@@ -1,0 +1,98 @@
+{
+  "engine_revision": "7c4a7c44d8a93e048a7c2095f3be380ddecf180d",
+  "working_tree_dirty": true,
+  "driver_sha256": "18596f1fb3f5e75726c622e79f25ca1a8d9bf800f755e72a5affc1732723d8c8",
+  "oracle_sha256": "5532e13ec8f2a49b618448b5d14fa6d3cbb8c12b941e5cc79e574a81e24f080c",
+  "fixture_manifest_sha256": "352cbf06380d357a4a81cd0358791f7500fe5aa0fc3c3fd8d0bbc36f9c43fd6b",
+  "extras_lock_sha256": "21a86789821ce98807a474035e52ce6953244f416e4b96c24e840d023e807553",
+  "dependency_versions": {
+    "coremltools": "9.0",
+    "cattrs": "25.3.0",
+    "pyaml": "25.7.0",
+    "numpy": "2.3.2",
+    "protobuf": "7.36.2",
+    "sympy": "1.14.0",
+    "tqdm": "4.70.1",
+    "packaging": "26.3",
+    "attrs": "26.1.0",
+    "PyYAML": "6.0.3",
+    "typing_extensions": "4.16.0"
+  },
+  "python": "3.12.8",
+  "device": "Apple M1 Pro",
+  "hardware_model": "MacBookPro18,3",
+  "physical_memory_bytes": 17179869184,
+  "os": "26.6.2",
+  "os_build": "25G83",
+  "format": "toklet-coreml-slice-run-v1",
+  "kind": "projection_fp16",
+  "policy": "cpu_and_ne",
+  "conversion_manifest_sha256": "ecfb2c965631713af9944d9202430aca6aa15d951120004e4be49b225457532a",
+  "package_sha256": "1ec843f6f0ffc7d67de9b72cf007bd24f831e845c6ac1737543e79a425949000",
+  "import_seconds": 1.370726166991517,
+  "power_start": {
+    "source": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+    "configuration": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  },
+  "cases": {},
+  "completed": false,
+  "actual_runtime_placement": null,
+  "limitations": [
+    "Slice only; no full decoder/generation/quality or engine adoption.",
+    "Predict is synchronous; individual prediction timers exclude prepared input dictionaries, fixture reads, state creation, correctness/cache readback and transport. Native predict output allocation is included.",
+    "Core ML's Python predict wrapper promotes FP16 input multiarrays to FP32 before the native call; these API/conversion costs and model-boundary conversions are included. Graph/state precision remains explicitly typed.",
+    "Sequence wall time additionally includes Python loop/output-copy overhead. Component times overlap; do not add prediction sum to wall time.",
+    "Own-process footprint includes Python/import/conversion/load support, but does not establish total Core ML service/device memory or energy.",
+    "Compute plan reports anticipated placement, not actual ANE execution. Full Xcode/Instruments execution trace is unavailable in this command-line-tools environment.",
+    "Core ML import warns about installed Torch 2.9.1; graphs use public MIL directly, not the untested Torch conversion frontend."
+  ],
+  "model_compile_load_seconds": 0.08833854191470891,
+  "compute_plan": {
+    "available": true,
+    "operations": [
+      {
+        "operation": "const",
+        "outputs": [
+          "output_weight_0"
+        ],
+        "anticipated_preferred_device": null,
+        "anticipated_supported_devices": null,
+        "estimated_relative_cost": null
+      },
+      {
+        "operation": "const",
+        "outputs": [
+          "output_bias_0"
+        ],
+        "anticipated_preferred_device": null,
+        "anticipated_supported_devices": null,
+        "estimated_relative_cost": null
+      },
+      {
+        "operation": "ios18.linear",
+        "outputs": [
+          "output"
+        ],
+        "anticipated_preferred_device": "MLCPUComputeDevice",
+        "anticipated_supported_devices": [
+          "MLCPUComputeDevice",
+          "MLNeuralEngineComputeDevice"
+        ],
+        "estimated_relative_cost": 1.0
+      }
+    ],
+    "scope": "Anticipated device assignment/cost only; no actual execution trace."
+  },
+  "failure": {
+    "stage": "single/warmup/1",
+    "type": "ValueError",
+    "message": "Target exceeds frozen gate: tolerance fraction 1.5727969659617609; maximum absolute error 0.0018783807754516602"
+  },
+  "power_end": {
+    "source": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+    "configuration": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  },
+  "process_peak_footprint_bytes": 239944712
+}

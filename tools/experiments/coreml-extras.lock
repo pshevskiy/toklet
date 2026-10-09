@@ -1,0 +1,5 @@
+# Isolated additions to the unchanged tools/bench/requirements.lock environment.
+# Install into artifacts/coreml-tools with --no-deps; arm64 macOS Python 3.12.
+coremltools==9.0 --hash=sha256:7079e8b6ff5a63f0e2c08eeeb8673e4eab8ca231d4b2eae4f7fb005e0d08a8cd
+cattrs==25.3.0 --hash=sha256:9896e84e0a5bf723bc7b4b68f4481785367ce07a8a02e7e9ee6eb2819bc306ff
+pyaml==25.7.0 --hash=sha256:ce5d7867cc2b455efdb9b0448324ff7b9f74d99f64650f12ca570102db6b985f

@@ -158,6 +158,15 @@ output-bit comparisons and two confirming runs support further qualification;
 the default decoder remains scalar. Synthetic kernel results do not complete
 M2.5 or establish an end-to-end optimization.
 
+The [public Core ML slice experiment](../docs/experiments/2026-10-10-coreml-slices.md)
+uses independently frozen tiny projection and persistent-KV attention fixtures.
+FP32 projection and both attention variants pass; FP16 projection fails its
+unchanged gate. All nonconstant operations anticipate CPU placement; actual
+Neural Engine execution is unobserved. Conversion/load and synchronous prediction
+timings, exact state checks, rejected records and reproducible commands are in
+the report. This isolated experiment leaves the Rust decoder unchanged and does
+not qualify full-model execution or close M3.
+
 The independent [llama.cpp worker](../tools/bench/llama/worker.cpp) uses the
 contract-pinned upstream source in a separate process. It has fixed 2,048-position
 FP32 KV, 128-token chunks and the same teacher-forced/cache protocol. The

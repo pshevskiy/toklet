@@ -1,0 +1,236 @@
+{
+  "engine_revision": "7c4a7c44d8a93e048a7c2095f3be380ddecf180d",
+  "working_tree_dirty": true,
+  "driver_sha256": "18596f1fb3f5e75726c622e79f25ca1a8d9bf800f755e72a5affc1732723d8c8",
+  "oracle_sha256": "5532e13ec8f2a49b618448b5d14fa6d3cbb8c12b941e5cc79e574a81e24f080c",
+  "fixture_manifest_sha256": "352cbf06380d357a4a81cd0358791f7500fe5aa0fc3c3fd8d0bbc36f9c43fd6b",
+  "extras_lock_sha256": "21a86789821ce98807a474035e52ce6953244f416e4b96c24e840d023e807553",
+  "dependency_versions": {
+    "coremltools": "9.0",
+    "cattrs": "25.3.0",
+    "pyaml": "25.7.0",
+    "numpy": "2.3.2",
+    "protobuf": "7.36.2",
+    "sympy": "1.14.0",
+    "tqdm": "4.70.1",
+    "packaging": "26.3",
+    "attrs": "26.1.0",
+    "PyYAML": "6.0.3",
+    "typing_extensions": "4.16.0"
+  },
+  "python": "3.12.8",
+  "device": "Apple M1 Pro",
+  "hardware_model": "MacBookPro18,3",
+  "physical_memory_bytes": 17179869184,
+  "os": "26.6.2",
+  "os_build": "25G83",
+  "format": "toklet-coreml-slice-build-v1",
+  "import_seconds": 2.171884457929991,
+  "conversion_source": "public MIL graph with immutable independent fixture arrays; no PyTorch conversion",
+  "deployment_target": "macOS15/iOS18",
+  "models": {
+    "projection_fp32": {
+      "package": "projection_fp32.mlpackage",
+      "package_sha256": "85784c9458d6accfe3549d93f0cc2ab9b549c8dfe41b7e27e51428ada163be13",
+      "conversion_seconds": 0.09457166702486575,
+      "save_seconds": 0.0013845410430803895,
+      "state_names": [],
+      "logical_state_bytes": 0,
+      "logical_weights_bytes": 4224,
+      "computation": "FP32 graph arithmetic",
+      "state_types": {},
+      "input_types": {
+        "x": {
+          "shape": [
+            1,
+            32
+          ],
+          "data_type_enum": 65568
+        }
+      },
+      "output_types": {
+        "output": {
+          "shape": [
+            1,
+            32
+          ],
+          "data_type_enum": 65568
+        }
+      }
+    },
+    "projection_fp16": {
+      "package": "projection_fp16.mlpackage",
+      "package_sha256": "1ec843f6f0ffc7d67de9b72cf007bd24f831e845c6ac1737543e79a425949000",
+      "conversion_seconds": 0.051220583030954,
+      "save_seconds": 0.0015054999385029078,
+      "state_names": [],
+      "logical_state_bytes": 0,
+      "logical_weights_bytes": 2112,
+      "computation": "FP16 graph arithmetic",
+      "state_types": {},
+      "input_types": {
+        "x": {
+          "shape": [
+            1,
+            32
+          ],
+          "data_type_enum": 65552
+        }
+      },
+      "output_types": {
+        "output": {
+          "shape": [
+            1,
+            32
+          ],
+          "data_type_enum": 65552
+        }
+      }
+    },
+    "stateful_attention": {
+      "package": "stateful_attention.mlpackage",
+      "package_sha256": "74728cbabc398afa94ff5130ef561f50da1d133701f002a99b2cfb215a2441bf",
+      "conversion_seconds": 0.07164025004021823,
+      "save_seconds": 0.001423667068593204,
+      "state_names": [
+        "cache_k",
+        "cache_v"
+      ],
+      "logical_state_bytes": 2048,
+      "logical_weights_bytes": 0,
+      "computation": "FP16 graph arithmetic",
+      "state_types": {
+        "cache_k": {
+          "shape": [
+            2,
+            32,
+            8
+          ],
+          "data_type_enum": 65552
+        },
+        "cache_v": {
+          "shape": [
+            2,
+            32,
+            8
+          ],
+          "data_type_enum": 65552
+        }
+      },
+      "input_types": {
+        "q": {
+          "shape": [
+            2,
+            2,
+            8
+          ],
+          "data_type_enum": 65552
+        },
+        "k": {
+          "shape": [
+            2,
+            1,
+            8
+          ],
+          "data_type_enum": 65552
+        },
+        "v": {
+          "shape": [
+            2,
+            1,
+            8
+          ],
+          "data_type_enum": 65552
+        },
+        "position": {
+          "shape": [
+            1
+          ],
+          "data_type_enum": 131104
+        }
+      },
+      "output_types": {
+        "output": {
+          "shape": [
+            1,
+            32
+          ],
+          "data_type_enum": 65552
+        }
+      }
+    },
+    "stateful_attention_fp32_accum": {
+      "package": "stateful_attention_fp32_accum.mlpackage",
+      "package_sha256": "c90c58439c82a61d727082932f001e4e54ebbc83e0fae9d136a889fbf58efc7f",
+      "conversion_seconds": 0.07714100007433444,
+      "save_seconds": 0.0015587080270051956,
+      "state_names": [
+        "cache_k",
+        "cache_v"
+      ],
+      "logical_state_bytes": 2048,
+      "logical_weights_bytes": 0,
+      "computation": "FP32 graph arithmetic",
+      "state_types": {
+        "cache_k": {
+          "shape": [
+            2,
+            32,
+            8
+          ],
+          "data_type_enum": 65552
+        },
+        "cache_v": {
+          "shape": [
+            2,
+            32,
+            8
+          ],
+          "data_type_enum": 65552
+        }
+      },
+      "input_types": {
+        "q": {
+          "shape": [
+            2,
+            2,
+            8
+          ],
+          "data_type_enum": 65552
+        },
+        "k": {
+          "shape": [
+            2,
+            1,
+            8
+          ],
+          "data_type_enum": 65552
+        },
+        "v": {
+          "shape": [
+            2,
+            1,
+            8
+          ],
+          "data_type_enum": 65552
+        },
+        "position": {
+          "shape": [
+            1
+          ],
+          "data_type_enum": 131104
+        }
+      },
+      "output_types": {
+        "output": {
+          "shape": [
+            1,
+            32
+          ],
+          "data_type_enum": 65552
+        }
+      }
+    }
+  },
+  "process_peak_footprint_bytes": 233030616
+}

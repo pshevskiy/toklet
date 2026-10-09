@@ -1,0 +1,17 @@
+Torch version 2.9.1 has not been tested with coremltools. You may run into unexpected errors. Torch 2.7.0 is the most recent version that has been tested.
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/tools/experiments/coreml_probe.py", line 405, in <module>
+    main()
+  File "/Users/coloner/work/rust/toklet/tools/experiments/coreml_probe.py", line 395, in main
+    run(args.packages, args.run, args.kind, args.policy)
+  File "/Users/coloner/work/rust/toklet/tools/experiments/coreml_probe.py", line 374, in run
+    raise failure
+  File "/Users/coloner/work/rust/toklet/tools/experiments/coreml_probe.py", line 348, in run
+    sample = sequence(model, manifest, case, kind)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/coloner/work/rust/toklet/tools/experiments/coreml_probe.py", line 228, in sequence
+    metrics = check(outputs, expected, manifest["cases"][case][gate_name])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/coloner/work/rust/toklet/tools/experiments/coreml_probe.py", line 174, in check
+    raise ValueError(f"Target exceeds frozen gate: tolerance fraction {fraction}; maximum absolute error {float(error.max())}")
+ValueError: Target exceeds frozen gate: tolerance fraction 1.5727969659617609; maximum absolute error 0.0018783807754516602

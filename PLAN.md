@@ -178,6 +178,25 @@ ANE execution, complete decoder or milestone completion is claimed.
 Astra accepted the completed oracle task after independently checking exact
 regeneration, a separate vectorized attention reconstruction, KV states and gates.
 
+Public-runtime slice results, 10 October 2026 (M3 remains pending): the
+[public Core ML probe](docs/experiments/2026-10-10-coreml-slices.md) converts four
+tiny projection/attention graphs with explicit types and persistent FP16 K/V.
+FP32 projection and FP16/FP32-arithmetic attention pass three warmups and ten
+measured repetitions across five frozen cases under both compute policies;
+interleaved states, exact cache readback, verified poison installation and causal
+masking pass. FP16 projection fails the unchanged first-warmup gate under both
+policies and remains rejected. Every nonconstant compute-plan operation prefers
+CPU; actual ANE placement is unobserved, so acceleration is inconclusive and no
+engine path is adopted. Own-process peaks stay below 243 MB, with total external
+Core ML service/device memory unavailable. Five offline probe tests, three oracle
+tests, eighteen benchmark Python tests, formatting/Clippy and all 74 ordinary
+Rust tests pass. The report preserves conversion/load costs, package/source
+identities, raw samples, power policy and limitations. Astra reviewed the
+completed code and required exact poison readback before prediction; it was fixed
+and regression-tested before final evidence was regenerated. Astra accepted the
+final code and independently verified the records and documented limits. Full scalar M2.5
+and separately reviewed CPU engine qualification still precede M3 completion.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [ ] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [ ] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
