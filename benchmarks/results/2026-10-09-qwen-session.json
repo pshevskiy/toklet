@@ -1,0 +1,67 @@
+{
+  "model": {
+    "engine_total_token_limit": 2048,
+    "engine_working_set_limit_bytes": 6442450944,
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "tokenizer_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights": {
+      "bytes": 988097824,
+      "file": "models/Qwen2.5-0.5B-Instruct/model.safetensors",
+      "sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "storage_dtype": "BF16",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/7ae557604adf67be50417f59c2c2f167def9a775/model.safetensors"
+    }
+  },
+  "physical_process_peak_bytes": 2108770344,
+  "results": {
+    "future_changed": {
+      "exact_full_logit_comparisons": 13,
+      "position_offset": 0,
+      "tokens": [
+        9707,
+        11,
+        358,
+        498
+      ]
+    },
+    "offset": {
+      "exact_full_logit_comparisons": 12,
+      "position_offset": 5,
+      "tokens": [
+        11,
+        358,
+        2776
+      ]
+    },
+    "short": {
+      "exact_full_logit_comparisons": 13,
+      "position_offset": 0,
+      "tokens": [
+        9707,
+        11,
+        358,
+        2776
+      ]
+    },
+    "single": {
+      "exact_full_logit_comparisons": 9,
+      "position_offset": 0,
+      "tokens": [
+        9707
+      ]
+    }
+  },
+  "scope": "short real-model numerical checks; 2048-token capacity admitted, full 2048-token execution checked with the small CPU model; no performance/held-out quality qualification",
+  "session_memory": {
+    "admitted_bytes": 2105239936,
+    "history_bytes": 8192,
+    "kv_bytes": 50331648,
+    "logits_bytes": 1215488,
+    "maximum_admitted_bytes": 2105239936,
+    "metadata_allowance_bytes": 67108864,
+    "metadata_bytes": 8064,
+    "scratch_bytes": 10436608,
+    "weights_bytes": 1976131072
+  }
+}

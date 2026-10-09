@@ -6,4 +6,5 @@
 pub mod cpu;
 pub mod model;
 pub mod sampling;
+pub mod session;
 pub mod weights;

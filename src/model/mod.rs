@@ -1,4 +1,4 @@
-//! Immutable FP32 decoder weights and full-prefix scalar correctness path.
+//! Immutable FP32 decoder weights and scalar full-prefix/cached execution.
 //!
 //! Numerical execution uses preallocated caller-owned scratch. Diagnostic
 //! traces allocate separately; tokenization and generation state live elsewhere.
@@ -8,7 +8,9 @@
 use crate::cpu::{self, AttentionShape, finite, length, nonzero, product};
 use std::fmt;
 
+mod cache;
 mod trace;
+pub(crate) use cache::KvCache;
 pub use trace::{LayerTrace, Trace};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -163,7 +165,7 @@ pub(super) fn allocation_bytes(count: usize) -> Result<usize, Error> {
     Ok(bytes)
 }
 
-pub(super) fn total_bytes(counts: &[usize]) -> Result<usize, Error> {
+pub(crate) fn total_bytes(counts: &[usize]) -> Result<usize, Error> {
     counts.iter().try_fold(0_usize, |total, &count| {
         total
             .checked_add(allocation_bytes(count)?)
@@ -171,7 +173,7 @@ pub(super) fn total_bytes(counts: &[usize]) -> Result<usize, Error> {
     })
 }
 
-pub(super) fn zeros(count: usize) -> Result<Vec<f32>, Error> {
+pub(crate) fn zeros(count: usize) -> Result<Vec<f32>, Error> {
     allocation_bytes(count)?;
     let mut values = Vec::new();
     values
@@ -228,6 +230,42 @@ impl Model {
         &self.config
     }
 
+    /// Owned numerical weight allocations, counted once when a session borrows
+    /// this model. Cold Rust metadata is covered by the session admission allowance.
+    pub fn allocated_weights_bytes(&self) -> Result<usize, Error> {
+        let mut bytes = total_bytes(&[
+            self.weights.embedding.capacity(),
+            self.weights.final_norm.capacity(),
+        ])?;
+        for layer in &self.weights.layers {
+            bytes = bytes
+                .checked_add(total_bytes(&[
+                    layer.input_norm.capacity(),
+                    layer.post_attention_norm.capacity(),
+                    layer.q.weight.capacity(),
+                    layer.q.bias.capacity(),
+                    layer.k.weight.capacity(),
+                    layer.k.bias.capacity(),
+                    layer.v.weight.capacity(),
+                    layer.v.bias.capacity(),
+                    layer.o.capacity(),
+                    layer.gate.capacity(),
+                    layer.up.capacity(),
+                    layer.down.capacity(),
+                ])?)
+                .ok_or(cpu::Error::SizeOverflow)?;
+        }
+        Ok(bytes)
+    }
+
+    pub(crate) fn allocated_metadata_bytes(&self) -> Result<usize, Error> {
+        product(
+            self.weights.layers.capacity(),
+            std::mem::size_of::<LayerWeights>(),
+        )
+        .map_err(Into::into)
+    }
+
     pub fn scratch(&self, capacity: usize) -> Result<Scratch, Error> {
         Scratch::new(&self.config, capacity)
     }
@@ -247,7 +285,7 @@ impl Model {
     ) -> Result<(), Error> {
         self.admit(tokens, offset, scratch)?;
         length("logits", logits.len(), self.config.vocab_size)?;
-        self.run(tokens, offset, scratch, None)?;
+        self.run(tokens, offset, scratch, None, None, 0)?;
         let start = (tokens.len() - 1) * self.config.hidden_size;
         cpu::matvec_f64(
             &scratch.norm[start..start + self.config.hidden_size],
@@ -269,7 +307,7 @@ impl Model {
     ) -> Result<Trace, Error> {
         self.admit(tokens, offset, scratch)?;
         let mut trace = Trace::new(&self.config, tokens.len())?;
-        self.run(tokens, offset, scratch, Some(&mut trace))?;
+        self.run(tokens, offset, scratch, Some(&mut trace), None, 0)?;
         cpu::matmul_f64(
             &scratch.norm[..tokens.len() * self.config.hidden_size],
             &self.weights.embedding,
@@ -280,6 +318,50 @@ impl Model {
             self.config.vocab_size,
         )?;
         Ok(trace)
+    }
+
+    /// Private session path: stage a chunk at cached_len; the caller commits its
+    /// length/logits only after this returns successfully. Scratch/cache originate
+    /// from the same borrowed model and cannot be replaced through the public API.
+    pub(crate) fn forward_cached(
+        &self,
+        tokens: &[u32],
+        rotary_offset: usize,
+        scratch: &mut Scratch,
+        cache: &mut KvCache,
+        cached_len: usize,
+        logits: &mut [f32],
+    ) -> Result<(), Error> {
+        self.admit(tokens, rotary_offset, scratch)?;
+        length("logits", logits.len(), self.config.vocab_size)?;
+        let end = cached_len
+            .checked_add(tokens.len())
+            .ok_or(cpu::Error::SizeOverflow)?;
+        if end > cache.capacity {
+            return Err(Error::Capacity {
+                offset: cached_len,
+                tokens: tokens.len(),
+                limit: cache.capacity,
+            });
+        }
+        self.run(
+            tokens,
+            rotary_offset,
+            scratch,
+            None,
+            Some(cache),
+            cached_len,
+        )?;
+        let start = (tokens.len() - 1) * self.config.hidden_size;
+        cpu::matvec_f64(
+            &scratch.norm[start..start + self.config.hidden_size],
+            &self.weights.embedding,
+            None,
+            logits,
+            self.config.hidden_size,
+            self.config.vocab_size,
+        )?;
+        Ok(())
     }
 
     fn admit(&self, tokens: &[u32], offset: usize, scratch: &Scratch) -> Result<(), Error> {
@@ -322,13 +404,18 @@ impl Model {
         offset: usize,
         s: &mut Scratch,
         mut trace: Option<&mut Trace>,
+        mut cache: Option<&mut KvCache>,
+        cached_len: usize,
     ) -> Result<(), Error> {
         let c = &self.config;
         let n = tokens.len();
         let nh = n * c.hidden_size;
         let nkv = n * c.kv_heads * c.head_dim;
         let nm = n * c.intermediate_size;
-        let ns = c.query_heads * n * n;
+        let ns = match &cache {
+            Some(cache) => cache.capacity,
+            None => c.query_heads * n * n,
+        };
         let activation = &mut s.activation[..nh];
         let norm = &mut s.norm[..nh];
         let q = &mut s.q[..nh];
@@ -392,20 +479,40 @@ impl Model {
             )?;
             cpu::rotary(q, q_rot, n, c.query_heads, c.head_dim, offset, c.rope_theta)?;
             cpu::rotary(k, k_rot, n, c.kv_heads, c.head_dim, offset, c.rope_theta)?;
-            cpu::attention(
-                q_rot,
-                k_rot,
-                v,
-                context,
-                scores,
-                probabilities,
-                &AttentionShape {
-                    tokens: n,
-                    query_heads: c.query_heads,
-                    kv_heads: c.kv_heads,
-                    head_dim: c.head_dim,
-                },
-            )?;
+            if let Some(cache) = cache.as_deref_mut() {
+                let capacity = cache.capacity;
+                let kv = &mut cache.layers[index];
+                kv.append(k_rot, v, c, capacity, cached_len);
+                kv.attend(
+                    q_rot,
+                    context,
+                    scores,
+                    probabilities,
+                    &cpu::CachedAttentionShape {
+                        tokens: n,
+                        query_heads: c.query_heads,
+                        kv_heads: c.kv_heads,
+                        head_dim: c.head_dim,
+                        capacity,
+                        offset: cached_len,
+                    },
+                )?;
+            } else {
+                cpu::attention(
+                    q_rot,
+                    k_rot,
+                    v,
+                    context,
+                    scores,
+                    probabilities,
+                    &AttentionShape {
+                        tokens: n,
+                        query_heads: c.query_heads,
+                        kv_heads: c.kv_heads,
+                        head_dim: c.head_dim,
+                    },
+                )?;
+            }
             cpu::matmul_f64(
                 context,
                 &layer.o,
@@ -519,6 +626,28 @@ pub struct Scratch {
 
 impl Scratch {
     fn new(c: &Config, capacity: usize) -> Result<Self, Error> {
+        let ns = product(product(c.query_heads, capacity)?, capacity)?;
+        Self::with_scores(c, capacity, ns)
+    }
+
+    pub(crate) fn for_session(c: &Config, chunk: usize, capacity: usize) -> Result<Self, Error> {
+        Self::with_scores(c, chunk, capacity)
+    }
+
+    pub(crate) fn planned_bytes(
+        c: &Config,
+        capacity: usize,
+        scores: usize,
+    ) -> Result<usize, Error> {
+        let nh = product(capacity, c.hidden_size)?;
+        let nkv = product(product(capacity, c.kv_heads)?, c.head_dim)?;
+        let nm = product(capacity, c.intermediate_size)?;
+        total_bytes(&[
+            nh, nh, nh, nkv, nkv, nh, nkv, nh, nh, nm, nm, nm, scores, scores,
+        ])
+    }
+
+    fn with_scores(c: &Config, capacity: usize, ns: usize) -> Result<Self, Error> {
         nonzero(capacity, "scratch capacity")?;
         if capacity > c.max_positions {
             return Err(Error::Capacity {
@@ -530,8 +659,7 @@ impl Scratch {
         let nh = product(capacity, c.hidden_size)?;
         let nkv = product(product(capacity, c.kv_heads)?, c.head_dim)?;
         let nm = product(capacity, c.intermediate_size)?;
-        let ns = product(product(c.query_heads, capacity)?, capacity)?;
-        total_bytes(&[nh, nh, nh, nkv, nkv, nh, nkv, nh, nh, nm, nm, nm, ns, ns])?;
+        Self::planned_bytes(c, capacity, ns)?;
         let mut s = Self {
             config: c.clone(),
             capacity,

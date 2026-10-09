@@ -11,7 +11,7 @@ use std::fmt;
 mod attention;
 mod reductions;
 
-pub use attention::{AttentionShape, attention, rotary};
+pub use attention::{AttentionShape, CachedAttentionShape, attention, attention_cached, rotary};
 pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
 
 #[derive(Debug, Clone, PartialEq, Eq)]

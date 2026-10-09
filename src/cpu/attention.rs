@@ -176,3 +176,121 @@ pub fn attention(
     }
     Ok(())
 }
+
+/// Chunk queries attend to a head-major cache, including the staged chunk.
+pub struct CachedAttentionShape {
+    pub tokens: usize,
+    pub query_heads: usize,
+    pub kv_heads: usize,
+    pub head_dim: usize,
+    pub capacity: usize,
+    /// Number of earlier valid cache tokens, independent of the rotary offset.
+    pub offset: usize,
+}
+
+/// Causal attention with Q/context `[tokens, query_heads, head_dim]` and separate
+/// K/V `[kv_heads, capacity, head_dim]`, strides `[capacity*head_dim, head_dim, 1]`.
+/// Cache positions through `offset + tokens` must contain staged K/V; later
+/// positions are ignored, including stale/nonfinite tails. Head mapping,
+/// FP32 dot/context order and FP64 softmax match full-prefix `attention`.
+///
+/// Scores/probabilities are reusable `[capacity]` rows, overwritten for each
+/// query/head; only the visible prefix of each row is meaningful. No quadratic
+/// workspace or expanded KV is allocated. Validate inputs before output writes;
+/// discard staged output on arithmetic failure.
+pub fn attention_cached(
+    q: &[f32],
+    k: &[f32],
+    v: &[f32],
+    context: &mut [f32],
+    scores: &mut [f32],
+    probabilities: &mut [f32],
+    shape: &CachedAttentionShape,
+) -> Result<(), Error> {
+    let CachedAttentionShape {
+        tokens,
+        query_heads,
+        kv_heads,
+        head_dim,
+        capacity,
+        offset,
+    } = *shape;
+    for (value, name) in [
+        (tokens, "tokens"),
+        (query_heads, "query_heads"),
+        (kv_heads, "kv_heads"),
+        (head_dim, "head_dim"),
+        (capacity, "cache capacity"),
+    ] {
+        nonzero(value, name)?;
+    }
+    if !query_heads.is_multiple_of(kv_heads) {
+        return Err(Error::InvalidParameter(
+            "query_heads must be divisible by kv_heads",
+        ));
+    }
+    let end = offset.checked_add(tokens).ok_or(Error::SizeOverflow)?;
+    if end > capacity {
+        return Err(Error::InvalidParameter("cache capacity exceeded"));
+    }
+    let q_stride = product(query_heads, head_dim)?;
+    let q_count = product(tokens, q_stride)?;
+    let head_stride = product(capacity, head_dim)?;
+    let kv_count = product(kv_heads, head_stride)?;
+    length("q", q.len(), q_count)?;
+    length("k cache", k.len(), kv_count)?;
+    length("v cache", v.len(), kv_count)?;
+    length("attention context", context.len(), q_count)?;
+    length("attention scores", scores.len(), capacity)?;
+    length("attention probabilities", probabilities.len(), capacity)?;
+    finite("q", q)?;
+    for head in 0..kv_heads {
+        let start = head * head_stride;
+        finite("k cache prefix", &k[start..start + end * head_dim])?;
+        finite("v cache prefix", &v[start..start + end * head_dim])?;
+    }
+    let group = query_heads / kv_heads;
+    let denominator = (head_dim as f32).sqrt();
+    for head in 0..query_heads {
+        let kv_start = (head / group) * head_stride;
+        for query in 0..tokens {
+            let visible = offset + query + 1;
+            let q_start = query * q_stride + head * head_dim;
+            for (key, score) in scores[..visible].iter_mut().enumerate() {
+                let start = kv_start + key * head_dim;
+                let mut dot = 0.0;
+                for feature in 0..head_dim {
+                    dot += q[q_start + feature] * k[start + feature];
+                }
+                *score = dot / denominator;
+                if !score.is_finite() {
+                    return Err(Error::NonFinite {
+                        tensor: "attention scores",
+                        index: key,
+                    });
+                }
+            }
+            softmax(
+                &scores[..visible],
+                None,
+                &mut probabilities[..visible],
+                1,
+                visible,
+            )?;
+            for feature in 0..head_dim {
+                let mut value = 0.0;
+                for key in 0..visible {
+                    value += probabilities[key] * v[kv_start + key * head_dim + feature];
+                }
+                if !value.is_finite() {
+                    return Err(Error::NonFinite {
+                        tensor: "attention context",
+                        index: q_start + feature,
+                    });
+                }
+                context[q_start + feature] = value;
+            }
+        }
+    }
+    Ok(())
+}

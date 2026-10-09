@@ -3,7 +3,7 @@ Toklet — Fast, lightweight LLM inference on Apple Silicon. An open-source Rust
 
 See the [implementation plan](PLAN.md) for milestones, dependencies, and acceptance criteria, and the [Apple LLM performance proposal](apple_llm_performance_plan.md) for the design rationale.
 
-The library provides a complete scalar decoder with FP32 storage, immutable weights, reusable scratch, tied output projection, and deterministic greedy selection. A separate diagnostic path retains all intermediate arrays. Projections, normalization, and softmax use FP64 accumulation for stability; the original FP32 projection functions remain available. The tiny decoder matches its frozen independent reference, and Qwen matches pinned Transformers on short numerical probes. Local safetensors loading supports FP32, FP16, BF16, and indexed shards. Cached sessions and CLI generation are next; the CLI shell currently provides help and version information.
+The library provides a complete scalar decoder with FP32 storage, immutable weights, reusable scratch, tied output projection, and deterministic greedy selection. A separate diagnostic path retains all intermediate arrays. Projections, normalization, and softmax use FP64 accumulation for stability; the original FP32 projection functions remain available. The tiny decoder matches its frozen independent reference, and Qwen matches pinned Transformers on short numerical probes. Local safetensors loading supports FP32, FP16, BF16, and indexed shards. Bounded [CPU sessions](src/session.rs) retain per-layer KV, track pending versus evaluated tokens, and support exact append, cached prompts, reset, and replay. CLI generation is next; the CLI shell currently provides help and version information.
 
 Use Rust 1.90 or newer. The library and CLI build without model downloads or Apple frameworks. Safetensors, Serde, and half-precision conversion dependencies are pinned. Fetch the locked dependencies once before running the offline checks:
 
@@ -36,6 +36,12 @@ The [Qwen forward report](benchmarks/results/2026-10-09-qwen-forward.md) records
 
 ```sh
 cargo test --locked --offline --release --test qwen_forward pinned_qwen_fp32_matches_full_transformers_forward -- --ignored --nocapture
+```
+
+The [session report](benchmarks/results/2026-10-09-qwen-session.md) records exact cache/full-prefix agreement, memory admission, and the checked capacity boundary. Its real-model suite uses the pinned local checkpoint; on macOS it also inspects its own process footprint:
+
+```sh
+cargo test --locked --offline --release --test qwen_session pinned_qwen_cached_sessions_match_full_prefix -- --ignored --nocapture
 ```
 
 The [benchmark contract](benchmarks/README.md) fixes workloads and quality gates. The [first MLX baseline](benchmarks/results/2026-10-09-mlx-bf16-512-128.md) retains raw completed-work timings and memory measurements on the M1 Pro; it does not claim Toklet performance or quality qualification.
