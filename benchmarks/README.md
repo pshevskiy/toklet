@@ -142,5 +142,11 @@ allocation and final model validation. It must not be added to total load again.
 evidence for this harness, with eleven worker records and a 2,033,928,208-byte
 own-child peak. It is not a workload benchmark. The full matrix, controlled
 external comparison, sustained/application records and qualification are still
-pending. Native BF16 MLX records remain on the application track until compatible
-FP32 measurements are available.
+pending. Native BF16 MLX records remain on the application track; the adapter's
+optional FP32 conversion provides a compatible storage representation for the
+controlled track. The [short FP32 baseline](results/2026-10-10-mlx-fp32-128-128.md)
+records completed timings and memory, with no quality ranking.
+
+```sh
+.venv/bin/python tools/bench/mlx_baseline.py --dtype fp32 --prompt-length 128 --output benchmarks/raw/mlx-fp32-short.json
+```

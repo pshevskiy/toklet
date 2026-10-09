@@ -1,4 +1,4 @@
-"""Explicit native BF16 MLX-LM baseline on the frozen token workload."""
+"""Explicit native BF16 or matched FP32 MLX baseline on frozen token IDs."""
 
 import argparse
 from importlib.metadata import version
@@ -107,6 +107,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prompt-length", type=int, choices=(128, 512, 1024, 1920), default=512)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--dtype", choices=("bf16", "fp32"), default="bf16")
     args = parser.parse_args()
     if args.output.exists():
         raise ValueError("Refusing to overwrite a baseline record")
@@ -142,10 +143,20 @@ def main():
     load_start = time.perf_counter()
     model, _ = load(str(prepare.ROOT / "models/Qwen2.5-0.5B-Instruct"), lazy=False, trust_remote_code=False)
     mx.eval(model.parameters())
+    if {str(array.dtype) for _, array in tree_flatten(model.parameters())} != {str(mx.bfloat16)}:
+        raise ValueError("Pinned source must load native BF16 weights")
+    conversion_seconds = None
+    target_dtype = mx.bfloat16 if args.dtype == "bf16" else mx.float32
+    if args.dtype == "fp32":
+        conversion_start = time.perf_counter()
+        model.set_dtype(target_dtype)
+        mx.eval(model.parameters())
+        conversion_seconds = time.perf_counter() - conversion_start
+        mx.clear_cache()
     load_seconds = time.perf_counter() - load_start
     parameters = tree_flatten(model.parameters())
-    if {str(array.dtype) for _, array in parameters} != {str(mx.bfloat16)}:
-        raise ValueError("Native source baseline must retain BF16 weights")
+    if {str(array.dtype) for _, array in parameters} != {str(target_dtype)}:
+        raise ValueError("Baseline weights differ from requested representation")
     weights_bytes = sum(array.nbytes for _, array in parameters)
     for _ in range(3):
         measure(model, mx, make_prompt_cache, prompt, continuation)
@@ -155,15 +166,15 @@ def main():
         sample, cache_info = measure(model, mx, make_prompt_cache, prompt, continuation)
         samples.append(sample)
         print(f"Measured request {index + 1}/10: {sample['total_seconds']:.3f}s", flush=True)
-    if cache_info["kv_dtype"] != str(mx.bfloat16):
-        raise ValueError("Native baseline KV dtype differs from BF16")
+    if cache_info["kv_dtype"] != str(target_dtype):
+        raise ValueError("Baseline KV dtype differs from requested representation")
     peaks = [sample["process_peak_footprint_bytes"] for sample in samples if sample["process_peak_footprint_bytes"] is not None]
     power = command(["/usr/bin/pmset", "-g", "batt"])
     settings = command(["/usr/bin/pmset", "-g", "custom"])
     thermal = command(["/usr/bin/pmset", "-g", "therm"])
     result = {
         "schema_version": 1, "contract_id": manifest["contract_id"],
-        "comparison_track": "application", "runtime": "MLX-LM",
+        "comparison_track": "application" if args.dtype == "bf16" else "controlled_engine", "runtime": "MLX-LM",
         "identity": {
             "engine_commit": command(["git", "rev-parse", "HEAD"]),
             "working_tree_dirty": bool(command(["git", "status", "--porcelain"])),
@@ -183,17 +194,18 @@ def main():
                 "thermal_conditions": thermal,
             },
         },
-        "representation": {"weight_dtype": "BF16", "kv_dtype": "BF16", "packed_format_version": None, "group_size": None},
+        "representation": {"weight_dtype": args.dtype.upper(), "kv_dtype": args.dtype.upper(), "packed_format_version": None, "group_size": None},
         "workload": {"name": f"prompt_{len(prompt)}_teacher_forced_128", "prompt_tokens": len(prompt), "output_steps": len(continuation), "context_capacity": 2048, "used_context_before_request": 0, "prompt_sha256": prompt_array["sha256"], "continuation_sha256": continuation_array["sha256"], "stop_policy": "fixed_length_teacher_forced_ignore_eos", "cache_state": "empty"},
         "timing_scope": {"includes_tokenization": False, "includes_sampling": False, "includes_detokenization": False, "completion_boundary": "mx.eval(prefix_cache_states), then mx.eval(last_prompt_token_logits, all_layer_cache_states); mx.eval(logits, all_layer_cache_states) after each decode token", "first_visible_text_policy": "not measured; teacher-forced token events only"},
-        "setup": {"model_load_seconds": load_seconds, "conversion_seconds": None, "compilation_seconds": None, "tokenization_seconds": None, "warmup_repetitions": 3},
+        "setup": {"model_load_seconds": load_seconds, "conversion_seconds": conversion_seconds, "compilation_seconds": None, "tokenization_seconds": None, "warmup_repetitions": 3},
         "samples": samples, "summary": summarize(samples, len(prompt)),
         "memory": {"engine_working_set_limit_bytes": 6 * 1024**3, "logical_weights_bytes": weights_bytes, "allocated_kv_bytes": cache_info["allocated_kv_bytes"], "scratch_bytes": None, "peak_process_bytes": max(peaks) if peaks else None, "system_memory_pressure": None, "measurement_instrument": "own-process footprint auxiliary.phys_footprint_peak; MLX get_peak_memory allocations; logical persistent tensor sizes"},
         "energy": {"joules": None, "instrument": None, "scope": None},
         "notes": [
             f"Adapter SHA256 {prepare.digest(Path(__file__))}; Python dependency lock SHA256 {prepare.digest(prepare.ROOT / 'tools/bench/requirements.lock')}",
             f"Power at start: {initial_power}; thermal report at start: {initial_thermal}",
-            "Native unquantized BF16 source checkpoint; quality scores are not measured in this baseline, so this record is not a qualified comparison ranking.",
+            "Unquantized pinned BF16 source, "+("native BF16 execution" if args.dtype == "bf16" else "converted to FP32 weights and KV for matched storage representation")+"; quality scores are not measured, so this is not a qualified comparison ranking.",
+            "Any FP32 conversion is nested within model load and timed through mx.eval completion; cached conversion allocations are cleared before warmup.",
             "Fresh MLX KV cache per warm request; capacity grows in native 256-token increments. Admitted limit is 2048; actual allocated capacity and bytes are reported separately.",
             f"Final committed tokens {cache_info['committed_tokens']}; actual allocated cache capacity {cache_info['allocated_capacity']}; final emitted token remains pending.",
             "Prefill timer excludes cache-object and input-array preparation; TTFT/total include both. No host wait occurs between layers.",
