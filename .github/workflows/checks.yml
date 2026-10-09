@@ -16,6 +16,8 @@ jobs:
           persist-credentials: false
       - name: Install Rust
         run: rustup toolchain install 1.90.0 --profile minimal --component rustfmt --component clippy
+      - name: Fetch locked test dependencies
+        run: cargo +1.90.0 fetch --locked
       - name: Check formatting
         run: cargo +1.90.0 fmt --check
       - name: Lint

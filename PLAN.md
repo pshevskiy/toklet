@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026. Status: implementation started; M0.1 is complete, M0 is in progress, and M1–M7 remain pending.
+Prepared 9 October 2026. Status: implementation started; M0.1 and M0.2 are complete, M0 is in progress, and M1–M7 remain pending.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -8,7 +8,7 @@ This plan translates the [Apple LLM performance proposal](apple_llm_performance_
 
 ## Starting point
 
-Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0.1 now provides the `toklet` package and CLI shell; engine code, numerical fixtures, and the benchmark harness remain pending.
+Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0.1 now provides the `toklet` package and CLI shell; M0.2 provides the frozen tiny-model arrays, NumPy oracle, and Rust fixture checks. Rust engine code and the benchmark harness remain pending.
 
 The planning environment reports Rust and Cargo 1.90.0, macOS 26.6.2, and `/Library/Developer/CommandLineTools` as the active developer directory. `xcrun --find metal` fails. Confirm an Xcode and Metal toolchain before GPU work. Hardware identification was unavailable through the sandbox, so M1 Pro with 16 GB remains the intended target from the proposal, not a verified description of this host.
 
@@ -91,13 +91,15 @@ The summed estimate is 298–515 focused hours, approximately 300–520. M0–M2
 ## M0 Establish the project and measurement contract
 
 - [x] **M0.1 Create the package.** Add `Cargo.toml`, library, CLI shell, locked dependencies, and formatting/lint/test checks. Preserve the license and existing documents. Add artifact ignore rules before fetching weights. Exit: a clean checkout builds and tests without model downloads or Apple frameworks.
-- [ ] **M0.2 Freeze the tiny reference.** Use an independent NumPy or PyTorch implementation to export actual FP32 weights, token inputs, and named intermediate values. Record shapes, layout, epsilon, rotary settings, tool versions, and hashes. Include at least one manually checked linear example. Exit: Rust reads the saved arrays; correctness never depends on matching RNG seeds across languages.
+- [x] **M0.2 Freeze the tiny reference.** Use an independent NumPy or PyTorch implementation to export actual FP32 weights, token inputs, and named intermediate values. Record shapes, layout, epsilon, rotary settings, tool versions, and hashes. Include at least one manually checked linear example. Exit: Rust reads the saved arrays; correctness never depends on matching RNG seeds across languages.
 - [ ] **M0.3 Define workloads and quality gates.** Pin the source model/tokenizer revision and baseline software versions. Store token arrays, continuation tokens, prompt hashes, stopping policies, quality corpus identity, and the result schema. Freeze the numerical and quality policy below before lossy work.
 - [ ] **M0.4 Capture one baseline.** Inventory the actual Mac, power mode, OS, and build tools. Run MLX-LM on the 512-input/128-output workload and retain commands and raw samples. Prepare the llama.cpp comparison adapter now or during M2. Record timing or artifact differences explicitly.
 
 M0.1 and M0.2 can proceed independently. M0.4 depends on M0.3. Keep large source models and generated benchmark data outside Git; commit small fixtures, manifests, scripts, and compact result summaries.
 
 M0.1 evidence, 9 October 2026: the dependency-free library and CLI shell passed `cargo fmt --check`, `cargo clippy --locked --offline --all-targets -- -D warnings`, `cargo test --locked --offline` (four CLI integration tests), and `cargo build --locked --offline --release` with Rust/Cargo 1.90.0 on macOS arm64. Release build and tests also passed in an isolated source copy with initially empty Cargo cache and target directories. Artifact ignore checks preserve small fixtures and reports; README links and package-file whitespace passed. Astra reviewed the completed code task and reported no findings. The GitHub Actions workflow is configured but has not run remotely; no numerical, GPU, or performance qualification is claimed.
+
+M0.2 evidence, 9 October 2026: [tiny-v1](tests/fixtures/tiny-v1/manifest.json) freezes 242 arrays with 383,720 payload bytes, exported by the [independent NumPy oracle](tools/reference/README.md) using Python 3.12.8 and NumPy 2.3.2. The per-operation FP32 gate remains `1e-5 + 1e-4 * abs(expected)`; the largest measured FP32/FP64 discrepancy uses 7.8058% of that tolerance. Both layers' intermediates, logits, single-token/offset/causal/capacity cases, stable probes, manual linear outputs, and greedy trace are saved with shapes and SHA-256 hashes. `cargo fmt --check`, Clippy with warnings denied, all eight offline Rust tests, release build, and `python3 tools/reference/tiny.py --check tests/fixtures/tiny-v1` passed. A second export reproduced every file exactly in the same environment; overwrite refusal and corrupted-array rejection passed. The Rust tests use locked development dependencies, fetched once before offline checks. Astra reported no findings after independently checking masking, probabilities, rotary norms, scalar GQA contractions, and recorded FP64 envelopes. No Rust decoder or real-model parity is claimed.
 
 Review and commit policy: Astra reviews each completed task that adds or changes code before the next code task begins. Run the applicable checks and commit each completed task after review passes. Individual edits and documentation-only updates do not require separate reviews. Continue autonomously within the plan and report unavailable external or hardware checks accurately.
 
@@ -226,4 +228,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next implementation action is M0.2.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next implementation action is M0.3.
