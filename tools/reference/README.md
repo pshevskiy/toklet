@@ -121,3 +121,31 @@ recovery, over-capacity rejection, and its own child's physical footprint on
 macOS. It retains all events and binary/driver identities. A watchdog bounds a
 hang; the child is always released. This is functional qualification, separate
 from workload benchmarks and held-out quality.
+
+`coreml_slice.py` prepares [coreml-slice-v1](../../tests/fixtures/coreml-slice-v1/manifest.json)
+before any Core ML evaluation. Its 42 arrays (36,992 payload bytes) derive from
+the immutable tiny-v1 first layer: biased query projection and already-rotated
+causal GQA attention at one, four, offset, changed-future and 32-token capacity
+cases. Persistent K/V expectations use separate `[2,32,8]` head-major FP16
+buffers with exact zero invalid suffixes. Rotary execution and a complete
+decoder are outside this slice.
+
+The independent NumPy implementation uses ordered scalar FP64 products/sums
+and stable softmax. FP32 projection keeps the original `1e-5 + 1e-4*abs(expected)`
+gate. FP16 projection/attention gates use twice the maximum independently
+reconstructed FP16 storage/operation-rounding discrepancy against the saved
+FP32 expected values, plus an absolute `1e-5` floor and `1e-4` relative term.
+Attention reconstruction covers dots/scale with and without FP16 intermediate
+rounding, and rounds probabilities and context storage. Gates are fixed before
+target outputs are inspected; they do not establish a full-model FP16 gate.
+
+```sh
+.venv/bin/python tools/reference/coreml_slice.py --check tests/fixtures/coreml-slice-v1
+.venv/bin/python tools/reference/coreml_slice.py --build artifacts/coreml-slice-candidate
+.venv/bin/python -m unittest discover -s tools/reference -p 'test_coreml_slice.py'
+```
+
+Export refuses existing directories. Verification reconstructs every array and
+gate independently and compares exact bytes, so enlarging a manifest tolerance
+cannot make a target pass. No Core ML import, conversion, runtime execution,
+ANE placement, model download, quality score, or engine selection is involved.

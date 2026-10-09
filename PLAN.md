@@ -169,6 +169,15 @@ M2.5 evidence completes; no milestone is marked complete by this preparation.
 Astra accepted the completed candidate code and independently verified both
 final records, raw checkpoints, identities, summaries and power settings.
 
+Public-runtime probe preparation, 10 October 2026: [coreml-slice-v1](tests/fixtures/coreml-slice-v1/manifest.json)
+freezes 42 small arrays and independent FP32/FP16 projection and persistent-KV
+attention gates from tiny-v1 before target evaluation. Scalar NumPy reconstruction,
+frozen gate/payload corruption checks, formatting/Clippy and all 74 ordinary
+Rust tests pass. This establishes the experiment's oracle only; no conversion,
+ANE execution, complete decoder or milestone completion is claimed.
+Astra accepted the completed oracle task after independently checking exact
+regeneration, a separate vectorized attention reconstruction, KV states and gates.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [ ] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [ ] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
