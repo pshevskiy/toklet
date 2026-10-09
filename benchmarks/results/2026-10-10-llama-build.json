@@ -1,0 +1,23 @@
+{
+  "binary": "artifacts/llama-bench-build/toklet-llama-bench",
+  "binary_sha256": "3a2183a32476b1d5a2edcf38694215cffdcd0cf7a9bbbc2aa087c0af5d69f962",
+  "build_seconds": 53.14417133410461,
+  "cmake": "cmake version 4.1.3\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+  "cmake_source_sha256": "8f526dc401bf92ac1a02a497fbc5a10e9cbe2914f0f24610399af4bb4cb552b5",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+  "configure_command": [
+    "/Users/coloner/work/rust/toklet/artifacts/bench-tools/cmake/data/bin/cmake",
+    "-S",
+    "/Users/coloner/work/rust/toklet/tools/bench/llama",
+    "-B",
+    "/Users/coloner/work/rust/toklet/artifacts/llama-bench-build",
+    "-G",
+    "Ninja",
+    "-DCMAKE_MAKE_PROGRAM=/Users/coloner/work/rust/toklet/artifacts/bench-tools/bin/ninja",
+    "-DLLAMA_SOURCE=/Users/coloner/work/rust/toklet/artifacts/llama.cpp",
+    "-DCMAKE_BUILD_TYPE=Release"
+  ],
+  "llama_revision": "3d65c90d04d337e88f2b1f7f0061f40a5324e662",
+  "ninja": "1.13.0.git.kitware.jobserver-pipe-1",
+  "worker_sha256": "5d4253f705481462245d4ec98dd660b2f3521057102cde0f2ceb3c346c87be53"
+}

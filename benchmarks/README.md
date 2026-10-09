@@ -147,6 +147,47 @@ optional FP32 conversion provides a compatible storage representation for the
 controlled track. The [short FP32 baseline](results/2026-10-10-mlx-fp32-128-128.md)
 records completed timings and memory, with no quality ranking.
 
+The [scalar short record](results/2026-10-10-cpu-short.md) retains the first ten
+CPU samples and a native profile. It also documents a sustained sequence of
+this workload, its historical runner identity and an excluded warmup pause.
+
+The independent [llama.cpp worker](../tools/bench/llama/worker.cpp) uses the
+contract-pinned upstream source in a separate process. It has fixed 2,048-position
+FP32 KV, 128-token chunks and the same teacher-forced/cache protocol. The
+[preparation tool](../tools/bench/llama_prepare.py) builds the wrapper and verifies
+every converted FP32 tensor bit-for-bit against the original BF16 payload in
+bounded chunks. Large source, build and GGUF files remain local ignored artifacts.
+Preparation never overwrites existing evidence/build/model directories.
+
+```sh
+git clone --filter=blob:none --no-checkout https://github.com/ggml-org/llama.cpp artifacts/llama.cpp
+git -C artifacts/llama.cpp checkout --detach 3d65c90d04d337e88f2b1f7f0061f40a5324e662
+.venv/bin/python -m pip install --target artifacts/bench-tools cmake==4.1.3 ninja==1.13.0
+.venv/bin/python tools/bench/llama_prepare.py --build
+.venv/bin/python tools/bench/llama_prepare.py --convert
+.venv/bin/python tools/bench/llama_prepare.py --check
+.venv/bin/python tools/bench/llama_check.py --output benchmarks/raw/llama-metal-probes.json
+.venv/bin/python tools/bench/cpu.py --backend llama --workload short --output benchmarks/raw/llama-fp32-short.json
+```
+
+The same eight workload names are supported by `--backend llama`. Metal source
+is embedded and compiled at runtime on the qualified Mac; the build does not
+require the missing standalone `metal` compiler. Actual GPU placement and
+pipeline diagnostics are retained separately from timing. Device initialization
+and initial shader compilation precede the worker's model-load timer; later
+pipeline compilation occurs during preparation/warmups and is not isolated.
+
+On the pinned M1 path, FP32-storage matrix-matrix kernels use half operands with
+float accumulation. The four short frozen last-logit probes exercise small
+batches; their unchanged-gate success does not qualify 128-token GEMM numerics
+or held-out quality. The real 2,048-position check establishes execution/state.
+Native `phys_footprint_peak` omits clean mapped weight pages and may incompletely
+represent shared GPU memory; it cannot establish the total working set or a
+memory advantage. A conservative admission estimate reserves two GGUF copies,
+FP32 KV and 1 GiB workspace; mapped/shared physical peak remains unavailable.
+See the [comparison report](results/2026-10-10-llama-fp32-short.md) for measured
+scope and remaining M2.5 work.
+
 ```sh
 .venv/bin/python tools/bench/mlx_baseline.py --dtype fp32 --prompt-length 128 --output benchmarks/raw/mlx-fp32-short.json
 ```

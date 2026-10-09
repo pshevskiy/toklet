@@ -1,0 +1,112 @@
+Analysis of sampling cpu_bench (pid 10671) every 1 millisecond
+Process:         cpu_bench [10671]
+Path:            /Users/USER/*/cpu_bench
+Load Address:    0x1048fc000
+Identifier:      cpu_bench
+Version:         0
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  Python [10666]
+Target Type:     live task
+
+Date/Time:       2026-10-10 01:06:38.409 +0300
+Launch Time:     2026-10-10 01:06:36.438 +0300
+OS Version:      macOS 26.6.2 (25G83)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+
+Physical footprint:         1.9G
+Physical footprint (peak):  1.9G
+Idle exit:                  untracked
+----
+
+Call graph:
+    3686 Thread_16880937   DispatchQueue_1: com.apple.main-thread  (serial)
+      3686 start  (in dyld) + 6992  [0x1831484e4]
+        3686 main  (in cpu_bench) + 52  [0x104900010]
+          3686 std::rt::lang_start_internal::h5b2b6e2cac0b4d2b  (in cpu_bench) + 140  [0x1049656a8]
+            3686 std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$::h4515a7224d0b03fd  (in cpu_bench) + 16  [0x104905fc4]
+              3686 std::sys::backtrace::__rust_begin_short_backtrace::hdd1062f17aa7a8c8  (in cpu_bench) + 12  [0x104906930]
+                3686 cpu_bench::main::h319c81fc1f7ed444  (in cpu_bench) + 4112  [0x1048fea84]
+                  3686 toklet::benchmark::measure_teacher_forced::h0114fc89c6b05fe4  (in cpu_bench) + 928  [0x104928dc0]
+                    3686 toklet::session::Session::evaluate_next_chunk::hca1fc2672b5263d0  (in cpu_bench) + 124  [0x104929c98]
+                      3686 toklet::model::Model::forward_cached::h1928817a287495cb  (in cpu_bench) + 516  [0x10491f4d8]
+                        1151 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 1912  [0x10491fd14]
+                        + 1151 toklet::cpu::matmul_f64::hb389e3eebd8aedec  (in cpu_bench) + 1724,1580,...  [0x10492baac,0x10492ba1c,...]
+                        1115 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 1852  [0x10491fcd8]
+                        + 1115 toklet::cpu::matmul_f64::hb389e3eebd8aedec  (in cpu_bench) + 1724,1580,...  [0x10492baac,0x10492ba1c,...]
+                        1000 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 2016  [0x10491fd7c]
+                        + 1000 toklet::cpu::matmul_f64::hb389e3eebd8aedec  (in cpu_bench) + 1580,1724,...  [0x10492ba1c,0x10492baac,...]
+                        206 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 1304  [0x10491fab4]
+                        + 206 toklet::cpu::matmul_f64::hb389e3eebd8aedec  (in cpu_bench) + 1724,1580,...  [0x10492baac,0x10492ba1c,...]
+                        136 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 716  [0x10491f868]
+                        + 136 toklet::cpu::matmul_f64::hb389e3eebd8aedec  (in cpu_bench) + 780,804,...  [0x10492b6fc,0x10492b714,...]
+                        30 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 840  [0x10491f8e4]
+                        + 30 toklet::cpu::matmul_f64::hb389e3eebd8aedec  (in cpu_bench) + 768,776,...  [0x10492b6f0,0x10492b6f8,...]
+                        21 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 1132  [0x10491fa08]
+                        + 21 toklet::cpu::attention::attention_cached::hf1c313ad274a9aff  (in cpu_bench) + 1936,1692,...  [0x104927378,0x104927284,...]
+                        20 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 780  [0x10491f8a8]
+                        + 20 toklet::cpu::matmul_f64::hb389e3eebd8aedec  (in cpu_bench) + 636,776,...  [0x10492b66c,0x10492b6f8,...]
+                        5 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 1960  [0x10491fd44]
+                        + 4 toklet::cpu::reductions::gated_silu::h6a8dd3f63020ba6a  (in cpu_bench) + 84,168,...  [0x104925cf0,0x104925d44,...]
+                        + 1 toklet::cpu::reductions::gated_silu::h6a8dd3f63020ba6a  (in cpu_bench) + 184  [0x104925d54]
+                        +   1 expf  (in libsystem_m.dylib) + 100  [0x1932ccb24]
+                        1 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 664  [0x10491f834]
+                        + 1 toklet::cpu::reductions::rmsnorm::h14bdce3f4d55f977  (in cpu_bench) + 324  [0x1049252b8]
+                        1 toklet::model::Model::run::h084011d0c543d00d  (in cpu_bench) + 2228  [0x10491fe50]
+                          1 toklet::cpu::residual_add::h3d179f8d8505e2d4  (in cpu_bench) + 108  [0x10492be84]
+
+Total number in stack (recursive counted multiple, when >=5):
+        7       toklet::cpu::matmul_f64::hb389e3eebd8aedec  (in cpu_bench) + 0  [0x10492b3f0]
+
+Sort by top of stack, same collapsed (when >= 5):
+        toklet::cpu::matmul_f64::hb389e3eebd8aedec  (in cpu_bench)        3658
+        toklet::cpu::attention::attention_cached::hf1c313ad274a9aff  (in cpu_bench)        21
+
+Binary Images:
+       0x1048fc000 -        0x1049b42b3 +cpu_bench (0) <A8CDC3E9-6597-3B91-99E4-64C1A64DF570> /Users/*/cpu_bench
+       0x1830a0000 -        0x1830f2b4b  libobjc.A.dylib (951.7) <03BD9E32-CF0A-37B0-898A-3CE8DE06D842> /usr/lib/libobjc.A.dylib
+       0x1830f3000 -        0x183127d58  libdyld.dylib (1387) <957F93B3-8805-39C7-9C51-EDD1715F550E> /usr/lib/system/libdyld.dylib
+       0x183128000 -        0x1831db4ff  dyld (1.0.0 - 1387) <74E52480-C2BD-3C8D-812D-95FE2B74A096> /usr/lib/dyld
+       0x1831dc000 -        0x1831df228  libsystem_blocks.dylib (96) <E0AC1231-27AA-3A13-8FAC-41D5802B1F3C> /usr/lib/system/libsystem_blocks.dylib
+       0x1831e0000 -        0x18323455f  libxpc.dylib (3102.160.5) <33E44C2D-D65E-37A6-B85F-1A4CF524A050> /usr/lib/system/libxpc.dylib
+       0x183235000 -        0x1832559ff  libsystem_trace.dylib (1861.160.4) <93F1DD8C-6CD9-32B9-B222-D23DA5D161B4> /usr/lib/system/libsystem_trace.dylib
+       0x183256000 -        0x1833045f7  libcorecrypto.dylib (1922.160.10) <0642DDAD-4771-3C82-805C-E7C6701C1461> /usr/lib/system/libcorecrypto.dylib
+       0x183305000 -        0x183355257  libsystem_malloc.dylib (812.160.5) <D969A907-3E43-3951-9365-8C2DB3812E9D> /usr/lib/system/libsystem_malloc.dylib
+       0x183356000 -        0x18339d23f  libdispatch.dylib (1542.160.2) <B2000CD5-F580-314A-A141-E036719D854E> /usr/lib/system/libdispatch.dylib
+       0x18339e000 -        0x1833a0ffb  libsystem_featureflags.dylib (103) <FEE12F9C-344B-33B3-8EDD-283580EF1C67> /usr/lib/system/libsystem_featureflags.dylib
+       0x1833a1000 -        0x1834221e7  libsystem_c.dylib (1752.160.4) <D77CEB62-AFF6-3CEC-BA9B-4F057FBE2EB5> /usr/lib/system/libsystem_c.dylib
+       0x183423000 -        0x1834b3ae7  libc++.1.dylib (2100.43) <F0FD393C-15BC-3C75-A19D-897F7B225C78> /usr/lib/libc++.1.dylib
+       0x1834b4000 -        0x1834ce75f  libc++abi.dylib (2100.43) <F38A9C58-22AB-3798-BBAE-8DCD9CC0CE27> /usr/lib/libc++abi.dylib
+       0x1834cf000 -        0x18350c2e7  libsystem_kernel.dylib (12377.161.14) <C6A4A4CB-92E6-3BAF-AAE0-E8306259209A> /usr/lib/system/libsystem_kernel.dylib
+       0x18350d000 -        0x183519b3b  libsystem_pthread.dylib (539.100.4) <A373F0B0-9880-326A-88B4-DD8BE4E33072> /usr/lib/system/libsystem_pthread.dylib
+       0x18351a000 -        0x183522963  libsystem_platform.dylib (375.120.2) <EDB83A19-EC17-32DE-9350-6145970A85D6> /usr/lib/system/libsystem_platform.dylib
+       0x183523000 -        0x1835526eb  libsystem_info.dylib (600) <9B5FB84B-31AD-3EA7-8F89-8C700D369DC8> /usr/lib/system/libsystem_info.dylib
+       0x1874f0000 -        0x1874f9e5f  libsystem_darwin.dylib (1752.160.4) <8E07D22E-CE5A-38A0-B091-5B0338C326F5> /usr/lib/system/libsystem_darwin.dylib
+       0x18795b000 -        0x18796d1b6  libsystem_notify.dylib (348.160.3) <15799128-6CBD-30D6-A2BB-B9D02B4470C0> /usr/lib/system/libsystem_notify.dylib
+       0x189c2c000 -        0x189c46f7b  libsystem_networkextension.dylib (2226.161.1) <9C7B1EEB-47BE-3791-93A9-CFC693CB9417> /usr/lib/system/libsystem_networkextension.dylib
+       0x189cc9000 -        0x189ce0fdf  libsystem_asl.dylib (406) <54439739-33EE-3273-839F-CBA67D7F5CB1> /usr/lib/system/libsystem_asl.dylib
+       0x18b882000 -        0x18b88a387  libsystem_symptoms.dylib (2169.160.3) <229122B9-B8B1-3F2F-870E-8650AE3C4FB5> /usr/lib/system/libsystem_symptoms.dylib
+       0x18fb27000 -        0x18fb5f5b7  libsystem_containermanager.dylib (725.160.3) <14B2A47F-19C8-392F-8FDB-FE8AE375DD41> /usr/lib/system/libsystem_containermanager.dylib
+       0x190f39000 -        0x190f3d5d7  libsystem_configuration.dylib (1405.160.3) <D8D6280B-783D-3550-BDBA-2861AE40604F> /usr/lib/system/libsystem_configuration.dylib
+       0x190f3e000 -        0x190f4499f  libsystem_sandbox.dylib (2680.160.6) <54688162-B50D-3D31-A1E8-7B9766D3530D> /usr/lib/system/libsystem_sandbox.dylib
+       0x192599000 -        0x19259c1fb  libquarantine.dylib (196.160.2) <EEE5AADB-52E1-3C4C-881A-70405770B1F1> /usr/lib/system/libquarantine.dylib
+       0x192d38000 -        0x192d3ed03  libsystem_coreservices.dylib (191.5.1) <D4ACD2AC-5702-3C45-85A0-300B2C2D19E1> /usr/lib/system/libsystem_coreservices.dylib
+       0x1932c7000 -        0x193304a77  libsystem_m.dylib (3312.100.1) <B54FBE99-DB0B-32C7-ABDD-C2206DF606A4> /usr/lib/system/libsystem_m.dylib
+       0x193306000 -        0x193309527  libmacho.dylib (1387) <949131E5-BDA2-39BA-AA50-62651BB51802> /usr/lib/system/libmacho.dylib
+       0x193323000 -        0x1933303a7  libcommonCrypto.dylib (600035) <3B110564-5278-3CB0-85F1-2CE8431FF935> /usr/lib/system/libcommonCrypto.dylib
+       0x193331000 -        0x19333aca3  libunwind.dylib (2100.2) <05FD0014-55B1-3B8A-A6BA-6C7A389C4123> /usr/lib/system/libunwind.dylib
+       0x193343000 -        0x19334dbef  libcopyfile.dylib (240.160.2.0.1) <D0009B8A-8ECC-3D56-9206-7E1839707F93> /usr/lib/system/libcopyfile.dylib
+       0x19334e000 -        0x193351987  libcompiler_rt.dylib (103.3) <6FB345CA-7F5C-3263-A23F-143F7539FD8A> /usr/lib/system/libcompiler_rt.dylib
+       0x193352000 -        0x19335678b  libsystem_collections.dylib (1752.160.4) <C8160BD2-5941-3DC0-BB40-F8C2B8156EC4> /usr/lib/system/libsystem_collections.dylib
+       0x193357000 -        0x19335a4cf  libsystem_secinit.dylib (168.100.7) <ECABC024-8F02-374A-BB7E-29437CEA2ABD> /usr/lib/system/libsystem_secinit.dylib
+       0x19335b000 -        0x19335dbf7  libremovefile.dylib (85.100.6) <7460B5AE-469A-36A0-A7EC-6C7D69628E86> /usr/lib/system/libremovefile.dylib
+       0x19335e000 -        0x19335ef27  libkeymgr.dylib (31) <7E863FCA-F3FF-32C7-8A8C-F983E946AFC3> /usr/lib/system/libkeymgr.dylib
+       0x19335f000 -        0x193367e37  libsystem_dnssd.dylib (2881.160.4) <305F4398-E688-3384-B351-02D865EC8A04> /usr/lib/system/libsystem_dnssd.dylib
+       0x193368000 -        0x19336d09b  libcache.dylib (95) <9CD7B1E1-3E47-339C-A193-2392E3E0ED23> /usr/lib/system/libcache.dylib
+       0x19336e000 -        0x19336fce3  libSystem.B.dylib (1356) <4FED5EE2-5D3E-35B1-A170-9859C4B683BB> /usr/lib/libSystem.B.dylib
+       0x287331000 -        0x287338349  libRosetta.dylib (367.9) <0C7397C6-D747-31F2-8BC1-4096213BDE5C> /usr/lib/libRosetta.dylib
+       0x288f44000 -        0x288f47a4b  libsystem_darwindirectory.dylib (122) <971A4F65-493D-39F3-846D-0D33FA2769FD> /usr/lib/system/libsystem_darwindirectory.dylib
+       0x288f48000 -        0x288f5239b  libsystem_eligibility.dylib (319.160.17) <750CA446-92EA-3A56-9A7B-CC0841686C50> /usr/lib/system/libsystem_eligibility.dylib
+       0x288f53000 -        0x288f5a88b  libsystem_sanitizers.dylib (26.1) <D88EC709-9AA8-3083-B22B-D3CB39678D71> /usr/lib/system/libsystem_sanitizers.dylib
+       0x288f5b000 -        0x288f5bbb7  libsystem_trial.dylib (474.2.18.2) <7194FF5B-A6C5-3D67-B00A-90209F10D603> /usr/lib/system/libsystem_trial.dylib
