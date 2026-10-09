@@ -6,3 +6,4 @@
 pub mod cpu;
 pub mod model;
 pub mod sampling;
+pub mod weights;

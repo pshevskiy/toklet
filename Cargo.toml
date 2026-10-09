@@ -11,6 +11,11 @@ publish = false
 name = "toklet"
 path = "src/bin/toklet.rs"
 
-[dev-dependencies]
+[dependencies]
+half = { version = "=2.7.1", features = ["std"] }
+safetensors = "=0.6.2"
+serde = { version = "=1.0.228", features = ["derive"] }
 serde_json = "=1.0.149"
+
+[dev-dependencies]
 sha2 = "=0.10.9"
