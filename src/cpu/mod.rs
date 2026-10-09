@@ -6,6 +6,10 @@
 
 use std::fmt;
 
+mod reductions;
+
+pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Error {
     ZeroDimension(&'static str),
@@ -23,6 +27,10 @@ pub enum Error {
     NonFinite {
         tensor: &'static str,
         index: usize,
+    },
+    InvalidParameter(&'static str),
+    FullyMasked {
+        row: usize,
     },
 }
 
@@ -50,6 +58,8 @@ impl fmt::Display for Error {
             Self::NonFinite { tensor, index } => {
                 write!(formatter, "non-finite value in {tensor} at index {index}")
             }
+            Self::InvalidParameter(name) => write!(formatter, "invalid parameter: {name}"),
+            Self::FullyMasked { row } => write!(formatter, "softmax row {row} is entirely masked"),
         }
     }
 }
