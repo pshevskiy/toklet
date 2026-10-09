@@ -212,6 +212,9 @@ impl<'model> Session<'model> {
     pub fn capacity(&self) -> usize {
         self.options.capacity
     }
+    pub fn vocab_size(&self) -> usize {
+        self.model.config().vocab_size
+    }
     pub fn memory(&self) -> Memory {
         self.memory
     }

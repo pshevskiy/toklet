@@ -22,20 +22,28 @@ fn topology_and_numerical_policy_match_the_learning_model() {
     let fixture = Fixture::tiny();
     assert_eq!(fixture.manifest["schema_version"], 1);
     assert_eq!(fixture.manifest["fixture_id"], "toklet-tiny-fp32-v1");
+    // Arbitrary-precision JSON retains number spelling (1e-06 versus 1e-6).
+    // Check exact parsed values, not lexical serialization, without changing gates.
+    let mut topology = fixture.manifest["model"].clone();
+    assert_eq!(topology["rms_norm_eps"].as_f64(), Some(1e-6));
+    assert_eq!(topology["rope_theta"].as_f64(), Some(1_000_000.0));
+    topology.as_object_mut().unwrap().remove("rms_norm_eps");
+    topology.as_object_mut().unwrap().remove("rope_theta");
     assert_eq!(
-        fixture.manifest["model"],
+        topology,
         json!({
             "vocab_size": 64, "num_layers": 2, "hidden_size": 32,
             "num_query_heads": 4, "num_kv_heads": 2, "head_dim": 8,
             "intermediate_size": 64, "capacity": 32,
-            "rms_norm_eps": 1e-6, "rope_theta": 1_000_000.0,
             "rope_pairing": "split_half", "tie_word_embeddings": true,
             "projection_biases": ["q", "k", "v"]
         })
     );
     let policy = &fixture.manifest["numerical_policy"];
     for tolerance in policy["tolerances"].as_object().unwrap().values() {
-        assert_eq!(tolerance, &json!({ "atol": 1e-5, "rtol": 1e-4 }));
+        assert_eq!(tolerance.as_object().unwrap().len(), 2);
+        assert_eq!(tolerance["atol"].as_f64(), Some(1e-5));
+        assert_eq!(tolerance["rtol"].as_f64(), Some(1e-4));
     }
     for envelope in policy["measured_fp32_vs_fp64"]
         .as_object()

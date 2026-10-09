@@ -1,0 +1,285 @@
+{
+  "model": {
+    "engine_total_token_limit": 2048,
+    "engine_working_set_limit_bytes": 6442450944,
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "tokenizer_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights": {
+      "bytes": 988097824,
+      "file": "models/Qwen2.5-0.5B-Instruct/model.safetensors",
+      "sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "storage_dtype": "BF16",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/7ae557604adf67be50417f59c2c2f167def9a775/model.safetensors"
+    }
+  },
+  "command": [
+    "/Users/coloner/work/rust/toklet/target/release/toklet",
+    "--model",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+    "--interactive",
+    "--max-new-tokens",
+    "4",
+    "--prefill-chunk",
+    "8",
+    "--no-eos"
+  ],
+  "cases": [
+    {
+      "case": "raw_greedy",
+      "ids": [
+        4460,
+        311,
+        1855,
+        264
+      ],
+      "statistics": {
+        "generation": {
+          "reason": {
+            "kind": "output_limit"
+          },
+          "reused_tokens": 0,
+          "prefill_tokens": 4,
+          "sampled_tokens": 4,
+          "emitted_tokens": 4,
+          "history_tokens": 8,
+          "evaluated_tokens": 7,
+          "pending_tokens": 1,
+          "first_token_seconds": 1.6233006250000002,
+          "prefill_seconds": 1.622714417,
+          "decode_seconds": 2.079583209,
+          "sampling_seconds": 0.002326501,
+          "total_seconds": 3.70487625
+        },
+        "input_preparation_seconds": 4.1e-08,
+        "load_seconds": 2.063284542,
+        "tokenizer_load_seconds": 0.14198725,
+        "memory_admitted_bytes": 2343243600
+      }
+    },
+    {
+      "case": "pending_continue",
+      "ids": [
+        2025,
+        429
+      ],
+      "statistics": {
+        "generation": {
+          "reason": {
+            "kind": "output_limit"
+          },
+          "reused_tokens": 7,
+          "prefill_tokens": 1,
+          "sampled_tokens": 2,
+          "emitted_tokens": 2,
+          "history_tokens": 10,
+          "evaluated_tokens": 9,
+          "pending_tokens": 1,
+          "first_token_seconds": 0.688567833,
+          "prefill_seconds": 0.687983125,
+          "decode_seconds": 0.686683875,
+          "sampling_seconds": 0.0011930830000000002,
+          "total_seconds": 1.375960333
+        },
+        "input_preparation_seconds": 0.0,
+        "load_seconds": 0.0,
+        "tokenizer_load_seconds": 0.0,
+        "memory_admitted_bytes": 2343243600
+      }
+    },
+    {
+      "case": "pending_full_prompt",
+      "statistics": {
+        "generation": {
+          "reason": {
+            "kind": "output_limit"
+          },
+          "reused_tokens": 9,
+          "prefill_tokens": 1,
+          "sampled_tokens": 0,
+          "emitted_tokens": 0,
+          "history_tokens": 10,
+          "evaluated_tokens": 10,
+          "pending_tokens": 0,
+          "first_token_seconds": null,
+          "prefill_seconds": 0.685745416,
+          "decode_seconds": 0.0,
+          "sampling_seconds": 0.0,
+          "total_seconds": 0.685745583
+        },
+        "input_preparation_seconds": 1.25e-07,
+        "load_seconds": 0.0,
+        "tokenizer_load_seconds": 0.0,
+        "memory_admitted_bytes": 2343243600
+      }
+    },
+    {
+      "case": "fully_cached_prompt",
+      "statistics": {
+        "generation": {
+          "reason": {
+            "kind": "output_limit"
+          },
+          "reused_tokens": 10,
+          "prefill_tokens": 0,
+          "sampled_tokens": 0,
+          "emitted_tokens": 0,
+          "history_tokens": 10,
+          "evaluated_tokens": 10,
+          "pending_tokens": 0,
+          "first_token_seconds": null,
+          "prefill_seconds": 0.0,
+          "decode_seconds": 0.0,
+          "sampling_seconds": 0.0,
+          "total_seconds": 4.58e-07
+        },
+        "input_preparation_seconds": 4.2e-08,
+        "load_seconds": 0.0,
+        "tokenizer_load_seconds": 0.0,
+        "memory_admitted_bytes": 2343243600
+      }
+    },
+    {
+      "case": "raw_user_suffix",
+      "statistics": {
+        "generation": {
+          "reason": {
+            "kind": "output_limit"
+          },
+          "reused_tokens": 10,
+          "prefill_tokens": 15,
+          "sampled_tokens": 1,
+          "emitted_tokens": 1,
+          "history_tokens": 26,
+          "evaluated_tokens": 25,
+          "pending_tokens": 1,
+          "first_token_seconds": 5.516437042,
+          "prefill_seconds": 5.5158341239999995,
+          "decode_seconds": 0.0,
+          "sampling_seconds": 0.000600041,
+          "total_seconds": 5.516504417
+        },
+        "input_preparation_seconds": 0.00165125,
+        "load_seconds": 0.0,
+        "tokenizer_load_seconds": 0.0,
+        "memory_admitted_bytes": 2343243600
+      }
+    },
+    {
+      "case": "chat_prompt_reset",
+      "text": "4",
+      "statistics": {
+        "generation": {
+          "reason": {
+            "kind": "output_limit"
+          },
+          "reused_tokens": 0,
+          "prefill_tokens": 40,
+          "sampled_tokens": 2,
+          "emitted_tokens": 2,
+          "history_tokens": 42,
+          "evaluated_tokens": 41,
+          "pending_tokens": 1,
+          "first_token_seconds": 14.430346,
+          "prefill_seconds": 14.429745583,
+          "decode_seconds": 0.704712833,
+          "sampling_seconds": 0.00119875,
+          "total_seconds": 15.13573475
+        },
+        "input_preparation_seconds": 0.001082209,
+        "load_seconds": 0.0,
+        "tokenizer_load_seconds": 0.0,
+        "memory_admitted_bytes": 2343243600
+      }
+    },
+    {
+      "case": "prefill_ctrl_c",
+      "statistics": {
+        "generation": {
+          "reason": {
+            "kind": "cancelled"
+          },
+          "reused_tokens": 0,
+          "prefill_tokens": 8,
+          "sampled_tokens": 0,
+          "emitted_tokens": 0,
+          "history_tokens": 16,
+          "evaluated_tokens": 8,
+          "pending_tokens": 8,
+          "first_token_seconds": null,
+          "prefill_seconds": 2.873534542,
+          "decode_seconds": 0.0,
+          "sampling_seconds": 0.0,
+          "total_seconds": 2.87353475
+        },
+        "input_preparation_seconds": 0.0,
+        "load_seconds": 0.0,
+        "tokenizer_load_seconds": 0.0,
+        "memory_admitted_bytes": 2343243600
+      }
+    },
+    {
+      "case": "prefill_resume",
+      "statistics": {
+        "generation": {
+          "reason": {
+            "kind": "output_limit"
+          },
+          "reused_tokens": 8,
+          "prefill_tokens": 8,
+          "sampled_tokens": 0,
+          "emitted_tokens": 0,
+          "history_tokens": 16,
+          "evaluated_tokens": 16,
+          "pending_tokens": 0,
+          "first_token_seconds": null,
+          "prefill_seconds": 2.8596065,
+          "decode_seconds": 0.0,
+          "sampling_seconds": 0.0,
+          "total_seconds": 2.859606958
+        },
+        "input_preparation_seconds": 4.1e-08,
+        "load_seconds": 0.0,
+        "tokenizer_load_seconds": 0.0,
+        "memory_admitted_bytes": 2343243600
+      }
+    },
+    {
+      "case": "over_capacity_rejected",
+      "error": "invalid generation request: prompt plus requested output exceeds session capacity"
+    },
+    {
+      "case": "after_rejection_prefix_retained",
+      "statistics": {
+        "generation": {
+          "reason": {
+            "kind": "output_limit"
+          },
+          "reused_tokens": 16,
+          "prefill_tokens": 0,
+          "sampled_tokens": 0,
+          "emitted_tokens": 0,
+          "history_tokens": 16,
+          "evaluated_tokens": 16,
+          "pending_tokens": 0,
+          "first_token_seconds": null,
+          "prefill_seconds": 0.0,
+          "decode_seconds": 0.0,
+          "sampling_seconds": 0.0,
+          "total_seconds": 4.2e-08
+        },
+        "input_preparation_seconds": 4.1e-08,
+        "load_seconds": 0.0,
+        "tokenizer_load_seconds": 0.0,
+        "memory_admitted_bytes": 2343243600
+      }
+    }
+  ],
+  "memory_admitted_bytes": 2343243600,
+  "physical_process_peak_bytes": 2115782768,
+  "scope": "functional CLI/session qualification; short real-model generation and cancellation; no benchmark or held-out quality claim",
+  "driver_sha256": "07536f8210d6c5c98ea3473bfedc7ebfeacadf38e88999bffae55ec91ffffdf3",
+  "binary_sha256": "c696f229675d90953a6d1da30ae854c3b50f5d3581f427939392955578d4d61b",
+  "engine_base_revision": "5f58a6eb7f84285011b272e4dc75af4e202c76f0",
+  "uncommitted_diff_sha256": "a212ff2621e7e2504b96dce0e222a1cdc8eb71c1b93a38409bf59bcc85fd655d"
+}

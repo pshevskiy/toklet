@@ -4,6 +4,7 @@
 //! buffers. The CLI shell currently provides help and version information.
 
 pub mod cpu;
+pub mod generation;
 pub mod model;
 pub mod sampling;
 pub mod session;

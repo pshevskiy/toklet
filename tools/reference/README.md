@@ -97,3 +97,27 @@ per-case policy that failed to cover equivalent-prefix reference shape variation
 v2 freezes operation/layer-specific limits across the four independent reference
 cases. The linked report records the reason and measured differences. These short
 probes do not establish held-out quality or long-context qualification.
+
+`chat.py` freezes token IDs and rendering from the pinned Transformers tokenizer
+and Qwen Jinja template, including Unicode, special tokens, tool schemas/calls,
+consecutive tool replies and generation prefixes. Chat-v1 also contains 1,010
+independent Python float-format probes. Its small tokenizer retains original IDs
+and the BPE merge closure needed for the eight raw and seven chat cases. It is
+only an offline fixture; production uses the complete local tokenizer. All file
+identities, exporter identity and Python/Jinja/Transformers/tokenizers versions
+are recorded in its manifest.
+
+```sh
+python3 tools/reference/chat.py --check tests/fixtures/chat-v1
+.venv/bin/python tools/reference/chat.py --output artifacts/chat-candidate
+cargo test --locked --offline --release --bin toklet full_pinned_tokenizer_matches_frozen_ids -- --ignored --nocapture
+python3 tools/reference/cli.py --output artifacts/qwen-cli-check
+```
+
+Both exporters require new output directories. `cli.py` verifies local source
+hashes, exercises the release CLI in one persistent child, checks short greedy
+output, pending/cached state, raw append, chat reset, prefill interruption and
+recovery, over-capacity rejection, and its own child's physical footprint on
+macOS. It retains all events and binary/driver identities. A watchdog bounds a
+hang; the child is always released. This is functional qualification, separate
+from workload benchmarks and held-out quality.

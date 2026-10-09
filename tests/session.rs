@@ -463,3 +463,297 @@ fn admitted_prefill_decode_and_reuse_allocate_no_buffers() {
     assert_eq!(ALLOCATIONS.with(Cell::get), 0);
     assert_eq!(session.memory(), memory);
 }
+
+#[test]
+fn bounded_generation_matches_greedy_oracle_and_continues_pending_token() {
+    use toklet::generation::{self, Input, Request, StopReason};
+    let f = Fixture::tiny();
+    let (c, w) = tiny_parts(&f);
+    let model = Model::new(c, w).unwrap();
+    let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
+    let cancel = std::sync::atomic::AtomicBool::new(false);
+    let mut events = Vec::new();
+    let report = generation::generate(
+        &mut session,
+        Request {
+            input: Input::Prompt(&[1, 7, 13, 3]),
+            max_new_tokens: 4,
+            stop_tokens: &[],
+        },
+        &cancel,
+        |e| {
+            events.push(e);
+            Ok(())
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        events.iter().map(|e| e.token_id).collect::<Vec<_>>(),
+        [47; 4]
+    );
+    assert_eq!(report.reason, StopReason::OutputLimit);
+    assert_eq!(report.sampled_tokens, 4);
+    assert_eq!(report.emitted_tokens, 4);
+    assert_eq!(report.prefill_tokens, 4);
+    assert_eq!(report.history_tokens, 8);
+    assert_eq!(report.evaluated_tokens, 7);
+    assert_eq!(report.pending_tokens, 1);
+    assert_eq!(report.first_token_seconds, Some(events[0].elapsed_seconds));
+    assert!(report.total_seconds >= events[3].elapsed_seconds);
+    let mut history = session.history().to_vec();
+    let mut scratch = model.scratch(32).unwrap();
+    let mut logits = [0.0; 64];
+    let mut expected = Vec::new();
+    for _ in 0..2 {
+        model
+            .forward(&history, 0, &mut scratch, &mut logits)
+            .unwrap();
+        let id = sampling::greedy(&logits).unwrap();
+        history.push(id);
+        expected.push(id);
+    }
+    events.clear();
+    let report = generation::generate(
+        &mut session,
+        Request {
+            input: Input::Continue,
+            max_new_tokens: 2,
+            stop_tokens: &[],
+        },
+        &cancel,
+        |e| {
+            events.push(e);
+            Ok(())
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        events.iter().map(|e| e.token_id).collect::<Vec<_>>(),
+        expected
+    );
+    assert_eq!(report.reused_tokens, 7);
+    assert_eq!(report.prefill_tokens, 1);
+    assert_eq!(session.history(), history);
+    assert_eq!(session.pending_len(), 1);
+}
+
+#[test]
+fn stop_ids_are_pending_and_hidden_and_zero_output_retains_cached_logits() {
+    use toklet::generation::{self, Input, Request, StopReason};
+    let f = Fixture::tiny();
+    let (c, w) = tiny_parts(&f);
+    let model = Model::new(c, w).unwrap();
+    let mut s = Session::new(&model, options(32, 2, 0)).unwrap();
+    let cancel = std::sync::atomic::AtomicBool::new(false);
+    let report = generation::generate(
+        &mut s,
+        Request {
+            input: Input::Prompt(&[1, 7, 13, 3]),
+            max_new_tokens: 4,
+            stop_tokens: &[47],
+        },
+        &cancel,
+        |_| panic!("stop token must not be visible"),
+    )
+    .unwrap();
+    assert_eq!(report.reason, StopReason::StopToken { token_id: 47 });
+    assert_eq!(report.sampled_tokens, 1);
+    assert_eq!(report.emitted_tokens, 0);
+    assert_eq!(s.history(), [1, 7, 13, 3, 47]);
+    assert_eq!(s.evaluated_len(), 4);
+    let report = generation::generate(
+        &mut s,
+        Request {
+            input: Input::Reset(&[1, 7, 13, 3]),
+            max_new_tokens: 0,
+            stop_tokens: &[],
+        },
+        &cancel,
+        |_| panic!(),
+    )
+    .unwrap();
+    assert_eq!(report.prefill_tokens, 4);
+    assert_eq!(report.first_token_seconds, None);
+    assert_eq!(s.pending_len(), 0);
+    let report = generation::generate(
+        &mut s,
+        Request {
+            input: Input::Prompt(&[1, 7, 13, 3]),
+            max_new_tokens: 1,
+            stop_tokens: &[],
+        },
+        &cancel,
+        |e| {
+            assert_eq!(e.token_id, 47);
+            Ok(())
+        },
+    )
+    .unwrap();
+    assert_eq!(report.reused_tokens, 4);
+    assert_eq!(report.prefill_tokens, 0);
+}
+
+#[test]
+fn generation_admission_rejects_all_invalid_inputs_before_state_changes() {
+    use toklet::generation::{self, Input, Request};
+    let f = Fixture::tiny();
+    let (c, w) = tiny_parts(&f);
+    let model = Model::new(c, w).unwrap();
+    let mut s = Session::new(&model, options(8, 2, 0)).unwrap();
+    s.append(&[1, 7]).unwrap();
+    s.evaluate().unwrap();
+    let logits = s.logits().unwrap().to_vec();
+    let cancel = std::sync::atomic::AtomicBool::new(false);
+    for request in [
+        Request {
+            input: Input::Reset(&[]),
+            max_new_tokens: 1,
+            stop_tokens: &[],
+        },
+        Request {
+            input: Input::Reset(&[64]),
+            max_new_tokens: 1,
+            stop_tokens: &[],
+        },
+        Request {
+            input: Input::Prompt(&[1, 2, 3, 4]),
+            max_new_tokens: 5,
+            stop_tokens: &[],
+        },
+        Request {
+            input: Input::Append(&[1, 2]),
+            max_new_tokens: 5,
+            stop_tokens: &[],
+        },
+        Request {
+            input: Input::Continue,
+            max_new_tokens: usize::MAX,
+            stop_tokens: &[],
+        },
+        Request {
+            input: Input::Continue,
+            max_new_tokens: 1,
+            stop_tokens: &[64],
+        },
+    ] {
+        assert!(generation::generate(&mut s, request, &cancel, |_| panic!()).is_err());
+        assert_eq!(s.history(), [1, 7]);
+        assert_eq!(s.evaluated_len(), 2);
+        assert_eq!(s.logits().unwrap(), logits);
+    }
+}
+
+#[test]
+fn cancellation_and_output_failure_preserve_recoverable_prefixes() {
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use toklet::generation::{self, Input, Request, StopReason};
+    let f = Fixture::tiny();
+    let (c, w) = tiny_parts(&f);
+    let model = Model::new(c, w).unwrap();
+    let mut s = Session::new(&model, options(32, 2, 0)).unwrap();
+    let cancel = AtomicBool::new(true);
+    let report = generation::generate(
+        &mut s,
+        Request {
+            input: Input::Prompt(&[1, 7, 13, 3]),
+            max_new_tokens: 4,
+            stop_tokens: &[],
+        },
+        &cancel,
+        |_| panic!(),
+    )
+    .unwrap();
+    assert_eq!(report.reason, StopReason::Cancelled);
+    assert!(s.history().is_empty());
+    cancel.store(false, Ordering::Relaxed);
+    let report = generation::generate(
+        &mut s,
+        Request {
+            input: Input::Prompt(&[1, 7, 13, 3]),
+            max_new_tokens: 4,
+            stop_tokens: &[],
+        },
+        &cancel,
+        |_| {
+            cancel.store(true, Ordering::Relaxed);
+            Ok(())
+        },
+    )
+    .unwrap();
+    assert_eq!(report.reason, StopReason::Cancelled);
+    assert_eq!(report.emitted_tokens, 1);
+    assert_eq!(s.evaluated_len(), 4);
+    assert_eq!(s.pending_len(), 1);
+    cancel.store(false, Ordering::Relaxed);
+    let report = generation::generate(
+        &mut s,
+        Request {
+            input: Input::Continue,
+            max_new_tokens: 1,
+            stop_tokens: &[],
+        },
+        &cancel,
+        |e| {
+            assert_eq!(e.token_id, 47);
+            Ok(())
+        },
+    )
+    .unwrap();
+    assert_eq!(report.prefill_tokens, 1);
+    assert_eq!(report.reused_tokens, 4);
+    s.discard_pending();
+    let before = s.history().to_vec();
+    let len = s.evaluated_len();
+    let result = generation::generate(
+        &mut s,
+        Request {
+            input: Input::Continue,
+            max_new_tokens: 1,
+            stop_tokens: &[],
+        },
+        &cancel,
+        |_| {
+            Err(std::io::Error::new(
+                std::io::ErrorKind::BrokenPipe,
+                "closed sink",
+            ))
+        },
+    );
+    assert!(matches!(result, Err(generation::Error::Output(_))));
+    assert_eq!(s.evaluated_len(), len);
+    assert_eq!(s.pending_len(), 1);
+    s.discard_pending();
+    assert_eq!(s.history(), before);
+    assert!(s.logits().is_some());
+}
+
+#[test]
+fn generation_events_and_statistics_allocate_no_numerical_buffers() {
+    use toklet::generation::{self, Input, Request};
+    let f = Fixture::tiny();
+    let (c, w) = tiny_parts(&f);
+    let model = Model::new(c, w).unwrap();
+    let mut s = Session::new(&model, options(32, 3, 0)).unwrap();
+    let cancel = std::sync::atomic::AtomicBool::new(false);
+    let mut ids = [0; 4];
+    ALLOCATIONS.with(|count| count.set(0));
+    TRACK.with(|track| track.set(true));
+    let report = generation::generate(
+        &mut s,
+        Request {
+            input: Input::Prompt(&[1, 7, 13, 3]),
+            max_new_tokens: 4,
+            stop_tokens: &[],
+        },
+        &cancel,
+        |e| {
+            ids[e.index] = e.token_id;
+            Ok(())
+        },
+    )
+    .unwrap();
+    TRACK.with(|track| track.set(false));
+    assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+    assert_eq!(ids, [47; 4]);
+    assert_eq!(report.emitted_tokens, 4);
+}
