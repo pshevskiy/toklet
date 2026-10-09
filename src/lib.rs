@@ -1,4 +1,6 @@
 //! Toklet is a small Rust inference engine for Apple Silicon.
 //!
-//! This initial package establishes the build and CLI shell. Numerical operations
-//! and model execution will be added in the implementation plan's later steps.
+//! Scalar CPU operations use borrowed contiguous slices and caller-owned output
+//! buffers. The CLI shell currently provides help and version information.
+
+pub mod cpu;

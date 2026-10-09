@@ -3,7 +3,7 @@ Toklet — Fast, lightweight LLM inference on Apple Silicon. An open-source Rust
 
 See the [implementation plan](PLAN.md) for milestones, dependencies, and acceptance criteria, and the [Apple LLM performance proposal](apple_llm_performance_plan.md) for the design rationale.
 
-The initial package contains a library and CLI shell. Model loading and generation are planned; the shell currently provides help and version information.
+The library currently provides scalar FP32 linear projections, embedding lookup, and in-place residual addition over checked slices. Model loading and generation are planned; the CLI shell currently provides help and version information.
 
 Use Rust 1.90 or newer. The library and CLI have no runtime dependencies and build without model downloads or Apple frameworks. Fetch the locked test dependencies once before running the offline checks:
 

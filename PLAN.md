@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026. Status: implementation started; M0.1–M0.3 are complete, M0 is in progress, and M1–M7 remain pending.
+Prepared 9 October 2026. Status: M0.1–M0.3 and M1.1 are complete; M0 and M1 are in progress, and M2–M7 remain pending.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -8,7 +8,7 @@ This plan translates the [Apple LLM performance proposal](apple_llm_performance_
 
 ## Starting point
 
-Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0.1 now provides the `toklet` package and CLI shell; M0.2 provides the frozen tiny-model arrays, NumPy oracle, and Rust fixture checks. M0.3 freezes the model/tokenizer, workload tokens, quality policy, and result schema. Rust engine code and baseline execution remain pending.
+Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0.1 now provides the `toklet` package and CLI shell; M0.2 provides the frozen tiny-model arrays, NumPy oracle, and Rust fixture checks. M0.3 freezes the model/tokenizer, workload tokens, quality policy, and result schema. M1.1 implements scalar linear, embedding, and residual operations. The Rust decoder and baseline execution remain pending.
 
 The environment reports Rust and Cargo 1.90.0, macOS 26.6.2 (25G83), and `/Library/Developer/CommandLineTools` as the active developer directory. Read-only inventory confirms Apple M1 Pro, MacBookPro18,3, and 16 GiB physical memory. AC power is attached with AC low-power mode disabled. `xcrun --find metal` fails; qualify an Xcode and Metal toolchain before engine GPU work. A hardware inventory does not establish numerical or performance qualification.
 
@@ -109,12 +109,14 @@ M0.3 evidence, 9 October 2026: [source identities](benchmarks/sources.json), [co
 
 Each ticket depends on the previous numerical building blocks and M0.2 fixtures.
 
-- [ ] **M1.1 Linear operations.** Implement matrix-vector and simple matrix-matrix multiplication, optional bias, embedding lookup, and residual addition. Validate dimensions at operation boundaries. Cover rectangular shapes, bias handling, and invalid input sizes.
+- [x] **M1.1 Linear operations.** Implement matrix-vector and simple matrix-matrix multiplication, optional bias, embedding lookup, and residual addition. Validate dimensions at operation boundaries. Cover rectangular shapes, bias handling, and invalid input sizes.
 - [ ] **M1.2 Stable elementwise and reduction operations.** Implement RMSNorm, max-subtracted softmax, SiLU, and gated MLP. Cover zero inputs, extreme finite values, and the policy for invalid or entirely masked rows.
 - [ ] **M1.3 Positions and causal attention.** Implement rotary positions with explicit pairing, scale, and absolute offsets; causal scaled attention; and grouped-query head mapping. Compare scores, probabilities, and attention outputs at several positions. Changing a future token must not affect an earlier output.
 - [ ] **M1.4 Complete the decoder.** Compose both layers, final normalization, tied output projection, and greedy selection. Initially recompute the complete prefix for each generated token. Define deterministic tie-breaking. Exit: saved intermediates, final logits, and a short greedy sequence agree with the independent reference within the frozen tolerances.
 
 Keep this full-prefix CPU path as the oracle for the cached implementation. It need not be fast.
+
+M1.1 evidence, 9 October 2026: [scalar CPU operations](src/cpu/mod.rs) implement row-major FP32 matrix-vector/matrix-matrix projection, optional bias, embedding lookup, and in-place residual addition without allocating buffers. Shape arithmetic, lengths, token bounds, and finite inputs are checked before writing; arithmetic errors require discarding any partial output. [Six targeted tests](tests/cpu_linear.rs) compare every saved linear projection across both layers and all five tiny cases, plus tied output, embeddings, residual composition, the manual example, and invalid-input behavior. Formatting, Clippy with warnings denied, all sixteen Rust tests, and whitespace checks passed. Astra independently reviewed bounds, ownership, accumulation order, and failure semantics and reported no findings. These are correctness references, with no performance qualification. M0.4 is next in the initial queue.
 
 ## M2 Run Qwen with persistent state
 
@@ -230,4 +232,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next implementation action is M1.1.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next implementation action is M0.4.
