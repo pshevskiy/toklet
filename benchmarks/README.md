@@ -151,6 +151,13 @@ The [scalar short record](results/2026-10-10-cpu-short.md) retains the first ten
 CPU samples and a native profile. It also documents a sustained sequence of
 this workload, its historical runner identity and an excluded warmup pause.
 
+The separate [projection candidate experiment](../docs/experiments/2026-10-10-cpu-tile.md)
+compares checked scalar and tiled FP64 accumulation on synthetic Qwen shapes,
+with three warmup pairs and ten alternating measured pairs per shape. Exact
+output-bit comparisons and two confirming runs support further qualification;
+the default decoder remains scalar. Synthetic kernel results do not complete
+M2.5 or establish an end-to-end optimization.
+
 The independent [llama.cpp worker](../tools/bench/llama/worker.cpp) uses the
 contract-pinned upstream source in a separate process. It has fixed 2,048-position
 FP32 KV, 128-token chunks and the same teacher-forced/cache protocol. The

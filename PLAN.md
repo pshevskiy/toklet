@@ -156,6 +156,19 @@ M2.5 application timing harness and external matrix, 10 October 2026 (milestone 
 
 ## M3 Bound CPU optimization and ANE research
 
+Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected
+[ordered FP64 projection tile](docs/experiments/2026-10-10-cpu-tile.md) preserves
+scalar accumulation order and default decoder execution. Two complete synthetic
+Qwen-shape runs use three warmup pairs and ten alternating measured pairs each,
+with exact scalar/candidate output bits. Representative 128-token projections
+improve 4.5–5.1×; single-token shapes improve 1.6–2.0×. These are microbenchmarks,
+not full workload acceptance. Seventy-four ordinary Rust tests, formatting,
+Clippy, release candidate build and eighteen offline Python checks pass. The
+candidate awaits separately reviewed engine qualification after the scalar
+M2.5 evidence completes; no milestone is marked complete by this preparation.
+Astra accepted the completed candidate code and independently verified both
+final records, raw checkpoints, identities, summaries and power settings.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [ ] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [ ] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.

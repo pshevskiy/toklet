@@ -10,9 +10,11 @@ use std::fmt;
 
 mod attention;
 mod reductions;
+mod tiled;
 
 pub use attention::{AttentionShape, CachedAttentionShape, attention, attention_cached, rotary};
 pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
+pub use tiled::matmul_f64_tiled;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Error {

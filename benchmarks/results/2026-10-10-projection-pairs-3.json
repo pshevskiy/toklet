@@ -1,0 +1,731 @@
+{
+  "format": "toklet-projection-pairs-v1",
+  "synthetic_weights": true,
+  "scope": "Complete validated FP32-storage/ordered-FP64 projection; bias absent. Allocation, data hashing, comparisons, transport, memory inspection excluded.",
+  "engine_revision": "337515e7780943b9f0f869f053808b543e9fbf26",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "src/cpu/mod.rs": "bd743cfcec580e1edf219c1342ad053adc35bfe4bd63cda8c7066a1f7cb36b3b",
+    "src/cpu/tiled.rs": "fe8a67820ddd82b05c7103374bc25096843c21ecc173c1be807d0e386fc9e6de",
+    "examples/cpu_projection_bench.rs": "3d798043179bd967eb4102ed18767e882c6c01b5fa8ea0ae17d3e147319b9c47",
+    "tools/bench/projection.py": "9220e9c81b831012d2d194bf2743be936ddbf5a143f9594ed1cf0fe8eb9460f9",
+    "tools/bench/mlx_baseline.py": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+    "Cargo.lock": "7e13db0c63cb370080711ed1d2f6f08a95a1a25516e16eb2a34b33e65db51151"
+  },
+  "binary_sha256": "cbf6d2a9b5340e9536ea87df12a9916fe943ce6ce620a4dcc6709dcbc7f52d88",
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)",
+  "build_command": "cargo build --locked --offline --release --example cpu_projection_bench",
+  "rustflags": null,
+  "device": "Apple M1 Pro",
+  "hardware_model": "MacBookPro18,3",
+  "physical_memory_bytes": 17179869184,
+  "os": "26.6.2",
+  "os_build": "25G83",
+  "architecture": "arm64",
+  "power_start": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+  "power_configuration_start": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+  "thermal_start": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded",
+  "rows": [
+    {
+      "tokens": 1,
+      "in_features": 896,
+      "out_features": 896,
+      "warmup_pairs": 3,
+      "measured_pairs": 10,
+      "samples": [
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.001003125,
+          "tiled_seconds": 0.0005215
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.001004333,
+          "tiled_seconds": 0.00052125
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.001004958,
+          "tiled_seconds": 0.000526042
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.001003166,
+          "tiled_seconds": 0.000521417
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.001002042,
+          "tiled_seconds": 0.000523084
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.001003459,
+          "tiled_seconds": 0.000517959
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.001004792,
+          "tiled_seconds": 0.000520458
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.001003125,
+          "tiled_seconds": 0.000524042
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.001003167,
+          "tiled_seconds": 0.000524167
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.00100325,
+          "tiled_seconds": 0.000522042
+        }
+      ],
+      "input_sha256": "88dfad11100b1188aab5a4ba2c8bed991656c503d3930bb0a967a7edbe188b47",
+      "weights_sha256": "f96a53e62e64cf36f5b8a93a104f01b0a33daf26f78116fdd69e1e80980533f6",
+      "output_sha256": "06f79612e5f2f4b46523be32fbff2b5148bccf4e9f811332e4badf2f41c9154a",
+      "bitwise_equal_every_pair": true,
+      "input_bytes": 3584,
+      "weights_bytes": 3211264,
+      "output_buffers_bytes": 7168,
+      "candidate_accumulator_stack_bytes": 128,
+      "summary": {
+        "scalar_median_seconds": 0.0010032085,
+        "scalar_min_seconds": 0.001002042,
+        "scalar_max_seconds": 0.001004958,
+        "tiled_median_seconds": 0.0005217710000000001,
+        "tiled_min_seconds": 0.000517959,
+        "tiled_max_seconds": 0.000526042,
+        "median_pair_speedup": 1.9226590557142589
+      },
+      "process_peak_footprint_bytes": 4292944
+    },
+    {
+      "tokens": 128,
+      "in_features": 896,
+      "out_features": 896,
+      "warmup_pairs": 3,
+      "measured_pairs": 10,
+      "samples": [
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.086018583,
+          "tiled_seconds": 0.0184905
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.086096375,
+          "tiled_seconds": 0.018550958
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.086109292,
+          "tiled_seconds": 0.018609708
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.086109375,
+          "tiled_seconds": 0.018483666
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.087151125,
+          "tiled_seconds": 0.018484875
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.086263792,
+          "tiled_seconds": 0.018994959
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.093139458,
+          "tiled_seconds": 0.019244542
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.089322417,
+          "tiled_seconds": 0.019113084
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.090856583,
+          "tiled_seconds": 0.019584125
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.091135167,
+          "tiled_seconds": 0.019944083
+        }
+      ],
+      "input_sha256": "d807dfa91e4c12cea4b821a4c8f261dcc0b488e79ee0d2cd86f645f42b02446f",
+      "weights_sha256": "f96a53e62e64cf36f5b8a93a104f01b0a33daf26f78116fdd69e1e80980533f6",
+      "output_sha256": "720bb882ccaf2cc3065fc406b23f31dad1123df32e23e8285a492a4b79f1d9dd",
+      "bitwise_equal_every_pair": true,
+      "input_bytes": 458752,
+      "weights_bytes": 3211264,
+      "output_buffers_bytes": 917504,
+      "candidate_accumulator_stack_bytes": 128,
+      "summary": {
+        "scalar_median_seconds": 0.0867074585,
+        "scalar_min_seconds": 0.086018583,
+        "scalar_max_seconds": 0.093139458,
+        "tiled_median_seconds": 0.018802333499999997,
+        "tiled_min_seconds": 0.018483666,
+        "tiled_max_seconds": 0.019944083,
+        "median_pair_speedup": 4.6465581765788215
+      },
+      "process_peak_footprint_bytes": 5783912
+    },
+    {
+      "tokens": 1,
+      "in_features": 896,
+      "out_features": 128,
+      "warmup_pairs": 3,
+      "measured_pairs": 10,
+      "samples": [
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.000143958,
+          "tiled_seconds": 7.525e-05
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.000146292,
+          "tiled_seconds": 7.5041e-05
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.000143583,
+          "tiled_seconds": 6.7334e-05
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.000143416,
+          "tiled_seconds": 6.7167e-05
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.00014375,
+          "tiled_seconds": 7.5167e-05
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.000143583,
+          "tiled_seconds": 7.4875e-05
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.000170834,
+          "tiled_seconds": 6.7292e-05
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.000143667,
+          "tiled_seconds": 7.525e-05
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.000143792,
+          "tiled_seconds": 7.5208e-05
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.000143667,
+          "tiled_seconds": 7.5292e-05
+        }
+      ],
+      "input_sha256": "88dfad11100b1188aab5a4ba2c8bed991656c503d3930bb0a967a7edbe188b47",
+      "weights_sha256": "07541d0a00858c01e6d7ec71fa9e16b1633096ada503ca3a4dd679654aa86799",
+      "output_sha256": "539503467e69b4d10f453d41cfda3c5fc907f8047c054d12d687c03aa25bff42",
+      "bitwise_equal_every_pair": true,
+      "input_bytes": 3584,
+      "weights_bytes": 458752,
+      "output_buffers_bytes": 1024,
+      "candidate_accumulator_stack_bytes": 128,
+      "summary": {
+        "scalar_median_seconds": 0.0001437085,
+        "scalar_min_seconds": 0.000143416,
+        "scalar_max_seconds": 0.000170834,
+        "tiled_median_seconds": 7.510399999999999e-05,
+        "tiled_min_seconds": 6.7167e-05,
+        "tiled_max_seconds": 7.5292e-05,
+        "median_pair_speedup": 1.9153495915118772
+      },
+      "process_peak_footprint_bytes": 5816680
+    },
+    {
+      "tokens": 128,
+      "in_features": 896,
+      "out_features": 128,
+      "warmup_pairs": 3,
+      "measured_pairs": 10,
+      "samples": [
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.01238675,
+          "tiled_seconds": 0.002683125
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.012346125,
+          "tiled_seconds": 0.002682583
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.012342875,
+          "tiled_seconds": 0.002687667
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.012455792,
+          "tiled_seconds": 0.002714208
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.01233175,
+          "tiled_seconds": 0.0027175
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.012342875,
+          "tiled_seconds": 0.002912125
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.012805125,
+          "tiled_seconds": 0.002917625
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.012499625,
+          "tiled_seconds": 0.002822917
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.0126785,
+          "tiled_seconds": 0.002782083
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.013200333,
+          "tiled_seconds": 0.002917417
+        }
+      ],
+      "input_sha256": "d807dfa91e4c12cea4b821a4c8f261dcc0b488e79ee0d2cd86f645f42b02446f",
+      "weights_sha256": "07541d0a00858c01e6d7ec71fa9e16b1633096ada503ca3a4dd679654aa86799",
+      "output_sha256": "0eb2beb21802d5caf96201bc28539d4138bcf68ef71bcdd7edafc12258d7374d",
+      "bitwise_equal_every_pair": true,
+      "input_bytes": 458752,
+      "weights_bytes": 458752,
+      "output_buffers_bytes": 131072,
+      "candidate_accumulator_stack_bytes": 128,
+      "summary": {
+        "scalar_median_seconds": 0.012421271000000001,
+        "scalar_min_seconds": 0.01233175,
+        "scalar_max_seconds": 0.013200333,
+        "tiled_median_seconds": 0.0027497915,
+        "tiled_min_seconds": 0.002682583,
+        "tiled_max_seconds": 0.002917625,
+        "median_pair_speedup": 4.547549687791083
+      },
+      "process_peak_footprint_bytes": 6422888
+    },
+    {
+      "tokens": 1,
+      "in_features": 896,
+      "out_features": 4864,
+      "warmup_pairs": 3,
+      "measured_pairs": 10,
+      "samples": [
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.005483041,
+          "tiled_seconds": 0.003028583
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.00551375,
+          "tiled_seconds": 0.003186833
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.005613167,
+          "tiled_seconds": 0.003172375
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.00615,
+          "tiled_seconds": 0.003352292
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.00594925,
+          "tiled_seconds": 0.003185167
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.006015167,
+          "tiled_seconds": 0.003372666
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.005925334,
+          "tiled_seconds": 0.003343834
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.005966917,
+          "tiled_seconds": 0.003361584
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.005894,
+          "tiled_seconds": 0.003311667
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.006029041,
+          "tiled_seconds": 0.0033555
+        }
+      ],
+      "input_sha256": "88dfad11100b1188aab5a4ba2c8bed991656c503d3930bb0a967a7edbe188b47",
+      "weights_sha256": "71dbfae7178e689628375c8601dfc6d5d879c20b09c43364f3cf571cd816a3c4",
+      "output_sha256": "6df9d15dd0da616bedb402adff55326c5feb8bff8a750bed22fb1a7148c33e81",
+      "bitwise_equal_every_pair": true,
+      "input_bytes": 3584,
+      "weights_bytes": 17432576,
+      "output_buffers_bytes": 38912,
+      "candidate_accumulator_stack_bytes": 128,
+      "summary": {
+        "scalar_median_seconds": 0.005937292,
+        "scalar_min_seconds": 0.005483041,
+        "scalar_max_seconds": 0.00615,
+        "tiled_median_seconds": 0.0033277504999999997,
+        "tiled_min_seconds": 0.003028583,
+        "tiled_max_seconds": 0.003372666,
+        "median_pair_speedup": 1.781636706319633
+      },
+      "process_peak_footprint_bytes": 23970152
+    },
+    {
+      "tokens": 128,
+      "in_features": 896,
+      "out_features": 4864,
+      "warmup_pairs": 3,
+      "measured_pairs": 10,
+      "samples": [
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.48596425,
+          "tiled_seconds": 0.109444625
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.483215208,
+          "tiled_seconds": 0.103853916
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.467312791,
+          "tiled_seconds": 0.103810792
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.46773475,
+          "tiled_seconds": 0.103910209
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.467708625,
+          "tiled_seconds": 0.103759833
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.468404416,
+          "tiled_seconds": 0.103871917
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.479169916,
+          "tiled_seconds": 0.103851209
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.4710665,
+          "tiled_seconds": 0.108727542
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.469251583,
+          "tiled_seconds": 0.104158042
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.467733833,
+          "tiled_seconds": 0.103793292
+        }
+      ],
+      "input_sha256": "d807dfa91e4c12cea4b821a4c8f261dcc0b488e79ee0d2cd86f645f42b02446f",
+      "weights_sha256": "71dbfae7178e689628375c8601dfc6d5d879c20b09c43364f3cf571cd816a3c4",
+      "output_sha256": "555deaf4723a8ad7c38022a2299bc172c69ec198a36e5a98a320307314725dc6",
+      "bitwise_equal_every_pair": true,
+      "input_bytes": 458752,
+      "weights_bytes": 17432576,
+      "output_buffers_bytes": 4980736,
+      "candidate_accumulator_stack_bytes": 128,
+      "summary": {
+        "scalar_median_seconds": 0.4688279995,
+        "scalar_min_seconds": 0.467312791,
+        "scalar_max_seconds": 0.48596425,
+        "tiled_median_seconds": 0.1038629165,
+        "tiled_min_seconds": 0.103759833,
+        "tiled_max_seconds": 0.109444625,
+        "median_pair_speedup": 4.505792862797362
+      },
+      "process_peak_footprint_bytes": 26509672
+    },
+    {
+      "tokens": 1,
+      "in_features": 4864,
+      "out_features": 896,
+      "warmup_pairs": 3,
+      "measured_pairs": 10,
+      "samples": [
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.005826833,
+          "tiled_seconds": 0.002864584
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.005823,
+          "tiled_seconds": 0.002998375
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.005998,
+          "tiled_seconds": 0.002948458
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.005956417,
+          "tiled_seconds": 0.002853917
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.005790583,
+          "tiled_seconds": 0.002850167
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.005922709,
+          "tiled_seconds": 0.002878667
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.005813292,
+          "tiled_seconds": 0.00289
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.005796084,
+          "tiled_seconds": 0.002871834
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.005796459,
+          "tiled_seconds": 0.0028645
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.005797375,
+          "tiled_seconds": 0.002864917
+        }
+      ],
+      "input_sha256": "645f0a548422b0ae613b78c2a50963c62608e4d29f240105193f737ad28b3504",
+      "weights_sha256": "71dbfae7178e689628375c8601dfc6d5d879c20b09c43364f3cf571cd816a3c4",
+      "output_sha256": "e228785fb345cea23d57c3487f26d123c74a70800652b12ca58c82dceb595988",
+      "bitwise_equal_every_pair": true,
+      "input_bytes": 19456,
+      "weights_bytes": 17432576,
+      "output_buffers_bytes": 7168,
+      "candidate_accumulator_stack_bytes": 128,
+      "summary": {
+        "scalar_median_seconds": 0.005818146,
+        "scalar_min_seconds": 0.005790583,
+        "scalar_max_seconds": 0.005998,
+        "tiled_median_seconds": 0.0028683755,
+        "tiled_min_seconds": 0.002850167,
+        "tiled_max_seconds": 0.002998375,
+        "median_pair_speedup": 2.027619831707229
+      },
+      "process_peak_footprint_bytes": 26526056
+    },
+    {
+      "tokens": 128,
+      "in_features": 4864,
+      "out_features": 896,
+      "warmup_pairs": 3,
+      "measured_pairs": 10,
+      "samples": [
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.511725167,
+          "tiled_seconds": 0.101540916
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.517437125,
+          "tiled_seconds": 0.100528916
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.511698291,
+          "tiled_seconds": 0.100523834
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.519296292,
+          "tiled_seconds": 0.100649459
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.512230083,
+          "tiled_seconds": 0.101298625
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.512483167,
+          "tiled_seconds": 0.101407875
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.513182583,
+          "tiled_seconds": 0.100500167
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.511891667,
+          "tiled_seconds": 0.100591
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.511987208,
+          "tiled_seconds": 0.100438625
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.51614,
+          "tiled_seconds": 0.106722958
+        }
+      ],
+      "input_sha256": "4c545693dd18fa933d271d790d141575b1230fad1a4f00bc179325c685753294",
+      "weights_sha256": "71dbfae7178e689628375c8601dfc6d5d879c20b09c43364f3cf571cd816a3c4",
+      "output_sha256": "63619c601d7896b06fe9b3530cb4e8f65ce092fee46cf491f29ceb2847c08a08",
+      "bitwise_equal_every_pair": true,
+      "input_bytes": 2490368,
+      "weights_bytes": 17432576,
+      "output_buffers_bytes": 917504,
+      "candidate_accumulator_stack_bytes": 128,
+      "summary": {
+        "scalar_median_seconds": 0.512356625,
+        "scalar_min_seconds": 0.511698291,
+        "scalar_max_seconds": 0.519296292,
+        "tiled_median_seconds": 0.10062022949999999,
+        "tiled_min_seconds": 0.100438625,
+        "tiled_max_seconds": 0.106722958,
+        "median_pair_speedup": 5.089579854584617
+      },
+      "process_peak_footprint_bytes": 26526056
+    },
+    {
+      "tokens": 1,
+      "in_features": 896,
+      "out_features": 151936,
+      "warmup_pairs": 3,
+      "measured_pairs": 10,
+      "samples": [
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.170191458,
+          "tiled_seconds": 0.106891
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.172779417,
+          "tiled_seconds": 0.108908584
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.170363459,
+          "tiled_seconds": 0.106452041
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.170753833,
+          "tiled_seconds": 0.107437625
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.174752583,
+          "tiled_seconds": 0.106471959
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.174647125,
+          "tiled_seconds": 0.106681458
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.170786375,
+          "tiled_seconds": 0.10708
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.171114583,
+          "tiled_seconds": 0.110428125
+        },
+        {
+          "candidate_first": true,
+          "scalar_seconds": 0.170606,
+          "tiled_seconds": 0.109225792
+        },
+        {
+          "candidate_first": false,
+          "scalar_seconds": 0.170948875,
+          "tiled_seconds": 0.10667875
+        }
+      ],
+      "input_sha256": "88dfad11100b1188aab5a4ba2c8bed991656c503d3930bb0a967a7edbe188b47",
+      "weights_sha256": "4c15c7a7ff65ade1ac42392a8b896bf883b59c1e02e6b5e907579f8fb49a3a36",
+      "output_sha256": "4d80b7272443d168d24593f3a4c7b47a3f9c62d60caae1564f522ceb03d278ed",
+      "bitwise_equal_every_pair": true,
+      "input_bytes": 3584,
+      "weights_bytes": 544538624,
+      "output_buffers_bytes": 1215488,
+      "candidate_accumulator_stack_bytes": 128,
+      "summary": {
+        "scalar_median_seconds": 0.170867625,
+        "scalar_min_seconds": 0.170191458,
+        "scalar_max_seconds": 0.174752583,
+        "tiled_median_seconds": 0.1069855,
+        "tiled_min_seconds": 0.106452041,
+        "tiled_max_seconds": 0.110428125,
+        "median_pair_speedup": 1.5935690983681783
+      },
+      "process_peak_footprint_bytes": 571572992
+    }
+  ],
+  "limitations": [
+    "Representative projection shapes with deterministic synthetic data; not trained weights, decoder quality, KV state, or full workload qualification.",
+    "Full input/weight finite validation is included in both operation timers. Median pair speedup is descriptive, not a retain decision.",
+    "Engine integration and a second confirming run are separate gates."
+  ],
+  "power_end": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+  "power_configuration_end": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+  "thermal_end": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+}
