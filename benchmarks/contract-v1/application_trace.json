@@ -1,0 +1,26 @@
+[
+  {
+    "content": "You are a Rust coding assistant. Describe changes and validation clearly.",
+    "role": "system"
+  },
+  {
+    "content": "Validate this rectangular linear operation and explain its shape.",
+    "role": "user"
+  },
+  {
+    "content": "I will compare the operation with the frozen NumPy fixture.",
+    "role": "assistant"
+  },
+  {
+    "content": "Tool result: formatting, Clippy, and all CPU tests passed. Continue with normalization.",
+    "role": "user"
+  },
+  {
+    "content": "The dimensions and fixture values agree. Normalization is the next task.",
+    "role": "assistant"
+  },
+  {
+    "content": "Tool result: the review has no findings. Commit the task and report its checks.",
+    "role": "user"
+  }
+]

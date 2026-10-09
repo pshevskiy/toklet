@@ -1,0 +1,519 @@
+{
+  "$id": "https://toklet.invalid/schemas/benchmark-result-v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "comparison_track": {
+      "enum": [
+        "controlled_engine",
+        "application"
+      ]
+    },
+    "contract_id": {
+      "const": "toklet-benchmark-contract-v1"
+    },
+    "energy": {
+      "additionalProperties": false,
+      "properties": {
+        "instrument": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "joules": {
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "scope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "joules",
+        "instrument",
+        "scope"
+      ],
+      "type": "object"
+    },
+    "identity": {
+      "additionalProperties": false,
+      "properties": {
+        "baseline_versions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "build_flags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "compiler": {
+          "type": "string"
+        },
+        "device": {
+          "additionalProperties": false,
+          "properties": {
+            "chip": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "os_build": {
+              "type": "string"
+            },
+            "os_version": {
+              "type": "string"
+            },
+            "physical_memory_bytes": {
+              "minimum": 0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "power_mode": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "thermal_conditions": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "chip",
+            "physical_memory_bytes",
+            "os_version",
+            "os_build",
+            "power_mode",
+            "thermal_conditions"
+          ],
+          "type": "object"
+        },
+        "engine_commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "model_revision": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "model_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "tokenizer_revision": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "tokenizer_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "working_tree_dirty": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "engine_commit",
+        "working_tree_dirty",
+        "baseline_versions",
+        "compiler",
+        "build_flags",
+        "model_revision",
+        "tokenizer_revision",
+        "model_sha256",
+        "tokenizer_sha256",
+        "device"
+      ],
+      "type": "object"
+    },
+    "memory": {
+      "additionalProperties": false,
+      "properties": {
+        "allocated_kv_bytes": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "engine_working_set_limit_bytes": {
+          "const": 6442450944
+        },
+        "logical_weights_bytes": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "measurement_instrument": {
+          "type": "string"
+        },
+        "peak_process_bytes": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "scratch_bytes": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "system_memory_pressure": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "engine_working_set_limit_bytes",
+        "logical_weights_bytes",
+        "allocated_kv_bytes",
+        "scratch_bytes",
+        "peak_process_bytes",
+        "system_memory_pressure",
+        "measurement_instrument"
+      ],
+      "type": "object"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "representation": {
+      "additionalProperties": false,
+      "properties": {
+        "group_size": {
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "kv_dtype": {
+          "enum": [
+            "BF16",
+            "FP32",
+            "FP16",
+            "Q8"
+          ]
+        },
+        "packed_format_version": {
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "weight_dtype": {
+          "enum": [
+            "BF16",
+            "FP32",
+            "FP16",
+            "Q4"
+          ]
+        }
+      },
+      "required": [
+        "weight_dtype",
+        "kv_dtype",
+        "packed_format_version",
+        "group_size"
+      ],
+      "type": "object"
+    },
+    "runtime": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "samples": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "decode_seconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "emitted_tokens": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "first_visible_text_seconds": {
+            "minimum": 0,
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "gpu_peak_allocation_bytes": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "prefill_seconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "process_peak_footprint_bytes": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "token_event_seconds": {
+            "items": {
+              "minimum": 0,
+              "type": "number"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "total_seconds": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "ttft_seconds": {
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "prefill_seconds",
+          "ttft_seconds",
+          "decode_seconds",
+          "total_seconds",
+          "first_visible_text_seconds",
+          "token_event_seconds",
+          "emitted_tokens",
+          "process_peak_footprint_bytes",
+          "gpu_peak_allocation_bytes"
+        ],
+        "type": "object"
+      },
+      "minItems": 10,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "setup": {
+      "additionalProperties": false,
+      "properties": {
+        "compilation_seconds": {
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "conversion_seconds": {
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "model_load_seconds": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "tokenization_seconds": {
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "warmup_repetitions": {
+          "minimum": 3,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "model_load_seconds",
+        "conversion_seconds",
+        "compilation_seconds",
+        "tokenization_seconds",
+        "warmup_repetitions"
+      ],
+      "type": "object"
+    },
+    "summary": {
+      "additionalProperties": false,
+      "properties": {
+        "decode_tokens_per_second_median": {
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "prefill_tokens_per_second_median": {
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "request_median_seconds": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "ttft_max_seconds": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "ttft_median_seconds": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "ttft_min_seconds": {
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "ttft_median_seconds",
+        "ttft_min_seconds",
+        "ttft_max_seconds",
+        "decode_tokens_per_second_median",
+        "request_median_seconds",
+        "prefill_tokens_per_second_median"
+      ],
+      "type": "object"
+    },
+    "timing_scope": {
+      "additionalProperties": false,
+      "properties": {
+        "completion_boundary": {
+          "type": "string"
+        },
+        "first_visible_text_policy": {
+          "type": "string"
+        },
+        "includes_detokenization": {
+          "type": "boolean"
+        },
+        "includes_sampling": {
+          "type": "boolean"
+        },
+        "includes_tokenization": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "includes_tokenization",
+        "includes_sampling",
+        "includes_detokenization",
+        "completion_boundary",
+        "first_visible_text_policy"
+      ],
+      "type": "object"
+    },
+    "workload": {
+      "additionalProperties": false,
+      "properties": {
+        "cache_state": {
+          "enum": [
+            "empty",
+            "exact_prefix_append",
+            "fully_cached",
+            "pending_sample",
+            "changed_prefix_replay"
+          ]
+        },
+        "context_capacity": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "continuation_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "output_steps": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "prompt_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "prompt_tokens": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "stop_policy": {
+          "type": "string"
+        },
+        "used_context_before_request": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "prompt_tokens",
+        "output_steps",
+        "context_capacity",
+        "used_context_before_request",
+        "prompt_sha256",
+        "continuation_sha256",
+        "stop_policy",
+        "cache_state"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "contract_id",
+    "comparison_track",
+    "runtime",
+    "identity",
+    "representation",
+    "workload",
+    "timing_scope",
+    "setup",
+    "samples",
+    "summary",
+    "memory",
+    "energy",
+    "notes"
+  ],
+  "title": "Toklet completed-work benchmark result v1",
+  "type": "object"
+}

@@ -1,0 +1,16 @@
+Result 0: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 1: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 2: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 3: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 4: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 5: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 6: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 7: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 8: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 9: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 10: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 11: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 12: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 13: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 14: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
+Result 15: the checked operation agrees with the saved oracle. The next task starts after review and a separate commit.
