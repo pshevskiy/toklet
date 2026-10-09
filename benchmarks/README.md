@@ -167,6 +167,11 @@ timings, exact state checks, rejected records and reproducible commands are in
 the report. This isolated experiment leaves the Rust decoder unchanged and does
 not qualify full-model execution or close M3.
 
+The [standalone Metal toolchain check](../docs/experiments/2026-10-10-metal-toolchain.md)
+records runtime compilation, three exact FP32 add/tail checks, device limits and
+MPS recommended strides. Its single timing observations are diagnostic only;
+FP16/model execution, matrix primitive evaluation and trace capture remain pending.
+
 The independent [llama.cpp worker](../tools/bench/llama/worker.cpp) uses the
 contract-pinned upstream source in a separate process. It has fixed 2,048-position
 FP32 KV, 128-token chunks and the same teacher-forced/cache protocol. The

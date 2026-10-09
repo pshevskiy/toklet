@@ -1,0 +1,180 @@
+{
+  "format": "toklet-metal-toolchain-probe-v1",
+  "driver_sha256": "2ae1dbb275f1b115baaa317eb5d7377c970bf5b57d3d78e7c34b62784bc10d87",
+  "compile_command": [
+    "xcrun",
+    "swiftc",
+    "-O",
+    "-warnings-as-errors",
+    "-target",
+    "arm64-apple-macosx15.0",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_probe.swift",
+    "-o",
+    "artifacts/metal-probe-v3/metal-probe"
+  ],
+  "engine_revision": {
+    "exit_code": 0,
+    "stdout": "b7c495d4a108b2a3f583efcad95d3af815055511\n",
+    "stderr": ""
+  },
+  "working_tree_status": {
+    "exit_code": 0,
+    "stdout": "?? tools/experiments/metal_probe.py\n?? tools/experiments/metal_probe.swift\n?? tools/experiments/test_metal_probe.py\n",
+    "stderr": ""
+  },
+  "compiler": {
+    "exit_code": 0,
+    "stdout": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0\n",
+    "stderr": "swift-driver version: 1.148.6 "
+  },
+  "active_developer_directory": {
+    "exit_code": 0,
+    "stdout": "/Library/Developer/CommandLineTools\n",
+    "stderr": ""
+  },
+  "sdk_path": {
+    "exit_code": 0,
+    "stdout": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk\n",
+    "stderr": ""
+  },
+  "sdk_version": {
+    "exit_code": 0,
+    "stdout": "26.5\n",
+    "stderr": ""
+  },
+  "physical_process_peak_bytes": null,
+  "actual_gpu_trace": null,
+  "energy": null,
+  "power_start": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  },
+  "completed": true,
+  "swift_compile_seconds": 1.2939484999515116,
+  "cold_process_wall_seconds": 0.5526494169607759,
+  "binary_sha256": "aed232836aa9dd02f162da40a9dcf8f9214cb601504b8f012f5d8e7698ba96f7",
+  "cases": [
+    {
+      "completed_host_seconds": 0.001200875,
+      "elements": 1,
+      "exact_outputs": true,
+      "gpu_seconds": 1.6375095583498478e-05,
+      "logical_buffer_bytes": 96,
+      "padding_untouched": true
+    },
+    {
+      "completed_host_seconds": 0.000234375,
+      "elements": 17,
+      "exact_outputs": true,
+      "gpu_seconds": 9.375042282044888e-06,
+      "logical_buffer_bytes": 288,
+      "padding_untouched": true
+    },
+    {
+      "completed_host_seconds": 0.000230959,
+      "elements": 257,
+      "exact_outputs": true,
+      "gpu_seconds": 1.4166696928441525e-05,
+      "logical_buffer_bytes": 3168,
+      "padding_untouched": true
+    }
+  ],
+  "chosen_threadgroup_width": 32,
+  "deployment_requirement": "macOS15; actual Mac execution only",
+  "device_name": "Apple M1 Pro",
+  "gpu_trace_capture_destination_supported": false,
+  "has_unified_memory": true,
+  "library_compile_seconds": 0.000743583,
+  "math_functions": "precise",
+  "math_mode": "safe",
+  "max_buffer_length": 9534832640,
+  "metal_language": "2.3",
+  "mps_recommended_row_bytes": [
+    {
+      "columns": 1,
+      "fp16_row_bytes": 2,
+      "fp32_row_bytes": 4
+    },
+    {
+      "columns": 3,
+      "fp16_row_bytes": 16,
+      "fp32_row_bytes": 16
+    },
+    {
+      "columns": 8,
+      "fp16_row_bytes": 16,
+      "fp32_row_bytes": 32
+    },
+    {
+      "columns": 896,
+      "fp16_row_bytes": 1792,
+      "fp32_row_bytes": 3584
+    },
+    {
+      "columns": 4864,
+      "fp16_row_bytes": 9728,
+      "fp32_row_bytes": 19456
+    }
+  ],
+  "mps_supports_device": true,
+  "os": "Version 26.6.2 (Build 25G83)",
+  "pipeline_creation_seconds": 0.000600291,
+  "pipeline_execution_width": 32,
+  "pipeline_max_threads_per_threadgroup": 1024,
+  "recommended_max_working_set_bytes": 12713115648,
+  "scope": "Functional toolchain/FP32-add only; no decoder, MPS multiplication, FP16, throughput, total memory, GPU trace or device-portability qualification. Single timings are diagnostic observations without warmups/repetitions.",
+  "source_sha256": "a99e561f93fbb9be73b038577b365d5cc0dc33f9719566886be2996f9f6f7137",
+  "supported_families": {
+    "apple1": true,
+    "apple2": true,
+    "apple3": true,
+    "apple4": true,
+    "apple5": true,
+    "apple6": true,
+    "apple7": true,
+    "apple8": false,
+    "apple9": false,
+    "apple10": false,
+    "mac2": true
+  },
+  "power_end": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  },
+  "metal_tool": {
+    "exit_code": 72,
+    "stdout": "",
+    "stderr": "xcrun: error: unable to find utility \"metal\", not a developer tool or in PATH\n"
+  },
+  "xctrace_tool": {
+    "exit_code": 72,
+    "stdout": "",
+    "stderr": "xcrun: error: unable to find utility \"xctrace\", not a developer tool or in PATH\n"
+  }
+}

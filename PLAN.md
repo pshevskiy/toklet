@@ -218,6 +218,17 @@ Use the public [CPU-and-Neural-Engine compute policy](https://developer.apple.co
 
 ## M4 Implement complete FP16 Metal execution
 
+Toolchain preparation, 10 October 2026 (M4 pending): the standalone
+[Metal check](docs/experiments/2026-10-10-metal-toolchain.md) compiles through
+public runtime APIs and passes exact FP32 add/buffer-tail checks on M1 Pro.
+It records queried device/pipeline limits, MPS availability/row strides and
+bounded build/run provenance. Standalone Metal/Instruments tools and GPU trace
+capture remain unavailable. This changes no Rust execution or dependency and
+does not qualify FP16, matrix multiplication, a decoder or a milestone.
+Astra accepted the completed toolchain task after checking resource safety,
+identities, functional records and both offline tests. Formatting/Clippy, all 74
+ordinary Rust tests and 33 offline Python checks pass.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
