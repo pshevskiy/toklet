@@ -6,8 +6,10 @@
 
 use std::fmt;
 
+mod attention;
 mod reductions;
 
+pub use attention::{AttentionShape, attention, rotary};
 pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
