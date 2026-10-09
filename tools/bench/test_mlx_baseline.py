@@ -45,6 +45,10 @@ class TimingTests(unittest.TestCase):
         summary = mlx_baseline.summarize([{"token_event_seconds": [0.1], "emitted_tokens": 1, "ttft_seconds": 0.1, "total_seconds": 0.1, "prefill_seconds": 0.1}], 1)
         self.assertIsNone(summary["decode_tokens_per_second_median"])
 
+    def test_fully_cached_has_no_prefill_throughput(self):
+        sample = {"token_event_seconds": [0.1], "emitted_tokens": 1, "ttft_seconds": 0.1, "total_seconds": 0.1, "prefill_seconds": 0.001, "prefill_tokens": 0}
+        self.assertIsNone(mlx_baseline.summarize([sample], 512)["prefill_tokens_per_second_median"])
+
     def test_invalid_event_records_are_rejected(self):
         for sample in [
             {"token_event_seconds": [1, 0], "emitted_tokens": 2},

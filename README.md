@@ -75,3 +75,11 @@ The [CLI qualification](benchmarks/results/2026-10-10-qwen-cli.md) records short
 cargo test --locked --offline --release --bin toklet full_pinned_tokenizer_matches_frozen_ids -- --ignored --nocapture
 python3 tools/reference/cli.py --output artifacts/qwen-cli-check
 ```
+
+The [profiling adapter](tools/bench/cpu.py) runs the frozen teacher-forced CPU
+workloads and records completed token timings without sampling or text output.
+See [benchmark instructions](benchmarks/README.md) for cache scenarios, raw
+checkpoints and the workload matrix. Load statistics include nested
+`conversion_seconds`; it is part of `load_seconds`, not an additional phase to
+sum. Profiling harness checks pass; complete performance qualification is still
+pending.

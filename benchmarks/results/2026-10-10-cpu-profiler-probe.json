@@ -1,0 +1,143 @@
+{
+  "records": [
+    {
+      "event": "ready",
+      "load_seconds": 2.119907167,
+      "conversion_seconds": 1.2125873119999973,
+      "memory_admitted_bytes": 2162579840,
+      "logical_weights_bytes": 1976131072,
+      "allocated_kv_bytes": 50331648,
+      "scratch_bytes": 667648,
+      "chunk_size": 8,
+      "context_capacity": 2048
+    },
+    {
+      "event": "sample",
+      "sample": {
+        "prefill_seconds": 1.6205043749999999,
+        "ttft_seconds": 1.620514459,
+        "decode_seconds": 2.0690106659999996,
+        "total_seconds": 3.689525542,
+        "token_event_seconds": [
+          1.620514459,
+          2.313841875,
+          3.005670375,
+          3.689525125
+        ],
+        "emitted_tokens": 4,
+        "reused_tokens": 0,
+        "prefill_tokens": 4,
+        "evaluated_tokens": 7,
+        "pending_tokens": 1
+      }
+    },
+    {
+      "event": "error",
+      "message": "invalid generation request: prompt plus requested output exceeds session capacity"
+    },
+    {
+      "event": "sample",
+      "sample": {
+        "prefill_seconds": 0.686877625,
+        "ttft_seconds": 0.686877666,
+        "decode_seconds": 0.0,
+        "total_seconds": 0.686878083,
+        "token_event_seconds": [
+          0.686877666
+        ],
+        "emitted_tokens": 1,
+        "reused_tokens": 7,
+        "prefill_tokens": 1,
+        "evaluated_tokens": 8,
+        "pending_tokens": 1
+      }
+    },
+    {
+      "event": "prepared",
+      "evaluated_tokens": 4,
+      "pending_tokens": 0
+    },
+    {
+      "event": "sample",
+      "sample": {
+        "prefill_seconds": 2.08e-07,
+        "ttft_seconds": 4.58e-07,
+        "decode_seconds": 0.0,
+        "total_seconds": 7.08e-07,
+        "token_event_seconds": [
+          4.58e-07
+        ],
+        "emitted_tokens": 1,
+        "reused_tokens": 4,
+        "prefill_tokens": 0,
+        "evaluated_tokens": 4,
+        "pending_tokens": 1
+      }
+    },
+    {
+      "event": "prepared",
+      "evaluated_tokens": 4,
+      "pending_tokens": 0
+    },
+    {
+      "event": "prepared",
+      "evaluated_tokens": 4,
+      "pending_tokens": 1
+    },
+    {
+      "event": "sample",
+      "sample": {
+        "prefill_seconds": 0.685735166,
+        "ttft_seconds": 0.68573525,
+        "decode_seconds": 0.0,
+        "total_seconds": 0.68573575,
+        "token_event_seconds": [
+          0.68573525
+        ],
+        "emitted_tokens": 1,
+        "reused_tokens": 4,
+        "prefill_tokens": 1,
+        "evaluated_tokens": 5,
+        "pending_tokens": 1
+      }
+    },
+    {
+      "event": "sample",
+      "sample": {
+        "prefill_seconds": 1.302419542,
+        "ttft_seconds": 1.302419625,
+        "decode_seconds": 0.0,
+        "total_seconds": 1.302419625,
+        "token_event_seconds": [
+          1.302419625
+        ],
+        "emitted_tokens": 1,
+        "reused_tokens": 5,
+        "prefill_tokens": 3,
+        "evaluated_tokens": 8,
+        "pending_tokens": 1
+      }
+    },
+    {
+      "event": "sample",
+      "sample": {
+        "prefill_seconds": 1.621504125,
+        "ttft_seconds": 1.62150425,
+        "decode_seconds": 0.0,
+        "total_seconds": 1.6215047089999999,
+        "token_event_seconds": [
+          1.62150425
+        ],
+        "emitted_tokens": 1,
+        "reused_tokens": 0,
+        "prefill_tokens": 4,
+        "evaluated_tokens": 4,
+        "pending_tokens": 1
+      }
+    }
+  ],
+  "peak": 2033928208,
+  "scope": "short functional profiling-worker probe; not a benchmark record or performance qualification",
+  "engine_base_revision": "dd3f5e63ec9e74a1b09a6d011c2cb21e2b75bb0d",
+  "binary_sha256": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+}

@@ -55,6 +55,9 @@ pub struct LoadReport {
     pub metadata_allowance_bytes: usize,
     pub admitted_load_bytes: usize,
     pub load_seconds: f64,
+    /// Nested within load time: payload decoding, finite checks and writes.
+    /// Excludes file reads, seeks, allocation and final model validation.
+    pub conversion_seconds: f64,
 }
 pub struct LoadedModel {
     pub model: Model,
@@ -365,6 +368,7 @@ struct Source {
     shards: Vec<Shard>,
     locations: BTreeMap<String, usize>,
     buffer: Vec<u8>,
+    conversion_seconds: f64,
 }
 impl Source {
     fn open(directory: &Path) -> Result<Self, Error> {
@@ -438,6 +442,7 @@ impl Source {
             shards,
             locations,
             buffer,
+            conversion_seconds: 0.0,
         })
     }
 
@@ -494,10 +499,12 @@ impl Source {
             mut remaining: usize,
             decode: impl Fn([u8; WIDTH]) -> f32,
             consume: &mut impl FnMut(f32) -> Result<(), Error>,
+            conversion_seconds: &mut f64,
         ) -> Result<(), Error> {
             while remaining > 0 {
                 let count = remaining.min(buffer.len());
                 io(&shard.path, shard.file.read_exact(&mut buffer[..count]))?;
+                let conversion_start = Instant::now();
                 for raw in buffer[..count].chunks_exact(WIDTH) {
                     let value = decode(raw.try_into().unwrap());
                     if !value.is_finite() {
@@ -505,6 +512,7 @@ impl Source {
                     }
                     consume(value)?;
                 }
+                *conversion_seconds += conversion_start.elapsed().as_secs_f64();
                 remaining -= count;
             }
             Ok(())
@@ -516,6 +524,7 @@ impl Source {
                 end - begin,
                 f32::from_le_bytes,
                 &mut consume,
+                &mut self.conversion_seconds,
             ),
             Dtype::F16 => stream(
                 shard,
@@ -523,6 +532,7 @@ impl Source {
                 end - begin,
                 |raw| f16::from_le_bytes(raw).to_f32(),
                 &mut consume,
+                &mut self.conversion_seconds,
             ),
             Dtype::BF16 => stream(
                 shard,
@@ -530,6 +540,7 @@ impl Source {
                 end - begin,
                 |raw| bf16::from_le_bytes(raw).to_f32(),
                 &mut consume,
+                &mut self.conversion_seconds,
             ),
             _ => Err(invalid("unsupported weight dtype")),
         }
@@ -731,6 +742,7 @@ pub fn load_qwen(directory: &Path, options: LoadOptions) -> Result<LoadedModel, 
         metadata_allowance_bytes: METADATA_ALLOWANCE_BYTES,
         admitted_load_bytes,
         load_seconds: start.elapsed().as_secs_f64(),
+        conversion_seconds: source.conversion_seconds,
     };
     Ok(LoadedModel { model, report })
 }

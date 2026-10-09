@@ -1,8 +1,10 @@
 //! Toklet is a small Rust inference engine for Apple Silicon.
 //!
 //! Scalar CPU operations use borrowed contiguous slices and caller-owned output
-//! buffers. The CLI shell currently provides help and version information.
+//! buffers. Bounded sessions support generation; the CLI owns tokenization,
+//! chat formatting and streamed text output.
 
+pub mod benchmark;
 pub mod cpu;
 pub mod generation;
 pub mod model;

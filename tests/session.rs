@@ -104,6 +104,71 @@ fn options(capacity: usize, chunk: usize, offset: usize) -> Options {
     }
 }
 
+#[test]
+fn teacher_forced_timing_keeps_exact_prefix_and_pending_state() {
+    use toklet::{benchmark::measure_teacher_forced, generation::Input};
+    let f = Fixture::tiny();
+    let (c, w) = tiny_parts(&f);
+    let model = Model::new(c, w).unwrap();
+    let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
+    let prompt = f.u32("cases.prompt.tokens");
+    let fixed = [47, 11, 3, 7];
+    let sample = measure_teacher_forced(&mut session, Input::Reset(&prompt), &fixed).unwrap();
+    assert_eq!(
+        (
+            sample.reused_tokens,
+            sample.prefill_tokens,
+            sample.evaluated_tokens,
+            sample.pending_tokens
+        ),
+        (0, 4, 7, 1)
+    );
+    assert_eq!(sample.token_event_seconds.len(), 4);
+    assert_eq!(sample.ttft_seconds, sample.token_event_seconds[0]);
+    assert_eq!(
+        sample.decode_seconds,
+        sample.token_event_seconds[3] - sample.ttft_seconds
+    );
+    assert!(sample.prefill_seconds <= sample.ttft_seconds);
+    assert!(sample.token_event_seconds.windows(2).all(|w| w[0] <= w[1]));
+    assert!(sample.total_seconds >= sample.token_event_seconds[3]);
+    let mut history = prompt;
+    history.extend(fixed);
+    assert_eq!(session.history(), history);
+    let sample = measure_teacher_forced(&mut session, Input::Continue, &[13]).unwrap();
+    assert_eq!(
+        (
+            sample.reused_tokens,
+            sample.prefill_tokens,
+            sample.evaluated_tokens,
+            sample.pending_tokens
+        ),
+        (7, 1, 8, 1)
+    );
+    assert_eq!(sample.decode_seconds, 0.0);
+    session.discard_pending();
+    let mut reference = [0.0; 64];
+    model
+        .forward(&history, 0, &mut model.scratch(32).unwrap(), &mut reference)
+        .unwrap();
+    assert_eq!(session.logits().unwrap(), reference);
+    let sample = measure_teacher_forced(&mut session, Input::Prompt(&history), &[17, 1]).unwrap();
+    assert_eq!((sample.reused_tokens, sample.prefill_tokens), (8, 0));
+    session.discard_pending();
+    let before = session.history().to_vec();
+    let logits = session.logits().unwrap().to_vec();
+    for (input, output) in [
+        (Input::Reset(&[1]), &[][..]),
+        (Input::Continue, &[64][..]),
+        (Input::Reset(&[1; 32]), &[1][..]),
+        (Input::Append(&[64]), &[1][..]),
+    ] {
+        assert!(measure_teacher_forced(&mut session, input, output).is_err());
+        assert_eq!(session.history(), before);
+        assert_eq!(session.logits().unwrap(), logits);
+    }
+}
+
 fn close(actual: &[f32], expected: &[f32]) {
     assert_eq!(actual.len(), expected.len());
     for (&a, &e) in actual.iter().zip(expected) {

@@ -18,20 +18,21 @@ def command(args):
     return subprocess.check_output(args, text=True, timeout=20).strip()
 
 
-def footprint_peak():
+def footprint_peak(pid=None):
     """Read our own kernel-reported physical peak, outside timed work."""
+    pid = os.getpid() if pid is None else pid
     with tempfile.TemporaryDirectory(prefix="toklet-footprint-") as directory:
         path = Path(directory) / "footprint.json"
         try:
             subprocess.run([
-                "/usr/bin/footprint", "-p", str(os.getpid()), "-f", "bytes",
+                "/usr/bin/footprint", "-p", str(pid), "-f", "bytes",
                 "--noCategories", "-j", str(path),
             ], check=True, capture_output=True, timeout=20)
             result = prepare.load_json(path)
             if result.get("unit") != "byte" or result.get("bytes per unit") != 1:
                 return None
             for process in result.get("processes", []):
-                if process.get("pid") == os.getpid():
+                if process.get("pid") == pid:
                     return process.get("auxiliary", {}).get("phys_footprint_peak")
         except (OSError, subprocess.SubprocessError, ValueError):
             return None
@@ -50,8 +51,9 @@ def summarize(samples, prompt_count):
             raise ValueError("Token timestamps must be monotonic")
         if len(events) > 1 and events[-1] > events[0]:
             rates.append((len(events) - 1) / (events[-1] - events[0]))
-        if sample["prefill_seconds"] > 0:
-            prefills.append(prompt_count / sample["prefill_seconds"])
+        prefill_count = sample.get("prefill_tokens", prompt_count)
+        if prefill_count > 0 and sample["prefill_seconds"] > 0:
+            prefills.append(prefill_count / sample["prefill_seconds"])
     ttft = [sample["ttft_seconds"] for sample in samples]
     return {
         "ttft_median_seconds": statistics.median(ttft),

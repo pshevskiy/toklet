@@ -208,6 +208,7 @@ struct Frontend {
     raw: bool,
     max: usize,
     load_seconds: f64,
+    conversion_seconds: f64,
     tokenizer_load_seconds: f64,
     memory_admitted_bytes: usize,
     requests: usize,
@@ -351,7 +352,7 @@ impl Frontend {
                 report.reason = StopReason::Cancelled;
             }
             let cancelled = report.reason == StopReason::Cancelled;
-            let stats = json!({"generation":report,"input_preparation_seconds":input_seconds,"load_seconds":if self.requests==0{self.load_seconds}else{0.0},"tokenizer_load_seconds":if self.requests==0{self.tokenizer_load_seconds}else{0.0},"memory_admitted_bytes":self.memory_admitted_bytes});
+            let stats = json!({"generation":report,"input_preparation_seconds":input_seconds,"load_seconds":if self.requests==0{self.load_seconds}else{0.0},"conversion_seconds":if self.requests==0{self.conversion_seconds}else{0.0},"tokenizer_load_seconds":if self.requests==0{self.tokenizer_load_seconds}else{0.0},"memory_admitted_bytes":self.memory_admitted_bytes});
             self.requests += 1;
             if self.json {
                 writeln!(out, "{}", json!({"event":"done","statistics":stats}))?;
@@ -469,6 +470,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         raw: a.raw,
         max: a.max,
         load_seconds: loaded.report.load_seconds,
+        conversion_seconds: loaded.report.conversion_seconds,
         tokenizer_load_seconds,
         memory_admitted_bytes: session
             .memory()

@@ -96,3 +96,51 @@ or real-model suite:
 ```sh
 .venv/bin/python tools/bench/prepare.py --fetch-weights
 ```
+
+The scalar CPU [worker](../examples/cpu_bench.rs) and [adapter](../tools/bench/cpu.py)
+run fixed teacher-forced token IDs, excluding tokenization, sampling,
+detokenization and JSON transport. Each request completes its final distribution
+before its token timestamp and leaves the last fixed output token pending. Cache
+preparation is outside the measured request. Admission and bounded timestamp
+storage are also outside timers. TTFT/total include request state changes;
+prefill time covers only evaluation, decode time covers the 127 subsequent
+distribution intervals, and total includes staging the final pending ID.
+
+```sh
+cargo build --locked --offline --release --example cpu_bench
+.venv/bin/python tools/bench/cpu.py --workload short --output benchmarks/raw/cpu-short.json --profile benchmarks/raw/cpu-short.sample.txt
+.venv/bin/python tools/bench/cpu.py --workload medium --output benchmarks/raw/cpu-medium.json
+.venv/bin/python tools/bench/cpu.py --workload long --output benchmarks/raw/cpu-long.json
+.venv/bin/python tools/bench/cpu.py --workload boundary --output benchmarks/raw/cpu-boundary.json
+.venv/bin/python tools/bench/cpu.py --workload append --output benchmarks/raw/cpu-append.json
+.venv/bin/python tools/bench/cpu.py --workload cached --output benchmarks/raw/cpu-cached.json
+.venv/bin/python tools/bench/cpu.py --workload pending --output benchmarks/raw/cpu-pending.json
+.venv/bin/python tools/bench/cpu.py --workload changed --output benchmarks/raw/cpu-changed.json
+```
+
+Run sequentially with other performance jobs stopped. The adapter always uses
+three warmups and ten samples, checks 1,921 + 128 admission rejection before
+warmup, and retains each measured raw row immediately in `.json.samples.jsonl`.
+The final schema-validated record is written only after clean worker exit.
+Existing record/profile/raw paths are rejected before model loading. An optional
+macOS `sample` trace runs during the first warmup; its time is separate from
+measured requests. The adapter terminates/reaps only its own worker on errors or
+Ctrl-C, and a 24-hour watchdog bounds unexpected hangs. Interrupted raw rows
+remain evidence, but are not complete benchmark records and cannot be silently
+resumed or overwritten.
+
+`prepare` in the worker evaluates a complete base history; `stage` appends a
+pending ID without computation. Exact append measures 64 new inputs after 512
+cached positions; fully cached input measures no prefill tokens; pending output
+measures one prefill token; changed input replays all 512. The pending record
+identifies the 512-token base plus the contract's pending ID 2077 (513 history
+positions). Pre-load source hashing warms the file cache. Conversion is a nested
+part of total load: byte decoding, finite checks and storage, excluding reads,
+allocation and final model validation. It must not be added to total load again.
+
+[The short worker probe](results/2026-10-10-cpu-profiler-probe.json) is functional
+evidence for this harness, with eleven worker records and a 2,033,928,208-byte
+own-child peak. It is not a workload benchmark. The full matrix, controlled
+external comparison, sustained/application records and qualification are still
+pending. Native BF16 MLX records remain on the application track until compatible
+FP32 measurements are available.

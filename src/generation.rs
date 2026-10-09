@@ -19,6 +19,7 @@ use std::{
     time::Instant,
 };
 
+#[derive(Clone, Copy)]
 pub enum Input<'a> {
     Prompt(&'a [u32]),
     Append(&'a [u32]),
