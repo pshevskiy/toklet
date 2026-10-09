@@ -14,6 +14,49 @@ fn close(actual: &[f32], expected: &[f32]) {
 }
 
 #[test]
+fn fp64_projection_accumulation_preserves_small_terms_and_reference_inputs() {
+    let mut output = [0.0];
+    cpu::matvec(&[1.0; 3], &[1e8, 1.0, -1e8], None, &mut output, 3, 1).unwrap();
+    assert_eq!(output, [0.0]);
+    cpu::matvec_f64(
+        &[1.0; 3],
+        &[1e8, 1.0, -1e8],
+        Some(&[0.25]),
+        &mut output,
+        3,
+        1,
+    )
+    .unwrap();
+    assert_eq!(output, [1.25]);
+    let fixture = Fixture::tiny();
+    let mut manual = [0.0; 4];
+    cpu::matmul_f64(
+        &fixture.f32("manual.inputs"),
+        &fixture.f32("manual.weight"),
+        Some(&fixture.f32("manual.bias")),
+        &mut manual,
+        2,
+        3,
+        2,
+    )
+    .unwrap();
+    assert_eq!(manual, [-3.75, 14.5, -2.75, 5.0]);
+    output[0] = 123.0;
+    assert!(matches!(
+        cpu::matvec_f64(&[1.0; 3], &[1.0, f32::NAN, 1.0], None, &mut output, 3, 1),
+        Err(Error::NonFinite { .. })
+    ));
+    assert_eq!(output, [123.0]);
+    assert!(matches!(
+        cpu::matvec_f64(&[f32::MAX], &[2.0], None, &mut output, 1, 1),
+        Err(Error::NonFinite {
+            tensor: "output",
+            ..
+        })
+    ));
+}
+
+#[test]
 fn rectangular_manual_projection_supports_batch_bias_and_matvec() {
     let fixture = Fixture::tiny();
     let input = fixture.f32("manual.inputs");

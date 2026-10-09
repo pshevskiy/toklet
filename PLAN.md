@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026. Status: M0, M1, and M2.1 are complete; M2 is in progress, and M3–M7 remain pending.
+Prepared 9 October 2026. Status: M0, M1, and M2.1–M2.2 are complete; M2 is in progress, and M3–M7 remain pending.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -8,7 +8,7 @@ This plan translates the [Apple LLM performance proposal](apple_llm_performance_
 
 ## Starting point
 
-Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0 establishes the package, frozen independent fixtures, workloads, quality gates, and the first native MLX baseline. M1 implements the complete scalar tiny decoder and greedy trace. M2.1 loads the pinned Qwen checkpoint into validated FP32 weights; real-model numerical parity and cached sessions remain pending.
+Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0 establishes the package, frozen independent fixtures, workloads, quality gates, and the first native MLX baseline. M1 implements the complete scalar tiny decoder and greedy trace. M2.1 loads the pinned Qwen checkpoint into validated FP32 weights; M2.2 qualifies its full-prefix forward pass on short independent numerical probes. Cached sessions remain pending.
 
 The environment reports Rust and Cargo 1.90.0, macOS 26.6.2 (25G83), and `/Library/Developer/CommandLineTools` as the active developer directory. Read-only inventory confirms Apple M1 Pro, MacBookPro18,3, and 16 GiB physical memory. AC power is attached with AC low-power mode disabled. `xcrun --find metal` fails; qualify an Xcode and Metal toolchain before engine GPU work. A hardware inventory does not establish numerical or performance qualification.
 
@@ -19,7 +19,7 @@ The environment reports Rust and Cargo 1.90.0, macOS 26.6.2 (25G83), and `/Libra
 | Workload | One interactive session, batch one, bounded output and context |
 | Learning model | Vocabulary 64; 2 layers; hidden size 32; 4 query heads; 2 KV heads; head dimension 8; MLP size 64; capacity 32 |
 | First pretrained model | A pinned revision of Qwen/Qwen2.5-0.5B-Instruct |
-| CPU execution | Scalar FP32 operations over slices; independent Python reference |
+| CPU execution | Scalar operations over slices with FP32 storage; qualified FP64 projection/reduction accumulation; independent Python reference |
 | Model import | Local safetensors, config, and tokenizer assets; explicit dtype conversion |
 | Initial context | Short fixtures first, then at most 2,048 prompt plus output tokens |
 | Metal execution | FP16 storage with qualified accumulation; compatible kernels first |
@@ -129,7 +129,7 @@ M1.4 evidence, 9 October 2026: [immutable decoder and scratch](src/model/mod.rs)
 ## M2 Run Qwen with persistent state
 
 - [x] **M2.1 Import and validate Qwen weights.** Reuse safetensors/config parsers and a half-precision conversion library. Inspect actual dtypes; explicitly convert BF16/FP16 to FP32. Validate expected names, shapes, Q/K/V bias presence, normalization epsilon, rotary parameters, and shared embedding/output storage. Support an index manifest if the selected artifact is sharded. Reject unsupported configurations with a useful error. Convert tensor by tensor to bound peak memory.
-- [ ] **M2.2 Compare the real forward pass.** Export selected intermediates and logits from pinned Transformers in FP32 with dropout disabled. Compare short fixed token sequences, including more than one layer and nonzero positions. Retain small selected probes in Git and regenerate larger outputs locally. Do this before judging decoded prose.
+- [x] **M2.2 Compare the real forward pass.** Export selected intermediates and logits from pinned Transformers in FP32 with dropout disabled. Compare short fixed token sequences, including more than one layer and nonzero positions. Retain small selected probes in Git and regenerate larger outputs locally. Do this before judging decoded prose.
 - [ ] **M2.3 Add the KV session.** Implement bounded per-layer K/V and reusable scratch, evaluated versus sampled positions, and exact append. Compare one-shot, irregularly chunked, and token-by-token execution with full-prefix recomputation. Prove position offsets and capacity checks at the 2,048-token boundary.
 - [ ] **M2.4 Add bounded CLI generation.** Reuse the tokenizer parser; reproduce the pinned template and special-token behavior with golden token IDs. Accept local model paths, prompt or token input, maximum output, context capacity, and backend selection. Add greedy streaming, EOS/stop handling, reset, continuation, cancellation, and statistics. Keep template rendering in the CLI layer.
 - [ ] **M2.5 Add engine profiling and benchmark records.** Record model load/conversion, tokenization, prefill, first token, decode, sampling, and peak memory separately. Run the workload matrix and compare with the external baselines under the documented comparison track. CPU slowness is acceptable here; correctness, state behavior, and timing boundaries are the gate.
@@ -139,6 +139,8 @@ M2.1 follows M1.4; M2.2 follows M2.1. M2.3 can start on the tiny model after M1.
 Exit: a local Qwen session generates, appends a user/tool-result suffix, cancels, resumes or replays explicitly, and resets without cache corruption. The 1,920-input/128-output workload succeeds; a request exceeding capacity fails before evaluation. Loading and execution stay within the admitted memory budget.
 
 M2.1 evidence, 9 October 2026: [local loader](src/weights/mod.rs) uses pinned safetensors, Serde, and half-precision parsers; validates config, tensor metadata and indexed shards before allocating FP32 weights; streams conversion with one 64 KiB buffer; and checks optional tied output tensors without retaining a duplicate table. [Seven ordinary loader tests](tests/weights.rs) cover tiny single/sharded oracle parity, independent FP16/BF16 bit values, conversion chunk boundaries/tails, tied heads, unsupported config/budget, and malformed artifacts. All forty-two ordinary Rust tests, formatting, Clippy with warnings denied, release compilation, and whitespace checks passed. The explicit SHA-verified pinned Qwen release check loaded all 290 BF16 tensors into 1,976,131,072 logical FP32 bytes, with physical process peak 1,981,335,520 bytes below 6 GiB; the [load report](benchmarks/results/2026-10-09-qwen-load.md) records identity, command and limitations. Astra accepted without findings, including the final chunk-boundary test. The metadata allowance is an estimate, and the single warm-cache load time is functional evidence; no real-model numerical or performance qualification is claimed. M2.2 is next.
+
+M2.2 evidence, 9 October 2026: the [pinned Transformers exporter](tools/reference/qwen.py) captures 228 arrays over four short cases, including changed future tokens, absolute offset five, and one-token execution. [Versioned probes](tests/fixtures/qwen-v2/manifest.json) anchor selected values and complete-array hashes, shapes, and byte counts; the [explicit suite](tests/qwen_forward.rs) verifies source identity and compares all full intermediate arrays at layers 0, 1, and 23, final normalization, and all-position logits. Scalar model projections now accumulate in FP64 with FP32 storage, preserving the original FP32 kernels. All forty-four ordinary tests, formatting, Clippy with warnings denied, both fixture integrity checks, and the explicit real-model release suite passed. Maximum tolerance fraction is 0.634609, maximum logit absolute error is 0.000785828, all greedy IDs agree, and short teacher-forced NLL differences are at most 0.000217482 nats. The [qualification report](benchmarks/results/2026-10-09-qwen-forward.md) records an explicit v1-to-v2 policy change derived from independent FP32/FP64 envelopes and equivalent-prefix reference variation; tiny-v1 and historical real-model v1 remain unchanged. Astra independently verified the policy and accepted after complete-array identity anchors were added and requalified. This establishes short numerical parity, not held-out quality, longer-context, or performance qualification. M2.3 is next.
 
 ## M3 Bound CPU optimization and ANE research
 
@@ -242,4 +244,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next implementation action is M2.2.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next implementation action is M2.3.

@@ -1,4 +1,6 @@
-//! Readable scalar FP32 kernels, with checked operation boundaries.
+//! Readable scalar kernels with FP32 storage and checked operation boundaries.
+//! The original FP32 projections remain available alongside qualified FP64
+//! accumulation operations for the decoder.
 //!
 //! Kernels allocate no buffers. Dimension, length, token and input-finiteness
 //! errors are detected before writing output. Arithmetic overflow can leave a
@@ -115,6 +117,49 @@ pub fn matmul(
     in_features: usize,
     out_features: usize,
 ) -> Result<(), Error> {
+    matmul_impl::<false>(
+        input,
+        weights,
+        bias,
+        output,
+        tokens,
+        in_features,
+        out_features,
+    )
+}
+
+/// FP32 storage projection with FP64 products and accumulation, then one FP32
+/// rounding after optional bias. This qualified correctness path limits error
+/// accumulation through the real decoder; [`matmul`] retains the FP32 oracle.
+pub fn matmul_f64(
+    input: &[f32],
+    weights: &[f32],
+    bias: Option<&[f32]>,
+    output: &mut [f32],
+    tokens: usize,
+    in_features: usize,
+    out_features: usize,
+) -> Result<(), Error> {
+    matmul_impl::<true>(
+        input,
+        weights,
+        bias,
+        output,
+        tokens,
+        in_features,
+        out_features,
+    )
+}
+
+fn matmul_impl<const PRECISE: bool>(
+    input: &[f32],
+    weights: &[f32],
+    bias: Option<&[f32]>,
+    output: &mut [f32],
+    tokens: usize,
+    in_features: usize,
+    out_features: usize,
+) -> Result<(), Error> {
     nonzero(tokens, "tokens")?;
     nonzero(in_features, "in_features")?;
     nonzero(out_features, "out_features")?;
@@ -141,13 +186,26 @@ pub fn matmul(
             .zip(output_row)
             .enumerate()
         {
-            let mut sum = 0.0_f32;
-            for (&activation, &weight) in input_row.iter().zip(weight_row) {
-                sum += activation * weight;
-            }
-            if let Some(bias) = bias {
-                sum += bias[feature];
-            }
+            // The const choice is statically dispatched, outside scalar work.
+            let sum = if PRECISE {
+                let mut sum = 0.0_f64;
+                for (&activation, &weight) in input_row.iter().zip(weight_row) {
+                    sum += f64::from(activation) * f64::from(weight);
+                }
+                if let Some(bias) = bias {
+                    sum += f64::from(bias[feature]);
+                }
+                sum as f32
+            } else {
+                let mut sum = 0.0_f32;
+                for (&activation, &weight) in input_row.iter().zip(weight_row) {
+                    sum += activation * weight;
+                }
+                if let Some(bias) = bias {
+                    sum += bias[feature];
+                }
+                sum
+            };
             if !sum.is_finite() {
                 return Err(Error::NonFinite {
                     tensor: "output",
@@ -170,6 +228,18 @@ pub fn matvec(
     out_features: usize,
 ) -> Result<(), Error> {
     matmul(input, weights, bias, output, 1, in_features, out_features)
+}
+
+/// Single-token form of [`matmul_f64`].
+pub fn matvec_f64(
+    input: &[f32],
+    weights: &[f32],
+    bias: Option<&[f32]>,
+    output: &mut [f32],
+    in_features: usize,
+    out_features: usize,
+) -> Result<(), Error> {
+    matmul_f64(input, weights, bias, output, 1, in_features, out_features)
 }
 
 /// Copy token rows from an embedding table `[vocab_size, hidden]` to

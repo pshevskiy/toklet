@@ -2,6 +2,8 @@
 //!
 //! Numerical execution uses preallocated caller-owned scratch. Diagnostic
 //! traces allocate separately; tokenization and generation state live elsewhere.
+//! Projection products/reductions, normalization and softmax use FP64 arithmetic
+//! with FP32 storage; rotary combination, activations and residuals remain FP32.
 
 use crate::cpu::{self, AttentionShape, finite, length, nonzero, product};
 use std::fmt;
@@ -247,7 +249,7 @@ impl Model {
         length("logits", logits.len(), self.config.vocab_size)?;
         self.run(tokens, offset, scratch, None)?;
         let start = (tokens.len() - 1) * self.config.hidden_size;
-        cpu::matvec(
+        cpu::matvec_f64(
             &scratch.norm[start..start + self.config.hidden_size],
             &self.weights.embedding,
             None,
@@ -268,7 +270,7 @@ impl Model {
         self.admit(tokens, offset, scratch)?;
         let mut trace = Trace::new(&self.config, tokens.len())?;
         self.run(tokens, offset, scratch, Some(&mut trace))?;
-        cpu::matmul(
+        cpu::matmul_f64(
             &scratch.norm[..tokens.len() * self.config.hidden_size],
             &self.weights.embedding,
             None,
@@ -361,7 +363,7 @@ impl Model {
                 c.hidden_size,
                 c.rms_norm_eps,
             )?;
-            cpu::matmul(
+            cpu::matmul_f64(
                 norm,
                 &layer.q.weight,
                 Some(&layer.q.bias),
@@ -370,7 +372,7 @@ impl Model {
                 c.hidden_size,
                 c.hidden_size,
             )?;
-            cpu::matmul(
+            cpu::matmul_f64(
                 norm,
                 &layer.k.weight,
                 Some(&layer.k.bias),
@@ -379,7 +381,7 @@ impl Model {
                 c.hidden_size,
                 c.kv_heads * c.head_dim,
             )?;
-            cpu::matmul(
+            cpu::matmul_f64(
                 norm,
                 &layer.v.weight,
                 Some(&layer.v.bias),
@@ -404,7 +406,7 @@ impl Model {
                     head_dim: c.head_dim,
                 },
             )?;
-            cpu::matmul(
+            cpu::matmul_f64(
                 context,
                 &layer.o,
                 None,
@@ -437,7 +439,7 @@ impl Model {
                 c.hidden_size,
                 c.rms_norm_eps,
             )?;
-            cpu::matmul(
+            cpu::matmul_f64(
                 norm,
                 &layer.gate,
                 None,
@@ -446,7 +448,7 @@ impl Model {
                 c.hidden_size,
                 c.intermediate_size,
             )?;
-            cpu::matmul(
+            cpu::matmul_f64(
                 norm,
                 &layer.up,
                 None,
@@ -456,7 +458,7 @@ impl Model {
                 c.intermediate_size,
             )?;
             cpu::gated_silu(gate, up, gated)?;
-            cpu::matmul(
+            cpu::matmul_f64(
                 gated,
                 &layer.down,
                 None,

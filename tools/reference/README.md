@@ -1,5 +1,7 @@
 # Independent tiny FP32 reference
 
+For the separate pretrained qualification, see the [Qwen forward report](../../benchmarks/results/2026-10-09-qwen-forward.md). Tiny-v1's gates and files remain unchanged.
+
 `tiny.py` uses NumPy to export the complete two-layer learning model from
 `PLAN.md`. Rust tests read the frozen arrays in
 [`tests/fixtures/tiny-v1`](../../tests/fixtures/tiny-v1/manifest.json); they do not
@@ -73,3 +75,25 @@ y[1] = 0.5*2 + (-2)*(-1) + 3*4 - 0.5 = 14.5
 
 A second input `[-1, 0, 2]` gives `[-2.75, 5]`. Both rows and their actual arrays
 are frozen and checked independently in Rust.
+
+`qwen.py` explicitly loads the pinned local BF16 source into Transformers CPU
+FP32, disables dropout/cache and uses eager attention. Module hooks capture
+layers 0, 1 and 23; an independent functional all-FP64 pass over the same weight
+values measures the reference envelope. Full arrays remain local; selected values
+and every-position argmax are versioned. No code from the Rust decoder participates
+in reference export.
+
+```sh
+.venv/bin/python tools/reference/qwen.py --output artifacts/qwen-forward-v2 --probes-output tests/fixtures/qwen-v2
+python3 tools/reference/qwen.py --check tests/fixtures/qwen-v2
+cargo test --locked --offline --release --test qwen_forward pinned_qwen_fp32_matches_full_transformers_forward -- --ignored --nocapture
+```
+
+Export directories must be new. In an existing checkout, regenerate into fresh
+candidate directories and verify identities before replacing local full artifacts;
+committed reference files stay immutable. Ordinary tests check the selected probes
+without Transformers or source weights. V1 is retained as evidence of the initial
+per-case policy that failed to cover equivalent-prefix reference shape variation;
+v2 freezes operation/layer-specific limits across the four independent reference
+cases. The linked report records the reason and measured differences. These short
+probes do not establish held-out quality or long-context qualification.
