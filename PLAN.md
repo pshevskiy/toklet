@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026. Status: M0 and M1.1–M1.3 are complete; M1 is in progress, and M2–M7 remain pending.
+Prepared 9 October 2026. Status: M0 and M1 are complete; M2–M7 remain pending.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -8,7 +8,7 @@ This plan translates the [Apple LLM performance proposal](apple_llm_performance_
 
 ## Starting point
 
-Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0.1 now provides the `toklet` package and CLI shell; M0.2 provides the frozen tiny-model arrays, NumPy oracle, and Rust fixture checks. M0.3 freezes the model/tokenizer, workload tokens, quality policy, and result schema. M0.4 records the first native MLX baseline. M1.1 implements scalar linear, embedding, and residual operations. The Rust decoder remains pending.
+Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0 establishes the package, frozen independent fixtures, workloads, quality gates, and the first native MLX baseline. M1 implements the complete scalar tiny decoder and greedy trace. Pretrained loading and cached sessions remain pending.
 
 The environment reports Rust and Cargo 1.90.0, macOS 26.6.2 (25G83), and `/Library/Developer/CommandLineTools` as the active developer directory. Read-only inventory confirms Apple M1 Pro, MacBookPro18,3, and 16 GiB physical memory. AC power is attached with AC low-power mode disabled. `xcrun --find metal` fails; qualify an Xcode and Metal toolchain before engine GPU work. A hardware inventory does not establish numerical or performance qualification.
 
@@ -114,7 +114,7 @@ Each ticket depends on the previous numerical building blocks and M0.2 fixtures.
 - [x] **M1.1 Linear operations.** Implement matrix-vector and simple matrix-matrix multiplication, optional bias, embedding lookup, and residual addition. Validate dimensions at operation boundaries. Cover rectangular shapes, bias handling, and invalid input sizes.
 - [x] **M1.2 Stable elementwise and reduction operations.** Implement RMSNorm, max-subtracted softmax, SiLU, and gated MLP. Cover zero inputs, extreme finite values, and the policy for invalid or entirely masked rows.
 - [x] **M1.3 Positions and causal attention.** Implement rotary positions with explicit pairing, scale, and absolute offsets; causal scaled attention; and grouped-query head mapping. Compare scores, probabilities, and attention outputs at several positions. Changing a future token must not affect an earlier output.
-- [ ] **M1.4 Complete the decoder.** Compose both layers, final normalization, tied output projection, and greedy selection. Initially recompute the complete prefix for each generated token. Define deterministic tie-breaking. Exit: saved intermediates, final logits, and a short greedy sequence agree with the independent reference within the frozen tolerances.
+- [x] **M1.4 Complete the decoder.** Compose both layers, final normalization, tied output projection, and greedy selection. Initially recompute the complete prefix for each generated token. Define deterministic tie-breaking. Exit: saved intermediates, final logits, and a short greedy sequence agree with the independent reference within the frozen tolerances.
 
 Keep this full-prefix CPU path as the oracle for the cached implementation. It need not be fast.
 
@@ -123,6 +123,8 @@ M1.1 evidence, 9 October 2026: [scalar CPU operations](src/cpu/mod.rs) implement
 M1.2 evidence, 9 October 2026: [stable CPU operations](src/cpu/reductions.rs) add RMSNorm, boolean-masked softmax, stable SiLU, elementwise gating, and the complete bias-free gated MLP. Borrowed weights and caller-owned output/scratch preserve explicit ownership without allocations. Normalization and softmax use documented FP64 intermediate arithmetic with FP32 storage; linear and activation operations remain FP32. Invalid epsilon, shapes, nonfinite inputs, and entirely masked rows fail before writes; arithmetic failures require discarding partial buffers. [Six targeted tests](tests/cpu_reductions.rs) cover every saved normalization/probability/MLP across both layers and all five cases, frozen edge probes, FP32 extremes, masks, and failure behavior under the unchanged tolerances. Formatting, Clippy with warnings denied, all twenty-two Rust tests, independent oracle verification, and whitespace checks passed. Astra independently accepted without findings. No performance qualification is claimed. M1.3 is next.
 
 M1.3 evidence, 9 October 2026: [rotary and attention](src/cpu/attention.rs) implement unscaled absolute positions with Qwen split-half pairing, causal scaled dot products, and grouped-query mapping without expanded KV storage. Rotary frequencies/angles/trigonometry use FP64 with FP32 rotation coefficients and output; attention dots and context accumulate in FP32, using the existing stable softmax. Layouts and numerical/error policies are documented. [Six tests](tests/cpu_attention.rs) compare rotary values, unmasked scores, causal probabilities, and contexts across all five cases and both layers, plus manual pairing/head mapping, chunk-offset identity, norm preservation, future-token invariance, and invalid/overflow behavior. Formatting, Clippy with warnings denied, all twenty-eight Rust tests, and whitespace checks passed. Astra independently accepted without findings. No performance qualification is claimed. M1.4 is next.
+
+M1.4 evidence, 9 October 2026: [immutable decoder and scratch](src/model/mod.rs), [diagnostic trace](src/model/trace.rs), and [greedy selection](src/sampling.rs) compose the complete scalar full-prefix path. Ordinary calls reuse bounded scratch and return final-token logits; diagnostic calls allocate all-position arrays separately with checked size arithmetic and fallible reserves. The embedding table is the tied output projection. [Seven tests](tests/cpu_decoder.rs) match every named intermediate and final logits across both layers and all five cases, plus four saved greedy steps, lowest-ID ties, exact causal-prefix invariance, tied weights, configuration/weight validation, capacity rejection, and scratch reuse after rejected requests. Formatting, Clippy with warnings denied, all thirty-five Rust tests, release build, and whitespace checks passed. Astra independently accepted without findings and confirmed ordinary execution has no allocation sites by inspection; no allocation-count or performance measurement is claimed. M1's exit gate is complete. M2.1 is next.
 
 ## M2 Run Qwen with persistent state
 
@@ -238,4 +240,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next implementation action is M1.4.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next implementation action is M2.1.
