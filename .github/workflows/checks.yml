@@ -1,0 +1,26 @@
+name: Rust checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  cpu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Install Rust
+        run: rustup toolchain install 1.90.0 --profile minimal --component rustfmt --component clippy
+      - name: Check formatting
+        run: cargo +1.90.0 fmt --check
+      - name: Lint
+        run: cargo +1.90.0 clippy --locked --offline --all-targets -- -D warnings
+      - name: Test
+        run: cargo +1.90.0 test --locked --offline
+      - name: Build release CLI
+        run: cargo +1.90.0 build --locked --offline --release

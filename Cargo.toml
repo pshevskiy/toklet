@@ -1,0 +1,12 @@
+[package]
+name = "toklet"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+description = "A small Rust inference engine for Apple Silicon"
+license = "Apache-2.0"
+publish = false
+
+[[bin]]
+name = "toklet"
+path = "src/bin/toklet.rs"
