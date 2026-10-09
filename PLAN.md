@@ -197,6 +197,19 @@ and regression-tested before final evidence was regenerated. Astra accepted the
 final code and independently verified the records and documented limits. Full scalar M2.5
 and separately reviewed CPU engine qualification still precede M3 completion.
 
+Future FP16 reference preparation, 10 October 2026: the separate
+[fp16-v1 oracle](tools/reference/README.md) freezes 251 full tiny-decoder arrays
+and 199 gates before any Metal execution, with FP16 weights/activations/KV and
+FP32 accumulation/scores/probabilities/logits. Independent ordered FP32 and FP64
+reconstructions use explicit storage-rounding boundaries and preserve the four
+source greedy IDs. Five offline tests cover manual math, exact regeneration,
+cache layout/causality, identities and gate corruption. This prepares numerical
+evidence for M4 without changing current execution, existing FP32/Core ML gates,
+real-model support or milestone status.
+Formatting/Clippy, all 74 ordinary Rust tests and 31 offline Python checks pass.
+Astra accepted the completed task and independently verified regeneration,
+counts, rounding, layouts and all ten attention cases with a separate calculation.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [ ] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [ ] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.

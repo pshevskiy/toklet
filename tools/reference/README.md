@@ -149,3 +149,52 @@ Export refuses existing directories. Verification reconstructs every array and
 gate independently and compares exact bytes, so enlarging a manifest tolerance
 cannot make a target pass. No Core ML import, conversion, runtime execution,
 ANE placement, model download, quality score, or engine selection is involved.
+
+`fp16.py` prepares the separate full-decoder
+[fp16-v1](../../tests/fixtures/fp16-v1/manifest.json) before any Metal execution.
+It reads the immutable tiny-v1 weights and defines FP16 weight/activation/cache
+storage, ordered FP32 projection/reduction arithmetic, FP32 rotary coefficients,
+and FP32 attention scores, probabilities and output logits. Bias is added after
+the dot, before storage rounding. Every named FP16 activation is rounded when
+stored, including normalized values, projections, rotary results, SiLU, gating
+and residuals. Tied embeddings remain one weight table. A second independent
+scalar FP64 calculation uses the same storage-rounding boundaries to expose
+accumulation/elementary-math differences. Neither pass uses Rust, Torch or Metal.
+
+The 251 arrays total 252,544 bytes; FP16 weights total 41,536 bytes. There are 199
+per-array numerical gates against the unchanged tiny-v1 FP32 references. Each
+gate is `atol = 2 * max(abs(independent FP32/FP64 reconstruction - source)) + 1e-5`
+with `rtol = 1e-4`. These new precision-specific gates are frozen before target
+evaluation; tiny-v1 and the already-evaluated Core ML slice gates are unchanged.
+The five original cases, both layers' full intermediates, all-position logits,
+and four teacher-forced greedy steps are preserved. The reconstructed greedy
+IDs remain `[47,47,47,47]`; future target argmax differences still require
+investigation. This small model does not qualify real-model or held-out quality.
+
+Every case includes separate per-layer FP16 K/V `[2,32,8]` expectations. Valid
+prefix values come from its full reconstruction; the suffix is exactly zero.
+Cross-device numerical operations need not produce identical half bits, so the
+cache arrays are numerical references rather than bit-exact GPU arithmetic
+requirements. Token-major intermediate Q/K/V and head-major cached K/V use the
+same physical layout rules as the engine, with no extra padding or alignment.
+
+```sh
+.venv/bin/python tools/reference/fp16.py --check tests/fixtures/fp16-v1
+.venv/bin/python tools/reference/fp16.py --build artifacts/fp16-candidate
+.venv/bin/python -m unittest discover -s tools/reference -p 'test_fp16.py'
+```
+
+Export refuses existing directories and nonfinite reconstruction. Verification
+checks source/generator/version and payload identities, then independently
+regenerates the complete inventory and every gate byte. Five offline tests cover
+exact regeneration, source-gate consistency, manual bias/accumulation/RMSNorm,
+manual causal GQA and split-half rotary, exact half weight conversion, cache
+layout/suffixes, future-token isolation, fixed greedy history, corrupt payloads,
+enlarged gates and overwrite refusal. No engine path or milestone is completed
+by preparing this reference.
+
+Formatting, Clippy with warnings denied, all 74 ordinary Rust tests, and all 31
+offline Python checks pass. Astra accepted the completed fixture task without
+findings, independently verified exact regeneration, counts, math/rounding and
+layout, and matched all ten layer/case FP64 attention reconstructions with a
+separate vectorized calculation that preserves FP32 score/probability boundaries.
