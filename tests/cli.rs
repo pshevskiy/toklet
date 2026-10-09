@@ -195,6 +195,24 @@ fn local_token_input_streams_frozen_greedy_ids_and_honors_eos_and_stop_ids() {
         r.last().unwrap()["statistics"]["generation"]["evaluated_tokens"],
         7
     );
+    let statistics = &r.last().unwrap()["statistics"];
+    for field in [
+        "input_formatting_seconds",
+        "tokenization_seconds",
+        "detokenization_seconds",
+    ] {
+        assert_eq!(statistics[field], 0.0, "token-only input has no {field}");
+    }
+    for field in [
+        "input_preparation_seconds",
+        "publication_seconds",
+        "load_seconds",
+        "conversion_seconds",
+        "tokenizer_load_seconds",
+    ] {
+        assert!(statistics[field].as_f64().unwrap().is_finite());
+        assert!(statistics[field].as_f64().unwrap() >= 0.0);
+    }
     fs::write(
         a.root.join("generation_config.json"),
         br#"{"eos_token_id":[47]}"#,

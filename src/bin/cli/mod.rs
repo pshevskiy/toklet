@@ -213,10 +213,19 @@ struct Frontend {
     memory_admitted_bytes: usize,
     requests: usize,
 }
+#[derive(Default)]
+struct OutputTiming {
+    detokenization_seconds: f64,
+    publication_seconds: f64,
+}
 impl Frontend {
-    fn finish_output(&mut self, out: &mut impl Write) -> io::Result<()> {
+    fn finish_output(&mut self, out: &mut impl Write) -> io::Result<OutputTiming> {
+        let mut timing = OutputTiming::default();
         if let Some(assets) = &self.assets {
+            let clock = Instant::now();
             let tail = self.decoder.finish(assets)?;
+            timing.detokenization_seconds = clock.elapsed().as_secs_f64();
+            let clock = Instant::now();
             if !tail.is_empty() {
                 if self.json {
                     writeln!(out, "{}", json!({"event":"text","text":tail}))?;
@@ -224,8 +233,14 @@ impl Frontend {
                     out.write_all(tail.as_bytes())?;
                 }
             }
+            out.flush()?;
+            timing.publication_seconds = clock.elapsed().as_secs_f64();
+        } else {
+            let clock = Instant::now();
+            out.flush()?;
+            timing.publication_seconds = clock.elapsed().as_secs_f64();
         }
-        out.flush()
+        Ok(timing)
     }
 
     fn execute(
@@ -258,6 +273,8 @@ impl Frontend {
             return Err(invalid("request needs exactly one tokens/prompt/messages field").into());
         }
         let clock = Instant::now();
+        let mut input_formatting_seconds = 0.0;
+        let mut tokenization_seconds = 0.0;
         let tokens = if let Some(tokens) = r.tokens {
             if r.tools.is_some() || r.raw.is_some() {
                 return Err(invalid("token input cannot use tools/raw").into());
@@ -268,6 +285,7 @@ impl Frontend {
                 .assets
                 .as_ref()
                 .ok_or_else(|| invalid("text input requires local tokenizer assets"))?;
+            let formatting_clock = Instant::now();
             let raw = r.action == Action::Append || r.raw.unwrap_or(self.raw);
             let text = if let Some(prompt) = r.prompt {
                 if raw {
@@ -292,7 +310,11 @@ impl Frontend {
                     true,
                 )?
             };
-            assets.encode(&text)?
+            input_formatting_seconds = formatting_clock.elapsed().as_secs_f64();
+            let encoding_clock = Instant::now();
+            let tokens = assets.encode(&text)?;
+            tokenization_seconds = encoding_clock.elapsed().as_secs_f64();
+            tokens
         } else {
             Vec::new()
         };
@@ -328,11 +350,18 @@ impl Frontend {
             max_new_tokens: max,
             stop_tokens: &self.stops,
         };
+        let mut output_timing = OutputTiming::default();
         let mut report = generation::generate(session, request, &CANCELLED, |event| {
             let text = match &self.assets {
-                Some(assets) => self.decoder.step(assets, event.token_id)?,
+                Some(assets) => {
+                    let clock = Instant::now();
+                    let text = self.decoder.step(assets, event.token_id)?;
+                    output_timing.detokenization_seconds += clock.elapsed().as_secs_f64();
+                    text
+                }
                 None => String::new(),
             };
+            let clock = Instant::now();
             if self.json {
                 writeln!(
                     out,
@@ -342,17 +371,24 @@ impl Frontend {
             } else {
                 out.write_all(text.as_bytes())?;
             }
-            out.flush()
+            out.flush()?;
+            output_timing.publication_seconds += clock.elapsed().as_secs_f64();
+            Ok(())
         })?;
         if !self.interactive || matches!(report.reason, StopReason::StopToken { .. }) {
-            self.finish_output(&mut out)?;
+            let tail = self.finish_output(&mut out)?;
+            output_timing.detokenization_seconds += tail.detokenization_seconds;
+            output_timing.publication_seconds += tail.publication_seconds;
         }
         publish_terminal(&CANCELLED, |active_cancelled| {
             if active_cancelled && report.reason == StopReason::OutputLimit {
                 report.reason = StopReason::Cancelled;
             }
             let cancelled = report.reason == StopReason::Cancelled;
-            let stats = json!({"generation":report,"input_preparation_seconds":input_seconds,"load_seconds":if self.requests==0{self.load_seconds}else{0.0},"conversion_seconds":if self.requests==0{self.conversion_seconds}else{0.0},"tokenizer_load_seconds":if self.requests==0{self.tokenizer_load_seconds}else{0.0},"memory_admitted_bytes":self.memory_admitted_bytes});
+            let stats = json!({"generation":report,"input_preparation_seconds":input_seconds,
+                "input_formatting_seconds":input_formatting_seconds,"tokenization_seconds":tokenization_seconds,
+                "detokenization_seconds":output_timing.detokenization_seconds,"publication_seconds":output_timing.publication_seconds,
+                "load_seconds":if self.requests==0{self.load_seconds}else{0.0},"conversion_seconds":if self.requests==0{self.conversion_seconds}else{0.0},"tokenizer_load_seconds":if self.requests==0{self.tokenizer_load_seconds}else{0.0},"memory_admitted_bytes":self.memory_admitted_bytes});
             self.requests += 1;
             if self.json {
                 writeln!(out, "{}", json!({"event":"done","statistics":stats}))?;
@@ -486,11 +522,18 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             0
         });
     }
+    let memory = session.memory();
     writeln!(
         io::stdout().lock(),
         "{}",
         json!({"event":"ready", "backend":"cpu", "context_capacity":a.capacity,
-        "memory_admitted_bytes":frontend.memory_admitted_bytes})
+        "memory_admitted_bytes":frontend.memory_admitted_bytes,
+        "logical_memory":{"weights_bytes":memory.weights_bytes,
+            "kv_bytes":memory.kv_bytes,"scratch_bytes":memory.scratch_bytes,
+            "history_bytes":memory.history_bytes,"logits_bytes":memory.logits_bytes,
+            "metadata_bytes":memory.metadata_bytes,
+            "metadata_allowance_bytes":memory.metadata_allowance_bytes,
+            "tokenizer_application_allowance_bytes":external_bytes}})
     )?;
     io::stdout().flush()?;
     let (sender, receiver) = mpsc::sync_channel(1);

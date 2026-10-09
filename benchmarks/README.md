@@ -188,6 +188,38 @@ FP32 KV and 1 GiB workspace; mapped/shared physical peak remains unavailable.
 See the [comparison report](results/2026-10-10-llama-fp32-short.md) for measured
 scope and remaining M2.5 work.
 
+The [external matrix](results/2026-10-10-external-matrix.md) retains all eight
+llama.cpp workloads and all four FP32 MLX prompt lengths, each with three
+warmups and ten measured requests. Arithmetic and memory limitations remain
+explicit; this does not complete the scalar CPU or application matrix.
+
+The [CLI application driver](../tools/bench/application.py) uses the frozen
+authored coding/tool-result transcript at its three user turns. Later authored
+assistant text replaces generated replies; each turn uses an empty numerical
+cache, with one resident model and reusable buffers. An explicit reset after
+each response finalizes any split Unicode suffix before the next turn. The
+full mode uses greedy EOS-or-128 output, three warmups and ten scenarios. The
+functional probe has one scenario and two output tokens per turn, and cannot
+establish benchmark acceptance.
+
+```sh
+cargo build --locked --offline --release
+.venv/bin/python tools/bench/application.py --probe --output benchmarks/raw/application-probe.json
+.venv/bin/python tools/bench/application.py --output benchmarks/raw/application.json
+```
+
+Driver timings start before request serialization/write and finish on complete
+JSON-line receipt, including transport/dispatch. First visible text means the
+first nonempty text payload. Native statistics separate input preparation,
+chat formatting, tokenization, numerical prefill/decode, sampling,
+detokenization and token/text publication. Publication includes serialization,
+writes and flushes, but excludes the final statistics record. Native generation
+time already includes callbacks; component timers overlap and must not be
+added to it. Explicit reset finalization and its Unicode tail lie outside the
+preceding native counters, and have a separate driver completion timestamp.
+New-process ready time and native loading/conversion/tokenizer setup are retained
+separately from warm requests; source hashing prevents a cold-storage claim.
+
 ```sh
 .venv/bin/python tools/bench/mlx_baseline.py --dtype fp32 --prompt-length 128 --output benchmarks/raw/mlx-fp32-short.json
 ```
