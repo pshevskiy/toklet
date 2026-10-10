@@ -169,6 +169,24 @@ qualification stay pending. Astra accepted the saved-evidence task without
 findings after independently verifying all states, summaries, historical
 assertions, identities and idle-window records.
 
+Held-out scorer preparation, 10 October 2026 (M2.5/quality still open): the
+[bounded loss runner](docs/experiments/2026-10-10-held-out-loss-runner.md)
+implements the existing ten independent 1,024-target blocks with one-token
+overlap and the 784-target tail. FP64 max-subtracted compensated loss scores
+every label from its committed preceding prefix and retains full-logit hashes.
+Four short real workers score twelve outputs across six independent labels;
+scalar/tiled loss records and complete logits agree exactly, with maximum
+source NLL discrepancy 0.000217481131459 under the unchanged 0.001 probe gate.
+All workers commit four tokens with none pending. Maximum physical charge is
+2,009,417,720 bytes and admission is 2,136,856,460 bytes below 6 GiB.
+Root formatting, Clippy, 76 ordinary Rust tests, three example tests, isolated
+release compilation and all 35 offline benchmark Python tests pass in the
+verified medium-worker idle window. Interrupted checks kill/reap their owned
+group and retain failure/output metadata. Astra accepted the completed code and
+evidence without findings after independent NLL, alignment, identity, memory,
+cleanup and test verification. Full 10,000-target scoring, the separate 100-task pass-rate evaluation,
+lossy-model acceptance, performance and milestone closure remain pending.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected
