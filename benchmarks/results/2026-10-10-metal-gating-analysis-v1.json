@@ -1,0 +1,39 @@
+{
+  "format": "toklet-saved-metal-gating-analysis-v1",
+  "completed": true,
+  "scope": "Saved tiny gating and same-binary regressions only; no performance, Qwen/full-model or M4 acceptance.",
+  "summary": {
+    "gating_cases": 11,
+    "input_products": 6720,
+    "gating_completed_commands": 143,
+    "gating_output_values": 87360,
+    "gating_output_guard_values": 1001,
+    "same_binary_completed_positive_commands": 1040,
+    "same_binary_expected_negative_runs": 4,
+    "maximum_source_fp32_gate_fraction": 0.49168481423172644,
+    "maximum_source_fp32_abs_error": 0.003214120864868164,
+    "maximum_admitted_gating_bytes": 67141744,
+    "maximum_own_process_peak_bytes": 17121856,
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "rms_regression": 364,
+      "embedding_frozen_regression": 65,
+      "embedding_manual_regression": 13,
+      "residual_regression": 273,
+      "residual_overflow_regression": 0,
+      "silu_regression": 143,
+      "gating_frozen_manual": 143,
+      "gating_overflow": 0
+    }
+  },
+  "records_sha256": {
+    "benchmarks/results/2026-10-10-metal-gating-v1.json": "01d93a2a9645a626baaec4927165f4e098161fe5e571c05f8a3db06ec96495ec",
+    "benchmarks/raw/2026-10-10-metal-gating-v1.json.native.jsonl": "43b8a2bfa23ed1f14242db4a00dbb3d149107906e2483e3985ef2b43277a6bb7",
+    "benchmarks/results/2026-10-10-metal-gating-v1.json.stderr.txt": "68e9d239845bb85c509df7e1292a1d6fa707f9a84171a8c2f5afb2840487d93b",
+    "benchmarks/results/2026-10-10-cpu-gating-check-window-idle.json": "32a18a2d3f357570987ee9b16c4b606ef6d7e5ac12ff67a52f9cf85db580d176"
+  },
+  "binary_sha256": "3b7c4e079bf34a7c00cd0ab190bb2a4756b2e129101edb68558f7e4bab524ac8",
+  "producer_sha256": "2e775b794c29794c96d0dd672d8740771a7532e15422d5dd301b635d7ca023f0"
+}

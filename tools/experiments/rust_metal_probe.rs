@@ -428,6 +428,12 @@ mod metal {
     pub(super) fn run_silu(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
         silu::run(path, limit)
     }
+    mod gating {
+        include!("rust_metal_gating.rs");
+    }
+    pub(super) fn run_gating(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
+        gating::run(path, limit)
+    }
 }
 
 fn run() -> Result<Value, Error> {
@@ -439,6 +445,7 @@ fn run() -> Result<Value, Error> {
     let mut embedding_input = None;
     let mut residual_input = None;
     let mut silu_input = None;
+    let mut gating_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
@@ -466,6 +473,12 @@ fn run() -> Result<Value, Error> {
                         .ok_or_else(|| error("arguments", "missing SiLU input"))?,
                 ));
             }
+            Some("--gating-input") if gating_input.is_none() => {
+                gating_input = Some(std::path::PathBuf::from(
+                    args.next()
+                        .ok_or_else(|| error("arguments", "missing gating input"))?,
+                ));
+            }
             Some("--budget-bytes") if !has_budget => {
                 let value = args
                     .next()
@@ -485,6 +498,7 @@ fn run() -> Result<Value, Error> {
         + usize::from(embedding_input.is_some())
         + usize::from(residual_input.is_some())
         + usize::from(silu_input.is_some())
+        + usize::from(gating_input.is_some())
         > 1
     {
         return Err(error("arguments", "probe operation modes are exclusive"));
@@ -499,6 +513,8 @@ fn run() -> Result<Value, Error> {
             metal::run_residual(&path, limit)
         } else if let Some(path) = silu_input {
             metal::run_silu(&path, limit)
+        } else if let Some(path) = gating_input {
+            metal::run_gating(&path, limit)
         } else {
             metal::run(invalid, limit)
         }
@@ -512,6 +528,7 @@ fn run() -> Result<Value, Error> {
             embedding_input,
             residual_input,
             silu_input,
+            gating_input,
         );
         Err(error("capability", "requires Apple Silicon macOS"))
     }

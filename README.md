@@ -136,6 +136,11 @@ edges using FP32 arithmetic and one Half store. The
 passes all twelve saved width-4,864 stages with exact Half outputs and unchanged
 source gates. Complete MLP and decoder execution remain pending.
 
+The [stored-Half gating check](docs/experiments/2026-10-10-metal-gating.md)
+passes ten frozen tiny stages and exact product-rounding edges. Distinct output
+ownership preserves both inputs, and completed Half overflow is discarded.
+Qwen gating and MLP/decoder composition remain pending.
+
 The [held-out loss runner](docs/experiments/2026-10-10-held-out-loss-runner.md)
 preserves the frozen block/label policy and passes independent short probes in
 scalar and tiled modes with exact complete-logit agreement. The full 10,000

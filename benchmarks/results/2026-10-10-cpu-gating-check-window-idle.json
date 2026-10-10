@@ -1,0 +1,12 @@
+{
+  "format": "toklet-cpu-gating-check-window-idle-v1",
+  "idle_verified_utc": "2026-10-10T07:35:25.312215+00:00",
+  "snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.08 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n60703 17694 Z      0:00.00 <defunct>\n",
+  "completed_workload": "long",
+  "warmups": 3,
+  "measured_requests": 10,
+  "held_orchestration_pid": 17694,
+  "exited_numerical_worker_pid": 60711,
+  "defunct_transport_pid": 60703,
+  "scope": "Only orchestration was held. Long transport and numerical worker finished naturally through all three warmups and ten measured requests before checks/builds/native probes. Orchestration remains held throughout the gating task's qualification window."
+}

@@ -1,0 +1,59 @@
+"""Check natural long-worker exit and save small evidence; never signal a PID."""
+from datetime import datetime, timezone
+import json
+from pathlib import Path
+import subprocess
+
+root = Path.cwd()
+snapshot = subprocess.run([
+    "ps", "-o", "pid,ppid,stat,time,command", "-p", "17694,60703,60711",
+], check=True, capture_output=True, text=True).stdout
+rows = {}
+for line in snapshot.splitlines()[1:]:
+    fields = line.split(None, 4)
+    if len(fields) == 5:
+        rows[int(fields[0])] = fields
+assert 60711 not in rows, "Numerical worker still exists; no checks permitted"
+assert int(rows[17694][1]) == 35939 and "T" in rows[17694][2], "Orchestration must remain held"
+assert int(rows[60703][1]) == 17694 and rows[60703][2].startswith("Z"), "Transport must have exited naturally"
+source = root / "benchmarks/raw/2026-10-10-cpu-long.json"
+samples = source.with_suffix(source.suffix + ".samples.jsonl")
+result = json.loads(source.read_text())
+raw = [json.loads(line) for line in samples.read_text().splitlines()]
+assert result["setup"]["warmup_repetitions"] == 3
+assert len(raw) == len(result["samples"]) == 10
+assert [row["sample"] for row in raw] == result["samples"]
+assert result["workload"]["name"] == "long_teacher_forced_128"
+for row in raw:
+    state = row["state"]
+    assert (state["reused_tokens"], state["prefill_tokens"], state["evaluated_tokens"],
+            state["pending_tokens"], state["emitted_tokens"]) == (0, 1024, 1151, 1, 128)
+hold = root / "benchmarks/raw/2026-10-10-cpu-gating-check-window-hold.json"
+saved_hold = json.loads(hold.read_text())
+assert saved_hold["held_pid"] == 17694
+assert saved_hold["active_transport_pid"] == 60703
+assert saved_hold["active_numerical_worker_pid"] == 60711
+idle = {
+    "format": "toklet-cpu-gating-check-window-idle-v1",
+    "idle_verified_utc": datetime.now(timezone.utc).isoformat(),
+    "snapshot": snapshot, "completed_workload": "long",
+    "warmups": 3, "measured_requests": 10,
+    "held_orchestration_pid": 17694,
+    "exited_numerical_worker_pid": 60711,
+    "defunct_transport_pid": 60703,
+    "scope": "Only orchestration was held. Long transport and numerical worker finished naturally through all three warmups and ten measured requests before checks/builds/native probes. Orchestration remains held throughout the gating task's qualification window.",
+}
+destination = root / "benchmarks/results"
+idle_name = "2026-10-10-cpu-gating-check-window-idle.json"
+targets = [destination / source.name, destination / samples.name,
+           destination / hold.name, destination / idle_name,
+           root / "benchmarks/raw" / idle_name]
+assert not any(path.exists() for path in targets), "Refusing to overwrite saved evidence"
+for original in [source, samples, hold]:
+    with (destination / original.name).open("xb") as stream:
+        stream.write(original.read_bytes())
+data = json.dumps(idle, indent=2, allow_nan=False) + "\n"
+for target in targets[-2:]:
+    with target.open("x") as stream:
+        stream.write(data)
+print(json.dumps(idle, indent=2))

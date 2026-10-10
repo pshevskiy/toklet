@@ -1,0 +1,170 @@
+"""Replay complete saved Metal gating evidence, only in a verified idle window."""
+import argparse
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--root", type=Path, required=True)
+parser.add_argument("--output", type=Path, required=True)
+args = parser.parse_args()
+root = args.root.resolve()
+sys.path.insert(0, str(root / "tools/experiments"))
+import rust_metal_gating as gating
+
+record_name = "benchmarks/results/2026-10-10-metal-gating-v1.json"
+raw_name = "benchmarks/raw/2026-10-10-metal-gating-v1.json.native.jsonl"
+stderr_name = "benchmarks/results/2026-10-10-metal-gating-v1.json.stderr.txt"
+idle_name = "benchmarks/results/2026-10-10-cpu-gating-check-window-idle.json"
+build = root / "artifacts/rust-metal-gating-v1"
+
+def read(name):
+    return json.loads((root / name).read_text())
+
+def digest(path):
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+idle = read(idle_name)
+assert idle["completed_workload"] == "long"
+assert idle["exited_numerical_worker_pid"] == 60711
+assert idle["measured_requests"] == 10
+assert idle["held_orchestration_pid"] == 17694
+record = read(record_name)
+assert record["completed"] is True and "failure" not in record
+assert record["native_raw_sha256"] == digest(root / raw_name)
+assert record["stderr_sha256"] == digest(root / stderr_name)
+raw = [json.loads(line) for line in (root / raw_name).read_text().splitlines()]
+runs = record["native_runs"]
+assert len(raw) == len(runs) == 11
+assert [run["mode"] for run in runs] == [
+    "normal", "invalid_shader", "insufficient_budget", "rms_regression",
+    "embedding_frozen_regression", "embedding_manual_regression",
+    "residual_regression", "residual_overflow_regression", "silu_regression",
+    "gating_frozen_manual", "gating_overflow",
+]
+assert len(record["checks"]) == len(record["build_commands"]) == 9
+assert [check["command"] for check in record["checks"]] == record["build_commands"]
+rust_test = next(check for check in record["checks"] if "test" in check["command"])
+assert "test result: ok. 18 passed; 0 failed" in rust_test["stdout"]
+for name, sha in record["source_sha256"].items():
+    original = root / name
+    assert digest(original) == sha
+    copied = build / ("Cargo.toml" if name.endswith(".Cargo.toml") else
+                      "Cargo.lock" if name.endswith(".lock") else
+                      "src/main.rs" if name.endswith("rust_metal_probe.rs") else
+                      "src/" + original.name)
+    assert digest(copied) == sha
+helpers = {
+    "tools/experiments/rust_metal_probe.py": record["driver_sha256"],
+    "tools/experiments/metal_probe.py": record["common_helper_sha256"],
+    "tools/bench/mlx_baseline.py": record["memory_helper_sha256"],
+}
+for name, sha in helpers.items():
+    assert digest(root / name) == sha
+context = record["extra_context"]
+for field in ["input_sha256", "qualification_driver_sha256"]:
+    for name, sha in context[field].items():
+        assert digest(Path(name)) == sha
+binary = build / "target/aarch64-apple-darwin/release/toklet-rust-metal-probe"
+assert digest(binary) == record["binary_sha256"]
+
+inputs, anchors, _ = gating.cases()
+rms_inputs, rms_anchors = gating.rms.cases()
+embedding = gating.residual.embedding
+embedding_inputs, embedding_anchors = embedding.cases()
+residual_inputs, residual_anchors, _ = gating.residual.cases()
+silu_inputs, silu_anchors = gating.silu.cases()
+validators = {
+    "rms_regression": lambda event: gating.rms.validate(event, rms_inputs, rms_anchors),
+    "embedding_frozen_regression": lambda event: embedding.validate(event, embedding_inputs[0], embedding_anchors),
+    "embedding_manual_regression": lambda event: embedding.validate(event, embedding_inputs[1], embedding_anchors),
+    "residual_regression": lambda event: gating.residual.validate(event, residual_inputs, residual_anchors),
+    "residual_overflow_regression": gating.residual.overflow_rejected,
+    "silu_regression": lambda event: gating.silu.validate(event, silu_inputs, silu_anchors),
+    "gating_frozen_manual": lambda event: gating.validate(event, inputs, anchors),
+    "gating_overflow": gating.overflow_rejected,
+}
+command_counts = {}
+for event, run in zip(raw, runs):
+    replay = copy.deepcopy(event)
+    temporary = {**run, "event": replay}
+    gating.rms.probe.validate_run(run["mode"], temporary, validators.get(run["mode"]))
+    assert replay == run["event"]
+    assert run["watchdog_killed"] is False
+    assert run["physical_process_charge_peak_bytes"] is not None
+    assert 0 < run["physical_process_charge_peak_bytes"] <= gating.rms.probe.LIMIT
+    command_counts[run["mode"]] = sum(len(case["rows"]) for case in event.get("result", {}).get("cases", []))
+assert command_counts == {
+    "normal": 39, "invalid_shader": 0, "insufficient_budget": 0,
+    "rms_regression": 364, "embedding_frozen_regression": 65,
+    "embedding_manual_regression": 13, "residual_regression": 273,
+    "residual_overflow_regression": 0, "silu_regression": 143,
+    "gating_frozen_manual": 143, "gating_overflow": 0,
+}
+assert sum(command_counts.values()) == 1040
+
+native = raw[9]["result"]
+assert len(native["cases"]) == 11
+active = guards = commands = 0
+maximum_fraction = maximum_error = 0.0
+for case, item in zip(native["cases"], inputs):
+    anchor = anchors[item["id"]]
+    count = item["rows"] * item["width"]
+    # Replay each product independently of the driver helper. Both Half
+    # operands are exact doubles; a 22-bit product is exact before one Half RNE.
+    expected = []
+    for left_bits, right_bits in zip(item["gate_bits"], item["up_bits"]):
+        left = struct.unpack("<e", struct.pack("<H", left_bits))[0]
+        right = struct.unpack("<e", struct.pack("<H", right_bits))[0]
+        exact = left * right
+        assert struct.unpack("<f", struct.pack("<f", exact))[0] == exact
+        expected.append(struct.unpack("<H", struct.pack("<e", exact))[0])
+    assert len(expected) == count and expected == anchor["bits"]
+    for row in case["rows"]:
+        assert row["output_bits"] == expected + [0x55a1] * 7
+        actual = struct.unpack(f"<{count}e", struct.pack(f"<{count}H", *expected))
+        for value, reference in zip(actual, anchor["reference"]):
+            assert math.isfinite(value) and math.isfinite(reference)
+            error = abs(value - reference)
+            maximum_error = max(maximum_error, error)
+            if anchor["gate"] is not None:
+                gate = anchor["gate"]
+                fraction = error / (gate["atol"] + gate["rtol"] * abs(reference))
+                assert fraction <= 1
+                maximum_fraction = max(maximum_fraction, fraction)
+            else:
+                assert error == 0
+        commands += 1
+        active += count
+        guards += 7
+assert (commands, active, guards) == (143, 87360, 1001)
+assert native["metadata"]["maximum_admitted_bytes"] == 67141744
+summary = {
+    "gating_cases": 11, "input_products": 6720,
+    "gating_completed_commands": commands, "gating_output_values": active,
+    "gating_output_guard_values": guards,
+    "same_binary_completed_positive_commands": sum(command_counts.values()),
+    "same_binary_expected_negative_runs": 4,
+    "maximum_source_fp32_gate_fraction": maximum_fraction,
+    "maximum_source_fp32_abs_error": maximum_error,
+    "maximum_admitted_gating_bytes": 67141744,
+    "maximum_own_process_peak_bytes": max(run["physical_process_charge_peak_bytes"] for run in runs),
+    "command_counts": command_counts,
+}
+analysis = {
+    "format": "toklet-saved-metal-gating-analysis-v1", "completed": True,
+    "scope": "Saved tiny gating and same-binary regressions only; no performance, Qwen/full-model or M4 acceptance.",
+    "summary": summary,
+    "records_sha256": {name: digest(root / name) for name in [record_name, raw_name, stderr_name, idle_name]},
+    "binary_sha256": record["binary_sha256"],
+    "producer_sha256": digest(Path(__file__)),
+}
+with args.output.open("x") as stream:
+    json.dump(analysis, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+print(json.dumps(summary, allow_nan=False))

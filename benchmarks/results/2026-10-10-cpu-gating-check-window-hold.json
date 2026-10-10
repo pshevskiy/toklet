@@ -1,0 +1,9 @@
+{
+  "format": "toklet-cpu-gating-check-window-hold-v1",
+  "orchestration_held_utc": "2026-10-10T06:02:09.819785+00:00",
+  "held_pid": 17694,
+  "active_transport_pid": 60703,
+  "active_numerical_worker_pid": 60711,
+  "snapshot_before": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ss     0:11.08 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n60703 17694 S      0:00.54 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload long --output benchmarks/raw/2026-10-10-cpu-long.json\n60711 60703 R      0:24.25 /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n",
+  "action": "Hold only orchestration ahead of the next workload. Active long transport and numerical worker continue through three warmups and ten measurements. No tests/builds/GPU/model or binary hashing until both exit naturally."
+}

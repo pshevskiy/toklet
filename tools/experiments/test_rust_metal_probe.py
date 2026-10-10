@@ -33,7 +33,7 @@ def fixture():
 
 
 class RustMetal(unittest.TestCase):
-    def test_silu_copied_inputs_are_hash_bound_even_on_build_failure(self):
+    def test_silu_and_gating_copied_inputs_are_hash_bound_even_on_build_failure(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);output=root/"result.json";build=root/"build"
             with patch.object(probe.common,"command",return_value="test provenance"), \
@@ -42,7 +42,7 @@ class RustMetal(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,"controlled build failure"):probe.run(output,build)
             result=json.loads(output.read_text())
             self.assertFalse(result["completed"])
-            for source in (probe.SILU_SOURCE,probe.SILU_SHADER):
+            for source in (probe.SILU_SOURCE,probe.SILU_SHADER,probe.GATING_SOURCE,probe.GATING_SHADER):
                 self.assertEqual(result["source_sha256"][str(source.relative_to(probe.ROOT))],probe.common.digest(source))
                 self.assertEqual((build/"src"/source.name).read_bytes(),source.read_bytes())
 

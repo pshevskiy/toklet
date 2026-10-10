@@ -533,6 +533,27 @@ checks, identities, test results and memory accounting.
 Gating/MLP/decoder composition, cache, quality, performance and traces remain
 unqualified, and M4 is open.
 
+Stored-Half gating preparation, 10 October 2026 (M4 pending): the standalone
+[product primitive](docs/experiments/2026-10-10-metal-gating.md) keeps two
+immutable contiguous inputs and a distinct owned output, preserving the Half
+SiLU boundary before an exact FP32 product and one Half store. Ten frozen tiny
+stages and preselected rounding/zero/subnormal probes pass all 143 completed
+commands, 87,360 exact independent Half outputs, 1,001 output guards and
+unchanged source gates, maximum fraction 0.491684814232. Completed overflow is
+discarded with a structured failure. Same-binary add/RMS/embedding/residual/SiLU
+regressions pass: 1,040 positive commands and four expected negative runs.
+Gating physical peak is 13,402,712 bytes; the largest own-process peak across
+all native jobs is 17,121,856 bytes. Conservative gating admission is
+67,141,744 bytes. Isolated formatting, Clippy, eighteen Rust tests and release
+compilation pass, as do 63 experiment Python tests, 35 benchmark Python tests,
+76 ordinary engine tests and root formatting/Clippy. Checks occur only after
+the long CPU worker exits naturally; root engine sources and protected scalar
+workers remain unchanged. Astra accepted the completed code and evidence without
+findings after independently replaying outputs, gates, records and identities,
+and checking memory, transcripts and idle-window scope.
+Qwen gating, MLP/decoder/cache composition, full quality, performance and traces
+remain unqualified; this does not close M4.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
