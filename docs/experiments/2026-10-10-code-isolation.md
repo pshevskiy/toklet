@@ -121,3 +121,10 @@ analysis exactly, checking C ABI/ownership, cleanup, identities, idle ordering,
 report links and the prepared resumption sequence. This accepts the experiment
 and its rejection evidence; the native candidate remains unqualified. Review
 ran no new native probe or orchestration signal.
+
+The [completed idle-window verification](../../benchmarks/results/2026-10-10-cpu-code-isolation-check-window-completed.json)
+binds this rejected experiment and the reviewed pending-token result at clean
+`22dc0f4`. It retains both reviewed commits, all eight model assets and 108
+source/artifact bindings before resuming only the original orchestration at
+11:21:29 UTC. This allows the independent CPU matrix to proceed; it does not
+adopt the rejected executor or execute generated code.

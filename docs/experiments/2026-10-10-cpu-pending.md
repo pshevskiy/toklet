@@ -93,3 +93,18 @@ hashes or signals.
 Changed-prefix and application measurements, full quality and M2.5/M3 acceptance
 remain open; no unrelated test suite or numerical benchmark is needed for this
 evidence-only report.
+
+The later [completed idle window](../../benchmarks/results/2026-10-10-cpu-code-isolation-check-window-completed.json)
+verifies reviewed commits `2bec633` and `22dc0f4` at clean `22dc0f4`, the frozen
+executables, eight model assets and 108 source/artifact bindings. All verification
+finishes before resuming only orchestration at 11:21:29 UTC, using its retained
+[source](../../benchmarks/results/2026-10-10-cpu-code-isolation-check-window-resume-v1.py.txt).
+Changed-prefix transport 85019 and numerical worker 85027 then run uninterrupted;
+only their parent is [held ahead of application timing](../../benchmarks/results/2026-10-10-cpu-changed-check-window-hold.json)
+at 11:21:49 UTC. Its exact [hold source](../../benchmarks/results/2026-10-10-cpu-changed-check-window-hold.py.txt)
+is retained. This follow-up adds launch evidence, not a changed-prefix result.
+Astra accepted the archival follow-up without findings, verifying source copies,
+the recorded producer hash, reviewed clean commits, asset/binding counts,
+ordering, ancestry and parent-only signaling from small saved evidence.
+No tests, builds, native/model work or binary/model/large-artifact hashes run
+while that numerical worker is active.
