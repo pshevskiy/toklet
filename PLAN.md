@@ -227,6 +227,22 @@ held-out quality and M2.5/M3 acceptance remain pending. Astra accepted the repor
 without findings after independently checking sample arithmetic, variation,
 memory, artifact identities and the explicit clean-run substitution.
 
+CLI selection preparation, 10 October 2026 (M3 remains pending): the
+[opt-in CLI selector](docs/experiments/2026-10-10-cpu-tiled-cli.md) consumes
+the model before session creation and reports actual scalar/tiled execution
+at readiness and each request. Scalar remains default; invalid/duplicate modes
+fail before model reads. Default, explicit scalar and tiled preserve tiny
+cache/continuation/rejection/reset semantics and identical ownership. Four real
+Qwen process roles, including the frozen CLI, agree on 24 generation requests over three
+independent first-token cases and pending-token continuations. Maximum physical
+child peak is 2,125,400,200 bytes; all admissions are 2,353,012,560 bytes below
+6 GiB. Formatting, Clippy, 76 ordinary Rust tests and isolated release build
+pass after the boundary worker exits, with the next matrix workload held and
+frozen numerical/application binaries unchanged. Complete application and
+matrix acceptance remain pending. Astra accepted the completed CLI task without
+findings after independently checking raw state/token/text, source/receipt/binary
+identities, checks, memory and idle-window evidence.
+
 Public-runtime slice results, 10 October 2026 (M3 remains pending): the
 [public Core ML probe](docs/experiments/2026-10-10-coreml-slices.md) converts four
 tiny projection/attention graphs with explicit types and persistent FP16 K/V.

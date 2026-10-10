@@ -56,6 +56,11 @@ target/release/toklet --model models/Qwen2.5-0.5B-Instruct --tokens 9707,11,358,
 
 `--raw` bypasses chat formatting; `--messages` and `--tools` accept local JSON arrays. `--token-file` accepts little-endian u32 IDs. Prompt plus requested output must fit `--context-capacity` (at most 2,048); admission occurs before changing session state. The initial backend is `cpu`. Model EOS IDs are hidden from output but remain pending in history; `--no-eos` disables them and repeated `--stop-token` adds IDs. Sampling has no penalties or RNG.
 
+`--cpu-projection tiled` selects the opt-in ordered FP64 projection tile before
+session creation; `scalar` remains default. JSON readiness and statistics name
+the selected mode. Full workload and application qualification precede default
+adoption; see the [CLI qualification](docs/experiments/2026-10-10-cpu-tiled-cli.md).
+
 `--interactive` loads once and accepts JSON lines, publishing a `ready` event before requests:
 
 ```json

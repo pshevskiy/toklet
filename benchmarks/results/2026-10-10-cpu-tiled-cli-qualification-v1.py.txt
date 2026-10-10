@@ -1,0 +1,164 @@
+"""Historical isolated CLI qualification; refuses work before matrix idle."""
+from pathlib import Path
+import datetime
+import json
+import os
+import shutil
+import signal
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+
+ROOT=Path('/Users/coloner/work/rust/toklet')
+sys.path.insert(0,str(ROOT/'tools/bench'))
+import cpu
+import prepare
+import mlx_baseline as common
+
+OUT=ROOT/'benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json'
+BUILD=ROOT/'artifacts/cpu-tiled-cli-v1'
+QPATH=ROOT/'benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json'
+FROZEN={'target/release/examples/cpu_bench':'e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea',
+        'target/release/toklet':'5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59'}
+if OUT.exists() or BUILD.exists():raise ValueError('Refusing to overwrite CLI qualification')
+ps=subprocess.run(['ps','-o','pid,ppid,state,time,command','-p','17694,17695,17701'],capture_output=True,text=True,check=True).stdout
+assert any(line.split()[:2]==['17694','35939'] and line.split()[2].startswith('T') for line in ps.splitlines())
+assert not any(line.split()[:1]==['17701'] for line in ps.splitlines())
+assert all(line.split()[2].startswith('Z') for line in ps.splitlines() if line.split()[:1]==['17695'])
+boundary=prepare.load_json(ROOT/'benchmarks/raw/2026-10-10-cpu-boundary.json')
+assert len(boundary['samples'])==10 and boundary['setup']['warmup_repetitions']==3
+assert any('all 2048 positions committed' in note for note in boundary['notes'])
+worker,_,numerical=cpu.qualified_cpu_worker(QPATH)
+for name,sha in FROZEN.items():assert prepare.digest(ROOT/name)==sha
+result={'format':'toklet-cpu-tiled-cli-functional-v1','completed':False,
+        'started_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        'idle_snapshot':ps,'engine_revision':common.command(['git','rev-parse','HEAD']),
+        'working_tree_status':common.command(['git','status','--porcelain']),
+        'qualification_source_sha256':prepare.digest(Path(__file__)),
+        'helper_sha256':{str(Path(module.__file__).relative_to(ROOT)):prepare.digest(Path(module.__file__)) for module in (cpu,prepare,common)},
+        'numerical_qualification':{'path':str(QPATH.relative_to(ROOT)),'sha256':prepare.digest(QPATH)},
+        'frozen_binaries':FROZEN,'checks':[],'runs':{},'rustflags':os.environ.get('RUSTFLAGS'),
+        'compiler':common.command(['rustc','--version']),
+        'build_commands':[['cp','-pR',str(ROOT/'artifacts/cpu-tiled-engine-v1/release'),str(BUILD/'release')],
+                          ['env',f'CARGO_TARGET_DIR={BUILD}','cargo','build','--locked','--offline','--release','-j','2','--bin','toklet']],
+        'scope':'CLI selection and short functional token/session parity only; no application or performance acceptance.'}
+
+def checked(command):
+    clock=time.perf_counter();process=subprocess.Popen(command,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
+    timed_out=False
+    try:
+        stdout,stderr=process.communicate(timeout=1200)
+    except subprocess.TimeoutExpired:
+        timed_out=True
+        try:os.killpg(process.pid,signal.SIGKILL)
+        except ProcessLookupError:pass
+        stdout,stderr=process.communicate(timeout=20)
+    result['checks'].append({'command':command,'exit_code':process.returncode,'stdout':stdout,'stderr':stderr,'timed_out':timed_out,'wall_seconds':time.perf_counter()-clock})
+    if process.returncode or timed_out:raise ValueError(f'Check failed: {command}')
+
+def power():
+    return {name:common.command(command) for name,command in (
+        ('source',['/usr/bin/pmset','-g','batt']),('configuration',['/usr/bin/pmset','-g','custom']),('thermal',['/usr/bin/pmset','-g','therm']))}
+
+def semantic(event):
+    if event['event']=='done':
+        return {'event':'done','generation':{name:value for name,value in event['statistics']['generation'].items() if not name.endswith('_seconds')}}
+    return {name:value for name,value in event.items() if name not in ('elapsed_seconds','cpu_projection')}
+
+def run_cli(binary,role,projection):
+    flags=[] if role in ('frozen_scalar','default') else ['--cpu-projection',projection]
+    command=[str(binary),'--model',str(ROOT/'models/Qwen2.5-0.5B-Instruct'),'--interactive','--json','--context-capacity','2048','--prefill-chunk','128','--no-eos']+flags
+    raw=OUT.with_suffix(OUT.suffix+f'.{role}.jsonl');stderr=OUT.with_suffix(OUT.suffix+f'.{role}.stderr.txt')
+    if raw.exists() or stderr.exists():raise ValueError('CLI raw evidence already exists')
+    events=[];cases=[]
+    with tempfile.TemporaryFile(mode='w+t') as errors,raw.open('x') as evidence:
+        process=subprocess.Popen(command,cwd=ROOT,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=errors,text=True)
+        watchdog=threading.Timer(1800,process.kill);watchdog.start()
+        try:
+            def read():
+                line=process.stdout.readline()
+                if not line:raise ValueError('Unexpected CLI EOF')
+                event=json.loads(line);events.append(event);evidence.write(line);evidence.flush();return event
+            def send(value):process.stdin.write(json.dumps(value)+'\n');process.stdin.flush()
+            ready=read();assert ready['event']=='ready' and ready['backend']=='cpu' and ready['context_capacity']==2048
+            if role!='frozen_scalar':assert ready['cpu_projection']==projection
+            assert ready['memory_admitted_bytes']<=6*1024**3
+            for name in ('future_changed','short','single'):
+                send({'tokens':fixture['cases'][name]['tokens'],'max_new_tokens':1})
+                generated=[];semantic_events=[]
+                for action in ('generate','continue'):
+                    if action=='continue':send({'action':'continue','max_new_tokens':1})
+                    ids=[]
+                    while True:
+                        event=read();semantic_events.append(semantic(event))
+                        if event['event']=='token':ids.append(event['token_id'])
+                        elif event['event']=='done':
+                            generation=event['statistics']['generation']
+                            assert generation['reason']=={'kind':'output_limit'} and generation['sampled_tokens']==1 and generation['emitted_tokens']==1 and generation['pending_tokens']==1
+                            if role!='frozen_scalar':assert event['statistics']['cpu_projection']==projection
+                            if action=='generate':assert generation['prefill_tokens']==len(fixture['cases'][name]['tokens']) and generation['reused_tokens']==0
+                            else:assert generation['prefill_tokens']==1 and generation['reused_tokens']==len(fixture['cases'][name]['tokens'])
+                            break
+                        elif event['event']!='text':raise ValueError(event)
+                    assert len(ids)==1;generated+=ids
+                assert generated[0]==fixture['argmax'][name][-1]
+                send({'action':'reset'})
+                while True:
+                    event=read();semantic_events.append(semantic(event))
+                    if event['event']=='reset':break
+                    assert event['event']=='text'
+                cases.append({'name':name,'tokens':fixture['cases'][name]['tokens'],'expected_first_token':fixture['argmax'][name][-1],
+                              'token_ids':generated,'semantic_events':semantic_events})
+            peak=common.footprint_peak(process.pid);assert peak is not None and 0<peak<=6*1024**3
+            process.stdin.close();assert process.wait(timeout=20)==0 and not process.stdout.read().strip()
+        finally:
+            watchdog.cancel()
+            if process.poll() is None:process.kill()
+            process.wait(timeout=20);process.stdout.close()
+            if not process.stdin.closed:process.stdin.close()
+            errors.seek(0);stderr.write_text(errors.read());evidence.flush()
+            result.setdefault('partial_runs',{})[role]={'command':command,'exit_code':process.returncode,
+                'raw':str(raw.relative_to(ROOT)),'raw_sha256':prepare.digest(raw),
+                'stderr':str(stderr.relative_to(ROOT)),'stderr_sha256':prepare.digest(stderr)}
+    return {'passed':True,'cpu_projection':projection,'command':command,'ready':ready,'cases':cases,
+            'physical_process_charge_peak_bytes':peak,'exit_code':process.returncode,
+            'raw':str(raw.relative_to(ROOT)),'raw_sha256':prepare.digest(raw),'stderr_sha256':prepare.digest(stderr)}
+
+try:
+    result['power_start']=power()
+    checked(['cargo','fmt'])
+    sources={str(path.relative_to(ROOT)):prepare.digest(path) for path in sorted((ROOT/'src').rglob('*.rs'))}
+    for name in ('Cargo.toml','Cargo.lock','tests/cli.rs'):sources[name]=prepare.digest(ROOT/name)
+    result['source_sha256']=sources
+    cpu.qualified_cpu_worker(QPATH)
+    for command in (['cargo','fmt','--check'],['cargo','clippy','--locked','--offline','--all-targets','--','-D','warnings'],['cargo','test','--locked','--offline']):checked(command)
+    BUILD.mkdir();checked(result['build_commands'][0]);checked(result['build_commands'][1])
+    binary=BUILD/'release/toklet';result['binary_path']=str(binary.relative_to(ROOT));result['binary_sha256']=prepare.digest(binary)
+    fixture_path=ROOT/'tests/fixtures/qwen-v2/manifest.json';fixture=prepare.load_json(fixture_path)
+    result['fixture_manifest_sha256']=prepare.digest(fixture_path)
+    assert result['fixture_manifest_sha256']=='691429f672aa89875e06475f48b5b691343f03c08e47fd204fa60fec2eef20d1'
+    sources_manifest=prepare.load_json(prepare.SOURCES);prepare.validate_source(sources_manifest['model']['weights'])
+    for asset in sources_manifest['assets']:
+        if asset['role']=='model_metadata_or_tokenizer':prepare.validate_source(asset)
+    result['model']=sources_manifest['model'];result['tokenizer_sha256']=next(a['sha256'] for a in sources_manifest['assets'] if a['id']=='qwen.tokenizer.json')
+    for role,projection,path in (('frozen_scalar','scalar',ROOT/'target/release/toklet'),('default','scalar',binary),('scalar','scalar',binary),('tiled','tiled',binary)):
+        result['runs'][role]=run_cli(path,role,projection)
+        assert result['runs'][role]['cases']==result['runs']['frozen_scalar']['cases']
+        if role in ('scalar','tiled'):assert semantic(result['runs'][role]['ready'])==semantic(result['runs']['default']['ready'])
+    for name,sha in sources.items():assert prepare.digest(ROOT/name)==sha
+    for name,sha in result['helper_sha256'].items():assert prepare.digest(ROOT/name)==sha
+    for name,sha in FROZEN.items():assert prepare.digest(ROOT/name)==sha
+    assert prepare.digest(binary)==result['binary_sha256'] and prepare.digest(QPATH)==result['numerical_qualification']['sha256']
+    assert prepare.digest(fixture_path)==result['fixture_manifest_sha256']
+    cpu.qualified_cpu_worker(QPATH);prepare.validate_source(sources_manifest['model']['weights'])
+    for asset in sources_manifest['assets']:
+        if asset['role']=='model_metadata_or_tokenizer':prepare.validate_source(asset)
+    result['power_end']=power();result['completed']=True
+except BaseException as error:
+    result['failure']={'type':type(error).__name__,'message':str(error)}
+    raise
+finally:
+    result['finished_utc']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    with OUT.open('x') as file:json.dump(result,file,indent=2,allow_nan=False);file.write('\n')

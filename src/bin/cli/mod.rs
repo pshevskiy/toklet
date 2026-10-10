@@ -15,6 +15,7 @@ use std::{
     time::{Duration, Instant},
 };
 use toklet::{
+    cpu::ProjectionKernel,
     generation::{self, Input, Request, StopReason},
     session::{Options, Session},
     weights::{self, LoadOptions},
@@ -41,7 +42,8 @@ Usage: toklet [OPTIONS]
   --max-new-tokens N         Sampled output limit, including stop token (32)
   --context-capacity N      Prompt plus output limit, at most 2048 (2048)
   --prefill-chunk N          Prefill cancellation boundary (128)
-  --backend cpu             Scalar CPU execution
+  --backend cpu             CPU execution
+  --cpu-projection MODE     scalar (default) or opt-in tiled projections
   --stop-token ID           Additional stop ID; repeatable
   --no-eos                  Ignore configured EOS IDs
   --json                    JSON token events and statistics
@@ -69,6 +71,7 @@ struct Args {
     max: usize,
     capacity: usize,
     chunk: usize,
+    projection: ProjectionKernel,
 }
 fn utf8(v: OsString) -> io::Result<String> {
     v.into_string()
@@ -96,6 +99,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         max: 32,
         capacity: 2048,
         chunk: 128,
+        projection: ProjectionKernel::Scalar,
     };
     let mut seen = HashSet::new();
     let mut values = values.into_iter().peekable();
@@ -123,6 +127,13 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--context-capacity" => a.capacity = number(value()?)?,
             "--prefill-chunk" => a.chunk = number(value()?)?,
             "--stop-token" => a.stop.push(number(value()?)?),
+            "--cpu-projection" => {
+                a.projection = match utf8(value()?)?.as_str() {
+                    "scalar" => ProjectionKernel::Scalar,
+                    "tiled" => ProjectionKernel::Tiled,
+                    _ => return Err(invalid("--cpu-projection must be scalar or tiled")),
+                };
+            }
             "--backend" => {
                 if value()? != "cpu" {
                     return Err(invalid("only the qualified cpu backend is available"));
@@ -212,6 +223,7 @@ struct Frontend {
     tokenizer_load_seconds: f64,
     memory_admitted_bytes: usize,
     requests: usize,
+    cpu_projection: &'static str,
 }
 #[derive(Default)]
 struct OutputTiming {
@@ -385,7 +397,7 @@ impl Frontend {
                 report.reason = StopReason::Cancelled;
             }
             let cancelled = report.reason == StopReason::Cancelled;
-            let stats = json!({"generation":report,"input_preparation_seconds":input_seconds,
+            let stats = json!({"generation":report,"cpu_projection":self.cpu_projection,"input_preparation_seconds":input_seconds,
                 "input_formatting_seconds":input_formatting_seconds,"tokenization_seconds":tokenization_seconds,
                 "detokenization_seconds":output_timing.detokenization_seconds,"publication_seconds":output_timing.publication_seconds,
                 "load_seconds":if self.requests==0{self.load_seconds}else{0.0},"conversion_seconds":if self.requests==0{self.conversion_seconds}else{0.0},"tokenizer_load_seconds":if self.requests==0{self.tokenizer_load_seconds}else{0.0},"memory_admitted_bytes":self.memory_admitted_bytes});
@@ -487,8 +499,9 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             memory_limit_bytes: budget,
         },
     )?;
+    let model = loaded.model.with_projection_kernel(a.projection);
     let mut session = Session::new(
-        &loaded.model,
+        &model,
         Options {
             capacity: a.capacity,
             prefill_chunk_size: a.chunk,
@@ -514,6 +527,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             .checked_add(external_bytes)
             .ok_or_else(|| invalid("memory accounting overflow"))?,
         requests: 0,
+        cpu_projection: model.projection_kernel().name(),
     };
     if let Some(r) = initial {
         return Ok(if frontend.execute(&mut session, r)? {
@@ -527,6 +541,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         io::stdout().lock(),
         "{}",
         json!({"event":"ready", "backend":"cpu", "context_capacity":a.capacity,
+        "cpu_projection":frontend.cpu_projection,
         "memory_admitted_bytes":frontend.memory_admitted_bytes,
         "logical_memory":{"weights_bytes":memory.weights_bytes,
             "kv_bytes":memory.kv_bytes,"scratch_bytes":memory.scratch_bytes,

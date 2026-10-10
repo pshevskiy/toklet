@@ -1,0 +1,1151 @@
+{
+  "format": "toklet-cpu-tiled-cli-functional-v1",
+  "completed": true,
+  "started_utc": "2026-10-10T04:38:51.176007+00:00",
+  "idle_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:10.98 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n17695 17694 Z      0:00.00 <defunct>\n",
+  "engine_revision": "58588277167b240f2afc195b0e5cfd71b574d7fc",
+  "working_tree_status": "M README.md\n M src/bin/cli/mod.rs\n M tests/cli.rs\n M tools/bench/application.py\n M tools/experiments/rust_metal_probe.py\n M tools/experiments/rust_metal_probe.rs\n M tools/experiments/test_rust_metal_probe.py\n?? docs/experiments/2026-10-10-cpu-tiled-application-adapter.md\n?? docs/experiments/2026-10-10-cpu-tiled-cli.md\n?? docs/experiments/2026-10-10-metal-silu.md\n?? tools/bench/cpu_cli.py\n?? tools/bench/test_cpu_cli.py\n?? tools/experiments/rust_metal_silu.metal\n?? tools/experiments/rust_metal_silu.py\n?? tools/experiments/rust_metal_silu.rs\n?? tools/experiments/test_rust_metal_silu.py",
+  "qualification_source_sha256": "db50c557c776b7ea397d86bbb5819a570a44ac5d0d502e2510521bdbff1b12a5",
+  "helper_sha256": {
+    "tools/bench/cpu.py": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "tools/bench/mlx_baseline.py": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34"
+  },
+  "numerical_qualification": {
+    "path": "benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json",
+    "sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc"
+  },
+  "frozen_binaries": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+  },
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "timed_out": false,
+      "wall_seconds": 0.2500242500100285
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "timed_out": false,
+      "wall_seconds": 0.10303216695319861
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "    Checking toklet v0.1.0 (/Users/coloner/work/rust/toklet)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.77s\n",
+      "timed_out": false,
+      "wall_seconds": 0.8186137499287724
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 7 tests\ntest cli::chat::real_tests::full_pinned_tokenizer_matches_frozen_ids ... ignored, requires explicitly downloaded pinned local Qwen tokenizer assets\ntest cli::tests::idle_interrupt_after_terminal_boundary_is_preserved ... ok\ntest cli::chat::tests::missing_generation_config_uses_model_eos ... ok\ntest cli::chat::tests::python_tool_json_float_spelling_matches_independent_probes ... ok\ntest cli::chat::tests::continued_output_preserves_split_unicode_and_finalizes_once ... ok\ntest cli::chat::tests::invalid_roles_multimodal_content_and_nonfinite_tools_are_rejected ... ok\ntest cli::chat::tests::frozen_transformers_chat_and_raw_ids_match_without_model_downloads ... ok\n\ntest result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.07s\n\n\nrunning 2 tests\ntest quality_policy_and_pinned_source_model_are_available_without_downloads ... ok\ntest offline_workload_arrays_have_frozen_identities_and_exact_admission_boundary ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 2 tests\ntest cached_attention_rejects_invalid_shapes_or_valid_prefix_before_writes ... ok\ntest head_major_cache_with_stale_tails_matches_frozen_gqa_at_all_offsets ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n\nrunning 10 tests\ntest non_unicode_arguments_return_an_error_instead_of_panicking ... ok\ntest version_matches_the_package ... ok\ntest invalid_arguments_fail_without_success_output ... ok\ntest help_is_available_without_a_model ... ok\ntest invalid_projection_options_fail_before_model_access ... ok\ntest invalid_cli_requests_and_over_capacity_fail_before_emitting_tokens ... ok\ntest interactive_cached_prompt_continuation_rejection_and_reset_keep_one_session ... ok\ntest local_token_input_streams_frozen_greedy_ids_and_honors_eos_and_stop_ids ... ok\ntest actual_ctrl_c_cancels_decode_then_continues_and_exits_when_idle ... ok\ntest ctrl_c_during_prefill_can_resume_all_pending_input ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.95s\n\n\nrunning 6 tests\ntest invalid_position_and_attention_inputs_fail_before_mutation ... ok\ntest arithmetic_overflow_requires_discarding_partial_outputs ... ok\ntest grouped_heads_read_their_shared_value_head_without_expansion ... ok\ntest changing_future_keys_queries_and_values_preserves_earlier_context ... ok\ntest rotary_uses_split_half_pairing_and_absolute_chunk_offsets ... ok\ntest rotary_and_gqa_attention_match_all_saved_intermediates ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 8 tests\ntest greedy_uses_lowest_id_ties_and_rejects_invalid_distributions ... ok\ntest output_projection_shares_embedding_weights ... ok\ntest composed_decoder_preserves_causal_outputs_when_future_tokens_change ... ok\ntest full_prefix_greedy_generation_matches_saved_logits_and_tokens ... ok\ntest admission_rejects_invalid_requests_and_scratch_remains_reusable ... ok\ntest opt_in_tiled_decoder_preserves_every_scalar_trace_bit_and_final_logits ... ok\ntest constructor_rejects_invalid_configuration_shapes_biases_and_weights ... ok\ntest composed_decoder_matches_every_named_array_across_all_cases ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s\n\n\nrunning 7 tests\ntest invalid_embedding_and_residual_inputs_fail_before_mutation ... ok\ntest invalid_projection_inputs_fail_before_writing_output ... ok\ntest arithmetic_overflow_is_reported ... ok\ntest rectangular_manual_projection_supports_batch_bias_and_matvec ... ok\ntest fp64_projection_accumulation_preserves_small_terms_and_reference_inputs ... ok\ntest embeddings_and_in_place_residuals_match_saved_values ... ok\ntest every_tiny_linear_projection_agrees_with_independent_numpy_values ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s\n\n\nrunning 6 tests\ntest invalid_reduction_inputs_are_rejected_before_output_changes ... ok\ntest mlp_validates_all_buffers_and_reports_arithmetic_overflow ... ok\ntest stable_operations_cover_zero_and_extreme_finite_values ... ok\ntest softmax_matches_all_causal_probability_arrays ... ok\ntest all_normalizations_match_the_frozen_numpy_reference ... ok\ntest activations_and_complete_gated_mlp_match_every_saved_layer ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 4 tests\ntest invalid_boundaries_fail_before_writes_and_arithmetic_reports_global_index ... ok\ntest fp32_range_subnormals_and_signed_zeros_match_the_scalar_oracle ... ok\ntest rectangular_tiles_and_all_tails_preserve_bias_and_ordered_cancellation ... ok\ntest independent_tiny_projections_keep_frozen_tolerances_and_exact_scalar_bits ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s\n\n\nrunning 4 tests\ntest topology_and_numerical_policy_match_the_learning_model ... ok\ntest saved_linear_example_matches_hand_calculation ... ok\ntest causal_fixture_preserves_logits_before_the_changed_future_token ... ok\ntest every_frozen_array_has_the_declared_shape_hash_and_finite_values ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n\nrunning 3 tests\ntest pinned_qwen_fp32_matches_full_transformers_forward ... ignored, requires pinned Qwen weights and explicitly regenerated full Transformers probes\ntest pinned_qwen_tiled_fp32_matches_full_transformers_forward ... ignored, requires pinned Qwen weights and explicitly regenerated full Transformers probes\ntest real_fp32_probes_have_frozen_identity_selection_and_independent_gates ... ok\n\ntest result: ok. 1 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n\nrunning 2 tests\ntest pinned_qwen_cached_sessions_match_full_prefix ... ignored, requires the explicitly downloaded pinned Qwen checkpoint; Mac footprint requires own-process inspection\ntest pinned_qwen_tiled_cached_sessions_match_full_prefix ... ignored, requires the explicitly downloaded pinned Qwen checkpoint; Mac footprint requires own-process inspection\n\ntest result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 13 tests\ntest layer_or_final_projection_failure_never_commits_a_staged_chunk ... ok\ntest requests_and_memory_are_admitted_before_mutation ... ok\ntest cancellation_and_output_failure_preserve_recoverable_prefixes ... ok\ntest generation_admission_rejects_all_invalid_inputs_before_state_changes ... ok\ntest exact_append_cached_prompt_changed_prefix_reset_and_chunk_boundaries ... ok\ntest generation_events_and_statistics_allocate_no_numerical_buffers ... ok\ntest sampled_history_is_pending_until_evaluated_and_greedy_trace_matches ... ok\ntest admitted_prefill_decode_and_reuse_allocate_no_buffers ... ok\ntest bounded_generation_matches_greedy_oracle_and_continues_pending_token ... ok\ntest stop_ids_are_pending_and_hidden_and_zero_output_retains_cached_logits ... ok\ntest teacher_forced_timing_keeps_exact_prefix_and_pending_state ... ok\ntest one_shot_irregular_chunks_and_decode_match_full_prefix_and_frozen_oracle ... ok\ntest all_2048_tokens_and_nonzero_absolute_boundary_match_full_prefix ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.37s\n\n\nrunning 8 tests\ntest pinned_qwen_loads_within_the_initial_budget ... ignored, requires the explicitly downloaded pinned Qwen checkpoint\ntest malformed_and_duplicate_metadata_are_rejected ... ok\ntest tied_output_is_checked_and_does_not_add_persistent_weights ... ok\ntest explicit_fp16_and_bf16_little_endian_values_convert_exactly ... ok\ntest single_and_indexed_shards_load_the_same_frozen_tiny_decoder ... ok\ntest conversion_crosses_chunk_boundaries_and_preserves_the_short_tail ... ok\ntest tensor_shape_dtype_names_nonfinite_and_shard_mapping_are_validated ... ok\ntest unsupported_configuration_and_insufficient_budget_fail_before_loading ... ok\n\ntest result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.11s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+      "stderr": "   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.07s\n     Running unittests src/lib.rs (target/debug/deps/toklet-bc72375bb0fa4d9e)\n     Running unittests src/bin/toklet.rs (target/debug/deps/toklet-3d54e551ad77587f)\n     Running tests/bench_contract.rs (target/debug/deps/bench_contract-768b169ecbe8e837)\n     Running tests/cached_attention.rs (target/debug/deps/cached_attention-4e06a4b0b525f094)\n     Running tests/cli.rs (target/debug/deps/cli-a12885597627480a)\n     Running tests/cpu_attention.rs (target/debug/deps/cpu_attention-3b8a30842bbafe58)\n     Running tests/cpu_decoder.rs (target/debug/deps/cpu_decoder-b89e061c1807a676)\n     Running tests/cpu_linear.rs (target/debug/deps/cpu_linear-9154aef7ef7a0669)\n     Running tests/cpu_reductions.rs (target/debug/deps/cpu_reductions-9fa12626b9e913c0)\n     Running tests/cpu_tiled.rs (target/debug/deps/cpu_tiled-007405c542dd3b5c)\n     Running tests/fixtures.rs (target/debug/deps/fixtures-0adf33794981c4eb)\n     Running tests/qwen_forward.rs (target/debug/deps/qwen_forward-1e413832df545151)\n     Running tests/qwen_session.rs (target/debug/deps/qwen_session-5f3b5e953a11cb3d)\n     Running tests/session.rs (target/debug/deps/session-72fe2cc0cd3d3069)\n     Running tests/weights.rs (target/debug/deps/weights-8901282e3f03e6a8)\n   Doc-tests toklet\n",
+      "timed_out": false,
+      "wall_seconds": 10.750070082955062
+    },
+    {
+      "command": [
+        "cp",
+        "-pR",
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release",
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "timed_out": false,
+      "wall_seconds": 1.0478667080169544
+    },
+    {
+      "command": [
+        "env",
+        "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1",
+        "cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "--release",
+        "-j",
+        "2",
+        "--bin",
+        "toklet"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)\n    Finished `release` profile [optimized] target(s) in 9.80s\n",
+      "timed_out": false,
+      "wall_seconds": 9.817763415980153
+    }
+  ],
+  "runs": {
+    "frozen_scalar": {
+      "passed": true,
+      "cpu_projection": "scalar",
+      "command": [
+        "/Users/coloner/work/rust/toklet/target/release/toklet",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+        "--interactive",
+        "--json",
+        "--context-capacity",
+        "2048",
+        "--prefill-chunk",
+        "128",
+        "--no-eos"
+      ],
+      "ready": {
+        "event": "ready",
+        "backend": "cpu",
+        "context_capacity": 2048,
+        "memory_admitted_bytes": 2353012560,
+        "logical_memory": {
+          "weights_bytes": 1976131072,
+          "kv_bytes": 50331648,
+          "scratch_bytes": 10436608,
+          "history_bytes": 8192,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 8064,
+          "metadata_allowance_bytes": 67108864,
+          "tokenizer_application_allowance_bytes": 247772624
+        }
+      },
+      "cases": [
+        {
+          "name": "future_changed",
+          "tokens": [
+            9707,
+            11,
+            358,
+            498
+          ],
+          "expected_first_token": 1410,
+          "token_ids": [
+            1410,
+            1492
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 1410,
+              "index": 0,
+              "text": " could"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 4,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 5,
+                "evaluated_tokens": 4,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 1492,
+              "index": 0,
+              "text": " help"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 4,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 6,
+                "evaluated_tokens": 5,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        },
+        {
+          "name": "short",
+          "tokens": [
+            9707,
+            11,
+            358,
+            2776
+          ],
+          "expected_first_token": 4460,
+          "token_ids": [
+            4460,
+            311
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 4460,
+              "index": 0,
+              "text": " trying"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 4,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 5,
+                "evaluated_tokens": 4,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 311,
+              "index": 0,
+              "text": " to"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 4,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 6,
+                "evaluated_tokens": 5,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        },
+        {
+          "name": "single",
+          "tokens": [
+            9707
+          ],
+          "expected_first_token": 271,
+          "token_ids": [
+            271,
+            40
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 271,
+              "index": 0,
+              "text": "\n\n"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 2,
+                "evaluated_tokens": 1,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 40,
+              "index": 0,
+              "text": "I"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 1,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 3,
+                "evaluated_tokens": 2,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        }
+      ],
+      "physical_process_charge_peak_bytes": 2125056112,
+      "exit_code": 0,
+      "raw": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.frozen_scalar.jsonl",
+      "raw_sha256": "9839d9f16d287dd452468f7f78c8919b3b0d1b5d45d21fcc182c392eacb67ef6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "default": {
+      "passed": true,
+      "cpu_projection": "scalar",
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release/toklet",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+        "--interactive",
+        "--json",
+        "--context-capacity",
+        "2048",
+        "--prefill-chunk",
+        "128",
+        "--no-eos"
+      ],
+      "ready": {
+        "event": "ready",
+        "backend": "cpu",
+        "context_capacity": 2048,
+        "cpu_projection": "scalar",
+        "memory_admitted_bytes": 2353012560,
+        "logical_memory": {
+          "weights_bytes": 1976131072,
+          "kv_bytes": 50331648,
+          "scratch_bytes": 10436608,
+          "history_bytes": 8192,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 8064,
+          "metadata_allowance_bytes": 67108864,
+          "tokenizer_application_allowance_bytes": 247772624
+        }
+      },
+      "cases": [
+        {
+          "name": "future_changed",
+          "tokens": [
+            9707,
+            11,
+            358,
+            498
+          ],
+          "expected_first_token": 1410,
+          "token_ids": [
+            1410,
+            1492
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 1410,
+              "index": 0,
+              "text": " could"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 4,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 5,
+                "evaluated_tokens": 4,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 1492,
+              "index": 0,
+              "text": " help"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 4,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 6,
+                "evaluated_tokens": 5,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        },
+        {
+          "name": "short",
+          "tokens": [
+            9707,
+            11,
+            358,
+            2776
+          ],
+          "expected_first_token": 4460,
+          "token_ids": [
+            4460,
+            311
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 4460,
+              "index": 0,
+              "text": " trying"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 4,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 5,
+                "evaluated_tokens": 4,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 311,
+              "index": 0,
+              "text": " to"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 4,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 6,
+                "evaluated_tokens": 5,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        },
+        {
+          "name": "single",
+          "tokens": [
+            9707
+          ],
+          "expected_first_token": 271,
+          "token_ids": [
+            271,
+            40
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 271,
+              "index": 0,
+              "text": "\n\n"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 2,
+                "evaluated_tokens": 1,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 40,
+              "index": 0,
+              "text": "I"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 1,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 3,
+                "evaluated_tokens": 2,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        }
+      ],
+      "physical_process_charge_peak_bytes": 2122631304,
+      "exit_code": 0,
+      "raw": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.default.jsonl",
+      "raw_sha256": "f993b7611b7030e7291cf8646316708ce774e699061637aca4453e42eb545cdb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "scalar": {
+      "passed": true,
+      "cpu_projection": "scalar",
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release/toklet",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+        "--interactive",
+        "--json",
+        "--context-capacity",
+        "2048",
+        "--prefill-chunk",
+        "128",
+        "--no-eos",
+        "--cpu-projection",
+        "scalar"
+      ],
+      "ready": {
+        "event": "ready",
+        "backend": "cpu",
+        "context_capacity": 2048,
+        "cpu_projection": "scalar",
+        "memory_admitted_bytes": 2353012560,
+        "logical_memory": {
+          "weights_bytes": 1976131072,
+          "kv_bytes": 50331648,
+          "scratch_bytes": 10436608,
+          "history_bytes": 8192,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 8064,
+          "metadata_allowance_bytes": 67108864,
+          "tokenizer_application_allowance_bytes": 247772624
+        }
+      },
+      "cases": [
+        {
+          "name": "future_changed",
+          "tokens": [
+            9707,
+            11,
+            358,
+            498
+          ],
+          "expected_first_token": 1410,
+          "token_ids": [
+            1410,
+            1492
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 1410,
+              "index": 0,
+              "text": " could"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 4,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 5,
+                "evaluated_tokens": 4,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 1492,
+              "index": 0,
+              "text": " help"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 4,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 6,
+                "evaluated_tokens": 5,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        },
+        {
+          "name": "short",
+          "tokens": [
+            9707,
+            11,
+            358,
+            2776
+          ],
+          "expected_first_token": 4460,
+          "token_ids": [
+            4460,
+            311
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 4460,
+              "index": 0,
+              "text": " trying"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 4,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 5,
+                "evaluated_tokens": 4,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 311,
+              "index": 0,
+              "text": " to"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 4,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 6,
+                "evaluated_tokens": 5,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        },
+        {
+          "name": "single",
+          "tokens": [
+            9707
+          ],
+          "expected_first_token": 271,
+          "token_ids": [
+            271,
+            40
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 271,
+              "index": 0,
+              "text": "\n\n"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 2,
+                "evaluated_tokens": 1,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 40,
+              "index": 0,
+              "text": "I"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 1,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 3,
+                "evaluated_tokens": 2,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        }
+      ],
+      "physical_process_charge_peak_bytes": 2122565744,
+      "exit_code": 0,
+      "raw": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.scalar.jsonl",
+      "raw_sha256": "e582de7f42fdb54fc277a7e956f6ce91db227381267bc8af9bbd129d0977f02d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tiled": {
+      "passed": true,
+      "cpu_projection": "tiled",
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release/toklet",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+        "--interactive",
+        "--json",
+        "--context-capacity",
+        "2048",
+        "--prefill-chunk",
+        "128",
+        "--no-eos",
+        "--cpu-projection",
+        "tiled"
+      ],
+      "ready": {
+        "event": "ready",
+        "backend": "cpu",
+        "context_capacity": 2048,
+        "cpu_projection": "tiled",
+        "memory_admitted_bytes": 2353012560,
+        "logical_memory": {
+          "weights_bytes": 1976131072,
+          "kv_bytes": 50331648,
+          "scratch_bytes": 10436608,
+          "history_bytes": 8192,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 8064,
+          "metadata_allowance_bytes": 67108864,
+          "tokenizer_application_allowance_bytes": 247772624
+        }
+      },
+      "cases": [
+        {
+          "name": "future_changed",
+          "tokens": [
+            9707,
+            11,
+            358,
+            498
+          ],
+          "expected_first_token": 1410,
+          "token_ids": [
+            1410,
+            1492
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 1410,
+              "index": 0,
+              "text": " could"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 4,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 5,
+                "evaluated_tokens": 4,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 1492,
+              "index": 0,
+              "text": " help"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 4,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 6,
+                "evaluated_tokens": 5,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        },
+        {
+          "name": "short",
+          "tokens": [
+            9707,
+            11,
+            358,
+            2776
+          ],
+          "expected_first_token": 4460,
+          "token_ids": [
+            4460,
+            311
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 4460,
+              "index": 0,
+              "text": " trying"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 4,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 5,
+                "evaluated_tokens": 4,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 311,
+              "index": 0,
+              "text": " to"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 4,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 6,
+                "evaluated_tokens": 5,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        },
+        {
+          "name": "single",
+          "tokens": [
+            9707
+          ],
+          "expected_first_token": 271,
+          "token_ids": [
+            271,
+            40
+          ],
+          "semantic_events": [
+            {
+              "event": "token",
+              "token_id": 271,
+              "index": 0,
+              "text": "\n\n"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 2,
+                "evaluated_tokens": 1,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "token",
+              "token_id": 40,
+              "index": 0,
+              "text": "I"
+            },
+            {
+              "event": "done",
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 1,
+                "prefill_tokens": 1,
+                "sampled_tokens": 1,
+                "emitted_tokens": 1,
+                "history_tokens": 3,
+                "evaluated_tokens": 2,
+                "pending_tokens": 1
+              }
+            },
+            {
+              "event": "reset"
+            }
+          ]
+        }
+      ],
+      "physical_process_charge_peak_bytes": 2125400200,
+      "exit_code": 0,
+      "raw": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.tiled.jsonl",
+      "raw_sha256": "c8c791009137957b92d664de596c5ebfb830c13def8d0d62ff28ed736bfa5d15",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "rustflags": null,
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)",
+  "build_commands": [
+    [
+      "cp",
+      "-pR",
+      "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release",
+      "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release"
+    ],
+    [
+      "env",
+      "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1",
+      "cargo",
+      "build",
+      "--locked",
+      "--offline",
+      "--release",
+      "-j",
+      "2",
+      "--bin",
+      "toklet"
+    ]
+  ],
+  "scope": "CLI selection and short functional token/session parity only; no application or performance acceptance.",
+  "power_start": {
+    "source": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+    "configuration": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  },
+  "source_sha256": {
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "32f64ab957faeac75638a5efe3de8e9a6b0a6d3d1219a50fcd0c3a126ff655b8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "ef43edbfc7e337b03d2b0039223d28489df920b8e7a39886de45cd534e4f1dff",
+    "src/lib.rs": "a1d32de474f895b05649fba4fc3f3042f4ee5f0903c18ffc1048b632defbdf7b",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "aba1c8cfd934a5b41f2debd3be2b75b137bdec9d725712849b89512b469e2d55",
+    "src/weights/mod.rs": "024c17ef5230069a024200ff89ef9c96a380ab4ea16f232de6d9c38892704783",
+    "Cargo.toml": "f9614fde795692ea4f976f4a243ed3991d1e76f0109a4f2fd6bc3d5141977cc4",
+    "Cargo.lock": "7e13db0c63cb370080711ed1d2f6f08a95a1a25516e16eb2a34b33e65db51151",
+    "tests/cli.rs": "326bb94cc3685cfdf594c73e0ec3f7a5583415f3a7b0a9f9f4f906fbc4ddb6a8"
+  },
+  "binary_path": "artifacts/cpu-tiled-cli-v1/release/toklet",
+  "binary_sha256": "8e1be695229fb4a46e49725f06050b3296f6fb398e718fca8567bf0c6b400b43",
+  "fixture_manifest_sha256": "691429f672aa89875e06475f48b5b691343f03c08e47fd204fa60fec2eef20d1",
+  "model": {
+    "engine_total_token_limit": 2048,
+    "engine_working_set_limit_bytes": 6442450944,
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "tokenizer_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights": {
+      "bytes": 988097824,
+      "file": "models/Qwen2.5-0.5B-Instruct/model.safetensors",
+      "sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "storage_dtype": "BF16",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/7ae557604adf67be50417f59c2c2f167def9a775/model.safetensors"
+    }
+  },
+  "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+  "partial_runs": {
+    "frozen_scalar": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/target/release/toklet",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+        "--interactive",
+        "--json",
+        "--context-capacity",
+        "2048",
+        "--prefill-chunk",
+        "128",
+        "--no-eos"
+      ],
+      "exit_code": 0,
+      "raw": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.frozen_scalar.jsonl",
+      "raw_sha256": "9839d9f16d287dd452468f7f78c8919b3b0d1b5d45d21fcc182c392eacb67ef6",
+      "stderr": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.frozen_scalar.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "default": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release/toklet",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+        "--interactive",
+        "--json",
+        "--context-capacity",
+        "2048",
+        "--prefill-chunk",
+        "128",
+        "--no-eos"
+      ],
+      "exit_code": 0,
+      "raw": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.default.jsonl",
+      "raw_sha256": "f993b7611b7030e7291cf8646316708ce774e699061637aca4453e42eb545cdb",
+      "stderr": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.default.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "scalar": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release/toklet",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+        "--interactive",
+        "--json",
+        "--context-capacity",
+        "2048",
+        "--prefill-chunk",
+        "128",
+        "--no-eos",
+        "--cpu-projection",
+        "scalar"
+      ],
+      "exit_code": 0,
+      "raw": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.scalar.jsonl",
+      "raw_sha256": "e582de7f42fdb54fc277a7e956f6ce91db227381267bc8af9bbd129d0977f02d",
+      "stderr": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.scalar.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tiled": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release/toklet",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+        "--interactive",
+        "--json",
+        "--context-capacity",
+        "2048",
+        "--prefill-chunk",
+        "128",
+        "--no-eos",
+        "--cpu-projection",
+        "tiled"
+      ],
+      "exit_code": 0,
+      "raw": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.tiled.jsonl",
+      "raw_sha256": "c8c791009137957b92d664de596c5ebfb830c13def8d0d62ff28ed736bfa5d15",
+      "stderr": "benchmarks/raw/2026-10-10-cpu-tiled-cli-qualification-v1.json.tiled.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "power_end": {
+    "source": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+    "configuration": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  },
+  "finished_utc": "2026-10-10T04:39:43.287063+00:00"
+}

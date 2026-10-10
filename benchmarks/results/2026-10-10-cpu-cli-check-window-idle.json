@@ -1,0 +1,7 @@
+{
+  "format": "toklet-cpu-cli-check-window-idle-v1",
+  "observed_utc": "2026-10-10T04:38:36.014587+00:00",
+  "snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:10.98 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n17695 17694 Z      0:00.00 <defunct>\n",
+  "boundary_result": "benchmarks/raw/2026-10-10-cpu-boundary.json",
+  "action": "Boundary transport and numerical worker exited normally. Parent orchestration remains held; no next numerical workload can start."
+}

@@ -267,44 +267,100 @@ fn local_token_input_streams_frozen_greedy_ids_and_honors_eos_and_stop_ids() {
 #[test]
 fn interactive_cached_prompt_continuation_rejection_and_reset_keep_one_session() {
     let a = Artifact::tiny(32);
-    let mut child = a
-        .command(32)
-        .args(["--interactive", "--max-new-tokens", "4"])
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .unwrap();
-    let mut input = child.stdin.take().unwrap();
-    for request in [
-        json!({"tokens":[1,7,13,3],"max_new_tokens":0}),
-        json!({"tokens":[1,7,13,3],"max_new_tokens":0}),
-        json!({"action":"continue","max_new_tokens":4}),
-        json!({"action":"continue","max_new_tokens":2}),
-        json!({"tokens":[64],"max_new_tokens":1}),
-        json!({"action":"reset"}),
-        json!({"tokens":[11],"max_new_tokens":1}),
+    let mut baseline = None;
+    for (flags, projection) in [
+        (&[][..], "scalar"),
+        (&["--cpu-projection", "scalar"][..], "scalar"),
+        (&["--cpu-projection", "tiled"][..], "tiled"),
     ] {
-        writeln!(input, "{request}").unwrap();
+        let mut child = a
+            .command(32)
+            .args(flags)
+            .args(["--interactive", "--max-new-tokens", "4"])
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .unwrap();
+        let mut input = child.stdin.take().unwrap();
+        for request in [
+            json!({"tokens":[1,7,13,3],"max_new_tokens":0}),
+            json!({"tokens":[1,7,13,3],"max_new_tokens":0}),
+            json!({"action":"continue","max_new_tokens":4}),
+            json!({"action":"continue","max_new_tokens":2}),
+            json!({"tokens":[64],"max_new_tokens":1}),
+            json!({"action":"reset"}),
+            json!({"tokens":[11],"max_new_tokens":1}),
+        ] {
+            writeln!(input, "{request}").unwrap();
+        }
+        drop(input);
+        let output = child.wait_with_output().unwrap();
+        let r = records(&output);
+        assert_eq!(r[0]["cpu_projection"], projection);
+        assert_eq!(r[0]["backend"], "cpu");
+        let done: Vec<_> = r
+            .iter()
+            .filter(|e| e["event"] == "done")
+            .map(|e| &e["statistics"]["generation"])
+            .collect();
+        assert_eq!(done.len(), 5);
+        assert_eq!(done[0]["prefill_tokens"], 4);
+        assert_eq!(done[1]["reused_tokens"], 4);
+        assert_eq!(done[1]["prefill_tokens"], 0);
+        assert_eq!(done[2]["sampled_tokens"], 4);
+        assert_eq!(done[3]["reused_tokens"], 7);
+        assert_eq!(done[3]["prefill_tokens"], 1);
+        assert!(r.iter().any(|e| e["event"] == "error"));
+        assert!(r.iter().any(|e| e["event"] == "reset"));
+        assert_eq!(done[4]["reused_tokens"], 0);
+        let mut semantics = Vec::new();
+        for event in &r {
+            match event["event"].as_str().unwrap() {
+                "ready" => {
+                    let mut ready = event.clone();
+                    ready.as_object_mut().unwrap().remove("cpu_projection");
+                    semantics.push(ready);
+                }
+                "done" => {
+                    assert_eq!(event["statistics"]["cpu_projection"], projection);
+                    let mut generation = event["statistics"]["generation"].clone();
+                    generation
+                        .as_object_mut()
+                        .unwrap()
+                        .retain(|name, _| !name.ends_with("_seconds"));
+                    semantics.push(generation);
+                }
+                "token" => semantics.push(json!({
+                    "event":"token", "token_id":event["token_id"],
+                    "index":event["index"], "text":event["text"]
+                })),
+                _ => semantics.push(event.clone()),
+            }
+        }
+        if let Some(expected) = &baseline {
+            assert_eq!(&semantics, expected);
+        } else {
+            baseline = Some(semantics);
+        }
     }
-    drop(input);
-    let output = child.wait_with_output().unwrap();
-    let r = records(&output);
-    let done: Vec<_> = r
-        .iter()
-        .filter(|e| e["event"] == "done")
-        .map(|e| &e["statistics"]["generation"])
-        .collect();
-    assert_eq!(done.len(), 5);
-    assert_eq!(done[0]["prefill_tokens"], 4);
-    assert_eq!(done[1]["reused_tokens"], 4);
-    assert_eq!(done[1]["prefill_tokens"], 0);
-    assert_eq!(done[2]["sampled_tokens"], 4);
-    assert_eq!(done[3]["reused_tokens"], 7);
-    assert_eq!(done[3]["prefill_tokens"], 1);
-    assert!(r.iter().any(|e| e["event"] == "error"));
-    assert!(r.iter().any(|e| e["event"] == "reset"));
-    assert_eq!(done[4]["reused_tokens"], 0);
+}
+
+#[test]
+fn invalid_projection_options_fail_before_model_access() {
+    for tail in [
+        vec!["--cpu-projection", "metal"],
+        vec!["--cpu-projection", "Tiled"],
+        vec!["--cpu-projection"],
+        vec!["--cpu-projection", "scalar", "--cpu-projection", "tiled"],
+    ] {
+        let mut args = vec!["--model", "/no-such-toklet-model", "--tokens", "1"];
+        args.extend(tail);
+        let out = run(&args);
+        assert_eq!(out.status.code(), Some(2));
+        assert!(out.stdout.is_empty());
+        assert!(String::from_utf8_lossy(&out.stderr).contains("--cpu-projection"));
+    }
 }
 
 #[test]

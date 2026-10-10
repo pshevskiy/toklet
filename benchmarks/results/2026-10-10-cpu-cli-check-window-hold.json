@@ -1,0 +1,7 @@
+{
+  "format": "toklet-cpu-cli-check-window-hold-v1",
+  "orchestration_held_utc": "2026-10-10T03:53:09.131238+00:00",
+  "held_pid": 17694,
+  "snapshot_before": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ss     0:10.98 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n17695 17694 S      0:00.56 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json\n17701 17695 R    117:10.34 /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n",
+  "action": "Hold only matrix orchestration; boundary transport and numerical worker continue normally through all remaining samples and final 2048-position commit. Heavy CLI checks wait for both to exit naturally. No numerical worker is stopped."
+}
