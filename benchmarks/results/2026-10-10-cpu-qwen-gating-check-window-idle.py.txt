@@ -1,0 +1,52 @@
+"""Verify owned append workers exited naturally before beginning any checks."""
+from datetime import datetime, timezone
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+
+root = Path.cwd().resolve()
+snapshot = subprocess.check_output([
+    "ps", "-o", "pid,ppid,stat,time,command", "-p", "17694,68696,68705",
+], text=True)
+rows = {int(row[0]): row for line in snapshot.splitlines()[1:]
+        if len(row := line.split(None, 4)) == 5}
+assert 68705 not in rows
+assert int(rows[17694][1]) == 35939 and "T" in rows[17694][2]
+assert int(rows[68696][1]) == 17694 and rows[68696][2].startswith("Z")
+result_path = root / "benchmarks/raw/2026-10-10-cpu-append.json"
+state_path = result_path.with_suffix(result_path.suffix + ".samples.jsonl")
+result = json.loads(result_path.read_text())
+states = [json.loads(line) for line in state_path.read_text().splitlines()]
+assert result["setup"]["warmup_repetitions"] == 3
+assert len(result["samples"]) == len(states) == 10
+assert result["runtime"] == "Toklet scalar CPU"
+assert result["workload"]["name"] == "append_teacher_forced_128"
+for sample, row in zip(result["samples"], states):
+    assert sample == row["sample"]
+    state = row["state"]
+    assert (state["reused_tokens"], state["prefill_tokens"], state["evaluated_tokens"],
+            state["pending_tokens"], state["emitted_tokens"]) == (512, 64, 703, 1, 128)
+hold_path = root / "benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-hold.json"
+hold = json.loads(hold_path.read_text())
+assert (hold["held_pid"], hold["active_transport_pid"], hold["active_numerical_worker_pid"]) == (17694, 68696, 68705)
+record = {
+    "format": "toklet-cpu-qwen-gating-check-window-idle-v1",
+    "idle_verified_utc": datetime.now(timezone.utc).isoformat(),
+    "completed_workload": "append", "measured_requests": 10,
+    "held_orchestration_pid": 17694, "defunct_transport_pid": 68696,
+    "exited_numerical_worker_pid": 68705, "snapshot": snapshot,
+    "source_hold_sha256": hashlib.sha256(hold_path.read_bytes()).hexdigest(),
+    "scope": "Append numerical worker exited naturally after all warmups/measurements, transport is defunct and only orchestration remains held. No tests/build/native/model or large hashes occurred until this idle proof.",
+}
+for source in (result_path, state_path):
+    destination = root / "benchmarks/results" / source.name
+    with destination.open("xb") as stream:
+        stream.write(source.read_bytes())
+raw_idle = root / "benchmarks/raw/2026-10-10-cpu-qwen-gating-check-window-idle.json"
+saved_idle = root / "benchmarks/results" / raw_idle.name
+for output in (raw_idle, saved_idle):
+    with output.open("x") as stream:
+        json.dump(record, stream, indent=2, allow_nan=False)
+        stream.write("\n")
+print(json.dumps({"idle_verified_utc": record["idle_verified_utc"], "measured_requests": 10}))

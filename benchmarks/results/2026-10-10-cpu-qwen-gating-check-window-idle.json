@@ -1,0 +1,12 @@
+{
+  "format": "toklet-cpu-qwen-gating-check-window-idle-v1",
+  "idle_verified_utc": "2026-10-10T08:49:00.377936+00:00",
+  "completed_workload": "append",
+  "measured_requests": 10,
+  "held_orchestration_pid": 17694,
+  "defunct_transport_pid": 68696,
+  "exited_numerical_worker_pid": 68705,
+  "snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.09 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n68696 17694 Z      0:00.00 <defunct>\n",
+  "source_hold_sha256": "cefeab5b06fc656725bfe916c32d8bc1992cd4827a7a08dcef31a2bb140d8564",
+  "scope": "Append numerical worker exited naturally after all warmups/measurements, transport is defunct and only orchestration remains held. No tests/build/native/model or large hashes occurred until this idle proof."
+}

@@ -1,0 +1,59 @@
+"""Run required checks only after the owned append worker has exited."""
+from datetime import datetime, timezone
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+root = Path.cwd().resolve()
+sys.path.insert(0, str(root / "tools/bench"))
+import quality
+
+idle_path = root / "benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-idle.json"
+idle = json.loads(idle_path.read_text())
+assert idle["completed_workload"] == "append" and idle["measured_requests"] == 10
+snapshot = subprocess.check_output([
+    "ps", "-o", "pid,ppid,stat,time,command", "-p", "17694,68696,68705",
+], text=True)
+rows = {int(row[0]): row for line in snapshot.splitlines()[1:]
+        if len(row := line.split(None, 4)) == 5}
+assert 68705 not in rows
+assert int(rows[17694][1]) == 35939 and "T" in rows[17694][2]
+assert int(rows[68696][1]) == 17694 and rows[68696][2].startswith("Z")
+commands = [
+    ["cargo", "fmt", "--check"],
+    ["cargo", "clippy", "--locked", "--offline", "--all-targets", "--", "-D", "warnings"],
+    ["cargo", "test", "--locked", "--offline"],
+    [str(root / ".venv/bin/python"), "-m", "unittest", "discover", "-s", "tools/experiments", "-p", "test_*.py"],
+    [str(root / ".venv/bin/python"), "-m", "unittest", "discover", "-s", "tools/bench", "-p", "test_*.py"],
+]
+output = root / "benchmarks/results/2026-10-10-qwen-metal-gating-task-checks-v1.json"
+record = {
+    "format": "toklet-qwen-metal-gating-task-checks-v1", "completed": False,
+    "started_utc": datetime.now(timezone.utc).isoformat(), "snapshot_before": snapshot,
+    "idle_proof_sha256": hashlib.sha256(idle_path.read_bytes()).hexdigest(),
+    "producer_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), "checks": [],
+    "check_helper_sha256": hashlib.sha256(Path(quality.__file__).read_bytes()).hexdigest(),
+}
+with output.open("x") as stream:
+    json.dump(record, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+for command in commands:
+    started = time.monotonic()
+    try:
+        # Reuse the reviewed bounded helper: on any failure it kills only the
+        # check's owned group, drains/reaps, retains exit/output/cleanup evidence,
+        # and re-raises the original exception after recording it.
+        quality.checked(command, record)
+    except BaseException as error:
+        record["failure"] = {"command": command, "type": type(error).__name__,
+                             "message": str(error), "wall_seconds": time.monotonic() - started}
+        output.write_text(json.dumps(record, indent=2, allow_nan=False) + "\n")
+        raise
+    output.write_text(json.dumps(record, indent=2, allow_nan=False) + "\n")
+    print(json.dumps({"checked": command, "exit_code": 0}), flush=True)
+record["completed"] = True
+record["finished_utc"] = datetime.now(timezone.utc).isoformat()
+output.write_text(json.dumps(record, indent=2, allow_nan=False) + "\n")

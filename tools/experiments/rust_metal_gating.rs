@@ -83,7 +83,7 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
         }
         let rows = scalar(source, "rows")?;
         let width = scalar(source, "width")?;
-        if !(1..=32).contains(&rows) || width != 64 {
+        if !(1..=32).contains(&rows) || !matches!(width, 64 | 4864) {
             return Err(error("fixture", "gating prototype shape outside bounds"));
         }
         let count = rows
@@ -308,6 +308,28 @@ mod tests {
         assert_eq!(admitted(&case, total).unwrap(), total);
         assert!(admitted(&case, total - 1).is_err());
         assert!(admitted(&case, LIMIT + 1).is_err());
+    }
+    #[test]
+    fn wide_rows_preserve_the_original_aggregate_inventory_limit() {
+        let mut value = sample();
+        value["cases"][0]["width"] = json!(4864);
+        value["cases"][0]["gate_bits"] = json!(vec![0x3c00u16; 4864]);
+        value["cases"][0]["up_bits"] = json!(vec![0x0001u16; 4864]);
+        let cases = load(&fixture(&value).0).unwrap();
+        assert_eq!(cases[0].gate.len(), 4871);
+        assert_eq!(cases[0].up.len(), 4871);
+        let budget = 67186800;
+        assert_eq!(admitted(&cases[0], budget).unwrap(), budget);
+        assert!(admitted(&cases[0], budget - 1).is_err());
+        let duplicate = value["cases"][0].clone();
+        value["cases"].as_array_mut().unwrap().push(duplicate);
+        value["cases"][1]["id"] = json!("second");
+        assert_eq!(load(&fixture(&value).0).err().unwrap().stage, "admission");
+        value["cases"].as_array_mut().unwrap().pop();
+        value["cases"][0]["rows"] = json!(2);
+        value["cases"][0]["gate_bits"] = json!(vec![0u16; 9728]);
+        value["cases"][0]["up_bits"] = json!(vec![0u16; 9728]);
+        assert_eq!(load(&fixture(&value).0).err().unwrap().stage, "admission");
     }
     #[test]
     fn oversized_bytes_and_case_counts_fail_before_native_allocation() {

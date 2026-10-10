@@ -568,6 +568,25 @@ and checking memory, transcripts and idle-window scope.
 Qwen gating, MLP/decoder/cache composition, full quality, performance and traces
 remain unqualified; this does not close M4.
 
+Selected Qwen gating preparation, 10 October 2026 (M4 pending): the
+[stored-Half product extension](docs/experiments/2026-10-10-qwen-metal-gating.md)
+admits one complete width-4,864 row while preserving the original 8,192-value
+inventory ceiling. Both saved operands and independent product references
+cover twelve stages, 36 rows and 175,104 products without checkpoint reads.
+All 468 Qwen commands pass 2,276,352 exact Half outputs, 3,276 output guards
+and unchanged source gates, maximum fraction 0.490092755385. Same-binary tiny
+and add regressions pass; invalid shader, insufficient admission and completed
+product overflow fail as required. Maximum own-process physical charge across
+all jobs is 13,369,944 bytes; Qwen admission is 67,186,800 bytes. Isolated
+formatting/Clippy, nineteen Rust tests and release build pass, alongside root
+formatting/Clippy, 76 ordinary Rust tests, 70 experiment Python tests and 35
+benchmark Python tests. Independent saved-output replay passes. Checks and
+native work follow the append worker's natural exit and retained idle proof.
+Astra accepted the completed code and evidence without findings after exact
+independent replay and identity, memory, ownership and transcript verification.
+Gating inactive-lane tails, fusion, MLP/decoder/KV composition, full quality,
+performance, traces and M4 completion remain open.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.

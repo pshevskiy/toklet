@@ -1,0 +1,181 @@
+"""Replay saved Qwen gating evidence only after its verified idle window."""
+import argparse
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--root", type=Path, required=True)
+parser.add_argument("--output", type=Path, required=True)
+args = parser.parse_args()
+root = args.root.resolve()
+sys.path.insert(0, str(root / "tools/experiments"))
+import rust_metal_qwen_gating as qg
+
+gating = qg.gating
+record_name = "benchmarks/results/2026-10-10-qwen-metal-gating-v1.json"
+raw_name = "benchmarks/raw/2026-10-10-qwen-metal-gating-v1.json.native.jsonl"
+stderr_name = record_name + ".stderr.txt"
+idle_name = "benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-idle.json"
+build = root / "artifacts/rust-qwen-metal-gating-v1"
+
+
+def read(name):
+    return json.loads((root / name).read_text())
+
+
+def digest(path):
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+idle = read(idle_name)
+assert idle["completed_workload"] == "append"
+assert idle["exited_numerical_worker_pid"] == 68705
+assert idle["measured_requests"] == 10
+assert idle["held_orchestration_pid"] == 17694
+record = read(record_name)
+assert record["completed"] is True and "failure" not in record
+assert digest(root / raw_name) == record["native_raw_sha256"]
+assert digest(root / stderr_name) == record["stderr_sha256"]
+raw = [json.loads(line) for line in (root / raw_name).read_text().splitlines()]
+runs = record["native_runs"]
+expected_modes = ["normal", "invalid_shader", "insufficient_budget",
+                  "tiny_gating_regression", "gating_overflow_regression"] + [
+                      f"qwen_gating_row_{index + 1}" for index in range(36)]
+assert len(raw) == len(runs) == 41
+assert [run["mode"] for run in runs] == expected_modes
+assert len(record["checks"]) == len(record["build_commands"]) == 9
+assert [check["command"] for check in record["checks"]] == record["build_commands"]
+rust_test = next(check for check in record["checks"] if "test" in check["command"])
+assert "test result: ok. 19 passed; 0 failed" in rust_test["stdout"]
+for name, sha in record["source_sha256"].items():
+    original = root / name
+    assert digest(original) == sha
+    copied = build / ("Cargo.toml" if name.endswith(".Cargo.toml") else
+                      "Cargo.lock" if name.endswith(".lock") else
+                      "src/main.rs" if name.endswith("rust_metal_probe.rs") else
+                      "src/" + original.name)
+    assert digest(copied) == sha
+for name, sha in {
+    "tools/experiments/rust_metal_probe.py": record["driver_sha256"],
+    "tools/experiments/metal_probe.py": record["common_helper_sha256"],
+    "tools/bench/mlx_baseline.py": record["memory_helper_sha256"],
+}.items():
+    assert digest(root / name) == sha
+context = record["extra_context"]
+assert context["checkpoint_reads"] is False
+assert len(context["input_sha256"]) == 38
+assert len(context["qualification_driver_sha256"]) == 8
+for field in ["input_sha256", "qualification_driver_sha256"]:
+    for name, sha in context[field].items():
+        assert digest(Path(name)) == sha
+for name, sha in context["manifest_sha256"].items():
+    assert digest(root / name / "manifest.json") == sha
+assert context["config_sha256"] == digest(qg.qwen.CONFIG)
+assert context["frozen_source_checkpoint_sha256"] == qg.qwen.WEIGHT_SHA
+assert context["frozen_source_checkpoint_bytes"] == qg.qwen.WEIGHT_BYTES
+binary = build / "target/aarch64-apple-darwin/release/toklet-rust-metal-probe"
+assert digest(binary) == record["binary_sha256"]
+
+half, single = qg.checked_references()
+inputs, anchors = qg.assemble(half, single, qg.qwen.HALF, qg.qwen.SINGLE)
+tiny_inputs, tiny_anchors, overflow = gating.cases()
+validators = {
+    "tiny_gating_regression": lambda event: gating.validate(event, tiny_inputs, tiny_anchors),
+    "gating_overflow_regression": gating.overflow_rejected,
+}
+for index, item in enumerate(inputs):
+    validators[f"qwen_gating_row_{index + 1}"] = lambda event, item=item: gating.validate(event, [item], anchors)
+command_counts = {}
+for event, run in zip(raw, runs):
+    replay = copy.deepcopy(event)
+    gating.rms.probe.validate_run(run["mode"], {**run, "event": replay}, validators.get(run["mode"]))
+    assert replay == run["event"]
+    assert run["watchdog_killed"] is False
+    assert 0 < run["physical_process_charge_peak_bytes"] <= gating.rms.probe.LIMIT
+    command_counts[run["mode"]] = sum(len(case["rows"]) for case in event.get("result", {}).get("cases", []))
+assert command_counts["normal"] == 39
+assert command_counts["tiny_gating_regression"] == 143
+assert all(command_counts[mode] == 0 for mode in expected_modes[1:3] + ["gating_overflow_regression"])
+assert all(command_counts[mode] == 13 for mode in expected_modes[5:])
+assert sum(command_counts.values()) == 650
+
+
+def independently_replay(event, source, expected_anchors):
+    commands = active = guards = 0
+    fraction = absolute = 0.0
+    assert len(event["result"]["cases"]) == len(source)
+    for case, item in zip(event["result"]["cases"], source):
+        assert case["id"] == item["id"]
+        anchor = expected_anchors[item["id"]]
+        count = item["rows"] * item["width"]
+        expected = []
+        # Independent replay does not call the product helper. Half significands
+        # multiply exactly; additionally prove exact FP32 storage for each product.
+        for a, b in zip(item["gate_bits"], item["up_bits"]):
+            left = struct.unpack("<e", struct.pack("<H", a))[0]
+            right = struct.unpack("<e", struct.pack("<H", b))[0]
+            product = left * right
+            assert struct.unpack("<f", struct.pack("<f", product))[0] == product
+            expected.append(struct.unpack("<H", struct.pack("<e", product))[0])
+        assert len(expected) == count and expected == anchor["bits"]
+        actual = struct.unpack(f"<{count}e", struct.pack(f"<{count}H", *expected))
+        for row in case["rows"]:
+            assert row["output_bits"] == expected + [0x55a1] * 7
+            for value, reference in zip(actual, anchor["reference"]):
+                assert math.isfinite(value) and math.isfinite(reference)
+                error = abs(value - reference)
+                absolute = max(absolute, error)
+                if anchor["gate"] is not None:
+                    gate = anchor["gate"]
+                    used = error / (gate["atol"] + gate["rtol"] * abs(reference))
+                    assert used <= 1
+                    fraction = max(fraction, used)
+                else:
+                    assert error == 0
+            commands += 1
+            active += count
+            guards += 7
+    return commands, active, guards, fraction, absolute
+
+
+tiny = independently_replay(raw[3], tiny_inputs, tiny_anchors)
+assert tiny[:3] == (143, 87360, 1001)
+commands = active = guards = 0
+fraction = absolute = 0.0
+for event, item in zip(raw[5:], inputs):
+    values = independently_replay(event, [item], anchors)
+    commands += values[0]
+    active += values[1]
+    guards += values[2]
+    fraction = max(fraction, values[3])
+    absolute = max(absolute, values[4])
+    assert event["result"]["metadata"]["maximum_admitted_bytes"] == 67186800
+assert (commands, active, guards) == (468, 2276352, 3276)
+summary = {
+    "qwen_stages": len({anchor["source_stage"] for anchor in anchors.values()}),
+    "qwen_rows": len(inputs), "qwen_input_products": 175104,
+    "qwen_completed_commands": commands, "qwen_output_values": active, "qwen_output_guard_values": guards,
+    "maximum_qwen_source_fp32_gate_fraction": fraction, "maximum_qwen_source_fp32_abs_error": absolute,
+    "maximum_qwen_admitted_bytes": 67186800,
+    "tiny_completed_commands": tiny[0], "tiny_output_values": tiny[1], "tiny_output_guard_values": tiny[2],
+    "same_binary_completed_positive_commands": sum(command_counts.values()), "same_binary_expected_negative_runs": 3,
+    "maximum_own_process_peak_bytes": max(run["physical_process_charge_peak_bytes"] for run in runs),
+    "command_counts": command_counts,
+}
+analysis = {
+    "format": "toklet-saved-qwen-metal-gating-analysis-v1", "completed": True,
+    "scope": "Saved selected Qwen stored-Half gating rows and tiny regressions; no fusion, MLP/full-model, quality, performance or M4 acceptance.",
+    "summary": summary,
+    "records_sha256": {name: digest(root / name) for name in [record_name, raw_name, stderr_name, idle_name]},
+    "binary_sha256": record["binary_sha256"], "producer_sha256": digest(Path(__file__)),
+}
+with args.output.open("x") as stream:
+    json.dump(analysis, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+print(json.dumps(summary, allow_nan=False))
