@@ -183,6 +183,20 @@ parent resumed. Astra accepted the saved-evidence task without findings after
 independent identity, state/event, summary, memory and window-order verification.
 Remaining matrix/application/quality gates remain pending.
 
+M2.5 long evidence, 10 October 2026 (milestone still open): the
+[scalar long report](docs/experiments/2026-10-10-cpu-long.md) retains three
+warmups and ten uninterrupted 1,024-input/128-output requests, each with
+1,151 committed positions and one pending token. Median TTFT is 336.469968 s,
+completed request time 428.750185 s and decode rate 1.377309 steps/s.
+Maximum own-process physical charge is 2,043,774,992 bytes below 6 GiB and
+conservative admission. Independent saved-data checks reproduce the schema,
+raw states, summaries, memory, token and historical driver identities, and
+launch/hold/idle ordering. Only orchestration was held ahead of the next
+workload; numerical execution was never stopped. Astra accepted the saved
+evidence and producer without findings after independent replay and identity,
+state, timing, memory and window-order verification. Remaining cache/application
+matrix and quality gates stay open.
+
 Held-out scorer preparation, 10 October 2026 (M2.5/quality still open): the
 [bounded loss runner](docs/experiments/2026-10-10-held-out-loss-runner.md)
 implements the existing ten independent 1,024-target blocks with one-token
