@@ -129,6 +129,27 @@ Ctrl-C, and a 24-hour watchdog bounds unexpected hangs. Interrupted raw rows
 remain evidence, but are not complete benchmark records and cannot be silently
 resumed or overwritten.
 
+The opt-in tiled path uses its completed functional qualification as a build
+receipt. Pass `--cpu-qualification` to select that isolated worker and
+`--cpu-projection scalar|tiled` to measure either kernel from the same binary:
+
+```sh
+.venv/bin/python tools/bench/cpu.py --workload short --cpu-projection scalar --cpu-qualification benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json --output benchmarks/raw/qualified-scalar-short.json
+.venv/bin/python tools/bench/cpu.py --workload short --cpu-projection tiled --cpu-qualification benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json --output benchmarks/raw/qualified-tiled-short.json
+```
+
+The adapter verifies recorded sources, binary bytes and successful forward/session
+report identities before and after measurement. It requires exact worker
+acknowledgement of the selected kernel, chunk 128 and capacity 2,048. Tiled
+measurement requires the receipt; ordinary scalar and llama.cpp commands retain
+their existing worker selection. All eight workloads retain the same frozen
+tokens, three warmups, ten measured samples, cache preparation, admission and
+final capacity checks. Notes distinguish the runner revision from the isolated
+numerical build and retain the qualification hash and original build commands.
+Run candidates sequentially, repeat a promising result in a second run and
+qualify the complete matrix before selecting a new default. The harness checks
+alone establish neither throughput nor an optimization retain decision.
+
 `prepare` in the worker evaluates a complete base history; `stage` appends a
 pending ID without computation. Exact append measures 64 new inputs after 512
 cached positions; fully cached input measures no prefill tokens; pending output

@@ -187,6 +187,21 @@ workloads and a second confirming performance run remain required before adoptio
 Astra accepted the completed code and independently verified source/binary
 identities, exact evidence copies, numerical counts, memory and scope.
 
+Candidate measurement preparation, 10 October 2026 (M3 remains pending): the
+[CPU workload adapter](tools/bench/cpu.py) can bind scalar or tiled execution
+to the completed isolated-build qualification. Recorded source, binary and
+forward/session report identities are checked before and after measurement;
+readiness must acknowledge the requested kernel, chunk and capacity. Frozen
+tokens, cache semantics, three warmups, ten samples, timing scope and capacity
+checks are unchanged. Offline driver checks cover silent-default rejection,
+changed identities, failed qualification and a complete synthetic protocol run.
+No candidate workload or performance acceptance is claimed by this harness task.
+Formatting, Clippy for all targets with warnings denied, 75 ordinary Rust tests
+and 49 offline Python checks pass. The actual committed qualification receipt
+verifies against the isolated worker and reports. Astra accepted the completed
+adapter code without findings and independently checked identities and protocol
+tests; required project checks ran while the frozen scalar worker was idle.
+
 Public-runtime probe preparation, 10 October 2026: [coreml-slice-v1](tests/fixtures/coreml-slice-v1/manifest.json)
 freezes 42 small arrays and independent FP32/FP16 projection and persistent-KV
 attention gates from tiny-v1 before target evaluation. Scalar NumPy reconstruction,

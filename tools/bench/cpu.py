@@ -15,6 +15,44 @@ WORKLOADS = {"short": 128, "medium": 512, "long": 1024, "boundary": 1920,
              "append": 512, "cached": 512, "pending": 512, "changed": 512}
 
 
+def qualified_cpu_worker(path):
+    """Bind an isolated worker to its completed numerical/session evidence."""
+    qualification = prepare.load_json(path)
+    if (qualification.get("format") != "toklet-cpu-tiled-engine-functional-v1"
+            or qualification.get("completed") is not True):
+        raise ValueError("CPU qualification is incomplete or unsupported")
+    for name, expected in qualification["source_sha256"].items():
+        if prepare.digest(prepare.ROOT/name) != expected:
+            raise ValueError(f"Qualified CPU source identity differs: {name}")
+    for section in ("forward", "sessions"):
+        report = prepare.ROOT/qualification[section]["report"]
+        if not report.exists():
+            report = prepare.ROOT/"benchmarks/results"/report.name
+        if prepare.digest(report) != qualification[section]["report_sha256"]:
+            raise ValueError(f"CPU {section} qualification report identity differs")
+        checked = prepare.load_json(report)
+        if checked.get("cpu_projection") != "tiled" or not checked.get("results"):
+            raise ValueError(f"CPU {section} qualification report is not tiled")
+        if section == "forward" and checked.get("passed") is not True:
+            raise ValueError("CPU forward qualification failed")
+    binary = Path(qualification["worker_smoke"]["tiled"]["command"][0])
+    if prepare.digest(binary) != qualification["binary_sha256"]["worker"]:
+        raise ValueError("Qualified CPU worker identity differs")
+    compiler = qualification["rustc"]
+    if compiler["exit_code"] != 0:
+        raise ValueError("Qualified CPU compiler identity unavailable")
+    return binary, compiler["stdout"].strip(), qualification
+
+
+def check_cpu_ready(ready, projection, qualified):
+    # Frozen scalar workers predate this readiness field. Qualified workers
+    # must acknowledge it, rather than silently timing the default backend.
+    actual = ready.get("cpu_projection", None if qualified else "scalar")
+    if (actual != projection or ready["chunk_size"] != 128
+            or ready["context_capacity"] != 2048):
+        raise ValueError("CPU worker projection/chunk/capacity differs from request")
+
+
 def requests(name, arrays, contract):
     base = arrays[f"prompt_{WORKLOADS[name]}"]
     fixed = arrays["continuation_128"]
@@ -45,7 +83,14 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--profile", type=Path, help="optional macOS sample report during first warmup")
     parser.add_argument("--backend", choices=("cpu", "llama"), default="cpu")
+    parser.add_argument("--cpu-projection", choices=("scalar", "tiled"), default="scalar")
+    parser.add_argument("--cpu-qualification", type=Path,
+                        help="completed functional qualification for an isolated CPU worker")
     args = parser.parse_args()
+    if args.backend != "cpu" and (args.cpu_qualification or args.cpu_projection != "scalar"):
+        raise ValueError("CPU candidate options require the CPU backend")
+    if args.cpu_projection == "tiled" and not args.cpu_qualification:
+        raise ValueError("Tiled CPU measurements require completed qualification")
     raw = args.output.with_suffix(args.output.suffix+".samples.jsonl")
     stderr_path = args.output.with_suffix(args.output.suffix+".stderr.txt")
     if (args.output.exists() or raw.exists() or stderr_path.exists() or args.profile and args.profile.exists()
@@ -66,6 +111,15 @@ def main():
     backend_versions, backend_notes = {}, []
     compiler = common.command(["rustc", "--version"])
     build_flags = ["cargo build --locked --offline --release --example cpu_bench"]
+    qualification_sha = None
+    if args.cpu_qualification:
+        binary, compiler, qualification = qualified_cpu_worker(args.cpu_qualification)
+        qualification_sha = prepare.digest(args.cpu_qualification)
+        build_flags = qualification["build_commands"]
+        backend_notes = [
+            f"CPU projection {args.cpu_projection}; qualification SHA256 {qualification_sha}; build base revision {qualification['engine_revision']['stdout'].strip()} plus recorded source hashes.",
+            f"Isolated worker functional forward report SHA256 {qualification['forward']['report_sha256']}; session report SHA256 {qualification['sessions']['report_sha256']}; RUSTFLAGS {qualification['rustflags']!r}.",
+            "Engine commit identifies benchmark dispatch; the qualification record identifies the separately built numerical binary. The recorded source files and worker bytes are verified before and after measurement."]
     if args.backend == "llama":
         import llama_prepare
         build = llama_prepare.checked_build()
@@ -93,6 +147,8 @@ def main():
     runner_sha, binary_sha = prepare.digest(Path(__file__)), prepare.digest(binary)
     common_sha = prepare.digest(Path(common.__file__))
     cmd = [str(binary), str(model_path)]
+    if args.cpu_qualification:
+        cmd += ["128", args.cpu_projection]
     power = common.command(["/usr/bin/pmset", "-g", "batt"])
     thermal = common.command(["/usr/bin/pmset", "-g", "therm"])
     # Vendor shader/model logs can exceed a pipe buffer before ready. Spool them
@@ -125,6 +181,8 @@ def main():
         ready = read()
         if ready["event"] != "ready":
             raise ValueError("Worker did not admit model/session")
+        if args.backend == "cpu":
+            check_cpu_ready(ready, args.cpu_projection, args.cpu_qualification is not None)
         # This checks full-output admission without dispatch and keeps the same
         # live empty session for subsequent warmups.
         rejection = send({"action": "reset", "tokens": arrays["prompt_1921"], "continuation": arrays["continuation_128"]})
@@ -173,7 +231,7 @@ def main():
             raise ValueError("Working set exceeds admitted limit")
         prefills = {"append": 64, "cached": 0, "pending": 1}.get(args.workload, WORKLOADS[args.workload])
         result = {
-            "schema_version": 1, "contract_id": manifest["contract_id"], "comparison_track": "controlled_engine", "runtime": "Toklet scalar CPU" if args.backend == "cpu" else "llama.cpp Metal",
+            "schema_version": 1, "contract_id": manifest["contract_id"], "comparison_track": "controlled_engine", "runtime": f"Toklet {args.cpu_projection} CPU" if args.backend == "cpu" else "llama.cpp Metal",
             "identity": {"engine_commit": engine_commit, "working_tree_dirty": dirty,
                 "baseline_versions": backend_versions, "compiler": compiler, "build_flags": build_flags,
                 "model_revision": sources["model"]["revision"], "tokenizer_revision": sources["model"]["tokenizer_revision"], "model_sha256": sources["model"]["weights"]["sha256"],
@@ -202,6 +260,10 @@ def main():
                 "Thermal report at end: "+common.command(["/usr/bin/pmset", "-g", "therm"])]+backend_notes}
         from jsonschema import Draft202012Validator
         Draft202012Validator(prepare.load_json(prepare.BENCH/"result.schema.json")).validate(result)
+        if args.cpu_qualification:
+            if prepare.digest(args.cpu_qualification) != qualification_sha:
+                raise ValueError("CPU qualification changed during measurement")
+            qualified_cpu_worker(args.cpu_qualification)
         worker.stdin.close()
         if worker.wait(timeout=20) != 0:
             errors.seek(0)
