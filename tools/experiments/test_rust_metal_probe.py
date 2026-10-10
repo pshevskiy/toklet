@@ -33,6 +33,19 @@ def fixture():
 
 
 class RustMetal(unittest.TestCase):
+    def test_silu_copied_inputs_are_hash_bound_even_on_build_failure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);output=root/"result.json";build=root/"build"
+            with patch.object(probe.common,"command",return_value="test provenance"), \
+                    patch.object(probe.common,"power",return_value={}), \
+                    patch.object(probe.common,"bounded",side_effect=ValueError("controlled build failure")):
+                with self.assertRaisesRegex(ValueError,"controlled build failure"):probe.run(output,build)
+            result=json.loads(output.read_text())
+            self.assertFalse(result["completed"])
+            for source in (probe.SILU_SOURCE,probe.SILU_SHADER):
+                self.assertEqual(result["source_sha256"][str(source.relative_to(probe.ROOT))],probe.common.digest(source))
+                self.assertEqual((build/"src"/source.name).read_bytes(),source.read_bytes())
+
     def test_custom_negative_fixture_requires_validated_failure_and_exit_one(self):
         result={"exit_code":1,"event":{"passed":False}}
         probe.validate_run("overflow",result,lambda event:False)

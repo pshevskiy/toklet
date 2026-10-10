@@ -122,3 +122,8 @@ rejection on Half overflow. Composed session recovery remains pending.
 The [selected Qwen residual check](docs/experiments/2026-10-10-qwen-metal-residual.md)
 passes 20 width-896 stages with exact Half outputs and unchanged source gates,
 using saved operands without checkpoint payload reads.
+
+The [stable Half SiLU check](docs/experiments/2026-10-10-metal-silu.md)
+passes all ten frozen tiny stages and exact signed-zero, subnormal and saturation
+edges using FP32 arithmetic and one Half store. Qwen activation and complete
+MLP execution remain pending.

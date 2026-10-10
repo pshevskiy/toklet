@@ -422,6 +422,12 @@ mod metal {
     pub(super) fn run_residual(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
         residual::run(path, limit)
     }
+    mod silu {
+        include!("rust_metal_silu.rs");
+    }
+    pub(super) fn run_silu(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
+        silu::run(path, limit)
+    }
 }
 
 fn run() -> Result<Value, Error> {
@@ -432,6 +438,7 @@ fn run() -> Result<Value, Error> {
     let mut rms_input = None;
     let mut embedding_input = None;
     let mut residual_input = None;
+    let mut silu_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
@@ -453,6 +460,12 @@ fn run() -> Result<Value, Error> {
                         error("arguments", "missing residual input")
                     })?));
             }
+            Some("--silu-input") if silu_input.is_none() => {
+                silu_input = Some(std::path::PathBuf::from(
+                    args.next()
+                        .ok_or_else(|| error("arguments", "missing SiLU input"))?,
+                ));
+            }
             Some("--budget-bytes") if !has_budget => {
                 let value = args
                     .next()
@@ -471,6 +484,7 @@ fn run() -> Result<Value, Error> {
         + usize::from(rms_input.is_some())
         + usize::from(embedding_input.is_some())
         + usize::from(residual_input.is_some())
+        + usize::from(silu_input.is_some())
         > 1
     {
         return Err(error("arguments", "probe operation modes are exclusive"));
@@ -483,13 +497,22 @@ fn run() -> Result<Value, Error> {
             metal::run_embedding(&path, limit)
         } else if let Some(path) = residual_input {
             metal::run_residual(&path, limit)
+        } else if let Some(path) = silu_input {
+            metal::run_silu(&path, limit)
         } else {
             metal::run(invalid, limit)
         }
     }
     #[cfg(not(all(target_os = "macos", target_arch = "aarch64")))]
     {
-        let _ = (invalid, limit, rms_input, embedding_input, residual_input);
+        let _ = (
+            invalid,
+            limit,
+            rms_input,
+            embedding_input,
+            residual_input,
+            silu_input,
+        );
         Err(error("capability", "requires Apple Silicon macOS"))
     }
 }
