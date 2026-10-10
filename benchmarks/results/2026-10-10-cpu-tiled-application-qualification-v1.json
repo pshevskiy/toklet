@@ -1,0 +1,350 @@
+{
+  "format": "toklet-cpu-tiled-application-functional-v1",
+  "completed": true,
+  "started_utc": "2026-10-10T04:42:31.193313+00:00",
+  "idle_snapshot": "PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:10.98 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n17695 17694 Z      0:00.00 <defunct>",
+  "engine_revision": "c52af3ac465c465462d736e60aabcf04dd3976ee",
+  "working_tree_status": "M tools/bench/application.py\n M tools/experiments/rust_metal_probe.py\n M tools/experiments/rust_metal_probe.rs\n M tools/experiments/test_rust_metal_probe.py\n?? docs/experiments/2026-10-10-cpu-tiled-application-adapter.md\n?? docs/experiments/2026-10-10-metal-silu.md\n?? tools/bench/cpu_cli.py\n?? tools/bench/test_cpu_cli.py\n?? tools/experiments/rust_metal_silu.metal\n?? tools/experiments/rust_metal_silu.py\n?? tools/experiments/rust_metal_silu.rs\n?? tools/experiments/test_rust_metal_silu.py",
+  "producer_sha256": "b1cd97372937608c82b76f6da59109d5d804c8e2c922ce47ee9697317e13a666",
+  "source_sha256": {
+    "tools/bench/cpu_cli.py": "6376e202aba99ead5a6a59db593b05770159cb54470330200b3f1867a14943d7",
+    "tools/bench/cpu.py": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "tools/bench/mlx_baseline.py": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+    "tools/bench/application.py": "9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da",
+    "tools/bench/test_cpu_cli.py": "1d19d1dc4962fa01f03c0b9160b8d77301a26db1979c97d031c868e16742838a"
+  },
+  "cli_qualification_sha256": "8d2a633ed95c488f3bbba5de186aa3e3418fa75df51a170af383e31d98ae2cc8",
+  "frozen_binaries": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+  },
+  "checks": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/bench",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "stdout": "Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.\n",
+      "stderr": "............................\n----------------------------------------------------------------------\nRan 28 tests in 0.081s\n\nOK\n",
+      "timed_out": false,
+      "wall_seconds": 0.2950672919396311
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "tools/bench/application.py",
+        "--probe",
+        "--output",
+        "/Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-application-adapter-legacy-probe-v1.json"
+      ],
+      "exit_code": 0,
+      "stdout": "Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.\napplication: sample 1: 74.255s\n",
+      "stderr": "",
+      "timed_out": false,
+      "wall_seconds": 76.96751099999528
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "tools/bench/application.py",
+        "--probe",
+        "--output",
+        "/Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-application-adapter-scalar-probe-v1.json",
+        "--cpu-projection",
+        "scalar",
+        "--cpu-qualification",
+        "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json"
+      ],
+      "exit_code": 0,
+      "stdout": "Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.\napplication: sample 1: 74.250s\n",
+      "stderr": "",
+      "timed_out": false,
+      "wall_seconds": 76.82197554199956
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "tools/bench/application.py",
+        "--probe",
+        "--output",
+        "/Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-application-adapter-tiled-probe-v1.json",
+        "--cpu-projection",
+        "tiled",
+        "--cpu-qualification",
+        "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json"
+      ],
+      "exit_code": 0,
+      "stdout": "Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.\napplication: sample 1: 17.507s\n",
+      "stderr": "",
+      "timed_out": false,
+      "wall_seconds": 20.092728499905206
+    }
+  ],
+  "scope": "Offline adapter admission and one two-token-per-turn functional probe in three modes. No application benchmark, quality or performance acceptance.",
+  "probes": {
+    "legacy": {
+      "path": "benchmarks/raw/2026-10-10-application-adapter-legacy-probe-v1.json",
+      "sha256": "e8f3610acc9a3a4bc179807dc8564085d226920b5282adff939a2945db36958e",
+      "raw_path": "benchmarks/raw/2026-10-10-application-adapter-legacy-probe-v1.json.samples.jsonl",
+      "raw_sha256": "bd545f8969694dd33d1c96b546aa1c76e6d7fa420441ae845c8fc6b6e8699359",
+      "semantics": [
+        {
+          "token_ids": [
+            1249,
+            9593
+          ],
+          "visible_text": "To validate",
+          "visible_text_sha256": "27b8d4609ff0ed9ad67d4960ca157fbba3fab1e3cd100466845b30d75f795bc8",
+          "generation": {
+            "emitted_tokens": 2,
+            "evaluated_tokens": 37,
+            "history_tokens": 38,
+            "pending_tokens": 1,
+            "prefill_tokens": 36,
+            "reason": {
+              "kind": "output_limit"
+            },
+            "reused_tokens": 0,
+            "sampled_tokens": 2
+          }
+        },
+        {
+          "token_ids": [
+            40,
+            686
+          ],
+          "visible_text": "I will",
+          "visible_text_sha256": "306c861a1fb4409de7e149ed3a1643410574839a87a8f19f35ecf15bcb380250",
+          "generation": {
+            "emitted_tokens": 2,
+            "evaluated_tokens": 77,
+            "history_tokens": 78,
+            "pending_tokens": 1,
+            "prefill_tokens": 76,
+            "reason": {
+              "kind": "output_limit"
+            },
+            "reused_tokens": 0,
+            "sampled_tokens": 2
+          }
+        },
+        {
+          "token_ids": [
+            785,
+            5666
+          ],
+          "visible_text": "The operation",
+          "visible_text_sha256": "2d8200cd5759abe09e10f675b5aa2b362341aa35d0e87b558a50f135f36887b9",
+          "generation": {
+            "emitted_tokens": 2,
+            "evaluated_tokens": 118,
+            "history_tokens": 119,
+            "pending_tokens": 1,
+            "prefill_tokens": 117,
+            "reason": {
+              "kind": "output_limit"
+            },
+            "reused_tokens": 0,
+            "sampled_tokens": 2
+          }
+        }
+      ],
+      "memory": {
+        "admitted_bytes": 2353012560,
+        "engine_working_set_limit_bytes": 6442450944,
+        "instrument": "own-child auxiliary.phys_footprint_peak",
+        "logical_allocations": {
+          "history_bytes": 8192,
+          "kv_bytes": 50331648,
+          "logits_bytes": 1215488,
+          "metadata_allowance_bytes": 67108864,
+          "metadata_bytes": 8064,
+          "scratch_bytes": 10436608,
+          "tokenizer_application_allowance_bytes": 247772624,
+          "weights_bytes": 1976131072
+        },
+        "peak_process_bytes": 2128513136,
+        "system_pressure": null
+      }
+    },
+    "scalar": {
+      "path": "benchmarks/raw/2026-10-10-application-adapter-scalar-probe-v1.json",
+      "sha256": "c9f25bf94f47239aa55137fcc88eb68abd9176fae246cfd90fca954ba4f0a7ff",
+      "raw_path": "benchmarks/raw/2026-10-10-application-adapter-scalar-probe-v1.json.samples.jsonl",
+      "raw_sha256": "4ee8c39d9b6e9c19d78c8b62d595356c90eba526ea7cf13d9bb9e46e4a73684d",
+      "semantics": [
+        {
+          "token_ids": [
+            1249,
+            9593
+          ],
+          "visible_text": "To validate",
+          "visible_text_sha256": "27b8d4609ff0ed9ad67d4960ca157fbba3fab1e3cd100466845b30d75f795bc8",
+          "generation": {
+            "emitted_tokens": 2,
+            "evaluated_tokens": 37,
+            "history_tokens": 38,
+            "pending_tokens": 1,
+            "prefill_tokens": 36,
+            "reason": {
+              "kind": "output_limit"
+            },
+            "reused_tokens": 0,
+            "sampled_tokens": 2
+          }
+        },
+        {
+          "token_ids": [
+            40,
+            686
+          ],
+          "visible_text": "I will",
+          "visible_text_sha256": "306c861a1fb4409de7e149ed3a1643410574839a87a8f19f35ecf15bcb380250",
+          "generation": {
+            "emitted_tokens": 2,
+            "evaluated_tokens": 77,
+            "history_tokens": 78,
+            "pending_tokens": 1,
+            "prefill_tokens": 76,
+            "reason": {
+              "kind": "output_limit"
+            },
+            "reused_tokens": 0,
+            "sampled_tokens": 2
+          }
+        },
+        {
+          "token_ids": [
+            785,
+            5666
+          ],
+          "visible_text": "The operation",
+          "visible_text_sha256": "2d8200cd5759abe09e10f675b5aa2b362341aa35d0e87b558a50f135f36887b9",
+          "generation": {
+            "emitted_tokens": 2,
+            "evaluated_tokens": 118,
+            "history_tokens": 119,
+            "pending_tokens": 1,
+            "prefill_tokens": 117,
+            "reason": {
+              "kind": "output_limit"
+            },
+            "reused_tokens": 0,
+            "sampled_tokens": 2
+          }
+        }
+      ],
+      "memory": {
+        "admitted_bytes": 2353012560,
+        "engine_working_set_limit_bytes": 6442450944,
+        "instrument": "own-child auxiliary.phys_footprint_peak",
+        "logical_allocations": {
+          "history_bytes": 8192,
+          "kv_bytes": 50331648,
+          "logits_bytes": 1215488,
+          "metadata_allowance_bytes": 67108864,
+          "metadata_bytes": 8064,
+          "scratch_bytes": 10436608,
+          "tokenizer_application_allowance_bytes": 247772624,
+          "weights_bytes": 1976131072
+        },
+        "peak_process_bytes": 2123892872,
+        "system_pressure": null
+      }
+    },
+    "tiled": {
+      "path": "benchmarks/raw/2026-10-10-application-adapter-tiled-probe-v1.json",
+      "sha256": "bf0abb7f351f988db4f88d8cad8f82f774c621d95764325a6ecfd5b3c6fcc707",
+      "raw_path": "benchmarks/raw/2026-10-10-application-adapter-tiled-probe-v1.json.samples.jsonl",
+      "raw_sha256": "79b9888e5fb3371f8061f1e437e1623a30bfc45f53a6b52da17d28813fc270f3",
+      "semantics": [
+        {
+          "token_ids": [
+            1249,
+            9593
+          ],
+          "visible_text": "To validate",
+          "visible_text_sha256": "27b8d4609ff0ed9ad67d4960ca157fbba3fab1e3cd100466845b30d75f795bc8",
+          "generation": {
+            "emitted_tokens": 2,
+            "evaluated_tokens": 37,
+            "history_tokens": 38,
+            "pending_tokens": 1,
+            "prefill_tokens": 36,
+            "reason": {
+              "kind": "output_limit"
+            },
+            "reused_tokens": 0,
+            "sampled_tokens": 2
+          }
+        },
+        {
+          "token_ids": [
+            40,
+            686
+          ],
+          "visible_text": "I will",
+          "visible_text_sha256": "306c861a1fb4409de7e149ed3a1643410574839a87a8f19f35ecf15bcb380250",
+          "generation": {
+            "emitted_tokens": 2,
+            "evaluated_tokens": 77,
+            "history_tokens": 78,
+            "pending_tokens": 1,
+            "prefill_tokens": 76,
+            "reason": {
+              "kind": "output_limit"
+            },
+            "reused_tokens": 0,
+            "sampled_tokens": 2
+          }
+        },
+        {
+          "token_ids": [
+            785,
+            5666
+          ],
+          "visible_text": "The operation",
+          "visible_text_sha256": "2d8200cd5759abe09e10f675b5aa2b362341aa35d0e87b558a50f135f36887b9",
+          "generation": {
+            "emitted_tokens": 2,
+            "evaluated_tokens": 118,
+            "history_tokens": 119,
+            "pending_tokens": 1,
+            "prefill_tokens": 117,
+            "reason": {
+              "kind": "output_limit"
+            },
+            "reused_tokens": 0,
+            "sampled_tokens": 2
+          }
+        }
+      ],
+      "memory": {
+        "admitted_bytes": 2353012560,
+        "engine_working_set_limit_bytes": 6442450944,
+        "instrument": "own-child auxiliary.phys_footprint_peak",
+        "logical_allocations": {
+          "history_bytes": 8192,
+          "kv_bytes": 50331648,
+          "logits_bytes": 1215488,
+          "metadata_allowance_bytes": 67108864,
+          "metadata_bytes": 8064,
+          "scratch_bytes": 10436608,
+          "tokenizer_application_allowance_bytes": 247772624,
+          "weights_bytes": 1976131072
+        },
+        "peak_process_bytes": 2123729056,
+        "system_pressure": null
+      }
+    }
+  },
+  "finished_utc": "2026-10-10T04:45:25.387497+00:00"
+}

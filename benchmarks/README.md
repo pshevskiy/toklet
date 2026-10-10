@@ -272,6 +272,18 @@ cargo build --locked --offline --release
 .venv/bin/python tools/bench/application.py --output benchmarks/raw/application.json
 ```
 
+The [qualified CLI application adapter](../docs/experiments/2026-10-10-cpu-tiled-application-adapter.md)
+selects scalar or opt-in tiled from the same isolated CLI after checking its
+completed numerical and functional qualification. Tiled requires that receipt;
+the live CLI must report its actual mode at readiness and every request.
+Default arguments retain the original frozen scalar CLI. The three separate
+two-token-per-turn probes agree on text/token/state and memory ownership;
+full application repetitions remain required before performance acceptance.
+
+```sh
+.venv/bin/python tools/bench/application.py --cpu-projection tiled --cpu-qualification benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json --output benchmarks/raw/application-tiled.json
+```
+
 Driver timings start before request serialization/write and finish on complete
 JSON-line receipt, including transport/dispatch. First visible text means the
 first nonempty text payload. Native statistics separate input preparation,

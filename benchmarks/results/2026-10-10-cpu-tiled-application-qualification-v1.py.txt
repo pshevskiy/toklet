@@ -1,0 +1,102 @@
+"""Historical sequential application-adapter functional qualification."""
+from pathlib import Path
+import datetime
+import hashlib
+import json
+import os
+import signal
+import subprocess
+import sys
+import time
+
+ROOT=Path('/Users/coloner/work/rust/toklet')
+sys.path.insert(0,str(ROOT/'tools/bench'))
+import cpu_cli
+import prepare
+import mlx_baseline as common
+
+OUT=ROOT/'benchmarks/raw/2026-10-10-cpu-tiled-application-qualification-v1.json'
+CLI=ROOT/'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json'
+FROZEN={'target/release/examples/cpu_bench':'e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea',
+        'target/release/toklet':'5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59'}
+if OUT.exists():raise ValueError('Refusing to overwrite adapter qualification')
+snapshot=common.command(['ps','-o','pid,ppid,state,time,command','-p','17694,17695,17701'])
+rows=[line.split() for line in snapshot.splitlines()[1:]]
+assert any(row[:2]==['17694','35939'] and row[2].startswith('T') for row in rows)
+assert not any(row[0]=='17701' for row in rows)
+assert all(row[2].startswith('Z') for row in rows if row[0]=='17695')
+binary,cli=cpu_cli.qualified_cli(CLI)
+# Source code used by the CLI must already be committed, not merely staged.
+for name,sha in cli['source_sha256'].items():
+    committed=subprocess.run(['git','show',f'HEAD:{name}'],cwd=ROOT,capture_output=True,check=True).stdout
+    assert hashlib.sha256(committed).hexdigest()==sha
+for name,sha in FROZEN.items():assert prepare.digest(ROOT/name)==sha
+sources={str(Path(module.__file__).relative_to(ROOT)):prepare.digest(Path(module.__file__)) for module in (cpu_cli,cpu_cli.cpu,prepare,common)}
+for name in ('tools/bench/application.py','tools/bench/test_cpu_cli.py'):sources[name]=prepare.digest(ROOT/name)
+record={'format':'toklet-cpu-tiled-application-functional-v1','completed':False,
+        'started_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        'idle_snapshot':snapshot,'engine_revision':common.command(['git','rev-parse','HEAD']),
+        'working_tree_status':common.command(['git','status','--porcelain']),
+        'producer_sha256':prepare.digest(Path(__file__)),'source_sha256':sources,
+        'cli_qualification_sha256':prepare.digest(CLI),'frozen_binaries':FROZEN,'checks':[],
+        'scope':'Offline adapter admission and one two-token-per-turn functional probe in three modes. No application benchmark, quality or performance acceptance.'}
+
+def checked(command):
+    clock=time.perf_counter();process=subprocess.Popen(command,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
+    timed_out=False
+    try:stdout,stderr=process.communicate(timeout=1200)
+    except subprocess.TimeoutExpired:
+        timed_out=True
+        try:os.killpg(process.pid,signal.SIGKILL)
+        except ProcessLookupError:pass
+        stdout,stderr=process.communicate(timeout=20)
+    record['checks'].append({'command':command,'exit_code':process.returncode,'stdout':stdout,'stderr':stderr,
+                             'timed_out':timed_out,'wall_seconds':time.perf_counter()-clock})
+    if process.returncode or timed_out:raise ValueError(f'Check failed: {command}')
+
+def semantics(result):
+    assert result['qualification']=='functional_probe' and result['setup']['warmup_repetitions']==0 and len(result['samples'])==1
+    turns=result['samples'][0]['turns'];assert len(turns)==3
+    state=[]
+    for turn in turns:
+        generation={key:value for key,value in turn['statistics']['generation'].items() if not key.endswith('_seconds')}
+        assert generation['emitted_tokens']==len(turn['token_ids'])==2 and generation['pending_tokens']==1
+        assert generation['reason']=={'kind':'output_limit'} and generation['reused_tokens']==0
+        state.append({'token_ids':turn['token_ids'],'visible_text':turn['visible_text'],
+                      'visible_text_sha256':turn['visible_text_sha256'],'generation':generation})
+    return state
+
+try:
+    checked([str(ROOT/'.venv/bin/python'),'-m','unittest','discover','-s','tools/bench','-p','test_*.py'])
+    probes={}
+    for role,projection in (('legacy','scalar'),('scalar','scalar'),('tiled','tiled')):
+        output=ROOT/f'benchmarks/raw/2026-10-10-application-adapter-{role}-probe-v1.json'
+        flags=[] if role=='legacy' else ['--cpu-projection',projection,'--cpu-qualification',str(CLI)]
+        command=[str(ROOT/'.venv/bin/python'),'tools/bench/application.py','--probe','--output',str(output)]+flags
+        checked(command)
+        result=prepare.load_json(output)
+        assert result['identity']['cpu_projection']==projection
+        assert result['identity']['binary_sha256']==(FROZEN['target/release/toklet'] if role=='legacy' else cli['binary_sha256'])
+        assert result['identity']['cli_qualification_sha256']==(None if role=='legacy' else prepare.digest(CLI))
+        assert 0<result['memory']['admitted_bytes']<=6*1024**3 and 0<result['memory']['peak_process_bytes']<=6*1024**3
+        if role!='legacy':assert all(turn['statistics']['cpu_projection']==projection for turn in result['samples'][0]['turns'])
+        raw=output.with_suffix(output.suffix+'.samples.jsonl')
+        assert [json.loads(line) for line in raw.read_text().splitlines()]==result['samples']
+        probes[role]={'path':str(output.relative_to(ROOT)),'sha256':prepare.digest(output),
+                      'raw_path':str(raw.relative_to(ROOT)),'raw_sha256':prepare.digest(raw),
+                      'semantics':semantics(result),'memory':result['memory']}
+        assert probes[role]['semantics']==probes['legacy']['semantics']
+    assert probes['scalar']['memory']['admitted_bytes']==probes['tiled']['memory']['admitted_bytes']
+    assert probes['scalar']['memory']['logical_allocations']==probes['tiled']['memory']['logical_allocations']
+    record['probes']=probes
+    for name,sha in sources.items():assert prepare.digest(ROOT/name)==sha
+    for name,sha in FROZEN.items():assert prepare.digest(ROOT/name)==sha
+    assert prepare.digest(CLI)==record['cli_qualification_sha256']
+    cpu_cli.qualified_cli(CLI)
+    record['completed']=True
+except BaseException as error:
+    record['failure']={'type':type(error).__name__,'message':str(error)}
+    raise
+finally:
+    record['finished_utc']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    with OUT.open('x') as file:json.dump(record,file,indent=2,allow_nan=False);file.write('\n')

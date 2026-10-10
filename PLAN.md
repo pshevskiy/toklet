@@ -243,6 +243,22 @@ matrix acceptance remain pending. Astra accepted the completed CLI task without
 findings after independently checking raw state/token/text, source/receipt/binary
 identities, checks, memory and idle-window evidence.
 
+Application candidate preparation, 10 October 2026 (M3 remains pending): the
+[qualified application adapter](docs/experiments/2026-10-10-cpu-tiled-application-adapter.md)
+uses one checked CLI binary for explicit scalar/tiled and preserves legacy
+default arguments. Receipt, compiled source, compiler/flags, reference/state,
+binary and helper identities are checked, and live readiness/statistics must
+acknowledge the selected mode. All 28 offline benchmark tests pass. After
+accepted CLI commit `c52af3a`, three sequential real-model probes match all nine
+two-token turns in visible text, token IDs, reset and non-timing generation
+state. All logical/admission accounts agree; maximum physical peak is
+2,128,513,136 bytes and admission is 2,353,012,560 bytes below 6 GiB. Root engine
+checks and frozen release binaries are unchanged; the matrix remains held
+after normal boundary exit. These functional probes establish wiring only;
+complete application repetitions remain pending. Astra accepted the adapter
+task without findings after independently checking code, checks, raw turn/state/
+text evidence, receipt/source identities and memory.
+
 Public-runtime slice results, 10 October 2026 (M3 remains pending): the
 [public Core ML probe](docs/experiments/2026-10-10-coreml-slices.md) converts four
 tiny projection/attention graphs with explicit types and persistent FP16 K/V.

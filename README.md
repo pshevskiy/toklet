@@ -99,6 +99,12 @@ confirms roughly 77.6% lower median TTFT for opt-in tiled projections in both
 comparison orders. Scalar remains default while full workload and application
 qualification continue.
 
+The [qualified application adapter](docs/experiments/2026-10-10-cpu-tiled-application-adapter.md)
+can compare scalar and tiled using one isolated CLI whose source, binary and
+functional qualification are verified. Three short transcript probes preserve
+token/text/session semantics and memory; full application measurements remain
+pending.
+
 The standalone [FP16 RMS primitive](docs/experiments/2026-10-10-metal-rms.md)
 passes frozen tiny-model source gates and exact manual range/subnormal cases;
 full decoder composition and Qwen qualification remain pending.

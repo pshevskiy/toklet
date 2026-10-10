@@ -1,0 +1,263 @@
+{
+  "comparison_track": "application",
+  "contract_id": "toklet-benchmark-contract-v1",
+  "energy": null,
+  "environment": {
+    "chip": "Apple M1 Pro",
+    "hardware": "MacBookPro18,3",
+    "os_build": "25G83",
+    "os_version": "26.6.2",
+    "physical_memory_bytes": 17179869184,
+    "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\nBattery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal_start": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  },
+  "identity": {
+    "binary_sha256": "8e1be695229fb4a46e49725f06050b3296f6fb398e718fca8567bf0c6b400b43",
+    "build_flags": [
+      [
+        "cp",
+        "-pR",
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release",
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release"
+      ],
+      [
+        "env",
+        "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1",
+        "cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "--release",
+        "-j",
+        "2",
+        "--bin",
+        "toklet"
+      ]
+    ],
+    "cli_qualification_helper_sha256": "6376e202aba99ead5a6a59db593b05770159cb54470330200b3f1867a14943d7",
+    "cli_qualification_sha256": "8d2a633ed95c488f3bbba5de186aa3e3418fa75df51a170af383e31d98ae2cc8",
+    "common_helper_sha256": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+    "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)",
+    "cpu_projection": "scalar",
+    "cpu_worker_qualification_helper_sha256": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "driver_sha256": "9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da",
+    "engine_commit": "c52af3ac465c465462d736e60aabcf04dd3976ee",
+    "model": {
+      "engine_total_token_limit": 2048,
+      "engine_working_set_limit_bytes": 6442450944,
+      "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "tokenizer_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "weights": {
+        "bytes": 988097824,
+        "file": "models/Qwen2.5-0.5B-Instruct/model.safetensors",
+        "sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+        "storage_dtype": "BF16",
+        "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/7ae557604adf67be50417f59c2c2f167def9a775/model.safetensors"
+      }
+    },
+    "preparation_helper_sha256": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "python": "3.12.8",
+    "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "transcript_sha256": "879944437214e4c5e85e74a0d02a1e91cc20074d1bcab1aa53268c393ba6671d",
+    "working_tree_dirty": true
+  },
+  "memory": {
+    "admitted_bytes": 2353012560,
+    "engine_working_set_limit_bytes": 6442450944,
+    "instrument": "own-child auxiliary.phys_footprint_peak",
+    "logical_allocations": {
+      "history_bytes": 8192,
+      "kv_bytes": 50331648,
+      "logits_bytes": 1215488,
+      "metadata_allowance_bytes": 67108864,
+      "metadata_bytes": 8064,
+      "scratch_bytes": 10436608,
+      "tokenizer_application_allowance_bytes": 247772624,
+      "weights_bytes": 1976131072
+    },
+    "peak_process_bytes": 2123892872,
+    "system_pressure": null
+  },
+  "notes": [
+    "Tokenization excludes chat formatting; publication counts token/text serialization, writes and flushes, excluding the done statistics record.",
+    "Native model conversion is nested inside loading; load/tokenizer setup appears only on the first request, outside warm request timers.",
+    "Final reset text timing belongs to response finalization and is outside native generation's output counters.",
+    "The frozen assistant messages replace generated replies in later authored turns. This trace is latency evidence, not task-quality scoring or live tool execution."
+  ],
+  "policy": {
+    "cache": "empty per authored turn; resident model and reusable buffers",
+    "greedy": true,
+    "max_output_tokens_per_turn": 2,
+    "scripted_assistant_history": true,
+    "stop": "pinned EOS or output limit",
+    "turns": 3
+  },
+  "qualification": "functional_probe",
+  "record_version": 1,
+  "representation": {
+    "context_capacity": 2048,
+    "kv": "FP32",
+    "prefill_chunk": 128,
+    "weights": "FP32"
+  },
+  "runtime": "Toklet scalar CPU CLI",
+  "samples": [
+    {
+      "process_peak_footprint_bytes": 2123892872,
+      "scenario_seconds": 74.25027970795054,
+      "turns": [
+        {
+          "received_token_event_seconds": [
+            11.545142624992877,
+            12.232759332982823
+          ],
+          "statistics": {
+            "conversion_seconds": 1.1273992470000032,
+            "cpu_projection": "scalar",
+            "detokenization_seconds": 4.2709e-05,
+            "generation": {
+              "decode_seconds": 0.687004375,
+              "emitted_tokens": 2,
+              "evaluated_tokens": 37,
+              "first_token_seconds": 11.543487667,
+              "history_tokens": 38,
+              "pending_tokens": 1,
+              "prefill_seconds": 11.5429025,
+              "prefill_tokens": 36,
+              "reason": {
+                "kind": "output_limit"
+              },
+              "reused_tokens": 0,
+              "sampled_tokens": 2,
+              "sampling_seconds": 0.00117275,
+              "total_seconds": 12.231161167
+            },
+            "input_formatting_seconds": 5.375e-06,
+            "input_preparation_seconds": 0.001446458,
+            "load_seconds": 1.495589833,
+            "memory_admitted_bytes": 2353012560,
+            "publication_seconds": 3.7291000000000006e-05,
+            "tokenization_seconds": 0.001440834,
+            "tokenizer_load_seconds": 0.121224041
+          },
+          "submission_to_done_seconds": 12.232796000083908,
+          "submission_to_finalized_seconds": 12.23287575005088,
+          "submission_to_first_token_seconds": 11.545142624992877,
+          "submission_to_first_visible_text_seconds": 11.545142624992877,
+          "token_ids": [
+            1249,
+            9593
+          ],
+          "visible_text": "To validate",
+          "visible_text_sha256": "27b8d4609ff0ed9ad67d4960ca157fbba3fab1e3cd100466845b30d75f795bc8"
+        },
+        {
+          "received_token_event_seconds": [
+            23.90794170810841,
+            24.606820417102426
+          ],
+          "statistics": {
+            "conversion_seconds": 0.0,
+            "cpu_projection": "scalar",
+            "detokenization_seconds": 2.2083e-05,
+            "generation": {
+              "decode_seconds": 0.698247875,
+              "emitted_tokens": 2,
+              "evaluated_tokens": 77,
+              "first_token_seconds": 23.90755975,
+              "history_tokens": 78,
+              "pending_tokens": 1,
+              "prefill_seconds": 23.906977041,
+              "prefill_tokens": 76,
+              "reason": {
+                "kind": "output_limit"
+              },
+              "reused_tokens": 0,
+              "sampled_tokens": 2,
+              "sampling_seconds": 0.001162541,
+              "total_seconds": 24.606454042
+            },
+            "input_formatting_seconds": 1.3583e-05,
+            "input_preparation_seconds": 0.000256375,
+            "load_seconds": 0.0,
+            "memory_admitted_bytes": 2353012560,
+            "publication_seconds": 4.1041e-05,
+            "tokenization_seconds": 0.000242625,
+            "tokenizer_load_seconds": 0.0
+          },
+          "submission_to_done_seconds": 24.606845542090014,
+          "submission_to_finalized_seconds": 24.606907625100575,
+          "submission_to_first_token_seconds": 23.90794170810841,
+          "submission_to_first_visible_text_seconds": 23.90794170810841,
+          "token_ids": [
+            40,
+            686
+          ],
+          "visible_text": "I will",
+          "visible_text_sha256": "306c861a1fb4409de7e149ed3a1643410574839a87a8f19f35ecf15bcb380250"
+        },
+        {
+          "received_token_event_seconds": [
+            36.72222441597842,
+            37.41032829100732
+          ],
+          "statistics": {
+            "conversion_seconds": 0.0,
+            "cpu_projection": "scalar",
+            "detokenization_seconds": 1.9667e-05,
+            "generation": {
+              "decode_seconds": 0.687440542,
+              "emitted_tokens": 2,
+              "evaluated_tokens": 118,
+              "first_token_seconds": 36.721780042,
+              "history_tokens": 119,
+              "pending_tokens": 1,
+              "prefill_seconds": 36.721196875,
+              "prefill_tokens": 117,
+              "reason": {
+                "kind": "output_limit"
+              },
+              "reused_tokens": 0,
+              "sampled_tokens": 2,
+              "sampling_seconds": 0.001218917,
+              "total_seconds": 37.409914292
+            },
+            "input_formatting_seconds": 9.125e-06,
+            "input_preparation_seconds": 0.000319292,
+            "load_seconds": 0.0,
+            "memory_admitted_bytes": 2353012560,
+            "publication_seconds": 3.5625e-05,
+            "tokenization_seconds": 0.00031,
+            "tokenizer_load_seconds": 0.0
+          },
+          "submission_to_done_seconds": 37.41035416594241,
+          "submission_to_finalized_seconds": 37.41042091604322,
+          "submission_to_first_token_seconds": 36.72222441597842,
+          "submission_to_first_visible_text_seconds": 36.72222441597842,
+          "token_ids": [
+            785,
+            5666
+          ],
+          "visible_text": "The operation",
+          "visible_text_sha256": "2d8200cd5759abe09e10f675b5aa2b362341aa35d0e87b558a50f135f36887b9"
+        }
+      ]
+    }
+  ],
+  "setup": {
+    "conversion_seconds": 1.1273992470000032,
+    "load_seconds": 1.495589833,
+    "storage_cache": "source hashing warmed files; no cold-storage claim",
+    "submission_to_ready_seconds": 1.6301225000061095,
+    "tokenizer_load_seconds": 0.121224041,
+    "warmup_repetitions": 0
+  },
+  "summary": {
+    "scenario_max_seconds": 74.25027970795054,
+    "scenario_median_seconds": 74.25027970795054,
+    "scenario_min_seconds": 74.25027970795054
+  },
+  "thermal_end": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded",
+  "timing_scope": "Driver submission through complete JSON-line receipt (includes transport/dispatch); visible text is the first nonempty text payload. Numerical/sampling/text/publication components are native per-turn statistics. Finalization includes explicit reset/Unicode tail. Native totals overlap component times; do not add them."
+}

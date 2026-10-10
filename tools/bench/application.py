@@ -12,6 +12,7 @@ import time
 
 import mlx_baseline as common
 import prepare
+import cpu_cli
 
 
 def trace_requests(manifest, max_tokens):
@@ -29,10 +30,25 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--probe", action="store_true", help="one two-token-per-turn functional check, not a benchmark")
+    parser.add_argument("--cpu-projection", choices=("scalar", "tiled"), default="scalar")
+    parser.add_argument("--cpu-qualification", type=Path,
+                        help="completed functional qualification for an isolated CLI")
     args = parser.parse_args()
+    if args.cpu_projection == "tiled" and not args.cpu_qualification:
+        raise ValueError("Tiled application measurements require completed CLI qualification")
     raw = args.output.with_suffix(args.output.suffix + ".samples.jsonl")
     if args.output.exists() or raw.exists():
         raise ValueError("Refusing to overwrite application evidence")
+    binary = prepare.ROOT / "target/release/toklet"
+    qualification = None
+    qualification_sha = None
+    build_flags = ["cargo build --locked --offline --release"]
+    if args.cpu_qualification:
+        qualification_sha = prepare.digest(args.cpu_qualification)
+        binary, qualification = cpu_cli.qualified_cli(args.cpu_qualification)
+        if prepare.digest(args.cpu_qualification) != qualification_sha:
+            raise ValueError("CLI qualification changed during admission")
+        build_flags = qualification["build_commands"]
     prepare.verify(prepare.CONTRACT)
     sources = prepare.load_json(prepare.SOURCES)
     prepare.validate_source(sources["model"]["weights"])
@@ -42,14 +58,16 @@ def main():
     manifest = prepare.load_json(prepare.CONTRACT / "manifest.json")
     max_tokens = 2 if args.probe else 128
     requests = trace_requests(manifest, max_tokens)
-    binary = prepare.ROOT / "target/release/toklet"
     identity = {"engine_commit": common.command(["git", "rev-parse", "HEAD"]),
                 "working_tree_dirty": bool(common.command(["git", "status", "--porcelain"])),
                 "binary_sha256": prepare.digest(binary), "driver_sha256": prepare.digest(Path(__file__)),
                 "common_helper_sha256": prepare.digest(Path(common.__file__)),
                 "preparation_helper_sha256": prepare.digest(Path(prepare.__file__)),
                 "python": platform.python_version(), "compiler": common.command(["rustc", "--version"]),
-                "build_flags": ["cargo build --locked --offline --release"],
+                "build_flags": build_flags, "cpu_projection": args.cpu_projection,
+                "cli_qualification_sha256": qualification_sha,
+                "cli_qualification_helper_sha256": prepare.digest(Path(cpu_cli.__file__)),
+                "cpu_worker_qualification_helper_sha256": prepare.digest(Path(cpu_cli.cpu.__file__)),
                 "model": sources["model"],
                 "tokenizer_sha256": next(a["sha256"] for a in sources["assets"] if a["id"] == "qwen.tokenizer.json"),
                 "transcript_sha256": manifest["authored_text_sha256"]["application_trace.json"]}
@@ -63,8 +81,11 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryFile(mode="w+t") as errors:
         started = time.perf_counter()
-        worker = subprocess.Popen([str(binary), "--model", str(prepare.ROOT/"models/Qwen2.5-0.5B-Instruct"),
-                                   "--interactive", "--json", "--context-capacity", "2048", "--prefill-chunk", "128"],
+        command = [str(binary), "--model", str(prepare.ROOT/"models/Qwen2.5-0.5B-Instruct"),
+                   "--interactive", "--json", "--context-capacity", "2048", "--prefill-chunk", "128"]
+        if qualification:
+            command += ["--cpu-projection", args.cpu_projection]
+        worker = subprocess.Popen(command,
                                   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=errors, text=True)
         watchdog = threading.Timer(24*60*60, worker.kill)
         watchdog.start()
@@ -84,6 +105,7 @@ def main():
             ready, ready_at = read()
             if ready.get("event") != "ready":
                 raise ValueError(ready)
+            cpu_cli.check_ready(ready, args.cpu_projection, qualification is not None)
             setup_seconds = ready_at - started
             samples = []
             native_setup = None
@@ -113,6 +135,7 @@ def main():
                         elif event["event"] == "done":
                             done = received - submitted
                             stats = event["statistics"]
+                            cpu_cli.check_statistics(stats, args.cpu_projection, qualification is not None)
                             if native_setup is None:
                                 native_setup = {key: stats[key] for key in ("load_seconds", "conversion_seconds", "tokenizer_load_seconds")}
                             break
@@ -162,9 +185,20 @@ def main():
             worker.stdin.close()
             if worker.wait(timeout=20) != 0 or worker.stdout.read().strip():
                 raise ValueError("Unexpected worker exit or final records")
+            if qualification:
+                if prepare.digest(args.cpu_qualification) != qualification_sha:
+                    raise ValueError("CLI qualification changed during measurement")
+                cpu_cli.qualified_cli(args.cpu_qualification)
+            for path, key in ((binary, "binary_sha256"), (Path(__file__), "driver_sha256"),
+                              (Path(common.__file__), "common_helper_sha256"),
+                              (Path(prepare.__file__), "preparation_helper_sha256"),
+                              (Path(cpu_cli.__file__), "cli_qualification_helper_sha256"),
+                              (Path(cpu_cli.cpu.__file__), "cpu_worker_qualification_helper_sha256")):
+                if prepare.digest(path) != identity[key]:
+                    raise ValueError("Application binary/driver/helper changed during measurement")
             result = {"record_version": 1, "contract_id": manifest["contract_id"], "comparison_track": "application",
                       "qualification": "functional_probe" if args.probe else "three_warmups_ten_samples",
-                      "runtime": "Toklet scalar CPU CLI", "identity": identity, "environment": environment,
+                      "runtime": f"Toklet {args.cpu_projection} CPU CLI", "identity": identity, "environment": environment,
                       "representation": {"weights": "FP32", "kv": "FP32", "context_capacity": 2048, "prefill_chunk": 128},
                       "policy": {"turns": 3, "max_output_tokens_per_turn": max_tokens, "stop": "pinned EOS or output limit",
                                  "greedy": True, "scripted_assistant_history": True, "cache": "empty per authored turn; resident model and reusable buffers"},
