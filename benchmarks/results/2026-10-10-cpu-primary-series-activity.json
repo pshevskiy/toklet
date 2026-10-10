@@ -1,0 +1,18 @@
+{
+  "format": "toklet-cpu-primary-series-activity-v1",
+  "excluded_run": "2026-10-10-cpu-primary-pair-1-scalar.json",
+  "reason": "Full offline Python fixture checks overlapped a timed request; retain raw run but replace it for comparative evidence.",
+  "activity_utc_start": "2026-10-10 02:00:46 UTC",
+  "activity_utc_end": "2026-10-10 02:00:56 UTC",
+  "checks": {
+    "reference_tests": 14,
+    "reference_wall_seconds": 5.735,
+    "benchmark_tests": 22,
+    "benchmark_wall_seconds": 0.048,
+    "experiment_tests": 18,
+    "experiment_wall_seconds": 3.329
+  },
+  "replacement": "2026-10-10-cpu-primary-pair-1-scalar-clean.json",
+  "native_check_window": "Wait for first scalar child and numerical worker to exit, then complete native checks before the clean replacement.",
+  "comparison_policy": "Pair 1 uses clean replacement scalar before tiled. Pair 2 retains reversed tiled before scalar order. Both pairs require three warmups and ten complete samples per run."
+}

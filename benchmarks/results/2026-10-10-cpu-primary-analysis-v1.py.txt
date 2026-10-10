@@ -1,0 +1,116 @@
+"""Frozen primary CPU report calculation; light reads only, no model/native work."""
+from pathlib import Path
+import datetime
+import hashlib
+import json
+import re
+import statistics
+import sys
+
+ROOT=Path('/Users/coloner/work/rust/toklet')
+sys.path.insert(0,str(ROOT/'tools/bench'))
+import mlx_baseline as common
+from jsonschema import Draft202012Validator
+
+OUT=ROOT/'benchmarks/raw/2026-10-10-cpu-primary-analysis-v1.json'
+if OUT.exists():raise ValueError('Refusing to overwrite analysis evidence')
+
+def load(path):
+    data=path.read_bytes()
+    if len(data)>1024*1024:raise ValueError('Report input exceeds one MiB')
+    return json.loads(data),hashlib.sha256(data).hexdigest()
+
+def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+def distribution(values):return {'median':statistics.median(values),'min':min(values),'max':max(values)}
+
+schema,schema_sha=load(ROOT/'benchmarks/result.schema.json')
+summary_helper_sha=digest(Path(common.__file__))
+qualification_path=ROOT/'benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json'
+q,qualification_sha=load(qualification_path)
+assert q['completed'] is True and qualification_sha=='2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc'
+series,series_sha=load(ROOT/'benchmarks/raw/2026-10-10-cpu-primary-pairs-v1.json')
+activity,activity_sha=load(ROOT/'benchmarks/raw/2026-10-10-cpu-primary-series-activity.json')
+guardian,guardian_sha=load(ROOT/'benchmarks/raw/2026-10-10-cpu-primary-clean-guardian-v1.json')
+assert series['complete'] is True and series['qualification_sha256']==qualification_sha
+assert [(r['pair'],r['projection']) for r in series['runs']]==[(1,'scalar'),(1,'tiled'),(2,'tiled'),(2,'scalar')]
+assert activity['excluded_run']=='2026-10-10-cpu-primary-pair-1-scalar.json'
+assert activity['replacement']=='2026-10-10-cpu-primary-pair-1-scalar-clean.json'
+assert guardian['completed'] is True and guardian['validated'] is True and guardian['qualification_sha256']==qualification_sha
+assert guardian['coordinator_resumed_utc']<=series['runs'][1]['started_utc']
+
+names=['pair-1-scalar-clean','pair-1-tiled','pair-2-tiled','pair-2-scalar']
+roles=[(1,'scalar'),(1,'tiled'),(2,'tiled'),(2,'scalar')]
+records=[];baseline=None
+for name,(pair,projection) in zip(names,roles):
+    path=ROOT/f'benchmarks/raw/2026-10-10-cpu-primary-{name}.json';r,sha=load(path)
+    Draft202012Validator(schema).validate(r)
+    assert r['runtime']==f'Toklet {projection} CPU' and r['comparison_track']=='controlled_engine'
+    assert len(r['samples'])==10 and r['setup']['warmup_repetitions']==3
+    assert r['workload']['name']=='short_teacher_forced_128'
+    assert r['workload']['prompt_tokens']==128 and r['workload']['output_steps']==128
+    assert r['workload']['cache_state']=='empty' and r['workload']['context_capacity']==2048
+    assert r['representation']=={'weight_dtype':'FP32','kv_dtype':'FP32','group_size':None,'packed_format_version':None}
+    for key in ('includes_tokenization','includes_sampling','includes_detokenization'):assert r['timing_scope'][key] is False
+    assert r['summary']==common.summarize(r['samples'],128)
+    checkpoint_path=path.with_suffix('.json.samples.jsonl');checkpoint_data=checkpoint_path.read_bytes()
+    rows=[json.loads(line) for line in checkpoint_data.splitlines()]
+    assert len(rows)==10 and [row['sample'] for row in rows]==r['samples']
+    for row in rows:
+        state=row['state'];assert state['prefill_tokens']==128 and state['emitted_tokens']==128 and state['pending_tokens']==1
+    identity=r['identity'];device=identity['device']
+    match={key:identity[key] for key in ('model_revision','tokenizer_revision','model_sha256','tokenizer_sha256','compiler','build_flags')}
+    match['device']={key:device[key] for key in ('name','chip','physical_memory_bytes','os_version','os_build')}
+    for key in ('contract_id','representation','workload','timing_scope'):match[key]=r[key]
+    if baseline is None:baseline=match
+    else:assert match==baseline
+    assert "Now drawing from 'AC Power'" in device['power_mode'] and re.search(r'AC Power:.*?lowpowermode\s+0',device['power_mode'],re.S)
+    assert 'No thermal warning level has been recorded' in device['thermal_conditions']
+    assert 'No performance warning level has been recorded' in device['thermal_conditions']
+    end=next(note for note in r['notes'] if note.startswith('Thermal report at end:'))
+    assert 'No thermal warning level has been recorded' in end and 'No performance warning level has been recorded' in end
+    assert f'binary SHA256 {q["binary_sha256"]["worker"]}' in r['notes'][0]
+    assert any(f'CPU projection {projection}; qualification SHA256 {qualification_sha}' in note for note in r['notes'])
+    runner=re.search(r'Runner SHA256 ([0-9a-f]{64})',r['notes'][0]).group(1)
+    assert runner==series['driver_sha256']
+    helper=re.search(r'common helper SHA256 ([0-9a-f]{64})',r['notes'][0]).group(1)
+    assert helper==summary_helper_sha
+    memory=r['memory'];assert memory['engine_working_set_limit_bytes']==6*1024**3
+    assert 0<memory['peak_process_bytes']<=memory['engine_working_set_limit_bytes']
+    assert memory['logical_weights_bytes']==1976131072 and memory['allocated_kv_bytes']==50331648 and memory['scratch_bytes']==10436608
+    if name=='pair-1-scalar-clean':assert sha==guardian['result_sha256'] and hashlib.sha256(checkpoint_data).hexdigest()==guardian['checkpoint_sha256']
+    else:assert sha==next(item for item in series['runs'] if item['pair']==pair and item['projection']==projection)['sha256']
+    decode=[127/(s['token_event_seconds'][-1]-s['token_event_seconds'][0]) for s in r['samples']]
+    records.append({'pair':pair,'projection':projection,'file':str(path.relative_to(ROOT)), 'sha256':sha,
+        'checkpoint_sha256':hashlib.sha256(checkpoint_data).hexdigest(),'dispatch_engine_revision':identity['engine_commit'],
+        'ttft_seconds':distribution([s['ttft_seconds'] for s in r['samples']]),
+        'request_seconds':distribution([s['total_seconds'] for s in r['samples']]),'decode_steps_per_second':distribution(decode),
+        'prefill_steps_per_second':distribution([128/s['prefill_seconds'] for s in r['samples']]),'memory':memory})
+
+pairs=[]
+for pair in (1,2):
+    s=next(r for r in records if r['pair']==pair and r['projection']=='scalar');t=next(r for r in records if r['pair']==pair and r['projection']=='tiled')
+    pairs.append({'pair':pair,'order':['scalar','tiled'] if pair==1 else ['tiled','scalar'],
+        'ttft_reduction_fraction':1-t['ttft_seconds']['median']/s['ttft_seconds']['median'],
+        'ttft_speedup':s['ttft_seconds']['median']/t['ttft_seconds']['median'],
+        'request_reduction_fraction':1-t['request_seconds']['median']/s['request_seconds']['median'],
+        'decode_speedup':t['decode_steps_per_second']['median']/s['decode_steps_per_second']['median']})
+variation={}
+for projection in ('scalar','tiled'):
+    variation[projection]={}
+    for metric in ('ttft_seconds','request_seconds','decode_steps_per_second'):
+        medians=[r[metric]['median'] for r in records if r['projection']==projection]
+        variation[projection][metric]=(max(medians)-min(medians))/min(medians)
+noise=max(variation[p]['ttft_seconds'] for p in variation)
+assert all(p['ttft_reduction_fraction']>=.05 and p['ttft_reduction_fraction']>noise for p in pairs)
+result={'format':'toklet-cpu-primary-comparison-v1','completed':True,'calculated_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    'analysis_source_sha256':digest(Path(__file__)),'summary_helper_sha256':summary_helper_sha,'schema_sha256':schema_sha,'qualification_sha256':qualification_sha,'series_sha256':series_sha,
+    'activity_sha256':activity_sha,'clean_guardian_sha256':guardian_sha,'effective_input_order':roles,
+    'excluded_run':activity['excluded_run'],'exclusion_reason':activity['reason'],'clean_replacement':activity['replacement'],
+    'shared_identity':baseline,'qualified_numerical_binary_sha256':q['binary_sha256']['worker'],
+    'qualified_numerical_build_base':q['engine_revision']['stdout'].strip(),'runs':records,'pairs':pairs,
+    'between_run_median_variation_fraction':variation,'primary_metric':'Warm 128-input/128-output TTFT',
+    'default_primary_threshold_fraction':.05,'short_primary_threshold_exceeds_observed_variation':True,
+    'decision':'Retain opt-in candidate for full-matrix measurement; scalar remains default. Short workload evidence does not establish full workload, application, sustained, quality, or M2.5/M3 acceptance.',
+    'scope':'Four complete3warm10 runs using one qualified numericalbinary; firstscalar replaced after overlap exclusion. Input order follows clean guardian and reversed pair2. Between-run orchestrator holds preserve numerical completion, and full checkpoints remain local/hash-bound. No formal confidence or tail percentile claim.'}
+with OUT.open('x') as f:json.dump(result,f,indent=2,allow_nan=False);f.write('\n')
+print(json.dumps({'pairs':pairs,'variation':variation},indent=2))

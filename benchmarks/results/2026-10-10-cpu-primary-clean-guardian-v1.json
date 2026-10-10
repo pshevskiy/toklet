@@ -1,0 +1,92 @@
+{
+  "boundary_after": {
+    "numerical": {
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+      "cpu": 0.0,
+      "cpu_time": "112:18.61",
+      "pid": 17701,
+      "ppid": 17695,
+      "state": "S"
+    },
+    "old_coordinator": {
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-clean-v1.py",
+      "cpu": 0.0,
+      "cpu_time": "0:00.16",
+      "pid": 37752,
+      "ppid": 35939,
+      "state": "Ts"
+    },
+    "primary_coordinator": {
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py",
+      "cpu": 0.0,
+      "cpu_time": "0:00.43",
+      "pid": 34871,
+      "ppid": 35939,
+      "state": "Ts"
+    },
+    "transport": {
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json",
+      "cpu": 0.0,
+      "cpu_time": "0:00.56",
+      "pid": 17695,
+      "ppid": 17694,
+      "state": "T"
+    }
+  },
+  "boundary_before": {
+    "numerical": {
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+      "cpu": 0.0,
+      "cpu_time": "112:18.61",
+      "pid": 17701,
+      "ppid": 17695,
+      "state": "S"
+    },
+    "old_coordinator": {
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-clean-v1.py",
+      "cpu": 0.0,
+      "cpu_time": "0:00.16",
+      "pid": 37752,
+      "ppid": 35939,
+      "state": "Ts"
+    },
+    "primary_coordinator": {
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py",
+      "cpu": 0.0,
+      "cpu_time": "0:00.43",
+      "pid": 34871,
+      "ppid": 35939,
+      "state": "Ts"
+    },
+    "transport": {
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json",
+      "cpu": 0.0,
+      "cpu_time": "0:00.56",
+      "pid": 17695,
+      "ppid": 17694,
+      "state": "T"
+    }
+  },
+  "checkpoint_sha256": "eca98f1a7fa5f82542e4aacea081baf6b4c37041c41848aeaefe1bf6e1b37e50",
+  "completed": true,
+  "coordinator_resumed_utc": "2026-10-10T02:36:24.940907+00:00",
+  "finished_utc": "2026-10-10T02:36:24.940957+00:00",
+  "format": "toklet-cpu-primary-clean-guardian-v1",
+  "guardian_sha256": "deefcb4a09fdfef478846cec523a5c8fc5522b5c001434aace09000d12df6c83",
+  "loaded_old_source_sha256": "e9e8e8f72e0367d781eb1238c2dc21374585ede94bb1579885e43eb1a357db91",
+  "qualification_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "recovery": "The old parent alone is held. Its numerical child continues normally. Retire that parent without running its faulty finally, then resume the primary coordinator only after a complete validated clean result and verified idle boundary.",
+  "result_sha256": "ef7be60453fbfdc4d057220d046b8014f94e90f0e007098abd0df7bf73a8cdb9",
+  "started_utc": "2026-10-10T02:13:33.813157+00:00",
+  "summary": {
+    "decode_tokens_per_second_median": 1.4390875625131558,
+    "prefill_tokens_per_second_median": 3.182389138424787,
+    "request_median_seconds": 128.56179045800002,
+    "ttft_max_seconds": 40.671987917,
+    "ttft_median_seconds": 40.2213685415,
+    "ttft_min_seconds": 40.037533625
+  },
+  "superseded_incomplete_receipt": "benchmarks/raw/2026-10-10-cpu-primary-clean-orchestration-v1.json",
+  "validated": true,
+  "verified_replacement_process_group": 37756
+}

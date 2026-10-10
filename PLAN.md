@@ -211,6 +211,22 @@ ANE execution, complete decoder or milestone completion is claimed.
 Astra accepted the completed oracle task after independently checking exact
 regeneration, a separate vectorized attention reconstruction, KV states and gates.
 
+Matched primary CPU result, 10 October 2026 (M3 remains pending): the
+[comparison report](docs/experiments/2026-10-10-cpu-primary-comparison.md)
+retains two complete three-warmup/ten-sample scalar/tiled pairs in the same
+qualified executable, reversing order for confirmation. A Python-test-overlapped
+scalar run is explicitly excluded and replaced by a complete clean run with
+hash-bound activity/guardian evidence. Warm 128-input/128-output TTFT improves
+77.6400% and 77.6009%, exceeding the 5% threshold and 0.3531% maximum observed
+between-run median variation. Request medians improve 52.0024%/52.0992%; decode
+rates improve 1.67460×/1.67830×. Logical weights/KV/scratch are identical and
+all native child peaks remain below 6 GiB. Exact records, raw checkpoint hashes,
+executed calculation/orchestration snapshots and power/thermal limitations
+are retained. Scalar stays default; full matrix, application, sustained,
+held-out quality and M2.5/M3 acceptance remain pending. Astra accepted the report
+without findings after independently checking sample arithmetic, variation,
+memory, artifact identities and the explicit clean-run substitution.
+
 Public-runtime slice results, 10 October 2026 (M3 remains pending): the
 [public Core ML probe](docs/experiments/2026-10-10-coreml-slices.md) converts four
 tiny projection/attention graphs with explicit types and persistent FP16 K/V.

@@ -1,0 +1,270 @@
+{
+  "format": "toklet-cpu-primary-comparison-v1",
+  "completed": true,
+  "calculated_utc": "2026-10-10T03:49:06.780992+00:00",
+  "analysis_source_sha256": "0c5c5a9b4e054bbb25dfbd54243964ffad627a208c99608360b849781aded78e",
+  "summary_helper_sha256": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+  "schema_sha256": "503047553e2a79bbc637da756497494e2fc916c70cdfef1fcf0b687a7a4be852",
+  "qualification_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "series_sha256": "3837b216061a58dd850e76f3e1de27006197251c51f744d8ff7e0915946c0efe",
+  "activity_sha256": "feeb9af6a9550f41ebbc3c078eb71ed19c208396b549babe356e21937b064a3f",
+  "clean_guardian_sha256": "3f18b6c410bfb12f03bba7c8a1b68f49535b269bb6bb53d70d71221e68471350",
+  "effective_input_order": [
+    [
+      1,
+      "scalar"
+    ],
+    [
+      1,
+      "tiled"
+    ],
+    [
+      2,
+      "tiled"
+    ],
+    [
+      2,
+      "scalar"
+    ]
+  ],
+  "excluded_run": "2026-10-10-cpu-primary-pair-1-scalar.json",
+  "exclusion_reason": "Full offline Python fixture checks overlapped a timed request; retain raw run but replace it for comparative evidence.",
+  "clean_replacement": "2026-10-10-cpu-primary-pair-1-scalar-clean.json",
+  "shared_identity": {
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "tokenizer_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "model_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)",
+    "build_flags": [
+      "cp -pR target/release artifacts/cpu-tiled-engine-v1/release",
+      "CARGO_TARGET_DIR=artifacts/cpu-tiled-engine-v1 cargo build --locked --offline --release -j 2 --example cpu_bench",
+      "CARGO_TARGET_DIR=artifacts/cpu-tiled-engine-v1 cargo test --locked --offline --release -j 2 --test qwen_forward --test qwen_session --no-run"
+    ],
+    "device": {
+      "name": "MacBookPro18,3",
+      "chip": "Apple M1 Pro",
+      "physical_memory_bytes": 17179869184,
+      "os_version": "26.6.2",
+      "os_build": "25G83"
+    },
+    "contract_id": "toklet-benchmark-contract-v1",
+    "representation": {
+      "group_size": null,
+      "kv_dtype": "FP32",
+      "packed_format_version": null,
+      "weight_dtype": "FP32"
+    },
+    "workload": {
+      "cache_state": "empty",
+      "context_capacity": 2048,
+      "continuation_sha256": "29fc3d4bc6b96644867b4d8df0c30f0009d814edf6e5579aa02d8f16ebedec07",
+      "name": "short_teacher_forced_128",
+      "output_steps": 128,
+      "prompt_sha256": "ce91eac01d5557affc79d9aae44415b8902e963635c42d52cf156b325a76ddda",
+      "prompt_tokens": 128,
+      "stop_policy": "fixed_length_teacher_forced_ignore_eos",
+      "used_context_before_request": 0
+    },
+    "timing_scope": {
+      "completion_boundary": "synchronous session evaluation through final projection; token timestamps before staging next fixed ID",
+      "first_visible_text_policy": "not measured; fixed token events only",
+      "includes_detokenization": false,
+      "includes_sampling": false,
+      "includes_tokenization": false
+    }
+  },
+  "qualified_numerical_binary_sha256": "3601c63ae83b0d9b20f8362bbda27781e4dd969d527918c072ccf270d2d4874d",
+  "qualified_numerical_build_base": "de1c24c1354213e42b5f81ae246f7ad506d0a056",
+  "runs": [
+    {
+      "pair": 1,
+      "projection": "scalar",
+      "file": "benchmarks/raw/2026-10-10-cpu-primary-pair-1-scalar-clean.json",
+      "sha256": "ef7be60453fbfdc4d057220d046b8014f94e90f0e007098abd0df7bf73a8cdb9",
+      "checkpoint_sha256": "eca98f1a7fa5f82542e4aacea081baf6b4c37041c41848aeaefe1bf6e1b37e50",
+      "dispatch_engine_revision": "0f122d79707d98b7fd150657df10041d1fca94d4",
+      "ttft_seconds": {
+        "median": 40.2213685415,
+        "min": 40.037533625,
+        "max": 40.671987917
+      },
+      "request_seconds": {
+        "median": 128.56179045800002,
+        "min": 127.943704709,
+        "max": 129.724919
+      },
+      "decode_steps_per_second": {
+        "median": 1.4390875625131558,
+        "min": 1.421554842815068,
+        "max": 1.4447222361592982
+      },
+      "prefill_steps_per_second": {
+        "median": 3.182389138424787,
+        "min": 3.1471292062820453,
+        "max": 3.197000141513488
+      },
+      "memory": {
+        "allocated_kv_bytes": 50331648,
+        "engine_working_set_limit_bytes": 6442450944,
+        "logical_weights_bytes": 1976131072,
+        "measurement_instrument": "own-child footprint auxiliary.phys_footprint_peak; logical session allocations",
+        "peak_process_bytes": 2043643920,
+        "scratch_bytes": 10436608,
+        "system_memory_pressure": null
+      }
+    },
+    {
+      "pair": 1,
+      "projection": "tiled",
+      "file": "benchmarks/raw/2026-10-10-cpu-primary-pair-1-tiled.json",
+      "sha256": "492dd9b11cb292fdf5f7b71b7db5869d7279f548f0075c7b9d142fcf725ceb1a",
+      "checkpoint_sha256": "29c4b296670aa0d49ef823efdba785134a7948ad853b59fcfc1e5d25fc98165a",
+      "dispatch_engine_revision": "d6baf81d6ad320fb4c6a747397d9c35bf23a8150",
+      "ttft_seconds": {
+        "median": 8.9934842085,
+        "min": 8.917332375,
+        "max": 9.078347333
+      },
+      "request_seconds": {
+        "median": 61.7065242085,
+        "min": 61.575775291,
+        "max": 62.140158083
+      },
+      "decode_steps_per_second": {
+        "median": 2.409894872130388,
+        "min": 2.3898989378308224,
+        "max": 2.413443354556954
+      },
+      "prefill_steps_per_second": {
+        "median": 14.232533735743736,
+        "min": 14.099482894580328,
+        "max": 14.354068930678077
+      },
+      "memory": {
+        "allocated_kv_bytes": 50331648,
+        "engine_working_set_limit_bytes": 6442450944,
+        "logical_weights_bytes": 1976131072,
+        "measurement_instrument": "own-child footprint auxiliary.phys_footprint_peak; logical session allocations",
+        "peak_process_bytes": 2043725840,
+        "scratch_bytes": 10436608,
+        "system_memory_pressure": null
+      }
+    },
+    {
+      "pair": 2,
+      "projection": "tiled",
+      "file": "benchmarks/raw/2026-10-10-cpu-primary-pair-2-tiled.json",
+      "sha256": "9f6ed5f3d59b8acaf6496fceb35afcbd447010c0cb3c9c39a629daddd59c5801",
+      "checkpoint_sha256": "1fa0f83ceb73a3d6a018d042e23c182c593f12f3838a971f464aa09db022da9e",
+      "dispatch_engine_revision": "3de376d44b9b9f72fabe24018882c009be914e2e",
+      "ttft_seconds": {
+        "median": 9.025235875,
+        "min": 8.907205041,
+        "max": 9.248784625
+      },
+      "request_seconds": {
+        "median": 61.7496821665,
+        "min": 61.384520583,
+        "max": 62.242872875
+      },
+      "decode_steps_per_second": {
+        "median": 2.408376892737361,
+        "min": 2.3838860770126176,
+        "max": 2.420320394500921
+      },
+      "prefill_steps_per_second": {
+        "median": 14.18246626832112,
+        "min": 13.839658188277761,
+        "max": 14.370389722162548
+      },
+      "memory": {
+        "allocated_kv_bytes": 50331648,
+        "engine_working_set_limit_bytes": 6442450944,
+        "logical_weights_bytes": 1976131072,
+        "measurement_instrument": "own-child footprint auxiliary.phys_footprint_peak; logical session allocations",
+        "peak_process_bytes": 2043660304,
+        "scratch_bytes": 10436608,
+        "system_memory_pressure": null
+      }
+    },
+    {
+      "pair": 2,
+      "projection": "scalar",
+      "file": "benchmarks/raw/2026-10-10-cpu-primary-pair-2-scalar.json",
+      "sha256": "46144974578bc11618bde90c31a34a4587c06aa4bcd0a80320598ef72bed3e97",
+      "checkpoint_sha256": "9c0d9d82adc8ce9e256de6ac5d93fa69eaa5070d1788f87eefeb34909614d8f6",
+      "dispatch_engine_revision": "e721bf6aa42520c48f993b64e50e1892ee7a6d4d",
+      "ttft_seconds": {
+        "median": 40.2928161455,
+        "min": 40.147194042,
+        "max": 40.67347475
+      },
+      "request_seconds": {
+        "median": 128.91154054150002,
+        "min": 128.461095292,
+        "max": 130.78412375
+      },
+      "decode_steps_per_second": {
+        "median": 1.4350058936098289,
+        "min": 1.4021120560392615,
+        "max": 1.4381625539269165
+      },
+      "prefill_steps_per_second": {
+        "median": 3.176746466841667,
+        "min": 3.147014374577016,
+        "max": 3.188267673129707
+      },
+      "memory": {
+        "allocated_kv_bytes": 50331648,
+        "engine_working_set_limit_bytes": 6442450944,
+        "logical_weights_bytes": 1976131072,
+        "measurement_instrument": "own-child footprint auxiliary.phys_footprint_peak; logical session allocations",
+        "peak_process_bytes": 2043709456,
+        "scratch_bytes": 10436608,
+        "system_memory_pressure": null
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "pair": 1,
+      "order": [
+        "scalar",
+        "tiled"
+      ],
+      "ttft_reduction_fraction": 0.7764003430360502,
+      "ttft_speedup": 4.472278775281067,
+      "request_reduction_fraction": 0.5200243868051996,
+      "decode_speedup": 1.6745991938960678
+    },
+    {
+      "pair": 2,
+      "order": [
+        "tiled",
+        "scalar"
+      ],
+      "ttft_reduction_fraction": 0.7760088090539693,
+      "ttft_speedup": 4.464461284287487,
+      "request_reduction_fraction": 0.5209918219337302,
+      "decode_speedup": 1.6783045306378281
+    }
+  ],
+  "between_run_median_variation_fraction": {
+    "scalar": {
+      "ttft_seconds": 0.0017763593480485498,
+      "request_seconds": 0.002720482363025727,
+      "decode_steps_per_second": 0.0028443568918447505
+    },
+    "tiled": {
+      "ttft_seconds": 0.003530518958379949,
+      "request_seconds": 0.0006994067248736225,
+      "decode_steps_per_second": 0.0006302914621064795
+    }
+  },
+  "primary_metric": "Warm 128-input/128-output TTFT",
+  "default_primary_threshold_fraction": 0.05,
+  "short_primary_threshold_exceeds_observed_variation": true,
+  "decision": "Retain opt-in candidate for full-matrix measurement; scalar remains default. Short workload evidence does not establish full workload, application, sustained, quality, or M2.5/M3 acceptance.",
+  "scope": "Four complete3warm10 runs using one qualified numericalbinary; firstscalar replaced after overlap exclusion. Input order follows clean guardian and reversed pair2. Between-run orchestrator holds preserve numerical completion, and full checkpoints remain local/hash-bound. No formal confidence or tail percentile claim."
+}

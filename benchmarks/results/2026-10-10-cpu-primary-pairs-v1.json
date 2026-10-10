@@ -1,0 +1,240 @@
+{
+  "baseline_before": {
+    "driver": {
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json",
+      "cpu": 0.0,
+      "cpu_time": "0:00.56",
+      "pid": 17695,
+      "ppid": 17694,
+      "state": "T"
+    },
+    "numerical": {
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+      "cpu": 0.0,
+      "cpu_time": "112:18.61",
+      "pid": 17701,
+      "ppid": 17695,
+      "state": "S"
+    }
+  },
+  "baseline_final": {
+    "driver": {
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json",
+      "cpu": 0.0,
+      "cpu_time": "0:00.56",
+      "pid": 17695,
+      "ppid": 17694,
+      "state": "T"
+    },
+    "numerical": {
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+      "cpu": 0.0,
+      "cpu_time": "112:18.61",
+      "pid": 17701,
+      "ppid": 17695,
+      "state": "S"
+    }
+  },
+  "complete": true,
+  "driver_sha256": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+  "finished_utc": "2026-10-10T03:48:17.017897+00:00",
+  "format": "toklet-cpu-primary-series-v1",
+  "orchestrator_sha256": "b6d93d987ed8883b228770b35904f6bdfc480049521d64acb81e52420fdb32f9",
+  "order": [
+    "scalar",
+    "tiled",
+    "tiled",
+    "scalar"
+  ],
+  "primary_metric": "warm 128-input/128-output TTFT",
+  "qualification_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "runs": [
+    {
+      "baseline_after": {
+        "driver": {
+          "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json",
+          "cpu": 0.0,
+          "cpu_time": "0:00.56",
+          "pid": 17695,
+          "ppid": 17694,
+          "state": "T"
+        },
+        "numerical": {
+          "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+          "cpu": 0.0,
+          "cpu_time": "112:18.61",
+          "pid": 17701,
+          "ppid": 17695,
+          "state": "S"
+        }
+      },
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "tools/bench/cpu.py",
+        "--workload",
+        "short",
+        "--cpu-projection",
+        "scalar",
+        "--cpu-qualification",
+        "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json",
+        "--output",
+        "/Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-cpu-primary-pair-1-scalar.json"
+      ],
+      "finished_utc": "2026-10-10T02:36:24.941253+00:00",
+      "output": "benchmarks/raw/2026-10-10-cpu-primary-pair-1-scalar.json",
+      "pair": 1,
+      "projection": "scalar",
+      "sha256": "09bef0599a548b83fd1e4c1be93ed3298dd8c26e0c0ab5fbf780e999eb4dacb2",
+      "started_utc": "2026-10-10T01:37:18.777125+00:00",
+      "summary": {
+        "decode_tokens_per_second_median": 1.4409462328674016,
+        "prefill_tokens_per_second_median": 3.1889342433691974,
+        "request_median_seconds": 128.3290007505,
+        "ttft_max_seconds": 40.448507417,
+        "ttft_median_seconds": 40.1388050415,
+        "ttft_min_seconds": 40.018161792
+      }
+    },
+    {
+      "baseline_after": {
+        "driver": {
+          "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json",
+          "cpu": 0.0,
+          "cpu_time": "0:00.56",
+          "pid": 17695,
+          "ppid": 17694,
+          "state": "T"
+        },
+        "numerical": {
+          "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+          "cpu": 0.0,
+          "cpu_time": "112:18.61",
+          "pid": 17701,
+          "ppid": 17695,
+          "state": "S"
+        }
+      },
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "tools/bench/cpu.py",
+        "--workload",
+        "short",
+        "--cpu-projection",
+        "tiled",
+        "--cpu-qualification",
+        "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json",
+        "--output",
+        "/Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-cpu-primary-pair-1-tiled.json"
+      ],
+      "finished_utc": "2026-10-10T02:52:53.570446+00:00",
+      "output": "benchmarks/raw/2026-10-10-cpu-primary-pair-1-tiled.json",
+      "pair": 1,
+      "projection": "tiled",
+      "sha256": "492dd9b11cb292fdf5f7b71b7db5869d7279f548f0075c7b9d142fcf725ceb1a",
+      "started_utc": "2026-10-10T02:36:24.951103+00:00",
+      "summary": {
+        "decode_tokens_per_second_median": 2.409894872130388,
+        "prefill_tokens_per_second_median": 14.232533735743736,
+        "request_median_seconds": 61.7065242085,
+        "ttft_max_seconds": 9.078347333,
+        "ttft_median_seconds": 8.9934842085,
+        "ttft_min_seconds": 8.917332375
+      }
+    },
+    {
+      "baseline_after": {
+        "driver": {
+          "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json",
+          "cpu": 0.0,
+          "cpu_time": "0:00.56",
+          "pid": 17695,
+          "ppid": 17694,
+          "state": "T"
+        },
+        "numerical": {
+          "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+          "cpu": 0.0,
+          "cpu_time": "112:18.61",
+          "pid": 17701,
+          "ppid": 17695,
+          "state": "S"
+        }
+      },
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "tools/bench/cpu.py",
+        "--workload",
+        "short",
+        "--cpu-projection",
+        "tiled",
+        "--cpu-qualification",
+        "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json",
+        "--output",
+        "/Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-cpu-primary-pair-2-tiled.json"
+      ],
+      "finished_utc": "2026-10-10T03:10:59.444981+00:00",
+      "output": "benchmarks/raw/2026-10-10-cpu-primary-pair-2-tiled.json",
+      "pair": 2,
+      "projection": "tiled",
+      "sha256": "9f6ed5f3d59b8acaf6496fceb35afcbd447010c0cb3c9c39a629daddd59c5801",
+      "started_utc": "2026-10-10T02:52:53.578240+00:00",
+      "summary": {
+        "decode_tokens_per_second_median": 2.408376892737361,
+        "prefill_tokens_per_second_median": 14.18246626832112,
+        "request_median_seconds": 61.7496821665,
+        "ttft_max_seconds": 9.248784625,
+        "ttft_median_seconds": 9.025235875,
+        "ttft_min_seconds": 8.907205041
+      }
+    },
+    {
+      "baseline_after": {
+        "driver": {
+          "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json",
+          "cpu": 0.0,
+          "cpu_time": "0:00.56",
+          "pid": 17695,
+          "ppid": 17694,
+          "state": "T"
+        },
+        "numerical": {
+          "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+          "cpu": 0.0,
+          "cpu_time": "112:18.61",
+          "pid": 17701,
+          "ppid": 17695,
+          "state": "S"
+        }
+      },
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "tools/bench/cpu.py",
+        "--workload",
+        "short",
+        "--cpu-projection",
+        "scalar",
+        "--cpu-qualification",
+        "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json",
+        "--output",
+        "/Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-cpu-primary-pair-2-scalar.json"
+      ],
+      "finished_utc": "2026-10-10T03:48:17.009731+00:00",
+      "output": "benchmarks/raw/2026-10-10-cpu-primary-pair-2-scalar.json",
+      "pair": 2,
+      "projection": "scalar",
+      "sha256": "46144974578bc11618bde90c31a34a4587c06aa4bcd0a80320598ef72bed3e97",
+      "started_utc": "2026-10-10T03:10:59.452101+00:00",
+      "summary": {
+        "decode_tokens_per_second_median": 1.4350058936098289,
+        "prefill_tokens_per_second_median": 3.176746466841667,
+        "request_median_seconds": 128.91154054150002,
+        "ttft_max_seconds": 40.67347475,
+        "ttft_median_seconds": 40.2928161455,
+        "ttft_min_seconds": 40.147194042
+      }
+    }
+  ],
+  "scalar_transport_resumed_utc": "2026-10-10T03:48:17.025759+00:00",
+  "scope": "Separate complete 3-warmup/10-sample runs from the same qualified binary; order reversed in the confirming pair. Scalar batch numerical process remains idle. Full matrix acceptance remains pending.",
+  "started_utc": "2026-10-10T01:37:18.772871+00:00"
+}
