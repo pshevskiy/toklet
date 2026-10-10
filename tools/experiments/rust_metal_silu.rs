@@ -60,7 +60,7 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
         }
         let rows = scalar(source, "rows")?;
         let width = scalar(source, "width")?;
-        if !(1..=32).contains(&rows) || width != 64 {
+        if !(1..=32).contains(&rows) || !matches!(width, 64 | 4864) {
             return Err(error("fixture", "SiLU prototype shape outside bounds"));
         }
         let count = rows
@@ -275,5 +275,24 @@ mod tests {
         assert_eq!(admitted(&case, total).unwrap(), total);
         assert!(admitted(&case, total - 1).is_err());
         assert!(admitted(&case, LIMIT + 1).is_err());
+    }
+    #[test]
+    fn qwen_width_is_bounded_to_one_row_per_native_inventory() {
+        let wide = json!({"format":"toklet-metal-silu-input-v1","cases":[{"id":"qwen-row","rows":1,"width":4864,"input_bits":vec![0x3c00u16;4864]}]});
+        let cases = load(&fixture(&wide).0).unwrap();
+        assert_eq!(cases[0].input.len(), 4864 + GUARDS);
+        assert_eq!(
+            admitted(&cases[0], LIMIT).unwrap(),
+            ALLOWANCE + (4864 + GUARDS) * 2 * 5
+        );
+        let mut two_rows = wide.clone();
+        two_rows["cases"][0]["rows"] = json!(2);
+        two_rows["cases"][0]["input_bits"] = json!(vec![0u16; 9728]);
+        assert!(load(&fixture(&two_rows).0).is_err());
+        let mut two_cases = wide;
+        let mut second = two_cases["cases"][0].clone();
+        second["id"] = json!("second-qwen-row");
+        two_cases["cases"].as_array_mut().unwrap().push(second);
+        assert!(load(&fixture(&two_cases).0).is_err());
     }
 }

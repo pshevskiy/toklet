@@ -481,8 +481,25 @@ experiment Python tests. Numerical checks run in the verified CPU idle window;
 engine sources and frozen binaries stay unchanged. Astra accepted the complete
 task without findings after independently reproducing numerical proofs,
 regressions, identities, memory and final records.
-Only width 64 is qualified; Qwen, gating/MLP/decoder composition, cache, quality,
-performance and traces remain pending.
+This record qualifies width 64; subsequent selected Qwen evidence follows.
+
+Selected Qwen SiLU preparation, 10 October 2026 (M4 pending): the
+[width-4,864 extension](docs/experiments/2026-10-10-qwen-metal-silu.md) retains
+the unchanged shader and 8,192-value inventory bound. All twelve saved stages
+at layers 0, 1 and 23 split into 36 complete rows, totaling 175,104 values.
+All 468 completed Qwen commands pass: 2,276,352 exact independent Half outputs,
+3,276 guards, and original FP32-source gates with maximum fraction
+0.495263925437. Same-binary tiny SiLU/manual and add/tail regressions pass;
+650 positive commands and both required early failures are retained.
+Maximum own-child physical charge is 13,091,392 bytes, below conservative
+admission of 67,157,574 bytes and 6 GiB. Isolated formatting, Clippy, fourteen
+Rust tests, release compilation and all 58 offline experiment Python tests
+pass. No checkpoint payload is read. Checks occur only after the medium CPU
+worker exits naturally. Astra accepted the complete code and evidence without
+findings after independently reproducing all raw-to-compact events, numerical
+checks, identities, test results and memory accounting.
+Gating/MLP/decoder composition, cache, quality, performance and traces remain
+unqualified, and M4 is open.
 
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
