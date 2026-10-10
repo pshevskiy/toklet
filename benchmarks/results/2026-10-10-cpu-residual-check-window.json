@@ -1,0 +1,42 @@
+{
+  "format": "toklet-cpu-residual-idle-window-v1",
+  "hold_utc": "2026-10-10T03:25:16.359049+00:00",
+  "before_hold": {
+    "17695": {
+      "ppid": 17694,
+      "state": "T",
+      "cpu": 0.0,
+      "time": "0:00.56",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json"
+    },
+    "17701": {
+      "ppid": 17695,
+      "state": "S",
+      "cpu": 0.0,
+      "time": "112:18.61",
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct"
+    },
+    "34871": {
+      "ppid": 35939,
+      "state": "Ss",
+      "cpu": 0.0,
+      "time": "0:01.40",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py"
+    },
+    "44476": {
+      "ppid": 34871,
+      "state": "Ss",
+      "cpu": 0.0,
+      "time": "0:00.61",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload short --cpu-projection scalar --cpu-qualification /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json --output /Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-cpu-primary-pair-2-scalar.json"
+    },
+    "44485": {
+      "ppid": 44476,
+      "state": "R",
+      "cpu": 99.7,
+      "time": "14:14.99",
+      "command": "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct 128 scalar"
+    }
+  },
+  "policy": "Hold only orchestration parent34871. Scalar driver44476/numerical44485 finish normally; wait for numerical exit before compiles/tests/GPU. Resume parent only after checks finish; it then completes primary series and resumes original transport17695."
+}

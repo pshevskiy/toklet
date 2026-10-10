@@ -1,0 +1,31 @@
+{
+  "format": "toklet-cpu-residual-check-window-idle-v1",
+  "idle_verified_utc": "2026-10-10T03:39:45.193255+00:00",
+  "processes": {
+    "17695": {
+      "ppid": 17694,
+      "state": "T",
+      "time": "0:00.56",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json"
+    },
+    "17701": {
+      "ppid": 17695,
+      "state": "S",
+      "time": "112:18.61",
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct"
+    },
+    "34871": {
+      "ppid": 35939,
+      "state": "Ts",
+      "time": "0:01.40",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py"
+    },
+    "44476": {
+      "ppid": 34871,
+      "state": "Z",
+      "time": "0:00.00",
+      "command": "<defunct>"
+    }
+  },
+  "policy": "Numerical44485 exited naturally; only orchestration34871 is held. Original17701 idle with unchanged CPUtime; numerical worker never stopped. Heavy residual checks start after this snapshot. Qwen checks follow only tiny-task acceptance/commit."
+}

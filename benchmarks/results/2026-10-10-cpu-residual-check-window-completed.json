@@ -1,0 +1,48 @@
+{
+  "format": "toklet-cpu-residual-check-window-completed-v1",
+  "completed_utc": "2026-10-10T03:41:53.878691+00:00",
+  "processes": {
+    "17695": {
+      "ppid": 17694,
+      "state": "T",
+      "time": "0:00.56",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json"
+    },
+    "17701": {
+      "ppid": 17695,
+      "state": "S",
+      "time": "112:18.61",
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct"
+    },
+    "34871": {
+      "ppid": 35939,
+      "state": "Ts",
+      "time": "0:01.40",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py"
+    },
+    "44476": {
+      "ppid": 34871,
+      "state": "Z",
+      "time": "0:00.00",
+      "command": "<defunct>"
+    }
+  },
+  "native_result_sha256": "03fa44760558ce24b872e27e95aad9412b0def87baf62288e4ddf2d3c8095bb1",
+  "checks": {
+    "engine_fmt": true,
+    "engine_clippy_all_targets_warnings_denied": true,
+    "engine_tests": 75,
+    "standalone_rust_tests": 11,
+    "offline_python_tests": 77,
+    "residual_exact_active_values": 80288,
+    "residual_output_guards": 1911,
+    "overflow_completed_result_invalid_and_discarded": true,
+    "add_rms_embedding_regression_dispatches": 481
+  },
+  "qualified_receipt_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "frozen_binaries": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+  },
+  "action": "Tiny residual checks finished. Coordinator remains held for selected Qwen residual checks only after tiny task acceptance/commit. No benchmark numerical process was stopped."
+}

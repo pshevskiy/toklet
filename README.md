@@ -99,3 +99,7 @@ and session qualification remain pending.
 The [Half embedding lookup](docs/experiments/2026-10-10-metal-embedding.md)
 preserves every frozen tiny output bit, including signed zero and subnormals.
 Wider/full-table and decoder execution remain pending.
+
+The [Half residual check](docs/experiments/2026-10-10-metal-residual.md) also
+passes exact tiny-model and rounding-edge outputs, with explicit invalid-state
+rejection on Half overflow. Composed session recovery remains pending.

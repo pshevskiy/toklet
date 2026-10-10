@@ -33,6 +33,16 @@ def fixture():
 
 
 class RustMetal(unittest.TestCase):
+    def test_custom_negative_fixture_requires_validated_failure_and_exit_one(self):
+        result={"exit_code":1,"event":{"passed":False}}
+        probe.validate_run("overflow",result,lambda event:False)
+        for passed,code in ((True,1),(False,0),(True,0)):
+            with self.subTest(passed=passed,code=code),self.assertRaisesRegex(ValueError,"exit policy"):
+                probe.validate_run("overflow",{"exit_code":code,"event":{"passed":passed}},lambda event:False)
+        probe.validate_run("primitive",{"exit_code":0,"event":{"passed":True}},lambda event:None)
+        with self.assertRaisesRegex(ValueError,"exit policy"):
+            probe.validate_run("primitive",result,lambda event:None)
+
     def test_inherited_cargo_target_directory_is_overridden_for_every_check(self):
         with tempfile.TemporaryDirectory() as directory:
             build = Path(directory)/"isolated build"

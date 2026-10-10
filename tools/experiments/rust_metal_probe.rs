@@ -141,8 +141,8 @@ mod metal {
                 return Err(error("upload", "complete buffer length differs"));
             }
             // SAFETY: owned initialized aligned allocation, exact checked
-            // length. Host Vec cannot alias the private Metal allocation. Only
-            // called before the first submission; input is read-only thereafter.
+            // length. Host Vec cannot alias the private Metal allocation. No
+            // GPU use is in flight: before first submission or after completion.
             unsafe {
                 std::ptr::copy_nonoverlapping(
                     values.as_ptr(),
@@ -416,6 +416,12 @@ mod metal {
     pub(super) fn run_embedding(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
         embedding::run(path, limit)
     }
+    mod residual {
+        include!("rust_metal_residual.rs");
+    }
+    pub(super) fn run_residual(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
+        residual::run(path, limit)
+    }
 }
 
 fn run() -> Result<Value, Error> {
@@ -425,6 +431,7 @@ fn run() -> Result<Value, Error> {
     let mut has_budget = false;
     let mut rms_input = None;
     let mut embedding_input = None;
+    let mut residual_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
@@ -438,6 +445,12 @@ fn run() -> Result<Value, Error> {
                 embedding_input =
                     Some(std::path::PathBuf::from(args.next().ok_or_else(|| {
                         error("arguments", "missing embedding input")
+                    })?));
+            }
+            Some("--residual-input") if residual_input.is_none() => {
+                residual_input =
+                    Some(std::path::PathBuf::from(args.next().ok_or_else(|| {
+                        error("arguments", "missing residual input")
                     })?));
             }
             Some("--budget-bytes") if !has_budget => {
@@ -457,6 +470,7 @@ fn run() -> Result<Value, Error> {
     if usize::from(invalid)
         + usize::from(rms_input.is_some())
         + usize::from(embedding_input.is_some())
+        + usize::from(residual_input.is_some())
         > 1
     {
         return Err(error("arguments", "probe operation modes are exclusive"));
@@ -467,13 +481,15 @@ fn run() -> Result<Value, Error> {
             metal::run_rms(&path, limit)
         } else if let Some(path) = embedding_input {
             metal::run_embedding(&path, limit)
+        } else if let Some(path) = residual_input {
+            metal::run_residual(&path, limit)
         } else {
             metal::run(invalid, limit)
         }
     }
     #[cfg(not(all(target_os = "macos", target_arch = "aarch64")))]
     {
-        let _ = (invalid, limit, rms_input, embedding_input);
+        let _ = (invalid, limit, rms_input, embedding_input, residual_input);
         Err(error("capability", "requires Apple Silicon macOS"))
     }
 }
