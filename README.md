@@ -126,8 +126,12 @@ The [fully cached scalar workload](docs/experiments/2026-10-10-cpu-cached.md)
 retains all ten requests with 512 reused tokens and zero timed prefill tokens.
 Median request time is 90.000 seconds and decode rate is 1.411 steps/s. Its
 0.792-microsecond numerical TTFT reuses a prepared distribution and excludes
-cache preparation and visible-text latency. Remaining pending/changed-prefix,
-application and quality checks stay open.
+cache preparation and visible-text latency.
+The [pending-token scalar workload](docs/experiments/2026-10-10-cpu-pending.md)
+retains all ten requests with 512 reused positions and one timed pending input.
+Median numerical TTFT is 0.703 seconds, request time is 90.501 seconds and
+decode rate is 1.414 steps/s. Changed-prefix, application and full quality
+checks stay open.
 The [selected Qwen RMS check](docs/experiments/2026-10-10-qwen-metal-rms.md)
 also passes width-896 source gates with norm-only checkpoint reads. Full-model
 and session qualification remain pending.

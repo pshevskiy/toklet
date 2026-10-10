@@ -1,0 +1,121 @@
+"""Validate saved pending CPU evidence without executing or hashing a model/worker."""
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import statistics
+
+from jsonschema import Draft202012Validator
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--root", type=Path, required=True)
+parser.add_argument("--output", type=Path, required=True)
+args = parser.parse_args()
+root = args.root.resolve()
+
+def read(name):
+    return json.loads((root / name).read_text())
+
+def digest(name):
+    return hashlib.sha256((root / name).read_bytes()).hexdigest()
+
+result_name = "benchmarks/results/2026-10-10-cpu-pending.json"
+raw_name = result_name + ".samples.jsonl"
+idle_name = "benchmarks/results/2026-10-10-cpu-code-isolation-check-window-idle.json"
+hold_name = "benchmarks/results/2026-10-10-cpu-pending-check-window-hold.json"
+driver_name = "benchmarks/results/2026-10-10-cpu-medium-source-driver-v1.py.txt"
+launch_name = "benchmarks/results/2026-10-10-cpu-task-cases-check-window-completed.json"
+result = read(result_name)
+Draft202012Validator(read("benchmarks/result.schema.json")).validate(result)
+rows = [json.loads(line) for line in (root / raw_name).read_text().splitlines()]
+assert len(rows) == len(result["samples"]) == 10
+assert result["setup"]["warmup_repetitions"] == 3
+assert result["runtime"] == "Toklet scalar CPU"
+assert result["representation"] == {
+    "group_size": None, "kv_dtype": "FP32", "packed_format_version": None, "weight_dtype": "FP32",
+}
+assert result["identity"]["engine_commit"] == "3393962286d9e6831831c3bc73f12aa99ade2f70"
+assert result["identity"]["working_tree_dirty"] is False
+contract = read("benchmarks/contract-v1/manifest.json")
+workload = result["workload"]
+assert workload == {
+    "cache_state": "pending_sample", "context_capacity": 2048,
+    "continuation_sha256": contract["arrays"]["continuation_128"]["sha256"],
+    "name": "pending_teacher_forced_128", "output_steps": 128,
+    "prompt_sha256": contract["arrays"]["prompt_512"]["sha256"],
+    "prompt_tokens": 512, "stop_policy": "fixed_length_teacher_forced_ignore_eos",
+    "used_context_before_request": 513,
+}
+for key in ["prompt_512", "continuation_128"]:
+    item = contract["arrays"][key]
+    assert digest("benchmarks/contract-v1/" + item["file"]) == item["sha256"]
+for row, sample in zip(rows, result["samples"]):
+    assert row["sample"] == sample
+    state = row["state"]
+    assert (state["reused_tokens"], state["prefill_tokens"], state["evaluated_tokens"],
+            state["pending_tokens"], state["emitted_tokens"]) == (512, 1, 640, 1, 128)
+    for key in ["prefill_seconds", "ttft_seconds", "decode_seconds", "total_seconds",
+                "token_event_seconds", "emitted_tokens"]:
+        assert state[key] == sample[key]
+    events = sample["token_event_seconds"]
+    assert len(events) == 128 and events[0] == sample["ttft_seconds"]
+    assert all(math.isfinite(t) and t >= 0 for t in events)
+    assert all(right >= left for left, right in zip(events, events[1:]))
+    assert math.isclose(sample["decode_seconds"], events[-1] - events[0], rel_tol=0, abs_tol=1e-9)
+    assert 0 < sample["prefill_seconds"] <= events[0] <= events[-1] <= sample["total_seconds"]
+    assert sample["first_visible_text_seconds"] is None
+    assert sample["gpu_peak_allocation_bytes"] is None
+    assert 0 < sample["process_peak_footprint_bytes"] < 6 * 1024**3
+# The fixed pending ID is one evaluated input token; throughput uses numerator one.
+samples = result["samples"]
+summary = {
+    "ttft_median_seconds": statistics.median(s["ttft_seconds"] for s in samples),
+    "ttft_min_seconds": min(s["ttft_seconds"] for s in samples),
+    "ttft_max_seconds": max(s["ttft_seconds"] for s in samples),
+    "request_median_seconds": statistics.median(s["total_seconds"] for s in samples),
+    "decode_tokens_per_second_median": statistics.median(127 / (s["token_event_seconds"][-1] - s["token_event_seconds"][0]) for s in samples),
+    "prefill_tokens_per_second_median": statistics.median(1 / s["prefill_seconds"] for s in samples),
+}
+assert summary == result["summary"]
+assert max(s["process_peak_footprint_bytes"] for s in samples) == result["memory"]["peak_process_bytes"]
+assert result["memory"]["logical_weights_bytes"] == 1976131072
+assert result["memory"]["allocated_kv_bytes"] == 50331648
+assert result["memory"]["scratch_bytes"] == 10436608
+assert "Admitted process estimate 2172348800 bytes; chunk 128; fixed capacity 2048;" in result["notes"][1]
+assert digest(driver_name) == "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a"
+assert "Runner SHA256 " + digest(driver_name) in result["notes"][0]
+launch = read(launch_name)
+assert launch["completed"] is True and launch["working_tree_clean_at_verification"] is True
+assert launch["frozen_binaries"]["target/release/examples/cpu_bench"] == "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+assert "binary SHA256 " + launch["frozen_binaries"]["target/release/examples/cpu_bench"] in result["notes"][0]
+idle = read(idle_name)
+hold = read(hold_name)
+assert idle["completed_workload"] == "pending" and idle["measured_requests"] == 10
+assert hold["active_numerical_worker_pid"] == idle["exited_numerical_worker_pid"] == 80039
+assert hold["active_transport_pid"] == idle["defunct_transport_pid"] == 80030
+assert hold["held_pid"] == idle["held_orchestration_pid"] == 17694
+assert launch["orchestration_resumed_utc"] < hold["orchestration_held_utc"] < idle["idle_verified_utc"]
+assert contract["continuation"]["pending_sample"]["pending_token"] == 2077
+assert contract["continuation"]["pending_sample"]["evaluated_len"] == 512
+assert contract["continuation"]["pending_sample"]["history_len"] == 513
+bound = [result_name, raw_name, idle_name, hold_name, driver_name, launch_name]
+analysis = {
+    "format": "toklet-saved-cpu-pending-analysis-v1", "completed": True,
+    "scope": "Small saved evidence only; no model/worker execution or binary hashes. Prior idle-window completion proof binds the frozen binary at launch.",
+    "checks": ["schema", "ten exact raw/sample pairs", "committed/pending state", "token events",
+               "independent summary", "fixed input hashes", "memory", "actual historical driver",
+               "prior binary identity and launch/hold/idle ordering"],
+    "summary": summary,
+    "requests_seconds": [sample["total_seconds"] for sample in samples],
+    "request_min_seconds": min(sample["total_seconds"] for sample in samples),
+    "request_max_seconds": max(sample["total_seconds"] for sample in samples),
+    "records_sha256": {name: digest(name) for name in bound},
+    "producer_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+}
+with args.output.open("x") as stream:
+    json.dump(analysis, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+print(json.dumps({"completed": True, "summary": summary,
+                  "request_min_seconds": analysis["request_min_seconds"],
+                  "request_max_seconds": analysis["request_max_seconds"]}))

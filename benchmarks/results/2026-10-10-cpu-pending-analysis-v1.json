@@ -1,0 +1,47 @@
+{
+  "format": "toklet-saved-cpu-pending-analysis-v1",
+  "completed": true,
+  "scope": "Small saved evidence only; no model/worker execution or binary hashes. Prior idle-window completion proof binds the frozen binary at launch.",
+  "checks": [
+    "schema",
+    "ten exact raw/sample pairs",
+    "committed/pending state",
+    "token events",
+    "independent summary",
+    "fixed input hashes",
+    "memory",
+    "actual historical driver",
+    "prior binary identity and launch/hold/idle ordering"
+  ],
+  "summary": {
+    "ttft_median_seconds": 0.702565104,
+    "ttft_min_seconds": 0.700897458,
+    "ttft_max_seconds": 0.721566417,
+    "request_median_seconds": 90.500724792,
+    "decode_tokens_per_second_median": 1.4143951955885101,
+    "prefill_tokens_per_second_median": 1.4233560586623355
+  },
+  "requests_seconds": [
+    90.872934458,
+    90.536529417,
+    90.464920167,
+    90.448712375,
+    90.592151833,
+    90.444751084,
+    90.588083042,
+    90.446744334,
+    90.45644475,
+    90.736529417
+  ],
+  "request_min_seconds": 90.444751084,
+  "request_max_seconds": 90.872934458,
+  "records_sha256": {
+    "benchmarks/results/2026-10-10-cpu-pending.json": "d200f0658d199708fc8c83b80331397c469e5645189707745604f3d3bc11d666",
+    "benchmarks/results/2026-10-10-cpu-pending.json.samples.jsonl": "6788d119eea5f260b911624f81100518a0d11ed0e408fd86937c707d98cbd66a",
+    "benchmarks/results/2026-10-10-cpu-code-isolation-check-window-idle.json": "32ef6f76448b68b3785aa777760b783a55d570b481335edf75d37694e57a9ad9",
+    "benchmarks/results/2026-10-10-cpu-pending-check-window-hold.json": "44a70f084639106ec1cbf65df172db99e7d8b620029bc2f14dc53f6a675c6d50",
+    "benchmarks/results/2026-10-10-cpu-medium-source-driver-v1.py.txt": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "benchmarks/results/2026-10-10-cpu-task-cases-check-window-completed.json": "c0b7c85860aa622d1cfb67d541bdf132c85e8688265e8642451b346968c7bb17"
+  },
+  "producer_sha256": "cf4caf390be4e69038e37ff7d1fe5e081d47f13350a92edc719bfa00bc806ae5"
+}

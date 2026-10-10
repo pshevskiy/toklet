@@ -228,7 +228,25 @@ identities, memory and launch/hold/idle ordering. Only orchestration was held;
 the numerical worker finished naturally before any checks or model work.
 Astra accepted the saved-data task without findings after exact analysis replay
 and independent raw-copy, state, stdout, timing, memory, identity and window-order
-verification. Pending-token, changed-prefix, application and full quality gates
+verification. The later pending-token record follows below; changed-prefix,
+application and full quality gates remain open.
+
+M2.5 pending-token evidence, 10 October 2026 (milestone still open): the
+[scalar pending report](docs/experiments/2026-10-10-cpu-pending.md)
+retains three warmups and ten uninterrupted measured requests. Each prepares
+512 evaluated tokens outside timing, stages fixed ID 2077 as a pending-sample
+stand-in, then emits 128 teacher-forced steps. All measured requests reuse 512
+positions, evaluate one pending input and finish with 640 committed positions
+and one pending token. Median numerical TTFT is 0.702565 s, completed request
+time is 90.500725 s and decode rate is 1.414395 steps/s. Prefill throughput
+uses the one pending input, not the prepared base. Maximum physical charge is
+2,043,791,376 bytes below conservative admission and 6 GiB. Independent saved
+analysis reproduces raw states, events, summaries, fixed identities, memory and
+launch/hold/idle ordering. Only orchestration was held; the numerical worker
+finished naturally before checks or native isolation work. Astra accepted the
+complete saved-data task without findings after exact replay and independent
+raw-copy, state/event, stdout, summary, memory, identity and ordering checks.
+Changed-prefix, application and full quality gates
 remain open.
 
 Held-out scorer preparation, 10 October 2026 (M2.5/quality still open): the
