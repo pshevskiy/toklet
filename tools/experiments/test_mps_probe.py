@@ -79,6 +79,36 @@ class MpsChecks(unittest.TestCase):
             edited = copy.deepcopy(result); mutate(edited)
             with self.assertRaises(ValueError): mps_probe.validate_result(edited,"f32")
 
+    def test_resident_storage_requires_gpu_bias_final_cast_and_exact_samples(self):
+        cases = []
+        for case in mps_oracle.verify()["cases"] + [{"name":"single_cast_bias_edge","shape":[1,2,1]}]:
+            if case["name"] == "float_output_range":
+                cases.append({"name":case["name"],"skipped":"not representable"}); continue
+            cases.append({"name":case["name"],"shape":case["shape"],
+                          "samples":[{"sample_index":i,"completed_host_seconds":1,"excluded_cpu_bias_reset_seconds":0} for i in range(10)],
+                          "exact_outputs":True,"guards_untouched":True,"logical_buffer_bytes":128,
+                          "resident_fp16_storage":True,"stored_row_padding_untouched":True,"cpu_bias_reset_required":False,"stored_row_bytes":case["shape"][2]*2})
+        names = json.loads((mps_probe.TINY_HALF/"manifest.json").read_text())["cases"]
+        result = {"mode":"f16-stored","warmups":3,"repetitions":10,"cases":cases,
+                  "tiny_projection_checks":[{"case":name,"maximum_tolerance_fraction":.5,"guards_untouched":True} for name in names]}
+        mps_probe.validate_result(result,"f16-stored")
+        mutations = [lambda r:r['cases'][0].update(cpu_bias_reset_required=True),
+                     lambda r:r['cases'][0].update(resident_fp16_storage=False),
+                     lambda r:r['cases'][0].update(stored_row_padding_untouched=False),
+                     lambda r:r['cases'][0]['samples'][0].update(excluded_cpu_bias_reset_seconds=.1),
+                     lambda r:r['cases'][0].update(stored_row_bytes=1)]
+        for mutate in mutations:
+            edited = copy.deepcopy(result); mutate(edited)
+            with self.assertRaises(ValueError): mps_probe.validate_result(edited,"f16-stored")
+        with tempfile.TemporaryDirectory() as directory:
+            output,build = Path(directory)/"out.json",Path(directory)/"build"
+            for modes in ((),("bad",),("f16-stored","f16-stored")):
+                with self.assertRaisesRegex(ValueError,"Invalid"):
+                    mps_probe.run(output,build,modes)
+            output.with_suffix(output.suffix+".f16-stored.jsonl").touch()
+            with self.assertRaisesRegex(ValueError,"Refusing"):
+                mps_probe.run(output,build,("f16-stored",))
+
     def test_watchdog_kills_only_its_owned_group_and_reaps(self):
         with tempfile.TemporaryFile(mode="w+") as errors, patch.object(mps_probe.os,"killpg",wraps=os.killpg) as kill:
             result = mps_probe.run_child([sys.executable,"-c","import time; time.sleep(60)"],io.StringIO(),errors,timeout=.1)

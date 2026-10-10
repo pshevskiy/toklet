@@ -49,6 +49,49 @@ struct Case: Decodable {
     }
 }
 struct Fixture: Decodable { let format: String; let cases: [Case] }
+struct ProjectionPipelines {
+    let bias: MTLComputePipelineState
+    let store: MTLComputePipelineState
+    let sourceHash: String
+    let prepareSeconds: Double
+    init(device: MTLDevice, path: String) throws {
+        let start = DispatchTime.now().uptimeNanoseconds
+        let data = try Data(contentsOf: URL(fileURLWithPath: path))
+        guard let source = String(data: data, encoding: .utf8) else { throw ProbeError.failure("Expected UTF-8 shader") }
+        sourceHash = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+        let options = MTLCompileOptions()
+        options.languageVersion = .version2_3
+        options.mathMode = .safe
+        options.mathFloatingPointFunctions = .precise
+        let library = try device.makeLibrary(source: source, options: options)
+        guard let biasFunction = library.makeFunction(name: "projection_bias"),
+              let storeFunction = library.makeFunction(name: "projection_store") else { throw ProbeError.failure("Missing projection functions") }
+        bias = try device.makeComputePipelineState(function: biasFunction)
+        store = try device.makeComputePipelineState(function: storeFunction)
+        prepareSeconds = seconds(start)
+    }
+    func encode(_ command: MTLCommandBuffer, pipeline: MTLComputePipelineState, left: MTLBuffer, right: MTLBuffer,
+                tokens: Int, outputs: Int, floatStride: Int, halfStride: Int, device: MTLDevice) throws {
+        let (count, overflow) = tokens.multipliedReportingOverflow(by: outputs)
+        let (floatElements, floatOverflow) = tokens.multipliedReportingOverflow(by: floatStride)
+        let (halfElements, halfOverflow) = tokens.multipliedReportingOverflow(by: halfStride)
+        try require(tokens > 0 && outputs > 0 && !overflow && count <= Int(UInt32.max) && floatStride >= outputs && halfStride >= outputs
+                    && floatStride <= Int(UInt32.max) && halfStride <= Int(UInt32.max), "Projection dispatch shape overflows")
+        try require(!floatOverflow && !halfOverflow && floatElements <= Int(UInt32.max) && halfElements <= Int(UInt32.max),
+                    "Projection physical stride indexing overflows")
+        let width = min(pipeline.threadExecutionWidth, pipeline.maxTotalThreadsPerThreadgroup, device.maxThreadsPerThreadgroup.width)
+        try require(width > 0, "No qualified projection dispatch width")
+        guard let encoder = command.makeComputeCommandEncoder() else { throw ProbeError.failure("Projection encoder allocation failed") }
+        encoder.setComputePipelineState(pipeline)
+        encoder.setBuffer(left, offset: 0, index: 0)
+        encoder.setBuffer(right, offset: 0, index: 1)
+        var shape = SIMD4<UInt32>(UInt32(tokens), UInt32(outputs), UInt32(floatStride), UInt32(halfStride))
+        encoder.setBytes(&shape, length: MemoryLayout<SIMD4<UInt32>>.stride, index: 2)
+        encoder.dispatchThreadgroups(MTLSize(width: (count+width-1)/width, height: 1, depth: 1),
+                                     threadsPerThreadgroup: MTLSize(width: width, height: 1, depth: 1))
+        encoder.endEncoding()
+    }
+}
 struct Matrix {
     let value: MPSMatrix
     let buffer: MTLBuffer
@@ -83,7 +126,8 @@ func matrix(_ device: MTLDevice, rows: Int, columns: Int, half: Bool, value: (In
     let layout = try allocation(rows: rows, columns: columns, half: half)
     let rowBytes = layout.rowBytes, payload = layout.payload, bytes = layout.bytes
     try require(bytes <= device.maxBufferLength && bytes <= 6*1024*1024*1024, "Matrix exceeds memory admission")
-    guard let buffer = device.makeBuffer(length: bytes, options: .storageModeShared) else { throw ProbeError.failure("Shared allocation failed") }
+    guard let buffer = device.makeBuffer(length: bytes, options: [.storageModeShared, .hazardTrackingModeTracked]) else { throw ProbeError.failure("Shared allocation failed") }
+    try require(buffer.hazardTrackingMode == .tracked, "Projection buffers must track encoder dependencies")
     try require(Int(bitPattern: buffer.contents())%alignment == 0, "Shared alignment differs")
     let elements = bytes/size
     if half {
@@ -109,6 +153,15 @@ func payloadHash(_ matrix: Matrix) -> String {
 func guardUnchanged(_ matrix: Matrix) -> Bool {
     Data(bytes: matrix.buffer.contents().advanced(by: matrix.payloadBytes), count: matrix.guardData.count) == matrix.guardData
 }
+func halfPaddingUnchanged(_ matrix: Matrix) -> Bool {
+    let pointer = matrix.buffer.contents().assumingMemoryBound(to: Float16.self)
+    for row in 0..<matrix.value.rows {
+        for column in matrix.value.columns..<matrix.rowBytes/2 {
+            if pointer[row*matrix.rowBytes/2+column].bitPattern != 0x7e57 { return false }
+        }
+    }
+    return true
+}
 
 func json(_ path: String) throws -> [String: Any] {
     guard let value = try JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: path))) as? [String: Any] else {
@@ -130,8 +183,11 @@ func array(_ directory: String, _ manifest: [String: Any], _ name: String) throw
         count = next
     }
     let size = dtype == "f16le" ? 2 : 4
+    try require(expectedBytes == count*size, "Tiny byte metadata differs from shape")
     let path = URL(fileURLWithPath: directory).appendingPathComponent(file).path
-    let data = try Data(contentsOf: URL(fileURLWithPath: path))
+    let fileHandle = try FileHandle(forReadingFrom: URL(fileURLWithPath: path))
+    defer { try? fileHandle.close() }
+    let data = try fileHandle.read(upToCount: expectedBytes+1) ?? Data()
     let loadedHash = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
     try require(data.count == expectedBytes && data.count == count*size && loadedHash == hash, "Tiny payload identity differs")
     // Data guarantees byte alignment only; assemble little-endian bits without
@@ -147,7 +203,7 @@ func array(_ directory: String, _ manifest: [String: Any], _ name: String) throw
     return values
 }
 func tinyProjections(_ halfDirectory: String, _ sourceDirectory: String, mode: String,
-                     device: MTLDevice, queue: MTLCommandQueue) throws -> [[String: Any]] {
+                     device: MTLDevice, queue: MTLCommandQueue, pipelines: ProjectionPipelines?) throws -> [[String: Any]] {
     let halfPath = URL(fileURLWithPath: halfDirectory).appendingPathComponent("manifest.json").path
     let sourcePath = URL(fileURLWithPath: sourceDirectory).appendingPathComponent("manifest.json").path
     let half = try json(halfPath), source = try json(sourcePath)
@@ -170,47 +226,68 @@ func tinyProjections(_ halfDirectory: String, _ sourceDirectory: String, mode: S
         let a = try matrix(device, rows: tokens.count, columns: 32, half: mode != "f32", value: { row,col in x[row*32+col] })
         let b = try matrix(device, rows: 32, columns: 32, half: mode != "f32", value: { row,col in weights[row*32+col] })
         let c = try matrix(device, rows: tokens.count, columns: 32, half: mode == "f16", value: { _,col in bias[col] })
+        let stored = try pipelines.map { _ in try matrix(device, rows: tokens.count, columns: 32, half: true, value: { _,_ in .nan }) }
+        let biasMatrix = try pipelines.map { _ in try matrix(device, rows: 1, columns: 32, half: true, value: { _,col in bias[col] }) }
+        let biasHash = biasMatrix.map { payloadHash($0) }
+        let aHash = payloadHash(a), bHash = payloadHash(b)
         let kernel = MPSMatrixMultiplication(device: device, transposeLeft: false, transposeRight: true,
                                              resultRows: tokens.count, resultColumns: 32, interiorColumns: 32, alpha: 1, beta: 1)
         guard let command = queue.makeCommandBuffer() else { throw ProbeError.failure("Tiny command allocation failed") }
         try require(command.retainedReferences, "Tiny command must retain resources")
+        if let pipelines, let stored, let biasMatrix {
+            try pipelines.encode(command, pipeline: pipelines.bias, left: biasMatrix.buffer, right: c.buffer,
+                                 tokens: tokens.count, outputs: 32, floatStride: c.rowBytes/4, halfStride: stored.rowBytes/2, device: device)
+        }
         kernel.encode(commandBuffer: command, leftMatrix: a.value, rightMatrix: b.value, resultMatrix: c.value)
+        if let pipelines, let stored {
+            try pipelines.encode(command, pipeline: pipelines.store, left: c.buffer, right: stored.buffer,
+                                 tokens: tokens.count, outputs: 32, floatStride: c.rowBytes/4, halfStride: stored.rowBytes/2, device: device)
+        }
         command.commit(); command.waitUntilCompleted()
         try require(command.status == .completed, "Tiny GPU command failed")
         var maxError = 0.0, maxFraction = 0.0
         for row in 0..<tokens.count { for col in 0..<32 {
             let value = c.half ? Float(c.buffer.contents().assumingMemoryBound(to: Float16.self)[row*c.rowBytes/2+col])
                                : c.buffer.contents().assumingMemoryBound(to: Float.self)[row*c.rowBytes/4+col]
-            // FP32-result modes require a subsequent FP16 activation-storage
-            // cast. CPU emulation here is diagnostic, outside operation timing.
-            let stored = Float(Float16(value))
-            try require(value.isFinite && stored.isFinite, "Nonfinite tiny projection")
+            // The resident mode reads GPU-stored Half. Other FP32-result modes
+            // emulate the storage cast on CPU outside operation timing.
+            let halfValue = stored.map { Float($0.buffer.contents().assumingMemoryBound(to: Float16.self)[row*$0.rowBytes/2+col]) } ?? Float(Float16(value))
+            try require(value.isFinite && halfValue.isFinite, "Nonfinite tiny projection")
+            try require(Float16(halfValue).bitPattern == Float16(value).bitPattern, "Tiny GPU storage cast differs")
             let reference = Double(expected[row*32+col])
-            let error = abs(Double(stored)-reference), fraction = error/(atol+rtol*abs(reference))
+            let error = abs(Double(halfValue)-reference), fraction = error/(atol+rtol*abs(reference))
             maxError = max(maxError,error); maxFraction = max(maxFraction,fraction)
         } }
         try require(guardUnchanged(a) && guardUnchanged(b) && guardUnchanged(c), "Tiny physical guard changed")
+        try require(payloadHash(a) == aHash && payloadHash(b) == bHash, "Tiny immutable projection input changed")
+        if let stored, let biasMatrix {
+            try require(guardUnchanged(stored) && halfPaddingUnchanged(stored) && guardUnchanged(biasMatrix) && payloadHash(biasMatrix) == biasHash, "Tiny resident bias/store changed guards, padding or immutable bias")
+        }
         let result: [String: Any] = ["case": name, "maximum_absolute_error": maxError, "maximum_tolerance_fraction": maxFraction,
                         "atol": atol, "rtol": rtol, "guards_untouched": true,
                         "scope": "First-layer biased Q projection only, from frozen FP16 normalized input; result stored as FP16 before original FP32 gate comparison. Single functional check, no timing claim."]
         try emit(["event": "tiny_projection_checked", "result": result])
         try require(maxFraction <= 1, "Tiny frozen gate failed at \(name): \(maxFraction)")
         results.append(result)
-        withExtendedLifetime((a,b,c,kernel,command)) {}
+        withExtendedLifetime((a,b,c,stored,biasMatrix,pipelines,kernel,command)) {}
     }
     return results
 }
 
-func runCase(_ item: Case, mode: String, device: MTLDevice, queue: MTLCommandQueue) throws -> [String: Any] {
+func runCase(_ item: Case, mode: String, device: MTLDevice, queue: MTLCommandQueue, pipelines: ProjectionPipelines?) throws -> [String: Any] {
     try item.validate()
     let tokens = item.shape[0], inputs = item.shape[1], outputs = item.shape[2]
     let halfInput = mode != "f32", halfResult = mode == "f16"
-    if halfResult && !item.fp16_output_admissible {
-        return ["name": item.name, "skipped": "exact result exceeds finite FP16 storage range; FP32 result mode tests it"]
+    if (halfResult || pipelines != nil) && !item.fp16_output_admissible {
+        return ["name": item.name, "skipped": "exact stored result exceeds finite FP16 range; FP32-only result modes test it"]
     }
-    let layouts = [try allocation(rows: tokens, columns: inputs, half: halfInput),
+    var layouts = [try allocation(rows: tokens, columns: inputs, half: halfInput),
                    try allocation(rows: outputs, columns: inputs, half: halfInput),
                    try allocation(rows: tokens, columns: outputs, half: halfResult)]
+    if pipelines != nil {
+        layouts.append(try allocation(rows: tokens, columns: outputs, half: true))
+        layouts.append(try allocation(rows: 1, columns: outputs, half: true))
+    }
     var admitted = 0
     for layout in layouts {
         let (sum, overflow) = admitted.addingReportingOverflow(layout.bytes)
@@ -220,9 +297,12 @@ func runCase(_ item: Case, mode: String, device: MTLDevice, queue: MTLCommandQue
     let a = try matrix(device, rows: tokens, columns: inputs, half: halfInput, value: item.input)
     let b = try matrix(device, rows: outputs, columns: inputs, half: halfInput, value: item.weight)
     let c = try matrix(device, rows: tokens, columns: outputs, half: halfResult, value: { _, column in item.biasValue(column) })
-    let logicalBytes = a.buffer.length+b.buffer.length+c.buffer.length
+    let stored = try pipelines.map { _ in try matrix(device, rows: tokens, columns: outputs, half: true, value: { _,_ in .nan }) }
+    let biasMatrix = try pipelines.map { _ in try matrix(device, rows: 1, columns: outputs, half: true, value: { _,column in item.biasValue(column) }) }
+    let logicalBytes = a.buffer.length+b.buffer.length+c.buffer.length+(stored?.buffer.length ?? 0)+(biasMatrix?.buffer.length ?? 0)
     try require(logicalBytes == admitted, "Allocated lengths differ from admission")
     let aHash = payloadHash(a), bHash = payloadHash(b)
+    let biasHash = biasMatrix.map { payloadHash($0) }
     let start = DispatchTime.now().uptimeNanoseconds
     // C starts as the bias in every row. beta=1 requests bias addition within
     // multiplication; the independent rounding edge qualifies its behavior.
@@ -232,18 +312,28 @@ func runCase(_ item: Case, mode: String, device: MTLDevice, queue: MTLCommandQue
     var samples = [[String: Any]]()
     for repetition in 0..<13 {
         let resetStart = DispatchTime.now().uptimeNanoseconds
-        if halfResult {
+        if pipelines != nil {
+            // GPU bias initialization is encoded with projection and storage.
+        } else if halfResult {
             populate(c.buffer.contents().assumingMemoryBound(to: Float16.self), rows: tokens, columns: outputs,
                      stride: c.rowBytes/2, value: { _, column in item.biasValue(column) })
         } else {
             populate(c.buffer.contents().assumingMemoryBound(to: Float.self), rows: tokens, columns: outputs,
                      stride: c.rowBytes/4, value: { _, column in item.biasValue(column) })
         }
-        let resetSeconds = seconds(resetStart)
+        let resetSeconds = pipelines == nil ? seconds(resetStart) : 0
         let timedStart = DispatchTime.now().uptimeNanoseconds
         guard let command = queue.makeCommandBuffer() else { throw ProbeError.failure("Command allocation failed") }
         try require(command.retainedReferences, "Command must retain matrix resources")
+        if let pipelines, let stored, let biasMatrix {
+            try pipelines.encode(command, pipeline: pipelines.bias, left: biasMatrix.buffer, right: c.buffer,
+                                 tokens: tokens, outputs: outputs, floatStride: c.rowBytes/4, halfStride: stored.rowBytes/2, device: device)
+        }
         kernel.encode(commandBuffer: command, leftMatrix: a.value, rightMatrix: b.value, resultMatrix: c.value)
+        if let pipelines, let stored {
+            try pipelines.encode(command, pipeline: pipelines.store, left: c.buffer, right: stored.buffer,
+                                 tokens: tokens, outputs: outputs, floatStride: c.rowBytes/4, halfStride: stored.rowBytes/2, device: device)
+        }
         command.commit()
         command.waitUntilCompleted()
         let completedSeconds = seconds(timedStart)
@@ -269,8 +359,15 @@ func runCase(_ item: Case, mode: String, device: MTLDevice, queue: MTLCommandQue
                 }
                 try require(actual.bitPattern == Float(expected).bitPattern, "Exact FP32 oracle differs at \(item.name)[\(row),\(column)]: \(actual) vs \(Float(expected))")
             }
+            if let stored {
+                let actual = stored.buffer.contents().assumingMemoryBound(to: Float16.self)[row*stored.rowBytes/2+column]
+                try require(actual.bitPattern == Float16(expected).bitPattern, "Exact resident FP16 output differs at \(item.name)[\(row),\(column)]")
+            }
         } }
         try require(guardUnchanged(a) && guardUnchanged(b) && guardUnchanged(c), "MPS wrote outside physical matrix payload")
+        if let stored, let biasMatrix {
+            try require(guardUnchanged(stored) && halfPaddingUnchanged(stored) && guardUnchanged(biasMatrix), "Resident projection wrote outside physical payload or into stored row padding")
+        }
         let gpuSeconds = command.gpuEndTime-command.gpuStartTime
         if repetition >= 3 {
             let sample: [String: Any] = ["sample_index": repetition-3, "completed_host_seconds": completedSeconds,
@@ -278,28 +375,35 @@ func runCase(_ item: Case, mode: String, device: MTLDevice, queue: MTLCommandQue
             samples.append(sample)
             try emit(["event": "sample", "case": item.name, "sample": sample])
         }
-        withExtendedLifetime((a, b, c, command, kernel)) {}
+        withExtendedLifetime((a, b, c, stored, biasMatrix, pipelines, command, kernel)) {}
     }
     try require(payloadHash(a) == aHash && payloadHash(b) == bHash, "Immutable matrix input changed")
+    if let biasMatrix { try require(payloadHash(biasMatrix) == biasHash, "Immutable resident bias changed") }
     return ["name": item.name, "shape": item.shape, "logical_buffer_bytes": logicalBytes,
             "left_row_bytes": a.rowBytes, "right_row_bytes": b.rowBytes, "result_row_bytes": c.rowBytes,
             "left_payload_sha256": aHash, "right_payload_sha256": bHash, "result_payload_sha256": payloadHash(c),
-            "kernel_object_prepare_seconds": prepareSeconds, "exact_outputs": true, "guards_untouched": true, "samples": samples]
+            "kernel_object_prepare_seconds": prepareSeconds, "exact_outputs": true, "guards_untouched": true, "samples": samples,
+            "resident_fp16_storage": pipelines != nil, "stored_row_bytes": stored?.rowBytes ?? 0,
+            "stored_payload_sha256": stored.map { payloadHash($0) } ?? "", "stored_row_padding_untouched": stored.map { halfPaddingUnchanged($0) } ?? true,
+            "cpu_bias_reset_required": pipelines == nil]
 }
 
 do {
     let args = CommandLine.arguments
-    try require(args.count == 5 && ["f32", "f16", "f16-to-f32"].contains(args[1]), "Usage: probe mode fixture.json fp16-fixture-dir source-fixture-dir")
+    try require(args.count == 6 && ["f32", "f16", "f16-to-f32", "f16-stored"].contains(args[1]), "Usage: probe mode fixture.json fp16-fixture-dir source-fixture-dir shader-path")
     let mode = args[1], path = args[2]
     let fixture = try JSONDecoder().decode(Fixture.self, from: Data(contentsOf: URL(fileURLWithPath: path)))
     try require(fixture.format == "toklet-mps-matrix-v1", "Fixture version differs")
     guard let device = MTLCreateSystemDefaultDevice(), MPSSupportsMTLDevice(device), let queue = device.makeCommandQueue() else {
         throw ProbeError.failure("No supported Metal/MPS device")
     }
+    let shaderHash = try sha256(args[5])
+    let pipelines = try mode == "f16-stored" ? ProjectionPipelines(device: device, path: args[5]) : nil
+    if let pipelines { try require(pipelines.sourceHash == shaderHash, "Loaded projection shader identity differs") }
     var cases = [[String: Any]]()
     for item in fixture.cases {
         try emit(["event": "case_started", "name": item.name])
-        let result = try autoreleasepool { try runCase(item, mode: mode, device: device, queue: queue) }
+        let result = try autoreleasepool { try runCase(item, mode: mode, device: device, queue: queue, pipelines: pipelines) }
         cases.append(result)
         try emit(["event": "case_completed", "case": result])
     }
@@ -309,15 +413,16 @@ do {
     let biasEdge = Case(name: "single_cast_bias_edge", kind: "manual", shape: [1,2,1], integer_table: nil,
                         left: [[1,1]], right: [[1,1.0/2048]], bias: [1.0/2048], expected: [[1.0+1.0/1024]], fp16_output_admissible: true)
     try emit(["event": "case_started", "name": biasEdge.name])
-    let edge = try autoreleasepool { try runCase(biasEdge, mode: mode, device: device, queue: queue) }
+    let edge = try autoreleasepool { try runCase(biasEdge, mode: mode, device: device, queue: queue, pipelines: pipelines) }
     cases.append(edge)
     try emit(["event": "case_completed", "case": edge])
-    let tiny = try tinyProjections(args[3], args[4], mode: mode, device: device, queue: queue)
+    let tiny = try tinyProjections(args[3], args[4], mode: mode, device: device, queue: queue, pipelines: pipelines)
     try emit(["event": "complete", "format": "toklet-mps-primitive-probe-v1", "mode": mode, "device": device.name,
               "source_sha256": try sha256(#filePath), "binary_sha256": try sha256(args[0]), "fixture_sha256": try sha256(path),
               "os": ProcessInfo.processInfo.operatingSystemVersionString, "has_unified_memory": device.hasUnifiedMemory,
-              "timing_scope": "MPS encode, command submission and successful completed work; CPU bias initialization, checks, allocation, hashes and kernel object construction excluded",
-              "bias_policy": "C initialized from bias before each request, beta=1; a resident engine would need GPU bias initialization or another qualified path",
+              "shader_sha256": shaderHash, "projection_pipeline_prepare_seconds": pipelines?.prepareSeconds ?? 0,
+              "timing_scope": pipelines == nil ? "MPS encode, command submission and successful completed work; CPU bias initialization, checks, allocation, hashes and kernel object construction excluded" : "GPU bias initialization, MPS projection and FP16 storage encoded into one command with a single completion wait; allocation, pipeline preparation, hashes, checks and transport excluded",
+              "bias_policy": pipelines == nil ? "C initialized from bias before each request, beta=1; a resident engine would need GPU bias initialization or another qualified path" : "Resident FP16 bias initializes FP32 C on GPU, beta=1 projection, then GPU final FP16 cast; no CPU bias restaging",
               "accumulation": "Not inferred from storage dtype; exact dyadic/manual and range probes only",
               "warmups": 3, "repetitions": 10, "cases": cases, "tiny_projection_checks": tiny,
               "tiny_fp16_manifest_sha256": try sha256(URL(fileURLWithPath: args[3]).appendingPathComponent("manifest.json").path),

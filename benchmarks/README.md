@@ -180,6 +180,13 @@ rounding edge on both runs and remains rejected. Bias setup is excluded from
 operation timing; resident decoder execution and accumulation precision remain
 unqualified. The report preserves timings, failure bits, memory and provenance.
 
+The [resident projection follow-up](../docs/experiments/2026-10-10-mps-resident-projection.md)
+includes GPU bias initialization and final FP16 storage in one completed
+command. Two runs pass exact intermediate/output bits, the unchanged bias edge,
+row padding and five tiny gates, while preserving the original mode's failure.
+Every sample and observed timing variation are retained; engine adoption,
+complete forward execution and quality remain pending.
+
 The independent [llama.cpp worker](../tools/bench/llama/worker.cpp) uses the
 contract-pinned upstream source in a separate process. It has fixed 2,048-position
 FP32 KV, 128-token chunks and the same teacher-forced/cache protocol. The
