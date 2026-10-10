@@ -133,3 +133,8 @@ Isolated binary SHA:
 Status: Astra accepted the completed task without findings after independently
 replaying all outputs, source gates, raw-to-compact events and identities, and
 checking memory, transcripts, idle-window evidence and reported limits.
+
+The subsequent [completed idle window](../../benchmarks/results/2026-10-10-cpu-gating-check-window-completed.json)
+records identity verification at clean reviewed revision `2bc36db`, followed
+by resuming only orchestration at 07:48:31 UTC. Checks and hashes completed
+before the append workload launched; the frozen scalar binaries were preserved.

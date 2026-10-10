@@ -1,0 +1,9 @@
+{
+  "format": "toklet-cpu-qwen-gating-check-window-hold-v1",
+  "orchestration_held_utc": "2026-10-10T07:48:54.660226+00:00",
+  "held_pid": 17694,
+  "active_transport_pid": 68696,
+  "active_numerical_worker_pid": 68705,
+  "snapshot_before": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ss     0:11.09 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n68696 17694 S      0:00.55 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload append --output benchmarks/raw/2026-10-10-cpu-append.json\n68705 68696 R      0:21.84 /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n",
+  "action": "Hold only owned orchestration ahead of the next workload. Append transport and numerical worker continue through all three warmups and ten measured requests. No builds/tests/GPU/model work or binary/model/large-artifact hashes until their natural exit."
+}
