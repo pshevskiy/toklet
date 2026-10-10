@@ -1,0 +1,5 @@
+future_changed: full forward probes, every-position argmax and final-only path match; short-target NLL deltas [-0.00021748113148056802, -9.707775863176948e-6, -1.1336978516851559e-5]
+offset: full forward probes, every-position argmax and final-only path match; short-target NLL deltas [-0.00012471939072788985, 1.161091716639362e-5]
+short: full forward probes, every-position argmax and final-only path match; short-target NLL deltas [-0.00021748113148056802, -9.707775863176948e-6, 1.1551205076898441e-5]
+single: full forward probes, every-position argmax and final-only path match; short-target NLL deltas []
+Full numerical metrics: /Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-cpu-tiled-forward-v1.json

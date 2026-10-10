@@ -164,10 +164,28 @@ with exact scalar/candidate output bits. Representative 128-token projections
 improve 4.5–5.1×; single-token shapes improve 1.6–2.0×. These are microbenchmarks,
 not full workload acceptance. Seventy-four ordinary Rust tests, formatting,
 Clippy, release candidate build and eighteen offline Python checks pass. The
-candidate awaits separately reviewed engine qualification after the scalar
+candidate awaits full-workload engine performance qualification after the scalar
 M2.5 evidence completes; no milestone is marked complete by this preparation.
 Astra accepted the completed candidate code and independently verified both
 final records, raw checkpoints, identities, summaries and power settings.
+
+Opt-in engine qualification, 10 October 2026 (M3 remains pending): the
+[tiled model path](docs/experiments/2026-10-10-cpu-tiled-engine.md) selects a
+concrete projection kernel once per operation, consumes model ownership without
+copying weights, and preserves scalar defaults. Four pinned Qwen cases match
+scalar bits across 1,740 complete trace arrays spanning all 24 layers and logits;
+all 228 unchanged independent gates and twelve greedy IDs pass. Tiled cached
+sessions pass 47 exact full-logit comparisons, with 2,067,597,328-byte physical
+process peak and unchanged 2,105,239,936-byte session admission below 6 GiB.
+All thirteen ordinary session tests run both variants, including actual
+small-model capacity execution, failure recovery and allocation-free paths.
+Formatting, Clippy, 75 ordinary Rust tests, 45 offline Python checks and explicit
+release real-model checks pass. Builds and checks ran while the frozen scalar
+numerical worker was idle between requests; its release binaries are unchanged.
+This establishes an opt-in numerical candidate only. Scalar M2.5, full candidate
+workloads and a second confirming performance run remain required before adoption.
+Astra accepted the completed code and independently verified source/binary
+identities, exact evidence copies, numerical counts, memory and scope.
 
 Public-runtime probe preparation, 10 October 2026: [coreml-slice-v1](tests/fixtures/coreml-slice-v1/manifest.json)
 freezes 42 small arrays and independent FP32/FP16 projection and persistent-KV

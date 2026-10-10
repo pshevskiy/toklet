@@ -106,66 +106,69 @@ fn options(capacity: usize, chunk: usize, offset: usize) -> Options {
 
 #[test]
 fn teacher_forced_timing_keeps_exact_prefix_and_pending_state() {
-    use toklet::{benchmark::measure_teacher_forced, generation::Input};
-    let f = Fixture::tiny();
-    let (c, w) = tiny_parts(&f);
-    let model = Model::new(c, w).unwrap();
-    let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
-    let prompt = f.u32("cases.prompt.tokens");
-    let fixed = [47, 11, 3, 7];
-    let sample = measure_teacher_forced(&mut session, Input::Reset(&prompt), &fixed).unwrap();
-    assert_eq!(
-        (
-            sample.reused_tokens,
-            sample.prefill_tokens,
-            sample.evaluated_tokens,
-            sample.pending_tokens
-        ),
-        (0, 4, 7, 1)
-    );
-    assert_eq!(sample.token_event_seconds.len(), 4);
-    assert_eq!(sample.ttft_seconds, sample.token_event_seconds[0]);
-    assert_eq!(
-        sample.decode_seconds,
-        sample.token_event_seconds[3] - sample.ttft_seconds
-    );
-    assert!(sample.prefill_seconds <= sample.ttft_seconds);
-    assert!(sample.token_event_seconds.windows(2).all(|w| w[0] <= w[1]));
-    assert!(sample.total_seconds >= sample.token_event_seconds[3]);
-    let mut history = prompt;
-    history.extend(fixed);
-    assert_eq!(session.history(), history);
-    let sample = measure_teacher_forced(&mut session, Input::Continue, &[13]).unwrap();
-    assert_eq!(
-        (
-            sample.reused_tokens,
-            sample.prefill_tokens,
-            sample.evaluated_tokens,
-            sample.pending_tokens
-        ),
-        (7, 1, 8, 1)
-    );
-    assert_eq!(sample.decode_seconds, 0.0);
-    session.discard_pending();
-    let mut reference = [0.0; 64];
-    model
-        .forward(&history, 0, &mut model.scratch(32).unwrap(), &mut reference)
-        .unwrap();
-    assert_eq!(session.logits().unwrap(), reference);
-    let sample = measure_teacher_forced(&mut session, Input::Prompt(&history), &[17, 1]).unwrap();
-    assert_eq!((sample.reused_tokens, sample.prefill_tokens), (8, 0));
-    session.discard_pending();
-    let before = session.history().to_vec();
-    let logits = session.logits().unwrap().to_vec();
-    for (input, output) in [
-        (Input::Reset(&[1]), &[][..]),
-        (Input::Continue, &[64][..]),
-        (Input::Reset(&[1; 32]), &[1][..]),
-        (Input::Append(&[64]), &[1][..]),
-    ] {
-        assert!(measure_teacher_forced(&mut session, input, output).is_err());
-        assert_eq!(session.history(), before);
-        assert_eq!(session.logits().unwrap(), logits);
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        use toklet::{benchmark::measure_teacher_forced, generation::Input};
+        let f = Fixture::tiny();
+        let (c, w) = tiny_parts(&f);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
+        let prompt = f.u32("cases.prompt.tokens");
+        let fixed = [47, 11, 3, 7];
+        let sample = measure_teacher_forced(&mut session, Input::Reset(&prompt), &fixed).unwrap();
+        assert_eq!(
+            (
+                sample.reused_tokens,
+                sample.prefill_tokens,
+                sample.evaluated_tokens,
+                sample.pending_tokens
+            ),
+            (0, 4, 7, 1)
+        );
+        assert_eq!(sample.token_event_seconds.len(), 4);
+        assert_eq!(sample.ttft_seconds, sample.token_event_seconds[0]);
+        assert_eq!(
+            sample.decode_seconds,
+            sample.token_event_seconds[3] - sample.ttft_seconds
+        );
+        assert!(sample.prefill_seconds <= sample.ttft_seconds);
+        assert!(sample.token_event_seconds.windows(2).all(|w| w[0] <= w[1]));
+        assert!(sample.total_seconds >= sample.token_event_seconds[3]);
+        let mut history = prompt;
+        history.extend(fixed);
+        assert_eq!(session.history(), history);
+        let sample = measure_teacher_forced(&mut session, Input::Continue, &[13]).unwrap();
+        assert_eq!(
+            (
+                sample.reused_tokens,
+                sample.prefill_tokens,
+                sample.evaluated_tokens,
+                sample.pending_tokens
+            ),
+            (7, 1, 8, 1)
+        );
+        assert_eq!(sample.decode_seconds, 0.0);
+        session.discard_pending();
+        let mut reference = [0.0; 64];
+        model
+            .forward(&history, 0, &mut model.scratch(32).unwrap(), &mut reference)
+            .unwrap();
+        assert_eq!(session.logits().unwrap(), reference);
+        let sample =
+            measure_teacher_forced(&mut session, Input::Prompt(&history), &[17, 1]).unwrap();
+        assert_eq!((sample.reused_tokens, sample.prefill_tokens), (8, 0));
+        session.discard_pending();
+        let before = session.history().to_vec();
+        let logits = session.logits().unwrap().to_vec();
+        for (input, output) in [
+            (Input::Reset(&[1]), &[][..]),
+            (Input::Continue, &[64][..]),
+            (Input::Reset(&[1; 32]), &[1][..]),
+            (Input::Append(&[64]), &[1][..]),
+        ] {
+            assert!(measure_teacher_forced(&mut session, input, output).is_err());
+            assert_eq!(session.history(), before);
+            assert_eq!(session.logits().unwrap(), logits);
+        }
     }
 }
 
@@ -181,205 +184,214 @@ fn close(actual: &[f32], expected: &[f32]) {
 
 #[test]
 fn one_shot_irregular_chunks_and_decode_match_full_prefix_and_frozen_oracle() {
-    let fixture = Fixture::tiny();
-    let (c, w) = tiny_parts(&fixture);
-    let model = Model::new(c, w).unwrap();
-    let mut scratch = model.scratch(32).unwrap();
-    let mut reference = [0.0; 64];
-    for case in ["prompt", "future_changed", "offset", "single", "capacity"] {
-        let tokens = fixture.u32(&format!("cases.{case}.tokens"));
-        let expected = fixture.f32(&format!("cases.{case}.logits"));
-        let offset = fixture.manifest["cases"][case]["position_offset"]
-            .as_u64()
-            .unwrap() as usize;
-        for chunk in [tokens.len(), 3, 1] {
-            let mut session = Session::new(&model, options(32 - offset, chunk, offset)).unwrap();
-            let memory = session.memory();
-            for part in tokens.chunks(chunk) {
-                session.append(part).unwrap();
-                assert!(session.logits().is_none());
-                session.evaluate().unwrap();
-                let len = session.evaluated_len();
-                assert_eq!(session.pending_len(), 0);
-                model
-                    .forward(&tokens[..len], offset, &mut scratch, &mut reference)
-                    .unwrap();
-                assert_eq!(
-                    session.logits().unwrap(),
-                    reference,
-                    "{case}, chunk {chunk}, position {len}"
-                );
-                close(
-                    session.logits().unwrap(),
-                    &expected[(len - 1) * 64..len * 64],
-                );
-                assert_eq!(session.memory(), memory);
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        let fixture = Fixture::tiny();
+        let (c, w) = tiny_parts(&fixture);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut scratch = model.scratch(32).unwrap();
+        let mut reference = [0.0; 64];
+        for case in ["prompt", "future_changed", "offset", "single", "capacity"] {
+            let tokens = fixture.u32(&format!("cases.{case}.tokens"));
+            let expected = fixture.f32(&format!("cases.{case}.logits"));
+            let offset = fixture.manifest["cases"][case]["position_offset"]
+                .as_u64()
+                .unwrap() as usize;
+            for chunk in [tokens.len(), 3, 1] {
+                let mut session =
+                    Session::new(&model, options(32 - offset, chunk, offset)).unwrap();
+                let memory = session.memory();
+                for part in tokens.chunks(chunk) {
+                    session.append(part).unwrap();
+                    assert!(session.logits().is_none());
+                    session.evaluate().unwrap();
+                    let len = session.evaluated_len();
+                    assert_eq!(session.pending_len(), 0);
+                    model
+                        .forward(&tokens[..len], offset, &mut scratch, &mut reference)
+                        .unwrap();
+                    assert_eq!(
+                        session.logits().unwrap(),
+                        reference,
+                        "{case}, chunk {chunk}, position {len}"
+                    );
+                    close(
+                        session.logits().unwrap(),
+                        &expected[(len - 1) * 64..len * 64],
+                    );
+                    assert_eq!(session.memory(), memory);
+                }
+                assert_eq!(session.history(), tokens);
+                assert_eq!(session.evaluate_next_chunk().unwrap(), 0);
+                assert_eq!(session.logits().unwrap(), reference);
             }
-            assert_eq!(session.history(), tokens);
-            assert_eq!(session.evaluate_next_chunk().unwrap(), 0);
-            assert_eq!(session.logits().unwrap(), reference);
         }
     }
 }
 
 #[test]
 fn sampled_history_is_pending_until_evaluated_and_greedy_trace_matches() {
-    let fixture = Fixture::tiny();
-    let (c, w) = tiny_parts(&fixture);
-    let model = Model::new(c, w).unwrap();
-    let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
-    session.append(&fixture.u32("cases.prompt.tokens")).unwrap();
-    session.evaluate().unwrap();
-    for (step, expected) in fixture.manifest["greedy"]["generated_tokens"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .enumerate()
-    {
-        close(
-            session.logits().unwrap(),
-            &fixture.f32(&format!("greedy.step_{step}.logits")),
-        );
-        let token = sampling::greedy(session.logits().unwrap()).unwrap();
-        assert_eq!(token as u64, expected.as_u64().unwrap());
-        let committed = session.evaluated_len();
-        session.append(&[token]).unwrap();
-        assert_eq!(session.evaluated_len(), committed);
-        assert_eq!(session.pending_len(), 1);
-        assert!(session.logits().is_none());
-        // The entire history, including the sampled pending token, matches.
-        let same = session.history().to_vec();
-        session.set_tokens(&same).unwrap();
-        assert_eq!(session.evaluated_len(), committed);
-        assert_eq!(session.evaluate_next_chunk().unwrap(), 1);
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        let fixture = Fixture::tiny();
+        let (c, w) = tiny_parts(&fixture);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
+        session.append(&fixture.u32("cases.prompt.tokens")).unwrap();
+        session.evaluate().unwrap();
+        for (step, expected) in fixture.manifest["greedy"]["generated_tokens"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .enumerate()
+        {
+            close(
+                session.logits().unwrap(),
+                &fixture.f32(&format!("greedy.step_{step}.logits")),
+            );
+            let token = sampling::greedy(session.logits().unwrap()).unwrap();
+            assert_eq!(token as u64, expected.as_u64().unwrap());
+            let committed = session.evaluated_len();
+            session.append(&[token]).unwrap();
+            assert_eq!(session.evaluated_len(), committed);
+            assert_eq!(session.pending_len(), 1);
+            assert!(session.logits().is_none());
+            // The entire history, including the sampled pending token, matches.
+            let same = session.history().to_vec();
+            session.set_tokens(&same).unwrap();
+            assert_eq!(session.evaluated_len(), committed);
+            assert_eq!(session.evaluate_next_chunk().unwrap(), 1);
+        }
     }
 }
 
 #[test]
 fn exact_append_cached_prompt_changed_prefix_reset_and_chunk_boundaries() {
-    let fixture = Fixture::tiny();
-    let (c, w) = tiny_parts(&fixture);
-    let model = Model::new(c, w).unwrap();
-    let mut session = Session::new(&model, options(32, 2, 0)).unwrap();
-    session.set_tokens(&[1, 7, 13, 3]).unwrap();
-    assert_eq!(session.evaluate_next_chunk().unwrap(), 2);
-    assert_eq!(session.evaluated_len(), 2);
-    assert_eq!(session.pending_len(), 2);
-    // A caller may stop here without submitting another chunk, then resume.
-    session.evaluate().unwrap();
-    let last = session.logits().unwrap().to_vec();
-    session.set_tokens(&[1, 7, 13, 3]).unwrap();
-    assert_eq!(session.evaluated_len(), 4);
-    assert_eq!(session.evaluate_next_chunk().unwrap(), 0);
-    assert_eq!(session.logits().unwrap(), last);
-    session.set_tokens(&[1, 7, 13, 3, 47, 11]).unwrap();
-    assert_eq!(session.evaluated_len(), 4);
-    session.discard_pending();
-    assert_eq!(session.logits().unwrap(), last);
-    session.set_tokens(&[1, 7, 13, 17]).unwrap();
-    assert_eq!(session.evaluated_len(), 0);
-    assert!(session.logits().is_none());
-    session.evaluate().unwrap();
-    close(
-        session.logits().unwrap(),
-        &fixture.f32("cases.future_changed.logits")[3 * 64..],
-    );
-    // Shortening also resets; longest-prefix truncation is deliberately deferred.
-    session.set_tokens(&[1, 7]).unwrap();
-    assert_eq!(session.evaluated_len(), 0);
-    session.evaluate().unwrap();
-    session.reset();
-    assert!(session.history().is_empty());
-    assert!(session.logits().is_none());
-    assert_eq!(session.evaluate_next_chunk().unwrap(), 0);
-    session.set_tokens(&[11]).unwrap();
-    session.evaluate().unwrap();
-    close(
-        session.logits().unwrap(),
-        &fixture.f32("cases.single.logits"),
-    );
-    session.set_tokens(&[]).unwrap();
-    assert!(session.logits().is_none());
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        let fixture = Fixture::tiny();
+        let (c, w) = tiny_parts(&fixture);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut session = Session::new(&model, options(32, 2, 0)).unwrap();
+        session.set_tokens(&[1, 7, 13, 3]).unwrap();
+        assert_eq!(session.evaluate_next_chunk().unwrap(), 2);
+        assert_eq!(session.evaluated_len(), 2);
+        assert_eq!(session.pending_len(), 2);
+        // A caller may stop here without submitting another chunk, then resume.
+        session.evaluate().unwrap();
+        let last = session.logits().unwrap().to_vec();
+        session.set_tokens(&[1, 7, 13, 3]).unwrap();
+        assert_eq!(session.evaluated_len(), 4);
+        assert_eq!(session.evaluate_next_chunk().unwrap(), 0);
+        assert_eq!(session.logits().unwrap(), last);
+        session.set_tokens(&[1, 7, 13, 3, 47, 11]).unwrap();
+        assert_eq!(session.evaluated_len(), 4);
+        session.discard_pending();
+        assert_eq!(session.logits().unwrap(), last);
+        session.set_tokens(&[1, 7, 13, 17]).unwrap();
+        assert_eq!(session.evaluated_len(), 0);
+        assert!(session.logits().is_none());
+        session.evaluate().unwrap();
+        close(
+            session.logits().unwrap(),
+            &fixture.f32("cases.future_changed.logits")[3 * 64..],
+        );
+        // Shortening also resets; longest-prefix truncation is deliberately deferred.
+        session.set_tokens(&[1, 7]).unwrap();
+        assert_eq!(session.evaluated_len(), 0);
+        session.evaluate().unwrap();
+        session.reset();
+        assert!(session.history().is_empty());
+        assert!(session.logits().is_none());
+        assert_eq!(session.evaluate_next_chunk().unwrap(), 0);
+        session.set_tokens(&[11]).unwrap();
+        session.evaluate().unwrap();
+        close(
+            session.logits().unwrap(),
+            &fixture.f32("cases.single.logits"),
+        );
+        session.set_tokens(&[]).unwrap();
+        assert!(session.logits().is_none());
+    }
 }
 
 #[test]
 fn requests_and_memory_are_admitted_before_mutation() {
-    let fixture = Fixture::tiny();
-    let (c, w) = tiny_parts(&fixture);
-    let model = Model::new(c, w).unwrap();
-    for opts in [
-        options(0, 1, 0),
-        options(2049, 1, 0),
-        options(33, 1, 0),
-        options(4, 0, 0),
-        options(4, 5, 0),
-        options(4, 1, 29),
-        options(4, 1, usize::MAX),
-        Options {
-            memory_limit_bytes: 0,
-            ..options(4, 1, 0)
-        },
-        Options {
-            memory_limit_bytes: usize::MAX,
-            ..options(4, 1, 0)
-        },
-    ] {
-        assert!(Session::new(&model, opts).is_err());
-    }
-    let mut session = Session::new(&model, options(4, 2, 0)).unwrap();
-    let m = session.memory();
-    assert_eq!(m.weights_bytes, model.allocated_weights_bytes().unwrap());
-    assert_eq!(m.kv_bytes, 2 * 2 * 2 * 4 * 8 * 4);
-    assert_eq!(m.history_bytes, 4 * 4);
-    assert_eq!(m.logits_bytes, 2 * 64 * 4);
-    assert_eq!(
-        m.admitted_bytes,
-        m.weights_bytes
-            + m.kv_bytes
-            + m.scratch_bytes
-            + m.history_bytes
-            + m.logits_bytes
-            + m.metadata_bytes
-            + m.metadata_allowance_bytes
-    );
-    assert!(matches!(
-        Session::new(
-            &model,
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        let fixture = Fixture::tiny();
+        let (c, w) = tiny_parts(&fixture);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        for opts in [
+            options(0, 1, 0),
+            options(2049, 1, 0),
+            options(33, 1, 0),
+            options(4, 0, 0),
+            options(4, 5, 0),
+            options(4, 1, 29),
+            options(4, 1, usize::MAX),
             Options {
-                memory_limit_bytes: m.admitted_bytes - 1,
-                ..options(4, 2, 0)
-            }
-        ),
-        Err(Error::MemoryBudget { .. })
-    ));
-    assert!(
-        Session::new(
-            &model,
+                memory_limit_bytes: 0,
+                ..options(4, 1, 0)
+            },
             Options {
-                memory_limit_bytes: m.admitted_bytes,
-                ..options(4, 2, 0)
-            }
-        )
-        .is_ok()
-    );
-    session.append(&[1, 7]).unwrap();
-    session.evaluate().unwrap();
-    let last = session.logits().unwrap().to_vec();
-    for invalid in [&[1, 64][..], &[1, 2, 3][..]] {
-        assert!(session.append(invalid).is_err());
+                memory_limit_bytes: usize::MAX,
+                ..options(4, 1, 0)
+            },
+        ] {
+            assert!(Session::new(&model, opts).is_err());
+        }
+        let mut session = Session::new(&model, options(4, 2, 0)).unwrap();
+        let m = session.memory();
+        assert_eq!(m.weights_bytes, model.allocated_weights_bytes().unwrap());
+        assert_eq!(m.kv_bytes, 2 * 2 * 2 * 4 * 8 * 4);
+        assert_eq!(m.history_bytes, 4 * 4);
+        assert_eq!(m.logits_bytes, 2 * 64 * 4);
+        assert_eq!(
+            m.admitted_bytes,
+            m.weights_bytes
+                + m.kv_bytes
+                + m.scratch_bytes
+                + m.history_bytes
+                + m.logits_bytes
+                + m.metadata_bytes
+                + m.metadata_allowance_bytes
+        );
+        assert!(matches!(
+            Session::new(
+                &model,
+                Options {
+                    memory_limit_bytes: m.admitted_bytes - 1,
+                    ..options(4, 2, 0)
+                }
+            ),
+            Err(Error::MemoryBudget { .. })
+        ));
+        assert!(
+            Session::new(
+                &model,
+                Options {
+                    memory_limit_bytes: m.admitted_bytes,
+                    ..options(4, 2, 0)
+                }
+            )
+            .is_ok()
+        );
+        session.append(&[1, 7]).unwrap();
+        session.evaluate().unwrap();
+        let last = session.logits().unwrap().to_vec();
+        for invalid in [&[1, 64][..], &[1, 2, 3][..]] {
+            assert!(session.append(invalid).is_err());
+            assert_eq!(session.history(), [1, 7]);
+            assert_eq!(session.evaluated_len(), 2);
+            assert_eq!(session.logits().unwrap(), last);
+        }
+        assert!(session.set_tokens(&[64]).is_err());
+        assert!(session.set_tokens(&[1, 2, 3, 4, 5]).is_err());
         assert_eq!(session.history(), [1, 7]);
-        assert_eq!(session.evaluated_len(), 2);
         assert_eq!(session.logits().unwrap(), last);
+        session.append(&[13, 3]).unwrap();
+        session.evaluate().unwrap();
+        assert_eq!(session.evaluated_len(), 4);
+        assert!(session.append(&[1]).is_err());
+        assert_eq!(session.memory(), m);
     }
-    assert!(session.set_tokens(&[64]).is_err());
-    assert!(session.set_tokens(&[1, 2, 3, 4, 5]).is_err());
-    assert_eq!(session.history(), [1, 7]);
-    assert_eq!(session.logits().unwrap(), last);
-    session.append(&[13, 3]).unwrap();
-    session.evaluate().unwrap();
-    assert_eq!(session.evaluated_len(), 4);
-    assert!(session.append(&[1]).is_err());
-    assert_eq!(session.memory(), m);
 }
 
 fn small_parts(max_positions: usize) -> (Config, Weights) {
@@ -427,398 +439,414 @@ fn small_parts(max_positions: usize) -> (Config, Weights) {
 
 #[test]
 fn layer_or_final_projection_failure_never_commits_a_staged_chunk() {
-    for late_projection in [false, true] {
-        let (c, mut w) = small_parts(32);
-        w.embedding[..2].fill(0.0);
-        w.embedding[2..4].fill(1.0);
-        if late_projection {
-            // Fail only in the tied output projection, after all cache writes.
-            w.embedding[4..6].fill(f32::MAX);
-        } else {
-            // Layer zero's staged cache is written before layer one fails.
-            w.layers[1].q.weight.fill(f32::MAX);
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        for late_projection in [false, true] {
+            let (c, mut w) = small_parts(32);
+            w.embedding[..2].fill(0.0);
+            w.embedding[2..4].fill(1.0);
+            if late_projection {
+                // Fail only in the tied output projection, after all cache writes.
+                w.embedding[4..6].fill(f32::MAX);
+            } else {
+                // Layer zero's staged cache is written before layer one fails.
+                w.layers[1].q.weight.fill(f32::MAX);
+            }
+            let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+            let mut session = Session::new(&model, options(8, 2, 0)).unwrap();
+            session.append(&[0]).unwrap();
+            session.evaluate().unwrap();
+            let last = session.logits().unwrap().to_vec();
+            session.append(&[0, 1]).unwrap();
+            assert!(matches!(
+                session.evaluate_next_chunk(),
+                Err(Error::Model(toklet::model::Error::Kernel(
+                    cpu::Error::NonFinite { .. }
+                )))
+            ));
+            assert_eq!(session.evaluated_len(), 1);
+            assert_eq!(session.history(), [0, 0, 1]);
+            assert_eq!(session.pending_len(), 2);
+            assert!(session.logits().is_none());
+            assert!(session.evaluate_next_chunk().is_err());
+            assert_eq!(session.evaluated_len(), 1);
+            session.discard_pending();
+            assert_eq!(session.logits().unwrap(), last);
+            session.append(&[0]).unwrap();
+            session.evaluate().unwrap();
+            assert_eq!(session.evaluated_len(), 2);
+            let mut scratch = model.scratch(2).unwrap();
+            let mut reference = [0.0; 3];
+            model
+                .forward(&[0, 0], 0, &mut scratch, &mut reference)
+                .unwrap();
+            assert_eq!(session.logits().unwrap(), reference);
         }
-        let model = Model::new(c, w).unwrap();
-        let mut session = Session::new(&model, options(8, 2, 0)).unwrap();
-        session.append(&[0]).unwrap();
-        session.evaluate().unwrap();
-        let last = session.logits().unwrap().to_vec();
-        session.append(&[0, 1]).unwrap();
-        assert!(matches!(
-            session.evaluate_next_chunk(),
-            Err(Error::Model(toklet::model::Error::Kernel(
-                cpu::Error::NonFinite { .. }
-            )))
-        ));
-        assert_eq!(session.evaluated_len(), 1);
-        assert_eq!(session.history(), [0, 0, 1]);
-        assert_eq!(session.pending_len(), 2);
-        assert!(session.logits().is_none());
-        assert!(session.evaluate_next_chunk().is_err());
-        assert_eq!(session.evaluated_len(), 1);
-        session.discard_pending();
-        assert_eq!(session.logits().unwrap(), last);
-        session.append(&[0]).unwrap();
-        session.evaluate().unwrap();
-        assert_eq!(session.evaluated_len(), 2);
-        let mut scratch = model.scratch(2).unwrap();
-        let mut reference = [0.0; 3];
-        model
-            .forward(&[0, 0], 0, &mut scratch, &mut reference)
-            .unwrap();
-        assert_eq!(session.logits().unwrap(), reference);
     }
 }
 
 #[test]
 fn all_2048_tokens_and_nonzero_absolute_boundary_match_full_prefix() {
-    let (c, w) = small_parts(2048);
-    let model = Model::new(c, w).unwrap();
-    let tokens: Vec<u32> = (0..2048).map(|i| (i % 3) as u32).collect();
-    let mut session = Session::new(&model, options(2048, 31, 0)).unwrap();
-    session.append(&tokens).unwrap();
-    session.evaluate().unwrap();
-    assert_eq!(session.evaluated_len(), 2048);
-    assert_eq!(session.history(), tokens);
-    let mut scratch = model.scratch(2048).unwrap();
-    let mut reference = [0.0; 3];
-    model
-        .forward(&tokens, 0, &mut scratch, &mut reference)
-        .unwrap();
-    assert_eq!(session.logits().unwrap(), reference);
-    assert!(session.append(&[1]).is_err());
-    assert_eq!(session.evaluated_len(), 2048);
-    assert_eq!(session.logits().unwrap(), reference);
-    let mut offset = Session::new(&model, options(2, 1, 2046)).unwrap();
-    offset.append(&[1, 2]).unwrap();
-    offset.evaluate().unwrap();
-    model
-        .forward(&[1, 2], 2046, &mut scratch, &mut reference)
-        .unwrap();
-    assert_eq!(offset.logits().unwrap(), reference);
-    assert!(Session::new(&model, options(2, 1, 2047)).is_err());
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        let (c, w) = small_parts(2048);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let tokens: Vec<u32> = (0..2048).map(|i| (i % 3) as u32).collect();
+        let mut session = Session::new(&model, options(2048, 31, 0)).unwrap();
+        session.append(&tokens).unwrap();
+        session.evaluate().unwrap();
+        assert_eq!(session.evaluated_len(), 2048);
+        assert_eq!(session.history(), tokens);
+        let mut scratch = model.scratch(2048).unwrap();
+        let mut reference = [0.0; 3];
+        model
+            .forward(&tokens, 0, &mut scratch, &mut reference)
+            .unwrap();
+        assert_eq!(session.logits().unwrap(), reference);
+        assert!(session.append(&[1]).is_err());
+        assert_eq!(session.evaluated_len(), 2048);
+        assert_eq!(session.logits().unwrap(), reference);
+        let mut offset = Session::new(&model, options(2, 1, 2046)).unwrap();
+        offset.append(&[1, 2]).unwrap();
+        offset.evaluate().unwrap();
+        model
+            .forward(&[1, 2], 2046, &mut scratch, &mut reference)
+            .unwrap();
+        assert_eq!(offset.logits().unwrap(), reference);
+        assert!(Session::new(&model, options(2, 1, 2047)).is_err());
+    }
 }
 
 #[test]
 fn admitted_prefill_decode_and_reuse_allocate_no_buffers() {
-    let fixture = Fixture::tiny();
-    let (c, w) = tiny_parts(&fixture);
-    let model = Model::new(c, w).unwrap();
-    let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
-    let memory = session.memory();
-    ALLOCATIONS.with(|count| count.set(0));
-    TRACK.with(|track| track.set(true));
-    session.set_tokens(&[1, 7, 13, 3]).unwrap();
-    session.evaluate().unwrap();
-    session.set_tokens(&[1, 7, 13, 3]).unwrap();
-    session.evaluate().unwrap();
-    for _ in 0..8 {
-        let token = sampling::greedy(session.logits().unwrap()).unwrap();
-        session.append(&[token]).unwrap();
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        let fixture = Fixture::tiny();
+        let (c, w) = tiny_parts(&fixture);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
+        let memory = session.memory();
+        ALLOCATIONS.with(|count| count.set(0));
+        TRACK.with(|track| track.set(true));
+        session.set_tokens(&[1, 7, 13, 3]).unwrap();
         session.evaluate().unwrap();
+        session.set_tokens(&[1, 7, 13, 3]).unwrap();
+        session.evaluate().unwrap();
+        for _ in 0..8 {
+            let token = sampling::greedy(session.logits().unwrap()).unwrap();
+            session.append(&[token]).unwrap();
+            session.evaluate().unwrap();
+        }
+        session.append(&[1, 7]).unwrap();
+        session.discard_pending();
+        session.set_tokens(&[11]).unwrap();
+        session.evaluate().unwrap();
+        session.reset();
+        session.append(&[7, 13, 3]).unwrap();
+        session.evaluate().unwrap();
+        TRACK.with(|track| track.set(false));
+        assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+        assert_eq!(session.memory(), memory);
     }
-    session.append(&[1, 7]).unwrap();
-    session.discard_pending();
-    session.set_tokens(&[11]).unwrap();
-    session.evaluate().unwrap();
-    session.reset();
-    session.append(&[7, 13, 3]).unwrap();
-    session.evaluate().unwrap();
-    TRACK.with(|track| track.set(false));
-    assert_eq!(ALLOCATIONS.with(Cell::get), 0);
-    assert_eq!(session.memory(), memory);
 }
 
 #[test]
 fn bounded_generation_matches_greedy_oracle_and_continues_pending_token() {
-    use toklet::generation::{self, Input, Request, StopReason};
-    let f = Fixture::tiny();
-    let (c, w) = tiny_parts(&f);
-    let model = Model::new(c, w).unwrap();
-    let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
-    let cancel = std::sync::atomic::AtomicBool::new(false);
-    let mut events = Vec::new();
-    let report = generation::generate(
-        &mut session,
-        Request {
-            input: Input::Prompt(&[1, 7, 13, 3]),
-            max_new_tokens: 4,
-            stop_tokens: &[],
-        },
-        &cancel,
-        |e| {
-            events.push(e);
-            Ok(())
-        },
-    )
-    .unwrap();
-    assert_eq!(
-        events.iter().map(|e| e.token_id).collect::<Vec<_>>(),
-        [47; 4]
-    );
-    assert_eq!(report.reason, StopReason::OutputLimit);
-    assert_eq!(report.sampled_tokens, 4);
-    assert_eq!(report.emitted_tokens, 4);
-    assert_eq!(report.prefill_tokens, 4);
-    assert_eq!(report.history_tokens, 8);
-    assert_eq!(report.evaluated_tokens, 7);
-    assert_eq!(report.pending_tokens, 1);
-    assert_eq!(report.first_token_seconds, Some(events[0].elapsed_seconds));
-    assert!(report.total_seconds >= events[3].elapsed_seconds);
-    let mut history = session.history().to_vec();
-    let mut scratch = model.scratch(32).unwrap();
-    let mut logits = [0.0; 64];
-    let mut expected = Vec::new();
-    for _ in 0..2 {
-        model
-            .forward(&history, 0, &mut scratch, &mut logits)
-            .unwrap();
-        let id = sampling::greedy(&logits).unwrap();
-        history.push(id);
-        expected.push(id);
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        use toklet::generation::{self, Input, Request, StopReason};
+        let f = Fixture::tiny();
+        let (c, w) = tiny_parts(&f);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut session = Session::new(&model, options(32, 3, 0)).unwrap();
+        let cancel = std::sync::atomic::AtomicBool::new(false);
+        let mut events = Vec::new();
+        let report = generation::generate(
+            &mut session,
+            Request {
+                input: Input::Prompt(&[1, 7, 13, 3]),
+                max_new_tokens: 4,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |e| {
+                events.push(e);
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            events.iter().map(|e| e.token_id).collect::<Vec<_>>(),
+            [47; 4]
+        );
+        assert_eq!(report.reason, StopReason::OutputLimit);
+        assert_eq!(report.sampled_tokens, 4);
+        assert_eq!(report.emitted_tokens, 4);
+        assert_eq!(report.prefill_tokens, 4);
+        assert_eq!(report.history_tokens, 8);
+        assert_eq!(report.evaluated_tokens, 7);
+        assert_eq!(report.pending_tokens, 1);
+        assert_eq!(report.first_token_seconds, Some(events[0].elapsed_seconds));
+        assert!(report.total_seconds >= events[3].elapsed_seconds);
+        let mut history = session.history().to_vec();
+        let mut scratch = model.scratch(32).unwrap();
+        let mut logits = [0.0; 64];
+        let mut expected = Vec::new();
+        for _ in 0..2 {
+            model
+                .forward(&history, 0, &mut scratch, &mut logits)
+                .unwrap();
+            let id = sampling::greedy(&logits).unwrap();
+            history.push(id);
+            expected.push(id);
+        }
+        events.clear();
+        let report = generation::generate(
+            &mut session,
+            Request {
+                input: Input::Continue,
+                max_new_tokens: 2,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |e| {
+                events.push(e);
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            events.iter().map(|e| e.token_id).collect::<Vec<_>>(),
+            expected
+        );
+        assert_eq!(report.reused_tokens, 7);
+        assert_eq!(report.prefill_tokens, 1);
+        assert_eq!(session.history(), history);
+        assert_eq!(session.pending_len(), 1);
     }
-    events.clear();
-    let report = generation::generate(
-        &mut session,
-        Request {
-            input: Input::Continue,
-            max_new_tokens: 2,
-            stop_tokens: &[],
-        },
-        &cancel,
-        |e| {
-            events.push(e);
-            Ok(())
-        },
-    )
-    .unwrap();
-    assert_eq!(
-        events.iter().map(|e| e.token_id).collect::<Vec<_>>(),
-        expected
-    );
-    assert_eq!(report.reused_tokens, 7);
-    assert_eq!(report.prefill_tokens, 1);
-    assert_eq!(session.history(), history);
-    assert_eq!(session.pending_len(), 1);
 }
 
 #[test]
 fn stop_ids_are_pending_and_hidden_and_zero_output_retains_cached_logits() {
-    use toklet::generation::{self, Input, Request, StopReason};
-    let f = Fixture::tiny();
-    let (c, w) = tiny_parts(&f);
-    let model = Model::new(c, w).unwrap();
-    let mut s = Session::new(&model, options(32, 2, 0)).unwrap();
-    let cancel = std::sync::atomic::AtomicBool::new(false);
-    let report = generation::generate(
-        &mut s,
-        Request {
-            input: Input::Prompt(&[1, 7, 13, 3]),
-            max_new_tokens: 4,
-            stop_tokens: &[47],
-        },
-        &cancel,
-        |_| panic!("stop token must not be visible"),
-    )
-    .unwrap();
-    assert_eq!(report.reason, StopReason::StopToken { token_id: 47 });
-    assert_eq!(report.sampled_tokens, 1);
-    assert_eq!(report.emitted_tokens, 0);
-    assert_eq!(s.history(), [1, 7, 13, 3, 47]);
-    assert_eq!(s.evaluated_len(), 4);
-    let report = generation::generate(
-        &mut s,
-        Request {
-            input: Input::Reset(&[1, 7, 13, 3]),
-            max_new_tokens: 0,
-            stop_tokens: &[],
-        },
-        &cancel,
-        |_| panic!(),
-    )
-    .unwrap();
-    assert_eq!(report.prefill_tokens, 4);
-    assert_eq!(report.first_token_seconds, None);
-    assert_eq!(s.pending_len(), 0);
-    let report = generation::generate(
-        &mut s,
-        Request {
-            input: Input::Prompt(&[1, 7, 13, 3]),
-            max_new_tokens: 1,
-            stop_tokens: &[],
-        },
-        &cancel,
-        |e| {
-            assert_eq!(e.token_id, 47);
-            Ok(())
-        },
-    )
-    .unwrap();
-    assert_eq!(report.reused_tokens, 4);
-    assert_eq!(report.prefill_tokens, 0);
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        use toklet::generation::{self, Input, Request, StopReason};
+        let f = Fixture::tiny();
+        let (c, w) = tiny_parts(&f);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut s = Session::new(&model, options(32, 2, 0)).unwrap();
+        let cancel = std::sync::atomic::AtomicBool::new(false);
+        let report = generation::generate(
+            &mut s,
+            Request {
+                input: Input::Prompt(&[1, 7, 13, 3]),
+                max_new_tokens: 4,
+                stop_tokens: &[47],
+            },
+            &cancel,
+            |_| panic!("stop token must not be visible"),
+        )
+        .unwrap();
+        assert_eq!(report.reason, StopReason::StopToken { token_id: 47 });
+        assert_eq!(report.sampled_tokens, 1);
+        assert_eq!(report.emitted_tokens, 0);
+        assert_eq!(s.history(), [1, 7, 13, 3, 47]);
+        assert_eq!(s.evaluated_len(), 4);
+        let report = generation::generate(
+            &mut s,
+            Request {
+                input: Input::Reset(&[1, 7, 13, 3]),
+                max_new_tokens: 0,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |_| panic!(),
+        )
+        .unwrap();
+        assert_eq!(report.prefill_tokens, 4);
+        assert_eq!(report.first_token_seconds, None);
+        assert_eq!(s.pending_len(), 0);
+        let report = generation::generate(
+            &mut s,
+            Request {
+                input: Input::Prompt(&[1, 7, 13, 3]),
+                max_new_tokens: 1,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |e| {
+                assert_eq!(e.token_id, 47);
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(report.reused_tokens, 4);
+        assert_eq!(report.prefill_tokens, 0);
+    }
 }
 
 #[test]
 fn generation_admission_rejects_all_invalid_inputs_before_state_changes() {
-    use toklet::generation::{self, Input, Request};
-    let f = Fixture::tiny();
-    let (c, w) = tiny_parts(&f);
-    let model = Model::new(c, w).unwrap();
-    let mut s = Session::new(&model, options(8, 2, 0)).unwrap();
-    s.append(&[1, 7]).unwrap();
-    s.evaluate().unwrap();
-    let logits = s.logits().unwrap().to_vec();
-    let cancel = std::sync::atomic::AtomicBool::new(false);
-    for request in [
-        Request {
-            input: Input::Reset(&[]),
-            max_new_tokens: 1,
-            stop_tokens: &[],
-        },
-        Request {
-            input: Input::Reset(&[64]),
-            max_new_tokens: 1,
-            stop_tokens: &[],
-        },
-        Request {
-            input: Input::Prompt(&[1, 2, 3, 4]),
-            max_new_tokens: 5,
-            stop_tokens: &[],
-        },
-        Request {
-            input: Input::Append(&[1, 2]),
-            max_new_tokens: 5,
-            stop_tokens: &[],
-        },
-        Request {
-            input: Input::Continue,
-            max_new_tokens: usize::MAX,
-            stop_tokens: &[],
-        },
-        Request {
-            input: Input::Continue,
-            max_new_tokens: 1,
-            stop_tokens: &[64],
-        },
-    ] {
-        assert!(generation::generate(&mut s, request, &cancel, |_| panic!()).is_err());
-        assert_eq!(s.history(), [1, 7]);
-        assert_eq!(s.evaluated_len(), 2);
-        assert_eq!(s.logits().unwrap(), logits);
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        use toklet::generation::{self, Input, Request};
+        let f = Fixture::tiny();
+        let (c, w) = tiny_parts(&f);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut s = Session::new(&model, options(8, 2, 0)).unwrap();
+        s.append(&[1, 7]).unwrap();
+        s.evaluate().unwrap();
+        let logits = s.logits().unwrap().to_vec();
+        let cancel = std::sync::atomic::AtomicBool::new(false);
+        for request in [
+            Request {
+                input: Input::Reset(&[]),
+                max_new_tokens: 1,
+                stop_tokens: &[],
+            },
+            Request {
+                input: Input::Reset(&[64]),
+                max_new_tokens: 1,
+                stop_tokens: &[],
+            },
+            Request {
+                input: Input::Prompt(&[1, 2, 3, 4]),
+                max_new_tokens: 5,
+                stop_tokens: &[],
+            },
+            Request {
+                input: Input::Append(&[1, 2]),
+                max_new_tokens: 5,
+                stop_tokens: &[],
+            },
+            Request {
+                input: Input::Continue,
+                max_new_tokens: usize::MAX,
+                stop_tokens: &[],
+            },
+            Request {
+                input: Input::Continue,
+                max_new_tokens: 1,
+                stop_tokens: &[64],
+            },
+        ] {
+            assert!(generation::generate(&mut s, request, &cancel, |_| panic!()).is_err());
+            assert_eq!(s.history(), [1, 7]);
+            assert_eq!(s.evaluated_len(), 2);
+            assert_eq!(s.logits().unwrap(), logits);
+        }
     }
 }
 
 #[test]
 fn cancellation_and_output_failure_preserve_recoverable_prefixes() {
-    use std::sync::atomic::{AtomicBool, Ordering};
-    use toklet::generation::{self, Input, Request, StopReason};
-    let f = Fixture::tiny();
-    let (c, w) = tiny_parts(&f);
-    let model = Model::new(c, w).unwrap();
-    let mut s = Session::new(&model, options(32, 2, 0)).unwrap();
-    let cancel = AtomicBool::new(true);
-    let report = generation::generate(
-        &mut s,
-        Request {
-            input: Input::Prompt(&[1, 7, 13, 3]),
-            max_new_tokens: 4,
-            stop_tokens: &[],
-        },
-        &cancel,
-        |_| panic!(),
-    )
-    .unwrap();
-    assert_eq!(report.reason, StopReason::Cancelled);
-    assert!(s.history().is_empty());
-    cancel.store(false, Ordering::Relaxed);
-    let report = generation::generate(
-        &mut s,
-        Request {
-            input: Input::Prompt(&[1, 7, 13, 3]),
-            max_new_tokens: 4,
-            stop_tokens: &[],
-        },
-        &cancel,
-        |_| {
-            cancel.store(true, Ordering::Relaxed);
-            Ok(())
-        },
-    )
-    .unwrap();
-    assert_eq!(report.reason, StopReason::Cancelled);
-    assert_eq!(report.emitted_tokens, 1);
-    assert_eq!(s.evaluated_len(), 4);
-    assert_eq!(s.pending_len(), 1);
-    cancel.store(false, Ordering::Relaxed);
-    let report = generation::generate(
-        &mut s,
-        Request {
-            input: Input::Continue,
-            max_new_tokens: 1,
-            stop_tokens: &[],
-        },
-        &cancel,
-        |e| {
-            assert_eq!(e.token_id, 47);
-            Ok(())
-        },
-    )
-    .unwrap();
-    assert_eq!(report.prefill_tokens, 1);
-    assert_eq!(report.reused_tokens, 4);
-    s.discard_pending();
-    let before = s.history().to_vec();
-    let len = s.evaluated_len();
-    let result = generation::generate(
-        &mut s,
-        Request {
-            input: Input::Continue,
-            max_new_tokens: 1,
-            stop_tokens: &[],
-        },
-        &cancel,
-        |_| {
-            Err(std::io::Error::new(
-                std::io::ErrorKind::BrokenPipe,
-                "closed sink",
-            ))
-        },
-    );
-    assert!(matches!(result, Err(generation::Error::Output(_))));
-    assert_eq!(s.evaluated_len(), len);
-    assert_eq!(s.pending_len(), 1);
-    s.discard_pending();
-    assert_eq!(s.history(), before);
-    assert!(s.logits().is_some());
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        use std::sync::atomic::{AtomicBool, Ordering};
+        use toklet::generation::{self, Input, Request, StopReason};
+        let f = Fixture::tiny();
+        let (c, w) = tiny_parts(&f);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut s = Session::new(&model, options(32, 2, 0)).unwrap();
+        let cancel = AtomicBool::new(true);
+        let report = generation::generate(
+            &mut s,
+            Request {
+                input: Input::Prompt(&[1, 7, 13, 3]),
+                max_new_tokens: 4,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |_| panic!(),
+        )
+        .unwrap();
+        assert_eq!(report.reason, StopReason::Cancelled);
+        assert!(s.history().is_empty());
+        cancel.store(false, Ordering::Relaxed);
+        let report = generation::generate(
+            &mut s,
+            Request {
+                input: Input::Prompt(&[1, 7, 13, 3]),
+                max_new_tokens: 4,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |_| {
+                cancel.store(true, Ordering::Relaxed);
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(report.reason, StopReason::Cancelled);
+        assert_eq!(report.emitted_tokens, 1);
+        assert_eq!(s.evaluated_len(), 4);
+        assert_eq!(s.pending_len(), 1);
+        cancel.store(false, Ordering::Relaxed);
+        let report = generation::generate(
+            &mut s,
+            Request {
+                input: Input::Continue,
+                max_new_tokens: 1,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |e| {
+                assert_eq!(e.token_id, 47);
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(report.prefill_tokens, 1);
+        assert_eq!(report.reused_tokens, 4);
+        s.discard_pending();
+        let before = s.history().to_vec();
+        let len = s.evaluated_len();
+        let result = generation::generate(
+            &mut s,
+            Request {
+                input: Input::Continue,
+                max_new_tokens: 1,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |_| {
+                Err(std::io::Error::new(
+                    std::io::ErrorKind::BrokenPipe,
+                    "closed sink",
+                ))
+            },
+        );
+        assert!(matches!(result, Err(generation::Error::Output(_))));
+        assert_eq!(s.evaluated_len(), len);
+        assert_eq!(s.pending_len(), 1);
+        s.discard_pending();
+        assert_eq!(s.history(), before);
+        assert!(s.logits().is_some());
+    }
 }
 
 #[test]
 fn generation_events_and_statistics_allocate_no_numerical_buffers() {
-    use toklet::generation::{self, Input, Request};
-    let f = Fixture::tiny();
-    let (c, w) = tiny_parts(&f);
-    let model = Model::new(c, w).unwrap();
-    let mut s = Session::new(&model, options(32, 3, 0)).unwrap();
-    let cancel = std::sync::atomic::AtomicBool::new(false);
-    let mut ids = [0; 4];
-    ALLOCATIONS.with(|count| count.set(0));
-    TRACK.with(|track| track.set(true));
-    let report = generation::generate(
-        &mut s,
-        Request {
-            input: Input::Prompt(&[1, 7, 13, 3]),
-            max_new_tokens: 4,
-            stop_tokens: &[],
-        },
-        &cancel,
-        |e| {
-            ids[e.index] = e.token_id;
-            Ok(())
-        },
-    )
-    .unwrap();
-    TRACK.with(|track| track.set(false));
-    assert_eq!(ALLOCATIONS.with(Cell::get), 0);
-    assert_eq!(ids, [47; 4]);
-    assert_eq!(report.emitted_tokens, 4);
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        use toklet::generation::{self, Input, Request};
+        let f = Fixture::tiny();
+        let (c, w) = tiny_parts(&f);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let mut s = Session::new(&model, options(32, 3, 0)).unwrap();
+        let cancel = std::sync::atomic::AtomicBool::new(false);
+        let mut ids = [0; 4];
+        ALLOCATIONS.with(|count| count.set(0));
+        TRACK.with(|track| track.set(true));
+        let report = generation::generate(
+            &mut s,
+            Request {
+                input: Input::Prompt(&[1, 7, 13, 3]),
+                max_new_tokens: 4,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |e| {
+                ids[e.index] = e.token_id;
+                Ok(())
+            },
+        )
+        .unwrap();
+        TRACK.with(|track| track.set(false));
+        assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+        assert_eq!(ids, [47; 4]);
+        assert_eq!(report.emitted_tokens, 4);
+    }
 }

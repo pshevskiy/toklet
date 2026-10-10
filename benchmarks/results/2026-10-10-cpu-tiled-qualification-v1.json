@@ -1,0 +1,219 @@
+{
+  "format": "toklet-cpu-tiled-engine-functional-v1",
+  "completed": true,
+  "engine_revision": {
+    "exit_code": 0,
+    "stdout": "de1c24c1354213e42b5f81ae246f7ad506d0a056\n",
+    "stderr": ""
+  },
+  "working_tree_status": {
+    "exit_code": 0,
+    "stdout": " M examples/cpu_bench.rs\n M src/cpu/mod.rs\n M src/cpu/tiled.rs\n M src/model/mod.rs\n M tests/cpu_decoder.rs\n M tests/qwen_forward.rs\n M tests/qwen_session.rs\n M tests/session.rs\n?? tests/support/trace_parity.rs\n",
+    "stderr": ""
+  },
+  "source_sha256": {
+    "Cargo.toml": "f9614fde795692ea4f976f4a243ed3991d1e76f0109a4f2fd6bc3d5141977cc4",
+    "Cargo.lock": "7e13db0c63cb370080711ed1d2f6f08a95a1a25516e16eb2a34b33e65db51151",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "src/session.rs": "aba1c8cfd934a5b41f2debd3be2b75b137bdec9d725712849b89512b469e2d55",
+    "examples/cpu_bench.rs": "d42eafa4f78ec0b9a618c137cd21a43b35f3c1d9af8621eba39d1055ddf2553a",
+    "tests/cpu_decoder.rs": "c97638807910b4307e56ded647088b10fdadf9eef50bfe9a21f8635ae83aed79",
+    "tests/session.rs": "ef613d99fb3473cddf24916fdff4202fdc595f014c1dd86ef9a7225326c7e95b",
+    "tests/qwen_forward.rs": "0cdd2529dac4c4ffb66e94d721571a40b12696486f26cbab31718cc9e767c7d5",
+    "tests/qwen_session.rs": "3ec4000c7ba72e18fd90ffb30b8f5b97716d495accbdcab9fe80d54831342744",
+    "tests/support/trace_parity.rs": "fb7144fb65f7422eb656411ebe3f0e842a337cb3beb1aa862803c6ff39994e5d"
+  },
+  "binary_sha256": {
+    "worker": "3601c63ae83b0d9b20f8362bbda27781e4dd969d527918c072ccf270d2d4874d",
+    "forward": "1e81c5b26d127b0587984e7b01eb388cb21cf2e36425d70e097fc826ae5a46a8",
+    "sessions": "5f5edc183857c6686b86c2f2334735461fcb5832c34720bd64c04c39a37385c8"
+  },
+  "rustc": {
+    "exit_code": 0,
+    "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\n",
+    "stderr": ""
+  },
+  "cargo": {
+    "exit_code": 0,
+    "stdout": "cargo 1.90.0 (Homebrew)\n",
+    "stderr": ""
+  },
+  "build_commands": [
+    "cp -pR target/release artifacts/cpu-tiled-engine-v1/release",
+    "CARGO_TARGET_DIR=artifacts/cpu-tiled-engine-v1 cargo build --locked --offline --release -j 2 --example cpu_bench",
+    "CARGO_TARGET_DIR=artifacts/cpu-tiled-engine-v1 cargo test --locked --offline --release -j 2 --test qwen_forward --test qwen_session --no-run"
+  ],
+  "rustflags": null,
+  "hardware": {
+    "exit_code": 0,
+    "stdout": "Apple M1 Pro\nMacBookPro18,3\n17179869184\n",
+    "stderr": ""
+  },
+  "os": {
+    "exit_code": 0,
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83\n",
+    "stderr": ""
+  },
+  "helper_sha256": "2ae1dbb275f1b115baaa317eb5d7377c970bf5b57d3d78e7c34b62784bc10d87",
+  "power_start": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  },
+  "checks": {
+    "format": true,
+    "clippy_all_targets_warnings_denied": true,
+    "ordinary_rust_tests": 75,
+    "offline_python_tests": 45
+  },
+  "scope": "Functional real-model numerical/session checks and worker admission only; no performance/held-out quality qualification or default adoption. Frozen scalar numerical worker idle during this task.",
+  "forward": {
+    "command": [
+      "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release/deps/qwen_forward-17f5ede0822dc485",
+      "pinned_qwen_tiled_fp32_matches_full_transformers_forward",
+      "--ignored",
+      "--exact",
+      "--test-threads=1",
+      "--nocapture"
+    ],
+    "report": "benchmarks/raw/2026-10-10-cpu-tiled-forward-v1.json",
+    "report_sha256": "d02f9a5c0e57ca020e39cedbd9cb4a93be245b45659910b3246640d627d7fb70",
+    "stderr_sha256": "3eb74aa1e047295164ba393e73089dd505080053fafea84377aa90c98585cffb",
+    "stdout": "\nrunning 1 test\ntest pinned_qwen_tiled_fp32_matches_full_transformers_forward ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 16.46s\n\n"
+  },
+  "sessions": {
+    "command": [
+      "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release/deps/qwen_session-4ccdab24998eb3e3",
+      "pinned_qwen_tiled_cached_sessions_match_full_prefix",
+      "--ignored",
+      "--exact",
+      "--test-threads=1",
+      "--nocapture"
+    ],
+    "report": "benchmarks/raw/2026-10-10-cpu-tiled-session-v1.json",
+    "report_sha256": "74a2a7e796ad059d61e07a87c566adcb37cb4e689032b1cd053990bbd19a0085",
+    "stderr_sha256": "ff1afc323695fe002d2431540ad85cab15284cbcc5c47cca9f1279dca02e78d0",
+    "stdout": "\nrunning 1 test\ntest pinned_qwen_tiled_cached_sessions_match_full_prefix ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 41.05s\n\n"
+  },
+  "worker_smoke": {
+    "scalar": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct"
+      ],
+      "events": [
+        {
+          "event": "ready",
+          "load_seconds": 1.492948208,
+          "conversion_seconds": 1.1230404199999988,
+          "memory_admitted_bytes": 2172348800,
+          "logical_weights_bytes": 1976131072,
+          "allocated_kv_bytes": 50331648,
+          "scratch_bytes": 10436608,
+          "chunk_size": 128,
+          "context_capacity": 2048,
+          "cpu_projection": "scalar"
+        },
+        {
+          "event": "sample",
+          "sample": {
+            "prefill_seconds": 1.612576334,
+            "ttft_seconds": 1.612576708,
+            "decode_seconds": 1.404083417,
+            "total_seconds": 3.016660792,
+            "token_event_seconds": [
+              1.612576708,
+              2.327706667,
+              3.016660125
+            ],
+            "emitted_tokens": 3,
+            "reused_tokens": 0,
+            "prefill_tokens": 4,
+            "evaluated_tokens": 6,
+            "pending_tokens": 1
+          }
+        }
+      ],
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scope": "one functional request, timing fields are not performance qualification"
+    },
+    "tiled": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+        "128",
+        "tiled"
+      ],
+      "events": [
+        {
+          "event": "ready",
+          "load_seconds": 1.469401375,
+          "conversion_seconds": 1.1262694550000039,
+          "memory_admitted_bytes": 2172348800,
+          "logical_weights_bytes": 1976131072,
+          "allocated_kv_bytes": 50331648,
+          "scratch_bytes": 10436608,
+          "chunk_size": 128,
+          "context_capacity": 2048,
+          "cpu_projection": "tiled"
+        },
+        {
+          "event": "sample",
+          "sample": {
+            "prefill_seconds": 0.590003917,
+            "ttft_seconds": 0.590004125,
+            "decode_seconds": 0.8190017909999999,
+            "total_seconds": 1.409006041,
+            "token_event_seconds": [
+              0.590004125,
+              1.000786625,
+              1.409005916
+            ],
+            "emitted_tokens": 3,
+            "reused_tokens": 0,
+            "prefill_tokens": 4,
+            "evaluated_tokens": 6,
+            "pending_tokens": 1
+          }
+        }
+      ],
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scope": "one functional request, timing fields are not performance qualification"
+    }
+  },
+  "invalid_kernel_before_loading": {
+    "exit_code": 1,
+    "stderr": "error: CPU projection must be scalar or tiled\n"
+  },
+  "power_end": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  }
+}

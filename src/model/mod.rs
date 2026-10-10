@@ -1,4 +1,4 @@
-//! Immutable FP32 decoder weights and scalar full-prefix/cached execution.
+//! Immutable FP32 decoder weights and checked full-prefix/cached CPU execution.
 //!
 //! Numerical execution uses preallocated caller-owned scratch. Diagnostic
 //! traces allocate separately; tokenization and generation state live elsewhere.
@@ -186,6 +186,7 @@ pub(crate) fn zeros(count: usize) -> Result<Vec<f32>, Error> {
 pub struct Model {
     pub(crate) config: Config,
     pub(crate) weights: Weights,
+    projection_kernel: cpu::ProjectionKernel,
 }
 
 impl Model {
@@ -223,7 +224,23 @@ impl Model {
                 check("MLP weight", values, product(config.intermediate_size, h)?)?;
             }
         }
-        Ok(Self { config, weights })
+        Ok(Self {
+            config,
+            weights,
+            projection_kernel: cpu::ProjectionKernel::Scalar,
+        })
+    }
+
+    /// Select a CPU projection candidate without copying weights or buffers.
+    /// Consuming the model prevents changing execution while a session borrows
+    /// it. Scalar is the default; Tiled is opt-in pending workload measurements.
+    pub fn with_projection_kernel(mut self, kernel: cpu::ProjectionKernel) -> Self {
+        self.projection_kernel = kernel;
+        self
+    }
+
+    pub fn projection_kernel(&self) -> cpu::ProjectionKernel {
+        self.projection_kernel
     }
 
     pub fn config(&self) -> &Config {
@@ -287,13 +304,12 @@ impl Model {
         length("logits", logits.len(), self.config.vocab_size)?;
         self.run(tokens, offset, scratch, None, None, 0)?;
         let start = (tokens.len() - 1) * self.config.hidden_size;
-        cpu::matvec_f64(
+        self.projection_kernel.project(
             &scratch.norm[start..start + self.config.hidden_size],
             &self.weights.embedding,
             None,
             logits,
-            self.config.hidden_size,
-            self.config.vocab_size,
+            [1, self.config.hidden_size, self.config.vocab_size],
         )?;
         Ok(())
     }
@@ -308,14 +324,16 @@ impl Model {
         self.admit(tokens, offset, scratch)?;
         let mut trace = Trace::new(&self.config, tokens.len())?;
         self.run(tokens, offset, scratch, Some(&mut trace), None, 0)?;
-        cpu::matmul_f64(
+        self.projection_kernel.project(
             &scratch.norm[..tokens.len() * self.config.hidden_size],
             &self.weights.embedding,
             None,
             &mut trace.logits,
-            tokens.len(),
-            self.config.hidden_size,
-            self.config.vocab_size,
+            [
+                tokens.len(),
+                self.config.hidden_size,
+                self.config.vocab_size,
+            ],
         )?;
         Ok(trace)
     }
@@ -353,13 +371,12 @@ impl Model {
             cached_len,
         )?;
         let start = (tokens.len() - 1) * self.config.hidden_size;
-        cpu::matvec_f64(
+        self.projection_kernel.project(
             &scratch.norm[start..start + self.config.hidden_size],
             &self.weights.embedding,
             None,
             logits,
-            self.config.hidden_size,
-            self.config.vocab_size,
+            [1, self.config.hidden_size, self.config.vocab_size],
         )?;
         Ok(())
     }
@@ -450,32 +467,26 @@ impl Model {
                 c.hidden_size,
                 c.rms_norm_eps,
             )?;
-            cpu::matmul_f64(
+            self.projection_kernel.project(
                 norm,
                 &layer.q.weight,
                 Some(&layer.q.bias),
                 q,
-                n,
-                c.hidden_size,
-                c.hidden_size,
+                [n, c.hidden_size, c.hidden_size],
             )?;
-            cpu::matmul_f64(
+            self.projection_kernel.project(
                 norm,
                 &layer.k.weight,
                 Some(&layer.k.bias),
                 k,
-                n,
-                c.hidden_size,
-                c.kv_heads * c.head_dim,
+                [n, c.hidden_size, c.kv_heads * c.head_dim],
             )?;
-            cpu::matmul_f64(
+            self.projection_kernel.project(
                 norm,
                 &layer.v.weight,
                 Some(&layer.v.bias),
                 v,
-                n,
-                c.hidden_size,
-                c.kv_heads * c.head_dim,
+                [n, c.hidden_size, c.kv_heads * c.head_dim],
             )?;
             cpu::rotary(q, q_rot, n, c.query_heads, c.head_dim, offset, c.rope_theta)?;
             cpu::rotary(k, k_rot, n, c.kv_heads, c.head_dim, offset, c.rope_theta)?;
@@ -513,14 +524,12 @@ impl Model {
                     },
                 )?;
             }
-            cpu::matmul_f64(
+            self.projection_kernel.project(
                 context,
                 &layer.o,
                 None,
                 projection,
-                n,
-                c.hidden_size,
-                c.hidden_size,
+                [n, c.hidden_size, c.hidden_size],
             )?;
             if let Some(t) = t.as_deref_mut() {
                 t.input_norm.copy_from_slice(norm);
@@ -546,33 +555,27 @@ impl Model {
                 c.hidden_size,
                 c.rms_norm_eps,
             )?;
-            cpu::matmul_f64(
+            self.projection_kernel.project(
                 norm,
                 &layer.gate,
                 None,
                 gate,
-                n,
-                c.hidden_size,
-                c.intermediate_size,
+                [n, c.hidden_size, c.intermediate_size],
             )?;
-            cpu::matmul_f64(
+            self.projection_kernel.project(
                 norm,
                 &layer.up,
                 None,
                 up,
-                n,
-                c.hidden_size,
-                c.intermediate_size,
+                [n, c.hidden_size, c.intermediate_size],
             )?;
             cpu::gated_silu(gate, up, gated)?;
-            cpu::matmul_f64(
+            self.projection_kernel.project(
                 gated,
                 &layer.down,
                 None,
                 projection,
-                n,
-                c.intermediate_size,
-                c.hidden_size,
+                [n, c.intermediate_size, c.hidden_size],
             )?;
             if let Some(t) = t.as_deref_mut() {
                 t.post_attention_norm.copy_from_slice(norm);

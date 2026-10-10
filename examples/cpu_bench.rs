@@ -7,6 +7,7 @@ use std::{
 };
 use toklet::{
     benchmark,
+    cpu::ProjectionKernel,
     generation::Input,
     session::{Options, Session},
     weights::{self, LoadOptions},
@@ -35,7 +36,10 @@ struct Request {
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut args = std::env::args_os().skip(1);
-    let path = PathBuf::from(args.next().ok_or("usage: cpu_bench MODEL [CHUNK]")?);
+    let path = PathBuf::from(
+        args.next()
+            .ok_or("usage: cpu_bench MODEL [CHUNK] [scalar|tiled]")?,
+    );
     let chunk = args
         .next()
         .map(|v| {
@@ -46,6 +50,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         })
         .transpose()?
         .unwrap_or(128);
+    let kernel = match args.next().as_deref().map(std::ffi::OsStr::to_str) {
+        None | Some(Some("scalar")) => ProjectionKernel::Scalar,
+        Some(Some("tiled")) => ProjectionKernel::Tiled,
+        _ => return Err("CPU projection must be scalar or tiled".into()),
+    };
     if args.next().is_some() {
         return Err("too many arguments".into());
     }
@@ -57,8 +66,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             ..LoadOptions::default()
         },
     )?;
+    let model = loaded.model.with_projection_kernel(kernel);
     let mut session = Session::new(
-        &loaded.model,
+        &model,
         Options {
             prefill_chunk_size: chunk,
             memory_limit_bytes: budget,
@@ -73,7 +83,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         json!({"event":"ready","load_seconds":loaded.report.load_seconds,
         "conversion_seconds":loaded.report.conversion_seconds,"memory_admitted_bytes":m.admitted_bytes+APP_BYTES,
         "logical_weights_bytes":m.weights_bytes,"allocated_kv_bytes":m.kv_bytes,"scratch_bytes":m.scratch_bytes,
-        "chunk_size":chunk,"context_capacity":session.capacity()})
+        "chunk_size":chunk,"context_capacity":session.capacity(),
+        "cpu_projection":kernel.name()})
     )?;
     out.flush()?;
     let mut input = io::BufReader::new(io::stdin());

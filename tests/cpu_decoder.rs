@@ -1,4 +1,6 @@
 mod support;
+#[path = "support/trace_parity.rs"]
+mod trace_parity;
 
 use support::Fixture;
 use toklet::{
@@ -6,6 +8,45 @@ use toklet::{
     model::{Config, Error, LayerWeights, Model, Projection, Weights},
     sampling,
 };
+
+#[test]
+fn opt_in_tiled_decoder_preserves_every_scalar_trace_bit_and_final_logits() {
+    use cpu::ProjectionKernel;
+    let fixture = Fixture::tiny();
+    let (config, weights) = tiny_parts(&fixture);
+    let mut model = Model::new(config, weights).unwrap();
+    assert_eq!(model.projection_kernel(), ProjectionKernel::Scalar);
+    let bytes = model.allocated_weights_bytes().unwrap();
+    let mut scratch = model.scratch(32).unwrap();
+    let scratch_bytes = scratch.allocated_bytes();
+    for case in ["prompt", "future_changed", "offset", "single", "capacity"] {
+        let tokens = fixture.u32(&format!("cases.{case}.tokens"));
+        let offset = fixture.manifest["cases"][case]["position_offset"]
+            .as_u64()
+            .unwrap() as usize;
+        model = model.with_projection_kernel(ProjectionKernel::Scalar);
+        let expected = model
+            .forward_diagnostic(&tokens, offset, &mut scratch)
+            .unwrap();
+        model = model.with_projection_kernel(ProjectionKernel::Tiled);
+        assert_eq!(model.projection_kernel(), ProjectionKernel::Tiled);
+        let actual = model
+            .forward_diagnostic(&tokens, offset, &mut scratch)
+            .unwrap();
+        assert_eq!(trace_parity::assert_bits(&actual, &expected), 39);
+        let mut last = [0.0; 64];
+        model
+            .forward(&tokens, offset, &mut scratch, &mut last)
+            .unwrap();
+        assert!(
+            last.iter()
+                .zip(&expected.logits[(tokens.len() - 1) * 64..])
+                .all(|(a, b)| a.to_bits() == b.to_bits())
+        );
+        assert_eq!(model.allocated_weights_bytes().unwrap(), bytes);
+        assert_eq!(scratch.allocated_bytes(), scratch_bytes);
+    }
+}
 
 fn tiny_parts(f: &Fixture) -> (Config, Weights) {
     let m = &f.manifest["model"];

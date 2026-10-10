@@ -158,6 +158,13 @@ output-bit comparisons and two confirming runs support further qualification;
 the default decoder remains scalar. Synthetic kernel results do not complete
 M2.5 or establish an end-to-end optimization.
 
+The [opt-in engine qualification](../docs/experiments/2026-10-10-cpu-tiled-engine.md)
+matches scalar bits across all Qwen layers on four frozen cases, passes the
+unchanged independent gates and cached-session checks, and preserves memory
+admission. The model and CLI still default to scalar. Isolated release builds
+preserve the active scalar matrix binaries; complete candidate workload timing
+and a second confirming run are required before adoption.
+
 The [public Core ML slice experiment](../docs/experiments/2026-10-10-coreml-slices.md)
 uses independently frozen tiny projection and persistent-KV attention fixtures.
 FP32 projection and both attention variants pass; FP16 projection fails its

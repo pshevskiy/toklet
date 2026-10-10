@@ -1,6 +1,57 @@
-//! Experimental projection tile; the decoder still uses the scalar oracle.
+//! Opt-in projection tile; scalar execution remains the default.
 
 use super::{Error, finite, length, nonzero, product};
+
+/// Bounded CPU projection selection at an operation boundary.
+/// Both variants use FP32 storage and ordered FP64 accumulation. The tiled
+/// candidate requires full-workload performance qualification before adoption.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum ProjectionKernel {
+    #[default]
+    Scalar,
+    Tiled,
+}
+
+impl ProjectionKernel {
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::Scalar => "scalar",
+            Self::Tiled => "tiled",
+        }
+    }
+
+    /// Shape is `[tokens, in_features, out_features]`. Each selected function
+    /// validates borrowed slices before its statically dispatched inner loops.
+    pub(crate) fn project(
+        self,
+        input: &[f32],
+        weights: &[f32],
+        bias: Option<&[f32]>,
+        output: &mut [f32],
+        [tokens, in_features, out_features]: [usize; 3],
+    ) -> Result<(), Error> {
+        match self {
+            Self::Scalar => super::matmul_f64(
+                input,
+                weights,
+                bias,
+                output,
+                tokens,
+                in_features,
+                out_features,
+            ),
+            Self::Tiled => matmul_f64_tiled(
+                input,
+                weights,
+                bias,
+                output,
+                tokens,
+                in_features,
+                out_features,
+            ),
+        }
+    }
+}
 
 /// Compute a row-major FP32 projection with ordered FP64 accumulation.
 ///
@@ -12,7 +63,7 @@ use super::{Error, finite, length, nonzero, product};
 /// heap allocation, extra alignment, reassociation, or CPU feature is required.
 /// The largest accumulator tile occupies 128 stack bytes.
 ///
-/// This is a candidate kernel, not the selected model execution path. Arithmetic
+/// This is an opt-in candidate kernel; models default to the scalar path. Arithmetic
 /// overflow can leave partial output, which must be discarded on error.
 pub fn matmul_f64_tiled(
     input: &[f32],

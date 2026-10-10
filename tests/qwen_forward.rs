@@ -6,10 +6,13 @@ use std::{
     path::{Path, PathBuf},
 };
 use toklet::{
+    cpu::ProjectionKernel,
     model::{LayerTrace, Trace},
     sampling,
     weights::{self, LoadOptions},
 };
+#[path = "support/trace_parity.rs"]
+mod trace_parity;
 
 fn read_json(path: &Path) -> Value {
     serde_json::from_slice(&fs::read(path).unwrap()).unwrap()
@@ -137,6 +140,16 @@ fn nll(logits: &[f32], target: u32) -> f64 {
 #[test]
 #[ignore = "requires pinned Qwen weights and explicitly regenerated full Transformers probes"]
 fn pinned_qwen_fp32_matches_full_transformers_forward() {
+    check_forward(ProjectionKernel::Scalar);
+}
+
+#[test]
+#[ignore = "requires pinned Qwen weights and explicitly regenerated full Transformers probes"]
+fn pinned_qwen_tiled_fp32_matches_full_transformers_forward() {
+    check_forward(ProjectionKernel::Tiled);
+}
+
+fn check_forward(kernel: ProjectionKernel) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let full = root.join("artifacts/qwen-forward-v2");
     let manifest = read_json(&full.join("manifest.json"));
@@ -177,7 +190,8 @@ fn pinned_qwen_fp32_matches_full_transformers_forward() {
         LoadOptions::default(),
     )
     .unwrap();
-    let mut scratch = loaded.model.scratch(4).unwrap();
+    let mut model = loaded.model;
+    let mut scratch = model.scratch(4).unwrap();
     let mut results = BTreeMap::new();
     let mut failures = Vec::new();
     for (case, spec) in manifest["cases"].as_object().unwrap() {
@@ -188,10 +202,24 @@ fn pinned_qwen_fp32_matches_full_transformers_forward() {
             .map(|token| token.as_u64().unwrap() as u32)
             .collect();
         let offset = spec["offset"].as_u64().unwrap() as usize;
-        let trace = loaded
-            .model
+        let scalar = if kernel == ProjectionKernel::Tiled {
+            model = model.with_projection_kernel(ProjectionKernel::Scalar);
+            Some(
+                model
+                    .forward_diagnostic(&tokens, offset, &mut scratch)
+                    .unwrap(),
+            )
+        } else {
+            None
+        };
+        model = model.with_projection_kernel(kernel);
+        let trace = model
             .forward_diagnostic(&tokens, offset, &mut scratch)
             .unwrap();
+        let bitwise_arrays = scalar
+            .as_ref()
+            .map(|scalar| trace_parity::assert_bits(&trace, scalar))
+            .unwrap_or(0);
         let values = trace_values(&trace);
         let mut metrics = BTreeMap::new();
         for (name, actual) in values {
@@ -240,7 +268,7 @@ fn pinned_qwen_fp32_matches_full_transformers_forward() {
             }
             metrics.insert(name, json!({"maximum_absolute_error": maximum_error, "maximum_tolerance_fraction": maximum_fraction, "maximum_relative_error_floor_1e-6": maximum_relative_error}));
         }
-        let width = loaded.model.config().vocab_size;
+        let width = model.config().vocab_size;
         let expected_logits =
             read_array(&full, &manifest["arrays"][format!("cases.{case}.logits")]);
         let argmax: Vec<u32> = trace
@@ -268,8 +296,7 @@ fn pinned_qwen_fp32_matches_full_transformers_forward() {
             "teacher-forced short-probe loss {losses:?}"
         );
         let mut last = vec![0.0; width];
-        loaded
-            .model
+        model
             .forward(&tokens, offset, &mut scratch, &mut last)
             .unwrap();
         assert_eq!(last, trace.logits[(tokens.len() - 1) * width..]);
@@ -278,12 +305,37 @@ fn pinned_qwen_fp32_matches_full_transformers_forward() {
         );
         results.insert(
             case.clone(),
-            json!({"arrays": metrics, "argmax": argmax, "short_teacher_forced_nll_deltas": losses}),
+            json!({"arrays": metrics, "argmax": argmax, "short_teacher_forced_nll_deltas": losses,
+                "scalar_bitwise_trace_arrays":bitwise_arrays}),
         );
     }
-    let report = json!({"model": manifest["model"], "policy": manifest["policy"], "results": results, "quality_scope":"short numerical probes only; no held-out loss/task qualification"});
-    let output = root.join("artifacts/qwen-parity-results.json");
-    fs::write(&output, serde_json::to_vec_pretty(&report).unwrap()).unwrap();
+    let report = json!({"model": manifest["model"], "policy": manifest["policy"], "results": results,
+        "cpu_projection":kernel.name(), "passed":failures.is_empty(),
+        "quality_scope":"short numerical probes only; no held-out loss/task qualification"});
+    let output = std::env::var_os("TOKLET_QWEN_FORWARD_REPORT")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| {
+            root.join(if kernel == ProjectionKernel::Scalar {
+                "artifacts/qwen-parity-results.json"
+            } else {
+                "artifacts/qwen-parity-tiled-results.json"
+            })
+        });
+    let bytes = serde_json::to_vec_pretty(&report).unwrap();
+    if kernel == ProjectionKernel::Tiled || std::env::var_os("TOKLET_QWEN_FORWARD_REPORT").is_some()
+    {
+        use std::io::Write;
+        fs::create_dir_all(output.parent().unwrap()).unwrap();
+        fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&output)
+            .unwrap()
+            .write_all(&bytes)
+            .unwrap();
+    } else {
+        fs::write(&output, bytes).unwrap();
+    }
     eprintln!("Full numerical metrics: {}", output.display());
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }

@@ -1,0 +1,6 @@
+future_changed: 13 exact full-logit cache/full-prefix comparisons pass, including append, sampled pending token, fully cached prompt and replay
+offset: 12 exact full-logit cache/full-prefix comparisons pass, including append, sampled pending token, fully cached prompt and replay
+short: 13 exact full-logit cache/full-prefix comparisons pass, including append, sampled pending token, fully cached prompt and replay
+single: 9 exact full-logit cache/full-prefix comparisons pass, including append, sampled pending token, fully cached prompt and replay
+Own-process physical session peak: 2067597328 bytes; includes test/hash/diagnostic setup
+Session report: /Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-cpu-tiled-session-v1.json

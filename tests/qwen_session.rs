@@ -2,6 +2,7 @@ use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{collections::BTreeMap, fs, io::Read, path::PathBuf};
 use toklet::{
+    cpu::ProjectionKernel,
     sampling,
     session::{Options, Session},
     weights::{self, LoadOptions},
@@ -10,6 +11,16 @@ use toklet::{
 #[test]
 #[ignore = "requires the explicitly downloaded pinned Qwen checkpoint; Mac footprint requires own-process inspection"]
 fn pinned_qwen_cached_sessions_match_full_prefix() {
+    check_sessions(ProjectionKernel::Scalar);
+}
+
+#[test]
+#[ignore = "requires the explicitly downloaded pinned Qwen checkpoint; Mac footprint requires own-process inspection"]
+fn pinned_qwen_tiled_cached_sessions_match_full_prefix() {
+    check_sessions(ProjectionKernel::Tiled);
+}
+
+fn check_sessions(kernel: ProjectionKernel) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let probes: Value = serde_json::from_slice(
         &fs::read(root.join("tests/fixtures/qwen-v2/manifest.json")).unwrap(),
@@ -35,7 +46,8 @@ fn pinned_qwen_cached_sessions_match_full_prefix() {
         LoadOptions::default(),
     )
     .unwrap();
-    let model = &loaded.model;
+    let owned_model = loaded.model.with_projection_kernel(kernel);
+    let model = &owned_model;
     let width = model.config().vocab_size;
     let mut scratch = model.scratch(5).unwrap();
     let mut results = BTreeMap::new();
@@ -120,7 +132,7 @@ fn pinned_qwen_cached_sessions_match_full_prefix() {
     maximum_admitted_bytes = maximum_admitted_bytes.max(m.admitted_bytes);
     assert_eq!(m.kv_bytes, 50_331_648);
     let peak = physical_peak();
-    let report = json!({"model": probes["model"], "results": results,
+    let report = json!({"model": probes["model"], "results": results, "cpu_projection":kernel.name(),
         "session_memory": {"weights_bytes": m.weights_bytes, "kv_bytes": m.kv_bytes,
             "scratch_bytes": m.scratch_bytes, "history_bytes": m.history_bytes,
             "logits_bytes": m.logits_bytes, "metadata_bytes": m.metadata_bytes,
@@ -128,9 +140,30 @@ fn pinned_qwen_cached_sessions_match_full_prefix() {
             "admitted_bytes": m.admitted_bytes, "maximum_admitted_bytes": maximum_admitted_bytes},
         "physical_process_peak_bytes": peak,
         "scope": "short real-model numerical checks; 2048-token capacity admitted, full 2048-token execution checked with the small CPU model; no performance/held-out quality qualification"});
-    let path = root.join("artifacts/qwen-session-results.json");
+    let path = std::env::var_os("TOKLET_QWEN_SESSION_REPORT")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| {
+            root.join(if kernel == ProjectionKernel::Scalar {
+                "artifacts/qwen-session-results.json"
+            } else {
+                "artifacts/qwen-session-tiled-results.json"
+            })
+        });
     fs::create_dir_all(path.parent().unwrap()).unwrap();
-    fs::write(&path, serde_json::to_vec_pretty(&report).unwrap()).unwrap();
+    let bytes = serde_json::to_vec_pretty(&report).unwrap();
+    if kernel == ProjectionKernel::Tiled || std::env::var_os("TOKLET_QWEN_SESSION_REPORT").is_some()
+    {
+        use std::io::Write;
+        fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)
+            .unwrap()
+            .write_all(&bytes)
+            .unwrap();
+    } else {
+        fs::write(&path, bytes).unwrap();
+    }
     eprintln!("Session report: {}", path.display());
 }
 
