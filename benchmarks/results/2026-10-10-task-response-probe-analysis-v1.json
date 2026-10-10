@@ -1,0 +1,39 @@
+{
+  "format": "toklet-saved-task-response-probe-analysis-v1",
+  "completed": true,
+  "scope": "Authored short response and prepared metadata qualification only; no task scores, HumanEval execution, quality/performance or milestone acceptance.",
+  "summary": {
+    "prepared_cases": 100,
+    "native_workers": 2,
+    "authored_requests": 4,
+    "mode_counts": {
+      "scalar": {
+        "requests": 2,
+        "visible_tokens": 48,
+        "sampled_tokens": 48,
+        "stop_token_requests": 0
+      },
+      "tiled": {
+        "requests": 2,
+        "visible_tokens": 48,
+        "sampled_tokens": 48,
+        "stop_token_requests": 0
+      }
+    },
+    "raw_events": 106,
+    "scalar_tiled_finalized_semantics_match": true,
+    "maximum_cli_physical_peak_bytes": 2125301896,
+    "maximum_driver_physical_peak_bytes": 25264704,
+    "maximum_conservative_joint_physical_peak_bytes": 2150566600,
+    "held_out_model_outputs": 0,
+    "generated_code_executions": 0
+  },
+  "records_sha256": {
+    "benchmarks/results/2026-10-10-task-response-probe-v2.json": "5e43d976fde2aaa5ce5b99de5cc9bafcd124c27c03f2493e285b7b3cc5723fc0",
+    "benchmarks/results/2026-10-10-task-response-probe-v2.json.native.jsonl": "675814e005f227e4e214d5d75bef481ff0ae3220fee72e585fd084fa74352eec",
+    "benchmarks/results/2026-10-10-task-response-probe-v2.json.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-10-cpu-task-cases-check-window-idle.json": "c4b84a2678459f14d0cac9fddb235cedea4bcf02fc1ed33e4992ab6ccc0d57dc"
+  },
+  "binary_sha256": "8e1be695229fb4a46e49725f06050b3296f6fb398e718fca8567bf0c6b400b43",
+  "producer_sha256": "1877bb36cb383a08277fa6ef34e2628c4486c9744293bfbb93461ae66a12d48b"
+}

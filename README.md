@@ -156,3 +156,9 @@ The [held-out loss runner](docs/experiments/2026-10-10-held-out-loss-runner.md)
 preserves the frozen block/label policy and passes independent short probes in
 scalar and tiled modes with exact complete-logit agreement. The full 10,000
 targets and separate 100-task quality evaluation remain pending.
+
+The [frozen task collector](docs/experiments/2026-10-10-task-response-collector.md)
+preserves prepared IDs, finalized text and pending EOS semantics, and supplies
+the exact text scorers and literal HumanEval program composition. Four authored
+scalar/tiled requests pass with matching outputs. Isolated code execution and
+all 100 held-out model responses remain pending.

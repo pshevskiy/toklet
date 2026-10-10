@@ -231,6 +231,22 @@ evidence without findings after independent NLL, alignment, identity, memory,
 cleanup and test verification. Full 10,000-target scoring, the separate 100-task pass-rate evaluation,
 lossy-model acceptance, performance and milestone closure remain pending.
 
+Task response preparation, 10 October 2026 (M2.5/quality still open): the
+[collector and deterministic scorers](docs/experiments/2026-10-10-task-response-collector.md)
+validate all 100 frozen cases, submit prepared IDs directly and retain finalized
+text through explicit reset. Pending EOS is distinct from visible output.
+TruthfulQA and LAMBADA use the frozen exact text rules; HumanEval composition
+preserves literal source and requires a separately qualified isolated executor.
+Infrastructure failures prevent binary aggregation. Four authored native
+requests across scalar/tiled modes emit 96 identical visible IDs in total and
+replay all 106 events; maximum conservative CLI-plus-driver physical charge is
+2,150,566,600 bytes below 6 GiB. Formatting, Clippy, 76 ordinary Rust tests and
+54 offline benchmark tests pass after the cached numerical worker exits
+naturally. Astra accepted the complete task without findings after independently
+running the 19 targeted tests and reproducing the saved analysis exactly.
+No held-out model response, generated code execution or quality score is claimed;
+full quality and milestone gates remain open.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

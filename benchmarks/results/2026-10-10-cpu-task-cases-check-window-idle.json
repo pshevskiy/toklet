@@ -1,0 +1,16 @@
+{
+  "format": "toklet-cpu-task-cases-check-window-idle-v1",
+  "idle_verified_utc": "2026-10-10T09:58:13.899371+00:00",
+  "completed_workload": "cached",
+  "measured_requests": 10,
+  "held_orchestration_pid": 17694,
+  "defunct_transport_pid": 74583,
+  "exited_numerical_worker_pid": 74591,
+  "snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.12 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n74583 17694 Z      0:00.00 <defunct>\n",
+  "saved_result_sha256": {
+    "benchmarks/results/2026-10-10-cpu-cached.json": "a78bee940fec0110a477551337ee1b1c32154afd1d06b6505dc8b7b0ca7e083e",
+    "benchmarks/results/2026-10-10-cpu-cached.json.samples.jsonl": "1a0193cad5e391890718b0c4e12deec7887202ebd10ec0c69ecbf6a97d003d55"
+  },
+  "producer_sha256": "f053080f9ed074ab28fdff4ae65e422edd7be36e177617c0ae82002b324011a6",
+  "scope": "Cached numerical work finished all three warmups and ten measured requests uninterrupted. Only orchestration was held. Checks/builds/model work and binary/model/large hashes may now run before separately verified resumption."
+}

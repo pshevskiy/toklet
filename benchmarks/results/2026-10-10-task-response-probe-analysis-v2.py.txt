@@ -1,0 +1,132 @@
+"""Replay saved authored task responses; no model or generated-code execution."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--root", type=Path, required=True)
+parser.add_argument("--output", type=Path, required=True)
+args = parser.parse_args()
+root = args.root.resolve()
+sys.path.insert(0, str(root / "tools/bench"))
+import task_cases_probe as probe
+
+def digest(path):
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+def read(name):
+    return json.loads((root / name).read_text())
+
+record_name = "benchmarks/results/2026-10-10-task-response-probe-v2.json"
+raw_name = record_name + ".native.jsonl"
+error_name = record_name + ".stderr.txt"
+idle_name = "benchmarks/results/2026-10-10-cpu-task-cases-check-window-idle.json"
+record = read(record_name)
+assert record["completed"] is True and "failure" not in record
+assert record["scalar_tiled_semantics_match"] is True
+assert record["idle_proof_sha256"] == digest(root / idle_name)
+assert record["native_raw_sha256"] == digest(root / raw_name)
+assert record["stderr_sha256"] == digest(root / error_name)
+idle = read(idle_name)
+assert idle["completed_workload"] == "cached" and idle["measured_requests"] == 10
+assert idle["idle_verified_utc"] < record["started_utc"] < record["finished_utc"]
+for field in ("helper_sha256", "compiled_source_sha256", "validated_local_model_assets"):
+    for name, sha in record[field].items():
+        assert digest(root / name) == sha
+assert digest(probe.prepare.CONTRACT / "manifest.json") == record["contract_manifest_sha256"]
+assert digest(probe.prepare.SOURCES) == record["sources_manifest_sha256"]
+binary, qualification = probe.cpu_cli.qualified_cli(root / "benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json")
+assert digest(root / "benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json") == record["cli_qualification_sha256"]
+assert binary.resolve() == Path(record["binary_path"]).resolve()
+assert digest(binary) == record["binary_sha256"]
+assert qualification["source_sha256"] == record["compiled_source_sha256"]
+assert qualification["compiler"] == record["compiler"]
+assert len(record["checks"]) == 4
+for check in record["checks"]:
+    assert check["exit_code"] == 0 and check["timed_out"] is False
+    assert check["process_group_killed"] is False and check["cleanup_errors"] == []
+assert [check["command"] for check in record["checks"]] == [
+    ["cargo", "fmt", "--check"],
+    ["cargo", "clippy", "--locked", "--offline", "--all-targets", "--", "-D", "warnings"],
+    ["cargo", "test", "--locked", "--offline"],
+    [str(root / ".venv/bin/python"), "-m", "unittest", "discover", "-s", "tools/bench", "-p", "test_*.py"],
+]
+assert "Ran 54 tests" in record["checks"][-1]["stderr"]
+cases = probe.probe_cases()
+assert record["probe_cases"] == cases
+prepared = probe.tasks.load_cases()
+assert record["prepared_task_inventory"] == {
+    "cases": 100, "categories": probe.tasks.CATEGORIES,
+    "payload_sha256": probe.tasks.TASK_SHA, "held_out_outputs_executed": False,
+}
+raw = [json.loads(line) for line in (root / raw_name).read_text().splitlines()]
+assert [run["projection"] for run in record["runs"]] == ["scalar", "tiled"]
+cursor = 0
+counts = {}
+joint_peak = cli_peak = driver_peak = 0
+for run in record["runs"]:
+    assert run["passed"] is True and run["exit_code"] == 0
+    assert not run["watchdog_killed"] and not run["process_group_killed"] and run["cleanup_errors"] == []
+    projection = run["projection"]
+    stream_sha = hashlib.sha256()
+
+    def next_event(case_id):
+        global cursor
+        row = raw[cursor]
+        cursor += 1
+        assert row["projection"] == projection and row["case_id"] == case_id and "trailing" not in row
+        assert row["line"].endswith("\n") and len(row["line"].encode()) <= 65536
+        stream_sha.update(row["line"].encode())
+        return json.loads(row["line"], parse_float=probe.finite_float, parse_constant=probe.invalid_constant)
+
+    ready = next_event(None)
+    assert ready == run["ready"]
+    probe.cpu_cli.check_ready(ready, projection, True)
+    assert 0 < ready["memory_admitted_bytes"] <= probe.LIMIT
+    assert len(run["cases"]) == 2
+    visible = sampled = stops = 0
+    for case, item in zip(cases, run["cases"]):
+        assert item["request"] == probe.tasks.request(case)
+        assert item["expected_first_token"] == case["expected_first_token"]
+        events = [next_event(case["id"]) for _ in item["semantic_events"]]
+        assert events == item["semantic_events"]
+        replay = probe.tasks.collect_response(case, events, projection)
+        assert replay == item["response"]
+        # Independent raw text/ID reconstruction includes reset finalization.
+        text = "".join(event["text"] for event in events if event["event"] in ("token", "text"))
+        ids = [event["token_id"] for event in events if event["event"] == "token"]
+        assert replay["visible_text"] == text and replay["visible_text_sha256"] == hashlib.sha256(text.encode()).hexdigest()
+        assert replay["visible_token_ids"] == ids and ids[0] == case["expected_first_token"]
+        visible += len(ids)
+        sampled += replay["statistics"]["generation"]["sampled_tokens"]
+        stops += replay["stop_reason"]["kind"] == "stop_token"
+        assert item["conservative_joint_physical_peak_bytes"] == item["cli_physical_peak_bytes"] + item["driver_physical_peak_bytes"]
+        assert all(type(item[key]) is int and item[key] > 0 for key in ("cli_physical_peak_bytes", "driver_physical_peak_bytes"))
+        assert 0 < item["conservative_joint_physical_peak_bytes"] <= probe.LIMIT
+        joint_peak = max(joint_peak, item["conservative_joint_physical_peak_bytes"])
+        cli_peak = max(cli_peak, item["cli_physical_peak_bytes"])
+        driver_peak = max(driver_peak, item["driver_physical_peak_bytes"])
+    assert stream_sha.hexdigest() == run["stdout_sha256"]
+    counts[projection] = {"requests": 2, "visible_tokens": visible, "sampled_tokens": sampled, "stop_token_requests": stops}
+assert cursor == len(raw)
+probe.compare_modes(record["runs"])
+summary = {
+    "prepared_cases": len(prepared), "native_workers": 2, "authored_requests": 4,
+    "mode_counts": counts, "raw_events": len(raw), "scalar_tiled_finalized_semantics_match": True,
+    "maximum_cli_physical_peak_bytes": cli_peak, "maximum_driver_physical_peak_bytes": driver_peak,
+    "maximum_conservative_joint_physical_peak_bytes": joint_peak,
+    "held_out_model_outputs": 0, "generated_code_executions": 0,
+}
+analysis = {
+    "format": "toklet-saved-task-response-probe-analysis-v1", "completed": True,
+    "scope": "Authored short response and prepared metadata qualification only; no task scores, HumanEval execution, quality/performance or milestone acceptance.",
+    "summary": summary, "records_sha256": {name: digest(root / name) for name in (record_name, raw_name, error_name, idle_name)},
+    "binary_sha256": record["binary_sha256"], "producer_sha256": digest(Path(__file__)),
+}
+with args.output.open("x") as stream:
+    json.dump(analysis, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+print(json.dumps(summary, allow_nan=False))
