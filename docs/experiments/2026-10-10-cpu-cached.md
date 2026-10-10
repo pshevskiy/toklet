@@ -96,3 +96,15 @@ of raw copies, all ten states, observed stdout, summaries, memory, historical
 identities and window ordering. The review also confirmed the timed empty
 evaluation in the historical source. No unrelated tests, builds, model work or
 benchmarks are required for this evidence-only task.
+
+The later [completed task-check window](../../benchmarks/results/2026-10-10-cpu-task-cases-check-window-completed.json)
+verifies reviewed commits `e54d6f8` and `3393962` at clean `3393962`, the frozen
+executables, all eight model assets and 102 source/artifact bindings. Every
+verification finishes before resuming only orchestration at 10:12:43 UTC.
+The pending transport 80030 and numerical worker 80039 then run uninterrupted;
+only their parent is [held ahead of changed-prefix timing](../../benchmarks/results/2026-10-10-cpu-pending-check-window-hold.json)
+at 10:13:24 UTC. Its exact [hold source](../../benchmarks/results/2026-10-10-cpu-pending-check-window-hold.py.txt)
+is retained. This archival follow-up supplies no further workload qualification.
+Astra accepted the follow-up without findings using only small saved records and
+source, verifying copies, producer identities, counts, ordering and parent-only
+signals; no tests, builds, large hashes or signals ran during review.
