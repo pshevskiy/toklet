@@ -170,7 +170,15 @@ not qualify full-model execution or close M3.
 The [standalone Metal toolchain check](../docs/experiments/2026-10-10-metal-toolchain.md)
 records runtime compilation, three exact FP32 add/tail checks, device limits and
 MPS recommended strides. Its single timing observations are diagnostic only;
-FP16/model execution, matrix primitive evaluation and trace capture remain pending.
+model execution and trace capture remain pending.
+
+The [public MPS matrix evaluation](../docs/experiments/2026-10-10-mps-primitives.md)
+checks representative projection shapes in two runs, with three warmups and
+ten completed-work samples per case. FP32-output modes pass exact independent
+cases and five frozen tiny FP16 Q-projection gates. FP16 output fails a bias
+rounding edge on both runs and remains rejected. Bias setup is excluded from
+operation timing; resident decoder execution and accumulation precision remain
+unqualified. The report preserves timings, failure bits, memory and provenance.
 
 The independent [llama.cpp worker](../tools/bench/llama/worker.cpp) uses the
 contract-pinned upstream source in a separate process. It has fixed 2,048-position
