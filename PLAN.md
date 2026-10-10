@@ -213,6 +213,24 @@ task without findings after independent replay and raw-copy, state, timing,
 memory, identity and window-order verification. Remaining cache/application
 matrix and full quality gates stay open.
 
+M2.5 cached evidence, 10 October 2026 (milestone still open): the
+[fully cached scalar report](docs/experiments/2026-10-10-cpu-cached.md)
+retains three warmups and ten uninterrupted measured requests. Each prepares
+512 evaluated tokens outside timing and emits 128 fixed IDs, finishing with
+639 committed positions and one pending token. Median numerical TTFT is
+0.792 microseconds, accessing the prepared distribution; this excludes cache
+preparation, sampling, transport and visible text. Median request time is
+90.000207 s and decode rate 1.411108 steps/s. Prefill throughput is null for
+zero prefill tokens; empty evaluation still incurs timer overhead. Maximum
+physical charge is 2,043,856,912 bytes below conservative admission and 6 GiB.
+Independent saved analysis reproduces all raw states, timings, summaries,
+identities, memory and launch/hold/idle ordering. Only orchestration was held;
+the numerical worker finished naturally before any checks or model work.
+Astra accepted the saved-data task without findings after exact analysis replay
+and independent raw-copy, state, stdout, timing, memory, identity and window-order
+verification. Pending-token, changed-prefix, application and full quality gates
+remain open.
+
 Held-out scorer preparation, 10 October 2026 (M2.5/quality still open): the
 [bounded loss runner](docs/experiments/2026-10-10-held-out-loss-runner.md)
 implements the existing ten independent 1,024-target blocks with one-token

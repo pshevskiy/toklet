@@ -1,0 +1,47 @@
+{
+  "format": "toklet-saved-cpu-cached-analysis-v1",
+  "completed": true,
+  "scope": "Small saved evidence only; no model/worker execution or binary hashes. Prior idle-window completion proof binds the frozen binary at launch.",
+  "checks": [
+    "schema",
+    "ten exact raw/sample pairs",
+    "committed/pending state",
+    "token events",
+    "independent summary",
+    "fixed input hashes",
+    "memory",
+    "actual historical driver",
+    "prior binary identity and launch/hold/idle ordering"
+  ],
+  "summary": {
+    "ttft_median_seconds": 7.92e-07,
+    "ttft_min_seconds": 5.83e-07,
+    "ttft_max_seconds": 1e-06,
+    "request_median_seconds": 90.0002074375,
+    "decode_tokens_per_second_median": 1.4111083615746347,
+    "prefill_tokens_per_second_median": null
+  },
+  "requests_seconds": [
+    89.896460792,
+    89.771810417,
+    90.187356958,
+    91.457112,
+    91.2757825,
+    90.734875667,
+    89.680068084,
+    89.947466584,
+    90.052948291,
+    89.688355083
+  ],
+  "request_min_seconds": 89.680068084,
+  "request_max_seconds": 91.457112,
+  "records_sha256": {
+    "benchmarks/results/2026-10-10-cpu-cached.json": "a78bee940fec0110a477551337ee1b1c32154afd1d06b6505dc8b7b0ca7e083e",
+    "benchmarks/results/2026-10-10-cpu-cached.json.samples.jsonl": "1a0193cad5e391890718b0c4e12deec7887202ebd10ec0c69ecbf6a97d003d55",
+    "benchmarks/results/2026-10-10-cpu-task-cases-check-window-idle.json": "c4b84a2678459f14d0cac9fddb235cedea4bcf02fc1ed33e4992ab6ccc0d57dc",
+    "benchmarks/results/2026-10-10-cpu-cached-check-window-hold.json": "0a54804a10b6feb0c016f54c6b2facc30b96056b8237449544c3a286a618dc27",
+    "benchmarks/results/2026-10-10-cpu-medium-source-driver-v1.py.txt": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-completed.json": "7b9cc41da7360ae73c43ea1615f26f52005a811b0cd6b0b71327c16254e578d9"
+  },
+  "producer_sha256": "2f43e2dc2cddf739cafc3f5ab09690a6035d5c59172dfe0c4305e75dcddaf815"
+}

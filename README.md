@@ -122,6 +122,12 @@ retains all ten requests with 512 reused tokens, 64 appended tokens and 128
 fixed output steps; median TTFT is 21.348 seconds and request time 111.629
 seconds, with completed Astra review. Remaining cache/application measurements
 and full quality qualification remain pending.
+The [fully cached scalar workload](docs/experiments/2026-10-10-cpu-cached.md)
+retains all ten requests with 512 reused tokens and zero timed prefill tokens.
+Median request time is 90.000 seconds and decode rate is 1.411 steps/s. Its
+0.792-microsecond numerical TTFT reuses a prepared distribution and excludes
+cache preparation and visible-text latency. Remaining pending/changed-prefix,
+application and quality checks stay open.
 The [selected Qwen RMS check](docs/experiments/2026-10-10-qwen-metal-rms.md)
 also passes width-896 source gates with norm-only checkpoint reads. Full-model
 and session qualification remain pending.
