@@ -357,6 +357,22 @@ qualification remain pending. Astra accepted the complete primitive task without
 findings, independently verifying identities, all numerical/guard proofs,
 unchanged gates, the reduction-order explanation, memory and idle windows.
 
+Embedding primitive preparation, 10 October 2026 (M4 pending): the standalone
+[Half bit-copy lookup](docs/experiments/2026-10-10-metal-embedding.md) keeps one
+immutable table resident across cases and copies UInt32-indexed rows exactly.
+Five frozen tiny cases and a signed-zero/subnormal/max-finite/repeated/final-row
+manual case pass all 78 completed dispatches, 25,376 active outputs and 546
+output sentinels. Unchanged FP32-source gates also pass. Shared ownership,
+checked admission and host access after completion preserve immutable inputs;
+child peaks remain below 6 GiB. All 39 add/tail and 364 RMS regressions pass,
+as do isolated/engine formatting and Clippy, eight standalone Rust tests,
+75 ordinary engine tests and 71 offline Python checks. Heavy checks use a
+verified idle CPU boundary, preserving frozen binaries and candidate identities.
+Astra accepted the complete task without findings after independently checking
+code, numerical proofs, identities, memory, final copies and isolation. Only
+tiny width-32 lookup is qualified;
+Qwen table, composition, cache, quality, performance and traces remain pending.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -365,6 +381,7 @@ unchanged gates, the reduction-order explanation, memory and idle windows.
 Before writing a substantial custom GEMM, compare an available Apple matrix primitive or TensorOps implementation at the actual projection shapes. Retain compatible kernels when the API is absent or slower; record the chosen device/OS requirements.
 
 Exit: the M2 session suite passes with FP16-specific numerical gates, complete Qwen generation runs on Metal, allocations remain bounded across repeated tokens, and the trace explains remaining costs. Speed parity with mature engines is measured separately from functional completion.
+
 
 ## M5 Optimize decode and prefill
 

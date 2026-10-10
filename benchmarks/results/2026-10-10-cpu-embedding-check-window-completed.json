@@ -1,0 +1,48 @@
+{
+  "format": "toklet-cpu-embedding-check-window-completed-v1",
+  "completed_utc": "2026-10-10T03:10:59.443475+00:00",
+  "before_resume": {
+    "17695": {
+      "ppid": 17694,
+      "state": "T",
+      "time": "0:00.56",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json"
+    },
+    "17701": {
+      "ppid": 17695,
+      "state": "S",
+      "time": "112:18.61",
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct"
+    },
+    "34871": {
+      "ppid": 35939,
+      "state": "Ts",
+      "time": "0:00.99",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py"
+    },
+    "42516": {
+      "ppid": 34871,
+      "state": "Z",
+      "time": "0:00.00",
+      "command": "<defunct>"
+    }
+  },
+  "native_result_sha256": "b777540a03a6e9b18c638dedcf0269f55d41d08e22adf41868d2b61c9111f257",
+  "checks": {
+    "engine_fmt": true,
+    "engine_clippy_all_targets_warnings_denied": true,
+    "engine_tests": 75,
+    "standalone_rust_tests": 8,
+    "offline_python_tests": 71,
+    "embedding_exact_active_values": 25376,
+    "embedding_output_guards": 546,
+    "rms_regression_dispatches": 364,
+    "add_regression_dispatches": 39
+  },
+  "qualified_receipt_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "frozen_binaries": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+  },
+  "action": "Resume only verified held primary orchestration parent34871 after all heavy checks and identity hashing finish."
+}

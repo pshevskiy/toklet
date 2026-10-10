@@ -82,10 +82,12 @@ mod metal {
     use std::{marker::PhantomData, ptr::NonNull, time::Instant};
 
     // Closed private scalar inventory: zero bytes and every loaded bit pattern
-    // are valid Rust values for both types. u16 carries stored Metal Half bits.
+    // are valid Rust values for all three types. u16 carries stored Metal Half
+    // bits; u32 carries token IDs without floating conversion.
     trait Scalar: Copy + Default {}
     impl Scalar for f32 {}
     impl Scalar for u16 {}
+    impl Scalar for u32 {}
 
     /// One owner; no raw pointer, native handle, borrowed slice or clone escapes.
     /// All accesses happen before submission or after waitUntilCompleted.
@@ -126,7 +128,7 @@ mod metal {
             let elements = bytes / size_of::<T>();
             // SAFETY: new owned shared allocation; actual length/alignment and
             // isize bounds checked above. No GPU command references it yet.
-            // Zero initializes every f32/u16 slot, including guard storage.
+            // Zero initializes every f32/u16/u32 slot, including guard storage.
             unsafe { raw.contents().as_ptr().cast::<T>().write_bytes(0, elements) };
             Ok(Self {
                 raw,
@@ -408,6 +410,12 @@ mod metal {
     pub(super) fn run_rms(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
         rms::run(path, limit)
     }
+    mod embedding {
+        include!("rust_metal_embedding.rs");
+    }
+    pub(super) fn run_embedding(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
+        embedding::run(path, limit)
+    }
 }
 
 fn run() -> Result<Value, Error> {
@@ -416,6 +424,7 @@ fn run() -> Result<Value, Error> {
     let mut limit = LIMIT;
     let mut has_budget = false;
     let mut rms_input = None;
+    let mut embedding_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
@@ -424,6 +433,12 @@ fn run() -> Result<Value, Error> {
                     args.next()
                         .ok_or_else(|| error("arguments", "missing RMS input"))?,
                 ));
+            }
+            Some("--embedding-input") if embedding_input.is_none() => {
+                embedding_input =
+                    Some(std::path::PathBuf::from(args.next().ok_or_else(|| {
+                        error("arguments", "missing embedding input")
+                    })?));
             }
             Some("--budget-bytes") if !has_budget => {
                 let value = args
@@ -439,23 +454,26 @@ fn run() -> Result<Value, Error> {
             _ => return Err(error("arguments", "unsupported probe argument")),
         }
     }
+    if usize::from(invalid)
+        + usize::from(rms_input.is_some())
+        + usize::from(embedding_input.is_some())
+        > 1
+    {
+        return Err(error("arguments", "probe operation modes are exclusive"));
+    }
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
     {
         if let Some(path) = rms_input {
-            if invalid {
-                return Err(error(
-                    "arguments",
-                    "RMS and invalid-shader modes are exclusive",
-                ));
-            }
             metal::run_rms(&path, limit)
+        } else if let Some(path) = embedding_input {
+            metal::run_embedding(&path, limit)
         } else {
             metal::run(invalid, limit)
         }
     }
     #[cfg(not(all(target_os = "macos", target_arch = "aarch64")))]
     {
-        let _ = (invalid, limit, rms_input);
+        let _ = (invalid, limit, rms_input, embedding_input);
         Err(error("capability", "requires Apple Silicon macOS"))
     }
 }

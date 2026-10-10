@@ -21,6 +21,8 @@ MANIFEST = Path(__file__).with_suffix(".Cargo.toml")
 LOCK = Path(__file__).with_suffix(".lock")
 RMS_SOURCE = Path(__file__).with_name("rust_metal_rms.rs")
 RMS_SHADER = Path(__file__).with_name("rust_metal_rms.metal")
+EMBEDDING_SOURCE = Path(__file__).with_name("rust_metal_embedding.rs")
+EMBEDDING_SHADER = Path(__file__).with_name("rust_metal_embedding.metal")
 LIMIT = 6 * 1024**3
 ALLOWANCE = 64 * 1024**2
 INPUT_GUARD, OUTPUT_GUARD = 0x4642FEDC, 0x46A35CE1
@@ -144,14 +146,16 @@ def run(output, build, extra_runs=(), extra_context=None):
     output.parent.mkdir(parents=True, exist_ok=True)
     (build/"src").mkdir(parents=True)
     source_hashes = {str(path.relative_to(ROOT)):common.digest(path)
-                     for path in (SOURCE,SHADER,MANIFEST,LOCK,RMS_SOURCE,RMS_SHADER)}
+                     for path in (SOURCE,SHADER,MANIFEST,LOCK,RMS_SOURCE,RMS_SHADER,EMBEDDING_SOURCE,EMBEDDING_SHADER)}
     copies = {SOURCE:build/"src/main.rs", SHADER:build/"src/rust_metal_probe.metal",
               MANIFEST:build/"Cargo.toml", LOCK:build/"Cargo.lock",
-              RMS_SOURCE:build/"src/rust_metal_rms.rs", RMS_SHADER:build/"src/rust_metal_rms.metal"}
+              RMS_SOURCE:build/"src/rust_metal_rms.rs", RMS_SHADER:build/"src/rust_metal_rms.metal",
+              EMBEDDING_SOURCE:build/"src/rust_metal_embedding.rs", EMBEDDING_SHADER:build/"src/rust_metal_embedding.metal"}
     for source, target in copies.items():
         shutil.copyfile(source,target)
     checks = build_commands(build)
     checks.insert(0,["rustfmt","--edition","2024","--check",str((build/"src/rust_metal_rms.rs").resolve())])
+    checks.insert(0,["rustfmt","--edition","2024","--check",str((build/"src/rust_metal_embedding.rs").resolve())])
     record = {"format":"toklet-rust-metal-binding-probe-v1","completed":False,
               "engine_revision":common.command(["git","-C",str(ROOT),"rev-parse","HEAD"]),
               "working_tree_status":common.command(["git","-C",str(ROOT),"status","--porcelain"]),
@@ -167,7 +171,7 @@ def run(output, build, extra_runs=(), extra_context=None):
               "power_start":common.power(),"checks":[],"native_runs":[],
               "actual_gpu_trace":None,"energy":None,"total_external_device_memory":None,
               "extra_context":extra_context,
-              "scope":"Standalone Rust public-API/ownership and optional FP16 RMS primitive checks. No full model backend, device-performance acceptance, M4 completion or mobile qualification."}
+              "scope":"Standalone Rust public-API/ownership and optional FP16 RMS/embedding checks. No full model backend, device-performance acceptance, M4 completion or mobile qualification."}
     stage = "build_checks"
     try:
         with stderr_path.open("x") as stderr:

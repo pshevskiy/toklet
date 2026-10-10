@@ -95,3 +95,7 @@ full decoder composition and Qwen qualification remain pending.
 The [selected Qwen RMS check](docs/experiments/2026-10-10-qwen-metal-rms.md)
 also passes width-896 source gates with norm-only checkpoint reads. Full-model
 and session qualification remain pending.
+
+The [Half embedding lookup](docs/experiments/2026-10-10-metal-embedding.md)
+preserves every frozen tiny output bit, including signed zero and subnormals.
+Wider/full-table and decoder execution remain pending.

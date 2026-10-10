@@ -1,0 +1,31 @@
+{
+  "format": "toklet-cpu-embedding-check-window-idle-v1",
+  "idle_verified_utc": "2026-10-10T03:10:00.658156+00:00",
+  "processes": {
+    "17695": {
+      "ppid": 17694,
+      "state": "T",
+      "time": "0:00.56",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json"
+    },
+    "17701": {
+      "ppid": 17695,
+      "state": "S",
+      "time": "112:18.61",
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct"
+    },
+    "34871": {
+      "ppid": 35939,
+      "state": "Ts",
+      "time": "0:00.99",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py"
+    },
+    "42516": {
+      "ppid": 34871,
+      "state": "Z",
+      "time": "0:00.00",
+      "command": "<defunct>"
+    }
+  },
+  "policy": "Numerical42524 exited naturally; only orchestration34871 is held. Original17701 idle with unchanged CPUtime; numerical worker never stopped. Heavy embedding checks start after this snapshot."
+}
