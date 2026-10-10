@@ -1,0 +1,12 @@
+[package]
+name = "toklet-rust-metal-probe"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+publish = false
+
+[dependencies]
+objc2 = "=0.6.5"
+objc2-foundation = { version = "=0.3.2", default-features = false, features = ["std", "NSObject", "NSString", "NSError", "NSProcessInfo"] }
+objc2-metal = { version = "=0.3.2", default-features = false, features = ["std", "MTLDevice", "MTLBuffer", "MTLResource", "MTLLibrary", "MTLCommandQueue", "MTLCommandBuffer", "MTLCommandEncoder", "MTLComputeCommandEncoder", "MTLComputePipeline", "MTLTypes"] }
+serde_json = "=1.0.149"

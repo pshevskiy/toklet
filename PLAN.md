@@ -306,6 +306,22 @@ Astra accepted after a documentation precision correction, independently
 verifying sequencing, bounds, six tests, raw identities, samples, edge payload
 hashes, medians, tiny gates and the preserved rejection using light checks.
 
+Rust binding preparation, 10 October 2026 (M4 pending): the standalone
+[pinned Rust Metal probe](docs/experiments/2026-10-10-rust-metal-bindings.md)
+passes 39 exact completed add/tail dispatches, structured shader-compilation
+failure and budget rejection before device discovery. Private shared owners,
+checked lengths/alignment, tracked hazards and retained command resources keep
+host access outside execution; queried dispatch limits and explicit compile
+policy readback pass. All native process peaks are below 6 GiB. The fresh utility
+package pins its Cargo output directory and dependencies without changing the
+engine package. Formatting/Clippy, 75 ordinary engine Rust tests, two standalone
+Rust bounds tests and 54 offline Python checks pass. The first Clippy failure is
+preserved; the corrected fresh attempt passes. Frozen CPU binaries and qualified
+candidate source hashes remain unchanged. Astra accepted the complete task after
+independently verifying safety, identities, exact evidence, dispatch values/guards,
+failure propagation, memory and power with lightweight checks.
+No FP16 decoder, trace, mobile qualification or milestone completion is claimed.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.

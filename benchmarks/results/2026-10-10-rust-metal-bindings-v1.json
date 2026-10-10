@@ -1,0 +1,168 @@
+{
+  "format": "toklet-rust-metal-binding-probe-v1",
+  "completed": false,
+  "engine_revision": {
+    "exit_code": 0,
+    "stdout": "0f122d79707d98b7fd150657df10041d1fca94d4\n",
+    "stderr": ""
+  },
+  "working_tree_status": {
+    "exit_code": 0,
+    "stdout": "?? docs/experiments/2026-10-10-rust-metal-bindings.md\n?? tools/experiments/rust_metal_probe.Cargo.toml\n?? tools/experiments/rust_metal_probe.lock\n?? tools/experiments/rust_metal_probe.metal\n?? tools/experiments/rust_metal_probe.py\n?? tools/experiments/rust_metal_probe.rs\n?? tools/experiments/test_rust_metal_probe.py\n",
+    "stderr": ""
+  },
+  "driver_sha256": "880b12d8abd664695516ee88d30de888d045fcd28c209df77fbff5f27baca1b4",
+  "source_sha256": {
+    "tools/experiments/rust_metal_probe.rs": "13abfeb879b57219098c5e7f4d748a59526586ddd07b5be4b65ee953e3a387b9",
+    "tools/experiments/rust_metal_probe.metal": "7f1364605048cc5fe83099cf7520bd1b83f49e46b7d3f2cc1c440ee2000ee850",
+    "tools/experiments/rust_metal_probe.Cargo.toml": "82e8bbdc97c3f953db36288e4ebbde1f668f653e0a7e581c684ec4e0aa7ac9ee",
+    "tools/experiments/rust_metal_probe.lock": "a8f5fba185347056006bcf61becfe2ddcdfb50d8157e77908e0e3e39a7c3096f"
+  },
+  "common_helper_sha256": "2ae1dbb275f1b115baaa317eb5d7377c970bf5b57d3d78e7c34b62784bc10d87",
+  "memory_helper_sha256": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+  "rustc": {
+    "exit_code": 0,
+    "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\n",
+    "stderr": ""
+  },
+  "cargo": {
+    "exit_code": 0,
+    "stdout": "cargo 1.90.0 (Homebrew)\n",
+    "stderr": ""
+  },
+  "build_commands": [
+    [
+      "env",
+      "MACOSX_DEPLOYMENT_TARGET=15.0",
+      "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/target",
+      "cargo",
+      "fmt",
+      "--manifest-path",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/Cargo.toml",
+      "--check"
+    ],
+    [
+      "env",
+      "MACOSX_DEPLOYMENT_TARGET=15.0",
+      "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/target",
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/Cargo.toml",
+      "--locked",
+      "--offline",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    [
+      "env",
+      "MACOSX_DEPLOYMENT_TARGET=15.0",
+      "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/target",
+      "cargo",
+      "test",
+      "--manifest-path",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/Cargo.toml",
+      "--locked",
+      "--offline"
+    ],
+    [
+      "env",
+      "MACOSX_DEPLOYMENT_TARGET=15.0",
+      "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/target",
+      "cargo",
+      "build",
+      "--manifest-path",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/Cargo.toml",
+      "--locked",
+      "--offline",
+      "--release",
+      "--target",
+      "aarch64-apple-darwin"
+    ]
+  ],
+  "rustflags": null,
+  "sdk_path": {
+    "exit_code": 0,
+    "stdout": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk\n",
+    "stderr": ""
+  },
+  "sdk_version": {
+    "exit_code": 0,
+    "stdout": "26.5\n",
+    "stderr": ""
+  },
+  "os": {
+    "exit_code": 0,
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83\n",
+    "stderr": ""
+  },
+  "hardware": {
+    "exit_code": 0,
+    "stdout": "Apple M1 Pro\nMacBookPro18,3\n17179869184\n",
+    "stderr": ""
+  },
+  "power_start": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  },
+  "checks": [
+    {
+      "command": [
+        "env",
+        "MACOSX_DEPLOYMENT_TARGET=15.0",
+        "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/target",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1/Cargo.toml",
+        "--check"
+      ],
+      "stdout": "",
+      "wall_seconds": 0.09046650002710521
+    }
+  ],
+  "native_runs": [],
+  "actual_gpu_trace": null,
+  "energy": null,
+  "total_external_device_memory": null,
+  "scope": "Standalone Rust public-API/ownership check only. Exact tiny add/tail cases; no model/FP16 backend, device-performance claim, M4 completion or mobile qualification.",
+  "failure": {
+    "stage": "build_checks",
+    "type": "RuntimeError",
+    "message": "Probe stage exited 101: env"
+  },
+  "power_end": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  },
+  "stderr_sha256": "85b26c52246c9b004b738dc6ba912ac6747adcae114c2903de78d63cad38ac17",
+  "native_raw_sha256": null
+}

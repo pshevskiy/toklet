@@ -83,3 +83,9 @@ checkpoints and the workload matrix. Load statistics include nested
 `conversion_seconds`; it is part of `load_seconds`, not an additional phase to
 sum. Profiling harness checks pass; complete performance qualification is still
 pending.
+
+Standalone Apple preparation includes a
+[pinned Rust Metal binding check](docs/experiments/2026-10-10-rust-metal-bindings.md)
+with exact small dispatches, owned shared buffers, completion/error checks and
+bounded isolated builds. It adds no engine dependency or GPU execution path;
+complete FP16 Metal qualification remains pending.

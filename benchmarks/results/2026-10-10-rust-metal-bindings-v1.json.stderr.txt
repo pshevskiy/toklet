@@ -1,0 +1,32 @@
+   Compiling objc2 v0.6.5
+    Checking objc2-encode v4.1.0
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.149
+    Checking bitflags v2.13.2
+    Checking memchr v2.8.3
+    Checking itoa v1.0.18
+    Checking objc2-foundation v0.3.2
+    Checking objc2-metal v0.3.2
+    Checking toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-metal-bindings-v1)
+error: manual implementation of `.is_multiple_of()`
+  --> src/main.rs:95:20
+   |
+95 |                 || bytes % size_of::<f32>() != 0
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!bytes.is_multiple_of(size_of::<f32>())`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_is_multiple_of
+   = note: `-D clippy::manual-is-multiple-of` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_is_multiple_of)]`
+
+error: manual implementation of `.is_multiple_of()`
+   --> src/main.rs:112:20
+    |
+112 |                 || raw.contents().as_ptr() as usize % align_of::<f32>() != 0
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!(raw.contents().as_ptr() as usize).is_multiple_of(align_of::<f32>())`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_is_multiple_of
+
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe" test) due to 2 previous errors
