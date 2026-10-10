@@ -1,0 +1,47 @@
+{
+  "format": "toklet-saved-cpu-append-analysis-v1",
+  "completed": true,
+  "scope": "Small saved evidence only; no model/worker execution or binary hashes. Prior idle-window completion proof binds the frozen binary at launch.",
+  "checks": [
+    "schema",
+    "ten exact raw/sample pairs",
+    "committed/pending state",
+    "token events",
+    "independent summary",
+    "fixed input hashes",
+    "memory",
+    "actual historical driver",
+    "prior binary identity and launch/hold/idle ordering"
+  ],
+  "summary": {
+    "ttft_median_seconds": 21.3480848955,
+    "ttft_min_seconds": 21.200767709,
+    "ttft_max_seconds": 21.545358209,
+    "request_median_seconds": 111.62889043749999,
+    "decode_tokens_per_second_median": 1.4063075673072305,
+    "prefill_tokens_per_second_median": 2.997932483017486
+  },
+  "requests_seconds": [
+    111.538488625,
+    111.347230375,
+    111.604272375,
+    111.6535085,
+    113.082251125,
+    112.938665,
+    112.934093625,
+    111.54062775,
+    111.420290042,
+    111.709631625
+  ],
+  "request_min_seconds": 111.347230375,
+  "request_max_seconds": 113.082251125,
+  "records_sha256": {
+    "benchmarks/results/2026-10-10-cpu-append.json": "a20328d513870c82f681593603e42966e2f8306e1500fb82443c93292bd03753",
+    "benchmarks/results/2026-10-10-cpu-append.json.samples.jsonl": "450ff84f7764b1f83489af298f3c83635f6acf35eb7875109efb7a777077094c",
+    "benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-idle.json": "39c2c4f5252669fa766d8d8b59b81e104cc07556e02720e4e5bb58233f697272",
+    "benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-hold.json": "cefeab5b06fc656725bfe916c32d8bc1992cd4827a7a08dcef31a2bb140d8564",
+    "benchmarks/results/2026-10-10-cpu-medium-source-driver-v1.py.txt": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "benchmarks/results/2026-10-10-cpu-gating-check-window-completed.json": "4705df0877726dd95b2214b641c12910b67dfe861e6236056aae73a3fdf74f54"
+  },
+  "producer_sha256": "1926242479fe33df1c27e85f75d1c7cd7c83fcf483b8db81b26e2f7fe561156d"
+}

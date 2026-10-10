@@ -116,8 +116,12 @@ retains all ten 512-input/128-output measurements and valid prefix states,
 with median TTFT 163.381 seconds and decode rate 1.414 steps/s.
 The [scalar long workload](docs/experiments/2026-10-10-cpu-long.md)
 retains all ten 1,024-input/128-output measurements, with median TTFT
-336.470 seconds and decode rate 1.377 steps/s. Cache/application and full
-quality qualification remain pending.
+336.470 seconds and decode rate 1.377 steps/s.
+The [scalar exact-prefix append workload](docs/experiments/2026-10-10-cpu-append.md)
+retains all ten requests with 512 reused tokens, 64 appended tokens and 128
+fixed output steps; median TTFT is 21.348 seconds and request time 111.629
+seconds, with completed Astra review. Remaining cache/application measurements
+and full quality qualification remain pending.
 The [selected Qwen RMS check](docs/experiments/2026-10-10-qwen-metal-rms.md)
 also passes width-896 source gates with norm-only checkpoint reads. Full-model
 and session qualification remain pending.

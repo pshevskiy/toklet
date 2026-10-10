@@ -197,6 +197,22 @@ evidence and producer without findings after independent replay and identity,
 state, timing, memory and window-order verification. Remaining cache/application
 matrix and quality gates stay open.
 
+M2.5 append evidence, 10 October 2026 (milestone still open): the
+[scalar exact-prefix append report](docs/experiments/2026-10-10-cpu-append.md)
+retains three warmups and ten uninterrupted measured requests. Each prepares
+512 cached tokens outside timing, then appends 64 fixed IDs and emits 128
+teacher-forced steps, finishing with 703 committed positions and one pending
+token. Median warm TTFT is 21.348085 s, completed request time 111.628890 s
+and decode rate 1.406308 steps/s; prefill throughput uses only the 64 appended
+tokens. Maximum physical charge is 2,043,774,992 bytes below 6 GiB and
+conservative admission. Independent saved-data checks reproduce raw states,
+summaries, token and historical driver identities, memory and launch/hold/idle
+ordering. Only orchestration was held; numerical work finished naturally
+before root checks and native Qwen gating ran. Astra accepted the saved-data
+task without findings after independent replay and raw-copy, state, timing,
+memory, identity and window-order verification. Remaining cache/application
+matrix and full quality gates stay open.
+
 Held-out scorer preparation, 10 October 2026 (M2.5/quality still open): the
 [bounded loss runner](docs/experiments/2026-10-10-held-out-loss-runner.md)
 implements the existing ten independent 1,024-target blocks with one-token
