@@ -1,0 +1,223 @@
+"""Verify the completed idle window, then resume only its owned orchestration."""
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import json
+import os
+from pathlib import Path
+import signal
+import subprocess
+import sys
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--reviewed-commit", action="append", required=True)
+args = parser.parse_args()
+root = Path.cwd().resolve()
+sys.path.insert(0, str(root / "tools/bench"))
+import cpu
+import cpu_cli
+
+def digest(path):
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+def checked(name, expected):
+    value = digest(root / name)
+    assert value == expected, (name, value, expected)
+    return value
+
+def read(name):
+    return json.loads((root / name).read_text())
+
+def utc():
+    return datetime.now(timezone.utc).isoformat()
+
+def snapshot():
+    return subprocess.check_output([
+        "ps", "-o", "pid,ppid,stat,time,command", "-p", "17694,80030,80039",
+    ], text=True)
+
+def assert_idle(value):
+    rows = {int(row[0]): row for line in value.splitlines()[1:]
+            if len(row := line.split(None, 4)) == 5}
+    assert 80039 not in rows
+    assert int(rows[17694][1]) == 35939 and "T" in rows[17694][2]
+    assert int(rows[80030][1]) == 17694 and rows[80030][2].startswith("Z")
+
+assert_idle(snapshot())
+assert subprocess.check_output(["git", "status", "--porcelain"], text=True) == ""
+head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+for commit in args.reviewed_commit:
+    subprocess.run(["git", "merge-base", "--is-ancestor", commit, head], check=True)
+assert subprocess.check_output([
+    "git", "diff", "1a9bd8b..HEAD", "--", "src", "Cargo.toml", "Cargo.lock",
+    "examples/cpu_bench.rs", "tests/cli.rs",
+], text=True) == ""
+prior_name = "benchmarks/results/2026-10-10-cpu-task-cases-check-window-completed.json"
+prior = read(prior_name)
+assert prior["completed"] is True
+frozen = {name: checked(name, sha) for name, sha in prior["frozen_binaries"].items()}
+assets = {name: checked(name, sha) for name, sha in prior["validated_local_model_assets"].items()}
+cpu_name = "benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json"
+cli_name = "benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json"
+cpu.qualified_cpu_worker(root / cpu_name)
+_, cli_record = cpu_cli.qualified_cli(root / cli_name)
+records = {
+    prior_name: digest(root / prior_name),
+    cpu_name: checked(cpu_name, "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc"),
+    cli_name: checked(cli_name, "8d2a633ed95c488f3bbba5de186aa3e3418fa75df51a170af383e31d98ae2cc8"),
+}
+source_bindings = {}
+gating_name = "benchmarks/results/2026-10-10-qwen-metal-gating-v1.json"
+gating = read(gating_name)
+assert gating["completed"] is True and "failure" not in gating
+for name, sha in gating["source_sha256"].items():
+    source_bindings[name] = checked(name, sha)
+for name, sha in {
+    "tools/experiments/rust_metal_probe.py": gating["driver_sha256"],
+    "tools/experiments/metal_probe.py": gating["common_helper_sha256"],
+    "tools/bench/mlx_baseline.py": gating["memory_helper_sha256"],
+}.items():
+    source_bindings[name] = checked(name, sha)
+context = gating["extra_context"]
+for field in ["input_sha256", "qualification_driver_sha256"]:
+    for name, sha in context[field].items():
+        source_bindings[name] = checked(name, sha)
+for name, sha in {
+    "tests/fixtures/fp16-v1/manifest.json": context["tiny_manifest_sha256"]["fp16"],
+    "tests/fixtures/tiny-v1/manifest.json": context["tiny_manifest_sha256"]["source_fp32"],
+    "models/Qwen2.5-0.5B-Instruct/config.json": context["config_sha256"],
+    **{str(Path(name) / "manifest.json"): sha for name, sha in context["manifest_sha256"].items()},
+}.items():
+    source_bindings[name] = checked(name, sha)
+binary_name = "artifacts/rust-qwen-metal-gating-v1/target/aarch64-apple-darwin/release/toklet-rust-metal-probe"
+source_bindings[binary_name] = checked(binary_name, gating["binary_sha256"])
+raw_name = "benchmarks/raw/2026-10-10-qwen-metal-gating-v1.json.native.jsonl"
+records[raw_name] = checked(raw_name, gating["native_raw_sha256"])
+stderr_name = gating_name + ".stderr.txt"
+records[stderr_name] = checked(stderr_name, gating["stderr_sha256"])
+for name in [gating_name, "benchmarks/results/2026-10-10-qwen-metal-gating-analysis-v1.json"]:
+    records[name] = digest(root / name)
+analysis = read("benchmarks/results/2026-10-10-qwen-metal-gating-analysis-v1.json")
+assert analysis["completed"] is True
+assert analysis["records_sha256"][gating_name] == records[gating_name]
+assert analysis["records_sha256"][raw_name] == records[raw_name]
+loss_name = "benchmarks/results/2026-10-10-held-out-loss-probe-v1.json"
+loss = read(loss_name)
+assert loss["completed"] is True
+records[loss_name] = checked(loss_name, "6fb800232abdb0b2e3e008b4f61002390bdcdfeb9168cb51ea0ea232e6ad6901")
+for field in ["source_sha256", "helper_sha256"]:
+    for name, sha in loss[field].items():
+        source_bindings[name] = checked(name, sha)
+source_bindings[loss["binary_path"]] = checked(loss["binary_path"], loss["binary_sha256"])
+append_name = "benchmarks/results/2026-10-10-cpu-append.json"
+append_raw_name = append_name + ".samples.jsonl"
+for name in [append_name, append_raw_name,
+             "benchmarks/results/2026-10-10-cpu-append-analysis-v1.json",
+             "benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-hold.json",
+             "benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-idle.json"]:
+    records[name] = digest(root / name)
+append_analysis = read("benchmarks/results/2026-10-10-cpu-append-analysis-v1.json")
+assert append_analysis["completed"] is True
+assert append_analysis["records_sha256"][append_name] == records[append_name]
+assert append_analysis["records_sha256"][append_raw_name] == records[append_raw_name]
+for name in [append_name, append_raw_name]:
+    assert digest(root / name.replace("benchmarks/results/", "benchmarks/raw/")) == records[name]
+task_name = "benchmarks/results/2026-10-10-task-response-probe-v2.json"
+task = read(task_name)
+assert task["completed"] is True and "failure" not in task
+assert task["scalar_tiled_semantics_match"] is True
+assert [run["projection"] for run in task["runs"]] == ["scalar", "tiled"]
+assert all(run["passed"] is True and run["exit_code"] == 0 and not run["watchdog_killed"] for run in task["runs"])
+for field in ["helper_sha256", "compiled_source_sha256"]:
+    for name, sha in task[field].items():
+        source_bindings[name] = checked(name, sha)
+source_bindings[task["binary_path"]] = checked(task["binary_path"], task["binary_sha256"])
+for name, sha in task["validated_local_model_assets"].items():
+    assert assets[name] == sha
+source_bindings["benchmarks/contract-v1/manifest.json"] = checked("benchmarks/contract-v1/manifest.json", task["contract_manifest_sha256"])
+source_bindings["benchmarks/sources.json"] = checked("benchmarks/sources.json", task["sources_manifest_sha256"])
+source_bindings["artifacts/quality-v1/tasks.jsonl"] = checked("artifacts/quality-v1/tasks.jsonl", task["prepared_task_inventory"]["payload_sha256"])
+for name, sha in {task_name + ".native.jsonl": task["native_raw_sha256"], task_name + ".stderr.txt": task["stderr_sha256"]}.items():
+    records[name] = checked(name, sha)
+records[task_name] = digest(root / task_name)
+for name in ["benchmarks/results/2026-10-10-task-response-probe-analysis-v1.json",
+             "benchmarks/results/2026-10-10-cpu-cached.json",
+             "benchmarks/results/2026-10-10-cpu-cached.json.samples.jsonl",
+             "benchmarks/results/2026-10-10-cpu-cached-analysis-v1.json",
+             "benchmarks/results/2026-10-10-cpu-task-cases-check-window-idle.json",
+             "benchmarks/results/2026-10-10-cpu-cached-check-window-hold.json"]:
+    records[name] = digest(root / name)
+analysis = read("benchmarks/results/2026-10-10-task-response-probe-analysis-v1.json")
+assert analysis["completed"] is True and analysis["records_sha256"][task_name] == records[task_name]
+cached_analysis = read("benchmarks/results/2026-10-10-cpu-cached-analysis-v1.json")
+assert cached_analysis["completed"] is True
+for name in ["benchmarks/results/2026-10-10-cpu-cached.json", "benchmarks/results/2026-10-10-cpu-cached.json.samples.jsonl"]:
+    assert cached_analysis["records_sha256"][name] == records[name]
+    assert digest(root / name.replace("benchmarks/results/", "benchmarks/raw/")) == records[name]
+isolation_name = "benchmarks/results/2026-10-10-code-isolation-probe-v1.json"
+isolation = read(isolation_name)
+assert isolation["completed"] is False
+assert isolation["failure"] == {"type": "ValueError", "message": "Authored isolation admission differs"}
+assert len(isolation["runs"]) == 1
+item = isolation["runs"][0]
+assert item["mode"] == "benign" and item["exit_code"] == 2
+assert item["cleanup_errors"] == [] and item["surviving_group_members"] == []
+assert not item["wall_timed_out"] and not item["output_limit_exceeded"]
+for name, sha in isolation["helper_sha256"].items():
+    source_bindings[name] = checked(name, sha)
+for field in ["python", "sdk_header", "sdk_exports"]:
+    name = isolation["python_executable"] if field == "python" else isolation[field + "_path"]
+    source_bindings[name] = checked(name, isolation[field + "_sha256"])
+records[isolation_name] = digest(root / isolation_name)
+isolation_analysis_name = "benchmarks/results/2026-10-10-code-isolation-rejection-analysis-v1.json"
+isolation_analysis = read(isolation_analysis_name)
+assert isolation_analysis["completed"] is True
+assert isolation_analysis["summary"] == {
+    "qualified": False, "required_offline_checks_passed": 4, "benchmark_python_tests_passed": 62,
+    "attempted_authored_workers": 1, "active_sandbox_admissions": 0, "completed_authored_operations": 0,
+    "failure_stage": "RLIMIT_DATA admission", "required_data_bytes": 268435456,
+    "held_out_model_outputs": 0, "dataset_programs": 0, "generated_code_executions": 0,
+    "candidate_adopted": False,
+}
+assert isolation_analysis["records_sha256"][isolation_name] == records[isolation_name]
+records[isolation_analysis_name] = digest(root / isolation_analysis_name)
+pending_name = "benchmarks/results/2026-10-10-cpu-pending.json"
+pending_raw_name = pending_name + ".samples.jsonl"
+pending_analysis_name = "benchmarks/results/2026-10-10-cpu-pending-analysis-v1.json"
+pending_analysis = read(pending_analysis_name)
+assert pending_analysis["completed"] is True
+for name in [pending_name, pending_raw_name]:
+    records[name] = checked(name, pending_analysis["records_sha256"][name])
+    assert digest(root / name.replace("benchmarks/results/", "benchmarks/raw/")) == records[name]
+records[pending_analysis_name] = digest(root / pending_analysis_name)
+for name in ["benchmarks/results/2026-10-10-cpu-code-isolation-check-window-idle.json",
+             "benchmarks/results/2026-10-10-cpu-pending-check-window-hold.json"]:
+    records[name] = digest(root / name)
+assert isolation["idle_proof_sha256"] == records["benchmarks/results/2026-10-10-cpu-code-isolation-check-window-idle.json"]
+assert subprocess.check_output(["git", "status", "--porcelain"], text=True) == ""
+before = snapshot()
+assert_idle(before)
+record = {
+    "format": "toklet-cpu-code-isolation-check-window-completed-v1", "completed": True,
+    "verified_utc": utc(), "snapshot_before": before,
+    "engine_commit": head, "working_tree_clean_at_verification": True,
+    "reviewed_commits": args.reviewed_commit,
+    "frozen_binaries": frozen,
+    "qualified_cli_binary_sha256": cli_record["binary_sha256"],
+    "records": records,
+    "validated_source_and_artifact_bindings": source_bindings,
+    "validated_local_model_assets": assets,
+    "producer_sha256": digest(Path(__file__)),
+    "scope": "Authored isolation checks ran after the uninterrupted pending worker exited naturally. All offline checks pass; native Python rejected the fixed data admission before sandbox/operation execution. This candidate is not adopted. No held-out outputs or generated code executed; original matrix progression is independent of this rejected executor candidate. Root numerical/CLI sources remain unchanged since 1a9bd8b, and the scalar benchmark binaries retain their separate historical source identities. All hashes/checks finish before resuming only the owned orchestration; no build/test/model/native work overlaps the next timed workload.",
+}
+out = root / "benchmarks/raw/2026-10-10-cpu-code-isolation-check-window-completed.json"
+with out.open("x") as stream:
+    json.dump(record, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+os.kill(17694, signal.SIGCONT)
+record["orchestration_resumed_utc"] = utc()
+record["snapshot_after"] = snapshot()
+out.write_text(json.dumps(record, indent=2, allow_nan=False) + "\n")
+print(json.dumps({"resumed_utc": record["orchestration_resumed_utc"],
+                  "verified_assets": len(assets), "bindings": len(source_bindings)}))

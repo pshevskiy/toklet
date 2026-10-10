@@ -1,0 +1,39 @@
+{
+  "format": "toklet-saved-code-isolation-rejection-analysis-v1",
+  "completed": true,
+  "scope": "Analysis completed; native candidate rejected before sandbox admission or any authored operation. No executor or quality qualification.",
+  "summary": {
+    "qualified": false,
+    "required_offline_checks_passed": 4,
+    "benchmark_python_tests_passed": 62,
+    "attempted_authored_workers": 1,
+    "active_sandbox_admissions": 0,
+    "completed_authored_operations": 0,
+    "failure_stage": "RLIMIT_DATA admission",
+    "required_data_bytes": 268435456,
+    "held_out_model_outputs": 0,
+    "dataset_programs": 0,
+    "generated_code_executions": 0,
+    "candidate_adopted": false
+  },
+  "policy": {
+    "id": "toklet-authored-code-isolation-policy-v1",
+    "api": "sandbox_init(SANDBOX_NAMED, kSBXProfilePureComputation)",
+    "library": "/usr/lib/system/libsystem_sandbox.dylib",
+    "data_bytes": 268435456,
+    "address_space_bytes": 1073741824,
+    "cpu_seconds": 4,
+    "wall_seconds": 6,
+    "output_bytes": 65536,
+    "core_bytes": 0,
+    "open_files": 64,
+    "network": "denied",
+    "filesystem": "denied after trusted initialization",
+    "child_processes": "denied"
+  },
+  "records_sha256": {
+    "benchmarks/results/2026-10-10-code-isolation-probe-v1.json": "42c89b54393edcb6107cb65ede861fee2154bd08120700bddac89f9e6dd0cffb",
+    "benchmarks/results/2026-10-10-cpu-code-isolation-check-window-idle.json": "32ef6f76448b68b3785aa777760b783a55d570b481335edf75d37694e57a9ad9"
+  },
+  "producer_sha256": "a107cab30f205c69f06f9f7f05e2d73b4c2f6a9cd7ded146782d2a1a3bb76ac9"
+}

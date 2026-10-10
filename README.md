@@ -168,3 +168,7 @@ preserves prepared IDs, finalized text and pending EOS semantics, and supplies
 the exact text scorers and literal HumanEval program composition. Four authored
 scalar/tiled requests pass with matching outputs. Isolated code execution and
 all 100 held-out model responses remain pending.
+The [authored native isolation candidate](docs/experiments/2026-10-10-code-isolation.md)
+passes offline checks but is rejected before sandbox admission because Python
+cannot accept the fixed data limit. It is not used for generated code; a
+compatible executor still needs qualification.

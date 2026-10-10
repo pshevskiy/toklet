@@ -1,0 +1,88 @@
+"""Replay rejected native admission; no sandbox, model or generated code."""
+import argparse
+import base64
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--root", type=Path, required=True)
+parser.add_argument("--output", type=Path, required=True)
+args = parser.parse_args()
+root = args.root.resolve()
+sys.path.insert(0, str(root / "tools/bench"))
+import code_isolation_probe as probe
+
+def digest(path):
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+name = "benchmarks/results/2026-10-10-code-isolation-probe-v1.json"
+idle_name = "benchmarks/results/2026-10-10-cpu-code-isolation-check-window-idle.json"
+record = json.loads((root / name).read_text())
+idle = json.loads((root / idle_name).read_text())
+assert record["completed"] is False
+assert record["failure"] == {"type": "ValueError", "message": "Authored isolation admission differs"}
+assert record["policy"] == probe.child.POLICY and record["modes"] == list(probe.child.MODES)
+assert record["idle_proof_sha256"] == digest(root / idle_name)
+assert idle["completed_workload"] == "pending" and idle["measured_requests"] == 10
+assert idle["idle_verified_utc"] < record["started_utc"] < record["finished_utc"]
+for key, sha in record["helper_sha256"].items():
+    assert digest(root / key) == sha
+for field in ("python", "sdk_header", "sdk_exports"):
+    path = record["python_executable"] if field == "python" else record[field + "_path"]
+    assert digest(Path(path)) == record[field + "_sha256"]
+assert record["python_version"] == sys.version
+assert len(record["checks"]) == 4
+assert [check["command"] for check in record["checks"]] == [
+    ["cargo", "fmt", "--check"],
+    ["cargo", "clippy", "--locked", "--offline", "--all-targets", "--", "-D", "warnings"],
+    ["cargo", "test", "--locked", "--offline"],
+    [str(root / ".venv/bin/python"), "-m", "unittest", "discover", "-s", "tools/bench", "-p", "test_*.py"],
+]
+for check in record["checks"]:
+    assert check["exit_code"] == 0 and check["timed_out"] is False
+    assert check["process_group_killed"] is False and check["cleanup_errors"] == []
+assert "Ran 62 tests" in record["checks"][-1]["stderr"]
+assert len(record["runs"]) == 1
+run = record["runs"][0]
+assert run["mode"] == "benign" and run["exit_code"] == 2
+assert "failure" not in run and "expectation_passed" not in run
+assert not run["wall_timed_out"] and not run["output_limit_exceeded"] and not run["process_group_killed"]
+assert run["cleanup_errors"] == [] and run["surviving_group_members"] == []
+raw = {}
+for stream in ("stdout", "stderr"):
+    raw[stream] = base64.b64decode(run[stream + "_base64"], validate=True)
+    assert len(raw[stream]) == run[stream + "_captured_bytes"]
+    assert hashlib.sha256(raw[stream]).hexdigest() == run[stream + "_captured_sha256"]
+assert raw["stderr"] == b"" and len(raw["stdout"].splitlines()) == 1
+assert json.loads(raw["stdout"]) == {
+    "event": "setup_error", "type": "RuntimeError",
+    "message": "Resource admission failed for RLIMIT_DATA: current limit exceeds maximum limit",
+}
+try:
+    probe.check_record(run)
+except ValueError as error:
+    assert str(error) == "Authored isolation admission differs"
+else:
+    raise AssertionError("Rejected admission unexpectedly qualifies")
+summary = {
+    "qualified": False, "required_offline_checks_passed": 4,
+    "benchmark_python_tests_passed": 62, "attempted_authored_workers": 1,
+    "active_sandbox_admissions": 0, "completed_authored_operations": 0,
+    "failure_stage": "RLIMIT_DATA admission", "required_data_bytes": 268435456,
+    "held_out_model_outputs": 0, "dataset_programs": 0, "generated_code_executions": 0,
+    "candidate_adopted": False,
+}
+analysis = {
+    "format": "toklet-saved-code-isolation-rejection-analysis-v1", "completed": True,
+    "scope": "Analysis completed; native candidate rejected before sandbox admission or any authored operation. No executor or quality qualification.",
+    "summary": summary, "policy": record["policy"],
+    "records_sha256": {key: digest(root / key) for key in (name, idle_name)},
+    "producer_sha256": digest(Path(__file__)),
+}
+with args.output.open("x") as stream:
+    json.dump(analysis, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+print(json.dumps(summary, allow_nan=False))

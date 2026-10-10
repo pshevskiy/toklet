@@ -265,6 +265,20 @@ running the 19 targeted tests and reproducing the saved analysis exactly.
 No held-out model response, generated code execution or quality score is claimed;
 full quality and milestone gates remain open.
 
+Code isolation preparation, 10 October 2026 (M2.5/quality still open): the
+[authored native candidate](docs/experiments/2026-10-10-code-isolation.md)
+provides bounded pipes, owned-group cleanup, fixed resource controls and planned
+named-profile denied-access probes. Formatting, Clippy, 76 ordinary Rust tests
+and all 62 offline benchmark tests pass after the pending worker's natural exit.
+The first native child rejects 256 MiB `RLIMIT_DATA` admission and exits 2 before
+applying the sandbox or running an authored operation. Exact saved replay
+verifies runtime/source identities, capture hashes, checks and cleanup. The
+candidate remains unqualified and is not adopted; limits are not dropped or
+lowered. Astra accepted the completed experiment without findings after all
+eight offline tests and exact rejection replay, with ABI, cleanup, identity and
+ordering checks. A compatible isolated executor, generated HumanEval programs,
+all 100 held-out responses, full quality and milestone gates remain pending.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

@@ -1,0 +1,55 @@
+"""Archive complete pending results only after their owned worker exits."""
+from datetime import datetime, timezone
+import hashlib
+import json
+import math
+from pathlib import Path
+import subprocess
+
+root = Path.cwd().resolve()
+snapshot = subprocess.check_output([
+    "ps", "-o", "pid,ppid,stat,time,command", "-p", "17694,80030,80039",
+], text=True)
+rows = {int(row[0]): row for line in snapshot.splitlines()[1:]
+        if len(row := line.split(None, 4)) == 5}
+assert 80039 not in rows
+assert int(rows[17694][1]) == 35939 and "T" in rows[17694][2]
+assert int(rows[80030][1]) == 17694 and rows[80030][2].startswith("Z")
+result_name = "benchmarks/raw/2026-10-10-cpu-pending.json"
+samples_name = result_name + ".samples.jsonl"
+result = json.loads((root / result_name).read_text())
+samples = [json.loads(line) for line in (root / samples_name).read_text().splitlines()]
+assert result["runtime"] == "Toklet scalar CPU"
+assert result["setup"]["warmup_repetitions"] == 3
+assert result["workload"]["cache_state"] == "pending_sample"
+assert len(result["samples"]) == len(samples) == 10
+for row, sample in zip(samples, result["samples"]):
+    assert row["sample"] == sample
+    state = row["state"]
+    assert (state["reused_tokens"], state["prefill_tokens"], state["evaluated_tokens"],
+            state["pending_tokens"], state["emitted_tokens"]) == (512, 1, 640, 1, 128)
+    # The pending sampled input is evaluated within the measured request.
+    assert math.isfinite(sample["prefill_seconds"]) and 0 < sample["prefill_seconds"] <= sample["ttft_seconds"]
+copies = {}
+for name in (result_name, samples_name):
+    payload = (root / name).read_bytes()
+    target_name = name.replace("benchmarks/raw/", "benchmarks/results/")
+    with (root / target_name).open("xb") as stream:
+        stream.write(payload)
+    assert (root / target_name).read_bytes() == payload
+    copies[target_name] = hashlib.sha256(payload).hexdigest()
+record = {
+    "format": "toklet-cpu-code-isolation-check-window-idle-v1",
+    "idle_verified_utc": datetime.now(timezone.utc).isoformat(),
+    "completed_workload": "pending", "measured_requests": 10,
+    "held_orchestration_pid": 17694,
+    "defunct_transport_pid": 80030,
+    "exited_numerical_worker_pid": 80039,
+    "snapshot": snapshot, "saved_result_sha256": copies,
+    "producer_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+    "scope": "Pending numerical work finished all three warmups and ten measured requests uninterrupted. Only orchestration was held. Checks/builds/model work and binary/model/large hashes may now run before separately verified resumption.",
+}
+with (root / "benchmarks/results/2026-10-10-cpu-code-isolation-check-window-idle.json").open("x") as stream:
+    json.dump(record, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+print(json.dumps({"idle": True, "measured_requests": 10, "copies": copies}))

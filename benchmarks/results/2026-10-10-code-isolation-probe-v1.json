@@ -1,0 +1,164 @@
+{
+  "format": "toklet-authored-code-isolation-probe-v1",
+  "completed": false,
+  "scope": "Authored native capability probes only. No dataset/model outputs or generated code; no quality score or executor adoption.",
+  "policy": {
+    "id": "toklet-authored-code-isolation-policy-v1",
+    "api": "sandbox_init(SANDBOX_NAMED, kSBXProfilePureComputation)",
+    "library": "/usr/lib/system/libsystem_sandbox.dylib",
+    "data_bytes": 268435456,
+    "address_space_bytes": 1073741824,
+    "cpu_seconds": 4,
+    "wall_seconds": 6,
+    "output_bytes": 65536,
+    "core_bytes": 0,
+    "open_files": 64,
+    "network": "denied",
+    "filesystem": "denied after trusted initialization",
+    "child_processes": "denied"
+  },
+  "modes": [
+    "benign",
+    "assertion_failure",
+    "early_exit",
+    "file_read",
+    "file_write",
+    "network",
+    "fork",
+    "exec",
+    "stdout_flood",
+    "stderr_flood",
+    "cpu_timeout",
+    "wall_timeout",
+    "data_limit",
+    "address_space_limit"
+  ],
+  "runs": [
+    {
+      "mode": "benign",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "/Users/coloner/work/rust/toklet/tools/bench/code_isolation_child.py",
+        "benign",
+        "/Users/coloner/work/rust/toklet/artifacts/authored-isolation-53585842/owned-outside-read.txt",
+        "/Users/coloner/work/rust/toklet/artifacts/authored-isolation-53585842/owned-outside-write.txt"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 2,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.05144320894032717,
+      "stdout_base64": "eyJldmVudCI6ICJzZXR1cF9lcnJvciIsICJ0eXBlIjogIlJ1bnRpbWVFcnJvciIsICJtZXNzYWdlIjogIlJlc291cmNlIGFkbWlzc2lvbiBmYWlsZWQgZm9yIFJMSU1JVF9EQVRBOiBjdXJyZW50IGxpbWl0IGV4Y2VlZHMgbWF4aW11bSBsaW1pdCJ9Cg==",
+      "stdout_captured_bytes": 142,
+      "stdout_captured_sha256": "11f5b8927f55bbaaeae0c19d8108874f25b189445c1a4aa956456ae35e3fe08c",
+      "stderr_base64": "",
+      "stderr_captured_bytes": 0,
+      "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "timed_out": false,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "wall_seconds": 0.2505092500941828
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.23s\n",
+      "timed_out": false,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "wall_seconds": 0.27983887505251914
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 7 tests\ntest cli::chat::real_tests::full_pinned_tokenizer_matches_frozen_ids ... ignored, requires explicitly downloaded pinned local Qwen tokenizer assets\ntest cli::tests::idle_interrupt_after_terminal_boundary_is_preserved ... ok\ntest cli::chat::tests::missing_generation_config_uses_model_eos ... ok\ntest cli::chat::tests::python_tool_json_float_spelling_matches_independent_probes ... ok\ntest cli::chat::tests::continued_output_preserves_split_unicode_and_finalizes_once ... ok\ntest cli::chat::tests::invalid_roles_multimodal_content_and_nonfinite_tools_are_rejected ... ok\ntest cli::chat::tests::frozen_transformers_chat_and_raw_ids_match_without_model_downloads ... ok\n\ntest result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.06s\n\n\nrunning 2 tests\ntest quality_policy_and_pinned_source_model_are_available_without_downloads ... ok\ntest offline_workload_arrays_have_frozen_identities_and_exact_admission_boundary ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 2 tests\ntest cached_attention_rejects_invalid_shapes_or_valid_prefix_before_writes ... ok\ntest head_major_cache_with_stale_tails_matches_frozen_gqa_at_all_offsets ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n\nrunning 10 tests\ntest non_unicode_arguments_return_an_error_instead_of_panicking ... ok\ntest version_matches_the_package ... ok\ntest invalid_arguments_fail_without_success_output ... ok\ntest help_is_available_without_a_model ... ok\ntest invalid_projection_options_fail_before_model_access ... ok\ntest invalid_cli_requests_and_over_capacity_fail_before_emitting_tokens ... ok\ntest local_token_input_streams_frozen_greedy_ids_and_honors_eos_and_stop_ids ... ok\ntest interactive_cached_prompt_continuation_rejection_and_reset_keep_one_session ... ok\ntest actual_ctrl_c_cancels_decode_then_continues_and_exits_when_idle ... ok\ntest ctrl_c_during_prefill_can_resume_all_pending_input ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.43s\n\n\nrunning 6 tests\ntest invalid_position_and_attention_inputs_fail_before_mutation ... ok\ntest arithmetic_overflow_requires_discarding_partial_outputs ... ok\ntest grouped_heads_read_their_shared_value_head_without_expansion ... ok\ntest changing_future_keys_queries_and_values_preserves_earlier_context ... ok\ntest rotary_uses_split_half_pairing_and_absolute_chunk_offsets ... ok\ntest rotary_and_gqa_attention_match_all_saved_intermediates ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 8 tests\ntest greedy_uses_lowest_id_ties_and_rejects_invalid_distributions ... ok\ntest output_projection_shares_embedding_weights ... ok\ntest composed_decoder_preserves_causal_outputs_when_future_tokens_change ... ok\ntest full_prefix_greedy_generation_matches_saved_logits_and_tokens ... ok\ntest admission_rejects_invalid_requests_and_scratch_remains_reusable ... ok\ntest opt_in_tiled_decoder_preserves_every_scalar_trace_bit_and_final_logits ... ok\ntest constructor_rejects_invalid_configuration_shapes_biases_and_weights ... ok\ntest composed_decoder_matches_every_named_array_across_all_cases ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s\n\n\nrunning 7 tests\ntest invalid_embedding_and_residual_inputs_fail_before_mutation ... ok\ntest invalid_projection_inputs_fail_before_writing_output ... ok\ntest arithmetic_overflow_is_reported ... ok\ntest fp64_projection_accumulation_preserves_small_terms_and_reference_inputs ... ok\ntest rectangular_manual_projection_supports_batch_bias_and_matvec ... ok\ntest embeddings_and_in_place_residuals_match_saved_values ... ok\ntest every_tiny_linear_projection_agrees_with_independent_numpy_values ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s\n\n\nrunning 6 tests\ntest invalid_reduction_inputs_are_rejected_before_output_changes ... ok\ntest mlp_validates_all_buffers_and_reports_arithmetic_overflow ... ok\ntest stable_operations_cover_zero_and_extreme_finite_values ... ok\ntest softmax_matches_all_causal_probability_arrays ... ok\ntest all_normalizations_match_the_frozen_numpy_reference ... ok\ntest activations_and_complete_gated_mlp_match_every_saved_layer ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 4 tests\ntest invalid_boundaries_fail_before_writes_and_arithmetic_reports_global_index ... ok\ntest fp32_range_subnormals_and_signed_zeros_match_the_scalar_oracle ... ok\ntest rectangular_tiles_and_all_tails_preserve_bias_and_ordered_cancellation ... ok\ntest independent_tiny_projections_keep_frozen_tolerances_and_exact_scalar_bits ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s\n\n\nrunning 4 tests\ntest topology_and_numerical_policy_match_the_learning_model ... ok\ntest saved_linear_example_matches_hand_calculation ... ok\ntest causal_fixture_preserves_logits_before_the_changed_future_token ... ok\ntest every_frozen_array_has_the_declared_shape_hash_and_finite_values ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 3 tests\ntest pinned_qwen_fp32_matches_full_transformers_forward ... ignored, requires pinned Qwen weights and explicitly regenerated full Transformers probes\ntest pinned_qwen_tiled_fp32_matches_full_transformers_forward ... ignored, requires pinned Qwen weights and explicitly regenerated full Transformers probes\ntest real_fp32_probes_have_frozen_identity_selection_and_independent_gates ... ok\n\ntest result: ok. 1 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n\nrunning 2 tests\ntest pinned_qwen_cached_sessions_match_full_prefix ... ignored, requires the explicitly downloaded pinned Qwen checkpoint; Mac footprint requires own-process inspection\ntest pinned_qwen_tiled_cached_sessions_match_full_prefix ... ignored, requires the explicitly downloaded pinned Qwen checkpoint; Mac footprint requires own-process inspection\n\ntest result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 13 tests\ntest layer_or_final_projection_failure_never_commits_a_staged_chunk ... ok\ntest cancellation_and_output_failure_preserve_recoverable_prefixes ... ok\ntest generation_events_and_statistics_allocate_no_numerical_buffers ... ok\ntest generation_admission_rejects_all_invalid_inputs_before_state_changes ... ok\ntest sampled_history_is_pending_until_evaluated_and_greedy_trace_matches ... ok\ntest exact_append_cached_prompt_changed_prefix_reset_and_chunk_boundaries ... ok\ntest requests_and_memory_are_admitted_before_mutation ... ok\ntest bounded_generation_matches_greedy_oracle_and_continues_pending_token ... ok\ntest admitted_prefill_decode_and_reuse_allocate_no_buffers ... ok\ntest stop_ids_are_pending_and_hidden_and_zero_output_retains_cached_logits ... ok\ntest teacher_forced_timing_keeps_exact_prefix_and_pending_state ... ok\ntest one_shot_irregular_chunks_and_decode_match_full_prefix_and_frozen_oracle ... ok\ntest all_2048_tokens_and_nonzero_absolute_boundary_match_full_prefix ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.37s\n\n\nrunning 8 tests\ntest pinned_qwen_loads_within_the_initial_budget ... ignored, requires the explicitly downloaded pinned Qwen checkpoint\ntest malformed_and_duplicate_metadata_are_rejected ... ok\ntest tied_output_is_checked_and_does_not_add_persistent_weights ... ok\ntest explicit_fp16_and_bf16_little_endian_values_convert_exactly ... ok\ntest single_and_indexed_shards_load_the_same_frozen_tiny_decoder ... ok\ntest conversion_crosses_chunk_boundaries_and_preserves_the_short_tail ... ok\ntest tensor_shape_dtype_names_nonfinite_and_shard_mapping_are_validated ... ok\ntest unsupported_configuration_and_insufficient_budget_fail_before_loading ... ok\n\ntest result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.11s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+      "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.11s\n     Running unittests src/lib.rs (target/debug/deps/toklet-bc72375bb0fa4d9e)\n     Running unittests src/bin/toklet.rs (target/debug/deps/toklet-3d54e551ad77587f)\n     Running tests/bench_contract.rs (target/debug/deps/bench_contract-768b169ecbe8e837)\n     Running tests/cached_attention.rs (target/debug/deps/cached_attention-4e06a4b0b525f094)\n     Running tests/cli.rs (target/debug/deps/cli-a12885597627480a)\n     Running tests/cpu_attention.rs (target/debug/deps/cpu_attention-3b8a30842bbafe58)\n     Running tests/cpu_decoder.rs (target/debug/deps/cpu_decoder-b89e061c1807a676)\n     Running tests/cpu_linear.rs (target/debug/deps/cpu_linear-9154aef7ef7a0669)\n     Running tests/cpu_reductions.rs (target/debug/deps/cpu_reductions-9fa12626b9e913c0)\n     Running tests/cpu_tiled.rs (target/debug/deps/cpu_tiled-007405c542dd3b5c)\n     Running tests/fixtures.rs (target/debug/deps/fixtures-0adf33794981c4eb)\n     Running tests/qwen_forward.rs (target/debug/deps/qwen_forward-1e413832df545151)\n     Running tests/qwen_session.rs (target/debug/deps/qwen_session-5f3b5e953a11cb3d)\n     Running tests/session.rs (target/debug/deps/session-72fe2cc0cd3d3069)\n     Running tests/weights.rs (target/debug/deps/weights-8901282e3f03e6a8)\n   Doc-tests toklet\n",
+      "timed_out": false,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "wall_seconds": 8.741672708070837
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/bench",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "stdout": "Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.\n",
+      "stderr": "..............................................................\n----------------------------------------------------------------------\nRan 62 tests in 2.534s\n\nOK\n",
+      "timed_out": false,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "wall_seconds": 2.727092624991201
+    }
+  ],
+  "started_utc": "2026-10-10T11:08:51.909247+00:00",
+  "idle_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.13 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n80030 17694 Z      0:00.00 <defunct>\n",
+  "idle_proof_sha256": "32ef6f76448b68b3785aa777760b783a55d570b481335edf75d37694e57a9ad9",
+  "helper_sha256": {
+    "tools/bench/code_isolation_child.py": "b2cabbe299e9921b0ec1658c14bc7eb73150496d86249585099d7e3647430b0f",
+    "tools/bench/code_isolation_probe.py": "18b3868f02f80198c06d77d3c2d1192217aa14c78e11b0f5a4f5b72b40d72386",
+    "tools/bench/task_cases_probe.py": "e73082850c0b0b9d634903088056032ab48a3f762da2017c3104bf5771d930ce",
+    "tools/bench/quality.py": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d",
+    "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "tools/bench/mlx_baseline.py": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+    "tools/bench/test_code_isolation_probe.py": "b49d3836e4cafd330752c5af745d4a4787e98f1e995a2bdbc76b887804a93583"
+  },
+  "python_executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+  "python_sha256": "a7f5b535d61d1c7326824204ac80f045a97a652abb154421e2c74fcc365a3539",
+  "sdk_header_path": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sandbox.h",
+  "sdk_header_sha256": "5baa98c212110d6323f7d73f4b42b0072a4c66a826a46c8bfd8fb850305f9416",
+  "sdk_exports_path": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/system/libsystem_sandbox.tbd",
+  "sdk_exports_sha256": "9b85f9c3c3cb9de8f5d49d6c032fe1e484091b7fdf6692a40b028ab90239bb71",
+  "python_version": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "engine_revision": "8404f818d9c3923e031d5f8a768021eb44256906",
+  "working_tree_dirty": true,
+  "hardware": "MacBookPro18,3",
+  "chip": "Apple M1 Pro",
+  "physical_memory_bytes": 17179869184,
+  "os_version": "26.6.2",
+  "os_build": "25G83",
+  "failure": {
+    "type": "ValueError",
+    "message": "Authored isolation admission differs"
+  },
+  "finished_utc": "2026-10-10T11:09:04.032204+00:00"
+}
