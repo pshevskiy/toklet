@@ -1,0 +1,136 @@
+{
+  "format": "toklet-qwen-fp16-export-v1",
+  "completed": true,
+  "generator_sha256": "c16994767d257ebc4d6bee38d5b1a20d9fcfd9e134b598eead54e25b8553b789",
+  "engine_revision": {
+    "exit_code": 0,
+    "stdout": "0d3ba9033f60fc093013ce0dd3498180c6cd1815\n",
+    "stderr": ""
+  },
+  "working_tree_status": {
+    "exit_code": 0,
+    "stdout": "?? tests/fixtures/qwen-fp16-v1/\n?? tools/reference/qwen_fp16.py\n?? tools/reference/test_qwen_fp16.py\n",
+    "stderr": ""
+  },
+  "power_start": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  },
+  "blas_thread_environment": {
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "scope": "Independent functional reference export only; elapsed time is not an inference benchmark. Physical charge peak may exclude clean mapped source pages; total system memory/energy unavailable.",
+  "logical_fp16_weights_bytes": 988065536,
+  "maximum_weight_conversion_stripe_bytes": 34865152,
+  "full_manifest_sha256": "49206b6f5bed4f605671bf45474f25c81cb0c48ee3c33a9f741c513eb9ecbb72",
+  "probes_manifest_sha256": "1f43732796e0a4e60d428d27beb6f549ee14aa4989870369d390654afe43f4fd",
+  "argmax": {
+    "future_changed": {
+      "source_fp32": [
+        271,
+        358,
+        1079,
+        1410
+      ],
+      "fp16_fp32_arithmetic": [
+        271,
+        358,
+        1079,
+        1410
+      ],
+      "fp16_fp64_arithmetic": [
+        271,
+        358,
+        1079,
+        1410
+      ]
+    },
+    "offset": {
+      "source_fp32": [
+        220,
+        2776,
+        537
+      ],
+      "fp16_fp32_arithmetic": [
+        220,
+        2776,
+        537
+      ],
+      "fp16_fp64_arithmetic": [
+        220,
+        2776,
+        537
+      ]
+    },
+    "short": {
+      "source_fp32": [
+        271,
+        358,
+        1079,
+        4460
+      ],
+      "fp16_fp32_arithmetic": [
+        271,
+        358,
+        1079,
+        4460
+      ],
+      "fp16_fp64_arithmetic": [
+        271,
+        358,
+        1079,
+        4460
+      ]
+    },
+    "single": {
+      "source_fp32": [
+        271
+      ],
+      "fp16_fp32_arithmetic": [
+        271
+      ],
+      "fp16_fp64_arithmetic": [
+        271
+      ]
+    }
+  },
+  "versions": {
+    "numpy": "2.3.2",
+    "torch": "2.9.1",
+    "safetensors": "0.8.0"
+  },
+  "functional_export_wall_seconds": 6.415589874959551,
+  "physical_process_charge_peak_bytes": 1166165720,
+  "power_end": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  }
+}

@@ -229,6 +229,20 @@ Astra accepted the completed toolchain task after checking resource safety,
 identities, functional records and both offline tests. Formatting/Clippy, all 74
 ordinary Rust tests and 33 offline Python checks pass.
 
+Real FP16 reference preparation, 10 October 2026 (M4 pending): the independent
+[Qwen oracle](docs/experiments/2026-10-10-qwen-fp16-reference.md) executes all 24
+layers over the four unchanged short source cases with FP16 storage and separate
+FP32/FP64 arithmetic. It freezes 228 selected arrays and precision-specific
+gates against the existing FP32 references before target Metal evaluation.
+All twelve greedy IDs agree; recorded numerical drift does not qualify held-out
+quality or persistent/long-context/GPU execution. Direct FP16 loading and bounded
+weight conversion avoid a full FP32/FP64 copy. Exact full/probe regeneration,
+six offline oracle tests, formatting/Clippy, all 74 ordinary Rust tests and 39
+offline Python checks pass. No execution path or milestone changes.
+Astra accepted the completed task without findings and independently verified
+full/selected anchors, source/generator identities, pooled/prefix envelopes,
+greedy IDs and the exact raw/result copy using light checks only.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.

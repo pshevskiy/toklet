@@ -198,3 +198,23 @@ offline Python checks pass. Astra accepted the completed fixture task without
 findings, independently verified exact regeneration, counts, math/rounding and
 layout, and matched all ten layer/case FP64 attention reconstructions with a
 separate vectorized calculation that preserves FP32 score/probability boundaries.
+
+`qwen_fp16.py` extends independent FP16 preparation to the pinned real checkpoint
+without executing Rust or Metal. It reads BF16 tensors directly into FP16, runs
+all 24 layers with FP16 stored activations and FP32 scores/probabilities/logits,
+and repeats with FP64 arithmetic using the same rounding boundaries. Weight
+conversion uses at most 1,024 rows rather than a second full FP32/FP64 model.
+Four unchanged qwen-v2 cases capture 228 arrays over layers 0, 1 and 23, final
+normalization and all-position logits. Selected probes total 31,616 bytes;
+full arrays remain ignored local artifacts.
+
+The separate [qwen-fp16-v1](../../tests/fixtures/qwen-fp16-v1/manifest.json) freezes
+operation/layer gates against original FP32 source arrays using both independent
+reconstructions and exact-prefix shape variation before Metal evaluation. Policy
+is `atol=max(1e-4,2*pooled_error,2*prefix_error)`, `rtol=1e-4`. All twelve source
+greedy IDs remain unchanged; measured drift does not establish held-out quality
+or cached/long-context/device qualification. The
+[report](../../docs/experiments/2026-10-10-qwen-fp16-reference.md) records envelopes,
+memory and provenance. Offline `--check` needs neither weights nor Torch;
+explicit `--regenerate-check` recomputes every byte/envelope with the pinned
+model and original full qwen-v2 arrays. Export always needs new directories.
