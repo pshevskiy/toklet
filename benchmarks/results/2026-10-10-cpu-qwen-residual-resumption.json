@@ -1,0 +1,7 @@
+{
+  "format": "toklet-cpu-qwen-residual-resumption-v1",
+  "coordinator_resumed_utc": "2026-10-10T03:48:17.009446+00:00",
+  "resumed_pid": 34871,
+  "completion_sha256": "2d8901dbe466e89f42aa3f16f003a6538f7b1b49cbef929bc6ccce9cd83711c3",
+  "action": "SIGCONT orchestration only after all native/tests/source/binary checks completed. Coordinator completes primary series and resumes original scalar transport itself."
+}

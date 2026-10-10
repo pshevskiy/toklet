@@ -1,0 +1,25 @@
+{
+  "format": "toklet-cpu-qwen-residual-check-window-completed-v1",
+  "checks_completed_utc": "2026-10-10T03:48:17.007886+00:00",
+  "idle_snapshot": "  PID  PPID STAT      TIME COMMAND\n17695 17694 T      0:00.56 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json\n17701 17695 S    112:18.61 /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n34871 35939 Ts     0:01.40 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py\n44476 34871 Z      0:00.00 <defunct>\n",
+  "tiny_residual_commit": "8c89d68a3b500b539d7bf8fe920b31a436436fde",
+  "native_result_sha256": "57e31c6894417d5280748db26ecd28be2d691a9b92cfb8762b1e29334c7814de",
+  "native_binary_sha256": "a83e6bc465e9cb7b274669d82d4a3eadd36f842541e426ce6a5667bb30795966",
+  "qualified_receipt_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "frozen_binaries": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+  },
+  "checks": {
+    "new_offline_python_tests": 5,
+    "prior_engine_tests_unchanged": 75,
+    "standalone_rust_tests": 11,
+    "fmt_and_clippy_all_targets_warnings_denied": true,
+    "selected_qwen_stages": 20,
+    "exact_active_values": 698880,
+    "output_guard_values": 1820,
+    "completed_positive_dispatches": 260,
+    "checkpoint_payload_read": false
+  },
+  "scope": "Qwen selected residual checks after tiny acceptance/commit; numerical worker completed naturally. Parent orchestration only was held; frozen scalar transport is still held and will be resumed by coordinator finally."
+}

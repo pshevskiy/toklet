@@ -103,3 +103,6 @@ Wider/full-table and decoder execution remain pending.
 The [Half residual check](docs/experiments/2026-10-10-metal-residual.md) also
 passes exact tiny-model and rounding-edge outputs, with explicit invalid-state
 rejection on Half overflow. Composed session recovery remains pending.
+The [selected Qwen residual check](docs/experiments/2026-10-10-qwen-metal-residual.md)
+passes 20 width-896 stages with exact Half outputs and unchanged source gates,
+using saved operands without checkpoint payload reads.

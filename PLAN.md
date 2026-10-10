@@ -388,6 +388,23 @@ overflow rejection, regressions and artifact identities.
 Width 32 only, with Qwen, composition, cache, quality, performance and traces
 still pending.
 
+Selected Qwen residual qualification, 10 October 2026 (M4 pending): the
+[saved-operand driver](docs/experiments/2026-10-10-qwen-metal-residual.md) reuses
+the accepted native primitive unchanged. Twenty width-896 stages across four
+short cases pass 260 completed dispatches, 698,880 exact Half outputs, 1,820
+state guards and unchanged source FP32 gates. Missing layer-22 state excludes
+layer-23 attention residual. No checkpoint payload is read; frozen reference
+identities, config, complete operands and all generated inputs are pinned.
+Isolated formatting, Clippy, 11 Rust tests, five new offline checks and add/tail
+and structured-failure regressions pass after tiny-task acceptance/commit in
+the same verified idle window. Maximum native child physical peak is 15,630,960
+bytes, below conservative 67,151,956-byte admission and the 6 GiB ceiling.
+Frozen CPU identities are unchanged and orchestration resumed after all heavy
+checks. Astra accepted the complete task without findings after independently
+checking exact outputs, source gates, identities, memory and records.
+Full residual coverage, decoder,
+cache/session recovery, quality, performance and traces remain unqualified.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
