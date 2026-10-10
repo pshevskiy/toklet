@@ -79,20 +79,27 @@ mod metal {
     };
     use objc2_foundation::{NSProcessInfo, NSString};
     use objc2_metal::*;
-    use std::{ptr::NonNull, time::Instant};
+    use std::{marker::PhantomData, ptr::NonNull, time::Instant};
+
+    // Closed private scalar inventory: zero bytes and every loaded bit pattern
+    // are valid Rust values for both types. u16 carries stored Metal Half bits.
+    trait Scalar: Copy + Default {}
+    impl Scalar for f32 {}
+    impl Scalar for u16 {}
 
     /// One owner; no raw pointer, native handle, borrowed slice or clone escapes.
     /// All accesses happen before submission or after waitUntilCompleted.
-    struct SharedF32 {
+    struct Shared<T: Scalar> {
         raw: Retained<ProtocolObject<dyn MTLBuffer>>,
         elements: usize,
+        scalar: PhantomData<T>,
     }
-    impl SharedF32 {
+    impl<T: Scalar> Shared<T> {
         fn new(device: &ProtocolObject<dyn MTLDevice>, bytes: usize) -> Result<Self, Error> {
             if bytes == 0
                 || bytes > device.maxBufferLength()
                 || bytes > isize::MAX as usize
-                || !bytes.is_multiple_of(size_of::<f32>())
+                || !bytes.is_multiple_of(size_of::<T>())
             {
                 return Err(error(
                     "allocation",
@@ -109,26 +116,25 @@ mod metal {
             if raw.length() != bytes
                 || raw.storageMode() != MTLStorageMode::Shared
                 || raw.hazardTrackingMode() != MTLHazardTrackingMode::Tracked
-                || !(raw.contents().as_ptr() as usize).is_multiple_of(align_of::<f32>())
+                || !(raw.contents().as_ptr() as usize).is_multiple_of(align_of::<T>())
             {
                 return Err(error(
                     "allocation",
                     "shared length/storage/alignment differs",
                 ));
             }
-            let elements = bytes / size_of::<f32>();
+            let elements = bytes / size_of::<T>();
             // SAFETY: new owned shared allocation; actual length/alignment and
             // isize bounds checked above. No GPU command references it yet.
-            // Zero initializes every FP32 slot, including later guard storage.
-            unsafe {
-                raw.contents()
-                    .as_ptr()
-                    .cast::<f32>()
-                    .write_bytes(0, elements)
-            };
-            Ok(Self { raw, elements })
+            // Zero initializes every f32/u16 slot, including guard storage.
+            unsafe { raw.contents().as_ptr().cast::<T>().write_bytes(0, elements) };
+            Ok(Self {
+                raw,
+                elements,
+                scalar: PhantomData,
+            })
         }
-        fn write(&mut self, values: &[f32]) -> Result<(), Error> {
+        fn write(&mut self, values: &[T]) -> Result<(), Error> {
             if values.len() != self.elements {
                 return Err(error("upload", "complete buffer length differs"));
             }
@@ -138,33 +144,30 @@ mod metal {
             unsafe {
                 std::ptr::copy_nonoverlapping(
                     values.as_ptr(),
-                    self.raw.contents().as_ptr().cast::<f32>(),
+                    self.raw.contents().as_ptr().cast::<T>(),
                     self.elements,
                 )
             };
             Ok(())
         }
-        fn fill(&mut self, value: f32) {
-            // SAFETY: initialized aligned owned allocation of elements FP32s.
+        fn fill(&mut self, value: T) {
+            // SAFETY: initialized aligned owned allocation of elements T's.
             // Called before submission, or after the prior command finished.
             unsafe {
                 std::slice::from_raw_parts_mut(
-                    self.raw.contents().as_ptr().cast::<f32>(),
+                    self.raw.contents().as_ptr().cast::<T>(),
                     self.elements,
                 )
                 .fill(value)
             };
         }
-        fn read(&self) -> Vec<f32> {
+        fn read(&self) -> Vec<T> {
             // SAFETY: initialized aligned owned allocation; every read caller
             // has waited for command completion, including command-error paths.
             // The slice is immediately copied; no borrow escapes this method.
             unsafe {
-                std::slice::from_raw_parts(
-                    self.raw.contents().as_ptr().cast::<f32>(),
-                    self.elements,
-                )
-                .to_vec()
+                std::slice::from_raw_parts(self.raw.contents().as_ptr().cast::<T>(), self.elements)
+                    .to_vec()
             }
         }
     }
@@ -180,8 +183,8 @@ mod metal {
             let admitted = admission(count, limit)?;
             let bytes = bytes(count)?;
             let launch = groups(count, self.width)?;
-            let mut input = SharedF32::new(&self.device, bytes)?;
-            let mut output = SharedF32::new(&self.device, bytes)?;
+            let mut input = Shared::<f32>::new(&self.device, bytes)?;
+            let mut output = Shared::<f32>::new(&self.device, bytes)?;
             let mut host_input = vec![f32::from_bits(INPUT_GUARD); count + GUARDS];
             for (index, value) in host_input[..count].iter_mut().enumerate() {
                 *value = (index % 29) as f32 * 0.25 - 3.5;
@@ -293,75 +296,69 @@ mod metal {
         }
     }
 
-    pub(super) fn run(invalid_shader: bool, limit: usize) -> Result<Value, Error> {
-        let admitted = SHAPES
-            .into_iter()
-            .map(|count| admission(count, limit))
-            .collect::<Result<Vec<_>, _>>()?;
-        autoreleasepool(|_| {
-            let version = NSProcessInfo::processInfo().operatingSystemVersion();
-            if version.majorVersion < 15 {
-                return Err(error(
-                    "capability",
-                    "math policy requires macOS 15 or newer",
-                ));
-            }
-            let started = Instant::now();
-            let device = MTLCreateSystemDefaultDevice()
-                .ok_or_else(|| error("device", "Metal device unavailable"))?;
-            if !device.hasUnifiedMemory() {
-                return Err(error(
-                    "capability",
-                    "probe qualifies unified Apple Silicon memory only",
-                ));
-            }
-            let discovery = started.elapsed().as_secs_f64();
-            let options = MTLCompileOptions::new();
-            options.setLanguageVersion(MTLLanguageVersion::Version2_3);
-            options.setMathMode(MTLMathMode::Safe);
-            options.setMathFloatingPointFunctions(MTLMathFloatingPointFunctions::Precise);
-            if options.languageVersion() != MTLLanguageVersion::Version2_3
-                || options.mathMode() != MTLMathMode::Safe
-                || options.mathFloatingPointFunctions() != MTLMathFloatingPointFunctions::Precise
-            {
-                return Err(error(
-                    "capability",
-                    "compile options differ from the qualified policy",
-                ));
-            }
-            let source = if invalid_shader {
-                "intentional invalid Metal source"
-            } else {
-                include_str!("rust_metal_probe.metal")
-            };
-            let started = Instant::now();
-            let library = device
-                .newLibraryWithSource_options_error(&NSString::from_str(source), Some(&options))
-                .map_err(|e| error("shader_compilation", e.to_string()))?;
-            let compilation = started.elapsed().as_secs_f64();
-            let function = library
-                .newFunctionWithName(&NSString::from_str("toklet_add_one"))
-                .ok_or_else(|| error("pipeline", "compiled function unavailable"))?;
-            let started = Instant::now();
-            let pipeline = device
-                .newComputePipelineStateWithFunction_error(&function)
-                .map_err(|e| error("pipeline", e.to_string()))?;
-            let pipeline_seconds = started.elapsed().as_secs_f64();
-            let device_threads = device.maxThreadsPerThreadgroup();
-            let width = pipeline
-                .threadExecutionWidth()
-                .min(pipeline.maxTotalThreadsPerThreadgroup())
-                .min(device_threads.width);
-            if width == 0 || device_threads.height == 0 || device_threads.depth == 0 {
-                return Err(error(
-                    "capability",
-                    "invalid pipeline/device dispatch limits",
-                ));
-            }
-            let queue = device
-                .newCommandQueue()
-                .ok_or_else(|| error("command", "queue unavailable"))?;
-            let metadata = json!({"device":device.name().to_string(),"registry_id":device.registryID(),
+    fn prepare(
+        source: &str,
+        function_name: &str,
+        admitted: usize,
+    ) -> Result<(Probe, Value), Error> {
+        let version = NSProcessInfo::processInfo().operatingSystemVersion();
+        if version.majorVersion < 15 {
+            return Err(error(
+                "capability",
+                "math policy requires macOS 15 or newer",
+            ));
+        }
+        let started = Instant::now();
+        let device = MTLCreateSystemDefaultDevice()
+            .ok_or_else(|| error("device", "Metal device unavailable"))?;
+        if !device.hasUnifiedMemory() {
+            return Err(error(
+                "capability",
+                "probe qualifies unified Apple Silicon memory only",
+            ));
+        }
+        let discovery = started.elapsed().as_secs_f64();
+        let options = MTLCompileOptions::new();
+        options.setLanguageVersion(MTLLanguageVersion::Version2_3);
+        options.setMathMode(MTLMathMode::Safe);
+        options.setMathFloatingPointFunctions(MTLMathFloatingPointFunctions::Precise);
+        if options.languageVersion() != MTLLanguageVersion::Version2_3
+            || options.mathMode() != MTLMathMode::Safe
+            || options.mathFloatingPointFunctions() != MTLMathFloatingPointFunctions::Precise
+        {
+            return Err(error(
+                "capability",
+                "compile options differ from the qualified policy",
+            ));
+        }
+        let started = Instant::now();
+        let library = device
+            .newLibraryWithSource_options_error(&NSString::from_str(source), Some(&options))
+            .map_err(|e| error("shader_compilation", e.to_string()))?;
+        let compilation = started.elapsed().as_secs_f64();
+        let function = library
+            .newFunctionWithName(&NSString::from_str(function_name))
+            .ok_or_else(|| error("pipeline", "compiled function unavailable"))?;
+        let started = Instant::now();
+        let pipeline = device
+            .newComputePipelineStateWithFunction_error(&function)
+            .map_err(|e| error("pipeline", e.to_string()))?;
+        let pipeline_seconds = started.elapsed().as_secs_f64();
+        let device_threads = device.maxThreadsPerThreadgroup();
+        let width = pipeline
+            .threadExecutionWidth()
+            .min(pipeline.maxTotalThreadsPerThreadgroup())
+            .min(device_threads.width);
+        if width == 0 || device_threads.height == 0 || device_threads.depth == 0 {
+            return Err(error(
+                "capability",
+                "invalid pipeline/device dispatch limits",
+            ));
+        }
+        let queue = device
+            .newCommandQueue()
+            .ok_or_else(|| error("command", "queue unavailable"))?;
+        let metadata = json!({"device":device.name().to_string(),"registry_id":device.registryID(),
                 "unified_memory":device.hasUnifiedMemory(),"max_buffer_length":device.maxBufferLength(),
                 "recommended_working_set_bytes":device.recommendedMaxWorkingSetSize(),
                 "execution_width":pipeline.threadExecutionWidth(),
@@ -370,19 +367,46 @@ mod metal {
                 "language_version":"2.3","math_mode":"safe","math_functions":"precise",
                 "minimum_macos_major":15,"device_discovery_seconds":discovery,
                 "shader_compile_seconds":compilation,"pipeline_compile_seconds":pipeline_seconds,
-                "maximum_admitted_bytes":admitted.into_iter().max().unwrap_or(0)});
-            let mut probe = Probe {
+                "maximum_admitted_bytes":admitted});
+        Ok((
+            Probe {
                 device,
                 queue,
                 pipeline,
                 width,
+            },
+            metadata,
+        ))
+    }
+
+    pub(super) fn run(invalid_shader: bool, limit: usize) -> Result<Value, Error> {
+        let admitted = SHAPES
+            .into_iter()
+            .map(|count| admission(count, limit))
+            .collect::<Result<Vec<_>, _>>()?
+            .into_iter()
+            .max()
+            .unwrap_or(0);
+        autoreleasepool(|_| {
+            let source = if invalid_shader {
+                "intentional invalid Metal source"
+            } else {
+                include_str!("rust_metal_probe.metal")
             };
+            let (mut probe, metadata) = prepare(source, "toklet_add_one", admitted)?;
             let mut cases = Vec::new();
             for count in SHAPES {
                 cases.push(autoreleasepool(|_| probe.case(count, limit))?);
             }
             Ok(json!({"metadata":metadata,"cases":cases}))
         })
+    }
+
+    mod rms {
+        include!("rust_metal_rms.rs");
+    }
+    pub(super) fn run_rms(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
+        rms::run(path, limit)
     }
 }
 
@@ -391,9 +415,16 @@ fn run() -> Result<Value, Error> {
     let mut invalid = false;
     let mut limit = LIMIT;
     let mut has_budget = false;
+    let mut rms_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
+            Some("--rms-input") if rms_input.is_none() => {
+                rms_input = Some(std::path::PathBuf::from(
+                    args.next()
+                        .ok_or_else(|| error("arguments", "missing RMS input"))?,
+                ));
+            }
             Some("--budget-bytes") if !has_budget => {
                 let value = args
                     .next()
@@ -410,11 +441,21 @@ fn run() -> Result<Value, Error> {
     }
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
     {
-        metal::run(invalid, limit)
+        if let Some(path) = rms_input {
+            if invalid {
+                return Err(error(
+                    "arguments",
+                    "RMS and invalid-shader modes are exclusive",
+                ));
+            }
+            metal::run_rms(&path, limit)
+        } else {
+            metal::run(invalid, limit)
+        }
     }
     #[cfg(not(all(target_os = "macos", target_arch = "aarch64")))]
     {
-        let _ = (invalid, limit);
+        let _ = (invalid, limit, rms_input);
         Err(error("capability", "requires Apple Silicon macOS"))
     }
 }

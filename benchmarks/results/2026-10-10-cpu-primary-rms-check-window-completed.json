@@ -1,0 +1,63 @@
+{
+  "format": "toklet-cpu-native-check-window-v1",
+  "completed_utc": "2026-10-10T02:36:24.910976+00:00",
+  "native_result": "benchmarks/raw/2026-10-10-metal-rms-v1.json",
+  "native_result_sha256": "0ebd78a754ac429167e9564efa51fae06d5e4fe9bd739b5d290b24ebfa28e461",
+  "checks": {
+    "cargo_fmt": true,
+    "cargo_clippy_all_targets_warnings_denied": true,
+    "ordinary_engine_tests": 75,
+    "standalone_rust_tests": 5,
+    "offline_python_tests": 60
+  },
+  "before_resume": {
+    "17695": {
+      "ppid": 17694,
+      "state": "T",
+      "cpu": 0.0,
+      "time": "0:00.56",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json"
+    },
+    "17701": {
+      "ppid": 17695,
+      "state": "S",
+      "cpu": 0.0,
+      "time": "112:18.61",
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct"
+    },
+    "34871": {
+      "ppid": 35939,
+      "state": "Ts",
+      "cpu": 0.0,
+      "time": "0:00.43",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py"
+    },
+    "37752": {
+      "ppid": 35939,
+      "state": "Ts",
+      "cpu": 0.0,
+      "time": "0:00.16",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-clean-v1.py"
+    },
+    "37756": {
+      "ppid": 37752,
+      "state": "Z",
+      "cpu": 0.0,
+      "time": "0:00.00",
+      "command": "<defunct>"
+    },
+    "38439": {
+      "ppid": 35939,
+      "state": "Ts",
+      "cpu": 0.0,
+      "time": "0:00.21",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-clean-guardian-v1.py"
+    }
+  },
+  "frozen_binaries": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+  },
+  "qualified_receipt_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "action": "Resume only the owned guardian38439; it validates clean results before retiring the faulty held parent and resuming primary34871."
+}

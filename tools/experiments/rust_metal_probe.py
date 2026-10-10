@@ -19,6 +19,8 @@ SOURCE = Path(__file__).with_suffix(".rs")
 SHADER = Path(__file__).with_suffix(".metal")
 MANIFEST = Path(__file__).with_suffix(".Cargo.toml")
 LOCK = Path(__file__).with_suffix(".lock")
+RMS_SOURCE = Path(__file__).with_name("rust_metal_rms.rs")
+RMS_SHADER = Path(__file__).with_name("rust_metal_rms.metal")
 LIMIT = 6 * 1024**3
 ALLOWANCE = 64 * 1024**2
 INPUT_GUARD, OUTPUT_GUARD = 0x4642FEDC, 0x46A35CE1
@@ -126,7 +128,7 @@ def build_commands(build):
              ("build",["--locked","--offline","--release","--target","aarch64-apple-darwin"]))]
 
 
-def run(output, build):
+def check_paths(output,build):
     stderr_path = output.with_suffix(output.suffix+".stderr.txt")
     native_raw = output.with_suffix(output.suffix+".native.jsonl")
     if any(build.resolve() == path.resolve() or build.resolve() in path.resolve().parents
@@ -134,15 +136,22 @@ def run(output, build):
         raise ValueError("Evidence must be outside the build directory")
     if any(path.exists() for path in (output, stderr_path, native_raw, build)):
         raise ValueError("Refusing to overwrite qualification evidence or build artifacts")
+    return stderr_path,native_raw
+
+
+def run(output, build, extra_runs=(), extra_context=None):
+    stderr_path,native_raw = check_paths(output,build)
     output.parent.mkdir(parents=True, exist_ok=True)
     (build/"src").mkdir(parents=True)
     source_hashes = {str(path.relative_to(ROOT)):common.digest(path)
-                     for path in (SOURCE,SHADER,MANIFEST,LOCK)}
+                     for path in (SOURCE,SHADER,MANIFEST,LOCK,RMS_SOURCE,RMS_SHADER)}
     copies = {SOURCE:build/"src/main.rs", SHADER:build/"src/rust_metal_probe.metal",
-              MANIFEST:build/"Cargo.toml", LOCK:build/"Cargo.lock"}
+              MANIFEST:build/"Cargo.toml", LOCK:build/"Cargo.lock",
+              RMS_SOURCE:build/"src/rust_metal_rms.rs", RMS_SHADER:build/"src/rust_metal_rms.metal"}
     for source, target in copies.items():
         shutil.copyfile(source,target)
     checks = build_commands(build)
+    checks.insert(0,["rustfmt","--edition","2024","--check",str((build/"src/rust_metal_rms.rs").resolve())])
     record = {"format":"toklet-rust-metal-binding-probe-v1","completed":False,
               "engine_revision":common.command(["git","-C",str(ROOT),"rev-parse","HEAD"]),
               "working_tree_status":common.command(["git","-C",str(ROOT),"status","--porcelain"]),
@@ -157,7 +166,8 @@ def run(output, build):
               "hardware":common.command(["/usr/sbin/sysctl","-n","machdep.cpu.brand_string","hw.model","hw.memsize"]),
               "power_start":common.power(),"checks":[],"native_runs":[],
               "actual_gpu_trace":None,"energy":None,"total_external_device_memory":None,
-              "scope":"Standalone Rust public-API/ownership check only. Exact tiny add/tail cases; no model/FP16 backend, device-performance claim, M4 completion or mobile qualification."}
+              "extra_context":extra_context,
+              "scope":"Standalone Rust public-API/ownership and optional FP16 RMS primitive checks. No full model backend, device-performance acceptance, M4 completion or mobile qualification."}
     stage = "build_checks"
     try:
         with stderr_path.open("x") as stderr:
@@ -174,13 +184,18 @@ def run(output, build):
             record["binary_sha256"] = binary_hash
             stage = "native_qualification"
             with native_raw.open("x") as raw:
-                for mode,options in (("normal",[]),("invalid_shader",["--invalid-shader"]),
-                                     ("insufficient_budget",["--budget-bytes","1"])):
+                jobs = [("normal",[],None),("invalid_shader",["--invalid-shader"],None),
+                        ("insufficient_budget",["--budget-bytes","1"],None)]+list(extra_runs)
+                for mode,options,validator in jobs:
                     command = [str(binary.resolve())]+options
                     result = run_child(command,raw,stderr)
                     record["native_runs"].append({"mode":mode,"command":command,**result})
                     event = result["event"]
-                    if mode == "normal":
+                    if validator is not None:
+                        validator(event) # May compact the validated diagnostics; raw line is retained.
+                        if result["exit_code"] != 0:
+                            raise ValueError("Passing primitive did not exit cleanly")
+                    elif mode == "normal":
                         validate_result(event)
                         if result["exit_code"] != 0:
                             raise ValueError("Passing native probe did not exit cleanly")

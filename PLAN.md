@@ -322,6 +322,23 @@ independently verifying safety, identities, exact evidence, dispatch values/guar
 failure propagation, memory and power with lightweight checks.
 No FP16 decoder, trace, mobile qualification or milestone completion is claimed.
 
+RMS primitive preparation, 10 October 2026 (M4 pending): the standalone
+[FP16 RMS normalization](docs/experiments/2026-10-10-metal-rms.md) uses resident
+Half input/weight/output with serial FP32 arithmetic, exact epsilon bits and
+one final Half store. Its 25 frozen tiny normalization stages and three exact
+manual range/subnormal cases pass 364 completed dispatches under unchanged
+pre-GPU source gates; every output also matches the independent Half bits.
+All payloads/guards remain intact and conservative admission and own-process
+peak remain below 6 GiB. The generic shared-owner refactor preserves all 39
+FP32 add/tail checks and structured failure behavior. Isolated/engine formatting
+and Clippy, five standalone Rust tests, 75 ordinary engine tests and 60 offline
+Python checks pass. Native/compiler/test work occurs only after the clean scalar
+request series exits, with coordinators held and frozen CPU identities verified.
+Width 32 only is qualified; Qwen, decoder composition, GPU traces and performance
+acceptance remain pending. Astra accepted the completed task after a report
+timestamp correction, independently verifying all numerical checks, compaction,
+identities, ownership, memory and preserved regression failures with light reads.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.

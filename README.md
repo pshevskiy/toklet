@@ -89,3 +89,6 @@ Standalone Apple preparation includes a
 with exact small dispatches, owned shared buffers, completion/error checks and
 bounded isolated builds. It adds no engine dependency or GPU execution path;
 complete FP16 Metal qualification remains pending.
+The standalone [FP16 RMS primitive](docs/experiments/2026-10-10-metal-rms.md)
+passes frozen tiny-model source gates and exact manual range/subnormal cases;
+full decoder composition and Qwen qualification remain pending.
