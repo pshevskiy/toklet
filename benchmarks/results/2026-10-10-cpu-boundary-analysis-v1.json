@@ -1,0 +1,59 @@
+{
+  "format": "toklet-cpu-boundary-analysis-v1",
+  "completed": true,
+  "calculated_utc": "2026-10-10T04:56:32.096935+00:00",
+  "analysis_source_sha256": "641a60c406e741150dfc43b8ec2bc1d1353ca31cb26bd928af85b64201e150d5",
+  "result_sha256": "2e2e88f18e9b1c2cbcc3339894e48ba37fa797bd0ec435e18ba1e6008dcc5f13",
+  "raw_sha256": "991d9e76bdb5fd5a0af66c1138e6f23f80acb61e7fae30faffac0d3d8b1f31b1",
+  "schema_sha256": "503047553e2a79bbc637da756497494e2fc916c70cdfef1fcf0b687a7a4be852",
+  "summary_helper_sha256": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+  "historical_driver_path": "benchmarks/raw/2026-10-10-cpu-boundary-source-driver-v1.py.txt",
+  "historical_driver_sha256": "6e9c30aeeefb28fb9f4c1403c537452926dcfcbf47aba394171245fb66fdbbad",
+  "check_window_completion_sha256": "33c8b5e08362e4f375d927f634c2a21d48814f6f5111befa900bd34d81b02066",
+  "dispatch_engine_commit": "337515e7780943b9f0f869f053808b543e9fbf26",
+  "numerical_source_commit": "996f8e7",
+  "numerical_sources_unchanged_through_dispatch": true,
+  "frozen_binary_sha256": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+  "warmups": 3,
+  "measured_requests": 10,
+  "prompt_tokens": 1920,
+  "emitted_fixed_tokens": 128,
+  "measured_request_evaluated_tokens": 2047,
+  "measured_request_pending_tokens": 1,
+  "final_capacity_checks": {
+    "committed_positions": 2048,
+    "pending_tokens": 0,
+    "further_token_rejected_before_mutation": true,
+    "evidence": "Completed original runner assertions and capacity note; final-response JSON itself was not retained."
+  },
+  "ttft_seconds": {
+    "median": 653.578163854,
+    "min": 652.909295792,
+    "max": 656.742609416
+  },
+  "request_seconds": {
+    "median": 749.021122583,
+    "min": 748.21960775,
+    "max": 752.13253475
+  },
+  "summary": {
+    "decode_tokens_per_second_median": 1.3311829231479182,
+    "prefill_tokens_per_second_median": 2.9376746953863986,
+    "request_median_seconds": 749.021122583,
+    "ttft_max_seconds": 656.742609416,
+    "ttft_median_seconds": 653.578163854,
+    "ttft_min_seconds": 652.909295792
+  },
+  "memory": {
+    "allocated_kv_bytes": 50331648,
+    "engine_working_set_limit_bytes": 6442450944,
+    "logical_weights_bytes": 1976131072,
+    "measurement_instrument": "own-child footprint auxiliary.phys_footprint_peak; logical session allocations",
+    "peak_process_bytes": 2043774992,
+    "scratch_bytes": 10436608,
+    "system_memory_pressure": null
+  },
+  "admitted_bytes": 2172348800,
+  "power_observation_scope": "AC source was queried before repetitions; AC low-power configuration was queried at the end. No end battery, energy or system-pressure evidence.",
+  "scope": "Real-model capacity evidence and one complete controlled scalar workload. Transport/orchestration holds outside active requests are disclosed; this is not continuous sustained execution or full-matrix/M2.5/quality acceptance."
+}

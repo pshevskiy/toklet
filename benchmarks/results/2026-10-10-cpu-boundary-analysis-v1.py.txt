@@ -1,0 +1,85 @@
+"""Historical boundary-result validation; saved-data reads only, no model work."""
+from pathlib import Path
+import datetime
+import hashlib
+import json
+import re
+import statistics
+import subprocess
+import sys
+
+ROOT=Path('/Users/coloner/work/rust/toklet')
+sys.path.insert(0,str(ROOT/'tools/bench'))
+import mlx_baseline as common
+from jsonschema import Draft202012Validator
+
+OUT=ROOT/'benchmarks/raw/2026-10-10-cpu-boundary-analysis-v1.json'
+RESULT=ROOT/'benchmarks/raw/2026-10-10-cpu-boundary.json'
+DRIVER=ROOT/'benchmarks/raw/2026-10-10-cpu-boundary-source-driver-v1.py.txt'
+assert not OUT.exists() and not DRIVER.exists()
+
+def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+def load(path):
+    data=path.read_bytes()
+    assert len(data)<=1024*1024
+    return json.loads(data)
+def distribution(values):return {'median':statistics.median(values),'min':min(values),'max':max(values)}
+
+r=load(RESULT);schema=ROOT/'benchmarks/result.schema.json'
+Draft202012Validator(load(schema)).validate(r)
+assert r['runtime']=='Toklet scalar CPU' and r['comparison_track']=='controlled_engine'
+assert r['identity']['engine_commit']=='337515e7780943b9f0f869f053808b543e9fbf26'
+assert r['setup']['warmup_repetitions']==3 and len(r['samples'])==10
+assert r['workload']['name']=='boundary_teacher_forced_128'
+assert r['workload']['prompt_tokens']==1920 and r['workload']['output_steps']==128
+assert r['workload']['context_capacity']==2048 and r['workload']['cache_state']=='empty'
+assert r['representation']=={'weight_dtype':'FP32','kv_dtype':'FP32','group_size':None,'packed_format_version':None}
+assert r['summary']==common.summarize(r['samples'],1920)
+for key in ('includes_tokenization','includes_sampling','includes_detokenization'):assert r['timing_scope'][key] is False
+raw=Path(str(RESULT)+'.samples.jsonl');rows=[json.loads(line) for line in raw.read_bytes().splitlines()]
+assert len(rows)==10 and [row['sample'] for row in rows]==r['samples']
+for row in rows:
+    state=row['state'];sample=row['sample']
+    assert state['prefill_tokens']==1920 and state['reused_tokens']==0
+    assert state['emitted_tokens']==128 and state['evaluated_tokens']==2047 and state['pending_tokens']==1
+    assert sample['emitted_tokens']==128 and len(sample['token_event_seconds'])==128
+    assert sample['token_event_seconds'][0]==sample['ttft_seconds']
+    assert sample['total_seconds']>=sample['token_event_seconds'][-1]
+    assert sample['decode_seconds']==sample['token_event_seconds'][-1]-sample['token_event_seconds'][0]
+    assert 0<sample['process_peak_footprint_bytes']<=r['memory']['peak_process_bytes']
+driver=subprocess.run(['git','show','337515e:tools/bench/cpu.py'],cwd=ROOT,check=True,capture_output=True).stdout
+assert hashlib.sha256(driver).hexdigest()=='6e9c30aeeefb28fb9f4c1403c537452926dcfcbf47aba394171245fb66fdbbad'
+assert re.search(r'Runner SHA256 ([0-9a-f]{64})',r['notes'][0]).group(1)==hashlib.sha256(driver).hexdigest()
+assert 'all 2048 positions committed; a further token was rejected before mutation' in '\n'.join(r['notes'])
+# The final-capacity note is written only after the original driver's checked
+# prepare(2048), zero-pending assertion and over-capacity stage rejection.
+assert b'finished.get("evaluated_tokens") != 2048 or finished.get("pending_tokens") != 0' in driver
+assert b'after_peak = common.footprint_peak(worker.pid)' in driver
+assert 'binary SHA256 e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea' in r['notes'][0]
+assert f'common helper SHA256 {digest(Path(common.__file__))}' in r['notes'][0]
+unchanged=subprocess.run(['git','diff','--exit-code','996f8e7','337515e','--','Cargo.toml','Cargo.lock','src/cpu','src/model','src/session.rs','src/benchmark.rs','examples/cpu_bench.rs'],cwd=ROOT,capture_output=True)
+assert unchanged.returncode==0 and not unchanged.stdout
+memory=r['memory'];assert memory['engine_working_set_limit_bytes']==6*1024**3
+assert memory['logical_weights_bytes']==1976131072 and memory['allocated_kv_bytes']==50331648 and memory['scratch_bytes']==10436608
+assert 0<memory['peak_process_bytes']<=2172348800<=memory['engine_working_set_limit_bytes']
+assert 'Admitted process estimate 2172348800 bytes; chunk 128; fixed capacity 2048' in r['notes'][1]
+window=ROOT/'benchmarks/raw/2026-10-10-cpu-cli-check-window-completed.json';w=load(window)
+assert w['completed'] is True and w['records'][str(RESULT.relative_to(ROOT))]==digest(RESULT)
+assert w['records'][str(raw.relative_to(ROOT))]==digest(raw)
+DRIVER.write_bytes(driver)
+record={'format':'toklet-cpu-boundary-analysis-v1','completed':True,'calculated_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+ 'analysis_source_sha256':digest(Path(__file__)),'result_sha256':digest(RESULT),'raw_sha256':digest(raw),
+ 'schema_sha256':digest(schema),'summary_helper_sha256':digest(Path(common.__file__)),
+ 'historical_driver_path':str(DRIVER.relative_to(ROOT)),'historical_driver_sha256':digest(DRIVER),
+ 'check_window_completion_sha256':digest(window),'dispatch_engine_commit':r['identity']['engine_commit'],
+ 'numerical_source_commit':'996f8e7','numerical_sources_unchanged_through_dispatch':True,
+ 'frozen_binary_sha256':'e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea',
+ 'warmups':3,'measured_requests':10,'prompt_tokens':1920,'emitted_fixed_tokens':128,
+ 'measured_request_evaluated_tokens':2047,'measured_request_pending_tokens':1,
+ 'final_capacity_checks':{'committed_positions':2048,'pending_tokens':0,'further_token_rejected_before_mutation':True,'evidence':'Completed original runner assertions and capacity note; final-response JSON itself was not retained.'},
+ 'ttft_seconds':distribution([s['ttft_seconds'] for s in r['samples']]),
+ 'request_seconds':distribution([s['total_seconds'] for s in r['samples']]),'summary':r['summary'],'memory':memory,'admitted_bytes':2172348800,
+ 'power_observation_scope':'AC source was queried before repetitions; AC low-power configuration was queried at the end. No end battery, energy or system-pressure evidence.',
+ 'scope':'Real-model capacity evidence and one complete controlled scalar workload. Transport/orchestration holds outside active requests are disclosed; this is not continuous sustained execution or full-matrix/M2.5/quality acceptance.'}
+with OUT.open('x') as target:json.dump(record,target,indent=2,allow_nan=False);target.write('\n')
+print(json.dumps({'result_sha256':record['result_sha256'],'raw_sha256':record['raw_sha256'],'analysis_sha256':digest(OUT),'summary':record['summary'],'request_seconds':record['request_seconds']},indent=2))

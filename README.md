@@ -108,6 +108,9 @@ pending.
 The standalone [FP16 RMS primitive](docs/experiments/2026-10-10-metal-rms.md)
 passes frozen tiny-model source gates and exact manual range/subnormal cases;
 full decoder composition and Qwen qualification remain pending.
+The [scalar capacity workload](benchmarks/results/2026-10-10-cpu-boundary.md)
+now completes all 2,048 Qwen positions and rejects another token within the
+memory budget. Remaining CPU matrix and application measurements continue.
 The [selected Qwen RMS check](docs/experiments/2026-10-10-qwen-metal-rms.md)
 also passes width-896 source gates with norm-only checkpoint reads. Full-model
 and session qualification remain pending.

@@ -1,0 +1,41 @@
+{
+  "format": "toklet-cpu-cli-check-window-completed-v1",
+  "completed": true,
+  "verified_utc": "2026-10-10T04:55:10.687907+00:00",
+  "snapshot_before": "PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:10.98 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n17695 17694 Z      0:00.00 <defunct>",
+  "engine_commit": "8a5ebc8ba320d073cbb4d1f2db8cbded22e0760f",
+  "working_tree_clean_at_verification": true,
+  "reviewed_commits": [
+    "c52af3a",
+    "9c3f4ff",
+    "8a5ebc8"
+  ],
+  "frozen_binaries": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+  },
+  "qualified_cli_binary_sha256": "8e1be695229fb4a46e49725f06050b3296f6fb398e718fca8567bf0c6b400b43",
+  "qualified_cpu_numerical_receipt_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "records": {
+    "benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json": "8d2a633ed95c488f3bbba5de186aa3e3418fa75df51a170af383e31d98ae2cc8",
+    "benchmarks/results/2026-10-10-cpu-tiled-application-qualification-v1.json": "4a5d4b71e4bf6dc68e295111d95f49cab9ad8b1d50ca32fec1cf8471555d8e04",
+    "benchmarks/results/2026-10-10-metal-silu-v1.json": "72035f4bc484579ba7385189ac90804f9ec04e99deb1fa722d72f50004f091de",
+    "benchmarks/raw/2026-10-10-cpu-boundary.json": "2e2e88f18e9b1c2cbcc3339894e48ba37fa797bd0ec435e18ba1e6008dcc5f13",
+    "benchmarks/raw/2026-10-10-cpu-boundary.json.samples.jsonl": "991d9e76bdb5fd5a0af66c1138e6f23f80acb61e7fae30faffac0d3d8b1f31b1",
+    "benchmarks/results/2026-10-10-cpu-cli-check-window-hold.json": "c2c042014c125e19a6e579f617cd961af8fff13cb9fc28d5aab6edf060ffef74",
+    "benchmarks/results/2026-10-10-cpu-cli-check-window-idle.json": "b0ead99df00f5ae0eb0c11f4f99902f261677890fdb401f2e6f419a7c9bae42f"
+  },
+  "validated_local_model_assets": {
+    "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+    "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+    "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+    "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+    "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+  },
+  "scope": "CLI/app functional and tiny SiLU checks completed after the original scalar boundary exited naturally. Only owned orchestration resumes. No numerical worker was stopped; no tests/builds/GPU/model work runs during the next timed workload.",
+  "orchestration_resumed_utc": "2026-10-10T04:55:10.704789+00:00",
+  "snapshot_after": "PID  PPID STAT      TIME COMMAND\n17694 35939 Ss     0:10.98 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -"
+}

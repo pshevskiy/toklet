@@ -154,6 +154,21 @@ M2.5 scalar/external probes, 10 October 2026 (milestone still open): the [scalar
 
 M2.5 application timing harness and external matrix, 10 October 2026 (milestone still open): [CLI statistics](src/bin/cli/mod.rs) now distinguish formatting/tokenization and detokenization/publication outside numerical kernels, and interactive readiness exposes logical ownership/accounting. The [application driver](tools/bench/application.py) records submission/visible-text/finalization latency for the frozen three-turn transcript, with separately retained startup and native components. Its [one-scenario functional probe](benchmarks/results/2026-10-10-application-probe.md) emits the expected ordered two-token events for all turns and has 2,126,055,536-byte physical child peak, below 6 GiB. Numerical code is unchanged; seventy ordinary Rust tests, formatting/Clippy, release compilation, sixteen offline Python checks and explicit real application probe pass. The [external matrix](benchmarks/results/2026-10-10-external-matrix.md) retains all eight llama.cpp cache/context workloads and four FP32 MLX prompt lengths, each with three warmups/ten samples, correct identities and raw events. Astra accepted the completed application timing code, verified final hashes, raw records, state/timing/memory and external summaries, and corrected the MLX dtype-check wording. Scalar matrix, real CPU final capacity execution and full application repetitions remain pending; the functional probe does not satisfy the performance gate.
 
+M2.5 real capacity evidence, 10 October 2026 (milestone still open): the
+[complete scalar boundary run](benchmarks/results/2026-10-10-cpu-boundary.md)
+retains three warmups and ten 1,920-input/128-output requests with all measured
+states. The original driver then commits all 2,048 positions with no pending
+token and rejects one more before mutation. Median warm TTFT is 653.578164 s,
+request time 749.021123 s and decode rate 1.331183 steps/s. Maximum own-child
+physical charge is 2,043,774,992 bytes below 6 GiB and conservative admission.
+Exact source/result/raw identities, schema/summary checks and the final idle
+window/resumption record are retained. Numerical work was never stopped;
+between-request transport holds preclude a continuous sustained-run claim.
+The real capacity criterion passes; remaining matrix, application and quality
+qualification stay pending. Astra accepted the saved-evidence task without
+findings after independently verifying all states, summaries, historical
+assertions, identities and idle-window records.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected
