@@ -63,7 +63,12 @@ at 08:49:00 UTC confirms the numerical worker has exited and transport is
 defunct under the held parent. Tests, builds, GPU/model work and binary/model
 hashing began only after this proof. No numerical worker was stopped.
 The original driver's warmup policy and complete saved measured records are
-retained; separate warmup stdout is not claimed.
+retained. A subsequently read
+[observed stdout block](../../benchmarks/results/2026-10-10-cpu-append-observed-stdout-v1.txt)
+from the original transport session retains three warmup lines, ten measured
+lines and the final summary. It was read before resumption and matches the
+saved measured samples rounded to three decimals; it does not provide raw
+warmup state or timestamp arrays.
 
 The named host is Apple M1 Pro, MacBookPro18,3, 16 GiB, macOS 26.6.2
 (25G83), Rust 1.90.0 and driver Python 3.12.8. The frozen release build uses
@@ -88,6 +93,17 @@ for the report. Astra independently reproduced the retained analysis exactly
 and verified raw copies, all ten cache states, 64-token prefill throughput,
 timing summaries, memory, historical identities and window ordering. No
 findings remain.
+
+The later
+[completed idle window](../../benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-completed.json)
+verifies both reviewed task commits, the frozen executables, eight model assets
+and current qualification/loss/append bindings at clean revision `f36ad90`.
+All verification finishes before resuming only orchestration at 09:01:08 UTC.
+The cached transport and numerical worker then run uninterrupted; only their
+parent is [held ahead of pending](../../benchmarks/results/2026-10-10-cpu-cached-check-window-hold.json),
+with its exact [hold source](../../benchmarks/results/2026-10-10-cpu-cached-check-window-hold.py.txt)
+retained. This archival follow-up does not rerun numerical work or qualify
+another workload.
 
 This is one controlled cache workload. Remaining fully cached, pending-token,
 changed-prefix and application measurements, full quality and M2.5/M3 closure

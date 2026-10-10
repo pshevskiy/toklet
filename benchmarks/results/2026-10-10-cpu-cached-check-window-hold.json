@@ -1,0 +1,10 @@
+{
+  "format": "toklet-cpu-cached-check-window-hold-v1",
+  "orchestration_held_utc": "2026-10-10T09:01:57.527764+00:00",
+  "held_pid": 17694,
+  "active_transport_pid": 74583,
+  "active_numerical_worker_pid": 74591,
+  "snapshot_before": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ss     0:11.12 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n74583 17694 S      0:00.55 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload cached --output benchmarks/raw/2026-10-10-cpu-cached.json\n74591 74583 R      0:48.10 /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n",
+  "snapshot_after": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.12 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n74583 17694 S      0:00.55 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload cached --output benchmarks/raw/2026-10-10-cpu-cached.json\n74591 74583 R      0:48.11 /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n",
+  "action": "Hold only owned orchestration ahead of pending. Cached transport and numerical worker continue through all three warmups and ten measured requests. No builds/tests/GPU/model work or binary/model/large-artifact hashes until their natural exit."
+}

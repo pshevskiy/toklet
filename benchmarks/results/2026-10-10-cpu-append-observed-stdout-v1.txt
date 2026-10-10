@@ -1,0 +1,15 @@
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+append: warmup 1: 111.325s
+append: warmup 2: 111.656s
+append: warmup 3: 111.380s
+append: sample 1: 111.538s
+append: sample 2: 111.347s
+append: sample 3: 111.604s
+append: sample 4: 111.654s
+append: sample 5: 113.082s
+append: sample 6: 112.939s
+append: sample 7: 112.934s
+append: sample 8: 111.541s
+append: sample 9: 111.420s
+append: sample 10: 111.710s
+{"decode_tokens_per_second_median": 1.4063075673072305, "prefill_tokens_per_second_median": 2.997932483017486, "request_median_seconds": 111.62889043749999, "ttft_max_seconds": 21.545358209, "ttft_median_seconds": 21.3480848955, "ttft_min_seconds": 21.200767709}

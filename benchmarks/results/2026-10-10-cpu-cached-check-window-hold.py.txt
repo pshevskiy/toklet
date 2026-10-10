@@ -1,0 +1,51 @@
+"""Hold only our orchestration ahead of pending; cached execution continues."""
+from datetime import datetime, timezone
+import json
+import os
+from pathlib import Path
+import signal
+import subprocess
+
+root = Path.cwd().resolve()
+out = root / "benchmarks/raw/2026-10-10-cpu-cached-check-window-hold.json"
+assert not out.exists()
+
+def snapshot():
+    return subprocess.check_output([
+        "ps", "-o", "pid,ppid,stat,time,command", "-p", "17694,74583,74591",
+    ], text=True)
+
+def rows(value):
+    return {int(row[0]): row for line in value.splitlines()[1:]
+            if len(row := line.split(None, 4)) == 5}
+
+before = snapshot()
+table = rows(before)
+assert set(table) == {17694, 74583, 74591}
+assert int(table[17694][1]) == 35939 and table[17694][4].endswith("/Python -")
+assert "T" not in table[17694][2] and "Z" not in table[17694][2]
+assert int(table[74583][1]) == 17694
+assert table[74583][4].endswith("tools/bench/cpu.py --workload cached --output benchmarks/raw/2026-10-10-cpu-cached.json")
+assert int(table[74591][1]) == 74583
+assert table[74591][4] == str(root / "target/release/examples/cpu_bench") + " " + str(root / "models/Qwen2.5-0.5B-Instruct")
+assert all("T" not in table[pid][2] and "Z" not in table[pid][2] for pid in [74583, 74591])
+os.kill(17694, signal.SIGSTOP)
+held = datetime.now(timezone.utc).isoformat()
+after = snapshot()
+table = rows(after)
+assert "T" in table[17694][2]
+assert all("T" not in table[pid][2] and "Z" not in table[pid][2] for pid in [74583, 74591])
+record = {
+    "format": "toklet-cpu-cached-check-window-hold-v1",
+    "orchestration_held_utc": held,
+    "held_pid": 17694,
+    "active_transport_pid": 74583,
+    "active_numerical_worker_pid": 74591,
+    "snapshot_before": before,
+    "snapshot_after": after,
+    "action": "Hold only owned orchestration ahead of pending. Cached transport and numerical worker continue through all three warmups and ten measured requests. No builds/tests/GPU/model work or binary/model/large-artifact hashes until their natural exit.",
+}
+with out.open("x") as stream:
+    json.dump(record, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+print(json.dumps({"held_only": 17694, "continues": [74583, 74591], "held_utc": held}))

@@ -101,6 +101,15 @@ verified outputs, source gates, guards, required failures, transcripts,
 source/copied-file/binary identities, ownership, admission and scope; no
 findings remain.
 
+The subsequent
+[completed idle window](../../benchmarks/results/2026-10-10-cpu-qwen-gating-check-window-completed.json)
+records clean reviewed revision `f36ad90`, both task commits, eight verified
+model assets and 94 source/artifact bindings. All checks and hashes finish
+before resuming only orchestration at 09:01:08 UTC. The fully cached workload
+then runs uninterrupted while only its parent is
+[held ahead of pending](../../benchmarks/results/2026-10-10-cpu-cached-check-window-hold.json).
+No numerical source or frozen executable is changed by this archival update.
+
 Reproduce in a fresh idle window with disjoint paths:
 
 ```sh
