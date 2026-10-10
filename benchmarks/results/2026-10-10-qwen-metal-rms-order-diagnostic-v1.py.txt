@@ -1,0 +1,53 @@
+"""Post-qualification diagnostic only; no gate or acceptance changes."""
+import hashlib,json,math,struct
+from pathlib import Path
+
+ROOT=Path('/Users/coloner/work/rust/toklet')
+INPUTS=ROOT/'artifacts/qwen-metal-rms-inputs-v1'
+RAW=ROOT/'benchmarks/raw/2026-10-10-qwen-metal-rms-v1.json.native.jsonl'
+HALF=ROOT/'artifacts/qwen-fp16-full-v2'
+OUT=ROOT/'benchmarks/raw/2026-10-10-qwen-metal-rms-order-diagnostic-v1.json'
+def sha(data):return hashlib.sha256(data).hexdigest()
+def f32(value):return struct.unpack('<f',struct.pack('<f',value))[0]
+def half(bits):return struct.unpack('<e',struct.pack('<H',bits))[0]
+def rank(bits):return 0x8000-(bits&0x7fff) if bits&0x8000 else 0x8000+bits
+source={item['id']:item for path in sorted(INPUTS.glob('*.json')) for item in json.loads(path.read_bytes())['cases']}
+manifest=json.loads((HALF/'manifest.json').read_bytes())
+events=[json.loads(line) for line in RAW.read_text().splitlines()]
+cases=[case for event in events if event.get('passed') and event['result'].get('operation')=='rms_norm_fp16_storage_fp32_serial' for case in event['result']['cases']]
+results=[]
+for case in cases:
+    item=source[case['id']];h=item['hidden'];count=item['rows']*h
+    x=[half(bits) for bits in item['input_bits']];w=[half(bits) for bits in item['weight_bits']]
+    epsilon=struct.unpack('<f',struct.pack('<I',item['epsilon_bits']))[0]
+    expected=[]
+    for row in range(item['rows']):
+        total=0.0
+        for value in x[row*h:(row+1)*h]:total=f32(total+f32(value*value))
+        inverse=f32(1.0/f32(math.sqrt(f32(f32(total/h)+epsilon))))
+        for feature in range(h):
+            value=f32(f32(x[row*h+feature]*inverse)*w[feature])
+            expected.append(struct.unpack('<H',struct.pack('<e',value))[0])
+    actual=case['rows'][0]['output_bits'][:count]
+    array=manifest['arrays'][case['id']]
+    payload=(HALF/array['file']).read_bytes()
+    if sha(payload)!=array['sha256']:raise RuntimeError('Independent payload changed')
+    independent=list(struct.unpack(f'<{count}H',payload))
+    results.append({'id':case['id'],'values':count,'expected_ordered_fp32_sha256':sha(struct.pack(f'<{count}H',*expected)),
+        'native_sha256':sha(struct.pack(f'<{count}H',*actual)),
+        'native_vs_ordered_exact':actual==expected,
+        'native_vs_ordered_max_half_ulp':max(abs(rank(a)-rank(b)) for a,b in zip(actual,expected)),
+        'native_vs_independent_different_values':sum(a!=b for a,b in zip(actual,independent)),
+        'native_vs_independent_max_half_ulp':max(abs(rank(a)-rank(b)) for a,b in zip(actual,independent)),
+        'native_vs_independent_max_abs':max(abs(half(a)-half(b)) for a,b in zip(actual,independent)),
+        'native_repetition_hashes_equal':all(row['output_bits'][:count]==actual for row in case['rows'])})
+if len(results)!=24 or sum(item['values'] for item in results)!=64512:raise RuntimeError('Inventory differs')
+record={'format':'toklet-qwen-rms-order-diagnostic-v1','purpose':'Post-qualification arithmetic diagnostic. Pure Python FP32 rounding after each serial multiply/add/divide/sqrt/inverse/scale; one final Half RNE. This changes no frozen source gate or acceptance rule.',
+        'script_sha256':sha(Path(__file__).read_bytes()),'native_raw_sha256':sha(RAW.read_bytes()),
+        'independent_manifest_sha256':sha((HALF/'manifest.json').read_bytes()),'cases':results,
+        'all_ordered_exact':all(item['native_vs_ordered_exact'] for item in results),
+        'maximum_independent_half_ulp':max(item['native_vs_independent_max_half_ulp'] for item in results),
+        'maximum_independent_abs':max(item['native_vs_independent_max_abs'] for item in results),
+        'different_independent_values':sum(item['native_vs_independent_different_values'] for item in results)}
+with OUT.open('x') as file:json.dump(record,file,indent=2);file.write('\n')
+print({key:value for key,value in record.items() if key!='cases'})

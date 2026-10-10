@@ -1,0 +1,34 @@
+{
+  "idle_verified_utc": "2026-10-10T02:50:13.258728+00:00",
+  "observed": {
+    "17695": {
+      "ppid": 17694,
+      "state": "T",
+      "cpu": 0.0,
+      "time": "0:00.56",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json"
+    },
+    "17701": {
+      "ppid": 17695,
+      "state": "S",
+      "cpu": 0.0,
+      "time": "112:18.61",
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct"
+    },
+    "34871": {
+      "ppid": 35939,
+      "state": "Ts",
+      "cpu": 0.0,
+      "time": "0:00.69",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py"
+    },
+    "40683": {
+      "ppid": 34871,
+      "state": "Z",
+      "cpu": 0.0,
+      "time": "0:00.00",
+      "command": "<defunct>"
+    }
+  },
+  "policy": "Checkpoint hashing, compiles, tests and GPU dispatch start only after numerical exit."
+}

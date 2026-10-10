@@ -339,6 +339,24 @@ acceptance remain pending. Astra accepted the completed task after a report
 timestamp correction, independently verifying all numerical checks, compaction,
 identities, ownership, memory and preserved regression failures with light reads.
 
+Qwen RMS primitive qualification, 10 October 2026 (M4 pending): the
+[width-896 extension](docs/experiments/2026-10-10-qwen-metal-rms.md) reads only
+six norm tensors directly from pinned BF16 storage with bounded streaming
+identity checks and one Half RNE cast. Four frozen short cases supply 24 selected
+normalizations in nine bounded inputs. All 312 completed dispatches, 838,656
+output values, immutable inputs/weights and guards pass unchanged pre-GPU gates.
+An independent serial FP32 diagnostic matches every native value, explaining
+46 one-Half-ULP differences from NumPy reduction order without a policy change.
+Native peaks/admission remain below 6 GiB; preparation-process/system physical
+memory is not inferred from child peaks. The isolated and engine checks pass:
+five standalone Rust tests, 75 ordinary engine tests and 66 offline Python
+checks, formatting and Clippy with warnings denied. Native/checkpoint/test work
+uses a verified idle CPU boundary; frozen numerical identities remain unchanged.
+Layer 23 input norm, all-layer composition, cache, quality, performance and trace
+qualification remain pending. Astra accepted the complete primitive task without
+findings, independently verifying identities, all numerical/guard proofs,
+unchanged gates, the reduction-order explanation, memory and idle windows.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.

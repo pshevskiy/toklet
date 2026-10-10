@@ -92,3 +92,6 @@ complete FP16 Metal qualification remains pending.
 The standalone [FP16 RMS primitive](docs/experiments/2026-10-10-metal-rms.md)
 passes frozen tiny-model source gates and exact manual range/subnormal cases;
 full decoder composition and Qwen qualification remain pending.
+The [selected Qwen RMS check](docs/experiments/2026-10-10-qwen-metal-rms.md)
+also passes width-896 source gates with norm-only checkpoint reads. Full-model
+and session qualification remain pending.

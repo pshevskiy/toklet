@@ -1,0 +1,42 @@
+{
+  "format": "toklet-cpu-qwen-rms-idle-window-v1",
+  "coordinator_hold_utc": "2026-10-10T02:45:29.086078+00:00",
+  "before_hold": {
+    "17695": {
+      "ppid": 17694,
+      "state": "T",
+      "cpu": 0.0,
+      "time": "0:00.56",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload boundary --output benchmarks/raw/2026-10-10-cpu-boundary.json"
+    },
+    "17701": {
+      "ppid": 17695,
+      "state": "S",
+      "cpu": 0.0,
+      "time": "112:18.61",
+      "command": "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct"
+    },
+    "34871": {
+      "ppid": 35939,
+      "state": "Ss",
+      "cpu": 0.0,
+      "time": "0:00.69",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/cpu-primary-pairs-v1.py"
+    },
+    "40683": {
+      "ppid": 34871,
+      "state": "Ss",
+      "cpu": 0.0,
+      "time": "0:00.61",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload short --cpu-projection tiled --cpu-qualification /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json --output /Users/coloner/work/rust/toklet/benchmarks/raw/2026-10-10-cpu-primary-pair-1-tiled.json"
+    },
+    "40690": {
+      "ppid": 40683,
+      "state": "R",
+      "cpu": 100.0,
+      "time": "9:02.40",
+      "command": "/Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct 128 tiled"
+    }
+  },
+  "policy": "Hold only orchestration parent34871; current Tiled driver40683/numerical40690 finish all timed requests normally. Native tests and checkpoint hashing wait for numerical exit and driver zombie. Resume parent only after checks finish."
+}
