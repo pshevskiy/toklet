@@ -111,6 +111,9 @@ full decoder composition and Qwen qualification remain pending.
 The [scalar capacity workload](benchmarks/results/2026-10-10-cpu-boundary.md)
 now completes all 2,048 Qwen positions and rejects another token within the
 memory budget. Remaining CPU matrix and application measurements continue.
+The [scalar medium workload](benchmarks/results/2026-10-10-cpu-medium.md)
+retains all ten 512-input/128-output measurements and valid prefix states,
+with median TTFT 163.381 seconds and decode rate 1.414 steps/s.
 The [selected Qwen RMS check](docs/experiments/2026-10-10-qwen-metal-rms.md)
 also passes width-896 source gates with norm-only checkpoint reads. Full-model
 and session qualification remain pending.

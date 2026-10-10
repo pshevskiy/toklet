@@ -1,0 +1,12 @@
+{
+  "format": "toklet-cpu-qwen-silu-check-window-idle-v1",
+  "idle_verified_utc": "2026-10-10T05:51:15.319572+00:00",
+  "snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.07 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n54908 17694 Z      0:00.00 <defunct>\n",
+  "completed_workload": "medium",
+  "warmups": 3,
+  "measured_requests": 10,
+  "held_pid": 17694,
+  "exited_numerical_worker_pid": 54916,
+  "defunct_transport_pid": 54908,
+  "scope": "Medium worker exited naturally before any queued tests/builds/Metal/model work. Only orchestration was held; it remains held for the Qwen SiLU and loss-runner checks."
+}

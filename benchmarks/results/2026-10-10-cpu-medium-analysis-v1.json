@@ -1,0 +1,46 @@
+{
+  "format": "toklet-saved-cpu-medium-analysis-v1",
+  "completed": true,
+  "scope": "Small saved-evidence validation only; no native execution, model reads, or binary hashes. Prior idle-window proof binds those identities.",
+  "checks": [
+    "schema",
+    "ten exact raw/sample pairs",
+    "state and token events",
+    "independent summary",
+    "fixed input hashes",
+    "memory totals",
+    "historical driver",
+    "idle-window identity and ordering"
+  ],
+  "summary": {
+    "ttft_median_seconds": 163.38123995849998,
+    "ttft_min_seconds": 162.868806709,
+    "ttft_max_seconds": 166.383823459,
+    "request_median_seconds": 253.195492771,
+    "decode_tokens_per_second_median": 1.4139395733870352,
+    "prefill_tokens_per_second_median": 3.1337779021486165
+  },
+  "requests_seconds": [
+    252.575225458,
+    252.59323625,
+    253.162616167,
+    252.94150725,
+    252.250702875,
+    256.925112542,
+    256.884125625,
+    256.110934875,
+    253.228369375,
+    253.297795834
+  ],
+  "request_min_seconds": 252.250702875,
+  "request_max_seconds": 256.925112542,
+  "records_sha256": {
+    "benchmarks/results/2026-10-10-cpu-medium.json": "a9f0e34d3d7f9a83486c27b6d17cd262975f922973466a82999a0894ca38aad5",
+    "benchmarks/results/2026-10-10-cpu-medium.json.samples.jsonl": "994e0147192d265059b26cda9268353d4f51f3800140e849300c9769f35ed050",
+    "benchmarks/results/2026-10-10-cpu-medium-source-driver-v1.py.txt": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "benchmarks/results/2026-10-10-cpu-qwen-silu-check-window-completed.json": "0e978f23b2ff74b2b6b5acc4318898f42b48e3e6844efbd07c8f4ba5cfb2eb21",
+    "benchmarks/results/2026-10-10-cpu-qwen-silu-check-window-hold.json": "b12de041a5021274909ae9a1a1994fc4f0d60ce98dba128039a9055ae4eb5678",
+    "benchmarks/results/2026-10-10-cpu-qwen-silu-check-window-idle.json": "9a31b9599fbb4c546c169c8d7664a49d5e5505a6ed6fb3678e72ddf6b8843405"
+  },
+  "producer_sha256": "ce58fa3d4f22c8d741dc6c1753bb03ed1f9330dbe589d1e8f713703fe60f9e81"
+}

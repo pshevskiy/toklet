@@ -169,6 +169,20 @@ qualification stay pending. Astra accepted the saved-evidence task without
 findings after independently verifying all states, summaries, historical
 assertions, identities and idle-window records.
 
+M2.5 medium evidence, 10 October 2026 (milestone still open): the
+[scalar medium report](benchmarks/results/2026-10-10-cpu-medium.md) retains
+three warmups and ten 512-input/128-output requests, each with 639 committed
+positions and one pending token. Median TTFT is 163.381240 s, completed
+request time 253.195493 s and decode rate 1.413940 steps/s. Maximum measured
+own-child physical charge is 2,043,840,528 bytes below 6 GiB and conservative
+admission. Saved-state/schema/summary checks and historical driver identity
+are retained. The medium worker completed uninterrupted; only orchestration
+was held ahead of the next workload. Qwen SiLU and loss-runner checks ran in
+the verified idle window before frozen identities were revalidated and the
+parent resumed. Astra accepted the saved-evidence task without findings after
+independent identity, state/event, summary, memory and window-order verification.
+Remaining matrix/application/quality gates remain pending.
+
 Held-out scorer preparation, 10 October 2026 (M2.5/quality still open): the
 [bounded loss runner](docs/experiments/2026-10-10-held-out-loss-runner.md)
 implements the existing ten independent 1,024-target blocks with one-token
