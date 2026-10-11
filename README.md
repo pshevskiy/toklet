@@ -173,39 +173,51 @@ target [scalar baseline](docs/experiments/2026-10-11-held-out-scalar-loss.md)
 now completes with mean loss 2.883725 nats/token and verified natural exit.
 The [full tiled comparison](docs/experiments/2026-10-11-held-out-tiled-loss.md)
 now matches all 10,000 complete-logit hashes and losses exactly, with zero mean
-NLL increase. The separate 100-task quality evaluation and remaining candidate
-workloads remain pending.
+NLL increase. The scalar task baseline below is now graded; tiled task
+collection/grading, the quality comparison and remaining candidate workloads
+remain pending.
 
 The [frozen task collector](docs/experiments/2026-10-10-task-response-collector.md)
 preserves prepared IDs, finalized text and pending EOS semantics, and supplies
 the exact text scorers and literal HumanEval program composition. Four authored
-scalar/tiled requests pass with matching outputs. Held-out code grading and
-the tiled 100-case collection remain pending.
+scalar/tiled requests pass with matching outputs. The later scalar grading
+report records actual held-out execution; tiled collection/grading remains pending.
 The [full-task collector preparation](docs/experiments/2026-10-11-held-out-task-collector.md)
 now handles 100 independent requests, including empty immediate EOS, with
 phase watchdogs and owned descendant cleanup. Eleven targeted checks and all
 172 offline checks pass. The [full scalar collection](docs/experiments/2026-10-11-held-out-task-scalar.md)
 now completes all 100 frozen responses with natural exit and full journal
 replay. Its conservative joint physical peak is 2,154,760,904 bytes, below
-6 GiB. Task scoring and the candidate comparison remain pending.
+6 GiB. The scalar grading report below records its score; tiled scoring and
+the candidate comparison remain pending.
 The [authored native isolation candidate](docs/experiments/2026-10-10-code-isolation.md)
 passes offline checks but is rejected before sandbox admission because Python
-cannot accept the fixed data limit. It is not used for generated code; a
-compatible executor still needs qualification.
+cannot accept the fixed data limit. It is not used for generated code. The
+Linux qualifications below establish the compatible executor used for scalar
+grading.
 
 The [authored Linux isolation retry](docs/experiments/2026-10-11-linux-code-isolation-retry.md)
 passes all fourteen native modes, 26 targeted checks and the full offline suite.
 It retains the fixed limits, verifies actual zero capabilities and reconciles
-completed container exit statuses. The VM's original stopped state is verified;
-generated-code integration and full quality checks remain pending.
+completed container exit statuses. The VM's original stopped state is verified.
+The later literal controller and scalar grading reports below extend this
+qualification; the full candidate quality comparison remains pending.
 
 The [literal Linux controller](docs/experiments/2026-10-11-linux-literal-controller.md)
 passes all 28 authored native expectations and 161 offline tests, with literal
 input, exact configuration, bounded transport and verified VM restoration.
-Unresolved statuses remain infrastructure failures. Held-out code grading and
-task scoring remain pending.
+Unresolved statuses remain infrastructure failures. The scalar grading report
+below now records actual held-out execution and scores.
 The [held-out grading integration](docs/experiments/2026-10-11-held-out-task-grading.md)
 now validates complete collections before starting the owned runtime, composes
 literal code programs and suppresses aggregates for unresolved infrastructure.
 Twenty-one targeted checks, 193 offline Python tests and required Cargo checks
-pass. Actual held-out code execution and task scores remain pending.
+pass. The scalar grading report below records the subsequent actual run.
+
+The [full scalar held-out task grading](docs/experiments/2026-10-11-held-out-task-scalar-grading.md)
+resolves all 100 literal outcomes: 2/100 overall (0/40 code, 1/30 prose, 1/30
+continuation), with no infrastructure ambiguity. All forty code outcomes are
+SyntaxErrors under unchanged literal composition. The owned Linux window removed
+every container and restored the stopped VM; independent replay confirms the
+score. Actual tiled task collection/grading and the unchanged quality comparison
+remain open.

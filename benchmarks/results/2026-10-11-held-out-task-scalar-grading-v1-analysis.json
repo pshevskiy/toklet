@@ -1,0 +1,53 @@
+{
+  "format": "toklet-held-out-task-grading-analysis-v1",
+  "accepted": true,
+  "producer_sha256": "6d79efe9841a96a48a8b6397f340f70c79e7fa096ca93f2a44c684b0218080ca",
+  "engine_revision": "ca0edff28af1646b12fa1a4c01b955dd1c90fb68",
+  "projection": "scalar",
+  "aggregate": {
+    "cases": 100,
+    "passed": 2,
+    "pass_rate": 0.02,
+    "aggregation": "100_equal_weight_binary_cases",
+    "categories": {
+      "code": {
+        "cases": 40,
+        "passed": 0
+      },
+      "prose": {
+        "cases": 30,
+        "passed": 1
+      },
+      "continuation": {
+        "cases": 30,
+        "passed": 1
+      }
+    }
+  },
+  "code_failure_reasons": {
+    "SyntaxError": 40
+  },
+  "actual_session_id": 42097,
+  "native_exit_code": 0,
+  "all_literal_outcomes_replayed": true,
+  "unresolved_case_ids": [],
+  "distinct_removed_containers": 40,
+  "machine_restored_stopped": true,
+  "owned_groups_absent": true,
+  "protected_endpoints_unchanged": true,
+  "window_started_utc": "2026-10-11T15:55:15.793510+00:00",
+  "window_finished_utc": "2026-10-11T15:56:18.866618+00:00",
+  "idle_verified_utc": "2026-10-11T15:57:12.021437+00:00",
+  "evidence_sha256": {
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-idle.json": "a7612744a01e6cca2106bf82f715f4f77001da8451271618cb2a7173a39d502a",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-idle.py.txt": "7e86d30f5f11be20e5f9982b1ce5eb2dee64f16de27f3eca2670674e3a9d2cd5",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-launch.json": "caefc6ae8f13aee44372fc43c3b7a9fd01a165d640508a3d95b111f6c7272f4d",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-launch.py.txt": "c976b12dbf8578913702c62bdcfe1cf00556a1fcd4c3d68a719e1d2888660868",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-owned.json": "b05f66273596b126b5e948fb42a1ba85b86a91ed529d3709907d39629928bee8",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-owned.py.txt": "3ddeb717751a60de412b716b4f5d5153a7dfd18323786c73e26985e80d11638e",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-probe.json": "eafd3d96733337097d64ea154d32a776964d8ebdb760882457a417a9b81c52c7",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-session-completion.json": "5a9617d058db9e7182bd79ea70ba61b8006f72cb37986128c57259f12bd72997",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-window.json": "0a438b564f7a39925d16933919e39ce9aa5ed0136c95c3ffc9c4d01c04ead0f3"
+  },
+  "scope": "Literal frozen scalar baseline; no candidate execution, no response repair, no adversarial attestation, no candidate quality or timing acceptance."
+}

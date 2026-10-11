@@ -1,0 +1,46 @@
+"""Archive actual completed scalar grading and verified runtime restoration."""
+from pathlib import Path
+from datetime import datetime,timezone
+import hashlib,json,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as boundary
+ROOT=Path.cwd();PREFIX='2026-10-11-held-out-task-scalar-grading-v1'
+def digest(p):
+ with Path(p).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
+def archive():
+ completion=ROOT/'artifacts'/f'{PREFIX}-session-completion.json';c=json.loads(completion.read_text())
+ assert c['session_id']==42097 and c['actual_tool_result']['exit_code']==0
+ assert c['actual_tool_result']['output']=='Scalar held-out task grading window completed naturally\n'
+ owned=ROOT/'artifacts'/f'{PREFIX}-owned.json';o=json.loads(owned.read_text())
+ pids=o['owned_pids']+[o['startup_client_pid']]
+ absent=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid='],capture_output=True,text=True)
+ assert absent.returncode==1 and not absent.stdout and not absent.stderr
+ groups={str(pid):boundary.live_group_members(pid) for pid in (2394,2444)};assert groups=={'2394':[],'2444':[]}
+ held=boundary.idle(json.loads((ROOT/'benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json').read_text()))
+ machines=json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+ selected=[m for m in machines if m['Name']=='podman-machine-default'];assert len(selected)==1
+ assert selected[0]['Running'] is False and selected[0]['Starting'] is False
+ raw=ROOT/'benchmarks/raw';w=json.loads((raw/f'{PREFIX}-window.json').read_text());p=json.loads((raw/f'{PREFIX}-probe.json').read_text())
+ assert w['completed'] and w['restored_stopped'] and w['pipe_lifetime_finished'] and not w.get('restoration_failure')
+ assert w['running_containers_before_stop']==[] and w['startup']['helper_pipe_lifetime_completed']
+ assert p['completed'] and p['quality_completed'] and p['unresolved_case_ids']==[] and len(p['runs'])==40 and len(p['outcomes'])==100
+ prior=json.loads((ROOT/'benchmarks/results/2026-10-11-held-out-task-scalar-idle-v1.json').read_text());end={}
+ for section,files in prior['end_verified'].items():
+  end[section]={}
+  for name,sha in files.items():
+   actual=digest(ROOT/name);assert actual==sha,name;end[section][name]=actual
+ out=ROOT/'benchmarks/results';inventory={}
+ sources=[(raw/f'{PREFIX}-{suffix}.json',out/f'{PREFIX}-{suffix}.json') for suffix in ('launch','window','probe')]
+ sources +=[(owned,out/f'{PREFIX}-owned.json'),(completion,out/f'{PREFIX}-session-completion.json'),
+ (ROOT/'artifacts/launch-held-out-task-scalar-grading-v1.py',out/f'{PREFIX}-launch.py.txt'),
+ (ROOT/'artifacts/observe-held-out-task-scalar-grading-owned-v1.py',out/f'{PREFIX}-owned.py.txt'),
+ (Path(__file__),out/f'{PREFIX}-idle.py.txt')]
+ for source,target in sources:
+  assert not target.exists();target.write_bytes(source.read_bytes());inventory[str(target.relative_to(ROOT))]=digest(target)
+ idle={'format':'toklet-held-out-task-grading-natural-exit-idle-v1','idle_verified_utc':datetime.now(timezone.utc).isoformat(),
+ 'session_id':42097,'all_owned_processes_absent':True,'exited_owned_pids':pids,'owned_group_members':groups,
+ 'owned_absence_query':{'command':absent.args,'exit_code':absent.returncode,'stdout':absent.stdout,'stderr':absent.stderr},
+ 'held_original_snapshot':held,'stopped_machine':selected[0],'end_verified':end,'saved_result_sha256':inventory,'producer_sha256':digest(__file__)}
+ with (out/f'{PREFIX}-idle.json').open('x') as f:json.dump(idle,f,indent=2);f.write('\n')
+ print(json.dumps({'idle_verified_utc':idle['idle_verified_utc'],'exited_owned_pids':pids,'saved_files':len(inventory)}))
+if __name__=='__main__':archive()

@@ -1,0 +1,75 @@
+{
+  "format": "toklet-held-out-task-grading-natural-exit-idle-v1",
+  "idle_verified_utc": "2026-10-11T15:57:12.021437+00:00",
+  "session_id": 42097,
+  "all_owned_processes_absent": true,
+  "exited_owned_pids": [
+    2394,
+    2398,
+    2445,
+    2446,
+    2444
+  ],
+  "owned_group_members": {
+    "2394": [],
+    "2444": []
+  },
+  "owned_absence_query": {
+    "command": [
+      "ps",
+      "-p",
+      "2394,2398,2445,2446,2444",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "held_original_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n",
+  "stopped_machine": {
+    "Name": "podman-machine-default",
+    "Default": true,
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "Running": false,
+    "Starting": false,
+    "LastUp": "2026-10-11T18:56:18.180254+03:00",
+    "Stream": "default",
+    "VMType": "applehv",
+    "CPUs": 5,
+    "Memory": "2147483648",
+    "Swap": "0",
+    "DiskSize": "107374182400",
+    "Port": 51387,
+    "RemoteUsername": "core",
+    "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+    "UserModeNetworking": true
+  },
+  "end_verified": {
+    "frozen_binaries": {
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    "validated_local_model_assets": {
+      "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+    }
+  },
+  "saved_result_sha256": {
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-launch.json": "caefc6ae8f13aee44372fc43c3b7a9fd01a165d640508a3d95b111f6c7272f4d",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-window.json": "0a438b564f7a39925d16933919e39ce9aa5ed0136c95c3ffc9c4d01c04ead0f3",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-probe.json": "eafd3d96733337097d64ea154d32a776964d8ebdb760882457a417a9b81c52c7",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-owned.json": "b05f66273596b126b5e948fb42a1ba85b86a91ed529d3709907d39629928bee8",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-session-completion.json": "5a9617d058db9e7182bd79ea70ba61b8006f72cb37986128c57259f12bd72997",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-launch.py.txt": "c976b12dbf8578913702c62bdcfe1cf00556a1fcd4c3d68a719e1d2888660868",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-owned.py.txt": "3ddeb717751a60de412b716b4f5d5153a7dfd18323786c73e26985e80d11638e",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-idle.py.txt": "7e86d30f5f11be20e5f9982b1ce5eb2dee64f16de27f3eca2670674e3a9d2cd5"
+  },
+  "producer_sha256": "7e86d30f5f11be20e5f9982b1ce5eb2dee64f16de27f3eca2670674e3a9d2cd5"
+}

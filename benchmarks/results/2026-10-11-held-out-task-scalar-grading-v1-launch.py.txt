@@ -1,0 +1,29 @@
+"""Run reviewed scalar held-out grading only after collection natural exit."""
+from pathlib import Path
+from datetime import datetime,timezone
+import json,os,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import prepare
+ROOT=Path.cwd()
+assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+checks_path=ROOT/'benchmarks/results/2026-10-11-held-out-task-grading-checks-v1.json'
+checks=json.loads(checks_path.read_text());assert checks['completed']
+for item in checks['checks']:assert item['exit_code']==0 and not item['timed_out'] and item['cleanup_errors']==[]
+for name,expected in checks['source_sha256'].items():assert prepare.digest(ROOT/name)==expected,name
+prefix='2026-10-11-held-out-task-scalar-grading-v1'
+collection=ROOT/'benchmarks/results/2026-10-11-held-out-task-scalar-v1.json'
+idle=ROOT/'benchmarks/results/2026-10-11-held-out-task-scalar-idle-v1.json'
+command=[sys.executable,'tools/bench/held_out_task_window.py','--collection',str(collection),'--idle-proof',str(idle),'--prefix',prefix]
+receipt=ROOT/'benchmarks/raw'/f'{prefix}-launch.json'
+assert not receipt.exists()
+assert all(not (ROOT/'benchmarks/raw'/f'{prefix}-{suffix}.json').exists() for suffix in ('window','probe','restoration'))
+record={'format':'toklet-held-out-task-grading-launch-v1','launch_utc':datetime.now(timezone.utc).isoformat(),
+ 'engine_revision':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'working_tree_clean':True,
+ 'launcher_pid':os.getpid(),'producer_sha256':prepare.digest(Path(__file__)),
+ 'checks_sha256':prepare.digest(checks_path),'source_sha256':checks['source_sha256'],
+ 'collection_sha256':prepare.digest(collection),'idle_sha256':prepare.digest(idle),'command':command,
+ 'scope':'Actual literal frozen scalar task grading; no concurrent model, tests or builds; no infrastructure outcome converted to model failure.'}
+with receipt.open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
+print(json.dumps({'launch_utc':record['launch_utc'],'launcher_pid':record['launcher_pid'],'engine_revision':record['engine_revision']}),flush=True)
+subprocess.run(command,check=True)
+print('Scalar held-out task grading window completed naturally',flush=True)

@@ -1,0 +1,13 @@
+{
+  "format": "toklet-actual-native-session-completion-v1",
+  "session_id": 42097,
+  "observed_utc": "2026-10-11T15:56:29.622971+00:00",
+  "origin": "Actual write_stdin completion returned by native execution tool; not inferred from files",
+  "actual_tool_result": {
+    "chunk_id": "7060cc",
+    "wall_time_seconds": 1.5917e-05,
+    "exit_code": 0,
+    "original_token_count": 14,
+    "output": "Scalar held-out task grading window completed naturally\n"
+  }
+}

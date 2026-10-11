@@ -1,0 +1,15 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import json,subprocess
+pids=[2394,2398,2445,2446]
+item=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid=,ppid=,pgid=,state=,command='],capture_output=True,text=True)
+assert item.returncode==0 and not item.stderr
+rows=[]
+for line in item.stdout.splitlines():
+ fields=line.split(None,4);rows.append({'pid':int(fields[0]),'ppid':int(fields[1]),'pgid':int(fields[2]),'state':fields[3],'command':fields[4]})
+assert [x['pid'] for x in rows]==pids
+assert rows[1]['ppid']==2394 and rows[1]['pgid']==2394
+assert all(x['ppid']==1 and x['pgid']==2444 for x in rows[2:])
+record={'format':'toklet-held-out-task-grading-owned-v1','observed_utc':datetime.now(timezone.utc).isoformat(),'owned_pids':pids,'startup_client_pid':2444,'startup_helper_group':2444,'snapshot':rows,'actual_query':{'command':item.args,'exit_code':item.returncode,'stdout':item.stdout,'stderr':item.stderr}}
+with Path('artifacts/2026-10-11-held-out-task-scalar-grading-v1-owned.json').open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
+print('Recorded grading launcher/window and startup helper ownership')

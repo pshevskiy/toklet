@@ -1,0 +1,103 @@
+"""Replay completed scalar grading receipts; never execute candidate programs."""
+from pathlib import Path
+from datetime import datetime
+import collections,hashlib,json,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import held_out_task_grading as grader,linux_task_controller as controller,linux_task_evidence as evidence,task_cases as tasks
+import linux_code_isolation_probe as boundary
+ROOT=Path.cwd();PREFIX='2026-10-11-held-out-task-scalar-grading-v1';OUT=ROOT/'benchmarks/results'
+def digest(p):
+ with Path(p).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
+def load(suffix):return evidence.decode_event((OUT/f'{PREFIX}-{suffix}.json').read_text())
+def analyze():
+ idle=load('idle');expected={f'benchmarks/results/{PREFIX}-{x}.json' for x in ('launch','window','probe','owned','session-completion')}
+ expected|={f'benchmarks/results/{PREFIX}-{x}.py.txt' for x in ('launch','owned','idle')}
+ assert set(idle['saved_result_sha256'])==expected
+ for name,sha in idle['saved_result_sha256'].items():assert digest(ROOT/name)==sha,name
+ launch=load('launch');window=load('window');probe=load('probe');owned=load('owned');complete=load('session-completion')
+ assert launch['format']=='toklet-held-out-task-grading-launch-v1' and launch['working_tree_clean'] is True
+ assert launch['engine_revision']=='ca0edff28af1646b12fa1a4c01b955dd1c90fb68'
+ assert complete['session_id']==42097 and complete['actual_tool_result']['exit_code']==0
+ assert complete['origin']=='Actual write_stdin completion returned by native execution tool; not inferred from files'
+ assert 'session_id' not in complete['actual_tool_result']
+ assert complete['actual_tool_result']['output']=='Scalar held-out task grading window completed naturally\n'
+ assert idle['format']=='toklet-held-out-task-grading-natural-exit-idle-v1' and idle['all_owned_processes_absent'] is True
+ assert owned['owned_pids']==[2394,2398,2445,2446] and owned['startup_client_pid']==2444
+ assert idle['exited_owned_pids']==owned['owned_pids']+[2444]
+ assert owned['actual_query']['exit_code']==0 and owned['actual_query']['stderr']==''
+ assert owned['snapshot'][0]['pid']==launch['launcher_pid']==2394
+ assert owned['snapshot'][1]['ppid']==2394
+ assert all(row['pgid']==2444 and row['ppid']==1 for row in owned['snapshot'][2:])
+ assert window['startup']['startup_process_group']==2444 and window['startup']['live_startup_group_members']==[2445,2446]
+ assert datetime.fromisoformat(launch['launch_utc']) < datetime.fromisoformat(window['started_utc']) < datetime.fromisoformat(owned['observed_utc']) < datetime.fromisoformat(window['finished_utc']) <= datetime.fromisoformat(complete['observed_utc']) <= datetime.fromisoformat(idle['idle_verified_utc'])
+ assert launch['producer_sha256']==digest(OUT/f'{PREFIX}-launch.py.txt')
+ assert idle['producer_sha256']==digest(OUT/f'{PREFIX}-idle.py.txt')
+ checks=ROOT/'benchmarks/results/2026-10-11-held-out-task-grading-checks-v1.json';assert launch['checks_sha256']==digest(checks)
+ assert launch['source_sha256']==json.loads(checks.read_text())['source_sha256']
+ for mapping in (launch['source_sha256'],window['window_source_sha256'],probe['source_sha256']):
+  for name,sha in mapping.items():
+   assert digest(ROOT/name)==sha,name
+   assert hashlib.sha256(subprocess.check_output(['git','show',launch['engine_revision']+':'+name])).hexdigest()==sha,name
+ assert window['producer_sha256']==digest(ROOT/'tools/bench/held_out_task_window.py')
+ literal=ROOT/'benchmarks/results/2026-10-11-literal-native-v3-probe.json';assert window['literal_qualification_sha256']==digest(literal)
+ for name,sha in json.loads(literal.read_text())['source_sha256'].items():assert digest(ROOT/name)==sha,name
+ prior=ROOT/'benchmarks/results/2026-10-11-linux-code-isolation-probe-v8.json';assert window['prior_qualification_sha256']==digest(prior)
+ q=json.loads(prior.read_text())
+ for key in ('connection_binding','image'):assert window[key]==q[key]
+ assert window['admitted_runtime']==probe['runtime']==q['admitted_runtime']
+ assert window['admitted_python_version']==probe['python_version']==q['admitted_python_version']
+ assert probe['image_id']==controller.evidence.child.isolation.IMAGE_ID if hasattr(controller.evidence.child.isolation,'IMAGE_ID') else probe['image_id']=='eb7d16fec874f15b584063275012ac719885a2b87574d124c0da9c156d504629'
+ collection=ROOT/'benchmarks/results/2026-10-11-held-out-task-scalar-v1.json'
+ old_idle=ROOT/'benchmarks/results/2026-10-11-held-out-task-scalar-idle-v1.json'
+ assert launch['collection_sha256']==window['collection_sha256']==probe['collection_sha256']==digest(collection)
+ assert launch['idle_sha256']==window['idle_sha256']==digest(old_idle)
+ assert launch['command'][1:]==['tools/bench/held_out_task_window.py','--collection',str(collection),'--idle-proof',str(old_idle),'--prefix',PREFIX]
+ collected,cases=grader.validate_collection(collection)
+ assert collected['projection']==window['projection']==probe['projection']=='scalar'
+ assert probe['task_payload_sha256']==tasks.TASK_SHA
+ assert probe['completed'] is True and probe['quality_completed'] is True and probe['unresolved_case_ids']==[]
+ assert len(probe['runs'])==40 and len(probe['outcomes'])==100
+ runs=iter(probe['runs']);outcomes=[];reasons=collections.Counter();names=[]
+ for case,item in zip(cases,collected['run']['cases']):
+  if case['category']=='code':
+   run=next(runs);assert run['id']==case['id']
+   text=item['response']['visible_text'];program=tasks.human_eval_program(case,text)
+   sha=hashlib.sha256(program.encode()).hexdigest()
+   assert run['program_sha256']==sha and run['completion_sha256']==hashlib.sha256(text.encode()).hexdigest()
+   payload={'case_id':case['id'],'program':program,'program_sha256':sha}
+   resolved=evidence.classify(run['raw'],payload,probe['runtime'],probe['python_version'])
+   assert evidence.canonical(resolved)==evidence.canonical(run['resolved'])
+   assert run['raw']['container_removed'] is True and run['raw']['container_cleanup_errors']==[]
+   assert run['raw']['cleanup_errors']==[] and run['raw']['surviving_group_members']==[]
+   names.append(run['raw']['container_name']);reasons[resolved.get('reason',resolved['outcome'])]+=1;passed=resolved['passed']
+  else:passed=tasks.grade_text(case,item['response']['visible_text'])
+  outcomes.append({'id':case['id'],'category':case['category'],'passed':passed,'status':'model_pass' if passed else 'model_fail'})
+ assert len(set(names))==40
+ assert evidence.canonical(outcomes)==evidence.canonical(probe['outcomes'])
+ aggregate=tasks.aggregate(cases,outcomes);assert aggregate==probe['aggregate']
+ assert window['completed'] is True and window['quality_completed'] is True and window['unresolved_case_ids']==[]
+ assert window['restored_stopped'] is True and window['pipe_lifetime_finished'] is True
+ assert not window.get('failure') and not window.get('restoration_failure')
+ assert window['running_containers_before_stop']==[] and window['startup']['helper_pipe_lifetime_completed'] is True
+ for inventories in (window['machine_before'],window['machine_after']):
+  machine=[m for m in inventories if m['Name']=='podman-machine-default'];assert len(machine)==1
+  assert machine[0]['Running'] is False and machine[0]['Starting'] is False
+ pids=idle['exited_owned_pids'];query=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid='],capture_output=True,text=True)
+ assert query.returncode==1 and not query.stdout and not query.stderr
+ assert all(boundary.live_group_members(pid)==[] for pid in (2394,2444))
+ boundary.idle(json.loads((OUT/'2026-10-11-interrupted-workload-idle-v1.json').read_text()))
+ machine=[m for m in json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True)) if m['Name']=='podman-machine-default'];assert len(machine)==1 and machine[0]['Running'] is False and machine[0]['Starting'] is False
+ assert idle['end_verified']==json.loads(old_idle.read_text())['end_verified']
+ for files in idle['end_verified'].values():
+  for name,sha in files.items():assert digest(ROOT/name)==sha,name
+ return {'format':'toklet-held-out-task-grading-analysis-v1','accepted':True,'producer_sha256':digest(__file__),
+ 'engine_revision':launch['engine_revision'],'projection':'scalar','aggregate':aggregate,'code_failure_reasons':dict(sorted(reasons.items())),
+ 'actual_session_id':42097,'native_exit_code':0,'all_literal_outcomes_replayed':True,'unresolved_case_ids':[],
+ 'distinct_removed_containers':40,'machine_restored_stopped':True,'owned_groups_absent':True,'protected_endpoints_unchanged':True,
+ 'window_started_utc':window['started_utc'],'window_finished_utc':window['finished_utc'],
+ 'idle_verified_utc':idle['idle_verified_utc'],'evidence_sha256':{name:digest(ROOT/name) for name in sorted(expected|{str((OUT/f'{PREFIX}-idle.json').relative_to(ROOT))})},
+ 'scope':'Literal frozen scalar baseline; no candidate execution, no response repair, no adversarial attestation, no candidate quality or timing acceptance.'}
+if __name__=='__main__':
+ result=analyze();target=Path(sys.argv[1])
+ with target.open('x') as f:json.dump(result,f,indent=2,allow_nan=False);f.write('\n')
+ print(json.dumps({'accepted':result['accepted'],'aggregate':result['aggregate'],'code_failure_reasons':result['code_failure_reasons']}))

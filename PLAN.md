@@ -473,6 +473,19 @@ Astra independently passes the targeted suite and accepts the complete code,
 check evidence and documentation without actionable findings. No actual held-out program execution,
 task score, tiled comparison or milestone closure is claimed by this code task.
 
+M2.5 held-out scalar task baseline, 11 October 2026: the
+[actual literal grading](docs/experiments/2026-10-11-held-out-task-scalar-grading.md)
+resolves all 100 collected responses at 2/100: code 0/40, prose 1/30 and
+continuation 1/30. All code outcomes are SyntaxErrors under unchanged literal
+prefix/completion/test composition; no response repair or scoring relaxation
+is applied. No infrastructure outcome is unresolved. All forty containers were
+removed, owned helpers/groups exited and the VM was restored stopped, with
+protected endpoints unchanged. Independent classification/text replay and Astra
+confirm the baseline; Astra accepted the complete evidence and report without
+findings. Tiled task collection,
+grading and the unchanged maximum two-percentage-point drop gate remain open.
+This does not close M2.5 or qualify candidate performance/application behavior.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected
