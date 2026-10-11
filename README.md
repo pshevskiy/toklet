@@ -252,3 +252,9 @@ closes M3's bounded runtime research with supported CPU slices and inconclusive
 ANE acceleration. The rejected FP16 projection and unobserved actual ANE
 placement remain explicit; no Core ML/ANE engine backend is adopted. M3 still
 requires the CPU candidate retention decision.
+
+The [tiled long workload](docs/experiments/2026-10-11-cpu-tiled-long.md)
+adds ten checked 1,024-input/128-output requests after three warmups: median
+TTFT 85.683956 s and request 142.368874 s. All finish with 1,151 committed
+positions and one pending fixed token. Five non-short rows, full tiled
+application evidence and the M3.1 retention decision remain pending.

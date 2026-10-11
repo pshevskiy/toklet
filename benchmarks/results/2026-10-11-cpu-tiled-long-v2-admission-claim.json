@@ -1,0 +1,7 @@
+{
+  "format": "toklet-cpu-tiled-long-admission-claim-v2",
+  "claimed_utc": "2026-10-11T18:10:40.443162+00:00",
+  "launcher_pid": 42842,
+  "workload": "long",
+  "producer_path": "/Users/coloner/work/rust/toklet/artifacts/launch-tiled-long-v2.py"
+}

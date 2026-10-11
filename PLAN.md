@@ -698,6 +698,16 @@ claim follows. The probe and fixtures are retained; no further native experiment
 runs for this documentation closure. M3 overall remains open for CPU workload,
 application and retention qualification.
 
+Candidate long evidence, 11 October 2026: the [complete 1,024-input workload](docs/experiments/2026-10-11-cpu-tiled-long.md)
+uses three warmups and ten measured requests, all with 1,151 committed positions
+and one pending fixed output token. Median TTFT is 85.683956 s and completed
+request 142.368874 s; the whole observed request range is retained. Exact
+source/qualification, preceding accepted medium admission, natural exit and
+owned idle are bound to the saved analysis. Historical scalar reductions are
+descriptive; no extra primary pair or quality run is implied. No numerical
+helper or qualified artifact changes. Five other non-short rows, full tiled
+application evidence and M3.1 retention remain pending.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [x] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [x] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.

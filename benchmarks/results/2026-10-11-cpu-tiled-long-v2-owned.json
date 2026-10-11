@@ -1,0 +1,12 @@
+{
+  "format": "toklet-cpu-tiled-workload-owned-v1",
+  "session_id": 93142,
+  "observed_utc": "2026-10-11T18:11:34.743026+00:00",
+  "launcher_pid": 42842,
+  "driver_pid": 42858,
+  "numerical_worker_pid": 42866,
+  "owned_process_group": 42842,
+  "snapshot": "42842 35939 42842 Ss   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/launch-tiled-long-v2.py --workload long\n42858 42842 42842 S    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload long --cpu-projection tiled --cpu-qualification /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json --output benchmarks/raw/2026-10-11-cpu-tiled-long-v2.json\n42866 42858 42842 R    /Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct 128 tiled\n",
+  "launch_receipt_sha256": "c6e68398f9b75447e7cbf7e49ec189bd46605cd745c339f42daaf6cf20e23c41",
+  "producer_sha256": "6a689c441a11fe2da741ca1223d9ad92023e57e7afe414473b88251f80ad2121"
+}
