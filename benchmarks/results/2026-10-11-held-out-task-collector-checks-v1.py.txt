@@ -1,0 +1,29 @@
+"""Check the full-task collector without a model or Linux VM run."""
+from datetime import datetime,timezone
+import json,os,subprocess,sys
+from pathlib import Path
+sys.path.insert(0,'tools/bench')
+import quality,held_out_tasks as collector,prepare
+ROOT=Path.cwd()
+output=ROOT/'benchmarks/raw/2026-10-11-held-out-task-collector-checks-v1.json'
+assert not output.exists()
+names=['tools/bench/held_out_tasks.py','tools/bench/test_held_out_tasks.py']
+source={name:prepare.digest(ROOT/name) for name in names}
+proof=ROOT/'benchmarks/results/2026-10-11-held-out-tiled-loss-idle-v1.json'
+record={'format':'toklet-held-out-task-collector-checks-v1','completed':False,
+        'started_utc':datetime.now(timezone.utc).isoformat(),'producer_sha256':prepare.digest(Path(__file__)),
+        'source_sha256':source,'admission':collector.idle(proof),'checks':[],
+        'scope':'Offline collector checks only; no held-out model outputs, VM, grading or score.'}
+os.environ['CARGO_TARGET_DIR']=str(ROOT/'artifacts/cpu-tiled-cli-v1')
+record['check_target_directory']=os.environ['CARGO_TARGET_DIR']
+try:
+ for command in [[str(ROOT/'.venv/bin/python'),'-m','unittest','discover','-s','tools/bench','-p','test_*.py'],
+                 ['cargo','fmt','--check'],['cargo','clippy','--locked','--offline','--all-targets','--','-D','warnings'],
+                 ['cargo','test','--locked','--offline']]:quality.checked(command,record)
+ assert source=={name:prepare.digest(ROOT/name) for name in names}
+ record['end_admission']=collector.idle(proof)
+ record['completed']=True
+finally:
+ record['finished_utc']=datetime.now(timezone.utc).isoformat()
+ with output.open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
+print('Complete collector offline/format/clippy/Rust checks passed',flush=True)

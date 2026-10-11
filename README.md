@@ -181,6 +181,10 @@ preserves prepared IDs, finalized text and pending EOS semantics, and supplies
 the exact text scorers and literal HumanEval program composition. Four authored
 scalar/tiled requests pass with matching outputs. Isolated code execution and
 all 100 held-out model responses remain pending.
+The [full-task collector preparation](docs/experiments/2026-10-11-held-out-task-collector.md)
+now handles 100 independent requests, including empty immediate EOS, with
+phase watchdogs and owned descendant cleanup. Eleven targeted checks and all
+172 offline checks pass; no held-out response or task score is claimed yet.
 The [authored native isolation candidate](docs/experiments/2026-10-10-code-isolation.md)
 passes offline checks but is rejected before sandbox admission because Python
 cannot accept the fixed data limit. It is not used for generated code; a

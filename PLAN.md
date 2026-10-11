@@ -424,6 +424,21 @@ Astra accepts the complete evidence/report task with no actionable findings;
 local links and whitespace checks pass. Task pass rates, remaining candidate
 workloads and milestone acceptance remain pending; scalar remains default.
 
+Full task collector preparation, 11 October 2026 (M2.5/quality still open): the
+[checked persistent collector](docs/experiments/2026-10-11-held-out-task-collector.md)
+preserves all 100 frozen requests, independent reset state, literal finalized
+text and empty immediate EOS without an authored first-token constraint.
+Per-phase watchdogs are canceled/joined; late shutdown expiry invalidates
+success. Unexpected descendants are terminated and boundedly rechecked,
+with initial/final inventory retained and no successful collection outcome.
+Eleven targeted tests include both Astra cleanup regressions and a real tiny
+100-request fake CLI. All 172 offline tests, formatting, locked offline Clippy
+and 76 Rust tests pass in an isolated target, with protected endpoints unchanged.
+Astra accepts the complete checked code task after independent cleanup regression
+checks and source/evidence/documentation review, with no remaining findings.
+Local links and whitespace checks pass. No held-out model response, code grading,
+pass-rate or milestone acceptance is claimed by this preparation.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

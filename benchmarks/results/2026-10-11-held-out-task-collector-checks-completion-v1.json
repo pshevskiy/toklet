@@ -1,0 +1,13 @@
+{
+  "format": "toklet-observed-session-completion-v1",
+  "session_id": 93116,
+  "observed_complete_utc": "2026-10-11 13:23:27 UTC",
+  "origin": "Observed write_stdin completion for session93116; exact tool result retained",
+  "actual_tool_result": {
+    "chunk_id": "3882c7",
+    "wall_time_seconds": 0.000007125,
+    "exit_code": 0,
+    "original_token_count": 15,
+    "output": "Complete collector offline/format/clippy/Rust checks passed\n"
+  }
+}
