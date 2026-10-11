@@ -1,0 +1,79 @@
+{
+  "format": "toklet-cpu-tiled-workload-failed-exit-idle-v1",
+  "idle_verified_utc": "2026-10-11T17:43:16.530124+00:00",
+  "accepted": false,
+  "eligible_for_performance_acceptance": false,
+  "reason": "All ten numerical samples saved; missing jsonschema in launcher interpreter prevented validated publication. Driver finally killed/reaped its own numerical child.",
+  "workload": "medium",
+  "session_id": 58286,
+  "all_owned_processes_absent": true,
+  "exited_owned_pids": [
+    29311,
+    29334,
+    29347
+  ],
+  "owned_group_members": {
+    "29311": []
+  },
+  "owned_absence_query": {
+    "command": [
+      "ps",
+      "-p",
+      "29311,29334,29347",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "held_original_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n",
+  "stopped_machine": {
+    "Name": "podman-machine-default",
+    "Default": true,
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "Running": false,
+    "Starting": false,
+    "LastUp": "2026-10-11T20:05:08.08417+03:00",
+    "Stream": "default",
+    "VMType": "applehv",
+    "CPUs": 5,
+    "Memory": "2147483648",
+    "Swap": "0",
+    "DiskSize": "107374182400",
+    "Port": 51387,
+    "RemoteUsername": "core",
+    "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+    "UserModeNetworking": true
+  },
+  "end_verified": {
+    "frozen_binaries": {
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    "validated_local_model_assets": {
+      "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+    }
+  },
+  "saved_result_sha256": {
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1.json.samples.jsonl": "cf1868e6e3c6ef675bf0848b92504bb0dca24323f52a3a39f076d654de7af9a7",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-launch.json": "260ef0072bdfe6fbccd6c6e23a7f24e9af8b46ca05a1ed02835b7aaa9ae893a8",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-admission-claim.json": "611253ef6b50f8b3e2ebd01a6e871b758a0ca09efda8d52d928f247ea8f7315c",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-owned.json": "2878f889de86bea424607390ae1f5ad35178314eb015084879c68af56537a086",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-session-completion.json": "14e2d96a219170562eb66fd6a3ec886af3cc4b3aba4b0975b93325576b9ba25c",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-launch.py.txt": "38819d12f7dcac58172c2490acbb23096bf52905f8b1b07d48bc9259c5a9c593",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-owned.py.txt": "aa969e87f4f338c1572cab5288abefcfb5dc64b58cba5f4e3f7da1d336c6bed6",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-owned-first.py.txt": "9ff8a29812894a186a5a302466d4e2f67bb314fd62e460298aaf75ecd14690f5",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-owned-first.json": "c4e74db5b0b40ca28ffe49437030e14383bcf2b7bddb8eef3a126be7119813bd",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-driver.py.txt": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "benchmarks/results/2026-10-11-cpu-tiled-medium-v1-failure-idle.py.txt": "113ce8543f202e2896df560d98db44b57c185be5ca484d1b2944079479e21a2b"
+  },
+  "producer_sha256": "113ce8543f202e2896df560d98db44b57c185be5ca484d1b2944079479e21a2b"
+}

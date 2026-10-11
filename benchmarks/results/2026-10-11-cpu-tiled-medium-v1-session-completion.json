@@ -1,0 +1,13 @@
+{
+  "format": "toklet-actual-native-session-completion-v1",
+  "session_id": 58286,
+  "observed_utc": "2026-10-11T17:41:02+00:00",
+  "origin": "Actual write_stdin completion returned by native execution tool; not inferred from files",
+  "actual_tool_result": {
+    "chunk_id": "c7e00d",
+    "wall_time_seconds": 0.000019583,
+    "exit_code": 1,
+    "original_token_count": 308,
+    "output": "medium: sample 10: 98.653s\nTraceback (most recent call last):\n  File \"/Users/coloner/work/rust/toklet/tools/bench/cpu.py\", line 293, in <module>\n    main()\n  File \"/Users/coloner/work/rust/toklet/tools/bench/cpu.py\", line 261, in main\n    from jsonschema import Draft202012Validator\nModuleNotFoundError: No module named 'jsonschema'\nTraceback (most recent call last):\n  File \"/Users/coloner/work/rust/toklet/artifacts/launch-tiled-medium-v1.py\", line 53, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"/Users/coloner/work/rust/toklet/artifacts/launch-tiled-medium-v1.py\", line 51, in main\n    subprocess.run(command,check=True)\n  File \"/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Library/Frameworks/Python.framework/Versions/3.12/bin/python3', 'tools/bench/cpu.py', '--workload', 'medium', '--cpu-projection', 'tiled', '--cpu-qualification', '/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json', '--output', 'benchmarks/raw/2026-10-11-cpu-tiled-medium-v1.json']' returned non-zero exit status 1.\n"
+  }
+}

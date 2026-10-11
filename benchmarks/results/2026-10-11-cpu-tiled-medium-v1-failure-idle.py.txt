@@ -1,0 +1,57 @@
+"""Preserve excluded publication failure and prove its owned processes are idle."""
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib, json, subprocess, sys
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as boundary
+ROOT=Path.cwd();PREFIX='2026-10-11-cpu-tiled-medium-v1'
+def digest(path):
+    with Path(path).open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+def main():
+    completion_path=ROOT/'artifacts'/f'{PREFIX}-session-completion.json'
+    completion=json.loads(completion_path.read_text())
+    assert completion['format']=='toklet-actual-native-session-completion-v1' and completion['session_id']==58286
+    assert completion['origin']=='Actual write_stdin completion returned by native execution tool; not inferred from files'
+    actual=completion['actual_tool_result']
+    assert actual['exit_code']==1 and 'session_id' not in actual
+    assert "ModuleNotFoundError: No module named 'jsonschema'" in actual['output']
+    owned_path=ROOT/'artifacts'/f'{PREFIX}-owned.json';owned=json.loads(owned_path.read_text())
+    pids=[29311,29334,29347]
+    assert [owned[key] for key in ('launcher_pid','driver_pid','numerical_worker_pid')]==pids
+    absent=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid='],capture_output=True,text=True)
+    assert absent.returncode==1 and not absent.stdout and not absent.stderr
+    groups={'29311':boundary.live_group_members(29311)};assert groups=={'29311':[]}
+    held=boundary.idle(json.loads((ROOT/'benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json').read_text()))
+    machines=json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+    machine=next(item for item in machines if item['Name']=='podman-machine-default')
+    assert machine['Running'] is False and machine['Starting'] is False
+    raw=ROOT/'benchmarks/raw'/f'{PREFIX}.json';assert not raw.exists()
+    rows=[json.loads(line) for line in Path(str(raw)+'.samples.jsonl').read_text().splitlines()]
+    assert len(rows)==10
+    out=ROOT/'benchmarks/results';inventory={}
+    def copy(source,suffix):
+        target=out/f'{PREFIX}{suffix}';assert not target.exists()
+        target.write_bytes(source.read_bytes());inventory[str(target.relative_to(ROOT))]=digest(target)
+    for source,suffix in [(Path(str(raw)+'.samples.jsonl'),'.json.samples.jsonl'),
+        (ROOT/'benchmarks/raw'/f'{PREFIX}-launch.json','-launch.json'),
+        (ROOT/'benchmarks/raw'/f'{PREFIX}-admission-claim.json','-admission-claim.json'),
+        (owned_path,'-owned.json'),(completion_path,'-session-completion.json'),
+        (ROOT/'artifacts/launch-tiled-medium-v1.py','-launch.py.txt'),
+        (ROOT/'artifacts/observe-tiled-medium-owned-v1.py','-owned.py.txt'),
+        (ROOT/'artifacts/observe-tiled-medium-owned-v1-first.py','-owned-first.py.txt'),
+        (ROOT/'artifacts'/f'{PREFIX}-owned-first.json','-owned-first.json'),
+        (ROOT/'tools/bench/cpu.py','-driver.py.txt'),(Path(__file__),'-failure-idle.py.txt')]:copy(source,suffix)
+    prior=json.loads((ROOT/'benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json').read_text())
+    end={}
+    for section,files in prior['end_verified'].items():
+        end[section]={}
+        for name,expected in files.items():
+            actual=digest(ROOT/name);assert actual==expected,name;end[section][name]=actual
+    record={'format':'toklet-cpu-tiled-workload-failed-exit-idle-v1','idle_verified_utc':datetime.now(timezone.utc).isoformat(),
+        'accepted':False,'eligible_for_performance_acceptance':False,'reason':'All ten numerical samples saved; missing jsonschema in launcher interpreter prevented validated publication. Driver finally killed/reaped its own numerical child.',
+        'workload':'medium','session_id':58286,'all_owned_processes_absent':True,'exited_owned_pids':pids,
+        'owned_group_members':groups,'owned_absence_query':{'command':absent.args,'exit_code':absent.returncode,'stdout':absent.stdout,'stderr':absent.stderr},
+        'held_original_snapshot':held,'stopped_machine':machine,'end_verified':end,'saved_result_sha256':inventory,'producer_sha256':digest(__file__)}
+    with (out/f'{PREFIX}-failure-idle.json').open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
+    print(json.dumps({'excluded':True,'saved_files':len(inventory),'idle_verified_utc':record['idle_verified_utc']}))
+if __name__=='__main__':main()

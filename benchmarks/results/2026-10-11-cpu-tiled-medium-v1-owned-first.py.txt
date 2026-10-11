@@ -1,0 +1,26 @@
+"""Record only the verified medium launcher's three owned processes."""
+from datetime import datetime, timezone
+from pathlib import Path
+import hashlib, json, subprocess
+
+root = Path.cwd()
+pids = [29311, 29334, 29347]
+command = ['ps', '-p', ','.join(map(str, pids)), '-o', 'pid=,ppid=,pgid=,stat=,command=']
+p = subprocess.run(command, text=True, capture_output=True)
+assert p.returncode == 0 and not p.stderr
+rows = {int(row[0]): row for line in p.stdout.splitlines() if len(row := line.split(None, 4)) == 5}
+assert set(rows) == set(pids)
+assert [(int(rows[pid][1]), int(rows[pid][2])) for pid in pids] == [(35939, 29311), (29311, 29311), (29334, 29311)]
+assert rows[29311][4].endswith('artifacts/launch-tiled-medium-v1.py --workload medium')
+assert 'tools/bench/cpu.py --workload medium --cpu-projection tiled' in rows[29334][4]
+assert rows[29347][4] == str(root/'artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench')+' '+str(root/'models/Qwen2.5-0.5B-Instruct')+' 128 tiled'
+launch = root/'benchmarks/raw/2026-10-11-cpu-tiled-medium-v1-launch.json'
+record = {'format': 'toklet-cpu-tiled-workload-owned-v1', 'session_id': 58286,
+          'observed_utc': datetime.now(timezone.utc).isoformat(),
+          'launcher_pid': 29311, 'driver_pid': 29334, 'numerical_worker_pid': 29347,
+          'owned_process_group': 29311, 'snapshot': p.stdout,
+          'launch_receipt_sha256': hashlib.sha256(launch.read_bytes()).hexdigest(),
+          'producer_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+with (root/'artifacts/2026-10-11-cpu-tiled-medium-v1-owned.json').open('x') as stream:
+    json.dump(record, stream, indent=2); stream.write('\n')
+print(json.dumps(record))

@@ -1,0 +1,7 @@
+{
+  "format": "toklet-cpu-tiled-medium-admission-claim-v1",
+  "claimed_utc": "2026-10-11T17:19:23.126700+00:00",
+  "launcher_pid": 29311,
+  "workload": "medium",
+  "producer_path": "/Users/coloner/work/rust/toklet/artifacts/launch-tiled-medium-v1.py"
+}
