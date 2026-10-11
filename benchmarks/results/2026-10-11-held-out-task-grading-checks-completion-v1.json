@@ -1,0 +1,13 @@
+{
+  "format": "toklet-observed-session-completion-v1",
+  "session_id": 92795,
+  "origin": "Observed write_stdin completion for session92795; exact tool result retained",
+  "observed_complete_utc": "2026-10-11T15:48:19+00:00",
+  "actual_tool_result": {
+    "chunk_id": "d591d2",
+    "wall_time_seconds": 0.000008791,
+    "exit_code": 0,
+    "original_token_count": 17,
+    "output": "Complete held-out grading offline/format/clippy/Rust checks passed\n"
+  }
+}

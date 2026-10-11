@@ -457,6 +457,22 @@ the complete evidence and documentation task with no remaining findings. All
 task score, tiled task comparison, timing acceptance or milestone closure
 is claimed by this collection.
 
+Held-out grading integration, 11 October 2026 (M2.5/quality still open): the
+[checked runner and runtime window](docs/experiments/2026-10-11-held-out-task-grading.md)
+validate all 100 finalized responses and their qualified provenance before VM
+startup. Forty code programs preserve literal prefix/completion/test composition;
+prose and continuation use unchanged protected scorers. Known resource outcomes
+remain resolved failures; unresolved compatibility/protocol/runtime evidence
+prevents an aggregate, and uncertain cleanup stops later container creation.
+The owned window binds the qualified runtime and cached image, refuses a
+pre-existing running VM, retains unexplained live containers and owns helper
+restoration through publication failures. All 21 targeted checks, 193 offline
+Python tests, formatting, locked offline Clippy and 76 Rust tests pass, with real
+completed scalar collection validation and protected idle endpoints unchanged.
+Astra independently passes the targeted suite and accepts the complete code,
+check evidence and documentation without actionable findings. No actual held-out program execution,
+task score, tiled comparison or milestone closure is claimed by this code task.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

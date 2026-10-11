@@ -204,3 +204,8 @@ passes all 28 authored native expectations and 161 offline tests, with literal
 input, exact configuration, bounded transport and verified VM restoration.
 Unresolved statuses remain infrastructure failures. Held-out code grading and
 task scoring remain pending.
+The [held-out grading integration](docs/experiments/2026-10-11-held-out-task-grading.md)
+now validates complete collections before starting the owned runtime, composes
+literal code programs and suppresses aggregates for unresolved infrastructure.
+Twenty-one targeted checks, 193 offline Python tests and required Cargo checks
+pass. Actual held-out code execution and task scores remain pending.
