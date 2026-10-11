@@ -1,0 +1,8 @@
+{
+  "format": "toklet-scalar-application-owned-processes-v1",
+  "utc": "2026-10-11T08:24:23.789068+00:00",
+  "launcher_pid": 65037,
+  "transport_pid": 65046,
+  "worker_pid": 65060,
+  "snapshot": "65037 35939 65037 Ss   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u artifacts/launch-scalar-application-2026-10-11-v1.py\n65046 65037 65037 S    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/application.py --cpu-projection scalar --output benchmarks/raw/2026-10-11-application-scalar-v1.json\n65060 65046 65037 R    /Users/coloner/work/rust/toklet/target/release/toklet --model /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct --interactive --json --context-capacity 2048 --prefill-chunk 128\n"
+}

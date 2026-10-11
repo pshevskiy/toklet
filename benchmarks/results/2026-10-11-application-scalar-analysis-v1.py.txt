@@ -1,0 +1,195 @@
+"""Replay small saved application evidence without running a model or worker."""
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import statistics
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--root", type=Path, required=True)
+parser.add_argument("--output", type=Path, required=True)
+args = parser.parse_args()
+root = args.root.resolve()
+base = "benchmarks/results/2026-10-11-application-scalar"
+result_name = base + "-v1.json"
+raw_name = result_name + ".samples.jsonl"
+launch_name = base + "-launch-v1.json"
+driver_name = base + "-driver-v1.py.txt"
+idle_name = base + "-idle-v1.json"
+owned_name = base + "-owned-processes-v1.json"
+
+
+def read(name):
+    return json.loads((root / name).read_text())
+
+
+def digest(name):
+    return hashlib.sha256((root / name).read_bytes()).hexdigest()
+
+
+def duration(value):
+    assert type(value) in (int, float) and math.isfinite(value) and value >= 0
+    return value
+
+
+def nullable_median(values):
+    assert all(value is None for value in values) or all(value is not None for value in values)
+    return None if values[0] is None else statistics.median(values)
+
+
+result = read(result_name)
+launch = read(launch_name)
+idle, owned = read(idle_name), read(owned_name)
+assert idle["format"] == "toklet-scalar-application-natural-exit-idle-v1"
+assert idle["uninterrupted_batch"] is True
+assert (idle["warmup_scenarios"], idle["measured_scenarios"], idle["measured_turns"]) == (3, 10, 30)
+assert [owned[key] for key in ("launcher_pid", "transport_pid", "worker_pid")] == [65037, 65046, 65060]
+assert [idle[key] for key in ("exited_launcher_pid", "exited_transport_pid", "exited_numerical_worker_pid")] == [65037, 65046, 65060]
+assert launch["launcher_pid"] == 65037 and idle["held_original_orchestration_pid"] == 17694
+assert launch["launch_utc"] < owned["utc"] < idle["idle_verified_utc"]
+assert idle["snapshot"] == ""
+assert set(idle["end_verified"]) == {"frozen_binaries", "validated_local_model_assets"}
+for section, values in idle["end_verified"].items():
+    assert values == launch["verified"][section]
+expected_saved = {result_name, raw_name, launch_name, driver_name, owned_name,
+                  base + "-launch-v1.py.txt", base + "-idle-v1.py.txt",
+                  base + "-session-completion-v1.json"}
+assert set(idle["saved_result_sha256"]) == expected_saved
+for name, expected in idle["saved_result_sha256"].items():
+    assert digest(name) == expected
+assert digest(base + "-idle-v1.py.txt") == idle["producer_sha256"]
+assert digest(base + "-launch-v1.py.txt") == launch["producer_sha256"]
+completion_name = base + "-session-completion-v1.json"
+assert digest(completion_name) == idle["session_completion_sha256"]
+completion = read(completion_name)
+assert completion["session_id"] == 16633 and completion["exit_code"] == 0
+assert "Full scalar application transport completed naturally" in completion["final_output"]
+assert completion["origin"] == "Observed unified exec session completion; not inferred from result data or PID absence"
+rows = [json.loads(line) for line in (root / raw_name).read_text().splitlines()]
+assert rows == result["samples"] and len(rows) == 10
+assert result["record_version"] == 1
+assert result["contract_id"] == "toklet-benchmark-contract-v1"
+assert result["comparison_track"] == "application"
+assert result["qualification"] == "three_warmups_ten_samples"
+assert result["runtime"] == "Toklet scalar CPU CLI"
+assert result["representation"] == {
+    "weights": "FP32", "kv": "FP32", "context_capacity": 2048, "prefill_chunk": 128,
+}
+assert result["policy"] == {
+    "turns": 3, "max_output_tokens_per_turn": 128,
+    "stop": "pinned EOS or output limit", "greedy": True,
+    "scripted_assistant_history": True,
+    "cache": "empty per authored turn; resident model and reusable buffers",
+}
+assert result["setup"]["warmup_repetitions"] == 3
+assert 0 <= duration(result["setup"]["conversion_seconds"]) <= duration(result["setup"]["load_seconds"])
+duration(result["setup"]["submission_to_ready_seconds"])
+duration(result["setup"]["tokenizer_load_seconds"])
+identity = result["identity"]
+assert identity["engine_commit"] == launch["engine_commit"] == "caabef4c5641aab939fac4618fe0652612878f85"
+assert identity["working_tree_dirty"] is False and launch["working_tree_clean"] is True
+assert identity["cpu_projection"] == "scalar" and identity["cli_qualification_sha256"] is None
+assert identity["binary_sha256"] == launch["verified"]["frozen_binaries"]["target/release/toklet"]
+assert identity["binary_sha256"] == "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+assert identity["driver_sha256"] == launch["driver_sha256"] == digest(driver_name)
+assert identity["driver_sha256"] == "9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da"
+contract = read("benchmarks/contract-v1/manifest.json")
+assert identity["transcript_sha256"] == contract["authored_text_sha256"]["application_trace.json"]
+assert identity["transcript_sha256"] == digest("benchmarks/contract-v1/application_trace.json")
+assert identity["model"] == read("benchmarks/sources.json")["model"]
+source_assets = read("benchmarks/sources.json")["assets"]
+assert identity["tokenizer_sha256"] == next(a["sha256"] for a in source_assets if a["id"] == "qwen.tokenizer.json")
+for name, field in (("tools/bench/mlx_baseline.py", "common_helper_sha256"),
+                    ("tools/bench/prepare.py", "preparation_helper_sha256"),
+                    ("tools/bench/cpu_cli.py", "cli_qualification_helper_sha256"),
+                    ("tools/bench/cpu.py", "cpu_worker_qualification_helper_sha256")):
+    assert identity[field] == launch["verified"]["validated_source_and_artifact_bindings"][name]
+memory = result["memory"]
+assert memory["engine_working_set_limit_bytes"] == 6 * 1024**3
+assert memory["admitted_bytes"] == 2353012560
+assert memory["logical_allocations"]["weights_bytes"] == 1976131072
+assert memory["logical_allocations"]["kv_bytes"] == 50331648
+assert memory["logical_allocations"]["scratch_bytes"] == 10436608
+qualified_memory = read("benchmarks/results/2026-10-10-application-probe.json")["memory"]["logical_allocations"]
+assert memory["logical_allocations"] == qualified_memory
+assert all(type(value) is int and value >= 0 for value in memory["logical_allocations"].values())
+assert sum(memory["logical_allocations"].values()) == memory["admitted_bytes"]
+assert memory["system_pressure"] is None and result["energy"] is None
+reference = rows[0]["turns"]
+for sample in rows:
+    assert len(sample["turns"]) == 3
+    assert 0 < sample["process_peak_footprint_bytes"] <= 6 * 1024**3
+    finalizations = []
+    for index, turn in enumerate(sample["turns"]):
+        tokens, events, stats = turn["token_ids"], turn["received_token_event_seconds"], turn["statistics"]
+        gen = stats["generation"]
+        assert 0 <= len(tokens) <= 128 and len(tokens) == len(events) == gen["emitted_tokens"]
+        assert all(type(token) is int and 0 <= token < 151936 and token not in (151643, 151645) for token in tokens)
+        assert all(duration(t) >= 0 for t in events)
+        assert all(b >= a for a, b in zip(events, events[1:]))
+        first = turn["submission_to_first_token_seconds"]
+        done = duration(turn["submission_to_done_seconds"])
+        finalized = duration(turn["submission_to_finalized_seconds"])
+        assert done <= finalized
+        if events:
+            assert duration(first) == events[0] <= events[-1] <= done
+        else:
+            assert first is None and gen["first_token_seconds"] is None
+        text_time = turn["submission_to_first_visible_text_seconds"]
+        if turn["visible_text"]:
+            assert events and first <= duration(text_time) <= finalized
+        else:
+            assert text_time is None
+        assert hashlib.sha256(turn["visible_text"].encode()).hexdigest() == turn["visible_text_sha256"]
+        assert gen["reused_tokens"] == 0 and gen["prefill_tokens"] == (36, 76, 117)[index]
+        assert gen["pending_tokens"] == 1
+        assert gen["evaluated_tokens"] == gen["prefill_tokens"] + gen["sampled_tokens"] - 1
+        assert gen["history_tokens"] == gen["evaluated_tokens"] + 1 <= 2048
+        reason = gen["reason"]
+        if reason["kind"] == "output_limit":
+            assert gen["sampled_tokens"] == len(tokens) == 128
+        else:
+            assert reason["kind"] == "stop_token" and reason["token_id"] in (151643, 151645)
+            assert gen["sampled_tokens"] == len(tokens) + 1 <= 128
+        for key in ("decode_seconds", "prefill_seconds", "sampling_seconds", "total_seconds"):
+            duration(gen[key])
+        assert gen["prefill_seconds"] <= gen["total_seconds"] <= done
+        if events:
+            assert gen["prefill_seconds"] <= duration(gen["first_token_seconds"]) <= gen["total_seconds"]
+        for key in ("load_seconds", "conversion_seconds", "tokenizer_load_seconds"):
+            assert stats[key] == 0
+        for key in ("detokenization_seconds", "input_formatting_seconds", "input_preparation_seconds", "publication_seconds", "tokenization_seconds"):
+            duration(stats[key])
+        assert stats["memory_admitted_bytes"] == memory["admitted_bytes"]
+        assert tokens == reference[index]["token_ids"]
+        assert turn["visible_text"] == reference[index]["visible_text"]
+        assert reason == reference[index]["statistics"]["generation"]["reason"]
+        finalizations.append(finalized)
+    assert duration(sample["scenario_seconds"]) >= sum(finalizations)
+summary = {
+    "scenario_median_seconds": statistics.median(s["scenario_seconds"] for s in rows),
+    "scenario_min_seconds": min(s["scenario_seconds"] for s in rows),
+    "scenario_max_seconds": max(s["scenario_seconds"] for s in rows),
+}
+assert summary == result["summary"]
+assert memory["peak_process_bytes"] == max(s["process_peak_footprint_bytes"] for s in rows)
+analysis = {
+    "format": "toklet-saved-scalar-application-analysis-v1", "completed": True,
+    "scope": "Ten saved three-turn scenarios only; warmup states were not retained. No model/worker execution or binary hashing. No task-quality claim.",
+    "checks": ["ten exact raw/sample pairs", "thirty deterministic finalized responses", "empty-cache committed/pending states", "ordered receipt timers", "text hashes", "independent summary", "memory", "launch and source identities"],
+    "summary": summary,
+    "turns": [{"prompt_tokens": (36, 76, 117)[i],
+               "emitted_tokens": len(reference[i]["token_ids"]),
+               "stop_reason": reference[i]["statistics"]["generation"]["reason"],
+               "first_token_median_seconds": nullable_median([s["turns"][i]["submission_to_first_token_seconds"] for s in rows]),
+               "first_visible_text_median_seconds": nullable_median([s["turns"][i]["submission_to_first_visible_text_seconds"] for s in rows]),
+               "finalized_median_seconds": statistics.median(s["turns"][i]["submission_to_finalized_seconds"] for s in rows),
+               "visible_text_sha256": reference[i]["visible_text_sha256"]} for i in range(3)],
+    "records_sha256": {name: digest(name) for name in sorted(expected_saved | {idle_name})},
+    "producer_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+}
+with args.output.open("x") as stream:
+    json.dump(analysis, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+print(json.dumps({"completed": True, "summary": summary, "turns": analysis["turns"]}))

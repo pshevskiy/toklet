@@ -346,6 +346,23 @@ Astra accepted the complete evidence task after a power-query timing correction
 and independent saved-data replay; links and whitespace checks pass.
 Application measurements, full quality and milestone acceptance remain open.
 
+Full scalar application evidence, 11 October 2026 (M2.5 still open): the
+[completed trace](docs/experiments/2026-10-11-application-scalar.md) retains
+three warmups and ten uninterrupted scripted three-turn scenarios. Median
+scenario latency is 263.230241 s, with all thirty measured responses and
+committed/pending states deterministic. Turns emit 128, 18 and 128 tokens;
+the second stops at pinned EOS. Median first-token/visible-text latency is
+11.606069 / 24.114077 / 36.922609 s for the three prompt depths. Maximum
+own-child physical footprint is 2,128,758,896 bytes, below conservative
+admission and 6 GiB. Saved replay verifies raw pairs, state/timing/text,
+complete memory accounting, identities, actual session exit zero and exact
+owned process absence. The original interrupted orchestration stays held.
+Source/helper/binary code is unchanged, and checks and VM/native work remain
+outside measurement. Astra accepted the completed task with no findings after
+independent byte-identical replay, identity/state/timing/memory checks and
+link/whitespace verification. Held-out quality, candidate application evidence
+and milestone acceptance remain open.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

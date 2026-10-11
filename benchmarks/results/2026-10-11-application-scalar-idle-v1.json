@@ -1,0 +1,43 @@
+{
+  "format": "toklet-scalar-application-natural-exit-idle-v1",
+  "idle_verified_utc": "2026-10-11T09:21:14.979767+00:00",
+  "completed_workload": "application",
+  "measured_scenarios": 10,
+  "measured_turns": 30,
+  "warmup_scenarios": 3,
+  "uninterrupted_batch": true,
+  "exited_launcher_pid": 65037,
+  "exited_transport_pid": 65046,
+  "exited_numerical_worker_pid": 65060,
+  "held_original_orchestration_pid": 17694,
+  "snapshot": "",
+  "held_snapshot": "17694 35939 Ts   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z    <defunct>\n",
+  "saved_result_sha256": {
+    "benchmarks/results/2026-10-11-application-scalar-v1.json": "abf61f9fb4fdc05119c4b2e073e086af0cc67f23ed19e4fac9b04cf50faaa8e2",
+    "benchmarks/results/2026-10-11-application-scalar-v1.json.samples.jsonl": "384037dcfeb871c750961b039fea3d48aeb6719a33d956bfac9b899fd2a8b6f8",
+    "benchmarks/results/2026-10-11-application-scalar-launch-v1.json": "b2231c8fb6fa1b8f78fcc89b7c0ea17d9ccb02bdfef5e6aeff824f8efd182dc1",
+    "benchmarks/results/2026-10-11-application-scalar-owned-processes-v1.json": "b006572d71feb1815dfccad67537474d4a95387ded26398c2fc1f95e453a9cff",
+    "benchmarks/results/2026-10-11-application-scalar-driver-v1.py.txt": "9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da",
+    "benchmarks/results/2026-10-11-application-scalar-launch-v1.py.txt": "5c6abfd90571df3da4f84c623b166199622fd2d77686b468fa1bc6af91b74928",
+    "benchmarks/results/2026-10-11-application-scalar-session-completion-v1.json": "a09fdb76deacbc7a15e3eac9356ff7e85f2d409b90a8521c5d19b083665e66a5",
+    "benchmarks/results/2026-10-11-application-scalar-idle-v1.py.txt": "87bc73692360bc876dc51e6f7ab3b515753df361b75a7eeec306ac86664fdcf2"
+  },
+  "producer_sha256": "87bc73692360bc876dc51e6f7ab3b515753df361b75a7eeec306ac86664fdcf2",
+  "session_completion_sha256": "a09fdb76deacbc7a15e3eac9356ff7e85f2d409b90a8521c5d19b083665e66a5",
+  "end_verified": {
+    "frozen_binaries": {
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    "validated_local_model_assets": {
+      "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+    }
+  }
+}

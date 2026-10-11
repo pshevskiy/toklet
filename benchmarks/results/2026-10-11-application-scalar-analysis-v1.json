@@ -1,0 +1,68 @@
+{
+  "format": "toklet-saved-scalar-application-analysis-v1",
+  "completed": true,
+  "scope": "Ten saved three-turn scenarios only; warmup states were not retained. No model/worker execution or binary hashing. No task-quality claim.",
+  "checks": [
+    "ten exact raw/sample pairs",
+    "thirty deterministic finalized responses",
+    "empty-cache committed/pending states",
+    "ordered receipt timers",
+    "text hashes",
+    "independent summary",
+    "memory",
+    "launch and source identities"
+  ],
+  "summary": {
+    "scenario_median_seconds": 263.2302414579899,
+    "scenario_min_seconds": 260.72721920802724,
+    "scenario_max_seconds": 266.06798324990086
+  },
+  "turns": [
+    {
+      "prompt_tokens": 36,
+      "emitted_tokens": 128,
+      "stop_reason": {
+        "kind": "output_limit"
+      },
+      "first_token_median_seconds": 11.606069395435043,
+      "first_visible_text_median_seconds": 11.606069395435043,
+      "finalized_median_seconds": 100.28241547942162,
+      "visible_text_sha256": "8e840f314af6a01ad7f13145d8d9b8b787070ad89226b59dd48234c16464853c"
+    },
+    {
+      "prompt_tokens": 76,
+      "emitted_tokens": 18,
+      "stop_reason": {
+        "kind": "stop_token",
+        "token_id": 151645
+      },
+      "first_token_median_seconds": 24.114076645986643,
+      "first_visible_text_median_seconds": 24.114076645986643,
+      "finalized_median_seconds": 36.626188729540445,
+      "visible_text_sha256": "43129cc725826d23efef821cb8d344b860d6ce0f47283a4d24bed39dedaf8ad9"
+    },
+    {
+      "prompt_tokens": 117,
+      "emitted_tokens": 128,
+      "stop_reason": {
+        "kind": "output_limit"
+      },
+      "first_token_median_seconds": 36.922608791443054,
+      "first_visible_text_median_seconds": 36.922608791443054,
+      "finalized_median_seconds": 125.96632531296927,
+      "visible_text_sha256": "03593bf9c7378d6930701cfd166889f2a672a5194846c0fac149bf1da19a2396"
+    }
+  ],
+  "records_sha256": {
+    "benchmarks/results/2026-10-11-application-scalar-driver-v1.py.txt": "9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da",
+    "benchmarks/results/2026-10-11-application-scalar-idle-v1.json": "18ad59b8f42e050b4ca2dcbd3c2db2d91018ec74b9f12dcb34a041864716f000",
+    "benchmarks/results/2026-10-11-application-scalar-idle-v1.py.txt": "87bc73692360bc876dc51e6f7ab3b515753df361b75a7eeec306ac86664fdcf2",
+    "benchmarks/results/2026-10-11-application-scalar-launch-v1.json": "b2231c8fb6fa1b8f78fcc89b7c0ea17d9ccb02bdfef5e6aeff824f8efd182dc1",
+    "benchmarks/results/2026-10-11-application-scalar-launch-v1.py.txt": "5c6abfd90571df3da4f84c623b166199622fd2d77686b468fa1bc6af91b74928",
+    "benchmarks/results/2026-10-11-application-scalar-owned-processes-v1.json": "b006572d71feb1815dfccad67537474d4a95387ded26398c2fc1f95e453a9cff",
+    "benchmarks/results/2026-10-11-application-scalar-session-completion-v1.json": "a09fdb76deacbc7a15e3eac9356ff7e85f2d409b90a8521c5d19b083665e66a5",
+    "benchmarks/results/2026-10-11-application-scalar-v1.json": "abf61f9fb4fdc05119c4b2e073e086af0cc67f23ed19e4fac9b04cf50faaa8e2",
+    "benchmarks/results/2026-10-11-application-scalar-v1.json.samples.jsonl": "384037dcfeb871c750961b039fea3d48aeb6719a33d956bfac9b899fd2a8b6f8"
+  },
+  "producer_sha256": "345dd0c763c757b3301265484a55a72eebc86aa07a4656374a281227cf3fadd2"
+}

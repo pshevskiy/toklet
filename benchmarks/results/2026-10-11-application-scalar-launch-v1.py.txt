@@ -1,0 +1,48 @@
+"""Admit a fresh full scalar application trace after the reviewed idle tasks."""
+from pathlib import Path
+from datetime import datetime,timezone
+import json,os,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import cpu,cpu_cli,linux_code_isolation_probe as linux
+root=Path.cwd();digest=linux.digest
+assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert subprocess.check_output(['git','diff','1a9bd8b..HEAD','--','src','Cargo.toml','Cargo.lock','examples/cpu_bench.rs','tests/cli.rs'],text=True)==''
+proof_name='benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json'
+snapshot=linux.idle(json.loads(Path(proof_name).read_text()))
+fresh_name='benchmarks/results/2026-10-11-cpu-changed-uninterrupted-idle-v1.json'
+fresh=json.loads(Path(fresh_name).read_text());assert fresh['uninterrupted_batch'] and fresh['measured_requests']==10
+pids=[fresh[k] for k in ['exited_launcher_pid','exited_transport_pid','exited_numerical_worker_pid']]
+p=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid='],text=True,capture_output=True)
+assert p.returncode==1 and not p.stdout.strip() and not p.stderr.strip()
+prior_name='benchmarks/results/2026-10-10-cpu-code-isolation-check-window-completed.json'
+assert digest(prior_name)=='b820f26729cb59e63f775e580c2ab6a516217cf3a0276e1766ca03c12fd84b09'
+prior=json.loads(Path(prior_name).read_text());verified={}
+for section in ['frozen_binaries','validated_local_model_assets','validated_source_and_artifact_bindings','records']:
+ verified[section]={}
+ for name,expected in prior[section].items():
+  assert digest(name)==expected,name
+  verified[section][name]=expected
+cpu.qualified_cpu_worker(root/'benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json')
+cpu_cli.qualified_cli(root/'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json')
+analysis_name='benchmarks/results/2026-10-11-linux-native-retry-analysis-v1.json'
+a=json.loads(Path(analysis_name).read_text());assert a['completed'] and a['native_authored_qualification_completed'] and not a['executor_adopted']
+for name,expected in a['records_sha256'].items():assert digest(name)==expected,name
+restoration_name='benchmarks/results/2026-10-11-linux-native-final-restoration-v1.json'
+f=json.loads(Path(restoration_name).read_text());assert f['original_machine_stopped'] and f['startup_group_empty']
+assert linux.live_group_members(json.loads(Path('benchmarks/results/2026-10-11-linux-runtime-window-v8.json').read_text())['startup']['startup_process_group'])==[]
+for name,expected in f['frozen_binaries'].items():assert digest(name)==expected
+machines=json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+m=next(x for x in machines if x['Name']=='podman-machine-default');assert m['Running'] is False and m['Starting'] is False
+assert digest('tools/bench/application.py')=='9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da'
+checks=json.loads(Path('benchmarks/results/2026-10-11-linux-code-isolation-probe-v8.json').read_text())
+assert checks['completed'] and len(checks['checks'])==4 and all(c['exit_code']==0 and not c['cleanup_errors'] and c['surviving_group_members']==[] for c in checks['checks'])
+out='benchmarks/raw/2026-10-11-application-scalar-v1.json'
+receipt='benchmarks/raw/2026-10-11-application-scalar-launch-v1.json'
+assert all(not Path(name).exists() for name in [out,out+'.samples.jsonl',receipt])
+linux.idle(json.loads(Path(proof_name).read_text()))
+r={'format':'toklet-scalar-full-application-launch-v1','engine_commit':head,'working_tree_clean':True,'launcher_pid':os.getpid(),'launch_utc':datetime.now(timezone.utc).isoformat(),'producer_sha256':digest(__file__),'prior_receipt_sha256':digest(prior_name),'changed_idle_sha256':digest(fresh_name),'native_analysis_sha256':digest(analysis_name),'restoration_sha256':digest(restoration_name),'driver_sha256':digest('tools/bench/application.py'),'verified':verified,'stopped_machine':m,'snapshot_before':snapshot,'command':[sys.executable,'tools/bench/application.py','--cpu-projection','scalar','--output',out],'policy':'Fresh three warmups and ten three-turn scripted scenarios; original interrupted orchestration remains held. All checks/hashes/VM work finish before launch; frozen historical CLI 5250694 is used, numerical source337515e.'}
+with Path(receipt).open('x') as f:json.dump(r,f,indent=2);f.write('\n')
+print(json.dumps({'launch_utc':r['launch_utc'],'engine_commit':head,'launcher_pid':r['launcher_pid'],'verified_assets':len(verified['validated_local_model_assets'])}),flush=True)
+subprocess.run(r['command'],check=True)
+print('Full scalar application transport completed naturally',flush=True)

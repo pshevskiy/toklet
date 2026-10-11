@@ -296,6 +296,15 @@ preceding native counters, and have a separate driver completion timestamp.
 New-process ready time and native loading/conversion/tokenizer setup are retained
 separately from warm requests; source hashing prevents a cold-storage claim.
 
+The [full scalar application report](../docs/experiments/2026-10-11-application-scalar.md)
+retains three warmups and ten uninterrupted three-turn scenarios. Median
+scenario latency is 263.230241 s (range 260.727219–266.067983 s); the respective
+turns emit 128, 18 and 128 tokens, with EOS ending the second turn. Every
+measured response/state matches its repeated counterpart. Maximum own-child
+physical footprint is 2,128,758,896 bytes, below admission and 6 GiB.
+Finalization, setup and overlapping native components remain separate.
+This completes this scalar trace, not held-out quality or milestone acceptance.
+
 ```sh
 .venv/bin/python tools/bench/mlx_baseline.py --dtype fp32 --prompt-length 128 --output benchmarks/raw/mlx-fp32-short.json
 ```

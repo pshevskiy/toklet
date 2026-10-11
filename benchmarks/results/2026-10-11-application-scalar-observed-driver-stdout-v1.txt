@@ -1,0 +1,15 @@
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+application: warmup 1: 261.555s
+application: warmup 2: 261.263s
+application: warmup 3: 261.647s
+application: sample 1: 261.071s
+application: sample 2: 260.727s
+application: sample 3: 261.001s
+application: sample 4: 263.896s
+application: sample 5: 265.697s
+application: sample 6: 266.068s
+application: sample 7: 261.949s
+application: sample 8: 264.232s
+application: sample 9: 263.568s
+application: sample 10: 262.892s
+Full scalar application transport completed naturally

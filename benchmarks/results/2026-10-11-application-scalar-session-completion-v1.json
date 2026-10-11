@@ -1,0 +1,14 @@
+{
+  "session_id": 16633,
+  "exit_code": 0,
+  "final_output": "application: sample 10: 262.892s\nFull scalar application transport completed naturally\n",
+  "observed_utc": "2026-10-11T09:20:57.999Z",
+  "origin": "Observed unified exec session completion; not inferred from result data or PID absence",
+  "raw_tool_result": {
+    "chunk_id": "406740",
+    "wall_time_seconds": 0.00001775,
+    "exit_code": 0,
+    "original_token_count": 22,
+    "output": "application: sample 10: 262.892s\nFull scalar application transport completed naturally\n"
+  }
+}
