@@ -1,0 +1,11 @@
+{
+  "format": "toklet-full-tiled-loss-owned-v1",
+  "session_id": 50862,
+  "observed_utc": "2026-10-11T12:04:00.490966+00:00",
+  "launcher_pid": 85088,
+  "driver_pid": 85096,
+  "numerical_worker_pid": 85473,
+  "snapshot": "85088 35939 85088 Ss   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/launch-held-out-tiled-loss-2026-10-11-v1.py\n85096 85088 85088 S    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/quality.py --output benchmarks/raw/2026-10-11-held-out-tiled-loss-v1.json --build-dir artifacts/held-out-tiled-loss-v1 --cpu-qualification /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json --cpu-projection tiled\n85473 85096 85473 Rs   artifacts/held-out-tiled-loss-v1/release/examples/quality_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct /Users/coloner/work/rust/toklet/benchmarks/contract-v1/held_out_loss.u32le tiled\n",
+  "launch_receipt_sha256": "01d9921d1dec9ba9c19ba6df4535fb21c391bbae7957fa8c6df864c9c460d2b1",
+  "producer_sha256": "385db5a14aa167af7d68c8e18984a102c67131eca67024a12256c2375328ca77"
+}

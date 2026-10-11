@@ -1,0 +1,20 @@
+"""Observe only the currently owned full tiled loss process chain."""
+from datetime import datetime,timezone
+from pathlib import Path
+import hashlib,json,subprocess
+pids=[85088,85096,85473]
+command=['ps','-p',','.join(map(str,pids)),'-o','pid=,ppid=,pgid=,stat=,command=']
+p=subprocess.run(command,text=True,capture_output=True)
+assert p.returncode==0 and not p.stderr
+rows={int(row[0]):row for line in p.stdout.splitlines() if len(row:=line.split(None,4))==5}
+assert set(rows)==set(pids)
+assert int(rows[85088][1])==35939 and int(rows[85088][2])==85088
+assert int(rows[85096][1])==85088 and int(rows[85096][2])==85088
+assert int(rows[85473][1])==85096 and int(rows[85473][2])==85473
+assert rows[85088][4].endswith('artifacts/launch-held-out-tiled-loss-2026-10-11-v1.py')
+assert 'tools/bench/quality.py --output benchmarks/raw/2026-10-11-held-out-tiled-loss-v1.json' in rows[85096][4]
+assert rows[85473][4]=='artifacts/held-out-tiled-loss-v1/release/examples/quality_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct /Users/coloner/work/rust/toklet/benchmarks/contract-v1/held_out_loss.u32le tiled'
+launch=Path('benchmarks/raw/2026-10-11-held-out-tiled-loss-launch-v1.json')
+r={'format':'toklet-full-tiled-loss-owned-v1','session_id':50862,'observed_utc':datetime.now(timezone.utc).isoformat(),'launcher_pid':85088,'driver_pid':85096,'numerical_worker_pid':85473,'snapshot':p.stdout,'launch_receipt_sha256':hashlib.sha256(launch.read_bytes()).hexdigest(),'producer_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+with Path('artifacts/2026-10-11-held-out-tiled-loss-owned-v1.json').open('x') as f:json.dump(r,f,indent=2);f.write('\n')
+print(json.dumps(r))

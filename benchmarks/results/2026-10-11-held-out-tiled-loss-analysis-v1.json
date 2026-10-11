@@ -1,0 +1,158 @@
+{
+  "format": "toklet-full-tiled-loss-replay-v1",
+  "scope": "Unquantized tiled held-out loss comparison only; not task pass-rate, full quality-suite or milestone acceptance.",
+  "engine_revision": "5ceee7d38157973466d6829a8e22d7223ff98d14",
+  "scored_targets": 10000,
+  "context_policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once",
+  "mean_negative_log_likelihood": 2.883725149929484,
+  "total_negative_log_likelihood": 28837.25149929484,
+  "physical_process_charge_peak_bytes": 2009532408,
+  "memory_admitted_bytes": 2136856460,
+  "blocks": [
+    {
+      "block_index": 0,
+      "target_start": 0,
+      "target_end": 1024,
+      "scored_targets": 1024,
+      "evaluated_tokens": 1025,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 2276.2171799127914,
+      "mean_negative_log_likelihood": 2.2228683397585853
+    },
+    {
+      "block_index": 1,
+      "target_start": 1024,
+      "target_end": 2048,
+      "scored_targets": 1024,
+      "evaluated_tokens": 1025,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 3034.8915366836636,
+      "mean_negative_log_likelihood": 2.9637612662926403
+    },
+    {
+      "block_index": 2,
+      "target_start": 2048,
+      "target_end": 3072,
+      "scored_targets": 1024,
+      "evaluated_tokens": 1025,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 2875.7021056874105,
+      "mean_negative_log_likelihood": 2.808302837585362
+    },
+    {
+      "block_index": 3,
+      "target_start": 3072,
+      "target_end": 4096,
+      "scored_targets": 1024,
+      "evaluated_tokens": 1025,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 3088.522577953577,
+      "mean_negative_log_likelihood": 3.01613533003279
+    },
+    {
+      "block_index": 4,
+      "target_start": 4096,
+      "target_end": 5120,
+      "scored_targets": 1024,
+      "evaluated_tokens": 1025,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 3340.469104225913,
+      "mean_negative_log_likelihood": 3.262176859595618
+    },
+    {
+      "block_index": 5,
+      "target_start": 5120,
+      "target_end": 6144,
+      "scored_targets": 1024,
+      "evaluated_tokens": 1025,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 3018.4447492588556,
+      "mean_negative_log_likelihood": 2.947699950448101
+    },
+    {
+      "block_index": 6,
+      "target_start": 6144,
+      "target_end": 7168,
+      "scored_targets": 1024,
+      "evaluated_tokens": 1025,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 3244.8114375870127,
+      "mean_negative_log_likelihood": 3.168761169518567
+    },
+    {
+      "block_index": 7,
+      "target_start": 7168,
+      "target_end": 8192,
+      "scored_targets": 1024,
+      "evaluated_tokens": 1025,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 3111.2511489349895,
+      "mean_negative_log_likelihood": 3.0383312001318257
+    },
+    {
+      "block_index": 8,
+      "target_start": 8192,
+      "target_end": 9216,
+      "scored_targets": 1024,
+      "evaluated_tokens": 1025,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 2378.429826582592,
+      "mean_negative_log_likelihood": 2.3226853775220624
+    },
+    {
+      "block_index": 9,
+      "target_start": 9216,
+      "target_end": 10000,
+      "scored_targets": 784,
+      "evaluated_tokens": 785,
+      "pending_tokens": 0,
+      "total_negative_log_likelihood": 2468.511832468035,
+      "mean_negative_log_likelihood": 3.1486120312092285
+    }
+  ],
+  "record_sha256": "85bbcbd3d6bd2124fb6cb2bf1d7ddf699e77fc1d1cec305fee8652d0b0c217e7",
+  "native_sha256": "2651edf5d0e68110ceea657d4dcb5c46b054625695457bdbcacb38e12fb7901d",
+  "completion_sha256": "453c5040c8ea38a1bd993fa39cc03140b4893cac08c5bd4ab89cbff4681aeb9a",
+  "idle_sha256": "a7ebfc57c8e17d06d32a934eed010925a8f016fb77d64cee53e488c5459ac773",
+  "verified_native_event_count": 10012,
+  "source_sha256": {
+    "src/session.rs": "aba1c8cfd934a5b41f2debd3be2b75b137bdec9d725712849b89512b469e2d55",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/generation.rs": "ef43edbfc7e337b03d2b0039223d28489df920b8e7a39886de45cd534e4f1dff",
+    "src/lib.rs": "a1d32de474f895b05649fba4fc3f3042f4ee5f0903c18ffc1048b632defbdf7b",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/weights/mod.rs": "024c17ef5230069a024200ff89ef9c96a380ab4ea16f232de6d9c38892704783",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "src/bin/cli/mod.rs": "32f64ab957faeac75638a5efe3de8e9a6b0a6d3d1219a50fcd0c3a126ff655b8",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "Cargo.toml": "f9614fde795692ea4f976f4a243ed3991d1e76f0109a4f2fd6bc3d5141977cc4",
+    "Cargo.lock": "7e13db0c63cb370080711ed1d2f6f08a95a1a25516e16eb2a34b33e65db51151",
+    "examples/quality_bench.rs": "ecb0501d40aca0a1fe9d6d91d89a6d34222acca9bd56276b95cfe981155e5aa8"
+  },
+  "helper_sha256": {
+    "tools/bench/cpu.py": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "tools/bench/mlx_baseline.py": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+    "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "tools/bench/quality.py": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d"
+  },
+  "binary_sha256": "18c2b95fc6eab4622c9a088f522fd04e681cf148ec648d50bd72f116d0bc591a",
+  "comparison": {
+    "scalar_record_sha256": "cae67d941141ee0be68ef358186afb37f29d84c9eac7f23b8eeaf252089e7cc3",
+    "scalar_analysis_sha256": "1be6b1030c1835bde93a081bf4bf87f1a02bdb038a78c3f7a3109bafb17777ac",
+    "scalar_mean_negative_log_likelihood": 2.883725149929484,
+    "tiled_minus_scalar_mean_nats_per_token": 0.0,
+    "maximum_absolute_target_nll_difference": 0.0,
+    "equal_complete_logit_sha256_targets": 10000,
+    "equal_target_logit_f32_bits": 10000,
+    "identical_loss_events": true,
+    "mean_nll_increase_limit_nats_per_token": 0.05,
+    "loss_gate_passed": true
+  }
+}

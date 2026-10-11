@@ -1,0 +1,42 @@
+"""Admit a standalone full tiled loss run after completed application/tests."""
+from pathlib import Path
+from datetime import datetime, timezone
+import json,os,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import cpu,linux_code_isolation_probe as linux
+root=Path.cwd()
+assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert subprocess.check_output(['git','diff','1a9bd8b..HEAD','--','src','Cargo.toml','Cargo.lock','examples/cpu_bench.rs','tests/cli.rs'],text=True)==''
+linux.idle(json.loads(Path('benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json').read_text()))
+idle_path='benchmarks/results/2026-10-11-literal-native-v3-idle.json'
+idle=json.loads(Path(idle_path).read_text())
+assert idle['owned_helpers_absent'] and idle['loss_workers_absent'] and idle['startup_group_members']==[]
+loss_idle_path='benchmarks/results/2026-10-11-held-out-scalar-loss-idle-v1.json'
+loss_idle=json.loads(Path(loss_idle_path).read_text())
+assert loss_idle['all_owned_processes_absent']
+assert linux.digest(loss_idle_path)==idle['loss_idle_sha256']
+pids=idle['owned_helper_pids']+loss_idle['exited_owned_pids']
+p=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid='],text=True,capture_output=True)
+assert p.returncode==1 and not p.stdout.strip() and not p.stderr.strip()
+for section in idle['end_verified'].values():
+ for path,expected in section.items():assert linux.digest(path)==expected,path
+machines=json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+m=next(x for x in machines if x['Name']=='podman-machine-default')
+assert m['Running'] is False and m['Starting'] is False
+qualification=root/'benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json'
+cpu.qualified_cpu_worker(qualification)
+assert linux.digest('tools/bench/quality.py')=='7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d'
+output='benchmarks/raw/2026-10-11-held-out-tiled-loss-v1.json'
+build='artifacts/held-out-tiled-loss-v1'
+receipt='benchmarks/raw/2026-10-11-held-out-tiled-loss-launch-v1.json'
+assert not Path(build).exists()
+assert all(not Path(n).exists() for n in [output,output+'.native.jsonl',output+'.stderr.txt',receipt])
+command=[sys.executable,'tools/bench/quality.py','--output',output,'--build-dir',build,'--cpu-qualification',str(qualification),'--cpu-projection','tiled']
+environment=dict(os.environ)
+environment['CARGO_TARGET_DIR']=str(root/'artifacts/cpu-tiled-cli-v1')
+r={'format':'toklet-full-tiled-loss-launch-v1','engine_revision':head,'launcher_pid':os.getpid(),'launch_utc':datetime.now(timezone.utc).isoformat(),'producer_sha256':linux.digest(__file__),'working_tree_clean':True,'literal_native_idle_sha256':linux.digest(idle_path),'scalar_loss_idle_sha256':linux.digest(loss_idle_path),'qualified_cpu_receipt_sha256':linux.digest(qualification),'driver_sha256':linux.digest('tools/bench/quality.py'),'command':command,'check_target_directory':environment['CARGO_TARGET_DIR'],'stopped_machine':m,'scope':'Full frozen 10000-target tiled held-out loss; not task pass-rate or full quality/milestone acceptance. Builds/checks before scoring; no concurrent model, native VM, test or build work during scoring.'}
+with Path(receipt).open('x') as f:json.dump(r,f,indent=2);f.write('\n')
+print(json.dumps({'launch_utc':r['launch_utc'],'launcher_pid':r['launcher_pid'],'engine_revision':head,'scope':r['scope']}),flush=True)
+subprocess.run(command,env=environment,check=True)
+print('Full tiled loss driver completed naturally',flush=True)

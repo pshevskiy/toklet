@@ -171,7 +171,10 @@ preserves the frozen block/label policy and passes independent short probes in
 scalar and tiled modes with exact complete-logit agreement. The full 10,000
 target [scalar baseline](docs/experiments/2026-10-11-held-out-scalar-loss.md)
 now completes with mean loss 2.883725 nats/token and verified natural exit.
-Full candidate loss and the separate 100-task quality evaluation remain pending.
+The [full tiled comparison](docs/experiments/2026-10-11-held-out-tiled-loss.md)
+now matches all 10,000 complete-logit hashes and losses exactly, with zero mean
+NLL increase. The separate 100-task quality evaluation and remaining candidate
+workloads remain pending.
 
 The [frozen task collector](docs/experiments/2026-10-10-task-response-collector.md)
 preserves prepared IDs, finalized text and pending EOS semantics, and supplies

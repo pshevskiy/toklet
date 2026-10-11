@@ -387,7 +387,8 @@ exit zero and owned process absence; the original orchestration stays held
 and the VM stays stopped. Astra independently reproduces the analysis
 byte-for-byte and accepts the complete task without findings after documentation,
 link and whitespace review.
-Full candidate loss, 100-task pass rates and milestone acceptance remain open.
+At this checkpoint, full candidate loss, 100-task pass rates and milestone
+acceptance remained open; the subsequent tiled loss comparison is recorded below.
 
 Literal Linux controller, 11 October 2026 (M2.5/quality still open): the
 [completed authored qualification](docs/experiments/2026-10-11-linux-literal-controller.md)
@@ -405,6 +406,23 @@ are verified. Saved replay validates both exclusions and all accepted outcomes.
 Astra accepts the complete task without findings after independent byte-identical
 replay, targeted tests, documentation and link review. No held-out generated
 program, task score, adversarial grader integrity or milestone closure is claimed.
+
+Full tiled held-out loss, 11 October 2026 (M2.5/quality still open): the
+[complete comparison](docs/experiments/2026-10-11-held-out-tiled-loss.md)
+replays all 10,000 aligned targets against the full scalar baseline. All loss
+events, complete-logit hashes and target FP32 bits agree; mean NLL remains
+2.883725149929484 nats/token, mean increase and maximum target difference are
+zero, and the unchanged 0.05 nats/token gate passes. Both runs use independent
+blocks and prefill chunk one; task prompts with chunk 128 require the separate
+100-task evaluation. Own-worker peak is 2,009,532,408 bytes, below admission
+2,136,856,460 and 6 GiB. Formatting, offline locked Clippy, 76 Rust tests and
+three example tests pass before scoring in isolated targets. Saved replay
+verifies all 10,012 native events, bindings, six ordered checks, actual exit
+zero and owned process absence; the original parent stays held and the VM
+stays stopped. Astra independently reproduces the comparison byte-for-byte.
+Astra accepts the complete evidence/report task with no actionable findings;
+local links and whitespace checks pass. Task pass rates, remaining candidate
+workloads and milestone acceptance remain pending; scalar remains default.
 
 ## M3 Bound CPU optimization and ANE research
 
