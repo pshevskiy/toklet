@@ -1,0 +1,33 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import json,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import cpu,cpu_cli,linux_code_isolation_probe as linux
+root=Path.cwd();digest=linux.digest
+prior_name='benchmarks/results/2026-10-10-cpu-code-isolation-check-window-completed.json'
+assert digest(prior_name)=='b820f26729cb59e63f775e580c2ab6a516217cf3a0276e1766ca03c12fd84b09'
+proof_name='benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json'
+snapshot=linux.idle(json.loads(Path(proof_name).read_text()))
+assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert subprocess.check_output(['git','diff','1a9bd8b..HEAD','--','src','Cargo.toml','Cargo.lock','examples/cpu_bench.rs','tests/cli.rs'],text=True)==''
+prior=json.loads(Path(prior_name).read_text());verified={}
+for section in ['frozen_binaries','validated_local_model_assets','validated_source_and_artifact_bindings','records']:
+ verified[section]={}
+ for name,expected in prior[section].items():
+  assert digest(name)==expected,name
+  verified[section][name]=expected
+cpu.qualified_cpu_worker(root/'benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json')
+cpu_cli.qualified_cli(root/'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json')
+attempt_name='benchmarks/results/2026-10-11-linux-code-isolation-attempt-v1.json'
+a=json.loads(Path(attempt_name).read_text());assert a['completed_checks'] is True and a['native_qualification_completed'] is False and a['executor_adopted'] is False
+for name,expected in a['source_sha256'].items():assert digest(name)==expected
+machines=json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+m=next(x for x in machines if x['Name']=='podman-machine-default');assert m['Running'] is False and m['Starting'] is False
+out='benchmarks/raw/2026-10-11-cpu-changed-uninterrupted-v1.json'
+assert all(not Path(out+suffix).exists() for suffix in ['', '.samples.jsonl','.stderr.txt'])
+linux.idle(json.loads(Path(proof_name).read_text()))
+r={'format':'toklet-changed-uninterrupted-relaunch-v1','engine_commit':head,'working_tree_clean':True,'launch_utc':datetime.now(timezone.utc).isoformat(),'producer_sha256':digest(__file__),'prior_receipt_sha256':digest(prior_name),'idle_proof_sha256':digest(proof_name),'linux_attempt_sha256':digest(attempt_name),'verified':verified,'stopped_machine':m,'snapshot_before':snapshot,'excluded_interrupted_raw':'benchmarks/raw/2026-10-10-cpu-changed.json.samples.jsonl','excluded_interrupted_sha256':digest('benchmarks/raw/2026-10-10-cpu-changed.json.samples.jsonl'),'command':[sys.executable,'tools/bench/cpu.py','--workload','changed','--output',out],'policy':'Fresh 3 warmups and 10 measurements, no SIGCONT of interrupted worker; original orchestration remains held. All checks/hashes/VM work finish before launch.'}
+with Path('benchmarks/raw/2026-10-11-cpu-changed-uninterrupted-launch-v1.json').open('x') as f:json.dump(r,f,indent=2);f.write('\n')
+print(json.dumps({'launch_utc':r['launch_utc'],'engine_commit':head,'verified_assets':len(verified['validated_local_model_assets'])}),flush=True)
+subprocess.run(r['command'],check=True)

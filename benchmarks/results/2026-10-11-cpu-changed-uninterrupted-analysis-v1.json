@@ -1,0 +1,47 @@
+{
+  "format": "toklet-saved-cpu-changed-analysis-v1",
+  "completed": true,
+  "scope": "Small saved evidence only; no model/worker execution or binary hashes. Prior idle-window completion proof binds the frozen binary at launch.",
+  "checks": [
+    "schema",
+    "ten exact raw/sample pairs",
+    "committed/pending state",
+    "token events",
+    "independent summary",
+    "fixed input hashes",
+    "memory",
+    "actual historical driver",
+    "prior binary identity, fresh launch/natural exit and paused-batch exclusion"
+  ],
+  "summary": {
+    "ttft_median_seconds": 163.551571521,
+    "ttft_min_seconds": 162.97588425,
+    "ttft_max_seconds": 166.233767625,
+    "request_median_seconds": 253.0541543125,
+    "decode_tokens_per_second_median": 1.4161741519307007,
+    "prefill_tokens_per_second_median": 3.1305110891159416
+  },
+  "requests_seconds": [
+    252.910438875,
+    256.66743925,
+    254.547417583,
+    253.124070084,
+    252.639919291,
+    252.694666083,
+    253.215288458,
+    252.790818375,
+    252.984238541,
+    254.835483792
+  ],
+  "request_min_seconds": 252.639919291,
+  "request_max_seconds": 256.66743925,
+  "records_sha256": {
+    "benchmarks/results/2026-10-11-cpu-changed-uninterrupted-v1.json": "ad4fa810bce6c54c9c07217c671a2e966d293a29c833e457ff807addae3c14fd",
+    "benchmarks/results/2026-10-11-cpu-changed-uninterrupted-v1.json.samples.jsonl": "e86014ddf5722e7703f8eee300c8ad0be27932db8ce56dfc249638266dc7ad5d",
+    "benchmarks/results/2026-10-11-cpu-changed-uninterrupted-idle-v1.json": "5c7169611353c5cfc9525f486ea19e2ad91388da887c1eea20915403296f9750",
+    "benchmarks/results/2026-10-11-changed-owned-processes-v1.json": "c88340a981d186d9f1f29094a69ba8829b4149df462ee0724b32b977df367724",
+    "benchmarks/results/2026-10-10-cpu-medium-source-driver-v1.py.txt": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "benchmarks/results/2026-10-11-cpu-changed-uninterrupted-launch-v1.json": "60049a13642abaa0108a03676ec49f38be04e66478e9ec74d691b8338fd8ad28"
+  },
+  "producer_sha256": "8870e99b54ff36ba8395e067b7476b875c143d028e16eae533290e885e95566c"
+}

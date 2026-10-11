@@ -130,8 +130,12 @@ cache preparation and visible-text latency.
 The [pending-token scalar workload](docs/experiments/2026-10-10-cpu-pending.md)
 retains all ten requests with 512 reused positions and one timed pending input.
 Median numerical TTFT is 0.703 seconds, request time is 90.501 seconds and
-decode rate is 1.414 steps/s. Changed-prefix, application and full quality
-checks stay open.
+decode rate is 1.414 steps/s.
+The [fresh changed-prefix scalar workload](docs/experiments/2026-10-11-cpu-changed.md)
+retains three warmups and ten uninterrupted requests, excluding the earlier
+paused batch. All 512 prompt tokens replay; median numerical TTFT is 163.552
+seconds and request time 253.054 seconds. Application and full quality checks
+stay open.
 The [selected Qwen RMS check](docs/experiments/2026-10-10-qwen-metal-rms.md)
 also passes width-896 source gates with norm-only checkpoint reads. Full-model
 and session qualification remain pending.

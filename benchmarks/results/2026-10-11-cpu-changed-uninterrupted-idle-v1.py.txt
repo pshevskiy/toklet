@@ -1,0 +1,33 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import subprocess,json,hashlib
+root=Path.cwd()
+owned_name='artifacts/2026-10-11-changed-owned-processes-v1.json'
+owned=json.loads(Path(owned_name).read_text())
+pids=[owned['launcher_pid'],owned['transport_pid'],owned['worker_pid']]
+assert pids==[53099,53106,53114]
+snapshot=subprocess.run(['ps','-p',','.join(map(str,pids)), '-o','pid=,ppid=,stat=,command='],capture_output=True,text=True)
+assert snapshot.returncode==1 and snapshot.stdout.strip()=='' and snapshot.stderr.strip()==''
+held=subprocess.check_output(['ps','-p','17694,85019','-o','pid=,ppid=,stat=,command='],text=True)
+rows={int(r[0]):r for l in held.splitlines() if len(r:=l.split(None,3))==4}
+assert rows[17694][1]=='35939' and 'T' in rows[17694][2] and rows[17694][3].endswith('/Python -')
+assert rows[85019][1]=='17694' and rows[85019][2].startswith('Z')
+result_name='benchmarks/raw/2026-10-11-cpu-changed-uninterrupted-v1.json';raw_name=result_name+'.samples.jsonl'
+result=json.loads(Path(result_name).read_text());samples=[json.loads(l) for l in Path(raw_name).read_text().splitlines()]
+assert result['setup']['warmup_repetitions']==3 and len(result['samples'])==len(samples)==10
+for row,sample in zip(samples,result['samples']):
+ assert row['sample']==sample
+ assert tuple(row['state'][k] for k in ['reused_tokens','prefill_tokens','evaluated_tokens','pending_tokens','emitted_tokens'])==(0,512,639,1,128)
+digest=lambda path:hashlib.sha256(Path(path).read_bytes()).hexdigest()
+launch_name='benchmarks/raw/2026-10-11-cpu-changed-uninterrupted-launch-v1.json'
+launch=json.loads(Path(launch_name).read_text())
+assert digest(launch['excluded_interrupted_raw'])==launch['excluded_interrupted_sha256']
+saved={}
+for name in [result_name,raw_name,launch_name]:
+ target=name.replace('benchmarks/raw/','benchmarks/results/')
+ with Path(target).open('xb') as f:f.write(Path(name).read_bytes())
+ saved[target]=digest(target)
+with Path('benchmarks/results/2026-10-11-changed-owned-processes-v1.json').open('xb') as f:f.write(Path(owned_name).read_bytes())
+r={'format':'toklet-changed-uninterrupted-natural-exit-idle-v1','idle_verified_utc':datetime.now(timezone.utc).isoformat(),'completed_workload':'changed','measured_requests':10,'uninterrupted_batch':True,'interrupted_original_batch_eligible':False,'excluded_interrupted_sha256':launch['excluded_interrupted_sha256'],'exited_numerical_worker_pid':53114,'exited_transport_pid':53106,'exited_launcher_pid':53099,'held_original_orchestration_pid':17694,'snapshot':snapshot.stdout,'held_snapshot':held,'saved_result_sha256':saved,'producer_sha256':digest(__file__)}
+with Path('benchmarks/results/2026-10-11-cpu-changed-uninterrupted-idle-v1.json').open('x') as f:json.dump(r,f,indent=2);f.write('\n')
+print(json.dumps(r))

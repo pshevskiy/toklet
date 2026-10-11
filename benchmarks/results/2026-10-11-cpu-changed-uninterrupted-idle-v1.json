@@ -1,0 +1,21 @@
+{
+  "format": "toklet-changed-uninterrupted-natural-exit-idle-v1",
+  "idle_verified_utc": "2026-10-11T07:49:45.185219+00:00",
+  "completed_workload": "changed",
+  "measured_requests": 10,
+  "uninterrupted_batch": true,
+  "interrupted_original_batch_eligible": false,
+  "excluded_interrupted_sha256": "39aab7afa8c47bc71d415aa9af1b7787a2ff353abf391f459251df1973e4999a",
+  "exited_numerical_worker_pid": 53114,
+  "exited_transport_pid": 53106,
+  "exited_launcher_pid": 53099,
+  "held_original_orchestration_pid": 17694,
+  "snapshot": "",
+  "held_snapshot": "17694 35939 Ts   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z    <defunct>\n",
+  "saved_result_sha256": {
+    "benchmarks/results/2026-10-11-cpu-changed-uninterrupted-v1.json": "ad4fa810bce6c54c9c07217c671a2e966d293a29c833e457ff807addae3c14fd",
+    "benchmarks/results/2026-10-11-cpu-changed-uninterrupted-v1.json.samples.jsonl": "e86014ddf5722e7703f8eee300c8ad0be27932db8ce56dfc249638266dc7ad5d",
+    "benchmarks/results/2026-10-11-cpu-changed-uninterrupted-launch-v1.json": "60049a13642abaa0108a03676ec49f38be04e66478e9ec74d691b8338fd8ad28"
+  },
+  "producer_sha256": "0294f506fa9c2f7d373c3de5af0a81f7179dfe7d183d6136dde07bf2a017ea65"
+}

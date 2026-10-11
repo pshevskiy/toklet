@@ -314,6 +314,19 @@ policy, generated program, executor adoption, quality score or milestone closure
 is claimed. Astra accepted the complete task without findings after independently
 rerunning the 19 targeted tests and verifying the saved evidence and stopped VM.
 
+Changed-prefix scalar result, 11 October 2026 (M2.5 still open): the
+[fresh batch](docs/experiments/2026-10-11-cpu-changed.md) retains three warmups
+and ten uninterrupted requests. Editing token 128 forces reset and replay of
+all 512 prompt tokens, with zero reuse and final 639 committed positions plus
+one pending token after 128 fixed output steps. Median numerical TTFT is
+163.551572 s, completed request 253.054154 s and decode 1.416174 steps/s.
+Maximum physical charge is 2,043,791,376 bytes, below admission and 6 GiB.
+Exact saved replay verifies states/events, summaries, identities and natural
+exit before checks. The earlier user-paused six-sample batch is excluded.
+Astra accepted the complete evidence task after a power-query timing correction
+and independent saved-data replay; links and whitespace checks pass.
+Application measurements, full quality and milestone acceptance remain open.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

@@ -1,0 +1,9 @@
+{
+  "format": "toklet-changed-uninterrupted-owned-processes-v1",
+  "utc": "2026-10-11T06:18:59.639590+00:00",
+  "launcher_pid": 53099,
+  "transport_pid": 53106,
+  "worker_pid": 53114,
+  "snapshot": "53099 35939 53099 Ss   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u artifacts/rerun-changed-after-pause-2026-10-11-v1.py\n53106 53099 53099 S    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload changed --output benchmarks/raw/2026-10-11-cpu-changed-uninterrupted-v1.json\n53114 53106 53099 R    /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n",
+  "scope": "Metadata only; no signals or numerical work."
+}
