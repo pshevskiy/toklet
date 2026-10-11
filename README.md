@@ -233,3 +233,9 @@ with no unresolved outcomes. All 100 visible texts, token sequences and stop
 reasons match exactly. Combined with the identical 10,000-target loss result,
 the frozen quality gates pass; remaining candidate performance/application
 measurements and retention review still keep scalar as the default.
+
+The [consolidated scalar/external comparison](docs/experiments/2026-10-11-m2.5-scalar-comparison.md)
+aligns the complete reference workload matrix, full application/startup and
+sustained measurements, scoped external timings and frozen quality results.
+Astra accepted M2.5 closure without findings. Tiled retention remains a
+separate M3.1 gate.

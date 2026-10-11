@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026. Status: M0, M1, and M2.1–M2.4 are complete; M2 is in progress, and M3–M7 remain pending.
+Prepared 9 October 2026; updated 11 October 2026. Status: M0–M2 are complete; M3.1 candidate qualification is in progress, and M3.2–M7 remain pending.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -132,7 +132,7 @@ M1.4 evidence, 9 October 2026: [immutable decoder and scratch](src/model/mod.rs)
 - [x] **M2.2 Compare the real forward pass.** Export selected intermediates and logits from pinned Transformers in FP32 with dropout disabled. Compare short fixed token sequences, including more than one layer and nonzero positions. Retain small selected probes in Git and regenerate larger outputs locally. Do this before judging decoded prose.
 - [x] **M2.3 Add the KV session.** Implement bounded per-layer K/V and reusable scratch, evaluated versus sampled positions, and exact append. Compare one-shot, irregularly chunked, and token-by-token execution with full-prefix recomputation. Prove position offsets and capacity checks at the 2,048-token boundary.
 - [x] **M2.4 Add bounded CLI generation.** Reuse the tokenizer parser; reproduce the pinned template and special-token behavior with golden token IDs. Accept local model paths, prompt or token input, maximum output, context capacity, and backend selection. Add greedy streaming, EOS/stop handling, reset, continuation, cancellation, and statistics. Keep template rendering in the CLI layer.
-- [ ] **M2.5 Add engine profiling and benchmark records.** Record model load/conversion, tokenization, prefill, first token, decode, sampling, and peak memory separately. Run the workload matrix and compare with the external baselines under the documented comparison track. CPU slowness is acceptable here; correctness, state behavior, and timing boundaries are the gate.
+- [x] **M2.5 Add engine profiling and benchmark records.** Record model load/conversion, tokenization, prefill, first token, decode, sampling, and peak memory separately. Run the workload matrix and compare with the external baselines under the documented comparison track. CPU slowness is acceptable here; correctness, state behavior, and timing boundaries are the gate.
 
 M2.1 follows M1.4; M2.2 follows M2.1. M2.3 can start on the tiny model after M1.4 and must pass real-model checks before M2 closes. M2.4 depends on M2.3; M2.5 completes after the generation path is stable.
 
@@ -514,6 +514,20 @@ without findings. Combined with the identical full 10,000-target NLL comparison,
 frozen quality gates pass. This does not accept M3.1 retention: the seven
 non-short tiled workload measurements, full tiled application and final review
 remain required. Scalar stays default.
+
+M2.5 completion, 11 October 2026: the
+[consolidated scalar/external comparison](docs/experiments/2026-10-11-m2.5-scalar-comparison.md)
+aligns all eight accepted scalar workloads, actual capacity commit/rejection,
+separate load/conversion/request components, full application trace and sustained
+request sequences with the scoped external matrix. FP64 projection accumulation,
+external Half-operand GEMM, unavailable mapped-memory/energy/pressure accounting,
+warm-filesystem startup and historical run/hold conditions remain explicit.
+The completed frozen loss/task comparisons preserve their unchanged gates.
+Astra verifies the table/source reports, links and milestone coverage and accepts
+M2.5 closure without findings. Content/link/whitespace checks pass; no new engine
+or benchmark run is needed for this documentation task. Tiled defaults and
+M3.1 retention remain open for the seven other workload measurements, full
+tiled application and final retention review.
 
 ## M3 Bound CPU optimization and ANE research
 
@@ -980,4 +994,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next implementation action is M2.5.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: qualify the seven non-short tiled workloads and full tiled application trace before the retention decision.
