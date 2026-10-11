@@ -246,3 +246,9 @@ request 97.892741 s and maximum child physical charge 2,043,693,048 bytes.
 The first attempt failed publication and is preserved separately as excluded
 evidence; the replacement uses pinned benchmark dependencies. Six non-short
 rows, full tiled application evidence and the retention decision remain pending.
+
+The [public CPU/ANE feasibility conclusion](docs/experiments/2026-10-11-ane-feasibility-closure.md)
+closes M3's bounded runtime research with supported CPU slices and inconclusive
+ANE acceleration. The rejected FP16 projection and unobserved actual ANE
+placement remain explicit; no Core ML/ANE engine backend is adopted. M3 still
+requires the CPU candidate retention decision.

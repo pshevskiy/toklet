@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026; updated 11 October 2026. Status: M0–M2 are complete; M3.1 candidate qualification is in progress, and M3.2–M7 remain pending.
+Prepared 9 October 2026; updated 11 October 2026. Status: M0–M2 are complete; M3.1 candidate qualification is in progress; M3.2/M3.3 research is complete, and M4–M7 remain pending.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -686,9 +686,21 @@ protected endpoint identities and exact source/qualification bindings are
 retained. No numerical helper or qualified artifact changes. Six other non-short
 rows, full tiled application evidence and M3.1 retention remain pending.
 
+M3.2/M3.3 completion, 11 October 2026: the [feasibility conclusion](docs/experiments/2026-10-11-ane-feasibility-closure.md)
+closes the bounded public-runtime research using the already accepted supported
+slice experiment. FP32 projection and persistent-KV attention pass CPU policies;
+FP16 projection remains rejected under unchanged gates. All nonconstant public
+compute-plan operations prefer CPU; actual ANE placement remains unobserved,
+so acceleration is inconclusive and no engine path is adopted. Conversion/load,
+completed prediction times, exact state checks and scoped memory are retained.
+No full decoder, Qwen generation, total service/device memory or ANE quality
+claim follows. The probe and fixtures are retained; no further native experiment
+runs for this documentation closure. M3 overall remains open for CPU workload,
+application and retention qualification.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
-- [ ] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
-- [ ] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
+- [x] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
+- [x] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
 
 Use the public [CPU-and-Neural-Engine compute policy](https://developer.apple.com/documentation/coreml/mlcomputeunits/cpuandneuralengine). Core ML supports stateful buffers from iOS 18/macOS 15; conversion success alone does not demonstrate ANE placement. [Core ML stateful models](https://apple.github.io/coremltools/docs-guides/source/stateful-models.html).
 
