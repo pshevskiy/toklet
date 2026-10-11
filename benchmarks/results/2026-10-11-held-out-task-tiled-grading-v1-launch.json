@@ -1,0 +1,28 @@
+{
+  "format": "toklet-held-out-task-grading-launch-v1",
+  "launch_utc": "2026-10-11T17:04:05.370176+00:00",
+  "engine_revision": "0a903c93e695867b68ac640a2608fe452c64be47",
+  "working_tree_clean": true,
+  "launcher_pid": 23954,
+  "producer_sha256": "f17d3b9cd82d55ca60a4ffd45b841e5a7640f1a1aa3a2d6166f03bb9c7047f43",
+  "checks_sha256": "3c780a762fed7f1e604e66d9cea33a86f84eaca7a84ba0317b72033675d721fc",
+  "source_sha256": {
+    "tools/bench/held_out_task_grading.py": "4334f3eda24c93bc73644fd2e79879cb0e740459d8d5b69df169aa6e78a69054",
+    "tools/bench/test_held_out_task_grading.py": "65012cdbd2411e6070353d5878d89a19be8abad4ada488172d7bc8060e48d347",
+    "tools/bench/held_out_task_window.py": "a8e2bcb487485ed2f45ed168030ac98ecaa8d40b86fee7fd1c7526f04c7f7932",
+    "tools/bench/test_held_out_task_window.py": "1073b49d36d8d7d69506614178484ea8cbcf56f1d34205f467c9144a1ab60061"
+  },
+  "collection_sha256": "959b28181e4090af49885c983d0f6729f9ff15888fbbae071edd72011c232b56",
+  "idle_sha256": "e2475da2074d28e2d508ce907a70e05c032156300cd6bc5316dcd0d80c8535d4",
+  "command": [
+    "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+    "tools/bench/held_out_task_window.py",
+    "--collection",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-11-held-out-task-tiled-v1.json",
+    "--idle-proof",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-11-held-out-task-tiled-idle-v1.json",
+    "--prefix",
+    "2026-10-11-held-out-task-tiled-grading-v1"
+  ],
+  "scope": "Actual literal frozen tiled task grading; no concurrent model, tests or builds; no infrastructure outcome converted to model failure."
+}

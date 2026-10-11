@@ -1,0 +1,55 @@
+{
+  "format": "toklet-held-out-task-grading-owned-v1",
+  "observed_utc": "2026-10-11T17:04:45.517289+00:00",
+  "owned_pids": [
+    23954,
+    23958,
+    24014,
+    24015
+  ],
+  "startup_client_pid": 24013,
+  "startup_helper_group": 24013,
+  "snapshot": [
+    {
+      "pid": 23954,
+      "ppid": 35939,
+      "pgid": 23954,
+      "state": "Ss",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/launch-held-out-task-tiled-grading-v1.py"
+    },
+    {
+      "pid": 23958,
+      "ppid": 23954,
+      "pgid": 23954,
+      "state": "S",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/held_out_task_window.py --collection /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-11-held-out-task-tiled-v1.json --idle-proof /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-11-held-out-task-tiled-idle-v1.json --prefix 2026-10-11-held-out-task-tiled-grading-v1"
+    },
+    {
+      "pid": 24014,
+      "ppid": 1,
+      "pgid": 24013,
+      "state": "S",
+      "command": "/opt/podman/bin/gvproxy -mtu 1500 -ssh-port 51387 -listen-vfkit unixgram:///var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default-gvproxy.sock -forward-identity /Users/coloner/.local/share/containers/podman/machine/machine -forward-sock /var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default-api.sock -forward-dest /run/user/501/podman/podman.sock -forward-user core -pid-file /var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/gvproxy.pid -log-file /var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/gvproxy.log"
+    },
+    {
+      "pid": 24015,
+      "ppid": 1,
+      "pgid": 24013,
+      "state": "S",
+      "command": "/opt/podman/bin/vfkit --cpus 5 --memory 2048 --bootloader efi,variable-store=/Users/coloner/.local/share/containers/podman/machine/applehv/efi-bl-podman-machine-default,create --device virtio-blk,path=/Users/coloner/.local/share/containers/podman/machine/applehv/podman-machine-default-arm64.raw --device virtio-rng --device virtio-vsock,port=1025,socketURL=/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default.sock,listen --device virtio-serial,logFilePath=/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default.log --device rosetta,mountTag=rosetta,install --device virtio-net,unixSocketPath=/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default-gvproxy.sock,mac=5a:94:ef:e4:0c:ee --device virtio-fs,sharedDir=/Users,mountTag=a2a0ee2c717462feb1de2f5afd59de5fd2d8 --device virtio-fs,sharedDir=/private,mountTag=71708eb255bc230cd7c91dd26f7667a7b938 --device virtio-fs,sharedDir=/var/folders,mountTag=a0bb3a2c8b0b02ba5958b0576f0d6530e104 --restful-uri tcp://localhost:51402"
+    }
+  ],
+  "startup_client_snapshot": null,
+  "actual_query": {
+    "command": [
+      "ps",
+      "-p",
+      "23954,23958,24014,24015,24013",
+      "-o",
+      "pid=,ppid=,pgid=,state=,command="
+    ],
+    "exit_code": 0,
+    "stdout": "23954 35939 23954 Ss   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/launch-held-out-task-tiled-grading-v1.py\n23958 23954 23954 S    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/held_out_task_window.py --collection /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-11-held-out-task-tiled-v1.json --idle-proof /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-11-held-out-task-tiled-idle-v1.json --prefix 2026-10-11-held-out-task-tiled-grading-v1\n24014     1 24013 S    /opt/podman/bin/gvproxy -mtu 1500 -ssh-port 51387 -listen-vfkit unixgram:///var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default-gvproxy.sock -forward-identity /Users/coloner/.local/share/containers/podman/machine/machine -forward-sock /var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default-api.sock -forward-dest /run/user/501/podman/podman.sock -forward-user core -pid-file /var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/gvproxy.pid -log-file /var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/gvproxy.log\n24015     1 24013 S    /opt/podman/bin/vfkit --cpus 5 --memory 2048 --bootloader efi,variable-store=/Users/coloner/.local/share/containers/podman/machine/applehv/efi-bl-podman-machine-default,create --device virtio-blk,path=/Users/coloner/.local/share/containers/podman/machine/applehv/podman-machine-default-arm64.raw --device virtio-rng --device virtio-vsock,port=1025,socketURL=/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default.sock,listen --device virtio-serial,logFilePath=/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default.log --device rosetta,mountTag=rosetta,install --device virtio-net,unixSocketPath=/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default-gvproxy.sock,mac=5a:94:ef:e4:0c:ee --device virtio-fs,sharedDir=/Users,mountTag=a2a0ee2c717462feb1de2f5afd59de5fd2d8 --device virtio-fs,sharedDir=/private,mountTag=71708eb255bc230cd7c91dd26f7667a7b938 --device virtio-fs,sharedDir=/var/folders,mountTag=a0bb3a2c8b0b02ba5958b0576f0d6530e104 --restful-uri tcp://localhost:51402\n",
+    "stderr": ""
+  }
+}

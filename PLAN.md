@@ -499,6 +499,22 @@ complete evidence and report without findings. No tiled task score, task-quality
 or retention is claimed; literal grading and remaining candidate workload/
 application gates follow separately. Scalar stays default.
 
+Full scalar/tiled task-quality comparison, 11 October 2026: the
+[actual literal comparison](docs/experiments/2026-10-11-held-out-task-quality.md)
+resolves both modes at 2/100 (code 0/40, prose 1/30, continuation 1/30), with
+zero percentage-point drop against the unchanged two-point gate. All 100
+visible texts, emitted token sequences, stop reasons and binary outcomes match.
+All forty code failures remain SyntaxErrors; no response repair, score policy
+change, resource failure or unresolved infrastructure is involved. All forty
+containers were removed; actual session 74369 exited zero, the VM stopped,
+owned helper groups exited and protected endpoints stayed unchanged. Exact
+classification/text/aggregate/provenance replay passes; Astra independently
+reproduces the analysis byte for byte and accepts the complete evidence/report
+without findings. Combined with the identical full 10,000-target NLL comparison, the
+frozen quality gates pass. This does not accept M3.1 retention: the seven
+non-short tiled workload measurements, full tiled application and final review
+remain required. Scalar stays default.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

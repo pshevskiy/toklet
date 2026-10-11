@@ -173,23 +173,23 @@ target [scalar baseline](docs/experiments/2026-10-11-held-out-scalar-loss.md)
 now completes with mean loss 2.883725 nats/token and verified natural exit.
 The [full tiled comparison](docs/experiments/2026-10-11-held-out-tiled-loss.md)
 now matches all 10,000 complete-logit hashes and losses exactly, with zero mean
-NLL increase. The scalar task baseline below is now graded; tiled task
-grading, the quality comparison and remaining candidate workloads
-remain pending.
+NLL increase. The complete task-quality comparison below now passes as well;
+remaining candidate performance/application workloads stay pending.
 
 The [frozen task collector](docs/experiments/2026-10-10-task-response-collector.md)
 preserves prepared IDs, finalized text and pending EOS semantics, and supplies
 the exact text scorers and literal HumanEval program composition. Four authored
 scalar/tiled requests pass with matching outputs. The later scalar grading
-report records actual held-out execution; tiled grading remains pending.
+report records actual held-out execution; the complete quality comparison
+below now includes tiled grading.
 The [full-task collector preparation](docs/experiments/2026-10-11-held-out-task-collector.md)
 now handles 100 independent requests, including empty immediate EOS, with
 phase watchdogs and owned descendant cleanup. Eleven targeted checks and all
 172 offline checks pass. The [full scalar collection](docs/experiments/2026-10-11-held-out-task-scalar.md)
 now completes all 100 frozen responses with natural exit and full journal
 replay. Its conservative joint physical peak is 2,154,760,904 bytes, below
-6 GiB. The scalar grading report below records its score; tiled scoring and
-the candidate comparison remain pending.
+6 GiB. The scalar grading report below records its score; the later quality
+comparison now includes both modes. Candidate performance remains pending.
 The [authored native isolation candidate](docs/experiments/2026-10-10-code-isolation.md)
 passes offline checks but is rejected before sandbox admission because Python
 cannot accept the fixed data limit. It is not used for generated code. The
@@ -219,10 +219,17 @@ resolves all 100 literal outcomes: 2/100 overall (0/40 code, 1/30 prose, 1/30
 continuation), with no infrastructure ambiguity. All forty code outcomes are
 SyntaxErrors under unchanged literal composition. The owned Linux window removed
 every container and restored the stopped VM; independent replay confirms the
-score. Tiled task grading and the unchanged quality comparison remain open.
+score. The full quality report below now includes tiled grading and comparison.
 
 The [full tiled task collection](docs/experiments/2026-10-11-held-out-task-tiled.md)
 now completes all 100 frozen responses with natural exit and exact journal
 replay. Its conservative joint physical peak is 2,150,484,680 bytes below 6 GiB.
-Literal grading and the task-quality comparison follow separately; candidate
-performance/application acceptance remains open and scalar stays default.
+The separate quality report below records its literal grades and comparison;
+candidate performance/application acceptance remains open and scalar stays default.
+
+The [full task-quality comparison](docs/experiments/2026-10-11-held-out-task-quality.md)
+passes the unchanged two-percentage-point drop gate: both modes score 2/100,
+with no unresolved outcomes. All 100 visible texts, token sequences and stop
+reasons match exactly. Combined with the identical 10,000-target loss result,
+the frozen quality gates pass; remaining candidate performance/application
+measurements and retention review still keep scalar as the default.

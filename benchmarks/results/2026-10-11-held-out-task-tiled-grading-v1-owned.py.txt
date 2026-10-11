@@ -1,0 +1,21 @@
+"""Observe only this grading launcher/window and their startup helper graph."""
+from pathlib import Path
+from datetime import datetime,timezone
+import json,subprocess
+pids=[23954,23958,24014,24015];client=24013
+item=subprocess.run(['ps','-p',','.join(map(str,pids+[client])),'-o','pid=,ppid=,pgid=,state=,command='],capture_output=True,text=True)
+assert item.returncode==0 and not item.stderr
+rows={}
+for line in item.stdout.splitlines():
+ fields=line.split(None,4);rows[int(fields[0])]={'pid':int(fields[0]),'ppid':int(fields[1]),'pgid':int(fields[2]),'state':fields[3],'command':fields[4]}
+assert set(rows) in (set(pids),set(pids+[client]))
+assert rows[23958]['ppid']==23954 and rows[23958]['pgid']==23954
+if client in rows:assert rows[client]['ppid']==23958 and rows[client]['pgid']==client
+assert all(rows[pid]['pgid']==client and rows[pid]['ppid'] in (1,client) for pid in pids[2:])
+assert rows[23954]['command'].endswith('artifacts/launch-held-out-task-tiled-grading-v1.py')
+assert 'tools/bench/held_out_task_window.py --collection' in rows[23958]['command']
+assert rows[24014]['command'].startswith('/opt/podman/bin/gvproxy ')
+assert rows[24015]['command'].startswith('/opt/podman/bin/vfkit ')
+record={'format':'toklet-held-out-task-grading-owned-v1','observed_utc':datetime.now(timezone.utc).isoformat(),'owned_pids':pids,'startup_client_pid':client,'startup_helper_group':client,'snapshot':[rows[p] for p in pids],'startup_client_snapshot':rows.get(client),'actual_query':{'command':item.args,'exit_code':item.returncode,'stdout':item.stdout,'stderr':item.stderr}}
+with Path('artifacts/2026-10-11-held-out-task-tiled-grading-v1-owned.json').open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
+print('Recorded tiled grading process/helper ownership')
