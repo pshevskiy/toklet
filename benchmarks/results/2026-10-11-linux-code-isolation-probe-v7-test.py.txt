@@ -1,0 +1,498 @@
+"""Offline Linux boundary tests: no VM, container, sandbox, model or GPU."""
+import base64
+import copy
+import ctypes
+import errno
+import hashlib
+import io
+import json
+import signal
+import struct
+from types import SimpleNamespace
+import unittest
+from unittest.mock import Mock, patch
+
+import linux_code_isolation_child as child
+import linux_code_isolation_probe as probe
+
+
+def evaluate(number, arguments=(), architecture=0xC00000B7):
+    """Independent classic-BPF interpreter over the documented seccomp_data ABI."""
+    data = struct.pack("<iIQ6Q", number, architecture, 0, *(list(arguments) + [0] * (6 - len(arguments))))
+    program = child.filter_instructions()
+    accumulator, pc = 0, 0
+    for _ in range(len(program) + 1):
+        code, yes, no, value = program[pc]
+        if code == 0x20:
+            accumulator = struct.unpack_from("<I", data, value)[0]
+        elif code in (0x15, 0x45):
+            condition = accumulator == value if code == 0x15 else bool(accumulator & value)
+            pc += yes if condition else no
+        elif code == 0x06:
+            return value
+        else:
+            raise AssertionError("Unexpected classic BPF instruction")
+        pc += 1
+        if not 0 <= pc < len(program):
+            raise AssertionError("Classic BPF branch escapes its fixed program")
+    raise AssertionError("Classic BPF did not terminate")
+
+
+def ready(mode):
+    blob = b"".join(struct.pack("<HBBI", *row) for row in child.filter_instructions())
+    return {"event": "isolated", "mode": mode, "policy": child.POLICY.copy(),
+            "profile": "toklet-linux-aarch64-seccomp-v1",
+            "limits": {name: [value, value] for name, (_, value) in child.limits().items()},
+            "runtime": {"machine": "aarch64", "kernel": "authored-fixture",
+                        "python_executable": "/usr/local/bin/python3", "python_sha256": "1" * 64,
+                        "uid": 65534, "gid": 65534, "capabilities": {"CapEff": 0, "CapBnd": 0},
+                        "filter_sha256": hashlib.sha256(blob).hexdigest()},
+            "python": "offline fixture", "isolated_flag": 1, "no_site_flag": 1,
+            "optimize_flag": 0, "dont_write_bytecode": True,
+            "environment_keys": sorted(probe.ENVIRONMENT), "removed_environment_keys": ["HOME", "HOSTNAME"]}
+
+
+def capture(mode="benign", result=None, container_code=0, **updates):
+    payload = (json.dumps(ready(mode)) + "\n").encode()
+    if result is not None:
+        payload += (json.dumps({"event": "probe_result", "mode": mode, "result": result}) + "\n").encode()
+    record = {"mode": mode, "exit_code": -signal.SIGKILL if container_code == 137 else container_code,
+              "container_exit_code": container_code, "transport_exit_code": container_code,
+              "container_state": {"Running": False, "OOMKilled": False, "Error": "", "ExitCode": container_code},
+              "container_removed": True, "container_cleanup_errors": [],
+              "container_forced_kill": False, "container_timeout_kill": False,
+              "execution_killed": False, "process_group_killed": False,
+              "wall_timed_out": False, "output_limit_exceeded": False,
+              "elapsed_seconds": 0.1, "cleanup_errors": [], "surviving_group_members": []}
+    for name, content in [("stdout", payload), ("stderr", b"")]:
+        record[name + "_base64"] = base64.b64encode(content).decode()
+        record[name + "_captured_bytes"] = len(content)
+        record[name + "_captured_sha256"] = hashlib.sha256(content).hexdigest()
+    record.update(updates)
+    return record
+
+
+def configuration():
+    return {"Id": "2" * 64, "Image": "1" * 64, "Mounts": [], "EffectiveCaps": [], "BoundingCaps": [],
+            "Config": {"Env": [key + "=" + value for key, value in probe.ENVIRONMENT.items()],
+                       "User": "65534:65534", "WorkingDir": "/tmp", "OpenStdin": False,
+                       "Entrypoint": ["/usr/local/bin/python3"], "Cmd": ["-I", "-S", "-B", "-c", "trusted fixture", "benign"],
+                       "Labels": {probe.LABEL: "toklet-authored-" + "3" * 32}},
+            "HostConfig": {"ReadonlyRootfs": True, "Privileged": False, "NetworkMode": "none",
+                           "PidsLimit": 1, "Memory": 256 * 1024**2, "MemorySwap": 256 * 1024**2,
+                           "CapAdd": [], "SecurityOpt": ["no-new-privileges"], "LogConfig": {"Type": "none"},
+                           "Ulimits": [{"Name": name, "Soft": value, "Hard": value}
+                                       for name, value in [("RLIMIT_DATA", 268435456), ("RLIMIT_CPU", 4),
+                                                           ("RLIMIT_CORE", 0), ("RLIMIT_NOFILE", 64)]]},
+            "State": {"Running": False, "OOMKilled": False, "ExitCode": 0}}
+
+
+class LinuxIsolationTests(unittest.TestCase):
+    def test_api_connection_must_identify_the_fixed_rootless_machine(self):
+        machine = {"Name": "podman-machine-default", "Rootful": False,
+                   "SSHConfig": {"Port": 51387, "RemoteUsername": "core", "IdentityPath": "/fixed/machine/key"}}
+        connection = {"Name": "podman-machine-default", "URI": "ssh://core@127.0.0.1:51387/run/user/1000/podman/podman.sock", "Identity": "/fixed/machine/key", "Default": False}
+        bound = probe.bound_machine_connection(machine, [connection, {"Name": "unrelated", "Default": True}])
+        self.assertEqual(bound["URI"], connection["URI"])
+        for change in [{"URI": connection["URI"].replace("51387", "51388")},
+                       {"URI": connection["URI"].replace("127.0.0.1", "elsewhere")},
+                       {"URI": connection["URI"].replace("core@", "root@")},
+                       {"URI": "unix:///foreign/socket"}, {"Identity": "/another/key"}, {"Name": "other"}]:
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                probe.bound_machine_connection(machine, [{**connection, **change}])
+        for change in [{"Rootful": True}, {"Name": "other"}, {"SSHConfig": {**machine["SSHConfig"], "Port": True}}]:
+            with self.assertRaises(ValueError): probe.bound_machine_connection({**machine, **change}, [connection])
+        with self.assertRaises(ValueError): probe.bound_machine_connection(machine, [connection, connection])
+
+    def test_explicit_endpoint_prefix_reaches_container_create_and_cleanup(self):
+        client = ("/fixed/podman", "--url", "ssh://core@127.0.0.1:51387/run/user/1000/podman/podman.sock", "--identity", "/fixed/machine/key")
+        args = probe.create_command(client, "1" * 64, "/usr/local/bin/python3", "toklet-authored-" + "3" * 32, "trusted fixture", "benign")
+        self.assertEqual(args[:5], list(client))
+        with patch.object(probe, "control", return_value={"exit_code": 1, "stdout_base64": "", "stderr_base64": "", "stderr_captured_bytes": 0}) as control:
+            self.assertFalse(probe.exists(client, "owned"))
+            self.assertEqual(control.call_args.args[0], [*client, "container", "exists", "owned"])
+
+    def test_architecture_guard_kills_wrong_abi_before_syscall_selection(self):
+        for architecture in [0xC000003E, 0x40000028, 0x800000B7, 0]:
+            for number in [64, 93, 222, -1]:
+                self.assertEqual(evaluate(number, architecture=architecture), 0x80000000)
+
+    def test_default_denies_files_network_processes_and_limit_changes(self):
+        # Actual AArch64 syscall numbers from the independent UAPI inventory.
+        for number in [56, 437, 78, 35, 198, 203, 200, 220, 435, 221, 281,
+                       167, 277, 261, 164, 103, 117, 270, 271, -1, 9999]:
+            self.assertEqual(evaluate(number), 0x00050000 | errno.EPERM)
+        for number in [93, 94, 139, 214, 215, 216, 233, 113, 114, 115, 101, 98, 124, 172, 178, 278]:
+            self.assertEqual(evaluate(number), 0x7FFF0000)
+
+    def test_descriptor_guards_reject_other_fds_and_poisoned_high_bits(self):
+        for number, allowed in [(63, {0}), (64, {1, 2}), (57, {0, 1, 2}), (80, {0, 1, 2})]:
+            for descriptor in range(6):
+                self.assertEqual(evaluate(number, [descriptor]), 0x7FFF0000 if descriptor in allowed else 0x00050001)
+            for descriptor in [1 << 32, (1 << 32) + 1, (1 << 32) + 2, 2**64 - 1]:
+                self.assertEqual(evaluate(number, [descriptor]), 0x00050001)
+
+    def test_memory_mapping_requires_anonymous_non_executable_arguments(self):
+        good = [0, 4096, 3, 34, 2**64 - 1, 0]
+        self.assertEqual(evaluate(222, good), 0x7FFF0000)
+        self.assertEqual(evaluate(222, [0, 2**31, 3, 33, 2**64 - 1, 0]), 0x7FFF0000)
+        for index, value in [(2, 7), (2, 3 + 2**32), (3, 2), (3, 34 + 2**32), (4, 0), (4, 3)]:
+            changed = good.copy()
+            changed[index] = value
+            self.assertEqual(evaluate(222, changed), 0x00050001)
+        self.assertEqual(evaluate(226, [0, 4096, 3]), 0x7FFF0000)
+        for protection in [4, 7, 3 + 2**32]:
+            self.assertEqual(evaluate(226, [0, 4096, protection]), 0x00050001)
+
+    def test_ctypes_instruction_layout_matches_independent_uapi_packing(self):
+        rows = child.filter_instructions()
+        self.assertLessEqual(len(rows), 255)
+        array = (child.SockFilter * len(rows))(*(child.SockFilter(*row) for row in rows))
+        self.assertEqual(bytes(array), b"".join(struct.pack("<HBBI", *row) for row in rows))
+        self.assertEqual((ctypes.sizeof(child.SockFilter), child.SockFilter.k.offset), (8, 4))
+        self.assertEqual((ctypes.sizeof(child.SockFprog), child.SockFprog.filter.offset), (16, 8))
+        for pc, (code, yes, no, _) in enumerate(rows):
+            if code in (0x15, 0x45):
+                self.assertLess(pc + 1 + yes, len(rows))
+                self.assertLess(pc + 1 + no, len(rows))
+
+    def test_child_rejects_other_platforms_without_resource_or_native_calls(self):
+        with patch.object(child.sys, "platform", "darwin"), patch.object(child.ctypes, "CDLL") as library, \
+             patch.object(child.resource, "setrlimit") as limits:
+            with self.assertRaises(ValueError): child.enter()
+            library.assert_not_called()
+            limits.assert_not_called()
+
+    def test_ctypes_admission_uses_owned_pointers_and_fixed_resource_pairs(self):
+        calls = []
+        def prctl(option, argument, pointer, last, final):
+            calls.append((option, argument, pointer, last, final))
+            if option == 22:
+                descriptor = child.SockFprog.from_address(pointer)
+                self.assertEqual(descriptor.length, len(child.filter_instructions()))
+                for index, row in enumerate(child.filter_instructions()):
+                    item = descriptor.filter[index]
+                    self.assertEqual((item.code, item.jt, item.jf, item.k), row)
+            return 0
+        function = Mock(side_effect=prctl)
+        pairs = [value for _, value in child.limits().values()]
+        with patch.object(child.sys, "platform", "linux"), patch.object(child.platform, "machine", return_value="aarch64"), \
+             patch.object(child.platform, "release", return_value="fixture"), \
+             patch("builtins.open", side_effect=lambda path, mode: io.BytesIO(
+                 b"CapEff:\t0000000000000000\nCapBnd:\t0000000000000000\n" if path == "/proc/self/status" else b"trusted runtime")), \
+             patch.object(child.os, "listdir", return_value=[]), \
+             patch.object(child.resource, "setrlimit") as setter, \
+             patch.object(child.resource, "getrlimit", side_effect=[(v, v) for v in pairs]), \
+             patch.object(child.ctypes, "CDLL", return_value=SimpleNamespace(prctl=function)):
+            admitted, runtime = child.enter()
+        self.assertEqual(calls[0], (38, 1, 0, 0, 0))
+        self.assertEqual(calls[1][:2], (22, 2))
+        self.assertEqual(setter.call_count, 5)
+        self.assertEqual(admitted["RLIMIT_CPU"], [4, 4])
+        self.assertEqual(admitted["RLIMIT_AS"], [1073741824, 1073741824])
+        setter.assert_any_call(child.resource.RLIMIT_AS, (1073741824, 1073741824))
+        self.assertEqual(runtime["python_sha256"], hashlib.sha256(b"trusted runtime").hexdigest())
+
+    def test_kernel_capability_masks_are_bounded_unique_and_zero(self):
+        valid = b"Name:\tpython\nCapEff:\t0000000000000000\nCapBnd:\t0000000000000000\n"
+        with patch("builtins.open", return_value=io.BytesIO(valid)) as opened:
+            self.assertEqual(child.capability_state(), {"CapEff": 0, "CapBnd": 0})
+            opened.assert_called_once_with("/proc/self/status", "rb")
+        for invalid in (b"", valid.replace(b"CapBnd", b"Other"), valid + b"CapEff:\t0000000000000000\n",
+                        valid.replace(b"0000000000000000", b"0000000000000001", 1),
+                        valid.replace(b"0000000000000000", b"not-a-mask", 1), b"x" * 65537):
+            with self.subTest(status=invalid[:80]), patch("builtins.open", return_value=io.BytesIO(invalid)):
+                with self.assertRaises(ValueError): child.capability_state()
+
+    def test_runtime_metadata_is_removed_without_hiding_other_environment(self):
+        expected = {"PATH": "/usr/local/bin:/usr/bin:/bin", "LC_ALL": "C", "TZ": "UTC", "SECRET": "unexpected"}
+        with patch.dict(child.os.environ, {**expected, "HOME": "runtime home", "HOSTNAME": "runtime name"}, clear=True):
+            self.assertEqual(child.normalize_environment(), ["HOME", "HOSTNAME"])
+            self.assertEqual(dict(child.os.environ), expected)
+        with patch.dict(child.os.environ, expected, clear=True):
+            self.assertEqual(child.normalize_environment(), [])
+            self.assertEqual(dict(child.os.environ), expected)
+        initial = ready("benign")
+        initial["environment_keys"] = sorted(expected)
+        item = capture(result={"check_returned": True})
+        payload = (json.dumps(initial) + "\n" + json.dumps({"event": "probe_result", "mode": "benign", "result": {"check_returned": True}}) + "\n").encode()
+        item.update(stdout_base64=base64.b64encode(payload).decode(), stdout_captured_bytes=len(payload),
+                    stdout_captured_sha256=hashlib.sha256(payload).hexdigest())
+        with self.assertRaises(ValueError): probe.check_record(item)
+
+    def test_container_arguments_are_literal_fixed_and_have_no_host_mounts(self):
+        command = probe.create_command("podman", "1" * 64, "/usr/local/bin/python3",
+                                       "toklet-authored-" + "3" * 32, "trusted fixture", "benign")
+        for required in ["--network=none", "--pull=never", "--cap-drop=all", "--read-only",
+                         "--read-only-tmpfs=false", "--pids-limit=1", "--unsetenv-all",
+                         "--timeout=6", "--memory=268435456", "--memory-swap=268435456",
+                         "--ulimit=data=268435456:268435456"]:
+            self.assertIn(required, command)
+        self.assertFalse(any(value.startswith("--ulimit=as=") for value in command))
+        self.assertEqual(command[-7:], ["sha256:" + "1" * 64, "-I", "-S", "-B", "-c", "trusted fixture", "benign"])
+        self.assertFalse(any(value.startswith(("--volume", "--mount", "--env-host")) for value in command))
+        with self.assertRaises(ValueError):
+            probe.create_command("podman", "latest", "/usr/bin/python3", "bad", "x", "arbitrary")
+
+    def test_server_configuration_rejects_mounts_secrets_privilege_and_missing_limits(self):
+        good = configuration()
+        probe.validate_configuration(good, "/usr/local/bin/python3", "trusted fixture", "benign")
+        empty_slices = {**good, "EffectiveCaps": None, "BoundingCaps": None}
+        probe.validate_configuration(empty_slices, "/usr/local/bin/python3", "trusted fixture", "benign")
+        for key in ("EffectiveCaps", "BoundingCaps"):
+            missing = good.copy()
+            del missing[key]
+            with self.assertRaises(ValueError):
+                probe.validate_configuration(missing, "/usr/local/bin/python3", "trusted fixture", "benign")
+        mutations = [("Mounts", [{"Source": "/host"}]), ("EffectiveCaps", ["CAP_SYS_ADMIN"]),
+                     ("BoundingCaps", ["CAP_SYS_ADMIN"])]
+        for field, value in mutations:
+            item = copy.deepcopy(good)
+            item[field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError): probe.validate_configuration(item, "/usr/local/bin/python3", "trusted fixture", "benign")
+        for section, field, value in [("Config", "Env", ["SECRET=x"]), ("Config", "User", "0"),
+                                      ("Config", "OpenStdin", True), ("Config", "Entrypoint", ["/bin/sh"]),
+                                      ("Config", "Cmd", ["-c", "foreign"]), ("HostConfig", "Privileged", True),
+                                      ("HostConfig", "LogConfig", {"Type": "k8s-file"}),
+                                      ("HostConfig", "NetworkMode", "host"), ("HostConfig", "PidsLimit", 2),
+                                      ("HostConfig", "PidsLimit", True),
+                                      ("HostConfig", "ReadonlyRootfs", False), ("HostConfig", "Ulimits", [])]:
+            item = copy.deepcopy(good)
+            item[section][field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError): probe.validate_configuration(item, "/usr/local/bin/python3", "trusted fixture", "benign")
+
+    def test_container_exists_distinguishes_absence_from_transport_failure(self):
+        for code, expected in [(0, True), (1, False)]:
+            item = {"exit_code": code, "stdout_base64": "", "stderr_captured_bytes": 0}
+            with patch.object(probe, "control", return_value=item): self.assertIs(probe.exists("podman", "2" * 64), expected)
+        for code in [2, 125, -signal.SIGKILL]:
+            with patch.object(probe, "control", return_value={"exit_code": code}), self.assertRaises(ValueError):
+                probe.exists("podman", "2" * 64)
+
+    def test_ownership_requires_exact_id_image_and_fresh_label(self):
+        good = configuration()
+        for field in [None, "Id", "Image", "label"]:
+            value = copy.deepcopy(good)
+            if field == "label": value["Config"]["Labels"][probe.LABEL] = "foreign"
+            elif field: value[field] = "9" * 64
+            with patch.object(probe, "successful", return_value={"stdout_base64": base64.b64encode(json.dumps([value]).encode()).decode()}):
+                if field:
+                    with self.assertRaises(ValueError): probe.inspect_owned("podman", "2" * 64, "toklet-authored-" + "3" * 32, "1" * 64)
+                else:
+                    self.assertEqual(probe.inspect_owned("podman", "2" * 64, "toklet-authored-" + "3" * 32, "1" * 64), value)
+
+    def test_success_failure_and_early_exit_remain_distinct_authored_outcomes(self):
+        probe.check_record(capture(result={"check_returned": True}))
+        probe.check_record(capture("assertion_failure", {"check_returned": False, "exception": "AssertionError"}))
+        probe.check_record(capture("early_exit"))
+        for item in [capture(result={"check_returned": False}), capture("benign"),
+                     capture("early_exit", {"check_returned": True}), capture(result={"check_returned": 1})]:
+            with self.assertRaises(ValueError): probe.check_record(item)
+
+    def test_runtime_capture_or_container_cleanup_corruption_never_qualifies(self):
+        good = capture(result={"check_returned": True})
+        for update in [{"stdout_captured_sha256": "wrong"}, {"container_removed": False},
+                       {"container_cleanup_errors": [{"type": "RuntimeError"}]},
+                       {"container_exit_code": True}, {"surviving_group_members": [123]},
+                       {"execution_killed": True}, {"container_timeout_kill": 1}]:
+            with self.subTest(update=update), self.assertRaises(ValueError): probe.check_record({**good, **update})
+        for field, value in [("machine", "x86_64"), ("filter_sha256", "0" * 64), ("uid", 0), ("gid", True),
+                             ("capabilities", None), ("capabilities", {"CapEff": 1, "CapBnd": 0}),
+                             ("capabilities", {"CapEff": False, "CapBnd": 0})]:
+            initial = ready("benign")
+            initial["runtime"][field] = value
+            payload = (json.dumps(initial) + "\n" + json.dumps({"event": "probe_result", "mode": "benign", "result": {"check_returned": True}}) + "\n").encode()
+            item = {**good, "stdout_base64": base64.b64encode(payload).decode(), "stdout_captured_bytes": len(payload),
+                    "stdout_captured_sha256": hashlib.sha256(payload).hexdigest()}
+            with self.subTest(field=field), self.assertRaises(ValueError): probe.check_record(item)
+
+    def test_cpu_and_wall_termination_have_separate_owned_causes(self):
+        probe.check_record(capture("cpu_timeout", container_code=137))
+        probe.check_record(capture("wall_timeout", container_code=137, wall_timed_out=True,
+                                   execution_killed=True, container_timeout_kill=True))
+        for item in [capture("cpu_timeout", container_code=137, wall_timed_out=True),
+                     capture("cpu_timeout", container_code=137, execution_killed=True, container_forced_kill=True),
+                     capture("wall_timeout", container_code=137),
+                     capture("wall_timeout", wall_timed_out=True, execution_killed=True, container_forced_kill=True)]:
+            with self.assertRaises(ValueError): probe.check_record(item)
+
+    def test_transport_infrastructure_failure_cannot_be_hidden_by_container_status(self):
+        for transport in [125, 126, 127, 137, 1, -signal.SIGKILL]:
+            item = capture(result={"check_returned": True}, transport_exit_code=transport)
+            with self.subTest(transport=transport), self.assertRaises(ValueError): probe.check_record(item)
+        for transport in [0, 125, -signal.SIGKILL]:
+            with self.assertRaises(ValueError): probe.check_record(capture("cpu_timeout", container_code=137, transport_exit_code=transport))
+        watched = capture("wall_timeout", container_code=137, transport_exit_code=-signal.SIGKILL,
+                          wall_timed_out=True, execution_killed=True, process_group_killed=True,
+                          container_forced_kill=True)
+        probe.check_record(watched)
+        with self.assertRaises(ValueError): probe.check_record({**watched, "transport_exit_code": 125})
+
+    def test_address_limit_readiness_requires_both_exact_literal_bounds(self):
+        for pair in (None, [1073741824, 2147483648], [2147483648, 2147483648]):
+            initial = ready("benign")
+            if pair is None:
+                del initial["limits"]["RLIMIT_AS"]
+            else:
+                initial["limits"]["RLIMIT_AS"] = pair
+            record = capture("benign", {"check_returned": True})
+            payload = (json.dumps(initial) + "\n" + json.dumps({"event": "probe_result", "mode": "benign", "result": {"check_returned": True}}) + "\n").encode()
+            record.update(stdout_base64=base64.b64encode(payload).decode(), stdout_captured_bytes=len(payload),
+                          stdout_captured_sha256=hashlib.sha256(payload).hexdigest())
+            with self.subTest(pair=pair), self.assertRaises(ValueError):
+                probe.check_record(record)
+
+    def test_failed_create_cleans_only_its_proven_owned_container(self):
+        called = []
+        owned = configuration()
+        identifier = owned["Id"]
+        def successful(command):
+            called.append(command)
+            if command[1] == "create": raise RuntimeError("authored create capture failure")
+            return {"stdout_base64": base64.b64encode(json.dumps([owned]).encode()).decode()}
+        with patch.object(probe.uuid, "uuid4", return_value=SimpleNamespace(hex="3" * 32)), \
+             patch.object(probe, "exists", side_effect=[False, True, False, False]), \
+             patch.object(probe, "successful", side_effect=successful):
+            item = probe.execute("podman", "1" * 64, "/usr/local/bin/python3", "trusted fixture", "benign")
+        self.assertTrue(item["container_removed"])
+        self.assertEqual(item["container_cleanup_errors"], [])
+        self.assertIn(["podman", "rm", "--force", identifier], called)
+        self.assertIn("failure", item)
+        called.clear()
+        owned["Config"]["Labels"][probe.LABEL] = "foreign"
+        with patch.object(probe.uuid, "uuid4", return_value=SimpleNamespace(hex="3" * 32)), \
+             patch.object(probe, "exists", side_effect=[False, True]), \
+             patch.object(probe, "successful", side_effect=successful):
+            item = probe.execute("podman", "1" * 64, "/usr/local/bin/python3", "trusted fixture", "benign")
+        self.assertTrue(item["container_cleanup_errors"])
+        self.assertFalse(any(command[1] == "rm" for command in called))
+
+    def test_owned_exit_wait_requires_completed_code_and_matching_final_state(self):
+        evidence = {}
+        owned = configuration()
+        owned["State"]["ExitCode"] = 137
+        for value in (b"137\n", b"-1\n", b"256\n", b"137\n0\n"):
+            wait = {"stdout_base64": base64.b64encode(value).decode(), "stderr_captured_bytes": 0}
+            with patch.object(probe, "successful", return_value=wait) as command, \
+                 patch.object(probe, "inspect_owned", return_value=owned):
+                if value == b"137\n":
+                    self.assertEqual(probe.wait_owned_exit("podman", "2" * 64, "owned", "1" * 64, evidence), (wait, owned))
+                    self.assertEqual(command.call_args.args[0], ["podman", "wait", "--condition=exited", "2" * 64])
+                else:
+                    with self.assertRaises(ValueError): probe.wait_owned_exit("podman", "2" * 64, "owned", "1" * 64, evidence)
+                    self.assertEqual(evidence["container_exit_wait"], wait)
+        for state in ({"Running": True, "ExitCode": 137}, {"Running": False, "ExitCode": -1},
+                      {"Running": False, "ExitCode": 0}, {"Running": False, "ExitCode": True}):
+            with patch.object(probe, "successful", return_value=wait | {"stdout_base64": base64.b64encode(b"137\n").decode()}), \
+                 patch.object(probe, "inspect_owned", return_value=owned | {"State": state}):
+                with self.assertRaises(ValueError): probe.wait_owned_exit("podman", "2" * 64, "owned", "1" * 64, evidence)
+        valid_wait = {"stdout_base64": base64.b64encode(b"137\n").decode(), "stderr_captured_bytes": 0}
+        for update in ({"OOMKilled": True}, {"Error": "runtime failure"}):
+            with patch.object(probe, "successful", return_value=valid_wait), \
+                 patch.object(probe, "inspect_owned", return_value=owned | {"State": owned["State"] | update}):
+                with self.assertRaises(ValueError): probe.wait_owned_exit("podman", "2" * 64, "owned", "1" * 64, evidence)
+        with patch.object(probe, "successful", side_effect=probe.ControlError("timeout", {"wall_timed_out": True})), \
+             patch.object(probe, "inspect_owned") as inspected:
+            with self.assertRaises(probe.ControlError): probe.wait_owned_exit("podman", "2" * 64, "owned", "1" * 64, evidence)
+            inspected.assert_not_called()
+        # Waiting publishes the final state; inspection must occur afterward.
+        delayed = owned | {"State": {"Running": False, "ExitCode": -1}}
+        def published(command):
+            delayed["State"] = owned["State"].copy()
+            return valid_wait
+        with patch.object(probe, "successful", side_effect=published), \
+             patch.object(probe, "inspect_owned", side_effect=lambda *args: delayed):
+            self.assertEqual(probe.wait_owned_exit("podman", "2" * 64, "owned", "1" * 64, evidence)[1]["State"]["ExitCode"], 137)
+
+    def test_failed_control_retains_raw_diagnostic_without_bundle_in_message(self):
+        raw = {"command": ["podman", "create", "large bundled source" * 1000],
+               "exit_code": 125, "stderr_base64": base64.b64encode(b"actual server error").decode()}
+        with patch.object(probe, "control", return_value=raw):
+            with self.assertRaises(probe.ControlError) as caught:
+                probe.successful(raw["command"])
+        self.assertIs(caught.exception.record, raw)
+        self.assertIn("actual server error", str(caught.exception))
+        self.assertNotIn("bundled source", str(caught.exception))
+        with patch.object(probe.uuid, "uuid4", return_value=SimpleNamespace(hex="3" * 32)), \
+             patch.object(probe, "exists", side_effect=[False, False, False]), \
+             patch.object(probe, "successful", side_effect=caught.exception):
+            item = probe.execute("podman", "1" * 64, "/usr/local/bin/python3", "trusted fixture", "benign")
+        self.assertEqual(item["failed_control"], raw)
+        self.assertTrue(item["container_removed"])
+
+    def test_idle_guard_requires_complete_changed_work_and_no_live_worker(self):
+        proof = {"completed_workload": "changed", "measured_requests": 10,
+                 "held_orchestration_pid": 17694, "defunct_transport_pid": 85019,
+                 "exited_numerical_worker_pid": 85027}
+        held = "PID PPID STAT TIME COMMAND\n17694 35939 Ts 0:00 /trusted/Python -\n85019 17694 Z 0:00 defunct\n"
+        with patch.object(probe.subprocess, "check_output", return_value=held): self.assertEqual(probe.idle(proof), held)
+        for value in [held + "85027 85019 R 0:00 worker\n", held.replace("Ts", "Ss"), held.replace("85019 17694 Z", "85019 17694 S")]:
+            with patch.object(probe.subprocess, "check_output", return_value=value), self.assertRaises(ValueError): probe.idle(proof)
+        with self.assertRaises(ValueError): probe.idle({**proof, "measured_requests": 9})
+        retired = {"format": "toklet-user-resume-interrupted-idle-v1",
+                   "interrupted_batch_eligible": False, "retired_pids": [88184, 85027, 85019],
+                   "held_orchestration_pid": 17694, "defunct_transport_pid": 85019,
+                   "exited_numerical_worker_pid": 85027}
+        with patch.object(probe.subprocess, "check_output", return_value=held):
+            self.assertEqual(probe.idle(retired), held)
+        for change in [{"interrupted_batch_eligible": True}, {"retired_pids": [85019]},
+                       {"format": "unverified"}]:
+            with self.assertRaises(ValueError): probe.idle({**retired, **change})
+
+    def fake_capture(self, stream_name, behavior):
+        class Stream(io.BytesIO):
+            def fileno(self): return 10 if self is stdout else 11
+        class Selector:
+            def __init__(self): self.keys = {}
+            def register(self, stream, _, name): self.keys[stream] = SimpleNamespace(fileobj=stream, data=name)
+            def unregister(self, stream): del self.keys[stream]
+            def get_map(self): return self.keys
+            def select(self, _):
+                wanted = "stdout" if state["reads"] == 0 else stream_name
+                return [(next(key for key in self.keys.values() if key.data == wanted), 1)]
+            def close(self): self.keys.clear()
+        stdout, stderr = Stream(), Stream()
+        code = -signal.SIGKILL if behavior in ("flood", "wall") else 0
+        worker = SimpleNamespace(pid=123, stdout=stdout, stderr=stderr, returncode=code, wait=lambda **_: code)
+        mode = "wall_timeout" if behavior == "wall" else stream_name + "_flood"
+        initial = (json.dumps(ready(mode)) + "\n").encode()
+        state = {"reads": 0, "clock": 0.0}
+        def read(_, size):
+            self.assertEqual(size, 4096)
+            state["reads"] += 1
+            if state["reads"] == 1:
+                if behavior == "wall": state["clock"] = 7.0
+                return initial
+            return b"x" * 4096
+        with patch.object(probe.selectors, "DefaultSelector", Selector), \
+             patch.object(probe.subprocess, "Popen", return_value=worker), \
+             patch.object(probe.os, "set_blocking", side_effect=OSError("authored setup failure") if behavior == "setup" else None), \
+             patch.object(probe.os, "read", side_effect=read), \
+             patch.object(probe.time, "monotonic", side_effect=lambda: state["clock"]), \
+             patch.object(probe, "signal_owned_group", return_value=behavior != "setup"), \
+             patch.object(probe, "live_group_members", return_value=[]):
+            item = probe.capture(["owned-fixture"], 6, 65536)
+        return item, mode
+
+    def test_transport_caps_both_pipes_and_wall_without_running_a_child(self):
+        for stream, behavior in [("stdout", "flood"), ("stderr", "flood"), ("stdout", "wall")]:
+            transport, mode = self.fake_capture(stream, behavior)
+            expected = capture(mode, container_code=137, transport_exit_code=-signal.SIGKILL,
+                               execution_killed=True, container_forced_kill=True)
+            expected.update(transport)
+            expected["transport_exit_code"] = transport["exit_code"]
+            expected["exit_code"] = -signal.SIGKILL
+            probe.check_record(expected)
+            if behavior == "flood":
+                self.assertEqual(transport["stdout_captured_bytes"] + transport["stderr_captured_bytes"], 65536)
+            else: self.assertTrue(transport["wall_timed_out"])
+
+    def test_transport_setup_failure_preserves_error_and_reaps_owned_group(self):
+        transport, _ = self.fake_capture("stdout", "setup")
+        self.assertEqual(transport["failure"]["message"], "authored setup failure")
+        self.assertEqual(transport["surviving_group_members"], [])
+        self.assertEqual(transport["exit_code"], 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

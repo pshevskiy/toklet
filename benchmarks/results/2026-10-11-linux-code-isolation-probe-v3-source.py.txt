@@ -1,0 +1,620 @@
+"""Qualify fixed Linux authored probes in owned Podman containers while idle."""
+import argparse
+import base64
+from datetime import datetime, timezone
+import errno
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import re
+import selectors
+import shutil
+import signal
+import subprocess
+import sys
+import time
+import uuid
+from urllib.parse import urlsplit
+
+import linux_code_isolation_child as child
+import code_isolation_probe as native
+import prepare
+from task_cases_probe import signal_owned_group
+
+ROOT = prepare.ROOT
+ENVIRONMENT = {"PATH": "/usr/local/bin:/usr/bin:/bin", "LC_ALL": "C", "TZ": "UTC"}
+LABEL = "io.toklet.authored-isolation"
+
+live_group_members = native.live_group_members
+
+def bound_machine_connection(machine, connections):
+    """Bind only the existing rootless default machine's observed SSH endpoint."""
+    if machine.get("Name") != "podman-machine-default" or machine.get("Rootful") is not False:
+        raise ValueError("Authored qualification requires the fixed rootless machine")
+    ssh = machine.get("SSHConfig", {})
+    port = ssh.get("Port")
+    if (type(port) is not int or not 0 < port < 65536
+            or not isinstance(ssh.get("RemoteUsername"), str) or not ssh["RemoteUsername"]
+            or not isinstance(ssh.get("IdentityPath"), str) or not Path(ssh["IdentityPath"]).is_absolute()):
+        raise ValueError("Machine SSH identity differs")
+    matches = [item for item in connections if item.get("Name") == machine["Name"]]
+    if len(matches) != 1:
+        raise ValueError("Unique fixed machine connection is required")
+    connection = matches[0]
+    uri = connection.get("URI")
+    if not isinstance(uri, str):
+        raise ValueError("Connection URI is missing")
+    parsed = urlsplit(uri)
+    if (parsed.scheme != "ssh" or parsed.hostname not in ("127.0.0.1", "localhost")
+            or parsed.port != port or parsed.username != ssh["RemoteUsername"]
+            or parsed.password is not None or parsed.query or parsed.fragment
+            or re.fullmatch(r"/run/user/[0-9]+/podman/podman.sock", parsed.path) is None
+            or connection.get("Identity") != ssh["IdentityPath"]):
+        raise ValueError("API connection does not identify the selected machine")
+    return {"machine": machine["Name"], "URI": uri, "Identity": ssh["IdentityPath"],
+            "SSHConfig": ssh, "Rootful": False}
+
+
+def podman_prefix(client):
+    if isinstance(client, str):
+        return [client]
+    if (not isinstance(client, tuple) or len(client) != 5
+            or client[1] != "--url" or client[3] != "--identity"):
+        raise ValueError("Podman client must have an explicit bound endpoint")
+    return list(client)
+
+
+def capture(command, wall_seconds, output_bytes):
+    """Bound both pipes and wall time, with the qualified owned-group cleanup."""
+    started = time.monotonic()
+    selector = selectors.DefaultSelector()
+    try:
+        worker = subprocess.Popen(command, cwd=ROOT, env=None, stdin=subprocess.DEVNULL,
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
+                                  close_fds=True)
+    except BaseException:
+        selector.close()
+        raise
+    deadline = started + wall_seconds
+    captured = {"stdout": bytearray(), "stderr": bytearray()}
+    cleanup_errors = []
+    record = {"command": command, "wall_timed_out": False, "output_limit_exceeded": False}
+    killed = False
+    try:
+        for stream, name in ((worker.stdout, "stdout"), (worker.stderr, "stderr")):
+            os.set_blocking(stream.fileno(), False)
+            selector.register(stream, selectors.EVENT_READ, name)
+        while selector.get_map():
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                record["wall_timed_out"] = True
+                break
+            for key, _ in sorted(selector.select(min(0.05, remaining)), key=lambda item: item[0].data != "stdout"):
+                payload = os.read(key.fileobj.fileno(), 4096)
+                if not payload:
+                    selector.unregister(key.fileobj)
+                    continue
+                available = output_bytes - sum(len(value) for value in captured.values())
+                captured[key.data].extend(payload[:available])
+                if len(payload) > available:
+                    record["output_limit_exceeded"] = True
+                    break
+            if record["output_limit_exceeded"]:
+                break
+        if record["wall_timed_out"] or record["output_limit_exceeded"]:
+            killed = signal_owned_group(worker, cleanup_errors)
+        try:
+            worker.wait(timeout=max(0.001, deadline - time.monotonic()))
+        except subprocess.TimeoutExpired:
+            record["wall_timed_out"] = True
+            killed = signal_owned_group(worker, cleanup_errors) or killed
+            worker.wait(timeout=20)
+    except BaseException as error:
+        record["failure"] = {"type": type(error).__name__, "message": str(error)}
+    finally:
+        selector.close()
+        # Even an exited leader may have left descendants. No process outside
+        # this newly owned session group is signaled.
+        killed = signal_owned_group(worker, cleanup_errors) or killed
+        try:
+            worker.wait(timeout=20)
+        except BaseException as error:
+            cleanup_errors.append({"type": type(error).__name__, "message": str(error)})
+        for stream in (worker.stdout, worker.stderr):
+            try:
+                stream.close()
+            except BaseException as error:
+                cleanup_errors.append({"type": type(error).__name__, "message": str(error)})
+        try:
+            surviving = live_group_members(worker.pid)
+        except BaseException as error:
+            surviving = None
+            cleanup_errors.append({"type": type(error).__name__, "message": str(error)})
+        record.update(exit_code=worker.returncode, process_group_killed=killed,
+                      cleanup_errors=cleanup_errors, surviving_group_members=surviving,
+                      elapsed_seconds=time.monotonic() - started)
+        for name, payload in captured.items():
+            record[name + "_base64"] = base64.b64encode(payload).decode("ascii")
+            record[name + "_captured_bytes"] = len(payload)
+            record[name + "_captured_sha256"] = hashlib.sha256(payload).hexdigest()
+    return record
+
+def check_record(record):
+    """A qualified boundary is distinct from a passing source-test result."""
+    state = record.get("container_state")
+    if (not isinstance(state, dict) or state.get("Running") is not False
+            or state.get("OOMKilled") is not False or state.get("Error") not in (None, "")
+            or type(state.get("ExitCode")) is not int
+            or state["ExitCode"] != record.get("container_exit_code")):
+        raise ValueError("Authored Linux container final state differs")
+    if (record.get("container_removed") is not True or record.get("container_cleanup_errors") != []
+            or type(record.get("container_exit_code")) is not int
+            or type(record.get("transport_exit_code")) is not int
+            or any(type(record.get(key)) is not bool for key in
+                   ("container_forced_kill", "container_timeout_kill", "process_group_killed"))
+            or record.get("execution_killed") != (record["process_group_killed"]
+                or record["container_forced_kill"] or record["container_timeout_kill"])
+            or record.get("exit_code") != (-signal.SIGKILL if record["container_exit_code"] == 137
+                                           else record["container_exit_code"])):
+        raise ValueError("Authored Linux container termination/cleanup evidence differs")
+    transport_matches = record["transport_exit_code"] == record["container_exit_code"]
+    owned_transport_kill = (record["process_group_killed"] is True
+        and (record.get("wall_timed_out") is True or record.get("output_limit_exceeded") is True)
+        and record["transport_exit_code"] == -signal.SIGKILL
+        and record["container_exit_code"] == 137)
+    if not transport_matches and not owned_transport_kill:
+        raise ValueError("Authored Linux transport/container exit statuses differ")
+    if (record.get("failure") or record["cleanup_errors"] or record["surviving_group_members"] != []
+            or type(record["exit_code"]) is not int
+            or type(record["elapsed_seconds"]) not in (int, float)
+            or not math.isfinite(record["elapsed_seconds"]) or record["elapsed_seconds"] < 0
+            or any(type(record[key]) is not bool for key in
+                   ("wall_timed_out", "output_limit_exceeded", "execution_killed"))):
+        raise ValueError("Authored isolation transport/cleanup failed")
+    output = base64.b64decode(record["stdout_base64"], validate=True)
+    errors = base64.b64decode(record["stderr_base64"], validate=True)
+    for name, payload in (("stdout", output), ("stderr", errors)):
+        if (type(record[name + "_captured_bytes"]) is not int
+                or len(payload) != record[name + "_captured_bytes"]
+                or hashlib.sha256(payload).hexdigest() != record[name + "_captured_sha256"]):
+            raise ValueError("Authored isolation raw capture identity differs")
+    if len(output) + len(errors) > child.POLICY["output_bytes"]:
+        raise ValueError("Authored isolation capture exceeds its bound")
+    lines = output.splitlines()
+    if not lines:
+        raise ValueError("Authored isolation lacks active-boundary evidence")
+    ready = json.loads(lines[0])
+    if not isinstance(ready, dict):
+        raise ValueError("Authored isolation admission must be an object")
+    mode = record["mode"]
+    expected_limits = {name: [value, value] for name, (_, value) in child.limits().items()}
+    observed_limits = ready.get("limits")
+    exact_limits = (isinstance(observed_limits, dict) and set(observed_limits) == set(expected_limits)
+                    and all(isinstance(pair, list) and len(pair) == 2
+                            and all(type(value) is int for value in pair)
+                            and pair == expected_limits[name] for name, pair in observed_limits.items()))
+    if (ready.get("event") != "isolated" or ready.get("mode") != mode
+            or json.dumps(ready.get("policy"), sort_keys=True, allow_nan=False) != json.dumps(child.POLICY, sort_keys=True, allow_nan=False)
+            or not exact_limits
+            or ready.get("profile") != "toklet-linux-aarch64-seccomp-v1"
+            or type(ready.get("isolated_flag")) is not int or ready["isolated_flag"] != 1
+            or type(ready.get("no_site_flag")) is not int or ready["no_site_flag"] != 1
+            or type(ready.get("optimize_flag")) is not int or ready["optimize_flag"] != 0
+            or ready.get("dont_write_bytecode") is not True
+            or ready.get("environment_keys") != sorted(ENVIRONMENT)):
+        raise ValueError("Authored isolation admission differs")
+    if mode in ("stdout_flood", "stderr_flood"):
+        if (not record["output_limit_exceeded"] or record["wall_timed_out"]
+                or not record["execution_killed"] or record["exit_code"] != -signal.SIGKILL
+                or len(output) + len(errors) != child.POLICY["output_bytes"]):
+            raise ValueError("Authored output bound was not enforced")
+    elif mode == "wall_timeout":
+        if (not record["wall_timed_out"] or record["output_limit_exceeded"]
+                or not record["execution_killed"] or record["exit_code"] != -signal.SIGKILL):
+            raise ValueError("Authored wall bound was not enforced")
+    elif mode == "cpu_timeout":
+        if (record["wall_timed_out"] or record["output_limit_exceeded"]
+                or record["execution_killed"]
+                or record["exit_code"] not in (-signal.SIGKILL, -signal.SIGXCPU)
+                or len(lines) != 1 or errors):
+            raise ValueError("Authored CPU bound was not enforced before wall deadline")
+    elif mode == "early_exit":
+        if record["exit_code"] != 0 or len(lines) != 1 or errors:
+            raise ValueError("Authored early-exit evidence differs")
+    else:
+        if (record["exit_code"] != 0 or record["wall_timed_out"] or record["output_limit_exceeded"]
+                or len(lines) != 2 or errors):
+            raise ValueError("Authored isolation lacks complete result evidence")
+        final = json.loads(lines[1])
+        if not isinstance(final, dict):
+            raise ValueError("Authored isolation result event must be an object")
+        if final.get("event") != "probe_result" or final.get("mode") != mode:
+            raise ValueError("Authored isolation result event differs")
+        result = final.get("result", {})
+        if not isinstance(result, dict):
+            raise ValueError("Authored isolation result must be an object")
+        if mode == "benign":
+            expected = result == {"check_returned": True} and result["check_returned"] is True
+        elif mode == "assertion_failure":
+            expected = (result == {"check_returned": False, "exception": "AssertionError"}
+                        and result["check_returned"] is False)
+        elif mode in ("file_read", "file_write", "network", "fork", "exec"):
+            expected = (result.get("denied") is True and type(result.get("errno")) is int
+                        and result["errno"] in (errno.EPERM, errno.EACCES)
+                        and result.get("exception") == "PermissionError")
+        elif mode == "data_limit":
+            expected = (result == {"bounded": True, "exception": "MemoryError", "requested_bytes": 512 * 1024**2}
+                        and result["bounded"] is True and type(result["requested_bytes"]) is int)
+        elif mode == "address_space_limit":
+            expected = (result == {"bounded": True, "exception": "OSError", "errno": errno.ENOMEM,
+                                  "requested_bytes": 2 * 1024**3}
+                        and result["bounded"] is True and type(result["requested_bytes"]) is int
+                        and type(result["errno"]) is int)
+        else:
+            expected = False
+        if not expected:
+            raise ValueError("Authored isolation capability/resource probe failed")
+    runtime = ready.get("runtime")
+    array = (child.SockFilter * len(child.filter_instructions()))(
+        *(child.SockFilter(*row) for row in child.filter_instructions()))
+    if (not isinstance(runtime, dict) or runtime.get("machine") != "aarch64"
+            or type(runtime.get("uid")) is not int or runtime["uid"] != 65534
+            or type(runtime.get("gid")) is not int or runtime["gid"] != 65534
+            or runtime.get("filter_sha256") != hashlib.sha256(bytes(array)).hexdigest()
+            or not isinstance(runtime.get("kernel"), str) or not runtime["kernel"]
+            or runtime.get("python_executable") not in ("/usr/local/bin/python3", "/usr/bin/python3")
+            or not isinstance(runtime.get("python_sha256"), str)
+            or re.fullmatch(r"[0-9a-f]{64}", runtime["python_sha256"]) is None):
+        raise ValueError("Linux runtime identity is absent or unsupported")
+    return ready
+
+
+class ControlError(RuntimeError):
+    """Retain bounded raw diagnostics without embedding a bundled program in errors."""
+
+    def __init__(self, message, record):
+        self.record = record
+        diagnostic = base64.b64decode(record.get("stderr_base64", "")).decode("utf-8", errors="replace")
+        super().__init__(message + ": " + diagnostic[:2048])
+
+
+def control(command):
+    record = capture(command, 20, 256 * 1024)
+    if (record.get("failure") or record["cleanup_errors"]
+            or record["surviving_group_members"] != [] or record["wall_timed_out"]
+            or record["output_limit_exceeded"]):
+        raise ControlError("Owned Podman control transport failed", record)
+    return record
+
+
+def output(record):
+    return base64.b64decode(record["stdout_base64"], validate=True).decode("utf-8")
+
+
+def successful(command):
+    record = control(command)
+    if record["exit_code"] != 0:
+        raise ControlError("Owned Podman control failed", record)
+    return record
+
+
+def normalized_id(value):
+    if not isinstance(value, str):
+        raise ValueError("Container/image identity must be a string")
+    value = value.removeprefix("sha256:")
+    if re.fullmatch(r"[0-9a-f]{64}", value) is None:
+        raise ValueError("Full immutable container/image identity is required")
+    return value
+
+
+def bundled_source():
+    # Load only the two pinned trusted files into separate module namespaces.
+    # OCI exec arguments carry the source directly: no host mount, shell,
+    # arbitrary source path, expression or generated program is accepted.
+    original = (ROOT / "tools/bench/code_isolation_child.py").read_text()
+    linux = (ROOT / "tools/bench/linux_code_isolation_child.py").read_text()
+    return ("import sys, types\n"
+            "module = types.ModuleType('code_isolation_child')\n"
+            "sys.modules[module.__name__] = module\n"
+            f"exec(compile({original!r}, 'trusted_authored_probes', 'exec'), module.__dict__)\n"
+            f"exec(compile({linux!r}, 'trusted_linux_policy', 'exec'), "
+            "{'__name__': '__main__'})\n")
+
+
+def create_command(podman, image_id, python_path, name, source, mode):
+    normalized_id(image_id)
+    if (python_path not in ("/usr/local/bin/python3", "/usr/bin/python3")
+            or re.fullmatch(r"toklet-authored-[0-9a-f]{32}", name) is None
+            or mode not in child.MODES):
+        raise ValueError("Only fixed authored container invocations are admitted")
+    command = [*podman_prefix(podman), "create", "--name=" + name, "--label=" + LABEL + "=" + name,
+               "--pull=never", "--image-volume=ignore", "--network=none", "--cap-drop=all",
+               "--security-opt=no-new-privileges", "--user=65534:65534", "--pids-limit=1",
+               "--read-only", "--read-only-tmpfs=false", "--no-healthcheck",
+               "--no-hosts", "--no-hostname", "--systemd=false", "--log-driver=none",
+               "--http-proxy=false", "--unsetenv-all", "--unsetenv=container",
+               "--workdir=/tmp", "--timeout=6", "--memory=268435456",
+               "--memory-swap=268435456", "--entrypoint=" + python_path]
+    for name, (_, value) in child.limits().items():
+        label = {"RLIMIT_DATA": "data", "RLIMIT_AS": "as", "RLIMIT_CPU": "cpu",
+                 "RLIMIT_CORE": "core", "RLIMIT_NOFILE": "nofile"}[name]
+        command.append(f"--ulimit={label}={value}:{value}")
+    for key, value in ENVIRONMENT.items():
+        command.append("--env=" + key + "=" + value)
+    command.extend(["sha256:" + normalized_id(image_id), "-I", "-S", "-B", "-c", source, mode])
+    return command
+
+
+def inspect_owned(podman, identifier, name, image_id):
+    record = successful([*podman_prefix(podman), "container", "inspect", identifier])
+    items = json.loads(output(record))
+    if not isinstance(items, list) or len(items) != 1 or not isinstance(items[0], dict):
+        raise ValueError("Owned container inspection differs")
+    value = items[0]
+    if (normalized_id(value.get("Id")) != normalized_id(identifier)
+            or normalized_id(value.get("Image")) != normalized_id(image_id)
+            or value.get("Config", {}).get("Labels", {}).get(LABEL) != name):
+        raise ValueError("Owned container identity or label differs")
+    return value
+
+
+def validate_configuration(value, python_path, source, mode):
+    configuration, host = value["Config"], value["HostConfig"]
+    expected_env = sorted(key + "=" + val for key, val in ENVIRONMENT.items())
+    if (value.get("Mounts") != [] or configuration.get("Env") is None
+            or sorted(configuration["Env"]) != expected_env
+            or configuration.get("User") != "65534:65534"
+            or configuration.get("WorkingDir") != "/tmp"
+            or configuration.get("Entrypoint") != [python_path]
+            or configuration.get("Cmd") != ["-I", "-S", "-B", "-c", source, mode]
+            or configuration.get("OpenStdin") is not False
+            or host.get("ReadonlyRootfs") is not True or host.get("Privileged") is not False
+            or host.get("NetworkMode") != "none"
+            or type(host.get("PidsLimit")) is not int or host["PidsLimit"] != 1
+            or host.get("Memory") != child.POLICY["data_bytes"]
+            or host.get("MemorySwap") != child.POLICY["data_bytes"]
+            or value.get("EffectiveCaps") != [] or value.get("BoundingCaps") != []
+            or host.get("CapAdd") not in (None, [])
+            or host.get("LogConfig", {}).get("Type") != "none"
+            or host.get("SecurityOpt") not in (["no-new-privileges"], ["no-new-privileges=true"])):
+        raise ValueError("Fixed owned container configuration differs")
+    expected = {name: (value, value) for name, (_, value) in child.limits().items()}
+    actual = {}
+    for row in host.get("Ulimits", []):
+        name = row.get("Name", "").upper()
+        if not name.startswith("RLIMIT_"):
+            name = "RLIMIT_" + name
+        if name in actual or type(row.get("Soft")) is not int or type(row.get("Hard")) is not int:
+            raise ValueError("Fixed owned container resource declarations differ")
+        actual[name] = (row["Soft"], row["Hard"])
+    if actual != expected:
+        raise ValueError("Fixed owned container resource declarations differ")
+    return {"environment_keys": sorted(ENVIRONMENT), "no_host_mounts": True,
+            "read_only": True, "network": "none", "pids_limit": 1,
+            "cap_drop": ["ALL"], "no_new_privileges": True,
+            "memory_bytes": host["Memory"], "memory_swap_bytes": host["MemorySwap"],
+            "user": configuration["User"], "limits": actual}
+
+
+def exists(podman, identifier):
+    record = control([*podman_prefix(podman), "container", "exists", identifier])
+    if record["exit_code"] not in (0, 1) or output(record) or record["stderr_captured_bytes"]:
+        raise ValueError("Owned container existence check failed")
+    return record["exit_code"] == 0
+
+
+def execute(podman, image_id, python_path, source, mode):
+    name = "toklet-authored-" + uuid.uuid4().hex
+    if exists(podman, name):
+        raise ValueError("Fresh authored container name unexpectedly exists")
+    identifier = None
+    record = {"mode": mode, "container_name": name, "container_cleanup_errors": []}
+    try:
+        created = successful(create_command(podman, image_id, python_path, name, source, mode))
+        identifier = normalized_id(output(created).strip())
+        record["container_id"] = identifier
+        before = inspect_owned(podman, identifier, name, image_id)
+        # Retain the actual public configuration fields so saved evidence can
+        # replay admission, rather than relying on the derived summary alone.
+        record["container_inspect_before"] = {key: before.get(key) for key in
+            ["Id", "Image", "Config", "HostConfig", "Mounts", "EffectiveCaps", "BoundingCaps"]}
+        record["configuration"] = validate_configuration(before, python_path, source, mode)
+        transport = capture([*podman_prefix(podman), "start", "--attach", identifier],
+                            child.POLICY["wall_seconds"], child.POLICY["output_bytes"])
+        record.update(transport)
+        record["transport_exit_code"] = transport["exit_code"]
+        stopped = inspect_owned(podman, identifier, name, image_id)
+        forced = False
+        if stopped["State"]["Running"]:
+            successful([*podman_prefix(podman), "kill", "--signal=KILL", identifier])
+            forced = True
+            stopped = inspect_owned(podman, identifier, name, image_id)
+        state = stopped["State"]
+        if state["Running"] or state.get("OOMKilled") is not False or type(state.get("ExitCode")) is not int:
+            raise ValueError("Owned container did not stop cleanly or was OOM-killed")
+        record["container_exit_code"] = state["ExitCode"]
+        record["container_state"] = {key: state.get(key) for key in
+                                     ["Running", "OOMKilled", "ExitCode", "Error", "StartedAt", "FinishedAt"]}
+        record["container_forced_kill"] = forced
+        record["container_timeout_kill"] = False
+        # Authored modes cannot intentionally return137. Preserve raw Podman
+        # and container codes and explicitly normalize this SIGKILL encoding.
+        record["exit_code"] = -signal.SIGKILL if state["ExitCode"] == 137 else state["ExitCode"]
+        record["execution_killed"] = transport["process_group_killed"] or forced
+        if mode == "wall_timeout" and not record["wall_timed_out"]:
+            started = datetime.fromisoformat(state["StartedAt"].replace("Z", "+00:00"))
+            finished = datetime.fromisoformat(state["FinishedAt"].replace("Z", "+00:00"))
+            duration = (finished - started).total_seconds()
+            record["container_run_seconds"] = duration
+            if state["ExitCode"] == 137 and duration >= child.POLICY["wall_seconds"]:
+                record["wall_timed_out"] = True
+                record["container_timeout_kill"] = True
+                record["execution_killed"] = True  # independent Podman wall watchdog
+    except BaseException as error:
+        record["failure"] = {"type": type(error).__name__, "message": str(error)[:4096]}
+        if isinstance(error, ControlError):
+            record["failed_control"] = error.record
+    finally:
+        try:
+            if identifier is None and exists(podman, name):
+                # A create transport failure may occur after the server creates
+                # our fresh name. Prove its label/image before any cleanup signal.
+                inspected = json.loads(output(successful([*podman_prefix(podman), "container", "inspect", name])))
+                if not isinstance(inspected, list) or len(inspected) != 1:
+                    raise ValueError("Failed-create ownership inspection differs")
+                identifier = normalized_id(inspected[0].get("Id"))
+                inspect_owned(podman, identifier, name, image_id)
+            if identifier is not None:
+                inspect_owned(podman, identifier, name, image_id)
+                successful([*podman_prefix(podman), "rm", "--force", identifier])
+                if exists(podman, identifier):
+                    raise ValueError("Owned container survives removal")
+            if exists(podman, name):
+                raise ValueError("Owned container name survives cleanup")
+            record["container_removed"] = True
+        except BaseException as error:
+            record["container_cleanup_errors"].append({"type": type(error).__name__, "message": str(error)[:4096]})
+            if isinstance(error, ControlError):
+                record["failed_cleanup_control"] = error.record
+    return record
+
+
+def idle(proof):
+    completed = proof.get("completed_workload") == "changed" and proof.get("measured_requests") == 10
+    retired = (proof.get("format") == "toklet-user-resume-interrupted-idle-v1"
+               and proof.get("interrupted_batch_eligible") is False
+               and proof.get("retired_pids") == [88184, 85027, 85019])
+    if not (completed or retired):
+        raise ValueError("Linux qualification requires a complete or explicitly retired workload idle proof")
+    pids = [proof["held_orchestration_pid"], proof["defunct_transport_pid"], proof["exited_numerical_worker_pid"]]
+    if pids != [17694, 85019, 85027]:
+        raise ValueError("Linux qualification idle identities differ")
+    snapshot = subprocess.check_output(["ps", "-o", "pid,ppid,stat,time,command", "-p", ",".join(map(str, pids))], text=True)
+    rows = {int(row[0]): row for line in snapshot.splitlines()[1:] if len(row := line.split(None, 4)) == 5}
+    if (pids[2] in rows or pids[0] not in rows or pids[1] not in rows
+            or int(rows[pids[0]][1]) != 35939 or "T" not in rows[pids[0]][2]
+            or not rows[pids[0]][4].endswith("/Python -")
+            or not rows[pids[1]][2].startswith("Z") or int(rows[pids[1]][1]) != pids[0]):
+        raise ValueError("Changed worker has not exited beneath held orchestration")
+    return snapshot
+
+
+def digest(path):
+    with Path(path).open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def run(args):
+    args.output = args.output.resolve()
+    if not args.output.is_relative_to((ROOT / "benchmarks/raw").resolve()) or args.output.exists():
+        raise ValueError("Fresh Linux qualification raw output is required")
+    proof = json.loads(args.idle_proof.read_text())
+    snapshot = idle(proof)
+    podman = shutil.which("podman")
+    if podman is None:
+        raise ValueError("Installed Podman client is required; VM setup is separate")
+    podman = str(Path(podman).resolve())
+    image_id = normalized_id(args.image_id)
+    source_names = ["tools/bench/linux_code_isolation_child.py", "tools/bench/linux_code_isolation_probe.py",
+                    "tools/bench/test_linux_code_isolation.py", "tools/bench/code_isolation_child.py",
+                    "tools/bench/code_isolation_probe.py", "tools/bench/task_cases_probe.py",
+                    "tools/bench/prepare.py", "tools/bench/quality.py", "tools/bench/mlx_baseline.py"]
+    identities = {name: digest(ROOT / name) for name in source_names}
+    source = bundled_source()
+    record = {"format": "toklet-authored-linux-code-isolation-probe-v1", "completed": False,
+              "scope": "Fixed authored probes only; no dataset/model/generated code. No engine or executor adoption.",
+              "started_utc": datetime.now(timezone.utc).isoformat(), "idle_snapshot": snapshot,
+              "idle_proof_sha256": digest(args.idle_proof), "policy": child.POLICY,
+              "source_sha256": identities, "bundle_sha256": hashlib.sha256(source.encode()).hexdigest(),
+              "podman_binary": podman, "podman_sha256": digest(podman),
+              "engine_revision": output(successful(["git", "rev-parse", "HEAD"])).strip(),
+              "working_tree_dirty": bool(output(successful(["git", "status", "--porcelain"]))),
+              "host_python_version": sys.version, "host_python_executable": str(Path(sys.executable).resolve()),
+              "host_python_sha256": digest(Path(sys.executable).resolve()),
+              "image_id": image_id, "python_path": args.python_path,
+              "checks": [], "runs": []}
+    try:
+        machine_admission = successful([podman, "machine", "inspect", "podman-machine-default"])
+        connection_admission = successful([podman, "system", "connection", "list", "--format=json"])
+        machines = json.loads(output(machine_admission))
+        if not isinstance(machines, list) or len(machines) != 1:
+            raise ValueError("Unique machine inspection required")
+        binding = bound_machine_connection(machines[0], json.loads(output(connection_admission)))
+        if args.podman_url != binding["URI"] or str(args.podman_identity) != binding["Identity"]:
+            raise ValueError("Requested endpoint differs from the selected machine")
+        record["connection_binding"] = binding
+        record["machine_connection_admission"] = [machine_admission, connection_admission]
+        podman = (podman, "--url", binding["URI"], "--identity", binding["Identity"])
+        record["podman_version"] = output(successful([*podman_prefix(podman), "version", "--format=json"]))
+        image = json.loads(output(successful([*podman_prefix(podman), "image", "inspect", "sha256:" + image_id])))
+        if (not isinstance(image, list) or len(image) != 1
+                or normalized_id(image[0].get("Id")) != image_id
+                or image[0].get("Architecture") != "arm64" or image[0].get("Os") != "linux"):
+            raise ValueError("Pinned Linux AArch64 image identity differs")
+        record["image"] = {key: image[0].get(key) for key in ["Id", "Digest", "RepoDigests", "Architecture", "Os", "RootFS"]}
+        for command in [["cargo", "fmt", "--check"],
+                        ["cargo", "clippy", "--locked", "--offline", "--all-targets", "--", "-D", "warnings"],
+                        ["cargo", "test", "--locked", "--offline"],
+                        [sys.executable, "-m", "unittest", "discover", "-s", "tools/bench", "-p", "test_*.py"]]:
+            checked = capture(command, 1200, 256 * 1024)
+            record["checks"].append(checked)
+            if (checked.get("failure") or checked["exit_code"] != 0 or checked["cleanup_errors"]
+                    or checked["surviving_group_members"] != []
+                    or checked["wall_timed_out"] or checked["output_limit_exceeded"]):
+                raise ValueError("Required Linux candidate checks failed")
+        idle(proof)
+        for mode in child.MODES:
+            item = execute(podman, image_id, args.python_path, source, mode)
+            record["runs"].append(item)
+            if item.get("failure") or item["container_cleanup_errors"] or item.get("container_removed") is not True:
+                raise ValueError("Authored Linux container infrastructure failed")
+            active = check_record(item)
+            if "admitted_runtime" not in record:
+                record["admitted_runtime"] = active["runtime"]
+                record["admitted_python_version"] = active["python"]
+            elif (active["runtime"] != record["admitted_runtime"]
+                  or active["python"] != record["admitted_python_version"]):
+                raise ValueError("Authored Linux interpreter/kernel identity changed between modes")
+            item["expectation_passed"] = True
+        if identities != {name: digest(ROOT / name) for name in source_names}:
+            raise ValueError("Linux qualification source identity changed")
+        if record["podman_sha256"] != digest(record["podman_binary"]):
+            raise ValueError("Podman client changed during qualification")
+        if record["host_python_sha256"] != digest(record["host_python_executable"]):
+            raise ValueError("Host interpreter changed during qualification")
+        final = json.loads(output(successful([*podman_prefix(podman), "image", "inspect", "sha256:" + image_id])))
+        if record["image"] != {key: final[0].get(key) for key in record["image"]}:
+            raise ValueError("Pinned Linux image changed during qualification")
+        machine_final = successful([record["podman_binary"], "machine", "inspect", "podman-machine-default"])
+        connection_final = successful([record["podman_binary"], "system", "connection", "list", "--format=json"])
+        final_machines = json.loads(output(machine_final))
+        if (not isinstance(final_machines, list) or len(final_machines) != 1
+                or bound_machine_connection(final_machines[0], json.loads(output(connection_final))) != binding):
+            raise ValueError("Machine/API connection identity changed")
+        record["machine_connection_final"] = [machine_final, connection_final]
+        idle(proof)
+        record["completed"] = True
+    except BaseException as error:
+        record["failure"] = {"type": type(error).__name__, "message": str(error)[:4096]}
+        if isinstance(error, ControlError):
+            record["failed_control"] = error.record
+    record["completed_utc"] = datetime.now(timezone.utc).isoformat()
+    with args.output.open("x") as stream:
+        json.dump(record, stream, indent=2, allow_nan=False)
+        stream.write("\n")
+    print(json.dumps({"completed": record["completed"], "authored_runs": len(record["runs"]),
+                      "failure": record.get("failure")}))
+    return 0 if record["completed"] else 1
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--idle-proof", type=Path, required=True)
+    parser.add_argument("--image-id", required=True)
+    parser.add_argument("--podman-url", required=True)
+    parser.add_argument("--podman-identity", type=Path, required=True)
+    parser.add_argument("--python-path", choices=["/usr/local/bin/python3", "/usr/bin/python3"], required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    sys.exit(run(parser.parse_args()))

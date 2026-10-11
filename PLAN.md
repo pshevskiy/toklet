@@ -314,6 +314,25 @@ policy, generated program, executor adoption, quality score or milestone closure
 is claimed. Astra accepted the complete task without findings after independently
 rerunning the 19 targeted tests and verifying the saved evidence and stopped VM.
 
+Linux authored retry, 11 October 2026 (M2.5/quality still open): the
+[fresh native run](docs/experiments/2026-10-11-linux-code-isolation-retry.md)
+passes all fourteen modes on the pinned arm64 Python image, including denied
+access, output/CPU/wall termination and both memory limits. Persistent startup
+helpers and pipe readers survive until verified stopped-machine restoration.
+The client binds the explicit selected-machine endpoint. All five process limits
+remain fixed; AS is admitted by the trusted child because Podman rejects its OCI
+ulimit spelling. Actual kernel capability masks must be zero, runtime metadata
+is removed before admission and unknown exit codes remain unqualified. Separate
+post-kill reaping avoids a redundant deadline signal without suppressing errors.
+The exact saved replay preserves six excluded retries and validates all outcomes,
+source/configuration identities and cleanup. Formatting, offline locked Clippy,
+76 ordinary Rust tests and 97 offline benchmark tests pass. Final inspection
+confirms owned helpers absent, original VM stopped and frozen binaries unchanged.
+Astra accepted the complete task without findings after byte-identical replay,
+35 targeted tests and independent identity/cleanup/restoration checks.
+A general generated-code executor, held-out responses and quality scores remain
+pending; this authored boundary is not an engine or milestone adoption.
+
 Changed-prefix scalar result, 11 October 2026 (M2.5 still open): the
 [fresh batch](docs/experiments/2026-10-11-cpu-changed.md) retains three warmups
 and ten uninterrupted requests. Editing token 128 forces reset and replay of

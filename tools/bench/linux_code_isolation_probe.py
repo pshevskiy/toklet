@@ -16,6 +16,7 @@ import subprocess
 import sys
 import time
 import uuid
+from urllib.parse import urlsplit
 
 import linux_code_isolation_child as child
 import code_isolation_probe as native
@@ -27,6 +28,43 @@ ENVIRONMENT = {"PATH": "/usr/local/bin:/usr/bin:/bin", "LC_ALL": "C", "TZ": "UTC
 LABEL = "io.toklet.authored-isolation"
 
 live_group_members = native.live_group_members
+
+def bound_machine_connection(machine, connections):
+    """Bind only the existing rootless default machine's observed SSH endpoint."""
+    if machine.get("Name") != "podman-machine-default" or machine.get("Rootful") is not False:
+        raise ValueError("Authored qualification requires the fixed rootless machine")
+    ssh = machine.get("SSHConfig", {})
+    port = ssh.get("Port")
+    if (type(port) is not int or not 0 < port < 65536
+            or not isinstance(ssh.get("RemoteUsername"), str) or not ssh["RemoteUsername"]
+            or not isinstance(ssh.get("IdentityPath"), str) or not Path(ssh["IdentityPath"]).is_absolute()):
+        raise ValueError("Machine SSH identity differs")
+    matches = [item for item in connections if item.get("Name") == machine["Name"]]
+    if len(matches) != 1:
+        raise ValueError("Unique fixed machine connection is required")
+    connection = matches[0]
+    uri = connection.get("URI")
+    if not isinstance(uri, str):
+        raise ValueError("Connection URI is missing")
+    parsed = urlsplit(uri)
+    if (parsed.scheme != "ssh" or parsed.hostname not in ("127.0.0.1", "localhost")
+            or parsed.port != port or parsed.username != ssh["RemoteUsername"]
+            or parsed.password is not None or parsed.query or parsed.fragment
+            or re.fullmatch(r"/run/user/[0-9]+/podman/podman.sock", parsed.path) is None
+            or connection.get("Identity") != ssh["IdentityPath"]):
+        raise ValueError("API connection does not identify the selected machine")
+    return {"machine": machine["Name"], "URI": uri, "Identity": ssh["IdentityPath"],
+            "SSHConfig": ssh, "Rootful": False}
+
+
+def podman_prefix(client):
+    if isinstance(client, str):
+        return [client]
+    if (not isinstance(client, tuple) or len(client) != 5
+            or client[1] != "--url" or client[3] != "--identity"):
+        raise ValueError("Podman client must have an explicit bound endpoint")
+    return list(client)
+
 
 def capture(command, wall_seconds, output_bytes):
     """Bound both pipes and wall time, with the qualified owned-group cleanup."""
@@ -67,12 +105,17 @@ def capture(command, wall_seconds, output_bytes):
                 break
         if record["wall_timed_out"] or record["output_limit_exceeded"]:
             killed = signal_owned_group(worker, cleanup_errors)
-        try:
-            worker.wait(timeout=max(0.001, deadline - time.monotonic()))
-        except subprocess.TimeoutExpired:
-            record["wall_timed_out"] = True
-            killed = signal_owned_group(worker, cleanup_errors) or killed
+            # Execution admission has ended and SIGKILL has been issued. Reap
+            # under the separate cleanup bound rather than racing a second
+            # signal against an already dying group after a 1 ms wait.
             worker.wait(timeout=20)
+        else:
+            try:
+                worker.wait(timeout=max(0.001, deadline - time.monotonic()))
+            except subprocess.TimeoutExpired:
+                record["wall_timed_out"] = True
+                killed = signal_owned_group(worker, cleanup_errors) or killed
+                worker.wait(timeout=20)
     except BaseException as error:
         record["failure"] = {"type": type(error).__name__, "message": str(error)}
     finally:
@@ -109,6 +152,7 @@ def check_record(record):
     if (not isinstance(state, dict) or state.get("Running") is not False
             or state.get("OOMKilled") is not False or state.get("Error") not in (None, "")
             or type(state.get("ExitCode")) is not int
+            or not 0 <= state["ExitCode"] <= 255
             or state["ExitCode"] != record.get("container_exit_code")):
         raise ValueError("Authored Linux container final state differs")
     if (record.get("container_removed") is not True or record.get("container_cleanup_errors") != []
@@ -165,7 +209,9 @@ def check_record(record):
             or type(ready.get("no_site_flag")) is not int or ready["no_site_flag"] != 1
             or type(ready.get("optimize_flag")) is not int or ready["optimize_flag"] != 0
             or ready.get("dont_write_bytecode") is not True
-            or ready.get("environment_keys") != sorted(ENVIRONMENT)):
+            or ready.get("environment_keys") != sorted(ENVIRONMENT)
+            or ready.get("removed_environment_keys") not in
+                ([], ["HOME"], ["HOSTNAME"], ["HOME", "HOSTNAME"])):
         raise ValueError("Authored isolation admission differs")
     if mode in ("stdout_flood", "stderr_flood"):
         if (not record["output_limit_exceeded"] or record["wall_timed_out"]
@@ -224,6 +270,8 @@ def check_record(record):
     if (not isinstance(runtime, dict) or runtime.get("machine") != "aarch64"
             or type(runtime.get("uid")) is not int or runtime["uid"] != 65534
             or type(runtime.get("gid")) is not int or runtime["gid"] != 65534
+            or runtime.get("capabilities") != {"CapEff": 0, "CapBnd": 0}
+            or any(type(value) is not int for value in runtime["capabilities"].values())
             or runtime.get("filter_sha256") != hashlib.sha256(bytes(array)).hexdigest()
             or not isinstance(runtime.get("kernel"), str) or not runtime["kernel"]
             or runtime.get("python_executable") not in ("/usr/local/bin/python3", "/usr/bin/python3")
@@ -233,12 +281,21 @@ def check_record(record):
     return ready
 
 
+class ControlError(RuntimeError):
+    """Retain bounded raw diagnostics without embedding a bundled program in errors."""
+
+    def __init__(self, message, record):
+        self.record = record
+        diagnostic = base64.b64decode(record.get("stderr_base64", "")).decode("utf-8", errors="replace")
+        super().__init__(message + ": " + diagnostic[:2048])
+
+
 def control(command):
     record = capture(command, 20, 256 * 1024)
     if (record.get("failure") or record["cleanup_errors"]
             or record["surviving_group_members"] != [] or record["wall_timed_out"]
             or record["output_limit_exceeded"]):
-        raise ValueError("Owned Podman control transport failed")
+        raise ControlError("Owned Podman control transport failed", record)
     return record
 
 
@@ -249,7 +306,7 @@ def output(record):
 def successful(command):
     record = control(command)
     if record["exit_code"] != 0:
-        raise RuntimeError("Owned Podman control failed: " + json.dumps(record, allow_nan=False))
+        raise ControlError("Owned Podman control failed", record)
     return record
 
 
@@ -282,7 +339,7 @@ def create_command(podman, image_id, python_path, name, source, mode):
             or re.fullmatch(r"toklet-authored-[0-9a-f]{32}", name) is None
             or mode not in child.MODES):
         raise ValueError("Only fixed authored container invocations are admitted")
-    command = [podman, "create", "--name=" + name, "--label=" + LABEL + "=" + name,
+    command = [*podman_prefix(podman), "create", "--name=" + name, "--label=" + LABEL + "=" + name,
                "--pull=never", "--image-volume=ignore", "--network=none", "--cap-drop=all",
                "--security-opt=no-new-privileges", "--user=65534:65534", "--pids-limit=1",
                "--read-only", "--read-only-tmpfs=false", "--no-healthcheck",
@@ -291,7 +348,12 @@ def create_command(podman, image_id, python_path, name, source, mode):
                "--workdir=/tmp", "--timeout=6", "--memory=268435456",
                "--memory-swap=268435456", "--entrypoint=" + python_path]
     for name, (_, value) in child.limits().items():
-        label = {"RLIMIT_DATA": "data", "RLIMIT_AS": "as", "RLIMIT_CPU": "cpu",
+        # Podman rejects AS in its ulimit parser. The trusted child admits and
+        # verifies the unchanged 1 GiB soft/hard AS pair before any probe or
+        # seccomp installation; other limits also apply before OCI exec.
+        if name == "RLIMIT_AS":
+            continue
+        label = {"RLIMIT_DATA": "data", "RLIMIT_CPU": "cpu",
                  "RLIMIT_CORE": "core", "RLIMIT_NOFILE": "nofile"}[name]
         command.append(f"--ulimit={label}={value}:{value}")
     for key, value in ENVIRONMENT.items():
@@ -301,7 +363,7 @@ def create_command(podman, image_id, python_path, name, source, mode):
 
 
 def inspect_owned(podman, identifier, name, image_id):
-    record = successful([podman, "container", "inspect", identifier])
+    record = successful([*podman_prefix(podman), "container", "inspect", identifier])
     items = json.loads(output(record))
     if not isinstance(items, list) or len(items) != 1 or not isinstance(items[0], dict):
         raise ValueError("Owned container inspection differs")
@@ -328,12 +390,16 @@ def validate_configuration(value, python_path, source, mode):
             or type(host.get("PidsLimit")) is not int or host["PidsLimit"] != 1
             or host.get("Memory") != child.POLICY["data_bytes"]
             or host.get("MemorySwap") != child.POLICY["data_bytes"]
-            or value.get("EffectiveCaps") != [] or value.get("BoundingCaps") != []
+            # Podman copies OCI Go slices directly; an empty nil slice encodes
+            # as null. Require the fields present and reject every capability.
+            or "EffectiveCaps" not in value or value["EffectiveCaps"] not in (None, [])
+            or "BoundingCaps" not in value or value["BoundingCaps"] not in (None, [])
             or host.get("CapAdd") not in (None, [])
             or host.get("LogConfig", {}).get("Type") != "none"
             or host.get("SecurityOpt") not in (["no-new-privileges"], ["no-new-privileges=true"])):
         raise ValueError("Fixed owned container configuration differs")
-    expected = {name: (value, value) for name, (_, value) in child.limits().items()}
+    expected = {name: (value, value) for name, (_, value) in child.limits().items()
+                if name != "RLIMIT_AS"}
     actual = {}
     for row in host.get("Ulimits", []):
         name = row.get("Name", "").upper()
@@ -352,10 +418,26 @@ def validate_configuration(value, python_path, source, mode):
 
 
 def exists(podman, identifier):
-    record = control([podman, "container", "exists", identifier])
+    record = control([*podman_prefix(podman), "container", "exists", identifier])
     if record["exit_code"] not in (0, 1) or output(record) or record["stderr_captured_bytes"]:
         raise ValueError("Owned container existence check failed")
     return record["exit_code"] == 0
+
+
+def wait_owned_exit(podman, identifier, name, image_id, evidence):
+    """Complete asynchronous termination before trusting a container exit code."""
+    waited = successful([*podman_prefix(podman), "wait", "--condition=exited", identifier])
+    evidence["container_exit_wait"] = waited
+    code = output(waited).strip()
+    if re.fullmatch(r"[0-9]{1,3}", code) is None or int(code) > 255 or waited["stderr_captured_bytes"]:
+        raise ValueError("Owned container exit wait lacks a completed exit code")
+    stopped = inspect_owned(podman, identifier, name, image_id)
+    state = stopped["State"]
+    if (state["Running"] is not False or type(state.get("ExitCode")) is not int
+            or state.get("OOMKilled") is not False or state.get("Error") not in (None, "")
+            or state["ExitCode"] != int(code)):
+        raise ValueError("Owned container exit wait and inspection differ")
+    return waited, stopped
 
 
 def execute(podman, image_id, python_path, source, mode):
@@ -374,16 +456,17 @@ def execute(podman, image_id, python_path, source, mode):
         record["container_inspect_before"] = {key: before.get(key) for key in
             ["Id", "Image", "Config", "HostConfig", "Mounts", "EffectiveCaps", "BoundingCaps"]}
         record["configuration"] = validate_configuration(before, python_path, source, mode)
-        transport = capture([podman, "start", "--attach", identifier],
+        transport = capture([*podman_prefix(podman), "start", "--attach", identifier],
                             child.POLICY["wall_seconds"], child.POLICY["output_bytes"])
         record.update(transport)
         record["transport_exit_code"] = transport["exit_code"]
         stopped = inspect_owned(podman, identifier, name, image_id)
         forced = False
         if stopped["State"]["Running"]:
-            successful([podman, "kill", "--signal=KILL", identifier])
+            successful([*podman_prefix(podman), "kill", "--signal=KILL", identifier])
             forced = True
-            stopped = inspect_owned(podman, identifier, name, image_id)
+        waited, stopped = wait_owned_exit(podman, identifier, name, image_id, record)
+        record["container_exit_wait"] = waited
         state = stopped["State"]
         if state["Running"] or state.get("OOMKilled") is not False or type(state.get("ExitCode")) is not int:
             raise ValueError("Owned container did not stop cleanly or was OOM-killed")
@@ -407,19 +490,21 @@ def execute(podman, image_id, python_path, source, mode):
                 record["execution_killed"] = True  # independent Podman wall watchdog
     except BaseException as error:
         record["failure"] = {"type": type(error).__name__, "message": str(error)[:4096]}
+        if isinstance(error, ControlError):
+            record["failed_control"] = error.record
     finally:
         try:
             if identifier is None and exists(podman, name):
                 # A create transport failure may occur after the server creates
                 # our fresh name. Prove its label/image before any cleanup signal.
-                inspected = json.loads(output(successful([podman, "container", "inspect", name])))
+                inspected = json.loads(output(successful([*podman_prefix(podman), "container", "inspect", name])))
                 if not isinstance(inspected, list) or len(inspected) != 1:
                     raise ValueError("Failed-create ownership inspection differs")
                 identifier = normalized_id(inspected[0].get("Id"))
                 inspect_owned(podman, identifier, name, image_id)
             if identifier is not None:
                 inspect_owned(podman, identifier, name, image_id)
-                successful([podman, "rm", "--force", identifier])
+                successful([*podman_prefix(podman), "rm", "--force", identifier])
                 if exists(podman, identifier):
                     raise ValueError("Owned container survives removal")
             if exists(podman, name):
@@ -427,6 +512,8 @@ def execute(podman, image_id, python_path, source, mode):
             record["container_removed"] = True
         except BaseException as error:
             record["container_cleanup_errors"].append({"type": type(error).__name__, "message": str(error)[:4096]})
+            if isinstance(error, ControlError):
+                record["failed_cleanup_control"] = error.record
     return record
 
 
@@ -485,8 +572,19 @@ def run(args):
               "image_id": image_id, "python_path": args.python_path,
               "checks": [], "runs": []}
     try:
-        record["podman_version"] = output(successful([podman, "version", "--format=json"]))
-        image = json.loads(output(successful([podman, "image", "inspect", "sha256:" + image_id])))
+        machine_admission = successful([podman, "machine", "inspect", "podman-machine-default"])
+        connection_admission = successful([podman, "system", "connection", "list", "--format=json"])
+        machines = json.loads(output(machine_admission))
+        if not isinstance(machines, list) or len(machines) != 1:
+            raise ValueError("Unique machine inspection required")
+        binding = bound_machine_connection(machines[0], json.loads(output(connection_admission)))
+        if args.podman_url != binding["URI"] or str(args.podman_identity) != binding["Identity"]:
+            raise ValueError("Requested endpoint differs from the selected machine")
+        record["connection_binding"] = binding
+        record["machine_connection_admission"] = [machine_admission, connection_admission]
+        podman = (podman, "--url", binding["URI"], "--identity", binding["Identity"])
+        record["podman_version"] = output(successful([*podman_prefix(podman), "version", "--format=json"]))
+        image = json.loads(output(successful([*podman_prefix(podman), "image", "inspect", "sha256:" + image_id])))
         if (not isinstance(image, list) or len(image) != 1
                 or normalized_id(image[0].get("Id")) != image_id
                 or image[0].get("Architecture") != "arm64" or image[0].get("Os") != "linux"):
@@ -518,17 +616,26 @@ def run(args):
             item["expectation_passed"] = True
         if identities != {name: digest(ROOT / name) for name in source_names}:
             raise ValueError("Linux qualification source identity changed")
-        if record["podman_sha256"] != digest(podman):
+        if record["podman_sha256"] != digest(record["podman_binary"]):
             raise ValueError("Podman client changed during qualification")
         if record["host_python_sha256"] != digest(record["host_python_executable"]):
             raise ValueError("Host interpreter changed during qualification")
-        final = json.loads(output(successful([podman, "image", "inspect", "sha256:" + image_id])))
+        final = json.loads(output(successful([*podman_prefix(podman), "image", "inspect", "sha256:" + image_id])))
         if record["image"] != {key: final[0].get(key) for key in record["image"]}:
             raise ValueError("Pinned Linux image changed during qualification")
+        machine_final = successful([record["podman_binary"], "machine", "inspect", "podman-machine-default"])
+        connection_final = successful([record["podman_binary"], "system", "connection", "list", "--format=json"])
+        final_machines = json.loads(output(machine_final))
+        if (not isinstance(final_machines, list) or len(final_machines) != 1
+                or bound_machine_connection(final_machines[0], json.loads(output(connection_final))) != binding):
+            raise ValueError("Machine/API connection identity changed")
+        record["machine_connection_final"] = [machine_final, connection_final]
         idle(proof)
         record["completed"] = True
     except BaseException as error:
         record["failure"] = {"type": type(error).__name__, "message": str(error)[:4096]}
+        if isinstance(error, ControlError):
+            record["failed_control"] = error.record
     record["completed_utc"] = datetime.now(timezone.utc).isoformat()
     with args.output.open("x") as stream:
         json.dump(record, stream, indent=2, allow_nan=False)
@@ -542,6 +649,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--idle-proof", type=Path, required=True)
     parser.add_argument("--image-id", required=True)
+    parser.add_argument("--podman-url", required=True)
+    parser.add_argument("--podman-identity", type=Path, required=True)
     parser.add_argument("--python-path", choices=["/usr/local/bin/python3", "/usr/bin/python3"], required=True)
     parser.add_argument("--output", type=Path, required=True)
     sys.exit(run(parser.parse_args()))

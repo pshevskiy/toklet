@@ -1,0 +1,231 @@
+{
+  "format": "toklet-authored-linux-code-isolation-probe-v1",
+  "completed": false,
+  "scope": "Fixed authored probes only; no dataset/model/generated code. No engine or executor adoption.",
+  "started_utc": "2026-10-11T07:57:50.278444+00:00",
+  "idle_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n",
+  "idle_proof_sha256": "a89caa850a16f51a4970e2636e05ec91d0059dbaa481d828e139f24097bacb12",
+  "policy": {
+    "id": "toklet-authored-linux-code-isolation-policy-v1",
+    "api": "prctl(PR_SET_NO_NEW_PRIVS); prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER)",
+    "architecture": "Linux AArch64 little-endian LP64",
+    "default_action": "EPERM; unexpected syscall architecture kills process",
+    "data_bytes": 268435456,
+    "address_space_bytes": 1073741824,
+    "cpu_seconds": 4,
+    "wall_seconds": 6,
+    "output_bytes": 65536,
+    "core_bytes": 0,
+    "open_files": 64,
+    "network": "denied",
+    "filesystem": "denied after trusted initialization",
+    "child_processes": "denied"
+  },
+  "source_sha256": {
+    "tools/bench/linux_code_isolation_child.py": "810ddd0ae76c15b6032b2f94e37c372cd28fe88c55c0ab8255a7620d5333e0f5",
+    "tools/bench/linux_code_isolation_probe.py": "78a57388f13d17dd93a43ac54b1048336878900189abb2d1e69cab1183a4872a",
+    "tools/bench/test_linux_code_isolation.py": "dc5d1edecb1e9f2c044b5d63e9095d4ad777654a46462c64d7056f76946f0204",
+    "tools/bench/code_isolation_child.py": "b2cabbe299e9921b0ec1658c14bc7eb73150496d86249585099d7e3647430b0f",
+    "tools/bench/code_isolation_probe.py": "18b3868f02f80198c06d77d3c2d1192217aa14c78e11b0f5a4f5b72b40d72386",
+    "tools/bench/task_cases_probe.py": "e73082850c0b0b9d634903088056032ab48a3f762da2017c3104bf5771d930ce",
+    "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "tools/bench/quality.py": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d",
+    "tools/bench/mlx_baseline.py": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34"
+  },
+  "bundle_sha256": "9411fcab3499bcc45a3c6a1783d6912b3668791dc18c07be827cfc94cafa8498",
+  "podman_binary": "/opt/podman/bin/podman",
+  "podman_sha256": "1da4bec6e2529e1b04020fcb6bc25f30489e873a0d8535e5a5ae8baf65f5361d",
+  "engine_revision": "aa2d407e5830276bb1a3d3e8987494b47c969639",
+  "working_tree_dirty": true,
+  "host_python_version": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "host_python_executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+  "host_python_sha256": "a7f5b535d61d1c7326824204ac80f045a97a652abb154421e2c74fcc365a3539",
+  "image_id": "eb7d16fec874f15b584063275012ac719885a2b87574d124c0da9c156d504629",
+  "python_path": "/usr/local/bin/python3",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.34569158300291747,
+      "stdout_base64": "",
+      "stdout_captured_bytes": 0,
+      "stdout_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_base64": "",
+      "stderr_captured_bytes": 0,
+      "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.3603077919688076,
+      "stdout_base64": "",
+      "stdout_captured_bytes": 0,
+      "stdout_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_base64": "ICAgIEZpbmlzaGVkIGBkZXZgIHByb2ZpbGUgW3Vub3B0aW1pemVkICsgZGVidWdpbmZvXSB0YXJnZXQocykgaW4gMC4yOXMK",
+      "stderr_captured_bytes": 72,
+      "stderr_captured_sha256": "0b53209db424367e80c52cd8cde8b75e37af110438a0efde777104a1463956de"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 8.832434250041842,
+      "stdout_base64": "CnJ1bm5pbmcgMCB0ZXN0cwoKdGVzdCByZXN1bHQ6IG9rLiAwIHBhc3NlZDsgMCBmYWlsZWQ7IDAgaWdub3JlZDsgMCBtZWFzdXJlZDsgMCBmaWx0ZXJlZCBvdXQ7IGZpbmlzaGVkIGluIDAuMDBzCgoKcnVubmluZyA3IHRlc3RzCnRlc3QgY2xpOjpjaGF0OjpyZWFsX3Rlc3RzOjpmdWxsX3Bpbm5lZF90b2tlbml6ZXJfbWF0Y2hlc19mcm96ZW5faWRzIC4uLiBpZ25vcmVkLCByZXF1aXJlcyBleHBsaWNpdGx5IGRvd25sb2FkZWQgcGlubmVkIGxvY2FsIFF3ZW4gdG9rZW5pemVyIGFzc2V0cwp0ZXN0IGNsaTo6dGVzdHM6OmlkbGVfaW50ZXJydXB0X2FmdGVyX3Rlcm1pbmFsX2JvdW5kYXJ5X2lzX3ByZXNlcnZlZCAuLi4gb2sKdGVzdCBjbGk6OmNoYXQ6OnRlc3RzOjptaXNzaW5nX2dlbmVyYXRpb25fY29uZmlnX3VzZXNfbW9kZWxfZW9zIC4uLiBvawp0ZXN0IGNsaTo6Y2hhdDo6dGVzdHM6OnB5dGhvbl90b29sX2pzb25fZmxvYXRfc3BlbGxpbmdfbWF0Y2hlc19pbmRlcGVuZGVudF9wcm9iZXMgLi4uIG9rCnRlc3QgY2xpOjpjaGF0Ojp0ZXN0czo6Y29udGludWVkX291dHB1dF9wcmVzZXJ2ZXNfc3BsaXRfdW5pY29kZV9hbmRfZmluYWxpemVzX29uY2UgLi4uIG9rCnRlc3QgY2xpOjpjaGF0Ojp0ZXN0czo6aW52YWxpZF9yb2xlc19tdWx0aW1vZGFsX2NvbnRlbnRfYW5kX25vbmZpbml0ZV90b29sc19hcmVfcmVqZWN0ZWQgLi4uIG9rCnRlc3QgY2xpOjpjaGF0Ojp0ZXN0czo6ZnJvemVuX3RyYW5zZm9ybWVyc19jaGF0X2FuZF9yYXdfaWRzX21hdGNoX3dpdGhvdXRfbW9kZWxfZG93bmxvYWRzIC4uLiBvawoKdGVzdCByZXN1bHQ6IG9rLiA2IHBhc3NlZDsgMCBmYWlsZWQ7IDEgaWdub3JlZDsgMCBtZWFzdXJlZDsgMCBmaWx0ZXJlZCBvdXQ7IGZpbmlzaGVkIGluIDAuMDdzCgoKcnVubmluZyAyIHRlc3RzCnRlc3QgcXVhbGl0eV9wb2xpY3lfYW5kX3Bpbm5lZF9zb3VyY2VfbW9kZWxfYXJlX2F2YWlsYWJsZV93aXRob3V0X2Rvd25sb2FkcyAuLi4gb2sKdGVzdCBvZmZsaW5lX3dvcmtsb2FkX2FycmF5c19oYXZlX2Zyb3plbl9pZGVudGl0aWVzX2FuZF9leGFjdF9hZG1pc3Npb25fYm91bmRhcnkgLi4uIG9rCgp0ZXN0IHJlc3VsdDogb2suIDIgcGFzc2VkOyAwIGZhaWxlZDsgMCBpZ25vcmVkOyAwIG1lYXN1cmVkOyAwIGZpbHRlcmVkIG91dDsgZmluaXNoZWQgaW4gMC4wMXMKCgpydW5uaW5nIDIgdGVzdHMKdGVzdCBjYWNoZWRfYXR0ZW50aW9uX3JlamVjdHNfaW52YWxpZF9zaGFwZXNfb3JfdmFsaWRfcHJlZml4X2JlZm9yZV93cml0ZXMgLi4uIG9rCnRlc3QgaGVhZF9tYWpvcl9jYWNoZV93aXRoX3N0YWxlX3RhaWxzX21hdGNoZXNfZnJvemVuX2dxYV9hdF9hbGxfb2Zmc2V0cyAuLi4gb2sKCnRlc3QgcmVzdWx0OiBvay4gMiBwYXNzZWQ7IDAgZmFpbGVkOyAwIGlnbm9yZWQ7IDAgbWVhc3VyZWQ7IDAgZmlsdGVyZWQgb3V0OyBmaW5pc2hlZCBpbiAwLjA0cwoKCnJ1bm5pbmcgMTAgdGVzdHMKdGVzdCBub25fdW5pY29kZV9hcmd1bWVudHNfcmV0dXJuX2FuX2Vycm9yX2luc3RlYWRfb2ZfcGFuaWNraW5nIC4uLiBvawp0ZXN0IHZlcnNpb25fbWF0Y2hlc190aGVfcGFja2FnZSAuLi4gb2sKdGVzdCBoZWxwX2lzX2F2YWlsYWJsZV93aXRob3V0X2FfbW9kZWwgLi4uIG9rCnRlc3QgaW52YWxpZF9hcmd1bWVudHNfZmFpbF93aXRob3V0X3N1Y2Nlc3Nfb3V0cHV0IC4uLiBvawp0ZXN0IGludmFsaWRfcHJvamVjdGlvbl9vcHRpb25zX2ZhaWxfYmVmb3JlX21vZGVsX2FjY2VzcyAuLi4gb2sKdGVzdCBpbnZhbGlkX2NsaV9yZXF1ZXN0c19hbmRfb3Zlcl9jYXBhY2l0eV9mYWlsX2JlZm9yZV9lbWl0dGluZ190b2tlbnMgLi4uIG9rCnRlc3QgaW50ZXJhY3RpdmVfY2FjaGVkX3Byb21wdF9jb250aW51YXRpb25fcmVqZWN0aW9uX2FuZF9yZXNldF9rZWVwX29uZV9zZXNzaW9uIC4uLiBvawp0ZXN0IGxvY2FsX3Rva2VuX2lucHV0X3N0cmVhbXNfZnJvemVuX2dyZWVkeV9pZHNfYW5kX2hvbm9yc19lb3NfYW5kX3N0b3BfaWRzIC4uLiBvawp0ZXN0IGFjdHVhbF9jdHJsX2NfY2FuY2Vsc19kZWNvZGVfdGhlbl9jb250aW51ZXNfYW5kX2V4aXRzX3doZW5faWRsZSAuLi4gb2sKdGVzdCBjdHJsX2NfZHVyaW5nX3ByZWZpbGxfY2FuX3Jlc3VtZV9hbGxfcGVuZGluZ19pbnB1dCAuLi4gb2sKCnRlc3QgcmVzdWx0OiBvay4gMTAgcGFzc2VkOyAwIGZhaWxlZDsgMCBpZ25vcmVkOyAwIG1lYXN1cmVkOyAwIGZpbHRlcmVkIG91dDsgZmluaXNoZWQgaW4gNS4zN3MKCgpydW5uaW5nIDYgdGVzdHMKdGVzdCBpbnZhbGlkX3Bvc2l0aW9uX2FuZF9hdHRlbnRpb25faW5wdXRzX2ZhaWxfYmVmb3JlX211dGF0aW9uIC4uLiBvawp0ZXN0IGFyaXRobWV0aWNfb3ZlcmZsb3dfcmVxdWlyZXNfZGlzY2FyZGluZ19wYXJ0aWFsX291dHB1dHMgLi4uIG9rCnRlc3QgZ3JvdXBlZF9oZWFkc19yZWFkX3RoZWlyX3NoYXJlZF92YWx1ZV9oZWFkX3dpdGhvdXRfZXhwYW5zaW9uIC4uLiBvawp0ZXN0IGNoYW5naW5nX2Z1dHVyZV9rZXlzX3F1ZXJpZXNfYW5kX3ZhbHVlc19wcmVzZXJ2ZXNfZWFybGllcl9jb250ZXh0IC4uLiBvawp0ZXN0IHJvdGFyeV91c2VzX3NwbGl0X2hhbGZfcGFpcmluZ19hbmRfYWJzb2x1dGVfY2h1bmtfb2Zmc2V0cyAuLi4gb2sKdGVzdCByb3RhcnlfYW5kX2dxYV9hdHRlbnRpb25fbWF0Y2hfYWxsX3NhdmVkX2ludGVybWVkaWF0ZXMgLi4uIG9rCgp0ZXN0IHJlc3VsdDogb2suIDYgcGFzc2VkOyAwIGZhaWxlZDsgMCBpZ25vcmVkOyAwIG1lYXN1cmVkOyAwIGZpbHRlcmVkIG91dDsgZmluaXNoZWQgaW4gMC4wMnMKCgpydW5uaW5nIDggdGVzdHMKdGVzdCBncmVlZHlfdXNlc19sb3dlc3RfaWRfdGllc19hbmRfcmVqZWN0c19pbnZhbGlkX2Rpc3RyaWJ1dGlvbnMgLi4uIG9rCnRlc3Qgb3V0cHV0X3Byb2plY3Rpb25fc2hhcmVzX2VtYmVkZGluZ193ZWlnaHRzIC4uLiBvawp0ZXN0IGNvbXBvc2VkX2RlY29kZXJfcHJlc2VydmVzX2NhdXNhbF9vdXRwdXRzX3doZW5fZnV0dXJlX3Rva2Vuc19jaGFuZ2UgLi4uIG9rCnRlc3QgZnVsbF9wcmVmaXhfZ3JlZWR5X2dlbmVyYXRpb25fbWF0Y2hlc19zYXZlZF9sb2dpdHNfYW5kX3Rva2VucyAuLi4gb2sKdGVzdCBhZG1pc3Npb25fcmVqZWN0c19pbnZhbGlkX3JlcXVlc3RzX2FuZF9zY3JhdGNoX3JlbWFpbnNfcmV1c2FibGUgLi4uIG9rCnRlc3Qgb3B0X2luX3RpbGVkX2RlY29kZXJfcHJlc2VydmVzX2V2ZXJ5X3NjYWxhcl90cmFjZV9iaXRfYW5kX2ZpbmFsX2xvZ2l0cyAuLi4gb2sKdGVzdCBjb25zdHJ1Y3Rvcl9yZWplY3RzX2ludmFsaWRfY29uZmlndXJhdGlvbl9zaGFwZXNfYmlhc2VzX2FuZF93ZWlnaHRzIC4uLiBvawp0ZXN0IGNvbXBvc2VkX2RlY29kZXJfbWF0Y2hlc19ldmVyeV9uYW1lZF9hcnJheV9hY3Jvc3NfYWxsX2Nhc2VzIC4uLiBvawoKdGVzdCByZXN1bHQ6IG9rLiA4IHBhc3NlZDsgMCBmYWlsZWQ7IDAgaWdub3JlZDsgMCBtZWFzdXJlZDsgMCBmaWx0ZXJlZCBvdXQ7IGZpbmlzaGVkIGluIDAuMDZzCgoKcnVubmluZyA3IHRlc3RzCnRlc3QgaW52YWxpZF9lbWJlZGRpbmdfYW5kX3Jlc2lkdWFsX2lucHV0c19mYWlsX2JlZm9yZV9tdXRhdGlvbiAuLi4gb2sKdGVzdCBhcml0aG1ldGljX292ZXJmbG93X2lzX3JlcG9ydGVkIC4uLiBvawp0ZXN0IGludmFsaWRfcHJvamVjdGlvbl9pbnB1dHNfZmFpbF9iZWZvcmVfd3JpdGluZ19vdXRwdXQgLi4uIG9rCnRlc3QgcmVjdGFuZ3VsYXJfbWFudWFsX3Byb2plY3Rpb25fc3VwcG9ydHNfYmF0Y2hfYmlhc19hbmRfbWF0dmVjIC4uLiBvawp0ZXN0IGZwNjRfcHJvamVjdGlvbl9hY2N1bXVsYXRpb25fcHJlc2VydmVzX3NtYWxsX3Rlcm1zX2FuZF9yZWZlcmVuY2VfaW5wdXRzIC4uLiBvawp0ZXN0IGVtYmVkZGluZ3NfYW5kX2luX3BsYWNlX3Jlc2lkdWFsc19tYXRjaF9zYXZlZF92YWx1ZXMgLi4uIG9rCnRlc3QgZXZlcnlfdGlueV9saW5lYXJfcHJvamVjdGlvbl9hZ3JlZXNfd2l0aF9pbmRlcGVuZGVudF9udW1weV92YWx1ZXMgLi4uIG9rCgp0ZXN0IHJlc3VsdDogb2suIDcgcGFzc2VkOyAwIGZhaWxlZDsgMCBpZ25vcmVkOyAwIG1lYXN1cmVkOyAwIGZpbHRlcmVkIG91dDsgZmluaXNoZWQgaW4gMC4wNnMKCgpydW5uaW5nIDYgdGVzdHMKdGVzdCBpbnZhbGlkX3JlZHVjdGlvbl9pbnB1dHNfYXJlX3JlamVjdGVkX2JlZm9yZV9vdXRwdXRfY2hhbmdlcyAuLi4gb2sKdGVzdCBtbHBfdmFsaWRhdGVzX2FsbF9idWZmZXJzX2FuZF9yZXBvcnRzX2FyaXRobWV0aWNfb3ZlcmZsb3cgLi4uIG9rCnRlc3Qgc3RhYmxlX29wZXJhdGlvbnNfY292ZXJfemVyb19hbmRfZXh0cmVtZV9maW5pdGVfdmFsdWVzIC4uLiBvawp0ZXN0IHNvZnRtYXhfbWF0Y2hlc19hbGxfY2F1c2FsX3Byb2JhYmlsaXR5X2FycmF5cyAuLi4gb2sKdGVzdCBhbGxfbm9ybWFsaXphdGlvbnNfbWF0Y2hfdGhlX2Zyb3plbl9udW1weV9yZWZlcmVuY2UgLi4uIG9rCnRlc3QgYWN0aXZhdGlvbnNfYW5kX2NvbXBsZXRlX2dhdGVkX21scF9tYXRjaF9ldmVyeV9zYXZlZF9sYXllciAuLi4gb2sKCnRlc3QgcmVzdWx0OiBvay4gNiBwYXNzZWQ7IDAgZmFpbGVkOyAwIGlnbm9yZWQ7IDAgbWVhc3VyZWQ7IDAgZmlsdGVyZWQgb3V0OyBmaW5pc2hlZCBpbiAwLjAzcwoKCnJ1bm5pbmcgNCB0ZXN0cwp0ZXN0IGludmFsaWRfYm91bmRhcmllc19mYWlsX2JlZm9yZV93cml0ZXNfYW5kX2FyaXRobWV0aWNfcmVwb3J0c19nbG9iYWxfaW5kZXggLi4uIG9rCnRlc3QgZnAzMl9yYW5nZV9zdWJub3JtYWxzX2FuZF9zaWduZWRfemVyb3NfbWF0Y2hfdGhlX3NjYWxhcl9vcmFjbGUgLi4uIG9rCnRlc3QgcmVjdGFuZ3VsYXJfdGlsZXNfYW5kX2FsbF90YWlsc19wcmVzZXJ2ZV9iaWFzX2FuZF9vcmRlcmVkX2NhbmNlbGxhdGlvbiAuLi4gb2sKdGVzdCBpbmRlcGVuZGVudF90aW55X3Byb2plY3Rpb25zX2tlZXBfZnJvemVuX3RvbGVyYW5jZXNfYW5kX2V4YWN0X3NjYWxhcl9iaXRzIC4uLiBvawoKdGVzdCByZXN1bHQ6IG9rLiA0IHBhc3NlZDsgMCBmYWlsZWQ7IDAgaWdub3JlZDsgMCBtZWFzdXJlZDsgMCBmaWx0ZXJlZCBvdXQ7IGZpbmlzaGVkIGluIDAuMDZzCgoKcnVubmluZyA0IHRlc3RzCnRlc3QgdG9wb2xvZ3lfYW5kX251bWVyaWNhbF9wb2xpY3lfbWF0Y2hfdGhlX2xlYXJuaW5nX21vZGVsIC4uLiBvawp0ZXN0IHNhdmVkX2xpbmVhcl9leGFtcGxlX21hdGNoZXNfaGFuZF9jYWxjdWxhdGlvbiAuLi4gb2sKdGVzdCBjYXVzYWxfZml4dHVyZV9wcmVzZXJ2ZXNfbG9naXRzX2JlZm9yZV90aGVfY2hhbmdlZF9mdXR1cmVfdG9rZW4gLi4uIG9rCnRlc3QgZXZlcnlfZnJvemVuX2FycmF5X2hhc190aGVfZGVjbGFyZWRfc2hhcGVfaGFzaF9hbmRfZmluaXRlX3ZhbHVlcyAuLi4gb2sKCnRlc3QgcmVzdWx0OiBvay4gNCBwYXNzZWQ7IDAgZmFpbGVkOyAwIGlnbm9yZWQ7IDAgbWVhc3VyZWQ7IDAgZmlsdGVyZWQgb3V0OyBmaW5pc2hlZCBpbiAwLjAzcwoKCnJ1bm5pbmcgMyB0ZXN0cwp0ZXN0IHBpbm5lZF9xd2VuX2ZwMzJfbWF0Y2hlc19mdWxsX3RyYW5zZm9ybWVyc19mb3J3YXJkIC4uLiBpZ25vcmVkLCByZXF1aXJlcyBwaW5uZWQgUXdlbiB3ZWlnaHRzIGFuZCBleHBsaWNpdGx5IHJlZ2VuZXJhdGVkIGZ1bGwgVHJhbnNmb3JtZXJzIHByb2Jlcwp0ZXN0IHBpbm5lZF9xd2VuX3RpbGVkX2ZwMzJfbWF0Y2hlc19mdWxsX3RyYW5zZm9ybWVyc19mb3J3YXJkIC4uLiBpZ25vcmVkLCByZXF1aXJlcyBwaW5uZWQgUXdlbiB3ZWlnaHRzIGFuZCBleHBsaWNpdGx5IHJlZ2VuZXJhdGVkIGZ1bGwgVHJhbnNmb3JtZXJzIHByb2Jlcwp0ZXN0IHJlYWxfZnAzMl9wcm9iZXNfaGF2ZV9mcm96ZW5faWRlbnRpdHlfc2VsZWN0aW9uX2FuZF9pbmRlcGVuZGVudF9nYXRlcyAuLi4gb2sKCnRlc3QgcmVzdWx0OiBvay4gMSBwYXNzZWQ7IDAgZmFpbGVkOyAyIGlnbm9yZWQ7IDAgbWVhc3VyZWQ7IDAgZmlsdGVyZWQgb3V0OyBmaW5pc2hlZCBpbiAwLjA0cwoKCnJ1bm5pbmcgMiB0ZXN0cwp0ZXN0IHBpbm5lZF9xd2VuX2NhY2hlZF9zZXNzaW9uc19tYXRjaF9mdWxsX3ByZWZpeCAuLi4gaWdub3JlZCwgcmVxdWlyZXMgdGhlIGV4cGxpY2l0bHkgZG93bmxvYWRlZCBwaW5uZWQgUXdlbiBjaGVja3BvaW50OyBNYWMgZm9vdHByaW50IHJlcXVpcmVzIG93bi1wcm9jZXNzIGluc3BlY3Rpb24KdGVzdCBwaW5uZWRfcXdlbl90aWxlZF9jYWNoZWRfc2Vzc2lvbnNfbWF0Y2hfZnVsbF9wcmVmaXggLi4uIGlnbm9yZWQsIHJlcXVpcmVzIHRoZSBleHBsaWNpdGx5IGRvd25sb2FkZWQgcGlubmVkIFF3ZW4gY2hlY2twb2ludDsgTWFjIGZvb3RwcmludCByZXF1aXJlcyBvd24tcHJvY2VzcyBpbnNwZWN0aW9uCgp0ZXN0IHJlc3VsdDogb2suIDAgcGFzc2VkOyAwIGZhaWxlZDsgMiBpZ25vcmVkOyAwIG1lYXN1cmVkOyAwIGZpbHRlcmVkIG91dDsgZmluaXNoZWQgaW4gMC4wMHMKCgpydW5uaW5nIDEzIHRlc3RzCnRlc3QgbGF5ZXJfb3JfZmluYWxfcHJvamVjdGlvbl9mYWlsdXJlX25ldmVyX2NvbW1pdHNfYV9zdGFnZWRfY2h1bmsgLi4uIG9rCnRlc3QgY2FuY2VsbGF0aW9uX2FuZF9vdXRwdXRfZmFpbHVyZV9wcmVzZXJ2ZV9yZWNvdmVyYWJsZV9wcmVmaXhlcyAuLi4gb2sKdGVzdCBzYW1wbGVkX2hpc3RvcnlfaXNfcGVuZGluZ191bnRpbF9ldmFsdWF0ZWRfYW5kX2dyZWVkeV90cmFjZV9tYXRjaGVzIC4uLiBvawp0ZXN0IGV4YWN0X2FwcGVuZF9jYWNoZWRfcHJvbXB0X2NoYW5nZWRfcHJlZml4X3Jlc2V0X2FuZF9jaHVua19ib3VuZGFyaWVzIC4uLiBvawp0ZXN0IGdlbmVyYXRpb25fZXZlbnRzX2FuZF9zdGF0aXN0aWNzX2FsbG9jYXRlX25vX251bWVyaWNhbF9idWZmZXJzIC4uLiBvawp0ZXN0IGJvdW5kZWRfZ2VuZXJhdGlvbl9tYXRjaGVzX2dyZWVkeV9vcmFjbGVfYW5kX2NvbnRpbnVlc19wZW5kaW5nX3Rva2VuIC4uLiBvawp0ZXN0IGFkbWl0dGVkX3ByZWZpbGxfZGVjb2RlX2FuZF9yZXVzZV9hbGxvY2F0ZV9ub19idWZmZXJzIC4uLiBvawp0ZXN0IHJlcXVlc3RzX2FuZF9tZW1vcnlfYXJlX2FkbWl0dGVkX2JlZm9yZV9tdXRhdGlvbiAuLi4gb2sKdGVzdCBnZW5lcmF0aW9uX2FkbWlzc2lvbl9yZWplY3RzX2FsbF9pbnZhbGlkX2lucHV0c19iZWZvcmVfc3RhdGVfY2hhbmdlcyAuLi4gb2sKdGVzdCBzdG9wX2lkc19hcmVfcGVuZGluZ19hbmRfaGlkZGVuX2FuZF96ZXJvX291dHB1dF9yZXRhaW5zX2NhY2hlZF9sb2dpdHMgLi4uIG9rCnRlc3QgdGVhY2hlcl9mb3JjZWRfdGltaW5nX2tlZXBzX2V4YWN0X3ByZWZpeF9hbmRfcGVuZGluZ19zdGF0ZSAuLi4gb2sKdGVzdCBvbmVfc2hvdF9pcnJlZ3VsYXJfY2h1bmtzX2FuZF9kZWNvZGVfbWF0Y2hfZnVsbF9wcmVmaXhfYW5kX2Zyb3plbl9vcmFjbGUgLi4uIG9rCnRlc3QgYWxsXzIwNDhfdG9rZW5zX2FuZF9ub256ZXJvX2Fic29sdXRlX2JvdW5kYXJ5X21hdGNoX2Z1bGxfcHJlZml4IC4uLiBvawoKdGVzdCByZXN1bHQ6IG9rLiAxMyBwYXNzZWQ7IDAgZmFpbGVkOyAwIGlnbm9yZWQ7IDAgbWVhc3VyZWQ7IDAgZmlsdGVyZWQgb3V0OyBmaW5pc2hlZCBpbiAyLjM5cwoKCnJ1bm5pbmcgOCB0ZXN0cwp0ZXN0IHBpbm5lZF9xd2VuX2xvYWRzX3dpdGhpbl90aGVfaW5pdGlhbF9idWRnZXQgLi4uIGlnbm9yZWQsIHJlcXVpcmVzIHRoZSBleHBsaWNpdGx5IGRvd25sb2FkZWQgcGlubmVkIFF3ZW4gY2hlY2twb2ludAp0ZXN0IG1hbGZvcm1lZF9hbmRfZHVwbGljYXRlX21ldGFkYXRhX2FyZV9yZWplY3RlZCAuLi4gb2sKdGVzdCB0aWVkX291dHB1dF9pc19jaGVja2VkX2FuZF9kb2VzX25vdF9hZGRfcGVyc2lzdGVudF93ZWlnaHRzIC4uLiBvawp0ZXN0IGV4cGxpY2l0X2ZwMTZfYW5kX2JmMTZfbGl0dGxlX2VuZGlhbl92YWx1ZXNfY29udmVydF9leGFjdGx5IC4uLiBvawp0ZXN0IHNpbmdsZV9hbmRfaW5kZXhlZF9zaGFyZHNfbG9hZF90aGVfc2FtZV9mcm96ZW5fdGlueV9kZWNvZGVyIC4uLiBvawp0ZXN0IGNvbnZlcnNpb25fY3Jvc3Nlc19jaHVua19ib3VuZGFyaWVzX2FuZF9wcmVzZXJ2ZXNfdGhlX3Nob3J0X3RhaWwgLi4uIG9rCnRlc3QgdGVuc29yX3NoYXBlX2R0eXBlX25hbWVzX25vbmZpbml0ZV9hbmRfc2hhcmRfbWFwcGluZ19hcmVfdmFsaWRhdGVkIC4uLiBvawp0ZXN0IHVuc3VwcG9ydGVkX2NvbmZpZ3VyYXRpb25fYW5kX2luc3VmZmljaWVudF9idWRnZXRfZmFpbF9iZWZvcmVfbG9hZGluZyAuLi4gb2sKCnRlc3QgcmVzdWx0OiBvay4gNyBwYXNzZWQ7IDAgZmFpbGVkOyAxIGlnbm9yZWQ7IDAgbWVhc3VyZWQ7IDAgZmlsdGVyZWQgb3V0OyBmaW5pc2hlZCBpbiAwLjExcwoKCnJ1bm5pbmcgMCB0ZXN0cwoKdGVzdCByZXN1bHQ6IG9rLiAwIHBhc3NlZDsgMCBmYWlsZWQ7IDAgaWdub3JlZDsgMCBtZWFzdXJlZDsgMCBmaWx0ZXJlZCBvdXQ7IGZpbmlzaGVkIGluIDAuMDBzCgo=",
+      "stdout_captured_bytes": 8342,
+      "stdout_captured_sha256": "73e91bf5efd89cf909c58433452fd895163cdbf9b643e04f6393c111936f6d7b",
+      "stderr_base64": "ICAgIEZpbmlzaGVkIGB0ZXN0YCBwcm9maWxlIFt1bm9wdGltaXplZCArIGRlYnVnaW5mb10gdGFyZ2V0KHMpIGluIDAuMTNzCiAgICAgUnVubmluZyB1bml0dGVzdHMgc3JjL2xpYi5ycyAodGFyZ2V0L2RlYnVnL2RlcHMvdG9rbGV0LWJjNzIzNzViYjBmYTRkOWUpCiAgICAgUnVubmluZyB1bml0dGVzdHMgc3JjL2Jpbi90b2tsZXQucnMgKHRhcmdldC9kZWJ1Zy9kZXBzL3Rva2xldC0zZDU0ZTU1MWFkNzc1ODdmKQogICAgIFJ1bm5pbmcgdGVzdHMvYmVuY2hfY29udHJhY3QucnMgKHRhcmdldC9kZWJ1Zy9kZXBzL2JlbmNoX2NvbnRyYWN0LTc2OGIxNjllY2JlOGU4MzcpCiAgICAgUnVubmluZyB0ZXN0cy9jYWNoZWRfYXR0ZW50aW9uLnJzICh0YXJnZXQvZGVidWcvZGVwcy9jYWNoZWRfYXR0ZW50aW9uLTRlMDZhNGIwYjUyNWYwOTQpCiAgICAgUnVubmluZyB0ZXN0cy9jbGkucnMgKHRhcmdldC9kZWJ1Zy9kZXBzL2NsaS1hMTI4ODU1OTc2Mjc0ODBhKQogICAgIFJ1bm5pbmcgdGVzdHMvY3B1X2F0dGVudGlvbi5ycyAodGFyZ2V0L2RlYnVnL2RlcHMvY3B1X2F0dGVudGlvbi0zYjhhMzA4NDJiYmFmZTU4KQogICAgIFJ1bm5pbmcgdGVzdHMvY3B1X2RlY29kZXIucnMgKHRhcmdldC9kZWJ1Zy9kZXBzL2NwdV9kZWNvZGVyLWI4OWUwNjFjMTgwN2E2NzYpCiAgICAgUnVubmluZyB0ZXN0cy9jcHVfbGluZWFyLnJzICh0YXJnZXQvZGVidWcvZGVwcy9jcHVfbGluZWFyLTkxNTRhZWY3ZWY3YTA2NjkpCiAgICAgUnVubmluZyB0ZXN0cy9jcHVfcmVkdWN0aW9ucy5ycyAodGFyZ2V0L2RlYnVnL2RlcHMvY3B1X3JlZHVjdGlvbnMtOWZhMTI2MjZiOWU5MTNjMCkKICAgICBSdW5uaW5nIHRlc3RzL2NwdV90aWxlZC5ycyAodGFyZ2V0L2RlYnVnL2RlcHMvY3B1X3RpbGVkLTAwNzQwNWM1NDJkZDNiNWMpCiAgICAgUnVubmluZyB0ZXN0cy9maXh0dXJlcy5ycyAodGFyZ2V0L2RlYnVnL2RlcHMvZml4dHVyZXMtMGFkZjMzNzk0OTgxYzRlYikKICAgICBSdW5uaW5nIHRlc3RzL3F3ZW5fZm9yd2FyZC5ycyAodGFyZ2V0L2RlYnVnL2RlcHMvcXdlbl9mb3J3YXJkLTFlNDEzODMyZGY1NDUxNTEpCiAgICAgUnVubmluZyB0ZXN0cy9xd2VuX3Nlc3Npb24ucnMgKHRhcmdldC9kZWJ1Zy9kZXBzL3F3ZW5fc2Vzc2lvbi01ZjNiNWU5NTNhMTFjYjNkKQogICAgIFJ1bm5pbmcgdGVzdHMvc2Vzc2lvbi5ycyAodGFyZ2V0L2RlYnVnL2RlcHMvc2Vzc2lvbi03MmZlMmNjMGNkM2QzMDY5KQogICAgIFJ1bm5pbmcgdGVzdHMvd2VpZ2h0cy5ycyAodGFyZ2V0L2RlYnVnL2RlcHMvd2VpZ2h0cy04OTAxMjgyZTNmMDNlNmE4KQogICBEb2MtdGVzdHMgdG9rbGV0Cg==",
+      "stderr_captured_bytes": 1321,
+      "stderr_captured_sha256": "7c67d8a26678a8251f51e3c48886a3b36f476eb142790b9347c34b3c7119613a"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/bench",
+        "-p",
+        "test_*.py"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 2.210977082955651,
+      "stdout_base64": "VmVyaWZpZWQgdG9rbGV0LWJlbmNobWFyay1jb250cmFjdC12MTogZml4ZWQgdGhyb3VnaHB1dCB0b2tlbnMsIDEwLDAwMCBsb3NzIHRhcmdldHMsIDEwMCB0YXNrIGlkZW50aXRpZXMuCg==",
+      "stdout_captured_bytes": 106,
+      "stdout_captured_sha256": "c33581bc91c7cb8f03e248aec4d4d63762ad46cc03f411f034d1b73bc9646cbe",
+      "stderr_base64": "Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpSYW4gOTIgdGVzdHMgaW4gMS45NjhzCgpPSwo=",
+      "stderr_captured_bytes": 191,
+      "stderr_captured_sha256": "8a085bd4ced7a071cc7dafed46b86333869c46792ede78678ac4e3dc0912c6ed"
+    }
+  ],
+  "runs": [
+    {
+      "mode": "benign",
+      "container_name": "toklet-authored-e81ead3f959642c5b2803abbb3dc2ea6",
+      "container_cleanup_errors": [],
+      "failure": {
+        "type": "RuntimeError",
+        "message": "Owned Podman control failed: {\"command\": [\"/opt/podman/bin/podman\", \"--url\", \"ssh://core@127.0.0.1:51387/run/user/501/podman/podman.sock\", \"--identity\", \"/Users/coloner/.local/share/containers/podman/machine/machine\", \"create\", \"--name=toklet-authored-e81ead3f959642c5b2803abbb3dc2ea6\", \"--label=io.toklet.authored-isolation=toklet-authored-e81ead3f959642c5b2803abbb3dc2ea6\", \"--pull=never\", \"--image-volume=ignore\", \"--network=none\", \"--cap-drop=all\", \"--security-opt=no-new-privileges\", \"--user=65534:65534\", \"--pids-limit=1\", \"--read-only\", \"--read-only-tmpfs=false\", \"--no-healthcheck\", \"--no-hosts\", \"--no-hostname\", \"--systemd=false\", \"--log-driver=none\", \"--http-proxy=false\", \"--unsetenv-all\", \"--unsetenv=container\", \"--workdir=/tmp\", \"--timeout=6\", \"--memory=268435456\", \"--memory-swap=268435456\", \"--entrypoint=/usr/local/bin/python3\", \"--ulimit=data=268435456:268435456\", \"--ulimit=as=1073741824:1073741824\", \"--ulimit=cpu=4:4\", \"--ulimit=core=0:0\", \"--ulimit=nofile=64:64\", \"--env=PATH=/usr/local/bin:/usr/bin:/bin\", \"--env=LC_ALL=C\", \"--env=TZ=UTC\", \"sha256:eb7d16fec874f15b584063275012ac719885a2b87574d124c0da9c156d504629\", \"-I\", \"-S\", \"-B\", \"-c\", \"import sys, types\\nmodule = types.ModuleType('code_isolation_child')\\nsys.modules[module.__name__] = module\\nexec(compile('\\\"\\\"\\\"Authored capability probes only; never accept dataset or generated code.\\\"\\\"\\\"\\\\nimport ctypes\\\\nimport errno\\\\nimport json\\\\nimport math\\\\nimport mmap\\\\nimport os\\\\nimport resource\\\\nimport socket\\\\nimport sys\\\\nimport time\\\\nimport typing\\\\n\\\\nPOLICY = {\\\\n    \\\"id\\\": \\\"toklet-authored-code-isolation-policy-v1\\\",\\\\n    \\\"api\\\": \\\"sandbox_init(SANDBOX_NAMED, kSBXProfilePureComputation)\\\",\\\\n    \\\"library\\\": \\\"/usr/lib/system/libsystem_sandbox.dylib\\\",\\\\n    \\\"data_bytes\\\": 256 * 1024**2,\\\\n    \\\"address_space_bytes\\\": 1024**3,\\\\n    \\\"cpu_seconds\\\": 4,\\\\n    \\\"wall_seconds\\\": 6,\\\\n    \\\"output_bytes\\\": 65536,\\\\n    \\\"core_bytes\\\": 0,\\\\n    \\\"open_files\\\": 64,\\\\n    \\\"network\\\": \\\"denied\\\",\\\\n    \\\"filesystem\\\": \\\"denied after trusted initialization\\\",\\\\n    \\\"child_processes\\\": \\\"denied\\\",\\\\n}\\\\nMODES = (\\\\n    \\\"benign\\\", \\\"assertion_failure\\\", \\\"early_exit\\\", \\\"file_read\\\", \\\"file_write\\\",\\\\n    \\\"network\\\", \\\"fork\\\", \\\"exec\\\", \\\"stdout_flood\\\", \\\"stderr_flood\\\", \\\"cpu_timeout\\\",\\\\n    \\\"wall_timeout\\\", \\\"data_limit\\\", \\\"address_space_limit\\\",\\\\n)\\\\n\\\\n\\\\ndef emit(value):\\\\n    # Parent bounds both inherited pipes together. All qualification records\\\\n    # originate in this trusted static program, before any future code runner.\\\\n    print(json.dumps(value, allow_nan=False), flush=True)\\\\n\\\\n\\\\ndef limits():\\\\n    return {\\\\n        \\\"RLIMIT_DATA\\\": (resource.RLIMIT_DATA, POLICY[\\\"data_bytes\\\"]),\\\\n        \\\"RLIMIT_AS\\\": (resource.RLIMIT_AS, POLICY[\\\"address_space_bytes\\\"]),\\\\n        \\\"RLIMIT_CPU\\\": (resource.RLIMIT_CPU, POLICY[\\\"cpu_seconds\\\"]),\\\\n        \\\"RLIMIT_CORE\\\": (resource.RLIMIT_CORE, POLICY[\\\"core_bytes\\\"]),\\\\n        \\\"RLIMIT_NOFILE\\\": (resource.RLIMIT_NOFILE, POLICY[\\\"open_files\\\"]),\\\\n    }\\\\n\\\\n\\\\ndef enter():\\\\n    \\\"\\\"\\\"Use the SDK\\\\'s named-profile API; never use reserved custom flags.\\\"\\\"\\\"\\\\n    # The installed SDK\\\\'s export stub assigns these public legacy symbols to\\\\n    # libsystem_sandbox, distinct from libsandbox\\\\'s profile compilation API.\\\\n    library = ctypes.CDLL(POLICY[\\\"library\\\"])\\\\n    initialize = library.sandbox_init\\\\n    initialize.argtypes = (ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_void_p))\\\\n    initialize.restype = ctypes.c_int\\\\n    release = library.sandbox_free_error\\\\n    release.argtypes = (ctypes.c_void_p,)\\\\n    release.restype = None\\\\n    # The exported const char[] is a static C profile name. Keep the library\\\\n    # owner alive while borrowing its first byte and NUL-terminated name.\\\\n    first = ctypes.c_char.in_dll(library, \\\"kSBXProfilePureComputation\\\")\\\\n    profile = ctypes.cast(ctypes.addressof(first), ctypes.c_char_p)\\\\n    name = profile.value.decode(\\\"ascii\\\")\\\\n    admitted = {}\\\\n    for label, (key, value) in limits().items():\\\\n        try:\\\\n            resourc"
+      },
+      "container_removed": true
+    }
+  ],
+  "connection_binding": {
+    "machine": "podman-machine-default",
+    "URI": "ssh://core@127.0.0.1:51387/run/user/501/podman/podman.sock",
+    "Identity": "/Users/coloner/.local/share/containers/podman/machine/machine",
+    "SSHConfig": {
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "Port": 51387,
+      "RemoteUsername": "core"
+    },
+    "Rootful": false
+  },
+  "machine_connection_admission": [
+    {
+      "command": [
+        "/opt/podman/bin/podman",
+        "machine",
+        "inspect",
+        "podman-machine-default"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.040628166985698044,
+      "stdout_base64": "WwogICAgIHsKICAgICAgICAgICJDb25maWdEaXIiOiB7CiAgICAgICAgICAgICAgICJQYXRoIjogIi9Vc2Vycy9jb2xvbmVyLy5jb25maWcvY29udGFpbmVycy9wb2RtYW4vbWFjaGluZS9hcHBsZWh2IgogICAgICAgICAgfSwKICAgICAgICAgICJDb25uZWN0aW9uSW5mbyI6IHsKICAgICAgICAgICAgICAgIlBvZG1hblNvY2tldCI6IHsKICAgICAgICAgICAgICAgICAgICAiUGF0aCI6ICIvdmFyL2ZvbGRlcnMvOW0vbnN6NnM3MGoxZzEweXozX2w3N3h3bDNtMDAwMGduL1QvcG9kbWFuL3BvZG1hbi1tYWNoaW5lLWRlZmF1bHQtYXBpLnNvY2siCiAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICJQb2RtYW5QaXBlIjogbnVsbAogICAgICAgICAgfSwKICAgICAgICAgICJDcmVhdGVkIjogIjIwMjYtMDEtMTVUMTI6MTI6NDIuNjY2NDYyKzAzOjAwIiwKICAgICAgICAgICJMYXN0VXAiOiAiMjAyNi0wMy0xNVQxNTozMjowMi45OTU4MjcrMDM6MDAiLAogICAgICAgICAgIk5hbWUiOiAicG9kbWFuLW1hY2hpbmUtZGVmYXVsdCIsCiAgICAgICAgICAiUmVzb3VyY2VzIjogewogICAgICAgICAgICAgICAiQ1BVcyI6IDUsCiAgICAgICAgICAgICAgICJEaXNrU2l6ZSI6IDEwMCwKICAgICAgICAgICAgICAgIk1lbW9yeSI6IDIwNDgsCiAgICAgICAgICAgICAgICJVU0JzIjogW10KICAgICAgICAgIH0sCiAgICAgICAgICAiU1NIQ29uZmlnIjogewogICAgICAgICAgICAgICAiSWRlbnRpdHlQYXRoIjogIi9Vc2Vycy9jb2xvbmVyLy5sb2NhbC9zaGFyZS9jb250YWluZXJzL3BvZG1hbi9tYWNoaW5lL21hY2hpbmUiLAogICAgICAgICAgICAgICAiUG9ydCI6IDUxMzg3LAogICAgICAgICAgICAgICAiUmVtb3RlVXNlcm5hbWUiOiAiY29yZSIKICAgICAgICAgIH0sCiAgICAgICAgICAiU3RhdGUiOiAicnVubmluZyIsCiAgICAgICAgICAiVXNlck1vZGVOZXR3b3JraW5nIjogdHJ1ZSwKICAgICAgICAgICJSb290ZnVsIjogZmFsc2UsCiAgICAgICAgICAiUm9zZXR0YSI6IHRydWUKICAgICB9Cl0K",
+      "stdout_captured_bytes": 1020,
+      "stdout_captured_sha256": "7c472a6d808c48ddf9c231644f7be906edd040c27aa83475ca938fa18a4a806f",
+      "stderr_base64": "",
+      "stderr_captured_bytes": 0,
+      "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/opt/podman/bin/podman",
+        "system",
+        "connection",
+        "list",
+        "--format=json"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.03620016702916473,
+      "stdout_base64": "WwogICAgewogICAgICAgICJOYW1lIjogInBvZG1hbi1tYWNoaW5lLWRlZmF1bHQiLAogICAgICAgICJVUkkiOiAic3NoOi8vY29yZUAxMjcuMC4wLjE6NTEzODcvcnVuL3VzZXIvNTAxL3BvZG1hbi9wb2RtYW4uc29jayIsCiAgICAgICAgIklkZW50aXR5IjogIi9Vc2Vycy9jb2xvbmVyLy5sb2NhbC9zaGFyZS9jb250YWluZXJzL3BvZG1hbi9tYWNoaW5lL21hY2hpbmUiLAogICAgICAgICJJc01hY2hpbmUiOiB0cnVlLAogICAgICAgICJEZWZhdWx0IjogdHJ1ZSwKICAgICAgICAiUmVhZFdyaXRlIjogdHJ1ZQogICAgfSwKICAgIHsKICAgICAgICAiTmFtZSI6ICJwb2RtYW4tbWFjaGluZS1kZWZhdWx0LXJvb3QiLAogICAgICAgICJVUkkiOiAic3NoOi8vcm9vdEAxMjcuMC4wLjE6NTEzODcvcnVuL3BvZG1hbi9wb2RtYW4uc29jayIsCiAgICAgICAgIklkZW50aXR5IjogIi9Vc2Vycy9jb2xvbmVyLy5sb2NhbC9zaGFyZS9jb250YWluZXJzL3BvZG1hbi9tYWNoaW5lL21hY2hpbmUiLAogICAgICAgICJJc01hY2hpbmUiOiB0cnVlLAogICAgICAgICJEZWZhdWx0IjogZmFsc2UsCiAgICAgICAgIlJlYWRXcml0ZSI6IHRydWUKICAgIH0KXQo=",
+      "stdout_captured_bytes": 590,
+      "stdout_captured_sha256": "4a95693e452c8d449c2041468a4b925e652a21d072cbc915212b36f1caa4a61e",
+      "stderr_base64": "",
+      "stderr_captured_bytes": 0,
+      "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "podman_version": "{\"Client\":{\"APIVersion\":\"5.7.1\",\"Version\":\"5.7.1\",\"GoVersion\":\"go1.25.5\",\"GitCommit\":\"f845d14e941889ba4c071f35233d09b29d363c75\",\"BuiltTime\":\"Wed Dec 10 17:53:41 2025\",\"Built\":1765378421,\"BuildOrigin\":\"pkginstaller\",\"OsArch\":\"darwin/arm64\",\"Os\":\"darwin\"},\"Server\":{\"APIVersion\":\"5.7.1\",\"Version\":\"5.7.1\",\"GoVersion\":\"go1.25.4 X:nodwarf5\",\"GitCommit\":\"f845d14e941889ba4c071f35233d09b29d363c75\",\"BuiltTime\":\"Tue Dec  9 03:00:00 2025\",\"Built\":1765238400,\"OsArch\":\"linux/arm64\",\"Os\":\"linux\"}}\n",
+  "image": {
+    "Id": "eb7d16fec874f15b584063275012ac719885a2b87574d124c0da9c156d504629",
+    "Digest": "sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "RepoDigests": [
+      "docker.io/library/python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+      "docker.io/library/python@sha256:739ba32ae445e8d58f3d90feb85f83bebc8346f8dd280fa1eb5848f4ff1ed163"
+    ],
+    "Architecture": "arm64",
+    "Os": "linux",
+    "RootFS": {
+      "Type": "layers",
+      "Layers": [
+        "sha256:dca69811453d69d10b6c0345a5c49147162abe20a2f77802d66efc60667949ea",
+        "sha256:aa7917539601453a983066ad360b759c92c30002edee05749dfe4baa9fa4dde8",
+        "sha256:54e908385c73b1f7a6708f9807d9da4cc2a1e7f4cc4f17e00e6e90a3d8c5007f",
+        "sha256:0e4e1e69caa145889e7738a6089b168f6c66c26184bba2c41b1c6a3e0bb21ff7"
+      ]
+    }
+  },
+  "failure": {
+    "type": "ValueError",
+    "message": "Authored Linux container infrastructure failed"
+  },
+  "completed_utc": "2026-10-11T07:58:02.886916+00:00"
+}

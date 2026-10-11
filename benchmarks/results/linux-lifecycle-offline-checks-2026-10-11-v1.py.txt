@@ -1,0 +1,22 @@
+from pathlib import Path
+import sys,json,subprocess
+from datetime import datetime,timezone
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as p
+out=Path('benchmarks/raw/2026-10-11-linux-lifecycle-offline-checks-v1.json')
+assert not out.exists()
+fresh=json.loads(Path('benchmarks/results/2026-10-11-cpu-changed-uninterrupted-idle-v1.json').read_text())
+a=subprocess.run(['ps','-p',','.join(str(fresh[k]) for k in ['exited_launcher_pid','exited_transport_pid','exited_numerical_worker_pid']),'-o','pid='],text=True,capture_output=True)
+assert a.returncode==1 and not a.stdout.strip() and not a.stderr.strip()
+p.idle(json.loads(Path('benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json').read_text()))
+r={'format':'toklet-linux-lifecycle-offline-checks-v1','producer_sha256':p.digest(__file__),'started_utc':datetime.now(timezone.utc).isoformat(),'completed':False,'commands':[],'source_sha256':{n:p.digest(n) for n in ['tools/bench/podman_machine_lifecycle.py','tools/bench/test_podman_machine_lifecycle.py','tools/bench/linux_code_isolation_probe.py','tools/bench/test_linux_code_isolation.py']}}
+commands=[['cargo','fmt','--check'],['cargo','clippy','--locked','--offline','--all-targets','--','-D','warnings'],['cargo','test','--locked','--offline'],[sys.executable,'-m','unittest','discover','-s','tools/bench','-p','test_*.py']]
+try:
+ for command in commands:
+  item=p.capture(command,1200,262144);r['commands'].append(item)
+  print(json.dumps({'command':command,'exit_code':item['exit_code'],'cleanup':item['cleanup_errors']}),flush=True)
+  assert item['exit_code']==0 and not item.get('failure') and not item['wall_timed_out'] and not item['output_limit_exceeded'] and not item['cleanup_errors'] and item['surviving_group_members']==[]
+ r['completed']=True
+finally:
+ r['finished_utc']=datetime.now(timezone.utc).isoformat()
+ with out.open('x') as f:json.dump(r,f,indent=2);f.write('\n')

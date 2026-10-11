@@ -1,0 +1,92 @@
+"""Replay saved authored isolation evidence; never start a VM or execute a child."""
+import argparse,base64,hashlib,json,math,re,sys
+from pathlib import Path
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as p
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--output',type=Path,required=True)
+a=parser.parse_args()
+def read(path):return json.loads(Path(path).read_text())
+def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+def check_capture(c, success=True):
+ for name in ('stdout','stderr'):
+  b=base64.b64decode(c[name+'_base64'],validate=True)
+  assert len(b)==c[name+'_captured_bytes']
+  assert hashlib.sha256(b).hexdigest()==c[name+'_captured_sha256']
+ assert c['cleanup_errors']==[] and c['surviving_group_members']==[]
+ assert not c.get('failure') and not c['wall_timed_out'] and not c['output_limit_exceeded']
+ assert math.isfinite(c['elapsed_seconds']) and c['elapsed_seconds']>=0
+ if success:assert c['exit_code']==0
+root='benchmarks/results/'
+probe_name=root+'2026-10-11-linux-code-isolation-probe-v8.json'
+window_name=root+'2026-10-11-linux-runtime-window-v8.json'
+probe=read(probe_name);window=read(window_name)
+assert probe['completed'] is True and not probe.get('failure')
+assert window['completed'] is True and not window.get('failure') and not window.get('restoration_failure')
+assert window['initially_stopped'] and window['started_by_this_task'] and window['restored_stopped'] and window['pipe_lifetime_finished']
+for label in ('machine_before','machine_after'):
+ machine=[m for m in window[label] if m['Name']=='podman-machine-default'];assert len(machine)==1
+ assert machine[0]['Running'] is False and machine[0]['Starting'] is False
+startup=window['startup'];assert startup['client_succeeded'] and startup['helper_pipe_lifetime_completed'] and not startup.get('helper_capture_failure')
+for name in ('stdout','stderr'):
+ b=base64.b64decode(startup[name+'_base64'],validate=True)
+ assert len(b)==startup[name+'_captured_bytes'] and hashlib.sha256(b).hexdigest()==startup[name+'_captured_sha256']
+assert startup['cleanup_errors']==[]
+for c in window['commands']:check_capture(c)
+for c in probe['checks']:check_capture(c)
+assert len(probe['checks'])==4
+assert 'Ran 97 tests' in base64.b64decode(probe['checks'][-1]['stderr_base64']).decode()
+rust=base64.b64decode(probe['checks'][2]['stdout_base64']).decode()
+assert sum(int(n) for n in re.findall(r'test result: ok\. (\d+) passed;',rust))==76
+assert len(probe['runs'])==14 and [r['mode'] for r in probe['runs']]==list(p.child.MODES)
+assert probe['image_id']=='eb7d16fec874f15b584063275012ac719885a2b87574d124c0da9c156d504629'
+assert window['qualification_sha256']==digest(probe_name)
+assert probe['connection_binding']==window['connection_binding']
+assert probe['connection_binding']==p.bound_machine_connection(window['machine_inspect_before'][0],
+ [dict(Name='podman-machine-default',URI=window['connection_binding']['URI'],Identity=window['connection_binding']['Identity'])])
+for c in probe['machine_connection_admission']+probe['machine_connection_final']:check_capture(c)
+bound={probe_name:digest(probe_name),window_name:digest(window_name)}
+for name,expected in probe['source_sha256'].items():assert digest(name)==expected
+for name,expected in window['source_sha256'].items():assert digest(name)==expected
+for name in sorted(set(probe['source_sha256'])|set(window['source_sha256'])):bound[name]=digest(name)
+assert window['producer_sha256']==digest(root+'linux-runtime-window-2026-10-11-v8.py.txt')
+assert probe['started_utc']<probe['completed_utc']<window['finished_utc']
+assert window['fresh_benchmark_idle_sha256']==digest(root+'2026-10-11-cpu-changed-uninterrupted-idle-v1.json')
+rows=[]
+for item in probe['runs']:
+ assert item['expectation_passed'] is True and item['container_removed'] is True
+ ready=p.check_record(item)
+ assert ready['runtime']==probe['admitted_runtime'] and ready['python']==probe['admitted_python_version']
+ assert ready['limits']['RLIMIT_AS']==[1073741824,1073741824]
+ assert ready['runtime']['capabilities']=={'CapEff':0,'CapBnd':0}
+ assert ready['environment_keys']==['LC_ALL','PATH','TZ']
+ assert ready['removed_environment_keys']==['HOME','HOSTNAME']
+ check_capture(item['container_exit_wait'])
+ assert int(p.output(item['container_exit_wait']).strip())==item['container_exit_code']
+ assert item['container_exit_wait']['command'][-3:]==['wait','--condition=exited',item['container_id']]
+ v=item['container_inspect_before']
+ # Saved source is rebound before independently reconstructing the fixed bundle.
+ config=p.validate_configuration(v,probe['python_path'],p.bundled_source(),item['mode'])
+ assert json.loads(json.dumps(config))==item['configuration']
+ assert len(config['limits'])==4 and 'RLIMIT_AS' not in config['limits']
+ rows.append({k:item[k] for k in ('mode','container_exit_code','transport_exit_code','wall_timed_out','output_limit_exceeded','elapsed_seconds','container_removed')})
+prior=[]
+for version in range(2,8):
+ pn=root+f'2026-10-11-linux-code-isolation-probe-v{version}.json'
+ wn=root+f'2026-10-11-linux-runtime-window-v{version}.json'
+ old=read(pn);w=read(wn)
+ assert old['completed'] is False and w['completed'] is False
+ assert w['restored_stopped'] and w['pipe_lifetime_finished'] and not w.get('restoration_failure')
+ assert all(x['container_cleanup_errors']==[] and x['container_removed'] is True for x in old['runs'])
+ for kind,name in [('source','tools/bench/linux_code_isolation_probe.py'),('test','tools/bench/test_linux_code_isolation.py')]:
+  snapshot=root+f'2026-10-11-linux-code-isolation-probe-v{version}-{kind}.py.txt'
+  assert digest(snapshot)==old['source_sha256'][name];bound[snapshot]=digest(snapshot)
+ child_snapshot=root+('2026-10-11-linux-code-isolation-child-v2-v4.py.txt' if version<5 else '2026-10-11-linux-code-isolation-child-v5.py.txt' if version==5 else '2026-10-11-linux-code-isolation-child-v6.py.txt')
+ assert digest(child_snapshot)==old['source_sha256']['tools/bench/linux_code_isolation_child.py'];bound[child_snapshot]=digest(child_snapshot)
+ wrapper=root+f'linux-runtime-window-2026-10-11-v{version}.py.txt'
+ assert digest(wrapper)==w['producer_sha256'];bound[wrapper]=digest(wrapper)
+ bound[pn]=digest(pn);bound[wn]=digest(wn)
+ prior.append({'version':version,'failure':old['failure'],'attempted_modes':len(old['runs']),'qualified_modes':sum(x.get('expectation_passed') is True for x in old['runs']),'restored_stopped':True})
+r={'format':'toklet-saved-authored-linux-native-retry-analysis-v1','completed':True,'native_authored_qualification_completed':True,'executor_adopted':False,'generated_programs_executed':0,'dataset_programs_executed':0,'model_requests':0,'checks':{'ordinary_rust_tests':76,'offline_benchmark_python_tests':97,'authored_modes':14},'image_id':probe['image_id'],'admitted_runtime':probe['admitted_runtime'],'admitted_python':probe['admitted_python_version'],'runs':rows,'excluded_prior_attempts':prior,'vm_restored_stopped':True,'records_sha256':bound,'producer_sha256':digest(__file__)}
+with a.output.open('x') as f:json.dump(r,f,indent=2,allow_nan=False);f.write('\n')
+print(json.dumps({'completed':True,'authored_modes':14,'vm_restored_stopped':True}))

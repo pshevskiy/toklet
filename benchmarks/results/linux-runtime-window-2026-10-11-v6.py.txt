@@ -1,0 +1,129 @@
+from pathlib import Path
+from datetime import datetime, timezone
+import json, sys, subprocess, time
+sys.path.insert(0, 'tools/bench')
+import linux_code_isolation_probe as p
+import podman_machine_lifecycle as lifecycle
+root = Path.cwd()
+podman = '/opt/podman/bin/podman'
+proof = root / 'benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json'
+r = {'format': 'toklet-authored-linux-runtime-window-v6', 'started_utc': datetime.now(timezone.utc).isoformat(), 'producer_sha256': p.digest(__file__), 'idle_proof_sha256': p.digest(proof), 'completed': False, 'commands': [], 'pipe_lifetime_finished': False, 'machine_name': 'podman-machine-default', 'started_by_this_task': False, 'restored_stopped': False}
+plumbing = None
+
+def command(args, seconds=120):
+    item = p.capture(args, seconds, 262144)
+    r['commands'].append(item)
+    print(json.dumps({'command': args[:6], 'exit_code': item['exit_code'], 'timeout': item['wall_timed_out'], 'cleanup': item['cleanup_errors']}), flush=True)
+    if item.get('failure') or item['exit_code'] != 0 or item['wall_timed_out'] or item['output_limit_exceeded'] or item['cleanup_errors'] or (item['surviving_group_members'] != []):
+        raise RuntimeError('Runtime command failed: ' + str(args[:6]))
+    return p.output(item)
+attempt_path = Path('benchmarks/raw/2026-10-11-linux-runtime-window-v6.json')
+recovery_path = Path('benchmarks/raw/2026-10-11-linux-runtime-window-v6-restoration.json')
+probe_path = Path('benchmarks/raw/2026-10-11-linux-code-isolation-probe-v6.json')
+assert not any((path.exists() for path in [attempt_path, recovery_path, probe_path]))
+
+def observe_stopped_inventory():
+    observed = p.capture([podman, 'machine', 'list', '--format=json'], 20, 262144)
+    r['last_stop_inventory'] = observed
+    if observed['exit_code'] != 0 or observed.get('failure') or observed['cleanup_errors'] or (observed['surviving_group_members'] != []) or observed['wall_timed_out'] or observed['output_limit_exceeded']:
+        raise RuntimeError('Stopped machine inventory unavailable')
+    return json.loads(p.output(observed))
+try:
+    try:
+        fresh_proof = root / 'benchmarks/results/2026-10-11-cpu-changed-uninterrupted-idle-v1.json'
+        fresh = json.loads(fresh_proof.read_text())
+        assert fresh['uninterrupted_batch'] is True and fresh['measured_requests'] == 10
+        owned_pids = [fresh['exited_launcher_pid'], fresh['exited_transport_pid'], fresh['exited_numerical_worker_pid']]
+        absent = subprocess.run(['ps', '-p', ','.join(map(str, owned_pids)), '-o', 'pid='], capture_output=True, text=True)
+        assert absent.returncode == 1 and (not absent.stdout.strip()) and (not absent.stderr.strip())
+        r['fresh_benchmark_idle_sha256'] = p.digest(fresh_proof)
+        p.idle(json.loads(proof.read_text()))
+        r['source_sha256'] = {n: p.digest(n) for n in ['tools/bench/podman_machine_lifecycle.py', 'tools/bench/test_podman_machine_lifecycle.py', 'tools/bench/linux_code_isolation_child.py', 'tools/bench/linux_code_isolation_probe.py', 'tools/bench/test_linux_code_isolation.py']}
+        before = json.loads(command([podman, 'machine', 'list', '--format=json']))
+        r['machine_before'] = before
+        machine = next((x for x in before if x['Name'] == r['machine_name']))
+        assert machine['Running'] is False and machine['Starting'] is False
+        machine_inspect = json.loads(command([podman, 'machine', 'inspect', r['machine_name']]))
+        assert len(machine_inspect) == 1
+        connections = json.loads(command([podman, 'system', 'connection', 'list', '--format=json']))
+        binding = p.bound_machine_connection(machine_inspect[0], connections)
+        r['machine_inspect_before'] = machine_inspect
+        r['connection_binding'] = binding
+        api = (podman, '--url', binding['URI'], '--identity', binding['Identity'])
+        r['initially_stopped'] = True
+        r['started_by_this_task'] = True
+        startup, plumbing = lifecycle.start_machine(podman)
+        r['startup'] = startup
+        if not startup['client_succeeded'] or startup.get('helper_capture_failure'):
+            raise RuntimeError('Persistent VM startup failed')
+        r['startup_helper_snapshot'] = subprocess.check_output(['ps', '-p', ','.join(map(str, startup['live_startup_group_members'])), '-o', 'pid=,ppid=,pgid=,stat=,command='], text=True) if startup['live_startup_group_members'] else ''
+        active = json.loads(command([podman, 'machine', 'list', '--format=json']))
+        active_machine = next((x for x in active if x['Name'] == r['machine_name']))
+        assert active_machine['Running'] is True and active_machine['Starting'] is False
+        deadline = time.monotonic() + 60
+        while True:
+            readiness = p.capture([*api, 'info', '--format=json'], 20, 262144)
+            r['commands'].append(readiness)
+            if readiness['exit_code'] == 0 and (not readiness.get('failure')) and (readiness['cleanup_errors'] == []) and (readiness['surviving_group_members'] == []) and (not readiness['wall_timed_out']) and (not readiness['output_limit_exceeded']):
+                r['api_readiness'] = json.loads(p.output(readiness))
+                break
+            if time.monotonic() >= deadline:
+                raise RuntimeError('VM API readiness was not established')
+            time.sleep(2)
+        tag = 'docker.io/library/python:3.12.15-slim-bookworm'
+        command([*api, 'pull', '--arch=arm64', tag], 600)
+        image = json.loads(command([*api, 'image', 'inspect', tag]))
+        r['image_setup'] = image
+        image_id = p.normalized_id(image[0]['Id'])
+        assert image[0]['Architecture'] == 'arm64' and image[0]['Os'] == 'linux'
+        out = 'benchmarks/raw/2026-10-11-linux-code-isolation-probe-v6.json'
+        command([sys.executable, 'tools/bench/linux_code_isolation_probe.py', '--idle-proof', str(proof), '--image-id', image_id, '--podman-url', binding['URI'], '--podman-identity', binding['Identity'], '--python-path', '/usr/local/bin/python3', '--output', out], 1200)
+        r['qualification_record'] = out
+        r['qualification_sha256'] = p.digest(out)
+        r['completed'] = True
+    except BaseException as e:
+        r['failure'] = {'type': type(e).__name__, 'message': str(e)}
+    finally:
+        if r['started_by_this_task']:
+            try:
+                inventory = json.loads(command([podman, 'machine', 'list', '--format=json']))
+                active = next((x for x in inventory if x['Name'] == r['machine_name']))
+                if active['Running'] is True or active['Starting'] is True:
+                    listed = p.capture([*api, 'ps', '--format=json'], 20, 262144)
+                    r['commands'].append(listed)
+                    if listed['exit_code'] != 0 or listed.get('failure') or listed['cleanup_errors'] or (listed['surviving_group_members'] != []):
+                        listed = p.capture([podman, 'machine', 'ssh', r['machine_name'], 'podman', 'ps', '--format=json'], 20, 262144)
+                        r['commands'].append(listed)
+                    if listed['exit_code'] != 0 or listed.get('failure') or listed['cleanup_errors'] or (listed['surviving_group_members'] != []) or listed['wall_timed_out'] or listed['output_limit_exceeded']:
+                        raise RuntimeError('Container inventory unavailable; machine cleanup is not verified')
+                    running = json.loads(p.output(listed))
+                    r['running_containers_before_stop'] = running
+                    if running:
+                        raise RuntimeError('VM retained: running containers require ownership review')
+                    command([podman, 'machine', 'stop', r['machine_name']])
+                after = json.loads(command([podman, 'machine', 'list', '--format=json']))
+                r['machine_after'] = after
+                machine = next((x for x in after if x['Name'] == r['machine_name']))
+                assert machine['Running'] is False and machine['Starting'] is False
+                r['restored_stopped'] = True
+                if plumbing is not None:
+                    plumbing.finish(after)
+                    if r['startup'].get('helper_capture_failure'):
+                        raise RuntimeError('VM helper capture failed')
+                    r['pipe_lifetime_finished'] = True
+            except BaseException as e:
+                r['restoration_failure'] = {'type': type(e).__name__, 'message': str(e)}
+        r['finished_utc'] = datetime.now(timezone.utc).isoformat()
+        with Path('benchmarks/raw/2026-10-11-linux-runtime-window-v6.json').open('x') as f:
+            json.dump(r, f, indent=2)
+            f.write('\n')
+        print(json.dumps({'completed': r['completed'], 'failure': r.get('failure'), 'restored_stopped': r['restored_stopped'], 'restoration_failure': r.get('restoration_failure')}), flush=True)
+finally:
+    needed = plumbing is not None and (not r['pipe_lifetime_finished'])
+    lifecycle.await_stopped_owner(plumbing, observe_stopped_inventory)
+    if needed:
+        recovery = {'format': 'toklet-authored-linux-helper-restoration-v1', 'verified_utc': datetime.now(timezone.utc).isoformat(), 'runtime_attempt_sha256': p.digest(attempt_path) if attempt_path.exists() else None, 'machine_inventory': r.get('last_stop_inventory'), 'startup_final': r['startup'], 'helper_pipe_lifetime_completed': True}
+        with recovery_path.open('x') as f:
+            json.dump(recovery, f, indent=2)
+            f.write('\n')
+raise SystemExit(0 if r['completed'] and r['restored_stopped'] and r['pipe_lifetime_finished'] and (not r.get('restoration_failure')) else 1)

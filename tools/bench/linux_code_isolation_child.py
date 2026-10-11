@@ -28,6 +28,37 @@ POLICY = {
 }
 MODES = authored.MODES
 
+
+def normalize_environment():
+    """Remove only OCI runtime metadata before the fixed execution boundary."""
+    removed = []
+    for key in ("HOME", "HOSTNAME"):
+        if key in os.environ:
+            del os.environ[key]
+            removed.append(key)
+    return removed
+
+
+def capability_state():
+    """Verify actual kernel capability masks during trusted initialization."""
+    with open("/proc/self/status", "rb") as stream:
+        status = stream.read(65537)
+    if len(status) > 65536:
+        raise ValueError("Linux process status exceeds admission bound")
+    masks = {}
+    for line in status.splitlines():
+        key, separator, value = line.partition(b":")
+        if key not in (b"CapEff", b"CapBnd"):
+            continue
+        value = value.strip()
+        if (key.decode() in masks or not separator or len(value) != 16
+                or any(byte not in b"0123456789abcdefABCDEF" for byte in value)):
+            raise ValueError("Linux capability status is malformed")
+        masks[key.decode()] = int(value, 16)
+    if masks != {"CapEff": 0, "CapBnd": 0}:
+        raise ValueError("Linux process capabilities are missing or nonzero")
+    return masks
+
 # Linux v6.17 UAPI: asm-generic/unistd.h, linux/audit.h, linux/filter.h,
 # linux/seccomp.h and asm-generic/mman-common.h. This candidate admits only
 # the native AArch64 ABI; it does not guess another architecture's numbers.
@@ -142,7 +173,7 @@ def enter():
         python_sha256 = hashlib.file_digest(stream, "sha256").hexdigest()
     runtime = {"python_executable": sys.executable, "python_sha256": python_sha256,
                "kernel": platform.release(), "machine": platform.machine(),
-               "uid": os.getuid(), "gid": os.getgid()}
+               "uid": os.getuid(), "gid": os.getgid(), "capabilities": capability_state()}
     # Directory enumeration briefly opens its own fd; ignore only verified
     # already-closed descriptors, and close every remaining inherited fd>=3.
     for label in os.listdir("/proc/self/fd"):
@@ -185,6 +216,7 @@ def main():
         raise ValueError("Only fixed authored isolation probes are admitted")
     mode = sys.argv[1]
     try:
+        removed_environment_keys = normalize_environment()
         admitted, runtime = enter()
     except BaseException as error:
         authored.emit({"event": "setup_error", "type": type(error).__name__,
@@ -196,7 +228,8 @@ def main():
                    "isolated_flag": sys.flags.isolated, "no_site_flag": sys.flags.no_site,
                    "optimize_flag": sys.flags.optimize,
                    "dont_write_bytecode": sys.dont_write_bytecode,
-                   "environment_keys": sorted(os.environ)})
+                   "environment_keys": sorted(os.environ),
+                   "removed_environment_keys": removed_environment_keys})
     try:
         result = authored.probe(mode, "/etc/passwd", "/tmp/toklet-authored-denied-write")
     except BaseException as error:

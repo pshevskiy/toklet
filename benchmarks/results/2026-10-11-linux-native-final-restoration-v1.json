@@ -1,0 +1,62 @@
+{
+  "format": "toklet-authored-linux-native-final-restoration-v1",
+  "verified_utc": "2026-10-11T08:17:29.684523+00:00",
+  "producer_sha256": "ab9d21986b7f9039e85cd0b826f5aa9969c4b0331f8e36071483c8e997a38fae",
+  "runtime_window_sha256": "836a413c11b6baea86d661f818c4a175bbe3753553d88095fa5cae5eb61e4393",
+  "owned_absent_pids": [
+    63622,
+    63623,
+    53099,
+    53106,
+    53114
+  ],
+  "owned_process_capture": {
+    "command": [
+      "ps",
+      "-p",
+      "63622,63623,53099,53106,53114",
+      "-o",
+      "pid=,ppid=,pgid=,stat=,command="
+    ],
+    "wall_timed_out": false,
+    "output_limit_exceeded": false,
+    "exit_code": 1,
+    "process_group_killed": false,
+    "cleanup_errors": [],
+    "surviving_group_members": [],
+    "elapsed_seconds": 0.026543708983808756,
+    "stdout_base64": "",
+    "stdout_captured_bytes": 0,
+    "stdout_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_base64": "",
+    "stderr_captured_bytes": 0,
+    "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "startup_group_empty": true,
+  "machine_inventory_capture": {
+    "command": [
+      "/opt/podman/bin/podman",
+      "machine",
+      "list",
+      "--format=json"
+    ],
+    "wall_timed_out": false,
+    "output_limit_exceeded": false,
+    "exit_code": 0,
+    "process_group_killed": false,
+    "cleanup_errors": [],
+    "surviving_group_members": [],
+    "elapsed_seconds": 0.034294583019800484,
+    "stdout_base64": "WwogICAgewogICAgICAgICJOYW1lIjogInBvZG1hbi1tYWNoaW5lLWRlZmF1bHQiLAogICAgICAgICJEZWZhdWx0IjogdHJ1ZSwKICAgICAgICAiQ3JlYXRlZCI6ICIyMDI2LTAxLTE1VDEyOjEyOjQyLjY2NjQ2MiswMzowMCIsCiAgICAgICAgIlJ1bm5pbmciOiBmYWxzZSwKICAgICAgICAiU3RhcnRpbmciOiBmYWxzZSwKICAgICAgICAiTGFzdFVwIjogIjIwMjYtMTAtMTFUMTE6MTY6MTQuOTYxMTU1KzAzOjAwIiwKICAgICAgICAiU3RyZWFtIjogImRlZmF1bHQiLAogICAgICAgICJWTVR5cGUiOiAiYXBwbGVodiIsCiAgICAgICAgIkNQVXMiOiA1LAogICAgICAgICJNZW1vcnkiOiAiMjE0NzQ4MzY0OCIsCiAgICAgICAgIlN3YXAiOiAiMCIsCiAgICAgICAgIkRpc2tTaXplIjogIjEwNzM3NDE4MjQwMCIsCiAgICAgICAgIlBvcnQiOiA1MTM4NywKICAgICAgICAiUmVtb3RlVXNlcm5hbWUiOiAiY29yZSIsCiAgICAgICAgIklkZW50aXR5UGF0aCI6ICIvVXNlcnMvY29sb25lci8ubG9jYWwvc2hhcmUvY29udGFpbmVycy9wb2RtYW4vbWFjaGluZS9tYWNoaW5lIiwKICAgICAgICAiVXNlck1vZGVOZXR3b3JraW5nIjogdHJ1ZQogICAgfQpd",
+    "stdout_captured_bytes": 591,
+    "stdout_captured_sha256": "50368a17ecffe2513f79c3daff75e16008715712f4577b033419ce353ecc6a6d",
+    "stderr_base64": "",
+    "stderr_captured_bytes": 0,
+    "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "original_machine_stopped": true,
+  "frozen_binaries": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+  }
+}

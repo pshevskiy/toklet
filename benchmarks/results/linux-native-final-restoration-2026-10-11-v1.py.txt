@@ -1,0 +1,19 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import json,sys
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as p
+w=json.loads(Path('benchmarks/results/2026-10-11-linux-runtime-window-v8.json').read_text())
+assert w['completed'] and w['restored_stopped'] and w['pipe_lifetime_finished']
+owned=w['startup']['live_startup_group_members']+[53099,53106,53114]
+processes=p.capture(['ps','-p',','.join(map(str,owned)),'-o','pid=,ppid=,pgid=,stat=,command='],20,262144)
+assert processes['exit_code']==1 and not p.output(processes).strip() and processes['stderr_captured_bytes']==0 and not processes['cleanup_errors'] and processes['surviving_group_members']==[]
+assert p.live_group_members(w['startup']['startup_process_group'])==[]
+assert p.idle(json.loads(Path('benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json').read_text()))
+c=p.successful(['/opt/podman/bin/podman','machine','list','--format=json'])
+machines=json.loads(p.output(c));m=next(x for x in machines if x['Name']=='podman-machine-default');assert m['Running'] is False and m['Starting'] is False
+r={'format':'toklet-authored-linux-native-final-restoration-v1','verified_utc':datetime.now(timezone.utc).isoformat(),'producer_sha256':p.digest(__file__),'runtime_window_sha256':p.digest('benchmarks/results/2026-10-11-linux-runtime-window-v8.json'),'owned_absent_pids':owned,'owned_process_capture':processes,'startup_group_empty':True,'machine_inventory_capture':c,'original_machine_stopped':True,'frozen_binaries':{n:p.digest(n) for n in ['target/release/examples/cpu_bench','target/release/toklet']}}
+assert r['frozen_binaries']['target/release/examples/cpu_bench']=='e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea'
+assert r['frozen_binaries']['target/release/toklet']=='5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59'
+with Path('benchmarks/results/2026-10-11-linux-native-final-restoration-v1.json').open('x') as f:json.dump(r,f,indent=2);f.write('\n')
+print('Actual machine stopped, owned helpers absent, frozen numerical binaries unchanged')

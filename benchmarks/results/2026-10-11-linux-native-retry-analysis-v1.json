@@ -1,0 +1,269 @@
+{
+  "format": "toklet-saved-authored-linux-native-retry-analysis-v1",
+  "completed": true,
+  "native_authored_qualification_completed": true,
+  "executor_adopted": false,
+  "generated_programs_executed": 0,
+  "dataset_programs_executed": 0,
+  "model_requests": 0,
+  "checks": {
+    "ordinary_rust_tests": 76,
+    "offline_benchmark_python_tests": 97,
+    "authored_modes": 14
+  },
+  "image_id": "eb7d16fec874f15b584063275012ac719885a2b87574d124c0da9c156d504629",
+  "admitted_runtime": {
+    "python_executable": "/usr/local/bin/python3",
+    "python_sha256": "7863a4d5e03fde7791c7f8c2c304cf3522f435e19745364ad18a6b7a0458af57",
+    "kernel": "6.17.7-300.fc43.aarch64",
+    "machine": "aarch64",
+    "uid": 65534,
+    "gid": 65534,
+    "capabilities": {
+      "CapEff": 0,
+      "CapBnd": 0
+    },
+    "filter_sha256": "7584e24ca69a1c2da42105b5956ef2e5bdccf215eca35cd3bea7da717c6c9e12"
+  },
+  "admitted_python": "3.12.15 (main, Oct  6 2026, 02:08:14) [GCC 12.2.0]",
+  "runs": [
+    {
+      "mode": "benign",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.2965854580979794,
+      "container_removed": true
+    },
+    {
+      "mode": "assertion_failure",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.23327387496829033,
+      "container_removed": true
+    },
+    {
+      "mode": "early_exit",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.2425038330256939,
+      "container_removed": true
+    },
+    {
+      "mode": "file_read",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.24264995905105025,
+      "container_removed": true
+    },
+    {
+      "mode": "file_write",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.2383032499346882,
+      "container_removed": true
+    },
+    {
+      "mode": "network",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.23665066598914564,
+      "container_removed": true
+    },
+    {
+      "mode": "fork",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.23560249991714954,
+      "container_removed": true
+    },
+    {
+      "mode": "exec",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.23220154200680554,
+      "container_removed": true
+    },
+    {
+      "mode": "stdout_flood",
+      "container_exit_code": 137,
+      "transport_exit_code": -9,
+      "wall_timed_out": false,
+      "output_limit_exceeded": true,
+      "elapsed_seconds": 0.19516779202967882,
+      "container_removed": true
+    },
+    {
+      "mode": "stderr_flood",
+      "container_exit_code": 137,
+      "transport_exit_code": -9,
+      "wall_timed_out": false,
+      "output_limit_exceeded": true,
+      "elapsed_seconds": 0.19751179090235382,
+      "container_removed": true
+    },
+    {
+      "mode": "cpu_timeout",
+      "container_exit_code": 137,
+      "transport_exit_code": 137,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 4.180854000034742,
+      "container_removed": true
+    },
+    {
+      "mode": "wall_timeout",
+      "container_exit_code": 137,
+      "transport_exit_code": -9,
+      "wall_timed_out": true,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 6.045756708015688,
+      "container_removed": true
+    },
+    {
+      "mode": "data_limit",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.24128237494733185,
+      "container_removed": true
+    },
+    {
+      "mode": "address_space_limit",
+      "container_exit_code": 0,
+      "transport_exit_code": 0,
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "elapsed_seconds": 0.24008645804133266,
+      "container_removed": true
+    }
+  ],
+  "excluded_prior_attempts": [
+    {
+      "version": 2,
+      "failure": {
+        "type": "ValueError",
+        "message": "Authored Linux container infrastructure failed"
+      },
+      "attempted_modes": 1,
+      "qualified_modes": 0,
+      "restored_stopped": true
+    },
+    {
+      "version": 3,
+      "failure": {
+        "type": "ValueError",
+        "message": "Authored Linux container infrastructure failed"
+      },
+      "attempted_modes": 1,
+      "qualified_modes": 0,
+      "restored_stopped": true
+    },
+    {
+      "version": 4,
+      "failure": {
+        "type": "ValueError",
+        "message": "Authored Linux container infrastructure failed"
+      },
+      "attempted_modes": 1,
+      "qualified_modes": 0,
+      "restored_stopped": true
+    },
+    {
+      "version": 5,
+      "failure": {
+        "type": "ValueError",
+        "message": "Authored isolation admission differs"
+      },
+      "attempted_modes": 1,
+      "qualified_modes": 0,
+      "restored_stopped": true
+    },
+    {
+      "version": 6,
+      "failure": {
+        "type": "ValueError",
+        "message": "Authored Linux transport/container exit statuses differ"
+      },
+      "attempted_modes": 12,
+      "qualified_modes": 11,
+      "restored_stopped": true
+    },
+    {
+      "version": 7,
+      "failure": {
+        "type": "ValueError",
+        "message": "Authored isolation transport/cleanup failed"
+      },
+      "attempted_modes": 12,
+      "qualified_modes": 11,
+      "restored_stopped": true
+    }
+  ],
+  "vm_restored_stopped": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v8.json": "0736ec7d8cf7481c5327c01c5f0c8555b6e3c8669c6c63e7a267f0044873d3f1",
+    "benchmarks/results/2026-10-11-linux-runtime-window-v8.json": "836a413c11b6baea86d661f818c4a175bbe3753553d88095fa5cae5eb61e4393",
+    "tools/bench/code_isolation_child.py": "b2cabbe299e9921b0ec1658c14bc7eb73150496d86249585099d7e3647430b0f",
+    "tools/bench/code_isolation_probe.py": "18b3868f02f80198c06d77d3c2d1192217aa14c78e11b0f5a4f5b72b40d72386",
+    "tools/bench/linux_code_isolation_child.py": "3560442782ac4ffa404d3b86a964ccbc38d5d4bc7c43a1b301fa72eedace0d5f",
+    "tools/bench/linux_code_isolation_probe.py": "4a1e01e3ac84e197b93440c694c7a3f4f8ab1258ec064d525507c7a3d9a76cbd",
+    "tools/bench/mlx_baseline.py": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+    "tools/bench/podman_machine_lifecycle.py": "eea3987fdf869ac8b0735569650ef9b785bfa960c05f8315a073ff4192afc97f",
+    "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "tools/bench/quality.py": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d",
+    "tools/bench/task_cases_probe.py": "e73082850c0b0b9d634903088056032ab48a3f762da2017c3104bf5771d930ce",
+    "tools/bench/test_linux_code_isolation.py": "4cd045caa8aec0facda137ec03ab798fd0017d4e991871b4b15a727aa5b32981",
+    "tools/bench/test_podman_machine_lifecycle.py": "d96dc8b7e69335d3620d35fc42c84909c4dc0ce6b82528e8ee828f1661903600",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v2-source.py.txt": "78a57388f13d17dd93a43ac54b1048336878900189abb2d1e69cab1183a4872a",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v2-test.py.txt": "dc5d1edecb1e9f2c044b5d63e9095d4ad777654a46462c64d7056f76946f0204",
+    "benchmarks/results/2026-10-11-linux-code-isolation-child-v2-v4.py.txt": "810ddd0ae76c15b6032b2f94e37c372cd28fe88c55c0ab8255a7620d5333e0f5",
+    "benchmarks/results/linux-runtime-window-2026-10-11-v2.py.txt": "f73fcb612d66b329ad0951c36dd97cb189d55d7c60c5b5d6885c3575fdcaf2bd",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v2.json": "3f2f9d9c09a2200c6e5284c21167a20b90573f863a7e87f72333ede105b8d662",
+    "benchmarks/results/2026-10-11-linux-runtime-window-v2.json": "7ee8424a333be64920f6eb6d841d56a1d7fbfa24e2adc5bffde8c94359e3b1fe",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v3-source.py.txt": "16539589b53c47ae6cb26ccbc9b5deaf82906ef78cf39c6dfc8df3daf563c109",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v3-test.py.txt": "b7ce2e8b8813d45b20e3be9cf8c734ba636be19a740c25638e667cd693bb153a",
+    "benchmarks/results/linux-runtime-window-2026-10-11-v3.py.txt": "1268753d56544ec957c5dae2b0ede30c10f40fce606dffe47a32f885a51fd494",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v3.json": "fddb06b330d1f2a7a206622a6d547885aa77fa47730778809eac132c055ca63f",
+    "benchmarks/results/2026-10-11-linux-runtime-window-v3.json": "cc5be769a770d35478d23312704afad617dde007e21b7716d8e000c2602f88e2",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v4-source.py.txt": "222cf5970ee0b3fc4f66e782facbf0ac31e9b043e9be9b59a41c0c24958fe67e",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v4-test.py.txt": "a0b2920bd04be9c6c6619c3b39a6346d9e8d53e74a3e3696125a0a5d5a4e2a8e",
+    "benchmarks/results/linux-runtime-window-2026-10-11-v4.py.txt": "d8bbc29e6f9fa831f4b39a6d3395688d02867172d5b4c5e17fcb8d4776454466",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v4.json": "2b871781a24740d9b23ef91b8df5ed4e4de175ec69269a1a7176d46ee180aab0",
+    "benchmarks/results/2026-10-11-linux-runtime-window-v4.json": "54aaf9949ab01e5150b775f35b4bdd6c0df634d7bcd855567a33c6e3e90a2e4a",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v5-source.py.txt": "f204d233cd5f432be8a5eb12ed3917c577cd2844cdebdb52b208c50c80d4c271",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v5-test.py.txt": "57e32973bf07e169e9d41bccf43c9ae2c22a5070cac2f26d54915fb74e7cdd64",
+    "benchmarks/results/2026-10-11-linux-code-isolation-child-v5.py.txt": "3b923b05ce366e976116b062bbfdc37544dd960a529a160c1c5421b3f378816b",
+    "benchmarks/results/linux-runtime-window-2026-10-11-v5.py.txt": "dc53a7c3354c69b18055854741acaadcae5d5340f60552318044beec04e8e1f4",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v5.json": "8bf6b1d72cacec4291a8775a5f7bdf9b599b4b792549cb5fe0f174e5500f743e",
+    "benchmarks/results/2026-10-11-linux-runtime-window-v5.json": "e640070bfeac2310b4079402b63bbb2f46f7806642ff39847bff0629ec0a066e",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v6-source.py.txt": "f0a65e89ad5f75c92d4649e00333fc4b101344061efd812278697e1fc6595727",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v6-test.py.txt": "a3d5acc1b62d20d30040bfd37dc20dc7679cbff070df31e3bb5fc0ea9e9d7c9b",
+    "benchmarks/results/2026-10-11-linux-code-isolation-child-v6.py.txt": "3560442782ac4ffa404d3b86a964ccbc38d5d4bc7c43a1b301fa72eedace0d5f",
+    "benchmarks/results/linux-runtime-window-2026-10-11-v6.py.txt": "11128fca8c124d3f66ec856d3819f83948550319e2af5eafbaf7cce6e49b206a",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v6.json": "34b7cc06d59f0f0f2abcb36ed08329c74aeba06058b585b1bc848356f741edd9",
+    "benchmarks/results/2026-10-11-linux-runtime-window-v6.json": "1385f2eafc715b738dae6c6c7fcba124721df8fd4f2bc14bf90ed270e3758c29",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v7-source.py.txt": "b849069b6d9b23a396dfbe207361140b99aff428e4e7c65c90314498135f7514",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v7-test.py.txt": "e60af760991316ea1930c53198061c0a057a1eef8fe6d9a26efa1ba91ed1b493",
+    "benchmarks/results/linux-runtime-window-2026-10-11-v7.py.txt": "042898e0849acc778733ba8d7b1881ff51a4c990398f0274f94043dc28de4a89",
+    "benchmarks/results/2026-10-11-linux-code-isolation-probe-v7.json": "ce6bb0704ea5642195544ea7476eca0e9721ce915aa5321001c928e2e929fc36",
+    "benchmarks/results/2026-10-11-linux-runtime-window-v7.json": "30a0bb3ea426014d66359ca1d6413f6631e552dd983e7831d98eeb3842323a92"
+  },
+  "producer_sha256": "817d6fbd9b434e2bf5415cb212431b43332533f480ca0f3d4bfe1fc1aa5588b2"
+}

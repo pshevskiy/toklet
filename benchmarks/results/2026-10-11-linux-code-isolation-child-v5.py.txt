@@ -1,0 +1,232 @@
+"""Fixed authored probes under an AArch64 Linux seccomp policy; no user code."""
+import ctypes
+import errno
+import hashlib
+import json
+import os
+import platform
+import resource
+import sys
+
+import code_isolation_child as authored
+
+POLICY = {
+    "id": "toklet-authored-linux-code-isolation-policy-v1",
+    "api": "prctl(PR_SET_NO_NEW_PRIVS); prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER)",
+    "architecture": "Linux AArch64 little-endian LP64",
+    "default_action": "EPERM; unexpected syscall architecture kills process",
+    "data_bytes": 256 * 1024**2,
+    "address_space_bytes": 1024**3,
+    "cpu_seconds": 4,
+    "wall_seconds": 6,
+    "output_bytes": 65536,
+    "core_bytes": 0,
+    "open_files": 64,
+    "network": "denied",
+    "filesystem": "denied after trusted initialization",
+    "child_processes": "denied",
+}
+MODES = authored.MODES
+
+
+def capability_state():
+    """Verify actual kernel capability masks during trusted initialization."""
+    with open("/proc/self/status", "rb") as stream:
+        status = stream.read(65537)
+    if len(status) > 65536:
+        raise ValueError("Linux process status exceeds admission bound")
+    masks = {}
+    for line in status.splitlines():
+        key, separator, value = line.partition(b":")
+        if key not in (b"CapEff", b"CapBnd"):
+            continue
+        value = value.strip()
+        if (key.decode() in masks or not separator or len(value) != 16
+                or any(byte not in b"0123456789abcdefABCDEF" for byte in value)):
+            raise ValueError("Linux capability status is malformed")
+        masks[key.decode()] = int(value, 16)
+    if masks != {"CapEff": 0, "CapBnd": 0}:
+        raise ValueError("Linux process capabilities are missing or nonzero")
+    return masks
+
+# Linux v6.17 UAPI: asm-generic/unistd.h, linux/audit.h, linux/filter.h,
+# linux/seccomp.h and asm-generic/mman-common.h. This candidate admits only
+# the native AArch64 ABI; it does not guess another architecture's numbers.
+AUDIT_ARCH_AARCH64 = 0xC00000B7
+ALLOW = 0x7FFF0000
+DENY = 0x00050000 | errno.EPERM
+KILL_PROCESS = 0x80000000
+LOAD_WORD = 0x20
+JUMP_EQ = 0x15
+JUMP_BITS = 0x45
+RETURN = 0x06
+SYSCALLS = {
+    "read": 63, "write": 64, "close": 57, "fstat": 80,
+    "exit": 93, "exit_group": 94, "rt_sigreturn": 139,
+    "rt_sigaction": 134, "rt_sigprocmask": 135, "sigaltstack": 132,
+    "brk": 214, "munmap": 215, "mremap": 216, "mmap": 222,
+    "mprotect": 226, "madvise": 233,
+    "clock_gettime": 113, "clock_getres": 114, "clock_nanosleep": 115,
+    "nanosleep": 101, "futex": 98, "sched_yield": 124,
+    "getpid": 172, "gettid": 178, "getuid": 174, "geteuid": 175,
+    "getgid": 176, "getegid": 177, "getrandom": 278,
+    "getrlimit": 163, "getrusage": 165,
+}
+
+
+class SockFilter(ctypes.Structure):
+    _fields_ = [("code", ctypes.c_uint16), ("jt", ctypes.c_uint8),
+                ("jf", ctypes.c_uint8), ("k", ctypes.c_uint32)]
+
+
+class SockFprog(ctypes.Structure):
+    _fields_ = [("length", ctypes.c_uint16), ("filter", ctypes.POINTER(SockFilter))]
+
+
+def filter_instructions():
+    """Return bounded classic BPF over seccomp_data; no caller program input."""
+    program = []
+
+    def statement(code, value):
+        program.append((code, 0, 0, value))
+
+    def jump(code, value, yes, no):
+        program.append((code, yes, no, value))
+
+    statement(LOAD_WORD, 4)  # seccomp_data.arch
+    jump(JUMP_EQ, AUDIT_ARCH_AARCH64, 1, 0)
+    statement(RETURN, KILL_PROCESS)
+    statement(LOAD_WORD, 0)  # seccomp_data.nr
+    constrained = {"read", "write", "close", "fstat", "mmap", "mprotect"}
+    for name, number in SYSCALLS.items():
+        if name not in constrained:
+            jump(JUMP_EQ, number, 0, 1)
+            statement(RETURN, ALLOW)
+    # Each block either returns or reloads nr for the next block. Arguments
+    # are 64-bit little-endian slots at offset16; validate both halves where
+    # a descriptor is constrained. Only stdin/stdout/stderr are inherited.
+    for name, descriptors in [("read", (0,)), ("write", (1, 2)),
+                              ("close", (0, 1, 2)), ("fstat", (0, 1, 2))]:
+        # Reject nonzero high descriptor bits, then test exact low values.
+        body = [(LOAD_WORD, 0, 0, 20), (JUMP_EQ, 1, 0, 0),
+                (RETURN, 0, 0, DENY), (LOAD_WORD, 0, 0, 16)]
+        for descriptor in descriptors:
+            body.extend([(JUMP_EQ, 0, 1, descriptor), (RETURN, 0, 0, ALLOW)])
+        body.append((RETURN, 0, 0, DENY))
+        jump(JUMP_EQ, SYSCALLS[name], 0, len(body))
+        program.extend(body)
+    # mprotect(addr,length,prot): never make memory executable.
+    body = [(LOAD_WORD, 0, 0, 36), (JUMP_EQ, 1, 0, 0), (RETURN, 0, 0, DENY),
+            (LOAD_WORD, 0, 0, 32), (JUMP_BITS, 0, 1, 4),
+            (RETURN, 0, 0, DENY), (RETURN, 0, 0, ALLOW)]
+    jump(JUMP_EQ, SYSCALLS["mprotect"], 0, len(body))
+    program.extend(body)
+    # mmap(addr,length,prot,flags,fd,offset): anonymous, fd=-1 and no PROT_EXEC.
+    # Constrain both argument halves; descriptor has exact signed -1.
+    body = [(LOAD_WORD, 0, 0, 36), (JUMP_EQ, 1, 0, 0), (RETURN, 0, 0, DENY),
+            (LOAD_WORD, 0, 0, 44), (JUMP_EQ, 1, 0, 0), (RETURN, 0, 0, DENY),
+            (LOAD_WORD, 0, 0, 32), (JUMP_BITS, 0, 1, 4), (RETURN, 0, 0, DENY),
+            (LOAD_WORD, 0, 0, 40), (JUMP_BITS, 1, 0, 32), (RETURN, 0, 0, DENY),
+            (LOAD_WORD, 0, 0, 48), (JUMP_EQ, 1, 0, 0xFFFFFFFF), (RETURN, 0, 0, DENY),
+            (LOAD_WORD, 0, 0, 52), (JUMP_EQ, 1, 0, 0xFFFFFFFF),
+            (RETURN, 0, 0, DENY), (RETURN, 0, 0, ALLOW)]
+    jump(JUMP_EQ, SYSCALLS["mmap"], 0, len(body))
+    program.extend(body)
+    statement(RETURN, DENY)
+    if not 0 < len(program) <= 255:
+        raise ValueError("Fixed seccomp inventory exceeds its bound")
+    return program
+
+
+def limits():
+    return {
+        "RLIMIT_DATA": (resource.RLIMIT_DATA, POLICY["data_bytes"]),
+        "RLIMIT_AS": (resource.RLIMIT_AS, POLICY["address_space_bytes"]),
+        "RLIMIT_CPU": (resource.RLIMIT_CPU, POLICY["cpu_seconds"]),
+        "RLIMIT_CORE": (resource.RLIMIT_CORE, POLICY["core_bytes"]),
+        "RLIMIT_NOFILE": (resource.RLIMIT_NOFILE, POLICY["open_files"]),
+    }
+
+
+def enter():
+    if (sys.platform != "linux" or platform.machine() != "aarch64"
+            or sys.byteorder != "little" or ctypes.sizeof(ctypes.c_void_p) != 8
+            or ctypes.sizeof(ctypes.c_ulong) != 8):
+        raise ValueError("Only the qualified Linux AArch64 LP64 ABI is admitted")
+    if (ctypes.sizeof(SockFilter) != 8 or ctypes.alignment(SockFilter) != 4
+            or SockFilter.k.offset != 4 or ctypes.sizeof(SockFprog) != 16
+            or ctypes.alignment(SockFprog) != 8 or SockFprog.filter.offset != 8):
+        raise ValueError("Linux seccomp structure ABI differs")
+    # Record trusted runtime identity before file access is denied. No model,
+    # dataset, host path, environment value or arbitrary program is loaded.
+    with open(sys.executable, "rb") as stream:
+        python_sha256 = hashlib.file_digest(stream, "sha256").hexdigest()
+    runtime = {"python_executable": sys.executable, "python_sha256": python_sha256,
+               "kernel": platform.release(), "machine": platform.machine(),
+               "uid": os.getuid(), "gid": os.getgid(), "capabilities": capability_state()}
+    # Directory enumeration briefly opens its own fd; ignore only verified
+    # already-closed descriptors, and close every remaining inherited fd>=3.
+    for label in os.listdir("/proc/self/fd"):
+        descriptor = int(label)
+        if descriptor >= 3:
+            try:
+                os.close(descriptor)
+            except OSError as error:
+                if error.errno != errno.EBADF:
+                    raise
+    library = ctypes.CDLL(None, use_errno=True)
+    prctl = library.prctl
+    prctl.argtypes = (ctypes.c_int, ctypes.c_ulong, ctypes.c_ulong,
+                      ctypes.c_ulong, ctypes.c_ulong)
+    prctl.restype = ctypes.c_int
+    admitted = {}
+    for label, (key, value) in limits().items():
+        resource.setrlimit(key, (value, value))
+        pair = resource.getrlimit(key)
+        if pair != (value, value):
+            raise ValueError("Linux resource admission differs: " + label)
+        admitted[label] = list(pair)
+    instructions = filter_instructions()
+    array = (SockFilter * len(instructions))(*(SockFilter(*row) for row in instructions))
+    runtime["filter_sha256"] = hashlib.sha256(bytes(array)).hexdigest()
+    descriptor = SockFprog(len(array), array)
+    # Public prctl variadic ABI uses unsigned long slots on this admitted LP64
+    # target. Keep descriptor and array alive through the synchronous copy.
+    # All pointers originate in these exact ctypes owners; no user pointer or
+    # string enters either call. errno is thread-local and read on failure only.
+    for option, argument, pointer in [(38, 1, 0), (22, 2, ctypes.addressof(descriptor))]:
+        if prctl(option, argument, pointer, 0, 0) != 0:
+            error = ctypes.get_errno()
+            raise OSError(error, "Linux seccomp admission failed")
+    return admitted, runtime
+
+
+def main():
+    if len(sys.argv) != 2 or sys.argv[1] not in MODES:
+        raise ValueError("Only fixed authored isolation probes are admitted")
+    mode = sys.argv[1]
+    try:
+        admitted, runtime = enter()
+    except BaseException as error:
+        authored.emit({"event": "setup_error", "type": type(error).__name__,
+                       "message": str(error)[:4096]})
+        return 2
+    authored.emit({"event": "isolated", "mode": mode, "policy": POLICY,
+                   "profile": "toklet-linux-aarch64-seccomp-v1", "limits": admitted,
+                   "runtime": runtime, "python": sys.version,
+                   "isolated_flag": sys.flags.isolated, "no_site_flag": sys.flags.no_site,
+                   "optimize_flag": sys.flags.optimize,
+                   "dont_write_bytecode": sys.dont_write_bytecode,
+                   "environment_keys": sorted(os.environ)})
+    try:
+        result = authored.probe(mode, "/etc/passwd", "/tmp/toklet-authored-denied-write")
+    except BaseException as error:
+        authored.emit({"event": "probe_error", "mode": mode, "type": type(error).__name__,
+                       "message": str(error)[:4096]})
+        return 3
+    authored.emit({"event": "probe_result", "mode": mode, "result": result})
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

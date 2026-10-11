@@ -181,8 +181,8 @@ passes offline checks but is rejected before sandbox admission because Python
 cannot accept the fixed data limit. It is not used for generated code; a
 compatible executor still needs qualification.
 
-The [authored Linux isolation candidate](docs/experiments/2026-10-10-linux-code-isolation.md)
-passes 19 targeted checks and the full offline suite. Native setup fails before
-image pull or container admission because the installed Podman API refuses
-connections. The VM's original stopped state is verified; no generated code
-executor is adopted.
+The [authored Linux isolation retry](docs/experiments/2026-10-11-linux-code-isolation-retry.md)
+passes all fourteen native modes, 26 targeted checks and the full offline suite.
+It retains the fixed limits, verifies actual zero capabilities and reconciles
+completed container exit statuses. The VM's original stopped state is verified;
+generated-code integration and full quality checks remain pending.

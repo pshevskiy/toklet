@@ -1,7 +1,10 @@
 # Authored Linux isolation candidate, 10 October 2026
 
-This candidate passed its offline checks on 11 October 2026, but native
-qualification remains unavailable after an actual setup attempt. Podman reported
+The first attempt passed its offline checks on 11 October 2026, but native
+qualification was unavailable after its actual setup attempt. A later
+[retry](2026-10-11-linux-code-isolation-retry.md) records fourteen passing
+authored modes and the enforcement adaptations; this document retains the first
+attempt's design and historical evidence. Podman reported
 successful machine start, then both image pull and container inventory failed
 with exit 125 and connection refused at its configured local socket. No image
 was pulled and no container, authored operation, dataset program, model response
@@ -15,7 +18,8 @@ That interrupted batch is excluded from timing qualification. On explicit resume
 the owned worker, transport and obsolete waiting guard were retired while the
 orchestration remained held. Checks ran only after live process inspection
 confirmed the worker and guard absent and transport defunct. A fresh uninterrupted
-three-warmup/ten-measurement batch is required.
+three-warmup/ten-measurement batch subsequently
+[completed](2026-10-11-cpu-changed.md).
 
 The [Linux child](../../tools/bench/linux_code_isolation_child.py) admits only
 Linux AArch64, little-endian LP64. A fixed classic-BPF program first checks
