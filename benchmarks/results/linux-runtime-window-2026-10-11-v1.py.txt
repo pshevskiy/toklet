@@ -1,0 +1,48 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import json,sys
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as p
+root=Path.cwd(); podman='/opt/podman/bin/podman'
+proof=root/'benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json'
+r={'format':'toklet-authored-linux-runtime-window-v1','started_utc':datetime.now(timezone.utc).isoformat(),'producer_sha256':p.digest(__file__),'idle_proof_sha256':p.digest(proof),'completed':False,'commands':[],'machine_name':'podman-machine-default','started_by_this_task':False,'restored_stopped':False}
+def command(args,seconds=120):
+ item=p.capture(args,seconds,262144);r['commands'].append(item)
+ print(json.dumps({'command':args[:6],'exit_code':item['exit_code'],'timeout':item['wall_timed_out'],'cleanup':item['cleanup_errors']}),flush=True)
+ if item.get('failure') or item['exit_code']!=0 or item['wall_timed_out'] or item['output_limit_exceeded'] or item['cleanup_errors'] or item['surviving_group_members']!=[]:raise RuntimeError('Runtime command failed: '+str(args[:6]))
+ return p.output(item)
+try:
+ p.idle(json.loads(proof.read_text()))
+ before=json.loads(command([podman,'machine','list','--format=json']));r['machine_before']=before
+ machine=next(x for x in before if x['Name']==r['machine_name'])
+ assert machine['Running'] is False and machine['Starting'] is False
+ r['initially_stopped']=True
+ r['started_by_this_task']=True
+ command([podman,'machine','start',r['machine_name']])
+ tag='docker.io/library/python:3.12.15-slim-bookworm'
+ command([podman,'pull','--arch=arm64',tag],600)
+ image=json.loads(command([podman,'image','inspect',tag]));r['image_setup']=image
+ image_id=p.normalized_id(image[0]['Id'])
+ assert image[0]['Architecture']=='arm64' and image[0]['Os']=='linux'
+ out='benchmarks/raw/2026-10-11-linux-code-isolation-probe-v1.json'
+ command([sys.executable,'tools/bench/linux_code_isolation_probe.py','--idle-proof',str(proof),'--image-id',image_id,'--python-path','/usr/local/bin/python3','--output',out],1200)
+ r['qualification_record']=out;r['qualification_sha256']=p.digest(out)
+ r['completed']=True
+except BaseException as e:
+ r['failure']={'type':type(e).__name__,'message':str(e)}
+finally:
+ if r['started_by_this_task']:
+  try:
+   running=json.loads(command([podman,'ps','--format=json']))
+   r['running_containers_before_stop']=running
+   if running:raise RuntimeError('VM retained: running containers require ownership review')
+   command([podman,'machine','stop',r['machine_name']])
+   after=json.loads(command([podman,'machine','list','--format=json']));r['machine_after']=after
+   machine=next(x for x in after if x['Name']==r['machine_name'])
+   assert machine['Running'] is False and machine['Starting'] is False
+   r['restored_stopped']=True
+  except BaseException as e:r['restoration_failure']={'type':type(e).__name__,'message':str(e)}
+ r['finished_utc']=datetime.now(timezone.utc).isoformat()
+ with Path('benchmarks/raw/2026-10-11-linux-runtime-window-v1.json').open('x') as f:json.dump(r,f,indent=2);f.write('\n')
+ print(json.dumps({'completed':r['completed'],'failure':r.get('failure'),'restored_stopped':r['restored_stopped'],'restoration_failure':r.get('restoration_failure')}),flush=True)
+raise SystemExit(0 if r['completed'] and r['restored_stopped'] else 1)

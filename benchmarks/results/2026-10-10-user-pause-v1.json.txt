@@ -1,0 +1,20 @@
+{
+  "format": "toklet-user-requested-pause-v1",
+  "paused_utc": "2026-10-10T12:28:36.587325+00:00",
+  "user_request": "can you pause work",
+  "paused": true,
+  "orchestration_pid": 17694,
+  "transport_pid": 85019,
+  "numerical_worker_pid": 85027,
+  "waiting_guard_pid": 88184,
+  "newly_stopped_pids": [
+    88184,
+    85027,
+    85019
+  ],
+  "snapshot_before": "  PID  PPID  PGID STAT COMMAND\n17694 35939 17694 Ts   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 17694 S    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload changed --output benchmarks/raw/2026-10-10-cpu-changed.json\n85027 85019 17694 R    /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n88184 35939 88184 Ss   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u artifacts/await-changed-idle-and-check-linux-v1.py\n",
+  "snapshot_after": "  PID  PPID  PGID STAT COMMAND\n17694 35939 17694 Ts   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 17694 T    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload changed --output benchmarks/raw/2026-10-10-cpu-changed.json\n85027 85019 17694 T    /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n88184 35939 88184 Ts   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u artifacts/await-changed-idle-and-check-linux-v1.py\n",
+  "measured_rows_retained": 6,
+  "timing_batch_eligible": false,
+  "resume_policy": "Do not adopt the interrupted batch or automatically resume the waiting guard. Preserve all partial evidence and run a fresh uninterrupted changed workload with three warmups and ten measured repetitions after an explicit user resume. Native/tests/builds/model work remain paused."
+}

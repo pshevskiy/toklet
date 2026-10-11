@@ -297,6 +297,23 @@ eight offline tests and exact rejection replay, with ABI, cleanup, identity and
 ordering checks. A compatible isolated executor, generated HumanEval programs,
 all 100 held-out responses, full quality and milestone gates remain pending.
 
+Linux isolation preparation, 11 October 2026 (M2.5/quality still open): the
+[authored Linux candidate](docs/experiments/2026-10-10-linux-code-isolation.md)
+adds a fixed AArch64 seccomp policy, literal container controls, bounded owned
+transport cleanup and independent policy/configuration tests. The first targeted
+execution found a reversed descriptor high-half branch; it was corrected and
+all 19 targeted tests pass. Formatting, offline locked Clippy, 76 ordinary Rust
+tests and all 81 offline benchmark tests pass after the explicitly paused
+benchmark is retired. Its six completed samples remain diagnostic; the
+interrupted batch cannot qualify timing. Podman reports successful VM start,
+but pull and inventory fail with connection refused before image/container
+admission. Follow-up inventory verifies the original stopped machine state.
+The [saved attempt](benchmarks/results/2026-10-11-linux-code-isolation-attempt-v1.json)
+binds source, actual commands/captures, checks and retirement evidence. No native
+policy, generated program, executor adoption, quality score or milestone closure
+is claimed. Astra accepted the complete task without findings after independently
+rerunning the 19 targeted tests and verifying the saved evidence and stopped VM.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

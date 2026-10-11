@@ -1,0 +1,125 @@
+{
+  "format": "toklet-authored-linux-runtime-window-v1",
+  "started_utc": "2026-10-11T06:15:24.171593+00:00",
+  "producer_sha256": "05e59b87903c545f7045c2bd1949350bb6bdd5cf2970b2061f9aa82871a118e2",
+  "idle_proof_sha256": "a89caa850a16f51a4970e2636e05ec91d0059dbaa481d828e139f24097bacb12",
+  "completed": false,
+  "commands": [
+    {
+      "command": [
+        "/opt/podman/bin/podman",
+        "machine",
+        "list",
+        "--format=json"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.03868737490847707,
+      "stdout_base64": "WwogICAgewogICAgICAgICJOYW1lIjogInBvZG1hbi1tYWNoaW5lLWRlZmF1bHQiLAogICAgICAgICJEZWZhdWx0IjogdHJ1ZSwKICAgICAgICAiQ3JlYXRlZCI6ICIyMDI2LTAxLTE1VDEyOjEyOjQyLjY2NjQ2MiswMzowMCIsCiAgICAgICAgIlJ1bm5pbmciOiBmYWxzZSwKICAgICAgICAiU3RhcnRpbmciOiBmYWxzZSwKICAgICAgICAiTGFzdFVwIjogIjIwMjYtMDMtMTVUMTU6MzI6MDIuOTk1ODI3KzAzOjAwIiwKICAgICAgICAiU3RyZWFtIjogImRlZmF1bHQiLAogICAgICAgICJWTVR5cGUiOiAiYXBwbGVodiIsCiAgICAgICAgIkNQVXMiOiA1LAogICAgICAgICJNZW1vcnkiOiAiMjE0NzQ4MzY0OCIsCiAgICAgICAgIlN3YXAiOiAiMCIsCiAgICAgICAgIkRpc2tTaXplIjogIjEwNzM3NDE4MjQwMCIsCiAgICAgICAgIlBvcnQiOiA1MTM4NywKICAgICAgICAiUmVtb3RlVXNlcm5hbWUiOiAiY29yZSIsCiAgICAgICAgIklkZW50aXR5UGF0aCI6ICIvVXNlcnMvY29sb25lci8ubG9jYWwvc2hhcmUvY29udGFpbmVycy9wb2RtYW4vbWFjaGluZS9tYWNoaW5lIiwKICAgICAgICAiVXNlck1vZGVOZXR3b3JraW5nIjogdHJ1ZQogICAgfQpd",
+      "stdout_captured_bytes": 591,
+      "stdout_captured_sha256": "e4544daec521a76fa6e29edd8dafd333a492482dedb705f1bde61cc8ea9d9332",
+      "stderr_base64": "",
+      "stderr_captured_bytes": 0,
+      "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/opt/podman/bin/podman",
+        "machine",
+        "start",
+        "podman-machine-default"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": true,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 11.789647083962336,
+      "stdout_base64": "U3RhcnRpbmcgbWFjaGluZSAicG9kbWFuLW1hY2hpbmUtZGVmYXVsdCIKClRoaXMgbWFjaGluZSBpcyBjdXJyZW50bHkgY29uZmlndXJlZCBpbiByb290bGVzcyBtb2RlLiBJZiB5b3VyIGNvbnRhaW5lcnMKcmVxdWlyZSByb290IHBlcm1pc3Npb25zIChlLmcuIHBvcnRzIDwgMTAyNCksIG9yIGlmIHlvdSBydW4gaW50byBjb21wYXRpYmlsaXR5Cmlzc3VlcyB3aXRoIG5vbi1wb2RtYW4gY2xpZW50cywgeW91IGNhbiBzd2l0Y2ggdXNpbmcgdGhlIGZvbGxvd2luZyBjb21tYW5kOgoKCXBvZG1hbiBtYWNoaW5lIHNldCAtLXJvb3RmdWwKCkFQSSBmb3J3YXJkaW5nIGxpc3RlbmluZyBvbjogL3Zhci9ydW4vZG9ja2VyLnNvY2sKRG9ja2VyIEFQSSBjbGllbnRzIGRlZmF1bHQgdG8gdGhpcyBhZGRyZXNzLiBZb3UgZG8gbm90IG5lZWQgdG8gc2V0IERPQ0tFUl9IT1NULgoKTWFjaGluZSAicG9kbWFuLW1hY2hpbmUtZGVmYXVsdCIgc3RhcnRlZCBzdWNjZXNzZnVsbHkK",
+      "stdout_captured_bytes": 489,
+      "stdout_captured_sha256": "7725db9dfa09e0c222990760c25d1eca0a3c3626917cde1f7bcbdfb81193c2b5",
+      "stderr_base64": "",
+      "stderr_captured_bytes": 0,
+      "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/opt/podman/bin/podman",
+        "pull",
+        "--arch=arm64",
+        "docker.io/library/python:3.12.15-slim-bookworm"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 125,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.03979504096787423,
+      "stdout_base64": "",
+      "stdout_captured_bytes": 0,
+      "stdout_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_base64": "Q2Fubm90IGNvbm5lY3QgdG8gUG9kbWFuLiBQbGVhc2UgdmVyaWZ5IHlvdXIgY29ubmVjdGlvbiB0byB0aGUgTGludXggc3lzdGVtIHVzaW5nIGBwb2RtYW4gc3lzdGVtIGNvbm5lY3Rpb24gbGlzdGAsIG9yIHRyeSBgcG9kbWFuIG1hY2hpbmUgaW5pdGAgYW5kIGBwb2RtYW4gbWFjaGluZSBzdGFydGAgdG8gbWFuYWdlIGEgbmV3IExpbnV4IFZNCkVycm9yOiB1bmFibGUgdG8gY29ubmVjdCB0byBQb2RtYW4gc29ja2V0OiBmYWlsZWQgdG8gY29ubmVjdDogZGlhbCB0Y3AgMTI3LjAuMC4xOjUxMzg3OiBjb25uZWN0OiBjb25uZWN0aW9uIHJlZnVzZWQK",
+      "stderr_captured_bytes": 312,
+      "stderr_captured_sha256": "342eaa54ee194b06c757ec43f79cb08c0730ecbfec8957f3a7239e74dac8fb0d"
+    },
+    {
+      "command": [
+        "/opt/podman/bin/podman",
+        "ps",
+        "--format=json"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 125,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.03608970798086375,
+      "stdout_base64": "",
+      "stdout_captured_bytes": 0,
+      "stdout_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_base64": "Q2Fubm90IGNvbm5lY3QgdG8gUG9kbWFuLiBQbGVhc2UgdmVyaWZ5IHlvdXIgY29ubmVjdGlvbiB0byB0aGUgTGludXggc3lzdGVtIHVzaW5nIGBwb2RtYW4gc3lzdGVtIGNvbm5lY3Rpb24gbGlzdGAsIG9yIHRyeSBgcG9kbWFuIG1hY2hpbmUgaW5pdGAgYW5kIGBwb2RtYW4gbWFjaGluZSBzdGFydGAgdG8gbWFuYWdlIGEgbmV3IExpbnV4IFZNCkVycm9yOiB1bmFibGUgdG8gY29ubmVjdCB0byBQb2RtYW4gc29ja2V0OiBmYWlsZWQgdG8gY29ubmVjdDogZGlhbCB0Y3AgMTI3LjAuMC4xOjUxMzg3OiBjb25uZWN0OiBjb25uZWN0aW9uIHJlZnVzZWQK",
+      "stderr_captured_bytes": 312,
+      "stderr_captured_sha256": "342eaa54ee194b06c757ec43f79cb08c0730ecbfec8957f3a7239e74dac8fb0d"
+    }
+  ],
+  "machine_name": "podman-machine-default",
+  "started_by_this_task": true,
+  "restored_stopped": false,
+  "machine_before": [
+    {
+      "Name": "podman-machine-default",
+      "Default": true,
+      "Created": "2026-01-15T12:12:42.666462+03:00",
+      "Running": false,
+      "Starting": false,
+      "LastUp": "2026-03-15T15:32:02.995827+03:00",
+      "Stream": "default",
+      "VMType": "applehv",
+      "CPUs": 5,
+      "Memory": "2147483648",
+      "Swap": "0",
+      "DiskSize": "107374182400",
+      "Port": 51387,
+      "RemoteUsername": "core",
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "UserModeNetworking": true
+    }
+  ],
+  "initially_stopped": true,
+  "failure": {
+    "type": "RuntimeError",
+    "message": "Runtime command failed: ['/opt/podman/bin/podman', 'pull', '--arch=arm64', 'docker.io/library/python:3.12.15-slim-bookworm']"
+  },
+  "restoration_failure": {
+    "type": "RuntimeError",
+    "message": "Runtime command failed: ['/opt/podman/bin/podman', 'ps', '--format=json']"
+  },
+  "finished_utc": "2026-10-11T06:15:36.086059+00:00"
+}

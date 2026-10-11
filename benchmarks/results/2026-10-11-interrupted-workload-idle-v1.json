@@ -1,0 +1,17 @@
+{
+  "format": "toklet-user-resume-interrupted-idle-v1",
+  "interrupted_batch_eligible": false,
+  "retired_pids": [
+    88184,
+    85027,
+    85019
+  ],
+  "held_orchestration_pid": 17694,
+  "defunct_transport_pid": 85019,
+  "exited_numerical_worker_pid": 85027,
+  "retirement_sha256": "a2f36cce966df3591e1e23f2d034f73465606974f85c8db3d2473d76efc41256",
+  "pause_checkpoint_sha256": "6637380bcb8ebda86f9c46b8377eb1478ad6777aa2a8fea385b4bc721b841cc4",
+  "idle_verified_utc": "2026-10-11T06:14:34.036145+00:00",
+  "scope": "Interrupted timing batch excluded; exact owned worker and guard absent and transport defunct beneath held orchestration. Offline/native checks only before a fresh timing batch.",
+  "snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n"
+}

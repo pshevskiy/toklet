@@ -1,0 +1,14 @@
+{
+  "format": "toklet-user-resume-interrupted-retirement-v1",
+  "utc": "2026-10-11T06:13:45.290072+00:00",
+  "user_request": "continue",
+  "snapshot_before": "85019 17694 17694 T    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload changed --output benchmarks/raw/2026-10-10-cpu-changed.json\n85027 85019 17694 T    /Users/coloner/work/rust/toklet/target/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct\n88184 35939 88184 Ts   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -u artifacts/await-changed-idle-and-check-linux-v1.py\n",
+  "retired_pids": [
+    88184,
+    85027,
+    85019
+  ],
+  "held_orchestration_pid": 17694,
+  "interrupted_batch_eligible": false,
+  "policy": "Retire stopped interrupted worker, transport, and obsolete guard. Preserve partial evidence. Fresh benchmark required."
+}

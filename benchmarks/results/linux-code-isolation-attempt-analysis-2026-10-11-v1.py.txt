@@ -1,0 +1,36 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import sys,json,base64,re
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as p
+root=Path.cwd()
+checks_name='benchmarks/raw/2026-10-11-linux-offline-checks-v2.json'
+runtime_name='benchmarks/raw/2026-10-11-linux-runtime-window-v1.json'
+checks=json.loads(Path(checks_name).read_text());runtime=json.loads(Path(runtime_name).read_text())
+assert len(checks)==4
+for c in checks:
+ assert c['exit_code']==0 and not c.get('failure') and not c['wall_timed_out'] and not c['output_limit_exceeded']
+ assert c['cleanup_errors']==[] and c['surviving_group_members']==[]
+ for stream in ['stdout','stderr']:
+  data=base64.b64decode(c[stream+'_base64'],validate=True)
+  assert len(data)==c[stream+'_captured_bytes'] and p.hashlib.sha256(data).hexdigest()==c[stream+'_captured_sha256']
+text=lambda c:base64.b64decode(c['stdout_base64']).decode()+base64.b64decode(c['stderr_base64']).decode()
+assert 'Ran 81 tests' in text(checks[3]) and '\nOK\n' in text(checks[3])
+assert sum(map(int,re.findall(r'test result: ok\. (\d+) passed',text(checks[2]))))==76
+assert runtime['completed'] is False and len(runtime['commands'])==4
+assert [c['exit_code'] for c in runtime['commands']]==[0,0,125,125]
+for c in runtime['commands'][2:]:assert 'connect: connection refused' in text(c)
+final=p.capture(['/opt/podman/bin/podman','machine','list','--format=json'],20,262144)
+assert final['exit_code']==0 and final['cleanup_errors']==[] and final['surviving_group_members']==[]
+machine=next(x for x in json.loads(p.output(final)) if x['Name']=='podman-machine-default')
+assert machine['Running'] is False and machine['Starting'] is False
+proof_name='benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json';p.idle(json.loads(Path(proof_name).read_text()))
+sources=['tools/bench/linux_code_isolation_child.py','tools/bench/linux_code_isolation_probe.py','tools/bench/test_linux_code_isolation.py','docs/experiments/2026-10-10-linux-code-isolation.md']
+r={'format':'toklet-authored-linux-code-isolation-attempt-v1','analyzed_utc':datetime.now(timezone.utc).isoformat(),'completed_checks':True,'native_qualification_completed':False,'failure_stage':'Podman connection before image pull/container admission','authored_operations':0,'dataset_programs':0,'generated_programs':0,'executor_adopted':False,'ordinary_rust_tests':76,'offline_benchmark_tests':81,'source_sha256':{s:p.digest(s) for s in sources},'idle_proof_sha256':p.digest(proof_name),'final_machine_inventory':final,'original_stopped_state_verified':True,'producer_sha256':p.digest(__file__),'evidence_sha256':{s:p.digest(s) for s in [checks_name,runtime_name,proof_name,'artifacts/2026-10-10-user-pause-v1.json','artifacts/2026-10-11-user-resume-retirement-v1.json']}}
+for name in [checks_name,runtime_name]:
+ target=Path(name.replace('benchmarks/raw/','benchmarks/results/'))
+ with target.open('xb') as f:f.write(Path(name).read_bytes())
+with Path('benchmarks/results/2026-10-11-linux-code-isolation-attempt-v1.json').open('x') as f:json.dump(r,f,indent=2);f.write('\n')
+for src in [Path(__file__),Path('artifacts/linux-runtime-window-2026-10-11-v1.py'),Path('artifacts/2026-10-10-user-pause-v1.json'),Path('artifacts/2026-10-11-user-resume-retirement-v1.json')]:
+ with Path('benchmarks/results',src.name+'.txt').open('xb') as f:f.write(src.read_bytes())
+print(json.dumps({k:r[k] for k in ['completed_checks','native_qualification_completed','ordinary_rust_tests','offline_benchmark_tests','original_stopped_state_verified']}))
