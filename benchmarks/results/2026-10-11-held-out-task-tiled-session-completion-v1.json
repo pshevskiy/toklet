@@ -1,0 +1,13 @@
+{
+  "format": "toklet-observed-session-completion-v1",
+  "session_id": 94680,
+  "observed_complete_utc": "2026-10-11T17:01:34.299182+00:00",
+  "origin": "Observed write_stdin completion for session94680; exact tool result retained",
+  "actual_tool_result": {
+    "chunk_id": "a86c94",
+    "wall_time_seconds": 1.8083e-05,
+    "exit_code": 0,
+    "original_token_count": 12,
+    "output": "Full tiled task collection completed naturally\n"
+  }
+}

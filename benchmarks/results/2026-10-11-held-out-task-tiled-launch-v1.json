@@ -1,0 +1,60 @@
+{
+  "format": "toklet-held-out-task-collection-launch-v1",
+  "engine_revision": "032499e98674f846fbb6ca668f03996cd1f4425c",
+  "working_tree_clean": true,
+  "launch_utc": "2026-10-11T16:01:43.571432+00:00",
+  "launcher_pid": 4303,
+  "producer_sha256": "c3dee514c01ac257d11569292216e853ed2542923f744b0cc81b264ece8cb806",
+  "checks_sha256": "5df1bfd8ab0086228870e7302036ca394f2d492df84bdc6cb2ebf85977e06c43",
+  "collector_sha256": "7dbfcaffc1676273ef0cf9238034dad18a0d227724bd97625fcb966f140de5f0",
+  "qualified_cli_receipt_sha256": "8d2a633ed95c488f3bbba5de186aa3e3418fa75df51a170af383e31d98ae2cc8",
+  "binary_sha256": "8e1be695229fb4a46e49725f06050b3296f6fb398e718fca8567bf0c6b400b43",
+  "admission": {
+    "idle_receipt_sha256": "cb85b39e1f6eeb816096999710a30c9a696d0b2ebdff94ee4b848d86b3aef149",
+    "owned_absence_query": {
+      "command": [
+        "ps",
+        "-p",
+        "91589,91598,91610",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "held_original_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n",
+    "stopped_machine": {
+      "Name": "podman-machine-default",
+      "Default": true,
+      "Created": "2026-01-15T12:12:42.666462+03:00",
+      "Running": false,
+      "Starting": false,
+      "LastUp": "2026-10-11T18:56:18.180254+03:00",
+      "Stream": "default",
+      "VMType": "applehv",
+      "CPUs": 5,
+      "Memory": "2147483648",
+      "Swap": "0",
+      "DiskSize": "107374182400",
+      "Port": 51387,
+      "RemoteUsername": "core",
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "UserModeNetworking": true
+    }
+  },
+  "completed_scalar_grading_idle_sha256": "a7612744a01e6cca2106bf82f715f4f77001da8451271618cb2a7173a39d502a",
+  "command": [
+    "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+    "tools/bench/held_out_tasks.py",
+    "--output",
+    "benchmarks/raw/2026-10-11-held-out-task-tiled-v1.json",
+    "--idle-proof",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-11-held-out-task-scalar-idle-v1.json",
+    "--cli-qualification",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json",
+    "--cpu-projection",
+    "tiled"
+  ],
+  "scope": "All100 frozen tiled responses, no generated code execution or pass-rate. No concurrent model/VM/test/build work during collection; only bounded observations and inactive source preparation."
+}

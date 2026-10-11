@@ -1,0 +1,44 @@
+"""Launch all frozen tiled task requests after the checked collector commit."""
+from datetime import datetime,timezone
+from pathlib import Path
+import json,os,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import held_out_tasks as collector,prepare,cpu_cli
+import linux_code_isolation_probe as boundary
+ROOT=Path.cwd()
+assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+checks_path=ROOT/'benchmarks/results/2026-10-11-held-out-task-collector-checks-v1.json'
+checks=prepare.load_json(checks_path)
+assert checks['completed'] and len(checks['checks'])==4
+for check in checks['checks']:
+ assert check['exit_code']==0 and check['cleanup_errors']==[] and check['timed_out'] is False
+for name,expected in checks['source_sha256'].items():assert prepare.digest(ROOT/name)==expected,name
+idle_path=ROOT/'benchmarks/results/2026-10-11-held-out-task-scalar-idle-v1.json'
+admission=collector.idle(idle_path)
+grading_idle_path=ROOT/'benchmarks/results/2026-10-11-held-out-task-scalar-grading-v1-idle.json'
+grading_idle=json.loads(grading_idle_path.read_text())
+assert grading_idle['format']=='toklet-held-out-task-grading-natural-exit-idle-v1' and grading_idle['all_owned_processes_absent'] is True
+absent=subprocess.run(['ps','-p',','.join(map(str,grading_idle['exited_owned_pids'])),'-o','pid='],capture_output=True,text=True)
+assert absent.returncode==1 and not absent.stdout and not absent.stderr
+assert all(boundary.live_group_members(pid)==[] for pid in (2394,2444))
+for files in grading_idle['end_verified'].values():
+ for name,sha in files.items():assert prepare.digest(ROOT/name)==sha,name
+qualification=ROOT/'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json'
+binary,_=cpu_cli.qualified_cli(qualification)
+output=ROOT/'benchmarks/raw/2026-10-11-held-out-task-tiled-v1.json'
+receipt=ROOT/'benchmarks/raw/2026-10-11-held-out-task-tiled-launch-v1.json'
+assert not receipt.exists() and all(not Path(str(output)+suffix).exists() for suffix in ('','.native.jsonl','.stderr.txt'))
+command=[sys.executable,'tools/bench/held_out_tasks.py','--output',str(output.relative_to(ROOT)),
+         '--idle-proof',str(idle_path),'--cli-qualification',str(qualification),'--cpu-projection','tiled']
+record={'format':'toklet-held-out-task-collection-launch-v1',
+        'engine_revision':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+        'working_tree_clean':True,'launch_utc':datetime.now(timezone.utc).isoformat(),'launcher_pid':os.getpid(),
+        'producer_sha256':prepare.digest(Path(__file__)),'checks_sha256':prepare.digest(checks_path),
+        'collector_sha256':prepare.digest(Path(collector.__file__)),
+        'qualified_cli_receipt_sha256':prepare.digest(qualification),'binary_sha256':prepare.digest(binary),
+        'admission':admission,'completed_scalar_grading_idle_sha256':prepare.digest(grading_idle_path),'command':command,
+        'scope':'All100 frozen tiled responses, no generated code execution or pass-rate. No concurrent model/VM/test/build work during collection; only bounded observations and inactive source preparation.'}
+with receipt.open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
+print(json.dumps({'launch_utc':record['launch_utc'],'launcher_pid':record['launcher_pid'],'engine_revision':record['engine_revision']}),flush=True)
+subprocess.run(command,check=True)
+print('Full tiled task collection completed naturally',flush=True)

@@ -174,14 +174,14 @@ now completes with mean loss 2.883725 nats/token and verified natural exit.
 The [full tiled comparison](docs/experiments/2026-10-11-held-out-tiled-loss.md)
 now matches all 10,000 complete-logit hashes and losses exactly, with zero mean
 NLL increase. The scalar task baseline below is now graded; tiled task
-collection/grading, the quality comparison and remaining candidate workloads
+grading, the quality comparison and remaining candidate workloads
 remain pending.
 
 The [frozen task collector](docs/experiments/2026-10-10-task-response-collector.md)
 preserves prepared IDs, finalized text and pending EOS semantics, and supplies
 the exact text scorers and literal HumanEval program composition. Four authored
 scalar/tiled requests pass with matching outputs. The later scalar grading
-report records actual held-out execution; tiled collection/grading remains pending.
+report records actual held-out execution; tiled grading remains pending.
 The [full-task collector preparation](docs/experiments/2026-10-11-held-out-task-collector.md)
 now handles 100 independent requests, including empty immediate EOS, with
 phase watchdogs and owned descendant cleanup. Eleven targeted checks and all
@@ -219,5 +219,10 @@ resolves all 100 literal outcomes: 2/100 overall (0/40 code, 1/30 prose, 1/30
 continuation), with no infrastructure ambiguity. All forty code outcomes are
 SyntaxErrors under unchanged literal composition. The owned Linux window removed
 every container and restored the stopped VM; independent replay confirms the
-score. Actual tiled task collection/grading and the unchanged quality comparison
-remain open.
+score. Tiled task grading and the unchanged quality comparison remain open.
+
+The [full tiled task collection](docs/experiments/2026-10-11-held-out-task-tiled.md)
+now completes all 100 frozen responses with natural exit and exact journal
+replay. Its conservative joint physical peak is 2,150,484,680 bytes below 6 GiB.
+Literal grading and the task-quality comparison follow separately; candidate
+performance/application acceptance remains open and scalar stays default.

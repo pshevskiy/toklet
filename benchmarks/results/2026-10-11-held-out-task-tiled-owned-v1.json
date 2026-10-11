@@ -1,0 +1,11 @@
+{
+  "format": "toklet-held-out-task-owned-v1",
+  "session_id": 94680,
+  "observed_utc": "2026-10-11T16:02:11.889729+00:00",
+  "launcher_pid": 4303,
+  "driver_pid": 4314,
+  "numerical_worker_pid": 4328,
+  "snapshot": " 4303 35939  4303 Ss   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/launch-held-out-task-tiled-2026-10-11-v1.py\n 4314  4303  4303 S    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/held_out_tasks.py --output benchmarks/raw/2026-10-11-held-out-task-tiled-v1.json --idle-proof /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-11-held-out-task-scalar-idle-v1.json --cli-qualification /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json --cpu-projection tiled\n 4328  4314  4328 Rs   /Users/coloner/work/rust/toklet/artifacts/cpu-tiled-cli-v1/release/toklet --model /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct --interactive --json --context-capacity 2048 --prefill-chunk 128 --cpu-projection tiled\n",
+  "launch_receipt_sha256": "016dc2decd7c391bb65c4af3e73787967dd09d38b7f417e34f47b4e4b968574f",
+  "producer_sha256": "c618c5e4afa4e43868ee906821460da7acbd1b97a7d3c15a0ad8acd827e2dfe2"
+}

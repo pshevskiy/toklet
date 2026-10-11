@@ -486,6 +486,19 @@ findings. Tiled task collection,
 grading and the unchanged maximum two-percentage-point drop gate remain open.
 This does not close M2.5 or qualify candidate performance/application behavior.
 
+Full tiled task response collection, 11 October 2026: the
+[completed collection](docs/experiments/2026-10-11-held-out-task-tiled.md)
+retains all 100 independent frozen responses, 6,393 visible tokens and 6,594
+native events, with 68 EOS and 32 output-limit stops and no empty response.
+The full journal and provenance replay passes. Actual native session 94680
+exits naturally; all owned PIDs/groups are absent, the VM stays stopped and
+protected endpoints remain unchanged. Conservative joint physical peak is
+2,150,484,680 bytes below 6 GiB. No model, VM, test or build ran concurrently.
+Astra independently reproduces the analysis byte for byte and accepts the
+complete evidence and report without findings. No tiled task score, task-quality comparison
+or retention is claimed; literal grading and remaining candidate workload/
+application gates follow separately. Scalar stays default.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

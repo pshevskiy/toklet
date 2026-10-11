@@ -1,0 +1,23 @@
+"""Bind only the active tiled collection's owned process graph."""
+from datetime import datetime,timezone
+from pathlib import Path
+import hashlib,json,subprocess
+pids=[4303,4314,4328]
+command=['ps','-p',','.join(map(str,pids)),'-o','pid=,ppid=,pgid=,stat=,command=']
+p=subprocess.run(command,text=True,capture_output=True)
+assert p.returncode==0 and not p.stderr
+rows={int(row[0]):row for line in p.stdout.splitlines() if len(row:=line.split(None,4))==5}
+assert set(rows)==set(pids)
+assert [(int(rows[pid][1]),int(rows[pid][2])) for pid in pids]==[(35939,4303),(4303,4303),(4314,4328)]
+assert rows[4303][4].endswith('artifacts/launch-held-out-task-tiled-2026-10-11-v1.py')
+assert 'tools/bench/held_out_tasks.py --output benchmarks/raw/2026-10-11-held-out-task-tiled-v1.json' in rows[4314][4]
+root=Path.cwd()
+expected=str(root/'artifacts/cpu-tiled-cli-v1/release/toklet')+' --model '+str(root/'models/Qwen2.5-0.5B-Instruct')+' --interactive --json --context-capacity 2048 --prefill-chunk 128 --cpu-projection tiled'
+assert rows[4328][4]==expected
+launch=Path('benchmarks/raw/2026-10-11-held-out-task-tiled-launch-v1.json')
+record={'format':'toklet-held-out-task-owned-v1','session_id':94680,'observed_utc':datetime.now(timezone.utc).isoformat(),
+        'launcher_pid':4303,'driver_pid':4314,'numerical_worker_pid':4328,'snapshot':p.stdout,
+        'launch_receipt_sha256':hashlib.sha256(launch.read_bytes()).hexdigest(),
+        'producer_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+with Path('artifacts/2026-10-11-held-out-task-tiled-owned-v1.json').open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
+print(json.dumps(record))
