@@ -1,0 +1,173 @@
+"""Draft completed-run replay; do not execute before scalar loss exits."""
+from pathlib import Path
+import hashlib,json,math,struct,sys,subprocess
+from datetime import datetime
+sys.path.insert(0,'tools/bench')
+import quality
+
+ROOT=Path.cwd()
+PREFIX='2026-10-11-held-out-scalar-loss'
+REVISION='7bc7e6376ea5224964d25c35aa5f7930d09694eb'
+CONTRACT_SHA='3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66'
+CORPUS_SHA='f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb'
+
+
+def digest(path):
+    with Path(path).open('rb') as stream:
+        return hashlib.file_digest(stream,'sha256').hexdigest()
+
+
+def canonical(value):
+    return json.dumps(value,sort_keys=True,allow_nan=False)
+
+
+def replay(record_path, native_path, completion_path, idle_path):
+    record=json.loads(Path(record_path).read_text())
+    completion=json.loads(Path(completion_path).read_text())
+    idle=json.loads(Path(idle_path).read_text())
+    launch_path=ROOT/'benchmarks/raw'/f'{PREFIX}-launch-v1.json'
+    owned_path=ROOT/'artifacts'/f'{PREFIX}-owned-v1.json'
+    launch=json.loads(launch_path.read_text())
+    owned=json.loads(owned_path.read_text())
+    assert launch['format']=='toklet-full-scalar-loss-launch-v1'
+    assert owned['format']=='toklet-full-scalar-loss-owned-v1'
+    assert launch['engine_revision']==record['engine_revision']==REVISION
+    assert launch['working_tree_clean'] is True and record['working_tree_dirty'] is False
+    assert [owned[key] for key in ('launcher_pid','driver_pid','numerical_worker_pid')]==[71230,71239,71731]
+    assert launch['launcher_pid']==71230 and owned['session_id']==completion['session_id']==56539
+    rows={int(row[0]):row for line in owned['snapshot'].splitlines() if len(row:=line.split(None,4))==5}
+    assert set(rows)=={71230,71239,71731}
+    assert [(int(rows[pid][1]),int(rows[pid][2])) for pid in (71230,71239,71731)]==[(35939,71230),(71230,71230),(71239,71731)]
+    assert rows[71230][4].endswith('artifacts/launch-held-out-scalar-loss-2026-10-11-v1.py')
+    assert 'tools/bench/quality.py --output benchmarks/raw/2026-10-11-held-out-scalar-loss-v1.json' in rows[71239][4]
+    assert rows[71731][4]=='artifacts/held-out-scalar-loss-v1/release/examples/quality_bench '+str(ROOT/'models/Qwen2.5-0.5B-Instruct')+' '+str(ROOT/'benchmarks/contract-v1/held_out_loss.u32le')+' scalar'
+    assert owned['producer_sha256']==digest(ROOT/'artifacts/observe-held-out-scalar-loss-owned-v1.py')
+    assert launch['producer_sha256']==digest(ROOT/'artifacts/launch-held-out-scalar-loss-2026-10-11-v1.py')
+    assert launch['qualified_cpu_receipt_sha256']==record['numerical_qualification']['sha256']=='2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc'
+    assert owned['launch_receipt_sha256']==digest(launch_path)
+    assert idle['launch_receipt_sha256']==digest(launch_path) and idle['owned_receipt_sha256']==digest(owned_path)
+    assert idle['exited_owned_pids']==[71230,71239,71731] and idle['owned_group_members']=={'71230':[], '71731':[]}
+    assert idle['record_sha256']==digest(record_path) and idle['native_sha256']==digest(native_path)
+    assert completion['origin']=='Observed write_stdin completion for session56539; exact tool result retained'
+    assert completion['actual_tool_result']['output'].splitlines()[-1]=='Full scalar loss driver completed naturally'
+    assert (datetime.fromisoformat(launch['launch_utc']) < datetime.fromisoformat(owned['observed_utc'])
+            < datetime.fromisoformat(completion['observed_complete_utc'])
+            <= datetime.fromisoformat(idle['idle_verified_utc']))
+    assert completion['actual_tool_result']['exit_code']==0
+    assert completion['actual_tool_result'].get('session_id') is None
+    assert idle['all_owned_processes_absent'] is True
+    assert idle['session_completion_sha256']==digest(completion_path)
+    out=ROOT/'benchmarks/results'
+    expected_saved={str((out/name).relative_to(ROOT)) for name in [
+        f'{PREFIX}-v1.json', f'{PREFIX}-v1.json.native.jsonl', f'{PREFIX}-v1.json.stderr.txt',
+        f'{PREFIX}-launch-v1.json', f'{PREFIX}-session-completion-v1.json', f'{PREFIX}-owned-v1.json',
+        f'{PREFIX}-launch-v1.py.txt', f'{PREFIX}-owned-v1.py.txt', f'{PREFIX}-driver-v1.py.txt',
+        f'{PREFIX}-worker-v1.rs.txt', f'{PREFIX}-idle-v1.py.txt']}
+    assert set(idle['saved_result_sha256'])==expected_saved
+    for path,sha in idle['saved_result_sha256'].items():assert digest(ROOT/path)==sha,path
+    assert digest(out/f'{PREFIX}-idle-v1.py.txt')==idle['producer_sha256']
+    assert digest(out/f'{PREFIX}-launch-v1.py.txt')==launch['producer_sha256']
+    assert digest(out/f'{PREFIX}-owned-v1.py.txt')==owned['producer_sha256']
+    assert digest(out/f'{PREFIX}-driver-v1.py.txt')==launch['driver_sha256']
+    assert digest(out/f'{PREFIX}-worker-v1.rs.txt')==record['source_sha256']['examples/quality_bench.rs']
+    app_path='benchmarks/results/2026-10-11-application-scalar-idle-v1.json'
+    app=json.loads(subprocess.check_output(['git','show',REVISION+':'+app_path]))
+    assert canonical(idle['end_verified'])==canonical(app['end_verified'])
+    for files in idle['end_verified'].values():
+        for path,sha in files.items():assert digest(ROOT/path)==sha,path
+    assert record['format']==quality.FORMAT and record['completed'] is True
+    assert record['qualification']=='held_out_10000' and len(record['runs'])==1
+    assert record['context_policy']==quality.POLICY
+    run=record['runs'][0]
+    assert run['role']=='scalar.held_out' and run['passed'] is True
+    assert run['exit_code']==0 and run['watchdog_killed'] is False
+    checks=record['checks']
+    build=Path('artifacts/held-out-scalar-loss-v1')
+    expected_checks=[['cargo','fmt','--check'],
+        ['cargo','clippy','--locked','--offline','--all-targets','--','-D','warnings'],
+        ['cargo','test','--locked','--offline'],
+        ['cargo','test','--locked','--offline','--example','quality_bench'],
+        ['cp','-R',str(ROOT/'artifacts/cpu-tiled-cli-v1'),str(build)],
+        ['env','CARGO_TARGET_DIR='+str(ROOT/build),'cargo','build','--locked','--offline','--release','--example','quality_bench','-j','2']]
+    assert [check['command'] for check in checks]==expected_checks
+    assert launch['check_target_directory']==str(ROOT/'artifacts/cpu-tiled-cli-v1')
+    expected_command=[launch['command'][0],'tools/bench/quality.py','--output',str(Path(record_path).relative_to(ROOT)),
+                      '--build-dir',str(build),'--cpu-qualification',str(ROOT/'benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json'),'--cpu-projection','scalar']
+    assert launch['command']==expected_command
+    assert record['binary_path']==str(build/'release/examples/quality_bench')
+    assert run['command']==[record['binary_path'],str(ROOT/'models/Qwen2.5-0.5B-Instruct'),
+                            str(ROOT/'benchmarks/contract-v1/held_out_loss.u32le'),'scalar']
+    for check in checks:
+        assert check['exit_code']==0 and not check.get('failure')
+        assert check['cleanup_errors']==[] and check['timed_out'] is False
+    corpus=ROOT/'benchmarks/contract-v1/held_out_loss.u32le'
+    manifest_path=ROOT/'benchmarks/contract-v1/manifest.json'
+    assert digest(manifest_path)==record['contract_manifest_sha256']==CONTRACT_SHA
+    manifest=json.loads(manifest_path.read_text())
+    assert manifest['arrays']['held_out_loss']=={'count':10001,'dtype':'u32le','file':'held_out_loss.u32le','sha256':CORPUS_SHA}
+    assert manifest['quality']['scored_loss_tokens']==10000 and manifest['quality']['loss_block_targets']==1024
+    assert digest(corpus)==CORPUS_SHA
+    raw=corpus.read_bytes()
+    assert len(raw)==10001*4
+    tokens=list(struct.unpack('<10001I',raw))
+    mean=quality.validate_run(run,tokens,'scalar',digest(corpus))
+    assert mean==run['mean_negative_log_likelihood']
+    expected=[run['ready']]
+    for index,event in enumerate(run['losses']):
+        expected.append(event)
+        if (index+1)%1024==0 or index+1==10000:
+            expected.append(run['blocks'][index//1024])
+    expected.append(run['done'])
+    inner_sha=hashlib.sha256()
+    with Path(native_path).open() as stream:
+        for count,wrapper_line in enumerate(stream,1):
+            wrapper=json.loads(wrapper_line)
+            assert set(wrapper)=={'role','line'} and wrapper['role']==run['role']
+            line=wrapper['line']
+            assert isinstance(line,str) and line.endswith('\n') and len(line.encode())<=65536
+            assert count<=len(expected)
+            assert canonical(json.loads(line))==canonical(expected[count-1])
+            inner_sha.update(line.encode())
+    assert count==len(expected)==10012
+    assert inner_sha.hexdigest()==run['stdout_sha256']
+    assert digest(native_path)==record['native_raw_sha256']
+    stderr_path=Path(str(record_path)+'.stderr.txt')
+    assert stderr_path.read_bytes()==b'' and digest(stderr_path)==record['stderr_sha256']
+    tree=subprocess.check_output(['git','ls-tree','-r','--name-only',REVISION,'--','src','Cargo.toml','Cargo.lock','examples/quality_bench.rs'],text=True).splitlines()
+    assert set(record['source_sha256'])==set(tree)
+    assert set(record['helper_sha256'])=={'tools/bench/cpu.py','tools/bench/mlx_baseline.py','tools/bench/prepare.py','tools/bench/quality.py'}
+    for name,sha in {**record['source_sha256'],**record['helper_sha256']}.items():
+        frozen=subprocess.check_output(['git','show',REVISION+':'+name])
+        assert hashlib.sha256(frozen).hexdigest()==sha,name
+        assert digest(ROOT/name)==sha,name
+    assert digest(record['binary_path'])==record['binary_sha256']
+    assert record['helper_sha256']['tools/bench/quality.py']==launch['driver_sha256']=='7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d'
+    frozen_sources=json.loads(subprocess.check_output(['git','show',REVISION+':benchmarks/sources.json']))
+    assert canonical(record['model'])==canonical(frozen_sources['model'])
+    blocks=[]
+    for block in run['blocks']:
+        losses=run['losses'][block['target_start']:block['target_end']]
+        total=math.fsum(row['negative_log_likelihood'] for row in losses)
+        assert math.isclose(total,block['total_negative_log_likelihood'],rel_tol=1e-13,abs_tol=1e-10)
+        blocks.append({'block_index':block['block_index'],'target_start':block['target_start'],
+                       'target_end':block['target_end'],'scored_targets':len(losses),
+                       'evaluated_tokens':block['evaluated_tokens'],'pending_tokens':block['pending_tokens'],
+                       'total_negative_log_likelihood':total,'mean_negative_log_likelihood':total/len(losses)})
+    return {'format':'toklet-full-scalar-loss-replay-v1','scope':'Unquantized scalar held-out loss baseline only; not task pass-rate, full quality-suite or milestone acceptance.',
+            'engine_revision':record['engine_revision'],'scored_targets':10000,'context_policy':record['context_policy'],
+            'mean_negative_log_likelihood':mean,'total_negative_log_likelihood':math.fsum(row['negative_log_likelihood'] for row in run['losses']),
+            'physical_process_charge_peak_bytes':run['physical_process_charge_peak_bytes'],
+            'memory_admitted_bytes':run['ready']['memory_admitted_bytes'],'blocks':blocks,
+            'record_sha256':digest(record_path),'native_sha256':digest(native_path),
+            'completion_sha256':digest(completion_path),'idle_sha256':digest(idle_path),
+            'verified_native_event_count':count,'source_sha256':record['source_sha256'],
+            'helper_sha256':record['helper_sha256'],'binary_sha256':record['binary_sha256']}
+
+
+if __name__=='__main__':
+    raw=ROOT/'benchmarks/raw'/f'{PREFIX}-v1.json'
+    summary=replay(raw,Path(str(raw)+'.native.jsonl'),
+                   ROOT/'artifacts'/f'{PREFIX}-session-completion-v1.json',
+                   ROOT/'benchmarks/results'/f'{PREFIX}-idle-v1.json')
+    out=ROOT/'benchmarks/results'/f'{PREFIX}-analysis-v1.json'
+    with out.open('x') as stream:json.dump(summary,stream,indent=2,allow_nan=False);stream.write('\n')

@@ -1,0 +1,20 @@
+"""Observe only the currently owned full scalar loss process chain."""
+from datetime import datetime,timezone
+from pathlib import Path
+import hashlib,json,subprocess
+pids=[71230,71239,71731]
+command=['ps','-p',','.join(map(str,pids)),'-o','pid=,ppid=,pgid=,stat=,command=']
+p=subprocess.run(command,text=True,capture_output=True)
+assert p.returncode==0 and not p.stderr
+rows={int(row[0]):row for line in p.stdout.splitlines() if len(row:=line.split(None,4))==5}
+assert set(rows)==set(pids)
+assert int(rows[71230][1])==35939 and int(rows[71230][2])==71230
+assert int(rows[71239][1])==71230 and int(rows[71239][2])==71230
+assert int(rows[71731][1])==71239 and int(rows[71731][2])==71731
+assert rows[71230][4].endswith('artifacts/launch-held-out-scalar-loss-2026-10-11-v1.py')
+assert 'tools/bench/quality.py --output benchmarks/raw/2026-10-11-held-out-scalar-loss-v1.json' in rows[71239][4]
+assert rows[71731][4]=='artifacts/held-out-scalar-loss-v1/release/examples/quality_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct /Users/coloner/work/rust/toklet/benchmarks/contract-v1/held_out_loss.u32le scalar'
+launch=Path('benchmarks/raw/2026-10-11-held-out-scalar-loss-launch-v1.json')
+r={'format':'toklet-full-scalar-loss-owned-v1','session_id':56539,'observed_utc':datetime.now(timezone.utc).isoformat(),'launcher_pid':71230,'driver_pid':71239,'numerical_worker_pid':71731,'snapshot':p.stdout,'launch_receipt_sha256':hashlib.sha256(launch.read_bytes()).hexdigest(),'producer_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+with Path('artifacts/2026-10-11-held-out-scalar-loss-owned-v1.json').open('x') as f:json.dump(r,f,indent=2);f.write('\n')
+print(json.dumps(r))

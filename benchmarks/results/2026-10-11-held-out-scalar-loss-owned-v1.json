@@ -1,0 +1,11 @@
+{
+  "format": "toklet-full-scalar-loss-owned-v1",
+  "session_id": 56539,
+  "observed_utc": "2026-10-11T09:57:51.054858+00:00",
+  "launcher_pid": 71230,
+  "driver_pid": 71239,
+  "numerical_worker_pid": 71731,
+  "snapshot": "71230 35939 71230 Ss   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/launch-held-out-scalar-loss-2026-10-11-v1.py\n71239 71230 71230 S    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/quality.py --output benchmarks/raw/2026-10-11-held-out-scalar-loss-v1.json --build-dir artifacts/held-out-scalar-loss-v1 --cpu-qualification /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json --cpu-projection scalar\n71731 71239 71731 Rs   artifacts/held-out-scalar-loss-v1/release/examples/quality_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct /Users/coloner/work/rust/toklet/benchmarks/contract-v1/held_out_loss.u32le scalar\n",
+  "launch_receipt_sha256": "e62d0e4e3fd342470577fce26d1704a36293d2f8013b302fd0731037177a6366",
+  "producer_sha256": "963372498ec3d35e5ddf8cf4239259822fcdb404f82423b5617753cf3b7c57db"
+}

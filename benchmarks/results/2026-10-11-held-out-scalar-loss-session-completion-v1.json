@@ -1,0 +1,12 @@
+{
+  "session_id": 56539,
+  "actual_tool_result": {
+    "chunk_id": "f5d5d5",
+    "wall_time_seconds": 42.78161575,
+    "exit_code": 0,
+    "original_token_count": 64,
+    "output": "Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.\nVerified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.\nFull scalar loss driver completed naturally\n"
+  },
+  "observed_complete_utc": "2026-10-11T11:35:03.094Z",
+  "origin": "Observed write_stdin completion for session56539; exact tool result retained"
+}

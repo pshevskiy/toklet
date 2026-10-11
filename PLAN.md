@@ -374,6 +374,21 @@ executed. Astra accepted the checked preparation task with no findings.
 Fixed container integration, native authored qualification and VM
 restoration remain required before adoption or quality scoring.
 
+Full scalar held-out loss, 11 October 2026 (M2.5/quality still open): the
+[completed baseline](docs/experiments/2026-10-11-held-out-scalar-loss.md)
+scores all 10,000 frozen targets with mean NLL 2.883725149929484 nats/token.
+Nine 1,024-target blocks and the final 784-target block follow the unchanged
+overlap/reset policy and finish with zero pending tokens. Own-worker peak
+physical charge is 2,009,548,792 bytes, below admitted 2,136,856,460 and 6 GiB.
+Formatting, offline locked Clippy, 76 ordinary Rust tests and three example
+tests pass before scoring in isolated targets. Exact saved replay verifies all
+10,012 native events, labels, sums, memory, identities, ordered checks, actual
+exit zero and owned process absence; the original orchestration stays held
+and the VM stays stopped. Astra independently reproduces the analysis
+byte-for-byte and accepts the complete task without findings after documentation,
+link and whitespace review.
+Full candidate loss, 100-task pass rates and milestone acceptance remain open.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

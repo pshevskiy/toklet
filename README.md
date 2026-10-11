@@ -169,7 +169,9 @@ remains pending.
 The [held-out loss runner](docs/experiments/2026-10-10-held-out-loss-runner.md)
 preserves the frozen block/label policy and passes independent short probes in
 scalar and tiled modes with exact complete-logit agreement. The full 10,000
-targets and separate 100-task quality evaluation remain pending.
+target [scalar baseline](docs/experiments/2026-10-11-held-out-scalar-loss.md)
+now completes with mean loss 2.883725 nats/token and verified natural exit.
+Full candidate loss and the separate 100-task quality evaluation remain pending.
 
 The [frozen task collector](docs/experiments/2026-10-10-task-response-collector.md)
 preserves prepared IDs, finalized text and pending EOS semantics, and supplies

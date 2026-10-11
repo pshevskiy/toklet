@@ -1,0 +1,81 @@
+{
+  "format": "toklet-full-scalar-loss-natural-exit-idle-v1",
+  "idle_verified_utc": "2026-10-11T11:35:19.295131+00:00",
+  "session_id": 56539,
+  "all_owned_processes_absent": true,
+  "exited_owned_pids": [
+    71230,
+    71239,
+    71731
+  ],
+  "owned_absence_query": {
+    "command": [
+      "ps",
+      "-p",
+      "71230,71239,71731",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "owned_group_members": {
+    "71230": [],
+    "71731": []
+  },
+  "held_original_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n",
+  "stopped_machine": {
+    "Name": "podman-machine-default",
+    "Default": true,
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "Running": false,
+    "Starting": false,
+    "LastUp": "2026-10-11T11:16:14.961155+03:00",
+    "Stream": "default",
+    "VMType": "applehv",
+    "CPUs": 5,
+    "Memory": "2147483648",
+    "Swap": "0",
+    "DiskSize": "107374182400",
+    "Port": 51387,
+    "RemoteUsername": "core",
+    "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+    "UserModeNetworking": true
+  },
+  "launch_receipt_sha256": "e62d0e4e3fd342470577fce26d1704a36293d2f8013b302fd0731037177a6366",
+  "owned_receipt_sha256": "9c97a35f52eb5a6c9618261eb541f97f6825dbf7e81f9b3f56498e263ed019f0",
+  "session_completion_sha256": "d2aae88489a81f8bd3e108b0d0db7e8b3a26cce82de9868c94b05407c5ff9162",
+  "record_sha256": "cae67d941141ee0be68ef358186afb37f29d84c9eac7f23b8eeaf252089e7cc3",
+  "native_sha256": "a99d700ba8f84d626a9dd6b2029f00a7a741673699ee23b34b37d2c66459e0cb",
+  "saved_result_sha256": {
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-v1.json": "cae67d941141ee0be68ef358186afb37f29d84c9eac7f23b8eeaf252089e7cc3",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-v1.json.native.jsonl": "a99d700ba8f84d626a9dd6b2029f00a7a741673699ee23b34b37d2c66459e0cb",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-v1.json.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-launch-v1.json": "e62d0e4e3fd342470577fce26d1704a36293d2f8013b302fd0731037177a6366",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-session-completion-v1.json": "d2aae88489a81f8bd3e108b0d0db7e8b3a26cce82de9868c94b05407c5ff9162",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-owned-v1.json": "9c97a35f52eb5a6c9618261eb541f97f6825dbf7e81f9b3f56498e263ed019f0",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-launch-v1.py.txt": "9c1558942206c1d174a46827dd405d7c772d54a8eeaee60ae7a4a0465b5437e6",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-owned-v1.py.txt": "963372498ec3d35e5ddf8cf4239259822fcdb404f82423b5617753cf3b7c57db",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-driver-v1.py.txt": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-worker-v1.rs.txt": "ecb0501d40aca0a1fe9d6d91d89a6d34222acca9bd56276b95cfe981155e5aa8",
+    "benchmarks/results/2026-10-11-held-out-scalar-loss-idle-v1.py.txt": "f4992efbbe44ad17aaceeb398a73972cfe5c17906fd1a32ade166bbe39a882ce"
+  },
+  "end_verified": {
+    "frozen_binaries": {
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    "validated_local_model_assets": {
+      "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+    }
+  },
+  "producer_sha256": "f4992efbbe44ad17aaceeb398a73972cfe5c17906fd1a32ade166bbe39a882ce"
+}
