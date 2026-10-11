@@ -1,0 +1,13 @@
+{
+  "format": "toklet-actual-native-session-completion-v1",
+  "session_id": 7930,
+  "observed_utc": "2026-10-11T18:06:56+00:00",
+  "origin": "Actual write_stdin completion returned by native execution tool; not inferred from files",
+  "actual_tool_result": {
+    "chunk_id": "b51522",
+    "wall_time_seconds": 0.000019709,
+    "exit_code": 0,
+    "original_token_count": 82,
+    "output": "medium: sample 10: 93.524s\n{\"decode_tokens_per_second_median\": 2.2322187528228463, \"prefill_tokens_per_second_median\": 12.499688947589668, \"request_median_seconds\": 97.892740917, \"ttft_max_seconds\": 41.446558708, \"ttft_median_seconds\": 40.96103225, \"ttft_min_seconds\": 38.929831334}\nTiled medium workload completed naturally\n"
+  }
+}

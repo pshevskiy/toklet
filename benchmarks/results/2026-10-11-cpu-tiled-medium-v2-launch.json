@@ -1,0 +1,81 @@
+{
+  "format": "toklet-cpu-tiled-workload-launch-v1",
+  "launch_utc": "2026-10-11T17:45:05.768612+00:00",
+  "engine_revision": "ba20a87d0f036dc8df6a1e7664dfe51e491b2f00",
+  "working_tree_clean": true,
+  "launcher_pid": 36010,
+  "producer_sha256": "afa65e7fad185e4359f9bc07496c81c2197586826e9614eaea6eba5fe355a8c1",
+  "admission_claim_sha256": "86f6d6a136dbd8db2f3ba5543acf16ecb7c8e9e3373201e752680bb575a576fe",
+  "driver_sha256": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+  "qualification_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "qualified_binary_sha256": "3601c63ae83b0d9b20f8362bbda27781e4dd969d527918c072ccf270d2d4874d",
+  "compiled_source_sha256": {
+    "Cargo.toml": "f9614fde795692ea4f976f4a243ed3991d1e76f0109a4f2fd6bc3d5141977cc4",
+    "Cargo.lock": "7e13db0c63cb370080711ed1d2f6f08a95a1a25516e16eb2a34b33e65db51151",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "src/session.rs": "aba1c8cfd934a5b41f2debd3be2b75b137bdec9d725712849b89512b469e2d55",
+    "examples/cpu_bench.rs": "d42eafa4f78ec0b9a618c137cd21a43b35f3c1d9af8621eba39d1055ddf2553a",
+    "tests/cpu_decoder.rs": "c97638807910b4307e56ded647088b10fdadf9eef50bfe9a21f8635ae83aed79",
+    "tests/session.rs": "ef613d99fb3473cddf24916fdff4202fdc595f014c1dd86ef9a7225326c7e95b",
+    "tests/qwen_forward.rs": "0cdd2529dac4c4ffb66e94d721571a40b12696486f26cbab31718cc9e767c7d5",
+    "tests/qwen_session.rs": "3ec4000c7ba72e18fd90ffb30b8f5b97716d495accbdcab9fe80d54831342744",
+    "tests/support/trace_parity.rs": "fb7144fb65f7422eb656411ebe3f0e842a337cb3beb1aa862803c6ff39994e5d"
+  },
+  "collection_admission": {
+    "idle_receipt_sha256": "e2475da2074d28e2d508ce907a70e05c032156300cd6bc5316dcd0d80c8535d4",
+    "owned_absence_query": {
+      "command": [
+        "ps",
+        "-p",
+        "4303,4314,4328",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "held_original_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n",
+    "stopped_machine": {
+      "Name": "podman-machine-default",
+      "Default": true,
+      "Created": "2026-01-15T12:12:42.666462+03:00",
+      "Running": false,
+      "Starting": false,
+      "LastUp": "2026-10-11T20:05:08.08417+03:00",
+      "Stream": "default",
+      "VMType": "applehv",
+      "CPUs": 5,
+      "Memory": "2147483648",
+      "Swap": "0",
+      "DiskSize": "107374182400",
+      "Port": 51387,
+      "RemoteUsername": "core",
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "UserModeNetworking": true
+    }
+  },
+  "grading_idle_sha256": "86fb2aaac8322e964457063bd21e63d51a0741683d075152086aecf1a3e9388b",
+  "quality_analysis_sha256": "730136432c71c26cecf94d1195ef466679c789715c790ed26e88c0b0d2d38eb7",
+  "workload": "medium",
+  "command": [
+    "/Users/coloner/work/rust/toklet/.venv/bin/python",
+    "tools/bench/cpu.py",
+    "--workload",
+    "medium",
+    "--cpu-projection",
+    "tiled",
+    "--cpu-qualification",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json",
+    "--output",
+    "benchmarks/raw/2026-10-11-cpu-tiled-medium-v2.json"
+  ],
+  "python_executable": "/Users/coloner/work/rust/toklet/.venv/bin/python",
+  "python_version": "3.12.8",
+  "jsonschema_version": "4.25.1",
+  "excluded_attempt_idle_sha256": "7b710f80de73dedca9794d9db2ff752ca23d3384ef1fcafb330727aa2d11239f",
+  "requirements_lock_sha256": "b05453a671689fbbc07c0ce5384ddebabdbfed4ba4229e19c75d416a79d2c8c2",
+  "scope": "One complete three-warmup/ten-sample qualified tiled workload; no concurrent model/VM/test/build/hash work after launch; original orchestration remains held."
+}

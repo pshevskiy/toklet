@@ -239,3 +239,10 @@ aligns the complete reference workload matrix, full application/startup and
 sustained measurements, scoped external timings and frozen quality results.
 Astra accepted M2.5 closure without findings. Tiled retention remains a
 separate M3.1 gate.
+
+The [tiled medium workload](docs/experiments/2026-10-11-cpu-tiled-medium.md)
+adds a complete three-warmup/ten-sample candidate row: median TTFT 40.961032 s,
+request 97.892741 s and maximum child physical charge 2,043,693,048 bytes.
+The first attempt failed publication and is preserved separately as excluded
+evidence; the replacement uses pinned benchmark dependencies. Six non-short
+rows, full tiled application evidence and the retention decision remain pending.

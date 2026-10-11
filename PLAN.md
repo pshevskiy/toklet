@@ -674,6 +674,18 @@ remains held, Podman is off and protected endpoint hashes match. A separately
 reviewed replacement uses repository `.venv` Python and checks pinned schema
 dependencies before dispatch. All seven non-short candidate rows remain pending.
 
+Candidate medium evidence, 11 October 2026: the [complete replacement](docs/experiments/2026-10-11-cpu-tiled-medium.md)
+uses qualified isolated tiled execution and pinned benchmark dependencies, with
+three warmups and ten samples. All states commit 639 positions with one pending
+fixed output token; median TTFT is 40.961032 s, completed request 97.892741 s,
+and maximum own-child physical charge 2,043,693,048 bytes below 6 GiB. Historical
+scalar reductions are descriptive, while the separate reversed-order primary
+pairs retain the confirming acceptance evidence. The excluded first attempt
+contributes no accepted sample. Natural completion, owned PID/group absence,
+protected endpoint identities and exact source/qualification bindings are
+retained. No numerical helper or qualified artifact changes. Six other non-short
+rows, full tiled application evidence and M3.1 retention remain pending.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [ ] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [ ] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
