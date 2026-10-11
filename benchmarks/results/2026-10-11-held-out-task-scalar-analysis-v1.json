@@ -1,0 +1,37 @@
+{
+  "format": "toklet-held-out-task-collection-analysis-v1",
+  "completed": true,
+  "projection": "scalar",
+  "engine_revision": "e65c77d695dc3c1890a69c88acc470460e1923bc",
+  "scope": "All frozen responses and native provenance replayed; no code execution, pass-rate, candidate comparison or timing acceptance.",
+  "cases": 100,
+  "categories": {
+    "code": 40,
+    "prose": 30,
+    "continuation": 30
+  },
+  "native_events": 6594,
+  "stop_reasons": {
+    "stop_token": 68,
+    "output_limit": 32
+  },
+  "empty_visible_responses": 0,
+  "visible_tokens": 6393,
+  "memory_admitted_bytes": 2353012560,
+  "maximum_cli_physical_peak_bytes": 2125318256,
+  "maximum_driver_physical_peak_bytes": 29442648,
+  "maximum_conservative_joint_physical_peak_bytes": 2154760904,
+  "input_sha256": {
+    "benchmarks/results/2026-10-11-held-out-task-scalar-v1.json": "103888cefeebfddfdffc5691d697f83524e69fc02c78099505292f0a40c41244",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-v1.json.native.jsonl": "7fd9021986776be236a1106b8d16cf8c31b5265244b4db14baebaf0ab54f908b",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-v1.json.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-launch-v1.json": "a20e129d7b094d32e5cb22d3acffebb7edb6b88fea1bac7d15cd1eb5cc6c0514",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-owned-v1.json": "39ff08fd62fa090162605b920d6ee88affe7a80165f1c8a79e81597df362f8e8",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-session-completion-v1.json": "7a62298f6c3a6c609daa650b3bc461690864fe1a411ea5efc59a7dde93a09014",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-idle-v1.json": "cb85b39e1f6eeb816096999710a30c9a696d0b2ebdff94ee4b848d86b3aef149"
+  },
+  "producer_sha256": "30f5d4d8fba780f1f164cd20e1ebb020e1119ce9f71149f9a0e6828c15b87191",
+  "validator_snapshot_sha256": "4d3c515fb07362bc1bdd891d0ff213c33350db5d96f34d08e2894a148fb68962",
+  "quality_completed": false,
+  "aggregate": null
+}

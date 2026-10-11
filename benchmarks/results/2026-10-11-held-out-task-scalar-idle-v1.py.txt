@@ -1,0 +1,61 @@
+"""Inactive archiver: only after actual scalar collection exit evidence exists."""
+from pathlib import Path
+from datetime import datetime,timezone
+import hashlib,json,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as boundary
+ROOT=Path.cwd();PREFIX='2026-10-11-held-out-task-scalar'
+
+def digest(path):
+ with Path(path).open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+
+def archive():
+ completion_path=ROOT/'artifacts'/f'{PREFIX}-session-completion-v1.json'
+ completion=json.loads(completion_path.read_text())
+ assert completion['session_id']==1132 and completion['actual_tool_result']['exit_code']==0
+ assert completion['actual_tool_result']['output'].splitlines()[-1]=='Full scalar task collection completed naturally'
+ owned_path=ROOT/'artifacts'/f'{PREFIX}-owned-v1.json';owned=json.loads(owned_path.read_text())
+ pids=[91589,91598,91610]
+ assert [owned[key] for key in ('launcher_pid','driver_pid','numerical_worker_pid')]==pids
+ absent=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid='],capture_output=True,text=True)
+ assert absent.returncode==1 and not absent.stdout and not absent.stderr
+ groups={str(pid):boundary.live_group_members(pid) for pid in (91589,91610)}
+ assert groups=={'91589':[],'91610':[]}
+ held=boundary.idle(json.loads((ROOT/'benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json').read_text()))
+ machines=json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+ machine=next(item for item in machines if item['Name']=='podman-machine-default')
+ assert machine['Running'] is False and machine['Starting'] is False
+ raw=ROOT/'benchmarks/raw'/f'{PREFIX}-v1.json';record=json.loads(raw.read_text())
+ assert record['completed'] is True and record['projection']=='scalar' and len(record['run']['cases'])==100
+ assert record['run']['passed'] is True and record['run']['exit_code']==0
+ assert record['run']['watchdog_killed'] is False and record['run']['process_group_killed'] is False
+ assert record['run']['cleanup_errors']==[] and record['run']['surviving_group_members']==[]
+ out=ROOT/'benchmarks/results';inventory={}
+ def copy(source,target):
+  assert not target.exists();target.write_bytes(source.read_bytes());inventory[str(target.relative_to(ROOT))]=digest(target)
+ for suffix in ('','.native.jsonl','.stderr.txt'):copy(Path(str(raw)+suffix),out/(f'{PREFIX}-v1.json'+suffix))
+ launch=ROOT/'benchmarks/raw'/f'{PREFIX}-launch-v1.json'
+ for source,target in [(launch,out/f'{PREFIX}-launch-v1.json'),(owned_path,out/f'{PREFIX}-owned-v1.json'),
+                        (completion_path,out/f'{PREFIX}-session-completion-v1.json'),
+                        (ROOT/'artifacts/launch-held-out-task-scalar-2026-10-11-v1.py',out/f'{PREFIX}-launch-v1.py.txt'),
+                        (ROOT/'artifacts/observe-held-out-task-scalar-owned-v1.py',out/f'{PREFIX}-owned-v1.py.txt'),
+                        (ROOT/'tools/bench/held_out_tasks.py',out/f'{PREFIX}-driver-v1.py.txt'),
+                        (ROOT/'artifacts/held_out_task_grading-draft.py',out/f'{PREFIX}-validator-v1.py.txt'),
+                        (Path(__file__),out/f'{PREFIX}-idle-v1.py.txt')]:copy(source,target)
+ prior=json.loads((ROOT/'benchmarks/results/2026-10-11-held-out-tiled-loss-idle-v1.json').read_text())
+ end={}
+ for section,files in prior['end_verified'].items():
+  end[section]={}
+  for path,expected in files.items():
+   actual=digest(ROOT/path);assert actual==expected,path;end[section][path]=actual
+ idle={'format':'toklet-held-out-task-natural-exit-idle-v1','idle_verified_utc':datetime.now(timezone.utc).isoformat(),
+       'session_id':1132,'all_owned_processes_absent':True,'exited_owned_pids':pids,'owned_group_members':groups,
+       'owned_absence_query':{'command':absent.args,'exit_code':absent.returncode,'stdout':absent.stdout,'stderr':absent.stderr},
+       'held_original_snapshot':held,'stopped_machine':machine,'end_verified':end,
+       'launch_receipt_sha256':digest(launch),'owned_receipt_sha256':digest(owned_path),
+       'session_completion_sha256':digest(completion_path),'collection_sha256':digest(raw),
+       'native_sha256':digest(Path(str(raw)+'.native.jsonl')),'saved_result_sha256':inventory,'producer_sha256':digest(__file__)}
+ with (out/f'{PREFIX}-idle-v1.json').open('x') as stream:json.dump(idle,stream,indent=2);stream.write('\n')
+ print(json.dumps({'idle_verified_utc':idle['idle_verified_utc'],'saved_files':len(inventory),'exited_owned_pids':pids}))
+
+if __name__=='__main__':archive()

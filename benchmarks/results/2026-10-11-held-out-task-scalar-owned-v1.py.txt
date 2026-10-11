@@ -1,0 +1,23 @@
+"""Bind only the active scalar collection's owned process graph."""
+from datetime import datetime,timezone
+from pathlib import Path
+import hashlib,json,subprocess
+pids=[91589,91598,91610]
+command=['ps','-p',','.join(map(str,pids)),'-o','pid=,ppid=,pgid=,stat=,command=']
+p=subprocess.run(command,text=True,capture_output=True)
+assert p.returncode==0 and not p.stderr
+rows={int(row[0]):row for line in p.stdout.splitlines() if len(row:=line.split(None,4))==5}
+assert set(rows)==set(pids)
+assert [(int(rows[pid][1]),int(rows[pid][2])) for pid in pids]==[(35939,91589),(91589,91589),(91598,91610)]
+assert rows[91589][4].endswith('artifacts/launch-held-out-task-scalar-2026-10-11-v1.py')
+assert 'tools/bench/held_out_tasks.py --output benchmarks/raw/2026-10-11-held-out-task-scalar-v1.json' in rows[91598][4]
+root=Path.cwd()
+expected=str(root/'artifacts/cpu-tiled-cli-v1/release/toklet')+' --model '+str(root/'models/Qwen2.5-0.5B-Instruct')+' --interactive --json --context-capacity 2048 --prefill-chunk 128 --cpu-projection scalar'
+assert rows[91610][4]==expected
+launch=Path('benchmarks/raw/2026-10-11-held-out-task-scalar-launch-v1.json')
+record={'format':'toklet-held-out-task-owned-v1','session_id':1132,'observed_utc':datetime.now(timezone.utc).isoformat(),
+        'launcher_pid':91589,'driver_pid':91598,'numerical_worker_pid':91610,'snapshot':p.stdout,
+        'launch_receipt_sha256':hashlib.sha256(launch.read_bytes()).hexdigest(),
+        'producer_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+with Path('artifacts/2026-10-11-held-out-task-scalar-owned-v1.json').open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
+print(json.dumps(record))

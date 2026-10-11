@@ -1,0 +1,35 @@
+"""Launch all frozen scalar task requests after the checked collector commit."""
+from datetime import datetime,timezone
+from pathlib import Path
+import json,os,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import held_out_tasks as collector,prepare,cpu_cli
+ROOT=Path.cwd()
+assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+checks_path=ROOT/'benchmarks/results/2026-10-11-held-out-task-collector-checks-v1.json'
+checks=prepare.load_json(checks_path)
+assert checks['completed'] and len(checks['checks'])==4
+for check in checks['checks']:
+ assert check['exit_code']==0 and check['cleanup_errors']==[] and check['timed_out'] is False
+for name,expected in checks['source_sha256'].items():assert prepare.digest(ROOT/name)==expected,name
+idle_path=ROOT/'benchmarks/results/2026-10-11-held-out-tiled-loss-idle-v1.json'
+admission=collector.idle(idle_path)
+qualification=ROOT/'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json'
+binary,_=cpu_cli.qualified_cli(qualification)
+output=ROOT/'benchmarks/raw/2026-10-11-held-out-task-scalar-v1.json'
+receipt=ROOT/'benchmarks/raw/2026-10-11-held-out-task-scalar-launch-v1.json'
+assert not receipt.exists() and all(not Path(str(output)+suffix).exists() for suffix in ('','.native.jsonl','.stderr.txt'))
+command=[sys.executable,'tools/bench/held_out_tasks.py','--output',str(output.relative_to(ROOT)),
+         '--idle-proof',str(idle_path),'--cli-qualification',str(qualification),'--cpu-projection','scalar']
+record={'format':'toklet-held-out-task-collection-launch-v1',
+        'engine_revision':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+        'working_tree_clean':True,'launch_utc':datetime.now(timezone.utc).isoformat(),'launcher_pid':os.getpid(),
+        'producer_sha256':prepare.digest(Path(__file__)),'checks_sha256':prepare.digest(checks_path),
+        'collector_sha256':prepare.digest(Path(collector.__file__)),
+        'qualified_cli_receipt_sha256':prepare.digest(qualification),'binary_sha256':prepare.digest(binary),
+        'admission':admission,'command':command,
+        'scope':'All100 frozen scalar responses, no generated code execution or pass-rate. No concurrent model/VM/test/build work during collection; only bounded observations and inactive source preparation.'}
+with receipt.open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
+print(json.dumps({'launch_utc':record['launch_utc'],'launcher_pid':record['launcher_pid'],'engine_revision':record['engine_revision']}),flush=True)
+subprocess.run(command,check=True)
+print('Full scalar task collection completed naturally',flush=True)

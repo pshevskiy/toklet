@@ -439,6 +439,24 @@ checks and source/evidence/documentation review, with no remaining findings.
 Local links and whitespace checks pass. No held-out model response, code grading,
 pass-rate or milestone acceptance is claimed by this preparation.
 
+Full scalar task response collection, 11 October 2026 (M2.5/quality still open):
+the [completed collection](docs/experiments/2026-10-11-held-out-task-scalar.md)
+retains all 100 frozen responses: 40 code, 30 prose and 30 continuation.
+All 6,594 native events and 6,393 visible tokens replay with exact finalized
+text, stopping, pending/committed state and reset semantics. Sixty-eight
+responses stop on EOS and 32 reach category output limits. The clean checked
+revision uses the existing qualified scalar CLI at capacity 2,048 and chunk 128.
+Logical admission is 2,353,012,560 bytes; the maximum conservative joint CLI
+and driver physical peak is 2,154,760,904 bytes, below 6 GiB. Native session
+1132 exits naturally zero; its three owned processes and both groups are absent,
+the VM is stopped, and protected identities and original held orchestration
+are unchanged. Exact launch, ownership, completion, idle and replay sources
+are retained. Astra independently reproduces byte-identical analysis and accepts
+the complete evidence and documentation task with no remaining findings. All
+144 local links, content and whitespace checks pass. No generated code execution,
+task score, tiled task comparison, timing acceptance or milestone closure
+is claimed by this collection.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

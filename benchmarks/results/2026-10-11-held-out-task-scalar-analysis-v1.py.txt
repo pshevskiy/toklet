@@ -1,0 +1,163 @@
+"""Inactive complete collection replay. Never generates or grades code.
+
+Requires archived actual native completion and idle receipts. Run only after
+session 1132 naturally exits; the validator snapshot is part of this evidence.
+"""
+from collections import Counter
+from datetime import datetime
+import hashlib
+import importlib.machinery
+import importlib.util
+import json
+from pathlib import Path
+import sys
+import subprocess
+
+sys.path.insert(0, 'tools/bench')
+import held_out_tasks as collector
+import linux_task_evidence as evidence
+
+ROOT = Path.cwd()
+PREFIX = '2026-10-11-held-out-task-scalar'
+RESULTS = ROOT / 'benchmarks/results'
+REVISION = 'e65c77d695dc3c1890a69c88acc470460e1923bc'
+HOST_PYTHON = '/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python'
+
+
+def digest(path):
+    with Path(path).open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+
+def read(suffix):
+    path = RESULTS / (PREFIX + suffix)
+    return evidence.decode_event(path.read_text())
+
+
+def analyze():
+    idle_path = RESULTS / (PREFIX + '-idle-v1.json')
+    idle = read('-idle-v1.json')
+    assert idle['session_id'] == 1132
+    assert idle['exited_owned_pids'] == [91589, 91598, 91610]
+    assert idle['owned_group_members'] == {'91589': [], '91610': []}
+    collector.idle(idle_path)
+    expected_saved = {str((RESULTS / (PREFIX + suffix)).relative_to(ROOT)) for suffix in (
+        '-v1.json', '-v1.json.native.jsonl', '-v1.json.stderr.txt', '-launch-v1.json',
+        '-owned-v1.json', '-session-completion-v1.json', '-launch-v1.py.txt',
+        '-owned-v1.py.txt', '-driver-v1.py.txt', '-validator-v1.py.txt', '-idle-v1.py.txt')}
+    assert set(idle['saved_result_sha256']) == expected_saved
+    for name, sha in idle['saved_result_sha256'].items():
+        assert digest(ROOT / name) == sha, name
+    assert idle['producer_sha256'] == digest(RESULTS / (PREFIX + '-idle-v1.py.txt'))
+    completion = read('-session-completion-v1.json')
+    assert completion['session_id'] == 1132
+    assert completion['format'] == 'toklet-observed-session-completion-v1'
+    assert completion['origin'] == 'Observed write_stdin completion for session1132; exact tool result retained'
+    assert completion['actual_tool_result']['exit_code'] == 0
+    assert completion['actual_tool_result'].get('session_id') is None
+    assert completion['actual_tool_result']['output'].splitlines()[-1] == 'Full scalar task collection completed naturally'
+    assert digest(RESULTS / (PREFIX + '-session-completion-v1.json')) == idle['session_completion_sha256']
+    launch = read('-launch-v1.json')
+    owned = read('-owned-v1.json')
+    assert launch['format'] == 'toklet-held-out-task-collection-launch-v1'
+    assert launch['working_tree_clean'] is True and launch['launcher_pid'] == 91589
+    assert launch['engine_revision'] == REVISION
+    expected_command = [str(ROOT / '.venv/bin/python'), 'tools/bench/held_out_tasks.py',
+        '--output', 'benchmarks/raw/' + PREFIX + '-v1.json',
+        '--idle-proof', str(RESULTS / '2026-10-11-held-out-tiled-loss-idle-v1.json'),
+        '--cli-qualification', str(RESULTS / '2026-10-10-cpu-tiled-cli-qualification-v1.json'),
+        '--cpu-projection', 'scalar']
+    assert launch['command'] == expected_command
+    assert launch['producer_sha256'] == digest(RESULTS / (PREFIX + '-launch-v1.py.txt'))
+    assert owned['format'] == 'toklet-held-out-task-owned-v1' and owned['session_id'] == 1132
+    assert [owned[key] for key in ('launcher_pid', 'driver_pid', 'numerical_worker_pid')] == [91589, 91598, 91610]
+    lines = owned['snapshot'].splitlines()
+    rows = {int(row[0]): row for line in lines if len(row := line.split(None, 4)) == 5}
+    assert len(lines) == len(rows) == 3 and set(rows) == {91589, 91598, 91610}
+    assert [(int(rows[pid][1]), int(rows[pid][2])) for pid in (91589, 91598, 91610)] == [(35939, 91589), (91589, 91589), (91598, 91610)]
+    assert all('T' not in rows[pid][3] and not rows[pid][3].startswith('Z') for pid in rows)
+    assert rows[91589][4] == HOST_PYTHON + ' artifacts/launch-held-out-task-scalar-2026-10-11-v1.py'
+    assert rows[91598][4] == ' '.join([HOST_PYTHON, *expected_command[1:]])
+    expected_worker = [str(ROOT / 'artifacts/cpu-tiled-cli-v1/release/toklet'),
+        '--model', str(ROOT / 'models/Qwen2.5-0.5B-Instruct'), '--interactive', '--json',
+        '--context-capacity', '2048', '--prefill-chunk', '128', '--cpu-projection', 'scalar']
+    assert rows[91610][4] == ' '.join(expected_worker)
+    assert (datetime.fromisoformat(launch['launch_utc']) < datetime.fromisoformat(owned['observed_utc'])
+            < datetime.fromisoformat(completion['observed_complete_utc'])
+            <= datetime.fromisoformat(idle['idle_verified_utc']))
+    assert owned['producer_sha256'] == digest(RESULTS / (PREFIX + '-owned-v1.py.txt'))
+    assert owned['launch_receipt_sha256'] == idle['launch_receipt_sha256'] == digest(RESULTS / (PREFIX + '-launch-v1.json'))
+    assert idle['owned_receipt_sha256'] == digest(RESULTS / (PREFIX + '-owned-v1.json'))
+    checks_path = RESULTS / '2026-10-11-held-out-task-collector-checks-v1.json'
+    checks = evidence.decode_event(checks_path.read_text())
+    assert launch['checks_sha256'] == digest(checks_path)
+    assert checks['completed'] is True and len(checks['checks']) == 4
+    expected_checks = [[str(ROOT / '.venv/bin/python'), '-m', 'unittest', 'discover',
+                        '-s', 'tools/bench', '-p', 'test_*.py'],
+                       ['cargo', 'fmt', '--check'],
+                       ['cargo', 'clippy', '--locked', '--offline', '--all-targets', '--', '-D', 'warnings'],
+                       ['cargo', 'test', '--locked', '--offline']]
+    assert [check['command'] for check in checks['checks']] == expected_checks
+    assert checks['check_target_directory'] == str(ROOT / 'artifacts/cpu-tiled-cli-v1')
+    assert datetime.fromisoformat(checks['finished_utc']) < datetime.fromisoformat(launch['launch_utc'])
+    for check in checks['checks']:
+        assert check['exit_code'] == 0 and check['timed_out'] is False and check['cleanup_errors'] == []
+        assert check.get('failure') is None and check['process_group_killed'] is False
+    for name, sha in checks['source_sha256'].items():
+        assert digest(ROOT / name) == sha, name
+    previous_idle_name = 'benchmarks/results/2026-10-11-held-out-tiled-loss-idle-v1.json'
+    previous_bytes = subprocess.check_output(['git', 'show', REVISION + ':' + previous_idle_name])
+    previous = evidence.decode_event(previous_bytes.decode())
+    assert idle['end_verified'] == previous['end_verified']
+    assert hashlib.sha256(previous_bytes).hexdigest() == launch['admission']['idle_receipt_sha256']
+    snapshot = RESULTS / (PREFIX + '-validator-v1.py.txt')
+    loader = importlib.machinery.SourceFileLoader('collection_snapshot_validator', str(snapshot))
+    spec = importlib.util.spec_from_loader(loader.name, loader)
+    validator = importlib.util.module_from_spec(spec)
+    loader.exec_module(validator)
+    path = RESULTS / (PREFIX + '-v1.json')
+    record, cases = validator.validate_collection(path)
+    assert record['projection'] == 'scalar'
+    assert record['engine_revision'] == launch['engine_revision']
+    assert record['binary_sha256'] == launch['binary_sha256']
+    assert record['cli_qualification_sha256'] == launch['qualified_cli_receipt_sha256']
+    assert record['helper_sha256']['tools/bench/held_out_tasks.py'] == launch['collector_sha256']
+    assert launch['collector_sha256'] == digest(RESULTS / (PREFIX + '-driver-v1.py.txt'))
+    assert record['run']['worker_pid'] == owned['numerical_worker_pid']
+    assert record['idle_receipt_sha256'] == launch['admission']['idle_receipt_sha256']
+    assert record['admission']['idle_receipt_sha256'] == record['idle_receipt_sha256']
+    assert record['run']['initial_surviving_group_members'] == []
+    assert idle['collection_sha256'] == digest(path)
+    assert idle['native_sha256'] == record['native_raw_sha256']
+    responses = [item['response'] for item in record['run']['cases']]
+    categories = dict(Counter(case['category'] for case in cases))
+    assert categories == {'code': 40, 'prose': 30, 'continuation': 30}
+    count = 1 + sum(len(item['semantic_events']) for item in record['run']['cases'])
+    return {
+        'format': 'toklet-held-out-task-collection-analysis-v1',
+        'completed': True, 'projection': 'scalar', 'engine_revision': record['engine_revision'],
+        'scope': 'All frozen responses and native provenance replayed; no code execution, pass-rate, candidate comparison or timing acceptance.',
+        'cases': len(cases), 'categories': categories, 'native_events': count,
+        'stop_reasons': dict(Counter(item['stop_reason']['kind'] for item in responses)),
+        'empty_visible_responses': sum(not item['visible_text'] for item in responses),
+        'visible_tokens': sum(len(item['visible_token_ids']) for item in responses),
+        'memory_admitted_bytes': record['run']['ready']['memory_admitted_bytes'],
+        'maximum_cli_physical_peak_bytes': max(item['cli_physical_peak_bytes'] for item in record['run']['cases']),
+        'maximum_driver_physical_peak_bytes': max(item['driver_physical_peak_bytes'] for item in record['run']['cases']),
+        'maximum_conservative_joint_physical_peak_bytes': max(item['conservative_joint_physical_peak_bytes'] for item in record['run']['cases']),
+        'input_sha256': {str((RESULTS / (PREFIX + suffix)).relative_to(ROOT)): digest(RESULTS / (PREFIX + suffix))
+                         for suffix in ('-v1.json', '-v1.json.native.jsonl', '-v1.json.stderr.txt',
+                                        '-launch-v1.json', '-owned-v1.json', '-session-completion-v1.json', '-idle-v1.json')},
+        'producer_sha256': digest(__file__),
+        'validator_snapshot_sha256': digest(snapshot),
+        'quality_completed': False, 'aggregate': None,
+    }
+
+
+if __name__ == '__main__':
+    result = analyze()
+    output = Path(sys.argv[1])
+    with output.open('x') as stream:
+        json.dump(result, stream, indent=2, allow_nan=False)
+        stream.write('\n')
+    print(json.dumps(result))

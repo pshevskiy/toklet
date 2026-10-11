@@ -1,0 +1,59 @@
+{
+  "format": "toklet-held-out-task-collection-launch-v1",
+  "engine_revision": "e65c77d695dc3c1890a69c88acc470460e1923bc",
+  "working_tree_clean": true,
+  "launch_utc": "2026-10-11T13:26:33.140373+00:00",
+  "launcher_pid": 91589,
+  "producer_sha256": "61261ca6e75ca77e9c64bce5257843ba94ecbfd5b05fe09aacf0306fdc15f24a",
+  "checks_sha256": "5df1bfd8ab0086228870e7302036ca394f2d492df84bdc6cb2ebf85977e06c43",
+  "collector_sha256": "7dbfcaffc1676273ef0cf9238034dad18a0d227724bd97625fcb966f140de5f0",
+  "qualified_cli_receipt_sha256": "8d2a633ed95c488f3bbba5de186aa3e3418fa75df51a170af383e31d98ae2cc8",
+  "binary_sha256": "8e1be695229fb4a46e49725f06050b3296f6fb398e718fca8567bf0c6b400b43",
+  "admission": {
+    "idle_receipt_sha256": "a7ebfc57c8e17d06d32a934eed010925a8f016fb77d64cee53e488c5459ac773",
+    "owned_absence_query": {
+      "command": [
+        "ps",
+        "-p",
+        "85088,85096,85473",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "held_original_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n",
+    "stopped_machine": {
+      "Name": "podman-machine-default",
+      "Default": true,
+      "Created": "2026-01-15T12:12:42.666462+03:00",
+      "Running": false,
+      "Starting": false,
+      "LastUp": "2026-10-11T14:52:06.710455+03:00",
+      "Stream": "default",
+      "VMType": "applehv",
+      "CPUs": 5,
+      "Memory": "2147483648",
+      "Swap": "0",
+      "DiskSize": "107374182400",
+      "Port": 51387,
+      "RemoteUsername": "core",
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "UserModeNetworking": true
+    }
+  },
+  "command": [
+    "/Users/coloner/work/rust/toklet/.venv/bin/python",
+    "tools/bench/held_out_tasks.py",
+    "--output",
+    "benchmarks/raw/2026-10-11-held-out-task-scalar-v1.json",
+    "--idle-proof",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-11-held-out-tiled-loss-idle-v1.json",
+    "--cli-qualification",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json",
+    "--cpu-projection",
+    "scalar"
+  ],
+  "scope": "All100 frozen scalar responses, no generated code execution or pass-rate. No concurrent model/VM/test/build work during collection; only bounded observations and inactive source preparation."
+}

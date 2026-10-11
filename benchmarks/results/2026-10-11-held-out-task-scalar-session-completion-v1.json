@@ -1,0 +1,13 @@
+{
+  "format": "toklet-observed-session-completion-v1",
+  "session_id": 1132,
+  "origin": "Observed write_stdin completion for session1132; exact tool result retained",
+  "observed_complete_utc": "2026-10-11T15:42:22+00:00",
+  "actual_tool_result": {
+    "chunk_id": "b4d383",
+    "wall_time_seconds": 0.000018083,
+    "exit_code": 0,
+    "original_token_count": 12,
+    "output": "Full scalar task collection completed naturally\n"
+  }
+}

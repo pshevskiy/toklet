@@ -1,0 +1,208 @@
+"""Inactive draft: literal grading after all collected model processes exit.
+
+The runtime window admits the qualified image, machine/API and controller
+source identities, and owns restoration. This runner cannot start a VM or
+choose candidate commands. Any unresolved case prohibits an aggregate.
+"""
+from datetime import datetime, timezone
+import hashlib
+import json
+import re
+import subprocess
+import cpu_cli
+from pathlib import Path
+
+import linux_code_isolation_probe as boundary
+import linux_task_controller as controller
+import linux_task_evidence as evidence
+import task_cases as tasks
+
+
+def validate_collection(path):
+    record = evidence.decode_event(Path(path).read_text())
+    cases = tasks.load_cases()
+    run = record.get("run", {})
+    if (record.get("format") != "toklet-held-out-task-collection-v1"
+            or record.get("completed") is not True or record.get("working_tree_dirty") is not False
+            or record.get("task_payload_sha256") != tasks.TASK_SHA
+            or record.get("projection") not in ("scalar", "tiled")
+            or run.get("projection") != record["projection"] or run.get("passed") is not True
+            or run.get("exit_code") != 0 or run.get("watchdog_killed") is not False
+            or run.get("process_group_killed") is not False or run.get("cleanup_errors") != []
+            or run.get("surviving_group_members") != [] or len(run.get("cases", [])) != 100):
+        raise ValueError("Complete frozen held-out response collection is required")
+    revision=record.get("engine_revision")
+    if not isinstance(revision,str) or re.fullmatch(r"[0-9a-f]{40}",revision) is None:
+        raise ValueError("Collection clean revision identity differs")
+    qualification_path=boundary.ROOT/'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json'
+    binary,qualification=cpu_cli.qualified_cli(qualification_path)
+    if (record.get('cli_qualification_sha256') != tasks.prepare.digest(qualification_path)
+            or record.get('binary_sha256') != tasks.prepare.digest(binary)
+            or record.get('binary_path') != str(binary)
+            or evidence.canonical(record.get('compiled_source_sha256')) != evidence.canonical(qualification['source_sha256'])
+            or record.get('compiler') != qualification['compiler']):
+        raise ValueError('Collection qualified executable binding differs')
+    for name,sha in qualification['source_sha256'].items():
+        data=subprocess.check_output(['git','show',revision+':'+name])
+        if hashlib.sha256(data).hexdigest()!=sha:
+            raise ValueError('Collection recorded revision differs from qualified executable')
+    sources=tasks.prepare.load_json(tasks.prepare.SOURCES)
+    if (record.get('sources_manifest_sha256') != tasks.prepare.digest(tasks.prepare.SOURCES)
+            or record.get('contract_manifest_sha256') != tasks.prepare.digest(tasks.prepare.CONTRACT/'manifest.json')
+            or evidence.canonical(record.get('model')) != evidence.canonical(sources['model'])):
+        raise ValueError('Collection frozen model/contract binding differs')
+    assets=[sources['model']['weights']]+[item for item in sources['assets'] if item['role']=='model_metadata_or_tokenizer']
+    expected_assets={asset.get('path',asset.get('file')):asset['sha256'] for asset in assets}
+    if evidence.canonical(record.get('validated_local_model_assets'))!=evidence.canonical(expected_assets):
+        raise ValueError('Collection frozen asset inventory differs')
+    for asset in assets:tasks.prepare.validate_source(asset)
+    expected_helpers={'tools/bench/'+name for name in
+        ('task_cases.py','prepare.py','cpu_cli.py','cpu.py','mlx_baseline.py',
+         'task_cases_probe.py','quality.py','linux_code_isolation_probe.py',
+         'linux_task_evidence.py','linux_task_child.py','linux_code_isolation_child.py',
+         'code_isolation_child.py','held_out_tasks.py')}
+    helpers=record.get('helper_sha256')
+    if not isinstance(helpers,dict) or set(helpers)!=expected_helpers:
+        raise ValueError('Collection helper inventory differs')
+    for name,sha in helpers.items():
+        data=subprocess.check_output(['git','show',revision+':'+name])
+        if hashlib.sha256(data).hexdigest()!=sha or tasks.prepare.digest(boundary.ROOT/name)!=sha:
+            raise ValueError('Collection helper source binding differs')
+    ready=run.get('ready',{})
+    cpu_cli.check_ready(ready,record['projection'],True)
+    if ready.get('event')!='ready':raise ValueError('Collection ready event differs')
+    expected_ready=qualification['runs'][record['projection']]['ready']
+    expected_command=[str(binary),'--model',str(boundary.ROOT/'models/Qwen2.5-0.5B-Instruct'),
+        '--interactive','--json','--context-capacity','2048','--prefill-chunk','128',
+        '--cpu-projection',record['projection']]
+    if (evidence.canonical(ready)!=evidence.canonical(expected_ready)
+            or run.get('command')!=expected_command):
+        raise ValueError('Collection qualified readiness/execution policy differs')
+    logical=ready.get('logical_memory')
+    fields={'weights_bytes','kv_bytes','scratch_bytes','history_bytes','logits_bytes',
+            'metadata_bytes','metadata_allowance_bytes','tokenizer_application_allowance_bytes'}
+    if (not isinstance(logical,dict) or set(logical)!=fields
+            or any(type(value) is not int or value<0 for value in logical.values())
+            or type(ready.get('memory_admitted_bytes')) is not int
+            or ready['memory_admitted_bytes']!=sum(logical.values())
+            or not 0<ready['memory_admitted_bytes']<=6*1024**3):
+        raise ValueError('Collection ready memory accounting differs')
+    for item in run['cases']:
+        left=item.get('cli_physical_peak_bytes');right=item.get('driver_physical_peak_bytes')
+        total=item.get('conservative_joint_physical_peak_bytes')
+        if (type(left) is not int or type(right) is not int or left<=0 or right<=0
+                or type(total) is not int or total!=left+right or total>6*1024**3):
+            raise ValueError('Collection physical memory accounting differs')
+    expected_inventory = [{"id": case["id"], "category": case["category"],
+                           "prompt_token_count": len(case["prompt_tokens"])} for case in cases]
+    if record["case_inventory"] != expected_inventory:
+        raise ValueError("Frozen collection case order differs")
+    for case, item in zip(cases, run["cases"]):
+        if item["request"] != tasks.request(case):
+            raise ValueError("Frozen collection request differs")
+        response = tasks.collect_response(case, item["semantic_events"], record["projection"])
+        if evidence.canonical(response) != evidence.canonical(item["response"]):
+            raise ValueError("Frozen finalized response replay differs")
+    raw_path = Path(str(path) + ".native.jsonl")
+    if tasks.prepare.digest(raw_path) != record["native_raw_sha256"]:
+        raise ValueError("Collection native journal identity differs")
+    expected = [(None, run["ready"])]
+    for case, item in zip(cases, run["cases"]):
+        expected.extend((case["id"], event) for event in item["semantic_events"])
+    inner = hashlib.sha256()
+    with raw_path.open(encoding="utf-8") as stream:
+        count = 0
+        for count, line in enumerate(stream, 1):
+            wrapper = evidence.decode_event(line)
+            if (count > len(expected) or set(wrapper) != {"projection", "case_id", "line"}
+                    or wrapper["projection"] != record["projection"]
+                    or wrapper["case_id"] != expected[count-1][0]
+                    or not isinstance(wrapper["line"], str)
+                    or not wrapper["line"].endswith("\n")
+                    or len(wrapper["line"].encode()) > 65536
+                    or evidence.canonical(evidence.decode_event(wrapper["line"]))
+                       != evidence.canonical(expected[count-1][1])):
+                raise ValueError("Collection native semantic event differs")
+            inner.update(wrapper["line"].encode())
+    if count != len(expected) or inner.hexdigest() != run["stdout_sha256"]:
+        raise ValueError("Collection native event coverage differs")
+    stderr_path = Path(str(path) + ".stderr.txt")
+    if tasks.prepare.digest(stderr_path) != record["stderr_sha256"]:
+        raise ValueError("Collection stderr identity differs")
+    # Native worker cleanup and current absence belong to the outer admission.
+    return record, cases
+
+
+def run(api, image_id, runtime, python_version, collection_path, output):
+    output = Path(output).resolve()
+    if not output.is_relative_to((boundary.ROOT / "benchmarks/raw").resolve()) or output.exists():
+        raise ValueError("Fresh held-out grading path is required")
+    collection, cases = validate_collection(collection_path)
+    source = controller.bundled_source()
+    controller.admit_bootstrap(source)
+    modules = (controller, evidence, evidence.child, evidence.child.isolation,
+               evidence.child.isolation.authored, tasks, tasks.prepare, boundary)
+    identities = {str(Path(module.__file__).resolve().relative_to(boundary.ROOT)): boundary.digest(Path(module.__file__))
+                  for module in modules}
+    for filename in ("linux_task_transport.py", "task_cases_probe.py", "code_isolation_probe.py"):
+        identities['tools/bench/' + filename] = boundary.digest(boundary.ROOT / 'tools/bench' / filename)
+    identities[str(Path(__file__).resolve().relative_to(boundary.ROOT))] = boundary.digest(Path(__file__))
+    record = {"format": "toklet-held-out-task-grading-v1", "completed": False,
+              "started_utc": datetime.now(timezone.utc).isoformat(),
+              "scope": "Literal frozen model response source-test and text outcomes; unresolved infrastructure prohibits aggregate. No adversarial grading attestation or timing acceptance.",
+              "collection_sha256": boundary.digest(collection_path),
+              "projection": collection["projection"], "task_payload_sha256": tasks.TASK_SHA,
+              "source_sha256": identities, "image_id": image_id, "runtime": runtime,
+              "python_version": python_version, "runs": [], "outcomes": []}
+    try:
+        for case, item in zip(cases, collection["run"]["cases"]):
+            response = item["response"]
+            outcome = {"id": case["id"], "category": case["category"]}
+            if case["category"] != "code":
+                passed = tasks.grade_text(case, response["visible_text"])
+            else:
+                program = tasks.human_eval_program(case, response["visible_text"])
+                payload = {"case_id": case["id"], "program": program,
+                           "program_sha256": hashlib.sha256(program.encode()).hexdigest()}
+                # Original dataset program stays in the ignored frozen payload;
+                # published receipts retain binding hashes and literal results.
+                raw = controller.execute(api, image_id, source, payload)
+                record["runs"].append({"id": case["id"], "raw": raw,
+                                       "program_sha256": payload["program_sha256"],
+                                       "completion_sha256": response["visible_text_sha256"]})
+                try:
+                    resolved = evidence.classify(raw, payload, runtime, python_version)
+                except ValueError as error:
+                    # Preserve unresolved compatibility/protocol/exit evidence.
+                    # Do not continue creating containers after uncertain cleanup.
+                    if (raw.get("failure") or raw.get("container_removed") is not True
+                            or raw.get("container_cleanup_errors") != []
+                            or raw.get("cleanup_errors") != []
+                            or raw.get("surviving_group_members") != []):
+                        raise
+                    record["runs"][-1]["infrastructure_failure"] = str(error)
+                    outcome.update(passed=None, status="infrastructure_failure")
+                    record["outcomes"].append(outcome)
+                    continue
+                record["runs"][-1]["resolved"] = resolved
+                passed = resolved["passed"]
+            outcome.update(passed=passed, status="model_pass" if passed else "model_fail")
+            record["outcomes"].append(outcome)
+        record["unresolved_case_ids"] = [item["id"] for item in record["outcomes"]
+                                        if item["status"] == "infrastructure_failure"]
+        record["quality_completed"] = not record["unresolved_case_ids"]
+        record["aggregate"] = (tasks.aggregate(cases, record["outcomes"])
+                               if record["quality_completed"] else None)
+        if identities != {name: boundary.digest(boundary.ROOT/name) for name in identities}:
+            raise ValueError("Held-out grading source changed")
+        if boundary.digest(collection_path) != record["collection_sha256"] or tasks.load_cases() != cases:
+            raise ValueError("Held-out grading response/input changed")
+        record["completed"] = True
+    except BaseException as error:
+        record["failure"] = {"type": type(error).__name__, "message": str(error)[:4096]}
+    finally:
+        record["completed_utc"] = datetime.now(timezone.utc).isoformat()
+        with output.open("x", encoding="utf-8") as stream:
+            json.dump(record, stream, indent=2, allow_nan=False)
+            stream.write("\n")
+    return record

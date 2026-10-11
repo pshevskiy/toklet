@@ -1,0 +1,81 @@
+{
+  "format": "toklet-held-out-task-natural-exit-idle-v1",
+  "idle_verified_utc": "2026-10-11T15:42:39.360415+00:00",
+  "session_id": 1132,
+  "all_owned_processes_absent": true,
+  "exited_owned_pids": [
+    91589,
+    91598,
+    91610
+  ],
+  "owned_group_members": {
+    "91589": [],
+    "91610": []
+  },
+  "owned_absence_query": {
+    "command": [
+      "ps",
+      "-p",
+      "91589,91598,91610",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "held_original_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n",
+  "stopped_machine": {
+    "Name": "podman-machine-default",
+    "Default": true,
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "Running": false,
+    "Starting": false,
+    "LastUp": "2026-10-11T14:52:06.710455+03:00",
+    "Stream": "default",
+    "VMType": "applehv",
+    "CPUs": 5,
+    "Memory": "2147483648",
+    "Swap": "0",
+    "DiskSize": "107374182400",
+    "Port": 51387,
+    "RemoteUsername": "core",
+    "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+    "UserModeNetworking": true
+  },
+  "end_verified": {
+    "frozen_binaries": {
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    "validated_local_model_assets": {
+      "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+    }
+  },
+  "launch_receipt_sha256": "a20e129d7b094d32e5cb22d3acffebb7edb6b88fea1bac7d15cd1eb5cc6c0514",
+  "owned_receipt_sha256": "39ff08fd62fa090162605b920d6ee88affe7a80165f1c8a79e81597df362f8e8",
+  "session_completion_sha256": "7a62298f6c3a6c609daa650b3bc461690864fe1a411ea5efc59a7dde93a09014",
+  "collection_sha256": "103888cefeebfddfdffc5691d697f83524e69fc02c78099505292f0a40c41244",
+  "native_sha256": "7fd9021986776be236a1106b8d16cf8c31b5265244b4db14baebaf0ab54f908b",
+  "saved_result_sha256": {
+    "benchmarks/results/2026-10-11-held-out-task-scalar-v1.json": "103888cefeebfddfdffc5691d697f83524e69fc02c78099505292f0a40c41244",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-v1.json.native.jsonl": "7fd9021986776be236a1106b8d16cf8c31b5265244b4db14baebaf0ab54f908b",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-v1.json.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-launch-v1.json": "a20e129d7b094d32e5cb22d3acffebb7edb6b88fea1bac7d15cd1eb5cc6c0514",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-owned-v1.json": "39ff08fd62fa090162605b920d6ee88affe7a80165f1c8a79e81597df362f8e8",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-session-completion-v1.json": "7a62298f6c3a6c609daa650b3bc461690864fe1a411ea5efc59a7dde93a09014",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-launch-v1.py.txt": "61261ca6e75ca77e9c64bce5257843ba94ecbfd5b05fe09aacf0306fdc15f24a",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-owned-v1.py.txt": "6968f6e25f5c26d3d3bdc366b3f7cda3e2025f7257ac0c2c02b2d5ffd3c173c5",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-driver-v1.py.txt": "7dbfcaffc1676273ef0cf9238034dad18a0d227724bd97625fcb966f140de5f0",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-validator-v1.py.txt": "4d3c515fb07362bc1bdd891d0ff213c33350db5d96f34d08e2894a148fb68962",
+    "benchmarks/results/2026-10-11-held-out-task-scalar-idle-v1.py.txt": "3c7eea9ab191eeab72b85b957a5131c0df2fd6a9ae9ee61b1196a157ff513627"
+  },
+  "producer_sha256": "3c7eea9ab191eeab72b85b957a5131c0df2fd6a9ae9ee61b1196a157ff513627"
+}

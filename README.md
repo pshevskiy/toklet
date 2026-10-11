@@ -179,12 +179,15 @@ workloads remain pending.
 The [frozen task collector](docs/experiments/2026-10-10-task-response-collector.md)
 preserves prepared IDs, finalized text and pending EOS semantics, and supplies
 the exact text scorers and literal HumanEval program composition. Four authored
-scalar/tiled requests pass with matching outputs. Isolated code execution and
-all 100 held-out model responses remain pending.
+scalar/tiled requests pass with matching outputs. Held-out code grading and
+the tiled 100-case collection remain pending.
 The [full-task collector preparation](docs/experiments/2026-10-11-held-out-task-collector.md)
 now handles 100 independent requests, including empty immediate EOS, with
 phase watchdogs and owned descendant cleanup. Eleven targeted checks and all
-172 offline checks pass; no held-out response or task score is claimed yet.
+172 offline checks pass. The [full scalar collection](docs/experiments/2026-10-11-held-out-task-scalar.md)
+now completes all 100 frozen responses with natural exit and full journal
+replay. Its conservative joint physical peak is 2,154,760,904 bytes, below
+6 GiB. Task scoring and the candidate comparison remain pending.
 The [authored native isolation candidate](docs/experiments/2026-10-10-code-isolation.md)
 passes offline checks but is rejected before sandbox admission because Python
 cannot accept the fixed data limit. It is not used for generated code; a
@@ -199,5 +202,5 @@ generated-code integration and full quality checks remain pending.
 The [literal Linux controller](docs/experiments/2026-10-11-linux-literal-controller.md)
 passes all 28 authored native expectations and 161 offline tests, with literal
 input, exact configuration, bounded transport and verified VM restoration.
-Unresolved statuses remain infrastructure failures. Held-out generation and
+Unresolved statuses remain infrastructure failures. Held-out code grading and
 task scoring remain pending.
