@@ -1,0 +1,29 @@
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib,json,re,subprocess
+root=Path.cwd()
+def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+out=root/'benchmarks/results'
+logs={}
+for name in ['offline-tests-v1','offline-tests-v2','rust-tests-v1','clippy-v1']:
+    src=root/'artifacts'/('2026-10-11-linux-task-'+name+'.txt')
+    dst=out/('2026-10-11-linux-task-'+name+'.txt')
+    dst.write_bytes(src.read_bytes())
+    logs[name]={'path':str(dst.relative_to(root)),'sha256':digest(dst)}
+failed=(root/logs['offline-tests-v1']['path']).read_text()
+passed=(root/logs['offline-tests-v2']['path']).read_text()
+rust=(root/logs['rust-tests-v1']['path']).read_text()
+assert 'Ran 136 tests' in failed and 'FAILED (failures=2)' in failed and 'Operation not permitted' in failed
+assert 'Ran 136 tests' in passed and '\nOK\n' in passed
+counts=[int(n) for n in re.findall(r'test result: ok\. (\d+) passed;',rust)]
+assert sum(counts)==76 and 'FAILED' not in rust
+assert 'Finished `dev`' in (root/logs['clippy-v1']['path']).read_text()
+protected={'target/release/examples/cpu_bench':'e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea','target/release/toklet':'5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59','tools/bench/quality.py':'7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d','tools/bench/task_cases.py':'91b5f44840ba31b8f0aead2217b4638c0dbb7e2529389225ba58a6c4822f9e1d'}
+for path,expected in protected.items():assert digest(root/path)==expected,path
+sources={str(path.relative_to(root)):digest(path) for path in sorted((root/'tools/bench').glob('*linux_task*.py'))}
+assert len(sources)==6
+snap=out/'2026-10-11-linux-task-preparation-checks-v1.py.txt'
+snap.write_bytes(Path(__file__).read_bytes())
+record={'format':'toklet-linux-task-preparation-checks-v1','observed_utc':datetime.now(timezone.utc).isoformat(),'engine_revision':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'scope':'Offline preparation only; no generated program, native container admission, executor adoption or quality score.','source_sha256':sources,'protected_sha256':protected,'logs':logs,'producer':{'path':str(snap.relative_to(root)),'sha256':digest(snap)},'checks':{'targeted_python_tests':39,'complete_python_tests':136,'rust_tests_passed':sum(counts),'rust_test_commands':[['env','CARGO_TARGET_DIR=artifacts/cpu-tiled-cli-v1','cargo','test','--locked','--offline']], 'format_check':{'command':['cargo','fmt','--check'],'exit_code':0,'evidence':'Observed exec result exit zero; no output'},'clippy_command':['env','CARGO_TARGET_DIR=artifacts/cpu-tiled-cli-v1','cargo','clippy','--locked','--offline','--all-targets','--','-D','warnings'],'initial_sandbox_suite_passed':False,'initial_sandbox_failures':2,'process_access_rerun_passed':True}}
+(out/'2026-10-11-linux-task-preparation-checks-v1.json').write_text(json.dumps(record,indent=2)+'\n')
+print(json.dumps(record['checks']))

@@ -1,0 +1,177 @@
+test_full_authored_turns_and_output_policy (test_application.Transcript.test_full_authored_turns_and_output_policy) ... ok
+test_active_admission_and_complete_benign_check_are_required (test_code_isolation_probe.IsolationEvidence.test_active_admission_and_complete_benign_check_are_required) ... ok
+test_controller_combined_output_and_wall_bounds_without_a_native_child (test_code_isolation_probe.IsolationEvidence.test_controller_combined_output_and_wall_bounds_without_a_native_child) ... ok
+test_corruption_unbounded_capture_and_failed_cleanup_never_qualify (test_code_isolation_probe.IsolationEvidence.test_corruption_unbounded_capture_and_failed_cleanup_never_qualify) ... ok
+test_failed_assertion_and_early_zero_exit_are_distinct_evidence (test_code_isolation_probe.IsolationEvidence.test_failed_assertion_and_early_zero_exit_are_distinct_evidence) ... ok
+test_idle_guard_rejects_incomplete_or_live_numerical_work (test_code_isolation_probe.IsolationEvidence.test_idle_guard_rejects_incomplete_or_live_numerical_work) ... ok
+test_pipe_setup_failure_preserves_failure_and_reaps_its_owned_child (test_code_isolation_probe.IsolationEvidence.test_pipe_setup_failure_preserves_failure_and_reaps_its_owned_child) ... ok
+test_refusal_is_not_network_denial_and_memory_probes_bind_the_request (test_code_isolation_probe.IsolationEvidence.test_refusal_is_not_network_denial_and_memory_probes_bind_the_request) ... ok
+test_resource_termination_requires_the_expected_cause_and_owned_cleanup (test_code_isolation_probe.IsolationEvidence.test_resource_termination_requires_the_expected_cause_and_owned_cleanup) ... ok
+test_frozen_contract_verifies_without_external_sources (test_contract.ContractTests.test_frozen_contract_verifies_without_external_sources) ... ok
+test_schema_rejects_incomplete_identity_and_short_measurement_runs (test_contract.ContractTests.test_schema_rejects_incomplete_identity_and_short_measurement_runs) ... ok
+test_token_reader_rejects_truncated_data (test_contract.ContractTests.test_token_reader_rejects_truncated_data) ... ok
+test_full_driver_preserves_contract_and_records_isolated_selection (test_cpu.CandidateIdentity.test_full_driver_preserves_contract_and_records_isolated_selection) ... ok
+test_qualification_binds_sources_worker_and_passed_reports (test_cpu.CandidateIdentity.test_qualification_binds_sources_worker_and_passed_reports) ... ok
+test_ready_rejects_silent_default_and_shape_drift (test_cpu.CandidateIdentity.test_ready_rejects_silent_default_and_shape_drift) ... ok
+test_unqualified_candidate_never_launches (test_cpu.CandidateIdentity.test_unqualified_candidate_never_launches) ... ok
+test_cache_workloads_prepare_the_declared_valid_prefix (test_cpu.Requests.test_cache_workloads_prepare_the_declared_valid_prefix) ... ok
+test_empty_cache_and_exact_capacity (test_cpu.Requests.test_empty_cache_and_exact_capacity) ... ok
+test_interrupted_record_retry_never_launches_a_worker (test_cpu.Requests.test_interrupted_record_retry_never_launches_a_worker) ... ok
+test_pending_token_is_staged_without_evaluation (test_cpu.Requests.test_pending_token_is_staged_without_evaluation) ... ok
+test_application_rejects_supplied_incomplete_receipt_before_contract_or_model_reads (test_cpu_cli.Qualification.test_application_rejects_supplied_incomplete_receipt_before_contract_or_model_reads) ... ok
+test_application_rejects_unqualified_tiled_before_model_reads (test_cpu_cli.Qualification.test_application_rejects_unqualified_tiled_before_model_reads) ... ok
+test_complete_source_build_reference_and_session_binding (test_cpu_cli.Qualification.test_complete_source_build_reference_and_session_binding) ... ok
+test_incomplete_identity_inventory_and_builds_fail (test_cpu_cli.Qualification.test_incomplete_identity_inventory_and_builds_fail) ... ok
+test_incomplete_modes_tokens_state_and_ownership_fail (test_cpu_cli.Qualification.test_incomplete_modes_tokens_state_and_ownership_fail) ... ok
+test_legacy_scalar_fallback_and_qualified_mode_acknowledgement (test_cpu_cli.Qualification.test_legacy_scalar_fallback_and_qualified_mode_acknowledgement) ... ok
+test_address_limit_readiness_requires_both_exact_literal_bounds (test_linux_code_isolation.LinuxIsolationTests.test_address_limit_readiness_requires_both_exact_literal_bounds) ... ok
+test_api_connection_must_identify_the_fixed_rootless_machine (test_linux_code_isolation.LinuxIsolationTests.test_api_connection_must_identify_the_fixed_rootless_machine) ... ok
+test_architecture_guard_kills_wrong_abi_before_syscall_selection (test_linux_code_isolation.LinuxIsolationTests.test_architecture_guard_kills_wrong_abi_before_syscall_selection) ... ok
+test_child_rejects_other_platforms_without_resource_or_native_calls (test_linux_code_isolation.LinuxIsolationTests.test_child_rejects_other_platforms_without_resource_or_native_calls) ... ok
+test_container_arguments_are_literal_fixed_and_have_no_host_mounts (test_linux_code_isolation.LinuxIsolationTests.test_container_arguments_are_literal_fixed_and_have_no_host_mounts) ... ok
+test_container_exists_distinguishes_absence_from_transport_failure (test_linux_code_isolation.LinuxIsolationTests.test_container_exists_distinguishes_absence_from_transport_failure) ... ok
+test_cpu_and_wall_termination_have_separate_owned_causes (test_linux_code_isolation.LinuxIsolationTests.test_cpu_and_wall_termination_have_separate_owned_causes) ... ok
+test_ctypes_admission_uses_owned_pointers_and_fixed_resource_pairs (test_linux_code_isolation.LinuxIsolationTests.test_ctypes_admission_uses_owned_pointers_and_fixed_resource_pairs) ... ok
+test_ctypes_instruction_layout_matches_independent_uapi_packing (test_linux_code_isolation.LinuxIsolationTests.test_ctypes_instruction_layout_matches_independent_uapi_packing) ... ok
+test_default_denies_files_network_processes_and_limit_changes (test_linux_code_isolation.LinuxIsolationTests.test_default_denies_files_network_processes_and_limit_changes) ... ok
+test_descriptor_guards_reject_other_fds_and_poisoned_high_bits (test_linux_code_isolation.LinuxIsolationTests.test_descriptor_guards_reject_other_fds_and_poisoned_high_bits) ... ok
+test_explicit_endpoint_prefix_reaches_container_create_and_cleanup (test_linux_code_isolation.LinuxIsolationTests.test_explicit_endpoint_prefix_reaches_container_create_and_cleanup) ... ok
+test_failed_control_retains_raw_diagnostic_without_bundle_in_message (test_linux_code_isolation.LinuxIsolationTests.test_failed_control_retains_raw_diagnostic_without_bundle_in_message) ... ok
+test_failed_create_cleans_only_its_proven_owned_container (test_linux_code_isolation.LinuxIsolationTests.test_failed_create_cleans_only_its_proven_owned_container) ... ok
+test_idle_guard_requires_complete_changed_work_and_no_live_worker (test_linux_code_isolation.LinuxIsolationTests.test_idle_guard_requires_complete_changed_work_and_no_live_worker) ... ok
+test_kernel_capability_masks_are_bounded_unique_and_zero (test_linux_code_isolation.LinuxIsolationTests.test_kernel_capability_masks_are_bounded_unique_and_zero) ... ok
+test_memory_mapping_requires_anonymous_non_executable_arguments (test_linux_code_isolation.LinuxIsolationTests.test_memory_mapping_requires_anonymous_non_executable_arguments) ... ok
+test_owned_exit_wait_requires_completed_code_and_matching_final_state (test_linux_code_isolation.LinuxIsolationTests.test_owned_exit_wait_requires_completed_code_and_matching_final_state) ... ok
+test_ownership_requires_exact_id_image_and_fresh_label (test_linux_code_isolation.LinuxIsolationTests.test_ownership_requires_exact_id_image_and_fresh_label) ... ok
+test_runtime_capture_or_container_cleanup_corruption_never_qualifies (test_linux_code_isolation.LinuxIsolationTests.test_runtime_capture_or_container_cleanup_corruption_never_qualifies) ... ok
+test_runtime_metadata_is_removed_without_hiding_other_environment (test_linux_code_isolation.LinuxIsolationTests.test_runtime_metadata_is_removed_without_hiding_other_environment) ... ok
+test_server_configuration_rejects_mounts_secrets_privilege_and_missing_limits (test_linux_code_isolation.LinuxIsolationTests.test_server_configuration_rejects_mounts_secrets_privilege_and_missing_limits) ... ok
+test_success_failure_and_early_exit_remain_distinct_authored_outcomes (test_linux_code_isolation.LinuxIsolationTests.test_success_failure_and_early_exit_remain_distinct_authored_outcomes) ... ok
+test_transport_caps_both_pipes_and_wall_without_running_a_child (test_linux_code_isolation.LinuxIsolationTests.test_transport_caps_both_pipes_and_wall_without_running_a_child) ... ok
+test_transport_infrastructure_failure_cannot_be_hidden_by_container_status (test_linux_code_isolation.LinuxIsolationTests.test_transport_infrastructure_failure_cannot_be_hidden_by_container_status) ... ok
+test_transport_setup_failure_preserves_error_and_reaps_owned_group (test_linux_code_isolation.LinuxIsolationTests.test_transport_setup_failure_preserves_error_and_reaps_owned_group) ... ok
+test_admission_precedes_candidate_output_and_completion (test_linux_task_child.LiteralChildTests.test_admission_precedes_candidate_output_and_completion) ... ok
+test_closed_output_rejects_write_flush_and_print (test_linux_task_child.LiteralChildTests.test_closed_output_rejects_write_flush_and_print) ... ok
+test_exit_zero_and_interrupt_do_not_pass (test_linux_task_child.LiteralChildTests.test_exit_zero_and_interrupt_do_not_pass) ... ok
+test_full_source_tests_return_normally (test_linux_task_child.LiteralChildTests.test_full_source_tests_return_normally) ... ok
+test_import_failure_leaves_case_unresolved (test_linux_task_child.LiteralChildTests.test_import_failure_leaves_case_unresolved) ... ok
+test_input_pipe_is_bounded_and_rejects_duplicate_fields (test_linux_task_child.LiteralChildTests.test_input_pipe_is_bounded_and_rejects_duplicate_fields) ... ok
+test_memory_exhaustion_is_resource_failure (test_linux_task_child.LiteralChildTests.test_memory_exhaustion_is_resource_failure) ... ok
+test_ordinary_output_is_framed_and_bounded_per_frame (test_linux_task_child.LiteralChildTests.test_ordinary_output_is_framed_and_bounded_per_frame) ... ok
+test_payload_binding_and_bound (test_linux_task_child.LiteralChildTests.test_payload_binding_and_bound) ... ok
+test_preload_inventory_does_not_consult_payload (test_linux_task_child.LiteralChildTests.test_preload_inventory_does_not_consult_payload) ... ok
+test_preloading_does_not_inject_candidate_names (test_linux_task_child.LiteralChildTests.test_preloading_does_not_inject_candidate_names) ... ok
+test_setup_failure_never_evaluates_program (test_linux_task_child.LiteralChildTests.test_setup_failure_never_evaluates_program) ... ok
+test_source_test_assertion_and_missing_candidate_fail (test_linux_task_child.LiteralChildTests.test_source_test_assertion_and_missing_candidate_fail) ... ok
+test_writelines_and_unsupported_stream_features (test_linux_task_child.LiteralChildTests.test_writelines_and_unsupported_stream_features) ... ok
+test_actual_oom_after_admission_is_resource_failure (test_linux_task_evidence.EvaluatorEvidenceTests.test_actual_oom_after_admission_is_resource_failure) ... ok
+test_ambiguous_exit137_does_not_mean_timeout (test_linux_task_evidence.EvaluatorEvidenceTests.test_ambiguous_exit137_does_not_mean_timeout) ... ok
+test_assertion_and_memory_failure_are_resolved (test_linux_task_evidence.EvaluatorEvidenceTests.test_assertion_and_memory_failure_are_resolved) ... ok
+test_duplicate_or_post_terminal_events_are_rejected (test_linux_task_evidence.EvaluatorEvidenceTests.test_duplicate_or_post_terminal_events_are_rejected) ... ok
+test_frame_and_terminal_shapes_are_checked (test_linux_task_evidence.EvaluatorEvidenceTests.test_frame_and_terminal_shapes_are_checked) ... ok
+test_import_compatibility_prevents_binary_score (test_linux_task_evidence.EvaluatorEvidenceTests.test_import_compatibility_prevents_binary_score) ... ok
+test_json_duplicate_keys_and_nonfinite_numbers_are_rejected (test_linux_task_evidence.EvaluatorEvidenceTests.test_json_duplicate_keys_and_nonfinite_numbers_are_rejected) ... ok
+test_mutated_binding_flags_policy_and_limits_are_rejected (test_linux_task_evidence.EvaluatorEvidenceTests.test_mutated_binding_flags_policy_and_limits_are_rejected) ... ok
+test_ordinary_output_frames_do_not_become_status_events (test_linux_task_evidence.EvaluatorEvidenceTests.test_ordinary_output_frames_do_not_become_status_events) ... ok
+test_pass_requires_terminal_completion (test_linux_task_evidence.EvaluatorEvidenceTests.test_pass_requires_terminal_completion) ... ok
+test_raw_capture_cleanup_and_exit_mismatch_block_score (test_linux_task_evidence.EvaluatorEvidenceTests.test_raw_capture_cleanup_and_exit_mismatch_block_score) ... ok
+test_recorded_wall_stop_requires_admission (test_linux_task_evidence.EvaluatorEvidenceTests.test_recorded_wall_stop_requires_admission) ... ok
+test_saturated_output_limit_allows_a_truncated_frame (test_linux_task_evidence.EvaluatorEvidenceTests.test_saturated_output_limit_allows_a_truncated_frame) ... ok
+test_serialized_payload_is_bounded_data (test_linux_task_evidence.EvaluatorEvidenceTests.test_serialized_payload_is_bounded_data) ... ok
+test_unsaturated_output_claim_and_nonzero_premature_exit_are_unresolved (test_linux_task_evidence.EvaluatorEvidenceTests.test_unsaturated_output_claim_and_nonzero_premature_exit_are_unresolved) ... ok
+test_broken_stdin_retains_failure_and_closes_owned_pipes (test_linux_task_transport.InputTransportTests.test_broken_stdin_retains_failure_and_closes_owned_pipes) ... ok
+test_cleanup_pipe_failure_is_retained (test_linux_task_transport.InputTransportTests.test_cleanup_pipe_failure_is_retained) ... ok
+test_interrupted_read_records_failure_and_still_cleans (test_linux_task_transport.InputTransportTests.test_interrupted_read_records_failure_and_still_cleans) ... ok
+test_invalid_input_never_spawns (test_linux_task_transport.InputTransportTests.test_invalid_input_never_spawns) ... ok
+test_partial_writes_and_eagain_finish_with_eof (test_linux_task_transport.InputTransportTests.test_partial_writes_and_eagain_finish_with_eof) ... ok
+test_pipe_setup_failure_still_reaps_and_closes (test_linux_task_transport.InputTransportTests.test_pipe_setup_failure_still_reaps_and_closes) ... ok
+test_saturation_captures_exact_bound_before_killing (test_linux_task_transport.InputTransportTests.test_saturation_captures_exact_bound_before_killing) ... ok
+test_spawn_failure_closes_selector_without_signaling (test_linux_task_transport.InputTransportTests.test_spawn_failure_closes_selector_without_signaling) ... ok
+test_wait_timeout_is_killed_and_reaped_separately (test_linux_task_transport.InputTransportTests.test_wait_timeout_is_killed_and_reaped_separately) ... ok
+test_wall_stop_reaps_under_cleanup_bound (test_linux_task_transport.InputTransportTests.test_wall_stop_reaps_under_cleanup_bound) ... ok
+test_shape_size_and_gate_are_anchored (test_llama_check.Anchors.test_shape_size_and_gate_are_anchored) ... ok
+test_qwen_tensor_mapping (test_llama_prepare.Names.test_qwen_tensor_mapping) ... ok
+test_unknown_names_fail (test_llama_prepare.Names.test_unknown_names_fail) ... ok
+test_decode_excludes_the_first_distribution_and_counts_intervals (test_mlx_baseline.TimingTests.test_decode_excludes_the_first_distribution_and_counts_intervals) ... ok
+test_fully_cached_has_no_prefill_throughput (test_mlx_baseline.TimingTests.test_fully_cached_has_no_prefill_throughput) ... ok
+test_invalid_event_records_are_rejected (test_mlx_baseline.TimingTests.test_invalid_event_records_are_rejected) ... ok
+test_one_token_has_no_decode_rate (test_mlx_baseline.TimingTests.test_one_token_has_no_decode_rate) ... ok
+test_prefill_evaluates_only_prefix_cache_and_last_token_logits (test_mlx_baseline.TimingTests.test_prefill_evaluates_only_prefix_cache_and_last_token_logits) ... ok
+test_failed_client_does_not_claim_machine_restoration (test_podman_machine_lifecycle.MachineLifecycleTests.test_failed_client_does_not_claim_machine_restoration) ... ok
+test_failed_observation_or_already_restored_owner_never_drops_live_readers (test_podman_machine_lifecycle.MachineLifecycleTests.test_failed_observation_or_already_restored_owner_never_drops_live_readers) ... ok
+test_fixed_limits_reject_changes_before_any_process (test_podman_machine_lifecycle.MachineLifecycleTests.test_fixed_limits_reject_changes_before_any_process) ... ok
+test_later_helper_output_keeps_readers_alive_until_verified_stop (test_podman_machine_lifecycle.MachineLifecycleTests.test_later_helper_output_keeps_readers_alive_until_verified_stop) ... ok
+test_output_bound_and_setup_failure_never_count_as_success (test_podman_machine_lifecycle.MachineLifecycleTests.test_output_bound_and_setup_failure_never_count_as_success) ... ok
+test_publication_failure_cannot_bypass_unverified_owner_restoration (test_podman_machine_lifecycle.MachineLifecycleTests.test_publication_failure_cannot_bypass_unverified_owner_restoration) ... ok
+test_queued_final_helper_output_is_drained_after_verified_shutdown (test_podman_machine_lifecycle.MachineLifecycleTests.test_queued_final_helper_output_is_drained_after_verified_shutdown) ... ok
+test_startup_timeout_kills_only_owned_group_and_requires_machine_cleanup (test_podman_machine_lifecycle.MachineLifecycleTests.test_startup_timeout_kills_only_owned_group_and_requires_machine_cleanup) ... ok
+test_success_preserves_helper_even_with_pipe_writer_still_alive (test_podman_machine_lifecycle.MachineLifecycleTests.test_success_preserves_helper_even_with_pipe_writer_still_alive) ... ok
+test_complete_pairs_and_corrupted_evidence (test_projection.Evidence.test_complete_pairs_and_corrupted_evidence) ... ok
+test_partial_evidence_blocks_retry_before_worker_launch (test_projection.Evidence.test_partial_evidence_blocks_retry_before_worker_launch) ... ok
+test_alignment_pending_and_missing_or_extra_scores_fail_closed (test_quality.Quality.test_alignment_pending_and_missing_or_extra_scores_fail_closed) ... ok
+test_backend_policy_and_memory_require_actual_acknowledgement (test_quality.Quality.test_backend_policy_and_memory_require_actual_acknowledgement) ... ok
+test_block_transition_and_full_tail_cover_every_target_once (test_quality.Quality.test_block_transition_and_full_tail_cover_every_target_once) ... ok
+test_exact_hash_agreement_does_not_replace_independent_nll_gate (test_quality.Quality.test_exact_hash_agreement_does_not_replace_independent_nll_gate) ... ok
+test_independent_stable_loss_preserves_equal_extreme_and_shifted_logits (test_quality.Quality.test_independent_stable_loss_preserves_equal_extreme_and_shifted_logits) ... ok
+test_interrupted_check_kills_and_reaps_its_owned_group_and_retains_output (test_quality.Quality.test_interrupted_check_kills_and_reaps_its_owned_group_and_retains_output) ... ok
+test_output_and_build_are_fresh_and_separate (test_quality.Quality.test_output_and_build_are_fresh_and_separate) ... ok
+test_inventory_and_raw_ids_preserve_caps_and_independent_input (test_task_cases.FrozenPolicy.test_inventory_and_raw_ids_preserve_caps_and_independent_input) ... ok
+test_inventory_order_policy_and_admission_corruption_reject (test_task_cases.FrozenPolicy.test_inventory_order_policy_and_admission_corruption_reject) ... ok
+test_payload_identity_size_and_path_are_checked_before_use (test_task_cases.FrozenPolicy.test_payload_identity_size_and_path_are_checked_before_use) ... ok
+test_eos_is_sampled_pending_and_absent_from_visible_ids (test_task_cases.Response.test_eos_is_sampled_pending_and_absent_from_visible_ids) ... ok
+test_event_order_finalization_and_mode_errors_are_infrastructure (test_task_cases.Response.test_event_order_finalization_and_mode_errors_are_infrastructure) ... ok
+test_output_limit_collects_reset_unicode_tail_before_grading (test_task_cases.Response.test_output_limit_collects_reset_unicode_tail_before_grading) ... ok
+test_response_bytes_and_extra_finalization_are_bounded (test_task_cases.Response.test_response_bytes_and_extra_finalization_are_bounded) ... ok
+test_state_sampling_timing_and_token_corruption_reject (test_task_cases.Response.test_state_sampling_timing_and_token_corruption_reject) ... ok
+test_code_is_literal_and_explicitly_invokes_all_source_tests (test_task_cases.Scoring.test_code_is_literal_and_explicitly_invokes_all_source_tests) ... ok
+test_continuation_preserves_first_word_case_and_punctuation (test_task_cases.Scoring.test_continuation_preserves_first_word_case_and_punctuation) ... ok
+test_equal_weight_aggregation_requires_all_resolved_cases (test_task_cases.Scoring.test_equal_weight_aggregation_requires_all_resolved_cases) ... ok
+test_prose_requires_the_whole_trimmed_uppercase_letter (test_task_cases.Scoring.test_prose_requires_the_whole_trimmed_uppercase_letter) ... ok
+test_empty_group_permission_error_needs_proof_of_no_live_members (test_task_cases_probe.TaskTransport.test_empty_group_permission_error_needs_proof_of_no_live_members) ... ok
+test_error_missing_reset_nonfinite_and_trailing_output_never_pass (test_task_cases_probe.TaskTransport.test_error_missing_reset_nonfinite_and_trailing_output_never_pass) ... 
+  test_error_missing_reset_nonfinite_and_trailing_output_never_pass (test_task_cases_probe.TaskTransport.test_error_missing_reset_nonfinite_and_trailing_output_never_pass) (variant='missing_reset') ... FAIL
+test_idle_requirement_rejects_live_or_unheld_numerical_work (test_task_cases_probe.TaskTransport.test_idle_requirement_rejects_live_or_unheld_numerical_work) ... ok
+test_mode_comparison_requires_complete_matching_finalized_responses (test_task_cases_probe.TaskTransport.test_mode_comparison_requires_complete_matching_finalized_responses) ... ok
+test_persistent_fake_cli_preserves_raw_ids_and_completed_responses (test_task_cases_probe.TaskTransport.test_persistent_fake_cli_preserves_raw_ids_and_completed_responses) ... ok
+test_probe_inventory_uses_only_independent_saved_numerical_ids (test_task_cases_probe.TaskTransport.test_probe_inventory_uses_only_independent_saved_numerical_ids) ... ok
+test_watchdog_kills_and_reaps_only_its_owned_group (test_task_cases_probe.TaskTransport.test_watchdog_kills_and_reaps_only_its_owned_group) ... FAIL
+
+======================================================================
+FAIL: test_error_missing_reset_nonfinite_and_trailing_output_never_pass (test_task_cases_probe.TaskTransport.test_error_missing_reset_nonfinite_and_trailing_output_never_pass) (variant='missing_reset')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/tools/bench/test_task_cases_probe.py", line 76, in test_error_missing_reset_nonfinite_and_trailing_output_never_pass
+    self.assertEqual(result["cleanup_errors"],[])
+AssertionError: Lists differ: [{'type': 'PermissionError', 'message': "[[113 chars]ed'}] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+{'type': 'PermissionError', 'message': "[Errno 1] Operation not permitted: 'ps'"}
+
++ []
+- [{'message': "[Errno 1] Operation not permitted: 'ps'",
+-   'type': 'PermissionError'},
+-  {'message': '[Errno 1] Operation not permitted', 'type': 'PermissionError'}]
+
+======================================================================
+FAIL: test_watchdog_kills_and_reaps_only_its_owned_group (test_task_cases_probe.TaskTransport.test_watchdog_kills_and_reaps_only_its_owned_group)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/tools/bench/test_task_cases_probe.py", line 89, in test_watchdog_kills_and_reaps_only_its_owned_group
+    self.assertEqual(result["cleanup_errors"],[])
+AssertionError: Lists differ: [{'type': 'PermissionError', 'message': "[[113 chars]ed'}] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+{'type': 'PermissionError', 'message': "[Errno 1] Operation not permitted: 'ps'"}
+
++ []
+- [{'message': "[Errno 1] Operation not permitted: 'ps'",
+-   'type': 'PermissionError'},
+-  {'message': '[Errno 1] Operation not permitted', 'type': 'PermissionError'}]
+
+----------------------------------------------------------------------
+Ran 136 tests in 4.220s
+
+FAILED (failures=2)
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.

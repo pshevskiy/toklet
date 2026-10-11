@@ -305,6 +305,12 @@ physical footprint is 2,128,758,896 bytes, below admission and 6 GiB.
 Finalization, setup and overlapping native components remain separate.
 This completes this scalar trace, not held-out quality or milestone acceptance.
 
+The [literal task evaluator preparation](../docs/experiments/2026-10-11-linux-task-preparation.md)
+adds bounded source/input handling, whole-program completion checks, strict
+receipt classification and owned input transport. Its 39 authored offline
+tests pass within the 136-test benchmark suite. Container integration and
+native qualification remain pending; it is not an adopted generated-code grader.
+
 ```sh
 .venv/bin/python tools/bench/mlx_baseline.py --dtype fp32 --prompt-length 128 --output benchmarks/raw/mlx-fp32-short.json
 ```

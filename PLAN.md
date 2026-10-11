@@ -363,6 +363,17 @@ independent byte-identical replay, identity/state/timing/memory checks and
 link/whitespace verification. Held-out quality, candidate application evidence
 and milestone acceptance remain open.
 
+Literal task evaluator preparation, 11 October 2026 (M2.5/quality still open):
+the [child, receipt validator and bounded input transport](docs/experiments/2026-10-11-linux-task-preparation.md)
+preserve whole-source completion, fixed preloads, strict evidence parsing and
+separate owned-process cleanup. All 39 new offline tests and the full 136-test
+benchmark suite pass; formatting, Clippy with warnings denied and 76 ordinary
+Rust tests pass. Initial sandbox EPERM failures in existing process fixtures
+are preserved separately from the passing rerun. No generated program was
+executed. Astra accepted the checked preparation task with no findings.
+Fixed container integration, native authored qualification and VM
+restoration remain required before adoption or quality scoring.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

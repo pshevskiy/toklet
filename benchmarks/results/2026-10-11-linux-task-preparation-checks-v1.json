@@ -1,0 +1,81 @@
+{
+  "format": "toklet-linux-task-preparation-checks-v1",
+  "observed_utc": "2026-10-11T09:34:54.934574+00:00",
+  "engine_revision": "5ca528fb7dbc846d9aee4d947aa7063ed4f187eb",
+  "scope": "Offline preparation only; no generated program, native container admission, executor adoption or quality score.",
+  "source_sha256": {
+    "tools/bench/linux_task_child.py": "e7189d1d22ee621c50a8afc922a77d5ae7bbd21674d08702279343ec64104c6e",
+    "tools/bench/linux_task_evidence.py": "edec9981a35e8fdbb019d3c3e07c2bd48fd79bea0c5e83d728a6ad99fcfc4ff2",
+    "tools/bench/linux_task_transport.py": "0cc556e5867fa06bf2d559b0011c641eb773f2911603456cccd584e55eb2040f",
+    "tools/bench/test_linux_task_child.py": "4275358b8620fc5870cf372689c2f805dfafbafce9ba0cb53787ce7bb6faa88a",
+    "tools/bench/test_linux_task_evidence.py": "30c9b88ef4a38e719a03f1ee486ab73a056d103fc9df372312900b1c71b6f073",
+    "tools/bench/test_linux_task_transport.py": "7527152ddd82a7265644e8e03309358cf8eae1b010c4aa201aa06e59b685f40e"
+  },
+  "protected_sha256": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "tools/bench/quality.py": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d",
+    "tools/bench/task_cases.py": "91b5f44840ba31b8f0aead2217b4638c0dbb7e2529389225ba58a6c4822f9e1d"
+  },
+  "logs": {
+    "offline-tests-v1": {
+      "path": "benchmarks/results/2026-10-11-linux-task-offline-tests-v1.txt",
+      "sha256": "7cf483557909051bb0e97d77a86ff4a59514529edd5330d78aee3818893b4f72"
+    },
+    "offline-tests-v2": {
+      "path": "benchmarks/results/2026-10-11-linux-task-offline-tests-v2.txt",
+      "sha256": "52728f728ded6d63cd0ea5b9ff28117d57d1643e99d29d43c5f2519ba63d1958"
+    },
+    "rust-tests-v1": {
+      "path": "benchmarks/results/2026-10-11-linux-task-rust-tests-v1.txt",
+      "sha256": "b869817b5e9a8a0ca04dffb3e7ad11a1ec1a75389e95d61effa928ba84b737f1"
+    },
+    "clippy-v1": {
+      "path": "benchmarks/results/2026-10-11-linux-task-clippy-v1.txt",
+      "sha256": "f52c11d26f76e443f40dad4770997d19391aa657b25dc3c74cff5a918ed51931"
+    }
+  },
+  "producer": {
+    "path": "benchmarks/results/2026-10-11-linux-task-preparation-checks-v1.py.txt",
+    "sha256": "01c19cc95dfd263a94b68c160553d9d224b6001223c49bab4a1cba1f8251e09b"
+  },
+  "checks": {
+    "targeted_python_tests": 39,
+    "complete_python_tests": 136,
+    "rust_tests_passed": 76,
+    "rust_test_commands": [
+      [
+        "env",
+        "CARGO_TARGET_DIR=artifacts/cpu-tiled-cli-v1",
+        "cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ]
+    ],
+    "format_check": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exit_code": 0,
+      "evidence": "Observed exec result exit zero; no output"
+    },
+    "clippy_command": [
+      "env",
+      "CARGO_TARGET_DIR=artifacts/cpu-tiled-cli-v1",
+      "cargo",
+      "clippy",
+      "--locked",
+      "--offline",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "initial_sandbox_suite_passed": false,
+    "initial_sandbox_failures": 2,
+    "process_access_rerun_passed": true
+  }
+}
