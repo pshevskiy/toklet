@@ -1,0 +1,39 @@
+"""Fresh exact owned-helper and protected-identity proof after native exit."""
+from datetime import datetime, timezone
+import json
+from pathlib import Path
+import subprocess
+import sys
+sys.path.insert(0, 'tools/bench')
+import linux_code_isolation_probe as boundary
+
+root=boundary.ROOT
+wpath=root/'benchmarks/results/2026-10-11-literal-native-v3-window.json'
+window=json.loads(wpath.read_text())
+assert window['completed'] is True and window['restored_stopped'] is True
+assert window['pipe_lifetime_finished'] is True and not window.get('restoration_failure')
+pids=[window['startup']['startup_process_group'],*window['startup']['live_startup_group_members']]
+assert pids==[82722,82723,82724]
+absent=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid='],text=True,capture_output=True)
+assert absent.returncode==1 and not absent.stdout and not absent.stderr
+assert boundary.live_group_members(82722)==[]
+original=root/'benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json'
+held=boundary.idle(json.loads(original.read_text()))
+loss=root/'benchmarks/results/2026-10-11-held-out-scalar-loss-idle-v1.json'
+proof=json.loads(loss.read_text())
+end={section:{name:boundary.digest(root/name) for name in files} for section,files in proof['end_verified'].items()}
+assert end==proof['end_verified']
+query=subprocess.run(['ps','-p','71230,71239,71731','-o','pid='],text=True,capture_output=True)
+assert query.returncode==1 and not query.stdout and not query.stderr
+machines=json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+matches=[item for item in machines if item['Name']=='podman-machine-default']
+assert len(matches)==1 and matches[0]['Running'] is False and matches[0]['Starting'] is False
+receipt={'format':'toklet-authored-literal-native-idle-v1','verified_utc':datetime.now(timezone.utc).isoformat(),
+         'owned_helper_pids':pids,'owned_helpers_absent':True,'startup_group_members':[],
+         'owned_absence_query':{'command':absent.args,'exit_code':absent.returncode,'stdout':absent.stdout,'stderr':absent.stderr},
+         'loss_workers_absent':True,'held_original_snapshot':held,'stopped_machine':matches[0],
+         'window_sha256':boundary.digest(wpath),'loss_idle_sha256':boundary.digest(loss),
+         'end_verified':end,'producer_sha256':boundary.digest(__file__)}
+out=root/'benchmarks/results/2026-10-11-literal-native-v3-idle.json'
+with out.open('x') as stream:json.dump(receipt,stream,indent=2);stream.write('\n')
+print(json.dumps({'owned_helper_pids':pids,'absent':True,'vm_stopped':True}))

@@ -1,0 +1,124 @@
+{
+  "format": "toklet-authored-literal-attempt-archive-v1",
+  "verified_utc": "2026-10-11T11:44:26.789511+00:00",
+  "completed": false,
+  "qualification": false,
+  "saved_record_sha256": {
+    "benchmarks/results/2026-10-11-literal-native-v1-window.json": "81d836f0fe4aec0ce94f2137850eb9311b5b649777299c74f381769ac2c31d07",
+    "benchmarks/results/2026-10-11-literal-native-v1-probe.json": "910209b2332bd4ec282e5e477a8330f12928089c0f3d464f8e9767c9e84084cf",
+    "benchmarks/results/2026-10-11-linux-literal-controller-checks-v1.json": "fd36469004e328a10c7f3fdd6c20bc27aa2ec050c5ece7a9ce792d3c2218ac00"
+  },
+  "saved_sources": {
+    "artifacts/linux-task-native-window-2026-10-11-v1.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/artifacts/linux-task-native-window-2026-10-11-v1.py.txt",
+      "sha256": "83c1f6d4e091ab7a42d0e7b0661b079d61a4c72a21fef9f03e76cf4a014ba719"
+    },
+    "tools/bench/podman_machine_lifecycle.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/podman_machine_lifecycle.py.txt",
+      "sha256": "eea3987fdf869ac8b0735569650ef9b785bfa960c05f8315a073ff4192afc97f"
+    },
+    "tools/bench/linux_task_native_probe.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/linux_task_native_probe.py.txt",
+      "sha256": "f312493cede2fac0f2f5b9e68ba78a292eb420839054b9b67b8f8ca1632f56a9"
+    },
+    "tools/bench/linux_task_controller.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/linux_task_controller.py.txt",
+      "sha256": "d43b1bc081387613a4d8a9b8308bdf49d6f98425b886084486d314cf5269c9db"
+    },
+    "tools/bench/linux_task_native_cases.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/linux_task_native_cases.py.txt",
+      "sha256": "ffd1f73d93f3bcd5bf0398e0857dde9d3725e98d29e68806ef2ec57b9817e8f9"
+    },
+    "tools/bench/linux_task_native_check.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/linux_task_native_check.py.txt",
+      "sha256": "f1b624438341c6eea58b9fc03e7cbc462f84fb21195d61333c59c65c31632962"
+    },
+    "tools/bench/linux_task_child.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/linux_task_child.py.txt",
+      "sha256": "e7189d1d22ee621c50a8afc922a77d5ae7bbd21674d08702279343ec64104c6e"
+    },
+    "tools/bench/linux_task_evidence.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/linux_task_evidence.py.txt",
+      "sha256": "657b21335683c3536533ce777906e843c93648fdb4dcc4e623eb29192d9a649b"
+    },
+    "tools/bench/linux_task_transport.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/linux_task_transport.py.txt",
+      "sha256": "0cc556e5867fa06bf2d559b0011c641eb773f2911603456cccd584e55eb2040f"
+    },
+    "tools/bench/linux_code_isolation_child.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/linux_code_isolation_child.py.txt",
+      "sha256": "3560442782ac4ffa404d3b86a964ccbc38d5d4bc7c43a1b301fa72eedace0d5f"
+    },
+    "tools/bench/code_isolation_child.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/code_isolation_child.py.txt",
+      "sha256": "b2cabbe299e9921b0ec1658c14bc7eb73150496d86249585099d7e3647430b0f"
+    },
+    "tools/bench/linux_code_isolation_probe.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/linux_code_isolation_probe.py.txt",
+      "sha256": "4a1e01e3ac84e197b93440c694c7a3f4f8ab1258ec064d525507c7a3d9a76cbd"
+    },
+    "tools/bench/task_cases_probe.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/task_cases_probe.py.txt",
+      "sha256": "e73082850c0b0b9d634903088056032ab48a3f762da2017c3104bf5771d930ce"
+    },
+    "tools/bench/code_isolation_probe.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/code_isolation_probe.py.txt",
+      "sha256": "18b3868f02f80198c06d77d3c2d1192217aa14c78e11b0f5a4f5b72b40d72386"
+    },
+    "tools/bench/prepare.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/prepare.py.txt",
+      "sha256": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13"
+    },
+    "tools/bench/test_linux_task_child.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/test_linux_task_child.py.txt",
+      "sha256": "4275358b8620fc5870cf372689c2f805dfafbafce9ba0cb53787ce7bb6faa88a"
+    },
+    "tools/bench/test_linux_task_controller.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/test_linux_task_controller.py.txt",
+      "sha256": "234e156e695ad6e930d47c162cadce4d4721844fc547728fa7491eacb72478a7"
+    },
+    "tools/bench/test_linux_task_evidence.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/test_linux_task_evidence.py.txt",
+      "sha256": "30c9b88ef4a38e719a03f1ee486ab73a056d103fc9df372312900b1c71b6f073"
+    },
+    "tools/bench/test_linux_task_native_check.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/test_linux_task_native_check.py.txt",
+      "sha256": "48e30aff8c5fbdfcdf0dfe93978b8fe632f9e112dec80733ccf3f89dbfc236ba"
+    },
+    "tools/bench/test_linux_task_output_race.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/test_linux_task_output_race.py.txt",
+      "sha256": "722243bad94d653a953c4b83a2ce8d612654e8bc5cec30044eb71fdc965c3d25"
+    },
+    "tools/bench/test_linux_task_transport.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/tools/bench/test_linux_task_transport.py.txt",
+      "sha256": "7527152ddd82a7265644e8e03309358cf8eae1b010c4aa201aa06e59b685f40e"
+    },
+    "artifacts/check-linux-literal-controller-v1.py": {
+      "path": "benchmarks/results/2026-10-11-literal-native-v1-sources/artifacts/check-linux-literal-controller-v1.py.txt",
+      "sha256": "978fa50d847dea99ee73112b84b6fde70d52f4932aa69c1d3d5252f050a2ed72"
+    }
+  },
+  "startup_group": 80444,
+  "live_startup_group_members": [],
+  "held_original_snapshot": "  PID  PPID STAT      TIME COMMAND\n17694 35939 Ts     0:11.15 /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -\n85019 17694 Z      0:00.00 <defunct>\n",
+  "stopped_machine": {
+    "Name": "podman-machine-default",
+    "Default": true,
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "Running": false,
+    "Starting": false,
+    "LastUp": "2026-10-11T14:42:20.006299+03:00",
+    "Stream": "default",
+    "VMType": "applehv",
+    "CPUs": 5,
+    "Memory": "2147483648",
+    "Swap": "0",
+    "DiskSize": "107374182400",
+    "Port": 51387,
+    "RemoteUsername": "core",
+    "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+    "UserModeNetworking": true
+  },
+  "protected_identities_unchanged": true,
+  "producer_sha256": "59936d05d79e4d22dadb9243b2ef32718e141baab4a56ef99fabd24111967591"
+}

@@ -1,0 +1,60 @@
+"""Record post-loss controller checks without touching root release builds."""
+from datetime import datetime, timezone
+import json
+from pathlib import Path
+import sys
+sys.path.insert(0, 'tools/bench')
+import linux_code_isolation_probe as boundary
+
+root = boundary.ROOT
+out = root / 'benchmarks/raw/2026-10-11-linux-literal-controller-checks-v2.json'
+assert not out.exists()
+proof = root / 'benchmarks/results/2026-10-11-held-out-scalar-loss-idle-v1.json'
+prior = json.loads(proof.read_text())
+names = sorted(str(path.relative_to(root)) for pattern in ('linux_task*.py', 'test_linux_task*.py')
+               for path in (root / 'tools/bench').glob(pattern))
+names += ['tools/bench/linux_code_isolation_child.py', 'tools/bench/linux_code_isolation_probe.py',
+          'tools/bench/code_isolation_child.py', 'tools/bench/code_isolation_probe.py',
+          'tools/bench/task_cases_probe.py', 'tools/bench/prepare.py',
+          'tools/bench/podman_machine_lifecycle.py']
+sources = {name: boundary.digest(root / name) for name in names}
+record = {'format': 'toklet-linux-literal-controller-checks-v1', 'completed': False,
+          'started_utc': datetime.now(timezone.utc).isoformat(),
+          'producer_sha256': boundary.digest(__file__), 'source_sha256': sources,
+          'loss_idle_sha256': boundary.digest(proof), 'checks': []}
+
+
+def protected():
+    for files in prior['end_verified'].values():
+        for name, expected in files.items():
+            assert boundary.digest(root / name) == expected, name
+
+
+try:
+    protected()
+    target = str(root / 'artifacts/cpu-tiled-cli-v1')
+    commands = [
+        [str(root / '.venv/bin/python'), '-m', 'unittest', 'discover', '-s', 'tools/bench', '-p', 'test_*.py'],
+        ['cargo', 'fmt', '--check'],
+        ['env', 'CARGO_TARGET_DIR=' + target, 'cargo', 'clippy', '--locked', '--offline', '--all-targets', '--', '-D', 'warnings'],
+        ['env', 'CARGO_TARGET_DIR=' + target, 'cargo', 'test', '--locked', '--offline'],
+    ]
+    for argv in commands:
+        checked = boundary.capture(argv, 1200, 262144)
+        record['checks'].append(checked)
+        if (checked.get('failure') or checked['exit_code'] != 0 or checked['wall_timed_out']
+                or checked['output_limit_exceeded'] or checked['cleanup_errors']
+                or checked['surviving_group_members'] != []):
+            raise ValueError('Required literal controller checks failed')
+    assert sources == {name: boundary.digest(root / name) for name in names}
+    protected()
+    record['completed'] = True
+except BaseException as error:
+    record['failure'] = {'type': type(error).__name__, 'message': str(error)[:4096]}
+record['completed_utc'] = datetime.now(timezone.utc).isoformat()
+with out.open('x') as stream:
+    json.dump(record, stream, indent=2, allow_nan=False)
+    stream.write('\n')
+print(json.dumps({'completed': record['completed'], 'checks': len(record['checks']),
+                  'failure': record.get('failure')}))
+sys.exit(0 if record['completed'] else 1)

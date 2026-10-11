@@ -1,0 +1,70 @@
+{
+  "format": "toklet-authored-literal-native-replay-v1",
+  "scope": "Authored controller qualification only; no held-out generation or task score.",
+  "attempts": [
+    {
+      "version": "v1",
+      "qualified": false,
+      "expected_cases_passed": 27,
+      "runs": 28,
+      "outcomes": {
+        "passed": 9,
+        "model_failure": 8,
+        "infrastructure_failure": 5,
+        "resource_failure": 5
+      },
+      "excluded_failures": [
+        {
+          "case_id": "authored/literal/change_limits",
+          "error": "Authored evaluator outcome differs"
+        }
+      ],
+      "offline_tests": 157,
+      "rust_tests": 76,
+      "probe_sha256": "910209b2332bd4ec282e5e477a8330f12928089c0f3d464f8e9767c9e84084cf",
+      "window_sha256": "81d836f0fe4aec0ce94f2137850eb9311b5b649777299c74f381769ac2c31d07"
+    },
+    {
+      "version": "v2",
+      "qualified": false,
+      "expected_cases_passed": 13,
+      "runs": 14,
+      "outcomes": {
+        "passed": 3,
+        "model_failure": 7,
+        "infrastructure_failure": 1,
+        "resource_failure": 2
+      },
+      "excluded_failures": [
+        {
+          "case_id": "authored/literal/wall_watchdog",
+          "error": "Literal evaluator termination or cleanup is unresolved"
+        }
+      ],
+      "offline_tests": 157,
+      "rust_tests": 76,
+      "probe_sha256": "12dda65c3afd25f89567d5715695617016f698b9492cbb00a3bb1733656e7dab",
+      "window_sha256": "a91f98d1c9d1d70ec25db310cd2c8068df424599b7f1c28a61d975bdee8d5e9f"
+    },
+    {
+      "version": "v3",
+      "qualified": true,
+      "expected_cases_passed": 28,
+      "runs": 28,
+      "outcomes": {
+        "passed": 10,
+        "model_failure": 8,
+        "infrastructure_failure": 5,
+        "resource_failure": 5
+      },
+      "excluded_failures": [],
+      "offline_tests": 161,
+      "rust_tests": 76,
+      "probe_sha256": "77cdda26d80a079bc56da9a80d52f7fa09d7b2942ce768d464128f07798a9453",
+      "window_sha256": "f92d2a265e2d4cec42be678090cd6d5bdd27cdb1dffddbaef07404ea31046f6f"
+    }
+  ],
+  "final_owned_helpers_absent": true,
+  "final_vm_stopped": true,
+  "idle_sha256": "140412e756f5ebbc7bdce49aa027e19ea1a94c52a83d834bc72bd714f0e697e1"
+}

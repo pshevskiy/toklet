@@ -188,3 +188,9 @@ passes all fourteen native modes, 26 targeted checks and the full offline suite.
 It retains the fixed limits, verifies actual zero capabilities and reconciles
 completed container exit statuses. The VM's original stopped state is verified;
 generated-code integration and full quality checks remain pending.
+
+The [literal Linux controller](docs/experiments/2026-10-11-linux-literal-controller.md)
+passes all 28 authored native expectations and 161 offline tests, with literal
+input, exact configuration, bounded transport and verified VM restoration.
+Unresolved statuses remain infrastructure failures. Held-out generation and
+task scoring remain pending.

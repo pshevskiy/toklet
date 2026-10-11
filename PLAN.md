@@ -389,6 +389,23 @@ byte-for-byte and accepts the complete task without findings after documentation
 link and whitespace review.
 Full candidate loss, 100-task pass rates and milestone acceptance remain open.
 
+Literal Linux controller, 11 October 2026 (M2.5/quality still open): the
+[completed authored qualification](docs/experiments/2026-10-11-linux-literal-controller.md)
+passes all 28 precise native expectations with bounded literal stdin, exact
+trusted bootstrap/configuration, raw status agreement and owned cleanup.
+Two stdout/stderr overflow cases exercise the narrow host-SIGKILL/remote-zero
+race and resolve only as resource failure. Unknown Podman wait status may
+retry with full evidence; persistent unknown remains infrastructure failure.
+The corrected limit-change fixture checks libc return and exact EPERM directly.
+Two excluded attempts and their exact source snapshots are retained.
+All 161 offline benchmark tests, formatting, Clippy and 76 ordinary Rust tests
+pass before the final native window. Every attempt removes its containers and
+restores the stopped VM; fresh exact helper absence and protected identities
+are verified. Saved replay validates both exclusions and all accepted outcomes.
+Astra accepts the complete task without findings after independent byte-identical
+replay, targeted tests, documentation and link review. No held-out generated
+program, task score, adversarial grader integrity or milestone closure is claimed.
+
 ## M3 Bound CPU optimization and ANE research
 
 Preparatory candidate, 10 October 2026 (M3 remains pending): the profile-selected

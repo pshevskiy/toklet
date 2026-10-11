@@ -1,0 +1,138 @@
+"""Replay authored native expectations and retain both excluded attempts."""
+import base64
+from collections import Counter
+import json
+from pathlib import Path
+import re
+import runpy
+import sys
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as boundary
+import linux_task_controller as controller
+import linux_task_evidence as evidence
+import linux_task_native_check as checker
+
+ROOT=boundary.ROOT
+OUT=ROOT/'benchmarks/results'
+
+
+def equal(a,b):
+    assert evidence.canonical(a)==evidence.canonical(b)
+
+
+def healthy(record):
+    assert record['exit_code']==0 and not record.get('failure')
+    assert record['wall_timed_out'] is False and record['output_limit_exceeded'] is False
+    assert record['cleanup_errors']==[] and record['surviving_group_members']==[]
+
+
+def replay():
+    summaries=[]
+    prior=json.loads((OUT/'2026-10-11-linux-code-isolation-probe-v8.json').read_text())
+    source=controller.bundled_source()
+    for version,passed_count in [('v1',27),('v2',13),('v3',28)]:
+        prefix='2026-10-11-literal-native-'+version
+        archive=json.loads((OUT/(prefix+'-archive.json')).read_text())
+        window=json.loads((OUT/(prefix+'-window.json')).read_text())
+        probe=json.loads((OUT/(prefix+'-probe.json')).read_text())
+        checks=json.loads((OUT/('2026-10-11-linux-literal-controller-checks-'+version+'.json')).read_text())
+        qualified=version=='v3'
+        assert window['completed'] is probe['completed'] is archive['qualification'] is qualified
+        assert window['restored_stopped'] is True and window['pipe_lifetime_finished'] is True
+        assert not window.get('restoration_failure') and window['running_containers_before_stop']==[]
+        assert window['startup']['helper_pipe_lifetime_completed'] is True
+        assert archive['live_startup_group_members']==[] and archive['protected_identities_unchanged'] is True
+        assert archive['stopped_machine']['Running'] is False and archive['stopped_machine']['Starting'] is False
+        for path,sha in archive['saved_record_sha256'].items():assert boundary.digest(ROOT/path)==sha,path
+        for name,item in archive['saved_sources'].items():assert boundary.digest(ROOT/item['path'])==item['sha256'],name
+        for mapping in (window['window_source_sha256'],probe['source_sha256'],checks['source_sha256']):
+            for name,sha in mapping.items():assert archive['saved_sources'][name]['sha256']==sha,name
+        for key,name in [('producer_sha256','artifacts/linux-task-native-window-2026-10-11-'+version+'.py')]:
+            assert window[key]==archive['saved_sources'][name]['sha256']
+        assert checks['producer_sha256']==archive['saved_sources']['artifacts/check-linux-literal-controller-'+version+'.py']['sha256']
+        archived_cases=ROOT/archive['saved_sources']['tools/bench/linux_task_native_cases.py']['path']
+        inventory=runpy.run_path(str(archived_cases))['cases']()
+        equal(inventory,probe['cases'])
+        equal(probe['runtime'],prior['admitted_runtime'])
+        equal(window['admitted_runtime'],probe['runtime'])
+        assert probe['python_version']==window['admitted_python_version']==prior['admitted_python_version']
+        equal(window['connection_binding'],prior['connection_binding'])
+        equal(window['image'],prior['image'])
+        assert window['prior_qualification_sha256']==boundary.digest(OUT/'2026-10-11-linux-code-isolation-probe-v8.json')
+        assert probe['bundle_sha256']==__import__('hashlib').sha256(source.encode()).hexdigest()
+        assert window['probe_sha256']==boundary.digest(OUT/(prefix+'-probe.json'))
+        assert checks['completed'] is True and len(checks['checks'])==4
+        for item in checks['checks']:healthy(item)
+        log=''.join(base64.b64decode(checks['checks'][0][channel+'_base64']).decode() for channel in ('stdout','stderr'))
+        count=int(re.search(r'Ran (\d+) tests',log).group(1))
+        assert count==(161 if qualified else 157)
+        rust=base64.b64decode(checks['checks'][-1]['stdout_base64']).decode()
+        assert sum(map(int,re.findall(r'test result: ok\. (\d+) passed',rust)))==76
+        api=(window['commands'][0]['command'][0],'--url',window['connection_binding']['URI'],
+             '--identity',window['connection_binding']['Identity'])
+        outcomes=Counter()
+        failures=[]
+        for index,(case,item) in enumerate(zip(inventory,probe['runs'],strict=False)):
+            assert item['container_removed'] is True and item['container_cleanup_errors']==[]
+            identifier=item['container_id'];name=item['container_name']
+            before=item['container_inspect_before']
+            assert boundary.normalized_id(before['Id'])==identifier
+            assert before['Config']['Labels'][boundary.LABEL]==name
+            controller.validate_configuration(before,source)
+            equal(item['container_create']['command'],controller.create_command(api,probe['image_id'],name,source))
+            equal(item['command'],[*api,'start','--interactive','--attach',identifier])
+            equal(item['container_remove']['command'],[*api,'rm','--force',identifier])
+            healthy(item['container_create']);healthy(item['container_remove'])
+            try:
+                result=checker.check(item,case,probe['runtime'],probe['python_version'])
+            except ValueError as error:
+                failures.append({'case_id':case['payload']['case_id'],'error':str(error)})
+                assert not qualified and index==len(probe['runs'])-1
+                assert str(error)==probe['failure']['message']
+                assert item.get('expectation_passed') is not True
+            else:
+                assert item['expectation_passed'] is True
+                equal(result,item['qualification_result'])
+                outcomes[result['outcome']]+=1
+            if qualified:
+                assert 1<=len(item['container_exit_waits'])<=3
+                assert len(item['container_exit_waits'])==len(item['container_exit_inspections'])
+                for offset,(wait,inspected) in enumerate(zip(item['container_exit_waits'],item['container_exit_inspections'],strict=True)):
+                    healthy(wait)
+                    equal(wait['command'],[*api,'wait','--condition=exited',identifier])
+                    assert wait['stderr_captured_bytes']==0
+                    assert boundary.normalized_id(inspected['Id'])==identifier
+                    assert inspected['Name'].lstrip('/')==name
+                    assert boundary.normalized_id(inspected['Image'])==probe['image_id']
+                    assert inspected['Labels'][boundary.LABEL]==name
+                    text=boundary.output(wait).strip();state=inspected['State']
+                    assert state['Running'] is False and state.get('Error') in ('',None)
+                    assert type(state['OOMKilled']) is bool and type(state['ExitCode']) is int
+                    if offset+1<len(item['container_exit_waits']):assert text=='-1'
+                    else:assert 0<=int(text)<=255 and int(text)==state['ExitCode']==item['container_exit_code']
+                equal(item['container_exit_wait'],item['container_exit_waits'][-1])
+        assert sum(outcomes.values())==passed_count
+        assert len(probe['runs'])==passed_count+(0 if qualified else 1)
+        assert len(failures)==(0 if qualified else 1)
+        summaries.append({'version':version,'qualified':qualified,'expected_cases_passed':passed_count,
+                          'runs':len(probe['runs']),'outcomes':dict(outcomes),'excluded_failures':failures,
+                          'offline_tests':count,'rust_tests':76,
+                          'probe_sha256':boundary.digest(OUT/(prefix+'-probe.json')),
+                          'window_sha256':boundary.digest(OUT/(prefix+'-window.json'))})
+    idle=json.loads((OUT/'2026-10-11-literal-native-v3-idle.json').read_text())
+    assert idle['owned_helper_pids']==[82722,82723,82724] and idle['owned_helpers_absent'] is True
+    assert idle['startup_group_members']==[] and idle['loss_workers_absent'] is True
+    assert idle['owned_absence_query']['exit_code']==1 and not idle['owned_absence_query']['stdout'] and not idle['owned_absence_query']['stderr']
+    for files in idle['end_verified'].values():
+        for name,sha in files.items():assert boundary.digest(ROOT/name)==sha,name
+    completion=json.loads((OUT/'2026-10-11-literal-native-v3-session-completion.json').read_text())
+    assert completion['session_id']==79484 and completion['actual_tool_result']['exit_code']==0
+    return {'format':'toklet-authored-literal-native-replay-v1','scope':'Authored controller qualification only; no held-out generation or task score.',
+            'attempts':summaries,'final_owned_helpers_absent':True,'final_vm_stopped':True,
+            'idle_sha256':boundary.digest(OUT/'2026-10-11-literal-native-v3-idle.json')}
+
+
+if __name__=='__main__':
+    summary=replay()
+    with (OUT/'2026-10-11-literal-native-analysis-v1.json').open('x') as stream:
+        json.dump(summary,stream,indent=2,allow_nan=False);stream.write('\n')

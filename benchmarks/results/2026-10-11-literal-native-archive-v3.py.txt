@@ -1,0 +1,70 @@
+"""Archive exact literal native attempts before any source correction."""
+from datetime import datetime, timezone
+import json
+from pathlib import Path
+import subprocess
+import sys
+sys.path.insert(0, 'tools/bench')
+import linux_code_isolation_probe as boundary
+
+ROOT = boundary.ROOT
+prefix = sys.argv[1]
+assert prefix in ('2026-10-11-literal-native-v1', '2026-10-11-literal-native-v2', '2026-10-11-literal-native-v3')
+version = prefix.rsplit('-', 1)[1]
+window_path = ROOT / 'benchmarks/raw' / (prefix + '-window.json')
+probe_path = ROOT / 'benchmarks/raw' / (prefix + '-probe.json')
+window = json.loads(window_path.read_text())
+probe = json.loads(probe_path.read_text())
+assert window['restored_stopped'] is True and window['pipe_lifetime_finished'] is True
+assert window.get('restoration_failure') is None
+assert boundary.live_group_members(window['startup']['startup_process_group']) == []
+assert all(item['container_removed'] is True and item['container_cleanup_errors'] == [] for item in probe['runs'])
+machines = json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+matches = [item for item in machines if item['Name'] == 'podman-machine-default']
+assert len(matches) == 1 and matches[0]['Running'] is False and matches[0]['Starting'] is False
+original = ROOT / 'benchmarks/results/2026-10-11-interrupted-workload-idle-v1.json'
+held = boundary.idle(json.loads(original.read_text()))
+loss_idle = json.loads((ROOT/'benchmarks/results/2026-10-11-held-out-scalar-loss-idle-v1.json').read_text())
+for files in loss_idle['end_verified'].values():
+    for name, expected in files.items():
+        assert boundary.digest(ROOT/name) == expected, name
+checked_name = '2026-10-11-linux-literal-controller-checks-' + version + '.json'
+checks_path = ROOT/'benchmarks/raw'/checked_name
+checks = json.loads(checks_path.read_text())
+source_map = {}
+for mapping in (window['window_source_sha256'], probe['source_sha256'], checks['source_sha256']):
+    for name, sha in mapping.items():
+        assert name not in source_map or source_map[name] == sha, name
+        source_map[name] = sha
+window_source = 'artifacts/linux-task-native-window-2026-10-11-' + version + '.py'
+assert source_map[window_source] == window['producer_sha256']
+checks_source = 'artifacts/check-linux-literal-controller-' + version + '.py'
+source_map[checks_source] = checks['producer_sha256']
+result = ROOT/'benchmarks/results'
+saved = {}
+for source in (window_path, probe_path, checks_path):
+    target = result/source.name
+    assert not target.exists()
+    target.write_bytes(source.read_bytes())
+    saved[str(target.relative_to(ROOT))] = boundary.digest(target)
+sources = {}
+for name, sha in source_map.items():
+    assert boundary.digest(ROOT/name) == sha, name
+    target = result/(prefix+'-sources')/(name+'.txt')
+    assert not target.exists()
+    target.parent.mkdir(parents=True,exist_ok=True)
+    target.write_bytes((ROOT/name).read_bytes())
+    assert boundary.digest(target) == sha
+    sources[name] = {'path':str(target.relative_to(ROOT)), 'sha256':sha}
+receipt = {'format':'toklet-authored-literal-attempt-archive-v1',
+           'verified_utc':datetime.now(timezone.utc).isoformat(),
+           'completed':window['completed'], 'qualification':probe['completed'],
+           'saved_record_sha256':saved, 'saved_sources':sources,
+           'startup_group':window['startup']['startup_process_group'], 'live_startup_group_members':[],
+           'held_original_snapshot':held, 'stopped_machine':matches[0],
+           'protected_identities_unchanged':True, 'producer_sha256':boundary.digest(__file__)}
+target = result/(prefix+'-archive.json')
+with target.open('x') as stream:
+    json.dump(receipt,stream,indent=2,allow_nan=False)
+    stream.write('\n')
+print(json.dumps({'qualified':receipt['qualification'],'saved_sources':len(sources),'restored_stopped':True}))

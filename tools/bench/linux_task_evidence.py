@@ -121,11 +121,19 @@ def classify(record, payload, runtime, python_version):
             or type(record.get("transport_exit_code")) is not int):
         raise ValueError("Literal evaluator termination or cleanup is unresolved")
     code = record["container_exit_code"]
-    if record["transport_exit_code"] != code:
-        if not (record["transport_exit_code"] == -signal.SIGKILL and record["process_group_killed"]
-                and code == 137 and (record["wall_timed_out"] or record["output_limit_exceeded"])):
-            raise ValueError("Literal evaluator transport and container exits differ")
     captured = verified_capture(record)
+    if record["transport_exit_code"] != code:
+        owned_kill = record["transport_exit_code"] == -signal.SIGKILL and record["process_group_killed"]
+        killed_container = code == 137 and (record["wall_timed_out"] or record["output_limit_exceeded"])
+        # The remote child may finish before the bounded attach client is
+        # killed. Resolve this race only as saturated output resource failure;
+        # admission and successful owned cleanup remain mandatory below.
+        finished_output = (code == 0 and record["output_limit_exceeded"]
+                           and not record["wall_timed_out"] and not state["OOMKilled"]
+                           and not record["container_forced_kill"]
+                           and sum(map(len, captured.values())) == child.isolation.POLICY["output_bytes"])
+        if not (owned_kill and (killed_container or finished_output)):
+            raise ValueError("Literal evaluator transport and container exits differ")
     first, separator, rest = captured["stdout"].partition(b"\n")
     if not separator:
         raise ValueError("Literal evaluator lacks completed admission evidence")
