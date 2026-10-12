@@ -1,0 +1,94 @@
+{
+  "format": "toklet-rust-mps-attention-projections-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-rust-mps-attention-projections-v1.json": "c63f7fbae01b6cb516f2f97d49765a18b49d168e619d17ab2fdd2745f78728ad",
+    "benchmarks/raw/2026-10-12-rust-mps-attention-projections-v1.json.native.jsonl": "dc9e7e6866458b222953a9f37463e95d6e50f73c77f1380d44d90586c406acf8",
+    "benchmarks/results/2026-10-12-rust-mps-attention-projections-v1.json.stderr.txt": "c479c7e2e40f661762e1a5abd2bcb8512dcfacc0a01d7aeb897dd739e4caf7dc",
+    "benchmarks/results/2026-10-12-rust-mps-attention-projections-idle-v1.json": "d4b05ad49ab104cd21e5e676dc7d979b8dcba6567cf77184a92e5b7337c59b84"
+  },
+  "summary": {
+    "stages": {
+      "k": {
+        "commands": 130,
+        "output_values": 18304,
+        "equal_frozen_half_values": 18304,
+        "max_source_fp32_gate_fraction": 0.4969946439169997,
+        "max_source_fp32_abs_error": 0.002014636993408203,
+        "max_admitted_bytes": 67124530,
+        "unique_half_differences": []
+      },
+      "v": {
+        "commands": 130,
+        "output_values": 18304,
+        "equal_frozen_half_values": 18291,
+        "max_source_fp32_gate_fraction": 0.48929894377917843,
+        "max_source_fp32_abs_error": 0.0016853809356689453,
+        "max_admitted_bytes": 67124530,
+        "unique_half_differences": [
+          {
+            "case": "cases.future_changed.layers.0.v_projection",
+            "index": 56,
+            "gpu_half_bits": 3853,
+            "frozen_half_bits": 3854,
+            "fp64_dot_plus_bias": 0.00043046940118074417,
+            "gpu_fp32_result": 0.00043044984340667725,
+            "gpu_minus_fp64": -1.955777406692505e-08,
+            "feature_order_fp32_plus_bias": 0.00043048523366451263,
+            "half_spacing": 2.384185791015625e-07,
+            "half_midpoint": 0.0004304647445678711,
+            "same_difference_all_repetitions": true
+          }
+        ]
+      },
+      "o": {
+        "commands": 130,
+        "output_values": 36608,
+        "equal_frozen_half_values": 36608,
+        "max_source_fp32_gate_fraction": 0.4901600612826886,
+        "max_source_fp32_abs_error": 0.0010646581649780273,
+        "max_admitted_bytes": 67133842,
+        "unique_half_differences": []
+      }
+    },
+    "total_attention_projection_commands": 390,
+    "total_attention_output_values": 73216,
+    "all_positive_commands": 1378,
+    "negative_jobs": 5,
+    "max_own_child_peak_bytes": 13369968,
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "mlp_1": 13,
+      "mlp_2": 13,
+      "mlp_3": 13,
+      "mlp_4": 13,
+      "mlp_5": 13,
+      "mlp_6": 13,
+      "mlp_7": 13,
+      "mlp_8": 13,
+      "mlp_9": 13,
+      "mlp_10": 13,
+      "mlp_overflow": 0,
+      "k_layer_0": 65,
+      "k_layer_1": 65,
+      "v_layer_0": 65,
+      "v_layer_1": 65,
+      "o_layer_0": 65,
+      "o_layer_1": 65,
+      "gate_layer_0": 65,
+      "gate_layer_1": 65,
+      "up_layer_0": 65,
+      "up_layer_1": 65,
+      "down_layer_0": 65,
+      "down_layer_1": 65,
+      "query_manual_regression": 169,
+      "projection_overflow_regression": 0,
+      "gating_regression": 143,
+      "gating_tails_regression": 117,
+      "gating_overflow_regression": 0
+    },
+    "scope": "Isolated saved-input K/V/O projections; no propagated attention/KV. Same-binary composed MLP regression. Unchanged source gates, exact single Half conversion. Native guard checks retain Boolean evidence, not complete padding byte replay. Internal MPS accumulation unqualified."
+  }
+}
