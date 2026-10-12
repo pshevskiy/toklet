@@ -264,3 +264,9 @@ completes three warmups and ten requests at 1,920 input / 128 fixed output
 tokens, then verifies full 2,048-position capacity and rejection before mutation.
 Median TTFT is 186.521378 s and completed request 246.854774 s. Scalar remains
 default; four cache rows, full tiled application evidence and retention remain.
+
+The [tiled append workload](docs/experiments/2026-10-12-cpu-tiled-append.md)
+reuses 512 committed prefix tokens and evaluates 64 appended tokens, with
+three warmups and ten complete fixed-output requests. Median TTFT is
+5.839271 s and request 63.166372 s. Cache preparation is outside request
+timing. Three cache rows, full application evidence and retention remain.

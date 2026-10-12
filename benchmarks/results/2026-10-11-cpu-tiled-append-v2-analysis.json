@@ -1,0 +1,74 @@
+{
+  "format": "toklet-cpu-tiled-append-analysis-v2",
+  "accepted": true,
+  "scope": "Saved evidence only; no numerical execution or model/binary hashing. Historical scalar comparison is descriptive; primary retention uses the separate paired experiment.",
+  "checks": [
+    "schema",
+    "exact raw/sample pairs",
+    "fixed workload and committed/pending states",
+    "independent timing summaries",
+    "source/qualification and owned natural exit",
+    "protected endpoint identities",
+    "same checkpoint/storage/device and historical scalar binding"
+  ],
+  "summary": {
+    "ttft_median_seconds": 5.8392712079999995,
+    "ttft_min_seconds": 5.621926666,
+    "ttft_max_seconds": 5.9509979170000005,
+    "request_median_seconds": 63.1663718125,
+    "decode_tokens_per_second_median": 2.21475256970849,
+    "prefill_tokens_per_second_median": 10.960313043214338
+  },
+  "request_min_seconds": 60.247733875,
+  "request_max_seconds": 64.36804875,
+  "measured_request_total_seconds": 629.436638418,
+  "historical_scalar_summary": {
+    "decode_tokens_per_second_median": 1.4063075673072305,
+    "prefill_tokens_per_second_median": 2.997932483017486,
+    "request_median_seconds": 111.62889043749999,
+    "ttft_max_seconds": 21.545358209,
+    "ttft_median_seconds": 21.3480848955,
+    "ttft_min_seconds": 21.200767709
+  },
+  "historical_request_reduction_percent": 43.41395711725157,
+  "historical_ttft_reduction_percent": 72.64733002241869,
+  "memory": {
+    "allocated_kv_bytes": 50331648,
+    "engine_working_set_limit_bytes": 6442450944,
+    "logical_weights_bytes": 1976131072,
+    "measurement_instrument": "own-child footprint auxiliary.phys_footprint_peak; logical session allocations",
+    "peak_process_bytes": 2043840528,
+    "scratch_bytes": 10436608,
+    "system_memory_pressure": null
+  },
+  "chronology": [
+    "2026-10-12T05:12:07.589205+00:00",
+    "2026-10-12T05:12:09.085980+00:00",
+    "2026-10-12T05:15:44.102106+00:00",
+    "2026-10-12T05:35:10.713908+00:00",
+    "2026-10-12T05:35:14.940343+00:00"
+  ],
+  "evidence_sha256": {
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2.json": "1eba60ac5a23f7227f10d560a00e321b761a9490680a252922ab51b1edec4102",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2.json.samples.jsonl": "6800da48342baf0e3d2acda7fd562a52741ea71f0a798966f181555c269d9c41",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2-launch.json": "eb4e951235ee0da82d4bb1b2fe06fd68ebcba3b44e6a676eb836e8debf1646e1",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2-admission-claim.json": "bd99474e31cbb195c95cd767945244e5425c9c178b6ab2eebe94d55d30efa3c7",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2-owned.json": "41dfaa09e536ef3974ee605b132a5a34b9b6524a180c4d550fc19ed2363b21c0",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2-session-completion.json": "0d0fbb8105e590645be983b51d972b9762a6f70d874519d6e7985a505c7d869b",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2-launch.py.txt": "a394ab8763e24dc98e7288ab6652aeab5231f8f990a02df68b97a047992dbb9f",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2-owned.py.txt": "0279a2615386d8ca97dc77c6c417a9518b9a0564400bba6d99cb83d4fb592c2b",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2-driver.py.txt": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2-idle.py.txt": "7cbc168ca9580509f6880da7be25d3cc0e32c424e08556fb9296eabd5aceeeba",
+    "benchmarks/results/2026-10-11-cpu-tiled-append-v2-idle.json": "6a025d349ac202e03c7ebd94aaefb5c0b1112434807ce9bd27b5f8d5803f133c",
+    "benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+    "benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-analysis.json": "730136432c71c26cecf94d1195ef466679c789715c790ed26e88c0b0d2d38eb7",
+    "benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json": "86fb2aaac8322e964457063bd21e63d51a0741683d075152086aecf1a3e9388b",
+    "benchmarks/results/2026-10-10-cpu-append.json": "a20328d513870c82f681593603e42966e2f8306e1500fb82443c93292bd03753",
+    "benchmarks/results/2026-10-10-cpu-append-analysis-v1.json": "2cbf38a9f0deeca315cb53310e1e0c47fd0ab847251b753511e2234a12d30325",
+    "benchmarks/results/2026-10-11-cpu-tiled-boundary-v2-idle.json": "1b6382a727923e1613ae3961809013b869eb85df71402d6739c640461f298ab7",
+    "benchmarks/results/2026-10-11-cpu-tiled-boundary-v2-analysis.json": "d1d54a1d2dd004e252d92d457b0bc3ce3c6353d298a23153e3615652bd4bfadf",
+    "benchmarks/results/2026-10-11-cpu-tiled-boundary-v2-session-completion.json": "9723aea0742b313345e545ad0409a1a92b90edc6f4767fa6345f5d9e20eb0728",
+    "tools/bench/requirements.lock": "b05453a671689fbbc07c0ce5384ddebabdbfed4ba4229e19c75d416a79d2c8c2"
+  },
+  "producer_sha256": "bcd12010f29e48da2cd71ad8e6cb00ec57bd87c0c9f3b451671e27f33d4a95a1"
+}

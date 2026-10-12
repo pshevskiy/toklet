@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026; updated 11 October 2026. Status: M0–M2 are complete; M3.1 candidate qualification is in progress; M3.2/M3.3 research is complete, and M4–M7 remain pending.
+Prepared 9 October 2026; updated 12 October 2026. Status: M0–M2 are complete; M3.1 candidate qualification is in progress; M3.2/M3.3 research is complete, and M4–M7 remain pending.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -717,6 +717,16 @@ TTFT is 186.521378 s and request 246.854774 s. Historical scalar reductions are
 descriptive. No numerical helper or qualified artifact changes. Four cache
 rows, full tiled application evidence and M3.1 retention remain pending.
 
+Candidate append evidence, 12 October 2026: the [exact-prefix workload](docs/experiments/2026-10-12-cpu-tiled-append.md)
+completes three warmups and ten requests, reusing 512 tokens and evaluating
+64 appended tokens. Each measured request ends with 703 committed positions
+and one pending fixed ID. Median TTFT is 5.839271 s and request 63.166372 s.
+Preparation is outside request timing; all raw/sample pairs, state/event
+chronology, source/qualification, actual natural exit and protected idle are
+validated independently. Historical scalar reductions are descriptive. No
+numerical helper or qualified artifact changes. Three cache rows (cached,
+pending and changed), full application evidence and retention remain.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [x] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [x] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
@@ -1045,4 +1055,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: qualify the four remaining cache workloads (append, cached, pending and changed) and full tiled application trace before the retention decision.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: qualify the three remaining cache workloads (cached, pending and changed) and full tiled application trace before the retention decision.
