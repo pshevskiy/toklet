@@ -1,0 +1,78 @@
+"""Launch the one-off qualified tiled boundary workload after reviewed quality evidence."""
+from pathlib import Path
+from datetime import datetime,timezone
+import argparse,json,os,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import held_out_tasks as collector,cpu,prepare,linux_code_isolation_probe as boundary
+ROOT=Path.cwd()
+
+def main():
+ parser=argparse.ArgumentParser(description=__doc__)
+ parser.add_argument('--workload',choices=('boundary',),required=True)
+ args=parser.parse_args()
+ prefix='2026-10-11-cpu-tiled-boundary-v2'
+ output=ROOT/'benchmarks/raw'/f'{prefix}.json';receipt=ROOT/'benchmarks/raw'/f'{prefix}-launch.json'
+ claim=ROOT/'benchmarks/raw'/f'{prefix}-admission-claim.json'
+ assert all(not path.exists() for path in (output,Path(str(output)+'.samples.jsonl'),Path(str(output)+'.stderr.txt'),receipt,claim))
+ # Exclusive one-off reservation precedes every model/binary hash or idle check.
+ # Failed admissions retain it and require a separately reviewed fresh attempt.
+ with claim.open('x') as f:
+  json.dump({'format':'toklet-cpu-tiled-boundary-admission-claim-v2','claimed_utc':datetime.now(timezone.utc).isoformat(),'launcher_pid':os.getpid(),'workload':'boundary','producer_path':str(Path(__file__).resolve())},f,indent=2);f.write('\n')
+ # Runtime dependencies and preceding natural completion precede heavy hashes.
+ from importlib.metadata import version
+ from jsonschema import Draft202012Validator
+ assert sys.executable==str(ROOT/'.venv/bin/python')
+ assert sys.version_info[:3]==(3,12,8) and version('jsonschema')=='4.25.1'
+ previous_idle=ROOT/'benchmarks/results/2026-10-11-cpu-tiled-long-v2-idle.json'
+ previous=json.loads(previous_idle.read_text())
+ assert previous['format']=='toklet-cpu-tiled-workload-natural-exit-idle-v1'
+ assert previous['workload']=='long' and previous['session_id']==93142
+ assert previous['all_owned_processes_absent'] is True
+ assert previous['exited_owned_pids']==[42842,42858,42866] and previous['owned_group_members']=={'42842':[]}
+ previous_absent=subprocess.run(['ps','-p','42842,42858,42866','-o','pid='],capture_output=True,text=True)
+ assert previous_absent.returncode==1 and not previous_absent.stdout and not previous_absent.stderr
+ assert boundary.live_group_members(42842)==[]
+ previous_completion=ROOT/'benchmarks/results/2026-10-11-cpu-tiled-long-v2-session-completion.json'
+ completed=json.loads(previous_completion.read_text())
+ assert completed['format']=='toklet-actual-native-session-completion-v1' and completed['session_id']==93142
+ assert completed['origin']=='Actual write_stdin completion returned by native execution tool; not inferred from files'
+ assert completed['actual_tool_result']['exit_code']==0 and 'session_id' not in completed['actual_tool_result']
+ assert completed['actual_tool_result']['output'].splitlines()[-1]=='Tiled long workload completed naturally'
+ assert prepare.digest(previous_completion)==previous['saved_result_sha256'][str(previous_completion.relative_to(ROOT))]
+ previous_analysis=ROOT/'benchmarks/results/2026-10-11-cpu-tiled-long-v2-analysis.json'
+ accepted=json.loads(previous_analysis.read_text());assert accepted['accepted'] is True
+ assert accepted['evidence_sha256'][str(previous_idle.relative_to(ROOT))]==prepare.digest(previous_idle)
+ for name,sha in accepted['evidence_sha256'].items():assert prepare.digest(ROOT/name)==sha,name
+ assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+ collection_idle=ROOT/'benchmarks/results/2026-10-11-held-out-task-tiled-idle-v1.json'
+ admission=collector.idle(collection_idle)
+ grading_idle=ROOT/'benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json'
+ g=json.loads(grading_idle.read_text());assert g['all_owned_processes_absent'] is True
+ assert g['format']=='toklet-held-out-task-grading-natural-exit-idle-v1'
+ pids=g['exited_owned_pids'];assert len(pids)==5 and len(set(pids))==5 and all(type(pid) is int and pid>1 for pid in pids)
+ absent=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid='],capture_output=True,text=True)
+ assert absent.returncode==1 and not absent.stdout and not absent.stderr
+ assert all(boundary.live_group_members(int(pid))==[] for pid in g['owned_group_members'])
+ for files in g['end_verified'].values():
+  for name,sha in files.items():assert prepare.digest(ROOT/name)==sha,name
+ quality_path=ROOT/'benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-analysis.json'
+ quality=json.loads(quality_path.read_text())
+ assert quality['accepted'] is True and quality['task_quality_comparison']['gate_passed'] is True
+ for name,sha in quality['evidence_sha256'].items():assert prepare.digest(ROOT/name)==sha,name
+ qualification=ROOT/'benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json'
+ binary,_,q=cpu.qualified_cpu_worker(qualification)
+ command=[sys.executable,'tools/bench/cpu.py','--workload',args.workload,'--cpu-projection','tiled','--cpu-qualification',str(qualification),'--output',str(output.relative_to(ROOT))]
+ record={'format':'toklet-cpu-tiled-workload-launch-v1','launch_utc':datetime.now(timezone.utc).isoformat(),
+  'engine_revision':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'working_tree_clean':True,
+  'launcher_pid':os.getpid(),'producer_sha256':prepare.digest(Path(__file__)),
+  'admission_claim_sha256':prepare.digest(claim),
+  'driver_sha256':prepare.digest(ROOT/'tools/bench/cpu.py'),'qualification_sha256':prepare.digest(qualification),
+  'qualified_binary_sha256':prepare.digest(binary),'compiled_source_sha256':q['source_sha256'],
+  'collection_admission':admission,'grading_idle_sha256':prepare.digest(grading_idle),'quality_analysis_sha256':prepare.digest(quality_path),
+  'workload':args.workload,'command':command,'python_executable':sys.executable,'python_version':sys.version.split()[0],'jsonschema_version':version('jsonschema'),'preceding_long_idle_sha256':prepare.digest(previous_idle),'preceding_long_analysis_sha256':prepare.digest(previous_analysis),'preceding_long_current_absence':{'command':previous_absent.args,'exit_code':previous_absent.returncode,'stdout':previous_absent.stdout,'stderr':previous_absent.stderr},'requirements_lock_sha256':prepare.digest(ROOT/'tools/bench/requirements.lock'),
+  'scope':'One complete three-warmup/ten-sample qualified tiled workload; no concurrent model/VM/test/build/hash work after launch; original orchestration remains held.'}
+ with receipt.open('x') as f:json.dump(record,f,indent=2);f.write('\n')
+ print(json.dumps({'launch_utc':record['launch_utc'],'launcher_pid':record['launcher_pid'],'workload':args.workload,'engine_revision':record['engine_revision']}),flush=True)
+ subprocess.run(command,check=True)
+ print('Tiled '+args.workload+' workload completed naturally',flush=True)
+if __name__=='__main__':main()

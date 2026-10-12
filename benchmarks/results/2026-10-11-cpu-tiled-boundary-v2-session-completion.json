@@ -1,0 +1,13 @@
+{
+  "format": "toklet-actual-native-session-completion-v1",
+  "session_id": 13791,
+  "observed_utc": "2026-10-12T05:08:24.289270+00:00",
+  "origin": "Actual write_stdin completion returned by native execution tool; not inferred from files",
+  "actual_tool_result": {
+    "chunk_id": "a8813a",
+    "wall_time_seconds": 5.4916e-05,
+    "exit_code": 0,
+    "original_token_count": 143,
+    "output": "boundary: sample 2: 247.738s\nboundary: sample 3: 246.857s\nboundary: sample 4: 246.852s\nboundary: sample 5: 247.147s\nboundary: sample 6: 247.815s\nboundary: sample 7: 246.819s\nboundary: sample 8: 246.548s\nboundary: sample 9: 246.436s\nboundary: sample 10: 246.137s\n{\"decode_tokens_per_second_median\": 2.1039457384006797, \"prefill_tokens_per_second_median\": 10.29372632592007, \"request_median_seconds\": 246.854774479, \"ttft_max_seconds\": 187.406238167, \"ttft_median_seconds\": 186.52137768749998, \"ttft_min_seconds\": 185.768662417}\nTiled boundary workload completed naturally\n"
+  }
+}

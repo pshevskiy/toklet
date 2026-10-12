@@ -258,3 +258,9 @@ adds ten checked 1,024-input/128-output requests after three warmups: median
 TTFT 85.683956 s and request 142.368874 s. All finish with 1,151 committed
 positions and one pending fixed token. Five non-short rows, full tiled
 application evidence and the M3.1 retention decision remain pending.
+
+The [tiled boundary workload](docs/experiments/2026-10-11-cpu-tiled-boundary.md)
+completes three warmups and ten requests at 1,920 input / 128 fixed output
+tokens, then verifies full 2,048-position capacity and rejection before mutation.
+Median TTFT is 186.521378 s and completed request 246.854774 s. Scalar remains
+default; four cache rows, full tiled application evidence and retention remain.

@@ -1,0 +1,7 @@
+{
+  "format": "toklet-cpu-tiled-boundary-admission-claim-v2",
+  "claimed_utc": "2026-10-11T18:44:46.881766+00:00",
+  "launcher_pid": 50988,
+  "workload": "boundary",
+  "producer_path": "/Users/coloner/work/rust/toklet/artifacts/launch-tiled-boundary-v2.py"
+}

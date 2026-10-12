@@ -708,6 +708,15 @@ descriptive; no extra primary pair or quality run is implied. No numerical
 helper or qualified artifact changes. Five other non-short rows, full tiled
 application evidence and M3.1 retention remain pending.
 
+Candidate boundary evidence, launched 11 October and archived 12 October 2026: the [capacity workload](docs/experiments/2026-10-11-cpu-tiled-boundary.md)
+retains three warmups, ten 1,920-input / 128-output requests, actual successful
+completion, owned idle and independent saved-data validation. All requests end
+at 2,047 committed positions with one pending ID; the driver then verifies all
+2,048 positions committed and rejects a further token before mutation. Median
+TTFT is 186.521378 s and request 246.854774 s. Historical scalar reductions are
+descriptive. No numerical helper or qualified artifact changes. Four cache
+rows, full tiled application evidence and M3.1 retention remain pending.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [x] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [x] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
@@ -1036,4 +1045,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: qualify the seven non-short tiled workloads and full tiled application trace before the retention decision.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: qualify the four remaining cache workloads (append, cached, pending and changed) and full tiled application trace before the retention decision.
