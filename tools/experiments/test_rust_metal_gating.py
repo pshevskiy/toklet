@@ -14,9 +14,10 @@ def fixture(inputs, anchors):
     cases = []
     for item in inputs:
         count = item["rows"] * item["width"]
-        size = (count + 7) * 2
+        guards = math.ceil(count / 32) * 32 - count + 7
+        size = (count + guards) * 2
         cases.append({
-            "id": item["id"], "rows_count": item["rows"], "width": item["width"], "guards": 7,
+            "id": item["id"], "rows_count": item["rows"], "width": item["width"], "guards": guards, "inactive_lanes": guards - 7, "sentinel_guards": 7,
             "output_guard_bits": gating.GUARD, "distinct_owned_output": True,
             "allocations_reused_across_repetitions": True, "threadgroup_width": 32,
             "threadgroups": math.ceil(count / 32), "shared_buffer_bytes": size * 3,
@@ -24,7 +25,7 @@ def fixture(inputs, anchors):
             "rows": [{"phase": "warmup" if i < 3 else "sample", "repetition": i + 1 if i < 3 else i - 2,
                       "command_completed": True, "immutable_inputs_and_guards": True,
                       "encode_commit_wait_seconds": .001,
-                      "output_bits": anchors[item["id"]]["bits"] + [gating.GUARD] * 7} for i in range(13)],
+                      "output_bits": anchors[item["id"]]["bits"] + [gating.GUARD] * guards} for i in range(13)],
         })
     return {"event": "idle_result", "passed": True, "result": {
         "operation": "gating_fp16_storage_fp32_product", "cases": cases,
@@ -84,6 +85,27 @@ class MetalGating(unittest.TestCase):
             elif kind == "repetition": row["repetition"] = 9
             with self.subTest(kind=kind), self.assertRaises(ValueError):
                 gating.validate(native, inputs, anchors)
+
+    def test_inactive_lanes_are_guarded_and_counted_using_queried_width(self):
+        inputs, anchors = gating.tail_cases()
+        self.assertEqual(tuple(item["width"] for item in inputs), gating.TAIL_COUNTS)
+        native = fixture(inputs, anchors)
+        gating.validate_tails(native, inputs, anchors)
+        self.assertEqual(native["result"]["cases"][0]["guards"], 38)
+        for field in ("inactive_lanes", "sentinel_guards", "guards"):
+            native = fixture(inputs, anchors)
+            native["result"]["cases"][0][field] -= 1
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                gating.validate_tails(native, inputs, anchors)
+        native = fixture(inputs, anchors)
+        native["result"]["cases"][0]["rows"][0]["output_bits"][1] ^= 1
+        with self.assertRaises(ValueError):
+            gating.validate_tails(native, inputs, anchors)
+        native = fixture(inputs, anchors)
+        for case in native["result"]["cases"]:
+            case["inactive_lanes"] = 0
+        with self.assertRaisesRegex(ValueError, "no inactive tail coverage"):
+            gating.validate_tails(native, inputs, anchors)
 
     def test_original_fp32_gate_and_independent_product_are_both_required(self):
         inputs, anchors, _ = gating.cases()

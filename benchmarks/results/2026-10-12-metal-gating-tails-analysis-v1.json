@@ -1,0 +1,162 @@
+{
+  "format": "toklet-metal-gating-tails-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-metal-gating-tails-idle-v1.json": "755546a6ea7f121a58e59c51f3c89ff5624bc70b6040bd9e693967ccae4859df",
+    "benchmarks/results/2026-10-12-metal-gating-tails-v3.json": "9bb4b6edcf7c1498454ae27d253a4b51cb5284123cdbfa5f3616baf546453d4e",
+    "benchmarks/results/2026-10-12-metal-gating-tails-v3.json.stderr.txt": "b79460850330ff04f57c2eb922dac6cb2c4bbcc37eb4d9c52429eaa77d2ec287",
+    "benchmarks/raw/2026-10-12-metal-gating-tails-v3.json.native.jsonl": "8aeb462f8f0123ef2402f3857c09ca113367534efff8e5d61fdd2e8fcd713862",
+    "benchmarks/results/2026-10-12-qwen-metal-gating-tails-v2.json": "15975f7c12b52f6cb22bb58f167a39ccc6c1b1a8e94f6bd772a6f3ce99b13e63",
+    "benchmarks/results/2026-10-12-qwen-metal-gating-tails-v2.json.stderr.txt": "27bf100af70790add2972f20f759f59f85870d313daca9081e94d3962895908c",
+    "benchmarks/raw/2026-10-12-qwen-metal-gating-tails-v2.json.native.jsonl": "752cc067dc4acdbd08f35472aaddfc4b5c4f7b722464f6b8182040dd22af4a56"
+  },
+  "summaries": {
+    "2026-10-12-metal-gating-tails-v3": {
+      "positive_commands": 1157,
+      "negative_jobs": 4,
+      "tails": [
+        {
+          "count": 1,
+          "queried_width": 32,
+          "inactive_lanes": 31,
+          "output_guards": 38,
+          "admitted_bytes": 67109488
+        },
+        {
+          "count": 31,
+          "queried_width": 32,
+          "inactive_lanes": 1,
+          "output_guards": 8,
+          "admitted_bytes": 67109488
+        },
+        {
+          "count": 32,
+          "queried_width": 32,
+          "inactive_lanes": 0,
+          "output_guards": 7,
+          "admitted_bytes": 67109488
+        },
+        {
+          "count": 33,
+          "queried_width": 32,
+          "inactive_lanes": 31,
+          "output_guards": 38,
+          "admitted_bytes": 67110000
+        },
+        {
+          "count": 63,
+          "queried_width": 32,
+          "inactive_lanes": 1,
+          "output_guards": 8,
+          "admitted_bytes": 67110000
+        },
+        {
+          "count": 65,
+          "queried_width": 32,
+          "inactive_lanes": 31,
+          "output_guards": 38,
+          "admitted_bytes": 67110512
+        },
+        {
+          "count": 127,
+          "queried_width": 32,
+          "inactive_lanes": 1,
+          "output_guards": 8,
+          "admitted_bytes": 67111024
+        },
+        {
+          "count": 129,
+          "queried_width": 32,
+          "inactive_lanes": 31,
+          "output_guards": 38,
+          "admitted_bytes": 67111536
+        },
+        {
+          "count": 4863,
+          "queried_width": 32,
+          "inactive_lanes": 1,
+          "output_guards": 8,
+          "admitted_bytes": 67186800
+        }
+      ],
+      "max_own_child_peak_bytes": 16974448,
+      "max_admitted_bytes": 67186800,
+      "gating_output_values": 156832,
+      "gating_guard_values": 3484
+    },
+    "2026-10-12-qwen-metal-gating-tails-v2": {
+      "positive_commands": 767,
+      "negative_jobs": 3,
+      "tails": [
+        {
+          "count": 1,
+          "queried_width": 32,
+          "inactive_lanes": 31,
+          "output_guards": 38,
+          "admitted_bytes": 67109488
+        },
+        {
+          "count": 31,
+          "queried_width": 32,
+          "inactive_lanes": 1,
+          "output_guards": 8,
+          "admitted_bytes": 67109488
+        },
+        {
+          "count": 32,
+          "queried_width": 32,
+          "inactive_lanes": 0,
+          "output_guards": 7,
+          "admitted_bytes": 67109488
+        },
+        {
+          "count": 33,
+          "queried_width": 32,
+          "inactive_lanes": 31,
+          "output_guards": 38,
+          "admitted_bytes": 67110000
+        },
+        {
+          "count": 63,
+          "queried_width": 32,
+          "inactive_lanes": 1,
+          "output_guards": 8,
+          "admitted_bytes": 67110000
+        },
+        {
+          "count": 65,
+          "queried_width": 32,
+          "inactive_lanes": 31,
+          "output_guards": 38,
+          "admitted_bytes": 67110512
+        },
+        {
+          "count": 127,
+          "queried_width": 32,
+          "inactive_lanes": 1,
+          "output_guards": 8,
+          "admitted_bytes": 67111024
+        },
+        {
+          "count": 129,
+          "queried_width": 32,
+          "inactive_lanes": 31,
+          "output_guards": 38,
+          "admitted_bytes": 67111536
+        },
+        {
+          "count": 4863,
+          "queried_width": 32,
+          "inactive_lanes": 1,
+          "output_guards": 8,
+          "admitted_bytes": 67186800
+        }
+      ],
+      "max_own_child_peak_bytes": 13124160,
+      "max_admitted_bytes": 67186800,
+      "gating_output_values": 2433184,
+      "gating_guard_values": 6760
+    }
+  },
+  "scope": "Standalone guarded stored-Half product, queried-width inactive tails and original primitive/Qwen regressions; no full decoder or performance qualification."
+}

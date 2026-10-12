@@ -301,3 +301,9 @@ closes M3.1 and M3: retain the qualified tiled projection as an opt-in variant,
 with scalar as default/reference. Both primary comparisons improve warm TTFT
 by about 77.6%; complete workload/application and frozen quality/memory gates
 pass their recorded scope. Metal composition and M4–M7 remain pending.
+
+The [Metal gating tail extension](docs/experiments/2026-10-12-metal-gating-tails.md)
+checks nine bounded lengths with exact Half outputs and full inactive-lane
+padding from queried launch limits. Original tiny and saved Qwen regressions
+pass; memory accounting includes final-size padded host and shared buffers.
+This qualifies a primitive boundary; MLP/decoder composition remains open.

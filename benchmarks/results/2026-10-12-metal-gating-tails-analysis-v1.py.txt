@@ -1,0 +1,164 @@
+"""Independently replay final native gating-tail records after owned idle proof."""
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+
+ROOT = Path.cwd().resolve()
+sys.path.insert(0, str(ROOT / 'tools/experiments'))
+import rust_metal_gating as gating
+import rust_metal_qwen_gating as qwen
+
+
+def sha(path):
+    with Path(path).open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+
+idle_path = ROOT / 'benchmarks/results/2026-10-12-metal-gating-tails-idle-v1.json'
+idle = read(idle_path)
+assert idle['all_recorded_processes_absent'] is True
+assert idle['machine']['State'] == 'stopped'
+assert idle['native_session_exit_code'] == 0
+for name, expected in idle['archive_sha256'].items():
+    assert sha(ROOT / name) == expected
+for name, expected in idle['protected_sha256'].items():
+    assert sha(ROOT / name) == expected
+
+inputs, anchors, _ = gating.cases()
+tails, tail_anchors = gating.tail_cases()
+rms_inputs, rms_anchors = gating.rms.cases()
+embedding = gating.residual.embedding
+embedding_inputs, embedding_anchors = embedding.cases()
+residual_inputs, residual_anchors, _ = gating.residual.cases()
+silu_inputs, silu_anchors = gating.silu.cases()
+half, single = qwen.checked_references()
+qinputs, qanchors = qwen.assemble(half, single, qwen.qwen.HALF, qwen.qwen.SINGLE)
+
+validators = {
+    'rms_regression': lambda e: gating.rms.validate(e, rms_inputs, rms_anchors),
+    'embedding_frozen_regression': lambda e: embedding.validate(e, embedding_inputs[0], embedding_anchors),
+    'embedding_manual_regression': lambda e: embedding.validate(e, embedding_inputs[1], embedding_anchors),
+    'residual_regression': lambda e: gating.residual.validate(e, residual_inputs, residual_anchors),
+    'residual_overflow_regression': gating.residual.overflow_rejected,
+    'silu_regression': lambda e: gating.silu.validate(e, silu_inputs, silu_anchors),
+    'gating_frozen_manual': lambda e: gating.validate(e, inputs, anchors),
+    'tiny_gating_regression': lambda e: gating.validate(e, inputs, anchors),
+    'gating_inactive_tails': lambda e: gating.validate_tails(e, tails, tail_anchors),
+    'gating_inactive_tails_regression': lambda e: gating.validate_tails(e, tails, tail_anchors),
+    'gating_overflow': gating.overflow_rejected,
+    'gating_overflow_regression': gating.overflow_rejected,
+}
+for index, item in enumerate(qinputs):
+    validators[f'qwen_gating_row_{index+1}'] = lambda e, item=item: gating.validate(e, [item], qanchors)
+
+summaries = {}
+records_sha256 = {str(idle_path.relative_to(ROOT)): sha(idle_path)}
+for stem, build_name, expected_modes in [
+    ('2026-10-12-metal-gating-tails-v3', 'rust-metal-gating-tails-v3',
+     ['normal', 'invalid_shader', 'insufficient_budget', 'rms_regression',
+      'embedding_frozen_regression', 'embedding_manual_regression', 'residual_regression',
+      'residual_overflow_regression', 'silu_regression', 'gating_frozen_manual',
+      'gating_inactive_tails', 'gating_overflow']),
+    ('2026-10-12-qwen-metal-gating-tails-v2', 'rust-qwen-metal-gating-tails-v2',
+     ['normal', 'invalid_shader', 'insufficient_budget', 'tiny_gating_regression',
+      'gating_inactive_tails_regression', 'gating_overflow_regression'] +
+     [f'qwen_gating_row_{index+1}' for index in range(36)]),
+]:
+    path = ROOT / f'benchmarks/results/{stem}.json'
+    record = read(path)
+    build = ROOT / 'artifacts' / build_name
+    assert record['completed'] is True and 'failure' not in record
+    raw_path = ROOT / f'benchmarks/raw/{stem}.json.native.jsonl'
+    stderr = ROOT / f'benchmarks/results/{stem}.json.stderr.txt'
+    assert sha(raw_path) == record['native_raw_sha256']
+    assert sha(stderr) == record['stderr_sha256']
+    records_sha256[str(path.relative_to(ROOT))] = sha(path)
+    records_sha256[str(stderr.relative_to(ROOT))] = sha(stderr)
+    records_sha256[str(raw_path.relative_to(ROOT))] = sha(raw_path)
+    checks = record['checks']
+    assert len(checks) == len(record['build_commands']) == 9
+    assert [x['command'] for x in checks] == record['build_commands']
+    assert 'test result: ok. 20 passed; 0 failed' in next(x['stdout'] for x in checks if 'test' in x['command'])
+    for name, expected in record['source_sha256'].items():
+        source = ROOT / name
+        target = build / ('Cargo.toml' if name.endswith('.Cargo.toml') else
+                          'Cargo.lock' if name.endswith('.lock') else
+                          'src/main.rs' if name.endswith('rust_metal_probe.rs') else 'src/' + source.name)
+        assert sha(source) == sha(target) == expected
+    for name, expected in {
+        'tools/experiments/rust_metal_probe.py': record['driver_sha256'],
+        'tools/experiments/metal_probe.py': record['common_helper_sha256'],
+        'tools/bench/mlx_baseline.py': record['memory_helper_sha256'],
+    }.items():
+        assert sha(ROOT / name) == expected
+    for field in ('input_sha256', 'qualification_driver_sha256'):
+        for name, expected in record['extra_context'][field].items():
+            assert sha(name) == expected
+    binary = build / 'target/aarch64-apple-darwin/release/toklet-rust-metal-probe'
+    assert sha(binary) == record['binary_sha256']
+    runs = record['native_runs']
+    raw = [json.loads(line) for line in raw_path.read_text().splitlines()]
+    assert len(raw) == len(runs) == len(expected_modes)
+    assert [run['mode'] for run in runs] == expected_modes
+    summary = {'positive_commands': 0, 'negative_jobs': 0, 'tails': [], 'max_own_child_peak_bytes': 0,
+               'max_admitted_bytes': 0, 'gating_output_values': 0, 'gating_guard_values': 0}
+    for event, run in zip(raw, runs):
+        replay = copy.deepcopy(event)
+        gating.rms.probe.validate_run(run['mode'], {**run, 'event': replay}, validators.get(run['mode']))
+        assert replay == run['event']
+        assert run['watchdog_killed'] is False
+        peak = run['physical_process_charge_peak_bytes']
+        assert 0 < peak <= gating.rms.probe.LIMIT
+        summary['max_own_child_peak_bytes'] = max(summary['max_own_child_peak_bytes'], peak)
+        if event['passed'] is False:
+            summary['negative_jobs'] += 1
+            continue
+        result = event['result']
+        summary['max_admitted_bytes'] = max(summary['max_admitted_bytes'], result['metadata']['maximum_admitted_bytes'])
+        summary['positive_commands'] += sum(len(case['rows']) for case in result['cases'])
+        if result.get('operation') != 'gating_fp16_storage_fp32_product':
+            continue
+        payload = read(run['command'][-1])['cases']
+        for case, item in zip(result['cases'], payload):
+            count = item['rows'] * item['width']
+            width = case['threadgroup_width']
+            rounded = ((count + width - 1) // width) * width
+            guards = rounded - count + 7
+            expected = []
+            # Independent exact product replay, without calling driver oracle.
+            for a, b in zip(item['gate_bits'], item['up_bits']):
+                left = struct.unpack('<e', struct.pack('<H', a))[0]
+                right = struct.unpack('<e', struct.pack('<H', b))[0]
+                value = left * right
+                assert struct.unpack('<f', struct.pack('<f', value))[0] == value
+                expected.append(struct.unpack('<H', struct.pack('<e', value))[0])
+            assert case['guards'] == guards and case['inactive_lanes'] == rounded - count
+            assert case['shared_buffer_bytes'] == (rounded + 7) * 6
+            assert case['host_input_and_readback_bytes'] == (rounded + 7) * 10
+            assert case['admitted_bytes'] == (rounded + 7) * 16 + gating.rms.probe.ALLOWANCE
+            for row in case['rows']:
+                assert row['output_bits'] == expected + [gating.GUARD] * guards
+                summary['gating_output_values'] += count
+                summary['gating_guard_values'] += guards
+            if 'tails' in run['mode']:
+                summary['tails'].append({'count': count, 'queried_width': width,
+                                         'inactive_lanes': rounded-count, 'output_guards': guards,
+                                         'admitted_bytes': case['admitted_bytes']})
+    assert len(summary['tails']) == 9 and any(row['inactive_lanes'] > 0 for row in summary['tails'])
+    summaries[stem] = summary
+
+out = {'format': 'toklet-metal-gating-tails-analysis-v1', 'completed': True,
+       'records_sha256': records_sha256, 'summaries': summaries,
+       'scope': 'Standalone guarded stored-Half product, queried-width inactive tails and original primitive/Qwen regressions; no full decoder or performance qualification.'}
+output = Path(sys.argv[1])
+with output.open('x') as stream:
+    stream.write(json.dumps(out, indent=2, allow_nan=False) + '\n')
+print(json.dumps(summaries, indent=2))

@@ -86,11 +86,13 @@ def run(output, build, directory):
     half, single = checked_references()
     inputs, anchors = assemble(half, single, qwen.HALF, qwen.SINGLE)
     tiny_inputs, tiny_anchors, overflow = gating.cases()
+    tail_inputs, tail_anchors = gating.tail_cases()
     directory.mkdir(parents=True)
     identities = {}
     jobs = []
     groups = [
         ("tiny_gating_regression", tiny_inputs, lambda event: gating.validate(event, tiny_inputs, tiny_anchors)),
+        ("gating_inactive_tails_regression", tail_inputs, lambda event: gating.validate_tails(event, tail_inputs, tail_anchors)),
         ("gating_overflow_regression", [overflow], gating.overflow_rejected),
     ] + [(f"qwen_gating_row_{index + 1}", [item],
           lambda event, item=item: gating.validate(event, [item], anchors))
@@ -133,7 +135,7 @@ def run(output, build, directory):
         "tiny_manifest_sha256": {"fp16": gating.rms.FP16_MANIFEST_SHA, "source_fp32": gating.rms.FP32_MANIFEST_SHA},
         "config_sha256": qwen.CONFIG_SHA, "frozen_source_checkpoint_sha256": qwen.WEIGHT_SHA,
         "frozen_source_checkpoint_bytes": qwen.WEIGHT_BYTES, "checkpoint_reads": False,
-        "scope": "12 selected width4864 gated stages split into36 complete rows; both stored-Half operands and frozen products independently checked before native work. Unchanged pre-GPU FP32 source gates. Same-binary tiny and completed-overflow regression. No checkpoint reads, fusion, MLP/decoder/cache composition, sessions, quality, performance, traces or M4 completion.",
+        "scope": "12 selected width4864 gated stages split into36 complete rows; both stored-Half operands and frozen products independently checked before native work. Unchanged pre-GPU FP32 source gates. Same-binary tiny, inactive-tail and completed-overflow regression. No checkpoint reads, fusion, MLP/decoder/cache composition, sessions, quality, performance, traces or M4 completion.",
     }
     gating.rms.probe.run(output, build, extra_runs=jobs, extra_context=context)
 

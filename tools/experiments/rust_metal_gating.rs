@@ -83,7 +83,12 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
         }
         let rows = scalar(source, "rows")?;
         let width = scalar(source, "width")?;
-        if !(1..=32).contains(&rows) || !matches!(width, 64 | 4864) {
+        if !(1..=32).contains(&rows)
+            || !matches!(
+                width,
+                1 | 31 | 32 | 33 | 63 | 64 | 65 | 127 | 129 | 4863 | 4864
+            )
+        {
             return Err(error("fixture", "gating prototype shape outside bounds"));
         }
         let count = rows
@@ -106,8 +111,12 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
     // Parsing and byte temporaries drop before any native allocation.
     Ok(cases)
 }
-fn storage(count: usize) -> Result<usize, Error> {
-    let bytes = count
+fn storage(count: usize, width: usize) -> Result<usize, Error> {
+    // Guard every inactive dispatched lane, then seven additional sentinels.
+    let rounded = groups(count, width)?
+        .checked_mul(width)
+        .ok_or_else(|| error("admission", "gating rounded storage overflow"))?;
+    let bytes = rounded
         .checked_add(GUARDS)
         .and_then(|n| n.checked_mul(size_of::<u16>()))
         .ok_or_else(|| error("admission", "gating storage overflow"))?;
@@ -116,14 +125,14 @@ fn storage(count: usize) -> Result<usize, Error> {
     }
     Ok(bytes)
 }
-fn admitted(case: &Case, limit: usize) -> Result<usize, Error> {
+fn admitted(case: &Case, limit: usize, width: usize) -> Result<usize, Error> {
     let count = case
         .rows
         .checked_mul(case.width)
         .ok_or_else(|| error("admission", "gating shape overflow"))?;
     // Three shared allocations, two host baselines and three readbacks. Bounded
     // retained fixture/JSON/repetition records use the fixed runtime allowance.
-    let bytes = storage(count)?
+    let bytes = storage(count, width)?
         .checked_mul(8)
         .and_then(|n| n.checked_add(ALLOWANCE))
         .ok_or_else(|| error("admission", "gating working-set overflow"))?;
@@ -133,15 +142,19 @@ fn admitted(case: &Case, limit: usize) -> Result<usize, Error> {
     Ok(bytes)
 }
 fn execute(probe: &mut Probe, case: &Case, limit: usize) -> Result<Value, Error> {
-    let budget = admitted(case, limit)?;
+    let budget = admitted(case, limit, probe.width)?;
     let count = case.rows * case.width;
-    let bytes = storage(count)?;
+    let bytes = storage(count, probe.width)?;
     let launch = groups(count, probe.width)?;
     let mut gate = Shared::<u16>::new(&probe.device, bytes)?;
     let mut up = Shared::<u16>::new(&probe.device, bytes)?;
     let mut output = Shared::<u16>::new(&probe.device, bytes)?;
-    gate.write(&case.gate)?;
-    up.write(&case.up)?;
+    let mut gate_baseline = vec![GATE_GUARD; bytes / size_of::<u16>()];
+    let mut up_baseline = vec![UP_GUARD; bytes / size_of::<u16>()];
+    gate_baseline[..case.gate.len()].copy_from_slice(&case.gate);
+    up_baseline[..case.up.len()].copy_from_slice(&case.up);
+    gate.write(&gate_baseline)?;
+    up.write(&up_baseline)?;
     let native_count = count as u32;
     let mut repetitions = Vec::with_capacity(13);
     for repetition in 0..13 {
@@ -171,7 +184,7 @@ fn execute(probe: &mut Probe, case: &Case, limit: usize) -> Result<Value, Error>
                 return Err(error("completion", format!("gating GPU failure: {:?}", command.error())));
             }
             let actual = output.read();
-            if gate.read() != case.gate || up.read() != case.up || actual[count..].iter().any(|&bits| bits != OUTPUT_GUARD) {
+            if gate.read() != gate_baseline || up.read() != up_baseline || actual[count..].iter().any(|&bits| bits != OUTPUT_GUARD) {
                 return Err(error("validation", "gating inputs/output guards changed"));
             }
             if actual[..count].iter().any(|&bits| bits & 0x7c00 == 0x7c00) {
@@ -182,7 +195,7 @@ fn execute(probe: &mut Probe, case: &Case, limit: usize) -> Result<Value, Error>
         })?);
     }
     Ok(
-        json!({"id":case.id,"rows_count":case.rows,"width":case.width,"guards":GUARDS,"output_guard_bits":OUTPUT_GUARD,
+        json!({"id":case.id,"rows_count":case.rows,"width":case.width,"guards":bytes/size_of::<u16>()-count,"inactive_lanes":launch*probe.width-count,"sentinel_guards":GUARDS,"output_guard_bits":OUTPUT_GUARD,
         "threadgroup_width":probe.width,"threadgroups":launch,"shared_buffer_bytes":bytes*3,"host_input_and_readback_bytes":bytes*5,
         "admitted_bytes":budget,"distinct_owned_output":true,"allocations_reused_across_repetitions":true,"rows":repetitions}),
     )
@@ -191,17 +204,27 @@ pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
     let cases = load(path)?;
     let maximum = cases
         .iter()
-        .map(|case| admitted(case, limit))
+        .map(|case| admitted(case, limit, 1))
         .collect::<Result<Vec<_>, _>>()?
         .into_iter()
         .max()
         .ok_or_else(|| error("admission", "empty gating cases"))?;
     autoreleasepool(|_| {
-        let (mut probe, metadata) = prepare(
+        let (mut probe, mut metadata) = prepare(
             include_str!("rust_metal_gating.metal"),
             "toklet_gating",
             maximum,
         )?;
+        // Capability discovery may increase padding; validate every case before
+        // allocating any native operand/output buffer or submitting commands.
+        let maximum = cases
+            .iter()
+            .map(|case| admitted(case, limit, probe.width))
+            .collect::<Result<Vec<_>, _>>()?
+            .into_iter()
+            .max()
+            .unwrap();
+        metadata["maximum_admitted_bytes"] = json!(maximum);
         let mut results = Vec::with_capacity(cases.len());
         for case in &cases {
             results.push(autoreleasepool(|_| execute(&mut probe, case, limit))?);
@@ -267,7 +290,7 @@ mod tests {
     }
     #[test]
     fn shape_identity_and_total_inventory_are_bounded() {
-        for (key, number) in [("rows", 0), ("rows", 33), ("width", 32)] {
+        for (key, number) in [("rows", 0), ("rows", 33), ("width", 34)] {
             let mut value = sample();
             value["cases"][0][key] = json!(number);
             assert!(load(&fixture(&value).0).is_err());
@@ -294,8 +317,8 @@ mod tests {
     }
     #[test]
     fn budget_counts_three_shared_buffers_once_and_bounds_storage() {
-        assert!(storage(0).is_err());
-        assert!(storage(usize::MAX).is_err());
+        assert!(storage(0, 32).is_err());
+        assert!(storage(usize::MAX, 32).is_err());
         let case = Case {
             id: String::new(),
             rows: 32,
@@ -305,9 +328,9 @@ mod tests {
         };
         let total = ALLOWANCE + 2055 * 2 * 8;
         assert_eq!(total, 67141744);
-        assert_eq!(admitted(&case, total).unwrap(), total);
-        assert!(admitted(&case, total - 1).is_err());
-        assert!(admitted(&case, LIMIT + 1).is_err());
+        assert_eq!(admitted(&case, total, 32).unwrap(), total);
+        assert!(admitted(&case, total - 1, 32).is_err());
+        assert!(admitted(&case, LIMIT + 1, 32).is_err());
     }
     #[test]
     fn wide_rows_preserve_the_original_aggregate_inventory_limit() {
@@ -319,8 +342,8 @@ mod tests {
         assert_eq!(cases[0].gate.len(), 4871);
         assert_eq!(cases[0].up.len(), 4871);
         let budget = 67186800;
-        assert_eq!(admitted(&cases[0], budget).unwrap(), budget);
-        assert!(admitted(&cases[0], budget - 1).is_err());
+        assert_eq!(admitted(&cases[0], budget, 32).unwrap(), budget);
+        assert!(admitted(&cases[0], budget - 1, 32).is_err());
         let duplicate = value["cases"][0].clone();
         value["cases"].as_array_mut().unwrap().push(duplicate);
         value["cases"][1]["id"] = json!("second");
@@ -330,6 +353,33 @@ mod tests {
         value["cases"][0]["gate_bits"] = json!(vec![0u16; 9728]);
         value["cases"][0]["up_bits"] = json!(vec![0u16; 9728]);
         assert_eq!(load(&fixture(&value).0).err().unwrap().stage, "admission");
+    }
+    #[test]
+    fn rounded_storage_covers_all_inactive_lanes_and_sentinels() {
+        for width in [1, 16, 32, 64, 128] {
+            for count in [1usize, 31, 32, 33, 63, 65, 127, 129, 4863] {
+                let rounded = count.div_ceil(width) * width;
+                assert_eq!(storage(count, width).unwrap(), (rounded + 7) * 2);
+                let case = Case {
+                    id: String::new(),
+                    rows: 1,
+                    width: count,
+                    gate: Vec::new(),
+                    up: Vec::new(),
+                };
+                let budget = ALLOWANCE + (rounded + 7) * 16;
+                assert_eq!(admitted(&case, budget, width).unwrap(), budget);
+                assert!(admitted(&case, budget - 1, width).is_err());
+            }
+        }
+        assert!(storage(1, 0).is_err());
+        assert!(storage(1, usize::MAX).is_err());
+        assert!(storage(u32::MAX as usize, 32).is_err());
+        for count in [1usize, 31, 32, 33, 63, 65, 127, 129, 4863] {
+            let value = json!({"format":"toklet-metal-gating-input-v1","cases":[{
+                "id":"tail","rows":1,"width":count,"gate_bits":vec![0u16;count],"up_bits":vec![0u16;count]}]});
+            assert!(load(&fixture(&value).0).is_ok());
+        }
     }
     #[test]
     fn oversized_bytes_and_case_counts_fail_before_native_allocation() {

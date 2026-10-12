@@ -95,6 +95,47 @@ def cases():
     return inputs, anchors, overflow
 
 
+TAIL_COUNTS = (1, 31, 32, 33, 63, 65, 127, 129, 4863)
+
+
+def tail_cases():
+    """Bounded irregular inventories from preselected independent RNE edges.
+
+    These lengths target the previously observed width32, but launch padding
+    and qualification always use queried capabilities, never assumed widths.
+    """
+    original, source, _ = cases()
+    manual = original[-1]
+    anchor = source[manual["id"]]
+    inputs, anchors = [], {}
+    for count in TAIL_COUNTS:
+        key = f"manual.tail.{count}"
+        a = [manual["gate_bits"][i % 18] for i in range(count)]
+        b = [manual["up_bits"][i % 18] for i in range(count)]
+        expected = [anchor["bits"][i % 18] for i in range(count)]
+        if expected != [half_product(left, right) for left, right in zip(a, b)]:
+            raise ValueError("Independent tail product oracle differs")
+        inputs.append({"id": key, "rows": 1, "width": count, "gate_bits": a, "up_bits": b})
+        anchors[key] = {"bits": expected,
+                       "reference": list(struct.unpack(f"<{count}e", struct.pack(f"<{count}H", *expected))),
+                       "gate": None, "manual_oracle": anchor["manual_oracle"],
+                       "oracle_fp16_sha256": hashlib.sha256(struct.pack(f"<{count}H", *expected)).hexdigest()}
+    if sum(TAIL_COUNTS) > 8192:
+        raise ValueError("Tail inventory exceeds native admission")
+    return inputs, anchors
+
+
+def validate_tails(event, inputs, anchors):
+    # Require actual inactive-lane coverage; an unusual device width must not
+    # silently turn this into an aligned-only qualification.
+    if event.get("passed") is not True:
+        raise ValueError("Native tail check failed")
+    native = event["result"]["cases"]
+    if not any(case.get("inactive_lanes", 0) > 0 for case in native):
+        raise ValueError("Queried dispatch provides no inactive tail coverage")
+    validate(event, inputs, anchors)
+
+
 def validate(event, inputs, anchors):
     if event.get("event") != "idle_result" or event.get("passed") is not True:
         raise ValueError("Native gating check failed")
@@ -109,9 +150,12 @@ def validate(event, inputs, anchors):
         raise ValueError("Native gating policy/inventory differs")
     for case, item in zip(result["cases"], inputs):
         count = item["rows"] * item["width"]
-        size = (count + 7) * 2
         width = case["threadgroup_width"]
-        if (case["rows_count"] != item["rows"] or case["width"] != item["width"] or case["guards"] != 7
+        inactive = ((count + width - 1) // width) * width - count if width > 0 else 0
+        guards = inactive + 7
+        size = (count + guards) * 2
+        if (case["rows_count"] != item["rows"] or case["width"] != item["width"] or case["guards"] != guards
+                or case.get("inactive_lanes") != inactive or case.get("sentinel_guards") != 7
                 or case["output_guard_bits"] != GUARD or case["distinct_owned_output"] is not True
                 or case["allocations_reused_across_repetitions"] is not True or len(case["rows"]) != 13
                 or not 0 < width <= min(metadata["execution_width"], metadata["pipeline_max_threads"], metadata["device_max_threads"][0])
@@ -126,8 +170,8 @@ def validate(event, inputs, anchors):
                     or row["repetition"] != (index + 1 if index < 3 else index - 2)
                     or row["command_completed"] is not True or row["immutable_inputs_and_guards"] is not True
                     or not math.isfinite(row["encode_commit_wait_seconds"]) or row["encode_commit_wait_seconds"] <= 0
-                    or len(bits) != count + 7 or any(type(value) is not int or not 0 <= value <= 65535 for value in bits)
-                    or bits[count:] != [GUARD] * 7 or bits[:count] != anchor["bits"]):
+                    or len(bits) != count + guards or any(type(value) is not int or not 0 <= value <= 65535 for value in bits)
+                    or bits[count:] != [GUARD] * guards or bits[:count] != anchor["bits"]):
                 raise ValueError("Gating completed-work/exact bits/guards differ")
             payload = struct.pack(f"<{count}H", *bits[:count])
             actual = struct.unpack(f"<{count}e", payload)
@@ -140,7 +184,7 @@ def validate(event, inputs, anchors):
             row["qualification"] = {
                 "exact_independent_fp16_bits": True, "source_fp32_max_abs_error": max(errors),
                 "against_source_fp32_max_gate_fraction": fraction,
-                "output_sha256": hashlib.sha256(payload).hexdigest(), "output_values": count, "output_guard_values": 7,
+                "output_sha256": hashlib.sha256(payload).hexdigest(), "output_values": count, "output_guard_values": guards,
             }
             del row["output_bits"]
         case["anchors"] = {key: value for key, value in anchor.items() if key not in ("bits", "reference")}
@@ -168,6 +212,7 @@ def run(output, build, directory):
            for root in (rms.FP16, rms.FP32) for path in (build, directory, *evidence)):
         raise ValueError("Gating outputs must be outside source fixtures")
     inputs, anchors, overflow = cases()
+    tails, tail_anchors = tail_cases()
     rms_inputs, rms_anchors = rms.cases()
     embedding = residual.embedding
     embedding_inputs, embedding_anchors = embedding.cases()
@@ -188,6 +233,8 @@ def run(output, build, directory):
          lambda event: silu.validate(event, silu_inputs, silu_anchors)),
         ("gating_frozen_manual", {"format": "toklet-metal-gating-input-v1", "cases": inputs}, "--gating-input",
          lambda event: validate(event, inputs, anchors)),
+        ("gating_inactive_tails", {"format": "toklet-metal-gating-input-v1", "cases": tails}, "--gating-input",
+         lambda event: validate_tails(event, tails, tail_anchors)),
         ("gating_overflow", {"format": "toklet-metal-gating-input-v1", "cases": [overflow]}, "--gating-input", overflow_rejected),
     ])
     for label, payload, option, validator in payloads:
@@ -214,7 +261,7 @@ def run(output, build, directory):
     context = {
         "qualification_driver_sha256": drivers, "input_sha256": identities,
         "fp16_manifest_sha256": rms.FP16_MANIFEST_SHA, "source_fp32_manifest_sha256": rms.FP32_MANIFEST_SHA,
-        "scope": "10 frozen tiny stored-Half gating stages and exact manual product RNE edges; width64. Exact independent product bits and unchanged source gates required. Completed overflow discarded. No Qwen, SiLU fusion, MLP/cache composition, performance or M4 completion.",
+        "scope": "10 frozen tiny stored-Half gating stages, exact manual product RNE edges and separate bounded inactive-tail inventories; padding uses queried width plus7 sentinels. Exact independent product bits and unchanged source gates required. Completed overflow discarded. No Qwen, SiLU fusion, MLP/cache composition, performance or M4 completion.",
     }
     rms.probe.run(output, build, extra_runs=jobs, extra_context=context)
 

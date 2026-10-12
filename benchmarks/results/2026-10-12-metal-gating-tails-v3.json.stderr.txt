@@ -1,0 +1,37 @@
+   Compiling objc2 v0.6.5
+   Compiling zmij v1.0.23
+    Checking objc2-encode v4.1.0
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.149
+    Checking bitflags v2.13.2
+    Checking itoa v1.0.18
+    Checking memchr v2.8.3
+    Checking objc2-foundation v0.3.2
+    Checking objc2-metal v0.3.2
+    Checking toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-metal-gating-tails-v3)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.16s
+   Compiling objc2-encode v4.1.0
+   Compiling bitflags v2.13.2
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling objc2 v0.6.5
+   Compiling objc2-foundation v0.3.2
+   Compiling serde_json v1.0.149
+   Compiling objc2-metal v0.3.2
+   Compiling toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-metal-gating-tails-v3)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.57s
+     Running unittests src/main.rs (artifacts/rust-metal-gating-tails-v3/target/debug/deps/toklet_rust_metal_probe-96d9a3a5da5bec10)
+   Compiling objc2 v0.6.5
+   Compiling serde_core v1.0.229
+   Compiling objc2-encode v4.1.0
+   Compiling zmij v1.0.23
+   Compiling bitflags v2.13.2
+   Compiling serde_json v1.0.149
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling objc2-foundation v0.3.2
+   Compiling objc2-metal v0.3.2
+   Compiling toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-metal-gating-tails-v3)
+    Finished `release` profile [optimized] target(s) in 3.58s

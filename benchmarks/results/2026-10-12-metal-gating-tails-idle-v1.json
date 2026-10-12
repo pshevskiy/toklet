@@ -1,0 +1,99 @@
+{
+  "format": "toklet-metal-gating-tails-idle-v1",
+  "verified_utc": "2026-10-12T10:02:02.432571+00:00",
+  "all_recorded_processes_absent": true,
+  "recorded_pids": [
+    51172,
+    51212,
+    51226,
+    43111,
+    43153,
+    43161,
+    96097,
+    96112,
+    96121,
+    17694,
+    85019,
+    85027,
+    88184,
+    35939
+  ],
+  "absence_query": {
+    "command": [
+      "ps",
+      "-p",
+      "51172,51212,51226,43111,43153,43161,96097,96112,96121,17694,85019,85027,88184,35939",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "machine": {
+    "ConfigDir": {
+      "Path": "/Users/coloner/.config/containers/podman/machine/applehv"
+    },
+    "ConnectionInfo": {
+      "PodmanSocket": {
+        "Path": "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default-api.sock"
+      },
+      "PodmanPipe": null
+    },
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "LastUp": "2026-10-11T20:05:08.08417+03:00",
+    "Name": "podman-machine-default",
+    "Resources": {
+      "CPUs": 5,
+      "DiskSize": 100,
+      "Memory": 2048,
+      "USBs": []
+    },
+    "SSHConfig": {
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "Port": 51387,
+      "RemoteUsername": "core"
+    },
+    "State": "stopped",
+    "UserModeNetworking": true,
+    "Rootful": false,
+    "Rosetta": true
+  },
+  "native_session_id": 24950,
+  "native_session_exit_code": 0,
+  "native_completion_tool": {
+    "chunk_id": "092cac",
+    "exit_code": 0,
+    "wall_time_seconds": 1.9334e-05,
+    "output": "Completed standalone Rust Metal binding qualification: benchmarks/raw/2026-10-12-metal-gating-tails-v3.json\nCompleted standalone Rust Metal binding qualification: benchmarks/raw/2026-10-12-qwen-metal-gating-tails-v2.json\n"
+  },
+  "previous_idle_sha256": "feb067b5e90b492087825b71258e51986803d2badb5bbbd3424b0f9f393f1cc7",
+  "protected_sha256": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+    "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+    "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+    "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+    "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+  },
+  "archive_sha256": {
+    "benchmarks/results/2026-10-12-metal-gating-tails-v3.json": "9bb4b6edcf7c1498454ae27d253a4b51cb5284123cdbfa5f3616baf546453d4e",
+    "benchmarks/results/2026-10-12-metal-gating-tails-v3.json.stderr.txt": "b79460850330ff04f57c2eb922dac6cb2c4bbcc37eb4d9c52429eaa77d2ec287",
+    "benchmarks/results/2026-10-12-qwen-metal-gating-tails-v2.json": "15975f7c12b52f6cb22bb58f167a39ccc6c1b1a8e94f6bd772a6f3ce99b13e63",
+    "benchmarks/results/2026-10-12-qwen-metal-gating-tails-v2.json.stderr.txt": "27bf100af70790add2972f20f759f59f85870d313daca9081e94d3962895908c",
+    "benchmarks/results/2026-10-12-metal-gating-tails-v1.json": "d9a2293dd88e593d907a206143e71c075a2bd4acdf11cff97828bd9c002f2ce5",
+    "benchmarks/results/2026-10-12-metal-gating-tails-v1.json.stderr.txt": "ff7b85af768649e08880ed73fb4f296b66c7400e88932ba1f575cd8c542a4605",
+    "benchmarks/results/2026-10-12-metal-gating-tails-v2.json": "278429126f6d12c9b77726d31fe57514ae9b553e79a2e6d7c434c7e24ca09d54",
+    "benchmarks/results/2026-10-12-metal-gating-tails-v2.json.stderr.txt": "a8cdf605e4abf79181707b0f384e48ceb0cd5e5be1c3567f308ec51c100dc5bf",
+    "benchmarks/results/2026-10-12-qwen-metal-gating-tails-v1.json": "4fb6c76f59666f4022545377ca1946df1be08b85eda93adae0a65637c8f9bd61",
+    "benchmarks/results/2026-10-12-qwen-metal-gating-tails-v1.json.stderr.txt": "b7ba50eec6b5a112ca6fcf7035eff4f996074108ee23352fed50fd92bf6a0535",
+    "benchmarks/results/2026-10-12-metal-gating-tails-build-failed.rs.txt": "8c85b374365b32a909639f2800ea5664b253536410a6338feca2f66c669b3be5",
+    "benchmarks/results/2026-10-12-metal-gating-tails-superseded.rs.txt": "4bedc7c0df0fe15b2b43eb40102eeec9fa539784fd66c93d621851ce98714293",
+    "benchmarks/results/2026-10-12-metal-gating-tails-archive-v1.py.txt": "589617ad69b55775bb515b1df4b641be3701f837871718d6320112b170749f85"
+  },
+  "scope": "Post-completion verification. All native children completed handshake and were reaped by driver; prior recorded numerical chains absent; VM stopped. No timing/performance acceptance."
+}

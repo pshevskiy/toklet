@@ -151,11 +151,12 @@ class QwenMetalGating(unittest.TestCase):
             tiny = [{"id": "tiny", "rows": 1, "width": 64, "gate_bits": [0] * 64, "up_bits": [0] * 64}]
             tiny_anchors = {"tiny": {"bits": [0] * 64, "reference": [0.0] * 64, "gate": None}}
             overflow = {"id": "overflow", "rows": 1, "width": 64, "gate_bits": [0x7bff] * 64, "up_bits": [0x4000] * 64}
+            tails, tail_anchors = qg.gating.tail_cases()
             contexts = []
 
             def native(output, build, extra_runs, extra_context):
                 contexts.append(extra_context)
-                self.assertEqual(len(extra_runs), 38)
+                self.assertEqual(len(extra_runs), 39)
                 for label, options, validator in extra_runs:
                     self.assertEqual(options[0], "--gating-input")
                     group = json.loads(Path(options[1]).read_text())["cases"]
@@ -164,12 +165,14 @@ class QwenMetalGating(unittest.TestCase):
                             "stage": "validation", "message": "completed gating contains nonfinite Half; result discarded"}}
                         qg.gating.rms.probe.validate_run(label, {"exit_code": 1, "event": event}, validator)
                     else:
-                        expected = tiny_anchors if label == "tiny_gating_regression" else anchors
+                        expected = (tiny_anchors if label == "tiny_gating_regression" else
+                                    tail_anchors if label == "gating_inactive_tails_regression" else anchors)
                         validator(fixture(group, expected))
 
             with patch.object(qg.qwen, "HALF", hroot), patch.object(qg.qwen, "SINGLE", sroot), \
                     patch.object(qg, "checked_references", return_value=(half, single)) as read, \
                     patch.object(qg.gating, "cases", return_value=(tiny, tiny_anchors, overflow)), \
+                    patch.object(qg.gating, "tail_cases", return_value=(tails, tail_anchors)), \
                     patch.object(qg.qwen, "norm_weights", side_effect=AssertionError("checkpoint read")) as weights, \
                     patch.object(qg.qwen, "stream_digest", side_effect=AssertionError("checkpoint hash")) as stream, \
                     patch.object(qg.gating.rms.probe, "run", side_effect=native):
@@ -178,7 +181,7 @@ class QwenMetalGating(unittest.TestCase):
                 weights.assert_not_called()
                 stream.assert_not_called()
             self.assertFalse(contexts[0]["checkpoint_reads"])
-            self.assertEqual(len(contexts[0]["input_sha256"]), 38)
+            self.assertEqual(len(contexts[0]["input_sha256"]), 39)
             self.assertEqual(len(contexts[0]["qualification_driver_sha256"]), 8)
 
     def test_final_reference_recheck_detects_post_load_payload_change(self):

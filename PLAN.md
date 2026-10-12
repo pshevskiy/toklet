@@ -1021,6 +1021,21 @@ independent replay and identity, memory, ownership and transcript verification.
 Gating inactive-lane tails, fusion, MLP/decoder/KV composition, full quality,
 performance, traces and M4 completion remain open.
 
+Gating inactive-lane preparation, 12 October 2026 (M4 pending): the
+[bounded tail extension](docs/experiments/2026-10-12-metal-gating-tails.md)
+checks nine explicit one-row lengths, 5,344 products per inventory, with
+queried-width rounded storage and seven additional sentinels. Both final
+runs check 117 tail commands, 69,472 exact outputs and 2,483 guards each;
+original primitive and selected Qwen regressions pass unchanged source gates.
+Maximum admission is 67,186,800 bytes; own-child peak 16,974,448 bytes.
+Direct final-size host allocations correct a reviewed capacity-accounting
+issue; failed/superseded attempts remain retained outside acceptance.
+Isolated native formatting/Clippy, twenty Rust tests and release build,
+root formatting/Clippy and 76 ordinary Rust tests, 71 experiment and 193
+benchmark Python tests, and byte-identical saved replay pass. Astra accepted
+the completed code and evidence without findings after independent replay. No fusion, MLP/decoder, full quality,
+performance or M4 completion is claimed.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -1114,4 +1129,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 preparation task: qualify stored-Half gating inactive-lane tails using queried launch limits, complete guard coverage and unchanged independent product/source gates before composing the MLP.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 composition task: connect qualified projections, SiLU and gating into one resident gated MLP, preserving intermediate Half boundaries and frozen source gates before composing the decoder.
