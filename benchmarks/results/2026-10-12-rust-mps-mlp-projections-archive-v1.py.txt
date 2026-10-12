@@ -1,0 +1,49 @@
+import datetime
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import subprocess
+
+root = Path.cwd()
+def digest(path):
+    with Path(path).open('rb') as stream:
+        return hashlib.file_digest(stream,'sha256').hexdigest()
+def query(args):
+    p=subprocess.run(args,capture_output=True,text=True,timeout=30)
+    return {'command':args,'exit_code':p.returncode,'stdout':p.stdout,'stderr':p.stderr}
+pids=[51172,51212,51226,43111,43153,43161,96097,96112,96121,17694,85019,85027,88184,35939]
+absence=query(['ps','-p',','.join(map(str,pids)),'-o','pid='])
+assert absence['exit_code']==1 and not absence['stdout'].strip() and not absence['stderr'].strip()
+vm=query(['/opt/podman/bin/podman','machine','inspect','podman-machine-default'])
+assert vm['exit_code']==0
+machine=json.loads(vm['stdout'])[0]
+assert machine['State']=='stopped'
+previous=json.loads(Path('benchmarks/results/2026-10-12-rust-mps-projection-idle-v1.json').read_text())
+protected=previous['protected_sha256']
+for name,sha in protected.items(): assert digest(name)==sha
+outputs={}
+for stem in ['2026-10-12-rust-mps-mlp-projections-v1']:
+    record=json.loads(Path(f'benchmarks/raw/{stem}.json').read_text())
+    assert record['completed'] is True and 'failure' not in record
+    for suffix in ['.json','.json.stderr.txt']:
+        source=Path(f'benchmarks/raw/{stem}{suffix}')
+        target=Path(f'benchmarks/results/{stem}{suffix}')
+        with target.open('xb') as output: output.write(source.read_bytes())
+        assert digest(source)==digest(target)
+        outputs[str(target)]=digest(target)
+script=Path('artifacts/archive-rust-mps-mlp-projections-v1.py')
+target=Path('benchmarks/results/2026-10-12-rust-mps-mlp-projections-archive-v1.py.txt')
+with target.open('xb') as output: output.write(script.read_bytes())
+outputs[str(target)]=digest(target)
+proof={'format':'toklet-rust-mps-mlp-projections-idle-v1','verified_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+       'all_recorded_processes_absent':True,'recorded_pids':pids,'absence_query':absence,'machine':machine,
+       'native_session_id':60159,'native_session_exit_code':0,
+       'native_completion_tool':{'chunk_id':'619662','exit_code':0,'wall_time_seconds':0.000015833,
+          'output':'Completed standalone Rust Metal binding qualification: benchmarks/raw/2026-10-12-rust-mps-mlp-projections-v1.json\n'},
+       'previous_idle_sha256':digest('benchmarks/results/2026-10-12-rust-mps-projection-idle-v1.json'),
+       'protected_sha256':protected,'archive_sha256':outputs,
+       'scope':'Post-completion verification. All native children completed handshake and were reaped by driver; prior recorded numerical chains absent; VM stopped. No timing/performance acceptance.'}
+with Path('benchmarks/results/2026-10-12-rust-mps-mlp-projections-idle-v1.json').open('x') as output:
+    output.write(json.dumps(proof,indent=2)+'\n')
+print('Archived MLP stage record; verified idle and protected endpoints')

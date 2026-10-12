@@ -314,3 +314,8 @@ Half operands stay resident; GPU bias initialization, FP32 result storage and
 one Half conversion share a command. Two repeated one-ULP Half differences
 are investigated within unchanged gates. Wider projections, MLP and decoder
 composition remain open.
+
+The [isolated tiny MLP projections](docs/experiments/2026-10-12-rust-mps-mlp-projections.md)
+qualify all thirty gate/up/down stages at their actual shapes. All 183,040
+outputs match frozen Half bits and unchanged source gates. Inputs are saved
+references; a composed resident gated MLP remains the next task.

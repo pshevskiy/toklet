@@ -1,0 +1,63 @@
+{
+  "format": "toklet-rust-mps-mlp-projections-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-rust-mps-mlp-projections-v1.json": "afcbc8fd01303e63cddf159e9d8c5636e36763b0f07d8eb38a83bcb2d0ce80c8",
+    "benchmarks/raw/2026-10-12-rust-mps-mlp-projections-v1.json.native.jsonl": "7230a7d631b6cb21e0e5591d5e0acc6912b9593a1fa761815fbe2b2575e31bf9",
+    "benchmarks/results/2026-10-12-rust-mps-mlp-projections-v1.json.stderr.txt": "3a6f8b6501e3bb4773967651ec69343d9c943ab48ea4e9d14994b3800fce7ff3",
+    "benchmarks/results/2026-10-12-rust-mps-mlp-projections-idle-v1.json": "b0c9b8da2be5d489e2ed6568f108dcb7404895e9d2c61c64db45248021ca368c"
+  },
+  "summary": {
+    "stages": {
+      "gate": {
+        "commands": 130,
+        "output_values": 73216,
+        "equal_frozen_half_values": 73216,
+        "max_source_fp32_gate_fraction": 0.4989114086591971,
+        "max_source_fp32_abs_error": 0.0025606751441955566,
+        "max_admitted_bytes": 67152466,
+        "unique_half_differences": []
+      },
+      "up": {
+        "commands": 130,
+        "output_values": 73216,
+        "equal_frozen_half_values": 73216,
+        "max_source_fp32_gate_fraction": 0.49568545435408545,
+        "max_source_fp32_abs_error": 0.002335071563720703,
+        "max_admitted_bytes": 67152466,
+        "unique_half_differences": []
+      },
+      "down": {
+        "commands": 130,
+        "output_values": 36608,
+        "equal_frozen_half_values": 36608,
+        "max_source_fp32_gate_fraction": 0.49299036400767493,
+        "max_source_fp32_abs_error": 0.0009409040212631226,
+        "max_admitted_bytes": 67146130,
+        "unique_half_differences": []
+      }
+    },
+    "total_mlp_projection_commands": 390,
+    "total_mlp_output_values": 183040,
+    "all_positive_commands": 858,
+    "negative_jobs": 4,
+    "max_own_child_peak_bytes": 13271592,
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "gate_layer_0": 65,
+      "gate_layer_1": 65,
+      "up_layer_0": 65,
+      "up_layer_1": 65,
+      "down_layer_0": 65,
+      "down_layer_1": 65,
+      "query_manual_regression": 169,
+      "projection_overflow_regression": 0,
+      "gating_regression": 143,
+      "gating_tails_regression": 117,
+      "gating_overflow_regression": 0
+    },
+    "scope": "Isolated saved-input projections only; no GPU propagation/composed MLP. Unchanged source gates, exact single Half conversion. Native guard checks retain Boolean evidence, not complete padding byte replay. Internal MPS accumulation unqualified."
+  }
+}

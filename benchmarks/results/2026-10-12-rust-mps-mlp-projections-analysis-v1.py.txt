@@ -1,0 +1,99 @@
+"""Replay all isolated tiny MLP projection stages after verified native idle."""
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_mlp_projections as mlp
+p=mlp.projection
+
+def sha(path):
+    with Path(path).open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+def read(path):return json.loads(Path(path).read_text())
+idle_path=ROOT/'benchmarks/results/2026-10-12-rust-mps-mlp-projections-idle-v1.json'
+idle=read(idle_path)
+assert idle['all_recorded_processes_absent'] is True and idle['machine']['State']=='stopped' and idle['native_session_exit_code']==0
+for field in ('archive_sha256','protected_sha256'):
+    for name,expected in idle[field].items():assert sha(ROOT/name)==expected
+path=ROOT/'benchmarks/results/2026-10-12-rust-mps-mlp-projections-v1.json';record=read(path)
+assert record['completed'] is True and 'failure' not in record
+raw_path=ROOT/'benchmarks/raw/2026-10-12-rust-mps-mlp-projections-v1.json.native.jsonl'
+stderr=ROOT/'benchmarks/results/2026-10-12-rust-mps-mlp-projections-v1.json.stderr.txt'
+assert sha(raw_path)==record['native_raw_sha256'] and sha(stderr)==record['stderr_sha256']
+build=ROOT/'artifacts/rust-mps-mlp-projections-v1'
+previous=read(ROOT/'benchmarks/results/2026-10-12-rust-mps-projection-v3.json')
+assert record['source_sha256']==previous['source_sha256'] and record['binary_sha256']==previous['binary_sha256']
+for name,expected in record['source_sha256'].items():
+    source=ROOT/name
+    target=build/('Cargo.toml' if name.endswith('.Cargo.toml') else 'Cargo.lock' if name.endswith('.lock') else 'src/main.rs' if name.endswith('rust_metal_probe.rs') else 'src/'+source.name)
+    assert sha(source)==sha(target)==expected
+for name,expected in {'tools/experiments/rust_metal_probe.py':record['driver_sha256'],'tools/experiments/metal_probe.py':record['common_helper_sha256'],'tools/bench/mlx_baseline.py':record['memory_helper_sha256']}.items():assert sha(ROOT/name)==expected
+for field in ('input_sha256','qualification_driver_sha256'):
+    for name,expected in record['extra_context'][field].items():assert sha(name)==expected
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==record['binary_sha256']
+assert len(record['checks'])==len(record['build_commands'])==10
+assert [c['command'] for c in record['checks']]==record['build_commands']
+assert 'test result: ok. 22 passed; 0 failed' in next(c['stdout'] for c in record['checks'] if 'test' in c['command'])
+groups,anchors=mlp.batches();query,qa,_=p.cases();tiny,ta,_=p.gating.cases();tails,tla=p.gating.tail_cases()
+validators={label:lambda e,cs=cs:p.validate(e,cs,anchors) for label,cs in groups}
+validators.update({'query_manual_regression':lambda e:p.validate(e,query,qa),'projection_overflow_regression':p.overflow_rejected,
+                   'gating_regression':lambda e:p.gating.validate(e,tiny,ta),'gating_tails_regression':lambda e:p.gating.validate_tails(e,tails,tla),
+                   'gating_overflow_regression':p.gating.overflow_rejected})
+raw=[json.loads(line) for line in raw_path.read_text().splitlines()];runs=record['native_runs']
+assert len(raw)==len(runs)==14
+assert [r['mode'] for r in runs]==['normal','invalid_shader','insufficient_budget']+[label for label,_ in groups]+['query_manual_regression','projection_overflow_regression','gating_regression','gating_tails_regression','gating_overflow_regression']
+commands={};peak=0
+for event,run in zip(raw,runs):
+    replay=copy.deepcopy(event);p.rms.probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']))
+    assert replay==run['event'] and run['watchdog_killed'] is False
+    assert 0<run['physical_process_charge_peak_bytes']<=p.rms.probe.LIMIT
+    peak=max(peak,run['physical_process_charge_peak_bytes'])
+    commands[run['mode']]=sum(len(c['rows']) for c in event.get('result',{}).get('cases',[]))
+assert sum(commands.values())==858
+stage_summaries={}
+for stage in ('gate','up','down'):
+    maximum_error=maximum_fraction=0.;values=equal=0;differences=[];max_admission=0
+    for index,(label,items) in enumerate(groups):
+        if not label.startswith(stage):continue
+        native=raw[3+index]['result']
+        for case,item in zip(native['cases'],items):
+            anchor=anchors[item['id']];count=item['rows']*item['outputs']
+            width=case['threadgroup_width'];rounded=math.ceil(count/width)*width;padded_rows=math.ceil(rounded/item['outputs'])
+            a=(case['input_stride']*item['rows']+7)*2;b=(case['weight_stride']*item['outputs']+7)*2;bias=(item['outputs']+7)*2
+            c=(case['fp32_stride']*padded_rows+7)*4;out=(case['output_stride']*padded_rows+7)*2
+            assert case['shared_buffer_bytes']==a+b+bias+c+out
+            assert case['host_baseline_readback_bytes']==2*(a+b+bias)+c+out
+            assert case['admitted_bytes']==3*(a+b+bias)+2*(c+out)+p.rms.probe.ALLOWANCE
+            max_admission=max(max_admission,case['admitted_bytes'])
+            for row in case['rows']:
+                floats=struct.unpack(f'<{count}f',struct.pack(f'<{count}I',*row['fp32_bits']))
+                expected=list(struct.unpack(f'<{count}H',struct.pack(f'<{count}e',*floats)))
+                assert expected==row['output_bits']
+                halves=struct.unpack(f'<{count}e',struct.pack(f'<{count}H',*expected))
+                for value,ref in zip(halves,anchor['source']):
+                    error=abs(value-ref);gate=anchor['gate'];fraction=error/(gate['atol']+gate['rtol']*abs(ref))
+                    assert fraction<=1;maximum_error=max(maximum_error,error);maximum_fraction=max(maximum_fraction,fraction)
+                values+=count;equal+=sum(a==b for a,b in zip(expected,anchor['oracle_bits']))
+            # Investigate every unique Half discrepancy using independent FP64
+            # products/sums, not the MPS or driver implementation.
+            first=case['rows'][0]
+            av,bv=[struct.unpack(f'<{len(item[key])}e',struct.pack(f'<{len(item[key])}H',*item[key])) for key in ('input_bits','weight_bits')]
+            for idx,(actual,oracle) in enumerate(zip(first['output_bits'],anchor['oracle_bits'])):
+                if actual==oracle:continue
+                rr,col=divmod(idx,item['outputs']);dot=sum(av[rr*item['inputs']+i]*bv[col*item['inputs']+i] for i in range(item['inputs']))
+                single=struct.unpack('<f',struct.pack('<I',first['fp32_bits'][idx]))[0]
+                differences.append({'case':item['id'],'index':idx,'gpu_half_bits':actual,'frozen_half_bits':oracle,
+                                    'fp64_dot':dot,'gpu_fp32_result':single,'gpu_minus_fp64':single-dot,
+                                    'same_difference_all_repetitions':all(row['output_bits'][idx]==actual for row in case['rows'])})
+    stage_summaries[stage]={'commands':130,'output_values':values,'equal_frozen_half_values':equal,
+                           'max_source_fp32_gate_fraction':maximum_fraction,'max_source_fp32_abs_error':maximum_error,
+                           'max_admitted_bytes':max_admission,'unique_half_differences':differences}
+summary={'stages':stage_summaries,'total_mlp_projection_commands':390,'total_mlp_output_values':sum(s['output_values'] for s in stage_summaries.values()),
+         'all_positive_commands':sum(commands.values()),'negative_jobs':4,'max_own_child_peak_bytes':peak,'command_counts':commands,
+         'scope':'Isolated saved-input projections only; no GPU propagation/composed MLP. Unchanged source gates, exact single Half conversion. Native guard checks retain Boolean evidence, not complete padding byte replay. Internal MPS accumulation unqualified.'}
+out={'format':'toklet-rust-mps-mlp-projections-analysis-v1','completed':True,'records_sha256':{str(pth.relative_to(ROOT)):sha(pth) for pth in (path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x') as stream:stream.write(json.dumps(out,indent=2,allow_nan=False)+'\n')
+print(json.dumps({**summary,'stages':{k:{kk:vv for kk,vv in v.items() if kk!='unique_half_differences'} for k,v in stage_summaries.items()}},indent=2))
