@@ -1,0 +1,117 @@
+{
+  "format": "toklet-cpu-tiled-workload-natural-exit-idle-v1",
+  "idle_verified_utc": "2026-10-12T08:36:55.468100+00:00",
+  "session_id": 34974,
+  "workload": "pending",
+  "all_owned_processes_absent": true,
+  "exited_owned_pids": [
+    36726,
+    36784,
+    36830
+  ],
+  "owned_group_members": {
+    "36726": []
+  },
+  "owned_absence_query": {
+    "command": [
+      "ps",
+      "-p",
+      "36726,36784,36830",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "original_recovery_snapshot": {
+    "original_orchestration_absent": true,
+    "recorded_pids": [
+      96097,
+      96112,
+      96121,
+      17694,
+      85019,
+      85027,
+      88184,
+      35939
+    ],
+    "query": {
+      "command": [
+        "ps",
+        "-p",
+        "96097,96112,96121,17694,85019,85027,88184,35939",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "recovery_idle_sha256": "1e3276cd578416de327a67d86b6a615bf90f87b2992d2b0364008d8e65d80914"
+  },
+  "stopped_machine": {
+    "Name": "podman-machine-default",
+    "Default": true,
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "Running": false,
+    "Starting": false,
+    "LastUp": "2026-10-11T20:05:08.08417+03:00",
+    "Stream": "default",
+    "VMType": "applehv",
+    "CPUs": 5,
+    "Memory": "2147483648",
+    "Swap": "0",
+    "DiskSize": "107374182400",
+    "Port": 51387,
+    "RemoteUsername": "core",
+    "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+    "UserModeNetworking": true
+  },
+  "end_verified": {
+    "frozen_binaries": {
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    "validated_local_model_assets": {
+      "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+    }
+  },
+  "qualified_binary_sha256": "3601c63ae83b0d9b20f8362bbda27781e4dd969d527918c072ccf270d2d4874d",
+  "compiled_source_sha256": {
+    "Cargo.toml": "f9614fde795692ea4f976f4a243ed3991d1e76f0109a4f2fd6bc3d5141977cc4",
+    "Cargo.lock": "7e13db0c63cb370080711ed1d2f6f08a95a1a25516e16eb2a34b33e65db51151",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "src/session.rs": "aba1c8cfd934a5b41f2debd3be2b75b137bdec9d725712849b89512b469e2d55",
+    "examples/cpu_bench.rs": "d42eafa4f78ec0b9a618c137cd21a43b35f3c1d9af8621eba39d1055ddf2553a",
+    "tests/cpu_decoder.rs": "c97638807910b4307e56ded647088b10fdadf9eef50bfe9a21f8635ae83aed79",
+    "tests/session.rs": "ef613d99fb3473cddf24916fdff4202fdc595f014c1dd86ef9a7225326c7e95b",
+    "tests/qwen_forward.rs": "0cdd2529dac4c4ffb66e94d721571a40b12696486f26cbab31718cc9e767c7d5",
+    "tests/qwen_session.rs": "3ec4000c7ba72e18fd90ffb30b8f5b97716d495accbdcab9fe80d54831342744",
+    "tests/support/trace_parity.rs": "fb7144fb65f7422eb656411ebe3f0e842a337cb3beb1aa862803c6ff39994e5d"
+  },
+  "working_tree_clean": true,
+  "engine_revision": "60c6192747aff79c63d83c9741958708ca3e3f69",
+  "saved_result_sha256": {
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3.json": "01e2d6dc3f9f501dd79ba81f00ad18fcc89925ddaa9f6ca19aec9cc771222b93",
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3.json.samples.jsonl": "39974ff70ec2e2322989ecd5e7043923fa60a2bb1bc5e0c255d3a6c4c656df37",
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3-launch.json": "0568571aa1c58c8fca37d70cdc57589e48eecd11cf797fce957ade1af569f993",
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3-admission-claim.json": "2805776639d80ec4c3760daa1566b214dc9a05c2e09f2c93eb15ce5ec1295030",
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3-owned.json": "8dd43220c641d7fad66a23303be8ff765f999d121692dea7062917a6e64032ad",
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3-session-completion.json": "910677262115566e8f9fb4175f0330534ee7a753e5015decbce7098752d991f1",
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3-launch.py.txt": "fa23cc54f3d04ecddb4ba396d6599b05bf60e4b9d359a9a44902b7b1a38c3745",
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3-owned.py.txt": "195d17ebadbdfcf8bbbcc477857dcf8522b443dbfb7210aaab0fc8c19f48205c",
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3-driver.py.txt": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "benchmarks/results/2026-10-12-cpu-tiled-pending-v3-idle.py.txt": "a849fe45113df30e3c6adbbec8b413a13b17f4e051066dd776f10b9df8815745"
+  },
+  "producer_sha256": "a849fe45113df30e3c6adbbec8b413a13b17f4e051066dd776f10b9df8815745"
+}

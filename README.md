@@ -276,3 +276,9 @@ completes three warmups and ten requests with zero prompt tokens to evaluate.
 Median request time is 54.425495 s; all requests finish at 639 committed
 positions plus one pending ID. The user-paused attempt remains excluded.
 Pending/changed rows, full application and retention remain.
+
+The [tiled pending-token workload](docs/experiments/2026-10-12-cpu-tiled-pending.md)
+commits fixed staged token 2077 before generating the continuation. Three
+warmups and ten measured requests complete; each measured request ends at
+640 committed positions plus one pending ID. Median TTFT is 0.425491 s and
+request 54.797608 s. Changed-prefix, full application and retention remain.

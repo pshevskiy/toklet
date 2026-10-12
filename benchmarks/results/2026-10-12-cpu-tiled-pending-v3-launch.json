@@ -1,0 +1,118 @@
+{
+  "format": "toklet-cpu-tiled-workload-launch-v1",
+  "launch_utc": "2026-10-12T08:16:17.396151+00:00",
+  "engine_revision": "60c6192747aff79c63d83c9741958708ca3e3f69",
+  "working_tree_clean": true,
+  "launcher_pid": 36726,
+  "producer_sha256": "fa23cc54f3d04ecddb4ba396d6599b05bf60e4b9d359a9a44902b7b1a38c3745",
+  "admission_claim_sha256": "2805776639d80ec4c3760daa1566b214dc9a05c2e09f2c93eb15ce5ec1295030",
+  "driver_sha256": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+  "qualification_sha256": "2ecfb27ef923973d327fa1be3c328d6acc85e10ab33ae55d6ca05a4c4d4bfbdc",
+  "qualified_binary_sha256": "3601c63ae83b0d9b20f8362bbda27781e4dd969d527918c072ccf270d2d4874d",
+  "compiled_source_sha256": {
+    "Cargo.toml": "f9614fde795692ea4f976f4a243ed3991d1e76f0109a4f2fd6bc3d5141977cc4",
+    "Cargo.lock": "7e13db0c63cb370080711ed1d2f6f08a95a1a25516e16eb2a34b33e65db51151",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "src/session.rs": "aba1c8cfd934a5b41f2debd3be2b75b137bdec9d725712849b89512b469e2d55",
+    "examples/cpu_bench.rs": "d42eafa4f78ec0b9a618c137cd21a43b35f3c1d9af8621eba39d1055ddf2553a",
+    "tests/cpu_decoder.rs": "c97638807910b4307e56ded647088b10fdadf9eef50bfe9a21f8635ae83aed79",
+    "tests/session.rs": "ef613d99fb3473cddf24916fdff4202fdc595f014c1dd86ef9a7225326c7e95b",
+    "tests/qwen_forward.rs": "0cdd2529dac4c4ffb66e94d721571a40b12696486f26cbab31718cc9e767c7d5",
+    "tests/qwen_session.rs": "3ec4000c7ba72e18fd90ffb30b8f5b97716d495accbdcab9fe80d54831342744",
+    "tests/support/trace_parity.rs": "fb7144fb65f7422eb656411ebe3f0e842a337cb3beb1aa862803c6ff39994e5d"
+  },
+  "collection_admission": {
+    "format": "toklet-historical-collection-and-recovery-admission-v1",
+    "idle_receipt_sha256": "e2475da2074d28e2d508ce907a70e05c032156300cd6bc5316dcd0d80c8535d4",
+    "current_recovery_idle_sha256": "1e3276cd578416de327a67d86b6a615bf90f87b2992d2b0364008d8e65d80914",
+    "original_orchestration_absent": true,
+    "recorded_processes_absent": [
+      96097,
+      96112,
+      96121,
+      17694,
+      85019,
+      85027,
+      88184,
+      35939
+    ],
+    "current_absence_query": {
+      "command": [
+        "ps",
+        "-p",
+        "96097,96112,96121,17694,85019,85027,88184,35939",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "collection_absence_query": {
+      "command": [
+        "ps",
+        "-p",
+        "4303,4314,4328",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "stopped_machine": {
+      "Name": "podman-machine-default",
+      "Default": true,
+      "Created": "2026-01-15T12:12:42.666462+03:00",
+      "Running": false,
+      "Starting": false,
+      "LastUp": "2026-10-11T20:05:08.08417+03:00",
+      "Stream": "default",
+      "VMType": "applehv",
+      "CPUs": 5,
+      "Memory": "2147483648",
+      "Swap": "0",
+      "DiskSize": "107374182400",
+      "Port": 51387,
+      "RemoteUsername": "core",
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "UserModeNetworking": true
+    }
+  },
+  "grading_idle_sha256": "86fb2aaac8322e964457063bd21e63d51a0741683d075152086aecf1a3e9388b",
+  "quality_analysis_sha256": "730136432c71c26cecf94d1195ef466679c789715c790ed26e88c0b0d2d38eb7",
+  "workload": "pending",
+  "command": [
+    "/Users/coloner/work/rust/toklet/.venv/bin/python",
+    "tools/bench/cpu.py",
+    "--workload",
+    "pending",
+    "--cpu-projection",
+    "tiled",
+    "--cpu-qualification",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json",
+    "--output",
+    "benchmarks/raw/2026-10-12-cpu-tiled-pending-v3.json"
+  ],
+  "python_executable": "/Users/coloner/work/rust/toklet/.venv/bin/python",
+  "python_version": "3.12.8",
+  "jsonschema_version": "4.25.1",
+  "preceding_cached_idle_sha256": "5aa27945ac7c5698c92b80bdd50be3a5a083b888cd038e249d91ed18c1fcf1f0",
+  "preceding_cached_analysis_sha256": "22de58d64f27645fd68c630f24f31b642af5d125b5fbe7e6f3efc830725f6fca",
+  "preceding_cached_current_absence": {
+    "command": [
+      "ps",
+      "-p",
+      "29542,29577,29597",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "requirements_lock_sha256": "b05453a671689fbbc07c0ce5384ddebabdbfed4ba4229e19c75d416a79d2c8c2",
+  "scope": "Fresh workload: three warmups/ten samples; paused cached-v2 measurements remain excluded; no concurrent model/VM/test/build/hash work after launch; original recorded orchestration is absent, not held."
+}

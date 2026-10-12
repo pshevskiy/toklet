@@ -1,0 +1,7 @@
+{
+  "format": "toklet-cpu-tiled-pending-admission-claim-v3",
+  "claimed_utc": "2026-10-12T08:16:15.908085+00:00",
+  "launcher_pid": 36726,
+  "workload": "pending",
+  "producer_path": "/Users/coloner/work/rust/toklet/artifacts/launch-tiled-pending-v3.py"
+}
