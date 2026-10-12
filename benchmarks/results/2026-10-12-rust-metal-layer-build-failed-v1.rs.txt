@@ -1,0 +1,661 @@
+// Bounded full-prefix layer, from saved normalized input through O.
+use super::*;
+use mlp::{
+    Input, ProjectionStep, active_float, active_half, encode_projection, input, kernel, totals,
+};
+use objc2_metal_performance_shaders::{MPSDataType, MPSSupportsMTLDevice};
+use projection::{Layout, half, matrix, number, queried};
+use std::{io::Read, path::Path};
+const HALF_GUARD: u16 = 0x55a1;
+const FLOAT_GUARD: u32 = 0x7fc0_5678;
+struct Case {
+    id: String,
+    rows: usize,
+    position: usize,
+    input: Vec<u16>,
+    weights: [Vec<u16>; 7],
+    norms: [Vec<u16>; 2],
+    biases: [Vec<u16>; 3],
+}
+fn load(path: &Path) -> Result<Case, Error> {
+    let file = std::fs::File::open(path).map_err(|e| error("fixture", e.to_string()))?;
+    let size = file
+        .metadata()
+        .map_err(|e| error("fixture", e.to_string()))?
+        .len();
+    if size > 1024 * 1024 {
+        return Err(error("fixture", "layer input exceeds one MiB"));
+    }
+    let mut data = Vec::new();
+    file.take(1024 * 1024 + 1)
+        .read_to_end(&mut data)
+        .map_err(|e| error("fixture", e.to_string()))?;
+    if data.len() as u64 != size || data.len() > 1024 * 1024 {
+        return Err(error("fixture", "layer changed size or exceeds bounds"));
+    }
+    let value: Value =
+        serde_json::from_slice(&data).map_err(|e| error("fixture", e.to_string()))?;
+    if value["format"] != "toklet-metal-layer-input-v1" {
+        return Err(error("fixture", "layer format differs"));
+    }
+    let id = value["id"]
+        .as_str()
+        .ok_or_else(|| error("fixture", "missing layer identity"))?;
+    if id.is_empty() || id.len() > 128 || !id.is_ascii() {
+        return Err(error("fixture", "invalid layer identity"));
+    }
+    let rows = number(&value, "rows")?;
+    let position = number(&value, "position")?;
+    if !(1..=32).contains(&rows) || position.checked_add(rows).is_none_or(|end| end > 2048) {
+        return Err(error("fixture", "layer shape/position outside bounds"));
+    }
+    Ok(Case {
+        id: id.to_owned(),
+        rows,
+        position,
+        input: half(&value, "input_bits", rows * 32)?,
+        weights: [
+            half(&value, "q_weight_bits", 1024)?,
+            half(&value, "k_weight_bits", 512)?,
+            half(&value, "v_weight_bits", 512)?,
+            half(&value, "o_weight_bits", 1024)?,
+            half(&value, "gate_weight_bits", 2048)?,
+            half(&value, "up_weight_bits", 2048)?,
+            half(&value, "down_weight_bits", 2048)?,
+        ],
+        norms: [
+            half(&value, "input_norm_weight_bits", 32)?,
+            half(&value, "post_norm_weight_bits", 32)?,
+        ],
+        biases: [
+            half(&value, "q_bias_bits", 32)?,
+            half(&value, "k_bias_bits", 16)?,
+            half(&value, "v_bias_bits", 16)?,
+        ],
+    })
+}
+fn raw_layout(rows: usize, columns: usize, storage: usize, bytes: usize) -> Result<Layout, Error> {
+    let logical = rows
+        .checked_mul(columns)
+        .ok_or_else(|| error("admission", "graph raw layout overflow"))?;
+    if logical.checked_add(GUARDS).is_none_or(|n| n > storage) {
+        return Err(error("admission", "graph raw storage undersized"));
+    }
+    let count = storage
+        .checked_mul(bytes)
+        .ok_or_else(|| error("admission", "graph raw bytes overflow"))?;
+    Ok(Layout {
+        rows,
+        columns,
+        stride: columns,
+        elements: storage,
+        bytes: count,
+    })
+}
+fn encode(
+    command: &ProtocolObject<dyn MTLCommandBuffer>,
+    probe: &Probe,
+    pipeline: &ProtocolObject<dyn MTLComputePipelineState>,
+    buffers: &[&ProtocolObject<dyn MTLBuffer>],
+    shape: &[u32],
+    count: usize,
+) -> Result<(), Error> {
+    let encoder = command
+        .computeCommandEncoder()
+        .ok_or_else(|| error("command", "graph encoder unavailable"))?;
+    encoder.setComputePipelineState(pipeline);
+    // SAFETY: private call sites supply the qualified rotary/cache/attention,
+    // RMS/residual/SiLU/gating ABIs (including the declared in-place residual), distinct initialized/tracked owned
+    // buffers with checked contiguous/mapped layouts. Shape is a nonempty
+    // UInt32 array copied immediately; each exact pipeline uses its expected
+    // length/slot. Command/owners survive completion. No CPU access in flight.
+    unsafe {
+        for (index, buffer) in buffers.iter().enumerate() {
+            encoder.setBuffer_offset_atIndex(Some(buffer), 0, index);
+        }
+        encoder.setBytes_length_atIndex(
+            NonNull::new(shape.as_ptr().cast_mut()).unwrap().cast(),
+            std::mem::size_of_val(shape),
+            buffers.len(),
+        );
+    }
+    encoder.dispatchThreadgroups_threadsPerThreadgroup(
+        MTLSize {
+            width: groups(count, probe.width)?,
+            height: 1,
+            depth: 1,
+        },
+        MTLSize {
+            width: probe.width,
+            height: 1,
+            depth: 1,
+        },
+    );
+    encoder.endEncoding();
+    Ok(())
+}
+fn copy_half(
+    command: &ProtocolObject<dyn MTLCommandBuffer>,
+    source: &Shared<u16>,
+    target: &Shared<u16>,
+    count: usize,
+) -> Result<(), Error> {
+    let bytes = count
+        .checked_mul(2)
+        .ok_or_else(|| error("admission", "layer copy bytes overflow"))?;
+    if count == 0
+        || count > source.elements
+        || count > target.elements
+        || !bytes.is_multiple_of(4)
+        || std::ptr::eq(source.raw.as_ref(), target.raw.as_ref())
+    {
+        return Err(error(
+            "admission",
+            "layer copy bounds/alignment/alias differ",
+        ));
+    }
+    let encoder = command
+        .blitCommandEncoder()
+        .ok_or_else(|| error("command", "layer blit encoder unavailable"))?;
+    // SAFETY: two distinct initialized owned/tracked buffers, offset0 aligned4,
+    // checked active byte count a multiple of4 within both allocations. The
+    // command retains resources; source/target owners live through checked wait.
+    // Copies preserve intermediate snapshots; CPU access is excluded in flight.
+    unsafe {
+        encoder.copyFromBuffer_sourceOffset_toBuffer_destinationOffset_size(
+            &source.raw,
+            0,
+            &target.raw,
+            0,
+            bytes,
+        );
+    }
+    encoder.endEncoding();
+    Ok(())
+}
+fn readback_error(error: Error) -> Error {
+    if error.stage == "validation" && error.message == "completed MLP nonfinite; result discarded" {
+        super::error("validation", "completed layer nonfinite; result discarded")
+    } else {
+        error
+    }
+}
+#[derive(PartialEq)]
+struct Frame {
+    half: Vec<Vec<u16>>,
+    single: Vec<Vec<u32>>,
+}
+pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
+    let case = load(path)?;
+    if !(ALLOWANCE..=LIMIT).contains(&limit) {
+        return Err(error("admission", "layer budget outside runtime allowance"));
+    }
+    autoreleasepool(|_| {
+        let source = concat!(
+            include_str!("rust_metal_projection.metal"),
+            "\n",
+            include_str!("rust_metal_rotary.metal"),
+            "\n",
+            include_str!("rust_metal_cache.metal"),
+            "\n",
+            include_str!("rust_metal_attention.metal"),
+            "\n",
+            include_str!("rust_metal_rms.metal"),
+            "\n",
+            include_str!("rust_metal_residual.metal"),
+            "\n",
+            include_str!("rust_metal_silu.metal"),
+            "\n",
+            include_str!("rust_metal_gating.metal")
+        );
+        let (mut probe, mut metadata) = prepare(source, "toklet_projection_store", ALLOWANCE)?;
+        // SAFETY: retained live device; support query precedes matrix allocation.
+        if !unsafe { MPSSupportsMTLDevice(Some(&probe.device)) } {
+            return Err(error("capability", "MPS does not support this device"));
+        }
+        let mut pipelines = Vec::new();
+        let mut caps = Vec::new();
+        for name in [
+            "toklet_projection_bias",
+            "toklet_rotary",
+            "toklet_cache_write",
+            "toklet_attention",
+            "toklet_rms_norm",
+            "toklet_residual",
+            "toklet_silu",
+            "toklet_gating",
+        ] {
+            let function = probe
+                .library
+                .newFunctionWithName(&NSString::from_str(name))
+                .ok_or_else(|| error("pipeline", "graph function unavailable"))?;
+            let pipeline = probe
+                .device
+                .newComputePipelineStateWithFunction_error(&function)
+                .map_err(|e| error("pipeline", e.to_string()))?;
+            let width = pipeline
+                .threadExecutionWidth()
+                .min(pipeline.maxTotalThreadsPerThreadgroup());
+            if width == 0 {
+                return Err(error(
+                    "capability",
+                    "graph pipeline has zero execution width",
+                ));
+            }
+            probe.width = probe.width.min(width);
+            caps.push(json!({"name":name,"execution_width":pipeline.threadExecutionWidth(),"max_threads":pipeline.maxTotalThreadsPerThreadgroup()}));
+            pipelines.push(pipeline);
+        }
+        let rows = case.rows;
+        let query_units = groups(rows * 4, probe.width)? * probe.width;
+        let qcap = (query_units * 8)
+            .div_ceil(32)
+            .max(groups(rows, probe.width)? * probe.width);
+        let wcap = (groups(rows * 64, probe.width)? * probe.width).div_ceil(64);
+        let kcap = (groups(rows * 8, probe.width)? * probe.width * 2).div_ceil(16);
+        let il = queried(rows, 32, 2, rows)?;
+        let qw = queried(32, 32, 2, 32)?;
+        let kw = queried(16, 32, 2, 16)?;
+        let ow = queried(32, 32, 2, 32)?;
+        let wg = queried(64, 32, 2, 64)?;
+        let wd = queried(32, 64, 2, 32)?;
+        let zb = queried(1, 64, 2, 1)?;
+        let wh = queried(rows, 64, 2, wcap)?;
+        let wf = queried(rows, 64, 4, wcap)?;
+        let qb = queried(1, 32, 2, 1)?;
+        let kb = queried(1, 16, 2, 1)?;
+        let qh = queried(rows, 32, 2, qcap)?;
+        let kh = queried(rows, 16, 2, kcap)?;
+        let qf = queried(rows, 32, 4, qcap)?;
+        let kf = queried(rows, 16, 4, kcap)?;
+        if il.stride != 32 || qh.stride != 32 || kh.stride != 16 || wh.stride != 64 {
+            return Err(error(
+                "capability",
+                "layer requires contiguous tiny Half rows",
+            ));
+        }
+        let cl = raw_layout(2, 256, 519, 2)?;
+        let sf = raw_layout(rows * 4, rows, query_units * rows + 7, 4)?;
+        let half_layouts = [
+            qh, kh, kh, qh, kh, cl, cl, qh, qh, qh, qh, qh, wh, wh, wh, wh, qh, qh,
+        ];
+        let float_layouts = [qf, kf, kf, sf, sf, qf, wf, wf, qf];
+        let input_bytes = [il, qw, kw, kw, ow, qb, kb, kb, zb, qb, qb, wg, wg, wd]
+            .iter()
+            .try_fold(0usize, |n, l| {
+                n.checked_add(l.bytes)
+                    .ok_or_else(|| error("admission", "graph input bytes overflow"))
+            })?;
+        let output_bytes = half_layouts
+            .iter()
+            .chain(&float_layouts)
+            .try_fold(0usize, |n, l| {
+                n.checked_add(l.bytes)
+                    .ok_or_else(|| error("admission", "graph output bytes overflow"))
+            })?;
+        let (shared, total) = totals(input_bytes, output_bytes, limit)?;
+        let inputs: [Input; 14] = [
+            input(&probe.device, il, &case.input)?,
+            input(&probe.device, qw, &case.weights[0])?,
+            input(&probe.device, kw, &case.weights[1])?,
+            input(&probe.device, kw, &case.weights[2])?,
+            input(&probe.device, ow, &case.weights[3])?,
+            input(&probe.device, qb, &case.biases[0])?,
+            input(&probe.device, kb, &case.biases[1])?,
+            input(&probe.device, kb, &case.biases[2])?,
+            input(&probe.device, zb, &[0u16; 64])?,
+            input(&probe.device, qb, &case.norms[0])?,
+            input(&probe.device, qb, &case.norms[1])?,
+            input(&probe.device, wg, &case.weights[4])?,
+            input(&probe.device, wg, &case.weights[5])?,
+            input(&probe.device, wd, &case.weights[6])?,
+        ];
+        let mut halves = half_layouts
+            .iter()
+            .map(|l| Shared::<u16>::new(&probe.device, l.bytes))
+            .collect::<Result<Vec<_>, _>>()?;
+        let mut singles = float_layouts
+            .iter()
+            .map(|l| Shared::<u32>::new(&probe.device, l.bytes))
+            .collect::<Result<Vec<_>, _>>()?;
+        let left = matrix(&halves[9], qh, MPSDataType::Float16)?;
+        let context = matrix(&halves[7], qh, MPSDataType::Float16)?;
+        let weights = [
+            matrix(&inputs[1].buffer, qw, MPSDataType::Float16)?,
+            matrix(&inputs[2].buffer, kw, MPSDataType::Float16)?,
+            matrix(&inputs[3].buffer, kw, MPSDataType::Float16)?,
+            matrix(&inputs[4].buffer, ow, MPSDataType::Float16)?,
+            matrix(&inputs[11].buffer, wg, MPSDataType::Float16)?,
+            matrix(&inputs[12].buffer, wg, MPSDataType::Float16)?,
+            matrix(&inputs[13].buffer, wd, MPSDataType::Float16)?,
+        ];
+        let result = [
+            matrix(&singles[0], qf, MPSDataType::Float32)?,
+            matrix(&singles[1], kf, MPSDataType::Float32)?,
+            matrix(&singles[2], kf, MPSDataType::Float32)?,
+            matrix(&singles[5], qf, MPSDataType::Float32)?,
+            matrix(&singles[6], wf, MPSDataType::Float32)?,
+            matrix(&singles[7], wf, MPSDataType::Float32)?,
+            matrix(&singles[8], qf, MPSDataType::Float32)?,
+        ];
+        let normalized_post = matrix(&halves[11], qh, MPSDataType::Float16)?;
+        let gated = matrix(&halves[15], wh, MPSDataType::Float16)?;
+        let kernels = [
+            kernel(&probe.device, rows, 32, 32),
+            kernel(&probe.device, rows, 32, 16),
+            kernel(&probe.device, rows, 32, 16),
+            kernel(&probe.device, rows, 32, 32),
+            kernel(&probe.device, rows, 32, 64),
+            kernel(&probe.device, rows, 32, 64),
+            kernel(&probe.device, rows, 64, 32),
+        ];
+        let mut first: Option<Frame> = None;
+        let mut repetitions = Vec::with_capacity(13);
+        let mut cache_initial = [HALF_GUARD; 519];
+        cache_initial[..512].fill(0);
+        for repetition in 0..13 {
+            for buffer in &mut halves {
+                buffer.fill(HALF_GUARD);
+            }
+            for buffer in &mut singles {
+                buffer.fill(FLOAT_GUARD);
+            }
+            halves[5].write(&cache_initial)?;
+            halves[6].write(&cache_initial)?;
+            let (frame, seconds) = autoreleasepool(|_| {
+                let start = Instant::now();
+                let command = probe
+                    .queue
+                    .commandBuffer()
+                    .ok_or_else(|| error("command", "graph command unavailable"))?;
+                if !command.retainedReferences() {
+                    return Err(error("command", "unretained graph resources unsupported"));
+                }
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[4],
+                    &[&inputs[0].buffer.raw, &inputs[9].buffer.raw, &halves[9].raw],
+                    &[rows as u32, 32, 1.0e-6f32.to_bits()],
+                    rows,
+                )?;
+                for index in 0..3 {
+                    encode_projection(
+                        &command,
+                        &probe,
+                        &pipelines[0],
+                        ProjectionStep {
+                            bias: &inputs[5 + index].buffer,
+                            floats: &singles[index],
+                            output: &halves[index],
+                            fl: if index == 0 { qf } else { kf },
+                            hl: if index == 0 { qh } else { kh },
+                            kernel: &kernels[index],
+                            left: &left,
+                            right: &weights[index],
+                            result: &result[index],
+                        },
+                    )?;
+                }
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[1],
+                    &[&halves[0].raw, &halves[3].raw],
+                    &[rows as u32, 4, 8, case.position as u32],
+                    rows * 16,
+                )?;
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[1],
+                    &[&halves[1].raw, &halves[4].raw],
+                    &[rows as u32, 2, 8, case.position as u32],
+                    rows * 8,
+                )?;
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[2],
+                    &[
+                        &halves[4].raw,
+                        &halves[2].raw,
+                        &halves[5].raw,
+                        &halves[6].raw,
+                    ],
+                    &[rows as u32, 0, 32],
+                    rows * 16,
+                )?;
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[3],
+                    &[
+                        &halves[3].raw,
+                        &halves[5].raw,
+                        &halves[6].raw,
+                        &singles[3].raw,
+                        &singles[4].raw,
+                        &halves[7].raw,
+                    ],
+                    &[rows as u32, 0, rows as u32],
+                    rows * 4,
+                )?;
+                encode_projection(
+                    &command,
+                    &probe,
+                    &pipelines[0],
+                    ProjectionStep {
+                        bias: &inputs[8].buffer,
+                        floats: &singles[5],
+                        output: &halves[8],
+                        fl: qf,
+                        hl: qh,
+                        kernel: &kernels[3],
+                        left: &context,
+                        right: &weights[3],
+                        result: &result[3],
+                    },
+                )?;
+
+                copy_half(&command, &inputs[0].buffer, &halves[10], rows * 32)?;
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[5],
+                    &[&halves[10].raw, &halves[8].raw],
+                    &[(rows * 32) as u32],
+                    rows * 32,
+                )?;
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[4],
+                    &[&halves[10].raw, &inputs[10].buffer.raw, &halves[11].raw],
+                    &[rows as u32, 32, 1.0e-6f32.to_bits()],
+                    rows,
+                )?;
+                encode_projection(
+                    &command,
+                    &probe,
+                    &pipelines[0],
+                    ProjectionStep {
+                        bias: &inputs[8].buffer,
+                        floats: &singles[6],
+                        output: &halves[12],
+                        fl: wf,
+                        hl: wh,
+                        kernel: &kernels[4],
+                        left: &normalized_post,
+                        right: &weights[4],
+                        result: &result[4],
+                    },
+                )?;
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[6],
+                    &[&halves[12].raw, &halves[13].raw],
+                    &[(rows * 64) as u32],
+                    rows * 64,
+                )?;
+                encode_projection(
+                    &command,
+                    &probe,
+                    &pipelines[0],
+                    ProjectionStep {
+                        bias: &inputs[8].buffer,
+                        floats: &singles[7],
+                        output: &halves[14],
+                        fl: wf,
+                        hl: wh,
+                        kernel: &kernels[5],
+                        left: &normalized_post,
+                        right: &weights[5],
+                        result: &result[5],
+                    },
+                )?;
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[7],
+                    &[&halves[13].raw, &halves[14].raw, &halves[15].raw],
+                    &[(rows * 64) as u32],
+                    rows * 64,
+                )?;
+                encode_projection(
+                    &command,
+                    &probe,
+                    &pipelines[0],
+                    ProjectionStep {
+                        bias: &inputs[8].buffer,
+                        floats: &singles[8],
+                        output: &halves[16],
+                        fl: qf,
+                        hl: qh,
+                        kernel: &kernels[6],
+                        left: &gated,
+                        right: &weights[6],
+                        result: &result[6],
+                    },
+                )?;
+                copy_half(&command, &halves[10], &halves[17], rows * 32)?;
+                encode(
+                    &command,
+                    &probe,
+                    &pipelines[5],
+                    &[&halves[17].raw, &halves[16].raw],
+                    &[(rows * 32) as u32],
+                    rows * 32,
+                )?;
+                command.commit();
+                command.waitUntilCompleted();
+                let seconds = start.elapsed().as_secs_f64();
+                if command.status() != MTLCommandBufferStatus::Completed
+                    || command.error().is_some()
+                {
+                    return Err(error("completion", "layer GPU command failed"));
+                }
+                if inputs.iter().any(|i| i.buffer.read() != i.baseline) {
+                    return Err(error("validation", "layer immutable inputs changed"));
+                }
+                let half = halves
+                    .iter()
+                    .zip(half_layouts)
+                    .map(|(b, l)| active_half(b, l))
+                    .collect::<Result<Vec<_>, _>>()
+                    .map_err(readback_error)?;
+                let single = singles
+                    .iter()
+                    .zip(float_layouts)
+                    .map(|(b, l)| active_float(b, l))
+                    .collect::<Result<Vec<_>, _>>()
+                    .map_err(readback_error)?;
+                Ok((Frame { half, single }, seconds))
+            })?;
+            if first.as_ref().is_some_and(|reference| reference != &frame) {
+                return Err(error("validation", "layer repeated intermediates differ"));
+            }
+            let output = frame.half[17].clone();
+            if first.is_none() {
+                first = Some(frame);
+            }
+            repetitions.push(json!({"phase":if repetition<3{"warmup"}else{"sample"},"repetition":if repetition<3{repetition+1}else{repetition-2},"command_completed":true,"commit_wait_pairs":1,"inputs_guards_and_intermediates_unchanged":true,"encode_commit_wait_seconds":seconds,"output_bits":output}));
+        }
+        let first = first.ok_or_else(|| error("validation", "missing graph first frame"))?;
+        metadata["maximum_admitted_bytes"] = json!(total);
+        metadata["mps_device_supported"] = json!(true);
+        metadata["graph_pipeline_caps"] = json!(caps);
+        let description = |l: Layout| json!({"rows":l.rows,"columns":l.columns,"stride":l.stride,"elements":l.elements,"bytes":l.bytes});
+        let input_description =
+            [il, qw, kw, kw, ow, qb, kb, kb, zb, qb, qb, wg, wg, wd].map(description);
+        let half_description = half_layouts.map(description);
+        let float_description = float_layouts.map(description);
+        Ok(
+            json!({"operation":"resident_tiny_layer_half_boundaries","id":case.id,"rows_count":rows,"position":case.position,"metadata":metadata,"threadgroup_width":probe.width,
+            "input_layouts":input_description,"half_layouts":half_description,"float_layouts":float_description,
+            "shared_buffer_bytes":shared,"host_snapshot_readback_bytes":shared*2,"admitted_bytes":total,"allocations_reused":true,"first_half_intermediates":first.half,"first_fp32_intermediates":first.single,"rows":repetitions}),
+        )
+    })
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn raw_shapes_and_mapped_storage_are_checked() {
+        assert!(raw_layout(2, 256, 519, 2).is_ok());
+        assert!(raw_layout(2, 256, 512, 2).is_err());
+        assert!(raw_layout(usize::MAX, 2, 519, 2).is_err());
+    }
+    #[test]
+    fn parser_rejects_bad_positions_shapes_and_finite_storage_before_device() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        static NEXT: AtomicUsize = AtomicUsize::new(0);
+        let source = json!({"format":"toklet-metal-layer-input-v1","id":"manual","rows":1,"position":0,"input_bits":vec![0u16;32],
+            "q_weight_bits":vec![0u16;1024],"k_weight_bits":vec![0u16;512],"v_weight_bits":vec![0u16;512],"o_weight_bits":vec![0u16;1024],
+            "gate_weight_bits":vec![0u16;2048],"up_weight_bits":vec![0u16;2048],"down_weight_bits":vec![0u16;2048],"input_norm_weight_bits":vec![0u16;32],"post_norm_weight_bits":vec![0u16;32],"q_bias_bits":vec![0u16;32],"k_bias_bits":vec![0u16;16],"v_bias_bits":vec![0u16;16]});
+        let check = |value: &Value| {
+            let path = std::env::temp_dir().join(format!(
+                "toklet-layer-{}-{}.json",
+                std::process::id(),
+                NEXT.fetch_add(1, Ordering::Relaxed)
+            ));
+            let mut file = std::fs::OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(&path)
+                .unwrap();
+            writeln!(file, "{value}").unwrap();
+            let result = load(&path);
+            std::fs::remove_file(path).unwrap();
+            result
+        };
+        assert!(check(&source).is_ok());
+        for (key, value) in [("rows", 0), ("rows", 33), ("position", 2048)] {
+            let mut v = source.clone();
+            v[key] = json!(value);
+            assert!(check(&v).is_err());
+        }
+        for key in [
+            "input_bits",
+            "q_weight_bits",
+            "k_weight_bits",
+            "v_weight_bits",
+            "o_weight_bits",
+            "gate_weight_bits",
+            "up_weight_bits",
+            "down_weight_bits",
+            "input_norm_weight_bits",
+            "post_norm_weight_bits",
+            "q_bias_bits",
+            "k_bias_bits",
+            "v_bias_bits",
+        ] {
+            let mut v = source.clone();
+            v[key][0] = json!(0x7c00);
+            assert!(check(&v).is_err());
+            v[key] = json!([0]);
+            assert!(check(&v).is_err());
+        }
+    }
+}

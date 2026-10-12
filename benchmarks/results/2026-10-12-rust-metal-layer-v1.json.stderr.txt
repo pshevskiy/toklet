@@ -1,0 +1,54 @@
+   Compiling objc2 v0.6.5
+    Checking objc2-encode v4.1.0
+    Checking bitflags v2.13.2
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.149
+    Checking itoa v1.0.18
+    Checking memchr v2.8.3
+    Checking objc2-foundation v0.3.2
+    Checking objc2-metal v0.3.2
+    Checking objc2-metal-performance-shaders v0.3.2
+    Checking toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-metal-layer-v1)
+error[E0283]: type annotations needed
+   --> src/rust_metal_layer.rs:150:12
+    |
+150 |         || std::ptr::eq(source.raw.as_ref(), target.raw.as_ref())
+    |            ^^^^^^^^^^^^            ------ type must be known at this point
+    |            |
+    |            cannot infer type of the type parameter `T` declared on the function `eq`
+    |
+    = note: multiple `impl`s satisfying `objc2::runtime::ProtocolObject<dyn objc2_metal::MTLBuffer>: std::convert::AsRef<_>` found in the `objc2` crate:
+            - impl<P, T> std::convert::AsRef<objc2::runtime::ProtocolObject<T>> for objc2::runtime::ProtocolObject<P>
+              where T: objc2::runtime::ImplementedBy<objc2::runtime::ProtocolObject<P>>, P: ?Sized, T: ?Sized;
+            - impl<P> std::convert::AsRef<objc2::runtime::AnyObject> for objc2::runtime::ProtocolObject<P>
+              where P: 'static, P: ?Sized;
+    = note: required for `objc2::rc::Retained<objc2::runtime::ProtocolObject<dyn objc2_metal::MTLBuffer>>` to implement `std::convert::AsRef<_>`
+help: consider specifying the generic argument
+    |
+150 |         || std::ptr::eq::<T>(source.raw.as_ref(), target.raw.as_ref())
+    |                        +++++
+
+error[E0283]: type annotations needed
+   --> src/rust_metal_layer.rs:150:12
+    |
+150 |         || std::ptr::eq(source.raw.as_ref(), target.raw.as_ref())
+    |            ^^^^^^^^^^^^                                 ------ type must be known at this point
+    |            |
+    |            cannot infer type of the type parameter `T` declared on the function `eq`
+    |
+    = note: multiple `impl`s satisfying `objc2::runtime::ProtocolObject<dyn objc2_metal::MTLBuffer>: std::convert::AsRef<_>` found in the `objc2` crate:
+            - impl<P, T> std::convert::AsRef<objc2::runtime::ProtocolObject<T>> for objc2::runtime::ProtocolObject<P>
+              where T: objc2::runtime::ImplementedBy<objc2::runtime::ProtocolObject<P>>, P: ?Sized, T: ?Sized;
+            - impl<P> std::convert::AsRef<objc2::runtime::AnyObject> for objc2::runtime::ProtocolObject<P>
+              where P: 'static, P: ?Sized;
+    = note: required for `objc2::rc::Retained<objc2::runtime::ProtocolObject<dyn objc2_metal::MTLBuffer>>` to implement `std::convert::AsRef<_>`
+help: consider specifying the generic argument
+    |
+150 |         || std::ptr::eq::<T>(source.raw.as_ref(), target.raw.as_ref())
+    |                        +++++
+
+For more information about this error, try `rustc --explain E0283`.
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe" test) due to 2 previous errors
