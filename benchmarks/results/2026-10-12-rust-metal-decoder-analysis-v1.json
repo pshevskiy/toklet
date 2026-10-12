@@ -1,0 +1,247 @@
+{
+  "format": "toklet-tiny-metal-decoder-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-rust-metal-decoder-v3.json": "818651f3abad5616c06d710a74550cdfe0401c73ba7f6d7dd34b1640a047a427",
+    "benchmarks/raw/2026-10-12-rust-metal-decoder-v3.json.native.jsonl": "f0040d86bb98035bcc98dc5c2d915575d227cf51cde9852881f83207105b934a",
+    "benchmarks/results/2026-10-12-rust-metal-decoder-v3.json.stderr.txt": "2193530884cf2c9da37e04feba1ab4b00a87e31cf64becda9bf86018a5ce987c",
+    "benchmarks/results/2026-10-12-rust-metal-decoder-idle-v1.json": "a590fcb114da477ed123c0b561834ee344a114f34878a1961cb05a762ca2688e"
+  },
+  "summary": {
+    "decoder_jobs": 9,
+    "decoder_commands": 117,
+    "layer_regression_commands": 130,
+    "all_positive_commands": 286,
+    "negative_jobs": 5,
+    "max_own_child_peak_bytes": 14402184,
+    "max_decoder_admitted_bytes": 67909198,
+    "normalization_values_independent_exact": 10560,
+    "ordered_score_values": 9536,
+    "equal_ordered_score_bits": 9536,
+    "all_actual_cache_cast_residual_gating_context_boundaries_exact": true,
+    "changed_future_first_three_outputs_exact": true,
+    "all_repetition_last_row_logits_values": 7488,
+    "greedy_tokens": [
+      47,
+      47,
+      47,
+      47
+    ],
+    "greedy_history": "source teacher-forced, identical to target generated history on all four qualified steps",
+    "outer_five_prefix_gates": {
+      "embedding": {
+        "values": 1408,
+        "equal_frozen_bits": 1408,
+        "max_gate_fraction": 0.44209390550671257
+      },
+      "norm": {
+        "values": 1408,
+        "equal_frozen_bits": 1408,
+        "max_gate_fraction": 0.49806906240227444
+      },
+      "logits": {
+        "values": 2816,
+        "equal_frozen_bits": 2466,
+        "max_gate_fraction": 0.4977734772586763
+      }
+    },
+    "layer_five_prefix_stages": {
+      "q_projection": {
+        "values": 2816,
+        "equal_frozen_bits": 2814,
+        "max_gate_fraction": 0.4981430054075672
+      },
+      "k_projection": {
+        "values": 1408,
+        "equal_frozen_bits": 1408,
+        "max_gate_fraction": 0.4969946439169997
+      },
+      "v_projection": {
+        "values": 1408,
+        "equal_frozen_bits": 1407,
+        "max_gate_fraction": 0.48929894377917843
+      },
+      "q_rotary": {
+        "values": 2816,
+        "equal_frozen_bits": 2814,
+        "max_gate_fraction": 0.49812881633031697
+      },
+      "k_rotary": {
+        "values": 1408,
+        "equal_frozen_bits": 1408,
+        "max_gate_fraction": 0.4969590975207504
+      },
+      "cache_k": {
+        "values": 5120,
+        "equal_frozen_bits": 5120,
+        "max_gate_fraction": null
+      },
+      "cache_v": {
+        "values": 5120,
+        "equal_frozen_bits": 5119,
+        "max_gate_fraction": null
+      },
+      "attention_context": {
+        "values": 2816,
+        "equal_frozen_bits": 2815,
+        "max_gate_fraction": 0.49459608999263055
+      },
+      "attention_projection": {
+        "values": 2816,
+        "equal_frozen_bits": 2815,
+        "max_gate_fraction": 0.4901600612826886
+      },
+      "input_norm": {
+        "values": 2816,
+        "equal_frozen_bits": 2816,
+        "max_gate_fraction": 0.48842514699866396
+      },
+      "attention_residual": {
+        "values": 2816,
+        "equal_frozen_bits": 2816,
+        "max_gate_fraction": 0.49315677478034853
+      },
+      "post_attention_norm": {
+        "values": 2816,
+        "equal_frozen_bits": 2816,
+        "max_gate_fraction": 0.49019750663284084
+      },
+      "gate_projection": {
+        "values": 5632,
+        "equal_frozen_bits": 5632,
+        "max_gate_fraction": 0.4989114086591971
+      },
+      "gate_silu": {
+        "values": 5632,
+        "equal_frozen_bits": 5632,
+        "max_gate_fraction": 0.4889693871776979
+      },
+      "up_projection": {
+        "values": 5632,
+        "equal_frozen_bits": 5632,
+        "max_gate_fraction": 0.49568545435408545
+      },
+      "gated": {
+        "values": 5632,
+        "equal_frozen_bits": 5632,
+        "max_gate_fraction": 0.49168481423172644
+      },
+      "down_projection": {
+        "values": 2816,
+        "equal_frozen_bits": 2816,
+        "max_gate_fraction": 0.49299036400767493
+      },
+      "output": {
+        "values": 2816,
+        "equal_frozen_bits": 2816,
+        "max_gate_fraction": 0.4957460689362005
+      },
+      "attention_scores": {
+        "values": 8528,
+        "equal_frozen_bits": 8523,
+        "max_gate_fraction": 0.49571994927715696
+      },
+      "attention_probabilities": {
+        "values": 8528,
+        "equal_frozen_bits": 7398,
+        "max_gate_fraction": 0.4749886285495449
+      }
+    },
+    "half_differences": [
+      {
+        "case": "cases.capacity",
+        "layer": 0,
+        "stage": "attention_context",
+        "index": 605,
+        "actual": 7339,
+        "frozen": 7338
+      },
+      {
+        "case": "cases.capacity",
+        "layer": 0,
+        "stage": "attention_projection",
+        "index": 580,
+        "actual": 9458,
+        "frozen": 9457
+      },
+      {
+        "case": "cases.future_changed",
+        "layer": 0,
+        "stage": "q_projection",
+        "index": 31,
+        "actual": 34054,
+        "frozen": 34055
+      },
+      {
+        "case": "cases.future_changed",
+        "layer": 0,
+        "stage": "v_projection",
+        "index": 56,
+        "actual": 3853,
+        "frozen": 3854
+      },
+      {
+        "case": "cases.future_changed",
+        "layer": 0,
+        "stage": "q_rotary",
+        "index": 31,
+        "actual": 34054,
+        "frozen": 34055
+      },
+      {
+        "case": "cases.future_changed",
+        "layer": 0,
+        "stage": "cache_v",
+        "index": 280,
+        "actual": 3853,
+        "frozen": 3854
+      },
+      {
+        "case": "cases.prompt",
+        "layer": 0,
+        "stage": "q_projection",
+        "index": 31,
+        "actual": 34054,
+        "frozen": 34055
+      },
+      {
+        "case": "cases.prompt",
+        "layer": 0,
+        "stage": "q_rotary",
+        "index": 31,
+        "actual": 34054,
+        "frozen": 34055
+      }
+    ],
+    "logits_max_abs_difference_from_fp64_dot_actual_half_operands": 7.674098014831543e-07,
+    "binary_sha256": "3c9de9c6b4875519eacf9ef1266a1f0696c3df4063db086736255d409398372f",
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "decoder_1": 13,
+      "decoder_2": 13,
+      "decoder_3": 13,
+      "decoder_4": 13,
+      "decoder_5": 13,
+      "decoder_6": 13,
+      "decoder_7": 13,
+      "decoder_8": 13,
+      "decoder_9": 13,
+      "decoder_overflow": 0,
+      "layer_1": 13,
+      "layer_2": 13,
+      "layer_3": 13,
+      "layer_4": 13,
+      "layer_5": 13,
+      "layer_6": 13,
+      "layer_7": 13,
+      "layer_8": 13,
+      "layer_9": 13,
+      "layer_10": 13,
+      "layer_overflow": 0,
+      "decoder_invalid_token": 0
+    },
+    "scope": "Independent first-frame replay; 12 later complete frames and full raw guards checked natively but not archived. Timings diagnostic, no performance acceptance, cache-session/Qwen/full backend/M4 closure."
+  }
+}

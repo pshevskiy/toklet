@@ -1,0 +1,41 @@
+   Compiling objc2 v0.6.5
+    Checking objc2-encode v4.1.0
+    Checking bitflags v2.13.2
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.149
+    Checking memchr v2.8.3
+    Checking itoa v1.0.18
+    Checking objc2-foundation v0.3.2
+    Checking objc2-metal v0.3.2
+    Checking objc2-metal-performance-shaders v0.3.2
+    Checking toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-metal-decoder-v2)
+error: unused variable: `kh`
+   --> src/rust_metal_layer.rs:337:18
+    |
+337 |         let [qh, kh, _, _, _, _, _, _, _, _, _, _, wh, ..] = plan.half_layouts;
+    |                  ^^ help: if this is intentional, prefix it with an underscore: `_kh`
+    |
+    = note: `-D unused-variables` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(unused_variables)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/rust_metal_layer.rs:191:26
+    |
+191 |   pub(super) fn setup() -> Result<
+    |  __________________________^
+192 | |     (
+193 | |         Probe,
+194 | |         Value,
+...   |
+198 | |     Error,
+199 | | > {
+    | |_^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+    = note: `-D clippy::type-complexity` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe" test) due to 2 previous errors

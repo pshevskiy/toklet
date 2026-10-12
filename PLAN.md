@@ -1171,6 +1171,24 @@ checked; actual cache/cast/gating/residual boundaries and causality pass.
 naturalcompletion, idle/VMstopped/protected endpoints recorded. Astra accepted completed code and evidence without findings after byte-identical independent replay. Each layer consumes saved input; two-layer propagation,
 embedding/finalnorm/tiedlogits/decoder/session/Qwen/quality and M4 remain open.
 
+Complete tiny decoder preparation, 12 October 2026 (M4 pending): the
+[resident two-layer decoder](docs/experiments/2026-10-12-rust-metal-decoder.md)
+composes GPU embedding, both layers, final normalization and one tied table's
+FP32 logits in one command/wait. No saved incoming layer activations are used.
+Five prefixes and four frozen teacher-forced histories pass117completedcommands;
+four greedy IDs are47 and target histories equal source histories. All original
+gates pass:1,408embedding/1,408finalnorm Half values exact and2,466/2,816logits
+frozenFP32bits exact. Known eight Half attention differences are absorbed at
+first residual. Independent10,560RMS/9,536score values and allactualGPUcache/
+cast/context/residual/gating boundaries pass. Future-token causality is exact.
+Ten layer regressions+add/tails give286positivecommands/fivenegativejobs.
+Combined admission67,909,198bytes/own-child peak14,402,184bytes;17buildchecks/
+38standaloneRust/106experimentPython/193benchmarkPython/76rootRust+fmt/Clippy
+pass. Both preGPUbuildfailures, final native evidence, idle/protected identities
+and replay producers are retained. Astra accepted code and complete evidence
+with no remaining findings after independent byte-identical replay. Root backend, incremental GPU session,
+Qwen, quality, performance, trace and M4 closure remain pending.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -1264,4 +1282,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: compose the two GPU layers with embedding, final normalization and tied output logits.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: extend the resident GPU forward pass to a bounded Qwen layer slice.

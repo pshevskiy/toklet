@@ -430,6 +430,12 @@ mod metal {
     pub(super) fn run_silu(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
         silu::run(path, limit)
     }
+    mod decoder {
+        include!("rust_metal_decoder.rs");
+    }
+    pub(super) fn run_decoder(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
+        decoder::run(path, limit)
+    }
     mod layer {
         include!("rust_metal_layer.rs");
     }
@@ -500,6 +506,7 @@ fn run() -> Result<Value, Error> {
     let mut attention_input = None;
     let mut attention_graph_input = None;
     let mut layer_input = None;
+    let mut decoder_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
@@ -569,6 +576,12 @@ fn run() -> Result<Value, Error> {
                         error("arguments", "missing attention graph input")
                     })?));
             }
+            Some("--decoder-input") if decoder_input.is_none() => {
+                decoder_input =
+                    Some(std::path::PathBuf::from(args.next().ok_or_else(|| {
+                        error("arguments", "missing decoder input")
+                    })?));
+            }
             Some("--layer-input") if layer_input.is_none() => {
                 layer_input = Some(std::path::PathBuf::from(
                     args.next()
@@ -602,13 +615,16 @@ fn run() -> Result<Value, Error> {
         + usize::from(attention_input.is_some())
         + usize::from(attention_graph_input.is_some())
         + usize::from(layer_input.is_some())
+        + usize::from(decoder_input.is_some())
         > 1
     {
         return Err(error("arguments", "probe operation modes are exclusive"));
     }
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
     {
-        if let Some(path) = rms_input {
+        if let Some(path) = decoder_input {
+            metal::run_decoder(&path, limit)
+        } else if let Some(path) = rms_input {
             metal::run_rms(&path, limit)
         } else if let Some(path) = embedding_input {
             metal::run_embedding(&path, limit)
@@ -653,6 +669,7 @@ fn run() -> Result<Value, Error> {
             attention_input,
             attention_graph_input,
             layer_input,
+            decoder_input,
         );
         Err(error("capability", "requires Apple Silicon macOS"))
     }

@@ -8,7 +8,7 @@ use projection::{Layout, half, matrix, number, queried};
 use std::{io::Read, path::Path};
 const HALF_GUARD: u16 = 0x55a1;
 const FLOAT_GUARD: u32 = 0x7fc0_5678;
-struct Case {
+pub(super) struct Case {
     id: String,
     rows: usize,
     position: usize,
@@ -17,7 +17,7 @@ struct Case {
     norms: [Vec<u16>; 2],
     biases: [Vec<u16>; 3],
 }
-fn load(path: &Path) -> Result<Case, Error> {
+pub(super) fn load(path: &Path) -> Result<Case, Error> {
     let file = std::fs::File::open(path).map_err(|e| error("fixture", e.to_string()))?;
     let size = file
         .metadata()
@@ -35,6 +35,9 @@ fn load(path: &Path) -> Result<Case, Error> {
     }
     let value: Value =
         serde_json::from_slice(&data).map_err(|e| error("fixture", e.to_string()))?;
+    parse(&value)
+}
+pub(super) fn parse(value: &Value) -> Result<Case, Error> {
     if value["format"] != "toklet-metal-layer-input-v1" {
         return Err(error("fixture", "layer format differs"));
     }
@@ -44,8 +47,8 @@ fn load(path: &Path) -> Result<Case, Error> {
     if id.is_empty() || id.len() > 128 || !id.is_ascii() {
         return Err(error("fixture", "invalid layer identity"));
     }
-    let rows = number(&value, "rows")?;
-    let position = number(&value, "position")?;
+    let rows = number(value, "rows")?;
+    let position = number(value, "position")?;
     if !(1..=32).contains(&rows) || position.checked_add(rows).is_none_or(|end| end > 2048) {
         return Err(error("fixture", "layer shape/position outside bounds"));
     }
@@ -53,24 +56,24 @@ fn load(path: &Path) -> Result<Case, Error> {
         id: id.to_owned(),
         rows,
         position,
-        input: half(&value, "input_bits", rows * 32)?,
+        input: half(value, "input_bits", rows * 32)?,
         weights: [
-            half(&value, "q_weight_bits", 1024)?,
-            half(&value, "k_weight_bits", 512)?,
-            half(&value, "v_weight_bits", 512)?,
-            half(&value, "o_weight_bits", 1024)?,
-            half(&value, "gate_weight_bits", 2048)?,
-            half(&value, "up_weight_bits", 2048)?,
-            half(&value, "down_weight_bits", 2048)?,
+            half(value, "q_weight_bits", 1024)?,
+            half(value, "k_weight_bits", 512)?,
+            half(value, "v_weight_bits", 512)?,
+            half(value, "o_weight_bits", 1024)?,
+            half(value, "gate_weight_bits", 2048)?,
+            half(value, "up_weight_bits", 2048)?,
+            half(value, "down_weight_bits", 2048)?,
         ],
         norms: [
-            half(&value, "input_norm_weight_bits", 32)?,
-            half(&value, "post_norm_weight_bits", 32)?,
+            half(value, "input_norm_weight_bits", 32)?,
+            half(value, "post_norm_weight_bits", 32)?,
         ],
         biases: [
-            half(&value, "q_bias_bits", 32)?,
-            half(&value, "k_bias_bits", 16)?,
-            half(&value, "v_bias_bits", 16)?,
+            half(value, "q_bias_bits", 32)?,
+            half(value, "k_bias_bits", 16)?,
+            half(value, "v_bias_bits", 16)?,
         ],
     })
 }
@@ -92,7 +95,7 @@ fn raw_layout(rows: usize, columns: usize, storage: usize, bytes: usize) -> Resu
         bytes: count,
     })
 }
-fn encode(
+pub(super) fn encode(
     command: &ProtocolObject<dyn MTLCommandBuffer>,
     probe: &Probe,
     pipeline: &ProtocolObject<dyn MTLComputePipelineState>,
@@ -105,7 +108,7 @@ fn encode(
         .ok_or_else(|| error("command", "graph encoder unavailable"))?;
     encoder.setComputePipelineState(pipeline);
     // SAFETY: private call sites supply the qualified rotary/cache/attention,
-    // RMS/residual/SiLU/gating ABIs (including the declared in-place residual), distinct initialized/tracked owned
+    // embedding/bias/RMS/residual/SiLU/gating ABIs (including the declared in-place residual), distinct initialized/tracked owned
     // buffers with checked contiguous/mapped layouts. Shape is a nonempty
     // UInt32 array copied immediately; each exact pipeline uses its expected
     // length/slot. Command/owners survive completion. No CPU access in flight.
@@ -181,72 +184,84 @@ fn readback_error(error: Error) -> Error {
     }
 }
 #[derive(PartialEq)]
-struct Frame {
-    half: Vec<Vec<u16>>,
-    single: Vec<Vec<u32>>,
+pub(super) struct Frame {
+    pub(super) half: Vec<Vec<u16>>,
+    pub(super) single: Vec<Vec<u32>>,
 }
-pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
-    let case = load(path)?;
-    if !(ALLOWANCE..=LIMIT).contains(&limit) {
-        return Err(error("admission", "layer budget outside runtime allowance"));
+type Setup = (
+    Probe,
+    Value,
+    Vec<Retained<ProtocolObject<dyn MTLComputePipelineState>>>,
+    Vec<Value>,
+);
+pub(super) fn setup() -> Result<Setup, Error> {
+    let source = concat!(
+        include_str!("rust_metal_projection.metal"),
+        "\n",
+        include_str!("rust_metal_rotary.metal"),
+        "\n",
+        include_str!("rust_metal_cache.metal"),
+        "\n",
+        include_str!("rust_metal_attention.metal"),
+        "\n",
+        include_str!("rust_metal_rms.metal"),
+        "\n",
+        include_str!("rust_metal_residual.metal"),
+        "\n",
+        include_str!("rust_metal_silu.metal"),
+        "\n",
+        include_str!("rust_metal_gating.metal"),
+        "\n",
+        include_str!("rust_metal_embedding.metal")
+    );
+    let (mut probe, metadata) = prepare(source, "toklet_projection_store", ALLOWANCE)?;
+    // SAFETY: retained live device; support query precedes matrix allocation.
+    if !unsafe { MPSSupportsMTLDevice(Some(&probe.device)) } {
+        return Err(error("capability", "MPS does not support this device"));
     }
-    autoreleasepool(|_| {
-        let source = concat!(
-            include_str!("rust_metal_projection.metal"),
-            "\n",
-            include_str!("rust_metal_rotary.metal"),
-            "\n",
-            include_str!("rust_metal_cache.metal"),
-            "\n",
-            include_str!("rust_metal_attention.metal"),
-            "\n",
-            include_str!("rust_metal_rms.metal"),
-            "\n",
-            include_str!("rust_metal_residual.metal"),
-            "\n",
-            include_str!("rust_metal_silu.metal"),
-            "\n",
-            include_str!("rust_metal_gating.metal")
-        );
-        let (mut probe, mut metadata) = prepare(source, "toklet_projection_store", ALLOWANCE)?;
-        // SAFETY: retained live device; support query precedes matrix allocation.
-        if !unsafe { MPSSupportsMTLDevice(Some(&probe.device)) } {
-            return Err(error("capability", "MPS does not support this device"));
+    let mut pipelines = Vec::new();
+    let mut caps = Vec::new();
+    for name in [
+        "toklet_projection_bias",
+        "toklet_rotary",
+        "toklet_cache_write",
+        "toklet_attention",
+        "toklet_rms_norm",
+        "toklet_residual",
+        "toklet_silu",
+        "toklet_gating",
+    ] {
+        let function = probe
+            .library
+            .newFunctionWithName(&NSString::from_str(name))
+            .ok_or_else(|| error("pipeline", "graph function unavailable"))?;
+        let pipeline = probe
+            .device
+            .newComputePipelineStateWithFunction_error(&function)
+            .map_err(|e| error("pipeline", e.to_string()))?;
+        let width = pipeline
+            .threadExecutionWidth()
+            .min(pipeline.maxTotalThreadsPerThreadgroup());
+        if width == 0 {
+            return Err(error(
+                "capability",
+                "graph pipeline has zero execution width",
+            ));
         }
-        let mut pipelines = Vec::new();
-        let mut caps = Vec::new();
-        for name in [
-            "toklet_projection_bias",
-            "toklet_rotary",
-            "toklet_cache_write",
-            "toklet_attention",
-            "toklet_rms_norm",
-            "toklet_residual",
-            "toklet_silu",
-            "toklet_gating",
-        ] {
-            let function = probe
-                .library
-                .newFunctionWithName(&NSString::from_str(name))
-                .ok_or_else(|| error("pipeline", "graph function unavailable"))?;
-            let pipeline = probe
-                .device
-                .newComputePipelineStateWithFunction_error(&function)
-                .map_err(|e| error("pipeline", e.to_string()))?;
-            let width = pipeline
-                .threadExecutionWidth()
-                .min(pipeline.maxTotalThreadsPerThreadgroup());
-            if width == 0 {
-                return Err(error(
-                    "capability",
-                    "graph pipeline has zero execution width",
-                ));
-            }
-            probe.width = probe.width.min(width);
-            caps.push(json!({"name":name,"execution_width":pipeline.threadExecutionWidth(),"max_threads":pipeline.maxTotalThreadsPerThreadgroup()}));
-            pipelines.push(pipeline);
-        }
-        let rows = case.rows;
+        probe.width = probe.width.min(width);
+        caps.push(json!({"name":name,"execution_width":pipeline.threadExecutionWidth(),"max_threads":pipeline.maxTotalThreadsPerThreadgroup()}));
+        pipelines.push(pipeline);
+    }
+    Ok((probe, metadata, pipelines, caps))
+}
+#[derive(Clone, Copy)]
+pub(super) struct Plan {
+    pub(super) input_layouts: [Layout; 14],
+    pub(super) half_layouts: [Layout; 18],
+    pub(super) float_layouts: [Layout; 9],
+}
+impl Plan {
+    pub(super) fn new(rows: usize, probe: &Probe) -> Result<Self, Error> {
         let query_units = groups(rows * 4, probe.width)? * probe.width;
         let qcap = (query_units * 8)
             .div_ceil(32)
@@ -280,22 +295,48 @@ pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
             qh, kh, kh, qh, kh, cl, cl, qh, qh, qh, qh, qh, wh, wh, wh, wh, qh, qh,
         ];
         let float_layouts = [qf, kf, kf, sf, sf, qf, wf, wf, qf];
-        let input_bytes = [il, qw, kw, kw, ow, qb, kb, kb, zb, qb, qb, wg, wg, wd]
+        let input_layouts = [il, qw, kw, kw, ow, qb, kb, kb, zb, qb, qb, wg, wg, wd];
+        Ok(Plan {
+            input_layouts,
+            half_layouts,
+            float_layouts,
+        })
+    }
+    pub(super) fn bytes(&self) -> Result<usize, Error> {
+        self.input_layouts[1..]
             .iter()
+            .chain(&self.half_layouts)
+            .chain(&self.float_layouts)
             .try_fold(0usize, |n, l| {
                 n.checked_add(l.bytes)
-                    .ok_or_else(|| error("admission", "graph input bytes overflow"))
-            })?;
-        let output_bytes = half_layouts
-            .iter()
-            .chain(&float_layouts)
-            .try_fold(0usize, |n, l| {
-                n.checked_add(l.bytes)
-                    .ok_or_else(|| error("admission", "graph output bytes overflow"))
-            })?;
-        let (shared, total) = totals(input_bytes, output_bytes, limit)?;
-        let inputs: [Input; 14] = [
-            input(&probe.device, il, &case.input)?,
+                    .ok_or_else(|| error("admission", "layer bytes overflow"))
+            })
+    }
+}
+use objc2_metal_performance_shaders::{MPSMatrix, MPSMatrixMultiplication};
+pub(super) struct Prepared {
+    pub(super) plan: Plan,
+    inputs: [Input; 13],
+    pub(super) halves: Vec<Shared<u16>>,
+    singles: Vec<Shared<u32>>,
+    left: Retained<MPSMatrix>,
+    context: Retained<MPSMatrix>,
+    weights: [Retained<MPSMatrix>; 7],
+    result: [Retained<MPSMatrix>; 7],
+    normalized_post: Retained<MPSMatrix>,
+    gated: Retained<MPSMatrix>,
+    kernels: [Retained<MPSMatrixMultiplication>; 7],
+}
+impl Prepared {
+    // Caller admits the complete combined graph before allocating any buffers.
+    pub(super) fn new(case: &Case, plan: Plan, probe: &Probe) -> Result<Self, Error> {
+        let rows = case.rows;
+        let [_, qw, kw, _, ow, qb, kb, _, zb, _, _, wg, _, wd] = plan.input_layouts;
+        let [qh, _, _, _, _, _, _, _, _, _, _, _, wh, ..] = plan.half_layouts;
+        let [qf, kf, _, _, _, _, wf, ..] = plan.float_layouts;
+        let half_layouts = plan.half_layouts;
+        let float_layouts = plan.float_layouts;
+        let inputs: [Input; 13] = [
             input(&probe.device, qw, &case.weights[0])?,
             input(&probe.device, kw, &case.weights[1])?,
             input(&probe.device, kw, &case.weights[2])?,
@@ -310,24 +351,24 @@ pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
             input(&probe.device, wg, &case.weights[5])?,
             input(&probe.device, wd, &case.weights[6])?,
         ];
-        let mut halves = half_layouts
+        let halves = half_layouts
             .iter()
             .map(|l| Shared::<u16>::new(&probe.device, l.bytes))
             .collect::<Result<Vec<_>, _>>()?;
-        let mut singles = float_layouts
+        let singles = float_layouts
             .iter()
             .map(|l| Shared::<u32>::new(&probe.device, l.bytes))
             .collect::<Result<Vec<_>, _>>()?;
         let left = matrix(&halves[9], qh, MPSDataType::Float16)?;
         let context = matrix(&halves[7], qh, MPSDataType::Float16)?;
         let weights = [
-            matrix(&inputs[1].buffer, qw, MPSDataType::Float16)?,
+            matrix(&inputs[0].buffer, qw, MPSDataType::Float16)?,
+            matrix(&inputs[1].buffer, kw, MPSDataType::Float16)?,
             matrix(&inputs[2].buffer, kw, MPSDataType::Float16)?,
-            matrix(&inputs[3].buffer, kw, MPSDataType::Float16)?,
-            matrix(&inputs[4].buffer, ow, MPSDataType::Float16)?,
+            matrix(&inputs[3].buffer, ow, MPSDataType::Float16)?,
+            matrix(&inputs[10].buffer, wg, MPSDataType::Float16)?,
             matrix(&inputs[11].buffer, wg, MPSDataType::Float16)?,
-            matrix(&inputs[12].buffer, wg, MPSDataType::Float16)?,
-            matrix(&inputs[13].buffer, wd, MPSDataType::Float16)?,
+            matrix(&inputs[12].buffer, wd, MPSDataType::Float16)?,
         ];
         let result = [
             matrix(&singles[0], qf, MPSDataType::Float32)?,
@@ -349,204 +390,294 @@ pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
             kernel(&probe.device, rows, 32, 64),
             kernel(&probe.device, rows, 64, 32),
         ];
+        Ok(Self {
+            plan,
+            inputs,
+            halves,
+            singles,
+            left,
+            context,
+            weights,
+            result,
+            normalized_post,
+            gated,
+            kernels,
+        })
+    }
+    pub(super) fn reset(&mut self) -> Result<(), Error> {
+        for b in &mut self.halves {
+            b.fill(HALF_GUARD);
+        }
+        for b in &mut self.singles {
+            b.fill(FLOAT_GUARD);
+        }
+        let mut cache = [HALF_GUARD; 519];
+        cache[..512].fill(0);
+        self.halves[5].write(&cache)?;
+        self.halves[6].write(&cache)?;
+        Ok(())
+    }
+    pub(super) fn encode(
+        &self,
+        command: &ProtocolObject<dyn MTLCommandBuffer>,
+        probe: &Probe,
+        pipelines: &[Retained<ProtocolObject<dyn MTLComputePipelineState>>],
+        incoming: &Shared<u16>,
+        rows: usize,
+        position: usize,
+    ) -> Result<(), Error> {
+        if rows != self.plan.half_layouts[0].rows
+            || position.checked_add(rows).is_none_or(|n| n > 2048)
+            || incoming.elements < rows * 32
+        {
+            return Err(error("admission", "layer incoming shape differs"));
+        }
+        let Self {
+            inputs,
+            halves,
+            singles,
+            left,
+            context,
+            weights,
+            result,
+            normalized_post,
+            gated,
+            kernels,
+            ..
+        } = self;
+        let [qh, kh, _, _, _, _, _, _, _, _, _, _, wh, ..] = self.plan.half_layouts;
+        let [qf, kf, _, _, _, _, wf, ..] = self.plan.float_layouts;
+        encode(
+            command,
+            probe,
+            &pipelines[4],
+            &[&incoming.raw, &inputs[8].buffer.raw, &halves[9].raw],
+            &[rows as u32, 32, 1.0e-6f32.to_bits()],
+            rows,
+        )?;
+        for index in 0..3 {
+            encode_projection(
+                command,
+                probe,
+                &pipelines[0],
+                ProjectionStep {
+                    bias: &inputs[4 + index].buffer,
+                    floats: &singles[index],
+                    output: &halves[index],
+                    fl: if index == 0 { qf } else { kf },
+                    hl: if index == 0 { qh } else { kh },
+                    kernel: &kernels[index],
+                    left,
+                    right: &weights[index],
+                    result: &result[index],
+                },
+            )?;
+        }
+        encode(
+            command,
+            probe,
+            &pipelines[1],
+            &[&halves[0].raw, &halves[3].raw],
+            &[rows as u32, 4, 8, position as u32],
+            rows * 16,
+        )?;
+        encode(
+            command,
+            probe,
+            &pipelines[1],
+            &[&halves[1].raw, &halves[4].raw],
+            &[rows as u32, 2, 8, position as u32],
+            rows * 8,
+        )?;
+        encode(
+            command,
+            probe,
+            &pipelines[2],
+            &[
+                &halves[4].raw,
+                &halves[2].raw,
+                &halves[5].raw,
+                &halves[6].raw,
+            ],
+            &[rows as u32, 0, 32],
+            rows * 16,
+        )?;
+        encode(
+            command,
+            probe,
+            &pipelines[3],
+            &[
+                &halves[3].raw,
+                &halves[5].raw,
+                &halves[6].raw,
+                &singles[3].raw,
+                &singles[4].raw,
+                &halves[7].raw,
+            ],
+            &[rows as u32, 0, rows as u32],
+            rows * 4,
+        )?;
+        encode_projection(
+            command,
+            probe,
+            &pipelines[0],
+            ProjectionStep {
+                bias: &inputs[7].buffer,
+                floats: &singles[5],
+                output: &halves[8],
+                fl: qf,
+                hl: qh,
+                kernel: &kernels[3],
+                left: context,
+                right: &weights[3],
+                result: &result[3],
+            },
+        )?;
+
+        copy_half(command, incoming, &halves[10], rows * 32)?;
+        encode(
+            command,
+            probe,
+            &pipelines[5],
+            &[&halves[10].raw, &halves[8].raw],
+            &[(rows * 32) as u32],
+            rows * 32,
+        )?;
+        encode(
+            command,
+            probe,
+            &pipelines[4],
+            &[&halves[10].raw, &inputs[9].buffer.raw, &halves[11].raw],
+            &[rows as u32, 32, 1.0e-6f32.to_bits()],
+            rows,
+        )?;
+        encode_projection(
+            command,
+            probe,
+            &pipelines[0],
+            ProjectionStep {
+                bias: &inputs[7].buffer,
+                floats: &singles[6],
+                output: &halves[12],
+                fl: wf,
+                hl: wh,
+                kernel: &kernels[4],
+                left: normalized_post,
+                right: &weights[4],
+                result: &result[4],
+            },
+        )?;
+        encode(
+            command,
+            probe,
+            &pipelines[6],
+            &[&halves[12].raw, &halves[13].raw],
+            &[(rows * 64) as u32],
+            rows * 64,
+        )?;
+        encode_projection(
+            command,
+            probe,
+            &pipelines[0],
+            ProjectionStep {
+                bias: &inputs[7].buffer,
+                floats: &singles[7],
+                output: &halves[14],
+                fl: wf,
+                hl: wh,
+                kernel: &kernels[5],
+                left: normalized_post,
+                right: &weights[5],
+                result: &result[5],
+            },
+        )?;
+        encode(
+            command,
+            probe,
+            &pipelines[7],
+            &[&halves[13].raw, &halves[14].raw, &halves[15].raw],
+            &[(rows * 64) as u32],
+            rows * 64,
+        )?;
+        encode_projection(
+            command,
+            probe,
+            &pipelines[0],
+            ProjectionStep {
+                bias: &inputs[7].buffer,
+                floats: &singles[8],
+                output: &halves[16],
+                fl: qf,
+                hl: qh,
+                kernel: &kernels[6],
+                left: gated,
+                right: &weights[6],
+                result: &result[6],
+            },
+        )?;
+        copy_half(command, &halves[10], &halves[17], rows * 32)?;
+        encode(
+            command,
+            probe,
+            &pipelines[5],
+            &[&halves[17].raw, &halves[16].raw],
+            &[(rows * 32) as u32],
+            rows * 32,
+        )?;
+        Ok(())
+    }
+    pub(super) fn frame(&self) -> Result<Frame, Error> {
+        if self.inputs.iter().any(|i| i.buffer.read() != i.baseline) {
+            return Err(error("validation", "layer immutable inputs changed"));
+        }
+        let half = self
+            .halves
+            .iter()
+            .zip(self.plan.half_layouts)
+            .map(|(b, l)| active_half(b, l))
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(readback_error)?;
+        let single = self
+            .singles
+            .iter()
+            .zip(self.plan.float_layouts)
+            .map(|(b, l)| active_float(b, l))
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(readback_error)?;
+        Ok(Frame { half, single })
+    }
+}
+pub(super) fn describe(l: Layout) -> Value {
+    json!({"rows":l.rows,"columns":l.columns,"stride":l.stride,"elements":l.elements,"bytes":l.bytes})
+}
+pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
+    let case = load(path)?;
+    autoreleasepool(|_| {
+        let (probe, mut metadata, pipelines, caps) = setup()?;
+        let plan = Plan::new(case.rows, &probe)?;
+        let (shared, total) = totals(plan.input_layouts[0].bytes, plan.bytes()?, limit)?;
+        let incoming = input(&probe.device, plan.input_layouts[0], &case.input)?;
+        let mut graph = Prepared::new(&case, plan, &probe)?;
         let mut first: Option<Frame> = None;
         let mut repetitions = Vec::with_capacity(13);
-        let mut cache_initial = [HALF_GUARD; 519];
-        cache_initial[..512].fill(0);
         for repetition in 0..13 {
-            for buffer in &mut halves {
-                buffer.fill(HALF_GUARD);
-            }
-            for buffer in &mut singles {
-                buffer.fill(FLOAT_GUARD);
-            }
-            halves[5].write(&cache_initial)?;
-            halves[6].write(&cache_initial)?;
+            graph.reset()?;
             let (frame, seconds) = autoreleasepool(|_| {
                 let start = Instant::now();
                 let command = probe
                     .queue
                     .commandBuffer()
-                    .ok_or_else(|| error("command", "graph command unavailable"))?;
+                    .ok_or_else(|| error("command", "layer command unavailable"))?;
                 if !command.retainedReferences() {
                     return Err(error("command", "unretained graph resources unsupported"));
                 }
-                encode(
+                graph.encode(
                     &command,
                     &probe,
-                    &pipelines[4],
-                    &[&inputs[0].buffer.raw, &inputs[9].buffer.raw, &halves[9].raw],
-                    &[rows as u32, 32, 1.0e-6f32.to_bits()],
-                    rows,
-                )?;
-                for index in 0..3 {
-                    encode_projection(
-                        &command,
-                        &probe,
-                        &pipelines[0],
-                        ProjectionStep {
-                            bias: &inputs[5 + index].buffer,
-                            floats: &singles[index],
-                            output: &halves[index],
-                            fl: if index == 0 { qf } else { kf },
-                            hl: if index == 0 { qh } else { kh },
-                            kernel: &kernels[index],
-                            left: &left,
-                            right: &weights[index],
-                            result: &result[index],
-                        },
-                    )?;
-                }
-                encode(
-                    &command,
-                    &probe,
-                    &pipelines[1],
-                    &[&halves[0].raw, &halves[3].raw],
-                    &[rows as u32, 4, 8, case.position as u32],
-                    rows * 16,
-                )?;
-                encode(
-                    &command,
-                    &probe,
-                    &pipelines[1],
-                    &[&halves[1].raw, &halves[4].raw],
-                    &[rows as u32, 2, 8, case.position as u32],
-                    rows * 8,
-                )?;
-                encode(
-                    &command,
-                    &probe,
-                    &pipelines[2],
-                    &[
-                        &halves[4].raw,
-                        &halves[2].raw,
-                        &halves[5].raw,
-                        &halves[6].raw,
-                    ],
-                    &[rows as u32, 0, 32],
-                    rows * 16,
-                )?;
-                encode(
-                    &command,
-                    &probe,
-                    &pipelines[3],
-                    &[
-                        &halves[3].raw,
-                        &halves[5].raw,
-                        &halves[6].raw,
-                        &singles[3].raw,
-                        &singles[4].raw,
-                        &halves[7].raw,
-                    ],
-                    &[rows as u32, 0, rows as u32],
-                    rows * 4,
-                )?;
-                encode_projection(
-                    &command,
-                    &probe,
-                    &pipelines[0],
-                    ProjectionStep {
-                        bias: &inputs[8].buffer,
-                        floats: &singles[5],
-                        output: &halves[8],
-                        fl: qf,
-                        hl: qh,
-                        kernel: &kernels[3],
-                        left: &context,
-                        right: &weights[3],
-                        result: &result[3],
-                    },
-                )?;
-
-                copy_half(&command, &inputs[0].buffer, &halves[10], rows * 32)?;
-                encode(
-                    &command,
-                    &probe,
-                    &pipelines[5],
-                    &[&halves[10].raw, &halves[8].raw],
-                    &[(rows * 32) as u32],
-                    rows * 32,
-                )?;
-                encode(
-                    &command,
-                    &probe,
-                    &pipelines[4],
-                    &[&halves[10].raw, &inputs[10].buffer.raw, &halves[11].raw],
-                    &[rows as u32, 32, 1.0e-6f32.to_bits()],
-                    rows,
-                )?;
-                encode_projection(
-                    &command,
-                    &probe,
-                    &pipelines[0],
-                    ProjectionStep {
-                        bias: &inputs[8].buffer,
-                        floats: &singles[6],
-                        output: &halves[12],
-                        fl: wf,
-                        hl: wh,
-                        kernel: &kernels[4],
-                        left: &normalized_post,
-                        right: &weights[4],
-                        result: &result[4],
-                    },
-                )?;
-                encode(
-                    &command,
-                    &probe,
-                    &pipelines[6],
-                    &[&halves[12].raw, &halves[13].raw],
-                    &[(rows * 64) as u32],
-                    rows * 64,
-                )?;
-                encode_projection(
-                    &command,
-                    &probe,
-                    &pipelines[0],
-                    ProjectionStep {
-                        bias: &inputs[8].buffer,
-                        floats: &singles[7],
-                        output: &halves[14],
-                        fl: wf,
-                        hl: wh,
-                        kernel: &kernels[5],
-                        left: &normalized_post,
-                        right: &weights[5],
-                        result: &result[5],
-                    },
-                )?;
-                encode(
-                    &command,
-                    &probe,
-                    &pipelines[7],
-                    &[&halves[13].raw, &halves[14].raw, &halves[15].raw],
-                    &[(rows * 64) as u32],
-                    rows * 64,
-                )?;
-                encode_projection(
-                    &command,
-                    &probe,
-                    &pipelines[0],
-                    ProjectionStep {
-                        bias: &inputs[8].buffer,
-                        floats: &singles[8],
-                        output: &halves[16],
-                        fl: qf,
-                        hl: qh,
-                        kernel: &kernels[6],
-                        left: &gated,
-                        right: &weights[6],
-                        result: &result[6],
-                    },
-                )?;
-                copy_half(&command, &halves[10], &halves[17], rows * 32)?;
-                encode(
-                    &command,
-                    &probe,
-                    &pipelines[5],
-                    &[&halves[17].raw, &halves[16].raw],
-                    &[(rows * 32) as u32],
-                    rows * 32,
+                    &pipelines,
+                    &incoming.buffer,
+                    case.rows,
+                    case.position,
                 )?;
                 command.commit();
                 command.waitUntilCompleted();
@@ -556,24 +687,12 @@ pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
                 {
                     return Err(error("completion", "layer GPU command failed"));
                 }
-                if inputs.iter().any(|i| i.buffer.read() != i.baseline) {
-                    return Err(error("validation", "layer immutable inputs changed"));
+                if incoming.buffer.read() != incoming.baseline {
+                    return Err(error("validation", "layer immutable input changed"));
                 }
-                let half = halves
-                    .iter()
-                    .zip(half_layouts)
-                    .map(|(b, l)| active_half(b, l))
-                    .collect::<Result<Vec<_>, _>>()
-                    .map_err(readback_error)?;
-                let single = singles
-                    .iter()
-                    .zip(float_layouts)
-                    .map(|(b, l)| active_float(b, l))
-                    .collect::<Result<Vec<_>, _>>()
-                    .map_err(readback_error)?;
-                Ok((Frame { half, single }, seconds))
+                Ok((graph.frame()?, seconds))
             })?;
-            if first.as_ref().is_some_and(|reference| reference != &frame) {
+            if first.as_ref().is_some_and(|r| r != &frame) {
                 return Err(error("validation", "layer repeated intermediates differ"));
             }
             let output = frame.half[17].clone();
@@ -582,19 +701,12 @@ pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
             }
             repetitions.push(json!({"phase":if repetition<3{"warmup"}else{"sample"},"repetition":if repetition<3{repetition+1}else{repetition-2},"command_completed":true,"commit_wait_pairs":1,"inputs_guards_and_intermediates_unchanged":true,"encode_commit_wait_seconds":seconds,"output_bits":output}));
         }
-        let first = first.ok_or_else(|| error("validation", "missing graph first frame"))?;
+        let first = first.unwrap();
         metadata["maximum_admitted_bytes"] = json!(total);
         metadata["mps_device_supported"] = json!(true);
         metadata["graph_pipeline_caps"] = json!(caps);
-        let description = |l: Layout| json!({"rows":l.rows,"columns":l.columns,"stride":l.stride,"elements":l.elements,"bytes":l.bytes});
-        let input_description =
-            [il, qw, kw, kw, ow, qb, kb, kb, zb, qb, qb, wg, wg, wd].map(description);
-        let half_description = half_layouts.map(description);
-        let float_description = float_layouts.map(description);
         Ok(
-            json!({"operation":"resident_tiny_layer_half_boundaries","id":case.id,"rows_count":rows,"position":case.position,"metadata":metadata,"threadgroup_width":probe.width,
-            "input_layouts":input_description,"half_layouts":half_description,"float_layouts":float_description,
-            "shared_buffer_bytes":shared,"host_snapshot_readback_bytes":shared*2,"admitted_bytes":total,"allocations_reused":true,"first_half_intermediates":first.half,"first_fp32_intermediates":first.single,"rows":repetitions}),
+            json!({"operation":"resident_tiny_layer_half_boundaries","id":case.id,"rows_count":case.rows,"position":case.position,"metadata":metadata,"threadgroup_width":probe.width,"input_layouts":plan.input_layouts.map(describe),"half_layouts":plan.half_layouts.map(describe),"float_layouts":plan.float_layouts.map(describe),"shared_buffer_bytes":shared,"host_snapshot_readback_bytes":shared*2,"admitted_bytes":total,"allocations_reused":true,"first_half_intermediates":first.half,"first_fp32_intermediates":first.single,"rows":repetitions}),
         )
     })
 }

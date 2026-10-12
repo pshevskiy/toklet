@@ -1,0 +1,104 @@
+"""Independent post-idle replay of the complete tiny resident decoder."""
+import copy,hashlib,json,math,struct,sys
+from pathlib import Path
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_decoder as decoder
+layer=decoder.layer;probe=decoder.rms.probe
+sha=lambda p:hashlib.file_digest(Path(p).open('rb'),'sha256').hexdigest()
+read=lambda p:json.loads(Path(p).read_text())
+record_path=ROOT/'benchmarks/results/2026-10-12-rust-metal-decoder-v3.json';idle_path=ROOT/'benchmarks/results/2026-10-12-rust-metal-decoder-idle-v1.json'
+r=read(record_path);idle=read(idle_path);raw_path=ROOT/'benchmarks/raw/2026-10-12-rust-metal-decoder-v3.json.native.jsonl';stderr=record_path.with_suffix('.json.stderr.txt')
+assert idle['all_recorded_processes_absent'] and idle['machine']['State']=='stopped' and idle['native_session_exit_code']==0
+for field in ('archive_sha256','protected_sha256'):
+ for name,h in idle[field].items():assert sha(ROOT/name)==h
+assert r['completed'] and 'failure'not in r and sha(raw_path)==r['native_raw_sha256'] and sha(stderr)==r['stderr_sha256']
+build=ROOT/'artifacts/rust-metal-decoder-v3'
+for name,h in r['source_sha256'].items():
+ p=ROOT/name;target=build/('Cargo.toml'if name.endswith('.Cargo.toml')else 'Cargo.lock'if name.endswith('.lock')else 'src/main.rs'if name.endswith('rust_metal_probe.rs')else 'src/'+p.name)
+ assert sha(p)==sha(target)==h
+for name,h in {'tools/experiments/rust_metal_probe.py':r['driver_sha256'],'tools/experiments/metal_probe.py':r['common_helper_sha256'],'tools/bench/mlx_baseline.py':r['memory_helper_sha256']}.items():assert sha(ROOT/name)==h
+for field in ('input_sha256','qualification_driver_sha256'):
+ for name,h in r['extra_context'][field].items():assert sha(name)==h
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==r['binary_sha256']
+assert len(r['checks'])==len(r['build_commands'])==17 and [c['command']for c in r['checks']]==r['build_commands']
+assert 'test result: ok. 38 passed; 0 failed' in next(c['stdout']for c in r['checks']if 'test'in c['command'])
+inputs,anchors,overflow=decoder.cases();li,la,lo=layer.cases()
+validators={f'decoder_{i+1}':lambda e,c=c:decoder.validate(e,c,anchors[c['id']])for i,c in enumerate(inputs)}
+validators.update({f'layer_{i+1}':lambda e,c=c:layer.validate(e,c,la[c['id']])for i,c in enumerate(li)})
+validators.update({'decoder_overflow':layer.overflow_rejected,'layer_overflow':layer.overflow_rejected})
+def invalid(e):
+ assert e['passed']is False and e['error']=={'stage':'fixture','message':'decoder token outside vocabulary'};return False
+validators['decoder_invalid_token']=invalid
+raw=[json.loads(line)for line in raw_path.read_text().splitlines()];runs=r['native_runs']
+assert len(raw)==len(runs)==25
+assert [run['mode']for run in runs]==['normal','invalid_shader','insufficient_budget']+[f'decoder_{i+1}'for i in range(9)]+['decoder_overflow']+[f'layer_{i+1}'for i in range(10)]+['layer_overflow','decoder_invalid_token']
+commands={};peak=0
+for e,run in zip(raw,runs):
+ replay=copy.deepcopy(e);probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']));assert replay==run['event'] and not run['watchdog_killed'] and 0<run['physical_process_charge_peak_bytes']<=probe.LIMIT
+ peak=max(peak,run['physical_process_charge_peak_bytes']);commands[run['mode']]=len(e.get('result',{}).get('rows',[]))+sum(len(c['rows'])for c in e.get('result',{}).get('cases',[]))
+assert sum(commands.values())==286
+f32=lambda n:struct.unpack('<f',struct.pack('<f',n))[0]
+half=lambda vals:list(struct.unpack(f'<{len(vals)}H',struct.pack(f'<{len(vals)}e',*vals)))
+f32bits=lambda n:struct.unpack('<I',struct.pack('<f',n))[0]
+def norm(bits,weights):
+ a=decoder.unpack(bits,'H');w=decoder.unpack(weights,'H');out=[]
+ for row in range(len(a)//32):
+  x=a[row*32:(row+1)*32];total=0.
+  for v in x:total=f32(total+f32(v*v))
+  inv=f32(1/f32(math.sqrt(f32(f32(total/32)+f32(1e-6)))))
+  out.extend(f32(f32(v*inv)*weight)for v,weight in zip(x,w))
+ return half(out)
+normalizations=score_count=score_equal=0;logit_dot_error=0.;differences=[];prefix_values={};outer={};layer_summary={name:{'values':0,'equal_frozen_bits':0,'max_gate_fraction':None if name.startswith('cache_')else 0.}for name in layer.HALF_STAGES+('attention_scores','attention_probabilities')}
+for i,item in enumerate(inputs):
+ e=raw[3+i]['result'];n=item['rows'];incoming=e['first_embedding_bits'];a=anchors[item['id']]
+ assert incoming==[v for token in item['tokens']for v in item['embedding_weight_bits'][token*32:(token+1)*32]]
+ for index,frame in enumerate(e['first_layers']):
+  h=frame['half'];s=frame['single'];weights=item['layers'][index]
+  assert h[9]==norm(incoming,weights['input_norm_weight_bits']) and h[11]==norm(h[10],weights['post_norm_weight_bits']);normalizations+=2*n*32
+  for src,dst in [(0,0),(1,1),(2,2),(5,8),(6,12),(7,14),(8,16)]:assert half(decoder.unpack(s[src],'I'))==h[dst]
+  for dst,src in [(5,4),(6,2)]:assert h[dst]==[h[src][(token*2+head)*8+feature]if token<n else 0 for head in range(2)for token in range(32)for feature in range(8)]
+  residual=lambda x,y:half([f32(v+w)for v,w in zip(decoder.unpack(x,'H'),decoder.unpack(y,'H'))])
+  assert h[10]==residual(incoming,h[8]) and h[17]==residual(h[10],h[16])
+  assert h[15]==half([f32(v*w)for v,w in zip(decoder.unpack(h[13],'H'),decoder.unpack(h[14],'H'))])
+  q,k,v=[decoder.unpack(h[j],'H')for j in (3,5,6)];prob=decoder.unpack(s[4],'I')
+  for token in range(n):
+   for head in range(4):
+    row=(head*n+token)*n;kv=head//2;assert all(s[4][row+p]==0 for p in range(token+1,n))
+    for p in range(n):
+     acc=0.
+     for feature in range(8):acc=f32(acc+f32(q[(token*4+head)*8+feature]*k[(kv*32+p)*8+feature]))
+     score_equal+=int(f32bits(f32(acc/f32(math.sqrt(8))))==s[3][row+p]);score_count+=1
+    for feature in range(8):
+     acc=0.
+     for p in range(token+1):acc=f32(acc+f32(prob[row+p]*v[(kv*32+p)*8+feature]))
+     assert half([acc])[0]==h[7][(token*4+head)*8+feature]
+  if 'layers'in a:
+   for name,bits,expected in zip(layer_summary,h+[s[3],s[4]],a['layers'][index]['stages']):
+    stage=layer_summary[name];stage['values']+=len(bits);stage['equal_frozen_bits']+=sum(v==w for v,w in zip(bits,expected['bits']))
+    if expected['gate']:
+     kind='I'if name.startswith('attention_s')or name=='attention_probabilities'else 'H';values=decoder.unpack(bits,kind);gate=expected['gate'];fraction=max(abs(v-w)/(gate['atol']+gate['rtol']*abs(w))for v,w in zip(values,expected['source']));assert fraction<=1;stage['max_gate_fraction']=max(stage['max_gate_fraction'],fraction)
+    if name in layer.HALF_STAGES:
+     differences.extend({'case':item['id'],'layer':index,'stage':name,'index':j,'actual':v,'frozen':w}for j,(v,w)in enumerate(zip(bits,expected['bits']))if v!=w)
+  incoming=h[17]
+ assert e['first_normalized_bits']==norm(incoming,item['final_norm_weight_bits']);normalizations+=n*32
+ x=decoder.unpack(e['first_normalized_bits'],'H');table=decoder.unpack(item['embedding_weight_bits'],'H');logits=decoder.unpack(e['first_logits_bits'],'I')
+ for token in range(n):
+  for col in range(64):
+   wide=sum(x[token*32+k]*table[col*32+k]for k in range(32));logit_dot_error=max(logit_dot_error,abs(logits[token*64+col]-wide))
+ if 'layers'in a:
+  for stage,key,kind in [('embedding','first_embedding_bits','H'),('norm','first_normalized_bits','H'),('logits','first_logits_bits','I')]:
+   result=decoder.qualify(e[key],a[stage],kind);agg=outer.setdefault(stage,{'values':0,'equal_frozen_bits':0,'max_gate_fraction':0.});agg['values']+=result['values'];agg['equal_frozen_bits']+=result['equal_frozen_bits'];agg['max_gate_fraction']=max(agg['max_gate_fraction'],result['source_fp32_max_gate_fraction'])
+ prefix_values[item['id']]=e
+prompt=prefix_values['cases.prompt'];future=prefix_values['cases.future_changed']
+for key,count in [('first_embedding_bits',96),('first_normalized_bits',96),('first_logits_bits',192)]:assert prompt[key][:count]==future[key][:count]
+for i in range(2):assert prompt['first_layers'][i]['half'][17][:96]==future['first_layers'][i]['half'][17][:96]
+greedy=[];last_values=0
+for i,item in enumerate(inputs):
+ e=prefix_values[item['id']];last=e['first_logits_bits'][-64:]
+ for row in e['rows']:assert row['last_logits_bits']==last;last_values+=64
+ if i>=5:greedy.append(e['rows'][0]['token_id']);assert inputs[i]['tokens']==[1,7,13,3]+greedy[:-1]
+assert greedy==[47]*4
+summary={'decoder_jobs':9,'decoder_commands':117,'layer_regression_commands':130,'all_positive_commands':286,'negative_jobs':5,'max_own_child_peak_bytes':peak,'max_decoder_admitted_bytes':max(prefix_values[c['id']]['admitted_bytes']for c in inputs),'normalization_values_independent_exact':normalizations,'ordered_score_values':score_count,'equal_ordered_score_bits':score_equal,'all_actual_cache_cast_residual_gating_context_boundaries_exact':True,'changed_future_first_three_outputs_exact':True,'all_repetition_last_row_logits_values':last_values,'greedy_tokens':greedy,'greedy_history':'source teacher-forced, identical to target generated history on all four qualified steps','outer_five_prefix_gates':outer,'layer_five_prefix_stages':layer_summary,'half_differences':differences,'logits_max_abs_difference_from_fp64_dot_actual_half_operands':logit_dot_error,'binary_sha256':r['binary_sha256'],'command_counts':commands,'scope':'Independent first-frame replay; 12 later complete frames and full raw guards checked natively but not archived. Timings diagnostic, no performance acceptance, cache-session/Qwen/full backend/M4 closure.'}
+out={'format':'toklet-tiny-metal-decoder-analysis-v1','completed':True,'records_sha256':{str(p.relative_to(ROOT)):sha(p)for p in(record_path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x')as stream:stream.write(json.dumps(out,indent=2,allow_nan=False)+'\n')
+print(json.dumps({k:v for k,v in summary.items()if k not in ('layer_five_prefix_stages','half_differences','command_counts')},indent=2));print('Half differences:',len(differences))
