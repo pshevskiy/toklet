@@ -1,0 +1,77 @@
+"""Post-idle independent replay and pinned BF16 tensor reconstruction."""
+import copy,hashlib,json,math,struct,sys
+from pathlib import Path
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_qwen_projections as q
+probe=q.projection.rms.probe
+read=lambda p:json.loads(Path(p).read_text())
+def sha(p):
+ with Path(p).open('rb')as f:return hashlib.file_digest(f,'sha256').hexdigest()
+base='2026-10-13-rust-metal-qwen-projections-v1';record_path=ROOT/f'benchmarks/results/{base}.json';raw_path=ROOT/f'benchmarks/raw/{base}.json.native.jsonl';stderr=ROOT/f'benchmarks/results/{base}.json.stderr.txt';idle_path=ROOT/'benchmarks/results/2026-10-13-rust-metal-qwen-projections-idle-v1.json'
+r=read(record_path);idle=read(idle_path);build=ROOT/'artifacts/rust-metal-qwen-projections-v1'
+assert r['completed'] and 'failure'not in r and idle['all_recorded_processes_absent'] and idle['machine']['State']=='stopped' and idle['native_session_exit_code']==0
+for field in('archive_sha256','protected_sha256'):
+ for name,h in idle[field].items():assert sha(ROOT/name)==h
+assert sha(raw_path)==r['native_raw_sha256']and sha(stderr)==r['stderr_sha256']
+for name,h in r['source_sha256'].items():
+ p=ROOT/name;target=build/('Cargo.toml'if name.endswith('.Cargo.toml')else'Cargo.lock'if name.endswith('.lock')else'src/main.rs'if name.endswith('rust_metal_probe.rs')else'src/'+p.name);assert sha(p)==sha(target)==h
+for name,h in{'tools/experiments/rust_metal_probe.py':r['driver_sha256'],'tools/experiments/metal_probe.py':r['common_helper_sha256'],'tools/bench/mlx_baseline.py':r['memory_helper_sha256']}.items():assert sha(ROOT/name)==h
+for field in('input_sha256','qualification_driver_sha256'):
+ for name,h in r['extra_context'][field].items():assert sha(name)==h
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==r['binary_sha256']
+assert len(r['checks'])==len(r['build_commands'])==17 and [c['command']for c in r['checks']]==r['build_commands']
+assert 'test result: ok. 40 passed; 0 failed' in next(c['stdout']for c in r['checks']if'test'in c['command'])
+inputs,anchors=q.cases();provenance=r['extra_context']['weights'];directory=ROOT/'artifacts/rust-metal-qwen-projections-inputs-v1';weights={};biases={};converted_count=0
+# Independent conversion from the recorded pinned raw BF16 offsets. The
+# descriptor is opened once; archive proof binds the entire checkpoint hash.
+with q.qwen.WEIGHTS.open('rb')as f:
+ header_size=struct.unpack('<Q',f.read(8))[0];metadata=json.loads(f.read(header_size))
+ for name,item in provenance.items():
+  assert metadata[name]['data_offsets']==item['data_offsets'] and metadata[name]['shape']==item['shape'] and metadata[name]['dtype']=='BF16'
+  n=math.prod(item['shape']);f.seek(8+header_size+item['data_offsets'][0]);data=f.read(n*2);assert len(data)==n*2 and hashlib.sha256(data).hexdigest()==item['source_bf16_sha256']
+  values=[struct.unpack('<f',struct.pack('<I',word<<16))[0]for(word,)in struct.iter_unpack('<H',data)];converted=struct.pack(f'<{n}e',*values);assert hashlib.sha256(converted).hexdigest()==item['half_sha256'];converted_count+=n
+  op=name.split('.')[-2][0]
+  if name.endswith('weight'):
+   assert(directory/f'{op}.f16le').read_bytes()==converted;weights[op]=struct.unpack(f'<{n}e',converted)
+  else:biases[op]=struct.unpack(f'<{n}e',converted)
+raw=[json.loads(line)for line in raw_path.read_text().splitlines()];runs=r['native_runs'];assert len(raw)==len(runs)==26
+assert[run['mode']for run in runs]==['normal','invalid_shader','insufficient_budget']+[f'qwen_{i+1}'for i in range(12)]+['tiny_regression','tiny_overflow']+[f'decoder_{i+1}'for i in range(9)]
+validators={};loaded_inputs=[]
+for i,item in enumerate(inputs):
+ payload=read(directory/f'qwen_{i+1}.json')['cases'][0];op=item['op'];assert payload['id']==item['id']and payload['input_bits']==item['input_bits']and payload['weight_file']==f'{op}.f16le';assert tuple(q.decoder.unpack(payload['bias_bits'],'H'))==biases[op]
+ anchor={**anchors[item['id']],'weight_sha256':provenance[f'model.layers.0.self_attn.{op}_proj.weight']['half_sha256'],'bias_sha256':provenance[f'model.layers.0.self_attn.{op}_proj.bias']['half_sha256']};loaded_inputs.append(payload);validators[f'qwen_{i+1}']=lambda e,c=payload,a=anchor:q.validate(e,c,a)
+tiny,ta,_=q.projection.cases();di,da,_=q.decoder.cases();validators['tiny_regression']=lambda e:q.projection.validate(e,tiny,ta);validators['tiny_overflow']=q.projection.overflow_rejected
+validators.update({f'decoder_{i+1}':lambda e,c=c:q.decoder.validate(e,c,da[c['id']])for i,c in enumerate(di)})
+commands={};peak=0
+for event,run in zip(raw,runs):
+ replay=copy.deepcopy(event);probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']));assert replay==run['event']and not run['watchdog_killed']and 0<run['physical_process_charge_peak_bytes']<=probe.LIMIT
+ peak=max(peak,run['physical_process_charge_peak_bytes']);commands[run['mode']]=len(event.get('result',{}).get('rows',[]))+sum(len(c['rows'])for c in event.get('result',{}).get('cases',[]))
+assert sum(commands.values())==481
+stages={op:{'first_values':0,'equal_frozen_half':0,'max_original_gate_fraction':0.,'max_fp32_difference_from_fp64_dot':0.,'half_differences':[]}for op in('q','k','v')};active=0;max_admission=0
+for i,item in enumerate(inputs):
+ case=raw[3+i]['result']['cases'][0];op=item['op'];n=item['rows'];out=item['outputs'];count=n*out;first=case['rows'][0];bits=first['output_bits'];floats=q.decoder.unpack(first['fp32_bits'],'I');x=q.decoder.unpack(item['input_bits'],'H');s=stages[op];s['first_values']+=count;s['equal_frozen_half']+=sum(a==b for a,b in zip(bits,anchors[item['id']]['oracle_bits']));max_admission=max(max_admission,case['admitted_bytes'])
+ for row in case['rows']:
+  assert row['output_bits']==bits and row['fp32_bits']==first['fp32_bits'];active+=count
+  assert q.projection.half_bits(q.decoder.unpack(row['fp32_bits'],'I'))==bits
+ s['max_original_gate_fraction']=max(s['max_original_gate_fraction'],max(row['qualification']['source_fp32_max_gate_fraction']for row in runs[3+i]['event']['result']['cases'][0]['rows']))
+ for j,(actual,frozen)in enumerate(zip(bits,anchors[item['id']]['oracle_bits'])):
+  if actual!=frozen:
+   token,col=divmod(j,out);wide=sum(v*w for v,w in zip(x[token*896:(token+1)*896],weights[op][col*896:(col+1)*896]))+biases[op][col];av=struct.unpack('<e',struct.pack('<H',actual))[0];fv=struct.unpack('<e',struct.pack('<H',frozen))[0]
+   s['half_differences'].append({'case':item['id'],'index':j,'actual':actual,'frozen':frozen,'gpu_fp32':floats[j],'fp64_dot_actual_half_operands':wide,'half_spacing':abs(av-fv),'half_midpoint':(av+fv)/2})
+ for token in range(n):
+  a=x[token*896:(token+1)*896]
+  for col in range(out):
+   weight=weights[op][col*896:(col+1)*896];wide=sum(v*w for v,w in zip(a,weight))+biases[op][col];s['max_fp32_difference_from_fp64_dot']=max(s['max_fp32_difference_from_fp64_dot'],abs(floats[token*out+col]-wide))
+# Equivalent valid first three tokens, despite changed future token.
+for op in('q','k','v'):
+ indices=[i for i,c in enumerate(inputs)if c['op']==op and c['id'].split('.')[1]in('short','future_changed')];a,b=[raw[3+i]['result']['cases'][0]['rows'][0]for i in indices];width=896 if op=='q'else 128
+ assert a['output_bits'][:3*width]==b['output_bits'][:3*width]and a['fp32_bits'][:3*width]==b['fp32_bits'][:3*width]
+previous=[json.loads(line)for line in Path('benchmarks/raw/2026-10-12-rust-metal-decoder-v3.json.native.jsonl').read_text().splitlines()]
+for i in range(9):
+ actual=raw[17+i]['result'];old=previous[3+i]['result']
+ for key in('first_layers','first_embedding_bits','first_normalized_bits','first_logits_bits'):assert actual[key]==old[key]
+summary={'qwen_jobs':12,'qwen_commands':156,'all_positive_commands':481,'negative_jobs':3,'qwen_active_half_values_all_repetitions':active,'bf16_to_half_values_independently_reconstructed':converted_count,'stages':stages,'max_qwen_admitted_bytes':max_admission,'max_own_child_peak_bytes':peak,'all_fp32_to_half_boundaries_exact':True,'all_qwen_fp32_and_half_repetitions_exact':True,'changed_future_first_three_projection_tokens_exact':True,'nine_full_tiny_decoder_frames_equal_preceding_qualification':True,'binary_sha256':r['binary_sha256'],'command_counts':commands,'scope':'Layer0 Q/K/V from saved normalized Half; original source gates, diagnostic FP64 dot only; MPS internal precision/order not qualified. No propagated Qwen normalization/rotary/cache/GQA/layer/decoder/session/performance/M4 closure.'}
+result={'format':'toklet-qwen-metal-projections-analysis-v1','completed':True,'records_sha256':{str(p.relative_to(ROOT)):sha(p)for p in(record_path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x')as f:f.write(json.dumps(result,indent=2,allow_nan=False)+'\n')
+print(json.dumps({k:v for k,v in summary.items()if k not in('stages','command_counts')},indent=2))
+for op,s in stages.items():print(op,{k:v for k,v in s.items()if k!='half_differences'},'differences',len(s['half_differences']))

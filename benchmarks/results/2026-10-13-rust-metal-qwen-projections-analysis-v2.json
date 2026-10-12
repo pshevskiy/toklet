@@ -1,0 +1,119 @@
+{
+  "format": "toklet-qwen-metal-projections-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-13-rust-metal-qwen-projections-v1.json": "6f8ae654bad3f5c2f8fd33d6335cdd6e4ca400647770f7d6c8dd975f729c4480",
+    "benchmarks/raw/2026-10-13-rust-metal-qwen-projections-v1.json.native.jsonl": "f234404ddb8a6ec67421b87531f860466015ce83b982829ba5645ed0498affdd",
+    "benchmarks/results/2026-10-13-rust-metal-qwen-projections-v1.json.stderr.txt": "4bbfaa0e1010aa9d8813236203f1a6750a63d6e74904b4de5306f373cef693b3",
+    "benchmarks/results/2026-10-13-rust-metal-qwen-projections-idle-v1.json": "5ba41b0c475195ab57e571f1ff8c01f2c83796022aa857a429de0c1a7da0d5a3"
+  },
+  "summary": {
+    "qwen_jobs": 12,
+    "qwen_commands": 156,
+    "all_positive_commands": 481,
+    "negative_jobs": 3,
+    "qwen_active_half_values_all_repetitions": 179712,
+    "bf16_to_half_values_independently_reconstructed": 1033344,
+    "stages": {
+      "q": {
+        "first_values": 10752,
+        "equal_frozen_half": 10751,
+        "max_original_gate_fraction": 0.4244601277452769,
+        "max_fp32_difference_from_fp64_dot": 5.411960955825634e-06,
+        "half_differences": [
+          {
+            "case": "cases.short.layers.0.q_projection",
+            "index": 3438,
+            "actual": 10765,
+            "frozen": 10764,
+            "gpu_fp32": 0.047257065773010254,
+            "fp64_dot_actual_half_operands": 0.04725663221324794,
+            "half_spacing": 3.0517578125e-05,
+            "half_midpoint": 0.0472564697265625
+          }
+        ]
+      },
+      "k": {
+        "first_values": 1536,
+        "equal_frozen_half": 1536,
+        "max_original_gate_fraction": 0.44659268001919933,
+        "max_fp32_difference_from_fp64_dot": 6.9901324195598136e-06,
+        "half_differences": []
+      },
+      "v": {
+        "first_values": 1536,
+        "equal_frozen_half": 1533,
+        "max_original_gate_fraction": 0.3792962003027851,
+        "max_fp32_difference_from_fp64_dot": 6.818299880251288e-08,
+        "half_differences": [
+          {
+            "case": "cases.future_changed.layers.0.v_projection",
+            "index": 246,
+            "actual": 4314,
+            "frozen": 4315,
+            "gpu_fp32": 0.0005924701690673828,
+            "fp64_dot_actual_half_operands": 0.0005924704591961927,
+            "half_spacing": 4.76837158203125e-07,
+            "half_midpoint": 0.0005924701690673828
+          },
+          {
+            "case": "cases.short.layers.0.v_projection",
+            "index": 246,
+            "actual": 4314,
+            "frozen": 4315,
+            "gpu_fp32": 0.0005924701690673828,
+            "fp64_dot_actual_half_operands": 0.0005924704591961927,
+            "half_spacing": 4.76837158203125e-07,
+            "half_midpoint": 0.0005924701690673828
+          },
+          {
+            "case": "cases.short.layers.0.v_projection",
+            "index": 391,
+            "actual": 10030,
+            "frozen": 10029,
+            "gpu_fp32": 0.02803804725408554,
+            "fp64_dot_actual_half_operands": 0.028038040525643737,
+            "half_spacing": 1.52587890625e-05,
+            "half_midpoint": 0.02803802490234375
+          }
+        ]
+      }
+    },
+    "max_qwen_admitted_bytes": 71995858,
+    "max_own_child_peak_bytes": 17875520,
+    "all_fp32_to_half_boundaries_exact": true,
+    "all_qwen_fp32_and_half_repetitions_exact": true,
+    "changed_future_first_three_projection_tokens_exact": true,
+    "nine_full_tiny_decoder_frames_equal_preceding_qualification": true,
+    "binary_sha256": "0d4668f44eae87fdf9f614a1790b1ab34f0936a9161b2f13097ab443e54b07f8",
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "qwen_1": 13,
+      "qwen_2": 13,
+      "qwen_3": 13,
+      "qwen_4": 13,
+      "qwen_5": 13,
+      "qwen_6": 13,
+      "qwen_7": 13,
+      "qwen_8": 13,
+      "qwen_9": 13,
+      "qwen_10": 13,
+      "qwen_11": 13,
+      "qwen_12": 13,
+      "tiny_regression": 169,
+      "tiny_overflow": 0,
+      "decoder_1": 13,
+      "decoder_2": 13,
+      "decoder_3": 13,
+      "decoder_4": 13,
+      "decoder_5": 13,
+      "decoder_6": 13,
+      "decoder_7": 13,
+      "decoder_8": 13,
+      "decoder_9": 13
+    },
+    "scope": "Layer0 Q/K/V from saved normalized Half; original source gates, diagnostic FP64 dot only; MPS internal precision/order not qualified. No propagated Qwen normalization/rotary/cache/GQA/layer/decoder/session/performance/M4 closure."
+  }
+}

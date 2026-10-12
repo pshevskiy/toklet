@@ -3,6 +3,7 @@ use objc2::AnyThread;
 use objc2_metal_performance_shaders::{
     MPSDataType, MPSMatrix, MPSMatrixDescriptor, MPSMatrixMultiplication, MPSSupportsMTLDevice,
 };
+use std::os::unix::fs::MetadataExt;
 use std::{collections::HashSet, io::Read, path::Path};
 
 const MAX_INPUT: u64 = 1024 * 1024;
@@ -52,6 +53,78 @@ pub(super) fn half(value: &Value, name: &str, count: usize) -> Result<Vec<u16>, 
         })
         .collect()
 }
+fn weight_file(parent: &Path, value: &Value, count: usize) -> Result<Vec<u16>, Error> {
+    let name = value["weight_file"]
+        .as_str()
+        .filter(|name| {
+            !name.is_empty()
+                && name.len() <= 128
+                && name.is_ascii()
+                && name
+                    .bytes()
+                    .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-' || b == b'.')
+                && *name != "."
+                && *name != ".."
+        })
+        .ok_or_else(|| error("fixture", "projection weight filename differs"))?;
+    let bytes = count
+        .checked_mul(2)
+        .ok_or_else(|| error("admission", "projection weight size overflow"))?;
+    if count > 896 * 896 {
+        return Err(error("admission", "projection weight count exceeds bound"));
+    }
+    let path = parent.join(name);
+    let entry = std::fs::symlink_metadata(&path).map_err(|e| error("fixture", e.to_string()))?;
+    if !entry.is_file() {
+        return Err(error(
+            "fixture",
+            "projection weight must be a regular nonsymlink file",
+        ));
+    }
+    let file = std::fs::File::open(&path).map_err(|e| error("fixture", e.to_string()))?;
+    let before = file
+        .metadata()
+        .map_err(|e| error("fixture", e.to_string()))?;
+    let same = |a: &std::fs::Metadata, b: &std::fs::Metadata| {
+        a.dev() == b.dev()
+            && a.ino() == b.ino()
+            && a.len() == b.len()
+            && a.mtime() == b.mtime()
+            && a.mtime_nsec() == b.mtime_nsec()
+    };
+    if before.len() != bytes as u64 || !same(&entry, &before) {
+        return Err(error(
+            "fixture",
+            "projection weight file length/identity differs",
+        ));
+    }
+    let mut data = Vec::with_capacity(bytes);
+    (&file)
+        .take(bytes as u64 + 1)
+        .read_to_end(&mut data)
+        .map_err(|e| error("fixture", e.to_string()))?;
+    let after = file
+        .metadata()
+        .map_err(|e| error("fixture", e.to_string()))?;
+    let entry_after =
+        std::fs::symlink_metadata(path).map_err(|e| error("fixture", e.to_string()))?;
+    if !entry_after.is_file() || !same(&before, &after) || !same(&after, &entry_after) {
+        return Err(error("fixture", "projection weight file changed identity"));
+    }
+    if data.len() != bytes {
+        return Err(error("fixture", "projection weight file changed length"));
+    }
+    data.chunks_exact(2)
+        .map(|word| {
+            let bits = u16::from_le_bytes([word[0], word[1]]);
+            if bits & 0x7c00 == 0x7c00 {
+                Err(error("fixture", "nonfinite projection weight file"))
+            } else {
+                Ok(bits)
+            }
+        })
+        .collect()
+}
 fn load(path: &Path) -> Result<Vec<Case>, Error> {
     let file = std::fs::File::open(path).map_err(|e| error("fixture", e.to_string()))?;
     let size = file
@@ -73,13 +146,14 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
     }
     let data: Value =
         serde_json::from_slice(&bytes).map_err(|e| error("fixture", e.to_string()))?;
-    if data["format"] != "toklet-metal-projection-input-v1" {
+    let qwen = data["format"] == "toklet-metal-qwen-projection-input-v1";
+    if !qwen && data["format"] != "toklet-metal-projection-input-v1" {
         return Err(error("fixture", "projection format differs"));
     }
     let values = data["cases"]
         .as_array()
         .ok_or_else(|| error("fixture", "missing projection cases"))?;
-    if values.is_empty() || values.len() > 16 {
+    if values.is_empty() || values.len() > 16 || (qwen && values.len() != 1) {
         return Err(error("fixture", "projection case count outside 1..16"));
     }
     let mut names = HashSet::new();
@@ -95,8 +169,12 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
         let rows = number(v, "rows")?;
         let inputs = number(v, "inputs")?;
         let outputs = number(v, "outputs")?;
-        if !(1..=32).contains(&rows) || !(1..=64).contains(&inputs) || !(1..=64).contains(&outputs)
-        {
+        let supported = if qwen {
+            (1..=4).contains(&rows) && inputs == 896 && [128, 896].contains(&outputs)
+        } else {
+            (1..=32).contains(&rows) && (1..=64).contains(&inputs) && (1..=64).contains(&outputs)
+        };
+        if !supported {
             return Err(error("fixture", "projection shape outside bounds"));
         }
         let a = rows
@@ -108,7 +186,7 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
         inventory = inventory
             .checked_add(a + b + outputs + rows * outputs)
             .ok_or_else(|| error("admission", "projection inventory overflow"))?;
-        if inventory > 32768 {
+        if inventory > if qwen { 819200 } else { 32768 } {
             return Err(error("admission", "projection inventory exceeds32768"));
         }
         cases.push(Case {
@@ -117,7 +195,11 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
             inputs,
             outputs,
             input: half(v, "input_bits", a)?,
-            weight: half(v, "weight_bits", b)?,
+            weight: if qwen {
+                weight_file(path.parent().unwrap_or_else(|| Path::new(".")), v, b)?
+            } else {
+                half(v, "weight_bits", b)?
+            },
             bias: half(v, "bias_bits", outputs)?,
         });
     }
@@ -453,6 +535,38 @@ mod tests {
     }
     fn sample() -> Value {
         json!({"format":"toklet-metal-projection-input-v1","cases":[{"id":"manual","rows":1,"inputs":2,"outputs":1,"input_bits":[0x3c00,0x3c00],"weight_bits":[0x3c00,0x1000],"bias_bits":[0x1000]}]})
+    }
+    #[test]
+    fn external_weight_lengths_names_and_finiteness_fail_closed() {
+        let file = fixture(&json!({}));
+        let parent = file.parent().unwrap();
+        let name = file.file_name().unwrap().to_str().unwrap();
+        let v = json!({"weight_file":name});
+        assert!(weight_file(parent, &v, 1).is_err());
+        std::fs::write(&file, [0u8, 0x3c]).unwrap();
+        assert_eq!(weight_file(parent, &v, 1).unwrap(), [0x3c00]);
+        std::fs::write(&file, [0u8, 0x7c]).unwrap();
+        assert!(weight_file(parent, &v, 1).is_err());
+        for name in ["../file", "/tmp/file", ".", "..", "file/other", ""] {
+            assert!(weight_file(parent, &json!({"weight_file":name}), 1).is_err());
+        }
+        assert!(weight_file(parent, &v, 896 * 896 + 1).is_err());
+        std::fs::remove_file(file).unwrap();
+    }
+    #[test]
+    fn qwen_profile_preserves_tiny_bounds_and_rejects_large_shapes() {
+        for (format, rows, inputs, outputs) in [
+            ("toklet-metal-projection-input-v1", 1, 896, 896),
+            ("toklet-metal-qwen-projection-input-v1", 5, 896, 896),
+            ("toklet-metal-qwen-projection-input-v1", 1, 32, 128),
+            ("toklet-metal-qwen-projection-input-v1", 1, 896, 129),
+        ] {
+            let file = fixture(
+                &json!({"format":format,"cases":[{"id":"manual","rows":rows,"inputs":inputs,"outputs":outputs}]}),
+            );
+            assert!(load(&file).is_err());
+            std::fs::remove_file(file).unwrap();
+        }
     }
     #[test]
     fn malformed_shapes_arrays_and_finite_half_values_fail_before_device_work() {
