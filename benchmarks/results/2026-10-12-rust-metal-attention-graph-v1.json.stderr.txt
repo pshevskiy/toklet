@@ -1,0 +1,23 @@
+   Compiling objc2 v0.6.5
+    Checking objc2-encode v4.1.0
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+    Checking bitflags v2.13.2
+   Compiling serde_json v1.0.149
+    Checking itoa v1.0.18
+    Checking memchr v2.8.3
+    Checking objc2-foundation v0.3.2
+    Checking objc2-metal v0.3.2
+    Checking objc2-metal-performance-shaders v0.3.2
+    Checking toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-metal-attention-graph-v1)
+error: no rules expected `.`
+   --> src/rust_metal_attention_graph.rs:427:57
+    |
+427 | ...   "input_layouts":[il,qw,kw,kw,ow,qb,kb,kb,qb].map(description),"half_layouts":half_layouts.map(description),"float_layouts":float_la...
+    |                                                   ^ no rules expected this token in macro call
+    |
+    = note: while trying to match end of macro
+
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe" test) due to 1 previous error

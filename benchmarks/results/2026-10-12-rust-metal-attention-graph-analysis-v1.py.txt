@@ -1,0 +1,118 @@
+"""Replay all isolated tiny MLP projection stages after verified native idle."""
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_attention_projections as mlp
+import rust_metal_rotary as rotary
+import rust_metal_cache as cache
+import rust_metal_attention as attention
+import rust_metal_cached_attention as cached
+import rust_metal_attention_graph as graph
+import rust_metal_mlp as composed
+p=mlp.projection
+
+def sha(path):
+    with Path(path).open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+def read(path):return json.loads(Path(path).read_text())
+idle_path=ROOT/'benchmarks/results/2026-10-12-rust-metal-attention-graph-idle-v1.json'
+idle=read(idle_path)
+assert idle['all_recorded_processes_absent'] is True and idle['machine']['State']=='stopped' and idle['native_session_exit_code']==0
+for field in ('archive_sha256','protected_sha256'):
+    for name,expected in idle[field].items():assert sha(ROOT/name)==expected
+path=ROOT/'benchmarks/results/2026-10-12-rust-metal-attention-graph-v2.json';record=read(path)
+assert record['completed'] is True and 'failure' not in record
+raw_path=ROOT/'benchmarks/raw/2026-10-12-rust-metal-attention-graph-v2.json.native.jsonl'
+stderr=ROOT/'benchmarks/results/2026-10-12-rust-metal-attention-graph-v2.json.stderr.txt'
+assert sha(raw_path)==record['native_raw_sha256'] and sha(stderr)==record['stderr_sha256']
+build=ROOT/'artifacts/rust-metal-attention-graph-v2'
+for name,expected in record['source_sha256'].items():
+    source=ROOT/name
+    target=build/('Cargo.toml' if name.endswith('.Cargo.toml') else 'Cargo.lock' if name.endswith('.lock') else 'src/main.rs' if name.endswith('rust_metal_probe.rs') else 'src/'+source.name)
+    assert sha(source)==sha(target)==expected
+for name,expected in {'tools/experiments/rust_metal_probe.py':record['driver_sha256'],'tools/experiments/metal_probe.py':record['common_helper_sha256'],'tools/bench/mlx_baseline.py':record['memory_helper_sha256']}.items():assert sha(ROOT/name)==expected
+for field in ('input_sha256','qualification_driver_sha256'):
+    for name,expected in record['extra_context'][field].items():assert sha(name)==expected
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==record['binary_sha256']
+assert len(record['checks'])==len(record['build_commands'])==15
+assert [c['command'] for c in record['checks']]==record['build_commands']
+assert 'test result: ok. 33 passed; 0 failed' in next(c['stdout'] for c in record['checks'] if 'test' in c['command'])
+inputs,anchors,_=graph.cases();queries,qa=cached.cases();full,fa=attention.cases();ci,ca=cache.cases();ri,ra,_=rotary.cases();mi,ma,_=composed.cases()
+validators={f'branch_{i+1}':lambda e,c=c:graph.validate(e,c,anchors[c['id']]) for i,c in enumerate(inputs)}
+validators['branch_overflow']=graph.overflow_rejected
+validators.update({f'cached_{i+1}':lambda e,c=c:attention.validate(e,c,qa[c['id']]) for i,c in enumerate(queries)})
+validators.update({f'full_{i+1}':lambda e,c=c:attention.validate(e,c,fa[c['id']]) for i,c in enumerate(full)})
+validators.update({f'mlp_{i+1}':lambda e,c=c:composed.validate(e,c,ma[c['id']]) for i,c in enumerate(mi)})
+validators.update({'invalid_cached_offset':cached.rejected,'cache_regression':lambda e:cache.validate(e,ci,ca),'rotary_regression':lambda e:rotary.validate(e,ri,ra),'rotary_overflow':rotary.overflow_rejected,'mlp_overflow':composed.overflow_rejected})
+raw=[json.loads(line) for line in raw_path.read_text().splitlines()];runs=record['native_runs']
+assert len(raw)==len(runs)==63
+assert [r['mode'] for r in runs]==['normal','invalid_shader','insufficient_budget']+[f'branch_{i+1}' for i in range(10)]+['branch_overflow']+[f'cached_{i+1}' for i in range(24)]+[f'full_{i+1}' for i in range(10)]+['invalid_cached_offset','cache_regression','rotary_regression','rotary_overflow']+[f'mlp_{i+1}' for i in range(10)]+['mlp_overflow']
+peak=0;commands={}
+for event,run in zip(raw,runs):
+    replay=copy.deepcopy(event);p.rms.probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']))
+    assert replay==run['event'] and run['watchdog_killed'] is False and 0<run['physical_process_charge_peak_bytes']<=p.rms.probe.LIMIT
+    peak=max(peak,run['physical_process_charge_peak_bytes']);commands[run['mode']]=len(event.get('result',{}).get('rows',[]))+sum(len(c['rows']) for c in event.get('result',{}).get('cases',[]))
+assert sum(commands.values())==1196
+f32=lambda v:struct.unpack('<f',struct.pack('<f',v))[0]
+stages={name:{'first_frame_values':0,'equal_frozen_bits':0,'max_original_source_gate_fraction':None if name in ('cache_k','cache_v') else 0.,'max_reference_abs_error':0.} for name in graph.HALF_STAGES+('attention_scores','attention_probabilities')}
+output_values=0;max_admission=0;half_differences=[];frames={};score_oracle_equal=score_count=0
+for i,item in enumerate(inputs):
+    r=raw[3+i]['result'];rows=item['rows'];halves=r['first_half_intermediates'];floats=r['first_fp32_intermediates'];arrays=halves+[floats[3],floats[4]]
+    shared=sum(l['bytes'] for group in ('input_layouts','half_layouts','float_layouts') for l in r[group]);assert r['shared_buffer_bytes']==shared and r['admitted_bytes']==shared*3+p.rms.probe.ALLOWANCE
+    max_admission=max(max_admission,r['admitted_bytes'])
+    for index,(name,bits,expected) in enumerate(zip(stages,arrays,anchors[item['id']]['stages'])):
+        count=len(bits);values=struct.unpack(f'<{count}{"e" if index<9 else "f"}',struct.pack(f'<{count}{"H" if index<9 else "I"}',*bits));stage=stages[name]
+        stage['first_frame_values']+=count;stage['equal_frozen_bits']+=sum(a==b for a,b in zip(bits,expected['bits']))
+        for a,b in zip(values,expected['source']):
+            error=abs(a-b);gate=expected['gate'];fraction=error/(gate['atol']+gate['rtol']*abs(b)) if gate else 0.;assert fraction<=1
+            stage['max_reference_abs_error']=max(stage['max_reference_abs_error'],error);
+            if gate is not None:stage['max_original_source_gate_fraction']=max(stage['max_original_source_gate_fraction'],fraction)
+        if index<9:
+            for j,(a,b)in enumerate(zip(bits,expected['bits'])):
+                if a!=b:
+                    difference={'case':item['id'],'stage':name,'index':j,'gpu_half_bits':a,'frozen_half_bits':b}
+                    if name=='attention_projection':
+                        token,column=divmod(j,32);weight=struct.unpack('<1024e',struct.pack('<1024H',*item['o_weight_bits']))
+                        actual_context=struct.unpack(f'<{rows*32}e',struct.pack(f'<{rows*32}H',*halves[7]))
+                        frozen_context=struct.unpack(f'<{rows*32}e',struct.pack(f'<{rows*32}H',*anchors[item['id']]['stages'][7]['bits']))
+                        actual_dot=sum(actual_context[token*32+k]*weight[column*32+k] for k in range(32))
+                        frozen_dot=sum(frozen_context[token*32+k]*weight[column*32+k] for k in range(32))
+                        actual_half=struct.unpack('<e',struct.pack('<H',a))[0];frozen_half=struct.unpack('<e',struct.pack('<H',b))[0]
+                        difference.update(fp64_dot_actual_gpu_context=actual_dot,fp64_dot_frozen_context=frozen_dot,
+                            gpu_fp32_projection=struct.unpack('<f',struct.pack('<I',floats[5][j]))[0],half_spacing=abs(actual_half-frozen_half),half_midpoint=(actual_half+frozen_half)/2)
+                    half_differences.append(difference)
+    # Derive complete caches directly from actual GPU sources and check all
+    # unwritten capacity, independently of the fixture's cache oracle.
+    for dst,src in [(5,4),(6,2)]:
+        assert halves[dst]==[halves[src][(token*2+head)*8+feature] if token<rows else 0 for head in range(2) for token in range(32) for feature in range(8)]
+    for raw_float,stored in [(0,0),(1,1),(2,2),(5,8)]:
+        values=struct.unpack(f'<{len(floats[raw_float])}f',struct.pack(f'<{len(floats[raw_float])}I',*floats[raw_float]))
+        assert list(struct.unpack(f'<{len(values)}H',struct.pack(f'<{len(values)}e',*values)))==halves[stored]
+    q,k,v=[struct.unpack(f'<{len(halves[j])}e',struct.pack(f'<{len(halves[j])}H',*halves[j])) for j in (3,5,6)]
+    probabilities=struct.unpack(f'<{len(floats[4])}f',struct.pack(f'<{len(floats[4])}I',*floats[4]))
+    for token in range(rows):
+        for head in range(4):
+            row=(head*rows+token)*rows;kv=head//2;assert all(floats[4][row+position]==0 for position in range(token+1,rows))
+            for position in range(rows):
+                acc=0.
+                for feature in range(8):acc=f32(acc+f32(q[(token*4+head)*8+feature]*k[(kv*32+position)*8+feature]))
+                score=struct.unpack('<I',struct.pack('<f',f32(acc/f32(math.sqrt(8)))))[0];score_oracle_equal+=int(score==floats[3][row+position]);score_count+=1
+            for feature in range(8):
+                acc=0.
+                for position in range(token+1):acc=f32(acc+f32(probabilities[row+position]*v[(kv*32+position)*8+feature]))
+                assert struct.unpack('<H',struct.pack('<e',acc))[0]==halves[7][(token*4+head)*8+feature]
+    for row in r['rows']:assert row['output_bits']==halves[8];output_values+=len(halves[8])
+    frames[item['id']]=halves[8]
+for layer in range(2):assert frames[f'cases.prompt.layers.{layer}.attention_branch'][:96]==frames[f'cases.future_changed.layers.{layer}.attention_branch'][:96]
+summary={'stages':stages,'branch_commands':130,'all_repetition_output_values':output_values,'all_actual_gpu_cache_copies_exact':True,'all_projection_float_to_half_stores_exact':True,
+         'ordered_score_values':score_count,'equal_ordered_score_bits':score_oracle_equal,'all_ordered_context_half_stores_exact':True,
+         'changed_future_first_three_output_tokens_exact':True,'half_differences':half_differences,'max_branch_admitted_bytes':max_admission,
+         'all_positive_commands':sum(commands.values()),'negative_jobs':6,'max_own_child_peak_bytes':peak,'command_counts':commands,
+         'scope':'Actual GPU propagation normalized input->QKV->rotary->cache->causalattention->O. Original9sourcegates and exact2cache-copy layouts. Firstactive9Half/6F32 arrays+finalOoutputs replayed; nativeguards/12laterframes checked, fullguardbytes notarchived. No normalization/residual/MLP/session/fullLayer/Qwen/quality/performance/M4 claim.'}
+out={'format':'toklet-tiny-metal-attention-graph-analysis-v1','completed':True,'records_sha256':{str(pth.relative_to(ROOT)):sha(pth) for pth in (path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x')as stream:stream.write(json.dumps(out,indent=2,allow_nan=False)+'\n')
+print(json.dumps({**summary,'half_differences_count':len(half_differences),'half_differences':half_differences[:10]},indent=2))

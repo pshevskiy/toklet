@@ -38,6 +38,7 @@ CACHE_SOURCE = Path(__file__).with_name("rust_metal_cache.rs")
 CACHE_SHADER = Path(__file__).with_name("rust_metal_cache.metal")
 ATTENTION_SOURCE = Path(__file__).with_name("rust_metal_attention.rs")
 ATTENTION_SHADER = Path(__file__).with_name("rust_metal_attention.metal")
+ATTENTION_GRAPH_SOURCE = Path(__file__).with_name("rust_metal_attention_graph.rs")
 LIMIT = 6 * 1024**3
 ALLOWANCE = 64 * 1024**2
 INPUT_GUARD, OUTPUT_GUARD = 0x4642FEDC, 0x46A35CE1
@@ -182,7 +183,7 @@ def run(output, build, extra_runs=(), extra_context=None):
               RESIDUAL_SOURCE:build/"src/rust_metal_residual.rs", RESIDUAL_SHADER:build/"src/rust_metal_residual.metal",
               SILU_SOURCE:build/"src/rust_metal_silu.rs", SILU_SHADER:build/"src/rust_metal_silu.metal",
               GATING_SOURCE:build/"src/rust_metal_gating.rs", GATING_SHADER:build/"src/rust_metal_gating.metal",
-              PROJECTION_SOURCE:build/"src/rust_metal_projection.rs", PROJECTION_SHADER:build/"src/rust_metal_projection.metal", MLP_SOURCE:build/"src/rust_metal_mlp.rs", ROTARY_SOURCE:build/"src/rust_metal_rotary.rs", ROTARY_SHADER:build/"src/rust_metal_rotary.metal", CACHE_SOURCE:build/"src/rust_metal_cache.rs", CACHE_SHADER:build/"src/rust_metal_cache.metal", ATTENTION_SOURCE:build/"src/rust_metal_attention.rs", ATTENTION_SHADER:build/"src/rust_metal_attention.metal"}
+              PROJECTION_SOURCE:build/"src/rust_metal_projection.rs", PROJECTION_SHADER:build/"src/rust_metal_projection.metal", MLP_SOURCE:build/"src/rust_metal_mlp.rs", ROTARY_SOURCE:build/"src/rust_metal_rotary.rs", ROTARY_SHADER:build/"src/rust_metal_rotary.metal", CACHE_SOURCE:build/"src/rust_metal_cache.rs", CACHE_SHADER:build/"src/rust_metal_cache.metal", ATTENTION_SOURCE:build/"src/rust_metal_attention.rs", ATTENTION_SHADER:build/"src/rust_metal_attention.metal", ATTENTION_GRAPH_SOURCE:build/"src/rust_metal_attention_graph.rs"}
     source_hashes = {str(path.relative_to(ROOT)):common.digest(path) for path in copies}
     for source, target in copies.items():
         shutil.copyfile(source,target)
@@ -197,6 +198,7 @@ def run(output, build, extra_runs=(), extra_context=None):
     checks.insert(0,["rustfmt","--edition","2024","--check",str((build/"src/rust_metal_rotary.rs").resolve())])
     checks.insert(0,["rustfmt","--edition","2024","--check",str((build/"src/rust_metal_cache.rs").resolve())])
     checks.insert(0,["rustfmt","--edition","2024","--check",str((build/"src/rust_metal_attention.rs").resolve())])
+    checks.insert(0,["rustfmt","--edition","2024","--check",str((build/"src/rust_metal_attention_graph.rs").resolve())])
     record = {"format":"toklet-rust-metal-binding-probe-v1","completed":False,
               "engine_revision":common.command(["git","-C",str(ROOT),"rev-parse","HEAD"]),
               "working_tree_status":common.command(["git","-C",str(ROOT),"status","--porcelain"]),

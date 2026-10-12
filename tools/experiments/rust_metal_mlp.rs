@@ -67,11 +67,11 @@ struct Params {
     half_stride: u32,
 }
 const _: () = assert!(size_of::<Params>() == 16 && align_of::<Params>() == 4);
-struct Input {
-    buffer: Shared<u16>,
-    baseline: Vec<u16>,
+pub(super) struct Input {
+    pub(super) buffer: Shared<u16>,
+    pub(super) baseline: Vec<u16>,
 }
-fn input(
+pub(super) fn input(
     device: &ProtocolObject<dyn MTLDevice>,
     layout: Layout,
     values: &[u16],
@@ -132,14 +132,18 @@ fn compact_float(mut all: Vec<u32>, l: Layout) -> Result<Vec<u32>, Error> {
     all.truncate(target);
     Ok(all)
 }
-fn active_half(buffer: &Shared<u16>, l: Layout) -> Result<Vec<u16>, Error> {
+pub(super) fn active_half(buffer: &Shared<u16>, l: Layout) -> Result<Vec<u16>, Error> {
     compact_half(buffer.read(), l)
 }
-fn active_float(buffer: &Shared<u32>, l: Layout) -> Result<Vec<u32>, Error> {
+pub(super) fn active_float(buffer: &Shared<u32>, l: Layout) -> Result<Vec<u32>, Error> {
     compact_float(buffer.read(), l)
 }
 
-fn totals(input_bytes: usize, output_bytes: usize, limit: usize) -> Result<(usize, usize), Error> {
+pub(super) fn totals(
+    input_bytes: usize,
+    output_bytes: usize,
+    limit: usize,
+) -> Result<(usize, usize), Error> {
     let shared = input_bytes
         .checked_add(output_bytes)
         .ok_or_else(|| error("admission", "MLP shared size overflow"))?;
@@ -154,18 +158,18 @@ fn totals(input_bytes: usize, output_bytes: usize, limit: usize) -> Result<(usiz
     }
     Ok((shared, total))
 }
-struct ProjectionStep<'a> {
-    bias: &'a Shared<u16>,
-    floats: &'a Shared<u32>,
-    output: &'a Shared<u16>,
-    fl: Layout,
-    hl: Layout,
-    kernel: &'a MPSMatrixMultiplication,
-    left: &'a MPSMatrix,
-    right: &'a MPSMatrix,
-    result: &'a MPSMatrix,
+pub(super) struct ProjectionStep<'a> {
+    pub(super) bias: &'a Shared<u16>,
+    pub(super) floats: &'a Shared<u32>,
+    pub(super) output: &'a Shared<u16>,
+    pub(super) fl: Layout,
+    pub(super) hl: Layout,
+    pub(super) kernel: &'a MPSMatrixMultiplication,
+    pub(super) left: &'a MPSMatrix,
+    pub(super) right: &'a MPSMatrix,
+    pub(super) result: &'a MPSMatrix,
 }
-fn encode_projection(
+pub(super) fn encode_projection(
     command: &ProtocolObject<dyn MTLCommandBuffer>,
     probe: &Probe,
     bias_pipeline: &ProtocolObject<dyn MTLComputePipelineState>,
@@ -286,14 +290,14 @@ fn elementwise(
     encoder.endEncoding();
     Ok(())
 }
-fn kernel(
+pub(super) fn kernel(
     device: &ProtocolObject<dyn MTLDevice>,
     rows: usize,
     inputs: usize,
     outputs: usize,
 ) -> Retained<MPSMatrixMultiplication> {
     // SAFETY: small checked topology, same-device guarded matrices, transpose
-    // right for row-major weights, FP32 result initialized from zero Half bias.
+    // right for row-major weights, FP32 result initialized from resident Half bias.
     unsafe {
         MPSMatrixMultiplication::initWithDevice_transposeLeft_transposeRight_resultRows_resultColumns_interiorColumns_alpha_beta(
         MPSMatrixMultiplication::alloc(),device,false,true,rows,outputs,inputs,1.0,1.0)

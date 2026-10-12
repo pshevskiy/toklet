@@ -430,6 +430,15 @@ mod metal {
     pub(super) fn run_silu(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
         silu::run(path, limit)
     }
+    mod attention_graph {
+        include!("rust_metal_attention_graph.rs");
+    }
+    pub(super) fn run_attention_graph(
+        path: &std::path::Path,
+        limit: usize,
+    ) -> Result<Value, Error> {
+        attention_graph::run(path, limit)
+    }
     mod attention {
         include!("rust_metal_attention.rs");
     }
@@ -483,6 +492,7 @@ fn run() -> Result<Value, Error> {
     let mut rotary_input = None;
     let mut cache_input = None;
     let mut attention_input = None;
+    let mut attention_graph_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
@@ -546,6 +556,12 @@ fn run() -> Result<Value, Error> {
                         error("arguments", "missing attention input")
                     })?));
             }
+            Some("--attention-graph-input") if attention_graph_input.is_none() => {
+                attention_graph_input =
+                    Some(std::path::PathBuf::from(args.next().ok_or_else(|| {
+                        error("arguments", "missing attention graph input")
+                    })?));
+            }
             Some("--budget-bytes") if !has_budget => {
                 let value = args
                     .next()
@@ -571,6 +587,7 @@ fn run() -> Result<Value, Error> {
         + usize::from(rotary_input.is_some())
         + usize::from(cache_input.is_some())
         + usize::from(attention_input.is_some())
+        + usize::from(attention_graph_input.is_some())
         > 1
     {
         return Err(error("arguments", "probe operation modes are exclusive"));
@@ -585,6 +602,8 @@ fn run() -> Result<Value, Error> {
             metal::run_residual(&path, limit)
         } else if let Some(path) = silu_input {
             metal::run_silu(&path, limit)
+        } else if let Some(path) = attention_graph_input {
+            metal::run_attention_graph(&path, limit)
         } else if let Some(path) = attention_input {
             metal::run_attention(&path, limit)
         } else if let Some(path) = cache_input {
@@ -616,6 +635,7 @@ fn run() -> Result<Value, Error> {
             rotary_input,
             cache_input,
             attention_input,
+            attention_graph_input,
         );
         Err(error("capability", "requires Apple Silicon macOS"))
     }

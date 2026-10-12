@@ -1,0 +1,221 @@
+{
+  "format": "toklet-tiny-metal-attention-graph-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-rust-metal-attention-graph-v2.json": "ca5756d9cbfcf3f5fde2bd68ab07238886e756bade327b68b6798d13abd41154",
+    "benchmarks/raw/2026-10-12-rust-metal-attention-graph-v2.json.native.jsonl": "ad75dbc2e5c150c6dc507e542edc7d11e313786bc9f838a109553cf051fb97d5",
+    "benchmarks/results/2026-10-12-rust-metal-attention-graph-v2.json.stderr.txt": "bc851994ece12bf9daff3b4448bd37988e1ed830138ba448ead58f4f570e470c",
+    "benchmarks/results/2026-10-12-rust-metal-attention-graph-idle-v1.json": "8d80ce7539badd291e0c33b25018bdd182e4057b380591d9ef6e619d9250d6dc"
+  },
+  "summary": {
+    "stages": {
+      "q_projection": {
+        "first_frame_values": 2816,
+        "equal_frozen_bits": 2814,
+        "max_original_source_gate_fraction": 0.4981430054075672,
+        "max_reference_abs_error": 0.0021896809339523315
+      },
+      "k_projection": {
+        "first_frame_values": 1408,
+        "equal_frozen_bits": 1408,
+        "max_original_source_gate_fraction": 0.4969946439169997,
+        "max_reference_abs_error": 0.002014636993408203
+      },
+      "v_projection": {
+        "first_frame_values": 1408,
+        "equal_frozen_bits": 1407,
+        "max_original_source_gate_fraction": 0.48929894377917843,
+        "max_reference_abs_error": 0.0016853809356689453
+      },
+      "q_rotary": {
+        "first_frame_values": 2816,
+        "equal_frozen_bits": 2814,
+        "max_original_source_gate_fraction": 0.49812881633031697,
+        "max_reference_abs_error": 0.0021777302026748657
+      },
+      "k_rotary": {
+        "first_frame_values": 1408,
+        "equal_frozen_bits": 1408,
+        "max_original_source_gate_fraction": 0.4969590975207504,
+        "max_reference_abs_error": 0.001990675926208496
+      },
+      "cache_k": {
+        "first_frame_values": 5120,
+        "equal_frozen_bits": 5120,
+        "max_original_source_gate_fraction": null,
+        "max_reference_abs_error": 0.0
+      },
+      "cache_v": {
+        "first_frame_values": 5120,
+        "equal_frozen_bits": 5119,
+        "max_original_source_gate_fraction": null,
+        "max_reference_abs_error": 2.384185791015625e-07
+      },
+      "attention_context": {
+        "first_frame_values": 2816,
+        "equal_frozen_bits": 2815,
+        "max_original_source_gate_fraction": 0.49459608999263055,
+        "max_reference_abs_error": 0.0014796257019042969
+      },
+      "attention_projection": {
+        "first_frame_values": 2816,
+        "equal_frozen_bits": 2815,
+        "max_original_source_gate_fraction": 0.4901600612826886,
+        "max_reference_abs_error": 0.0010646581649780273
+      },
+      "attention_scores": {
+        "first_frame_values": 8528,
+        "equal_frozen_bits": 8523,
+        "max_original_source_gate_fraction": 0.49571994927715696,
+        "max_reference_abs_error": 0.002866387367248535
+      },
+      "attention_probabilities": {
+        "first_frame_values": 8528,
+        "equal_frozen_bits": 7398,
+        "max_original_source_gate_fraction": 0.4749886285495449,
+        "max_reference_abs_error": 0.0004818439483642578
+      }
+    },
+    "branch_commands": 130,
+    "all_repetition_output_values": 36608,
+    "all_actual_gpu_cache_copies_exact": true,
+    "all_projection_float_to_half_stores_exact": true,
+    "ordered_score_values": 8528,
+    "equal_ordered_score_bits": 8528,
+    "all_ordered_context_half_stores_exact": true,
+    "changed_future_first_three_output_tokens_exact": true,
+    "half_differences": [
+      {
+        "case": "cases.capacity.layers.0.attention_branch",
+        "stage": "attention_context",
+        "index": 605,
+        "gpu_half_bits": 7339,
+        "frozen_half_bits": 7338
+      },
+      {
+        "case": "cases.capacity.layers.0.attention_branch",
+        "stage": "attention_projection",
+        "index": 580,
+        "gpu_half_bits": 9458,
+        "frozen_half_bits": 9457,
+        "fp64_dot_actual_gpu_context": 0.019310078638227424,
+        "fp64_dot_frozen_context": 0.019309797844471177,
+        "gpu_fp32_projection": 0.01931007392704487,
+        "half_spacing": 1.52587890625e-05,
+        "half_midpoint": 0.01930999755859375
+      },
+      {
+        "case": "cases.future_changed.layers.0.attention_branch",
+        "stage": "q_projection",
+        "index": 31,
+        "gpu_half_bits": 34054,
+        "frozen_half_bits": 34055
+      },
+      {
+        "case": "cases.future_changed.layers.0.attention_branch",
+        "stage": "v_projection",
+        "index": 56,
+        "gpu_half_bits": 3853,
+        "frozen_half_bits": 3854
+      },
+      {
+        "case": "cases.future_changed.layers.0.attention_branch",
+        "stage": "q_rotary",
+        "index": 31,
+        "gpu_half_bits": 34054,
+        "frozen_half_bits": 34055
+      },
+      {
+        "case": "cases.future_changed.layers.0.attention_branch",
+        "stage": "cache_v",
+        "index": 280,
+        "gpu_half_bits": 3853,
+        "frozen_half_bits": 3854
+      },
+      {
+        "case": "cases.prompt.layers.0.attention_branch",
+        "stage": "q_projection",
+        "index": 31,
+        "gpu_half_bits": 34054,
+        "frozen_half_bits": 34055
+      },
+      {
+        "case": "cases.prompt.layers.0.attention_branch",
+        "stage": "q_rotary",
+        "index": 31,
+        "gpu_half_bits": 34054,
+        "frozen_half_bits": 34055
+      }
+    ],
+    "max_branch_admitted_bytes": 67310380,
+    "all_positive_commands": 1196,
+    "negative_jobs": 6,
+    "max_own_child_peak_bytes": 22528624,
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "branch_1": 13,
+      "branch_2": 13,
+      "branch_3": 13,
+      "branch_4": 13,
+      "branch_5": 13,
+      "branch_6": 13,
+      "branch_7": 13,
+      "branch_8": 13,
+      "branch_9": 13,
+      "branch_10": 13,
+      "branch_overflow": 0,
+      "cached_1": 13,
+      "cached_2": 13,
+      "cached_3": 13,
+      "cached_4": 13,
+      "cached_5": 13,
+      "cached_6": 13,
+      "cached_7": 13,
+      "cached_8": 13,
+      "cached_9": 13,
+      "cached_10": 13,
+      "cached_11": 13,
+      "cached_12": 13,
+      "cached_13": 13,
+      "cached_14": 13,
+      "cached_15": 13,
+      "cached_16": 13,
+      "cached_17": 13,
+      "cached_18": 13,
+      "cached_19": 13,
+      "cached_20": 13,
+      "cached_21": 13,
+      "cached_22": 13,
+      "cached_23": 13,
+      "cached_24": 13,
+      "full_1": 13,
+      "full_2": 13,
+      "full_3": 13,
+      "full_4": 13,
+      "full_5": 13,
+      "full_6": 13,
+      "full_7": 13,
+      "full_8": 13,
+      "full_9": 13,
+      "full_10": 13,
+      "invalid_cached_offset": 0,
+      "cache_regression": 182,
+      "rotary_regression": 273,
+      "rotary_overflow": 0,
+      "mlp_1": 13,
+      "mlp_2": 13,
+      "mlp_3": 13,
+      "mlp_4": 13,
+      "mlp_5": 13,
+      "mlp_6": 13,
+      "mlp_7": 13,
+      "mlp_8": 13,
+      "mlp_9": 13,
+      "mlp_10": 13,
+      "mlp_overflow": 0
+    },
+    "scope": "Actual GPU propagation normalized input->QKV->rotary->cache->causalattention->O. Original9sourcegates and exact2cache-copy layouts. Firstactive9Half/6F32 arrays+finalOoutputs replayed; nativeguards/12laterframes checked, fullguardbytes notarchived. No normalization/residual/MLP/session/fullLayer/Qwen/quality/performance/M4 claim."
+  }
+}

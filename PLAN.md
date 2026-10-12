@@ -1144,6 +1144,19 @@ positive/fivenegativejobs.14buildchecks/31standaloneRust plus96experimentPython/
 Read-only saved prefixes do not establish propagated cache/session behavior;
 GPU layer/decoder/Qwen/quality and M4 remain open.
 
+Propagated tiny attention preparation, 12 October 2026 (M4 pending): the
+[resident branch](docs/experiments/2026-10-12-rust-metal-attention-graph.md)
+composes actualQ/K/V projections→rotary→cache→causalGQA→O in onecommand/wait
+from savednormalized input. Nine originalsourcegates pass; exactactualGPU
+K/V layout copies have no inventedcachegate.130commands/36,608finalOoutputs,
+first9Half/6F32arrays replayed; native12laterframes+guards checked. Known
+Q/V/context differences propagate, and one O Halfmidpoint crossing is
+investigated without tolerancechanges. Samebinary regressions total1,196
+positive/sixnegativejobs.15buildchecks/33standaloneRust plus99experimentPython/
+193benchmarkPython/76rootRust+fmt/Clippy pass. PreGPU buildfailure retained;
+naturalcompletion/idle/VMstopped/protected endpoints recorded. Astra accepted completed code and evidence without findings after byte-identical independent replay. GPU normalization/residual/MLP layercomposition, decoder/
+session/Qwen/quality and M4 remain open.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -1237,4 +1250,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: compose a complete GPU layer from the qualified primitives.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: add GPU normalization, residuals and MLP around the propagated attention branch to complete a tiny layer.
