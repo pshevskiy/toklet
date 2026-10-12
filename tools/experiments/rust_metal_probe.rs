@@ -178,6 +178,7 @@ mod metal {
         device: Retained<ProtocolObject<dyn MTLDevice>>,
         queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
         pipeline: Retained<ProtocolObject<dyn MTLComputePipelineState>>,
+        library: Retained<ProtocolObject<dyn MTLLibrary>>,
         width: usize,
     }
     impl Probe {
@@ -375,6 +376,7 @@ mod metal {
                 device,
                 queue,
                 pipeline,
+                library,
                 width,
             },
             metadata,
@@ -428,6 +430,12 @@ mod metal {
     pub(super) fn run_silu(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
         silu::run(path, limit)
     }
+    mod projection {
+        include!("rust_metal_projection.rs");
+    }
+    pub(super) fn run_projection(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
+        projection::run(path, limit)
+    }
     mod gating {
         include!("rust_metal_gating.rs");
     }
@@ -446,6 +454,7 @@ fn run() -> Result<Value, Error> {
     let mut residual_input = None;
     let mut silu_input = None;
     let mut gating_input = None;
+    let mut projection_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
@@ -479,6 +488,12 @@ fn run() -> Result<Value, Error> {
                         .ok_or_else(|| error("arguments", "missing gating input"))?,
                 ));
             }
+            Some("--projection-input") if projection_input.is_none() => {
+                projection_input =
+                    Some(std::path::PathBuf::from(args.next().ok_or_else(|| {
+                        error("arguments", "missing projection input")
+                    })?));
+            }
             Some("--budget-bytes") if !has_budget => {
                 let value = args
                     .next()
@@ -499,6 +514,7 @@ fn run() -> Result<Value, Error> {
         + usize::from(residual_input.is_some())
         + usize::from(silu_input.is_some())
         + usize::from(gating_input.is_some())
+        + usize::from(projection_input.is_some())
         > 1
     {
         return Err(error("arguments", "probe operation modes are exclusive"));
@@ -513,6 +529,8 @@ fn run() -> Result<Value, Error> {
             metal::run_residual(&path, limit)
         } else if let Some(path) = silu_input {
             metal::run_silu(&path, limit)
+        } else if let Some(path) = projection_input {
+            metal::run_projection(&path, limit)
         } else if let Some(path) = gating_input {
             metal::run_gating(&path, limit)
         } else {
@@ -529,6 +547,7 @@ fn run() -> Result<Value, Error> {
             residual_input,
             silu_input,
             gating_input,
+            projection_input,
         );
         Err(error("capability", "requires Apple Silicon macOS"))
     }

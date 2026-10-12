@@ -1,0 +1,299 @@
+{
+  "format": "toklet-rust-mps-projection-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-rust-mps-projection-v3.json": "7cecefb0d8bddb0c6d98d19d54d8048d2c9c6b25a1c839a9adcde3f6a764b368",
+    "benchmarks/raw/2026-10-12-rust-mps-projection-v3.json.native.jsonl": "7dfceacb41363a82cd5cd830740e492044d5a7f91379d1dff55896e1a0d183ce",
+    "benchmarks/results/2026-10-12-rust-mps-projection-v3.json.stderr.txt": "b500946f49b8080b475af59b42095f67d25c2918d57918089e97539f921b7ba7",
+    "benchmarks/results/2026-10-12-rust-mps-projection-idle-v1.json": "2e098ba5d42b3e56a34c491215f597a97d5e2b7f8f2977d2a6084ba85c48471a"
+  },
+  "summary": {
+    "projection_commands": 169,
+    "projection_output_values": 36686,
+    "equal_frozen_half_values": 36660,
+    "max_source_fp32_gate_fraction": 0.4981430054075672,
+    "max_source_fp32_abs_error": 0.0021896809339523315,
+    "manual_results": {
+      "manual.bias_rounding": {
+        "fp32": [
+          1.0009765625
+        ],
+        "half_bits": [
+          15361
+        ]
+      },
+      "manual.irregular": {
+        "fp32": [
+          -3.75,
+          14.5,
+          -2.75,
+          5.0
+        ],
+        "half_bits": [
+          50048,
+          19264,
+          49536,
+          17664
+        ]
+      },
+      "manual.finite_cancellation": {
+        "fp32": [
+          65504.0
+        ],
+        "half_bits": [
+          31743
+        ]
+      }
+    },
+    "frozen_half_differences": [
+      {
+        "case": "cases.future_changed.layers.0.q_projection",
+        "index": 31,
+        "gpu_half_bits": 34054,
+        "frozen_half_bits": 34055,
+        "fp64_dot_plus_bias": -7.670558989048004e-05,
+        "gpu_fp32_result": -7.665157318115234e-05,
+        "gpu_minus_fp64": 5.4016709327697754e-08,
+        "feature_order_fp32_dot_plus_bias": -7.67093151807785e-05,
+        "same_difference_all_repetitions": true
+      },
+      {
+        "case": "cases.prompt.layers.0.q_projection",
+        "index": 31,
+        "gpu_half_bits": 34054,
+        "frozen_half_bits": 34055,
+        "fp64_dot_plus_bias": -7.670558989048004e-05,
+        "gpu_fp32_result": -7.665157318115234e-05,
+        "gpu_minus_fp64": 5.4016709327697754e-08,
+        "feature_order_fp32_dot_plus_bias": -7.67093151807785e-05,
+        "same_difference_all_repetitions": true
+      }
+    ],
+    "layouts": [
+      {
+        "id": "cases.capacity.layers.0.q_projection",
+        "rows_count": 32,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 32,
+        "threadgroup_width": 32,
+        "threadgroups": 32,
+        "shared_buffer_bytes": 10388,
+        "host_baseline_readback_bytes": 14590,
+        "admitted_bytes": 67133842
+      },
+      {
+        "id": "cases.capacity.layers.1.q_projection",
+        "rows_count": 32,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 32,
+        "threadgroup_width": 32,
+        "threadgroups": 32,
+        "shared_buffer_bytes": 10388,
+        "host_baseline_readback_bytes": 14590,
+        "admitted_bytes": 67133842
+      },
+      {
+        "id": "cases.future_changed.layers.0.q_projection",
+        "rows_count": 4,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 4,
+        "threadgroup_width": 32,
+        "threadgroups": 4,
+        "shared_buffer_bytes": 3220,
+        "host_baseline_readback_bytes": 5630,
+        "admitted_bytes": 67117714
+      },
+      {
+        "id": "cases.future_changed.layers.1.q_projection",
+        "rows_count": 4,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 4,
+        "threadgroup_width": 32,
+        "threadgroups": 4,
+        "shared_buffer_bytes": 3220,
+        "host_baseline_readback_bytes": 5630,
+        "admitted_bytes": 67117714
+      },
+      {
+        "id": "cases.offset.layers.0.q_projection",
+        "rows_count": 3,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 3,
+        "threadgroup_width": 32,
+        "threadgroups": 3,
+        "shared_buffer_bytes": 2964,
+        "host_baseline_readback_bytes": 5310,
+        "admitted_bytes": 67117138
+      },
+      {
+        "id": "cases.offset.layers.1.q_projection",
+        "rows_count": 3,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 3,
+        "threadgroup_width": 32,
+        "threadgroups": 3,
+        "shared_buffer_bytes": 2964,
+        "host_baseline_readback_bytes": 5310,
+        "admitted_bytes": 67117138
+      },
+      {
+        "id": "cases.prompt.layers.0.q_projection",
+        "rows_count": 4,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 4,
+        "threadgroup_width": 32,
+        "threadgroups": 4,
+        "shared_buffer_bytes": 3220,
+        "host_baseline_readback_bytes": 5630,
+        "admitted_bytes": 67117714
+      },
+      {
+        "id": "cases.prompt.layers.1.q_projection",
+        "rows_count": 4,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 4,
+        "threadgroup_width": 32,
+        "threadgroups": 4,
+        "shared_buffer_bytes": 3220,
+        "host_baseline_readback_bytes": 5630,
+        "admitted_bytes": 67117714
+      },
+      {
+        "id": "cases.single.layers.0.q_projection",
+        "rows_count": 1,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 1,
+        "threadgroup_width": 32,
+        "threadgroups": 1,
+        "shared_buffer_bytes": 2452,
+        "host_baseline_readback_bytes": 4670,
+        "admitted_bytes": 67115986
+      },
+      {
+        "id": "cases.single.layers.1.q_projection",
+        "rows_count": 1,
+        "inputs": 32,
+        "outputs": 32,
+        "input_stride": 32,
+        "weight_stride": 32,
+        "fp32_stride": 32,
+        "output_stride": 32,
+        "storage_rows": 1,
+        "threadgroup_width": 32,
+        "threadgroups": 1,
+        "shared_buffer_bytes": 2452,
+        "host_baseline_readback_bytes": 4670,
+        "admitted_bytes": 67115986
+      },
+      {
+        "id": "manual.bias_rounding",
+        "rows_count": 1,
+        "inputs": 2,
+        "outputs": 1,
+        "input_stride": 8,
+        "weight_stride": 8,
+        "fp32_stride": 1,
+        "output_stride": 1,
+        "storage_rows": 32,
+        "threadgroup_width": 32,
+        "threadgroups": 1,
+        "shared_buffer_bytes": 310,
+        "host_baseline_readback_bytes": 386,
+        "admitted_bytes": 67109560
+      },
+      {
+        "id": "manual.irregular",
+        "rows_count": 2,
+        "inputs": 3,
+        "outputs": 2,
+        "input_stride": 8,
+        "weight_stride": 8,
+        "fp32_stride": 4,
+        "output_stride": 8,
+        "storage_rows": 16,
+        "threadgroup_width": 32,
+        "threadgroups": 1,
+        "shared_buffer_bytes": 664,
+        "host_baseline_readback_bytes": 774,
+        "admitted_bytes": 67110302
+      },
+      {
+        "id": "manual.finite_cancellation",
+        "rows_count": 1,
+        "inputs": 2,
+        "outputs": 1,
+        "input_stride": 8,
+        "weight_stride": 8,
+        "fp32_stride": 1,
+        "output_stride": 1,
+        "storage_rows": 32,
+        "threadgroup_width": 32,
+        "threadgroups": 1,
+        "shared_buffer_bytes": 310,
+        "host_baseline_readback_bytes": 386,
+        "admitted_bytes": 67109560
+      }
+    ],
+    "all_positive_commands": 468,
+    "negative_jobs": 4,
+    "max_own_child_peak_bytes": 13075008,
+    "max_projection_admitted_bytes": 67133842,
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "projection_frozen_manual": 169,
+      "projection_overflow": 0,
+      "gating_regression": 143,
+      "gating_tails_regression": 117,
+      "gating_overflow_regression": 0
+    },
+    "guard_evidence": "Reviewed native host checks full input/guard allocations after completion; transcript retains booleans and active FP32/Half outputs, not full padding readbacks.",
+    "precision_scope": "FP32 result storage and observed unchanged gates; MPS internal accumulation order/precision unqualified."
+  }
+}

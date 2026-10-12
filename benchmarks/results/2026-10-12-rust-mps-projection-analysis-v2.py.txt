@@ -1,0 +1,122 @@
+"""Replay bounded Rust MPS evidence and independent numerical gates after idle."""
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+
+ROOT=Path.cwd().resolve()
+sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_projection as projection
+
+def sha(path):
+    with Path(path).open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+def read(path):return json.loads(Path(path).read_text())
+
+idle_path=ROOT/'benchmarks/results/2026-10-12-rust-mps-projection-idle-v1.json'
+idle=read(idle_path)
+assert idle['all_recorded_processes_absent'] is True and idle['machine']['State']=='stopped'
+assert idle['native_session_exit_code']==0
+for field in ('archive_sha256','protected_sha256'):
+    for name,expected in idle[field].items():assert sha(ROOT/name)==expected
+path=ROOT/'benchmarks/results/2026-10-12-rust-mps-projection-v3.json'
+record=read(path)
+assert record['completed'] is True and 'failure' not in record
+raw_path=ROOT/'benchmarks/raw/2026-10-12-rust-mps-projection-v3.json.native.jsonl'
+stderr=ROOT/'benchmarks/results/2026-10-12-rust-mps-projection-v3.json.stderr.txt'
+assert sha(raw_path)==record['native_raw_sha256'] and sha(stderr)==record['stderr_sha256']
+build=ROOT/'artifacts/rust-mps-projection-v3'
+for name,expected in record['source_sha256'].items():
+    source=ROOT/name
+    target=build/('Cargo.toml' if name.endswith('.Cargo.toml') else 'Cargo.lock' if name.endswith('.lock') else 'src/main.rs' if name.endswith('rust_metal_probe.rs') else 'src/'+source.name)
+    assert sha(source)==sha(target)==expected
+for name,expected in {'tools/experiments/rust_metal_probe.py':record['driver_sha256'],
+                     'tools/experiments/metal_probe.py':record['common_helper_sha256'],
+                     'tools/bench/mlx_baseline.py':record['memory_helper_sha256']}.items():assert sha(ROOT/name)==expected
+for field in ('input_sha256','qualification_driver_sha256'):
+    for name,expected in record['extra_context'][field].items():assert sha(name)==expected
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==record['binary_sha256']
+assert len(record['checks'])==len(record['build_commands'])==10
+assert [c['command'] for c in record['checks']]==record['build_commands']
+assert 'test result: ok. 22 passed; 0 failed' in next(c['stdout'] for c in record['checks'] if 'test' in c['command'])
+inputs,anchors,_=projection.cases()
+gating=projection.gating
+tiny,tiny_anchors,_=gating.cases()
+tails,tail_anchors=gating.tail_cases()
+validators={
+    'projection_frozen_manual':lambda e:projection.validate(e,inputs,anchors),
+    'projection_overflow':projection.overflow_rejected,
+    'gating_regression':lambda e:gating.validate(e,tiny,tiny_anchors),
+    'gating_tails_regression':lambda e:gating.validate_tails(e,tails,tail_anchors),
+    'gating_overflow_regression':gating.overflow_rejected,
+}
+raw=[json.loads(line) for line in raw_path.read_text().splitlines()]
+runs=record['native_runs']
+assert len(raw)==len(runs)==8
+assert [r['mode'] for r in runs]==['normal','invalid_shader','insufficient_budget','projection_frozen_manual','projection_overflow','gating_regression','gating_tails_regression','gating_overflow_regression']
+commands={};peak=0
+for event,run in zip(raw,runs):
+    replay=copy.deepcopy(event)
+    projection.rms.probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']))
+    assert replay==run['event'] and run['watchdog_killed'] is False
+    assert 0<run['physical_process_charge_peak_bytes']<=projection.rms.probe.LIMIT
+    peak=max(peak,run['physical_process_charge_peak_bytes'])
+    commands[run['mode']]=sum(len(c['rows']) for c in event.get('result',{}).get('cases',[]))
+assert commands=={'normal':39,'invalid_shader':0,'insufficient_budget':0,'projection_frozen_manual':169,'projection_overflow':0,'gating_regression':143,'gating_tails_regression':117,'gating_overflow_regression':0}
+
+fraction=error=0.0;values=equal=0;manual={};layouts=[];differences=[]
+for case,item in zip(raw[3]['result']['cases'],inputs):
+    anchor=anchors[item['id']];count=item['rows']*item['outputs']
+    width=case['threadgroup_width'];rounded=math.ceil(count/width)*width
+    padded_rows=math.ceil(rounded/item['outputs'])
+    a=(case['input_stride']*item['rows']+7)*2
+    b=(case['weight_stride']*item['outputs']+7)*2
+    bias=(item['outputs']+7)*2
+    c=(case['fp32_stride']*padded_rows+7)*4
+    out=(case['output_stride']*padded_rows+7)*2
+    assert case['shared_buffer_bytes']==a+b+bias+c+out
+    assert case['host_baseline_readback_bytes']==2*(a+b+bias)+c+out
+    assert case['admitted_bytes']==3*(a+b+bias)+2*(c+out)+projection.rms.probe.ALLOWANCE
+    first=case['rows'][0]
+    operands=[struct.unpack(f'<{len(item[key])}e',struct.pack(f'<{len(item[key])}H',*item[key])) for key in ('input_bits','weight_bits','bias_bits')]
+    av,bv,biasv=operands
+    for index,(actual,oracle) in enumerate(zip(first['output_bits'],anchor['oracle_bits'])):
+        if actual!=oracle:
+            rr,col=divmod(index,item['outputs'])
+            terms=[av[rr*item['inputs']+i]*bv[col*item['inputs']+i] for i in range(item['inputs'])]
+            exact=sum(terms)+biasv[col]
+            single=struct.unpack('<f',struct.pack('<I',first['fp32_bits'][index]))[0]
+            total=0.0
+            for term in terms:total=struct.unpack('<f',struct.pack('<f',total+term))[0]
+            ordered=struct.unpack('<f',struct.pack('<f',total+biasv[col]))[0]
+            differences.append({'case':item['id'],'index':index,'gpu_half_bits':actual,'frozen_half_bits':oracle,
+                                'fp64_dot_plus_bias':exact,'gpu_fp32_result':single,'gpu_minus_fp64':single-exact,
+                                'feature_order_fp32_dot_plus_bias':ordered,
+                                'same_difference_all_repetitions':all(row['output_bits'][index]==actual for row in case['rows'])})
+    for row in case['rows']:
+        bits=row['output_bits'];singles=struct.unpack(f'<{count}f',struct.pack(f'<{count}I',*row['fp32_bits']))
+        expected=list(struct.unpack(f'<{count}H',struct.pack(f'<{count}e',*singles)))
+        assert expected==bits
+        halves=struct.unpack(f'<{count}e',struct.pack(f'<{count}H',*bits))
+        for value,ref in zip(halves,anchor['source']):
+            delta=abs(value-ref);error=max(error,delta)
+            if anchor['gate']:
+                gate=anchor['gate'];used=delta/(gate['atol']+gate['rtol']*abs(ref));assert used<=1;fraction=max(fraction,used)
+            else:assert delta==0
+        if anchor['gate'] is None:
+            assert list(singles)==anchor['source'] and bits==anchor['oracle_bits']
+            manual[item['id']]={'fp32':list(singles),'half_bits':bits}
+        values+=count;equal+=sum(a==b for a,b in zip(bits,anchor['oracle_bits']))
+    layouts.append({k:case[k] for k in ('id','rows_count','inputs','outputs','input_stride','weight_stride','fp32_stride','output_stride','storage_rows','threadgroup_width','threadgroups','shared_buffer_bytes','host_baseline_readback_bytes','admitted_bytes')})
+summary={'projection_commands':169,'projection_output_values':values,'equal_frozen_half_values':equal,
+         'max_source_fp32_gate_fraction':fraction,'max_source_fp32_abs_error':error,
+         'manual_results':manual,'frozen_half_differences':differences,'layouts':layouts,'all_positive_commands':sum(commands.values()),'negative_jobs':4,
+         'max_own_child_peak_bytes':peak,'max_projection_admitted_bytes':raw[3]['result']['metadata']['maximum_admitted_bytes'],
+         'command_counts':commands,'guard_evidence':'Reviewed native host checks full input/guard allocations after completion; transcript retains booleans and active FP32/Half outputs, not full padding readbacks.',
+         'precision_scope':'FP32 result storage and observed unchanged gates; MPS internal accumulation order/precision unqualified.'}
+out={'format':'toklet-rust-mps-projection-analysis-v1','completed':True,
+     'records_sha256':{str(p.relative_to(ROOT)):sha(p) for p in (path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x') as stream:stream.write(json.dumps(out,indent=2,allow_nan=False)+'\n')
+print(json.dumps({k:v for k,v in summary.items() if k!='layouts'},indent=2))

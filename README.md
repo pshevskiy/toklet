@@ -307,3 +307,10 @@ checks nine bounded lengths with exact Half outputs and full inactive-lane
 padding from queried launch limits. Original tiny and saved Qwen regressions
 pass; memory accounting includes final-size padded host and shared buffers.
 This qualifies a primitive boundary; MLP/decoder composition remains open.
+
+The [Rust MPS projection boundary](docs/experiments/2026-10-12-rust-mps-projection.md)
+passes frozen tiny query gates and exact bias/stride/cancellation probes.
+Half operands stay resident; GPU bias initialization, FP32 result storage and
+one Half conversion share a command. Two repeated one-ULP Half differences
+are investigated within unchanged gates. Wider projections, MLP and decoder
+composition remain open.

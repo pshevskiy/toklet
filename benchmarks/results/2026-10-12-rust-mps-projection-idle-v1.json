@@ -1,0 +1,95 @@
+{
+  "format": "toklet-rust-mps-projection-idle-v1",
+  "verified_utc": "2026-10-12T10:21:43.241581+00:00",
+  "all_recorded_processes_absent": true,
+  "recorded_pids": [
+    51172,
+    51212,
+    51226,
+    43111,
+    43153,
+    43161,
+    96097,
+    96112,
+    96121,
+    17694,
+    85019,
+    85027,
+    88184,
+    35939
+  ],
+  "absence_query": {
+    "command": [
+      "ps",
+      "-p",
+      "51172,51212,51226,43111,43153,43161,96097,96112,96121,17694,85019,85027,88184,35939",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "machine": {
+    "ConfigDir": {
+      "Path": "/Users/coloner/.config/containers/podman/machine/applehv"
+    },
+    "ConnectionInfo": {
+      "PodmanSocket": {
+        "Path": "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default-api.sock"
+      },
+      "PodmanPipe": null
+    },
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "LastUp": "2026-10-11T20:05:08.08417+03:00",
+    "Name": "podman-machine-default",
+    "Resources": {
+      "CPUs": 5,
+      "DiskSize": 100,
+      "Memory": 2048,
+      "USBs": []
+    },
+    "SSHConfig": {
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "Port": 51387,
+      "RemoteUsername": "core"
+    },
+    "State": "stopped",
+    "UserModeNetworking": true,
+    "Rootful": false,
+    "Rosetta": true
+  },
+  "native_session_id": 19464,
+  "native_session_exit_code": 0,
+  "native_completion_tool": {
+    "chunk_id": "89bc56",
+    "exit_code": 0,
+    "wall_time_seconds": 2.6792e-05,
+    "output": "Completed standalone Rust Metal binding qualification: benchmarks/raw/2026-10-12-rust-mps-projection-v3.json\n"
+  },
+  "previous_idle_sha256": "755546a6ea7f121a58e59c51f3c89ff5624bc70b6040bd9e693967ccae4859df",
+  "protected_sha256": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+    "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+    "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+    "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+    "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+  },
+  "archive_sha256": {
+    "benchmarks/results/2026-10-12-rust-mps-projection-v3.json": "7cecefb0d8bddb0c6d98d19d54d8048d2c9c6b25a1c839a9adcde3f6a764b368",
+    "benchmarks/results/2026-10-12-rust-mps-projection-v3.json.stderr.txt": "b500946f49b8080b475af59b42095f67d25c2918d57918089e97539f921b7ba7",
+    "benchmarks/results/2026-10-12-rust-mps-projection-v1.json": "5809cef8be06d048e64fb4a87eb4c2d180e8757dac062a403956e939df8bb410",
+    "benchmarks/results/2026-10-12-rust-mps-projection-v1.json.stderr.txt": "f413d5963f728568ff2ba2255bf5d4667f1fe7b2570e12269b368729a311d231",
+    "benchmarks/results/2026-10-12-rust-mps-projection-v2.json": "44213cb101c6dbba6f204d92ece3ad7ad107635412285e05f014772695987cc1",
+    "benchmarks/results/2026-10-12-rust-mps-projection-v2.json.stderr.txt": "b0982e570a090834d251778c1ffe6afd4737e2d488b2b35e348c82a0fcbd1295",
+    "benchmarks/results/2026-10-12-rust-mps-projection-build-failed.rs.txt": "13f0cb91e2a0beb4f161be9e2c9d0acf33bc3fea9e4c05ddd44206f6ad520d3a",
+    "benchmarks/results/2026-10-12-rust-mps-projection-superseded.rs.txt": "ef4091f35efd74a3b83e26acc29f97f609a1b57a5159f284b0fefe9ac1f47a5e",
+    "benchmarks/results/2026-10-12-rust-mps-projection-archive-v1.py.txt": "be3884f3932b43b8fdf1837da8a64308fbd357d7ae6545b927e8d6922c872380"
+  },
+  "scope": "Post-completion verification. All native children completed handshake and were reaped by driver; prior recorded numerical chains absent; VM stopped. No timing/performance acceptance."
+}

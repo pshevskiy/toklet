@@ -1,0 +1,34 @@
+   Compiling objc2 v0.6.5
+    Checking objc2-encode v4.1.0
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+    Checking bitflags v2.13.2
+   Compiling serde_json v1.0.149
+    Checking itoa v1.0.18
+    Checking memchr v2.8.3
+    Checking objc2-foundation v0.3.2
+    Checking objc2-metal v0.3.2
+    Checking objc2-metal-performance-shaders v0.3.2
+    Checking toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1)
+error: use of deprecated associated function `objc2_metal_performance_shaders::MPSMatrixDescriptor::rowBytesFromColumns_dataType`
+   --> src/rust_metal_projection.rs:181:30
+    |
+181 |         MPSMatrixDescriptor::rowBytesFromColumns_dataType(
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `-D deprecated` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(deprecated)]`
+
+error: manual `!RangeInclusive::contains` implementation
+   --> src/rust_metal_projection.rs:351:8
+    |
+351 |     if limit < ALLOWANCE || limit > LIMIT {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use: `!(ALLOWANCE..=LIMIT).contains(&limit)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_range_contains
+    = note: `-D clippy::manual-range-contains` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::manual_range_contains)]`
+
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe" test) due to 2 previous errors

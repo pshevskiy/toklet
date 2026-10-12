@@ -1,0 +1,308 @@
+{
+  "format": "toklet-rust-metal-binding-probe-v1",
+  "completed": false,
+  "engine_revision": {
+    "exit_code": 0,
+    "stdout": "eb119fb00cfcc1e11ccca7c015454423ba4db6a6\n",
+    "stderr": ""
+  },
+  "working_tree_status": {
+    "exit_code": 0,
+    "stdout": " M tools/experiments/rust_metal_probe.Cargo.toml\n M tools/experiments/rust_metal_probe.lock\n M tools/experiments/rust_metal_probe.py\n M tools/experiments/rust_metal_probe.rs\n?? tools/experiments/rust_metal_projection.metal\n?? tools/experiments/rust_metal_projection.py\n?? tools/experiments/rust_metal_projection.rs\n",
+    "stderr": ""
+  },
+  "driver_sha256": "cb3cca213a9eb4d39733ed1304d77823cad77e60bd631efd0aec67a3ded798bf",
+  "source_sha256": {
+    "tools/experiments/rust_metal_probe.rs": "dc6b2c51a414ddb701920a29a48e7375b30a700cec02d18a10378661dd28a02e",
+    "tools/experiments/rust_metal_probe.metal": "7f1364605048cc5fe83099cf7520bd1b83f49e46b7d3f2cc1c440ee2000ee850",
+    "tools/experiments/rust_metal_probe.Cargo.toml": "4389119849021ee674baefb4f52be1f3ca9b0d82a6788ff18d0c2e6d802a2a8b",
+    "tools/experiments/rust_metal_probe.lock": "6369307c0893307f610e618b0081d00742dbff1e77aeabb43b3277af3256aedc",
+    "tools/experiments/rust_metal_rms.rs": "47bca7280d34d694eba440729e28869c792f31f5d4104d57760542f57f1d6fa0",
+    "tools/experiments/rust_metal_rms.metal": "f6a75d593516b7d4fd0d7ae46228f86e3b4387973760a3a27b521869e0d704f9",
+    "tools/experiments/rust_metal_embedding.rs": "a8c9c223e6955efccbacab153d4cf18abb24b6694b0b2df5d49677afe55ee5b6",
+    "tools/experiments/rust_metal_embedding.metal": "9e3c9d2e489979b8292aef526400e95a93d02ebc5e3f5f715ad4617d16b77781",
+    "tools/experiments/rust_metal_residual.rs": "0a04040f9506d325dd71c2180800adaad9c5709f56169e9fe5ae513e79c6e6a7",
+    "tools/experiments/rust_metal_residual.metal": "d2f154f0db7b0e07fd55c9e78981772da442bd2723e44d3068445b7a46a7f8a8",
+    "tools/experiments/rust_metal_silu.rs": "7aa2dde8683c30314e67f3e7798e90710f538308a2cf9762f444099a6d1978d3",
+    "tools/experiments/rust_metal_silu.metal": "bf8d3ae0e0cde55047e46ce2a670f109c621d57715adb317391bb47633a76944",
+    "tools/experiments/rust_metal_gating.rs": "466abe9683717f581b9b1bb8a5451d5dad7b287eac8d1535f24399092708fd41",
+    "tools/experiments/rust_metal_gating.metal": "a63e219e6385671d4e26675ab2b67d5a6a3f5ba26aa820062241ac1753dd2ebe",
+    "tools/experiments/rust_metal_projection.rs": "13f0cb91e2a0beb4f161be9e2c9d0acf33bc3fea9e4c05ddd44206f6ad520d3a",
+    "tools/experiments/rust_metal_projection.metal": "228134f559dcaeb51ab4c1464c6a1030c54780496eae2a03aec8c9a6138e9405"
+  },
+  "common_helper_sha256": "2ae1dbb275f1b115baaa317eb5d7377c970bf5b57d3d78e7c34b62784bc10d87",
+  "memory_helper_sha256": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+  "rustc": {
+    "exit_code": 0,
+    "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\n",
+    "stderr": ""
+  },
+  "cargo": {
+    "exit_code": 0,
+    "stdout": "cargo 1.90.0 (Homebrew)\n",
+    "stderr": ""
+  },
+  "build_commands": [
+    [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--check",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_projection.rs"
+    ],
+    [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--check",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_gating.rs"
+    ],
+    [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--check",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_silu.rs"
+    ],
+    [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--check",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_residual.rs"
+    ],
+    [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--check",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_embedding.rs"
+    ],
+    [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--check",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_rms.rs"
+    ],
+    [
+      "env",
+      "MACOSX_DEPLOYMENT_TARGET=15.0",
+      "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/target",
+      "cargo",
+      "fmt",
+      "--manifest-path",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/Cargo.toml",
+      "--check"
+    ],
+    [
+      "env",
+      "MACOSX_DEPLOYMENT_TARGET=15.0",
+      "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/target",
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/Cargo.toml",
+      "--locked",
+      "--offline",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    [
+      "env",
+      "MACOSX_DEPLOYMENT_TARGET=15.0",
+      "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/target",
+      "cargo",
+      "test",
+      "--manifest-path",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/Cargo.toml",
+      "--locked",
+      "--offline"
+    ],
+    [
+      "env",
+      "MACOSX_DEPLOYMENT_TARGET=15.0",
+      "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/target",
+      "cargo",
+      "build",
+      "--manifest-path",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/Cargo.toml",
+      "--locked",
+      "--offline",
+      "--release",
+      "--target",
+      "aarch64-apple-darwin"
+    ]
+  ],
+  "rustflags": null,
+  "sdk_path": {
+    "exit_code": 0,
+    "stdout": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk\n",
+    "stderr": ""
+  },
+  "sdk_version": {
+    "exit_code": 0,
+    "stdout": "26.5\n",
+    "stderr": ""
+  },
+  "os": {
+    "exit_code": 0,
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83\n",
+    "stderr": ""
+  },
+  "hardware": {
+    "exit_code": 0,
+    "stdout": "Apple M1 Pro\nMacBookPro18,3\n17179869184\n",
+    "stderr": ""
+  },
+  "power_start": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  },
+  "checks": [
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_projection.rs"
+      ],
+      "stdout": "",
+      "wall_seconds": 0.023665166925638914
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_gating.rs"
+      ],
+      "stdout": "",
+      "wall_seconds": 0.019866707967594266
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_silu.rs"
+      ],
+      "stdout": "",
+      "wall_seconds": 0.0182798751629889
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_residual.rs"
+      ],
+      "stdout": "",
+      "wall_seconds": 0.018017709022387862
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_embedding.rs"
+      ],
+      "stdout": "",
+      "wall_seconds": 0.018552334047853947
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/src/rust_metal_rms.rs"
+      ],
+      "stdout": "",
+      "wall_seconds": 0.017402708064764738
+    },
+    {
+      "command": [
+        "env",
+        "MACOSX_DEPLOYMENT_TARGET=15.0",
+        "CARGO_TARGET_DIR=/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/target",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-v1/Cargo.toml",
+        "--check"
+      ],
+      "stdout": "",
+      "wall_seconds": 0.0570393749512732
+    }
+  ],
+  "native_runs": [],
+  "actual_gpu_trace": null,
+  "energy": null,
+  "total_external_device_memory": null,
+  "extra_context": {
+    "qualification_driver_sha256": {
+      "/Users/coloner/work/rust/toklet/tools/experiments/rust_metal_gating.py": "36f652c776fd10ec4de9feba3385e08764e0cfb8faf28049b435f22f155ca6e5",
+      "/Users/coloner/work/rust/toklet/tools/experiments/rust_metal_rms.py": "2270c0fd24222f0a70f7856a31e4f8037c8a78ed52fc639a33a9e2037695a2f0",
+      "/Users/coloner/work/rust/toklet/tools/experiments/rust_metal_silu.py": "4144aa8b90803419ecc826df3b9233615ce847be0f24eae1971e25b43f96207c",
+      "/Users/coloner/work/rust/toklet/tools/experiments/rust_metal_residual.py": "51bae4e5e61324118af622647ae64394af1952aad023a5f426520ee5ff1a92c0",
+      "/Users/coloner/work/rust/toklet/tools/experiments/rust_metal_embedding.py": "c139d7490d9c8026f9664e1aac1f4473729f85bc56d9605fdea19f0ece36a69d",
+      "/Users/coloner/work/rust/toklet/tools/experiments/rust_metal_projection.py": "b5623eceaa8f59389f5a3c1ce4a0807eed554ed278605cb25727f51ae0e3dba4"
+    },
+    "input_sha256": {
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-input-v1/projection_frozen_manual.json": "1af3ea5b5ff784c7fe0aea5d91ae6043ae12cbbbf503e17f5861df8f172b7031",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-input-v1/projection_overflow.json": "70ec53132026a17c9d9589fee30a08b72da1b090fe6c0714f8e1203ad79d01b4",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-input-v1/gating_regression.json": "c75af822f9c04ca5f2341957692aaa29cca6a5e75de873ba25dd36b2f3977e2d",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-input-v1/gating_tails_regression.json": "f1c040a0fd97f062b70a884f6ff2085c78497885819e3e5d436720a808bec632",
+      "/Users/coloner/work/rust/toklet/artifacts/rust-mps-projection-input-v1/gating_overflow_regression.json": "86ea419a0f489a12060c50dc039ad26999df1c12e9e5120f1b7e7b66156bbcc2"
+    },
+    "fp16_manifest_sha256": "4a416b21f52ecc89c6bbafd4c948b173cd9709c3f5b1a60cd6ce037a63964e6b",
+    "source_fp32_manifest_sha256": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4",
+    "scope": "10 frozen tiny query projections and3 independent manual bias/stride/cancellation cases. Resident Half operands, GPU bias -> MPS FP32 result -> one Half store in one command. Frozen source gates and exact manual outputs. Same-binary add/gating/tails/overflow regressions. No Qwen projection, full decoder, performance or M4 completion."
+  },
+  "scope": "Standalone Rust public-API/ownership and optional FP16 RMS/embedding/residual/SiLU/gating/MPS projection checks. No full model backend, device-performance acceptance, M4 completion or mobile qualification.",
+  "failure": {
+    "stage": "build_checks",
+    "type": "RuntimeError",
+    "message": "Probe stage exited 101: env"
+  },
+  "power_end": {
+    "source": {
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\n",
+      "stderr": ""
+    },
+    "configuration": {
+      "exit_code": 0,
+      "stdout": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+      "stderr": ""
+    },
+    "thermal": {
+      "exit_code": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    }
+  },
+  "stderr_sha256": "f413d5963f728568ff2ba2255bf5d4667f1fe7b2570e12269b368729a311d231",
+  "native_raw_sha256": null
+}
