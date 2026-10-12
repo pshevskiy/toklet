@@ -1062,6 +1062,21 @@ formatting/Clippy, 22 Rust tests and release, three targeted/all 78 experiment
 Python tests and byte-identical replay pass. Astra accepted the completed code
 and evidence without findings after independent replay. GPU stage propagation/composed MLP and M4 completion remain open.
 
+Resident tiny MLP preparation, 12 October 2026 (M4 pending): the
+[composed GPU graph](docs/experiments/2026-10-12-rust-metal-mlp.md)
+propagates actual GPU outputs through gate/up, SiLU, gating and down, preserving
+all Half storage boundaries in one command/wait. Ten graphs pass 130 command
+buffers, 25,344 first-frame Half values and 36,608 independently retained final
+outputs. All five original source gates pass, maximum fraction 0.498911408659;
+first frames match frozen bits and native checks require all thirteen frames
+identical. Repeated nonfinal/padding bytes are not archived; comparison scope
+is explicit. Readbacks compact in place with two-snapshot bounds; admission
+67,269,664 bytes and peak 13,337,152. Same-binary regressions and five required
+negative jobs pass. Isolated formatting/Clippy, 25 Rust tests and release,
+four targeted/all 82 experiment tests, root formatting/Clippy/76 Rust tests,
+193 benchmark tests and byte-identical replay pass. Astra accepted the completed
+code and evidence after independent replay and a frame-count wording correction. No full layer/decoder, KV, Qwen, performance or M4 closure claim.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -1155,4 +1170,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 composition task: propagate GPU outputs through one resident gated MLP, preserving intermediate Half boundaries and frozen source gates before composing the decoder.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: cover the remaining tiny K/V/output attention projections, then implement rotary/cache writes and causal GQA before composing a full layer.

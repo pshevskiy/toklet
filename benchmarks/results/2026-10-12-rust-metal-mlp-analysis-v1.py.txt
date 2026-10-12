@@ -1,0 +1,86 @@
+"""Replay composed MLP first frames, all final outputs and fixed source gates."""
+import copy
+import hashlib
+import json
+from pathlib import Path
+import struct
+import sys
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_mlp as mlp
+p=mlp.p
+
+def sha(path):
+    with Path(path).open('rb')as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+def read(path):return json.loads(Path(path).read_text())
+idle_path=ROOT/'benchmarks/results/2026-10-12-rust-metal-mlp-idle-v1.json';idle=read(idle_path)
+assert idle['all_recorded_processes_absent'] is True and idle['machine']['State']=='stopped' and idle['native_session_exit_code']==0
+for field in ('archive_sha256','protected_sha256'):
+    for name,expected in idle[field].items():assert sha(ROOT/name)==expected
+path=ROOT/'benchmarks/results/2026-10-12-rust-metal-mlp-v3.json';record=read(path)
+assert record['completed'] is True and 'failure'not in record
+raw_path=ROOT/'benchmarks/raw/2026-10-12-rust-metal-mlp-v3.json.native.jsonl';stderr=ROOT/'benchmarks/results/2026-10-12-rust-metal-mlp-v3.json.stderr.txt'
+assert sha(raw_path)==record['native_raw_sha256'] and sha(stderr)==record['stderr_sha256']
+build=ROOT/'artifacts/rust-metal-mlp-v3'
+for name,expected in record['source_sha256'].items():
+    source=ROOT/name;target=build/('Cargo.toml'if name.endswith('.Cargo.toml')else'Cargo.lock'if name.endswith('.lock')else'src/main.rs'if name.endswith('rust_metal_probe.rs')else'src/'+source.name)
+    assert sha(source)==sha(target)==expected
+for name,expected in {'tools/experiments/rust_metal_probe.py':record['driver_sha256'],'tools/experiments/metal_probe.py':record['common_helper_sha256'],'tools/bench/mlx_baseline.py':record['memory_helper_sha256']}.items():assert sha(ROOT/name)==expected
+for field in ('input_sha256','qualification_driver_sha256'):
+    for name,expected in record['extra_context'][field].items():assert sha(name)==expected
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==record['binary_sha256']
+assert len(record['checks'])==len(record['build_commands'])==11
+assert [c['command']for c in record['checks']]==record['build_commands']
+assert 'test result: ok. 25 passed; 0 failed'in next(c['stdout']for c in record['checks']if'test'in c['command'])
+inputs,anchors,_=mlp.cases();groups,stage_anchors=mlp.stages.batches();query,qa,_=p.cases();tiny,ta,_=p.gating.cases();tails,tla=p.gating.tail_cases()
+validators={f'mlp_{i+1}':lambda e,case=case:mlp.validate(e,case,anchors[case['id']])for i,case in enumerate(inputs)}
+validators['mlp_overflow']=mlp.overflow_rejected
+validators.update({label:lambda e,cs=cs:p.validate(e,cs,stage_anchors)for label,cs in groups})
+validators.update({'query_manual_regression':lambda e:p.validate(e,query,qa),'projection_overflow_regression':p.overflow_rejected,
+                   'gating_regression':lambda e:p.gating.validate(e,tiny,ta),'gating_tails_regression':lambda e:p.gating.validate_tails(e,tails,tla),
+                   'gating_overflow_regression':p.gating.overflow_rejected})
+raw=[json.loads(line)for line in raw_path.read_text().splitlines()];runs=record['native_runs']
+expected=['normal','invalid_shader','insufficient_budget']+[f'mlp_{i+1}'for i in range(10)]+['mlp_overflow']+[label for label,_ in groups]+['query_manual_regression','projection_overflow_regression','gating_regression','gating_tails_regression','gating_overflow_regression']
+assert len(raw)==len(runs)==25 and[r['mode']for r in runs]==expected
+commands={};peak=0
+for event,run in zip(raw,runs):
+    replay=copy.deepcopy(event);p.rms.probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']))
+    assert replay==run['event'] and run['watchdog_killed'] is False and 0<run['physical_process_charge_peak_bytes']<=p.rms.probe.LIMIT
+    peak=max(peak,run['physical_process_charge_peak_bytes'])
+    result=event.get('result',{})
+    commands[run['mode']]=len(result['rows'])if result.get('operation')=='resident_tiny_mlp_half_boundaries'else sum(len(c['rows'])for c in result.get('cases',[]))
+assert sum(commands.values())==988
+summary_stages={name:{'first_frame_values':0,'equal_frozen_half_values':0,'maximum_source_gate_fraction':0.,'maximum_source_abs_error':0.}for name in mlp.HALF_STAGES}
+layouts=[];final_values=0
+for event,case in zip(raw[3:13],inputs):
+    r=event['result'];anchor=anchors[case['id']];half=r['first_half_intermediates'];single=r['first_fp32_projection_bits'];rows=case['rows']
+    for bits,index in zip(single,(0,2,4)):
+        floats=struct.unpack(f'<{len(bits)}f',struct.pack(f'<{len(bits)}I',*bits))
+        expected=list(struct.unpack(f'<{len(bits)}H',struct.pack(f'<{len(bits)}e',*floats)))
+        assert expected==half[index]
+    products=[]
+    for a,b in zip(half[1],half[2]):
+        av=struct.unpack('<e',struct.pack('<H',a))[0];bv=struct.unpack('<e',struct.pack('<H',b))[0];exact=av*bv
+        assert struct.unpack('<f',struct.pack('<f',exact))[0]==exact
+        products.append(struct.unpack('<H',struct.pack('<e',exact))[0])
+    assert products==half[3]
+    for name,bits,expected in zip(mlp.HALF_STAGES,half,anchor['stages']):
+        s=summary_stages[name];values=struct.unpack(f'<{len(bits)}e',struct.pack(f'<{len(bits)}H',*bits));gate=expected['gate']
+        for value,ref in zip(values,expected['source']):
+            error=abs(value-ref);fraction=error/(gate['atol']+gate['rtol']*abs(ref));assert fraction<=1
+            s['maximum_source_gate_fraction']=max(s['maximum_source_gate_fraction'],fraction);s['maximum_source_abs_error']=max(s['maximum_source_abs_error'],error)
+        s['first_frame_values']+=len(bits);s['equal_frozen_half_values']+=sum(a==b for a,b in zip(bits,expected['bits']))
+    for row in r['rows']:
+        assert row['commit_wait_pairs']==1 and row['inputs_guards_and_intermediates_unchanged'] is True
+        assert row['output_bits']==half[4];final_values+=len(row['output_bits'])
+    inp=(rows*r['input_stride']+7)*2+2*(64*r['gate_weight_stride']+7)*2+(32*r['down_weight_stride']+7)*2+(r['bias_stride']+7)*2
+    out=4*(r['capacity_rows64']*64+7)*2+(r['capacity_rows32']*r['half_output_stride']+7)*2+2*(r['capacity_rows64']*r['float_intermediate_stride']+7)*4+(r['capacity_rows32']*r['float_output_stride']+7)*4
+    assert r['shared_buffer_bytes']==inp+out and r['host_snapshot_readback_bytes']==(inp+out)*2
+    assert r['admitted_bytes']==(inp+out)*3+p.rms.probe.ALLOWANCE
+    layouts.append({k:r[k]for k in ('id','rows_count','threadgroup_width','capacity_rows64','capacity_rows32','input_stride','gate_weight_stride','down_weight_stride','bias_stride','half_intermediate_stride','half_output_stride','float_intermediate_stride','float_output_stride','shared_buffer_bytes','host_snapshot_readback_bytes','admitted_bytes')})
+summary={'composed_mlps':10,'composed_commands':130,'first_half_intermediate_values':sum(s['first_frame_values']for s in summary_stages.values()),
+         'stages':summary_stages,'final_output_values_all_repetitions':final_values,'all_positive_commands':sum(commands.values()),'negative_jobs':5,
+         'maximum_own_child_peak_bytes':peak,'maximum_mlp_admitted_bytes':max(l['admitted_bytes']for l in layouts),'layouts':layouts,'command_counts':commands,
+         'scope':'First full active intermediate frame independently replayed; all13 final outputs independently compared. Native host compares all13 intermediate frames/guards, retained as Boolean evidence. No full padding byte replay, decoder/KV/Qwen or performance qualification.'}
+out={'format':'toklet-composed-tiny-metal-mlp-analysis-v1','completed':True,'records_sha256':{str(pt.relative_to(ROOT)):sha(pt)for pt in (path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x')as stream:stream.write(json.dumps(out,indent=2,allow_nan=False)+'\n')
+print(json.dumps({k:v for k,v in summary.items()if k not in('layouts','command_counts')},indent=2))

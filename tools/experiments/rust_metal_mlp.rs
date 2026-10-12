@@ -1,0 +1,658 @@
+// One bounded tiny MLP graph; all dependent encodings share one completion wait.
+use super::*;
+use objc2::AnyThread;
+use objc2_metal_performance_shaders::{
+    MPSDataType, MPSMatrix, MPSMatrixMultiplication, MPSSupportsMTLDevice,
+};
+use projection::{Layout, baseline, half, matrix, number, queried};
+use std::{io::Read, path::Path};
+const HALF_GUARD: u16 = 0x55a1;
+const FLOAT_GUARD: u32 = 0x7fc0_5678;
+const MAX_INPUT: u64 = 1024 * 1024;
+struct Case {
+    id: String,
+    rows: usize,
+    input: Vec<u16>,
+    weights: [Vec<u16>; 3],
+}
+fn load(path: &Path) -> Result<Case, Error> {
+    let file = std::fs::File::open(path).map_err(|e| error("fixture", e.to_string()))?;
+    let size = file
+        .metadata()
+        .map_err(|e| error("fixture", e.to_string()))?
+        .len();
+    if size > MAX_INPUT {
+        return Err(error("fixture", "MLP input exceeds one MiB"));
+    }
+    let mut bytes = Vec::new();
+    file.take(MAX_INPUT + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|e| error("fixture", e.to_string()))?;
+    if bytes.len() as u64 != size || bytes.len() as u64 > MAX_INPUT {
+        return Err(error("fixture", "MLP input changed or exceeds bounds"));
+    }
+    let value: Value =
+        serde_json::from_slice(&bytes).map_err(|e| error("fixture", e.to_string()))?;
+    if value["format"] != "toklet-metal-mlp-input-v1" {
+        return Err(error("fixture", "MLP format differs"));
+    }
+    let id = value["id"]
+        .as_str()
+        .ok_or_else(|| error("fixture", "missing MLP identity"))?;
+    if id.is_empty() || id.len() > 128 || !id.is_ascii() {
+        return Err(error("fixture", "MLP identity outside bounds"));
+    }
+    let rows = number(&value, "rows")?;
+    if !(1..=32).contains(&rows) {
+        return Err(error("fixture", "MLP rows outside1..32"));
+    }
+    // Fixed tiny topology: hidden32, intermediate64. At most7168 stored input
+    // and weight values; JSON/fixture owners remain under the runtime allowance.
+    Ok(Case {
+        id: id.to_owned(),
+        rows,
+        input: half(&value, "input_bits", rows * 32)?,
+        weights: [
+            half(&value, "gate_weight_bits", 64 * 32)?,
+            half(&value, "up_weight_bits", 64 * 32)?,
+            half(&value, "down_weight_bits", 32 * 64)?,
+        ],
+    })
+}
+#[repr(C)]
+struct Params {
+    rows: u32,
+    outputs: u32,
+    float_stride: u32,
+    half_stride: u32,
+}
+const _: () = assert!(size_of::<Params>() == 16 && align_of::<Params>() == 4);
+struct Input {
+    buffer: Shared<u16>,
+    baseline: Vec<u16>,
+}
+fn input(
+    device: &ProtocolObject<dyn MTLDevice>,
+    layout: Layout,
+    values: &[u16],
+) -> Result<Input, Error> {
+    let values = baseline(values, layout);
+    let mut buffer = Shared::new(device, layout.bytes)?;
+    buffer.write(&values)?;
+    Ok(Input {
+        buffer,
+        baseline: values,
+    })
+}
+#[derive(PartialEq, Eq)]
+struct Frame {
+    half: Vec<Vec<u16>>,
+    single: Vec<Vec<u32>>,
+}
+fn compact_half(mut all: Vec<u16>, l: Layout) -> Result<Vec<u16>, Error> {
+    let mut target = 0;
+    for index in 0..all.len() {
+        let value = all[index];
+        if index / l.stride < l.rows && index % l.stride < l.columns {
+            if value & 0x7c00 == 0x7c00 {
+                return Err(error(
+                    "validation",
+                    "completed MLP nonfinite; result discarded",
+                ));
+            }
+            // target never exceeds index, so compaction cannot alter an unread
+            // source or guard. Retain exactly the original allocation capacity.
+            all[target] = value;
+            target += 1;
+        } else if value != HALF_GUARD {
+            return Err(error("validation", "MLP Half padding/guards changed"));
+        }
+    }
+    all.truncate(target);
+    Ok(all)
+}
+fn compact_float(mut all: Vec<u32>, l: Layout) -> Result<Vec<u32>, Error> {
+    if all[l.rows * l.stride..].iter().any(|&v| v != FLOAT_GUARD) {
+        return Err(error("validation", "MLP FP32 tail guards changed"));
+    }
+    let mut target = 0;
+    for row in 0..l.rows {
+        for col in 0..l.columns {
+            let bits = all[row * l.stride + col];
+            if !f32::from_bits(bits).is_finite() {
+                return Err(error(
+                    "validation",
+                    "completed MLP nonfinite; result discarded",
+                ));
+            }
+            all[target] = bits;
+            target += 1;
+        }
+    }
+    all.truncate(target);
+    Ok(all)
+}
+fn active_half(buffer: &Shared<u16>, l: Layout) -> Result<Vec<u16>, Error> {
+    compact_half(buffer.read(), l)
+}
+fn active_float(buffer: &Shared<u32>, l: Layout) -> Result<Vec<u32>, Error> {
+    compact_float(buffer.read(), l)
+}
+
+fn totals(input_bytes: usize, output_bytes: usize, limit: usize) -> Result<(usize, usize), Error> {
+    let shared = input_bytes
+        .checked_add(output_bytes)
+        .ok_or_else(|| error("admission", "MLP shared size overflow"))?;
+    // Shared storage once; one immutable input/first-output snapshot and one
+    // current readback per buffer. Diagnostic JSON/active copies use allowance.
+    let total = shared
+        .checked_mul(3)
+        .and_then(|n| n.checked_add(ALLOWANCE))
+        .ok_or_else(|| error("admission", "MLP working-set overflow"))?;
+    if limit > LIMIT || total > limit {
+        return Err(error("admission", "MLP exceeds supplied budget"));
+    }
+    Ok((shared, total))
+}
+struct ProjectionStep<'a> {
+    bias: &'a Shared<u16>,
+    floats: &'a Shared<u32>,
+    output: &'a Shared<u16>,
+    fl: Layout,
+    hl: Layout,
+    kernel: &'a MPSMatrixMultiplication,
+    left: &'a MPSMatrix,
+    right: &'a MPSMatrix,
+    result: &'a MPSMatrix,
+}
+fn encode_projection(
+    command: &ProtocolObject<dyn MTLCommandBuffer>,
+    probe: &Probe,
+    bias_pipeline: &ProtocolObject<dyn MTLComputePipelineState>,
+    step: ProjectionStep<'_>,
+) -> Result<(), Error> {
+    let ProjectionStep {
+        bias,
+        floats,
+        output,
+        fl,
+        hl,
+        kernel,
+        left,
+        right,
+        result,
+    } = step;
+    let params = Params {
+        rows: fl.rows as u32,
+        outputs: fl.columns as u32,
+        float_stride: fl.stride as u32,
+        half_stride: hl.stride as u32,
+    };
+    let launch = groups(fl.rows * fl.columns, probe.width)?;
+    for phase in 0..2 {
+        let encoder = command
+            .computeCommandEncoder()
+            .ok_or_else(|| error("command", "MLP projection encoder unavailable"))?;
+        encoder.setComputePipelineState(if phase == 0 {
+            bias_pipeline
+        } else {
+            &probe.pipeline
+        });
+        // SAFETY: same qualified layouts/types as the projection boundary.
+        // Bias/result/output are distinct initialized owned shared allocations,
+        // params16/4 copied at slot2, mapped inactive lanes fit guarded storage.
+        // Retained command resources/owners survive wait; no concurrent CPU use.
+        unsafe {
+            encoder.setBuffer_offset_atIndex(
+                Some(if phase == 0 { &bias.raw } else { &floats.raw }),
+                0,
+                0,
+            );
+            encoder.setBuffer_offset_atIndex(
+                Some(if phase == 0 { &floats.raw } else { &output.raw }),
+                0,
+                1,
+            );
+            encoder.setBytes_length_atIndex(NonNull::from(&params).cast(), size_of::<Params>(), 2);
+        }
+        encoder.dispatchThreadgroups_threadsPerThreadgroup(
+            MTLSize {
+                width: launch,
+                height: 1,
+                depth: 1,
+            },
+            MTLSize {
+                width: probe.width,
+                height: 1,
+                depth: 1,
+            },
+        );
+        encoder.endEncoding();
+        if phase == 0 {
+            // SAFETY: all matrices and kernel belong to the same device, with
+            // checked dimensions/strides/types, nonaliased inputs/result. Tracked
+            // hazards order bias -> MPS -> Half store within this command.
+            unsafe {
+                kernel.encodeToCommandBuffer_leftMatrix_rightMatrix_resultMatrix(
+                    command, left, right, result,
+                );
+            }
+        }
+    }
+    Ok(())
+}
+fn elementwise(
+    command: &ProtocolObject<dyn MTLCommandBuffer>,
+    probe: &Probe,
+    pipeline: &ProtocolObject<dyn MTLComputePipelineState>,
+    a: &Shared<u16>,
+    b: Option<&Shared<u16>>,
+    out: &Shared<u16>,
+    count: usize,
+) -> Result<(), Error> {
+    let encoder = command
+        .computeCommandEncoder()
+        .ok_or_else(|| error("command", "MLP elementwise encoder unavailable"))?;
+    encoder.setComputePipelineState(pipeline);
+    let count32 =
+        u32::try_from(count).map_err(|_| error("admission", "MLP count exceedsUInt32"))?;
+    // SAFETY: fixed hidden64 intermediate layouts are explicitly contiguous;
+    // count and rounded tail fit each initialized distinct owned Half buffer.
+    // Existing SiLU(slot0,1,2) and gating(slot0,1,2,3) shader ABIs are unchanged.
+    // CPU access is excluded until successful command completion.
+    unsafe {
+        encoder.setBuffer_offset_atIndex(Some(&a.raw), 0, 0);
+        if let Some(b) = b {
+            encoder.setBuffer_offset_atIndex(Some(&b.raw), 0, 1);
+            encoder.setBuffer_offset_atIndex(Some(&out.raw), 0, 2);
+            encoder.setBytes_length_atIndex(NonNull::from(&count32).cast(), size_of::<u32>(), 3);
+        } else {
+            encoder.setBuffer_offset_atIndex(Some(&out.raw), 0, 1);
+            encoder.setBytes_length_atIndex(NonNull::from(&count32).cast(), size_of::<u32>(), 2);
+        }
+    }
+    encoder.dispatchThreadgroups_threadsPerThreadgroup(
+        MTLSize {
+            width: groups(count, probe.width)?,
+            height: 1,
+            depth: 1,
+        },
+        MTLSize {
+            width: probe.width,
+            height: 1,
+            depth: 1,
+        },
+    );
+    encoder.endEncoding();
+    Ok(())
+}
+fn kernel(
+    device: &ProtocolObject<dyn MTLDevice>,
+    rows: usize,
+    inputs: usize,
+    outputs: usize,
+) -> Retained<MPSMatrixMultiplication> {
+    // SAFETY: small checked topology, same-device guarded matrices, transpose
+    // right for row-major weights, FP32 result initialized from zero Half bias.
+    unsafe {
+        MPSMatrixMultiplication::initWithDevice_transposeLeft_transposeRight_resultRows_resultColumns_interiorColumns_alpha_beta(
+        MPSMatrixMultiplication::alloc(),device,false,true,rows,outputs,inputs,1.0,1.0)
+    }
+}
+pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
+    let case = load(path)?;
+    if !(ALLOWANCE..=LIMIT).contains(&limit) {
+        return Err(error("admission", "MLP budget outside runtime allowance"));
+    }
+    autoreleasepool(|_| {
+        let source = concat!(
+            include_str!("rust_metal_projection.metal"),
+            "\n",
+            include_str!("rust_metal_silu.metal"),
+            "\n",
+            include_str!("rust_metal_gating.metal")
+        );
+        let (mut probe, mut metadata) = prepare(source, "toklet_projection_store", ALLOWANCE)?;
+        // SAFETY: retained live device; support query before matrix allocation.
+        if !unsafe { MPSSupportsMTLDevice(Some(&probe.device)) } {
+            return Err(error("capability", "MPS does not support this device"));
+        }
+        let mut pipelines = Vec::new();
+        let mut caps = Vec::new();
+        for name in ["toklet_projection_bias", "toklet_silu", "toklet_gating"] {
+            let function = probe
+                .library
+                .newFunctionWithName(&NSString::from_str(name))
+                .ok_or_else(|| error("pipeline", "MLP function unavailable"))?;
+            let pipeline = probe
+                .device
+                .newComputePipelineStateWithFunction_error(&function)
+                .map_err(|e| error("pipeline", e.to_string()))?;
+            let width = pipeline
+                .threadExecutionWidth()
+                .min(pipeline.maxTotalThreadsPerThreadgroup());
+            if width == 0 {
+                return Err(error("capability", "MLP pipeline has zero execution width"));
+            }
+            probe.width = probe.width.min(width);
+            caps.push(json!({"name":name,"execution_width":pipeline.threadExecutionWidth(),"max_threads":pipeline.maxTotalThreadsPerThreadgroup()}));
+            pipelines.push(pipeline);
+        }
+        let rows = case.rows;
+        let capacity64 = (groups(rows * 64, probe.width)? * probe.width).div_ceil(64);
+        let capacity32 = (groups(rows * 32, probe.width)? * probe.width).div_ceil(32);
+        let il = queried(rows, 32, 2, rows)?;
+        let wg = queried(64, 32, 2, 64)?;
+        let wd = queried(32, 64, 2, 32)?;
+        let bl = queried(1, 64, 2, 1)?;
+        let hl = queried(rows, 64, 2, capacity64)?;
+        let ol = queried(rows, 32, 2, capacity32)?;
+        let fl = queried(rows, 64, 4, capacity64)?;
+        let dl = queried(rows, 32, 4, capacity32)?;
+        if hl.stride != 64 {
+            return Err(error(
+                "capability",
+                "MLP elementwise requires contiguous hidden64 Half rows",
+            ));
+        }
+        let input_bytes = il
+            .bytes
+            .checked_add(
+                wg.bytes
+                    .checked_mul(2)
+                    .ok_or_else(|| error("admission", "MLP weights overflow"))?,
+            )
+            .and_then(|n| n.checked_add(wd.bytes))
+            .and_then(|n| n.checked_add(bl.bytes))
+            .ok_or_else(|| error("admission", "MLP inputs overflow"))?;
+        let output_bytes = hl
+            .bytes
+            .checked_mul(4)
+            .and_then(|n| n.checked_add(ol.bytes))
+            .and_then(|n| n.checked_add(fl.bytes.checked_mul(2)?))
+            .and_then(|n| n.checked_add(dl.bytes))
+            .ok_or_else(|| error("admission", "MLP outputs overflow"))?;
+        let (shared, admitted) = totals(input_bytes, output_bytes, limit)?;
+        let inputs = [
+            input(&probe.device, il, &case.input)?,
+            input(&probe.device, wg, &case.weights[0])?,
+            input(&probe.device, wg, &case.weights[1])?,
+            input(&probe.device, wd, &case.weights[2])?,
+            input(&probe.device, bl, &[0u16; 64])?,
+        ];
+        let mut halves = Vec::new();
+        for layout in [hl, hl, hl, hl, ol] {
+            halves.push(Shared::<u16>::new(&probe.device, layout.bytes)?);
+        }
+        // FP32 GPU result storage is owned as raw four-byte u32 words: all bit
+        // patterns are valid, alignment matches Float32, and the checked MPS
+        // descriptor interprets them as Float32. Readback keeps exact bits and
+        // compacts each Vec in place, avoiding a second conversion allocation.
+        let mut singles = Vec::new();
+        for layout in [fl, fl, dl] {
+            singles.push(Shared::<u32>::new(&probe.device, layout.bytes)?);
+        }
+        let im = matrix(&inputs[0].buffer, il, MPSDataType::Float16)?;
+        let weights = [
+            matrix(&inputs[1].buffer, wg, MPSDataType::Float16)?,
+            matrix(&inputs[2].buffer, wg, MPSDataType::Float16)?,
+            matrix(&inputs[3].buffer, wd, MPSDataType::Float16)?,
+        ];
+        let results = [
+            matrix(&singles[0], fl, MPSDataType::Float32)?,
+            matrix(&singles[1], fl, MPSDataType::Float32)?,
+            matrix(&singles[2], dl, MPSDataType::Float32)?,
+        ];
+        let gated = matrix(&halves[3], hl, MPSDataType::Float16)?;
+        let kernels = [
+            kernel(&probe.device, rows, 32, 64),
+            kernel(&probe.device, rows, 32, 64),
+            kernel(&probe.device, rows, 64, 32),
+        ];
+        let mut first = None;
+        let mut repetitions = Vec::with_capacity(13);
+        for repetition in 0..13 {
+            for buffer in &mut halves {
+                buffer.fill(HALF_GUARD);
+            }
+            for buffer in &mut singles {
+                buffer.fill(FLOAT_GUARD);
+            }
+            let (frame, seconds) = autoreleasepool(|_| {
+                let start = Instant::now();
+                let command = probe
+                    .queue
+                    .commandBuffer()
+                    .ok_or_else(|| error("command", "MLP command unavailable"))?;
+                if !command.retainedReferences() {
+                    return Err(error("command", "unretained MLP resources unsupported"));
+                }
+                encode_projection(
+                    &command,
+                    &probe,
+                    &pipelines[0],
+                    ProjectionStep {
+                        bias: &inputs[4].buffer,
+                        floats: &singles[0],
+                        output: &halves[0],
+                        fl,
+                        hl,
+                        kernel: &kernels[0],
+                        left: &im,
+                        right: &weights[0],
+                        result: &results[0],
+                    },
+                )?;
+                elementwise(
+                    &command,
+                    &probe,
+                    &pipelines[1],
+                    &halves[0],
+                    None,
+                    &halves[1],
+                    rows * 64,
+                )?;
+                encode_projection(
+                    &command,
+                    &probe,
+                    &pipelines[0],
+                    ProjectionStep {
+                        bias: &inputs[4].buffer,
+                        floats: &singles[1],
+                        output: &halves[2],
+                        fl,
+                        hl,
+                        kernel: &kernels[1],
+                        left: &im,
+                        right: &weights[1],
+                        result: &results[1],
+                    },
+                )?;
+                elementwise(
+                    &command,
+                    &probe,
+                    &pipelines[2],
+                    &halves[1],
+                    Some(&halves[2]),
+                    &halves[3],
+                    rows * 64,
+                )?;
+                encode_projection(
+                    &command,
+                    &probe,
+                    &pipelines[0],
+                    ProjectionStep {
+                        bias: &inputs[4].buffer,
+                        floats: &singles[2],
+                        output: &halves[4],
+                        fl: dl,
+                        hl: ol,
+                        kernel: &kernels[2],
+                        left: &gated,
+                        right: &weights[2],
+                        result: &results[2],
+                    },
+                )?;
+                command.commit();
+                command.waitUntilCompleted();
+                let seconds = start.elapsed().as_secs_f64();
+                if command.status() != MTLCommandBufferStatus::Completed
+                    || command.error().is_some()
+                {
+                    return Err(error("completion", "MLP GPU command failed"));
+                }
+                if inputs
+                    .iter()
+                    .any(|input| input.buffer.read() != input.baseline)
+                {
+                    return Err(error("validation", "MLP immutable inputs changed"));
+                }
+                let mut half = Vec::new();
+                for (buffer, layout) in halves.iter().zip([hl, hl, hl, hl, ol]) {
+                    half.push(active_half(buffer, layout)?);
+                }
+                let mut single = Vec::new();
+                for (buffer, layout) in singles.iter().zip([fl, fl, dl]) {
+                    single.push(active_float(buffer, layout)?);
+                }
+                Ok((Frame { half, single }, seconds))
+            })?;
+            if let Some(reference) = &first
+                && &frame != reference
+            {
+                return Err(error("validation", "MLP repeated intermediates differ"));
+            }
+            let down = frame.half[4].clone();
+            if first.is_none() {
+                first = Some(frame);
+            }
+            repetitions.push(json!({"phase":if repetition<3{"warmup"}else{"sample"},"repetition":if repetition<3{repetition+1}else{repetition-2},
+                "command_completed":true,"commit_wait_pairs":1,"inputs_guards_and_intermediates_unchanged":true,"encode_commit_wait_seconds":seconds,"output_bits":down}));
+        }
+        let first = first.unwrap();
+        metadata["maximum_admitted_bytes"] = json!(admitted);
+        metadata["mps_device_supported"] = json!(true);
+        metadata["graph_pipeline_caps"] = json!(caps);
+        Ok(
+            json!({"operation":"resident_tiny_mlp_half_boundaries","metadata":metadata,"id":case.id,"rows_count":rows,
+            "hidden":32,"intermediate":64,"threadgroup_width":probe.width,"capacity_rows64":capacity64,"capacity_rows32":capacity32,
+            "input_stride":il.stride,"gate_weight_stride":wg.stride,"down_weight_stride":wd.stride,"bias_stride":bl.stride,
+            "half_intermediate_stride":hl.stride,"half_output_stride":ol.stride,"float_intermediate_stride":fl.stride,"float_output_stride":dl.stride,
+            "shared_buffer_bytes":shared,"host_snapshot_readback_bytes":shared*2,"admitted_bytes":admitted,"allocations_reused":true,
+            "first_half_intermediates":first.half,"first_fp32_projection_bits":first.single,"rows":repetitions}),
+        )
+    })
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn fixture(value: &Value) -> std::path::PathBuf {
+        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        let path = std::env::temp_dir().join(format!(
+            "toklet-mlp-{}-{}.json",
+            std::process::id(),
+            NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+        ));
+        let mut file = std::fs::OpenOptions::new()
+            .create_new(true)
+            .write(true)
+            .open(&path)
+            .unwrap();
+        writeln!(file, "{value}").unwrap();
+        path
+    }
+    fn loaded(value: &Value) -> Result<Case, Error> {
+        let path = fixture(value);
+        let result = load(&path);
+        std::fs::remove_file(path).unwrap();
+        result
+    }
+    fn sample() -> Value {
+        json!({"format":"toklet-metal-mlp-input-v1","id":"manual","rows":1,"input_bits":vec![0u16;32],"gate_weight_bits":vec![0u16;2048],"up_weight_bits":vec![0u16;2048],"down_weight_bits":vec![0u16;2048]})
+    }
+    #[test]
+    fn fixed_shape_payload_and_file_limits_fail_before_device_work() {
+        assert!(loaded(&sample()).is_ok());
+        for rows in [0, 33] {
+            let mut v = sample();
+            v["rows"] = json!(rows);
+            assert!(loaded(&v).is_err());
+        }
+        for id in ["", "λ"] {
+            let mut v = sample();
+            v["id"] = json!(id);
+            assert!(loaded(&v).is_err());
+        }
+        for key in [
+            "input_bits",
+            "gate_weight_bits",
+            "up_weight_bits",
+            "down_weight_bits",
+        ] {
+            for bits in [
+                json!(0x7c00),
+                json!(0xfc00),
+                json!(0x7e00),
+                json!(-1),
+                json!(65536),
+                json!(1.0),
+            ] {
+                let mut v = sample();
+                v[key][0] = bits;
+                assert!(loaded(&v).is_err());
+            }
+            let mut v = sample();
+            v[key] = json!([]);
+            assert!(loaded(&v).is_err());
+        }
+        let path = fixture(&sample());
+        std::fs::write(&path, vec![b' '; (MAX_INPUT + 1) as usize]).unwrap();
+        assert!(load(&path).is_err());
+        std::fs::remove_file(path).unwrap();
+    }
+    #[test]
+    fn readback_compacts_in_place_with_bit_exact_guards_and_zero_signs() {
+        let l = Layout {
+            rows: 2,
+            columns: 2,
+            stride: 4,
+            elements: 15,
+            bytes: 30,
+        };
+        let mut half = vec![HALF_GUARD; 15];
+        half[..2].copy_from_slice(&[0, 0x8000]);
+        half[4..6].copy_from_slice(&[1, 0x3c00]);
+        let capacity = half.capacity();
+        let values = compact_half(half, l).unwrap();
+        assert_eq!(values, [0, 0x8000, 1, 0x3c00]);
+        assert_eq!(values.capacity(), capacity);
+        let mut bad = vec![HALF_GUARD; 15];
+        bad[8] = 0;
+        assert!(compact_half(bad, l).is_err());
+        let mut floats = vec![FLOAT_GUARD; 15];
+        floats[..2].copy_from_slice(&[0, 0x80000000]);
+        floats[4..6].copy_from_slice(&[1, 0x3f800000]);
+        let capacity = floats.capacity();
+        let values = compact_float(floats, Layout { bytes: 60, ..l }).unwrap();
+        assert_eq!(values, [0, 0x80000000, 1, 0x3f800000]);
+        assert_eq!(values.capacity(), capacity);
+        let bad = vec![FLOAT_GUARD; 15];
+        assert!(compact_float(bad, l).is_err());
+    }
+    #[test]
+    fn model_topology_and_capacity_are_bounded_before_native_work() {
+        let input = (32 * 32 + 3 * 64 * 32 + 64 + 5 * 7) * 2;
+        let output = 32000;
+        let (shared, total) = totals(input, output, LIMIT).unwrap();
+        assert_eq!(total, shared * 3 + ALLOWANCE);
+        assert!(totals(input, output, total - 1).is_err());
+        assert!(totals(input, output, LIMIT + 1).is_err());
+        assert!(totals(usize::MAX, 1, LIMIT).is_err());
+        for rows in 1..=32 {
+            for width in [1, 16, 32, 64, 128] {
+                let cap = (groups(rows * 64, width).unwrap() * width).div_ceil(64);
+                assert!(cap >= rows);
+            }
+        }
+    }
+}

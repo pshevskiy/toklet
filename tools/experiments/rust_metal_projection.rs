@@ -25,13 +25,13 @@ struct Case {
     weight: Vec<u16>,
     bias: Vec<u16>,
 }
-fn number(value: &Value, name: &str) -> Result<usize, Error> {
+pub(super) fn number(value: &Value, name: &str) -> Result<usize, Error> {
     value[name]
         .as_u64()
         .and_then(|n| usize::try_from(n).ok())
         .ok_or_else(|| error("fixture", "projection dimension differs"))
 }
-fn half(value: &Value, name: &str, count: usize) -> Result<Vec<u16>, Error> {
+pub(super) fn half(value: &Value, name: &str, count: usize) -> Result<Vec<u16>, Error> {
     let source = value[name]
         .as_array()
         .ok_or_else(|| error("fixture", "missing projection Half bits"))?;
@@ -124,12 +124,12 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
     Ok(cases)
 }
 #[derive(Clone, Copy)]
-struct Layout {
-    rows: usize,
-    columns: usize,
-    stride: usize,
-    elements: usize,
-    bytes: usize,
+pub(super) struct Layout {
+    pub(super) rows: usize,
+    pub(super) columns: usize,
+    pub(super) stride: usize,
+    pub(super) elements: usize,
+    pub(super) bytes: usize,
 }
 fn layout(
     rows: usize,
@@ -169,7 +169,7 @@ fn layout(
         bytes,
     })
 }
-fn queried(
+pub(super) fn queried(
     rows: usize,
     columns: usize,
     scalar_bytes: usize,
@@ -189,11 +189,36 @@ fn queried(
     };
     layout(rows, columns, scalar_bytes, row_bytes, storage_rows)
 }
-fn matrix<T: Scalar>(buffer: &Shared<T>, l: Layout, dtype: MPSDataType) -> Retained<MPSMatrix> {
-    // SAFETY: descriptor reflects checked physical stride and owned buffer size;
-    // offset0, positive dimensions and type match T. Both objects stay owned
-    // through command completion and host access. No temporary MPS allocation.
-    unsafe {
+pub(super) fn matrix<T: Scalar>(
+    buffer: &Shared<T>,
+    l: Layout,
+    dtype: MPSDataType,
+) -> Result<Retained<MPSMatrix>, Error> {
+    let typed = (size_of::<T>() == 2 && dtype == MPSDataType::Float16)
+        || (size_of::<T>() == 4 && dtype == MPSDataType::Float32);
+    let required = l
+        .rows
+        .checked_mul(l.stride)
+        .and_then(|n| n.checked_add(GUARDS));
+    let bytes = l.elements.checked_mul(size_of::<T>());
+    if !typed
+        || l.rows == 0
+        || l.columns == 0
+        || l.stride < l.columns
+        || required.is_none_or(|n| n > l.elements)
+        || buffer.elements != l.elements
+        || bytes != Some(l.bytes)
+        || u32::try_from(l.elements).is_err()
+    {
+        return Err(error(
+            "admission",
+            "MPS matrix layout/type differs from owned buffer",
+        ));
+    }
+    // SAFETY: checked descriptor dimensions/stride/type fit the initialized
+    // owned buffer. Offset0; native objects and storage survive completion.
+    // FP16/FP32 byte widths match T and all indexing/storage arithmetic is checked.
+    Ok(unsafe {
         let d = MPSMatrixDescriptor::matrixDescriptorWithRows_columns_rowBytes_dataType(
             l.rows,
             l.columns,
@@ -201,9 +226,10 @@ fn matrix<T: Scalar>(buffer: &Shared<T>, l: Layout, dtype: MPSDataType) -> Retai
             dtype,
         );
         MPSMatrix::initWithBuffer_descriptor(MPSMatrix::alloc(), &buffer.raw, &d)
-    }
+    })
 }
-fn baseline(values: &[u16], l: Layout) -> Vec<u16> {
+
+pub(super) fn baseline(values: &[u16], l: Layout) -> Vec<u16> {
     let mut out = vec![HALF_GUARD; l.elements];
     for (row, values) in values.chunks_exact(l.columns).enumerate() {
         out[row * l.stride..row * l.stride + l.columns].copy_from_slice(values);
@@ -273,9 +299,9 @@ fn execute(
     bias.write(&biasv)?;
     let mut cb = Shared::<f32>::new(&probe.device, c.bytes)?;
     let mut ob = Shared::<u16>::new(&probe.device, out.bytes)?;
-    let am = matrix(&ab, a, MPSDataType::Float16);
-    let bm = matrix(&bb, b, MPSDataType::Float16);
-    let cm = matrix(&cb, c, MPSDataType::Float32);
+    let am = matrix(&ab, a, MPSDataType::Float16)?;
+    let bm = matrix(&bb, b, MPSDataType::Float16)?;
+    let cm = matrix(&cb, c, MPSDataType::Float32)?;
     // SAFETY: same device, nontransposed activations [rows,in], transposed
     // row-major weights [out,in], F32 result [rows,out], alpha1/beta1 after
     // GPU bias initialization. Dimensions/strides/storage checked before this.

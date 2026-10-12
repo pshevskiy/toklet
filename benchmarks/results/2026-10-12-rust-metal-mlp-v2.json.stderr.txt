@@ -1,0 +1,36 @@
+   Compiling objc2 v0.6.5
+    Checking objc2-encode v4.1.0
+   Compiling serde_core v1.0.229
+    Checking bitflags v2.13.2
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.149
+    Checking memchr v2.8.3
+    Checking itoa v1.0.18
+    Checking objc2-foundation v0.3.2
+    Checking objc2-metal v0.3.2
+    Checking objc2-metal-performance-shaders v0.3.2
+    Checking toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-metal-mlp-v2)
+error: this `if` statement can be collapsed
+   --> src/rust_metal_mlp.rs:520:13
+    |
+520 | /             if let Some(reference) = &first {
+521 | |                 if &frame != reference {
+522 | |                     return Err(error("validation", "MLP repeated intermediates differ"));
+523 | |                 }
+524 | |             }
+    | |_____________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+520 ~             if let Some(reference) = &first
+521 ~                 && &frame != reference {
+522 |                     return Err(error("validation", "MLP repeated intermediates differ"));
+523 ~                 }
+    |
+
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe" test) due to 1 previous error

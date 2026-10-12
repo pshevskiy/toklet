@@ -319,3 +319,9 @@ The [isolated tiny MLP projections](docs/experiments/2026-10-12-rust-mps-mlp-pro
 qualify all thirty gate/up/down stages at their actual shapes. All 183,040
 outputs match frozen Half bits and unchanged source gates. Inputs are saved
 references; a composed resident gated MLP remains the next task.
+
+The [resident tiny MLP](docs/experiments/2026-10-12-rust-metal-mlp.md)
+propagates GPU outputs through projections, SiLU and gating in one command,
+preserving every Half boundary. All ten graphs pass frozen intermediate gates
+and first-frame Half bits; repeated final outputs and host frame comparisons
+pass. Attention/KV and full-layer/decoder composition remain open.

@@ -1,0 +1,64 @@
+   Compiling objc2 v0.6.5
+    Checking objc2-encode v4.1.0
+    Checking bitflags v2.13.2
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.149
+    Checking memchr v2.8.3
+    Checking itoa v1.0.18
+    Checking objc2-foundation v0.3.2
+    Checking objc2-metal v0.3.2
+    Checking objc2-metal-performance-shaders v0.3.2
+    Checking toklet-rust-metal-probe v0.1.0 (/Users/coloner/work/rust/toklet/artifacts/rust-metal-mlp-v1)
+error[E0753]: expected outer doc comment
+ --> src/rust_metal_mlp.rs:1:1
+  |
+1 | //! One bounded tiny MLP graph; all dependent encodings share one completion wait.
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2 | use super::*;
+  | ------------- the inner doc comment doesn't annotate this `use` import
+  |
+help: to annotate the `use` import, change the doc comment from inner to outer style
+  |
+1 - //! One bounded tiny MLP graph; all dependent encodings share one completion wait.
+1 + /// One bounded tiny MLP graph; all dependent encodings share one completion wait.
+  |
+
+error: redundant field names in struct initialization
+   --> src/rust_metal_mlp.rs:425:25
+    |
+425 |                         fl: fl,
+    |                         ^^^^^^ help: replace it with: `fl`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_field_names
+    = note: `-D clippy::redundant-field-names` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::redundant_field_names)]`
+
+error: redundant field names in struct initialization
+   --> src/rust_metal_mlp.rs:426:25
+    |
+426 |                         hl: hl,
+    |                         ^^^^^^ help: replace it with: `hl`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_field_names
+
+error: redundant field names in struct initialization
+   --> src/rust_metal_mlp.rs:450:25
+    |
+450 |                         fl: fl,
+    |                         ^^^^^^ help: replace it with: `fl`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_field_names
+
+error: redundant field names in struct initialization
+   --> src/rust_metal_mlp.rs:451:25
+    |
+451 |                         hl: hl,
+    |                         ^^^^^^ help: replace it with: `hl`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#redundant_field_names
+
+For more information about this error, try `rustc --explain E0753`.
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe") due to 5 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `toklet-rust-metal-probe` (bin "toklet-rust-metal-probe" test) due to 5 previous errors

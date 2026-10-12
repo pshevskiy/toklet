@@ -430,6 +430,12 @@ mod metal {
     pub(super) fn run_silu(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
         silu::run(path, limit)
     }
+    mod mlp {
+        include!("rust_metal_mlp.rs");
+    }
+    pub(super) fn run_mlp(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
+        mlp::run(path, limit)
+    }
     mod projection {
         include!("rust_metal_projection.rs");
     }
@@ -455,6 +461,7 @@ fn run() -> Result<Value, Error> {
     let mut silu_input = None;
     let mut gating_input = None;
     let mut projection_input = None;
+    let mut mlp_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
@@ -494,6 +501,12 @@ fn run() -> Result<Value, Error> {
                         error("arguments", "missing projection input")
                     })?));
             }
+            Some("--mlp-input") if mlp_input.is_none() => {
+                mlp_input = Some(std::path::PathBuf::from(
+                    args.next()
+                        .ok_or_else(|| error("arguments", "missing MLP input"))?,
+                ));
+            }
             Some("--budget-bytes") if !has_budget => {
                 let value = args
                     .next()
@@ -515,6 +528,7 @@ fn run() -> Result<Value, Error> {
         + usize::from(silu_input.is_some())
         + usize::from(gating_input.is_some())
         + usize::from(projection_input.is_some())
+        + usize::from(mlp_input.is_some())
         > 1
     {
         return Err(error("arguments", "probe operation modes are exclusive"));
@@ -529,6 +543,8 @@ fn run() -> Result<Value, Error> {
             metal::run_residual(&path, limit)
         } else if let Some(path) = silu_input {
             metal::run_silu(&path, limit)
+        } else if let Some(path) = mlp_input {
+            metal::run_mlp(&path, limit)
         } else if let Some(path) = projection_input {
             metal::run_projection(&path, limit)
         } else if let Some(path) = gating_input {
@@ -548,6 +564,7 @@ fn run() -> Result<Value, Error> {
             silu_input,
             gating_input,
             projection_input,
+            mlp_input,
         );
         Err(error("capability", "requires Apple Silicon macOS"))
     }
