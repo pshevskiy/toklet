@@ -1,0 +1,29 @@
+"""Record only the verified application launcher's three owned processes."""
+from datetime import datetime, timezone
+from pathlib import Path
+import hashlib, json, subprocess
+
+root = Path.cwd()
+pids = [51172, 51212, 51226]
+command = ['ps', '-p', ','.join(map(str, pids)), '-o', 'pid=,ppid=,pgid=,stat=,command=']
+p = subprocess.run(command, text=True, capture_output=True)
+assert p.returncode == 0 and not p.stderr
+rows = {int(row[0]): row for line in p.stdout.splitlines() if len(row := line.split(None, 4)) == 5}
+assert set(rows) == set(pids)
+assert [(int(rows[pid][1]), int(rows[pid][2])) for pid in pids] == [(99431, 51172), (51172, 51172), (51212, 51172)]
+assert all(row[3][0] in ('R', 'S', 'I') and not any(c in row[3] for c in ('T', 't', 'Z')) for row in rows.values())
+python_image = '/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python'
+assert rows[51172][4] == python_image+' artifacts/launch-tiled-application-v3.py --workload application'
+expected_driver = python_image+' tools/bench/application.py --cpu-projection tiled --cpu-qualification '+str(root/'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json')+' --output benchmarks/raw/2026-10-12-application-tiled-v3.json'
+assert rows[51212][4] == expected_driver
+assert rows[51226][4] == str(root/'artifacts/cpu-tiled-cli-v1/release/toklet')+' --model '+str(root/'models/Qwen2.5-0.5B-Instruct')+' --interactive --json --context-capacity 2048 --prefill-chunk 128 --cpu-projection tiled'
+launch = root/'benchmarks/raw/2026-10-12-application-tiled-v3-launch.json'
+record = {'format': 'toklet-cpu-tiled-application-owned-v3', 'session_id': 89055,
+          'observed_utc': datetime.now(timezone.utc).isoformat(),
+          'launcher_pid': 51172, 'driver_pid': 51212, 'numerical_worker_pid': 51226,
+          'owned_process_group': 51172, 'snapshot': p.stdout,
+          'launch_receipt_sha256': hashlib.sha256(launch.read_bytes()).hexdigest(),
+          'producer_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+with (root/'artifacts/2026-10-12-application-tiled-v3-owned.json').open('x') as stream:
+    json.dump(record, stream, indent=2); stream.write('\n')
+print(json.dumps(record))

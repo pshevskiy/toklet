@@ -1,0 +1,13 @@
+{
+  "format": "toklet-actual-native-session-completion-v1",
+  "session_id": 89055,
+  "observed_utc": "2026-10-12T09:39:49.747035+00:00",
+  "origin": "Actual write_stdin completion returned by native execution tool; not inferred from files",
+  "actual_tool_result": {
+    "chunk_id": "25b217",
+    "wall_time_seconds": 2.375e-05,
+    "exit_code": 0,
+    "original_token_count": 22,
+    "output": "application: sample 10: 129.031s\nFull tiled application workload completed naturally\n"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "format": "toklet-cpu-tiled-application-natural-exit-idle-v3",
+  "idle_verified_utc": "2026-10-12T09:39:52.344860+00:00",
+  "session_id": 89055,
+  "workload": "application",
+  "all_owned_processes_absent": true,
+  "exited_owned_pids": [
+    51172,
+    51212,
+    51226
+  ],
+  "owned_group_members": {
+    "51172": []
+  },
+  "owned_absence_query": {
+    "command": [
+      "ps",
+      "-p",
+      "51172,51212,51226",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "original_recovery_snapshot": {
+    "original_orchestration_absent": true,
+    "recorded_pids": [
+      96097,
+      96112,
+      96121,
+      17694,
+      85019,
+      85027,
+      88184,
+      35939
+    ],
+    "query": {
+      "command": [
+        "ps",
+        "-p",
+        "96097,96112,96121,17694,85019,85027,88184,35939",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "recovery_idle_sha256": "1e3276cd578416de327a67d86b6a615bf90f87b2992d2b0364008d8e65d80914"
+  },
+  "stopped_machine": {
+    "Name": "podman-machine-default",
+    "Default": true,
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "Running": false,
+    "Starting": false,
+    "LastUp": "2026-10-11T20:05:08.08417+03:00",
+    "Stream": "default",
+    "VMType": "applehv",
+    "CPUs": 5,
+    "Memory": "2147483648",
+    "Swap": "0",
+    "DiskSize": "107374182400",
+    "Port": 51387,
+    "RemoteUsername": "core",
+    "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+    "UserModeNetworking": true
+  },
+  "end_verified": {
+    "frozen_binaries": {
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    "validated_local_model_assets": {
+      "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+    }
+  },
+  "qualified_binary_sha256": "8e1be695229fb4a46e49725f06050b3296f6fb398e718fca8567bf0c6b400b43",
+  "compiled_source_sha256": {
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "32f64ab957faeac75638a5efe3de8e9a6b0a6d3d1219a50fcd0c3a126ff655b8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "ef43edbfc7e337b03d2b0039223d28489df920b8e7a39886de45cd534e4f1dff",
+    "src/lib.rs": "a1d32de474f895b05649fba4fc3f3042f4ee5f0903c18ffc1048b632defbdf7b",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "aba1c8cfd934a5b41f2debd3be2b75b137bdec9d725712849b89512b469e2d55",
+    "src/weights/mod.rs": "024c17ef5230069a024200ff89ef9c96a380ab4ea16f232de6d9c38892704783",
+    "Cargo.toml": "f9614fde795692ea4f976f4a243ed3991d1e76f0109a4f2fd6bc3d5141977cc4",
+    "Cargo.lock": "7e13db0c63cb370080711ed1d2f6f08a95a1a25516e16eb2a34b33e65db51151",
+    "tests/cli.rs": "326bb94cc3685cfdf594c73e0ec3f7a5583415f3a7b0a9f9f4f906fbc4ddb6a8"
+  },
+  "working_tree_clean": true,
+  "engine_revision": "226e71db247522f6a1b34810b1529a19abbc3f2a",
+  "saved_result_sha256": {
+    "benchmarks/results/2026-10-12-application-tiled-v3.json": "35e0d7bbcddf1b10061a66b8b05adf676a393240ce4348e87a26c56cbe8d3055",
+    "benchmarks/results/2026-10-12-application-tiled-v3.json.samples.jsonl": "229e5669b8edad3756eff10a986a49de473d913e7655969be5bfb693233fa853",
+    "benchmarks/results/2026-10-12-application-tiled-v3-launch.json": "6d2b7ec340c428bcc63df6a984ec35264ec46cdbb043b0c7e0ff7d40e094d5b6",
+    "benchmarks/results/2026-10-12-application-tiled-v3-admission-claim.json": "238ca1b1c0796d8526b3dc6f052118df9434761e1f7a182f39bc03a7d3ca6ab2",
+    "benchmarks/results/2026-10-12-application-tiled-v3-owned.json": "8c4920645fd5f0d7a6b18d07eaf08bdb4c36a96cc47a30afa5e05b1da14f5123",
+    "benchmarks/results/2026-10-12-application-tiled-v3-session-completion.json": "931aa996c4ac8d98e7647531b26d16e393946f225f2556d26ab6b851b9ebbece",
+    "benchmarks/results/2026-10-12-application-tiled-v3-launch.py.txt": "abf151d620c77af583ccda018a6ef7c0c55e2144608f95eb63485a4ca483677f",
+    "benchmarks/results/2026-10-12-application-tiled-v3-owned.py.txt": "e24ce53fde837f4b460b719766e78afb0b345919f73977a3385d14edb71f133a",
+    "benchmarks/results/2026-10-12-application-tiled-v3-driver.py.txt": "9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da",
+    "benchmarks/results/2026-10-12-application-tiled-v3-idle.py.txt": "b85898191b57e44f4ea7246901b9bfec407600fc2aa2568f8f7c4b7e0b58f7ff"
+  },
+  "producer_sha256": "b85898191b57e44f4ea7246901b9bfec407600fc2aa2568f8f7c4b7e0b58f7ff"
+}

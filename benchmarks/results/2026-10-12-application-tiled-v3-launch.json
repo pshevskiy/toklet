@@ -1,0 +1,126 @@
+{
+  "format": "toklet-cpu-tiled-application-launch-v3",
+  "launch_utc": "2026-10-12T09:11:13.041660+00:00",
+  "engine_revision": "226e71db247522f6a1b34810b1529a19abbc3f2a",
+  "working_tree_clean": true,
+  "launcher_pid": 51172,
+  "producer_sha256": "abf151d620c77af583ccda018a6ef7c0c55e2144608f95eb63485a4ca483677f",
+  "admission_claim_sha256": "238ca1b1c0796d8526b3dc6f052118df9434761e1f7a182f39bc03a7d3ca6ab2",
+  "driver_sha256": "9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da",
+  "qualification_sha256": "8d2a633ed95c488f3bbba5de186aa3e3418fa75df51a170af383e31d98ae2cc8",
+  "qualified_binary_sha256": "8e1be695229fb4a46e49725f06050b3296f6fb398e718fca8567bf0c6b400b43",
+  "compiled_source_sha256": {
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "32f64ab957faeac75638a5efe3de8e9a6b0a6d3d1219a50fcd0c3a126ff655b8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "ef43edbfc7e337b03d2b0039223d28489df920b8e7a39886de45cd534e4f1dff",
+    "src/lib.rs": "a1d32de474f895b05649fba4fc3f3042f4ee5f0903c18ffc1048b632defbdf7b",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "aba1c8cfd934a5b41f2debd3be2b75b137bdec9d725712849b89512b469e2d55",
+    "src/weights/mod.rs": "024c17ef5230069a024200ff89ef9c96a380ab4ea16f232de6d9c38892704783",
+    "Cargo.toml": "f9614fde795692ea4f976f4a243ed3991d1e76f0109a4f2fd6bc3d5141977cc4",
+    "Cargo.lock": "7e13db0c63cb370080711ed1d2f6f08a95a1a25516e16eb2a34b33e65db51151",
+    "tests/cli.rs": "326bb94cc3685cfdf594c73e0ec3f7a5583415f3a7b0a9f9f4f906fbc4ddb6a8"
+  },
+  "application_adapter_qualification_sha256": "4a5d4b71e4bf6dc68e295111d95f49cab9ad8b1d50ca32fec1cf8471555d8e04",
+  "scalar_application_analysis_sha256": "4462a2d0ad5715fc35b4b2484a38bcce1b21d22baf2848e6527e3dd2b185d825",
+  "scalar_application_result_sha256": "abf61f9fb4fdc05119c4b2e073e086af0cc67f23ed19e4fac9b04cf50faaa8e2",
+  "collection_admission": {
+    "format": "toklet-historical-collection-and-recovery-admission-v1",
+    "idle_receipt_sha256": "e2475da2074d28e2d508ce907a70e05c032156300cd6bc5316dcd0d80c8535d4",
+    "current_recovery_idle_sha256": "1e3276cd578416de327a67d86b6a615bf90f87b2992d2b0364008d8e65d80914",
+    "original_orchestration_absent": true,
+    "recorded_processes_absent": [
+      96097,
+      96112,
+      96121,
+      17694,
+      85019,
+      85027,
+      88184,
+      35939
+    ],
+    "current_absence_query": {
+      "command": [
+        "ps",
+        "-p",
+        "96097,96112,96121,17694,85019,85027,88184,35939",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "collection_absence_query": {
+      "command": [
+        "ps",
+        "-p",
+        "4303,4314,4328",
+        "-o",
+        "pid="
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "stopped_machine": {
+      "Name": "podman-machine-default",
+      "Default": true,
+      "Created": "2026-01-15T12:12:42.666462+03:00",
+      "Running": false,
+      "Starting": false,
+      "LastUp": "2026-10-11T20:05:08.08417+03:00",
+      "Stream": "default",
+      "VMType": "applehv",
+      "CPUs": 5,
+      "Memory": "2147483648",
+      "Swap": "0",
+      "DiskSize": "107374182400",
+      "Port": 51387,
+      "RemoteUsername": "core",
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "UserModeNetworking": true
+    }
+  },
+  "grading_idle_sha256": "86fb2aaac8322e964457063bd21e63d51a0741683d075152086aecf1a3e9388b",
+  "quality_analysis_sha256": "730136432c71c26cecf94d1195ef466679c789715c790ed26e88c0b0d2d38eb7",
+  "workload": "application",
+  "command": [
+    "/Users/coloner/work/rust/toklet/.venv/bin/python",
+    "tools/bench/application.py",
+    "--cpu-projection",
+    "tiled",
+    "--cpu-qualification",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json",
+    "--output",
+    "benchmarks/raw/2026-10-12-application-tiled-v3.json"
+  ],
+  "python_executable": "/Users/coloner/work/rust/toklet/.venv/bin/python",
+  "python_version": "3.12.8",
+  "jsonschema_version": "4.25.1",
+  "preceding_changed_idle_sha256": "1bc4ad9a2a9ae5b4f9b2fea5091e006088e23bbe82abb35c7ea6d277c332024a",
+  "preceding_changed_analysis_sha256": "aafb13ffcb8bcc0033c44487d5d6840d0bdc39c87274f939fd1ba6b34c29c73e",
+  "preceding_changed_current_absence": {
+    "command": [
+      "ps",
+      "-p",
+      "43111,43153,43161",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "requirements_lock_sha256": "b05453a671689fbbc07c0ce5384ddebabdbfed4ba4229e19c75d416a79d2c8c2",
+  "scope": "Full application: three warmups/ten three-turn scripted scenarios; paused cached-v2 measurements remain excluded; no concurrent model/VM/test/build/hash work after launch; original recorded orchestration is absent, not held."
+}

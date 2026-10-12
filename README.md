@@ -288,3 +288,10 @@ resets and replays the full 512-token prompt after an edit at zero-based index
 128. Three warmups and ten measured requests complete. Median TTFT is
 38.530052 s and request 93.038050 s. The numerical matrix is now measured;
 full application evidence and explicit retention remain before M3.1 closure.
+
+The [full tiled application trace](docs/experiments/2026-10-12-application-tiled.md)
+completes three warmups and ten three-turn scenarios. All thirty responses,
+token IDs, stops and untimed generation states match scalar. Median scenario
+latency is 129.141379 s; historical scalar comparison is descriptive. All
+candidate workload and application measurements are complete; M3.1 still
+requires its explicit retention decision.

@@ -1,0 +1,124 @@
+{
+  "format": "toklet-cpu-tiled-application-analysis-v3",
+  "accepted": true,
+  "scope": "Ten saved three-turn scenarios, no model/worker execution or binary hashing; warmup states and complete per-token/text protocol log not retained. Historical scalar comparison descriptive; no task-quality claim.",
+  "checks": [
+    "exact raw/sample pairs",
+    "all thirty scalar-identical response IDs/text/stops/states",
+    "ordered receipt times",
+    "independent summaries",
+    "logical/physical memory",
+    "source/qualification/provenance/current recovery bindings"
+  ],
+  "summary": {
+    "scenario_median_seconds": 129.14137889549602,
+    "scenario_min_seconds": 128.9018207921181,
+    "scenario_max_seconds": 129.9712165419478
+  },
+  "turns": [
+    {
+      "prompt_tokens": 36,
+      "emitted_tokens": 128,
+      "stop_reason": {
+        "kind": "output_limit"
+      },
+      "first_token_median_seconds": 2.6942242078948766,
+      "first_visible_text_median_seconds": 2.6942242078948766,
+      "finalized_median_seconds": 55.2189358335454,
+      "visible_text_sha256": "8e840f314af6a01ad7f13145d8d9b8b787070ad89226b59dd48234c16464853c"
+    },
+    {
+      "prompt_tokens": 76,
+      "emitted_tokens": 18,
+      "stop_reason": {
+        "kind": "stop_token",
+        "token_id": 151645
+      },
+      "first_token_median_seconds": 5.366894708597101,
+      "first_visible_text_median_seconds": 5.366894708597101,
+      "finalized_median_seconds": 12.820272812037729,
+      "visible_text_sha256": "43129cc725826d23efef821cb8d344b860d6ce0f47283a4d24bed39dedaf8ad9"
+    },
+    {
+      "prompt_tokens": 117,
+      "emitted_tokens": 128,
+      "stop_reason": {
+        "kind": "output_limit"
+      },
+      "first_token_median_seconds": 8.225117249996401,
+      "first_visible_text_median_seconds": 8.225117249996401,
+      "finalized_median_seconds": 61.036084291525185,
+      "visible_text_sha256": "03593bf9c7378d6930701cfd166889f2a672a5194846c0fac149bf1da19a2396"
+    }
+  ],
+  "historical_scalar_summary": {
+    "scenario_max_seconds": 266.06798324990086,
+    "scenario_median_seconds": 263.2302414579899,
+    "scenario_min_seconds": 260.72721920802724
+  },
+  "historical_scenario_reduction_percent": 50.93976353924886,
+  "measured_scenario_total_seconds": 1292.114342458779,
+  "memory": {
+    "admitted_bytes": 2353012560,
+    "engine_working_set_limit_bytes": 6442450944,
+    "instrument": "own-child auxiliary.phys_footprint_peak",
+    "logical_allocations": {
+      "history_bytes": 8192,
+      "kv_bytes": 50331648,
+      "logits_bytes": 1215488,
+      "metadata_allowance_bytes": 67108864,
+      "metadata_bytes": 8064,
+      "scratch_bytes": 10436608,
+      "tokenizer_application_allowance_bytes": 247772624,
+      "weights_bytes": 1976131072
+    },
+    "peak_process_bytes": 2123745392,
+    "system_pressure": null
+  },
+  "chronology": [
+    "2026-10-12T09:11:11.641536+00:00",
+    "2026-10-12T09:11:13.041660+00:00",
+    "2026-10-12T09:17:02.250541+00:00",
+    "2026-10-12T09:39:49.747035+00:00",
+    "2026-10-12T09:39:52.344860+00:00"
+  ],
+  "evidence_sha256": {
+    "benchmarks/results/2026-10-12-application-tiled-v3.json": "35e0d7bbcddf1b10061a66b8b05adf676a393240ce4348e87a26c56cbe8d3055",
+    "benchmarks/results/2026-10-12-application-tiled-v3.json.samples.jsonl": "229e5669b8edad3756eff10a986a49de473d913e7655969be5bfb693233fa853",
+    "benchmarks/results/2026-10-12-application-tiled-v3-launch.json": "6d2b7ec340c428bcc63df6a984ec35264ec46cdbb043b0c7e0ff7d40e094d5b6",
+    "benchmarks/results/2026-10-12-application-tiled-v3-admission-claim.json": "238ca1b1c0796d8526b3dc6f052118df9434761e1f7a182f39bc03a7d3ca6ab2",
+    "benchmarks/results/2026-10-12-application-tiled-v3-owned.json": "8c4920645fd5f0d7a6b18d07eaf08bdb4c36a96cc47a30afa5e05b1da14f5123",
+    "benchmarks/results/2026-10-12-application-tiled-v3-session-completion.json": "931aa996c4ac8d98e7647531b26d16e393946f225f2556d26ab6b851b9ebbece",
+    "benchmarks/results/2026-10-12-application-tiled-v3-launch.py.txt": "abf151d620c77af583ccda018a6ef7c0c55e2144608f95eb63485a4ca483677f",
+    "benchmarks/results/2026-10-12-application-tiled-v3-owned.py.txt": "e24ce53fde837f4b460b719766e78afb0b345919f73977a3385d14edb71f133a",
+    "benchmarks/results/2026-10-12-application-tiled-v3-driver.py.txt": "9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da",
+    "benchmarks/results/2026-10-12-application-tiled-v3-idle.py.txt": "b85898191b57e44f4ea7246901b9bfec407600fc2aa2568f8f7c4b7e0b58f7ff",
+    "benchmarks/results/2026-10-12-application-tiled-v3-idle.json": "feb067b5e90b492087825b71258e51986803d2badb5bbbd3424b0f9f393f1cc7",
+    "benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json": "8d2a633ed95c488f3bbba5de186aa3e3418fa75df51a170af383e31d98ae2cc8",
+    "benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-analysis.json": "730136432c71c26cecf94d1195ef466679c789715c790ed26e88c0b0d2d38eb7",
+    "benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json": "86fb2aaac8322e964457063bd21e63d51a0741683d075152086aecf1a3e9388b",
+    "benchmarks/results/2026-10-11-application-scalar-v1.json": "abf61f9fb4fdc05119c4b2e073e086af0cc67f23ed19e4fac9b04cf50faaa8e2",
+    "benchmarks/results/2026-10-11-application-scalar-analysis-v1.json": "4462a2d0ad5715fc35b4b2484a38bcce1b21d22baf2848e6527e3dd2b185d825",
+    "benchmarks/results/2026-10-12-cpu-tiled-changed-v3-idle.json": "1bc4ad9a2a9ae5b4f9b2fea5091e006088e23bbe82abb35c7ea6d277c332024a",
+    "benchmarks/results/2026-10-12-cpu-tiled-changed-v3-analysis.json": "aafb13ffcb8bcc0033c44487d5d6840d0bdc39c87274f939fd1ba6b34c29c73e",
+    "benchmarks/results/2026-10-12-cpu-tiled-changed-v3-session-completion.json": "780425614aafdc572db2f289abdb2c47569d9ae198d1ecdc896e0a00d12abce2",
+    "tools/bench/requirements.lock": "b05453a671689fbbc07c0ce5384ddebabdbfed4ba4229e19c75d416a79d2c8c2",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-idle.json": "1e3276cd578416de327a67d86b6a615bf90f87b2992d2b0364008d8e65d80914",
+    "benchmarks/results/2026-10-11-held-out-task-tiled-idle-v1.json": "e2475da2074d28e2d508ce907a70e05c032156300cd6bc5316dcd0d80c8535d4",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-admission-claim.json": "3c1e8e8813bb0d0653f2db13730b7f0a777fd0d759232a166fb047febefb735c",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-driver.py.txt": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-failed-retirement.py.txt": "0522ef977709bc486271de5ebf4a36f9c70237bc3f27dcab90dbfcb00221cb35",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-idle.py.txt": "f2c76ca60c358adcefb3a783236f353fb80ce7fb3b4df9f1cb6c3ba3b7bf3655",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-launch.json": "20eda5c21fdd52294f7f58cca8388d7c306fc0b175311795ea82219136277088",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-launch.py.txt": "f37f3c3606eaff693a87dbfd4624b06c20972000638cfe66b52f3f99921dca9c",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-owned.json": "e8155df5b04ffc83c31119844fecbf3efc5551e09f047475ea77b9d5ac317ebc",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-owned.py.txt": "f21cf41c58ccfe99e71ed17b6283c89d4293ecb67997bde26bf39de4d2c85e38",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-recovery-observation.json": "374436ca60296ab65f6852b29702c598d677755a241d5f5d7a8a3c821aaa17e2",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-user-pause.json": "824aded19d5841341402cf70f9982fd51acc04ec4af9d83ec1b6ac864edf1e5e",
+    "benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded.samples.jsonl": "e7af93762b0fb092f1ba5f0699a1686d59e31615b9a33b5a98e379fbf035f22e",
+    "benchmarks/results/2026-10-10-cpu-tiled-application-qualification-v1.json": "4a5d4b71e4bf6dc68e295111d95f49cab9ad8b1d50ca32fec1cf8471555d8e04",
+    "benchmarks/contract-v1/manifest.json": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66",
+    "benchmarks/contract-v1/application_trace.json": "879944437214e4c5e85e74a0d02a1e91cc20074d1bcab1aa53268c393ba6671d"
+  },
+  "producer_sha256": "d363c186138cbdca0f855c7294a0514c95ce350967b65102392abcb147cff701"
+}

@@ -1,0 +1,133 @@
+"""Launch the one-off qualified tiled full application workload after reviewed quality evidence."""
+from pathlib import Path
+from datetime import datetime,timezone
+import argparse,json,os,subprocess,sys
+sys.path.insert(0,'tools/bench')
+import cpu,cpu_cli,prepare,linux_code_isolation_probe as append
+ROOT=Path.cwd()
+
+def main():
+ parser=argparse.ArgumentParser(description=__doc__)
+ parser.add_argument('--workload',choices=('application',),required=True)
+ args=parser.parse_args()
+ prefix='2026-10-12-application-tiled-v3'
+ output=ROOT/'benchmarks/raw'/f'{prefix}.json';receipt=ROOT/'benchmarks/raw'/f'{prefix}-launch.json'
+ claim=ROOT/'benchmarks/raw'/f'{prefix}-admission-claim.json'
+ assert all(not path.exists() for path in (output,Path(str(output)+'.samples.jsonl'),Path(str(output)+'.stderr.txt'),receipt,claim))
+ # Exclusive one-off reservation precedes every model/binary hash or idle check.
+ # Failed admissions retain it and require a separately reviewed fresh attempt.
+ with claim.open('x') as f:
+  json.dump({'format':'toklet-cpu-tiled-application-admission-claim-v3','claimed_utc':datetime.now(timezone.utc).isoformat(),'launcher_pid':os.getpid(),'workload':'application','producer_path':str(Path(__file__).resolve())},f,indent=2);f.write('\n')
+ # Runtime dependencies and preceding natural completion precede heavy hashes.
+ from importlib.metadata import version
+ from jsonschema import Draft202012Validator
+ assert sys.executable==str(ROOT/'.venv/bin/python')
+ assert sys.version_info[:3]==(3,12,8) and version('jsonschema')=='4.25.1'
+ previous_idle=ROOT/'benchmarks/results/2026-10-12-cpu-tiled-changed-v3-idle.json'
+ previous=json.loads(previous_idle.read_text())
+ assert previous['format']=='toklet-cpu-tiled-workload-natural-exit-idle-v1'
+ assert previous['workload']=='changed' and previous['session_id']==41086
+ assert previous['all_owned_processes_absent'] is True
+ assert previous['exited_owned_pids']==[43111,43153,43161] and previous['owned_group_members']=={'43111':[]}
+ previous_absent=subprocess.run(['ps','-p','43111,43153,43161','-o','pid='],capture_output=True,text=True)
+ assert previous_absent.returncode==1 and not previous_absent.stdout and not previous_absent.stderr
+ assert append.live_group_members(43111)==[]
+ previous_completion=ROOT/'benchmarks/results/2026-10-12-cpu-tiled-changed-v3-session-completion.json'
+ completed=json.loads(previous_completion.read_text())
+ assert completed['format']=='toklet-actual-native-session-completion-v1' and completed['session_id']==41086
+ assert completed['origin']=='Actual write_stdin completion returned by native execution tool; not inferred from files'
+ assert completed['actual_tool_result']['exit_code']==0 and 'session_id' not in completed['actual_tool_result']
+ assert completed['actual_tool_result']['output'].splitlines()[-1]=='Tiled changed workload completed naturally'
+ assert prepare.digest(previous_completion)==previous['saved_result_sha256'][str(previous_completion.relative_to(ROOT))]
+ previous_analysis=ROOT/'benchmarks/results/2026-10-12-cpu-tiled-changed-v3-analysis.json'
+ accepted=json.loads(previous_analysis.read_text());assert accepted['accepted'] is True
+ assert accepted['evidence_sha256'][str(previous_idle.relative_to(ROOT))]==prepare.digest(previous_idle)
+ for name,sha in accepted['evidence_sha256'].items():assert prepare.digest(ROOT/name)==sha,name
+ assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+ recovery_path=ROOT/'benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-idle.json'
+ recovery=json.loads(recovery_path.read_text())
+ assert recovery['format']=='toklet-paused-excluded-recovery-idle-v1'
+ assert recovery['session_id']==60442 and recovery['acceptance_eligible'] is False and recovery['native_exit_status'] is None
+ expected_pids=[96097,96112,96121,17694,85019,85027,88184,35939]
+ assert recovery['all_recorded_processes_absent'] is True and recovery['absent_pids']==expected_pids
+ assert recovery['empty_process_groups']=={'96097':[],'17694':[]}
+ current_absence=subprocess.run(['ps','-p',','.join(map(str,expected_pids)),'-o','pid='],capture_output=True,text=True)
+ assert current_absence.returncode==1 and not current_absence.stdout and not current_absence.stderr
+ assert append.live_group_members(96097)==[] and append.live_group_members(17694)==[]
+ machines=json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+ machine=next(m for m in machines if m['Name']=='podman-machine-default')
+ assert machine['Running'] is False and machine['Starting'] is False
+ recovery_prefix='benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded'
+ expected_inventory={recovery_prefix+suffix for suffix in ('.samples.jsonl','-launch.json','-admission-claim.json','-owned.json','-user-pause.json','-recovery-observation.json','-launch.py.txt','-owned.py.txt','-driver.py.txt','-failed-retirement.py.txt','-idle.py.txt')}
+ assert set(recovery['saved_result_sha256'])==expected_inventory
+ for name,sha in recovery['saved_result_sha256'].items():assert prepare.digest(ROOT/name)==sha,name
+ assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+ for name in [str(recovery_path.relative_to(ROOT)),*expected_inventory]:
+  committed=subprocess.check_output(['git','show','HEAD:'+name])
+  import hashlib
+  assert hashlib.sha256(committed).hexdigest()==prepare.digest(ROOT/name),name
+ collection_idle=ROOT/'benchmarks/results/2026-10-11-held-out-task-tiled-idle-v1.json'
+ historical=json.loads(collection_idle.read_text())
+ assert historical['format']=='toklet-held-out-task-natural-exit-idle-v1' and historical['all_owned_processes_absent'] is True
+ assert historical['exited_owned_pids']==[4303,4314,4328]
+ collection_absence=subprocess.run(['ps','-p','4303,4314,4328','-o','pid='],capture_output=True,text=True)
+ assert collection_absence.returncode==1 and not collection_absence.stdout and not collection_absence.stderr
+ assert historical['owned_group_members']=={'4303':[],'4328':[]}
+ assert append.live_group_members(4303)==[] and append.live_group_members(4328)==[]
+ for section,files in recovery['end_verified'].items():
+  assert files==historical['end_verified'][section]
+  for name,sha in files.items():assert prepare.digest(ROOT/name)==sha,name
+ admission={'format':'toklet-historical-collection-and-recovery-admission-v1',
+  'idle_receipt_sha256':prepare.digest(collection_idle),'current_recovery_idle_sha256':prepare.digest(recovery_path),
+  'original_orchestration_absent':True,'recorded_processes_absent':expected_pids,
+  'current_absence_query':{'command':current_absence.args,'exit_code':current_absence.returncode,'stdout':current_absence.stdout,'stderr':current_absence.stderr},
+  'collection_absence_query':{'command':collection_absence.args,'exit_code':collection_absence.returncode,'stdout':collection_absence.stdout,'stderr':collection_absence.stderr},
+  'stopped_machine':machine}
+ grading_idle=ROOT/'benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json'
+ g=json.loads(grading_idle.read_text());assert g['all_owned_processes_absent'] is True
+ assert g['format']=='toklet-held-out-task-grading-natural-exit-idle-v1'
+ pids=g['exited_owned_pids'];assert len(pids)==5 and len(set(pids))==5 and all(type(pid) is int and pid>1 for pid in pids)
+ absent=subprocess.run(['ps','-p',','.join(map(str,pids)),'-o','pid='],capture_output=True,text=True)
+ assert absent.returncode==1 and not absent.stdout and not absent.stderr
+ assert all(append.live_group_members(int(pid))==[] for pid in g['owned_group_members'])
+ for files in g['end_verified'].values():
+  for name,sha in files.items():assert prepare.digest(ROOT/name)==sha,name
+ quality_path=ROOT/'benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-analysis.json'
+ quality=json.loads(quality_path.read_text())
+ assert quality['accepted'] is True and quality['task_quality_comparison']['gate_passed'] is True
+ for name,sha in quality['evidence_sha256'].items():assert prepare.digest(ROOT/name)==sha,name
+ qualification=ROOT/'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json'
+ binary,q=cpu_cli.qualified_cli(qualification)
+ adapter_path=ROOT/'benchmarks/results/2026-10-10-cpu-tiled-application-qualification-v1.json'
+ adapter=json.loads(adapter_path.read_text())
+ assert adapter['format']=='toklet-cpu-tiled-application-functional-v1' and adapter['completed'] is True
+ assert adapter['cli_qualification_sha256']==prepare.digest(qualification)
+ assert len(adapter['checks'])==4 and all(c['exit_code']==0 and c['timed_out'] is False for c in adapter['checks'])
+ assert set(adapter['probes'])=={'legacy','scalar','tiled'}
+ for name,sha in adapter['source_sha256'].items():assert prepare.digest(ROOT/name)==sha,name
+ for role,probe in adapter['probes'].items():
+  assert prepare.digest(ROOT/probe['path'])==probe['sha256']
+  assert prepare.digest(ROOT/probe['raw_path'])==probe['raw_sha256']
+  assert probe['semantics']==adapter['probes']['legacy']['semantics']
+ scalar_analysis_path=ROOT/'benchmarks/results/2026-10-11-application-scalar-analysis-v1.json'
+ scalar_analysis=json.loads(scalar_analysis_path.read_text())
+ assert scalar_analysis['completed'] is True
+ for name,sha in scalar_analysis['records_sha256'].items():assert prepare.digest(ROOT/name)==sha,name
+ scalar_result_path=ROOT/'benchmarks/results/2026-10-11-application-scalar-v1.json'
+ assert prepare.digest(scalar_result_path)==scalar_analysis['records_sha256'][str(scalar_result_path.relative_to(ROOT))]
+ command=[sys.executable,'tools/bench/application.py','--cpu-projection','tiled','--cpu-qualification',str(qualification),'--output',str(output.relative_to(ROOT))]
+ record={'format':'toklet-cpu-tiled-application-launch-v3','launch_utc':datetime.now(timezone.utc).isoformat(),
+  'engine_revision':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'working_tree_clean':True,
+  'launcher_pid':os.getpid(),'producer_sha256':prepare.digest(Path(__file__)),
+  'admission_claim_sha256':prepare.digest(claim),
+  'driver_sha256':prepare.digest(ROOT/'tools/bench/application.py'),'qualification_sha256':prepare.digest(qualification),
+  'qualified_binary_sha256':prepare.digest(binary),'compiled_source_sha256':q['source_sha256'],'application_adapter_qualification_sha256':prepare.digest(adapter_path),
+  'scalar_application_analysis_sha256':prepare.digest(scalar_analysis_path),'scalar_application_result_sha256':prepare.digest(scalar_result_path),
+  'collection_admission':admission,'grading_idle_sha256':prepare.digest(grading_idle),'quality_analysis_sha256':prepare.digest(quality_path),
+  'workload':args.workload,'command':command,'python_executable':sys.executable,'python_version':sys.version.split()[0],'jsonschema_version':version('jsonschema'),'preceding_changed_idle_sha256':prepare.digest(previous_idle),'preceding_changed_analysis_sha256':prepare.digest(previous_analysis),'preceding_changed_current_absence':{'command':previous_absent.args,'exit_code':previous_absent.returncode,'stdout':previous_absent.stdout,'stderr':previous_absent.stderr},'requirements_lock_sha256':prepare.digest(ROOT/'tools/bench/requirements.lock'),
+  'scope':'Full application: three warmups/ten three-turn scripted scenarios; paused cached-v2 measurements remain excluded; no concurrent model/VM/test/build/hash work after launch; original recorded orchestration is absent, not held.'}
+ with receipt.open('x') as f:json.dump(record,f,indent=2);f.write('\n')
+ print(json.dumps({'launch_utc':record['launch_utc'],'launcher_pid':record['launcher_pid'],'workload':args.workload,'engine_revision':record['engine_revision']}),flush=True)
+ subprocess.run(command,check=True)
+ print('Full tiled application workload completed naturally',flush=True)
+if __name__=='__main__':main()

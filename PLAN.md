@@ -766,6 +766,17 @@ descriptive. All eight numerical matrix rows now have candidate measurements;
 full application and explicit retention remain. No numerical helper or
 qualified artifact changes.
 
+Full candidate application evidence, 12 October 2026: the [three-turn trace](docs/experiments/2026-10-12-application-tiled.md)
+completes three warmups and ten scenarios. All thirty responses/token IDs,
+visible text, stops and untimed generation states match the accepted scalar
+reference. Median scenario latency is 129.141379 s, range 128.901821–
+129.971217 s; historical reduction is descriptive. Tokenization/streaming,
+EOS pending state, reset finalization, logical memory/admission, physical
+peak and source/recovery/CLI-qualification/completion bindings pass saved-data
+checks. All candidate matrix/application measurements are complete. M3.1
+remains open for explicit retention; no numerical helper, kernel, qualified
+artifact or quality gate changes.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [x] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [x] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
@@ -1094,4 +1105,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: qualify the full tiled application trace before the explicit retention decision.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: review the complete CPU evidence and record the explicit retain/revert decision.

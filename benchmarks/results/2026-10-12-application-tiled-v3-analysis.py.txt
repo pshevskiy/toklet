@@ -1,0 +1,306 @@
+"""Analyze saved application evidence; never launch numerical work or hash model/binaries."""
+from pathlib import Path
+from datetime import datetime
+import argparse, hashlib, json, math, statistics, subprocess
+
+ROOT = Path.cwd()
+PREFIX = 'benchmarks/results/2026-10-12-application-tiled-v3'
+
+def read(name):
+    return json.loads((ROOT/name).read_text())
+
+def digest(name):
+    return hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
+
+def duration(value):
+    assert type(value) in (int,float) and math.isfinite(value) and value >= 0
+    return value
+
+def nullable_median(values):
+    assert all(value is None for value in values) or all(value is not None for value in values)
+    return None if values[0] is None else statistics.median(values)
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args()
+    result = read(PREFIX+'.json')
+    launch = read(PREFIX+'-launch.json')
+    owned = read(PREFIX+'-owned.json')
+    completion = read(PREFIX+'-session-completion.json')
+    idle = read(PREFIX+'-idle.json')
+    claim = read(PREFIX+'-admission-claim.json')
+    assert result['runtime'] == 'Toklet tiled CPU CLI'
+    assert result['identity']['engine_commit'] == launch['engine_revision'] == idle['engine_revision'] == '226e71db247522f6a1b34810b1529a19abbc3f2a'
+    assert result['identity']['working_tree_dirty'] is False
+    assert launch['working_tree_clean'] is True and idle['working_tree_clean'] is True
+    assert launch['workload'] == idle['workload'] == claim['workload'] == 'application'
+    assert launch['format'] == 'toklet-cpu-tiled-application-launch-v3'
+    assert claim['format'] == 'toklet-cpu-tiled-application-admission-claim-v3'
+    assert owned['format'] == 'toklet-cpu-tiled-application-owned-v3'
+    assert idle['format'] == 'toklet-cpu-tiled-application-natural-exit-idle-v3'
+    assert claim['launcher_pid'] == launch['launcher_pid'] == owned['launcher_pid'] == 51172
+    assert (owned['driver_pid'], owned['numerical_worker_pid'], owned['owned_process_group']) == (51212,51226,51172)
+    assert completion['session_id'] == idle['session_id'] == owned['session_id'] == 89055
+    assert completion['format'] == 'toklet-actual-native-session-completion-v1'
+    assert completion['origin'] == 'Actual write_stdin completion returned by native execution tool; not inferred from files'
+    actual = completion['actual_tool_result']
+    assert actual['exit_code'] == 0 and 'session_id' not in actual
+    assert actual['output'].splitlines()[-1] == 'Full tiled application workload completed naturally'
+    assert idle['all_owned_processes_absent'] is True and idle['exited_owned_pids'] == [51172,51212,51226]
+    assert idle['owned_group_members'] == {'51172': []}
+    absent = idle['owned_absence_query']
+    assert absent['exit_code'] == 1 and not absent['stdout'] and not absent['stderr']
+    assert idle['stopped_machine']['Running'] is False and idle['stopped_machine']['Starting'] is False
+    chronology = [claim['claimed_utc'], launch['launch_utc'], owned['observed_utc'], completion['observed_utc'], idle['idle_verified_utc']]
+    times = [datetime.fromisoformat(value) for value in chronology]
+    assert times[0] < times[1] < times[2] < times[3] <= times[4]
+    expected_inventory = {PREFIX+suffix for suffix in ('.json','.json.samples.jsonl','-launch.json',
+        '-admission-claim.json','-owned.json','-session-completion.json','-launch.py.txt',
+        '-owned.py.txt','-driver.py.txt','-idle.py.txt')}
+    assert set(idle['saved_result_sha256']) == expected_inventory
+    for name, sha in idle['saved_result_sha256'].items():
+        assert digest(name) == sha, name
+    snapshot_rows = [line.split(None,4) for line in owned['snapshot'].splitlines()]
+    assert len(snapshot_rows) == 3 and all(len(row) == 5 for row in snapshot_rows)
+    rows = {int(row[0]):row for row in snapshot_rows}
+    assert set(rows) == {51172,51212,51226}
+    assert [(int(rows[pid][1]),int(rows[pid][2])) for pid in (51172,51212,51226)] == [(99431,51172),(51172,51172),(51212,51172)]
+    assert all(row[3][0] in ('R','S','I') and not any(c in row[3] for c in ('T','t','Z')) for row in rows.values())
+    python_image = '/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python'
+    assert rows[51172][4] == python_image+' artifacts/launch-tiled-application-v3.py --workload application'
+    expected_command = [str(ROOT/'.venv/bin/python'),
+        'tools/bench/application.py','--cpu-projection','tiled','--cpu-qualification',
+        str(ROOT/'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json'),
+        '--output','benchmarks/raw/2026-10-12-application-tiled-v3.json']
+    assert launch['command'] == expected_command
+    assert launch['python_executable'] == str(ROOT/'.venv/bin/python')
+    assert launch['python_version'] == '3.12.8' and launch['jsonschema_version'] == '4.25.1'
+    assert launch['requirements_lock_sha256'] == digest('tools/bench/requirements.lock')
+    committed_requirements = subprocess.check_output(['git','show',launch['engine_revision']+':tools/bench/requirements.lock'])
+    assert hashlib.sha256(committed_requirements).hexdigest() == launch['requirements_lock_sha256']
+    preceding_idle_name = 'benchmarks/results/2026-10-12-cpu-tiled-changed-v3-idle.json'
+    preceding_analysis_name = 'benchmarks/results/2026-10-12-cpu-tiled-changed-v3-analysis.json'
+    preceding_completion_name = 'benchmarks/results/2026-10-12-cpu-tiled-changed-v3-session-completion.json'
+    preceding_idle = read(preceding_idle_name)
+    preceding_analysis = read(preceding_analysis_name)
+    preceding_completion = read(preceding_completion_name)
+    assert digest(preceding_idle_name) == launch['preceding_changed_idle_sha256']
+    assert digest(preceding_analysis_name) == launch['preceding_changed_analysis_sha256']
+    assert preceding_analysis['accepted'] is True
+    assert preceding_analysis['evidence_sha256'][preceding_idle_name] == digest(preceding_idle_name)
+    for name, expected in preceding_analysis['evidence_sha256'].items():
+        assert digest(name) == expected, name
+    assert preceding_idle['format'] == 'toklet-cpu-tiled-workload-natural-exit-idle-v1'
+    assert preceding_idle['session_id'] == 41086 and preceding_idle['workload'] == 'changed'
+    assert preceding_idle['all_owned_processes_absent'] is True and preceding_idle['exited_owned_pids'] == [43111,43153,43161]
+    assert preceding_idle['owned_group_members'] == {'43111': []}
+    assert preceding_completion['format'] == 'toklet-actual-native-session-completion-v1'
+    assert preceding_completion['session_id'] == 41086 and preceding_completion['actual_tool_result']['exit_code'] == 0
+    assert preceding_completion['origin'] == 'Actual write_stdin completion returned by native execution tool; not inferred from files'
+    assert 'session_id' not in preceding_completion['actual_tool_result']
+    assert preceding_completion['actual_tool_result']['output'].splitlines()[-1] == 'Tiled changed workload completed naturally'
+    assert preceding_idle['saved_result_sha256'][preceding_completion_name] == digest(preceding_completion_name)
+    assert datetime.fromisoformat(preceding_idle['idle_verified_utc']) < times[0]
+    admission = launch['preceding_changed_current_absence']
+    assert admission == {'command':['ps','-p','43111,43153,43161','-o','pid='],'exit_code':1,'stdout':'','stderr':''}
+    for name in (preceding_idle_name,preceding_analysis_name):
+        committed = subprocess.check_output(['git','show',launch['engine_revision']+':'+name])
+        assert hashlib.sha256(committed).hexdigest() == digest(name), name
+    assert rows[51212][4] == python_image+' '+' '.join(expected_command[1:])
+    assert rows[51226][4] == str(ROOT/'artifacts/cpu-tiled-cli-v1/release/toklet')+' --model '+str(ROOT/'models/Qwen2.5-0.5B-Instruct')+' --interactive --json --context-capacity 2048 --prefill-chunk 128 --cpu-projection tiled'
+    assert absent['command'] == ['ps','-p','51172,51212,51226','-o','pid=']
+    assert digest(PREFIX+'-admission-claim.json') == launch['admission_claim_sha256']
+    assert digest(PREFIX+'-launch.json') == owned['launch_receipt_sha256']
+    assert digest(PREFIX+'-launch.py.txt') == launch['producer_sha256']
+    assert digest(PREFIX+'-owned.py.txt') == owned['producer_sha256']
+    assert digest(PREFIX+'-idle.py.txt') == idle['producer_sha256']
+    assert digest(PREFIX+'-driver.py.txt') == launch['driver_sha256'] == '9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da'
+    assert result['identity']['driver_sha256'] == launch['driver_sha256']
+    assert result['identity']['binary_sha256'] == launch['qualified_binary_sha256']
+    assert launch['qualified_binary_sha256'] == idle['qualified_binary_sha256']
+    qualification_name = 'benchmarks/results/2026-10-10-cpu-tiled-cli-qualification-v1.json'
+    q = read(qualification_name)
+    assert q['format'] == 'toklet-cpu-tiled-cli-functional-v1'
+    assert q['completed'] is True and q['source_sha256'] == launch['compiled_source_sha256'] == idle['compiled_source_sha256']
+    assert q['binary_sha256'] == launch['qualified_binary_sha256']
+    assert digest(qualification_name) == launch['qualification_sha256']
+    committed_qualification = subprocess.check_output(['git','show',launch['engine_revision']+':'+qualification_name])
+    assert hashlib.sha256(committed_qualification).hexdigest() == digest(qualification_name)
+    for name, expected in launch['compiled_source_sha256'].items():
+        committed = subprocess.check_output(['git','show',launch['engine_revision']+':'+name])
+        assert hashlib.sha256(committed).hexdigest() == expected, name
+        assert digest(name) == expected, name
+    for section, files in idle['end_verified'].items():
+        assert files == read('benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json')['end_verified'][section]
+    quality_name = 'benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-analysis.json'
+    quality = read(quality_name)
+    assert digest(quality_name) == launch['quality_analysis_sha256']
+    assert quality['accepted'] is True and quality['task_quality_comparison']['gate_passed'] is True
+    assert digest('benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json') == launch['grading_idle_sha256']
+    recovery_name = 'benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-idle.json'
+    recovery = read(recovery_name)
+    admission = launch['collection_admission']
+    assert admission['format'] == 'toklet-historical-collection-and-recovery-admission-v1'
+    assert admission['current_recovery_idle_sha256'] == digest(recovery_name)
+    assert recovery['format'] == 'toklet-paused-excluded-recovery-idle-v1'
+    assert recovery['session_id'] == 60442 and recovery['native_exit_status'] is None and recovery['acceptance_eligible'] is False
+    assert recovery['all_recorded_processes_absent'] is True
+    expected_original = [96097,96112,96121,17694,85019,85027,88184,35939]
+    assert recovery['absent_pids'] == admission['recorded_processes_absent'] == expected_original
+    assert admission['original_orchestration_absent'] is True
+    original = idle['original_recovery_snapshot']
+    assert original['original_orchestration_absent'] is True and original['recorded_pids'] == expected_original
+    assert original['recovery_idle_sha256'] == digest(recovery_name)
+    expected_query = {'command':['ps','-p',','.join(map(str,expected_original)),'-o','pid='],'exit_code':1,'stdout':'','stderr':''}
+    assert original['query'] == admission['current_absence_query'] == expected_query
+    assert recovery['empty_process_groups'] == {'96097':[],'17694':[]}
+    expected_recovery_inventory = {recovery_name.removesuffix('-idle.json')+suffix for suffix in ('.samples.jsonl','-launch.json','-admission-claim.json','-owned.json','-user-pause.json','-recovery-observation.json','-launch.py.txt','-owned.py.txt','-driver.py.txt','-failed-retirement.py.txt','-idle.py.txt')}
+    assert set(recovery['saved_result_sha256']) == expected_recovery_inventory
+    for name,sha in recovery['saved_result_sha256'].items():assert digest(name) == sha,name
+    for name in [recovery_name,*expected_recovery_inventory]:
+        committed = subprocess.check_output(['git','show',launch['engine_revision']+':'+name])
+        assert hashlib.sha256(committed).hexdigest() == digest(name),name
+    assert recovery['end_verified'] == idle['end_verified']
+    assert datetime.fromisoformat(recovery['idle_verified_utc']) < times[0]
+    historical_name = 'benchmarks/results/2026-10-11-held-out-task-tiled-idle-v1.json'
+    historical = read(historical_name)
+    assert admission['idle_receipt_sha256'] == digest(historical_name)
+    assert historical['format'] == 'toklet-held-out-task-natural-exit-idle-v1' and historical['all_owned_processes_absent'] is True
+    assert historical['exited_owned_pids'] == [4303,4314,4328] and historical['owned_group_members'] == {'4303':[],'4328':[]}
+    assert admission['collection_absence_query'] == {'command':['ps','-p','4303,4314,4328','-o','pid='],'exit_code':1,'stdout':'','stderr':''}
+    assert historical['end_verified'] == recovery['end_verified']
+    rows = [json.loads(line) for line in (ROOT/(PREFIX+'.json.samples.jsonl')).read_text().splitlines()]
+    assert rows == result['samples'] and len(rows) == 10
+    assert result['record_version'] == 1 and result['contract_id'] == 'toklet-benchmark-contract-v1'
+    assert result['comparison_track'] == 'application' and result['qualification'] == 'three_warmups_ten_samples'
+    assert result['setup']['warmup_repetitions'] == 3
+    duration(result['setup']['submission_to_ready_seconds'])
+    assert 0 <= duration(result['setup']['conversion_seconds']) <= duration(result['setup']['load_seconds'])
+    duration(result['setup']['tokenizer_load_seconds'])
+    scalar_name = 'benchmarks/results/2026-10-11-application-scalar-v1.json'
+    scalar_analysis_name = 'benchmarks/results/2026-10-11-application-scalar-analysis-v1.json'
+    scalar = read(scalar_name); scalar_analysis = read(scalar_analysis_name)
+    assert scalar_analysis['completed'] is True
+    assert digest(scalar_analysis_name) == launch['scalar_application_analysis_sha256']
+    assert digest(scalar_name) == launch['scalar_application_result_sha256'] == scalar_analysis['records_sha256'][scalar_name]
+    for name,sha in scalar_analysis['records_sha256'].items():assert digest(name) == sha,name
+    assert result['representation'] == scalar['representation'] == {'weights':'FP32','kv':'FP32','context_capacity':2048,'prefill_chunk':128}
+    assert result['policy'] == scalar['policy'] == {'turns':3,'max_output_tokens_per_turn':128,'stop':'pinned EOS or output limit','greedy':True,'scripted_assistant_history':True,'cache':'empty per authored turn; resident model and reusable buffers'}
+    assert result['timing_scope'] == scalar['timing_scope']
+    identity = result['identity']
+    assert identity['cpu_projection'] == 'tiled' and identity['cli_qualification_sha256'] == digest(qualification_name)
+    assert identity['model'] == scalar['identity']['model'] == read('benchmarks/sources.json')['model']
+    assert identity['tokenizer_sha256'] == scalar['identity']['tokenizer_sha256']
+    assert identity['build_flags'] == q['build_commands'] and identity['compiler'] == q['compiler']
+    assert identity['python'] == '3.12.8'
+    for key in ('hardware','chip','physical_memory_bytes','os_version','os_build'):
+        assert result['environment'][key] == scalar['environment'][key]
+    adapter_name = 'benchmarks/results/2026-10-10-cpu-tiled-application-qualification-v1.json'
+    adapter = read(adapter_name)
+    assert adapter['format'] == 'toklet-cpu-tiled-application-functional-v1' and adapter['completed'] is True
+    assert digest(adapter_name) == launch['application_adapter_qualification_sha256']
+    assert adapter['cli_qualification_sha256'] == digest(qualification_name)
+    assert len(adapter['checks']) == 4 and all(c['exit_code']==0 and c['timed_out'] is False for c in adapter['checks'])
+    for name,sha in adapter['source_sha256'].items():assert digest(name) == sha,name
+    for name,field in [('tools/bench/mlx_baseline.py','common_helper_sha256'),('tools/bench/prepare.py','preparation_helper_sha256'),('tools/bench/cpu_cli.py','cli_qualification_helper_sha256'),('tools/bench/cpu.py','cpu_worker_qualification_helper_sha256')]:
+        assert identity[field] == adapter['source_sha256'][name]
+    contract_name = 'benchmarks/contract-v1/manifest.json'; contract = read(contract_name)
+    transcript_name = 'benchmarks/contract-v1/application_trace.json'
+    assert identity['transcript_sha256'] == contract['authored_text_sha256']['application_trace.json'] == digest(transcript_name)
+    memory = result["memory"]
+    assert memory["engine_working_set_limit_bytes"] == 6 * 1024**3
+    assert memory["admitted_bytes"] == 2353012560
+    assert memory["logical_allocations"]["weights_bytes"] == 1976131072
+    assert memory["logical_allocations"]["kv_bytes"] == 50331648
+    assert memory["logical_allocations"]["scratch_bytes"] == 10436608
+    qualified_memory = scalar["memory"]["logical_allocations"]
+    assert memory["logical_allocations"] == qualified_memory
+    assert all(type(value) is int and value >= 0 for value in memory["logical_allocations"].values())
+    assert sum(memory["logical_allocations"].values()) == memory["admitted_bytes"]
+    assert memory["system_pressure"] is None and result["energy"] is None
+    reference = scalar["samples"][0]["turns"]
+    for sample in rows:
+        assert len(sample["turns"]) == 3
+        assert 0 < sample["process_peak_footprint_bytes"] <= 6 * 1024**3
+        finalizations = []
+        for index, turn in enumerate(sample["turns"]):
+            tokens, events, stats = turn["token_ids"], turn["received_token_event_seconds"], turn["statistics"]
+            gen = stats["generation"]
+            assert stats["cpu_projection"] == "tiled"
+            assert 0 <= len(tokens) <= 128 and len(tokens) == len(events) == gen["emitted_tokens"]
+            assert all(type(token) is int and 0 <= token < 151936 and token not in (151643, 151645) for token in tokens)
+            assert all(duration(t) >= 0 for t in events)
+            assert all(b >= a for a, b in zip(events, events[1:]))
+            first = turn["submission_to_first_token_seconds"]
+            done = duration(turn["submission_to_done_seconds"])
+            finalized = duration(turn["submission_to_finalized_seconds"])
+            assert done <= finalized
+            if events:
+                assert duration(first) == events[0] <= events[-1] <= done
+            else:
+                assert first is None and gen["first_token_seconds"] is None
+            text_time = turn["submission_to_first_visible_text_seconds"]
+            if turn["visible_text"]:
+                assert events and first <= duration(text_time) <= finalized
+            else:
+                assert text_time is None
+            assert hashlib.sha256(turn["visible_text"].encode()).hexdigest() == turn["visible_text_sha256"]
+            assert gen["reused_tokens"] == 0 and gen["prefill_tokens"] == (36, 76, 117)[index]
+            assert gen["pending_tokens"] == 1
+            assert gen["evaluated_tokens"] == gen["prefill_tokens"] + gen["sampled_tokens"] - 1
+            assert gen["history_tokens"] == gen["evaluated_tokens"] + 1 <= 2048
+            reason = gen["reason"]
+            if reason["kind"] == "output_limit":
+                assert gen["sampled_tokens"] == len(tokens) == 128
+            else:
+                assert reason["kind"] == "stop_token" and reason["token_id"] in (151643, 151645)
+                assert gen["sampled_tokens"] == len(tokens) + 1 <= 128
+            for key in ("decode_seconds", "prefill_seconds", "sampling_seconds", "total_seconds"):
+                duration(gen[key])
+            assert gen["prefill_seconds"] <= gen["total_seconds"] <= done
+            if events:
+                assert gen["prefill_seconds"] <= duration(gen["first_token_seconds"]) <= gen["total_seconds"]
+            for key in ("load_seconds", "conversion_seconds", "tokenizer_load_seconds"):
+                assert stats[key] == 0
+            for key in ("detokenization_seconds", "input_formatting_seconds", "input_preparation_seconds", "publication_seconds", "tokenization_seconds"):
+                duration(stats[key])
+            assert stats["memory_admitted_bytes"] == memory["admitted_bytes"]
+            assert tokens == reference[index]["token_ids"]
+            assert turn["visible_text"] == reference[index]["visible_text"]
+            assert reason == reference[index]["statistics"]["generation"]["reason"]
+            stable_generation = {key:value for key,value in gen.items() if not key.endswith("_seconds")}
+            scalar_generation = {key:value for key,value in reference[index]["statistics"]["generation"].items() if not key.endswith("_seconds")}
+            assert stable_generation == scalar_generation
+            finalizations.append(finalized)
+        assert duration(sample["scenario_seconds"]) >= sum(finalizations)
+    summary = {
+        "scenario_median_seconds": statistics.median(s["scenario_seconds"] for s in rows),
+        "scenario_min_seconds": min(s["scenario_seconds"] for s in rows),
+        "scenario_max_seconds": max(s["scenario_seconds"] for s in rows),
+    }
+    assert summary == result["summary"]
+    assert memory["peak_process_bytes"] == max(s["process_peak_footprint_bytes"] for s in rows)
+    bound = list(idle['saved_result_sha256'])+[PREFIX+'-idle.json',qualification_name,quality_name,
+        'benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json',scalar_name,scalar_analysis_name,
+        preceding_idle_name,preceding_analysis_name,preceding_completion_name,'tools/bench/requirements.lock',
+        recovery_name,historical_name,*sorted(expected_recovery_inventory),adapter_name,contract_name,transcript_name]
+    analysis = {'format':'toklet-cpu-tiled-application-analysis-v3','accepted':True,
+        'scope':'Ten saved three-turn scenarios, no model/worker execution or binary hashing; warmup states and complete per-token/text protocol log not retained. Historical scalar comparison descriptive; no task-quality claim.',
+        'checks':['exact raw/sample pairs','all thirty scalar-identical response IDs/text/stops/states','ordered receipt times','independent summaries','logical/physical memory','source/qualification/provenance/current recovery bindings'],
+        'summary':summary,
+        'turns':[{'prompt_tokens':(36,76,117)[i],'emitted_tokens':len(reference[i]['token_ids']),
+            'stop_reason':reference[i]['statistics']['generation']['reason'],
+            'first_token_median_seconds':nullable_median([sample['turns'][i]['submission_to_first_token_seconds'] for sample in rows]),
+            'first_visible_text_median_seconds':nullable_median([sample['turns'][i]['submission_to_first_visible_text_seconds'] for sample in rows]),
+            'finalized_median_seconds':statistics.median(sample['turns'][i]['submission_to_finalized_seconds'] for sample in rows),
+            'visible_text_sha256':reference[i]['visible_text_sha256']} for i in range(3)],
+        'historical_scalar_summary':scalar['summary'],
+        'historical_scenario_reduction_percent':100*(1-summary['scenario_median_seconds']/scalar['summary']['scenario_median_seconds']),
+        'measured_scenario_total_seconds':sum(sample['scenario_seconds'] for sample in rows),
+        'memory':memory,'chronology':chronology,'evidence_sha256':{name:digest(name) for name in bound},
+        'producer_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+    with args.output.open('x') as f:json.dump(analysis,f,indent=2,allow_nan=False);f.write('\n')
+    print(json.dumps({'accepted':True,'summary':summary,'turns':analysis['turns']}))
+
+if __name__ == '__main__':main()
