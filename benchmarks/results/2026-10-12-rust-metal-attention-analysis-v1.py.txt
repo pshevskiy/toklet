@@ -1,0 +1,111 @@
+"""Replay all isolated tiny MLP projection stages after verified native idle."""
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_attention_projections as mlp
+import rust_metal_rotary as rotary
+import rust_metal_cache as cache
+import rust_metal_attention as attention
+import rust_metal_mlp as composed
+p=mlp.projection
+
+def sha(path):
+    with Path(path).open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+def read(path):return json.loads(Path(path).read_text())
+idle_path=ROOT/'benchmarks/results/2026-10-12-rust-metal-attention-idle-v1.json'
+idle=read(idle_path)
+assert idle['all_recorded_processes_absent'] is True and idle['machine']['State']=='stopped' and idle['native_session_exit_code']==0
+for field in ('archive_sha256','protected_sha256'):
+    for name,expected in idle[field].items():assert sha(ROOT/name)==expected
+path=ROOT/'benchmarks/results/2026-10-12-rust-metal-attention-v1.json';record=read(path)
+assert record['completed'] is True and 'failure' not in record
+raw_path=ROOT/'benchmarks/raw/2026-10-12-rust-metal-attention-v1.json.native.jsonl'
+stderr=ROOT/'benchmarks/results/2026-10-12-rust-metal-attention-v1.json.stderr.txt'
+assert sha(raw_path)==record['native_raw_sha256'] and sha(stderr)==record['stderr_sha256']
+build=ROOT/'artifacts/rust-metal-attention-v1'
+for name,expected in record['source_sha256'].items():
+    source=ROOT/name
+    target=build/('Cargo.toml' if name.endswith('.Cargo.toml') else 'Cargo.lock' if name.endswith('.lock') else 'src/main.rs' if name.endswith('rust_metal_probe.rs') else 'src/'+source.name)
+    assert sha(source)==sha(target)==expected
+for name,expected in {'tools/experiments/rust_metal_probe.py':record['driver_sha256'],'tools/experiments/metal_probe.py':record['common_helper_sha256'],'tools/bench/mlx_baseline.py':record['memory_helper_sha256']}.items():assert sha(ROOT/name)==expected
+for field in ('input_sha256','qualification_driver_sha256'):
+    for name,expected in record['extra_context'][field].items():assert sha(name)==expected
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==record['binary_sha256']
+assert len(record['checks'])==len(record['build_commands'])==14
+assert [c['command'] for c in record['checks']]==record['build_commands']
+assert 'test result: ok. 31 passed; 0 failed' in next(c['stdout'] for c in record['checks'] if 'test' in c['command'])
+inputs,anchors=attention.cases();ci,ca=cache.cases();ri,ra,_=rotary.cases();mi,ma,_=composed.cases()
+validators={f'attention_{i+1}':lambda e,c=c:attention.validate(e,c,anchors[c['id']]) for i,c in enumerate(inputs)}
+validators.update({f'mlp_{i+1}':lambda e,c=c:composed.validate(e,c,ma[c['id']]) for i,c in enumerate(mi)})
+validators.update({'cache_regression':lambda e:cache.validate(e,ci,ca),'rotary_regression':lambda e:rotary.validate(e,ri,ra),
+                   'rotary_overflow':rotary.overflow_rejected,'mlp_overflow':composed.overflow_rejected})
+raw=[json.loads(line) for line in raw_path.read_text().splitlines()];runs=record['native_runs']
+assert len(raw)==len(runs)==27
+assert [r['mode'] for r in runs]==['normal','invalid_shader','insufficient_budget']+[f'attention_{i+1}' for i in range(10)]+['cache_regression','rotary_regression','rotary_overflow']+[f'mlp_{i+1}' for i in range(10)]+['mlp_overflow']
+peak=0;commands={}
+for event,run in zip(raw,runs):
+    replay=copy.deepcopy(event);p.rms.probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']))
+    assert replay==run['event'] and run['watchdog_killed'] is False and 0<run['physical_process_charge_peak_bytes']<=p.rms.probe.LIMIT
+    peak=max(peak,run['physical_process_charge_peak_bytes']);commands[run['mode']]=len(event.get('result',{}).get('rows',[]))+sum(len(c['rows']) for c in event.get('result',{}).get('cases',[]))
+assert sum(commands.values())==754
+stages={name:{'first_frame_values':0,'equal_frozen_bits':0,'max_source_fp32_abs_error':0.0,'max_source_fp32_gate_fraction':0.0,'first_frame_guard_values':0} for name in ('scores','probabilities','context')}
+probability_max_frozen_abs_error=0.;probability_max_frozen_ulp_difference=0
+context_values=0;max_admission=0;differences=[];frames={};score_bits_equal=score_values=0
+f32=lambda v:struct.unpack('<f',struct.pack('<f',v))[0]
+for i,item in enumerate(inputs):
+    r=raw[3+i]['result'];rows=item['rows'];width=r['threadgroup_width'];units=math.ceil(rows*4/width)*width;h=units*8+7;f=units*rows+7;shared=h*4+519*4+f*8
+    assert r['shared_buffer_bytes']==shared and r['host_baseline_frames_readback_bytes']==shared*2 and r['admitted_bytes']==shared*3+p.rms.probe.ALLOWANCE
+    max_admission=max(max_admission,r['admitted_bytes']);arrays=[r['first_score_bits'],r['first_probability_bits'],r['first_context_bits']];counts=[rows*rows*4]*2+[rows*32]
+    for index,(name,bits,count,expected) in enumerate(zip(stages,arrays,counts,anchors[item['id']]['stages'])):
+        values=struct.unpack(f'<{count}{"f" if index<2 else "e"}',struct.pack(f'<{count}{"I" if index<2 else "H"}',*bits[:count]));stage=stages[name]
+        stage['first_frame_values']+=count;stage['equal_frozen_bits']+=sum(a==b for a,b in zip(bits[:count],expected['bits']));stage['first_frame_guard_values']+=len(bits)-count
+        if index==1:
+            frozen=struct.unpack(f'<{count}f',struct.pack(f'<{count}I',*expected['bits']))
+            probability_max_frozen_abs_error=max(probability_max_frozen_abs_error,max(abs(a-b) for a,b in zip(values,frozen)))
+            probability_max_frozen_ulp_difference=max(probability_max_frozen_ulp_difference,max(abs(a-b) for a,b in zip(bits[:count],expected['bits'])))
+        for value,reference in zip(values,expected['reference']):
+            error=abs(value-reference);gate=expected['gate'];fraction=error/(gate['atol']+gate['rtol']*abs(reference));assert fraction<=1
+            stage['max_source_fp32_abs_error']=max(stage['max_source_fp32_abs_error'],error);stage['max_source_fp32_gate_fraction']=max(stage['max_source_fp32_gate_fraction'],fraction)
+    q,k,v=[struct.unpack(f'<{len(item[key])}e',struct.pack(f'<{len(item[key])}H',*item[key])) for key in ('q_bits','k_bits','v_bits')]
+    probabilities=struct.unpack(f'<{counts[1]}f',struct.pack(f'<{counts[1]}I',*arrays[1][:counts[1]]))
+    for token in range(rows):
+        for head in range(4):
+            kv=head//2;row=(head*rows+token)*rows
+            assert all(arrays[1][row+position]==0 for position in range(token+1,rows))
+            for position in range(rows):
+                acc=0.0
+                for feature in range(8):acc=f32(acc+f32(q[(token*4+head)*8+feature]*k[(kv*32+position)*8+feature]))
+                score=f32(acc/f32(math.sqrt(8)));score_bits=struct.unpack('<I',struct.pack('<f',score))[0]
+                score_bits_equal+=int(score_bits==arrays[0][row+position]);score_values+=1
+            for feature in range(8):
+                acc=0.0
+                for position in range(token+1):acc=f32(acc+f32(probabilities[row+position]*v[(kv*32+position)*8+feature]))
+                predicted=struct.unpack('<H',struct.pack('<e',acc))[0];index=(token*4+head)*8+feature;actual=arrays[2][index]
+                assert predicted==actual
+                oracle=anchors[item['id']]['stages'][2]['bits'][index]
+                if actual!=oracle:
+                    dot=sum(probabilities[row+position]*v[(kv*32+position)*8+feature] for position in range(token+1))
+                    frozen_probabilities=struct.unpack(f'<{counts[1]}f',struct.pack(f'<{counts[1]}I',*anchors[item['id']]['stages'][1]['bits']))
+                    frozen_acc=0.0
+                    for position in range(token+1):frozen_acc=f32(frozen_acc+f32(frozen_probabilities[row+position]*v[(kv*32+position)*8+feature]))
+                    assert struct.unpack('<H',struct.pack('<e',frozen_acc))[0]==oracle
+                    actual_half=struct.unpack('<e',struct.pack('<H',actual))[0];frozen_half=struct.unpack('<e',struct.pack('<H',oracle))[0]
+                    differences.append({'case':item['id'],'index':index,'gpu_half_bits':actual,'frozen_half_bits':oracle,'independent_ordered_fp32_context':acc,'fp64_using_gpu_probabilities':dot,'ordered_fp32_using_frozen_probabilities':frozen_acc,
+                                        'half_spacing':abs(actual_half-frozen_half),'half_midpoint':(actual_half+frozen_half)/2})
+    for row in r['rows']:assert row['context_bits']==arrays[2][:counts[2]];context_values+=counts[2]
+    frames[item['id']]=arrays[2][:counts[2]]
+for layer in range(2):assert frames[f'cases.prompt.layers.{layer}.attention'][:96]==frames[f'cases.future_changed.layers.{layer}.attention'][:96]
+summary={'stages':stages,'attention_commands':130,'all_repetition_context_values':context_values,'independent_ordered_score_values':score_values,
+         'equal_independent_ordered_score_bits':score_bits_equal,'exact_ordered_context_half_store_values':stages['context']['first_frame_values'],
+         'unique_context_half_differences':differences,'probability_max_frozen_abs_error':probability_max_frozen_abs_error,
+         'probability_max_frozen_ulp_difference':probability_max_frozen_ulp_difference,'future_changed_first_three_context_tokens_exact':True,'max_attention_admitted_bytes':max_admission,
+         'all_positive_commands':sum(commands.values()),'negative_jobs':4,'max_own_child_peak_bytes':peak,'command_counts':commands,
+         'scope':'10 saved-input full-prefix GQA jobs. First score/probability/context and all firstguards replayed; native12 subsequentframesexact, eachfinalcontext archived. Independent FP32 ordered context using rawGPUprobabilities ->Half store exact. No cachedprefix/propagation/session/Qwen/fullbackend/quality/performance/M4 claim.'}
+out={'format':'toklet-tiny-metal-attention-analysis-v1','completed':True,'records_sha256':{str(pth.relative_to(ROOT)):sha(pth) for pth in (path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x')as stream:stream.write(json.dumps(out,indent=2,allow_nan=False)+'\n')
+print(json.dumps(summary,indent=2))

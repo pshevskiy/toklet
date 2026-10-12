@@ -1,0 +1,90 @@
+{
+  "format": "toklet-tiny-metal-attention-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-rust-metal-attention-v1.json": "ef308139468304644cffdc30f6b3139574f38c90a4ed191dbcd712a99fd96cdf",
+    "benchmarks/raw/2026-10-12-rust-metal-attention-v1.json.native.jsonl": "f84ab97b0c66df672b30cb9c926c14873215b513795212fe0fbc0fa6cc18f70c",
+    "benchmarks/results/2026-10-12-rust-metal-attention-v1.json.stderr.txt": "f4b471dff610ea9e5121ec75bf186760a46d8ff25206e3ba543be557792580c1",
+    "benchmarks/results/2026-10-12-rust-metal-attention-idle-v1.json": "16e562dd9fa264b9a873dcd78b189b384d713a2313ec895b097b91b3f980b199"
+  },
+  "summary": {
+    "stages": {
+      "scores": {
+        "first_frame_values": 8528,
+        "equal_frozen_bits": 8528,
+        "max_source_fp32_abs_error": 0.002866387367248535,
+        "max_source_fp32_gate_fraction": 0.49571994927715696,
+        "first_frame_guard_values": 502
+      },
+      "probabilities": {
+        "first_frame_values": 8528,
+        "equal_frozen_bits": 7398,
+        "max_source_fp32_abs_error": 0.0004818439483642578,
+        "max_source_fp32_gate_fraction": 0.4749886285495449,
+        "first_frame_guard_values": 502
+      },
+      "context": {
+        "first_frame_values": 2816,
+        "equal_frozen_bits": 2815,
+        "max_source_fp32_abs_error": 0.0014796257019042969,
+        "max_source_fp32_gate_fraction": 0.49459608999263055,
+        "first_frame_guard_values": 1350
+      }
+    },
+    "attention_commands": 130,
+    "all_repetition_context_values": 36608,
+    "independent_ordered_score_values": 8528,
+    "equal_independent_ordered_score_bits": 8528,
+    "exact_ordered_context_half_store_values": 2816,
+    "unique_context_half_differences": [
+      {
+        "case": "cases.capacity.layers.0.attention",
+        "index": 605,
+        "gpu_half_bits": 7339,
+        "frozen_half_bits": 7338,
+        "independent_ordered_fp32_context": 0.004556663334369659,
+        "fp64_using_gpu_probabilities": 0.004556665264317417,
+        "ordered_fp32_using_frozen_probabilities": 0.004556652158498764,
+        "half_spacing": 3.814697265625e-06,
+        "half_midpoint": 0.0045566558837890625
+      }
+    ],
+    "probability_max_frozen_abs_error": 5.960464477539063e-08,
+    "probability_max_frozen_ulp_difference": 3,
+    "future_changed_first_three_context_tokens_exact": true,
+    "max_attention_admitted_bytes": 67225936,
+    "all_positive_commands": 754,
+    "negative_jobs": 4,
+    "max_own_child_peak_bytes": 22594160,
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "attention_1": 13,
+      "attention_2": 13,
+      "attention_3": 13,
+      "attention_4": 13,
+      "attention_5": 13,
+      "attention_6": 13,
+      "attention_7": 13,
+      "attention_8": 13,
+      "attention_9": 13,
+      "attention_10": 13,
+      "cache_regression": 182,
+      "rotary_regression": 273,
+      "rotary_overflow": 0,
+      "mlp_1": 13,
+      "mlp_2": 13,
+      "mlp_3": 13,
+      "mlp_4": 13,
+      "mlp_5": 13,
+      "mlp_6": 13,
+      "mlp_7": 13,
+      "mlp_8": 13,
+      "mlp_9": 13,
+      "mlp_10": 13,
+      "mlp_overflow": 0
+    },
+    "scope": "10 saved-input full-prefix GQA jobs. First score/probability/context and all firstguards replayed; native12 subsequentframesexact, eachfinalcontext archived. Independent FP32 ordered context using rawGPUprobabilities ->Half store exact. No cachedprefix/propagation/session/Qwen/fullbackend/quality/performance/M4 claim."
+  }
+}

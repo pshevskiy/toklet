@@ -1116,6 +1116,20 @@ recorded. Astra accepted code and evidence without findings after independent re
 qualification timing; no integrated session-valid-prefix advances. Causal GQA,
 propagated decoder/Qwen/quality and M4 remain open.
 
+Tiny full-prefix GQA preparation, 12 October 2026 (M4 pending): the
+[causal GPU attention](docs/experiments/2026-10-12-rust-metal-attention.md)
+covers all ten saved-input jobs with stable orderedFP32 scores/softmax/context
+and Half context. Original three intermediate gates pass; scores are frozen
+bit-exact, probability differences are at most3FP32ULPs, and one normalHalf
+contextULP is investigated at its midpoint. Independent orderedFP32 scores
+and all finalcontext stores match; masked probabilities are zero and changed
+future tokens preserve earlier context.130 commands retain36,608 finalcontext
+values/first completeframes+2,354guards; native12laterframes equal first.
+Same-binary cache/rotary/MLP checks total754positive/fournegativejobs;14build
+checks/31standaloneRust and94experimentPython/193benchmarkPython/76rootRust
+plusfmt/Clippy pass. Astra accepted the completed code and evidence without findings after byte-identical independent replay. Nonzero cached prefixes,
+GPU propagation, full decoder/Qwen/quality and M4 remain open.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -1209,4 +1223,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: implement causal GQA before composing a full layer.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: qualify nonzero cached-prefix GQA, then compose a complete GPU layer.
