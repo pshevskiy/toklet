@@ -1,0 +1,105 @@
+{
+  "format": "toklet-tiny-metal-rotary-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-rust-metal-rotary-v2.json": "2ea8f7d2cc4534817e186a9b3b98b6f06ac985ce54b73108bd1e2f74046f605a",
+    "benchmarks/raw/2026-10-12-rust-metal-rotary-v2.json.native.jsonl": "42095b72cd0e6a5945c04e426d80b968bbb58135f02c7c1c1413d9bbd5dfc690",
+    "benchmarks/results/2026-10-12-rust-metal-rotary-v2.json.stderr.txt": "08420d75dd06e7a58ce43c792038fd8977634eff31dc541be6292a1a77ff675c",
+    "benchmarks/results/2026-10-12-rust-metal-rotary-idle-v1.json": "52a424dcd6e50a7a07a18927337abe7f3d06bef24459846aee79b7c6e2f61de2"
+  },
+  "summary": {
+    "attention_regression_stages": {
+      "k": {
+        "commands": 130,
+        "output_values": 18304,
+        "equal_frozen_half_values": 18304,
+        "max_source_fp32_gate_fraction": 0.4969946439169997,
+        "max_source_fp32_abs_error": 0.002014636993408203,
+        "max_admitted_bytes": 67124530,
+        "unique_half_differences": []
+      },
+      "v": {
+        "commands": 130,
+        "output_values": 18304,
+        "equal_frozen_half_values": 18291,
+        "max_source_fp32_gate_fraction": 0.48929894377917843,
+        "max_source_fp32_abs_error": 0.0016853809356689453,
+        "max_admitted_bytes": 67124530,
+        "unique_half_differences": [
+          {
+            "case": "cases.future_changed.layers.0.v_projection",
+            "index": 56,
+            "gpu_half_bits": 3853,
+            "frozen_half_bits": 3854,
+            "fp64_dot_plus_bias": 0.00043046940118074417,
+            "gpu_fp32_result": 0.00043044984340667725,
+            "gpu_minus_fp64": -1.955777406692505e-08,
+            "feature_order_fp32_plus_bias": 0.00043048523366451263,
+            "half_spacing": 2.384185791015625e-07,
+            "half_midpoint": 0.0004304647445678711,
+            "same_difference_all_repetitions": true
+          }
+        ]
+      },
+      "o": {
+        "commands": 130,
+        "output_values": 36608,
+        "equal_frozen_half_values": 36608,
+        "max_source_fp32_gate_fraction": 0.4901600612826886,
+        "max_source_fp32_abs_error": 0.0010646581649780273,
+        "max_admitted_bytes": 67133842,
+        "unique_half_differences": []
+      }
+    },
+    "rotary": {
+      "commands": 273,
+      "cases": 21,
+      "output_values": 55120,
+      "equal_frozen_half_values": 55120,
+      "max_source_fp32_gate_fraction": 0.49812881633031697,
+      "max_source_fp32_abs_error": 0.0021777302026748657,
+      "guard_values": 5863,
+      "max_admitted_bytes": 67119174,
+      "unique_half_differences": []
+    },
+    "all_positive_commands": 1651,
+    "negative_jobs": 6,
+    "max_own_child_peak_bytes": 13140592,
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "mlp_1": 13,
+      "mlp_2": 13,
+      "mlp_3": 13,
+      "mlp_4": 13,
+      "mlp_5": 13,
+      "mlp_6": 13,
+      "mlp_7": 13,
+      "mlp_8": 13,
+      "mlp_9": 13,
+      "mlp_10": 13,
+      "mlp_overflow": 0,
+      "k_layer_0": 65,
+      "k_layer_1": 65,
+      "v_layer_0": 65,
+      "v_layer_1": 65,
+      "o_layer_0": 65,
+      "o_layer_1": 65,
+      "gate_layer_0": 65,
+      "gate_layer_1": 65,
+      "up_layer_0": 65,
+      "up_layer_1": 65,
+      "down_layer_0": 65,
+      "down_layer_1": 65,
+      "query_manual_regression": 169,
+      "projection_overflow_regression": 0,
+      "gating_regression": 143,
+      "gating_tails_regression": 117,
+      "gating_overflow_regression": 0,
+      "rotary_frozen_manual": 273,
+      "rotary_overflow": 0
+    },
+    "scope": "Saved-input rotary only; no KV writes or propagated decoder. GPU FP32 trigonometry and Half stores observed via final Half results, no internal coefficient/FP32 rotary readback. Full rotary guard bytes retained/replayed; original projection/MLP guard checks retain Boolean evidence."
+  }
+}

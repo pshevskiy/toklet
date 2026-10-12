@@ -1089,6 +1089,19 @@ and five required failures. Eleven build checks/25 standalone Rust tests and
 85 experiment Python tests pass. Astra accepted code and evidence without findings after independent replay. Rotary/cache
 writes, causal GQA, full decoder/Qwen and M4 completion remain open.
 
+Tiny rotary preparation, 12 October 2026 (M4 pending): the
+[split-half GPU primitive](docs/experiments/2026-10-12-rust-metal-rotary.md)
+covers all twenty saved-input Q/K stages and exact position-zero/manual.
+GPU FP32 angles/trigonometry/uncontracted products/sums precede Half stores;
+all55,120 active values match frozen/manual bits across273 commands, with
+5,863 full inactive/tail guard values replayed. Original source gates pass.
+Finite-input output overflow is discarded. Same-binary regressions total
+1,651 positive commands/six failures. Twelve build checks/27 standaloneRust,
+88 experimentPython/193 benchmarkPython and76 rootRust tests plusfmt/Clippy
+pass. The first pre-GPU Clippy failure is retained; finalnative completes
+naturally with priorchains absent/VMstopped/protected endpoints unchanged.
+Astra accepted code and evidence without findings after independent replay. KV writes, GQA, full decoder/Qwen and M4 remain open.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -1182,4 +1195,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: implement rotary/cache writes and causal GQA before composing a full layer.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: implement cache writes and causal GQA before composing a full layer.

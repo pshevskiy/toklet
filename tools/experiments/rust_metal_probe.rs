@@ -430,6 +430,12 @@ mod metal {
     pub(super) fn run_silu(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
         silu::run(path, limit)
     }
+    mod rotary {
+        include!("rust_metal_rotary.rs");
+    }
+    pub(super) fn run_rotary(path: &std::path::Path, limit: usize) -> Result<Value, Error> {
+        rotary::run(path, limit)
+    }
     mod mlp {
         include!("rust_metal_mlp.rs");
     }
@@ -462,6 +468,7 @@ fn run() -> Result<Value, Error> {
     let mut gating_input = None;
     let mut projection_input = None;
     let mut mlp_input = None;
+    let mut rotary_input = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--invalid-shader") if !invalid => invalid = true,
@@ -507,6 +514,12 @@ fn run() -> Result<Value, Error> {
                         .ok_or_else(|| error("arguments", "missing MLP input"))?,
                 ));
             }
+            Some("--rotary-input") if rotary_input.is_none() => {
+                rotary_input = Some(std::path::PathBuf::from(
+                    args.next()
+                        .ok_or_else(|| error("arguments", "missing rotary input"))?,
+                ));
+            }
             Some("--budget-bytes") if !has_budget => {
                 let value = args
                     .next()
@@ -529,6 +542,7 @@ fn run() -> Result<Value, Error> {
         + usize::from(gating_input.is_some())
         + usize::from(projection_input.is_some())
         + usize::from(mlp_input.is_some())
+        + usize::from(rotary_input.is_some())
         > 1
     {
         return Err(error("arguments", "probe operation modes are exclusive"));
@@ -543,6 +557,8 @@ fn run() -> Result<Value, Error> {
             metal::run_residual(&path, limit)
         } else if let Some(path) = silu_input {
             metal::run_silu(&path, limit)
+        } else if let Some(path) = rotary_input {
+            metal::run_rotary(&path, limit)
         } else if let Some(path) = mlp_input {
             metal::run_mlp(&path, limit)
         } else if let Some(path) = projection_input {
@@ -565,6 +581,7 @@ fn run() -> Result<Value, Error> {
             gating_input,
             projection_input,
             mlp_input,
+            rotary_input,
         );
         Err(error("capability", "requires Apple Silicon macOS"))
     }
