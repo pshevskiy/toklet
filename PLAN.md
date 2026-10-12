@@ -735,6 +735,16 @@ at its pre-signal identity check. Protected endpoints and stopped VM are
 verified; no resumed/reconstructed sample counts. Fresh cached qualification,
 pending/changed workloads, full application and retention remain required.
 
+Fresh cached evidence, 12 October 2026: the [complete retry](docs/experiments/2026-10-12-cpu-tiled-cached.md)
+retains three fresh warmups and ten measured requests; all reuse 512 tokens,
+evaluate zero prompt tokens and end at 639 committed positions plus one
+pending ID. Median request is 54.425495 s and decode 2.333468 steps/s. The
+empty evaluation is timed; prefill throughput is null. Cached TTFT near the
+timer floor is not ranked by percentages. Exclusion recovery, current process
+absence, natural completion, protected endpoints and source bindings pass
+saved-data checks. No paused-v2 rows are reused. Pending/changed rows, full
+application and explicit retention remain; scalar stays default.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [x] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [x] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
@@ -1063,4 +1073,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: qualify the three remaining cache workloads (cached, pending and changed) and full tiled application trace before the retention decision.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: qualify the two remaining cache workloads (pending and changed) and full tiled application trace before the retention decision.

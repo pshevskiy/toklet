@@ -270,3 +270,9 @@ reuses 512 committed prefix tokens and evaluates 64 appended tokens, with
 three warmups and ten complete fixed-output requests. Median TTFT is
 5.839271 s and request 63.166372 s. Cache preparation is outside request
 timing. Three cache rows, full application evidence and retention remain.
+
+The [fresh tiled cached workload](docs/experiments/2026-10-12-cpu-tiled-cached.md)
+completes three warmups and ten requests with zero prompt tokens to evaluate.
+Median request time is 54.425495 s; all requests finish at 639 committed
+positions plus one pending ID. The user-paused attempt remains excluded.
+Pending/changed rows, full application and retention remain.

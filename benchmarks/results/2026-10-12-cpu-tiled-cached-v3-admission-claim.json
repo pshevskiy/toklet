@@ -1,0 +1,7 @@
+{
+  "format": "toklet-cpu-tiled-cached-admission-claim-v3",
+  "claimed_utc": "2026-10-12T07:52:14.580151+00:00",
+  "launcher_pid": 29542,
+  "workload": "cached",
+  "producer_path": "/Users/coloner/work/rust/toklet/artifacts/launch-tiled-cached-v3.py"
+}
