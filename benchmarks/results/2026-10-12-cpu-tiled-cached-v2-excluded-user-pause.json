@@ -1,0 +1,17 @@
+{
+  "format": "toklet-user-requested-benchmark-pause-v1",
+  "paused_utc": "2026-10-12T05:50:30.205652+00:00",
+  "session_id": 60442,
+  "workload": "cached",
+  "owned_process_group": 96097,
+  "paused_pids": [
+    96097,
+    96112,
+    96121
+  ],
+  "snapshot_before": "96097 35939 96097 Ss   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/launch-tiled-cached-v2.py --workload cached\n96112 96097 96097 S    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload cached --cpu-projection tiled --cpu-qualification /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json --output benchmarks/raw/2026-10-11-cpu-tiled-cached-v2.json\n96121 96112 96097 R    /Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct 128 tiled\n",
+  "snapshot_after": "96097 35939 96097 Ts   /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python artifacts/launch-tiled-cached-v2.py --workload cached\n96112 96097 96097 T    /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python tools/bench/cpu.py --workload cached --cpu-projection tiled --cpu-qualification /Users/coloner/work/rust/toklet/benchmarks/results/2026-10-10-cpu-tiled-qualification-v1.json --output benchmarks/raw/2026-10-11-cpu-tiled-cached-v2.json\n96121 96112 96097 T    /Users/coloner/work/rust/toklet/artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench /Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct 128 tiled\n",
+  "signal": "SIGSTOP",
+  "acceptance_eligible": false,
+  "reason": "User explicitly requested pause; monotonic timing and uninterrupted run are invalidated. Preserve whole attempt; fresh attempt needed for acceptance after safe retirement on resume."
+}

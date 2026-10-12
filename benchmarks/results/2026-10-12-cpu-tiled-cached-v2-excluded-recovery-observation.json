@@ -1,0 +1,60 @@
+{
+  "format": "toklet-paused-attempt-recovery-observation-v1",
+  "observed_utc": "2026-10-12T07:48:43.361146+00:00",
+  "session_id": 60442,
+  "native_exit_status": null,
+  "native_session_query": {
+    "tool": "write_stdin",
+    "session_id": 60442,
+    "error": "Unknown process id 60442"
+  },
+  "retirement_preflight": {
+    "command": [
+      ".venv/bin/python",
+      "artifacts/retire-paused-cached-v2.py"
+    ],
+    "actual_tool_result": {
+      "chunk_id": "353c58",
+      "wall_time_seconds": 8.292e-06,
+      "exit_code": 1,
+      "original_token_count": 87,
+      "output": "Traceback (most recent call last):\n  File \"/Users/coloner/work/rust/toklet/artifacts/retire-paused-cached-v2.py\", line 10, in <module>\n    p=subprocess.run(query,text=True,capture_output=True);assert p.returncode==0 and not p.stderr\n                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    "failed_before_signals": true
+  },
+  "owned_absence_observation": {
+    "actual_tool_result": {
+      "chunk_id": "9dbd13",
+      "wall_time_seconds": 1.0375e-05,
+      "exit_code": 1,
+      "original_token_count": 0,
+      "output": ""
+    },
+    "command": [
+      "ps",
+      "-p",
+      "96097,96112,96121",
+      "-o",
+      "pid=,ppid=,pgid=,stat=,command="
+    ]
+  },
+  "original_absence_observation": {
+    "actual_tool_result": {
+      "chunk_id": "ec2fdd",
+      "wall_time_seconds": 9.375e-06,
+      "exit_code": 1,
+      "original_token_count": 0,
+      "output": ""
+    },
+    "command": [
+      "ps",
+      "-p",
+      "17694,85019,85027,88184,35939",
+      "-o",
+      "pid=,ppid=,pgid=,stat=,command="
+    ]
+  },
+  "signals_sent_by_retirement": [],
+  "acceptance_eligible": false,
+  "scope": "Current absence is observed. Native exit time/status and disappearance cause unavailable; do not infer successful completion."
+}

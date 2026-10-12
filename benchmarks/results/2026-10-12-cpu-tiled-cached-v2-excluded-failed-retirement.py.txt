@@ -1,0 +1,42 @@
+"""Retire only the verified paused, excluded cached attempt; run no numerical work."""
+from pathlib import Path
+from datetime import datetime, timezone
+import json, os, signal, subprocess
+root=Path.cwd();pids=[96097,96112,96121];group=96097
+pause_path=root/'artifacts/2026-10-12-cpu-tiled-cached-v2-user-pause.json'
+pause=json.loads(pause_path.read_text())
+assert pause['session_id']==60442 and pause['paused_pids']==pids and pause['acceptance_eligible'] is False
+query=['ps','-p',','.join(map(str,pids)),'-o','pid=,ppid=,pgid=,stat=,command=']
+p=subprocess.run(query,text=True,capture_output=True);assert p.returncode==0 and not p.stderr
+rows={int(row[0]):row for line in p.stdout.splitlines() if len(row:=line.split(None,4))==5}
+old={int(row[0]):row for line in pause['snapshot_after'].splitlines() if len(row:=line.split(None,4))==5}
+assert set(rows)==set(old)==set(pids)
+assert [(int(rows[pid][1]),int(rows[pid][2])) for pid in pids]==[(35939,group),(group,group),(96112,group)]
+assert all('T' in rows[pid][3] and rows[pid][4]==old[pid][4] for pid in pids)
+allp=subprocess.check_output(['ps','-axo','pid=,pgid='],text=True)
+members=sorted(int(parts[0]) for line in allp.splitlines() if len(parts:=line.split())==2 and int(parts[1])==group)
+assert members==pids
+# Reserve the durable receipt before dispatching any signal. The worker is
+# never continued; parents continue only to receive EOF, reap and exit.
+record={'format':'toklet-excluded-paused-attempt-retirement-v1','retirement_started_utc':datetime.now(timezone.utc).isoformat(),
+'session_id':60442,'workload':'cached','owned_pids':pids,'owned_group':group,'snapshot_before':p.stdout,
+'actions':[],'worker_resumed':False,'acceptance_eligible':False,'dispatch_complete':False,
+'scope':'Retirement dispatched only; actual tool completion and post-exit absence still required.'}
+path=root/'artifacts/2026-10-12-cpu-tiled-cached-v2-retirement.json'
+with path.open('x') as f:
+ def publish():
+  f.seek(0);json.dump(record,f,indent=2);f.write('\n');f.truncate();f.flush();os.fsync(f.fileno())
+ publish()
+ try:
+  for pid,sig in [(96121,signal.SIGKILL),(96112,signal.SIGCONT),(96097,signal.SIGCONT)]:
+   os.kill(pid,sig)
+   record['actions'].append({'pid':pid,'signal':sig.name,'dispatched_utc':datetime.now(timezone.utc).isoformat()})
+   publish()
+  record['dispatch_complete']=True
+  record['retired_utc']=datetime.now(timezone.utc).isoformat()
+  publish()
+ except BaseException as exc:
+  record['dispatch_error']={'type':type(exc).__name__,'message':str(exc),'observed_utc':datetime.now(timezone.utc).isoformat()}
+  publish()
+  raise
+print(json.dumps(record))

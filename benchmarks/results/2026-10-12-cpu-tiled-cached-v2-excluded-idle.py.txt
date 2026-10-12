@@ -1,0 +1,67 @@
+"""Archive the excluded paused attempt using current absence, without inventing exit evidence."""
+from pathlib import Path
+from datetime import datetime,timezone
+import json,subprocess,hashlib,sys
+sys.path.insert(0,'tools/bench')
+import linux_code_isolation_probe as probe
+ROOT=Path.cwd();PREFIX='2026-10-12-cpu-tiled-cached-v2-excluded'
+def digest(path):
+ with Path(path).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
+def main():
+ observation_path=ROOT/'artifacts/2026-10-12-cpu-tiled-cached-v2-recovery-observation.json'
+ observation=json.loads(observation_path.read_text())
+ assert observation['session_id']==60442 and observation['native_exit_status'] is None
+ assert observation['signals_sent_by_retirement']==[] and observation['acceptance_eligible'] is False
+ assert observation['retirement_preflight']['failed_before_signals'] is True
+ assert observation['retirement_preflight']['actual_tool_result']['exit_code']==1
+ assert not (ROOT/'artifacts/2026-10-12-cpu-tiled-cached-v2-retirement.json').exists()
+ pause_path=ROOT/'artifacts/2026-10-12-cpu-tiled-cached-v2-user-pause.json'
+ pause=json.loads(pause_path.read_text());assert pause['session_id']==60442 and pause['acceptance_eligible'] is False
+ assert pause['paused_pids']==[96097,96112,96121] and pause['owned_process_group']==96097
+ pids=[96097,96112,96121,17694,85019,85027,88184,35939]
+ command=['ps','-p',','.join(map(str,pids)),'-o','pid=']
+ absent=subprocess.run(command,capture_output=True,text=True)
+ assert absent.returncode==1 and not absent.stdout and not absent.stderr
+ groups={str(group):probe.live_group_members(group) for group in [96097,17694]}
+ assert groups=={'96097':[],'17694':[]}
+ machines=json.loads(subprocess.check_output(['/opt/podman/bin/podman','machine','list','--format=json'],text=True))
+ machine=next(m for m in machines if m['Name']=='podman-machine-default');assert machine['Running'] is False and machine['Starting'] is False
+ launch_path=ROOT/'benchmarks/raw/2026-10-11-cpu-tiled-cached-v2-launch.json'
+ launch=json.loads(launch_path.read_text());assert launch['engine_revision']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+ assert subprocess.check_output(['git','status','--porcelain'],text=True)==''
+ raw=ROOT/'benchmarks/raw/2026-10-11-cpu-tiled-cached-v2.json'
+ assert not raw.exists();journal=Path(str(raw)+'.samples.jsonl');assert journal.exists()
+ rows=[json.loads(line) for line in journal.read_text().splitlines()];assert 0<len(rows)<10
+ prior=json.loads((ROOT/'benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json').read_text())
+ end={}
+ for section,files in prior['end_verified'].items():
+  end[section]={}
+  for name,expected in files.items():
+   actual=digest(ROOT/name);assert actual==expected,name;end[section][name]=actual
+ binary=ROOT/'artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench';assert digest(binary)==launch['qualified_binary_sha256']
+ for name,expected in launch['compiled_source_sha256'].items():assert digest(ROOT/name)==expected,name
+ out=ROOT/'benchmarks/results';inventory={}
+ sources=[(journal,'.samples.jsonl'),(launch_path,'-launch.json'),
+ (ROOT/'benchmarks/raw/2026-10-11-cpu-tiled-cached-v2-admission-claim.json','-admission-claim.json'),
+ (ROOT/'artifacts/2026-10-11-cpu-tiled-cached-v2-owned.json','-owned.json'),
+ (pause_path,'-user-pause.json'),(observation_path,'-recovery-observation.json'),
+ (ROOT/'artifacts/launch-tiled-cached-v2.py','-launch.py.txt'),
+ (ROOT/'artifacts/observe-tiled-cached-owned-v2.py','-owned.py.txt'),
+ (ROOT/'tools/bench/cpu.py','-driver.py.txt'),
+ (ROOT/'artifacts/retire-paused-cached-v2.py','-failed-retirement.py.txt'),
+ (Path(__file__),'-idle.py.txt')]
+ for source,suffix in sources:
+  target=out/(PREFIX+suffix)
+  with target.open('xb') as f:f.write(source.read_bytes())
+  inventory[str(target.relative_to(ROOT))]=digest(target)
+ record={'format':'toklet-paused-excluded-recovery-idle-v1','idle_verified_utc':datetime.now(timezone.utc).isoformat(),
+ 'session_id':60442,'workload':'cached','acceptance_eligible':False,'native_exit_status':None,
+ 'all_recorded_processes_absent':True,'absent_pids':pids,'empty_process_groups':groups,
+ 'absence_query':{'command':command,'exit_code':absent.returncode,'stdout':absent.stdout,'stderr':absent.stderr},
+ 'stopped_machine':machine,'end_verified':end,'qualified_binary_sha256':launch['qualified_binary_sha256'],
+ 'compiled_source_sha256':launch['compiled_source_sha256'],'dispatch_revision':launch['engine_revision'],
+ 'excluded_journal_rows':len(rows),'saved_result_sha256':inventory,'producer_sha256':digest(__file__),
+ 'scope':'User-paused attempt wholly excluded. Exit status/time/disappearance cause unknown; current original orchestration and benchmark absence observed. No successful-result JSON or signals dispatched by recovery.'}
+ with (out/(PREFIX+'-idle.json')).open('x') as f:json.dump(record,f,indent=2);f.write('\n')
+ print(json.dumps({'saved_files':len(inventory),'excluded_rows':len(rows),'idle_verified_utc':record['idle_verified_utc']}))
+if __name__=='__main__':main()

@@ -727,6 +727,14 @@ validated independently. Historical scalar reductions are descriptive. No
 numerical helper or qualified artifact changes. Three cache rows (cached,
 pending and changed), full application evidence and retention remain.
 
+Excluded cached attempt, 12 October 2026: the [pause/recovery record](docs/experiments/2026-10-12-cpu-tiled-cached-excluded.md)
+retains five partial rows solely as excluded evidence. All recorded benchmark
+and original orchestration PIDs/groups are now absent; native session exit
+status and disappearance cause are unavailable. Reviewed retirement stopped
+at its pre-signal identity check. Protected endpoints and stopped VM are
+verified; no resumed/reconstructed sample counts. Fresh cached qualification,
+pending/changed workloads, full application and retention remain required.
+
 - [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [x] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [x] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
