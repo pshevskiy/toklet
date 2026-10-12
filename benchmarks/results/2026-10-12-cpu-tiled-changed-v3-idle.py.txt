@@ -1,0 +1,101 @@
+"""Archive the changed run only after its actual natural completion."""
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib, json, subprocess, sys
+sys.path.insert(0, 'tools/bench')
+import linux_code_isolation_probe as cached
+
+ROOT = Path.cwd()
+PREFIX = '2026-10-12-cpu-tiled-changed-v3'
+
+def digest(path):
+    with Path(path).open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+def main():
+    completion_path = ROOT/'artifacts'/f'{PREFIX}-session-completion.json'
+    completion = json.loads(completion_path.read_text())
+    assert completion['session_id'] == 41086
+    assert completion['actual_tool_result']['exit_code'] == 0
+    assert completion['actual_tool_result']['output'].splitlines()[-1] == 'Tiled changed workload completed naturally'
+    owned_path = ROOT/'artifacts'/f'{PREFIX}-owned.json'
+    owned = json.loads(owned_path.read_text())
+    pids = [43111, 43153, 43161]
+    assert [owned[key] for key in ('launcher_pid', 'driver_pid', 'numerical_worker_pid')] == pids
+    assert owned['owned_process_group'] == 43111
+    absent = subprocess.run(['ps', '-p', ','.join(map(str, pids)), '-o', 'pid='], capture_output=True, text=True)
+    assert absent.returncode == 1 and not absent.stdout and not absent.stderr
+    groups = {'43111': cached.live_group_members(43111)}
+    assert groups == {'43111': []}
+    recovery_path = ROOT/'benchmarks/results/2026-10-12-cpu-tiled-cached-v2-excluded-idle.json'
+    recovery = json.loads(recovery_path.read_text())
+    assert recovery['format'] == 'toklet-paused-excluded-recovery-idle-v1' and recovery['acceptance_eligible'] is False
+    assert recovery['native_exit_status'] is None and recovery['session_id'] == 60442
+    original_pids = [96097,96112,96121,17694,85019,85027,88184,35939]
+    assert recovery['absent_pids'] == original_pids
+    original_absent = subprocess.run(['ps','-p',','.join(map(str,original_pids)),'-o','pid='],capture_output=True,text=True)
+    assert original_absent.returncode == 1 and not original_absent.stdout and not original_absent.stderr
+    assert cached.live_group_members(96097) == [] and cached.live_group_members(17694) == []
+    held = {'original_orchestration_absent':True,'recorded_pids':original_pids,
+            'query':{'command':original_absent.args,'exit_code':original_absent.returncode,'stdout':original_absent.stdout,'stderr':original_absent.stderr},
+            'recovery_idle_sha256':digest(recovery_path)}
+    machines = json.loads(subprocess.check_output(['/opt/podman/bin/podman', 'machine', 'list', '--format=json'], text=True))
+    machine = next(item for item in machines if item['Name'] == 'podman-machine-default')
+    assert machine['Running'] is False and machine['Starting'] is False
+    raw = ROOT/'benchmarks/raw'/f'{PREFIX}.json'
+    result = json.loads(raw.read_text())
+    assert result['runtime'] == 'Toklet tiled CPU' and len(result['samples']) == 10
+    assert result['setup']['warmup_repetitions'] == 3
+    launch = ROOT/'benchmarks/raw'/f'{PREFIX}-launch.json'
+    launch_record = json.loads(launch.read_text())
+    assert launch_record['launcher_pid'] == 43111
+    assert launch_record['engine_revision'] == result['identity']['engine_commit']
+    assert launch_record['working_tree_clean'] is True and result['identity']['working_tree_dirty'] is False
+    assert subprocess.check_output(['git', 'status', '--porcelain'], text=True) == ''
+    assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == launch_record['engine_revision']
+    out = ROOT/'benchmarks/results'
+    inventory = {}
+    def copy(source, target):
+        assert not target.exists()
+        target.write_bytes(source.read_bytes())
+        inventory[str(target.relative_to(ROOT))] = digest(target)
+    for suffix in ('', '.samples.jsonl'):
+        copy(Path(str(raw)+suffix), out/(f'{PREFIX}.json'+suffix))
+    for source, target in [
+        (launch, out/f'{PREFIX}-launch.json'),
+        (ROOT/'benchmarks/raw'/f'{PREFIX}-admission-claim.json', out/f'{PREFIX}-admission-claim.json'),
+        (owned_path, out/f'{PREFIX}-owned.json'),
+        (completion_path, out/f'{PREFIX}-session-completion.json'),
+        (ROOT/'artifacts/launch-tiled-changed-v3.py', out/f'{PREFIX}-launch.py.txt'),
+        (ROOT/'artifacts/observe-tiled-changed-owned-v3.py', out/f'{PREFIX}-owned.py.txt'),
+        (ROOT/'tools/bench/cpu.py', out/f'{PREFIX}-driver.py.txt'),
+        (Path(__file__), out/f'{PREFIX}-idle.py.txt')]:
+        copy(source, target)
+    prior = json.loads((ROOT/'benchmarks/results/2026-10-11-held-out-task-tiled-grading-v1-idle.json').read_text())
+    end = {}
+    for section, files in prior['end_verified'].items():
+        end[section] = {}
+        for name, expected in files.items():
+            actual = digest(ROOT/name)
+            assert actual == expected, name
+            end[section][name] = actual
+    qualified_binary = ROOT/'artifacts/cpu-tiled-engine-v1/release/examples/cpu_bench'
+    assert digest(qualified_binary) == launch_record['qualified_binary_sha256']
+    for name, expected in launch_record['compiled_source_sha256'].items():
+        assert digest(ROOT/name) == expected, name
+    idle = {'format': 'toklet-cpu-tiled-workload-natural-exit-idle-v1',
+            'idle_verified_utc': datetime.now(timezone.utc).isoformat(), 'session_id': 41086,
+            'workload': 'changed', 'all_owned_processes_absent': True, 'exited_owned_pids': pids,
+            'owned_group_members': groups, 'owned_absence_query': {'command': absent.args,
+            'exit_code': absent.returncode, 'stdout': absent.stdout, 'stderr': absent.stderr},
+            'original_recovery_snapshot': held, 'stopped_machine': machine, 'end_verified': end,
+            'qualified_binary_sha256': digest(qualified_binary),
+            'compiled_source_sha256': launch_record['compiled_source_sha256'],
+            'working_tree_clean': True, 'engine_revision': launch_record['engine_revision'],
+            'saved_result_sha256': inventory, 'producer_sha256': digest(__file__)}
+    with (out/f'{PREFIX}-idle.json').open('x') as stream:
+        json.dump(idle, stream, indent=2); stream.write('\n')
+    print(json.dumps({'idle_verified_utc': idle['idle_verified_utc'], 'saved_files': len(inventory), 'exited_owned_pids': pids}))
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,7 @@
+{
+  "format": "toklet-cpu-tiled-changed-admission-claim-v3",
+  "claimed_utc": "2026-10-12T08:38:33.712653+00:00",
+  "launcher_pid": 43111,
+  "workload": "changed",
+  "producer_path": "/Users/coloner/work/rust/toklet/artifacts/launch-tiled-changed-v3.py"
+}

@@ -282,3 +282,9 @@ commits fixed staged token 2077 before generating the continuation. Three
 warmups and ten measured requests complete; each measured request ends at
 640 committed positions plus one pending ID. Median TTFT is 0.425491 s and
 request 54.797608 s. Changed-prefix, full application and retention remain.
+
+The [tiled changed-prefix workload](docs/experiments/2026-10-12-cpu-tiled-changed.md)
+resets and replays the full 512-token prompt after an edit at zero-based index
+128. Three warmups and ten measured requests complete. Median TTFT is
+38.530052 s and request 93.038050 s. The numerical matrix is now measured;
+full application evidence and explicit retention remain before M3.1 closure.
