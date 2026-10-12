@@ -1,0 +1,106 @@
+"""Replay all isolated tiny MLP projection stages after verified native idle."""
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_attention_projections as mlp
+import rust_metal_rotary as rotary
+import rust_metal_cache as cache
+import rust_metal_attention as attention
+import rust_metal_cached_attention as cached
+import rust_metal_mlp as composed
+p=mlp.projection
+
+def sha(path):
+    with Path(path).open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+def read(path):return json.loads(Path(path).read_text())
+idle_path=ROOT/'benchmarks/results/2026-10-12-rust-metal-cached-attention-idle-v1.json'
+idle=read(idle_path)
+assert idle['all_recorded_processes_absent'] is True and idle['machine']['State']=='stopped' and idle['native_session_exit_code']==0
+for field in ('archive_sha256','protected_sha256'):
+    for name,expected in idle[field].items():assert sha(ROOT/name)==expected
+path=ROOT/'benchmarks/results/2026-10-12-rust-metal-cached-attention-v1.json';record=read(path)
+assert record['completed'] is True and 'failure' not in record
+raw_path=ROOT/'benchmarks/raw/2026-10-12-rust-metal-cached-attention-v1.json.native.jsonl'
+stderr=ROOT/'benchmarks/results/2026-10-12-rust-metal-cached-attention-v1.json.stderr.txt'
+assert sha(raw_path)==record['native_raw_sha256'] and sha(stderr)==record['stderr_sha256']
+build=ROOT/'artifacts/rust-metal-cached-attention-v1'
+for name,expected in record['source_sha256'].items():
+    source=ROOT/name
+    target=build/('Cargo.toml' if name.endswith('.Cargo.toml') else 'Cargo.lock' if name.endswith('.lock') else 'src/main.rs' if name.endswith('rust_metal_probe.rs') else 'src/'+source.name)
+    assert sha(source)==sha(target)==expected
+for name,expected in {'tools/experiments/rust_metal_probe.py':record['driver_sha256'],'tools/experiments/metal_probe.py':record['common_helper_sha256'],'tools/bench/mlx_baseline.py':record['memory_helper_sha256']}.items():assert sha(ROOT/name)==expected
+for field in ('input_sha256','qualification_driver_sha256'):
+    for name,expected in record['extra_context'][field].items():assert sha(name)==expected
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==record['binary_sha256']
+assert len(record['checks'])==len(record['build_commands'])==14
+assert [c['command'] for c in record['checks']]==record['build_commands']
+assert 'test result: ok. 31 passed; 0 failed' in next(c['stdout'] for c in record['checks'] if 'test' in c['command'])
+inputs,anchors=cached.cases();full,fa=attention.cases();ci,ca=cache.cases();ri,ra,_=rotary.cases();mi,ma,_=composed.cases()
+validators={f'cached_{i+1}':lambda e,c=c:attention.validate(e,c,anchors[c['id']]) for i,c in enumerate(inputs)}
+validators.update({f'full_{i+1}':lambda e,c=c:attention.validate(e,c,fa[c['id']]) for i,c in enumerate(full)})
+validators.update({f'mlp_{i+1}':lambda e,c=c:composed.validate(e,c,ma[c['id']]) for i,c in enumerate(mi)})
+validators.update({'invalid_cached_offset':cached.rejected,'cache_regression':lambda e:cache.validate(e,ci,ca),'rotary_regression':lambda e:rotary.validate(e,ri,ra),
+                   'rotary_overflow':rotary.overflow_rejected,'mlp_overflow':composed.overflow_rejected})
+raw=[json.loads(line) for line in raw_path.read_text().splitlines()];runs=record['native_runs']
+assert len(raw)==len(runs)==52
+assert [r['mode'] for r in runs]==['normal','invalid_shader','insufficient_budget']+[f'cached_{i+1}' for i in range(24)]+[f'full_{i+1}' for i in range(10)]+['invalid_cached_offset','cache_regression','rotary_regression','rotary_overflow']+[f'mlp_{i+1}' for i in range(10)]+['mlp_overflow']
+peak=0;commands={}
+for event,run in zip(raw,runs):
+    replay=copy.deepcopy(event);p.rms.probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']))
+    assert replay==run['event'] and run['watchdog_killed'] is False and 0<run['physical_process_charge_peak_bytes']<=p.rms.probe.LIMIT
+    peak=max(peak,run['physical_process_charge_peak_bytes']);commands[run['mode']]=len(event.get('result',{}).get('rows',[]))+sum(len(c['rows']) for c in event.get('result',{}).get('cases',[]))
+assert sum(commands.values())==1066
+f32=lambda v:struct.unpack('<f',struct.pack('<f',v))[0]
+stages={name:{'first_frame_values':0,'equal_frozen_bits':0,'max_source_fp32_abs_error':0.,'max_source_fp32_gate_fraction':0.,'first_frame_guard_values':0} for name in ('scores','probabilities','context')}
+frames=[];context_values=0;max_admission=0;different_contexts=[]
+for i,item in enumerate(inputs):
+    r=raw[3+i]['result'];rows=item['rows'];valid=item['valid'];offset=item['offset'];width=r['threadgroup_width'];units=math.ceil(rows*4/width)*width
+    h=units*8+7;f=units*valid+7;shared=h*4+519*4+f*8
+    assert r['shared_buffer_bytes']==shared and r['host_baseline_frames_readback_bytes']==shared*2 and r['admitted_bytes']==shared*3+p.rms.probe.ALLOWANCE
+    max_admission=max(max_admission,r['admitted_bytes']);arrays=[r['first_score_bits'],r['first_probability_bits'],r['first_context_bits']];counts=[rows*valid*4]*2+[rows*32]
+    for index,(name,bits,count,expected) in enumerate(zip(stages,arrays,counts,anchors[item['id']]['stages'])):
+        values=struct.unpack(f'<{count}{"f" if index<2 else "e"}',struct.pack(f'<{count}{"I" if index<2 else "H"}',*bits[:count]));s=stages[name]
+        s['first_frame_values']+=count;s['equal_frozen_bits']+=sum(a==b for a,b in zip(bits[:count],expected['bits']));s['first_frame_guard_values']+=len(bits)-count
+        for a,b in zip(values,expected['reference']):
+            error=abs(a-b);gate=expected['gate'];fraction=error/(gate['atol']+gate['rtol']*abs(b));assert fraction<=1
+            s['max_source_fp32_abs_error']=max(s['max_source_fp32_abs_error'],error);s['max_source_fp32_gate_fraction']=max(s['max_source_fp32_gate_fraction'],fraction)
+    q,k,v=[struct.unpack(f'<{len(item[key])}e',struct.pack(f'<{len(item[key])}H',*item[key])) for key in ('q_bits','k_bits','v_bits')]
+    probabilities=struct.unpack(f'<{counts[1]}f',struct.pack(f'<{counts[1]}I',*arrays[1][:counts[1]]))
+    for token in range(rows):
+        for head in range(4):
+            row=(head*rows+token)*valid;kv=head//2
+            assert all(arrays[1][row+position]==0 for position in range(offset+token+1,valid))
+            for position in range(valid):
+                acc=0.
+                for feature in range(8):acc=f32(acc+f32(q[(token*4+head)*8+feature]*k[(kv*32+position)*8+feature]))
+                assert struct.unpack('<I',struct.pack('<f',f32(acc/f32(math.sqrt(8)))))[0]==arrays[0][row+position]
+            for feature in range(8):
+                acc=0.
+                for position in range(offset+token+1):acc=f32(acc+f32(probabilities[row+position]*v[(kv*32+position)*8+feature]))
+                index=(token*4+head)*8+feature;assert struct.unpack('<H',struct.pack('<e',acc))[0]==arrays[2][index]
+                oracle=anchors[item['id']]['stages'][2]['bits'][index]
+                if arrays[2][index]!=oracle:different_contexts.append({'case':item['id'],'local_index':index,'global_token':offset+token,'gpu_half_bits':arrays[2][index],'frozen_half_bits':oracle,'ordered_fp32_context':acc})
+    for row in r['rows']:assert row['context_bits']==arrays[2][:counts[2]];context_values+=counts[2]
+    frames.append(arrays)
+for i in range(0,len(frames),2):assert frames[i]==frames[i+1]
+# Assemble each irregular partition and compare it exactly with the same-binary
+# whole-prefix output, without using saved-reference equality for this claim.
+for layer in range(2):
+    parent=next(i for i,c in enumerate(full) if c['id']==f'cases.capacity.layers.{layer}.attention')
+    full_context=raw[27+parent]['result']['first_context_bits'][:1024]
+    joined=[]
+    for i in range(layer*12,layer*12+10,2):joined+=frames[i][2][:inputs[i]['rows']*32]
+    assert joined==full_context and frames[layer*12+10][2][:32]==full_context[31*32:32*32]
+summary={'stages':stages,'cached_commands':312,'all_repetition_context_values':context_values,'first_ordered_context_half_store_values':stages['context']['first_frame_values'],
+         'all12_stale_pairs_complete_frames_exact':True,'nondegenerate_poisoned_capacity_pairs':8,'full_capacity_control_pairs':4,
+         'irregular_partition_and_last_token_decode_equal_full_prefix':True,'context_half_differences':different_contexts,'max_cached_admitted_bytes':max_admission,
+         'all_positive_commands':sum(commands.values()),'negative_jobs':5,'max_own_child_peak_bytes':peak,'command_counts':commands,
+         'scope':'Read-only saved cached prefixes/queries; no cachewrite-propagation/session. Unchanged sliced parent source gates. First complete frames/guards+all finalcontexts retained; native12laterframeschecked. Raw stale-pair/fullprefix equality independently verified. Numerical reference differences retain existing scope.'}
+out={'format':'toklet-tiny-metal-cached-attention-analysis-v1','completed':True,'records_sha256':{str(pth.relative_to(ROOT)):sha(pth) for pth in (path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x')as stream:stream.write(json.dumps(out,indent=2,allow_nan=False)+'\n')
+print(json.dumps(summary,indent=2))

@@ -29,7 +29,7 @@ def cases():
                 count=math.prod(shape);bits=list(struct.unpack(f'<{count}{"I" if dtype=="f32le" else "H"}',data))
                 stages.append({'bits':bits,'reference':list(struct.unpack(f'<{count}f',source)),'gate':item['gate_against_source_fp32'],
                                'oracle_sha256':item['sha256'],'source_sha256':ref['sha256']})
-            inputs.append({'format':'toklet-metal-attention-input-v1','id':identity,'rows':rows,'query_heads':4,'kv_heads':2,'dimension':8,'capacity':32,**payload})
+            inputs.append({'format':'toklet-metal-attention-input-v1','id':identity,'rows':rows,'offset':0,'valid':rows,'query_heads':4,'kv_heads':2,'dimension':8,'capacity':32,**payload})
             anchors[identity]={'stages':stages,'input_sha256':hashes,'rotary_position_offset':spec['position_offset']}
     if len(inputs)!=10:raise ValueError('Attention complete inventory differs')
     return inputs,anchors
@@ -37,9 +37,9 @@ def cases():
 
 def validate(event,item,anchor):
     if event.get('event')!='idle_result' or event.get('passed') is not True:raise ValueError('Native attention failed')
-    r=event['result'];m=r['metadata'];rows=item['rows'];width=r['threadgroup_width'];units=math.ceil(rows*4/width)*width
-    h=units*8+7;f=units*rows+7;shared=h*4+519*4+f*8
-    if (r['operation']!='tiny_causal_gqa_fp32_half_context' or r['id']!=item['id'] or r['rows_count']!=rows or r['query_heads']!=4
+    r=event['result'];m=r['metadata'];rows=item['rows'];valid=item['valid'];offset=item['offset'];width=r['threadgroup_width'];units=math.ceil(rows*4/width)*width
+    h=units*8+7;f=units*valid+7;shared=h*4+519*4+f*8
+    if (r['operation']!='tiny_causal_gqa_fp32_half_context' or r['id']!=item['id'] or r['rows_count']!=rows or r['offset']!=offset or r['valid']!=valid or r['query_heads']!=4
             or r['kv_heads']!=2 or r['dimension']!=8 or r['capacity']!=32 or m['unified_memory'] is not True
             or m['language_version']!='2.3' or m['math_mode']!='safe' or m['math_functions']!='precise' or m['minimum_macos_major']!=15
             or not 0<width<=min(m['execution_width'],m['pipeline_max_threads'],m['device_max_threads'][0])
@@ -47,7 +47,7 @@ def validate(event,item,anchor):
             or r['half_guard_bits']!=HALF_GUARD or r['fp32_guard_bits']!=FLOAT_GUARD or r['allocations_reused'] is not True
             or r['shared_buffer_bytes']!=shared or r['host_baseline_frames_readback_bytes']!=shared*2 or r['admitted_bytes']!=shared*3+rms.probe.ALLOWANCE
             or m['maximum_admitted_bytes']!=r['admitted_bytes'] or r['admitted_bytes']>rms.probe.LIMIT):raise ValueError('Attention policy/topology/memory differs')
-    arrays=[r['first_score_bits'],r['first_probability_bits'],r['first_context_bits']];counts=[4*rows*rows]*2+[rows*32]
+    arrays=[r['first_score_bits'],r['first_probability_bits'],r['first_context_bits']];counts=[4*rows*valid]*2+[rows*32]
     qualifications=[]
     for index,(bits,count,size,guard,expected) in enumerate(zip(arrays,counts,(f,f,h),(FLOAT_GUARD,FLOAT_GUARD,HALF_GUARD),anchor['stages'])):
         if len(bits)!=size or bits[count:]!=[guard]*(size-count) or any(type(n) is not int or not 0<=n<(2**32 if index<2 else 2**16) for n in bits):raise ValueError('Attention full intermediate guard/type differs')
@@ -62,8 +62,8 @@ def validate(event,item,anchor):
     probabilities=struct.unpack(f'<{counts[1]}f',struct.pack(f'<{counts[1]}I',*arrays[1][:counts[1]]))
     for head in range(4):
         for token in range(rows):
-            start=(head*rows+token)*rows;valid=probabilities[start:start+token+1]
-            if any(value<0 for value in valid) or any(arrays[1][start+position]!=0 for position in range(token+1,rows)):
+            start=(head*rows+token)*valid;active=probabilities[start:start+offset+token+1]
+            if any(value<0 for value in active) or any(arrays[1][start+position]!=0 for position in range(offset+token+1,valid)):
                 raise ValueError('Attention causal probabilities differ')
     if len(r['rows'])!=13:raise ValueError('Attention repetition inventory differs')
     for i,row in enumerate(r['rows']):

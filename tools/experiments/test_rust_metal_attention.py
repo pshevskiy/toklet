@@ -10,7 +10,7 @@ import rust_metal_attention as attention
 def fixture(item,anchor):
     rows=item['rows'];units=math.ceil(rows*4/32)*32;h=units*8+7;f=units*rows+7;shared=h*4+519*4+f*8
     score,probability,context=[s['bits'] for s in anchor['stages']]
-    return {'event':'idle_result','passed':True,'result':{'operation':'tiny_causal_gqa_fp32_half_context','id':item['id'],'rows_count':rows,'query_heads':4,'kv_heads':2,'dimension':8,'capacity':32,
+    return {'event':'idle_result','passed':True,'result':{'operation':'tiny_causal_gqa_fp32_half_context','id':item['id'],'rows_count':rows,'offset':0,'valid':rows,'query_heads':4,'kv_heads':2,'dimension':8,'capacity':32,
         'metadata':{'unified_memory':True,'language_version':'2.3','math_mode':'safe','math_functions':'precise','minimum_macos_major':15,'execution_width':32,'pipeline_max_threads':1024,'device_max_threads':[1024]*3,'maximum_admitted_bytes':shared*3+attention.rms.probe.ALLOWANCE},
         'threadgroup_width':32,'threadgroups':math.ceil(rows*4/32),'half_storage_elements':h,'fp32_storage_elements':f,'half_guard_bits':attention.HALF_GUARD,'fp32_guard_bits':attention.FLOAT_GUARD,
         'allocations_reused':True,'shared_buffer_bytes':shared,'host_baseline_frames_readback_bytes':shared*2,'admitted_bytes':shared*3+attention.rms.probe.ALLOWANCE,

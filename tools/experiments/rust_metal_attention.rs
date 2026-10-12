@@ -5,6 +5,8 @@ const FLOAT_GUARD: u32 = 0x4642fedc;
 struct Case {
     id: String,
     rows: usize,
+    offset: usize,
+    valid: usize,
     q: Vec<u16>,
     k: Vec<u16>,
     v: Vec<u16>,
@@ -40,7 +42,11 @@ fn load(path: &Path) -> Result<Case, Error> {
         return Err(error("fixture", "invalid attention identity"));
     }
     let rows = projection::number(&value, "rows")?;
+    let offset = projection::number(&value, "offset")?;
+    let valid = projection::number(&value, "valid")?;
     if !(1..=32).contains(&rows)
+        || !(1..=32).contains(&valid)
+        || offset.checked_add(rows) != Some(valid)
         || value["query_heads"].as_u64() != Some(4)
         || value["kv_heads"].as_u64() != Some(2)
         || value["dimension"].as_u64() != Some(8)
@@ -51,13 +57,15 @@ fn load(path: &Path) -> Result<Case, Error> {
     Ok(Case {
         id: id.to_owned(),
         rows,
+        offset,
+        valid,
         q: projection::half(&value, "q_bits", rows * 32)?,
         k: projection::half(&value, "k_bits", 512)?,
         v: projection::half(&value, "v_bits", 512)?,
     })
 }
-fn mapped(rows: usize, width: usize) -> Result<(usize, usize), Error> {
-    if !(1..=32).contains(&rows) {
+fn mapped(rows: usize, valid: usize, width: usize) -> Result<(usize, usize), Error> {
+    if !(1..=32).contains(&rows) || !(1..=32).contains(&valid) {
         return Err(error("admission", "attention rows outside bounds"));
     }
     let units = groups(rows * 4, width)?
@@ -68,13 +76,13 @@ fn mapped(rows: usize, width: usize) -> Result<(usize, usize), Error> {
         .and_then(|n| n.checked_add(GUARDS))
         .ok_or_else(|| error("admission", "attention Half storage overflow"))?;
     let single = units
-        .checked_mul(rows)
+        .checked_mul(valid)
         .and_then(|n| n.checked_add(GUARDS))
         .ok_or_else(|| error("admission", "attention FP32 storage overflow"))?;
     Ok((half, single))
 }
-fn admitted(rows: usize, width: usize, limit: usize) -> Result<usize, Error> {
-    let (h, f) = mapped(rows, width)?;
+fn admitted(rows: usize, valid: usize, width: usize, limit: usize) -> Result<usize, Error> {
+    let (h, f) = mapped(rows, valid, width)?;
     // Three immutable inputs and three outputs; shared once, full baselines
     // and input readbacks, plus retained first/current output frames. Bounded
     // diagnostic JSON/fixture records live under the fixed runtime allowance.
@@ -108,13 +116,14 @@ fn frame(
     probabilities: &Shared<u32>,
     context: &Shared<u16>,
     rows: usize,
+    valid: usize,
 ) -> Result<Frame, Error> {
     let result = Frame {
         scores: scores.read(),
         probabilities: probabilities.read(),
         context: context.read(),
     };
-    let n = rows * rows * 4;
+    let n = rows * valid * 4;
     let h = rows * 32;
     if result.scores[n..]
         .iter()
@@ -142,16 +151,16 @@ fn frame(
 }
 pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
     let case = load(path)?;
-    let initial = admitted(case.rows, 1, limit)?;
+    let initial = admitted(case.rows, case.valid, 1, limit)?;
     autoreleasepool(|_| {
         let (probe, mut metadata) = prepare(
             include_str!("rust_metal_attention.metal"),
             "toklet_attention",
             initial,
         )?;
-        let total = admitted(case.rows, probe.width, limit)?;
+        let total = admitted(case.rows, case.valid, probe.width, limit)?;
         metadata["maximum_admitted_bytes"] = json!(total);
-        let (h, f) = mapped(case.rows, probe.width)?;
+        let (h, f) = mapped(case.rows, case.valid, probe.width)?;
         let mut q = Shared::<u16>::new(&probe.device, h * 2)?;
         let mut k = Shared::<u16>::new(&probe.device, 519 * 2)?;
         let mut v = Shared::<u16>::new(&probe.device, 519 * 2)?;
@@ -164,7 +173,7 @@ pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
         q.write(&qb)?;
         k.write(&kb)?;
         v.write(&vb)?;
-        let native_rows = case.rows as u32;
+        let shape = [case.rows as u32, case.offset as u32, case.valid as u32];
         let mut first: Option<Frame> = None;
         let mut repetitions = Vec::with_capacity(13);
         for repetition in 0..13 {
@@ -181,17 +190,17 @@ pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
                 // K/V cover2*32*8+7; bounded topology gives in-range head/position
                 // addresses. Each lane owns a disjoint score/probability row and
                 // context8-tuple; its ordered passes need no inter-lane barrier.
-                // Slot6 copies UInt32 rows (4/4). Owners live through completion;
+                // Slot6 copies three UInt32 rows/offset/valid (12/4). Owners live through completion;
                 // all CPU buffer access occurs before submit or after checked wait.
                 unsafe{
                     encoder.setBuffer_offset_atIndex(Some(&q.raw),0,0);encoder.setBuffer_offset_atIndex(Some(&k.raw),0,1);encoder.setBuffer_offset_atIndex(Some(&v.raw),0,2);
                     encoder.setBuffer_offset_atIndex(Some(&scores.raw),0,3);encoder.setBuffer_offset_atIndex(Some(&probabilities.raw),0,4);encoder.setBuffer_offset_atIndex(Some(&context.raw),0,5);
-                    encoder.setBytes_length_atIndex(NonNull::from(&native_rows).cast(),size_of::<u32>(),6);
+                    encoder.setBytes_length_atIndex(NonNull::from(&shape).cast(),size_of::<[u32;3]>(),6);
                 }
                 encoder.dispatchThreadgroups_threadsPerThreadgroup(MTLSize{width:groups(case.rows*4,probe.width)?,height:1,depth:1},MTLSize{width:probe.width,height:1,depth:1});
                 encoder.endEncoding();command.commit();command.waitUntilCompleted();let seconds=started.elapsed().as_secs_f64();
                 if command.status()!=MTLCommandBufferStatus::Completed || command.error().is_some(){return Err(error("completion",format!("attention GPU failure: {:?}",command.error())));}
-                let current=frame(&scores,&probabilities,&context,case.rows)?;
+                let current=frame(&scores,&probabilities,&context,case.rows,case.valid)?;
                 if q.read()!=qb || k.read()!=kb || v.read()!=vb{return Err(error("validation","attention immutable inputs or guards changed"));}
                 if first.as_ref().is_some_and(|expected|expected!=&current){return Err(error("validation","attention repeated intermediate frame differs"));}
                 let output=current.context[..case.rows*32].to_vec();if first.is_none(){first=Some(current);}
@@ -201,7 +210,7 @@ pub(super) fn run(path: &Path, limit: usize) -> Result<Value, Error> {
         let first = first.ok_or_else(|| error("validation", "missing attention first frame"))?;
         let shared = h * 4 + 519 * 4 + f * 8;
         Ok(
-            json!({"operation":"tiny_causal_gqa_fp32_half_context","id":case.id,"rows_count":case.rows,"query_heads":4,"kv_heads":2,"dimension":8,"capacity":32,"metadata":metadata,
+            json!({"operation":"tiny_causal_gqa_fp32_half_context","id":case.id,"rows_count":case.rows,"offset":case.offset,"valid":case.valid,"query_heads":4,"kv_heads":2,"dimension":8,"capacity":32,"metadata":metadata,
             "threadgroup_width":probe.width,"threadgroups":groups(case.rows*4,probe.width)?,"half_storage_elements":h,"fp32_storage_elements":f,"half_guard_bits":HALF_GUARD,"fp32_guard_bits":FLOAT_GUARD,
             "shared_buffer_bytes":shared,"host_baseline_frames_readback_bytes":2*shared,"admitted_bytes":total,"allocations_reused":true,
             "first_score_bits":first.scores,"first_probability_bits":first.probabilities,"first_context_bits":first.context,"rows":repetitions}),
@@ -213,20 +222,20 @@ mod tests {
     use super::*;
     #[test]
     fn mapped_query_grid_and_admission_are_bounded() {
-        assert_eq!(mapped(3, 32).unwrap(), (263, 103));
-        assert_eq!(mapped(32, 32).unwrap(), (1031, 4103));
+        assert_eq!(mapped(3, 3, 32).unwrap(), (263, 103));
+        assert_eq!(mapped(32, 32, 32).unwrap(), (1031, 4103));
         for (rows, width) in [(0, 32), (33, 32), (1, 0), (32, usize::MAX)] {
-            assert!(mapped(rows, width).is_err());
+            assert!(mapped(rows, rows, width).is_err());
         }
         let total = ALLOWANCE + 3 * (263 * 4 + 519 * 4 + 103 * 8);
-        assert_eq!(admitted(3, 32, total).unwrap(), total);
-        assert!(admitted(3, 32, total - 1).is_err());
+        assert_eq!(admitted(3, 3, 32, total).unwrap(), total);
+        assert!(admitted(3, 3, 32, total - 1).is_err());
     }
     #[test]
     fn malformed_topology_and_nonfinite_storage_fail_before_device_work() {
         use std::sync::atomic::{AtomicUsize, Ordering};
         static NEXT: AtomicUsize = AtomicUsize::new(0);
-        let sample = json!({"format":"toklet-metal-attention-input-v1","id":"manual","rows":1,"query_heads":4,"kv_heads":2,"dimension":8,"capacity":32,
+        let sample = json!({"format":"toklet-metal-attention-input-v1","id":"manual","rows":1,"offset":0,"valid":1,"query_heads":4,"kv_heads":2,"dimension":8,"capacity":32,
             "q_bits":vec![0u16;32],"k_bits":vec![0u16;512],"v_bits":vec![0u16;512]});
         let check = |value: &Value| {
             let path = std::env::temp_dir().join(format!(
@@ -248,6 +257,10 @@ mod tests {
         for (key, n) in [
             ("rows", 0),
             ("rows", 33),
+            ("offset", 32),
+            ("valid", 0),
+            ("valid", 33),
+            ("valid", 2),
             ("query_heads", 3),
             ("kv_heads", 4),
             ("dimension", 7),

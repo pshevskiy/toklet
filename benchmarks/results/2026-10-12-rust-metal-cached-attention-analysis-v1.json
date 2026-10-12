@@ -1,0 +1,119 @@
+{
+  "format": "toklet-tiny-metal-cached-attention-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-rust-metal-cached-attention-v1.json": "11de69f228c15401709aff53ca79b25855d50dbfa4edd2d116bfd34b4b7a6b7e",
+    "benchmarks/raw/2026-10-12-rust-metal-cached-attention-v1.json.native.jsonl": "50fa7529382ab67d8b75e7b9610a7b3d3cea8c04336fec79973e03c4ff88157c",
+    "benchmarks/results/2026-10-12-rust-metal-cached-attention-v1.json.stderr.txt": "f787471d133fce9289e14d0e6667ec68de5d566afdefe476fccca7dfa2179f9a",
+    "benchmarks/results/2026-10-12-rust-metal-cached-attention-idle-v1.json": "2ec7d321657dea106b5e3fd4eb1a5fe2075273f72dab629a74b400c554c7c0d2"
+  },
+  "summary": {
+    "stages": {
+      "scores": {
+        "first_frame_values": 11040,
+        "equal_frozen_bits": 11040,
+        "max_source_fp32_abs_error": 0.00256192684173584,
+        "max_source_fp32_gate_fraction": 0.48111244689733446,
+        "first_frame_guard_values": 5512
+      },
+      "probabilities": {
+        "first_frame_values": 11040,
+        "equal_frozen_bits": 8720,
+        "max_source_fp32_abs_error": 0.00039646029472351074,
+        "max_source_fp32_gate_fraction": 0.47253975303456286,
+        "first_frame_guard_values": 5512
+      },
+      "context": {
+        "first_frame_values": 4224,
+        "equal_frozen_bits": 4222,
+        "max_source_fp32_abs_error": 0.0010336041450500488,
+        "max_source_fp32_gate_fraction": 0.48220984291558744,
+        "first_frame_guard_values": 3112
+      }
+    },
+    "cached_commands": 312,
+    "all_repetition_context_values": 54912,
+    "first_ordered_context_half_store_values": 4224,
+    "all12_stale_pairs_complete_frames_exact": true,
+    "nondegenerate_poisoned_capacity_pairs": 8,
+    "full_capacity_control_pairs": 4,
+    "irregular_partition_and_last_token_decode_equal_full_prefix": true,
+    "context_half_differences": [
+      {
+        "case": "capacity.layer0.chunk11_24",
+        "local_index": 253,
+        "global_token": 18,
+        "gpu_half_bits": 7339,
+        "frozen_half_bits": 7338,
+        "ordered_fp32_context": 0.004556663334369659
+      },
+      {
+        "case": "capacity.layer0.chunk11_24.stale",
+        "local_index": 253,
+        "global_token": 18,
+        "gpu_half_bits": 7339,
+        "frozen_half_bits": 7338,
+        "ordered_fp32_context": 0.004556663334369659
+      }
+    ],
+    "max_cached_admitted_bytes": 67158352,
+    "all_positive_commands": 1066,
+    "negative_jobs": 5,
+    "max_own_child_peak_bytes": 22676080,
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "cached_1": 13,
+      "cached_2": 13,
+      "cached_3": 13,
+      "cached_4": 13,
+      "cached_5": 13,
+      "cached_6": 13,
+      "cached_7": 13,
+      "cached_8": 13,
+      "cached_9": 13,
+      "cached_10": 13,
+      "cached_11": 13,
+      "cached_12": 13,
+      "cached_13": 13,
+      "cached_14": 13,
+      "cached_15": 13,
+      "cached_16": 13,
+      "cached_17": 13,
+      "cached_18": 13,
+      "cached_19": 13,
+      "cached_20": 13,
+      "cached_21": 13,
+      "cached_22": 13,
+      "cached_23": 13,
+      "cached_24": 13,
+      "full_1": 13,
+      "full_2": 13,
+      "full_3": 13,
+      "full_4": 13,
+      "full_5": 13,
+      "full_6": 13,
+      "full_7": 13,
+      "full_8": 13,
+      "full_9": 13,
+      "full_10": 13,
+      "invalid_cached_offset": 0,
+      "cache_regression": 182,
+      "rotary_regression": 273,
+      "rotary_overflow": 0,
+      "mlp_1": 13,
+      "mlp_2": 13,
+      "mlp_3": 13,
+      "mlp_4": 13,
+      "mlp_5": 13,
+      "mlp_6": 13,
+      "mlp_7": 13,
+      "mlp_8": 13,
+      "mlp_9": 13,
+      "mlp_10": 13,
+      "mlp_overflow": 0
+    },
+    "scope": "Read-only saved cached prefixes/queries; no cachewrite-propagation/session. Unchanged sliced parent source gates. First complete frames/guards+all finalcontexts retained; native12laterframeschecked. Raw stale-pair/fullprefix equality independently verified. Numerical reference differences retain existing scope."
+  }
+}
