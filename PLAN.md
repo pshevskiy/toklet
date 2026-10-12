@@ -1102,6 +1102,20 @@ pass. The first pre-GPU Clippy failure is retained; finalnative completes
 naturally with priorchains absent/VMstopped/protected endpoints unchanged.
 Astra accepted code and evidence without findings after independent replay. KV writes, GQA, full decoder/Qwen and M4 remain open.
 
+Tiny cache-write preparation, 12 October 2026 (M4 pending): the
+[lossless head-major write](docs/experiments/2026-10-12-rust-metal-cache.md)
+covers ten frozen local cache cases and four stale-prefix/tail/manual cases,
+including last-slot/full capacity and pre-native over-capacity rejection.
+RawUInt16 copies preserve exact Half storage;182 commands replay186,368 cache
+payload values (52,416 new/133,952 untouched) and2,548 outputguards. Existing
+rotary/attention/MLP/projection/gating regressions total1,833 positive commands
+and seven negative jobs. Thirteen build checks/29standaloneRust and full
+91experimentPython/193benchmarkPython/76rootRust+fmt/Clippy checks pass.
+Natural completion, stoppedVM/priorchainsabsent and protected endpoints are
+recorded. Astra accepted code and evidence without findings after independent replay. Saved initial caches reset outside
+qualification timing; no integrated session-valid-prefix advances. Causal GQA,
+propagated decoder/Qwen/quality and M4 remain open.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -1195,4 +1209,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: implement cache writes and causal GQA before composing a full layer.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: implement causal GQA before composing a full layer.

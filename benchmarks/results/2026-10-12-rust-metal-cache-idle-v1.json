@@ -1,0 +1,89 @@
+{
+  "format": "toklet-rust-metal-cache-idle-v1",
+  "verified_utc": "2026-10-12T12:02:43.855354+00:00",
+  "all_recorded_processes_absent": true,
+  "recorded_pids": [
+    51172,
+    51212,
+    51226,
+    43111,
+    43153,
+    43161,
+    96097,
+    96112,
+    96121,
+    17694,
+    85019,
+    85027,
+    88184,
+    35939
+  ],
+  "absence_query": {
+    "command": [
+      "ps",
+      "-p",
+      "51172,51212,51226,43111,43153,43161,96097,96112,96121,17694,85019,85027,88184,35939",
+      "-o",
+      "pid="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "machine": {
+    "ConfigDir": {
+      "Path": "/Users/coloner/.config/containers/podman/machine/applehv"
+    },
+    "ConnectionInfo": {
+      "PodmanSocket": {
+        "Path": "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/podman/podman-machine-default-api.sock"
+      },
+      "PodmanPipe": null
+    },
+    "Created": "2026-01-15T12:12:42.666462+03:00",
+    "LastUp": "2026-10-11T20:05:08.08417+03:00",
+    "Name": "podman-machine-default",
+    "Resources": {
+      "CPUs": 5,
+      "DiskSize": 100,
+      "Memory": 2048,
+      "USBs": []
+    },
+    "SSHConfig": {
+      "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+      "Port": 51387,
+      "RemoteUsername": "core"
+    },
+    "State": "stopped",
+    "UserModeNetworking": true,
+    "Rootful": false,
+    "Rosetta": true
+  },
+  "native_session_id": 27989,
+  "native_session_exit_code": 0,
+  "native_completion_tool": {
+    "chunk_id": "7cfa02",
+    "exit_code": 0,
+    "wall_time_seconds": 6.25e-06,
+    "output": "Completed standalone Rust Metal binding qualification: benchmarks/raw/2026-10-12-rust-metal-cache-v1.json\n"
+  },
+  "previous_idle_sha256": "52a424dcd6e50a7a07a18927337abe7f3d06bef24459846aee79b7c6e2f61de2",
+  "protected_sha256": {
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+    "models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+    "models/Qwen2.5-0.5B-Instruct/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+    "models/Qwen2.5-0.5B-Instruct/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+    "models/Qwen2.5-0.5B-Instruct/LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e"
+  },
+  "archive_sha256": {
+    "benchmarks/results/2026-10-12-rust-metal-cache-v1.json": "e04b26767ae21115260e13864f57eee8c9c643fb33cdb42fc4f650868ae48df0",
+    "benchmarks/results/2026-10-12-rust-metal-cache-v1.json.stderr.txt": "13a70140ae62193ee166f2da3dff5cbfcfb67e5ec7809c209d2f5cd3d82d7847",
+    "benchmarks/results/2026-10-12-rust-metal-cache-archive-v1.py.txt": "c9524dc7c4dd4288a41e46ab46f3dd95ec1e38c1b1144170993a468888f6f1a7"
+  },
+  "scope": "Post-completion verification. All native children completed handshake and were reaped by driver; prior recorded numerical chains absent; VM stopped. No timing/performance acceptance."
+}

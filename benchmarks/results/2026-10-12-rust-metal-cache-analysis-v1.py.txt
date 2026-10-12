@@ -1,0 +1,167 @@
+"""Replay all isolated tiny MLP projection stages after verified native idle."""
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_attention_projections as mlp
+import rust_metal_rotary as rotary
+import rust_metal_cache as cache
+import rust_metal_mlp as composed
+p=mlp.projection
+
+def sha(path):
+    with Path(path).open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+def read(path):return json.loads(Path(path).read_text())
+idle_path=ROOT/'benchmarks/results/2026-10-12-rust-metal-cache-idle-v1.json'
+idle=read(idle_path)
+assert idle['all_recorded_processes_absent'] is True and idle['machine']['State']=='stopped' and idle['native_session_exit_code']==0
+for field in ('archive_sha256','protected_sha256'):
+    for name,expected in idle[field].items():assert sha(ROOT/name)==expected
+path=ROOT/'benchmarks/results/2026-10-12-rust-metal-cache-v1.json';record=read(path)
+assert record['completed'] is True and 'failure' not in record
+raw_path=ROOT/'benchmarks/raw/2026-10-12-rust-metal-cache-v1.json.native.jsonl'
+stderr=ROOT/'benchmarks/results/2026-10-12-rust-metal-cache-v1.json.stderr.txt'
+assert sha(raw_path)==record['native_raw_sha256'] and sha(stderr)==record['stderr_sha256']
+build=ROOT/'artifacts/rust-metal-cache-v1'
+for name,expected in record['source_sha256'].items():
+    source=ROOT/name
+    target=build/('Cargo.toml' if name.endswith('.Cargo.toml') else 'Cargo.lock' if name.endswith('.lock') else 'src/main.rs' if name.endswith('rust_metal_probe.rs') else 'src/'+source.name)
+    assert sha(source)==sha(target)==expected
+for name,expected in {'tools/experiments/rust_metal_probe.py':record['driver_sha256'],'tools/experiments/metal_probe.py':record['common_helper_sha256'],'tools/bench/mlx_baseline.py':record['memory_helper_sha256']}.items():assert sha(ROOT/name)==expected
+for field in ('input_sha256','qualification_driver_sha256'):
+    for name,expected in record['extra_context'][field].items():assert sha(name)==expected
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==record['binary_sha256']
+assert len(record['checks'])==len(record['build_commands'])==13
+assert [c['command'] for c in record['checks']]==record['build_commands']
+assert 'test result: ok. 29 passed; 0 failed' in next(c['stdout'] for c in record['checks'] if 'test' in c['command'])
+groups,anchors=mlp.batches();mlps,ma,mo=composed.cases();stages,sa=composed.stages.batches();query,qa,_=p.cases();tiny,ta,_=p.gating.cases();tails,tla=p.gating.tail_cases()
+rotary_inputs,rotary_anchors,_=rotary.cases()
+validators={label:lambda e,cs=cs:p.validate(e,cs,anchors) for label,cs in groups}
+validators.update({f'mlp_{i+1}':lambda e,c=c:composed.validate(e,c,ma[c['id']]) for i,c in enumerate(mlps)})
+validators['mlp_overflow']=composed.overflow_rejected
+validators.update({label:lambda e,cs=cs:p.validate(e,cs,sa) for label,cs in stages})
+validators.update({'query_manual_regression':lambda e:p.validate(e,query,qa),'projection_overflow_regression':p.overflow_rejected,
+                   'gating_regression':lambda e:p.gating.validate(e,tiny,ta),'gating_tails_regression':lambda e:p.gating.validate_tails(e,tails,tla),
+                   'gating_overflow_regression':p.gating.overflow_rejected})
+validators['rotary_frozen_manual']=lambda e:rotary.validate(e,rotary_inputs,rotary_anchors)
+validators['rotary_overflow']=rotary.overflow_rejected
+cache_inputs,cache_anchors=cache.cases()
+validators['cache_frozen_manual']=lambda e:cache.validate(e,cache_inputs,cache_anchors)
+validators['cache_capacity_rejection']=cache.rejected
+raw=[json.loads(line) for line in raw_path.read_text().splitlines()];runs=record['native_runs']
+assert len(raw)==len(runs)==35
+assert [r['mode'] for r in runs]==['normal','invalid_shader','insufficient_budget']+[f'mlp_{i+1}' for i in range(10)]+['mlp_overflow']+[label for label,_ in groups]+[label for label,_ in stages]+['query_manual_regression','projection_overflow_regression','gating_regression','gating_tails_regression','gating_overflow_regression','rotary_frozen_manual','rotary_overflow','cache_frozen_manual','cache_capacity_rejection']
+commands={};peak=0
+for event,run in zip(raw,runs):
+    replay=copy.deepcopy(event);p.rms.probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']))
+    assert replay==run['event'] and run['watchdog_killed'] is False
+    assert 0<run['physical_process_charge_peak_bytes']<=p.rms.probe.LIMIT
+    peak=max(peak,run['physical_process_charge_peak_bytes'])
+    commands[run['mode']]=len(event.get('result',{}).get('rows',[])) + sum(len(c['rows']) for c in event.get('result',{}).get('cases',[]))
+assert sum(commands.values())==1833
+stage_summaries={}
+for stage in ('k','v','o'):
+    maximum_error=maximum_fraction=0.;values=equal=0;differences=[];max_admission=0
+    for index,(label,items) in enumerate(groups):
+        if not label.startswith(stage):continue
+        native=raw[14+index]['result']
+        for case,item in zip(native['cases'],items):
+            anchor=anchors[item['id']];count=item['rows']*item['outputs']
+            width=case['threadgroup_width'];rounded=math.ceil(count/width)*width;padded_rows=math.ceil(rounded/item['outputs'])
+            a=(case['input_stride']*item['rows']+7)*2;b=(case['weight_stride']*item['outputs']+7)*2;bias=(item['outputs']+7)*2
+            c=(case['fp32_stride']*padded_rows+7)*4;out=(case['output_stride']*padded_rows+7)*2
+            assert case['shared_buffer_bytes']==a+b+bias+c+out
+            assert case['host_baseline_readback_bytes']==2*(a+b+bias)+c+out
+            assert case['admitted_bytes']==3*(a+b+bias)+2*(c+out)+p.rms.probe.ALLOWANCE
+            max_admission=max(max_admission,case['admitted_bytes'])
+            for row in case['rows']:
+                floats=struct.unpack(f'<{count}f',struct.pack(f'<{count}I',*row['fp32_bits']))
+                expected=list(struct.unpack(f'<{count}H',struct.pack(f'<{count}e',*floats)))
+                assert expected==row['output_bits']
+                halves=struct.unpack(f'<{count}e',struct.pack(f'<{count}H',*expected))
+                for value,ref in zip(halves,anchor['source']):
+                    error=abs(value-ref);gate=anchor['gate'];fraction=error/(gate['atol']+gate['rtol']*abs(ref))
+                    assert fraction<=1;maximum_error=max(maximum_error,error);maximum_fraction=max(maximum_fraction,fraction)
+                values+=count;equal+=sum(a==b for a,b in zip(expected,anchor['oracle_bits']))
+            # Investigate every unique Half discrepancy using independent FP64
+            # products/sums, not the MPS or driver implementation.
+            first=case['rows'][0]
+            bias_values=struct.unpack(f"<{len(item['bias_bits'])}e",struct.pack(f"<{len(item['bias_bits'])}H",*item['bias_bits']))
+            av,bv=[struct.unpack(f'<{len(item[key])}e',struct.pack(f'<{len(item[key])}H',*item[key])) for key in ('input_bits','weight_bits')]
+            for idx,(actual,oracle) in enumerate(zip(first['output_bits'],anchor['oracle_bits'])):
+                if actual==oracle:continue
+                rr,col=divmod(idx,item['outputs']);dot=sum(av[rr*item['inputs']+i]*bv[col*item['inputs']+i] for i in range(item['inputs']))+bias_values[col]
+                single=struct.unpack('<f',struct.pack('<I',first['fp32_bits'][idx]))[0]
+                def f32(value):return struct.unpack('<f',struct.pack('<f',value))[0]
+                ordered=0.0
+                for feature in range(item['inputs']):
+                    ordered=f32(ordered+f32(av[rr*item['inputs']+feature]*bv[col*item['inputs']+feature]))
+                ordered=f32(ordered+bias_values[col])
+                actual_value=struct.unpack('<e',struct.pack('<H',actual))[0]
+                oracle_value=struct.unpack('<e',struct.pack('<H',oracle))[0]
+                differences.append({'case':item['id'],'index':idx,'gpu_half_bits':actual,'frozen_half_bits':oracle,
+                                    'fp64_dot_plus_bias':dot,'gpu_fp32_result':single,'gpu_minus_fp64':single-dot,'feature_order_fp32_plus_bias':ordered,
+                                    'half_spacing':abs(actual_value-oracle_value),'half_midpoint':(actual_value+oracle_value)/2,
+                                    'same_difference_all_repetitions':all(row['output_bits'][idx]==actual for row in case['rows'])})
+    stage_summaries[stage]={'commands':130,'output_values':values,'equal_frozen_half_values':equal,
+                           'max_source_fp32_gate_fraction':maximum_fraction,'max_source_fp32_abs_error':maximum_error,
+                           'max_admitted_bytes':max_admission,'unique_half_differences':differences}
+native=raw[-4]['result'];rotary_values=rotary_equal=rotary_guards=0;max_error=max_fraction=0.;max_admission=0;differences=[]
+for case,item in zip(native['cases'],rotary_inputs):
+    count=item['rows']*item['heads']*8;anchor=rotary_anchors[item['id']];width=case['threadgroup_width']
+    rounded=math.ceil((count//2)/width)*width*2;size=(rounded+7)*2;guards=rounded-count+7
+    assert case['shared_buffer_bytes']==size*2 and case['host_input_and_readback_bytes']==size*3
+    assert case['admitted_bytes']==size*5+p.rms.probe.ALLOWANCE
+    max_admission=max(max_admission,case['admitted_bytes'])
+    for row in case['rows']:
+        bits=row['output_bits'];assert len(bits)==rounded+7 and bits[count:]==[rotary.GUARD]*guards
+        actual=struct.unpack(f'<{count}e',struct.pack(f'<{count}H',*bits[:count]))
+        rotary_values+=count;rotary_equal+=sum(a==b for a,b in zip(bits[:count],anchor['bits']));rotary_guards+=guards
+        for a,b in zip(actual,anchor['reference']):
+            error=abs(a-b);gate=anchor['gate'];fraction=error/(gate['atol']+gate['rtol']*abs(b)) if gate else 0
+            assert fraction<=1 and (gate is not None or bits[:count]==anchor['bits'])
+            max_error=max(max_error,error);max_fraction=max(max_fraction,fraction)
+    source=struct.unpack(f'<{count}e',struct.pack(f'<{count}H',*item['input_bits']))
+    first=case['rows'][0]['output_bits']
+    for index,(actual,oracle) in enumerate(zip(first[:count],anchor['bits'])):
+        if actual==oracle:continue
+        token,component=divmod(index,item['heads']*8);head,feature=divmod(component,8)
+        paired=feature%4;base=(token*item['heads']+head)*8
+        a,b=source[base+paired],source[base+paired+4]
+        angle=(item['offset']+token)*1_000_000**(-2*paired/8)
+        reference=a*math.cos(angle)-b*math.sin(angle) if feature<4 else b*math.cos(angle)+a*math.sin(angle)
+        differences.append({'case':item['id'],'index':index,'gpu_half_bits':actual,'frozen_half_bits':oracle,
+                            'independent_fp64_rotary':reference,'same_difference_all_repetitions':all(row['output_bits'][index]==actual for row in case['rows'])})
+cache_values=cache_written=cache_guards=cache_input_guards=0;max_cache_admission=0
+for case,item in zip(raw[-2]['result']['cases'],cache_inputs):
+    count=item['rows']*16;width=case['threadgroup_width'];rounded=math.ceil(count/width)*width
+    shared=2*((rounded+7)*2+519*2)
+    assert case['shared_buffer_bytes']==shared and case['host_baseline_readback_bytes']==shared*2
+    assert case['admitted_bytes']==shared*3+p.rms.probe.ALLOWANCE
+    max_cache_admission=max(max_cache_admission,case['admitted_bytes'])
+    def reconstruct(key):
+        return [item[f'{key}_bits'][((position-item['offset'])*2+head)*8+feature]
+                if item['offset'] <= position < item['offset']+item['rows']
+                else item[f'initial_{key}_bits'][(head*32+position)*8+feature]
+                for head in range(2) for position in range(32) for feature in range(8)]
+    expected_k,expected_v=reconstruct('k'),reconstruct('v')
+    assert (expected_k,expected_v)==(cache_anchors[item['id']]['k'],cache_anchors[item['id']]['v'])
+    for row in case['rows']:
+        assert row['cache_k_bits']==expected_k+[cache.K_GUARD]*7 and row['cache_v_bits']==expected_v+[cache.V_GUARD]*7
+        cache_values+=1024;cache_written+=count*2;cache_guards+=14;cache_input_guards+=2*(rounded-count+7)
+summary={'attention_regression_stages':stage_summaries,
+         'rotary_regression':{'commands':273,'cases':21,'output_values':rotary_values,'equal_frozen_half_values':rotary_equal,
+                   'max_source_fp32_gate_fraction':max_fraction,'max_source_fp32_abs_error':max_error,
+                   'guard_values':rotary_guards,'max_admitted_bytes':max_admission,'unique_half_differences':differences},
+         'cache':{'cases':14,'commands':182,'cache_payload_values':cache_values,'new_chunk_values':cache_written,
+                  'untouched_values':cache_values-cache_written,'cache_guard_values':cache_guards,
+                  'native_checked_input_guard_values':cache_input_guards,'max_admitted_bytes':max_cache_admission,'exact_half_storage_bits':True},
+         'all_positive_commands':sum(commands.values()),'negative_jobs':7,'max_own_child_peak_bytes':peak,'command_counts':commands,
+         'scope':'Independent raw full cache payload and guards replay; exact new/untouched Half storage. Native input guards checked but not archived. Saved K already rotated; no propagation/committed-prefix/session claim. All rotary/projection/MLP/gating regressions with their existing evidence limits.'}
+out={'format':'toklet-tiny-metal-cache-analysis-v1','completed':True,'records_sha256':{str(pth.relative_to(ROOT)):sha(pth) for pth in (path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x') as stream:stream.write(json.dumps(out,indent=2,allow_nan=False)+'\n')
+print(json.dumps(summary,indent=2))

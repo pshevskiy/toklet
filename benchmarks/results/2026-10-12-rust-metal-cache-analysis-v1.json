@@ -1,0 +1,118 @@
+{
+  "format": "toklet-tiny-metal-cache-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-12-rust-metal-cache-v1.json": "e04b26767ae21115260e13864f57eee8c9c643fb33cdb42fc4f650868ae48df0",
+    "benchmarks/raw/2026-10-12-rust-metal-cache-v1.json.native.jsonl": "4cbb6bf69e0e1ea668d05c28bd5ae0ead5f25b602bf70bdfefe75210b7443296",
+    "benchmarks/results/2026-10-12-rust-metal-cache-v1.json.stderr.txt": "13a70140ae62193ee166f2da3dff5cbfcfb67e5ec7809c209d2f5cd3d82d7847",
+    "benchmarks/results/2026-10-12-rust-metal-cache-idle-v1.json": "cfa7a43ded8e60f5105d9a49cc7c60ede6cff99191a4d13c844ebcd1d5cc7e65"
+  },
+  "summary": {
+    "attention_regression_stages": {
+      "k": {
+        "commands": 130,
+        "output_values": 18304,
+        "equal_frozen_half_values": 18304,
+        "max_source_fp32_gate_fraction": 0.4969946439169997,
+        "max_source_fp32_abs_error": 0.002014636993408203,
+        "max_admitted_bytes": 67124530,
+        "unique_half_differences": []
+      },
+      "v": {
+        "commands": 130,
+        "output_values": 18304,
+        "equal_frozen_half_values": 18291,
+        "max_source_fp32_gate_fraction": 0.48929894377917843,
+        "max_source_fp32_abs_error": 0.0016853809356689453,
+        "max_admitted_bytes": 67124530,
+        "unique_half_differences": [
+          {
+            "case": "cases.future_changed.layers.0.v_projection",
+            "index": 56,
+            "gpu_half_bits": 3853,
+            "frozen_half_bits": 3854,
+            "fp64_dot_plus_bias": 0.00043046940118074417,
+            "gpu_fp32_result": 0.00043044984340667725,
+            "gpu_minus_fp64": -1.955777406692505e-08,
+            "feature_order_fp32_plus_bias": 0.00043048523366451263,
+            "half_spacing": 2.384185791015625e-07,
+            "half_midpoint": 0.0004304647445678711,
+            "same_difference_all_repetitions": true
+          }
+        ]
+      },
+      "o": {
+        "commands": 130,
+        "output_values": 36608,
+        "equal_frozen_half_values": 36608,
+        "max_source_fp32_gate_fraction": 0.4901600612826886,
+        "max_source_fp32_abs_error": 0.0010646581649780273,
+        "max_admitted_bytes": 67133842,
+        "unique_half_differences": []
+      }
+    },
+    "rotary_regression": {
+      "commands": 273,
+      "cases": 21,
+      "output_values": 55120,
+      "equal_frozen_half_values": 55120,
+      "max_source_fp32_gate_fraction": 0.49812881633031697,
+      "max_source_fp32_abs_error": 0.0021777302026748657,
+      "guard_values": 5863,
+      "max_admitted_bytes": 67119174,
+      "unique_half_differences": []
+    },
+    "cache": {
+      "cases": 14,
+      "commands": 182,
+      "cache_payload_values": 186368,
+      "new_chunk_values": 52416,
+      "untouched_values": 133952,
+      "cache_guard_values": 2548,
+      "native_checked_input_guard_values": 5044,
+      "max_admitted_bytes": 67121320,
+      "exact_half_storage_bits": true
+    },
+    "all_positive_commands": 1833,
+    "negative_jobs": 7,
+    "max_own_child_peak_bytes": 22758024,
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "mlp_1": 13,
+      "mlp_2": 13,
+      "mlp_3": 13,
+      "mlp_4": 13,
+      "mlp_5": 13,
+      "mlp_6": 13,
+      "mlp_7": 13,
+      "mlp_8": 13,
+      "mlp_9": 13,
+      "mlp_10": 13,
+      "mlp_overflow": 0,
+      "k_layer_0": 65,
+      "k_layer_1": 65,
+      "v_layer_0": 65,
+      "v_layer_1": 65,
+      "o_layer_0": 65,
+      "o_layer_1": 65,
+      "gate_layer_0": 65,
+      "gate_layer_1": 65,
+      "up_layer_0": 65,
+      "up_layer_1": 65,
+      "down_layer_0": 65,
+      "down_layer_1": 65,
+      "query_manual_regression": 169,
+      "projection_overflow_regression": 0,
+      "gating_regression": 143,
+      "gating_tails_regression": 117,
+      "gating_overflow_regression": 0,
+      "rotary_frozen_manual": 273,
+      "rotary_overflow": 0,
+      "cache_frozen_manual": 182,
+      "cache_capacity_rejection": 0
+    },
+    "scope": "Independent raw full cache payload and guards replay; exact new/untouched Half storage. Native input guards checked but not archived. Saved K already rotated; no propagation/committed-prefix/session claim. All rotary/projection/MLP/gating regressions with their existing evidence limits."
+  }
+}
