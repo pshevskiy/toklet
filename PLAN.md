@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026; updated 12 October 2026. Status: M0–M2 are complete; M3.1 candidate qualification is in progress; M3.2/M3.3 research is complete, and M4–M7 remain pending.
+Prepared 9 October 2026; updated 12 October 2026. Status: M0–M3 are complete; M4–M7 remain pending, with bounded Metal primitive preparation already recorded.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -777,7 +777,16 @@ checks. All candidate matrix/application measurements are complete. M3.1
 remains open for explicit retention; no numerical helper, kernel, qualified
 artifact or quality gate changes.
 
-- [ ] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
+CPU retention decision, 12 October 2026: [the consolidated evidence](docs/experiments/2026-10-12-cpu-tiled-retention.md)
+retains the ordered FP64 tile as the qualified opt-in `--cpu-projection tiled`
+variant, preserving scalar as default/reference. Both primary pairs exceed
+unchanged acceptance thresholds; all eight numerical rows, full application,
+full loss/task gates, bounded memory and capacity checks pass their recorded
+scope. Historical comparisons, timer-floor cached TTFT, excluded attempts and
+unavailable telemetry are disclosed. M3.1 and M3 close without changing any
+numerical source, qualified executable or gate. Astra accepted closure after correcting cache-state and power-observation wording; numerical results and evidence are unchanged.
+
+- [x] **M3.1 Improve one measured CPU bottleneck.** Spend approximately 4–6 hours on a profile-selected change such as contiguous traversal, vectorization, or bounded threading. Preserve the scalar oracle. Retain it only if full workloads improve without correctness or memory regressions.
 - [x] **M3.2 Evaluate public CPU and ANE execution.** Spend the remaining 8–14 hours converting the tiny decoder or a supported slice, comparing CPU-only and CPU-and-Neural-Engine policies, and attempting persistent state. Capture actual placement where tooling permits, fallback, conversion cost, completed-work latency, and memory.
 - [x] **M3.3 Close the experiment.** Record useful, uncompetitive, unsupported, or inconclusive, with commands and evidence. A slice result applies only to that slice. Adopt an ANE engine path only after complete stateful decode is measured; otherwise continue to M4 when the time budget ends.
 
@@ -1105,4 +1114,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M3.1: review the complete CPU evidence and record the explicit retain/revert decision.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 preparation task: qualify stored-Half gating inactive-lane tails using queried launch limits, complete guard coverage and unchanged independent product/source gates before composing the MLP.

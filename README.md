@@ -295,3 +295,9 @@ token IDs, stops and untimed generation states match scalar. Median scenario
 latency is 129.141379 s; historical scalar comparison is descriptive. All
 candidate workload and application measurements are complete; M3.1 still
 requires its explicit retention decision.
+
+The [CPU retention decision](docs/experiments/2026-10-12-cpu-tiled-retention.md)
+closes M3.1 and M3: retain the qualified tiled projection as an opt-in variant,
+with scalar as default/reference. Both primary comparisons improve warm TTFT
+by about 77.6%; complete workload/application and frozen quality/memory gates
+pass their recorded scope. Metal composition and M4–M7 remain pending.

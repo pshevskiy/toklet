@@ -99,7 +99,7 @@ a generic benchmark tool. The
 is also retained exactly. Analysis pins the schema, current shared summary
 helper, clean guardian, substitution record and orchestration identities.
 It requires identical model/tokenizer/build/device/workload/precision/timing
-identity, complete request state, startup AC source and low-power policy,
+identity, complete request state, startup AC source and publication-time low-power policy,
 start/end warning reports, and memory limits before calculating the comparisons.
 No model, native or test work is performed during report generation or review.
 
@@ -116,8 +116,8 @@ Record dispatch revisions, in effective order, are `0f122d7`, `d6baf81`,
 `3de376d` and `e721bf6`; the numerical binary/source identities remain the same.
 
 The host is Apple M1 Pro, MacBookPro18,3, 16 GiB, macOS 26.6.2 (25G83).
-Each run records the actual AC source line and AC low-power mode disabled at
-startup; `pmset` captures no recorded thermal/performance warning at start/end.
+Each run records the actual AC source line at startup and configured AC
+low-power mode disabled when publishing its completed result; `pmset` captures no recorded thermal/performance warning at start/end.
 End-of-run power source, actual temperature, system memory pressure and energy
 are unavailable. A warning-free report does not establish controlled thermal
 conditions or energy efficiency.
