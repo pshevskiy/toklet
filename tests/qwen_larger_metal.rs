@@ -136,7 +136,7 @@ fn larger_storage_probes_bind_complete_arrays_shapes_gates_and_argmax() {
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 mod native {
     use super::*;
-    use std::io::{Read, Write};
+    use std::io::{Read, Seek, SeekFrom, Write};
     use toklet::{metal, session, weights};
 
     fn file_sha(path: &Path) -> String {
@@ -194,7 +194,7 @@ mod native {
             format!("cases.{case}.{stage}")
         }
     }
-    fn run(kind: &str) {
+    fn run(kind: &str, normalization: metal::NormalizationMode, version: &str) {
         let r = root();
         let probes = probe(kind);
         let full = r.join(format!("artifacts/m5-larger-{kind}-oracle-v3"));
@@ -219,9 +219,20 @@ mod native {
                 sha.as_str().unwrap()
             );
         }
-        let output = r.join(format!(
-            "benchmarks/results/2026-10-13-larger-{kind}-gpu-parity-v3.json"
-        ));
+        // Retained reports are immutable. A caller may choose a fresh evidence
+        // path; ordinary reruns use an exclusive, uniquely named local artifact.
+        let output = std::env::var_os("TOKLET_LARGER_PARITY_REPORT")
+            .map(PathBuf::from)
+            .unwrap_or_else(|| {
+                r.join(format!(
+                    "artifacts/larger-{kind}-parity-{version}-{}-{}.json",
+                    std::process::id(),
+                    std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap()
+                        .as_nanos()
+                ))
+            });
         assert!(!output.exists(), "Native evidence already exists");
         let model_path = r.join("models/Qwen2.5-1.5B-Instruct");
         let packed_path = r.join("artifacts/m5-larger-q4-v1");
@@ -301,7 +312,7 @@ mod native {
             chunks.sort_unstable();
             chunks.dedup();
             for chunk in chunks {
-                let mut s = metal::Session::with_projection_mode(
+                let mut s = metal::Session::with_execution_modes(
                     &model,
                     session::Options {
                         capacity: 27,
@@ -314,6 +325,7 @@ mod native {
                     } else {
                         metal::ProjectionMode::Original
                     },
+                    normalization,
                 )
                 .unwrap();
                 let budget = s.memory().admitted_bytes;
@@ -434,6 +446,7 @@ mod native {
         let peak = physical_peak();
         let mut report = json!({"format":"toklet-larger-metal-parity-v1","kind":kind,"passed":failures.is_empty(),"scope":"Short larger GPU geometry/storage numerical parity only; no lossy quality or performance acceptance","device":model.device_name(),"weights_bytes":model.weights_bytes(),"load_timing":{"load_seconds":model.load_timing.load_seconds,"conversion_seconds":model.load_timing.conversion_seconds,"compilation_seconds":model.load_timing.compilation_seconds},"q4_execution_widths":model.q4_execution_widths(),"compensated_execution_width":model.q4_compensated_execution_width(),"projection_mode":if kind=="q4" {"Q4Compensated"}else{"Original"},"full_arrays_compared":compared,"initial_native_lifetime_peak_bytes":initial_peak,"final_native_lifetime_peak_bytes":peak,"native_scope":"Own-process v4 lifetime charge includes fixture/hash/diagnostics; no concurrent model worker; complements allocation admission","profile_events":profile_events,"metrics":metrics,"failures":failures});
         report["identities"] = json!({"source_sha256":source_sha,"config_sha256":config_sha,"packed_manifest_sha256":packed_sha});
+        report["normalization_mode"] = json!(normalization);
         fs::OpenOptions::new()
             .write(true)
             .create_new(true)
@@ -446,11 +459,120 @@ mod native {
     #[test]
     #[ignore = "Explicit preselected larger Half geometry/parity on Apple GPU"]
     fn larger_half_matches_source_with_frozen_storage_envelope() {
-        run("half");
+        run("half", metal::NormalizationMode::Original, "v3");
     }
     #[test]
     #[ignore = "Explicit preselected larger Q4 reconstructed oracle/profile on Apple GPU"]
     fn larger_q4_matches_frozen_reconstructed_oracle() {
-        run("q4");
+        run("q4", metal::NormalizationMode::Original, "v3");
+    }
+
+    #[test]
+    #[ignore = "Explicit larger Q4 compensated projection and RMS qualification under unchanged gates"]
+    fn larger_q4_compensated_rms_matches_frozen_reconstructed_oracle() {
+        run("q4", metal::NormalizationMode::Compensated, "v4");
+    }
+
+    #[test]
+    #[ignore = "Bounded identical-input larger RMS/rotary diagnostic capture, no numerical qualification"]
+    fn capture_larger_first_layer_for_numerical_localization() {
+        let r = root();
+        let probes = probe("q4");
+        let model_path = r.join("models/Qwen2.5-1.5B-Instruct");
+        let source = model_path.join("model.safetensors");
+        let source_sha = file_sha(&source);
+        assert_eq!(source_sha, probes["model"]["weights"]["sha256"]);
+        let config_sha = file_sha(&model_path.join("config.json"));
+        assert_eq!(
+            config_sha,
+            "98d2ff8cc47488d08a2b0b3acf4eb99ef210779b42bd48605f6b8e36acdbf670"
+        );
+        // Read only the pinned 1536-element norm vector. Source identity and
+        // exact header/shape/range checks precede this bounded diagnostic copy.
+        let mut file = fs::File::open(&source).unwrap();
+        assert_eq!(file.metadata().unwrap().len(), 3_087_467_144);
+        let mut length = [0; 8];
+        file.read_exact(&mut length).unwrap();
+        assert_eq!(u64::from_le_bytes(length), 38528);
+        let mut header = vec![0; 38528];
+        file.read_exact(&mut header).unwrap();
+        let header: Value = serde_json::from_slice(&header).unwrap();
+        let norm = &header["model.layers.0.input_layernorm.weight"];
+        assert_eq!(norm["dtype"], "BF16");
+        assert_eq!(norm["shape"], json!([1536]));
+        let start = norm["data_offsets"][0].as_u64().unwrap();
+        let end = norm["data_offsets"][1].as_u64().unwrap();
+        assert_eq!(end.checked_sub(start), Some(3072));
+        assert!(end <= 3_087_428_608);
+        file.seek(SeekFrom::Start(38536 + start)).unwrap();
+        let mut payload = vec![0; 3072];
+        file.read_exact(&mut payload).unwrap();
+        let norm_bits: Vec<u16> = payload
+            .chunks_exact(2)
+            .map(|v| {
+                f16::from_f32(f32::from_bits(
+                    u32::from(u16::from_le_bytes(v.try_into().unwrap())) << 16,
+                ))
+                .to_bits()
+            })
+            .collect();
+        assert!(norm_bits.iter().all(|&v| f16::from_bits(v).is_finite()));
+        let packed = r.join("artifacts/m5-larger-q4-v1");
+        let packed_sha = file_sha(&packed.join("manifest.json"));
+        assert_eq!(packed_sha, probes["identities"]["packed_manifest_sha256"]);
+        let model = metal::Model::load_q4(
+            &model_path,
+            &packed,
+            weights::LoadOptions {
+                context_limit: 32,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let mut cases = Vec::new();
+        for (name, spec) in probes["cases"].as_object().unwrap() {
+            let tokens: Vec<u32> = spec["tokens"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|v| v.as_u64().unwrap() as u32)
+                .collect();
+            let mut s = metal::Session::with_projection_mode(
+                &model,
+                session::Options {
+                    capacity: 27,
+                    prefill_chunk_size: tokens.len(),
+                    position_offset: spec["offset"].as_u64().unwrap() as usize,
+                    ..Default::default()
+                },
+                metal::ProjectionMode::Q4Compensated,
+            )
+            .unwrap();
+            s.enable_diagnostics(&[0]).unwrap();
+            assert!(
+                s.memory().admitted_bytes + 128 * 1024 * 1024
+                    <= weights::INITIAL_MEMORY_LIMIT_BYTES
+            );
+            s.set_tokens(&tokens).unwrap();
+            assert_eq!(s.evaluate_next_chunk().unwrap(), tokens.len());
+            let snapshots: Vec<_> = s.diagnostics().unwrap().into_iter().filter(|v| {
+                (v.layer.is_none() && v.stage == "embedding") || (v.layer == Some(0) && ["input_norm", "q", "k", "q_rotary", "k_rotary"].contains(&v.stage))
+            }).map(|v| json!({"layer":v.layer,"stage":v.stage,"rows":v.rows,"columns":v.columns,"values_bits":v.values.iter().map(|v| v.to_bits()).collect::<Vec<_>>() })).collect();
+            assert_eq!(snapshots.len(), 6);
+            cases.push(json!({"case":name,"spec":spec,"snapshots":snapshots}));
+        }
+        assert_eq!(file_sha(&source), source_sha);
+        assert_eq!(file_sha(&model_path.join("config.json")), config_sha);
+        assert_eq!(file_sha(&packed.join("manifest.json")), packed_sha);
+        let report = json!({"scope":"Identical-input RMS/rotary diagnostic only; no qualification, gate or quality changes", "source_sha256":source_sha,"config_sha256":config_sha,"packed_manifest_sha256":packed_sha,"norm_bf16_payload_sha256":format!("{:x}",Sha256::digest(payload)),"norm_half_bits":norm_bits,"cases":cases,"native_lifetime_peak_bytes":physical_peak()});
+        let bytes = serde_json::to_vec(&report).unwrap();
+        assert!(bytes.len() <= 4 * 1024 * 1024);
+        fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(r.join("artifacts/m5-larger-first-layer-capture-v1.json"))
+            .unwrap()
+            .write_all(&bytes)
+            .unwrap();
     }
 }

@@ -6,6 +6,12 @@ inline void checked_half(device half* out,uint i,float v,device atomic_uint* sta
     out[i]=h;
     if(!isfinite(v)||!isfinite(float(h)))atomic_fetch_or_explicit(status,1u,memory_order_relaxed);
 }
+// Neumaier's two-component FP32 sum, shared by the opt-in accurate reductions.
+inline float2 compensated_add(float2 sum,float value) {
+    float next=sum.x+value;
+    float error=abs(sum.x)>=abs(value)?(sum.x-next)+value:(value-next)+sum.x;
+    return float2(next,sum.y+error);
+}
 
 kernel void embedding(device const ushort* w[[buffer(0)]],device const uint* tokens[[buffer(1)]],device ushort* out[[buffer(2)]],constant uint* s[[buffer(3)]],uint i[[thread_position_in_grid]]) {
     if(i>=s[0]*s[1])return;
@@ -16,9 +22,20 @@ kernel void rms(device const half* x[[buffer(0)]],device const half* w[[buffer(1
     if(row>=s[0])return;
     uint base=row*s[1];
     float total=0;
-    for(uint i=0;i<s[1];++i) {
-        float v=float(x[base+i]);
-        total=total+v*v;
+    if(s[3]!=0) {
+        // Half squares are exact FP32 products. Compensate their positive
+        // reduction only; division, sqrt, inverse and scaling stay unchanged.
+        float2 sum=float2(0.0f);
+        for(uint i=0;i<s[1];++i) {
+            float v=float(x[base+i]);
+            sum=compensated_add(sum,v*v);
+        }
+        total=sum.x+sum.y;
+    } else {
+        for(uint i=0;i<s[1];++i) {
+            float v=float(x[base+i]);
+            total=total+v*v;
+        }
     }
     float inv=1.0f/sqrt(total/float(s[1])+as_type<float>(s[2]));
     for(uint i=0;i<s[1];++i)checked_half(out,base+i,(float(x[base+i])*inv)*float(w[i]),status);
@@ -166,11 +183,6 @@ kernel void q4_prefill(device const uchar* w[[buffer(0)]],device const half* bia
 
 // Neumaier's two-component FP32 sum. Explicit fma below recovers the product
 // residual; reconstruction itself remains the same rounded FP32 format value.
-inline float2 compensated_add(float2 sum,float value) {
-    float next=sum.x+value;
-    float error=abs(sum.x)>=abs(value)?(sum.x-next)+value:(value-next)+sum.x;
-    return float2(next,sum.y+error);
-}
 // Round an inexact two-component result to an odd Float32 significand before
 // Half RNE. This retains which side of a Half midpoint the low component lies
 // on, avoiding double rounding through a nearest-even Float32 midpoint.

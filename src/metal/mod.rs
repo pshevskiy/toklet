@@ -412,6 +412,15 @@ pub enum ProjectionMode {
     /// gates pass; larger Q4 and held-out quality remain unqualified.
     Q4Compensated,
 }
+/// Select the RMS reduction once per operation. Original remains the default.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize)]
+pub enum NormalizationMode {
+    #[default]
+    Original,
+    /// Experimental positive FP32 square-sum compensation. Remaining RMS
+    /// arithmetic, epsilon and Half storage are unchanged.
+    Compensated,
+}
 #[derive(Clone, Copy, Debug, serde::Serialize)]
 pub struct Timing {
     pub command_creation_seconds: f64,
@@ -430,6 +439,7 @@ pub struct Session<'m> {
     model: &'m Model,
     options: session::Options,
     projection_mode: ProjectionMode,
+    normalization_mode: NormalizationMode,
     memory: session::Memory,
     history: Vec<u32>,
     evaluated: usize,
@@ -458,6 +468,16 @@ impl<'m> Session<'m> {
         model: &'m Model,
         options: session::Options,
         projection_mode: ProjectionMode,
+    ) -> Result<Self> {
+        Self::with_execution_modes(model, options, projection_mode, NormalizationMode::Original)
+    }
+    /// Explicit experimental numerical choices; admission and resource ownership
+    /// are the same as the original session and defaults remain unchanged.
+    pub fn with_execution_modes(
+        model: &'m Model,
+        options: session::Options,
+        projection_mode: ProjectionMode,
+        normalization_mode: NormalizationMode,
     ) -> Result<Self> {
         autoreleasepool(|_| {
             if projection_mode != ProjectionMode::Original
@@ -616,6 +636,7 @@ impl<'m> Session<'m> {
                 model,
                 options,
                 projection_mode,
+                normalization_mode,
                 memory: session::Memory {
                     weights_bytes: model.weight_bytes,
                     kv_bytes,
@@ -819,6 +840,7 @@ impl<'m> Session<'m> {
                 n,
                 h,
                 c.rms_norm_eps,
+                self.normalization_mode,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "input_norm", &s.norm.raw)?;
@@ -986,6 +1008,7 @@ impl<'m> Session<'m> {
                 n,
                 h,
                 c.rms_norm_eps,
+                self.normalization_mode,
                 &s.status,
             )?;
             self.snapshot(
@@ -1082,6 +1105,7 @@ impl<'m> Session<'m> {
             n,
             h,
             c.rms_norm_eps,
+            self.normalization_mode,
             &s.status,
         )?;
         self.snapshot(&command, None, "final_norm", &s.norm.raw)?;
@@ -1179,13 +1203,19 @@ fn rms(
     n: usize,
     h: usize,
     eps: f32,
+    mode: NormalizationMode,
     status: &Buffer<u32>,
 ) -> Result<()> {
     g.encode(
         c,
         Kernel::Rms,
         &[&x.raw, &w.raw, &out.raw],
-        &[n as u32, h as u32, eps.to_bits()],
+        &[
+            n as u32,
+            h as u32,
+            eps.to_bits(),
+            u32::from(mode == NormalizationMode::Compensated),
+        ],
         n,
         Some(status),
     )
@@ -2015,6 +2045,143 @@ mod tests {
             assert_eq!(cases, 72);
             println!(
                 "Compensated Half rounding: {cases} signed midpoint cases, {double_rounding_cases} distinguish direct FP64 from FP32-then-Half; unchanged overflow status and guards"
+            );
+        });
+    }
+    #[test]
+    #[ignore = "Explicit identical-input RMS reduction oracle; requires frozen larger first-layer capture"]
+    fn compensated_rms_preserves_fp32_arithmetic_after_exact_square_sum() {
+        use sha2::Digest;
+        autoreleasepool(|_| {
+            let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("artifacts/m5-larger-first-layer-capture-v1.json");
+            assert!(std::fs::metadata(&path).unwrap().len() <= 4 * 1024 * 1024);
+            let bytes = std::fs::read(path).unwrap();
+            assert!(bytes.len() <= 4 * 1024 * 1024);
+            assert_eq!(
+                format!("{:x}", sha2::Sha256::digest(&bytes)),
+                "9cab8309655256b0c117605816e36c7cb9b36783860fb6ef9f8fcf8ae3153e2a"
+            );
+            let capture: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+            let gpu = Gpu::new().unwrap();
+            let norm: Vec<u16> = capture["norm_half_bits"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|v| u16::try_from(v.as_u64().unwrap()).unwrap())
+                .collect();
+            assert_eq!(norm.len(), 1536);
+            let mut weight = Buffer::<u16>::new(&gpu, 1536).unwrap();
+            weight.with_mut(|v| v.copy_from_slice(&norm));
+            let mut cases: Vec<(String, Vec<u16>, usize)> = capture["cases"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|c| {
+                    let e = c["snapshots"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .find(|v| v["stage"] == "embedding")
+                        .unwrap();
+                    let rows = e["rows"].as_u64().unwrap() as usize;
+                    let values: Vec<_> = e["values_bits"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|v| {
+                            half::f16::from_f32(f32::from_bits(
+                                u32::try_from(v.as_u64().unwrap()).unwrap(),
+                            ))
+                            .to_bits()
+                        })
+                        .collect();
+                    assert_eq!(values.len(), rows * 1536);
+                    (c["case"].as_str().unwrap().to_owned(), values, rows)
+                })
+                .collect();
+            assert_eq!(cases.len(), 4);
+            cases.push(("zero".into(), vec![0; 1536], 1));
+            cases.push((
+                "dynamic_range".into(),
+                (0..1536)
+                    .map(|i| {
+                        half::f16::from_f32(if i == 0 {
+                            65504.
+                        } else if i % 2 == 0 {
+                            0.25
+                        } else {
+                            2f32.powi(-24)
+                        })
+                        .to_bits()
+                    })
+                    .collect(),
+                1,
+            ));
+            let mut compared = 0;
+            for (name, x, rows) in cases {
+                let mut input = Buffer::<u16>::new(&gpu, x.len() + 7).unwrap();
+                input.with_mut(|v| {
+                    v.fill(0x7e00);
+                    v[..x.len()].copy_from_slice(&x);
+                });
+                let mut output = Buffer::<u16>::new(&gpu, x.len() + 7).unwrap();
+                let mut status = Buffer::<u32>::new(&gpu, 8).unwrap();
+                for mode in [NormalizationMode::Original, NormalizationMode::Compensated] {
+                    output.with_mut(|v| v.fill(0x7bff));
+                    status.with_mut(|v| v.fill(0));
+                    let raw = gpu.command().unwrap();
+                    let command = Command {
+                        raw: &raw,
+                        trace: None,
+                    };
+                    rms(
+                        &gpu, &command, &input, &weight, &output, rows, 1536, 1e-6, mode, &status,
+                    )
+                    .unwrap();
+                    raw.commit();
+                    raw.waitUntilCompleted();
+                    assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                    assert_eq!(status.with_slice(|v| v[0]), 0);
+                    output.with_slice(|actual| {
+                        for row in 0..rows {
+                            let values = &x[row * 1536..(row + 1) * 1536];
+                            let total = if mode == NormalizationMode::Original {
+                                values.iter().fold(0f32, |sum, &v| {
+                                    let v = half::f16::from_bits(v).to_f32();
+                                    sum + v * v
+                                })
+                            } else {
+                                values
+                                    .iter()
+                                    .map(|&v| {
+                                        let v = f64::from(half::f16::from_bits(v).to_f32());
+                                        v * v
+                                    })
+                                    .sum::<f64>() as f32
+                            };
+                            let inverse = 1.0f32 / (total / 1536.0 + 1e-6).sqrt();
+                            for (feature, (&x, &w)) in values.iter().zip(&norm).enumerate() {
+                                let expected = half::f16::from_f32(
+                                    (half::f16::from_bits(x).to_f32() * inverse)
+                                        * half::f16::from_bits(w).to_f32(),
+                                )
+                                .to_bits();
+                                assert_eq!(
+                                    actual[row * 1536 + feature],
+                                    expected,
+                                    "{name} {mode:?} row{row} feature{feature}"
+                                );
+                                compared += 1;
+                            }
+                        }
+                        assert!(actual[x.len()..].iter().all(|&v| v == 0x7bff));
+                    });
+                }
+            }
+            assert_eq!(compared, 2 * 14 * 1536);
+            println!(
+                "RMS identical-input oracle: {compared} exact Half values, original ordered FP32 or compensated square sum with FP32 remaining arithmetic; zero/dynamic-range/guards pass"
             );
         });
     }

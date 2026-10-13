@@ -504,6 +504,16 @@ fn compensated_q4_matches_expanded_independent_oracle() {
 }
 
 #[test]
+#[ignore = "Explicit compensated Q4/RMS full tiny decoder under unchanged independent gates"]
+fn compensated_q4_and_rms_match_expanded_independent_oracle() {
+    check_tiny_oracle_modes(
+        "q4-tiny-prefill-v1",
+        metal::ProjectionMode::Q4Compensated,
+        metal::NormalizationMode::Compensated,
+    );
+}
+
+#[test]
 #[ignore = "Explicit bounded numerical investigation; captures data, does not qualify decoder parity"]
 fn capture_compensated_offset_stages_for_investigation() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -703,6 +713,13 @@ fn tiled_q4_prefill_preserves_every_original_stage_bit() {
     );
 }
 fn check_tiny_oracle(fixture: &str, mode: metal::ProjectionMode) {
+    check_tiny_oracle_modes(fixture, mode, metal::NormalizationMode::Original);
+}
+fn check_tiny_oracle_modes(
+    fixture: &str,
+    mode: metal::ProjectionMode,
+    normalization: metal::NormalizationMode,
+) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let reference = root.join("tests/fixtures").join(fixture);
     let manifest = manifest(&reference);
@@ -750,7 +767,7 @@ fn check_tiny_oracle(fixture: &str, mode: metal::ProjectionMode) {
                 .cloned()
                 .collect();
             assert_eq!(expected_names.len(), 35);
-            let mut session = metal::Session::with_projection_mode(
+            let mut session = metal::Session::with_execution_modes(
                 &model,
                 session::Options {
                     capacity: 32 - spec["position_offset"].as_u64().unwrap() as usize,
@@ -759,6 +776,7 @@ fn check_tiny_oracle(fixture: &str, mode: metal::ProjectionMode) {
                     ..Default::default()
                 },
                 mode,
+                normalization,
             )
             .unwrap();
             session.enable_diagnostics(&[0, 1]).unwrap();
