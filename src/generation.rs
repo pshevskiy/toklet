@@ -9,7 +9,7 @@
 //! callers may continue or discard pending input explicitly.
 
 use crate::{
-    cpu, sampling,
+    cpu,
     session::{self, InferenceSession},
 };
 use serde::Serialize;
@@ -62,6 +62,8 @@ pub struct Report {
     pub first_token_seconds: Option<f64>,
     pub prefill_seconds: f64,
     pub decode_seconds: f64,
+    /// Host selection or cached-ID fetch. A GPU session that selects the ID
+    /// during evaluation charges that work to prefill/decode instead.
     pub sampling_seconds: f64,
     /// Includes callback/output time; component timers exclude callback time.
     pub total_seconds: f64,
@@ -190,12 +192,10 @@ pub fn generate(
             }
         }
         let clock = Instant::now();
-        let token_id = sampling::greedy(
-            session
-                .logits()
-                .ok_or(Error::InvalidRequest("no evaluated distribution"))?,
-        )
-        .map_err(Error::Sampling)?;
+        let token_id = session
+            .greedy_token()
+            .ok_or(Error::InvalidRequest("no evaluated distribution"))?
+            .map_err(Error::Sampling)?;
         report.sampling_seconds += clock.elapsed().as_secs_f64();
         if cancelled.load(Ordering::Relaxed) {
             report.reason = StopReason::Cancelled;

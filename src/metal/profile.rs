@@ -292,7 +292,12 @@ impl Session<'_> {
         } else {
             38
         };
-        let events = per_layer * self.model.config.num_layers + 6;
+        // Token selection replaces final validation in ordinary execution.
+        // Reserve one spare slot because diagnostics may be enabled later and
+        // must validate every logit row in addition to selecting the final row.
+        let events = per_layer * self.model.config.num_layers
+            + 6
+            + usize::from(self.readback_mode == super::ReadbackMode::GreedyToken);
         if events > MAX_EVENTS {
             return Err(Error::Unsupported(
                 "model profiling exceeds admitted counter capacity",

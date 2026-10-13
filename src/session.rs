@@ -64,7 +64,8 @@ pub struct Memory {
     pub kv_bytes: usize,
     pub scratch_bytes: usize,
     pub history_bytes: usize,
-    /// Current committed distribution and a staging distribution, both FP32.
+    /// Current/staged FP32 distributions, or two cached token IDs in an
+    /// explicitly selected token-only backend mode.
     pub logits_bytes: usize,
     /// Allocated model-layer and cache-layer tables (Vec headers, not tensors).
     pub metadata_bytes: usize,
@@ -412,6 +413,11 @@ pub trait InferenceSession {
     fn vocab_size(&self) -> usize;
     fn memory(&self) -> Memory;
     fn logits(&self) -> Option<&[f32]>;
+    /// Coarse statically dispatched sampling boundary. None has the same
+    /// unavailable-distribution meaning as logits(); CPU retains its oracle.
+    fn greedy_token(&self) -> Option<Result<u32, crate::cpu::Error>> {
+        self.logits().map(crate::sampling::greedy)
+    }
     fn append(&mut self, tokens: &[u32]) -> Result<(), Error>;
     fn set_tokens(&mut self, tokens: &[u32]) -> Result<(), Error>;
     fn evaluate_next_chunk(&mut self) -> Result<usize, Error>;

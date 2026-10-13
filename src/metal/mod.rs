@@ -192,6 +192,9 @@ impl Model {
             self.gpu.execution_width(Kernel::Q4CompensatedPrefill),
         ]
     }
+    pub fn greedy_execution_width(&self) -> usize {
+        self.gpu.execution_width(Kernel::Greedy)
+    }
     pub fn device_name(&self) -> String {
         self.gpu.device.name().to_string()
     }
@@ -387,6 +390,7 @@ struct Scratch {
     probs: Buffer<u32>,
     tokens: Buffer<u32>,
     status: Buffer<u32>,
+    selection: Option<Buffer<u32>>,
     zero: Buffer<u16>,
 }
 struct Views {
@@ -430,6 +434,14 @@ pub enum NormalizationMode {
     /// arithmetic, epsilon and Half storage are unchanged.
     Compensated,
 }
+/// Full logits remain the default. Token-only readback is an explicit experiment;
+/// full logits/stages are still available through admitted diagnostics.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize)]
+pub enum ReadbackMode {
+    #[default]
+    FullLogits,
+    GreedyToken,
+}
 #[derive(Clone, Copy, Debug, serde::Serialize)]
 pub struct Timing {
     pub command_creation_seconds: f64,
@@ -449,6 +461,7 @@ pub struct Session<'m> {
     options: session::Options,
     projection_mode: ProjectionMode,
     normalization_mode: NormalizationMode,
+    readback_mode: ReadbackMode,
     memory: session::Memory,
     history: Vec<u32>,
     evaluated: usize,
@@ -460,6 +473,8 @@ pub struct Session<'m> {
     views: Vec<Views>,
     logits: Vec<f32>,
     staged: Vec<f32>,
+    selected: u32,
+    staged_selected: u32,
     h: Layout,
     k: Layout,
     m: Layout,
@@ -487,6 +502,23 @@ impl<'m> Session<'m> {
         options: session::Options,
         projection_mode: ProjectionMode,
         normalization_mode: NormalizationMode,
+    ) -> Result<Self> {
+        Self::with_readback_mode(
+            model,
+            options,
+            projection_mode,
+            normalization_mode,
+            ReadbackMode::FullLogits,
+        )
+    }
+    /// Explicit output boundary, selected before admission. Token-only mode
+    /// retains no host logit vectors; diagnostics can still expose full rows.
+    pub fn with_readback_mode(
+        model: &'m Model,
+        options: session::Options,
+        projection_mode: ProjectionMode,
+        normalization_mode: NormalizationMode,
+        readback_mode: ReadbackMode,
     ) -> Result<Self> {
         autoreleasepool(|_| {
             if projection_mode != ProjectionMode::Original
@@ -558,7 +590,17 @@ impl<'m> Session<'m> {
                             .checked_mul(8)
                             .ok_or(Error::Options("scores overflow"))?,
                     )?,
-                    add(add((chunk + 7) * 4, 32)?, zero_count * 2)?,
+                    add(
+                        add(
+                            add((chunk + 7) * 4, 32)?,
+                            if readback_mode == ReadbackMode::GreedyToken {
+                                32
+                            } else {
+                                0
+                            },
+                        )?,
+                        zero_count * 2,
+                    )?,
                 )?,
             )?;
             let kv_bytes = cache_count
@@ -566,7 +608,11 @@ impl<'m> Session<'m> {
                 .and_then(|n| n.checked_mul(c.num_layers))
                 .ok_or(Error::Options("KV bytes overflow"))?;
             let history_bytes = options.capacity * 4;
-            let logits_bytes = c.vocab_size * 8;
+            let logits_bytes = if readback_mode == ReadbackMode::GreedyToken {
+                8
+            } else {
+                c.vocab_size * 8
+            };
             let metadata_bytes =
                 chunk * std::mem::size_of::<Views>() + c.num_layers * std::mem::size_of::<Cache>();
             let admitted = [
@@ -609,6 +655,11 @@ impl<'m> Session<'m> {
                 probs: Buffer::new(g, score_count)?,
                 tokens: Buffer::new(g, chunk + 7)?,
                 status: Buffer::new(g, 8)?,
+                selection: if readback_mode == ReadbackMode::GreedyToken {
+                    Some(Buffer::new(g, 8)?)
+                } else {
+                    None
+                },
                 zero: Buffer::new(g, zero_count)?,
             };
             let mut cache = Vec::with_capacity(c.num_layers);
@@ -646,6 +697,7 @@ impl<'m> Session<'m> {
                 options,
                 projection_mode,
                 normalization_mode,
+                readback_mode,
                 memory: session::Memory {
                     weights_bytes: model.weight_bytes,
                     kv_bytes,
@@ -664,8 +716,24 @@ impl<'m> Session<'m> {
                 cache,
                 scratch,
                 views,
-                logits: vec![0.; c.vocab_size],
-                staged: vec![0.; c.vocab_size],
+                logits: vec![
+                    0.;
+                    if readback_mode == ReadbackMode::GreedyToken {
+                        0
+                    } else {
+                        c.vocab_size
+                    }
+                ],
+                staged: vec![
+                    0.;
+                    if readback_mode == ReadbackMode::GreedyToken {
+                        0
+                    } else {
+                        c.vocab_size
+                    }
+                ],
+                selected: 0,
+                staged_selected: 0,
                 h,
                 k,
                 m,
@@ -696,8 +764,20 @@ impl<'m> Session<'m> {
         self.memory
     }
     pub fn logits(&self) -> Option<&[f32]> {
-        (self.distribution_valid && self.evaluated > 0 && self.pending_len() == 0 && !self.replay)
+        (self.readback_mode == ReadbackMode::FullLogits && self.distribution_available())
             .then_some(self.logits.as_slice())
+    }
+    fn distribution_available(&self) -> bool {
+        self.distribution_valid && self.evaluated > 0 && self.pending_len() == 0 && !self.replay
+    }
+    /// Select from a valid committed distribution, or return its completed GPU
+    /// selection. Pending history and failures have the same availability rules.
+    pub fn greedy_token(&self) -> Option<std::result::Result<u32, crate::cpu::Error>> {
+        if self.readback_mode == ReadbackMode::FullLogits {
+            self.logits().map(crate::sampling::greedy)
+        } else {
+            self.distribution_available().then_some(Ok(self.selected))
+        }
     }
     pub fn timing(&self) -> Option<Timing> {
         self.last_timing
@@ -785,6 +865,9 @@ impl<'m> Session<'m> {
             .tokens
             .with_mut(|words| words[..n].copy_from_slice(&self.history[start..start + n]));
         self.scratch.status.with_mut(|words| words.fill(0));
+        if let Some(selection) = &mut self.scratch.selection {
+            selection.with_mut(|words| words.fill(u32::MAX));
+        }
         self.diagnostic_rows = 0;
         let result = autoreleasepool(|_| self.run_chunk(n, start));
         self.finish_chunk(n, result)
@@ -793,6 +876,7 @@ impl<'m> Session<'m> {
         match result {
             Ok(timing) => {
                 std::mem::swap(&mut self.logits, &mut self.staged);
+                std::mem::swap(&mut self.selected, &mut self.staged_selected);
                 self.evaluated += n;
                 self.distribution_valid = true;
                 self.distribution_replay = false;
@@ -1140,19 +1224,38 @@ impl<'m> Session<'m> {
             logit_rows,
             c.vocab_size,
         )?;
-        g.encode(
-            &command,
-            Kernel::Validate,
-            &[&s.floats.raw],
-            &[
-                logit_rows as u32,
-                c.vocab_size as u32,
-                self.f.stride as u32,
-                0,
-            ],
-            logit_rows * c.vocab_size,
-            Some(&s.status),
-        )?;
+        if self.readback_mode == ReadbackMode::FullLogits || all_logits {
+            g.encode(
+                &command,
+                Kernel::Validate,
+                &[&s.floats.raw],
+                &[
+                    logit_rows as u32,
+                    c.vocab_size as u32,
+                    self.f.stride as u32,
+                    0,
+                ],
+                logit_rows * c.vocab_size,
+                Some(&s.status),
+            )?;
+        }
+        if let Some(selection) = &s.selection {
+            g.encode(
+                &command,
+                Kernel::Greedy,
+                &[&s.floats.raw, &selection.raw],
+                &[
+                    c.vocab_size as u32,
+                    if all_logits {
+                        ((n - 1) * self.f.stride) as u32
+                    } else {
+                        0
+                    },
+                ],
+                1,
+                Some(&s.status),
+            )?;
+        }
         self.snapshot(&command, None, "logits", &s.floats.raw)?;
         let host_encode_seconds = clock.elapsed().as_secs_f64();
         let commit_clock = Instant::now();
@@ -1168,22 +1271,35 @@ impl<'m> Session<'m> {
         if s.status.with_slice(|words| words[0]) != 0 {
             return Err(Error::Nonfinite);
         }
-        s.floats.with_slice(|words| {
-            let base = if all_logits {
-                (n - 1) * self.f.stride
-            } else {
-                0
-            };
-            for (dst, bits) in self
-                .staged
-                .iter_mut()
-                .zip(&words[base..base + c.vocab_size])
-            {
-                *dst = f32::from_bits(*bits);
+        if let Some(selection) = &s.selection {
+            let id = selection.with_slice(|words| {
+                if words[1..].iter().any(|&v| v != u32::MAX) {
+                    return Err(Error::Options("greedy output guard changed"));
+                }
+                if words[0] as usize >= c.vocab_size {
+                    return Err(Error::Options("greedy ID outside vocabulary"));
+                }
+                Ok(words[0])
+            })?;
+            self.staged_selected = id;
+        } else {
+            s.floats.with_slice(|words| {
+                let base = if all_logits {
+                    (n - 1) * self.f.stride
+                } else {
+                    0
+                };
+                for (dst, bits) in self
+                    .staged
+                    .iter_mut()
+                    .zip(&words[base..base + c.vocab_size])
+                {
+                    *dst = f32::from_bits(*bits);
+                }
+            });
+            if self.staged.iter().any(|v| !v.is_finite()) {
+                return Err(Error::Nonfinite);
             }
-        });
-        if self.staged.iter().any(|v| !v.is_finite()) {
-            return Err(Error::Nonfinite);
         }
         let readback_seconds = readback.elapsed().as_secs_f64();
         if let Some(trace) = &self.trace {
@@ -1378,6 +1494,9 @@ impl session::InferenceSession for Session<'_> {
     }
     fn logits(&self) -> Option<&[f32]> {
         Session::logits(self)
+    }
+    fn greedy_token(&self) -> Option<std::result::Result<u32, crate::cpu::Error>> {
+        Session::greedy_token(self)
     }
     fn append(&mut self, tokens: &[u32]) -> std::result::Result<(), session::Error> {
         Session::append(self, tokens).map_err(|e| session::Error::Backend(e.to_string()))
@@ -2275,4 +2394,161 @@ mod tests {
         assert_eq!(session.evaluated_len(), 2);
         assert_eq!(session.logits().unwrap(), logits);
     }
+}
+#[test]
+#[ignore = "Explicit Apple GPU greedy oracle, ties, input offsets and finite rejection"]
+fn gpu_greedy_matches_cpu_ties_offsets_and_finite_policy() {
+    autoreleasepool(|_| {
+        let gpu = Gpu::new().unwrap();
+        let mut cases = 0;
+        for n in [1, 7, 31, 32, 33, 65, 257, 151936] {
+            for offset in [0, 3] {
+                for pattern in 0..10 {
+                    let mut values = vec![-3f32; n];
+                    match pattern {
+                        0 => {}
+                        1 => {
+                            values[n - 1] = f32::MAX;
+                        }
+                        2 => {
+                            values.fill(-f32::MAX);
+                        }
+                        3 => {
+                            values.fill(-0.0);
+                            values[n - 1] = 0.0;
+                        }
+                        4 => {
+                            values.fill(0.);
+                            values[n - 1] = f32::from_bits(1);
+                        }
+                        5 => {
+                            values[n / 2] = f32::NAN;
+                        }
+                        6 => {
+                            values[n - 1] = f32::INFINITY;
+                        }
+                        7 => {
+                            values[0] = f32::NEG_INFINITY;
+                        }
+                        8 => {
+                            values.fill(f32::from_bits(0x80000001));
+                            values[n - 1] = -0.;
+                        }
+                        _ => {
+                            values.fill(1.);
+                            values[n - 1] = f32::from_bits(1f32.to_bits() + 1);
+                        }
+                    }
+                    if pattern == 0 && n > 33 {
+                        values[2] = 5.;
+                        values[33] = 5.;
+                    }
+                    let expected = crate::sampling::greedy(&values);
+                    let mut input = Buffer::<u32>::new(&gpu, offset + n + 7).unwrap();
+                    input.with_mut(|v| {
+                        v.fill(0x7fc00001);
+                        for (dst, &x) in v[offset..offset + n].iter_mut().zip(&values) {
+                            *dst = x.to_bits();
+                        }
+                    });
+                    let before = input.with_slice(|v| v.to_vec());
+                    let mut output = Buffer::<u32>::new(&gpu, 8).unwrap();
+                    output.with_mut(|v| v.fill(u32::MAX));
+                    let mut status = Buffer::<u32>::new(&gpu, 8).unwrap();
+                    status.with_mut(|v| v.fill(0));
+                    let raw = gpu.command().unwrap();
+                    let command = Command {
+                        raw: &raw,
+                        trace: None,
+                    };
+                    gpu.encode(
+                        &command,
+                        Kernel::Greedy,
+                        &[&input.raw, &output.raw],
+                        &[n as u32, offset as u32],
+                        1,
+                        Some(&status),
+                    )
+                    .unwrap();
+                    raw.commit();
+                    raw.waitUntilCompleted();
+                    assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                    status.with_slice(|v| {
+                        assert_eq!(v[0], u32::from(expected.is_err()));
+                        assert!(v[1..].iter().all(|&x| x == 0));
+                    });
+                    output.with_slice(|v| {
+                        if let Ok(id) = expected {
+                            assert_eq!(v[0], id, "n{n} offset{offset} pattern{pattern}");
+                        }
+                        assert!(v[1..].iter().all(|&x| x == u32::MAX));
+                    });
+                    assert_eq!(input.with_slice(|v| v.to_vec()), before);
+                    cases += 1;
+                }
+            }
+        }
+        assert_eq!(cases, 160);
+        println!(
+            "GPU greedy: {cases} exact CPU-oracle cases, SIMD width {}, lowest-ID ties/signed-zero/subnormals/extrema/offsets/tails/nonfinite status and guards",
+            gpu.execution_width(Kernel::Greedy)
+        );
+    });
+}
+#[test]
+#[ignore = "Explicit token-only failure/replay and late diagnostic/profile admission"]
+fn gpu_greedy_failure_and_diagnostic_profile_preserve_committed_selection() {
+    let artifact = weights::half_tests::artifact(safetensors::Dtype::F32, None, true);
+    let model = Model::load(&artifact.0, weights::LoadOptions::default()).unwrap();
+    let mut s = Session::with_readback_mode(
+        &model,
+        session::Options {
+            capacity: 8,
+            prefill_chunk_size: 1,
+            ..Default::default()
+        },
+        ProjectionMode::Original,
+        NormalizationMode::Original,
+        ReadbackMode::GreedyToken,
+    )
+    .unwrap();
+    assert_eq!(s.memory.logits_bytes, 8);
+    assert!(s.logits.is_empty() && s.staged.is_empty());
+    s.enable_profile().unwrap();
+    s.enable_diagnostics(&[]).unwrap();
+    s.append(&[0]).unwrap();
+    s.evaluate().unwrap();
+    let selected = s.greedy_token().unwrap().unwrap();
+    assert!(s.logits().is_none());
+    let snapshots = s.diagnostics().unwrap();
+    let logits = &snapshots
+        .iter()
+        .find(|d| d.stage == "logits")
+        .unwrap()
+        .values;
+    assert_eq!(selected, crate::sampling::greedy(logits).unwrap());
+    assert_eq!(
+        s.profile().unwrap().events.len(),
+        38 * model.config.num_layers + 7
+    );
+    s.append(&[1]).unwrap();
+    assert!(s.greedy_token().is_none());
+    assert!(matches!(s.evaluate(), Err(Error::Nonfinite)));
+    assert_eq!(s.evaluated_len(), 1);
+    assert!(s.greedy_token().is_none());
+    assert!(s.profile().is_err());
+    s.discard_pending();
+    assert_eq!(s.greedy_token().unwrap().unwrap(), selected);
+    assert!(matches!(
+        s.finish_chunk(1, Err(Error::Completion)),
+        Err(Error::Completion)
+    ));
+    assert!(s.greedy_token().is_none());
+    assert!(matches!(
+        s.evaluate_next_chunk(),
+        Err(Error::ReplayRequired)
+    ));
+    s.set_tokens(&[0]).unwrap();
+    s.evaluate().unwrap();
+    assert_eq!(s.greedy_token().unwrap().unwrap(), selected);
 }

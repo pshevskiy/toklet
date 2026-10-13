@@ -209,6 +209,7 @@ pub(super) enum Kernel {
     Q4Prefill,
     Q4Compensated,
     Q4CompensatedPrefill,
+    Greedy,
 }
 impl Kernel {
     pub fn name(self) -> &'static str {
@@ -229,6 +230,7 @@ impl Kernel {
             "q4_prefill",
             "q4_compensated",
             "q4_compensated_prefill",
+            "greedy_token",
         ][self as usize]
     }
 }
@@ -289,6 +291,7 @@ impl Gpu {
             Kernel::Q4Prefill,
             Kernel::Q4Compensated,
             Kernel::Q4CompensatedPrefill,
+            Kernel::Greedy,
         ] {
             let f = library
                 .newFunctionWithName(&NSString::from_str(k.name()))
@@ -344,6 +347,7 @@ impl Gpu {
                 | Kernel::Q4Prefill
                 | Kernel::Q4Compensated
                 | Kernel::Q4CompensatedPrefill
+                | Kernel::Greedy
         ) {
             self.execution_width(k)
         } else {
@@ -358,6 +362,7 @@ impl Gpu {
                 | Kernel::Q4Prefill
                 | Kernel::Q4Compensated
                 | Kernel::Q4CompensatedPrefill
+                | Kernel::Greedy
         ) {
             count
         } else {

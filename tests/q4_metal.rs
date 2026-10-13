@@ -54,6 +54,291 @@ mod allocations {
 static ALLOCATOR: allocations::Counting = allocations::Counting;
 
 #[test]
+#[ignore = "Explicit FP16/Q4 token-only generation, diagnostic refinement and prefix contracts"]
+fn token_only_selection_matches_full_logits_and_session_contracts() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let source = root.join("artifacts/m5-tiny-source-v1");
+    for quantized in [false, true] {
+        let model = if quantized {
+            metal::Model::load_q4(
+                &source,
+                &root.join("artifacts/m5-tiny-q4-v1"),
+                weights::LoadOptions {
+                    context_limit: 32,
+                    ..Default::default()
+                },
+            )
+        } else {
+            metal::Model::load(
+                &source,
+                weights::LoadOptions {
+                    context_limit: 32,
+                    ..Default::default()
+                },
+            )
+        }
+        .unwrap();
+        let projection = if quantized {
+            metal::ProjectionMode::Q4CompensatedTiled
+        } else {
+            metal::ProjectionMode::Original
+        };
+        let normalization = if quantized {
+            metal::NormalizationMode::Compensated
+        } else {
+            metal::NormalizationMode::Original
+        };
+        for offset in [0, 5] {
+            let opts = session::Options {
+                capacity: 27,
+                prefill_chunk_size: 9,
+                position_offset: offset,
+                ..Default::default()
+            };
+            let mut full =
+                metal::Session::with_execution_modes(&model, opts, projection, normalization)
+                    .unwrap();
+            let mut token = metal::Session::with_readback_mode(
+                &model,
+                opts,
+                projection,
+                normalization,
+                metal::ReadbackMode::GreedyToken,
+            )
+            .unwrap();
+            assert_eq!(
+                full.memory().logits_bytes - token.memory().logits_bytes,
+                64 * 8 - 8
+            );
+            assert_eq!(
+                token.memory().scratch_bytes - full.memory().scratch_bytes,
+                32
+            );
+            let exact = token.memory().admitted_bytes;
+            assert!(
+                metal::Session::with_readback_mode(
+                    &model,
+                    session::Options {
+                        memory_limit_bytes: exact - 1,
+                        ..opts
+                    },
+                    projection,
+                    normalization,
+                    metal::ReadbackMode::GreedyToken
+                )
+                .is_err()
+            );
+            assert!(
+                metal::Session::with_readback_mode(
+                    &model,
+                    session::Options {
+                        memory_limit_bytes: exact,
+                        ..opts
+                    },
+                    projection,
+                    normalization,
+                    metal::ReadbackMode::GreedyToken
+                )
+                .is_ok()
+            );
+            full.enable_diagnostics(&[0, 1]).unwrap();
+            token.enable_diagnostics(&[0, 1]).unwrap();
+            for input in [
+                &[1, 7, 13, 3, 47, 11, 2, 5, 9][..],
+                &[1, 7, 13, 3, 47, 11, 2, 5, 9, 4][..],
+                &[1, 7, 13, 3, 47, 11, 2, 8][..],
+                &[1, 7, 13][..],
+            ] {
+                full.set_tokens(input).unwrap();
+                token.set_tokens(input).unwrap();
+                let rows = full.pending_len();
+                assert!(rows > 0 && rows <= opts.prefill_chunk_size);
+                assert_eq!(rows, token.pending_len());
+                assert_eq!(full.evaluated_len(), token.evaluated_len());
+                assert_eq!(
+                    full.greedy_token().is_some(),
+                    token.greedy_token().is_some()
+                );
+                full.evaluate().unwrap();
+                token.evaluate().unwrap();
+                assert!(token.logits().is_none());
+                assert_eq!(
+                    full.greedy_token().unwrap().unwrap(),
+                    token.greedy_token().unwrap().unwrap()
+                );
+                let a = full.diagnostics().unwrap();
+                let b = token.diagnostics().unwrap();
+                let c = model.config();
+                let mut expected = BTreeSet::from([
+                    (None, "embedding", c.hidden_size),
+                    (None, "final_norm", c.hidden_size),
+                    (None, "logits", c.vocab_size),
+                ]);
+                for layer in 0..2 {
+                    for (stage, columns) in [
+                        ("input_norm", c.hidden_size),
+                        ("q", c.hidden_size),
+                        ("k", c.kv_heads * c.head_dim),
+                        ("v", c.kv_heads * c.head_dim),
+                        ("q_rotary", c.hidden_size),
+                        ("k_rotary", c.kv_heads * c.head_dim),
+                        ("attention_context", c.hidden_size),
+                        ("attention_projection", c.hidden_size),
+                        ("attention_residual", c.hidden_size),
+                        ("post_attention_norm", c.hidden_size),
+                        ("gate", c.intermediate_size),
+                        ("silu", c.intermediate_size),
+                        ("up", c.intermediate_size),
+                        ("gated", c.intermediate_size),
+                        ("down", c.hidden_size),
+                        ("output", c.hidden_size),
+                    ] {
+                        assert!(expected.insert((Some(layer), stage, columns)));
+                    }
+                }
+                assert_eq!(expected.len(), 35);
+                for stages in [&a, &b] {
+                    assert_eq!(stages.len(), 35);
+                    let inventory: BTreeSet<_> = stages
+                        .iter()
+                        .map(|d| {
+                            assert_eq!(d.rows, rows);
+                            assert_eq!(d.values.len(), rows * d.columns);
+                            (d.layer, d.stage, d.columns)
+                        })
+                        .collect();
+                    assert_eq!(inventory, expected);
+                }
+                for (a, b) in a.iter().zip(&b) {
+                    assert_eq!(
+                        (a.layer, a.stage, a.rows, a.columns),
+                        (b.layer, b.stage, b.rows, b.columns)
+                    );
+                    assert!(
+                        a.values
+                            .iter()
+                            .zip(&b.values)
+                            .all(|(a, b)| a.to_bits() == b.to_bits())
+                    );
+                }
+                assert_eq!(a.len(), b.len());
+            }
+            full.set_tokens(&[1, 7, 13]).unwrap();
+            token.set_tokens(&[1, 7, 13]).unwrap();
+            assert_eq!(full.evaluate_next_chunk().unwrap(), 0);
+            assert_eq!(token.evaluate_next_chunk().unwrap(), 0);
+            assert_eq!(
+                full.greedy_token().unwrap().unwrap(),
+                token.greedy_token().unwrap().unwrap()
+            );
+        }
+        let opts = session::Options {
+            capacity: 32,
+            prefill_chunk_size: 8,
+            ..Default::default()
+        };
+        let mut full =
+            metal::Session::with_execution_modes(&model, opts, projection, normalization).unwrap();
+        let mut token = metal::Session::with_readback_mode(
+            &model,
+            opts,
+            projection,
+            normalization,
+            metal::ReadbackMode::GreedyToken,
+        )
+        .unwrap();
+        for mode in 0..3 {
+            let mut sequences = [Vec::with_capacity(4), Vec::with_capacity(4)];
+            for (i, s) in [&mut full, &mut token].into_iter().enumerate() {
+                let input = if mode == 0 {
+                    toklet::generation::Input::Reset(&[1, 7, 13, 3])
+                } else {
+                    toklet::generation::Input::Continue
+                };
+                let report = toklet::generation::generate(
+                    s,
+                    toklet::generation::Request {
+                        input,
+                        max_new_tokens: 4,
+                        stop_tokens: &[],
+                    },
+                    &std::sync::atomic::AtomicBool::new(false),
+                    |e| {
+                        sequences[i].push(e.token_id);
+                        Ok(())
+                    },
+                )
+                .unwrap();
+                assert_eq!(report.pending_tokens, 1);
+                assert!(s.greedy_token().is_none());
+            }
+            assert_eq!(sequences[0], sequences[1]);
+            assert_eq!(full.history(), token.history());
+            assert_eq!(full.evaluated_len(), token.evaluated_len());
+        }
+        token.discard_pending();
+        full.discard_pending();
+        assert_eq!(
+            full.greedy_token().unwrap().unwrap(),
+            token.greedy_token().unwrap().unwrap()
+        );
+        allocations::start();
+        for _ in 0..8 {
+            let id = token.greedy_token().unwrap().unwrap();
+            token.append(&[id]).unwrap();
+            token.evaluate().unwrap();
+        }
+        assert_eq!(allocations::finish(), 0);
+        let before = token.history().to_vec();
+        let report = toklet::generation::generate(
+            &mut token,
+            toklet::generation::Request {
+                input: toklet::generation::Input::Continue,
+                max_new_tokens: 1,
+                stop_tokens: &[],
+            },
+            &std::sync::atomic::AtomicBool::new(true),
+            |_| Ok(()),
+        )
+        .unwrap();
+        assert_eq!(report.reason, toklet::generation::StopReason::Cancelled);
+        assert_eq!(token.history(), before);
+        let stop = token.greedy_token().unwrap().unwrap();
+        let report = toklet::generation::generate(
+            &mut token,
+            toklet::generation::Request {
+                input: toklet::generation::Input::Continue,
+                max_new_tokens: 1,
+                stop_tokens: &[stop],
+            },
+            &std::sync::atomic::AtomicBool::new(false),
+            |_| panic!("hidden stop must not emit"),
+        )
+        .unwrap();
+        assert_eq!(report.sampled_tokens, 1);
+        assert_eq!(report.emitted_tokens, 0);
+        assert_eq!(report.pending_tokens, 1);
+        token.discard_pending();
+        assert!(
+            toklet::generation::generate(
+                &mut token,
+                toklet::generation::Request {
+                    input: toklet::generation::Input::Continue,
+                    max_new_tokens: 1,
+                    stop_tokens: &[]
+                },
+                &std::sync::atomic::AtomicBool::new(false),
+                |_| Err(std::io::Error::other("injected output error"))
+            )
+            .is_err()
+        );
+        assert_eq!(token.pending_len(), 1);
+        token.discard_pending();
+        assert!(token.greedy_token().is_some());
+    }
+}
+
+#[test]
 #[ignore = "explicit Apple GPU required-position versus all-row FP16/Q4 logits"]
 fn ordinary_prefill_last_logits_match_all_required_diagnostic_rows() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));

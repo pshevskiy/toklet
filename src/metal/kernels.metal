@@ -1,6 +1,33 @@
 #include <metal_stdlib>
 using namespace metal;
 #pragma clang fp contract(off)
+// One queried SIMD group selects the lowest ID with the largest finite logit.
+// Invalid values set the chunk status; their candidate is never published.
+kernel void greedy_token(device const uint* logits[[buffer(0)]],device uint* out[[buffer(1)]],constant uint* s[[buffer(2)]],device atomic_uint* status[[buffer(3)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    if(group!=0)return;
+    uint best=0,id=0xffffffffu;
+    for(uint i=lane;i<s[0];i+=width) {
+        uint bits=logits[s[1]+i];
+        if((bits&0x7f800000u)==0x7f800000u)atomic_fetch_or_explicit(status,1u,memory_order_relaxed);
+        else {
+            // IEEE finite order, with both zero signs sharing a key. Integer
+            // comparison also preserves subnormal distinctions without relying
+            // on device floating-point arithmetic for the selection itself.
+            uint key=(bits&0x7fffffffu)==0?0x80000000u:(bits&0x80000000u)!=0?~bits:bits^0x80000000u;
+            if(key>best || (key==best && i<id)) {best=key;id=i;}
+        }
+    }
+    for(uint hop=1;hop<width;) {
+        uint other=simd_shuffle_down(best,hop),other_id=simd_shuffle_down(id,hop);
+        if(lane%hop==0 && (lane/hop)%2==0 && lane<width-hop && (other>best || (other==best && other_id<id))) {best=other;id=other_id;}
+        if(hop>=width-hop)break;
+        hop*=2;
+    }
+    if(lane==0) {
+        out[0]=id;
+        if(id==0xffffffffu)atomic_fetch_or_explicit(status,1u,memory_order_relaxed);
+    }
+}
 inline void checked_half(device half* out,uint i,float v,device atomic_uint* status) {
     half h=half(v);
     out[i]=h;
