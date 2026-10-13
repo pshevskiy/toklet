@@ -3,7 +3,8 @@
 Updated 13 October 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M4 are functionally
-complete; M5 remains in progress. CPU/scalar remains the default. Speedups below
+complete; M5.1, M5.3 and M5.5 are complete in their recorded scopes. M5 remains
+in progress. CPU/scalar remains the default. Speedups below
 apply to the named workload and comparison, and cannot be added together.
 
 ## Measured performance improvements
@@ -73,6 +74,7 @@ qualification does not establish acceptable end-to-end quantization quality.
 | Fused Q4 reconstruction/projection | Dequantizes within the dot product; no full-model or per-token expanded weights. 0.5B resident weights are **476,307,372 bytes**, versus Half **988,069,596** and FP32 **1,976,131,072**. | [Execution](experiments/2026-10-13-q4-decode.md); `b99d334`. Weight payload only; quality rejected. Larger Q4 payload is **1,223,992,516 bytes**. |
 | Required-position vocabulary projection | Ordinary prefill computes only its final-row logits, using a precreated checked view; diagnostic paths retain all rows. | [Qualification](experiments/2026-10-13-required-position-logits.md); `d93264e`. Float scratch is unchanged; no measured latency/memory gain claimed. |
 | Explicit Metal chunks through 1,024 | Checked admission and a shared-model four-chunk harness pass exact capacity/budget boundaries and larger offset/append/edit final-logit bit refinement. | [Chunk task](experiments/2026-10-13-metal-chunks.md). Default stays 128; this does not qualify every mode or full release workload. |
+| Scoped M5.3 prefill closure | Required-position logits, independently qualified accurate Q4 prompt tile and completed chunk sweep satisfy the named prefill mechanisms; default chunk stays 128. | [Synthesis](experiments/2026-10-13-m5-prefill-closure.md). Experimental compensated path only; both Q4 quality failures and M5 release gates remain open. |
 | CPU caller-owned all-row logits | Bounded external chunk output supports teacher-forced scoring without full-prefix traces or duplicate weights; normal final-row execution remains unchanged. | [All-row logits](experiments/2026-10-13-cpu-all-row-logits.md); `3dd5485`. |
 | Streamed independent storage oracles | Cache one Half tied table, stream current tensors/Q4 stripes, pin exact bytes before parsing, publish only after completed native memory qualification. | [Oracle report](experiments/2026-10-13-streamed-storage-oracles.md); `962f206`. Evaluation memory benefit, not inference latency. |
 
