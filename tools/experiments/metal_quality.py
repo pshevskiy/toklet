@@ -95,8 +95,8 @@ def done(event,tokens,losses,blocks,evaluated):
     return total/count
 
 
-def child(binary,source,packed,token_path,tokens,quantized,chunk,raw,stderr):
-    command=[str(binary),str(source),str(packed) if quantized else "-",str(token_path),str(chunk)]
+def child(binary,source,packed,token_path,tokens,quantized,chunk,raw,stderr,*,admission=ready,extra_args=()):
+    command=[str(binary),str(source),str(packed) if quantized else "-",str(token_path),str(chunk)]+list(extra_args)
     worker=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
     transport=None
     result={"command":command,"worker_pid":worker.pid,"passed":False,"losses":[],"chunks":[],"blocks":[],"idle_usage":[],"cleanup_errors":[],
@@ -112,7 +112,7 @@ def child(binary,source,packed,token_path,tokens,quantized,chunk,raw,stderr):
         # Bind the worker's exact parsed input to the driver's admitted IDs,
         # rather than hashing a path again after the worker has read it.
         token_sha=hashlib.sha256(struct.pack(f"<{len(tokens)}I",*tokens)).hexdigest()
-        event=transport.read();ready(event,tokens,token_sha,quantized,chunk);result["ready"]=event
+        event=transport.read();admission(event,tokens,token_sha,quantized,chunk);result["ready"]=event
         usage("ready");proceed();evaluated=0
         while True:
             event=transport.read();kind=event.get("event");block=len(result["blocks"])

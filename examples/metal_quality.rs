@@ -32,6 +32,11 @@ mod apple {
         if !matches!(chunk, 1 | 128) {
             return Err("quality chunk must be 1 or 128".into());
         }
+        let larger = match args.next() {
+            None => false,
+            Some(v) if v == "larger" => true,
+            _ => return Err("optional quality geometry must be larger".into()),
+        };
         if args.next().is_some() {
             return Err("extra quality argument".into());
         }
@@ -48,11 +53,11 @@ mod apple {
         } else {
             metal::Model::load(&source, load)
         }?;
-        if model.config().hidden_size != 896
-            || model.config().num_layers != 24
+        if model.config().hidden_size != if larger { 1536 } else { 896 }
+            || model.config().num_layers != if larger { 28 } else { 24 }
             || model.config().vocab_size != 151936
         {
-            return Err("frozen Qwen 0.5B geometry required".into());
+            return Err("selected frozen Qwen quality geometry required".into());
         }
         if ids
             .iter()
@@ -60,7 +65,17 @@ mod apple {
         {
             return Err("invalid loss token".into());
         }
-        let mut session = metal::Session::new(
+        let projection = if larger && quantized {
+            metal::ProjectionMode::Q4Compensated
+        } else {
+            metal::ProjectionMode::Original
+        };
+        let normalization = if larger && quantized {
+            metal::NormalizationMode::Compensated
+        } else {
+            metal::NormalizationMode::Original
+        };
+        let mut session = metal::Session::with_execution_modes(
             &model,
             session::Options {
                 capacity: CAPACITY,
@@ -68,6 +83,8 @@ mod apple {
                 memory_limit_bytes: budget,
                 ..Default::default()
             },
+            projection,
+            normalization,
         )?;
         // Every causal row is required for teacher forcing. The diagnostic
         // admission includes both GPU snapshots and their bounded CPU copies.
@@ -86,7 +103,7 @@ mod apple {
         writeln!(
             out,
             "{}",
-            json!({"event":"ready","format":"toklet-metal-held-out-loss-events-v1","backend":"metal","quantized":quantized,"device":model.device_name(),"debug_assertions":cfg!(debug_assertions),"target_tokens":targets,"corpus_sha256":corpus_sha,"context_policy":POLICY,"block_targets":BLOCK,"context_capacity":CAPACITY,"prefill_chunk_size":chunk,"logit_positions":"all_causal_rows","weight_dtype":if quantized {"Q4 v1 + FP16 exclusions"}else{"FP16"},"kv_dtype":"FP16","memory":memory,"application_allowance_bytes":APP_BYTES,"memory_admitted_bytes":admitted,"load_seconds":model.load_timing.load_seconds})
+            json!({"event":"ready","format":"toklet-metal-held-out-loss-events-v1","backend":"metal","quantized":quantized,"device":model.device_name(),"debug_assertions":cfg!(debug_assertions),"target_tokens":targets,"corpus_sha256":corpus_sha,"context_policy":POLICY,"block_targets":BLOCK,"context_capacity":CAPACITY,"prefill_chunk_size":chunk,"logit_positions":"all_causal_rows","weight_dtype":if quantized {"Q4 v1 + FP16 exclusions"}else{"FP16"},"kv_dtype":"FP16","memory":memory,"application_allowance_bytes":APP_BYTES,"memory_admitted_bytes":admitted,"load_seconds":model.load_timing.load_seconds,"hidden_size":model.config().hidden_size,"num_layers":model.config().num_layers,"vocab_size":model.config().vocab_size,"projection_mode":projection,"normalization_mode":normalization})
         )?;
         out.flush()?;
         handshake()?;

@@ -1,0 +1,348 @@
+{
+  "format": "toklet-larger-metal-loss-qualification-v1",
+  "source_head": "8e76c3d",
+  "scope": "Checked bounded collector; larger Q4 full quality rejected, no release/performance or M5 acceptance",
+  "bindings": [
+    {
+      "path": "Cargo.lock",
+      "bytes": 24261,
+      "sha256": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 1915,
+      "sha256": "02f294d3d27f33a61371183c1b7ad9f4a949dee40db8db7d0ba00fd54584071b"
+    },
+    {
+      "path": "PLAN.md",
+      "bytes": 140580,
+      "sha256": "352aa900161ce453a9973d9a853169c5285d64974893c41e91b880c6066539ad"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-build-v1.txt",
+      "bytes": 123,
+      "sha256": "926e833bb43f1a0ac7f1ea9506df8f4906232a60d525d8e347884092605aa4f4"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-clippy-default-v1.txt",
+      "bytes": 72,
+      "sha256": "a41051563a4cb5fc1b1bcdd9aa0ba28ca80f7736d629d90cc138218756e8e3a9"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-clippy-metal-v1.txt",
+      "bytes": 72,
+      "sha256": "99f71393b9903dca098310bb446022a4bdee195ea9996f351a787195555210a6"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-clippy-v1.txt",
+      "bytes": 133,
+      "sha256": "4922a4269ed783e57eade8a825ac6c24fac5183103e65514939db198c33dec91"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-fmt-v1.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-native-binary-v1/metal_quality",
+      "bytes": 1241680,
+      "sha256": "382fab731bacd60ac9a65f0bf5048750dc6dd3d3e58e42290cf9f10ce6a0cfab"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-python-all-v1.txt",
+      "bytes": 262,
+      "sha256": "b31b5f46d736770fd86442ab1aa82cc64cbe13a95a9931b6a5000edd554684ed"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-python-all-v2.txt",
+      "bytes": 263,
+      "sha256": "73714c5b91cb73da79c237a26308a409cd7abd2c7414617690810c62379482b3"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-python-v1.txt",
+      "bytes": 109,
+      "sha256": "fa004e0510c006b0e262a1d98ad5439cc1f1bef02614d0dd879f8f5c4abd291e"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-python-v2.txt",
+      "bytes": 109,
+      "sha256": "26df1f9693cabb2c3cd7646f6c89c3ad0ba876e8853977f0999c8acc200f4ab5"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-python-v3.txt",
+      "bytes": 110,
+      "sha256": "49daa646c06fa45f612fae57708457babc3aa457541fe4b95d411438edabf742"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-tests-default-v1.txt",
+      "bytes": 12340,
+      "sha256": "8b42f7ccf987defe31316300e889a03041636c43b7aa724f925824af41b8cce5"
+    },
+    {
+      "path": "artifacts/m5-larger-metal-loss-tests-metal-v1.txt",
+      "bytes": 16834,
+      "sha256": "372304d222c225b7603a8cd6abd403ccd8d1bbbd3533636b952e4aac219c09e1"
+    },
+    {
+      "path": "artifacts/m5-larger-q4-held-out-loss-collector-v1.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/contract-v1/held_out_loss.u32le",
+      "bytes": 40004,
+      "sha256": "f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb"
+    },
+    {
+      "path": "benchmarks/contract-v1/manifest.json",
+      "bytes": 6490,
+      "sha256": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66"
+    },
+    {
+      "path": "benchmarks/results/2026-10-13-larger-fp32-held-out-loss-v1.json",
+      "bytes": 4262330,
+      "sha256": "5967fb03c60420556bfbf3d3893269b27c3bb54df4328de19fc667074dc0da6b"
+    },
+    {
+      "path": "benchmarks/results/2026-10-13-larger-q4-held-out-loss-v1.json",
+      "bytes": 4059528,
+      "sha256": "c0287f4207877603293c75de502a4037d7f7fd90bef6594a9faa64d1fd6401fe"
+    },
+    {
+      "path": "benchmarks/results/2026-10-13-larger-q4-held-out-loss-v1.raw.jsonl",
+      "bytes": 2726031,
+      "sha256": "479a0696633cfceda23bdece7401b343e9d00d843707a2689be0e64ea2ccf269"
+    },
+    {
+      "path": "benchmarks/results/2026-10-13-larger-q4-held-out-loss-v1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/experiments/2026-10-13-larger-metal-loss.md",
+      "bytes": 4682,
+      "sha256": "a9e5b1a3a2b9e673b0ea860d233fd642cff82bd3386171d68f4c115990ab027a"
+    },
+    {
+      "path": "examples/metal_quality.rs",
+      "bytes": 8975,
+      "sha256": "135b3f09eaae6c96f410e5d351ede0605041f428ba8154382d6c0539818fb3e4"
+    },
+    {
+      "path": "examples/support/loss.rs",
+      "bytes": 4454,
+      "sha256": "a2cbea031570c1aa539b1096d2af87711935064c844f600f5d0cc6b55ed4c0ff"
+    },
+    {
+      "path": "src/benchmark.rs",
+      "bytes": 3360,
+      "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a"
+    },
+    {
+      "path": "src/bin/cli/chat.rs",
+      "bytes": 21958,
+      "sha256": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de"
+    },
+    {
+      "path": "src/bin/cli/mod.rs",
+      "bytes": 25931,
+      "sha256": "9cfa75d60ba5359bfa8a3f41b8b568ff5c33caf991ca8b0d811e22bb6c5aa48b"
+    },
+    {
+      "path": "src/bin/toklet.rs",
+      "bytes": 96,
+      "sha256": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb"
+    },
+    {
+      "path": "src/cpu/attention.rs",
+      "bytes": 11201,
+      "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf"
+    },
+    {
+      "path": "src/cpu/mod.rs",
+      "bytes": 9060,
+      "sha256": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265"
+    },
+    {
+      "path": "src/cpu/reductions.rs",
+      "bytes": 7659,
+      "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d"
+    },
+    {
+      "path": "src/cpu/tiled.rs",
+      "bytes": 6519,
+      "sha256": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb"
+    },
+    {
+      "path": "src/generation.rs",
+      "bytes": 7771,
+      "sha256": "40496130b7928e87f6ad47c10ced4643b165894552108fe23d21cb42f6a115a5"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 496,
+      "sha256": "a4cc758d947079d5cf715183edfa71039de4dc1735caac6a481cf7a0c9ae8962"
+    },
+    {
+      "path": "src/metal/capture.rs",
+      "bytes": 2365,
+      "sha256": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f"
+    },
+    {
+      "path": "src/metal/diagnostic.rs",
+      "bytes": 7365,
+      "sha256": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8"
+    },
+    {
+      "path": "src/metal/kernels.metal",
+      "bytes": 12125,
+      "sha256": "cb516967cc70179581f53d5e3523653e849a0f7d11dff60009ac6b1a1a493dcd"
+    },
+    {
+      "path": "src/metal/memory.rs",
+      "bytes": 15327,
+      "sha256": "a01b09c08e96106e708d307428c168db65602117e3fd881a6ef868be3795283d"
+    },
+    {
+      "path": "src/metal/mod.rs",
+      "bytes": 90250,
+      "sha256": "cc907a716d1fb112a6f1dad1cecb597be0bc06a6a480c1d19930e7da7be18bd2"
+    },
+    {
+      "path": "src/metal/profile.rs",
+      "bytes": 13202,
+      "sha256": "2bd72611ac3bb2ef71e9352010e8181153754dd481e36cb0236ac8ee4d7557e9"
+    },
+    {
+      "path": "src/model/cache.rs",
+      "bytes": 3096,
+      "sha256": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0"
+    },
+    {
+      "path": "src/model/mod.rs",
+      "bytes": 24014,
+      "sha256": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94"
+    },
+    {
+      "path": "src/model/trace.rs",
+      "bytes": 2807,
+      "sha256": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1"
+    },
+    {
+      "path": "src/q4/artifact.rs",
+      "bytes": 9997,
+      "sha256": "b8cb3ded35f0db6a053d113a202df81c49e9c5a33755ec61c898899c9a694252"
+    },
+    {
+      "path": "src/q4.rs",
+      "bytes": 7011,
+      "sha256": "6a419a51502a939937d95e454bf8d086175ae3b303c094e4b15730008fc843cd"
+    },
+    {
+      "path": "src/sampling.rs",
+      "bytes": 616,
+      "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9"
+    },
+    {
+      "path": "src/session.rs",
+      "bytes": 16593,
+      "sha256": "b2a9d88a4414c366fbf439aac8d93a923686623746225ed65270a6ae1765b738"
+    },
+    {
+      "path": "src/weights/half_tests.rs",
+      "bytes": 3814,
+      "sha256": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2"
+    },
+    {
+      "path": "src/weights/mod.rs",
+      "bytes": 30344,
+      "sha256": "a07f0e8b91973c22c3fe9b0c9c5f0f688fc4b602f5402ef0f9a95c05976399c1"
+    },
+    {
+      "path": "target/release/examples/cpu_bench",
+      "bytes": 1069664,
+      "sha256": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+    },
+    {
+      "path": "target/release/toklet",
+      "bytes": 5367760,
+      "sha256": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    {
+      "path": "tools/bench/prepare.py",
+      "bytes": 15310,
+      "sha256": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13"
+    },
+    {
+      "path": "tools/bench/quality.py",
+      "bytes": 20956,
+      "sha256": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d"
+    },
+    {
+      "path": "tools/experiments/metal_continue.py",
+      "bytes": 9786,
+      "sha256": "48487c955a81cafb4149caf033d397d0403068cd6f31913a8a2b90a75f03b622"
+    },
+    {
+      "path": "tools/experiments/metal_engine.py",
+      "bytes": 10905,
+      "sha256": "1541afc73738d91e13dc6d71c32f72632e4b2eb20174781dc193126362b73d0c"
+    },
+    {
+      "path": "tools/experiments/metal_quality.py",
+      "bytes": 15231,
+      "sha256": "24a7510a1c3e3654e82de7628bcd5609f8092e05bf10e00e01aae1df7fee5af2"
+    },
+    {
+      "path": "tools/experiments/metal_quality_larger.py",
+      "bytes": 11139,
+      "sha256": "8e0f3abcfc31b3751a12d43309a2c0fef8b0dd22754679c34a48fb0826bef38d"
+    },
+    {
+      "path": "tools/experiments/native_usage.py",
+      "bytes": 1700,
+      "sha256": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc"
+    },
+    {
+      "path": "tools/experiments/quality_rows.py",
+      "bytes": 12478,
+      "sha256": "ec90277e708d55b8184416c58210bf8411bd22753cd61b2d86162168d250ac72"
+    },
+    {
+      "path": "tools/experiments/test_metal_quality.py",
+      "bytes": 9897,
+      "sha256": "cf64afb5f5f34429b3f281835a8cea837d29298ca9615d3cd900107c264d3f4e"
+    },
+    {
+      "path": "tools/experiments/test_metal_quality_larger.py",
+      "bytes": 6350,
+      "sha256": "1006d5e5e65830cbf4dcafb86d521e64306448edf5ad6657e51cc003a5dd0ab3"
+    }
+  ],
+  "source_artifact_provenance": "Collector result separately binds allsource/packed files and validates initial/endpoint SHA values; all5 native workers close cleanly. No redundant checkpoint hash is required by this receipt.",
+  "checks": {
+    "fmt": true,
+    "strict_clippy_both": true,
+    "default_tests": 87,
+    "metal_tests": 94,
+    "experiment_python_tests": 162,
+    "new_larger_collector_tests": 5,
+    "raw_events": 10134,
+    "worker_count": 5,
+    "full_scored_targets": 10000,
+    "full_chunks": 88,
+    "full_blocks": 10,
+    "max_probe_batch_single_nll_delta": 8.572458672917449e-06,
+    "max_worker_driver_native_peak_bytes": 1606355152
+  },
+  "quality": {
+    "completed": true,
+    "passed": false,
+    "mean_nll": 2.588645591385506,
+    "matched_fp32_mean_nll": 2.485958031019153,
+    "increase_nats_per_token": 0.10268756036635285,
+    "maximum_increase_nats_per_token": 0.05
+  },
+  "decision": "Keep checked collector and rejected evidence; no quantizer/corpus/gate/default change; M5exit remains open.",
+  "astra_review": "Accepted collector code/rejected-result record after independent63bindings/10134event replay; no actionable findings; finalreview-only docannotation refreshed itsbinding."
+}
