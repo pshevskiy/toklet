@@ -54,6 +54,113 @@ mod allocations {
 static ALLOCATOR: allocations::Counting = allocations::Counting;
 
 #[test]
+#[ignore = "explicit Apple GPU FP16/Q4 longest-prefix and repeated-cleanup suite"]
+fn metal_prefix_edits_shortening_and_recovery_match_reset_replay() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let source = root.join("artifacts/m5-tiny-source-v1");
+    let packed = root.join("artifacts/m5-tiny-q4-v1");
+    for quantized in [false, true] {
+        let load = weights::LoadOptions {
+            context_limit: 32,
+            ..Default::default()
+        };
+        let model = if quantized {
+            metal::Model::load_q4(&source, &packed, load)
+        } else {
+            metal::Model::load(&source, load)
+        }
+        .unwrap();
+        for offset in [0, 5] {
+            let options = session::Options {
+                capacity: 27,
+                prefill_chunk_size: 3,
+                position_offset: offset,
+                ..Default::default()
+            };
+            let mut reused = metal::Session::new(&model, options).unwrap();
+            let mut reference = metal::Session::new(&model, options).unwrap();
+            let base = [1, 7, 13, 3, 47, 11];
+            let same = |left: &metal::Session<'_>, right: &metal::Session<'_>| {
+                let a = left.logits().unwrap();
+                let b = right.logits().unwrap();
+                assert_eq!(a.len(), b.len());
+                for (&actual, &want) in a.iter().zip(b) {
+                    assert!(
+                        (actual - want).abs() <= 1e-4 + 1e-3 * want.abs(),
+                        "{actual}/{want}"
+                    );
+                }
+                assert_eq!(
+                    toklet::sampling::greedy(a).unwrap(),
+                    toklet::sampling::greedy(b).unwrap()
+                );
+            };
+            for (tokens, keep) in [
+                (&base[..], 6),
+                (&[1, 7, 13, 3, 47, 12][..], 5),
+                (&[1, 8, 13, 3][..], 1),
+                (&[2, 7, 13][..], 0),
+                (&base[..4], 3),
+                (&base[..1], 0),
+            ] {
+                reused.reset();
+                reused.set_tokens(&base).unwrap();
+                reused.evaluate().unwrap();
+                reused.set_tokens(tokens).unwrap();
+                assert_eq!(reused.evaluated_len(), keep);
+                reused.evaluate().unwrap();
+                reference.reset();
+                reference.set_tokens(tokens).unwrap();
+                reference.evaluate().unwrap();
+                same(&reused, &reference);
+            }
+            reused.reset();
+            reused.set_tokens(&base).unwrap();
+            reused.evaluate().unwrap();
+            reused.append(&[47]).unwrap();
+            reused.set_tokens(&base).unwrap();
+            assert_eq!((reused.evaluated_len(), reused.pending_len()), (6, 0));
+            reused.set_tokens(&[1, 7, 13, 3, 47, 12]).unwrap();
+            assert!(reused.logits().is_none());
+            reused.discard_pending();
+            reused.discard_pending();
+            reused.append(&[12, 13]).unwrap();
+            reused.discard_pending();
+            reused.discard_pending();
+            assert_eq!(reused.history(), &base[..5]);
+            assert_eq!((reused.evaluated_len(), reused.pending_len()), (4, 1));
+            assert!(reused.logits().is_none());
+            let same_history = reused.history().to_vec();
+            reused.set_tokens(&same_history).unwrap();
+            reused.discard_pending();
+            assert_eq!(reused.history(), &base[..5]);
+            reused.evaluate().unwrap();
+            reference.reset();
+            reference.set_tokens(&base[..5]).unwrap();
+            reference.evaluate().unwrap();
+            same(&reused, &reference);
+            reused.set_tokens(&[1, 7, 13, 3, 48]).unwrap();
+            reused.set_tokens(&base[..4]).unwrap();
+            reused.discard_pending();
+            reused.discard_pending();
+            assert_eq!(reused.history(), &base[..4]);
+            assert_eq!((reused.evaluated_len(), reused.pending_len()), (3, 1));
+            reused.evaluate().unwrap();
+            reference.reset();
+            reference.set_tokens(&base[..4]).unwrap();
+            reference.evaluate().unwrap();
+            same(&reused, &reference);
+            reused.set_tokens(&[]).unwrap();
+            assert!(reused.logits().is_none());
+            assert_eq!(reused.evaluated_len(), 0);
+            println!(
+                "longest-prefix/repeated-recovery suite quantized{quantized} offset{offset} passed"
+            );
+        }
+    }
+}
+
+#[test]
 #[ignore = "explicit Apple GPU Q4 generation/state/Rust-allocation suite; local tiny artifact required"]
 fn q4_sessions_generate_continue_cancel_and_allocate_no_steady_state_rust_buffers() {
     use std::sync::atomic::AtomicBool;

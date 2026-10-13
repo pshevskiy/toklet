@@ -264,6 +264,118 @@ fn sampled_history_is_pending_until_evaluated_and_greedy_trace_matches() {
 }
 
 #[test]
+fn longest_committed_prefix_edits_shortening_pending_and_discard_match_full_replay() {
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        let fixture = Fixture::tiny();
+        let (c, w) = tiny_parts(&fixture);
+        let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
+        let base = [1, 7, 13, 3, 47, 11];
+        for offset in [0, 5] {
+            let mut s = Session::new(&model, options(27, 3, offset)).unwrap();
+            let mut scratch = model.scratch(27).unwrap();
+            let mut expected = [0.0; 64];
+            for (tokens, keep) in [
+                (&base[..], 6),
+                (&[1, 7, 13, 3, 47, 12][..], 5),
+                (&[1, 8, 13, 3][..], 1),
+                (&[2, 7, 13][..], 0),
+                (&base[..4], 3),
+                (&base[..1], 0),
+                (&[][..], 0),
+            ] {
+                s.reset();
+                s.set_tokens(&base).unwrap();
+                s.evaluate().unwrap();
+                let memory = s.memory();
+                s.set_tokens(tokens).unwrap();
+                assert_eq!(s.evaluated_len(), keep);
+                assert_eq!(s.history(), tokens);
+                if keep < tokens.len() {
+                    assert!(s.logits().is_none());
+                }
+                s.evaluate().unwrap();
+                assert_eq!(s.evaluated_len(), tokens.len());
+                assert_eq!(s.memory(), memory);
+                if tokens.is_empty() {
+                    assert!(s.logits().is_none());
+                } else {
+                    model
+                        .forward(tokens, offset, &mut scratch, &mut expected)
+                        .unwrap();
+                    assert_eq!(s.logits().unwrap(), expected);
+                }
+            }
+            // Pending sampled history cannot masquerade as an extra committed KV row.
+            for pending in [47, 48] {
+                s.reset();
+                s.set_tokens(&base).unwrap();
+                s.evaluate().unwrap();
+                s.append(&[47]).unwrap();
+                let mut changed = base.to_vec();
+                changed.push(pending);
+                s.set_tokens(&changed).unwrap();
+                assert_eq!((s.evaluated_len(), s.pending_len()), (6, 1));
+                s.evaluate().unwrap();
+                model
+                    .forward(&changed, offset, &mut scratch, &mut expected)
+                    .unwrap();
+                assert_eq!(s.logits().unwrap(), expected);
+            }
+            s.reset();
+            s.set_tokens(&base).unwrap();
+            s.evaluate().unwrap();
+            s.append(&[47]).unwrap();
+            s.set_tokens(&base).unwrap();
+            assert_eq!((s.evaluated_len(), s.pending_len()), (6, 0));
+            assert!(s.logits().is_some());
+            // A cancelled edited request retains KV, but its earlier logits are
+            // unavailable. Discard stages one retained token rather than exposing
+            // the old distribution belonging to the longer prompt.
+            s.set_tokens(&[1, 7, 13, 3, 47, 12]).unwrap();
+            assert_eq!(s.evaluated_len(), 5);
+            assert!(s.logits().is_none());
+            s.discard_pending();
+            assert_eq!(s.history(), &base[..5]);
+            assert_eq!((s.evaluated_len(), s.pending_len()), (4, 1));
+            assert!(s.logits().is_none());
+            s.discard_pending();
+            assert_eq!(s.history(), &base[..5]);
+            assert_eq!((s.evaluated_len(), s.pending_len()), (4, 1));
+            s.append(&[12, 13]).unwrap();
+            s.discard_pending();
+            s.discard_pending();
+            assert_eq!(s.history(), &base[..5]);
+            assert_eq!((s.evaluated_len(), s.pending_len()), (4, 1));
+            let retained = s.history().to_vec();
+            s.set_tokens(&retained).unwrap();
+            s.discard_pending();
+            assert_eq!(s.history(), &base[..5]);
+            assert_eq!((s.evaluated_len(), s.pending_len()), (4, 1));
+            s.evaluate().unwrap();
+            model
+                .forward(&base[..5], offset, &mut scratch, &mut expected)
+                .unwrap();
+            assert_eq!(s.logits().unwrap(), expected);
+            // A fully cached request at the current truncated boundary still
+            // requires replay when its distribution has not yet been computed.
+            s.set_tokens(&[1, 7, 13, 3, 48]).unwrap();
+            assert_eq!(s.evaluated_len(), 4);
+            s.set_tokens(&base[..4]).unwrap();
+            assert_eq!((s.evaluated_len(), s.pending_len()), (3, 1));
+            s.discard_pending();
+            s.discard_pending();
+            assert_eq!(s.history(), &base[..4]);
+            assert_eq!((s.evaluated_len(), s.pending_len()), (3, 1));
+            s.evaluate().unwrap();
+            model
+                .forward(&base[..4], offset, &mut scratch, &mut expected)
+                .unwrap();
+            assert_eq!(s.logits().unwrap(), expected);
+        }
+    }
+}
+
+#[test]
 fn exact_append_cached_prompt_changed_prefix_reset_and_chunk_boundaries() {
     for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
         let fixture = Fixture::tiny();
@@ -286,16 +398,16 @@ fn exact_append_cached_prompt_changed_prefix_reset_and_chunk_boundaries() {
         session.discard_pending();
         assert_eq!(session.logits().unwrap(), last);
         session.set_tokens(&[1, 7, 13, 17]).unwrap();
-        assert_eq!(session.evaluated_len(), 0);
+        assert_eq!(session.evaluated_len(), 3);
         assert!(session.logits().is_none());
         session.evaluate().unwrap();
         close(
             session.logits().unwrap(),
             &fixture.f32("cases.future_changed.logits")[3 * 64..],
         );
-        // Shortening also resets; longest-prefix truncation is deliberately deferred.
+        // Shortening retains all but the final shared token, whose logits need replay.
         session.set_tokens(&[1, 7]).unwrap();
-        assert_eq!(session.evaluated_len(), 0);
+        assert_eq!(session.evaluated_len(), 1);
         session.evaluate().unwrap();
         session.reset();
         assert!(session.history().is_empty());

@@ -110,9 +110,9 @@ fn check_sessions(kernel: ProjectionKernel) {
             assert_eq!(session.logits().unwrap(), reference);
             comparisons += 1;
             assert_eq!(session.memory(), memory);
-            // Editing/shortening the history resets validity, then replay matches.
+            // Shortening retains all but its final token; replay reconstructs logits.
             session.set_tokens(&tokens).unwrap();
-            assert_eq!(session.evaluated_len(), 0);
+            assert_eq!(session.evaluated_len(), tokens.len() - 1);
             session.evaluate().unwrap();
             assert_eq!(
                 session.logits().unwrap(),
@@ -169,38 +169,27 @@ fn check_sessions(kernel: ProjectionKernel) {
 
 #[cfg(target_os = "macos")]
 fn physical_peak() -> Option<u64> {
-    let path = std::env::temp_dir().join(format!(
-        "toklet-session-footprint-{}.json",
-        std::process::id()
-    ));
-    let output = std::process::Command::new("/usr/bin/footprint")
-        .args([
-            "-p",
-            &std::process::id().to_string(),
-            "-f",
-            "bytes",
-            "--noCategories",
-            "-j",
-        ])
-        .arg(&path)
-        .output()
-        .unwrap();
-    assert!(
-        output.status.success(),
-        "{}",
-        String::from_utf8_lossy(&output.stderr)
-    );
-    let record: Value = serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
-    fs::remove_file(path).unwrap();
-    assert_eq!(record["unit"], "byte");
-    let peak = record["processes"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .find(|entry| entry["pid"] == std::process::id())
-        .unwrap()["auxiliary"]["phys_footprint_peak"]
-        .as_u64()
-        .unwrap();
+    // macOS SDK rusage_info_v4: 16 UUID bytes followed by35 u64 fields.
+    // This bounded own-process syscall avoids an external footprint sampler.
+    #[repr(C)]
+    struct Usage {
+        uuid: [u8; 16],
+        fields: [u64; 35],
+    }
+    #[link(name = "proc")]
+    unsafe extern "C" {
+        fn proc_pid_rusage(pid: i32, flavor: i32, usage: *mut Usage) -> i32;
+    }
+    assert_eq!(std::mem::size_of::<Usage>(), 296);
+    let mut usage = Usage {
+        uuid: [0; 16],
+        fields: [0; 35],
+    };
+    // SAFETY: initialized, aligned v4 storage has the SDK's296-byte size;
+    // the call writes only this exclusive stack allocation synchronously.
+    let status = unsafe { proc_pid_rusage(std::process::id() as i32, 4, &mut usage) };
+    assert_eq!(status, 0, "own-process libproc v4 query failed");
+    let peak = usage.fields[28]; // ri_lifetime_max_phys_footprint
     assert!(peak <= weights::INITIAL_MEMORY_LIMIT_BYTES as u64);
     eprintln!(
         "Own-process physical session peak: {peak} bytes; includes test/hash/diagnostic setup"

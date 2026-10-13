@@ -1,0 +1,69 @@
+{
+  "format": "toklet-prefix-continuation-qualification-v1",
+  "passed": true,
+  "scope": "M5.5 exact-prefix mechanism; Q4 quality and final M5 release gates separate",
+  "source_sha256": {
+    "Cargo.toml": "65e40a45a06e7e40943dda44dffe25d3b086bee32da0b481846c03350bcfd3fd",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "src/session.rs": "07ac16f707c718d60b56d046f9436008b4d88a61ff6867c384cb74be74707443",
+    "src/metal/mod.rs": "d1123cfb1ba0bd58aa860a982dce782956fa7de84594ace586f1f4ed2162a692",
+    "tests/session.rs": "f4722670b09b6699aaa71691f8d84b4aee4e7bfbd79b9f84886062c300656d44",
+    "tests/qwen_session.rs": "12dff3749581d550a2e4577b9a90e150fb7f12bf14fc282cd38cae04fb4aa0f3",
+    "tests/q4_metal.rs": "d265d8a77215e702df95cb78b9724e5e5ad80a322acd06aaa54f4bf778db26c3",
+    "examples/metal_continue.rs": "bbcbad6573e4b0de95307954487e2ad7f496eb77c998fd328da42f96aad9baa6",
+    "tools/experiments/metal_continue.py": "48487c955a81cafb4149caf033d397d0403068cd6f31913a8a2b90a75f03b622",
+    "tools/experiments/metal_engine.py": "1541afc73738d91e13dc6d71c32f72632e4b2eb20174781dc193126362b73d0c",
+    "tools/experiments/test_metal_continue.py": "da3b554d6eb751d0dceef8a2fa141c23fb9191c064b635182e4d03376a4ba749",
+    "tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc"
+  },
+  "checks": {
+    "artifacts/m5-prefix-clippy-default-v1.txt": "db21d9b2181b36e21c112571df1e2f469417e28e3fc0c85e26ee30b233e15bb7",
+    "artifacts/m5-prefix-failure-v1.txt": "5d225a435d5fb7b1e365eb946ca1285143351883b55f3adbed3920cf5e73baf6",
+    "artifacts/m5-prefix-fp16-v1.txt": "fa25b5f7be2b32851fe5c2ecb0d197ab014c51806ddbb69883fd8a070a913a7a",
+    "artifacts/m5-prefix-clippy-metal-v1.txt": "af18c546a9222dde6ea2120c0a18076b88ba45d3c8d1a318c9af47fa3f429b73",
+    "artifacts/m5-prefix-fmt-v1.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m5-prefix-test-default-v1.txt": "35a1e0013705102d0afd9cf32848df331622031af33098225dcf67f1949b8e3d",
+    "artifacts/m5-prefix-native-v1.txt": "8b82806ed26e3edf23547aabd28a69495d64f7ed02b925b684086716f26bbb3d",
+    "artifacts/m5-prefix-python-final-v1.txt": "628015b95c84fa18409bb39aab6df48adaf3369bca9d2f9693ff14b30f1a83d4",
+    "artifacts/m5-prefix-qwen-tiled-v1.txt": "25122592f795f01d874ac3d647599a4bf71db35b19f13b9d2af92adc29c9d7cc",
+    "artifacts/m5-prefix-test-metal-v1.txt": "3d3b5bd17e1e2289354dd7d4b68681f59874788c2a4f8b9e9a69ab461d8753ea",
+    "artifacts/m5-prefix-qwen-scalar-v1.txt": "bb5a606583073dbf31e4aae6ab43f73c4074e09db15deb084f9a2cff97d2b813",
+    "artifacts/m5-prefix-example-build-final-v1.txt": "1d4a459075bb084f679636df54054e09c302d0ad0d545b52395925946c48d277",
+    "artifacts/m5-prefix-python-targeted-final-v1.txt": "b9ba6442c95876138526fec949f1e813b286c0ffcc021435d55eb5d2b50dd6ed"
+  },
+  "records": {
+    "benchmarks/results/2026-10-13-metal-continuation-q4-v1.json": "78b26628c752290eacf55d7d1af873c28af711921d3ca3b353e8866f70e2d465",
+    "benchmarks/results/2026-10-13-metal-continuation-q4-v2.json": "c1d7d506c11186de63f9b63525194c854ed0eba07f0534136ab5949abe880c12",
+    "benchmarks/results/2026-10-13-metal-continuation-q4-v3.json": "a2fc02f0d238a76039d57333f88f23d02eb98193eda2d41ff91aea8eb60bc7d8",
+    "benchmarks/results/2026-10-13-qwen-session-prefix-scalar-v1.json": "28db2fde48b8775241191f23e1dfa03377bccc3a0d2482c8cf9901b5f1edf6c0",
+    "benchmarks/results/2026-10-13-qwen-session-prefix-tiled-v1.json": "fae3573a671050fbb1cbf12d7b17314c190911bba4bde1fc05647914eb643776"
+  },
+  "binaries": {
+    "artifacts/m5-prefix-reference-v1/metal_continue": "873b921c1a6a91d2b4afd8de7139d358f28b38d300003f885378958a635749b7",
+    "artifacts/m5-checks/release/deps/q4_metal-3a988d703d327c0f": "6bfdc3ca80bd6ac4015e8244393bc275d28f2c8dc4c2fb5cab0c1c7bf7f9f9ae",
+    "artifacts/m5-checks/release/deps/metal-107a46ab23f56d73": "3dddff93d396956024d9d3a0070bc5eb46667b52861d8e3940d64a22e0613790",
+    "artifacts/m5-checks/release/deps/toklet-f8ac5e0ca609557c": "a22db8ba21b532d1a78bd1803149be90dbe9a1cedfc8751f08d0f0444774d2a0",
+    "artifacts/m5-checks/release/deps/qwen_session-92bbd39279dda176": "0fd31d310bf86a661c7b83bb1821098cd4274c25d557ea045c3df419b0217536"
+  },
+  "protected_cpu_sha256": {
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "build_environment_overrides": {
+    "RUSTFLAGS": null,
+    "CARGO_ENCODED_RUSTFLAGS": null,
+    "CARGO_PROFILE_RELEASE_OPT_LEVEL": null,
+    "CARGO_PROFILE_RELEASE_DEBUG": null,
+    "CARGO_PROFILE_RELEASE_LTO": null,
+    "CARGO_PROFILE_RELEASE_CODEGEN_UNITS": null
+  },
+  "fast_tests": {
+    "default": 84,
+    "metal": 90
+  },
+  "review": "Astra accepted after correction to47 CPU comparisons and numerical equality wording; no remaining code/evidence findings.",
+  "documentation_sha256": {
+    "PLAN.md": "7f186d4503762e3801651fd7b1e3593865c9697495111da2e12251d74b93c289",
+    "docs/experiments/2026-10-13-prefix-continuation.md": "8ccd8d8680b94082e7a540ecf1e5353e4edb29a76b411f2239ac66de877cd474"
+  }
+}

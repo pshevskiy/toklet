@@ -33,3 +33,7 @@ objc2-metal-performance-shaders = { version = "=0.3.2", optional = true, default
 [[example]]
 name = "metal_trace"
 required-features = ["metal"]
+
+[[example]]
+name = "metal_continue"
+required-features = ["metal"]

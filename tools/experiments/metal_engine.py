@@ -40,10 +40,15 @@ def kill_owned_group(child):
 
 class Transport:
     """Bounded nonblocking pipes, with no reader threads or stream-close locks."""
-    def __init__(self, child, raw, stderr, stdout_limit=8*1024*1024, event_limit=4096):
+    def __init__(self, child, raw, stderr, stdout_limit=8*1024*1024, event_limit=4096,
+                 request_timeout=30, lifetime_timeout=180):
         if not 1 <= stdout_limit <= 16*1024*1024 or not 1 <= event_limit <= 32768:
             raise ValueError("transport limits outside admitted diagnostic bounds")
         self.stdout_limit, self.event_limit = stdout_limit, event_limit
+        if (type(request_timeout) not in (int,float) or type(lifetime_timeout) not in (int,float)
+                or not 0<request_timeout<=lifetime_timeout<=86400):
+            raise ValueError("transport time limits outside bounded diagnostic scope")
+        self.request_timeout,self.lifetime_timeout=request_timeout,lifetime_timeout
         self.child, self.raw, self.stderr = child, raw, stderr
         self.selector = selectors.DefaultSelector()
         for name, stream in [("stdout",child.stdout),("stderr",child.stderr)]:
@@ -74,7 +79,7 @@ class Transport:
                 if max(map(len,self.pending.split(b"\n"))) > 65536:
                     raise ValueError("child output exceeds bounded line limit")
     def read(self):
-        deadline = min(time.monotonic()+30,self.started+180)
+        deadline = min(time.monotonic()+self.request_timeout,self.started+self.lifetime_timeout)
         while True:
             if b"\n" in self.pending:
                 line,_,tail = self.pending.partition(b"\n")

@@ -1,4 +1,4 @@
-//! Bounded CPU sessions with exact-prefix reuse and transactional chunk commits.
+//! Bounded CPU sessions with longest-prefix reuse and transactional chunk commits.
 //!
 //! Weights are borrowed immutably. A session owns separate per-layer FP32 K/V
 //! `[kv_heads, capacity, head_dim]`, fixed chunk scratch, two logits buffers and
@@ -13,6 +13,27 @@ use crate::{
 use std::fmt;
 
 const METADATA_ALLOWANCE_BYTES: usize = 64 * 1024 * 1024;
+
+/// Longest representable committed prefix. A shortened fully cached prompt
+/// needs its final token replayed: only the current committed logits are held.
+/// Pending sampled/input tokens never count as KV, even when they match.
+pub(crate) fn reusable_prefix(
+    history: &[u32],
+    evaluated: usize,
+    tokens: &[u32],
+    distribution_valid: bool,
+) -> (usize, bool) {
+    let shared = history[..evaluated]
+        .iter()
+        .zip(tokens)
+        .take_while(|(old, new)| old == new)
+        .count();
+    if shared == tokens.len() && (shared < evaluated || !distribution_valid) {
+        (shared.saturating_sub(1), shared > 0)
+    } else {
+        (shared, false)
+    }
+}
 
 #[derive(Clone, Copy, Debug)]
 pub struct Options {
@@ -116,6 +137,8 @@ pub struct Session<'model> {
     memory: Memory,
     history: Vec<u32>,
     evaluated_len: usize,
+    distribution_valid: bool,
+    distribution_replay: bool,
     cache: KvCache,
     scratch: Scratch,
     logits: Vec<f32>,
@@ -195,6 +218,8 @@ impl<'model> Session<'model> {
             memory,
             history,
             evaluated_len: 0,
+            distribution_valid: false,
+            distribution_replay: false,
             cache,
             scratch,
             logits,
@@ -224,7 +249,8 @@ impl<'model> Session<'model> {
     /// A next-token distribution is available only for a nonempty fully
     /// evaluated history. Pending tokens must be evaluated or discarded first.
     pub fn logits(&self) -> Option<&[f32]> {
-        (self.evaluated_len > 0 && self.pending_len() == 0).then_some(self.logits.as_slice())
+        (self.distribution_valid && self.evaluated_len > 0 && self.pending_len() == 0)
+            .then_some(self.logits.as_slice())
     }
 
     fn validate(&self, tokens: &[u32], base: usize) -> Result<(), Error> {
@@ -260,18 +286,28 @@ impl<'model> Session<'model> {
         Ok(())
     }
 
-    /// Reuse only an exact extension of the entire current history (including
-    /// pending tokens). Any edit or shortening resets and stages the new prompt.
-    /// Validation precedes reset, so rejected replacements preserve all state.
+    /// Reuse the longest exact committed prefix and overwrite only its suffix.
+    /// Shortened fully cached prompts replay one token to reconstruct logits.
+    /// Validation precedes mutation; invalid replacements preserve all state.
     pub fn set_tokens(&mut self, tokens: &[u32]) -> Result<(), Error> {
         self.validate(tokens, 0)?;
-        if tokens.starts_with(&self.history) {
-            self.history
-                .extend_from_slice(&tokens[self.history.len()..]);
-        } else {
-            self.reset();
-            self.history.extend_from_slice(tokens);
+        let (keep, recover) = reusable_prefix(
+            &self.history,
+            self.evaluated_len,
+            tokens,
+            self.distribution_valid,
+        );
+        let recover = recover
+            || (self.distribution_replay
+                && keep == self.evaluated_len
+                && tokens.get(keep) == self.history.get(keep));
+        if keep < self.evaluated_len {
+            self.distribution_valid = false;
         }
+        self.evaluated_len = keep;
+        self.distribution_replay = recover;
+        self.history.truncate(keep);
+        self.history.extend_from_slice(&tokens[keep..]);
         Ok(())
     }
 
@@ -297,6 +333,8 @@ impl<'model> Session<'model> {
         )?;
         std::mem::swap(&mut self.logits, &mut self.staged_logits);
         self.evaluated_len += count;
+        self.distribution_valid = true;
+        self.distribution_replay = false;
         Ok(count)
     }
 
@@ -305,16 +343,27 @@ impl<'model> Session<'model> {
         Ok(())
     }
 
-    /// Keep the valid prefix/distribution and remove unevaluated input. Stale KV
-    /// tails need no clearing because they are outside the committed length.
+    /// Remove unevaluated input. If a reused/truncated KV prefix has no retained
+    /// logits, stage its final retained token for replay before sampling again.
+    /// Stale KV tails remain outside the committed length and need no clearing.
     pub fn discard_pending(&mut self) {
-        self.history.truncate(self.evaluated_len);
+        self.history
+            .truncate(self.evaluated_len + usize::from(self.distribution_replay));
+        if self.distribution_replay {
+            return;
+        }
+        if !self.distribution_valid && self.evaluated_len > 0 {
+            self.evaluated_len -= 1;
+            self.distribution_replay = true;
+        }
     }
 
     /// Reset positions/history and distribution validity, retaining allocations.
     pub fn reset(&mut self) {
         self.history.clear();
         self.evaluated_len = 0;
+        self.distribution_valid = false;
+        self.distribution_replay = false;
     }
 }
 

@@ -408,6 +408,8 @@ pub struct Session<'m> {
     memory: session::Memory,
     history: Vec<u32>,
     evaluated: usize,
+    distribution_valid: bool,
+    distribution_replay: bool,
     replay: bool,
     cache: Vec<Cache>,
     scratch: Scratch,
@@ -580,6 +582,8 @@ impl<'m> Session<'m> {
                 },
                 history: Vec::with_capacity(options.capacity),
                 evaluated: 0,
+                distribution_valid: false,
+                distribution_replay: false,
                 replay: false,
                 cache,
                 scratch,
@@ -616,7 +620,7 @@ impl<'m> Session<'m> {
         self.memory
     }
     pub fn logits(&self) -> Option<&[f32]> {
-        (self.evaluated > 0 && self.pending_len() == 0 && !self.replay)
+        (self.distribution_valid && self.evaluated > 0 && self.pending_len() == 0 && !self.replay)
             .then_some(self.logits.as_slice())
     }
     pub fn timing(&self) -> Option<Timing> {
@@ -642,21 +646,48 @@ impl<'m> Session<'m> {
     }
     pub fn set_tokens(&mut self, tokens: &[u32]) -> Result<()> {
         self.validate(tokens, 0)?;
-        if !self.replay && tokens.starts_with(&self.history) {
-            self.history
-                .extend_from_slice(&tokens[self.history.len()..]);
-        } else {
+        if self.replay {
             self.reset();
             self.history.extend_from_slice(tokens);
+            return Ok(());
         }
+        let (keep, recover) = session::reusable_prefix(
+            &self.history,
+            self.evaluated,
+            tokens,
+            self.distribution_valid,
+        );
+        let recover = recover
+            || (self.distribution_replay
+                && keep == self.evaluated
+                && tokens.get(keep) == self.history.get(keep));
+        if keep < self.evaluated {
+            self.distribution_valid = false;
+            self.last_timing = None;
+            self.diagnostic_rows = 0;
+        }
+        self.evaluated = keep;
+        self.distribution_replay = recover;
+        self.history.truncate(keep);
+        self.history.extend_from_slice(&tokens[keep..]);
         Ok(())
     }
     pub fn discard_pending(&mut self) {
-        self.history.truncate(self.evaluated);
+        self.history
+            .truncate(self.evaluated + usize::from(self.distribution_replay));
+        if self.distribution_replay {
+            return;
+        }
+        if !self.distribution_valid && self.evaluated > 0 {
+            self.evaluated -= 1;
+            self.distribution_replay = true;
+        }
     }
     pub fn reset(&mut self) {
         self.history.clear();
         self.evaluated = 0;
+        self.distribution_valid = false;
+        self.distribution_replay = false;
         self.replay = false;
         self.last_timing = None;
         self.diagnostic_rows = 0;
@@ -687,12 +718,16 @@ impl<'m> Session<'m> {
             Ok(timing) => {
                 std::mem::swap(&mut self.logits, &mut self.staged);
                 self.evaluated += n;
+                self.distribution_valid = true;
+                self.distribution_replay = false;
                 self.last_timing = Some(timing);
                 self.diagnostic_rows = n;
                 Ok(n)
             }
             Err(Error::Completion) => {
                 self.evaluated = 0;
+                self.distribution_valid = false;
+                self.distribution_replay = false;
                 self.replay = true;
                 Err(Error::Completion)
             }
