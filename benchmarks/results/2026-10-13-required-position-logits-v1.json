@@ -1,0 +1,46 @@
+{
+  "format": "toklet-required-position-logits-qualification-v1",
+  "passed": true,
+  "scope": "Required-position computation code task only; no latency/memory improvement or M5.3 closure",
+  "source_sha256": {
+    "src/metal/mod.rs": "06162bf9df8e4e2c587d638b45144e1597dfa4c20b72e26495282c92753100dd",
+    "src/metal/memory.rs": "6ffb494af6102cf273d648ac9be6b1eca0c7db99e04ad48579f45873fc4f23c0",
+    "tests/q4_metal.rs": "5e028d2c85c894193190b72b733b97530fe9449d8cc3888fabc5cf844539aa79",
+    "Cargo.toml": "65e40a45a06e7e40943dda44dffe25d3b086bee32da0b481846c03350bcfd3fd",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9"
+  },
+  "checks": {
+    "artifacts/m5-last-logits-build-v1.txt": "b8ead0918c4ec576b17429c3134b071947fb11c03f561a271013ac53b9317449",
+    "artifacts/m5-last-logits-build-v2.txt": "0d3fecc723fc68aa208a908f9dd9552e12537913fccdf05a15f4425eb37ab976",
+    "artifacts/m5-last-logits-fmt-final-v1.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m5-last-logits-clippy-default-v1.txt": "d5b285ae9e50ba5a07effe8ff5c866cdb347c531583c3abbc94398c2caff1721",
+    "artifacts/m5-last-logits-clippy-metal-final-v2.txt": "ed9bfa6b271a8f9354679a29c3c1723c18ad85afe60c9fe281777ebfedd4d559",
+    "artifacts/m5-last-logits-test-default-v1.txt": "a16c599a19dfde00af6b6e2262000d31c0f4ec15391f72200514e13404a41631",
+    "artifacts/m5-last-logits-test-metal-v1.txt": "84aab7f3c18a12e5246f265eaa674ec8ce4bba34e11c6112f80ad855d29c1f89",
+    "artifacts/m5-last-logits-native-q4-v2.txt": "7e18c949e60d63d179c5693029d4afec8ae6dddc3fb318fa964d7f8967b5aa80",
+    "artifacts/m5-last-logits-native-fp16-v1.txt": "14713f5ef8f8ffde1471be4a2e87f254dcf598b34ab465436a98beade835c93c",
+    "artifacts/m5-last-logits-native-failure-v1.txt": "715b0840bbc6dbc0f0b292d34b6ed495bbf0e219f03b81acd53e261577014801",
+    "artifacts/m5-last-logits-worker-build-v1.txt": "b23b1650e2bba9fca595f4f020fb84f1673bb03fa2906c83612cf2b773731939"
+  },
+  "binaries": {
+    "artifacts/m5-checks/release/deps/q4_metal-3a988d703d327c0f": "b3d404e10b64b7b1797d6fad4909e79e9be97c6354a76b1156502b46748120b9",
+    "artifacts/m5-checks/release/deps/metal-107a46ab23f56d73": "4bcc82729b32c5035455c1fd719cb058962f1a69ecb417dc41977789decd4fb7",
+    "artifacts/m5-checks/release/deps/toklet-f8ac5e0ca609557c": "a8c806fc0609b4fa0d211943f08f604ddfbae7e4bbcee078ec685b5a8b5e1731",
+    "artifacts/m5-checks/release/examples/metal_continue": "79d9d28b00e084083ac56db2a40d997059270a24baa8d60e464d8b55f7931696",
+    "artifacts/m5-prefix-reference-v1/metal_continue": "873b921c1a6a91d2b4afd8de7139d358f28b38d300003f885378958a635749b7"
+  },
+  "protected_cpu_sha256": {
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "parity_distributions": {
+    "tiny": 48,
+    "qwen": 28
+  },
+  "cross_path_gate": {
+    "atol": 0.0001,
+    "rtol": 0.001
+  },
+  "failure_retained": "artifacts/m5-last-logits-native-q4-v1.txt: pending-input test expectation; production/gates unchanged",
+  "review": "Astra accepted code/check/evidence scope; no remaining findings. Required-position computation only, M5.3 still open."
+}

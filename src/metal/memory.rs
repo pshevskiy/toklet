@@ -137,11 +137,21 @@ pub(super) fn matrix<T: Scalar>(
     l: Layout,
     half: bool,
 ) -> Result<Retained<MPSMatrix>> {
+    matrix_offset(b, l, half, 0)
+}
+/// Offset is in scalar elements; descriptor strides remain those of the owner.
+pub(super) fn matrix_offset<T: Scalar>(
+    b: &Buffer<T>,
+    l: Layout,
+    half: bool,
+    offset: usize,
+) -> Result<Retained<MPSMatrix>> {
     let size = if half { 2 } else { 4 };
     if size_of::<T>() != size
         || b.len != l.elements
         || l.rows
             .checked_mul(l.stride)
+            .and_then(|n| n.checked_add(offset))
             .and_then(|n| n.checked_add(7))
             .is_none_or(|n| n > b.len)
         || l.columns > l.stride
@@ -161,9 +171,10 @@ pub(super) fn matrix<T: Scalar>(
                 MPSDataType::Float32
             },
         );
-        Ok(MPSMatrix::initWithBuffer_descriptor(
+        Ok(MPSMatrix::initWithBuffer_offset_descriptor(
             MPSMatrix::alloc(),
             &b.raw,
+            offset * size,
             &d,
         ))
     }

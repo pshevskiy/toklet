@@ -54,6 +54,85 @@ mod allocations {
 static ALLOCATOR: allocations::Counting = allocations::Counting;
 
 #[test]
+#[ignore = "explicit Apple GPU required-position versus all-row FP16/Q4 logits"]
+fn ordinary_prefill_last_logits_match_all_required_diagnostic_rows() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    // Freeze the existing session envelope before native execution. Changing
+    // the MPS row count may change its internal reduction; no bit equality claim.
+    for real in [false, true] {
+        let source = root.join(if real {
+            "models/Qwen2.5-0.5B-Instruct"
+        } else {
+            "artifacts/m5-tiny-source-v1"
+        });
+        let packed = root.join(if real {
+            "artifacts/m5-qwen-q4-v1"
+        } else {
+            "artifacts/m5-tiny-q4-v1"
+        });
+        let tokens: &[u32] = if real {
+            &[9707, 11, 358, 2776]
+        } else {
+            &[1, 7, 13, 3, 47, 11, 2]
+        };
+        for quantized in [false, true] {
+            let options = weights::LoadOptions {
+                context_limit: 32,
+                ..Default::default()
+            };
+            let model = if quantized {
+                metal::Model::load_q4(&source, &packed, options)
+            } else {
+                metal::Model::load(&source, options)
+            }
+            .unwrap();
+            for offset in [0, 5] {
+                for chunk in [4, 3, 1] {
+                    let options = session::Options {
+                        capacity: 27,
+                        prefill_chunk_size: chunk,
+                        position_offset: offset,
+                        ..Default::default()
+                    };
+                    let mut ordinary = metal::Session::new(&model, options).unwrap();
+                    let mut diagnostic = metal::Session::new(&model, options).unwrap();
+                    diagnostic.enable_diagnostics(&[]).unwrap();
+                    for part in tokens.chunks(chunk) {
+                        ordinary.append(part).unwrap();
+                        diagnostic.append(part).unwrap();
+                        let rows = ordinary.evaluate_next_chunk().unwrap();
+                        assert_eq!(rows, diagnostic.evaluate_next_chunk().unwrap());
+                        assert_eq!(rows, part.len());
+                        let snapshots = diagnostic.diagnostics().unwrap();
+                        let all = snapshots.iter().find(|s| s.stage == "logits").unwrap();
+                        assert_eq!(all.rows, rows);
+                        assert_eq!(all.values.len(), rows * model.config().vocab_size);
+                        let last = &all.values[(rows - 1) * all.columns..];
+                        assert_eq!(last, diagnostic.logits().unwrap());
+                        for (&actual, &want) in ordinary.logits().unwrap().iter().zip(last) {
+                            assert!(
+                                (actual - want).abs() <= 1e-4 + 1e-3 * want.abs(),
+                                "last-row mismatch real{real} q4{quantized} offset{offset} chunk{chunk}: {actual}/{want}"
+                            );
+                        }
+                        assert_eq!(
+                            toklet::sampling::greedy(ordinary.logits().unwrap()).unwrap(),
+                            toklet::sampling::greedy(last).unwrap()
+                        );
+                    }
+                    assert_eq!(ordinary.evaluate_next_chunk().unwrap(), 0);
+                    assert_eq!(diagnostic.evaluate_next_chunk().unwrap(), 0);
+                    assert_eq!(ordinary.evaluated_len(), tokens.len());
+                    println!(
+                        "required/all-row distribution parity real{real} q4{quantized} offset{offset} chunk{chunk} passed"
+                    );
+                }
+            }
+        }
+    }
+}
+
+#[test]
 #[ignore = "explicit Apple GPU FP16/Q4 longest-prefix and repeated-cleanup suite"]
 fn metal_prefix_edits_shortening_and_recovery_match_reset_replay() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));

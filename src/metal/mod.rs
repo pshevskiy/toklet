@@ -8,7 +8,7 @@ mod memory;
 mod profile;
 use crate::{model, q4, session, weights};
 pub use diagnostic::Diagnostic;
-use memory::{Buffer, Gpu, Kernel, Layout, matrix, multiply};
+use memory::{Buffer, Gpu, Kernel, Layout, matrix, matrix_offset, multiply};
 use objc2::rc::{Retained, autoreleasepool};
 use objc2_metal::{MTLCommandBuffer, MTLCommandBufferStatus, MTLDevice};
 use objc2_metal_performance_shaders::{MPSMatrix, MPSMatrixMultiplication};
@@ -376,6 +376,7 @@ struct Scratch {
 }
 struct Views {
     norm: Retained<MPSMatrix>,
+    last_norm: Retained<MPSMatrix>,
     context: Retained<MPSMatrix>,
     gated: Retained<MPSMatrix>,
     result_h: Retained<MPSMatrix>,
@@ -554,6 +555,12 @@ impl<'m> Session<'m> {
             for n in 1..=chunk {
                 views.push(Views {
                     norm: matrix(&scratch.norm, h.view(n, c.hidden_size)?, true)?,
+                    last_norm: matrix_offset(
+                        &scratch.norm,
+                        h.view(1, c.hidden_size)?,
+                        true,
+                        (n - 1) * h.stride,
+                    )?,
                     context: matrix(&scratch.context, h.view(n, c.hidden_size)?, true)?,
                     gated: matrix(&scratch.gated, m.view(n, c.intermediate_size)?, true)?,
                     result_h: matrix(&scratch.floats, f.view(n, c.hidden_size)?, false)?,
@@ -1032,25 +1039,39 @@ impl<'m> Session<'m> {
             &s.status,
         )?;
         self.snapshot(&command, None, "final_norm", &s.norm.raw)?;
+        // Ordinary prefill needs only the last causal distribution. Diagnostic
+        // sessions explicitly require every row, retaining the all-row path.
+        // All views/kernels are admitted and created before numerical execution.
+        let all_logits = !self.diagnostics.is_empty();
+        let (logit_rows, logit_input, logit_output, logit_kernel) = if all_logits {
+            (n, &v.norm, &v.result_v, &v.hv)
+        } else {
+            (1, &v.last_norm, &self.views[0].result_v, &self.views[0].hv)
+        };
         encode_multiply(
             g,
             &command,
             &self.model.embedding,
             &s.zero,
-            &v.hv,
-            &v.norm,
-            &v.result_v,
+            logit_kernel,
+            logit_input,
+            logit_output,
             &s.floats,
             self.f,
-            n,
+            logit_rows,
             c.vocab_size,
         )?;
         g.encode(
             &command,
             Kernel::Validate,
             &[&s.floats.raw],
-            &[n as u32, c.vocab_size as u32, self.f.stride as u32, 0],
-            n * c.vocab_size,
+            &[
+                logit_rows as u32,
+                c.vocab_size as u32,
+                self.f.stride as u32,
+                0,
+            ],
+            logit_rows * c.vocab_size,
             Some(&s.status),
         )?;
         self.snapshot(&command, None, "logits", &s.floats.raw)?;
@@ -1069,10 +1090,15 @@ impl<'m> Session<'m> {
             return Err(Error::Nonfinite);
         }
         s.floats.with_slice(|words| {
+            let base = if all_logits {
+                (n - 1) * self.f.stride
+            } else {
+                0
+            };
             for (dst, bits) in self
                 .staged
                 .iter_mut()
-                .zip(&words[(n - 1) * self.f.stride..(n - 1) * self.f.stride + c.vocab_size])
+                .zip(&words[base..base + c.vocab_size])
             {
                 *dst = f32::from_bits(*bits);
             }
