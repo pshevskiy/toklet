@@ -10,6 +10,8 @@ use objc2_foundation::{NSRange, NSString};
 use objc2_metal::*;
 use std::{cell::Cell, ops::Deref, ptr::NonNull, time::Instant};
 
+const MAX_EVENTS: usize = 1024;
+
 #[derive(Clone, Copy, Debug, serde::Serialize)]
 pub struct ProfileEvent {
     pub name: &'static str,
@@ -128,7 +130,7 @@ impl Trace {
         let descriptor = MTLCounterSampleBufferDescriptor::new();
         descriptor.setCounterSet(Some(&set));
         descriptor.setStorageMode(MTLStorageMode::Shared);
-        if samples == 0 || samples > 2048 {
+        if samples == 0 || samples > 2 * MAX_EVENTS {
             return Err(Error::Options("counter capacity outside bounds"));
         }
         // SAFETY: bounded nonzero sample count, pre-admitted diagnostic allowance.
@@ -280,6 +282,22 @@ impl Session<'_> {
         if self.trace.is_some() || !self.history.is_empty() || self.evaluated != 0 {
             return Err(Error::Options("enable profile on a fresh session"));
         }
+        // Seven Q4 projections use one custom encoder each. Half projections
+        // retain bias, two dependent MPS markers, and storage conversion.
+        let per_layer = if matches!(
+            self.model.layers[0].q.storage,
+            super::TensorStorage::Q4 { .. }
+        ) {
+            17
+        } else {
+            38
+        };
+        let events = per_layer * self.model.config.num_layers + 6;
+        if events > MAX_EVENTS {
+            return Err(Error::Unsupported(
+                "model profiling exceeds admitted counter capacity",
+            ));
+        }
         let admitted = super::add(self.memory.admitted_bytes, super::ALLOWANCE)?;
         if admitted > self.options.memory_limit_bytes {
             return Err(Error::Budget {
@@ -287,9 +305,7 @@ impl Session<'_> {
                 limit: self.options.memory_limit_bytes,
             });
         }
-        let trace = autoreleasepool(|_| {
-            Trace::new(&self.model.gpu, 38 * self.model.config.num_layers + 6)
-        })?;
+        let trace = autoreleasepool(|_| Trace::new(&self.model.gpu, events))?;
         self.trace = Some(trace);
         self.memory.metadata_allowance_bytes =
             super::add(self.memory.metadata_allowance_bytes, super::ALLOWANCE)?;

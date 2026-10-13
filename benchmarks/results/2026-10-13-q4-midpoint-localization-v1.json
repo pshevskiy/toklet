@@ -1,0 +1,28 @@
+{
+  "scope": "Diagnostic replay of identical-input failed O feature; no gate or quality acceptance",
+  "identity_sha256": {
+    "artifacts/m5-q4-compensated-midpoint-replay-v1.py": "34cf7eebfbd031f76410c27e167a0cacaefc9a74a2f4dc5d22a3d3807adefe16",
+    "artifacts/m5-q4-compensated-offset-stages-v1.json": "7f4c36030af028eb336f099c60688989212299a3b2cb568a94173fc5e00e9c48",
+    "artifacts/m5-tiny-q4-v1/model.layers.1.self_attn.o_proj.weight.q4": "00033e7cd5b5a35796464a07e03cd00efd5fb047f0fd10c7108edd0b9f3b3565",
+    "tests/fixtures/q4-tiny-prefill-v1/manifest.json": "af489fadf32b1a2a46a04098fabc315152cf63f507ee2887bc6a4f13de2545c9",
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.attention_context.f16le": "ac40d9fdba01ed044b2bb04409dfe556658c1b57fa71c0464667ce474130aa54",
+    "tools/reference/fp16.py": "181ac89a8b94f76f5f3a8149eb80089e9d7a0a63688e42951e6269be567fd9d6",
+    "tools/reference/q4_tiny.py": "a1b90019081aef9ab0fc7cce68ccbdf4d1518131c8c716c8fc73d2a228b1286b"
+  },
+  "ordered_fp32_dot": 0.1626587063074112,
+  "fp64_dot": 0.16265869280323386,
+  "half_midpoint": 0.16265869140625,
+  "fp64_rounded_fp32": 0.16265869140625,
+  "direct_fp64_half": 0.1627197265625,
+  "fp32_then_half": 0.16259765625,
+  "native_initial_candidates": {
+    "Original": {
+      "context_exact": true,
+      "o_feature19": 0.16259765625
+    },
+    "Q4Compensated": {
+      "context_exact": true,
+      "o_feature19": 0.16259765625
+    }
+  }
+}

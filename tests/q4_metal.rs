@@ -498,6 +498,81 @@ fn tiled_q4_prefill_matches_independent_oracle_at_all_stages_and_chunks() {
 }
 
 #[test]
+#[ignore = "explicit Apple GPU compensated Q4 projection full frozen independent tiny gates"]
+fn compensated_q4_matches_expanded_independent_oracle() {
+    check_tiny_oracle("q4-tiny-prefill-v1", metal::ProjectionMode::Q4Compensated);
+}
+
+#[test]
+#[ignore = "Explicit bounded numerical investigation; captures data, does not qualify decoder parity"]
+fn capture_compensated_offset_stages_for_investigation() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let reference = manifest(&root.join("tests/fixtures/q4-tiny-prefill-v1"));
+    let packed = root.join("artifacts/m5-tiny-q4-v1");
+    assert_eq!(
+        format!(
+            "{:x}",
+            Sha256::digest(fs::read(packed.join("manifest.json")).unwrap())
+        ),
+        reference["packed_manifest_sha256"].as_str().unwrap()
+    );
+    let model = metal::Model::load_q4(
+        &root.join("artifacts/m5-tiny-source-v1"),
+        &packed,
+        weights::LoadOptions {
+            context_limit: 32,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let spec = &reference["cases"]["offset17"];
+    let tokens: Vec<u32> = spec["tokens"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|v| v.as_u64().unwrap() as u32)
+        .collect();
+    assert_eq!(tokens.len(), 17);
+    let mut captures = Vec::new();
+    for mode in [
+        metal::ProjectionMode::Original,
+        metal::ProjectionMode::Q4Compensated,
+    ] {
+        let mut session = metal::Session::with_projection_mode(
+            &model,
+            session::Options {
+                capacity: 27,
+                prefill_chunk_size: 17,
+                position_offset: 5,
+                ..Default::default()
+            },
+            mode,
+        )
+        .unwrap();
+        session.enable_diagnostics(&[0, 1]).unwrap();
+        session.set_tokens(&tokens).unwrap();
+        assert_eq!(session.evaluate_next_chunk().unwrap(), 17);
+        let stages = session.diagnostics().unwrap();
+        assert_eq!(stages.len(), 35);
+        for stage in stages {
+            captures.push(serde_json::json!({"mode":format!("{mode:?}"), "layer":stage.layer,
+                "stage":stage.stage, "rows":stage.rows,"columns":stage.columns,"values":stage.values}));
+        }
+    }
+    let record = serde_json::json!({"scope":"Diagnostic capture only; unchanged independent parity test remains separately failing",
+        "packed_manifest_sha256":reference["packed_manifest_sha256"],"case":spec,"captures":captures});
+    use std::io::Write;
+    let mut output = fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(root.join("artifacts/m5-q4-compensated-offset-stages-v1.json"))
+        .unwrap();
+    output
+        .write_all(&serde_json::to_vec(&record).unwrap())
+        .unwrap();
+}
+
+#[test]
 #[ignore = "explicit Apple GPU tile refinement; expanded independent oracle remains a separate gate"]
 fn tiled_q4_prefill_preserves_every_original_stage_bit() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));

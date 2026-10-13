@@ -1323,6 +1323,8 @@ M5.2 depends on M5.1. M5.3 and M5.5 can start from M4 independently of Q4; M5.4 
 
 Exit: Q4 passes quality checks and improves at least one named workload beyond measured noise; other accepted optimizations satisfy their declared tradeoffs. Report baseline gaps if they remain. Claim an external speed lead only when the same quality, memory, and comparison conditions support it.
 
+M5.2/M5.6 numerical component, 13 October 2026: [compensated Q4 storage and larger GPU geometry](docs/experiments/2026-10-13-q4-compensated-storage.md) admits the exact preselected 28-layer geometry and bounded Q4 profiling. Larger Half passes969 selected-stage comparisons; larger Q4 fails its unchanged gate. An opt-in compensated projection fixes a localized double-rounding error at Half storage and passes4550 expanded tiny stage comparisons plus72 signed midpoint/overflow cases. Original/Tiled failures remain preserved, no quality/performance/default acceptance is claimed, and larger normalization/rotary investigation remains pending.
+
 ## M6 Qualify longer context and attention
 
 - [ ] **M6.1 Implement tiled online-softmax attention.** Build separate decode and prefill paths without materializing the full attention-score matrix. Preserve causal boundaries, absolute positions, and GQA sharing. Compare irregular chunk sizes and substantial cached depths with the reference.

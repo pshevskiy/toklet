@@ -163,3 +163,56 @@ kernel void q4_prefill(device const uchar* w[[buffer(0)]],device const half* bia
         }
     }
 }
+
+// Neumaier's two-component FP32 sum. Explicit fma below recovers the product
+// residual; reconstruction itself remains the same rounded FP32 format value.
+inline float2 compensated_add(float2 sum,float value) {
+    float next=sum.x+value;
+    float error=abs(sum.x)>=abs(value)?(sum.x-next)+value:(value-next)+sum.x;
+    return float2(next,sum.y+error);
+}
+// Round an inexact two-component result to an odd Float32 significand before
+// Half RNE. This retains which side of a Half midpoint the low component lies
+// on, avoiding double rounding through a nearest-even Float32 midpoint.
+inline float compensated_store_value(float2 sum) {
+    float value=sum.x+sum.y;
+    if(!isfinite(value))return value;
+    float tail=abs(sum.x)>=abs(sum.y)?(sum.x-value)+sum.y:(sum.y-value)+sum.x;
+    uint bits=as_type<uint>(value);
+    if(tail!=0.0f && (bits&1u)==0) {
+        if(value==0.0f)return copysign(as_type<float>(1u),tail);
+        bits=((tail>0.0f)==(value>0.0f))?bits+1u:bits-1u;
+        value=as_type<float>(bits);
+    }
+    return value;
+}
+kernel void q4_compensated(device const uchar* w[[buffer(0)]],device const half* bias[[buffer(1)]],device const half* x[[buffer(2)]],device half* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    uint token=group/s[2],row=group%s[2];
+    if(token>=s[0])return;
+    float2 sum=float2(0.0f);
+    for(uint column=lane;column<s[1];column+=width) {
+        uint start=64+row*s[3]+(column/64)*36;
+        device const ushort* metadata=reinterpret_cast<device const ushort*>(w+start);
+        float scale=float(as_type<half>(metadata[0])),b=float(as_type<half>(metadata[1]));
+        uint code=(w[start+4+(column%64)/2]>>(4*(column%2)))&15;
+        float weight=scale*float(code)+b,input=float(x[token*s[4]+column]);
+        float product=weight*input;
+        sum=compensated_add(sum,product);
+        sum=compensated_add(sum,fma(weight,input,-product));
+    }
+    // Merge disjoint adjacent subtrees for any queried positive width. All
+    // lanes participate in shuffles; out-of-range results are never consumed.
+    for(uint hop=1;hop<width;) {
+        float hi=simd_shuffle_down(sum.x,hop),lo=simd_shuffle_down(sum.y,hop);
+        if(lane%hop==0 && (lane/hop)%2==0 && lane<width-hop) {
+            sum=compensated_add(sum,hi);
+            sum=compensated_add(sum,lo);
+        }
+        if(hop>=width-hop)break;
+        hop*=2;
+    }
+    if(lane==0) {
+        sum=compensated_add(sum,float(bias[row]));
+        checked_half(out,token*s[5]+row,compensated_store_value(sum),status);
+    }
+}

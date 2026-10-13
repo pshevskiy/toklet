@@ -207,6 +207,7 @@ pub(super) enum Kernel {
     Marker,
     Q4Matvec,
     Q4Prefill,
+    Q4Compensated,
 }
 impl Kernel {
     pub fn name(self) -> &'static str {
@@ -225,6 +226,7 @@ impl Kernel {
             "marker",
             "q4_matvec",
             "q4_prefill",
+            "q4_compensated",
         ][self as usize]
     }
 }
@@ -283,6 +285,7 @@ impl Gpu {
             Kernel::Marker,
             Kernel::Q4Matvec,
             Kernel::Q4Prefill,
+            Kernel::Q4Compensated,
         ] {
             let f = library
                 .newFunctionWithName(&NSString::from_str(k.name()))
@@ -332,7 +335,10 @@ impl Gpu {
         }
         // Q4 assigns one queried SIMD group to each output row. Other kernels
         // assign one scalar lane per item; never assume an Apple SIMD width.
-        let width = if matches!(k, Kernel::Q4Matvec | Kernel::Q4Prefill) {
+        let width = if matches!(
+            k,
+            Kernel::Q4Matvec | Kernel::Q4Prefill | Kernel::Q4Compensated
+        ) {
             self.execution_width(k)
         } else {
             self.width
@@ -340,7 +346,10 @@ impl Gpu {
         if width == 0 || width > self.pipelines[k as usize].maxTotalThreadsPerThreadgroup() {
             return Err(Error::Unsupported("kernel launch width unsupported"));
         }
-        let groups = if matches!(k, Kernel::Q4Matvec | Kernel::Q4Prefill) {
+        let groups = if matches!(
+            k,
+            Kernel::Q4Matvec | Kernel::Q4Prefill | Kernel::Q4Compensated
+        ) {
             count
         } else {
             count.div_ceil(width)

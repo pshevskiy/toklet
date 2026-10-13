@@ -57,22 +57,20 @@ fn add(a: usize, b: usize) -> Result<usize> {
 fn geometry(c: &model::Config) -> Result<()> {
     c.validate()
         .map_err(|_| Error::Options("invalid model configuration"))?;
-    if !matches!(
-        (
-            c.hidden_size,
-            c.intermediate_size,
-            c.query_heads,
-            c.kv_heads,
-            c.head_dim
-        ),
-        (32, 64, 4, 2, 8) | (896, 4864, 14, 2, 64)
-    ) || c.num_layers > 24
-        || c.vocab_size > 151936
-        || c.rope_theta != 1e6
-        || c.rms_norm_eps != 1e-6
-    {
+    let supported = match (
+        c.hidden_size,
+        c.intermediate_size,
+        c.query_heads,
+        c.kv_heads,
+        c.head_dim,
+    ) {
+        (32, 64, 4, 2, 8) | (896, 4864, 14, 2, 64) => c.num_layers <= 24,
+        (1536, 8960, 12, 2, 128) => c.num_layers == 28,
+        _ => false,
+    };
+    if !supported || c.vocab_size > 151936 || c.rope_theta != 1e6 || c.rms_norm_eps != 1e-6 {
         return Err(Error::Unsupported(
-            "Metal initially qualifies tiny/Qwen2-0.5B geometry and theta/epsilon",
+            "Metal requires supported tiny/Qwen geometry and theta/epsilon",
         ));
     }
     Ok(())
@@ -184,6 +182,9 @@ impl Model {
             self.gpu.execution_width(Kernel::Q4Matvec),
             self.gpu.execution_width(Kernel::Q4Prefill),
         ]
+    }
+    pub fn q4_compensated_execution_width(&self) -> usize {
+        self.gpu.execution_width(Kernel::Q4Compensated)
     }
     pub fn device_name(&self) -> String {
         self.gpu.device.name().to_string()
@@ -406,6 +407,10 @@ pub enum ProjectionMode {
     #[default]
     Original,
     Q4Tiled,
+    /// Experimental FP32 two-component product/accumulation with midpoint-
+    /// preserving Half rounding and unchanged Q4 reconstruction. Expanded tiny
+    /// gates pass; larger Q4 and held-out quality remain unqualified.
+    Q4Compensated,
 }
 #[derive(Clone, Copy, Debug, serde::Serialize)]
 pub struct Timing {
@@ -455,10 +460,12 @@ impl<'m> Session<'m> {
         projection_mode: ProjectionMode,
     ) -> Result<Self> {
         autoreleasepool(|_| {
-            if projection_mode == ProjectionMode::Q4Tiled
+            if projection_mode != ProjectionMode::Original
                 && !matches!(model.layers[0].q.storage, TensorStorage::Q4 { .. })
             {
-                return Err(Error::Options("Q4 tile requires Q4 model weights"));
+                return Err(Error::Options(
+                    "Q4 projection mode requires Q4 model weights",
+                ));
             }
             let c = &model.config;
             let chunk = options.prefill_chunk_size;
@@ -1255,6 +1262,8 @@ fn project(
             c,
             if tiled {
                 Kernel::Q4Prefill
+            } else if mode == ProjectionMode::Q4Compensated {
+                Kernel::Q4Compensated
             } else {
                 Kernel::Q4Matvec
             },
@@ -1710,7 +1719,7 @@ mod tests {
                             }
                         }
                     });
-                    for kernel in [Kernel::Q4Matvec, Kernel::Q4Prefill] {
+                    for kernel in [Kernel::Q4Matvec, Kernel::Q4Prefill, Kernel::Q4Compensated] {
                         output.with_mut(|values| values.fill(0x7bff));
                         status.with_mut(|values| values.fill(0));
                         let raw = gpu.command().unwrap();
@@ -1772,25 +1781,241 @@ mod tests {
                 }
             });
             bias.with_mut(|values| values.fill(0));
-            status.with_mut(|values| values.fill(0));
-            let raw = gpu.command().unwrap();
-            let command = Command {
-                raw: &raw,
-                trace: None,
-            };
-            gpu.encode(
-                &command,
-                Kernel::Q4Prefill,
-                &[&weight.raw, &bias.raw, &input.raw, &output.raw],
-                &[9, 65, 2, 128, 72, 8],
-                4,
-                Some(&status),
-            )
-            .unwrap();
-            raw.commit();
-            raw.waitUntilCompleted();
-            assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
-            assert_eq!(status.with_slice(|values| values[0]), 1);
+            for kernel in [Kernel::Q4Prefill, Kernel::Q4Compensated] {
+                status.with_mut(|values| values.fill(0));
+                output.with_mut(|values| values.fill(0x7bff));
+                let raw = gpu.command().unwrap();
+                let command = Command {
+                    raw: &raw,
+                    trace: None,
+                };
+                gpu.encode(
+                    &command,
+                    kernel,
+                    &[&weight.raw, &bias.raw, &input.raw, &output.raw],
+                    &[9, 65, 2, 128, 72, 8],
+                    if matches!(kernel, Kernel::Q4Prefill) {
+                        4
+                    } else {
+                        18
+                    },
+                    Some(&status),
+                )
+                .unwrap();
+                raw.commit();
+                raw.waitUntilCompleted();
+                assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                assert_eq!(status.with_slice(|values| values[0]), 1);
+                output.with_slice(|values| {
+                    for (i, &v) in values.iter().enumerate() {
+                        if i / 8 >= 9 || i % 8 >= 2 {
+                            assert_eq!(v, 0x7bff);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    #[test]
+    #[ignore = "explicit Apple GPU compensated product/add/reduction cancellation oracle"]
+    fn q4_compensated_preserves_small_terms_across_large_cancellation() {
+        autoreleasepool(|_| {
+            let gpu = Gpu::new().unwrap();
+            let mut packed = include_bytes!("../../tests/fixtures/q4/rows.q4").to_vec();
+            packed[64..66].copy_from_slice(&half::f16::from_f32(0.10005).to_bits().to_le_bytes());
+            packed[66..68].copy_from_slice(&half::f16::from_f32(-0.31).to_bits().to_le_bytes());
+            let oracle = q4::Matrix::parse(&packed).unwrap();
+            let value = oracle.value(0, 15).unwrap();
+            let product = f64::from(value) * 65504.;
+            assert_ne!(
+                product,
+                f64::from(value * 65504.),
+                "Fixture must exercise explicit product residual"
+            );
+            let mut weight = Buffer::<u16>::new(&gpu, packed.len() / 2).unwrap();
+            weight.with_mut(|values| {
+                for (a, b) in values.iter_mut().zip(packed.chunks_exact(2)) {
+                    *a = u16::from_le_bytes(b.try_into().unwrap());
+                }
+            });
+            let mut input = Buffer::<u16>::new(&gpu, 72 + 7).unwrap();
+            let mut output = Buffer::<u16>::new(&gpu, 8 + 7).unwrap();
+            let mut bias = Buffer::<u16>::new(&gpu, 2).unwrap();
+            bias.with_mut(|v| {
+                v[0] = half::f16::from_f32(0.25).to_bits();
+                v[1] = half::f16::from_f32(-0.5).to_bits();
+            });
+            let mut status = Buffer::<u32>::new(&gpu, 8).unwrap();
+            for (large, sign) in [(false, 1.), (true, 1.), (true, -1.)] {
+                input.with_mut(|v| {
+                    v.fill(0x7e00);
+                    v[..65].fill(0);
+                    if large {
+                        v[15] = half::f16::from_f32(sign * 65504.).to_bits();
+                        v[31] = half::f16::from_f32(-sign * 65504.).to_bits();
+                    }
+                    v[47] = half::f16::from_f32(sign * 0.03125).to_bits();
+                    v[64] = half::f16::from_f32(sign * 2f32.powi(-14)).to_bits();
+                });
+                output.with_mut(|v| v.fill(0x7bff));
+                status.with_mut(|v| v.fill(0));
+                let raw = gpu.command().unwrap();
+                let command = Command {
+                    raw: &raw,
+                    trace: None,
+                };
+                gpu.encode(
+                    &command,
+                    Kernel::Q4Compensated,
+                    &[&weight.raw, &bias.raw, &input.raw, &output.raw],
+                    &[1, 65, 2, 128, 72, 8],
+                    2,
+                    Some(&status),
+                )
+                .unwrap();
+                raw.commit();
+                raw.waitUntilCompleted();
+                assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                assert_eq!(status.with_slice(|v| v[0]), 0);
+                output.with_slice(|v| {
+                    input.with_slice(|x| {
+                        for (row, &actual) in v[..2].iter().enumerate() {
+                            let mut expected = 0f64;
+                            for (column, &input) in x[..65].iter().enumerate() {
+                                expected += f64::from(oracle.value(row, column).unwrap())
+                                    * f64::from(half::f16::from_bits(input).to_f32());
+                            }
+                            expected += if row == 0 { 0.25 } else { -0.5 };
+                            assert_eq!(
+                                actual,
+                                half::f16::from_f64(expected).to_bits(),
+                                "large{large} sign{sign} row{row}"
+                            );
+                        }
+                        assert!(v[2..].iter().all(|&v| v == 0x7bff));
+                    })
+                });
+            }
+            println!(
+                "Compensated Q4 cancellation oracle: exact FP64-rounded Half, queried SIMD width {}",
+                gpu.execution_width(Kernel::Q4Compensated)
+            );
+        });
+    }
+    #[test]
+    #[ignore = "Explicit Apple GPU compensated Half rounding at signed midpoint, subnormal and overflow boundaries"]
+    fn q4_compensated_rounds_half_midpoints_without_double_rounding() {
+        autoreleasepool(|_| {
+            let gpu = Gpu::new().unwrap();
+            let mut packed = include_bytes!("../../tests/fixtures/q4/rows.q4").to_vec();
+            let mut weight = Buffer::<u16>::new(&gpu, packed.len() / 2).unwrap();
+            let mut input = Buffer::<u16>::new(&gpu, 72 + 7).unwrap();
+            let mut output = Buffer::<u16>::new(&gpu, 8 + 7).unwrap();
+            let bias = Buffer::<u16>::new(&gpu, 2).unwrap();
+            let mut status = Buffer::<u32>::new(&gpu, 8).unwrap();
+            let mut double_rounding_cases = 0;
+            let mut cases = 0;
+            // Even/odd significands, exponent transitions, signed values,
+            // subnormals/zero and the finite-to-infinity rounding threshold.
+            for lower in [
+                0u16, 1, 0x3ff, 0x400, 0x401, 0x3554, 0x3555, 0x3bff, 0x3c00, 0x3c01, 0x7bfe,
+                0x7bff,
+            ] {
+                let overflow = lower == 0x7bff;
+                let a = half::f16::from_bits(lower).to_f32();
+                let b = if overflow {
+                    65536.
+                } else {
+                    half::f16::from_bits(lower + 1).to_f32()
+                };
+                let midpoint = (a + b) * 0.5;
+                let exponent = ((midpoint.to_bits() >> 23) & 255) as i32 - 127;
+                let tiny = half::f16::from_f32(2f32.powi(exponent - 1).max(2f32.powi(-24)));
+                for sign in [1., -1.] {
+                    for side in [-1., 0., 1.] {
+                        // Both rows have the same exactly representable weights.
+                        for row in 0..2 {
+                            let first = 64 + row * 128;
+                            packed[first..first + 36].fill(0);
+                            packed[first + 2..first + 4].copy_from_slice(
+                                &half::f16::from_f32(if overflow { 1. } else { 0.5 })
+                                    .to_bits()
+                                    .to_le_bytes(),
+                            );
+                            packed[first + 36..first + 72].fill(0);
+                            packed[first + 36..first + 38].copy_from_slice(&1u16.to_le_bytes());
+                            packed[first + 40] = 1;
+                        }
+                        let oracle = q4::Matrix::parse(&packed).unwrap();
+                        weight.with_mut(|v| {
+                            for (dst, bytes) in v.iter_mut().zip(packed.chunks_exact(2)) {
+                                *dst = u16::from_le_bytes(bytes.try_into().unwrap());
+                            }
+                        });
+                        input.with_mut(|v| {
+                            v.fill(0x7e00);
+                            v[..65].fill(0);
+                            v[0] = half::f16::from_f32(sign * a).to_bits();
+                            v[1] = half::f16::from_f32(sign * if overflow { 16. } else { b })
+                                .to_bits();
+                            v[64] = half::f16::from_f32(sign * side * tiny.to_f32()).to_bits();
+                        });
+                        let expected = input.with_slice(|v| {
+                            v[..65]
+                                .iter()
+                                .enumerate()
+                                .map(|(i, &x)| {
+                                    f64::from(oracle.value(0, i).unwrap())
+                                        * f64::from(half::f16::from_bits(x).to_f32())
+                                })
+                                .sum::<f64>()
+                        });
+                        let want = half::f16::from_f64(expected);
+                        if want != half::f16::from_f32(expected as f32) {
+                            double_rounding_cases += 1;
+                        }
+                        output.with_mut(|v| v.fill(0x7bff));
+                        status.with_mut(|v| v.fill(0));
+                        let raw = gpu.command().unwrap();
+                        let command = Command {
+                            raw: &raw,
+                            trace: None,
+                        };
+                        gpu.encode(
+                            &command,
+                            Kernel::Q4Compensated,
+                            &[&weight.raw, &bias.raw, &input.raw, &output.raw],
+                            &[1, 65, 2, 128, 72, 8],
+                            2,
+                            Some(&status),
+                        )
+                        .unwrap();
+                        raw.commit();
+                        raw.waitUntilCompleted();
+                        assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                        assert_eq!(status.with_slice(|v| v[0]), u32::from(!want.is_finite()));
+                        output.with_slice(|v| {
+                            for &actual in &v[..2] {
+                                assert_eq!(
+                                    actual,
+                                    want.to_bits(),
+                                    "lower{lower:x} sign{sign} side{side} exact{expected}"
+                                );
+                            }
+                            assert!(v[2..].iter().all(|&v| v == 0x7bff));
+                        });
+                        cases += 1;
+                    }
+                }
+            }
+            // At the zero/subnormal midpoint the minimum representable product
+            // is one Float32 ULP; the other eleven boundaries each contribute
+            // one witness per sign. Exact ties are deliberately not witnesses.
+            assert_eq!(double_rounding_cases, 22);
+            assert_eq!(cases, 72);
+            println!(
+                "Compensated Half rounding: {cases} signed midpoint cases, {double_rounding_cases} distinguish direct FP64 from FP32-then-Half; unchanged overflow status and guards"
+            );
         });
     }
     #[test]
