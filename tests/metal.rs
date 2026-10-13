@@ -523,22 +523,68 @@ fn resident_capacity_boundary() {
     let artifact = Artifact::configured(2048, true);
     let model = metal::Model::load(&artifact.0, weights::LoadOptions::default()).unwrap();
     for (capacity, offset) in [(2048, 0), (2047, 1)] {
-        let mut s = metal::Session::new(
-            &model,
-            session::Options {
-                capacity,
-                position_offset: offset,
-                ..Default::default()
-            },
-        )
-        .unwrap();
-        let tokens = vec![1; capacity];
-        s.append(&tokens).unwrap();
-        s.evaluate().unwrap();
-        assert_eq!(s.evaluated_len(), capacity);
-        assert!(s.logits().unwrap().iter().all(|x| x.to_bits() == 0));
-        assert!(s.append(&[1]).is_err());
-        s.set_tokens(&tokens).unwrap();
-        assert_eq!(s.evaluate_next_chunk().unwrap(), 0);
+        for chunk in [128, 256, 512, 1024] {
+            let mut s = metal::Session::new(
+                &model,
+                session::Options {
+                    capacity,
+                    prefill_chunk_size: chunk,
+                    position_offset: offset,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            let tokens = vec![1; capacity];
+            s.append(&tokens).unwrap();
+            s.evaluate().unwrap();
+            assert_eq!(s.evaluated_len(), capacity);
+            assert!(s.logits().unwrap().iter().all(|x| x.to_bits() == 0));
+            assert!(s.append(&[1]).is_err());
+            s.set_tokens(&tokens).unwrap();
+            assert_eq!(s.evaluate_next_chunk().unwrap(), 0);
+            let memory = s.memory();
+            assert!(matches!(
+                metal::Session::new(
+                    &model,
+                    session::Options {
+                        capacity,
+                        prefill_chunk_size: chunk,
+                        position_offset: offset,
+                        memory_limit_bytes: memory.admitted_bytes - 1,
+                    }
+                ),
+                Err(metal::Error::Budget { .. })
+            ));
+            drop(s);
+            assert!(
+                metal::Session::new(
+                    &model,
+                    session::Options {
+                        capacity,
+                        prefill_chunk_size: chunk,
+                        position_offset: offset,
+                        memory_limit_bytes: memory.admitted_bytes,
+                    }
+                )
+                .is_ok()
+            );
+        }
     }
+    for (capacity, chunk, offset) in [(2048, 1025, 0), (256, 512, 0), (2048, 1024, 1)] {
+        assert!(matches!(
+            metal::Session::new(
+                &model,
+                session::Options {
+                    capacity,
+                    prefill_chunk_size: chunk,
+                    position_offset: offset,
+                    ..Default::default()
+                }
+            ),
+            Err(metal::Error::Options(_))
+        ));
+    }
+    println!(
+        "Eight complete exact-zero capacity checks: chunks128/256/512/1024, offsets0/1; exact budget and rejected oversized bounds"
+    );
 }

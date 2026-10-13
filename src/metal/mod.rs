@@ -501,7 +501,7 @@ impl<'m> Session<'m> {
             if options.capacity == 0
                 || options.capacity > 2048
                 || chunk == 0
-                || chunk > 128
+                || chunk > 1024
                 || chunk > options.capacity
                 || options
                     .position_offset
