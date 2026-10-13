@@ -1,0 +1,55 @@
+{
+  "format": "toklet-cpu-all-row-logits-qualification-v1",
+  "passed": true,
+  "scope": "Caller-owned CPU all-row logits code prerequisite; no larger admission, held-out quality, performance or M5 closure",
+  "source_sha256": {
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/session.rs": "b2a9d88a4414c366fbf439aac8d93a923686623746225ed65270a6ae1765b738",
+    "tests/session.rs": "958690e150c1235357a67830e0067b9c472024815d97832c77681a8da0e07c4c",
+    "tests/qwen_session.rs": "b163c685a3d8bbccc504e47ccc460b3ecc04893bbfa37bda9ceae83d3ccb84e5",
+    "Cargo.toml": "c881879fb56ca16f7d635f3ec94dd078950b988cc4950e2d8748fda814d5ac3e",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9"
+  },
+  "checks": {
+    "artifacts/m5-cpu-row-logits-qwen-build-v1.txt": "b4f54a502901c1a0f25e6be476b47dc9212d516c7204515ddb0c0f74de027098",
+    "artifacts/m5-cpu-row-logits-clippy-default-v1.txt": "ab789bb02601ffd7a4bfdc3738edbc94ce6245097c52933d5ab286a82b21e0a1",
+    "artifacts/m5-cpu-row-logits-tests-v3.txt": "e03631beb1668fc1fee3381c2a1a1ca4c903ceba3d8d3d83b1075d8bb4b2716f",
+    "artifacts/m5-cpu-row-logits-clippy-metal-final-v1.txt": "f7ae63913b480cac1c90d7f2530a5752a64fb5b944b756ac68bea09c977da4a0",
+    "artifacts/m5-cpu-row-logits-tests-v2.txt": "1c7be5047e2ad17d5a77505eac13553bf53a1b8e383ec63856e4341ae2b6af5f",
+    "artifacts/m5-cpu-row-logits-tests-v1.txt": "7dd26fdda34d3156fad197f2ea66cbbc0b2738b827f04e1dbb569fbdf3e71908",
+    "artifacts/m5-cpu-row-logits-qwen-tiled-v1.txt": "8f61a981c7bfee6ebc18ef4983c91230c2d7cccc2c81b7dcce1ddc15d6105004",
+    "artifacts/m5-cpu-row-logits-qwen-scalar-v1.txt": "583279de2a72900a42b35cb37cb0c2ef348cfe8832c77132b311ae319e771423",
+    "artifacts/m5-cpu-row-logits-default-v1.txt": "039db5f80b66780a1cb84ad82428fa3edb04c88ffcc42bb1e93c0faf2f4c6ec9",
+    "artifacts/m5-cpu-row-logits-clippy-metal-v1.txt": "3da88064cae04c0bfc8b4f0a7c7a3b8bc23a0f593e10504f133a39fe2ff0431d",
+    "artifacts/m5-cpu-row-logits-metal-v1.txt": "336ef8d4f8c78c81a6928cd899c08b7613e729d7d6f4d9d680c41e4a8c170adc",
+    "artifacts/m5-cpu-row-logits-fmt-v1.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m5-cpu-row-logits-clippy-default-final-v1.txt": "b81c16e06980f12563f2af33021acf9562eca66515288a2e735ce75d1375be29",
+    "artifacts/m5-cpu-row-logits-initial-v2.txt": "a5eff9aa1db622643cbcdcb359673cd1e278c538b66b764ca3556919bedab8c3",
+    "artifacts/m5-cpu-row-logits-initial-v1.txt": "d386617e5c595d840e3b1423a2003b7df395311f3fe7677d2e34bfedc4fff34f"
+  },
+  "ordinary_tests_passed": {
+    "default": 85,
+    "metal": 91
+  },
+  "native_reports": {
+    "benchmarks/results/2026-10-13-qwen-session-all-rows-scalar-v1.json": "9689941cc720c5582a25bc9be3c4e85d5c30f86f5d83cfcd51bc9651b35c7148",
+    "benchmarks/results/2026-10-13-qwen-session-all-rows-tiled-v1.json": "1fa21b22f47ead7f348eaeb6d5fb30b3529dc7042c1e37292b9f9dc1652bce9e"
+  },
+  "binaries": {
+    "artifacts/m5-checks/release/deps/qwen_session-92bbd39279dda176": "8770aff5e6fafb9d667801b6d26d70c59af8651557fc73b169b7cad653bfb65d"
+  },
+  "protected_cpu_sha256": {
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "tiny_row_comparisons": 84,
+  "native_per_kernel": {
+    "all_row_numerical_equality": 36,
+    "public_distribution_comparisons": 47
+  },
+  "retained_initial_failures": [
+    "artifacts/m5-cpu-row-logits-tests-v1.txt: checked product error conversion",
+    "artifacts/m5-cpu-row-logits-tests-v2.txt: test scratch needed eight tokens for final append"
+  ],
+  "review": "Astra accepted code/check/native evidence; PLAN comparison-count wording clarified. No remaining findings."
+}

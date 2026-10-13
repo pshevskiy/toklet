@@ -339,7 +339,8 @@ impl Model {
     }
 
     /// Private session path: stage a chunk at cached_len; the caller commits its
-    /// length/logits only after this returns successfully. Scratch/cache originate
+    /// length/logits only after this returns successfully. Output is either the
+    /// last distribution or explicit all-row diagnostics. Scratch/cache originate
     /// from the same borrowed model and cannot be replaced through the public API.
     pub(crate) fn forward_cached(
         &self,
@@ -351,7 +352,16 @@ impl Model {
         logits: &mut [f32],
     ) -> Result<(), Error> {
         self.admit(tokens, rotary_offset, scratch)?;
-        length("logits", logits.len(), self.config.vocab_size)?;
+        let rows = if logits.len() == self.config.vocab_size {
+            1
+        } else {
+            length(
+                "all-row logits",
+                logits.len(),
+                product(tokens.len(), self.config.vocab_size)?,
+            )?;
+            tokens.len()
+        };
         let end = cached_len
             .checked_add(tokens.len())
             .ok_or(cpu::Error::SizeOverflow)?;
@@ -370,13 +380,13 @@ impl Model {
             Some(cache),
             cached_len,
         )?;
-        let start = (tokens.len() - 1) * self.config.hidden_size;
+        let start = (tokens.len() - rows) * self.config.hidden_size;
         self.projection_kernel.project(
-            &scratch.norm[start..start + self.config.hidden_size],
+            &scratch.norm[start..start + rows * self.config.hidden_size],
             &self.weights.embedding,
             None,
             logits,
-            [1, self.config.hidden_size, self.config.vocab_size],
+            [rows, self.config.hidden_size, self.config.vocab_size],
         )?;
         Ok(())
     }

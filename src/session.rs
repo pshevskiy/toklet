@@ -318,19 +318,54 @@ impl<'model> Session<'model> {
     /// zero and retains its distribution. Cancellation can stop between calls;
     /// this synchronous method does not interrupt a chunk in flight.
     pub fn evaluate_next_chunk(&mut self) -> Result<usize, Error> {
+        self.evaluate_chunk(None)
+    }
+    /// Explicit all-row diagnostic output `[committed_chunk_rows, vocabulary]`.
+    /// The caller owns and separately admits this storage; session memory does
+    /// not include it. A failed step may dirty output, but preserves committed
+    /// session state. Shape is checked before any numerical/cache mutation.
+    pub fn evaluate_next_chunk_with_logits(&mut self, output: &mut [f32]) -> Result<usize, Error> {
+        self.evaluate_chunk(Some(output))
+    }
+    fn evaluate_chunk(&mut self, output: Option<&mut [f32]>) -> Result<usize, Error> {
         let count = self.pending_len().min(self.options.prefill_chunk_size);
+        if let Some(output) = &output {
+            cpu::length(
+                "all-row logits",
+                output.len(),
+                cpu::product(count, self.vocab_size()).map_err(model::Error::Kernel)?,
+            )
+            .map_err(model::Error::Kernel)?;
+        }
         if count == 0 {
             return Ok(0);
         }
         let start = self.evaluated_len;
-        self.model.forward_cached(
-            &self.history[start..start + count],
-            self.options.position_offset + start,
-            &mut self.scratch,
-            &mut self.cache,
-            start,
-            &mut self.staged_logits,
-        )?;
+        match output {
+            Some(logits) => {
+                self.model.forward_cached(
+                    &self.history[start..start + count],
+                    self.options.position_offset + start,
+                    &mut self.scratch,
+                    &mut self.cache,
+                    start,
+                    logits,
+                )?;
+                let width = self.model.config().vocab_size;
+                self.staged_logits
+                    .copy_from_slice(&logits[(count - 1) * width..]);
+            }
+            None => {
+                self.model.forward_cached(
+                    &self.history[start..start + count],
+                    self.options.position_offset + start,
+                    &mut self.scratch,
+                    &mut self.cache,
+                    start,
+                    &mut self.staged_logits,
+                )?;
+            }
+        }
         std::mem::swap(&mut self.logits, &mut self.staged_logits);
         self.evaluated_len += count;
         self.distribution_valid = true;

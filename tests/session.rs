@@ -105,6 +105,82 @@ fn options(capacity: usize, chunk: usize, offset: usize) -> Options {
 }
 
 #[test]
+fn explicit_all_row_cached_logits_match_each_independent_prefix_without_allocations() {
+    let tokens = [1, 7, 13, 3, 47, 11, 2];
+    for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
+        let f = Fixture::tiny();
+        let (config, weights) = tiny_parts(&f);
+        let model = Model::new(config, weights)
+            .unwrap()
+            .with_projection_kernel(kernel);
+        for offset in [0, 5] {
+            let mut scratch = model.scratch(tokens.len() + 1).unwrap();
+            let mut expected = vec![0.; model.config().vocab_size];
+            for chunk in [1, 3, 8] {
+                let mut session = Session::new(&model, options(27, chunk, offset)).unwrap();
+                let memory = session.memory();
+                let width = session.vocab_size();
+                let mut output = vec![0.; chunk * width]; // Separately owned/admitted diagnostic storage.
+                session.append(&tokens).unwrap();
+                let before = session.history().to_vec();
+                assert!(
+                    session
+                        .evaluate_next_chunk_with_logits(&mut output[..width - 1])
+                        .is_err()
+                );
+                assert_eq!(session.history(), before);
+                assert_eq!(session.evaluated_len(), 0);
+                while session.pending_len() != 0 {
+                    let start = session.evaluated_len();
+                    let rows = session.pending_len().min(chunk);
+                    TRACK.with(|track| track.set(true));
+                    ALLOCATIONS.with(|n| n.set(0));
+                    let result =
+                        session.evaluate_next_chunk_with_logits(&mut output[..rows * width]);
+                    TRACK.with(|track| track.set(false));
+                    assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+                    assert_eq!(result.unwrap(), rows);
+                    for row in 0..rows {
+                        model
+                            .forward(
+                                &tokens[..start + row + 1],
+                                offset,
+                                &mut scratch,
+                                &mut expected,
+                            )
+                            .unwrap();
+                        assert_eq!(
+                            &output[row * width..(row + 1) * width],
+                            expected,
+                            "{kernel:?} offset{offset} chunk{chunk} row{row}"
+                        );
+                    }
+                    assert_eq!(session.memory(), memory);
+                    if session.pending_len() != 0 {
+                        assert!(session.logits().is_none());
+                    }
+                }
+                assert_eq!(session.logits().unwrap(), expected);
+                assert_eq!(session.evaluate_next_chunk_with_logits(&mut []).unwrap(), 0);
+                assert!(
+                    session
+                        .evaluate_next_chunk_with_logits(&mut output[..width])
+                        .is_err()
+                );
+                assert_eq!(session.logits().unwrap(), expected);
+                // The original final-row method remains available in the same session.
+                session.append(&[13]).unwrap();
+                session.evaluate_next_chunk().unwrap();
+                model
+                    .forward(session.history(), offset, &mut scratch, &mut expected)
+                    .unwrap();
+                assert_eq!(session.logits().unwrap(), expected);
+            }
+        }
+    }
+}
+
+#[test]
 fn teacher_forced_timing_keeps_exact_prefix_and_pending_state() {
     for kernel in [cpu::ProjectionKernel::Scalar, cpu::ProjectionKernel::Tiled] {
         use toklet::{benchmark::measure_teacher_forced, generation::Input};
@@ -564,34 +640,42 @@ fn layer_or_final_projection_failure_never_commits_a_staged_chunk() {
                 w.layers[1].q.weight.fill(f32::MAX);
             }
             let model = Model::new(c, w).unwrap().with_projection_kernel(kernel);
-            let mut session = Session::new(&model, options(8, 2, 0)).unwrap();
-            session.append(&[0]).unwrap();
-            session.evaluate().unwrap();
-            let last = session.logits().unwrap().to_vec();
-            session.append(&[0, 1]).unwrap();
-            assert!(matches!(
-                session.evaluate_next_chunk(),
-                Err(Error::Model(toklet::model::Error::Kernel(
-                    cpu::Error::NonFinite { .. }
-                )))
-            ));
-            assert_eq!(session.evaluated_len(), 1);
-            assert_eq!(session.history(), [0, 0, 1]);
-            assert_eq!(session.pending_len(), 2);
-            assert!(session.logits().is_none());
-            assert!(session.evaluate_next_chunk().is_err());
-            assert_eq!(session.evaluated_len(), 1);
-            session.discard_pending();
-            assert_eq!(session.logits().unwrap(), last);
-            session.append(&[0]).unwrap();
-            session.evaluate().unwrap();
-            assert_eq!(session.evaluated_len(), 2);
-            let mut scratch = model.scratch(2).unwrap();
-            let mut reference = [0.0; 3];
-            model
-                .forward(&[0, 0], 0, &mut scratch, &mut reference)
-                .unwrap();
-            assert_eq!(session.logits().unwrap(), reference);
+            for all_rows in [false, true] {
+                let mut session = Session::new(&model, options(8, 2, 0)).unwrap();
+                session.append(&[0]).unwrap();
+                session.evaluate().unwrap();
+                let last = session.logits().unwrap().to_vec();
+                session.append(&[0, 1]).unwrap();
+                let mut output = [0.; 6];
+                let result = if all_rows {
+                    session.evaluate_next_chunk_with_logits(&mut output)
+                } else {
+                    session.evaluate_next_chunk()
+                };
+                assert!(matches!(
+                    result,
+                    Err(Error::Model(toklet::model::Error::Kernel(
+                        cpu::Error::NonFinite { .. }
+                    )))
+                ));
+                assert_eq!(session.evaluated_len(), 1);
+                assert_eq!(session.history(), [0, 0, 1]);
+                assert_eq!(session.pending_len(), 2);
+                assert!(session.logits().is_none());
+                assert!(session.evaluate_next_chunk().is_err());
+                assert_eq!(session.evaluated_len(), 1);
+                session.discard_pending();
+                assert_eq!(session.logits().unwrap(), last);
+                session.append(&[0]).unwrap();
+                session.evaluate().unwrap();
+                assert_eq!(session.evaluated_len(), 2);
+                let mut scratch = model.scratch(2).unwrap();
+                let mut reference = [0.0; 3];
+                model
+                    .forward(&[0, 0], 0, &mut scratch, &mut reference)
+                    .unwrap();
+                assert_eq!(session.logits().unwrap(), reference);
+            }
         }
     }
 }

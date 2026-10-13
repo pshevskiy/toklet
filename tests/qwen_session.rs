@@ -64,6 +64,7 @@ fn check_sessions(kernel: ProjectionKernel) {
             .forward_diagnostic(&tokens, offset, &mut scratch)
             .unwrap();
         let mut comparisons = 0;
+        let mut all_row_comparisons = 0;
         for chunk in [tokens.len(), 2, 1] {
             let opts = Options {
                 capacity: 2048 - offset,
@@ -78,9 +79,21 @@ fn check_sessions(kernel: ProjectionKernel) {
             assert_eq!(memory.kv_bytes, 2 * 24 * 2 * (2048 - offset) * 64 * 4);
             assert!(memory.admitted_bytes <= weights::INITIAL_MEMORY_LIMIT_BYTES);
             for part in tokens.chunks(chunk) {
+                let start = session.evaluated_len();
                 session.append(part).unwrap();
                 assert!(session.logits().is_none());
-                session.evaluate().unwrap();
+                let mut all_rows = vec![0.; part.len() * width];
+                assert_eq!(
+                    session
+                        .evaluate_next_chunk_with_logits(&mut all_rows)
+                        .unwrap(),
+                    part.len()
+                );
+                assert_eq!(
+                    all_rows,
+                    trace.logits[start * width..(start + part.len()) * width]
+                );
+                all_row_comparisons += part.len();
                 let position = session.evaluated_len() - 1;
                 assert_eq!(
                     session.logits().unwrap(),
@@ -123,7 +136,7 @@ fn check_sessions(kernel: ProjectionKernel) {
         eprintln!(
             "{case}: {comparisons} exact full-logit cache/full-prefix comparisons pass, including append, sampled pending token, fully cached prompt and replay"
         );
-        results.insert(case.clone(), json!({"exact_full_logit_comparisons": comparisons, "position_offset": offset, "tokens": tokens}));
+        results.insert(case.clone(), json!({"exact_full_logit_comparisons": comparisons, "all_row_logit_comparisons":all_row_comparisons, "position_offset": offset, "tokens": tokens}));
     }
     // Keep a fully admitted 2048-token allocation live for footprint inspection;
     // the real-model numerical scope above is short probes, not long-context runs.
