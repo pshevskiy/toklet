@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026; updated 12 October 2026. Status: M0–M3 are complete; M4–M7 remain pending, with bounded Metal primitive preparation already recorded.
+Prepared 9 October 2026; updated 13 October 2026. Status: M0–M4 are functionally complete; M5 is in progress and M6–M7 remain pending. FP16 held-out quality and performance replacement gates remain unqualified.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -1286,12 +1286,14 @@ Exit: the M2 session suite passes with FP16-specific numerical gates, complete Q
 
 ## M5 Optimize decode and prefill
 
-- [ ] **M5.1 Freeze and test Q4 format version 1.** Specify row/group order, nibble order, rounding/clipping, constant groups, padding, alignment, endianness, FP16 metadata rounding, and excluded tensors. Start with groups of 64 along each linear row; reconstruct as `weight = scale * code + bias`, with codes 0–15. Keep norms, biases, and initially the tied embedding/output matrix in FP16. Implement a Python packer and simple Rust dequantization oracle. Test constants, extreme values, row tails, and exact packed-byte round trips. This is an engine format, not an implied claim of MLX compatibility.
+- [x] **M5.1 Freeze and test Q4 format version 1.** Specify row/group order, nibble order, rounding/clipping, constant groups, padding, alignment, endianness, FP16 metadata rounding, and excluded tensors. Start with groups of 64 along each linear row; reconstruct as `weight = scale * code + bias`, with codes 0–15. Keep norms, biases, and initially the tied embedding/output matrix in FP16. Implement a Python packer and simple Rust dequantization oracle. Test constants, extreme values, row tails, and exact packed-byte round trips. This is an engine format, not an implied claim of MLX compatibility.
 - [ ] **M5.2 Implement fused Q4 decode.** Dequantize tiles or values during matrix-vector execution; do not expand the whole model per token. Compare reconstructed-weight math with the CPU oracle and run the frozen quality suite against the unquantized checkpoint. Preserve the FP16 path if Q4 misses its quality gate.
 - [ ] **M5.3 Implement separate prefill.** Add tiled matrix-matrix execution and reuse dequantized weights across prompt rows. Sweep chunks of 128, 256, 512, and 1,024 within the memory ceiling. Compute vocabulary logits only for required positions. Verify irregular final chunks and nonzero cached offsets; retain simple attention until M6.
 - [ ] **M5.4 Reduce measured dispatch and traffic costs.** Evaluate GPU greedy selection returning a token ID, residual/normalization fusion, rotary/cache-write fusion, and MLP gating fusion individually. Add stochastic sampling only when required, with explicit RNG state and all filters/penalties in the measured path. Retain a small shape/device dispatch table rather than a general autotuner.
 - [ ] **M5.5 Optimize conversation continuation.** Find the longest exact shared token prefix, truncate only representable state, and replay from the required point. Handle an entirely cached prompt, a pending sampled token, and edits near the start or end. Compare continuation latency with reset-and-replay.
 - [ ] **M5.6 Qualify the performance release.** Repeat controlled and application comparisons, sustained runs, and quality checks. Select one larger checkpoint in the implemented Qwen family using actual tensor payload and memory admission; record its exact artifact before claiming behavior at larger scale. Reject configurations that exceed 6 GiB, including high-precision exclusions and load-time scratch.
+
+M5.1 format and CPU oracle qualification, 13 October 2026: the [Q4 v1 contract](docs/q4-v1.md) freezes decoded FP32 source values, row-local affine groups of 64, rounded FP16 metadata, ties-to-even codes, canonical padding and explicit underflow/overflow policies. Python and Rust independently verify the frozen hand-calculated artifact. The [task report](docs/experiments/2026-10-13-q4-format.md) records checks and Astra review. This qualifies the matrix format only; Q4 GPU/model loading, quality and performance remain M5.2–M5.6.
 
 M5.2 depends on M5.1. M5.3 and M5.5 can start from M4 independently of Q4; M5.4 follows the relevant profile. M5.6 requires all accepted changes. Grouped affine quantization is a practical candidate, but container names alone do not establish format compatibility. [MLX quantization API](https://ml-explore.github.io/mlx/build/html/python/_autosummary/mlx.core.quantize.html).
 
@@ -1367,4 +1369,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. M4 is functionally complete. The next milestone is M5; implementation stops at the requested M4 scope. FP16 held-out quality and performance replacement gates remain outstanding before changing the CPU default.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. M4 is functionally complete. M5 implementation is now authorized through its full exit criteria. FP16 held-out quality and performance replacement gates remain outstanding before changing the CPU default.
