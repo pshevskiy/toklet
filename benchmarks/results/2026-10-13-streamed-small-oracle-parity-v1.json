@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "arrays_bit_identical": 228,
+  "independent_envelopes_identical": true,
+  "old_manifest_sha256": "bdd368d21dfae574197e3b64423b75d4f1b2b37c083c6172c429e36bb4dd69c7",
+  "streamed_manifest_sha256": "152ddd3f94238667b198dd7fa3cba491760de85b556e1837f684ad338ba932be",
+  "native_peak_bytes": 1344457296
+}

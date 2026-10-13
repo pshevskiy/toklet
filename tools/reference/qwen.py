@@ -27,12 +27,14 @@ CASES = {"short": {"tokens": [9707, 11, 358, 2776], "offset": 0},
 LAYERS = [0, 1, 23]
 
 
-def check(directory):
+def check(directory, sources=None, layers=None):
     manifest = prepare.load_json(directory / "manifest.json")
     if manifest["policy"] not in [POLICY_V1, POLICY] or manifest["cases"] != CASES:
         raise ValueError("Real FP32 policy/cases changed")
-    if manifest["model"] != prepare.load_json(prepare.SOURCES)["model"]:
+    if manifest["model"] != (sources or prepare.load_json(prepare.SOURCES))["model"]:
         raise ValueError("Pinned model identity changed")
+    if manifest["layers"] != (layers or LAYERS):
+        raise ValueError("Selected reference layers changed")
     for name, array in manifest["arrays"].items():
         path = directory / array["file"]
         if path.stat().st_size != array["bytes"] or prepare.digest(path) != array["sha256"]:
@@ -42,11 +44,12 @@ def check(directory):
     print(f"Verified {len(manifest['arrays'])} pinned real FP32 probes", flush=True)
 
 
-def export(full_directory, probes_directory):
+def export(full_directory, probes_directory, sources=None, model_directory=None, streamed=False, layers=None):
     for path in [full_directory, probes_directory]:
         if path.exists():
             raise ValueError("Refusing to overwrite a reference directory")
-    sources = prepare.load_json(prepare.SOURCES)
+    sources = sources or prepare.load_json(prepare.SOURCES)
+    layers = layers or LAYERS
     for package in ["transformers", "torch", "numpy"]:
         if version(package) != sources["baselines"][package]:
             raise ValueError(f"Version mismatch: {package}")
@@ -63,13 +66,17 @@ def export(full_directory, probes_directory):
     torch.set_num_threads(1)
     torch.set_grad_enabled(False)
     model = AutoModelForCausalLM.from_pretrained(
-        ROOT / "models/Qwen2.5-0.5B-Instruct", dtype=torch.float32,
+        model_directory or ROOT / "models/Qwen2.5-0.5B-Instruct", dtype=torch.bfloat16 if streamed else torch.float32,
         attn_implementation="eager", local_files_only=True,
     ).eval()
-    if {parameter.dtype for parameter in model.parameters()} != {torch.float32}:
-        raise ValueError("Reference weights must all be FP32")
+    if {parameter.dtype for parameter in model.parameters()} != {torch.bfloat16 if streamed else torch.float32}:
+        raise ValueError("Reference source parameter dtype differs")
     if model.lm_head.weight.data_ptr() != model.model.embed_tokens.weight.data_ptr():
         raise ValueError("Reference must retain tied weights")
+    parameter_scopes = None
+    if streamed:
+        from qwen_streamed import Parameters
+        parameter_scopes = Parameters(model, torch)
     baseline = {}
     handles = []
 
@@ -80,7 +87,7 @@ def export(full_directory, probes_directory):
 
     handles.append(model.model.embed_tokens.register_forward_hook(hook("embedding")))
     handles.append(model.model.norm.register_forward_hook(hook("final_norm")))
-    for index in LAYERS:
+    for index in layers:
         layer = model.model.layers[index]
         prefix = f"layers.{index}"
         for name, module in [("input_norm", layer.input_layernorm), ("post_attention_norm", layer.post_attention_layernorm),
@@ -95,7 +102,7 @@ def export(full_directory, probes_directory):
 
     def capture_attention(module, query, key, value, attention_mask, scaling, **kwargs):
         output, probabilities = original_attention(module, query, key, value, attention_mask, scaling, **kwargs)
-        if module.layer_idx in LAYERS:
+        if module.layer_idx in layers:
             prefix = f"layers.{module.layer_idx}"
             baseline[f"{prefix}.q_rotary"] = query[0].transpose(0, 1).contiguous().clone()
             baseline[f"{prefix}.k_rotary"] = key[0].transpose(0, 1).contiguous().clone()
@@ -130,7 +137,7 @@ def export(full_directory, probes_directory):
         for index, layer in enumerate(model.model.layers):
             prefix = f"layers.{index}"
             def save(name, tensor):
-                if index in LAYERS:
+                if index in layers:
                     values[f"{prefix}.{name}"] = tensor
                 return tensor
             normalized = save("input_norm", norm(x, layer.input_layernorm))
@@ -161,11 +168,19 @@ def export(full_directory, probes_directory):
     for case, spec in CASES.items():
         baseline.clear()
         tokens, offset = spec["tokens"], spec["offset"]
-        output = model(input_ids=torch.tensor([tokens]), position_ids=torch.arange(offset, offset + len(tokens))[None], use_cache=False)
+        with torch.inference_mode():
+            try:
+                output = model(input_ids=torch.tensor([tokens]), position_ids=torch.arange(offset, offset + len(tokens))[None], use_cache=False)
+            finally:
+                if parameter_scopes:
+                    parameter_scopes.restore()
+                    parameter_scopes.assert_restored()
         baseline["logits"] = output.logits[0].detach()
-        for index in LAYERS:
+        for index in layers:
             baseline[f"layers.{index}.gate_silu"] = F.silu(baseline[f"layers.{index}.gate_projection"])
         high_precision = precise(tokens, offset)
+        if parameter_scopes:
+            parameter_scopes.observe(f"functional_fp64_{case}")
         for name, value in baseline.items():
             actual = value.numpy().astype("<f4", copy=False)
             expected = high_precision[name].numpy().reshape(actual.shape)
@@ -176,7 +191,7 @@ def export(full_directory, probes_directory):
             if not np.isfinite(actual).all():
                 raise ValueError("Nonfinite reference probe")
             arrays[f"cases.{case}.{name}"] = (actual.copy(), expected.copy(), {"maximum_absolute_error": absolute_error, "maximum_tolerance_fraction": fraction, "atol": atol})
-        print(f"Captured {case}: {len(baseline)} arrays across layers {LAYERS}", flush=True)
+        print(f"Captured {case}: {len(baseline)} arrays across layers {layers}", flush=True)
     qwen.eager_attention_forward = original_attention
     for handle in handles:
         handle.remove()
@@ -212,9 +227,16 @@ def export(full_directory, probes_directory):
         envelope.update({"atol": atol, "pooled_fp32_fp64_max_absolute_error": pooled[name], "equivalent_prefix_max_absolute_error": prefix_error,
                          "maximum_tolerance_fraction": float(np.max(np.abs(actual.astype(np.float64) - expected) / (atol + POLICY["rtol"] * np.abs(expected))))})
 
-    identity = {"schema_version": 1, "reference_id": "qwen-forward-v2", "model": sources["model"], "cases": CASES, "policy": POLICY, "layers": LAYERS,
+    identity = {"schema_version": 1, "reference_id": "qwen-larger-forward-v1" if streamed and layers != LAYERS else "qwen-forward-v2", "model": sources["model"], "cases": CASES, "policy": POLICY, "layers": layers,
                 "versions": {name: version(name) for name in ["transformers", "torch", "numpy"]}, "arrays": {},
                 "exporter_sha256": prepare.digest(Path(__file__)), "dtype": "FP32", "device": "CPU", "attention": "eager", "dropout": "eval disabled", "cache": "none"}
+    if parameter_scopes:
+        identity["streamed_parameters"] = parameter_scopes.report()
+        identity["streamed_helper_sha256"] = prepare.digest(ROOT / "tools/reference/qwen_streamed.py")
+        parameter_scopes.close()
+    for asset in [sources["model"]["weights"], *sources["assets"]]:
+        if asset is sources["model"]["weights"] or asset["role"] == "model_metadata_or_tokenizer":
+            prepare.validate_source(asset)
     manifests = [json.loads(json.dumps(identity)), json.loads(json.dumps(identity))]
     for directory in [full_directory, probes_directory]:
         directory.mkdir(parents=True)
@@ -246,8 +268,8 @@ def export(full_directory, probes_directory):
                 manifest.setdefault("argmax", {})[case] = np.argmax(values, axis=-1).tolist()
     for directory, manifest in zip([full_directory, probes_directory], manifests):
         (directory / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True, allow_nan=False) + "\n")
-    check(full_directory)
-    check(probes_directory)
+    check(full_directory, sources, layers)
+    check(probes_directory, sources, layers)
 
 
 def main():
@@ -255,11 +277,19 @@ def main():
     parser.add_argument("--output", type=Path)
     parser.add_argument("--probes-output", type=Path)
     parser.add_argument("--check", type=Path)
+    parser.add_argument("--streamed", action="store_true")
+    parser.add_argument("--larger", action="store_true")
     args = parser.parse_args()
+    sources = prepare.load_json(ROOT / "benchmarks/m5-larger-sources-v1.json") if args.larger else None
+    layers = [0, 1, 27] if args.larger else None
+    if args.larger and not args.streamed:
+        parser.error("larger export requires bounded streamed parameters")
     if args.check:
-        check(args.check)
+        check(args.check, sources, layers)
     elif args.output and args.probes_output:
-        export(args.output, args.probes_output)
+        export(args.output, args.probes_output, sources,
+               ROOT / "models/Qwen2.5-1.5B-Instruct" if args.larger else None,
+               args.streamed, layers)
     else:
         parser.error("provide --check or both --output and --probes-output")
 
