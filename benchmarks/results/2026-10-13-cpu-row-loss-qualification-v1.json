@@ -1,0 +1,59 @@
+{
+  "format": "toklet-cpu-row-loss-qualification-v1",
+  "passed": true,
+  "scope": "Reference scorer,small frozen probes,larger short admission/batching only; independent larger numerical oracle/full reference not qualified",
+  "source_sha256": {
+    "examples/quality_rows.rs": "3004d210ed465ac3c74cb9e4c2f688da1b1657004ea9e8ef1e6f9ebfbeaaad16",
+    "examples/support/loss.rs": "a2cbea031570c1aa539b1096d2af87711935064c844f600f5d0cc6b55ed4c0ff",
+    "tools/experiments/quality_rows.py": "ec90277e708d55b8184416c58210bf8411bd22753cd61b2d86162168d250ac72",
+    "tools/experiments/test_quality_rows.py": "6a856ff9af79676d6ddef10297bb5fc6413bc1d64c0da31d3322f2fa1e03c2a7",
+    "tools/experiments/metal_quality.py": "e57012733e3c018879502a78a6b4b42721e164cce4dc25dda4342c9013351fbf",
+    "tools/experiments/metal_engine.py": "1541afc73738d91e13dc6d71c32f72632e4b2eb20174781dc193126362b73d0c",
+    "tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc",
+    "tools/experiments/metal_continue.py": "48487c955a81cafb4149caf033d397d0403068cd6f31913a8a2b90a75f03b622",
+    "tools/bench/quality.py": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d",
+    "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/session.rs": "b2a9d88a4414c366fbf439aac8d93a923686623746225ed65270a6ae1765b738",
+    "Cargo.toml": "c881879fb56ca16f7d635f3ec94dd078950b988cc4950e2d8748fda814d5ac3e",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9"
+  },
+  "checks": {
+    "artifacts/m5-reference-rows-clippy-metal-v1.txt": "8aa3d7b38312bae06973e189e555ea2fe354faf3bb1d651104a52999aea9d49a",
+    "artifacts/m5-reference-rows-metal-v1.txt": "d6b798574b4e481695c59eabca693621466b9a66aa7e08212eaa1b5ab284d447",
+    "artifacts/m5-reference-rows-default-v1.txt": "b70b30def4bde09eb855ebf0eec3fc4a6baddc89f388313a2feb5361ee019ed4",
+    "artifacts/m5-reference-rows-python-all-v1.txt": "78658d2b79f6ef29796175d96117e3eb1cb4797390a2a9f99029a9f8f36a5dfd",
+    "artifacts/m5-reference-rows-small-probes-v1.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m5-reference-rows-python-v1.txt": "cfc2e5c7745a039ad4dd5df4e9fad0525586cedfc2496a272ba27dcfc4300945",
+    "artifacts/m5-reference-rows-larger-probes-v1.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m5-reference-rows-build-v1.txt": "84cd3d1498bb4621f0cbd229b5db1df06ab3ad5419e86f3c3ca20fa04de8b518",
+    "artifacts/m5-reference-rows-fmt-v1.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m5-reference-rows-clippy-default-v1.txt": "18fa34789863ab15f0a9203d6b65e65bd07cadd92ba270c5bc4c7ccab0a9bcc1",
+    "artifacts/m5-reference-rows-math-v1.txt": "3f95d2bf99d5d9316ae351dd95f19cdcb7c42f3e98a205eacd2f65aec3f496b9"
+  },
+  "receipts": {
+    "benchmarks/results/2026-10-13-cpu-row-loss-small-probes-v1.raw.jsonl": "244fdc58ae61a39adcb2a7a288b42dba36ebc9d9940225d505508c35c8bd33f3",
+    "benchmarks/results/2026-10-13-cpu-row-loss-larger-probes-v1.raw.jsonl": "028fde3fe79c4288983d62d28896b4852cae158324d141c1ab30a861a4eb402d",
+    "benchmarks/results/2026-10-13-cpu-row-loss-small-probes-v1.json": "5723717f6ccfb770b07f746358799180a938d8abc42cd2936464f75fc610be1a",
+    "benchmarks/results/2026-10-13-cpu-row-loss-larger-probes-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-13-cpu-row-loss-larger-probes-v1.json": "a8e91bf554c1101492c25d2fca129a4db05c498ba293ec506c38c735ae7c04a4",
+    "benchmarks/results/2026-10-13-cpu-row-loss-small-probes-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-13-larger-source-verification-v1.json": "77e89a5977608952a759f5a73638969dc70c88dfdb0007d883529537375a07eb"
+  },
+  "binary": {
+    "artifacts/m5-checks/release/examples/quality_rows": "5776f67b52e6a16970d1545327a75a06c428fe6ea3554c7c31b2370023df8e56"
+  },
+  "protected_cpu_sha256": {
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "larger_chunk8_admission_bytes": 6370269388,
+  "larger_joint_native_peak_bytes": 6288004880,
+  "ordinary_tests": {
+    "default": 85,
+    "metal": 91,
+    "scorer_math": 3,
+    "python_experiments": 153
+  },
+  "review": "Astra accepted code/check/native probe evidence; independent larger numerical qualification and full reference remain pending. No remaining findings."
+}
