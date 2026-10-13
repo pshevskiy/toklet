@@ -1,0 +1,78 @@
+{
+  "format": "toklet-streamed-storage-oracle-export-v1",
+  "completed": true,
+  "scope": "Independent short full-array reference export only; no device, lossy quality or performance qualification",
+  "command": [
+    "tools/reference/qwen_storage_oracle.py",
+    "models/Qwen2.5-1.5B-Instruct",
+    "artifacts/m5-larger-oracle-v1",
+    "artifacts/m5-larger-half-oracle-v2",
+    "benchmarks/results/2026-10-13-larger-half-oracle-export-v2.json"
+  ],
+  "native_samples": [
+    {
+      "phase": "future_changed",
+      "usage": {
+        "resident_size": 867057664,
+        "phys_footprint": 507921560,
+        "lifetime_max_phys_footprint": 724501536
+      }
+    },
+    {
+      "phase": "offset",
+      "usage": {
+        "resident_size": 873906176,
+        "phys_footprint": 508495024,
+        "lifetime_max_phys_footprint": 724501536
+      }
+    },
+    {
+      "phase": "short",
+      "usage": {
+        "resident_size": 877969408,
+        "phys_footprint": 509412528,
+        "lifetime_max_phys_footprint": 724501536
+      }
+    },
+    {
+      "phase": "single",
+      "usage": {
+        "resident_size": 887750656,
+        "phys_footprint": 509756592,
+        "lifetime_max_phys_footprint": 724501536
+      }
+    },
+    {
+      "phase": "completed",
+      "usage": {
+        "resident_size": 895614976,
+        "phys_footprint": 512754864,
+        "lifetime_max_phys_footprint": 724501536
+      }
+    }
+  ],
+  "admission": {
+    "tied_half_bytes": 466747392,
+    "largest_matrix_bytes": 27525120,
+    "source_stripes_bytes": 55050240,
+    "fp64_conversion_stripe_bytes": 73400320,
+    "q4_decode_stripes_bytes": 0,
+    "maximum_packed_bytes": 0,
+    "application_reference_allowance_bytes": 536870912,
+    "admitted_bytes": 1159593984
+  },
+  "manifest_sha256": "4eaf8562c8a402eb13e18fd6e8c4b9129cc6d86827314e4eae3461a62b15e48e",
+  "identities": {
+    "source_sha256": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+    "config_sha256": "98d2ff8cc47488d08a2b0b3acf4eb99ef210779b42bd48605f6b8e36acdbf670",
+    "baseline_manifest_sha256": "676cf5392c0dcb8ceff8d098fae21378b0dfdca92b69f9de7aac48bc23e234fe",
+    "oracle_sources": {
+      "qwen_storage_oracle.py": "73e55f576db7ca0c3cf94f2b67c852425ccc8953b042a25d730770aa7f446b36",
+      "qwen_storage.py": "686dcc9c6a3e75cfb0b3008432e4127d81cf9c106a4eccf793df30302147d8b5",
+      "qwen_fp16.py": "c16994767d257ebc4d6bee38d5b1a20d9fcfd9e134b598eead54e25b8553b789",
+      "q4_tiny.py": "a1b90019081aef9ab0fc7cce68ccbdf4d1518131c8c716c8fc73d2a228b1286b",
+      "native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc"
+    }
+  },
+  "functional_export_wall_seconds": 36.40324887493625
+}

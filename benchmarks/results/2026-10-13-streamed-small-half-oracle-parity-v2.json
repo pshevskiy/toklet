@@ -1,0 +1,20 @@
+{
+  "format": "toklet-streamed-half-small-parity-v1",
+  "passed": true,
+  "full_arrays": 228,
+  "all_payload_hashes_and_gates_identical": true,
+  "old_manifest_sha256": "49206b6f5bed4f605671bf45474f25c81cb0c48ee3c33a9f741c513eb9ecbb72",
+  "new_manifest_sha256": "0333f3c2c283c780f6a5cf025cafb8e4ec85700c7524805adb6dd8dba5c99fe7",
+  "export_receipt_sha256": "1636b82bf9bb7a7d1cb50e19e13c814751ceecb6945d332588ef60f39057130a",
+  "memory_admission": {
+    "admitted_bytes": 887586816,
+    "application_reference_allowance_bytes": 536870912,
+    "fp64_conversion_stripe_bytes": 39845888,
+    "largest_matrix_bytes": 8716288,
+    "maximum_packed_bytes": 0,
+    "q4_decode_stripes_bytes": 0,
+    "source_stripes_bytes": 29884416,
+    "tied_half_bytes": 272269312
+  },
+  "native_lifetime_peak_bytes": 432522056
+}

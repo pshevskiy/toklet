@@ -1,0 +1,70 @@
+{
+  "format": "toklet-streamed-storage-oracle-export-v1",
+  "completed": true,
+  "scope": "Independent short full-array reference export only; no device, lossy quality or performance qualification",
+  "command": [
+    "tools/reference/qwen_storage_oracle.py",
+    "models/Qwen2.5-0.5B-Instruct",
+    "artifacts/qwen-forward-v2",
+    "artifacts/m5-streamed-small-half-oracle-v1",
+    "benchmarks/results/2026-10-13-streamed-small-half-oracle-export-v1.json"
+  ],
+  "native_samples": [
+    {
+      "phase": "future_changed",
+      "usage": {
+        "resident_size": 508100608,
+        "phys_footprint": 305775432,
+        "lifetime_max_phys_footprint": 432227144
+      }
+    },
+    {
+      "phase": "offset",
+      "usage": {
+        "resident_size": 546897920,
+        "phys_footprint": 307528568,
+        "lifetime_max_phys_footprint": 432227144
+      }
+    },
+    {
+      "phase": "short",
+      "usage": {
+        "resident_size": 599212032,
+        "phys_footprint": 308495272,
+        "lifetime_max_phys_footprint": 432227144
+      }
+    },
+    {
+      "phase": "single",
+      "usage": {
+        "resident_size": 610271232,
+        "phys_footprint": 308773824,
+        "lifetime_max_phys_footprint": 432227144
+      }
+    }
+  ],
+  "admission": {
+    "tied_half_bytes": 272269312,
+    "largest_matrix_bytes": 8716288,
+    "source_stripes_bytes": 29884416,
+    "fp64_conversion_stripe_bytes": 39845888,
+    "q4_decode_stripes_bytes": 0,
+    "maximum_packed_bytes": 0,
+    "application_reference_allowance_bytes": 536870912,
+    "admitted_bytes": 887586816
+  },
+  "manifest_sha256": "8ec05126b633e4ec8b1dd6e755fab23fc760eda7eab91e1f2dcc31f374727ac8",
+  "identities": {
+    "source_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "config_sha256": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "baseline_manifest_sha256": "bdd368d21dfae574197e3b64423b75d4f1b2b37c083c6172c429e36bb4dd69c7",
+    "oracle_sources": {
+      "qwen_storage_oracle.py": "069d2f5da7b248f2fe11f91a408052dc616d45a1f9ed875e552d51a2296863b3",
+      "qwen_storage.py": "686dcc9c6a3e75cfb0b3008432e4127d81cf9c106a4eccf793df30302147d8b5",
+      "qwen_fp16.py": "c16994767d257ebc4d6bee38d5b1a20d9fcfd9e134b598eead54e25b8553b789",
+      "q4_tiny.py": "a1b90019081aef9ab0fc7cce68ccbdf4d1518131c8c716c8fc73d2a228b1286b",
+      "native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc"
+    }
+  },
+  "functional_export_wall_seconds": 11.70006858301349
+}
