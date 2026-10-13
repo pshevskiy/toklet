@@ -1,0 +1,7 @@
+
+running 1 test
+test metal::tests::q4_prefill_tile_matches_scalar_oracle_and_preserves_inactive_storage ... Q4 queried SIMD widths decode32, prefill32
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.13s
+

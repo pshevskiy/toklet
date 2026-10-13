@@ -177,6 +177,14 @@ impl Model {
     pub fn weights_bytes(&self) -> usize {
         self.weight_bytes
     }
+    /// Queried SIMD widths `[one-row decode, eight-row prefill]`. Numerical
+    /// qualification applies independently even when the widths differ.
+    pub fn q4_execution_widths(&self) -> [usize; 2] {
+        [
+            self.gpu.execution_width(Kernel::Q4Matvec),
+            self.gpu.execution_width(Kernel::Q4Prefill),
+        ]
+    }
     pub fn device_name(&self) -> String {
         self.gpu.device.name().to_string()
     }
@@ -389,6 +397,16 @@ struct Views {
     mh: Retained<MPSMatrixMultiplication>,
     hv: Retained<MPSMatrixMultiplication>,
 }
+/// Bounded operation-boundary selection. The original path remains the default.
+/// The opt-in tile is experimental: equal-width device measurements establish
+/// refinement of Original, while an expanded independent decoder gate remains
+/// unresolved on both paths. This mode does not qualify Q4 quality or release.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize)]
+pub enum ProjectionMode {
+    #[default]
+    Original,
+    Q4Tiled,
+}
 #[derive(Clone, Copy, Debug, serde::Serialize)]
 pub struct Timing {
     pub command_creation_seconds: f64,
@@ -406,6 +424,7 @@ pub struct Timing {
 pub struct Session<'m> {
     model: &'m Model,
     options: session::Options,
+    projection_mode: ProjectionMode,
     memory: session::Memory,
     history: Vec<u32>,
     evaluated: usize,
@@ -428,7 +447,19 @@ pub struct Session<'m> {
 }
 impl<'m> Session<'m> {
     pub fn new(model: &'m Model, options: session::Options) -> Result<Self> {
+        Self::with_projection_mode(model, options, ProjectionMode::Original)
+    }
+    pub fn with_projection_mode(
+        model: &'m Model,
+        options: session::Options,
+        projection_mode: ProjectionMode,
+    ) -> Result<Self> {
         autoreleasepool(|_| {
+            if projection_mode == ProjectionMode::Q4Tiled
+                && !matches!(model.layers[0].q.storage, TensorStorage::Q4 { .. })
+            {
+                return Err(Error::Options("Q4 tile requires Q4 model weights"));
+            }
             let c = &model.config;
             let chunk = options.prefill_chunk_size;
             if options.capacity == 0
@@ -577,6 +608,7 @@ impl<'m> Session<'m> {
             Ok(Self {
                 model,
                 options,
+                projection_mode,
                 memory: session::Memory {
                     weights_bytes: model.weight_bytes,
                     kv_bytes,
@@ -796,6 +828,7 @@ impl<'m> Session<'m> {
                 self.f,
                 self.h,
                 n,
+                self.projection_mode,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "q", &s.q.raw)?;
@@ -812,6 +845,7 @@ impl<'m> Session<'m> {
                 self.f,
                 self.k,
                 n,
+                self.projection_mode,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "k", &s.k.raw)?;
@@ -828,6 +862,7 @@ impl<'m> Session<'m> {
                 self.f,
                 self.k,
                 n,
+                self.projection_mode,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "v", &s.v.raw)?;
@@ -917,6 +952,7 @@ impl<'m> Session<'m> {
                 self.f,
                 self.h,
                 n,
+                self.projection_mode,
                 &s.status,
             )?;
             self.snapshot(
@@ -964,6 +1000,7 @@ impl<'m> Session<'m> {
                 self.f,
                 self.m,
                 n,
+                self.projection_mode,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "gate", &s.gate.raw)?;
@@ -989,6 +1026,7 @@ impl<'m> Session<'m> {
                 self.f,
                 self.m,
                 n,
+                self.projection_mode,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "up", &s.up.raw)?;
@@ -1014,6 +1052,7 @@ impl<'m> Session<'m> {
                 self.f,
                 self.h,
                 n,
+                self.projection_mode,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "down", &s.delta.raw)?;
@@ -1200,6 +1239,7 @@ fn project(
     fl: Layout,
     hl: Layout,
     n: usize,
+    mode: ProjectionMode,
     status: &Buffer<u32>,
 ) -> Result<()> {
     if let TensorStorage::Q4 { stride } = weight.storage {
@@ -1210,9 +1250,14 @@ fn project(
         if offset != 0 || !row_bytes.is_multiple_of(2) {
             return Err(Error::Options("Q4 input view offset/stride unsupported"));
         }
+        let tiled = mode == ProjectionMode::Q4Tiled && n >= 8;
         return g.encode(
             c,
-            Kernel::Q4Matvec,
+            if tiled {
+                Kernel::Q4Prefill
+            } else {
+                Kernel::Q4Matvec
+            },
             &[&weight.buffer.raw, &bias.raw, &input, &out.raw],
             &[
                 n as u32,
@@ -1222,7 +1267,7 @@ fn project(
                 (row_bytes / 2) as u32,
                 hl.stride as u32,
             ],
-            n * weight.layout.rows,
+            if tiled { n.div_ceil(8) } else { n } * weight.layout.rows,
             Some(status),
         );
     }
@@ -1619,6 +1664,133 @@ mod tests {
                     assert_eq!(status.with_slice(|v| v[0]), 1);
                 }
             }
+        });
+    }
+    #[test]
+    #[ignore = "explicit Apple GPU Q4 tile row tails, padded strides, subnormals and overflow"]
+    fn q4_prefill_tile_matches_scalar_oracle_and_preserves_inactive_storage() {
+        autoreleasepool(|_| {
+            let gpu = Gpu::new().unwrap();
+            println!(
+                "Q4 queried SIMD widths decode{}, prefill{}",
+                gpu.execution_width(Kernel::Q4Matvec),
+                gpu.execution_width(Kernel::Q4Prefill)
+            );
+            let mut packed = include_bytes!("../../tests/fixtures/q4/rows.q4").to_vec();
+            let mut input = Buffer::<u16>::new(&gpu, 17 * 72 + 7).unwrap();
+            let mut output = Buffer::<u16>::new(&gpu, 17 * 8 + 7).unwrap();
+            let mut bias = Buffer::<u16>::new(&gpu, 2).unwrap();
+            let mut status = Buffer::<u32>::new(&gpu, 8).unwrap();
+            for subnormal in [false, true] {
+                if subnormal {
+                    packed[64..66].copy_from_slice(&1u16.to_le_bytes());
+                    packed[66..68].copy_from_slice(&0u16.to_le_bytes());
+                }
+                let oracle = q4::Matrix::parse(&packed).unwrap();
+                let mut weight = Buffer::<u16>::new(&gpu, packed.len() / 2).unwrap();
+                weight.with_mut(|values| {
+                    for (dst, src) in values.iter_mut().zip(packed.chunks_exact(2)) {
+                        *dst = u16::from_le_bytes([src[0], src[1]]);
+                    }
+                });
+                let biases = if subnormal { [0., 0.] } else { [0.25, -0.5] };
+                bias.with_mut(|values| {
+                    for (dst, value) in values.iter_mut().zip(biases) {
+                        *dst = half::f16::from_f32(value).to_bits();
+                    }
+                });
+                for rows in [1usize, 7, 8, 9, 17] {
+                    input.with_mut(|values| {
+                        values.fill(0x7e00); // Poison padding and inactive rows.
+                        for row in 0..rows {
+                            for column in 0..65 {
+                                let value =
+                                    (column as f32 % 7. - 3.) * 0.5 + (row % 3) as f32 * 0.25;
+                                values[row * 72 + column] = half::f16::from_f32(value).to_bits();
+                            }
+                        }
+                    });
+                    for kernel in [Kernel::Q4Matvec, Kernel::Q4Prefill] {
+                        output.with_mut(|values| values.fill(0x7bff));
+                        status.with_mut(|values| values.fill(0));
+                        let raw = gpu.command().unwrap();
+                        let command = Command {
+                            raw: &raw,
+                            trace: None,
+                        };
+                        gpu.encode(
+                            &command,
+                            kernel,
+                            &[&weight.raw, &bias.raw, &input.raw, &output.raw],
+                            &[rows as u32, 65, 2, 128, 72, 8],
+                            if matches!(kernel, Kernel::Q4Prefill) {
+                                rows.div_ceil(8) * 2
+                            } else {
+                                rows * 2
+                            },
+                            Some(&status),
+                        )
+                        .unwrap();
+                        raw.commit();
+                        raw.waitUntilCompleted();
+                        assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                        assert_eq!(status.with_slice(|values| values[0]), 0);
+                        output.with_slice(|values| {
+                            input.with_slice(|inputs| {
+                                for (index, &bits) in values.iter().enumerate() {
+                                    let row=index/8;let column=index%8;
+                                    if row>=rows || column>=2 { assert_eq!(bits,0x7bff);continue; }
+                                    let mut expected=f64::from(biases[column]);let mut magnitude=expected.abs();
+                                    for feature in 0..65 {
+                                        let product=f64::from(oracle.value(column,feature).unwrap()) * f64::from(half::f16::from_bits(inputs[row*72+feature]).to_f32());
+                                        expected+=product;magnitude+=product.abs();
+                                    }
+                                    // The existing reconstructed-Q4 projection bound:
+                                    // FP32 products/reduction plus Half normal/subnormal rounding.
+                                    let u=f64::from(f32::EPSILON);let steps=2.*65.+128.;
+                                    let bound=(steps*u/(1.-steps*u))*magnitude + 2f64.powi(-11)*expected.abs()+2f64.powi(-25);
+                                    let actual=half::f16::from_bits(bits).to_f32();
+                                    assert!(actual.is_finite() && (f64::from(actual)-expected).abs()<=bound,"rows{rows} subnormal{subnormal} row{row}/{column}: {actual}/{expected} bound{bound}");
+                                }
+                            });
+                        });
+                    }
+                }
+            }
+            packed[64..66].copy_from_slice(&half::f16::from_f32(8736.).to_bits().to_le_bytes());
+            packed[66..68].copy_from_slice(&half::f16::from_f32(-65504.).to_bits().to_le_bytes());
+            let mut weight = Buffer::<u16>::new(&gpu, packed.len() / 2).unwrap();
+            weight.with_mut(|values| {
+                for (dst, src) in values.iter_mut().zip(packed.chunks_exact(2)) {
+                    *dst = u16::from_le_bytes([src[0], src[1]]);
+                }
+            });
+            input.with_mut(|values| {
+                values.fill(0);
+                for row in 0..9 {
+                    values[row * 72] = half::f16::from_f32(2.).to_bits();
+                }
+            });
+            bias.with_mut(|values| values.fill(0));
+            status.with_mut(|values| values.fill(0));
+            let raw = gpu.command().unwrap();
+            let command = Command {
+                raw: &raw,
+                trace: None,
+            };
+            gpu.encode(
+                &command,
+                Kernel::Q4Prefill,
+                &[&weight.raw, &bias.raw, &input.raw, &output.raw],
+                &[9, 65, 2, 128, 72, 8],
+                4,
+                Some(&status),
+            )
+            .unwrap();
+            raw.commit();
+            raw.waitUntilCompleted();
+            assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+            assert_eq!(status.with_slice(|values| values[0]), 1);
         });
     }
     #[test]

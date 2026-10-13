@@ -1,0 +1,87 @@
+
+running 6 tests
+Q4 SIMD widths [32, 32], mode Q4Tiled
+Q4 SIMD widths [32, 32], mode Original
+required/all-row distribution parity realfalse q4false offset0 chunk4 passed
+Q4 rows7 chunk7: 35 stage comparisons, weights 38504
+Q4 single chunk1: 35 stage comparisons, weights 38504
+Q4 rows7 chunk8: 35 stage comparisons, weights 38504
+Q4 single chunk3: 35 stage comparisons, weights 38504
+Q4 single chunk1: 35 stage comparisons, weights 38504
+Q4 rows7 chunk3: 105 stage comparisons, weights 38504
+required/all-row distribution parity realfalse q4false offset0 chunk3 passed
+Q4 prompt chunk4: 35 stage comparisons, weights 38504
+Q4 prompt chunk3: 70 stage comparisons, weights 38504
+Q4 prompt chunk1: 140 stage comparisons, weights 38504
+Q4 rows7 chunk1: 245 stage comparisons, weights 38504
+Q4 session/state suite: 20 warmed steps, 0 Rust allocations, 67159832 admitted bytes
+test q4_sessions_generate_continue_cancel_and_allocate_no_steady_state_rust_buffers ... ok
+required/all-row distribution parity realfalse q4false offset0 chunk1 passed
+Q4 future_changed chunk4: 35 stage comparisons, weights 38504
+required/all-row distribution parity realfalse q4false offset5 chunk4 passed
+Q4 future_changed chunk3: 70 stage comparisons, weights 38504
+Q4 rows8 chunk8: 35 stage comparisons, weights 38504
+longest-prefix/repeated-recovery suite quantizedfalse offset0 passed
+required/all-row distribution parity realfalse q4false offset5 chunk3 passed
+Q4 rows8 chunk8: 35 stage comparisons, weights 38504
+Q4 future_changed chunk1: 140 stage comparisons, weights 38504
+Q4 rows8 chunk3: 105 stage comparisons, weights 38504
+Q4 offset chunk3: 35 stage comparisons, weights 38504
+Q4 offset chunk3: 35 stage comparisons, weights 38504
+required/all-row distribution parity realfalse q4false offset5 chunk1 passed
+Q4 offset chunk1: 105 stage comparisons, weights 38504
+required/all-row distribution parity realfalse q4true offset0 chunk4 passed
+Q4 capacity chunk32: 35 stage comparisons, weights 38504
+Q4 rows8 chunk1: 280 stage comparisons, weights 38504
+required/all-row distribution parity realfalse q4true offset0 chunk3 passed
+Q4 rows9 chunk9: 35 stage comparisons, weights 38504
+Q4 rows9 chunk8: 70 stage comparisons, weights 38504
+longest-prefix/repeated-recovery suite quantizedfalse offset5 passed
+Q4 rows9 chunk3: 105 stage comparisons, weights 38504
+required/all-row distribution parity realfalse q4true offset0 chunk1 passed
+Q4 capacity chunk3: 385 stage comparisons, weights 38504
+required/all-row distribution parity realfalse q4true offset5 chunk4 passed
+required/all-row distribution parity realfalse q4true offset5 chunk3 passed
+Q4 rows9 chunk1: 315 stage comparisons, weights 38504
+required/all-row distribution parity realfalse q4true offset5 chunk1 passed
+Q4 rows17 chunk17: 35 stage comparisons, weights 38504
+Q4 rows17 chunk8: 105 stage comparisons, weights 38504
+longest-prefix/repeated-recovery suite quantizedtrue offset0 passed
+Q4 rows17 chunk3: 210 stage comparisons, weights 38504
+longest-prefix/repeated-recovery suite quantizedtrue offset5 passed
+test metal_prefix_edits_shortening_and_recovery_match_reset_replay ... ok
+Q4 capacity chunk1: 1120 stage comparisons, weights 38504
+test resident_q4_tiny_matches_independent_oracle_at_all_stages_and_chunks ... ok
+Q4 rows17 chunk1: 595 stage comparisons, weights 38504
+Q4 rows24 chunk24: 35 stage comparisons, weights 38504
+Q4 rows24 chunk8: 105 stage comparisons, weights 38504
+Q4 rows24 chunk3: 280 stage comparisons, weights 38504
+Q4 rows24 chunk1: 840 stage comparisons, weights 38504
+
+thread 'tiled_q4_prefill_matches_independent_oracle_at_all_stages_and_chunks' panicked at tests/q4_metal.rs:603:25:
+cases.offset17.final_norm chunk17 start0 index531: 0.08996582 vs 0.09057617; gate0.0001/0.001
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test tiled_q4_prefill_matches_independent_oracle_at_all_stages_and_chunks ... FAILED
+required/all-row distribution parity realtrue q4false offset0 chunk4 passed
+required/all-row distribution parity realtrue q4false offset0 chunk3 passed
+required/all-row distribution parity realtrue q4false offset0 chunk1 passed
+required/all-row distribution parity realtrue q4false offset5 chunk4 passed
+required/all-row distribution parity realtrue q4false offset5 chunk3 passed
+required/all-row distribution parity realtrue q4false offset5 chunk1 passed
+{"scope":"execution smoke, no quality/performance acceptance","ids":[4460,311,1281,264,4285,2025,429,686],"report":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.05764925,"prefill_seconds":0.0570305,"decode_seconds":0.216161251,"sampling_seconds":0.004861125,"total_seconds":0.2780585},"memory":{"weights_bytes":476307372,"kv_bytes":393888,"scratch_bytes":2951268,"history_bytes":128,"logits_bytes":1215488,"metadata_bytes":1184,"metadata_allowance_bytes":67108864,"admitted_bytes":547978192},"last_command_timing":{"command_creation_seconds":3.791e-6,"clock_calibration_seconds":0.0,"commit_seconds":8.125e-6,"host_encode_seconds":0.000316584,"wait_seconds":0.031380458,"gpu_start_seconds":1226266.3368095001,"gpu_end_seconds":1226266.36780225,"readback_seconds":0.000080292,"command_count":1}}
+test q4_qwen_runs_complete_resident_generation ... ok
+required/all-row distribution parity realtrue q4true offset0 chunk4 passed
+required/all-row distribution parity realtrue q4true offset0 chunk3 passed
+required/all-row distribution parity realtrue q4true offset0 chunk1 passed
+required/all-row distribution parity realtrue q4true offset5 chunk4 passed
+required/all-row distribution parity realtrue q4true offset5 chunk3 passed
+required/all-row distribution parity realtrue q4true offset5 chunk1 passed
+test ordinary_prefill_last_logits_match_all_required_diagnostic_rows ... ok
+
+failures:
+
+failures:
+    tiled_q4_prefill_matches_independent_oracle_at_all_stages_and_chunks
+
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 2 filtered out; finished in 20.31s
+

@@ -206,6 +206,7 @@ pub(super) enum Kernel {
     Validate,
     Marker,
     Q4Matvec,
+    Q4Prefill,
 }
 impl Kernel {
     pub fn name(self) -> &'static str {
@@ -223,6 +224,7 @@ impl Kernel {
             "validate_float",
             "marker",
             "q4_matvec",
+            "q4_prefill",
         ][self as usize]
     }
 }
@@ -233,6 +235,9 @@ pub(super) struct Gpu {
     pub width: usize,
 }
 impl Gpu {
+    pub(super) fn execution_width(&self, kernel: Kernel) -> usize {
+        self.pipelines[kernel as usize].threadExecutionWidth()
+    }
     pub fn new() -> Result<Self> {
         if NSProcessInfo::processInfo()
             .operatingSystemVersion()
@@ -277,6 +282,7 @@ impl Gpu {
             Kernel::Validate,
             Kernel::Marker,
             Kernel::Q4Matvec,
+            Kernel::Q4Prefill,
         ] {
             let f = library
                 .newFunctionWithName(&NSString::from_str(k.name()))
@@ -326,15 +332,15 @@ impl Gpu {
         }
         // Q4 assigns one queried SIMD group to each output row. Other kernels
         // assign one scalar lane per item; never assume an Apple SIMD width.
-        let width = if matches!(k, Kernel::Q4Matvec) {
-            self.pipelines[k as usize].threadExecutionWidth()
+        let width = if matches!(k, Kernel::Q4Matvec | Kernel::Q4Prefill) {
+            self.execution_width(k)
         } else {
             self.width
         };
         if width == 0 || width > self.pipelines[k as usize].maxTotalThreadsPerThreadgroup() {
             return Err(Error::Unsupported("kernel launch width unsupported"));
         }
-        let groups = if matches!(k, Kernel::Q4Matvec) {
+        let groups = if matches!(k, Kernel::Q4Matvec | Kernel::Q4Prefill) {
             count
         } else {
             count.div_ceil(width)

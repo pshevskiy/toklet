@@ -436,7 +436,11 @@ fn manifest(root: &Path) -> Value {
     let data = fs::read(root.join("manifest.json")).unwrap();
     assert_eq!(
         format!("{:x}", Sha256::digest(&data)),
-        "e4928e4c132c3971798ab67cfd9eec73dc1dfaeae0107797738fc45eb73c8a0c"
+        if root.ends_with("q4-tiny-prefill-v1") {
+            "af489fadf32b1a2a46a04098fabc315152cf63f507ee2887bc6a4f13de2545c9"
+        } else {
+            "e4928e4c132c3971798ab67cfd9eec73dc1dfaeae0107797738fc45eb73c8a0c"
+        }
     );
     let value: Value = serde_json::from_slice(&data).unwrap();
     let workspace = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -484,8 +488,148 @@ fn read(root: &Path, entry: &Value) -> Vec<f32> {
 #[test]
 #[ignore = "explicit Apple GPU Q4 tiny parity; requires artifacts/m5-tiny-{source,q4}-v1"]
 fn resident_q4_tiny_matches_independent_oracle_at_all_stages_and_chunks() {
+    check_tiny_oracle("q4-tiny-v1", metal::ProjectionMode::Original);
+}
+#[test]
+#[ignore = "explicit Apple GPU eight-row Q4 tile independent stage/tail/offset qualification"]
+fn tiled_q4_prefill_matches_independent_oracle_at_all_stages_and_chunks() {
+    check_tiny_oracle("q4-tiny-prefill-v1", metal::ProjectionMode::Original);
+    check_tiny_oracle("q4-tiny-prefill-v1", metal::ProjectionMode::Q4Tiled);
+}
+
+#[test]
+#[ignore = "explicit Apple GPU tile refinement; expanded independent oracle remains a separate gate"]
+fn tiled_q4_prefill_preserves_every_original_stage_bit() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let reference = root.join("tests/fixtures/q4-tiny-v1");
+    let reference = manifest(&root.join("tests/fixtures/q4-tiny-prefill-v1"));
+    assert_eq!(
+        format!(
+            "{:x}",
+            Sha256::digest(fs::read(root.join("artifacts/m5-tiny-q4-v1/manifest.json")).unwrap())
+        ),
+        reference["packed_manifest_sha256"].as_str().unwrap()
+    );
+    let model = metal::Model::load_q4(
+        &root.join("artifacts/m5-tiny-source-v1"),
+        &root.join("artifacts/m5-tiny-q4-v1"),
+        weights::LoadOptions {
+            context_limit: 32,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    // Bit preservation is qualified on the measured device's equal queried
+    // widths. This is not a full-graph independent numerical acceptance.
+    let widths = model.q4_execution_widths();
+    assert_eq!(widths[0], widths[1]);
+    let mut compared = 0;
+    for (case, spec) in reference["cases"].as_object().unwrap() {
+        let expected_names: BTreeSet<_> = reference["arrays"]
+            .as_object()
+            .unwrap()
+            .keys()
+            .filter(|name| name.starts_with(&format!("cases.{case}.")))
+            .cloned()
+            .collect();
+        assert_eq!(expected_names.len(), 35);
+        let tokens: Vec<u32> = spec["tokens"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|v| v.as_u64().unwrap() as u32)
+            .collect();
+        let offset = spec["position_offset"].as_u64().unwrap() as usize;
+        for chunk in [tokens.len(), 8, 3, 1] {
+            let options = session::Options {
+                capacity: 32 - offset,
+                prefill_chunk_size: chunk,
+                position_offset: offset,
+                ..Default::default()
+            };
+            let mut original = metal::Session::new(&model, options).unwrap();
+            let mut tiled = metal::Session::with_projection_mode(
+                &model,
+                options,
+                metal::ProjectionMode::Q4Tiled,
+            )
+            .unwrap();
+            for session in [&mut original, &mut tiled] {
+                session.enable_diagnostics(&[0, 1]).unwrap();
+                session.set_tokens(&tokens).unwrap();
+            }
+            while original.pending_len() > 0 {
+                let start = original.evaluated_len();
+                let rows = original.evaluate_next_chunk().unwrap();
+                assert_eq!(rows, tiled.evaluate_next_chunk().unwrap());
+                assert_eq!(rows, chunk.min(tokens.len() - start));
+                let a = original.diagnostics().unwrap();
+                let b = tiled.diagnostics().unwrap();
+                assert_eq!(a.len(), 35);
+                assert_eq!(b.len(), 35);
+                let mut seen = BTreeSet::new();
+                for (a, b) in a.iter().zip(&b) {
+                    assert_eq!(
+                        (a.layer, a.stage, a.rows, a.columns),
+                        (b.layer, b.stage, b.rows, b.columns)
+                    );
+                    assert_eq!(a.values.len(), b.values.len());
+                    let stage = match a.stage {
+                        "q" => "q_projection",
+                        "k" => "k_projection",
+                        "v" => "v_projection",
+                        "gate" => "gate_projection",
+                        "up" => "up_projection",
+                        "silu" => "gate_silu",
+                        "down" => "down_projection",
+                        other => other,
+                    };
+                    let name = if let Some(layer) = a.layer {
+                        format!("cases.{case}.layers.{layer}.{stage}")
+                    } else {
+                        format!("cases.{case}.{stage}")
+                    };
+                    assert!(expected_names.contains(&name));
+                    assert!(seen.insert(name.clone()));
+                    let shape: Vec<_> = reference["arrays"][name]["shape"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|v| v.as_u64().unwrap() as usize)
+                        .collect();
+                    assert_eq!(shape[0], tokens.len());
+                    for actual in [a, b] {
+                        assert_eq!(actual.rows, rows);
+                        assert_eq!(actual.columns, shape[1..].iter().product::<usize>());
+                        assert_eq!(actual.values.len(), rows * actual.columns);
+                    }
+                    for (i, (a, b)) in a.values.iter().zip(&b.values).enumerate() {
+                        assert_eq!(
+                            a.to_bits(),
+                            b.to_bits(),
+                            "{case} chunk{chunk} start{start} index{i}"
+                        );
+                    }
+                    compared += 1;
+                }
+                assert_eq!(seen, expected_names);
+            }
+            assert_eq!(tiled.pending_len(), 0);
+            assert_eq!(original.evaluated_len(), tokens.len());
+            assert_eq!(tiled.evaluated_len(), tokens.len());
+            assert_eq!(
+                toklet::sampling::greedy(original.logits().unwrap()).unwrap(),
+                toklet::sampling::greedy(tiled.logits().unwrap()).unwrap()
+            );
+        }
+    }
+    assert_eq!(compared, 4550);
+    println!(
+        "Experimental tile refinement: {compared} complete stage arrays preserve bits; queried widths {widths:?}. Expanded independent decoder gate remains unqualified."
+    );
+}
+fn check_tiny_oracle(fixture: &str, mode: metal::ProjectionMode) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let reference = root.join("tests/fixtures").join(fixture);
     let manifest = manifest(&reference);
     let source = root.join("artifacts/m5-tiny-source-v1");
     let packed = root.join("artifacts/m5-tiny-q4-v1");
@@ -505,6 +649,11 @@ fn resident_q4_tiny_matches_independent_oracle_at_all_stages_and_chunks() {
         },
     )
     .unwrap();
+    println!(
+        "Q4 SIMD widths {:?}, mode {:?}",
+        model.q4_execution_widths(),
+        mode
+    );
     for (case, spec) in manifest["cases"].as_object().unwrap() {
         let tokens: Vec<u32> = spec["tokens"]
             .as_array()
@@ -512,7 +661,12 @@ fn resident_q4_tiny_matches_independent_oracle_at_all_stages_and_chunks() {
             .iter()
             .map(|v| v.as_u64().unwrap() as u32)
             .collect();
-        for chunk in [tokens.len(), 3, 1] {
+        let chunks = if mode == metal::ProjectionMode::Original {
+            vec![tokens.len(), 3, 1]
+        } else {
+            vec![tokens.len(), 8, 3, 1]
+        };
+        for chunk in chunks {
             let expected_names: BTreeSet<_> = manifest["arrays"]
                 .as_object()
                 .unwrap()
@@ -521,7 +675,7 @@ fn resident_q4_tiny_matches_independent_oracle_at_all_stages_and_chunks() {
                 .cloned()
                 .collect();
             assert_eq!(expected_names.len(), 35);
-            let mut session = metal::Session::new(
+            let mut session = metal::Session::with_projection_mode(
                 &model,
                 session::Options {
                     capacity: 32 - spec["position_offset"].as_u64().unwrap() as usize,
@@ -529,6 +683,7 @@ fn resident_q4_tiny_matches_independent_oracle_at_all_stages_and_chunks() {
                     position_offset: spec["position_offset"].as_u64().unwrap() as usize,
                     ..Default::default()
                 },
+                mode,
             )
             .unwrap();
             session.enable_diagnostics(&[0, 1]).unwrap();
@@ -605,6 +760,23 @@ fn resident_q4_tiny_matches_independent_oracle_at_all_stages_and_chunks() {
                 model.weights_bytes()
             );
         }
+    }
+}
+
+#[test]
+fn frozen_q4_prefill_fixture_is_bounded_and_hash_checked_without_gpu() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/q4-tiny-prefill-v1");
+    let manifest = manifest(&root);
+    assert_eq!(manifest["arrays"].as_object().unwrap().len(), 210);
+    assert_eq!(manifest["policy"]["rtol"].as_f64(), Some(1e-3));
+    assert_eq!(manifest["cases"].as_object().unwrap().len(), 6);
+    for entry in manifest["arrays"].as_object().unwrap().values() {
+        assert!(read(&root, entry).iter().all(|v| v.is_finite()));
+        assert_eq!(entry["gate"]["rtol"].as_f64(), Some(1e-3));
+        assert_eq!(
+            entry["gate"]["atol"].as_f64().unwrap(),
+            (2. * entry["independent_precision_envelope"].as_f64().unwrap()).max(1e-4)
+        );
     }
 }
 

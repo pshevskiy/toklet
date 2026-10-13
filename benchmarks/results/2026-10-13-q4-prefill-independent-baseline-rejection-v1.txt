@@ -1,0 +1,31 @@
+
+running 1 test
+test tiled_q4_prefill_matches_independent_oracle_at_all_stages_and_chunks ... Q4 SIMD widths [32, 32], mode Original
+Q4 rows7 chunk7: 35 stage comparisons, weights 38504
+Q4 rows7 chunk3: 105 stage comparisons, weights 38504
+Q4 rows7 chunk1: 245 stage comparisons, weights 38504
+Q4 rows8 chunk8: 35 stage comparisons, weights 38504
+Q4 rows8 chunk3: 105 stage comparisons, weights 38504
+Q4 rows8 chunk1: 280 stage comparisons, weights 38504
+Q4 rows9 chunk9: 35 stage comparisons, weights 38504
+Q4 rows9 chunk3: 105 stage comparisons, weights 38504
+Q4 rows9 chunk1: 315 stage comparisons, weights 38504
+Q4 rows17 chunk17: 35 stage comparisons, weights 38504
+Q4 rows17 chunk3: 210 stage comparisons, weights 38504
+Q4 rows17 chunk1: 595 stage comparisons, weights 38504
+Q4 rows24 chunk24: 35 stage comparisons, weights 38504
+Q4 rows24 chunk3: 280 stage comparisons, weights 38504
+Q4 rows24 chunk1: 840 stage comparisons, weights 38504
+
+thread 'tiled_q4_prefill_matches_independent_oracle_at_all_stages_and_chunks' panicked at tests/q4_metal.rs:604:25:
+cases.offset17.final_norm chunk17 start0 index531: 0.08996582 vs 0.09057617; gate0.0001/0.001
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    tiled_q4_prefill_matches_independent_oracle_at_all_stages_and_chunks
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.33s
+

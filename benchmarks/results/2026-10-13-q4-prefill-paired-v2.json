@@ -1,0 +1,1449 @@
+{
+  "format": "toklet-metal-q4-prefill-v1",
+  "passed": true,
+  "scope": "Paired opt-in Q4 tile warm512-input/one-output engine TTFT; no full decode workload,heldout quality,external lead or release acceptance",
+  "revision": "095dd91e8e9468e365fa83ee0917cf2a636ee2fa",
+  "identities": {
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_prefill.py": "43f5ef455d6e36e87ef1abefe7054fe7cc8ad1e48a8cd8269e6507c3d04f2c39",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_engine.py": "1541afc73738d91e13dc6d71c32f72632e4b2eb20174781dc193126362b73d0c",
+    "/Users/coloner/work/rust/toklet/tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc",
+    "/Users/coloner/work/rust/toklet/Cargo.toml": "02f294d3d27f33a61371183c1b7ad9f4a949dee40db8db7d0ba00fd54584071b",
+    "/Users/coloner/work/rust/toklet/Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "/Users/coloner/work/rust/toklet/examples/metal_prefill.rs": "d1b0553357f0f06831c764645e815b265900a771b1a55f0f9955b36c1ac1e332",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-checks/release/examples/metal_prefill": "e9a66316c6598538e20c9a79f469909bdb7da69f2fa92e850435835498fc4ddc",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_512.u32le": "4ff74dae2ee5b778f9313f4c707f9ccb6415609a9c0653684cce7be63d457dd6",
+    "/Users/coloner/work/rust/toklet/src/session.rs": "b2a9d88a4414c366fbf439aac8d93a923686623746225ed65270a6ae1765b738",
+    "/Users/coloner/work/rust/toklet/src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "/Users/coloner/work/rust/toklet/src/generation.rs": "40496130b7928e87f6ad47c10ced4643b165894552108fe23d21cb42f6a115a5",
+    "/Users/coloner/work/rust/toklet/src/lib.rs": "a4cc758d947079d5cf715183edfa71039de4dc1735caac6a481cf7a0c9ae8962",
+    "/Users/coloner/work/rust/toklet/src/q4.rs": "6a419a51502a939937d95e454bf8d086175ae3b303c094e4b15730008fc843cd",
+    "/Users/coloner/work/rust/toklet/src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "/Users/coloner/work/rust/toklet/src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "/Users/coloner/work/rust/toklet/src/metal/profile.rs": "97d0c78df30722f9263100eb764c1b3e9b9a483604e08103d3509698653772c5",
+    "/Users/coloner/work/rust/toklet/src/metal/memory.rs": "727defd21837d08cc21ae16d00f00a1fc2c6c44e97a70b3d81b564c94118fda5",
+    "/Users/coloner/work/rust/toklet/src/metal/mod.rs": "a823ed08e8f22989f0d9235d59d31dfc6b7e6e801af0593f4669935f6984351c",
+    "/Users/coloner/work/rust/toklet/src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "/Users/coloner/work/rust/toklet/src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "/Users/coloner/work/rust/toklet/src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "/Users/coloner/work/rust/toklet/src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "/Users/coloner/work/rust/toklet/src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "/Users/coloner/work/rust/toklet/src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "/Users/coloner/work/rust/toklet/src/weights/mod.rs": "a07f0e8b91973c22c3fe9b0c9c5f0f688fc4b602f5402ef0f9a95c05976399c1",
+    "/Users/coloner/work/rust/toklet/src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "/Users/coloner/work/rust/toklet/src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "/Users/coloner/work/rust/toklet/src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "/Users/coloner/work/rust/toklet/src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "/Users/coloner/work/rust/toklet/src/q4/artifact.rs": "b8cb3ded35f0db6a053d113a202df81c49e9c5a33755ec61c898899c9a694252",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/mod.rs": "9cfa75d60ba5359bfa8a3f41b8b568ff5c33caf991ca8b0d811e22bb6c5aa48b",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "/Users/coloner/work/rust/toklet/src/metal/kernels.metal": "f30593c3e52ca2df352362bbc4f93ab107efbfb4374a45db3a9025713d6be888",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_continue.py": "48487c955a81cafb4149caf033d397d0403068cd6f31913a8a2b90a75f03b622",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.9.mlp.up_proj.weight.q4": "5d1ff2a7c76de81e19db80aab947e91c92bdd86d9eec8c653b72f971c10383a6",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.16.mlp.gate_proj.weight.q4": "6f3c668fdd389a46b1ad8607964dea0d1429b80a67e11e45d003250946264f0f",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.14.mlp.up_proj.weight.q4": "07ceb8ba158d0b5daed5f914fea3e3b88f4af7edd943d82b6d99ca4e8ef04d55",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.9.self_attn.q_proj.weight.q4": "2990887881126682a1226e022bcef85893b01083673a1940a8620dd95aaa289c",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.5.self_attn.q_proj.weight.q4": "c9446777560dc2c93c984d610f75732ab3388a9342230fb37becb5dee619728e",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.21.mlp.down_proj.weight.q4": "9781a51e67dc9c9f59b1824ff427808d774801560600138c2736a1d6feb888d8",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.10.mlp.down_proj.weight.q4": "623b7a8d69b3da49fa4a7c73e0951bbff2921be19a80a25e924bffba04c83546",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.10.self_attn.q_proj.weight.q4": "ef7af23183947a5495be8e71d98595f5dda308e6a5c2bc24804d5f704d8b7963",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.19.mlp.gate_proj.weight.q4": "ffe874f8b36f57e0ae48bf31d36ac4999d2d2005a4c318d081906cec94d9f8a1",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.21.self_attn.o_proj.weight.q4": "cde77e1c35143e08699b28fd7cedd4547c53990ec9913965a8107ae0f16933e4",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.12.self_attn.k_proj.weight.q4": "2046d1381d0ecb9be80894f3797b5de86b3a06db3ed5f81a36215ac3a2093db8",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.5.self_attn.v_proj.weight.q4": "5e338ada3b0d872b31b749e447f5eed94c84e628798bc60fbe54240745c45e85",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.14.self_attn.o_proj.weight.q4": "e505103e9e2f5799e0dcd1a0466ae9f027b0d11984076184c45026b9cb08386c",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.1.mlp.up_proj.weight.q4": "eea10747008887ba4db188e473cad1c500d3b6e7653078bab5375c32eed67bbb",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.2.mlp.down_proj.weight.q4": "6324b60a548ecb6ba89eacebf609d129e911bf928e32fb290fc35690e8d61935",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.18.self_attn.o_proj.weight.q4": "17a323687a5b549990a643bdfb4df6295303bee1f84e0a968780251b4875ab91",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.9.self_attn.v_proj.weight.q4": "248d8406e1b9ef27f3241adc8c8cdd347091f9e53cf5df6837f686fc4c409c53",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.7.self_attn.k_proj.weight.q4": "08f3a56934018c4e367cebe15e82b4f9eb09b3d466a394d4c746ca9a2af72080",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.1.self_attn.o_proj.weight.q4": "531fa88437ea89d177998d33b10dc6eb9b3f53490f8e9221586f412d0a7a4d6e",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.4.mlp.gate_proj.weight.q4": "35926a1bae6ddb4c3af7a289b1e0f33b8ab03942c1cfed1bde1d1632a2f02613",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.10.self_attn.v_proj.weight.q4": "8969b1ec8fc135ab0e3b44fdf27767a75847a7d2f294a8f841f74d59818710b1",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.14.mlp.down_proj.weight.q4": "8543a73136a59043b5827bd9d0e30afc7ff23660ad21b69db46e1b298764f639",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.6.self_attn.o_proj.weight.q4": "b57f1034ad767deb63cf7736c13800e080528269bbf32709da1fe1ec7bb2e4bd",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.17.self_attn.v_proj.weight.q4": "edcbda6743325a41b4bfa7064a9b54b5a8ec60d6684ed1821c843733ab889c61",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.22.self_attn.v_proj.weight.q4": "c9b16e9f8c13069e3cce6e6681b3151d60165faddae5c3ad9af14195522b2149",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.23.mlp.gate_proj.weight.q4": "896b08a6f2e8636c7d50f48b06c41f793fccaf9ba3365b52240591bbd6320aef",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.0.self_attn.k_proj.weight.q4": "b7aff5ba2dcaa9d97da57fa5a5e12395e036b719f8a05798e94fb7238e0a57f2",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.2.self_attn.v_proj.weight.q4": "68edc4785fd83b59d16771dc6bbe60d3f2fce96c698bc966af127e66af8a93da",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.13.self_attn.o_proj.weight.q4": "d377a5c558b5a50880d7add6942e765adfb278cd25c34f20830c652edf6754d2",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.12.mlp.gate_proj.weight.q4": "0617e128f367ec2b9d073a27e8b4e410d0cd59635e73d44b98003c5923fdf9bf",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.20.self_attn.k_proj.weight.q4": "8996c95c371f11e76e1c08d0ae5ee680244ac6d74d7bb5ba5242375fbd2ca6f2",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.19.self_attn.k_proj.weight.q4": "60dfe5c9652899fa8d61e52f4314d77cf2018be31a9af070aa47baa3fa23bfc5",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.16.mlp.up_proj.weight.q4": "044d3a8e284162497e25722bd9840203c1bac29bbc1e5d5a26c338764ea215f2",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.15.self_attn.k_proj.weight.q4": "9d6ae451f526918dad8036d9bbc0d6bb0b82ed0a263cc1c3bb9ba8018ffada7b",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.17.self_attn.q_proj.weight.q4": "712e5d3fc8217fc5d64707a1d31bf38b32d96db53b1f7c9b673f3e745b7758a7",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.9.mlp.down_proj.weight.q4": "ce9a63ae084bb440d332c3391582b4091854ed95df430e82159fd17dfe32db2a",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.0.mlp.gate_proj.weight.q4": "2beea55663efb7547f9479d9fbd582ee612bb939f764c0cb34f69a387875f295",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.22.self_attn.q_proj.weight.q4": "cf1818c737f996d25c0dfab92d1419c04f5077d5d443cb87e81acbd3cd0d5f86",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.2.self_attn.q_proj.weight.q4": "6ac0b2e348f2bf565804bb2aa93bdc99a6de11ecce4d98df72d5dd6823da1fa2",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.6.mlp.down_proj.weight.q4": "18a6375dd37f8acc6c507aa62c44125ff3db95ed67c6d4cd605b4da69970bbd1",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.3.mlp.up_proj.weight.q4": "7ff3cad51a02799476494acf7a7878bf254c6877a4e0caf09c9a059bac04692f",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.23.self_attn.v_proj.weight.q4": "b9631160de26dc5823386ce00072eacaf9e162de4a46fca5783e3113ec86eae6",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.18.mlp.up_proj.weight.q4": "0993c60f50584545f87bab2cc5e7c5b5c8e4846264f76336116ecda08236912c",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.1.self_attn.k_proj.weight.q4": "bad499822880751394228e1ecc9e1430792d0039598acd26d5372ca51b66fe23",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.5.mlp.up_proj.weight.q4": "3991edd46d5b3ca84f830b8bb0d01c4d92745e9709fbcf02bd5c42e98cdedc33",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.3.mlp.gate_proj.weight.q4": "632dd2c0dfddb7f5bc9d5f84aaad32a761244412373436bf4171eaebd15c9144",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.7.self_attn.o_proj.weight.q4": "95681c23f8c5cd5fb8310f4f4cd65b3d21dc713f99ce351bfb78f5300581f1bc",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.16.self_attn.v_proj.weight.q4": "73b959113daef54815d5bc9615bb7098a876629d98ad5d5a796d084ac95fb56d",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.22.mlp.up_proj.weight.q4": "aa5fef5ee221ee1d0923371ff6caf8c815e532e5de9658a1b90cff9e43f62a88",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.18.self_attn.k_proj.weight.q4": "1eec8adc41087eb1989621e54ed82f3dbf315c6c13e009bb24314a27408f4f3a",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.14.self_attn.k_proj.weight.q4": "98ff1eb9bd67160b2cd07818d22b211d5ca1eb3b4f11ba60ff3d248fdf46e2c6",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.3.self_attn.v_proj.weight.q4": "a47ad53dcae8cd8303a145045db407ee441d2afa28064ec4352e8f1b9bcc5672",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.12.self_attn.o_proj.weight.q4": "d64c92d4fc5814ea68fded445e4909db39d567b8379402b2db7eb0220308beed",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.21.self_attn.k_proj.weight.q4": "b39e7834defb27fc6479a6a5b4094fe260073179279e700687f60df57adb6e87",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.5.mlp.down_proj.weight.q4": "00b035b89a91bf31d8d4fadf398577e38624f95a8649776e409f319dde1f552a",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.17.mlp.down_proj.weight.q4": "34c90cea2f3008ad3560b64f399f4c1db2540ffb7fd9f25d099d885a2e603d05",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.23.self_attn.q_proj.weight.q4": "939174ec6188827849a52506bbe65a53f991bbd48bd52ba744ffbbb3de629ba5",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.16.self_attn.q_proj.weight.q4": "95d84e65562aa60d52bb6b4dfaf0e667ebe48538547f7b4efac992e27a72186e",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.20.mlp.gate_proj.weight.q4": "6b470dcfaa969ea4ea424fa52e62815d5c55cac524dc096b59209a2144bb51a3",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.10.mlp.up_proj.weight.q4": "b7ed5131441c28ff8adb65a7d4afbd2a19dbdf474ed88cbe17605e84045b38db",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.11.mlp.gate_proj.weight.q4": "99c98f9ea693098e0b55193a3fb98d1236fa1b20939d420d80510b1fa6200017",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.18.mlp.down_proj.weight.q4": "ad5c2a4b43dbbb57757ab625ed11e74280c5ea8e202e458375597ef8e728797b",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.3.self_attn.q_proj.weight.q4": "789aff1996d1670c33df94ba3bcd0da8c2b963892f9f85b19e10ef4b866c913f",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.20.mlp.up_proj.weight.q4": "b16dd3d711c1572ee8e61d612f77f37a8fdbf31baa146716e7cb8751be73eca3",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.8.self_attn.q_proj.weight.q4": "3a79ea9ea8ba1ccd7d36f71abf26b4531021acccc6b34110389ea5f0cec81d6e",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.8.mlp.gate_proj.weight.q4": "064bac99336cc491d760a4ca601d4a3a6f71c41c2784dc2154e1ed313f041f27",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.4.self_attn.q_proj.weight.q4": "975ff283eaa0f8bb130d17ed5074200d46a33bb42248b230379a82a881ae80c5",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.1.mlp.down_proj.weight.q4": "cba0769bd5caba9f3eabe118bc304b560b9cd213e5e981517e407c14637cd511",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.11.self_attn.q_proj.weight.q4": "e7185acd3c46eb7a6a6eecbc44e8a2932d0d4a6e25d74aaa27f587db6b7da219",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.7.mlp.up_proj.weight.q4": "4e0c99d3cd2fb6c24f218f726bd059a9ad679f88da548a8106b3c04fac170d64",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.7.mlp.gate_proj.weight.q4": "3732f341f6be0f60ed4e263468b889c12fa5f9132eaf6bf27c8dd004db52e00f",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.4.self_attn.v_proj.weight.q4": "7ec8e3b133ba13d9a5b0efcfad393969a39ee2ffa4128b38fba72efe2767b475",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.15.self_attn.o_proj.weight.q4": "6952c88ad640397852db9ecc07b0cf920cd0149ec69545e027ac6d1713d240e9",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.15.mlp.gate_proj.weight.q4": "d3d3b24d04d09b7723416bf3184db8055925fbff80d2074e4136b34c584513e1",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.19.self_attn.o_proj.weight.q4": "4595d2485c30d1a9a56d39df9cd39ca2a3613a94ff7af069cf074c64039a3819",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.8.self_attn.v_proj.weight.q4": "93273b5cfece0a1658829ffc8137768d30865dcf1cd20fac9398b883573e4444",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.22.mlp.down_proj.weight.q4": "ec2ab095f8d9c56a886d8ca56577be449f0f142695f61fd9b0b5c1a4b7fb6f4a",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.20.self_attn.o_proj.weight.q4": "b07b6cf5e8489b25bc49d57fabbe6a0a28274dd89eff501a35918c751122f426",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.13.self_attn.k_proj.weight.q4": "1eb9cf63d282a0cd483e6b616b4ca2c334e5d97013482e7542213cab5e72ccd1",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.13.mlp.down_proj.weight.q4": "715819f87fbafb7eacde0d5e2bb444dc9585c4e6ad04e09118198be4d10cc56f",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.0.self_attn.o_proj.weight.q4": "526fefc75d73cda97cb5b4def7883bb692aefbce352b3304ad66e6bf813644cb",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.11.self_attn.v_proj.weight.q4": "a1909e8d418224bcb21280b9a3a481546e2df5faaabd07b422160efc0303139f",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.6.self_attn.k_proj.weight.q4": "5ffa81e0f2c122b32d80605b40bbbb3ebbeb20171baf40582d2da756035619bf",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.12.mlp.up_proj.weight.q4": "7ee7a18323f07857a7a3d4cc8a8940da98d60a61d7a897cd49d00e7cbfd816cf",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.16.self_attn.k_proj.weight.q4": "5fc54c7e73eabebe1b33860a9278fbff784972a974ba766356a8edd123b3f7e7",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.0.mlp.up_proj.weight.q4": "d4152999a8d5b25e65cc702d3f853416f856ed7ea91d1b7cebf5c7cf5d5fef77",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.7.mlp.down_proj.weight.q4": "daa8bf8b482176e0c1f2eb12df03a1f5474345e591f1629cce53c7e34fb2795f",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.10.self_attn.o_proj.weight.q4": "efc8aab68b3d2be6c4a15f3ae2c9ac31c1595518625411dbe648fe5b853bd13b",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.1.self_attn.v_proj.weight.q4": "d65b1a62f70b0febd21e460df05fae9eed38ce66bd7baa9e0ff2e72b006f6077",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.23.self_attn.k_proj.weight.q4": "0795476700794158f035b1009f3ace82eee4f180a57c5c894c591d0c20ca3ec3",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.21.self_attn.v_proj.weight.q4": "3b143ab978485e4d86b12e49e9e15c1e08134412e81a5eb3c4d955afda7edae1",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.3.self_attn.k_proj.weight.q4": "bd86bdf2cbb2ab4ee003a62b4823e6dcc1cf56befb9dc7168aaf72408bb80bb1",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.1.mlp.gate_proj.weight.q4": "cc65db597f60dd43352fae1bf7d8368455f04ad6d7919d74d5921275918949ad",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.9.self_attn.o_proj.weight.q4": "7d79069ef8767f1a68bf98af22fbb45aedfc8d6b79aeec479ee8c9f772530638",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.8.mlp.down_proj.weight.q4": "a37f413965ae3983a3e65eab9b2625dd31ea628e7a677b96c3fc538507a61e46",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.18.self_attn.v_proj.weight.q4": "e54a3828d77debd23cd6272ba4833e71d0d595c3168a759f55120a44805308e9",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.14.self_attn.v_proj.weight.q4": "0428763ee83796d975fec83fe10a296baa1a5e2d367231cdec66ecfa493ea389",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.5.self_attn.o_proj.weight.q4": "cb5457283fc45782b304b061527a617d6916ae275a1917568d17692155f7a245",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.15.mlp.up_proj.weight.q4": "f2c4bbf5e0808861c95f922f3916c963d2721208d8ba718be293d35e08b3cd65",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.8.mlp.up_proj.weight.q4": "6a28d7ffe0751f6f22a59a5843c4ccaa5bf9e573aaced83924d0c3dc9becd231",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.1.self_attn.q_proj.weight.q4": "e10a093246339b31f5c250fd8dfbddd4d9cc6ea71ef54b8d6d02bdbd53998f13",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.13.mlp.gate_proj.weight.q4": "5076955bc0f0f532a8e611b699d66ed608afe0f9611c16887e728ef3c325ff85",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.21.self_attn.q_proj.weight.q4": "77cacd9995b16ac148e3f2e348535627fa4d2aa844264d469f6876b4aacb45be",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.22.mlp.gate_proj.weight.q4": "16d769829cd4a1ba4429fe9fb4eb6a9c63a3ba1faa49dfa970a701d249e9f224",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.14.self_attn.q_proj.weight.q4": "231fcc8d8385179a68e58143777cea9d8f82c39c7e01273b2365a829d74839b6",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.15.mlp.down_proj.weight.q4": "e2d5e73e1c9f2b0dcdf13610233b05bd41ad1d366c74fe306e9fa5adafecfb59",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.18.self_attn.q_proj.weight.q4": "89b70071faeaba88efc6199cc63653d62bb4e7831b035261d6905588e86b3318",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.5.mlp.gate_proj.weight.q4": "5d830a7db1625847ed0c6473b3d6d5e799ad2ab1531b450717ffd65286899566",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.13.self_attn.q_proj.weight.q4": "9f173a4619bc6042bb157afafc004e89237210053d107e069a2ecef6a87b7f1c",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.3.mlp.down_proj.weight.q4": "6a29591bd0694fe8e7b39b3b5f2545fa0fc08df480f1d212f67b5549e0bd0e16",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.6.self_attn.q_proj.weight.q4": "c90d43bdd72c96ec5ed63d8385389687bcc72ad8454e7464617aa58882f274f4",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.2.mlp.up_proj.weight.q4": "312a11c51f4de9aa22c7c334b2b449517d3641828724a7fc92bd868fa0ac4133",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.13.self_attn.v_proj.weight.q4": "9732a1a7583cf81ee76719b767f81658592007d329190c7f1dbc776d2ebf8461",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.2.self_attn.o_proj.weight.q4": "2bca16444e641bb805f6e6e006b998420eab353b8dbef1ccdc2f5ea21e799935",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.18.mlp.gate_proj.weight.q4": "f4d7ab2f43102de9968e2ed8e84bd8b6841415b1c069816acc7ee63d6112f57d",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.4.self_attn.k_proj.weight.q4": "c6a66393d008595e4516ac08caea77594afea174daf052dc4c89a302478a7134",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.11.mlp.down_proj.weight.q4": "36cb33e449f51c6413a39cb49467164d80e7866847305840a2be74cbde044105",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.8.self_attn.k_proj.weight.q4": "207a333b54da4e06a261ba64eb28731679c6ec5e2a98383912e1d26ce106b087",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.20.mlp.down_proj.weight.q4": "82ab72b2df4636ce84526b0e90832cc286f444b5d76ffe6a0c5ef5a21e225e14",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.17.self_attn.o_proj.weight.q4": "1835d84608cfdd3e7640993b9124442e66e0ea62154983bc38762d1ba61e23ea",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.17.mlp.up_proj.weight.q4": "2cd77822eb8001146fa3b5264a4f9bc740b15067de88c24c63718d67d6d428d7",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.6.self_attn.v_proj.weight.q4": "bd052adc285305bcd2ab1d932e5d981ad93f0b1d84f43adc0ba2225f7441fc12",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.17.mlp.gate_proj.weight.q4": "ea9a0de835a8306484614cb0d10527db4c1f23f8535cbeab2f0ccf978f322b88",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.22.self_attn.o_proj.weight.q4": "b33096bd671fbfd6f58015929533bbd3d741bee7eb09ef76c9f96c4e507b1403",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.11.self_attn.k_proj.weight.q4": "40e78c4678535dc59354f12195c515ed858259c267455db02ba602415631724b",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.11.mlp.up_proj.weight.q4": "169fe7b4754f0c6e3f296a2f1de965eb27e66e47c62c85a1006ce43f41720066",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.12.self_attn.q_proj.weight.q4": "ea1fc0fd0c9989952027e65bf3d60e5bab78c715cf838fc4a6caa8ef074842a2",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.12.mlp.down_proj.weight.q4": "c9253533bc11c4d0d2d609b8ce0a6dbf54d7ec46d6dd22c6470e470ccf92b0e1",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.23.mlp.down_proj.weight.q4": "f4b4810b5924edad437fe0a3cccc7bbe0df0270dc15ceb390acb629de5af050d",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.7.self_attn.q_proj.weight.q4": "c3242e42c062382704081c065e7bb8f6b03f1fd607648aadfa51b87b79bdd5b6",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.14.mlp.gate_proj.weight.q4": "01a51e19ecc011bb277e8e65bf502489d9339a57c6a2047dda1077cfe5b254fc",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.5.self_attn.k_proj.weight.q4": "fce7c22bb6dcd8a06474997da513c82fa664eff8215e22b01cbee955584fb5d1",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.4.mlp.up_proj.weight.q4": "6be9b0777880e5b688d746f0fe664300ad68289549b51b426d8f53993cba3c4b",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.6.mlp.gate_proj.weight.q4": "1898290180949947cb61c62a2b9cd88e1d459a89695c55e2721f6348f72fcd48",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.9.self_attn.k_proj.weight.q4": "e82ed5b99763732fbcebd4b9a9086aefbb0dcc7bf912b83548478c3848ade51d",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.19.mlp.up_proj.weight.q4": "5ceb78c8b030624222619b1b46cc0015ce8553bd30543d50c9450038fa2a282c",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.12.self_attn.v_proj.weight.q4": "86166fa83010ed48ab89f60e7027f1983944b9a5cdebc19cccef5643d5aeef35",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.3.self_attn.o_proj.weight.q4": "af2947feed13c391c65a29eebe95a10dacdc7f6c3a174de1eae17844329cbd80",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.23.self_attn.o_proj.weight.q4": "32d7f80d2ac1403b65ed02c5d7a0695797fa834fd0bfb952d1d215112ab10279",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.10.self_attn.k_proj.weight.q4": "08713a998a52874320affb268305230a8b1cdb5b6ed911014fea5a9282d97f7e",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.0.mlp.down_proj.weight.q4": "2dc4dad04dfd427fc098de8ab86aa471db51e2649e688dafa542004ebd5d925f",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.9.mlp.gate_proj.weight.q4": "2e2a7a7d2762c4fbf79482432f5165931c38e632e0cef0beceb6e969f9d5b129",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.23.mlp.up_proj.weight.q4": "6524a4970a264fa3c7aec6fc950dc07bb64d7717405b49b1e57d5bbf0dc47925",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.16.self_attn.o_proj.weight.q4": "0e7c07f1ea54386e17f3e646687dbf6182fd996048f1a4e1a38e4c5ede1c2641",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.7.self_attn.v_proj.weight.q4": "863fa3783f6a588c38693dfe852c3ea9ed4ece39f89d85189af8e76d7bea9440",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.11.self_attn.o_proj.weight.q4": "274aa0fcb2a04a3081bf23b1c5f46d55f22b7c743e44ca4e4afcdeaab891edbd",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.0.self_attn.v_proj.weight.q4": "80727bd3d005c7461886e0ee1ec16954e2fb2f985105094c060f1ba22885796d",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.22.self_attn.k_proj.weight.q4": "5779bee6a6c449becc7c4c38225da7da244ecf8d6a5e7b3cb84a1bd53a42b22b",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.19.mlp.down_proj.weight.q4": "01086990641ffcc60d66c5abef56740767279a2d59d3ff04b3bec3e50e217c84",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.10.mlp.gate_proj.weight.q4": "f585c63791d6ca94c19b1e9d3179d4bd1131fc0d47a67ab74d600cf220f2ddbc",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.17.self_attn.k_proj.weight.q4": "f222a6304567b699b7e7fffd15895455758311e266dda03d4821a1bbd5d5bf83",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.8.self_attn.o_proj.weight.q4": "18b55a5ae1b93fb06ecbf960db06a09fbf4941cc96bf6904b9c3398e4c5054bf",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.21.mlp.gate_proj.weight.q4": "5c5448fd7734831d13e1b8e2e90e43882101a103e55dfb35936d9718b9ee677d",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.19.self_attn.v_proj.weight.q4": "220eba11cf288437a3cb83d71d0dbd045c35c2e95a819781461ca7dda4fcb860",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.13.mlp.up_proj.weight.q4": "d35707cca8f94265b50b68dde6c18f1fcbff66d01e2867a8a143df2fe7c1f13a",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.15.self_attn.v_proj.weight.q4": "bac04383f13f91f10a3230f1b4ad4d6d5eacf2e3fd168398fb7b0c02238fda7b",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.4.self_attn.o_proj.weight.q4": "b0221a442f52aa2fdbc0d222f75064e9186e0a4941172a2b6c16b251cea69bd2",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.16.mlp.down_proj.weight.q4": "fe139d28f11eae2844af7bfb2c16903fcea82c6049e82d3773860a51118e31b0",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.20.self_attn.v_proj.weight.q4": "24b30bcb004f41775c17585b39dd0ebb4a95255601c6da4b9e8f44ebed888938",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.2.self_attn.k_proj.weight.q4": "30a40e3e95b0de6a8416650b29d187c24a81e0d2273fe976e1b7a5381b710166",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.4.mlp.down_proj.weight.q4": "d12a56b65b8710e96494feec7c8b99404935d4a55dda085d03c6d7d6e1e640ec",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.0.self_attn.q_proj.weight.q4": "63fc7dbb84312437ccfb38c82a531033999b52a790daaf6d3ef0ed2f657d37b8",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.21.mlp.up_proj.weight.q4": "7d3cf524ccb6f19c71de2617450b1f81d1be668610de0213ba5dc14a3cce4b25",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.6.mlp.up_proj.weight.q4": "ac3edd9f4a54906b4a1662dac78fed2098b290e3ebe1f6259f102351b00cc7cd",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.2.mlp.gate_proj.weight.q4": "12bfde8331feaafaaedf70a8cce780bf01c0b0ec7ac32b8af7ef43cede560085",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.15.self_attn.q_proj.weight.q4": "54c0302c3c403c3a349d2d6e9dc13259ccf7915fdb0a15bf773f829af9d69777",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.19.self_attn.q_proj.weight.q4": "3a5d559b7b91d7dbdd5341ae699673b3947f9ff509459c94d490698054f87cfa",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/model.layers.20.self_attn.q_proj.weight.q4": "c5d4540e9430a9ccc84361d344a96655680a819e24d971671e648be394d64499",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-qwen-q4-v1/manifest.json": "f2d51cb2bb53d1ce0a4157fe54d27dbdd6f57a454b1e3aeed807c4772acc2a3a"
+  },
+  "events": [
+    {
+      "event": "sample",
+      "run": 0,
+      "order": "original_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.993482167,
+        "prefill_seconds": 2.9928600419999998,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000620458,
+        "total_seconds": 2.993482208
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.933382666,
+        "prefill_seconds": 1.932799458,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000582084,
+        "total_seconds": 1.933382666
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 6.125e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 9.167e-06,
+        "host_encode_seconds": 0.000349083,
+        "wait_seconds": 0.849612541,
+        "gpu_start_seconds": 1226931.0755415,
+        "gpu_end_seconds": 1226931.9246671668,
+        "readback_seconds": 8.7334e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 5.083e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 7.958e-06,
+        "host_encode_seconds": 0.000332041,
+        "wait_seconds": 0.5881805,
+        "gpu_start_seconds": 1226933.27038725,
+        "gpu_end_seconds": 1226933.8581382502,
+        "readback_seconds": 8.5708e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 1,
+      "order": "tiled_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.977007042,
+        "prefill_seconds": 2.9763925,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000613042,
+        "total_seconds": 2.9770070840000002
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.928533583,
+        "prefill_seconds": 1.927943751,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000589042,
+        "total_seconds": 1.928533625
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 5.375e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.4125e-05,
+        "host_encode_seconds": 0.000341792,
+        "wait_seconds": 0.847890792,
+        "gpu_start_seconds": 1226937.9166659168,
+        "gpu_end_seconds": 1226938.764047,
+        "readback_seconds": 8.8583e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 4.917e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 8.667e-06,
+        "host_encode_seconds": 0.00033425,
+        "wait_seconds": 0.5861125,
+        "gpu_start_seconds": 1226935.201365625,
+        "gpu_end_seconds": 1226935.7870562917,
+        "readback_seconds": 0.000134375,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 2,
+      "order": "original_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.977477667,
+        "prefill_seconds": 2.9768922910000004,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000584458,
+        "total_seconds": 2.977477667
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.932095458,
+        "prefill_seconds": 1.931512124,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000581834,
+        "total_seconds": 1.9320955
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 8.375e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.2417e-05,
+        "host_encode_seconds": 0.0003495,
+        "wait_seconds": 0.84978425,
+        "gpu_start_seconds": 1226940.8928208752,
+        "gpu_end_seconds": 1226941.7421415,
+        "readback_seconds": 8.625e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 6.125e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.0333e-05,
+        "host_encode_seconds": 0.0003325,
+        "wait_seconds": 0.588235333,
+        "gpu_start_seconds": 1226943.086449125,
+        "gpu_end_seconds": 1226943.674174125,
+        "readback_seconds": 8.4583e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 3,
+      "order": "tiled_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.9789895,
+        "prefill_seconds": 2.9783694569999994,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000618625,
+        "total_seconds": 2.978989541
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.928219542,
+        "prefill_seconds": 1.927619875,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000598583,
+        "total_seconds": 1.928219584
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 7.125e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 8.25e-06,
+        "host_encode_seconds": 0.000345708,
+        "wait_seconds": 0.848652208,
+        "gpu_start_seconds": 1226947.73368675,
+        "gpu_end_seconds": 1226948.5818899167,
+        "readback_seconds": 8.375e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 5.167e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 9.25e-06,
+        "host_encode_seconds": 0.000332625,
+        "wait_seconds": 0.585007375,
+        "gpu_start_seconds": 1226945.01835325,
+        "gpu_end_seconds": 1226945.6029266252,
+        "readback_seconds": 8.1834e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 4,
+      "order": "original_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.975791208,
+        "prefill_seconds": 2.975208334,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000581667,
+        "total_seconds": 2.97579125
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.9352405830000001,
+        "prefill_seconds": 1.934657542,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000581541,
+        "total_seconds": 1.935240625
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 3.333e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 7.959e-06,
+        "host_encode_seconds": 0.000335792,
+        "wait_seconds": 0.849027625,
+        "gpu_start_seconds": 1226950.7095592502,
+        "gpu_end_seconds": 1226951.55813875,
+        "readback_seconds": 8.775e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 3.541e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 8.167e-06,
+        "host_encode_seconds": 0.000345875,
+        "wait_seconds": 0.5884285,
+        "gpu_start_seconds": 1226952.90538925,
+        "gpu_end_seconds": 1226953.4933915418,
+        "readback_seconds": 8.45e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 5,
+      "order": "tiled_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.9768197499999998,
+        "prefill_seconds": 2.9761713320000003,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.00064675,
+        "total_seconds": 2.976819791
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.934839459,
+        "prefill_seconds": 1.934256499,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000582083,
+        "total_seconds": 1.9348395
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 2.916e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.15e-05,
+        "host_encode_seconds": 0.000340667,
+        "wait_seconds": 0.84656325,
+        "gpu_start_seconds": 1226957.559259,
+        "gpu_end_seconds": 1226958.405392125,
+        "readback_seconds": 8.7209e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 8.333e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.3667e-05,
+        "host_encode_seconds": 0.0003445,
+        "wait_seconds": 0.589187333,
+        "gpu_start_seconds": 1226954.8399150001,
+        "gpu_end_seconds": 1226955.428636375,
+        "readback_seconds": 8.6792e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 6,
+      "order": "original_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.973284541,
+        "prefill_seconds": 2.97268229,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.00060125,
+        "total_seconds": 2.973284541
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.930836583,
+        "prefill_seconds": 1.930254459,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000580625,
+        "total_seconds": 1.930836625
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 5.25e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.1625e-05,
+        "host_encode_seconds": 0.00034,
+        "wait_seconds": 0.846440625,
+        "gpu_start_seconds": 1226960.5331230417,
+        "gpu_end_seconds": 1226961.379039375,
+        "readback_seconds": 8.3875e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 5.292e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 9.25e-06,
+        "host_encode_seconds": 0.000336709,
+        "wait_seconds": 0.587657667,
+        "gpu_start_seconds": 1226962.722788375,
+        "gpu_end_seconds": 1226963.3099112501,
+        "readback_seconds": 8.4834e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 7,
+      "order": "tiled_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.977532792,
+        "prefill_seconds": 2.976663084,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000867875,
+        "total_seconds": 2.977532875
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.9248887909999999,
+        "prefill_seconds": 1.924036124,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000851625,
+        "total_seconds": 1.924888833
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 4.625e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 8.375e-06,
+        "host_encode_seconds": 0.000345625,
+        "wait_seconds": 0.847436875,
+        "gpu_start_seconds": 1226967.365444,
+        "gpu_end_seconds": 1226968.2124735,
+        "readback_seconds": 0.000114833,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 5.333e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 9.375e-06,
+        "host_encode_seconds": 0.000352292,
+        "wait_seconds": 0.585377166,
+        "gpu_start_seconds": 1226964.650006375,
+        "gpu_end_seconds": 1226965.2348934168,
+        "readback_seconds": 0.00011325,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 8,
+      "order": "original_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.9744085829999998,
+        "prefill_seconds": 2.973814083,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000592917,
+        "total_seconds": 2.974408625
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.9269438330000002,
+        "prefill_seconds": 1.9260892099999998,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000853209,
+        "total_seconds": 1.926943875
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 8.084e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.2667e-05,
+        "host_encode_seconds": 0.000397,
+        "wait_seconds": 0.846519167,
+        "gpu_start_seconds": 1226970.34159725,
+        "gpu_end_seconds": 1226971.1876069168,
+        "readback_seconds": 8.5625e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 5e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 8.792e-06,
+        "host_encode_seconds": 0.000342916,
+        "wait_seconds": 0.584941959,
+        "gpu_start_seconds": 1226972.5298236667,
+        "gpu_end_seconds": 1226973.114267,
+        "readback_seconds": 0.000117708,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 9,
+      "order": "tiled_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.97878275,
+        "prefill_seconds": 2.978196876,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.0005845,
+        "total_seconds": 2.97878275
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.9292371670000001,
+        "prefill_seconds": 1.928642375,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000593667,
+        "total_seconds": 1.929237209
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 4.25e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.0416e-05,
+        "host_encode_seconds": 0.000467167,
+        "wait_seconds": 0.849710167,
+        "gpu_start_seconds": 1226977.173904625,
+        "gpu_end_seconds": 1226978.023190625,
+        "readback_seconds": 7.9417e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 5.792e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.5292e-05,
+        "host_encode_seconds": 0.000355916,
+        "wait_seconds": 0.586208958,
+        "gpu_start_seconds": 1226974.4586487918,
+        "gpu_end_seconds": 1226975.0443976251,
+        "readback_seconds": 6.6333e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 10,
+      "order": "original_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.975912333,
+        "prefill_seconds": 2.975318374,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000592958,
+        "total_seconds": 2.975912333
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.934234875,
+        "prefill_seconds": 1.933651209,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000582125,
+        "total_seconds": 1.934234917
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 5.125e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 9.708e-06,
+        "host_encode_seconds": 0.000344042,
+        "wait_seconds": 0.848093041,
+        "gpu_start_seconds": 1226980.1518011668,
+        "gpu_end_seconds": 1226980.999409625,
+        "readback_seconds": 8.4416e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 4.792e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 1.2e-05,
+        "host_encode_seconds": 0.000339958,
+        "wait_seconds": 0.589150625,
+        "gpu_start_seconds": 1226982.3449987501,
+        "gpu_end_seconds": 1226982.9336863752,
+        "readback_seconds": 8.4791e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 11,
+      "order": "tiled_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.980273209,
+        "prefill_seconds": 2.97967925,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.00059275,
+        "total_seconds": 2.9802732499999998
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.93230325,
+        "prefill_seconds": 1.9317092489999999,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000593083,
+        "total_seconds": 1.93230325
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 3.083e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 6.791e-06,
+        "host_encode_seconds": 0.000339,
+        "wait_seconds": 0.849738375,
+        "gpu_start_seconds": 1226986.99733325,
+        "gpu_end_seconds": 1226987.846528625,
+        "readback_seconds": 8.6708e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 3.042e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 6.292e-06,
+        "host_encode_seconds": 0.000325959,
+        "wait_seconds": 0.588953666,
+        "gpu_start_seconds": 1226984.2778582918,
+        "gpu_end_seconds": 1226984.866322,
+        "readback_seconds": 8.3e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    },
+    {
+      "event": "sample",
+      "run": 12,
+      "order": "original_first",
+      "original_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 2.976478583,
+        "prefill_seconds": 2.975882458,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.00059275,
+        "total_seconds": 2.976478583
+      },
+      "tiled_report": {
+        "reason": {
+          "kind": "output_limit"
+        },
+        "reused_tokens": 0,
+        "prefill_tokens": 512,
+        "sampled_tokens": 1,
+        "emitted_tokens": 1,
+        "history_tokens": 513,
+        "evaluated_tokens": 512,
+        "pending_tokens": 1,
+        "first_token_seconds": 1.931823333,
+        "prefill_seconds": 1.9312176239999999,
+        "decode_seconds": 0.0,
+        "sampling_seconds": 0.000604458,
+        "total_seconds": 1.931823333
+      },
+      "greedy_id": 3060,
+      "max_logit_delta": 0.0,
+      "original_timing": {
+        "command_creation_seconds": 4.25e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 8.375e-06,
+        "host_encode_seconds": 0.000339792,
+        "wait_seconds": 0.849083459,
+        "gpu_start_seconds": 1226989.9748874167,
+        "gpu_end_seconds": 1226990.8235311667,
+        "readback_seconds": 8.425e-05,
+        "command_count": 1
+      },
+      "tiled_timing": {
+        "command_creation_seconds": 3.334e-06,
+        "clock_calibration_seconds": 0.0,
+        "commit_seconds": 7.25e-06,
+        "host_encode_seconds": 0.000332042,
+        "wait_seconds": 0.5875125,
+        "gpu_start_seconds": 1226992.1682419167,
+        "gpu_end_seconds": 1226992.7553147501,
+        "readback_seconds": 9.0167e-05,
+        "command_count": 1
+      },
+      "original_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      },
+      "tiled_memory": {
+        "weights_bytes": 476307372,
+        "kv_bytes": 12583584,
+        "scratch_bytes": 99231316,
+        "history_bytes": 4096,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 656464800
+      }
+    }
+  ],
+  "idle_usage": [
+    {
+      "phase": "ready",
+      "worker": {
+        "resident_size": 727252992,
+        "phys_footprint": 717702176,
+        "lifetime_max_phys_footprint": 717702176
+      },
+      "driver": {
+        "resident_size": 23904256,
+        "phys_footprint": 13517352,
+        "lifetime_max_phys_footprint": 13517352
+      }
+    },
+    {
+      "phase": "after_run_2",
+      "worker": {
+        "resident_size": 730071040,
+        "phys_footprint": 720585784,
+        "lifetime_max_phys_footprint": 720602168
+      },
+      "driver": {
+        "resident_size": 23937024,
+        "phys_footprint": 13533736,
+        "lifetime_max_phys_footprint": 13533736
+      }
+    },
+    {
+      "phase": "after_run_12",
+      "worker": {
+        "resident_size": 730103808,
+        "phys_footprint": 720618552,
+        "lifetime_max_phys_footprint": 720618552
+      },
+      "driver": {
+        "resident_size": 24035328,
+        "phys_footprint": 13632040,
+        "lifetime_max_phys_footprint": 13632040
+      }
+    }
+  ],
+  "platform": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "power_before": {
+    "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t100%; charged; 0:00 remaining present: true",
+    "policy": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  },
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1",
+  "build": {
+    "command": "CARGO_TARGET_DIR=artifacts/m5-checks cargo build --offline --release --features metal --example metal_prefill",
+    "profile": "Cargo release defaults; no RUSTFLAGS override",
+    "features": [
+      "metal"
+    ]
+  },
+  "thermal_scope": "Endpoint observations only; continuous thermal pressure is not measured.",
+  "transport_policy": {
+    "request_seconds": 120,
+    "lifetime_seconds": 1200
+  },
+  "ready": {
+    "event": "ready",
+    "format": "toklet-metal-q4-prefill-v1",
+    "projection_modes": [
+      "Original",
+      "Q4Tiled"
+    ],
+    "device": "Apple M1 Pro",
+    "q4_execution_widths": [
+      32,
+      32
+    ],
+    "debug_assertions": false,
+    "warmups": 3,
+    "samples": 10,
+    "prompt_tokens": 512,
+    "output_tokens": 1,
+    "capacity": 1024,
+    "chunk": 128,
+    "combined_admitted_bytes": 903731092,
+    "original_memory": {
+      "weights_bytes": 476307372,
+      "kv_bytes": 12583584,
+      "scratch_bytes": 99231316,
+      "history_bytes": 4096,
+      "logits_bytes": 1215488,
+      "metadata_bytes": 14080,
+      "metadata_allowance_bytes": 67108864,
+      "admitted_bytes": 656464800
+    },
+    "tiled_memory": {
+      "weights_bytes": 476307372,
+      "kv_bytes": 12583584,
+      "scratch_bytes": 99231316,
+      "history_bytes": 4096,
+      "logits_bytes": 1215488,
+      "metadata_bytes": 14080,
+      "metadata_allowance_bytes": 67108864,
+      "admitted_bytes": 656464800
+    },
+    "application_bytes": 67108864,
+    "load_seconds": 12.327231166,
+    "numerical_gate": {
+      "atol": 0.0001,
+      "rtol": 0.0001
+    }
+  },
+  "analysis": {
+    "original": {
+      "median_seconds": 2.9766491664999997,
+      "minimum_seconds": 2.973284541,
+      "maximum_seconds": 2.980273209,
+      "median_absolute_deviation_seconds": 0.0015086045000003434,
+      "raw_seconds": [
+        2.9789895,
+        2.975791208,
+        2.9768197499999998,
+        2.973284541,
+        2.977532792,
+        2.9744085829999998,
+        2.97878275,
+        2.975912333,
+        2.980273209,
+        2.976478583
+      ]
+    },
+    "tiled": {
+      "median_seconds": 1.931329958,
+      "minimum_seconds": 1.9248887909999999,
+      "maximum_seconds": 1.9352405830000001,
+      "median_absolute_deviation_seconds": 0.0030076665000000613,
+      "raw_seconds": [
+        1.928219542,
+        1.9352405830000001,
+        1.934839459,
+        1.930836583,
+        1.9248887909999999,
+        1.9269438330000002,
+        1.9292371670000001,
+        1.934234875,
+        1.93230325,
+        1.931823333
+      ]
+    },
+    "improvement_fraction": 0.3511731312726738,
+    "max_logit_delta": 0.0,
+    "primary_metric": "Warm request reset/prefill to first token event;512input,1output; timings include GPU completion,full last-logits readback,CPUgreedy"
+  },
+  "cleanup_errors": [],
+  "identities_unchanged": true,
+  "power_after": {
+    "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t100%; charged; 0:00 remaining present: true",
+    "policy": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  }
+}

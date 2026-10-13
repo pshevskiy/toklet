@@ -132,3 +132,34 @@ kernel void q4_matvec(device const uchar* w[[buffer(0)]],device const half* bias
     float value=simd_sum(sum)+float(bias[row]);
     if(lane==0)checked_half(out,token*s[5]+row,value,status);
 }
+
+// One SIMD group per [eight-token tile, output row]. The ordered column
+// traversal/reduction follows q4_matvec for the same queried SIMD width.
+// Each reconstructed Float32
+// weight is reused across eight independent lane accumulators. Partial tiles
+// neither read nor write inactive rows. ABI/strides are identical to matvec.
+kernel void q4_prefill(device const uchar* w[[buffer(0)]],device const half* bias[[buffer(1)]],device const half* x[[buffer(2)]],device half* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    uint first=(group/s[2])*8,row=group%s[2];
+    if(first>=s[0])return;
+    uint active=min(8u,s[0]-first);
+    float sums[8]={0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+    for(uint column=lane;column<s[1];column+=width) {
+        uint start=64+row*s[3]+(column/64)*36;
+        device const ushort* metadata=reinterpret_cast<device const ushort*>(w+start);
+        float scale=float(as_type<half>(metadata[0])),b=float(as_type<half>(metadata[1]));
+        uint code=(w[start+4+(column%64)/2]>>(4*(column%2)))&15;
+        float weight=scale*float(code)+b;
+        // Fixed indices let the compiler retain eight independent accumulators
+        // in registers. The dynamically indexed prototype lost end-to-end time.
+        #pragma unroll
+        for(uint token=0;token<8;token++)
+            if(token<active)sums[token]=sums[token]+weight*float(x[(first+token)*s[4]+column]);
+    }
+    #pragma unroll
+    for(uint token=0;token<8;token++) {
+        if(token<active) {
+            float value=simd_sum(sums[token])+float(bias[row]);
+            if(lane==0)checked_half(out,(first+token)*s[5]+row,value,status);
+        }
+    }
+}
