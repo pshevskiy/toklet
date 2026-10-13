@@ -1,0 +1,36 @@
+{
+  "format": "toklet-larger-fp32-loss-qualification-v1",
+  "scope": "Completed matched FP32 reference collection only; no GPU quality, task-rate, performance or M5 acceptance",
+  "engine_revision": "58dc39a4a73a28298c449042d9303b579b2a42d0",
+  "command": [
+    "python3",
+    "artifacts/m5-larger-reference-snapshot-v1/tools/experiments/quality_rows.py",
+    "--binary",
+    "artifacts/m5-larger-reference-snapshot-v1/quality_rows",
+    "--output",
+    "benchmarks/results/2026-10-13-larger-fp32-held-out-loss-v1.json",
+    "--full"
+  ],
+  "build_note": "Collector build field describes the original isolated release binary, copied unchanged into the snapshot; no build was performed inside the snapshot.",
+  "bindings": {
+    "benchmarks/results/2026-10-13-larger-fp32-held-out-loss-v1.json": "5967fb03c60420556bfbf3d3893269b27c3bb54df4328de19fc667074dc0da6b",
+    "benchmarks/results/2026-10-13-larger-fp32-held-out-loss-v1.raw.jsonl": "d9fefc8fe286d71660ecc53ee3f7002bc981141711f53440180838887c4ca808",
+    "benchmarks/results/2026-10-13-larger-fp32-held-out-loss-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-13-larger-reference-snapshot-v1.json": "38aa0320362a404b335194af98b7cff808635bc1bd8c12a553deaa32ba3b744d",
+    "benchmarks/results/2026-10-13-larger-oracle-qualification-v1.json": "854c50a3974ba490e730784352ed835a5670deb9b6b370f2045d06a0dd360ef3"
+  },
+  "scored_targets": 10000,
+  "full_chunks": 1260,
+  "blocks": 10,
+  "mean_negative_log_likelihood": 2.485958031019153,
+  "total_negative_log_likelihood": 24859.580310191533,
+  "all_five_workers_exit_zero": true,
+  "memory_admitted_bytes": 6370269388,
+  "combined_native_lifetime_peak_bytes": 6290069216,
+  "astra_review": "Accepted independent stdlib replay of all11306events/causal labels,1260chunks/10blocks and fsum mean; snapshot identity binding accepted.",
+  "quality_gate": {
+    "maximum_mean_nll_increase": 0.05,
+    "maximum_task_pass_rate_drop": 0.02
+  },
+  "remaining": "Matched larger GPU loss and100-task baseline/candidate, performance and sustained qualification remain pending. Qwen0.5B Q4 rejection unchanged."
+}
