@@ -1,0 +1,185 @@
+{"event":"ready","backend":"metal","context_capacity":256,"cpu_projection":"none","memory_admitted_bytes":1329601312,"logical_memory":{"weights_bytes":988069596,"kv_bytes":3146400,"scratch_bytes":22283476,"history_bytes":1024,"logits_bytes":1215488,"metadata_bytes":3840,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624}}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.066382083,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.174602792,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.28316625,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.391971917,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.501145958,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.610609458,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.720169875,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.830534708,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.066382083,"prefill_seconds":0.065798209,"decode_seconds":0.759911208,"sampling_seconds":0.004672625,"total_seconds":0.83054525},"backend":"metal","cpu_projection":"none","input_preparation_seconds":0.000016084,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.00010479200000000001,"publication_seconds":0.00005500100000000001,"load_seconds":3.391669792,"conversion_seconds":3.185546326000151,"tokenizer_load_seconds":0.136649959,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042823291,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150981458,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259541708,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368492875,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.47760175,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.587282541,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.6971525,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.807504916,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042823291,"prefill_seconds":0.042241667,"decode_seconds":0.760563251,"sampling_seconds":0.004655749000000001,"total_seconds":0.8075135},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.66e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000018291,"publication_seconds":0.000032959,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042672875,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.149935667,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.258475625,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.367440792,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.476555417,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.586194417,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.69581775,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.805913708,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042672875,"prefill_seconds":0.042095041,"decode_seconds":0.7588893739999999,"sampling_seconds":0.004836041,"total_seconds":0.80593175},"backend":"metal","cpu_projection":"none","input_preparation_seconds":4.1e-8,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000039750000000000004,"publication_seconds":0.000069123,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042943209,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.1516575,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.260380917,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.369473334,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.478757542,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.588486459,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.6979395,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.808146625,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042943209,"prefill_seconds":0.042325167,"decode_seconds":0.7610383319999999,"sampling_seconds":0.004694666,"total_seconds":0.808153834},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.67e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000034166000000000005,"publication_seconds":0.000059082999999999997,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042758458,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.151019,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259688917,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368721042,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477851417,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.586453042,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.695049792,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.804164083,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042758458,"prefill_seconds":0.042169625,"decode_seconds":0.757224626,"sampling_seconds":0.004696624,"total_seconds":0.804193417},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000044334,"publication_seconds":0.00005604299999999999,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042951208,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.15082375,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.258183375,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.365967625,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.475356291,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.584542416,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.694274041,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.804471875,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042951208,"prefill_seconds":0.042369458,"decode_seconds":0.757282875,"sampling_seconds":0.004724042,"total_seconds":0.804481541},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000044958000000000006,"publication_seconds":0.000057459,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042012167,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.149614833,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.258078417,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.365672792,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.473525333,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.581879583,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.691934375,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.80228925,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042012167,"prefill_seconds":0.041393042,"decode_seconds":0.756053125,"sampling_seconds":0.004738165,"total_seconds":0.802295625},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.00004525,"publication_seconds":0.000062457,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042770458,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.151190583,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.2599895,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.369218667,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.478514333,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.588341167,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.698344167,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.808788208,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042770458,"prefill_seconds":0.042188709,"decode_seconds":0.7618962069999999,"sampling_seconds":0.00464,"total_seconds":0.808796542},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000026666999999999997,"publication_seconds":0.000042999000000000006,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042816541,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.151089541,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259793416,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368691708,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.4780345,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.587623958,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.697276041,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.806333125,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042816541,"prefill_seconds":0.042232083,"decode_seconds":0.7593207089999999,"sampling_seconds":0.004710124,"total_seconds":0.80636425},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.67e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000033667,"publication_seconds":0.00006554299999999999,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042032917,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.14935225,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.258130459,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.367022167,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.476241542,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.585952959,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.695896584,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.805804625,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042032917,"prefill_seconds":0.041438083,"decode_seconds":0.7595811659999999,"sampling_seconds":0.004707666000000001,"total_seconds":0.805824417},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.67e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000036126999999999995,"publication_seconds":0.000059417000000000004,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042434417,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150844625,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259642,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368428792,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477645458,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.587437083,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.697423625,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.807703125,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042434417,"prefill_seconds":0.041852375,"decode_seconds":0.7611542920000001,"sampling_seconds":0.004638959,"total_seconds":0.80771175},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000023667,"publication_seconds":0.000040501000000000004,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042767625,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150984458,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259671333,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.3687335,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477458708,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.587078375,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.697112,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.807185375,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042767625,"prefill_seconds":0.042186167,"decode_seconds":0.760269749,"sampling_seconds":0.004655791,"total_seconds":0.80720625},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000036418,"publication_seconds":0.00005571000000000001,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042773,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.151118,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259375916,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368268541,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477797291,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.587546291,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.697176625,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.807666833,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042773,"prefill_seconds":0.042201708,"decode_seconds":0.760753165,"sampling_seconds":0.004636917,"total_seconds":0.807673541},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000034377,"publication_seconds":0.000045541,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":785,"index":0,"elapsed_seconds":0.144731125,"text":"The"}
+{"event":"token","token_id":12884,"index":1,"elapsed_seconds":0.266058084,"text":" sky"}
+{"event":"token","token_id":7952,"index":2,"elapsed_seconds":0.38774475,"text":" appears"}
+{"event":"token","token_id":6303,"index":3,"elapsed_seconds":0.50984075,"text":" blue"}
+{"event":"token","token_id":1576,"index":4,"elapsed_seconds":0.632204792,"text":" because"}
+{"event":"token","token_id":315,"index":5,"elapsed_seconds":0.754238792,"text":" of"}
+{"event":"token","token_id":279,"index":6,"elapsed_seconds":0.877332209,"text":" the"}
+{"event":"token","token_id":71816,"index":7,"elapsed_seconds":1.001034459,"text":" scattering"}
+{"event":"token","token_id":315,"index":8,"elapsed_seconds":1.124977125,"text":" of"}
+{"event":"token","token_id":39020,"index":9,"elapsed_seconds":1.249426959,"text":" sunlight"}
+{"event":"token","token_id":553,"index":10,"elapsed_seconds":1.374314959,"text":" by"}
+{"event":"token","token_id":13673,"index":11,"elapsed_seconds":1.4995487920000001,"text":" tiny"}
+{"event":"token","token_id":18730,"index":12,"elapsed_seconds":1.625108917,"text":" particles"}
+{"event":"token","token_id":304,"index":13,"elapsed_seconds":1.75099775,"text":" in"}
+{"event":"token","token_id":279,"index":14,"elapsed_seconds":1.877170375,"text":" the"}
+{"event":"token","token_id":9237,"index":15,"elapsed_seconds":2.003819542,"text":" Earth"}
+{"event":"token","token_id":594,"index":16,"elapsed_seconds":2.13073675,"text":"'s"}
+{"event":"token","token_id":16566,"index":17,"elapsed_seconds":2.258007292,"text":" atmosphere"}
+{"event":"token","token_id":11,"index":18,"elapsed_seconds":2.385695792,"text":","}
+{"event":"token","token_id":7945,"index":19,"elapsed_seconds":2.513706,"text":" particularly"}
+{"event":"token","token_id":3015,"index":20,"elapsed_seconds":2.641790292,"text":" water"}
+{"event":"token","token_id":37652,"index":21,"elapsed_seconds":2.77072825,"text":" vapor"}
+{"event":"token","token_id":323,"index":22,"elapsed_seconds":2.899838709,"text":" and"}
+{"event":"token","token_id":46403,"index":23,"elapsed_seconds":3.0293395,"text":" nitrogen"}
+{"event":"token","token_id":18952,"index":24,"elapsed_seconds":3.159149125,"text":" ox"}
+{"event":"token","token_id":3341,"index":25,"elapsed_seconds":3.289375417,"text":"ides"}
+{"event":"token","token_id":13,"index":26,"elapsed_seconds":3.419864417,"text":"."}
+{"event":"token","token_id":1096,"index":27,"elapsed_seconds":3.550230125,"text":" This"}
+{"event":"token","token_id":71816,"index":28,"elapsed_seconds":3.680144709,"text":" scattering"}
+{"event":"token","token_id":11137,"index":29,"elapsed_seconds":3.8105728340000002,"text":" causes"}
+{"event":"token","token_id":279,"index":30,"elapsed_seconds":3.941725167,"text":" the"}
+{"event":"token","token_id":6303,"index":31,"elapsed_seconds":4.072882709,"text":" blue"}
+{"event":"token","token_id":3100,"index":32,"elapsed_seconds":4.205488542,"text":" light"}
+{"event":"token","token_id":504,"index":33,"elapsed_seconds":4.338572084,"text":" from"}
+{"event":"token","token_id":279,"index":34,"elapsed_seconds":4.472263375,"text":" the"}
+{"event":"token","token_id":7015,"index":35,"elapsed_seconds":4.606129042,"text":" sun"}
+{"event":"token","token_id":311,"index":36,"elapsed_seconds":4.740320125,"text":" to"}
+{"event":"token","token_id":387,"index":37,"elapsed_seconds":4.874872209,"text":" be"}
+{"event":"token","token_id":36967,"index":38,"elapsed_seconds":5.008559459,"text":" scattered"}
+{"event":"token","token_id":304,"index":39,"elapsed_seconds":5.14257975,"text":" in"}
+{"event":"token","token_id":678,"index":40,"elapsed_seconds":5.277013459,"text":" all"}
+{"event":"token","token_id":17961,"index":41,"elapsed_seconds":5.413075834,"text":" directions"}
+{"event":"token","token_id":11,"index":42,"elapsed_seconds":5.5495685,"text":","}
+{"event":"token","token_id":12942,"index":43,"elapsed_seconds":5.686523292,"text":" resulting"}
+{"event":"token","token_id":304,"index":44,"elapsed_seconds":5.823488584,"text":" in"}
+{"event":"token","token_id":279,"index":45,"elapsed_seconds":5.961134459,"text":" the"}
+{"event":"token","token_id":28583,"index":46,"elapsed_seconds":6.098976459,"text":" characteristic"}
+{"event":"token","token_id":6303,"index":47,"elapsed_seconds":6.237119459,"text":" blue"}
+{"event":"token","token_id":1894,"index":48,"elapsed_seconds":6.37568825,"text":" color"}
+{"event":"token","token_id":315,"index":49,"elapsed_seconds":6.514410667,"text":" of"}
+{"event":"token","token_id":279,"index":50,"elapsed_seconds":6.653530292,"text":" the"}
+{"event":"token","token_id":12884,"index":51,"elapsed_seconds":6.79210125,"text":" sky"}
+{"event":"token","token_id":13,"index":52,"elapsed_seconds":6.931163375,"text":"."}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"stop_token","token_id":151645},"reused_tokens":0,"prefill_tokens":40,"sampled_tokens":54,"emitted_tokens":53,"history_tokens":94,"evaluated_tokens":93,"pending_tokens":1,"first_token_seconds":0.144731125,"prefill_seconds":0.144148291,"decode_seconds":6.894783125999998,"sampling_seconds":0.031567129,"total_seconds":7.071179667},"backend":"metal","cpu_projection":"none","input_preparation_seconds":0.00161075,"input_formatting_seconds":4.375e-6,"tokenization_seconds":0.001606167,"detokenization_seconds":0.0003296220000000001,"publication_seconds":0.00034391900000000004,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}

@@ -1,0 +1,185 @@
+{"event":"ready","backend":"metal","context_capacity":256,"cpu_projection":"none","memory_admitted_bytes":1329601312,"logical_memory":{"weights_bytes":988069596,"kv_bytes":3146400,"scratch_bytes":22283476,"history_bytes":1024,"logits_bytes":1215488,"metadata_bytes":3840,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624}}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.070940459,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.179059417,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.287439834,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.396110125,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.505215209,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.614649584,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.724506959,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.834349959,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.070940459,"prefill_seconds":0.070357167,"decode_seconds":0.7591999560000001,"sampling_seconds":0.004654166999999999,"total_seconds":0.834384292},"backend":"metal","cpu_projection":"none","input_preparation_seconds":3.125e-6,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000122084,"publication_seconds":0.000048040999999999996,"load_seconds":3.493972083,"conversion_seconds":3.2302903219999837,"tokenizer_load_seconds":0.136827,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042659208,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150809292,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.2591935,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.36826675,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.476318917,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.584971708,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.693893458,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.804183333,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042659208,"prefill_seconds":0.042077875,"decode_seconds":0.7572786280000001,"sampling_seconds":0.0047355010000000005,"total_seconds":0.804190292},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000040541,"publication_seconds":0.000054667,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042646833,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150889625,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259395333,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368402875,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477576333,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.587185375,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.696387292,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.806660125,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042646833,"prefill_seconds":0.042070542,"decode_seconds":0.7598916240000001,"sampling_seconds":0.0046337900000000005,"total_seconds":0.806667417},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.67e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000028291,"publication_seconds":0.00004075,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042760709,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.151170042,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259776667,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368404375,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477776875,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.587273709,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.6974955,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.807918792,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042760709,"prefill_seconds":0.042179,"decode_seconds":0.761019707,"sampling_seconds":0.004657374000000001,"total_seconds":0.807924959},"backend":"metal","cpu_projection":"none","input_preparation_seconds":0.0,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000026625,"publication_seconds":0.000040248000000000005,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042727667,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150919167,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259702334,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.3686935,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.478017917,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.587554,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.697610417,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.807858917,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042727667,"prefill_seconds":0.042148917,"decode_seconds":0.7610099170000001,"sampling_seconds":0.004640248,"total_seconds":0.807867917},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000021833,"publication_seconds":0.000045334,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042771584,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.15117275,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.260063875,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.369115084,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.478569084,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.588286209,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.69835,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.808512667,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042771584,"prefill_seconds":0.042187583,"decode_seconds":0.7616275020000001,"sampling_seconds":0.0046567100000000005,"total_seconds":0.808518084},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000017001999999999997,"publication_seconds":0.000027875,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042749833,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150390916,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.258524666,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.366129,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.475320541,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.584591958,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.693219625,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.803355916,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042749833,"prefill_seconds":0.042166125,"decode_seconds":0.7558709579999999,"sampling_seconds":0.005185667000000001,"total_seconds":0.803363416},"backend":"metal","cpu_projection":"none","input_preparation_seconds":4.2e-8,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000057584,"publication_seconds":0.000079293,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.04228825,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150589542,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259200667,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368184667,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477279333,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.586813458,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.696689292,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.806939833,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.04228825,"prefill_seconds":0.041706708,"decode_seconds":0.760520331,"sampling_seconds":0.004650584,"total_seconds":0.806949375},"backend":"metal","cpu_projection":"none","input_preparation_seconds":2.08e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000028168000000000002,"publication_seconds":0.000041707,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042861583,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.1510095,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259707167,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368619,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477877125,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.5871695,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.697167833,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.807488917,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042861583,"prefill_seconds":0.042277375,"decode_seconds":0.760501375,"sampling_seconds":0.004658207,"total_seconds":0.80749825},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000018998,"publication_seconds":0.000040873,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.0426945,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150854375,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.259303208,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368045458,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477311541,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.586876208,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.696753,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.80694025,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.0426945,"prefill_seconds":0.042112792,"decode_seconds":0.760101708,"sampling_seconds":0.004670456999999999,"total_seconds":0.806953875},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000027167000000000003,"publication_seconds":0.000039666,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.042563417,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150648417,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.258084292,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.36560275,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.47366975,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.581957208,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.691196917,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.801659167,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.042563417,"prefill_seconds":0.041979375,"decode_seconds":0.7548004589999999,"sampling_seconds":0.004770293,"total_seconds":0.801666958},"backend":"metal","cpu_projection":"none","input_preparation_seconds":4.2e-8,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000047582999999999995,"publication_seconds":0.00006725,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.04268,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.150186625,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.258928333,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.368009166,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.477437125,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.587124541,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.697052,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.807284541,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.04268,"prefill_seconds":0.04209575,"decode_seconds":0.7604495000000001,"sampling_seconds":0.004662959,"total_seconds":0.807291},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000033709,"publication_seconds":0.0000475,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":4460,"index":0,"elapsed_seconds":0.0428645,"text":" trying"}
+{"event":"token","token_id":311,"index":1,"elapsed_seconds":0.15136875,"text":" to"}
+{"event":"token","token_id":1855,"index":2,"elapsed_seconds":0.260058833,"text":" create"}
+{"event":"token","token_id":264,"index":3,"elapsed_seconds":0.369061917,"text":" a"}
+{"event":"token","token_id":2025,"index":4,"elapsed_seconds":0.478361917,"text":" program"}
+{"event":"token","token_id":429,"index":5,"elapsed_seconds":0.588146542,"text":" that"}
+{"event":"token","token_id":646,"index":6,"elapsed_seconds":0.698043125,"text":" can"}
+{"event":"token","token_id":1477,"index":7,"elapsed_seconds":0.808326167,"text":" find"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.0428645,"prefill_seconds":0.042282709,"decode_seconds":0.7613143320000001,"sampling_seconds":0.004667249,"total_seconds":0.808332042},"backend":"metal","cpu_projection":"none","input_preparation_seconds":1.25e-7,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000022167,"publication_seconds":0.000043834,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}
+{"event":"reset"}
+{"event":"token","token_id":785,"index":0,"elapsed_seconds":0.145187417,"text":"The"}
+{"event":"token","token_id":12884,"index":1,"elapsed_seconds":0.26646225,"text":" sky"}
+{"event":"token","token_id":7952,"index":2,"elapsed_seconds":0.387990334,"text":" appears"}
+{"event":"token","token_id":6303,"index":3,"elapsed_seconds":0.509929959,"text":" blue"}
+{"event":"token","token_id":1576,"index":4,"elapsed_seconds":0.632304042,"text":" because"}
+{"event":"token","token_id":315,"index":5,"elapsed_seconds":0.754994084,"text":" of"}
+{"event":"token","token_id":279,"index":6,"elapsed_seconds":0.877964792,"text":" the"}
+{"event":"token","token_id":71816,"index":7,"elapsed_seconds":1.00069725,"text":" scattering"}
+{"event":"token","token_id":315,"index":8,"elapsed_seconds":1.123302209,"text":" of"}
+{"event":"token","token_id":39020,"index":9,"elapsed_seconds":1.246327834,"text":" sunlight"}
+{"event":"token","token_id":553,"index":10,"elapsed_seconds":1.370300417,"text":" by"}
+{"event":"token","token_id":13673,"index":11,"elapsed_seconds":1.4948691250000001,"text":" tiny"}
+{"event":"token","token_id":18730,"index":12,"elapsed_seconds":1.620351042,"text":" particles"}
+{"event":"token","token_id":304,"index":13,"elapsed_seconds":1.745897042,"text":" in"}
+{"event":"token","token_id":279,"index":14,"elapsed_seconds":1.871688542,"text":" the"}
+{"event":"token","token_id":9237,"index":15,"elapsed_seconds":1.998152334,"text":" Earth"}
+{"event":"token","token_id":594,"index":16,"elapsed_seconds":2.124891,"text":"'s"}
+{"event":"token","token_id":16566,"index":17,"elapsed_seconds":2.251791292,"text":" atmosphere"}
+{"event":"token","token_id":11,"index":18,"elapsed_seconds":2.379139959,"text":","}
+{"event":"token","token_id":7945,"index":19,"elapsed_seconds":2.506928417,"text":" particularly"}
+{"event":"token","token_id":3015,"index":20,"elapsed_seconds":2.635023917,"text":" water"}
+{"event":"token","token_id":37652,"index":21,"elapsed_seconds":2.763553125,"text":" vapor"}
+{"event":"token","token_id":323,"index":22,"elapsed_seconds":2.8924925420000003,"text":" and"}
+{"event":"token","token_id":46403,"index":23,"elapsed_seconds":3.021689459,"text":" nitrogen"}
+{"event":"token","token_id":18952,"index":24,"elapsed_seconds":3.15144375,"text":" ox"}
+{"event":"token","token_id":3341,"index":25,"elapsed_seconds":3.281449042,"text":"ides"}
+{"event":"token","token_id":13,"index":26,"elapsed_seconds":3.411965834,"text":"."}
+{"event":"token","token_id":1096,"index":27,"elapsed_seconds":3.5422002089999998,"text":" This"}
+{"event":"token","token_id":71816,"index":28,"elapsed_seconds":3.673393125,"text":" scattering"}
+{"event":"token","token_id":11137,"index":29,"elapsed_seconds":3.804954709,"text":" causes"}
+{"event":"token","token_id":279,"index":30,"elapsed_seconds":3.936779667,"text":" the"}
+{"event":"token","token_id":6303,"index":31,"elapsed_seconds":4.069116459,"text":" blue"}
+{"event":"token","token_id":3100,"index":32,"elapsed_seconds":4.201682959,"text":" light"}
+{"event":"token","token_id":504,"index":33,"elapsed_seconds":4.334738209,"text":" from"}
+{"event":"token","token_id":279,"index":34,"elapsed_seconds":4.467925042,"text":" the"}
+{"event":"token","token_id":7015,"index":35,"elapsed_seconds":4.600430959,"text":" sun"}
+{"event":"token","token_id":311,"index":36,"elapsed_seconds":4.733716417,"text":" to"}
+{"event":"token","token_id":387,"index":37,"elapsed_seconds":4.868621167,"text":" be"}
+{"event":"token","token_id":36967,"index":38,"elapsed_seconds":5.0038215,"text":" scattered"}
+{"event":"token","token_id":304,"index":39,"elapsed_seconds":5.13929075,"text":" in"}
+{"event":"token","token_id":678,"index":40,"elapsed_seconds":5.275095709,"text":" all"}
+{"event":"token","token_id":17961,"index":41,"elapsed_seconds":5.4107492090000004,"text":" directions"}
+{"event":"token","token_id":11,"index":42,"elapsed_seconds":5.54740975,"text":","}
+{"event":"token","token_id":12942,"index":43,"elapsed_seconds":5.684255417,"text":" resulting"}
+{"event":"token","token_id":304,"index":44,"elapsed_seconds":5.821356167,"text":" in"}
+{"event":"token","token_id":279,"index":45,"elapsed_seconds":5.959114042,"text":" the"}
+{"event":"token","token_id":28583,"index":46,"elapsed_seconds":6.097187625,"text":" characteristic"}
+{"event":"token","token_id":6303,"index":47,"elapsed_seconds":6.235666875,"text":" blue"}
+{"event":"token","token_id":1894,"index":48,"elapsed_seconds":6.37442625,"text":" color"}
+{"event":"token","token_id":315,"index":49,"elapsed_seconds":6.513440625,"text":" of"}
+{"event":"token","token_id":279,"index":50,"elapsed_seconds":6.652861042,"text":" the"}
+{"event":"token","token_id":12884,"index":51,"elapsed_seconds":6.792365167,"text":" sky"}
+{"event":"token","token_id":13,"index":52,"elapsed_seconds":6.931314167,"text":"."}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"stop_token","token_id":151645},"reused_tokens":0,"prefill_tokens":40,"sampled_tokens":54,"emitted_tokens":53,"history_tokens":94,"evaluated_tokens":93,"pending_tokens":1,"first_token_seconds":0.145187417,"prefill_seconds":0.144604834,"decode_seconds":6.894675331,"sampling_seconds":0.032132039999999994,"total_seconds":7.072288292},"backend":"metal","cpu_projection":"none","input_preparation_seconds":0.001489417,"input_formatting_seconds":4.416e-6,"tokenization_seconds":0.001484792,"detokenization_seconds":0.0004841649999999999,"publication_seconds":0.00037787799999999995,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1329601312}}

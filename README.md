@@ -54,7 +54,7 @@ target/release/toklet --model models/Qwen2.5-0.5B-Instruct --prompt 'Answer brie
 target/release/toklet --model models/Qwen2.5-0.5B-Instruct --tokens 9707,11,358,2776 --max-new-tokens 4 --json
 ```
 
-`--raw` bypasses chat formatting; `--messages` and `--tools` accept local JSON arrays. `--token-file` accepts little-endian u32 IDs. Prompt plus requested output must fit `--context-capacity` (at most 2,048); admission occurs before changing session state. The initial backend is `cpu`. Model EOS IDs are hidden from output but remain pending in history; `--no-eos` disables them and repeated `--stop-token` adds IDs. Sampling has no penalties or RNG.
+`--raw` bypasses chat formatting; `--messages` and `--tools` accept local JSON arrays. `--token-file` accepts little-endian u32 IDs. Prompt plus requested output must fit `--context-capacity` (at most 2,048); admission occurs before changing session state. The default backend is `cpu`. On Apple Silicon macOS 15+, build with `--features metal` and select `--backend metal` for the resident FP16 backend. Model EOS IDs are hidden from output but remain pending in history; `--no-eos` disables them and repeated `--stop-token` adds IDs. Sampling has no penalties or RNG.
 
 `--cpu-projection tiled` selects the opt-in ordered FP64 projection tile before
 session creation; `scalar` remains default. JSON readiness and statistics name
@@ -93,7 +93,7 @@ Standalone Apple preparation includes a
 [pinned Rust Metal binding check](docs/experiments/2026-10-10-rust-metal-bindings.md)
 with exact small dispatches, owned shared buffers, completion/error checks and
 bounded isolated builds. It adds no engine dependency or GPU execution path;
-complete FP16 Metal qualification remains pending.
+The [resident root backend](docs/experiments/2026-10-13-metal-engine.md) now passes tiny/Qwen forward and session checks; M4.4 kernel/idle trace attribution remains pending.
 The [matched short CPU comparison](docs/experiments/2026-10-10-cpu-primary-comparison.md)
 confirms roughly 77.6% lower median TTFT for opt-in tiled projections in both
 comparison orders. Scalar remains default while full workload and application

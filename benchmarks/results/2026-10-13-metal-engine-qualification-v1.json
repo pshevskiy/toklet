@@ -1,0 +1,143 @@
+{
+  "scope": "M4.1-M4.3 root resident backend integration; M4.4 kernel/idle timing attribution remains open",
+  "device": "Apple M1 Pro / MacBookPro18,3 / 16GiB / macOS26.6.2(25G83)",
+  "build": "rust1.90 release; optional metal; isolated CARGO_TARGET_DIR=artifacts/m4-metal-engine-v1",
+  "gpu_test_binary_sha256": "c1800701a28ce7a9416a352f0f6438c911c7a2ba2fce8b3c816c085a6ec4c782",
+  "unit_gpu_test_binary_sha256": "bbbe87f1d64c5d292a9755bedbe603c8fa45772c5b969eb291c0cf27db89694f",
+  "checks": {
+    "cargo_fmt_check": true,
+    "default_clippy_all_targets_warnings_denied": true,
+    "metal_clippy_all_targets_warnings_denied": true,
+    "default_cpu_tests_passed": 76,
+    "metal_cpu_tests_passed": 78,
+    "experiment_python_tests_passed": 125,
+    "gpu_integration_tests_passed": 3,
+    "gpu_failure_unit_test_passed": 1,
+    "qwen_intermediate_arrays": 612,
+    "rust_steady_state_decode_allocations": 0,
+    "zero_oracle_capacity_tokens": [
+      2048,
+      2047
+    ]
+  },
+  "trace": {
+    "path": "artifacts/m4-metal-engine-v1/tiny-v2.gputrace",
+    "metadata": {
+      "DYCaptureSession.unusedFunctionCount": 0,
+      "DYCaptureSession.graphics_api": 1,
+      "DYCaptureSession.unusedCommandQueueCount": 0,
+      "(uuid)": "F55ADF30-AD05-4672-8F8B-BF0CDB7A4979",
+      "DYCaptureSession.boundaryLess": false,
+      "DYCaptureSession.capture_version": 0,
+      "DYCaptureSession.unusedRenderPipelineStateCount": 0,
+      "DYCaptureSession.deviceId": 1,
+      "DYCaptureEngine.launch_dictionary": {},
+      "DYCaptureSession.nativePointerSize": 8,
+      "DYCaptureSession.unusedBufferCount": 0,
+      "DYCaptureSession.unusedTextureCount": 0,
+      "DYCaptureEngine.linked_on_apex_or_later": 1,
+      "DYCaptureSession.unusedSamplerStateCount": 0,
+      "DYCaptureSession.library_link_time_versions": {
+        "AppKit": -1,
+        "UIKit": -1,
+        "Metal": 24445440,
+        "CoreFoundation": 329385220,
+        "System": 88866816,
+        "Foundation": 329385220
+      },
+      "DYCaptureSession.unusedLibraryCount": 0,
+      "DYCaptureSession.unusedComputePipelineStateCount": 0,
+      "DYCaptureEngine.captured_frames_count": 1,
+      "DYCaptureSession.unusedDepthStencilStateCount": 0,
+      "DYCaptureSession.interpose_feature_version": 65538,
+      "DYCaptureSession.interpose_patch_version": "0"
+    },
+    "files": {
+      "375135A1E1C34D25": {
+        "bytes": 36452,
+        "sha256": "a6957276cdd430649139c0ba529a6419805fee3b2fca82e0b0b36b18c91c75c9"
+      },
+      "413AE7A88C3200B9": {
+        "bytes": 34917104,
+        "sha256": "5a09d64adeefb14c1b8f4b407026cd9670c9524dca6f3bedb5bedfd5b99dbce3"
+      },
+      "8D346F446C3947BD": {
+        "bytes": 3715112,
+        "sha256": "8ff3e4146e0d9ec03b63656932ea0f09c236c644156f37b2b0d44015768ed1ef"
+      },
+      "MTLBuffer-68-0": {
+        "bytes": 32768,
+        "sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      "MTLBuffer-69-0": {
+        "bytes": 32768,
+        "sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      "capture": {
+        "bytes": 12934676,
+        "sha256": "626ec3aeaaeb7f3f9d1063afe4a0a80fc4ff1cec1781402446a92e3065fcbd61"
+      },
+      "delta-device-resources-0x10550a5a0": {
+        "bytes": 56,
+        "sha256": "125a069ef8e0e9c2eb50924f8d2c88626bfcf3d4333bda6ef3c4ae5c354d5394"
+      },
+      "device-resources-0x10550a5a0": {
+        "bytes": 51296,
+        "sha256": "86f676a7600843bb82806682849d3bbf69cdc9a3d27cee81a63956fa9ed83bd8"
+      },
+      "index": {
+        "bytes": 466498,
+        "sha256": "04a9a406a6fff15c39683e42b9fe6ab63049dabc1e96c2d6125a90ffdd42a967"
+      },
+      "metadata": {
+        "bytes": 1143,
+        "sha256": "8fe60c230fd6f89b879dd57dcfe77d20cec2320e7232ee7e3d5b2ae02b570300"
+      },
+      "startup-0-platform": {
+        "bytes": 76,
+        "sha256": "cdbe4584ede51b84a2f601450b84979cc35253c3f794238d747201e94798497e"
+      },
+      "startup-1-platform": {
+        "bytes": 8,
+        "sha256": "307bca216804762e9741cc4d56a78333351e51a2b9ba29b1b623c5c07df79550"
+      },
+      "store0": {
+        "bytes": 615043,
+        "sha256": "66fdcbe2864f188bb46611c42aa9aae5bdef670a5cefd7e796823efbfed0d2cf"
+      },
+      "unsorted-capture": {
+        "bytes": 12289932,
+        "sha256": "fd6d586bc05aace599c2ec0df7f5814d160af77d212c36a55200afaf140dd616"
+      },
+      "unused-device-resources-0x10550a5a0": {
+        "bytes": 7060,
+        "sha256": "20de327ceb35cba665d2b1d04138fdce39128c586a903b85c697acedbcbdca6f"
+      }
+    },
+    "bytes": 65099992,
+    "xctrace": "unavailable; no per-kernel/idle attribution claim"
+  },
+  "protected_cpu_release": {
+    "toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "logs": {
+    "2026-10-13-metal-engine-capacity-v1.txt": "d7e6214b665d4af71d6296756fc963941ac278051cc98b29cf959bb934f7646a",
+    "2026-10-13-metal-engine-failure-v1.txt": "ad970d9bc07f38464f1071047825bfb9d62d5a2c5711c29fa1678de1c79062ef",
+    "2026-10-13-metal-engine-failure-v2.txt": "d994cf33c93d1adb1021e1f2d06b9bb1eb183ff04c52ab0394074816f55b83a3",
+    "2026-10-13-metal-engine-generation-v1.jsonl": "2788424b675427bf95858d0ba4188c591e0bc6dbd69a9efaa744e83e391ce125",
+    "2026-10-13-metal-engine-generation-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "2026-10-13-metal-engine-gpu-v3.txt": "776405a46033d0266cc2eda0fe0fc4707a2eb0b6a251ebda733954b22c79fc82",
+    "2026-10-13-metal-engine-qwen-v1.txt": "1fcf716202ad4a8a38d98a4ee1372b8f6df550231a81b309faa33ba45e119293",
+    "2026-10-13-metal-engine-qwen-v2.txt": "8869d5e4ca471da1f43db29d4f4714078de19c63ef9d15d5fa90c34bd844a20a",
+    "2026-10-13-metal-engine-resident-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "2026-10-13-metal-engine-resident-v2.json": "6e83de85817b0d11047ebe0efc0b67932f6557544d454a371b125df1c6e850b5",
+    "2026-10-13-metal-engine-resident-v2.raw.jsonl": "5a8cc43769ca9e196f6fa4e9e1d1a734808ccbe5e605ee1b4760b3d042e32c30",
+    "2026-10-13-metal-engine-resident-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "2026-10-13-metal-engine-resident-v3.json": "6aad0b32f9b875354dce4b0513b52a93e6f8f9cdbdc5ec99d4b9fea8620d29ef",
+    "2026-10-13-metal-engine-resident-v3.raw.jsonl": "223d099dbfeb71772e63f86b264e248fc67925e06f4a75b3271de65bd4e3e507",
+    "2026-10-13-metal-engine-resident-v3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "2026-10-13-metal-engine-tiny-trace-v1.txt": "edaf8ba84add1dcf7d6e58e12f82d816a673763f5c2b980ad34f22814c997c33",
+    "2026-10-13-metal-engine-tiny-trace-v2.txt": "ec3566bd151f2b50f66ddb7cb60bca108987866d5ae783d2cc511b875b050e1e"
+  }
+}

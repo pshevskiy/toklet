@@ -1,0 +1,19 @@
+
+running 1 test
+test resident_qwen_full_forward ... Qwen device=Apple M1 Pro weights_bytes=988069596 load=LoadTiming { load_seconds: 3.575121583, conversion_seconds: 3.2186672370000173, compilation_seconds: 0.113924541 }
+Qwen case=future_changed chunk=4 arrays=51 token=1410 timing=Some(Timing { host_encode_seconds: 0.002557334, wait_seconds: 0.171706334, gpu_start_seconds: 1193832.810342875, gpu_end_seconds: 1193832.9468689167, readback_seconds: 0.00019725, command_count: 1 }) admitted=1066658934
+Qwen case=future_changed chunk=3 arrays=51 token=1410 timing=Some(Timing { host_encode_seconds: 0.000858584, wait_seconds: 0.10905775, gpu_start_seconds: 1193833.25933875, gpu_end_seconds: 1193833.368032, readback_seconds: 0.000166958, command_count: 1 }) admitted=1064268562
+Qwen case=future_changed chunk=1 arrays=51 token=1410 timing=Some(Timing { host_encode_seconds: 0.000763667, wait_seconds: 0.109256042, gpu_start_seconds: 1193833.7116831667, gpu_end_seconds: 1193833.8206087917, readback_seconds: 8.6083e-5, command_count: 1 }) admitted=1059487818
+Qwen case=offset chunk=3 arrays=51 token=537 timing=Some(Timing { host_encode_seconds: 0.000804958, wait_seconds: 0.282260458, gpu_start_seconds: 1193833.8368385, gpu_end_seconds: 1193834.11841775, readback_seconds: 0.00012675, command_count: 1 }) admitted=1064268562
+Qwen case=offset chunk=3 arrays=51 token=537 timing=Some(Timing { host_encode_seconds: 0.000895417, wait_seconds: 0.284154417, gpu_start_seconds: 1193834.1391305001, gpu_end_seconds: 1193834.4225356667, readback_seconds: 8.3792e-5, command_count: 1 }) admitted=1064268562
+Qwen case=offset chunk=1 arrays=51 token=537 timing=Some(Timing { host_encode_seconds: 0.000817959, wait_seconds: 0.106873667, gpu_start_seconds: 1193834.6513394166, gpu_end_seconds: 1193834.7579001668, readback_seconds: 8.8e-5, command_count: 1 }) admitted=1059487818
+Qwen case=short chunk=4 arrays=51 token=4460 timing=Some(Timing { host_encode_seconds: 0.000884667, wait_seconds: 0.043639417, gpu_start_seconds: 1193834.771317, gpu_end_seconds: 1193834.814347625, readback_seconds: 0.00012175, command_count: 1 }) admitted=1066658934
+Qwen case=short chunk=3 arrays=51 token=4460 timing=Some(Timing { host_encode_seconds: 0.000858958, wait_seconds: 0.108902542, gpu_start_seconds: 1193835.1219667501, gpu_end_seconds: 1193835.230529, readback_seconds: 0.000131542, command_count: 1 }) admitted=1064268562
+Qwen case=short chunk=1 arrays=51 token=4460 timing=Some(Timing { host_encode_seconds: 0.00078975, wait_seconds: 0.109043042, gpu_start_seconds: 1193835.5736278752, gpu_end_seconds: 1193835.682312125, readback_seconds: 8.25e-5, command_count: 1 }) admitted=1059487818
+Qwen case=single chunk=1 arrays=51 token=271 timing=Some(Timing { host_encode_seconds: 0.000836625, wait_seconds: 0.108014958, gpu_start_seconds: 1193835.697989, gpu_end_seconds: 1193835.8053341252, readback_seconds: 8.3292e-5, command_count: 1 }) admitted=1059487818
+Qwen case=single chunk=3 arrays=51 token=271 timing=Some(Timing { host_encode_seconds: 0.000807959, wait_seconds: 0.108268125, gpu_start_seconds: 1193835.8184257918, gpu_end_seconds: 1193835.92597325, readback_seconds: 0.0001275, command_count: 1 }) admitted=1064268562
+Qwen case=single chunk=1 arrays=51 token=271 timing=Some(Timing { host_encode_seconds: 0.00079025, wait_seconds: 0.107838167, gpu_start_seconds: 1193835.932869625, gpu_end_seconds: 1193836.040023125, readback_seconds: 8.2917e-5, command_count: 1 }) admitted=1059487818
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 6.87s
+

@@ -11,3 +11,6 @@ pub mod model;
 pub mod sampling;
 pub mod session;
 pub mod weights;
+
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub mod metal;

@@ -17,7 +17,7 @@ use std::{
 use toklet::{
     cpu::ProjectionKernel,
     generation::{self, Input, Request, StopReason},
-    session::{Options, Session},
+    session::{InferenceSession, Options, Session},
     weights::{self, LoadOptions},
 };
 const APPLICATION_ALLOWANCE: usize = 128 * 1024 * 1024;
@@ -42,7 +42,7 @@ Usage: toklet [OPTIONS]
   --max-new-tokens N         Sampled output limit, including stop token (32)
   --context-capacity N      Prompt plus output limit, at most 2048 (2048)
   --prefill-chunk N          Prefill cancellation boundary (128)
-  --backend cpu             CPU execution
+  --backend cpu|metal       CPU (default), or opt-in Metal feature
   --cpu-projection MODE     scalar (default) or opt-in tiled projections
   --stop-token ID           Additional stop ID; repeatable
   --no-eos                  Ignore configured EOS IDs
@@ -54,7 +54,7 @@ Usage: toklet [OPTIONS]
 
 Generation is greedy without penalties. Text requires local tokenizer assets.
 Interactive actions: generate, append (raw text or IDs), continue, reset.
-Ctrl-C cancels between CPU chunks/steps; idle interactive Ctrl-C exits.";
+Ctrl-C cancels between backend chunks/steps; idle interactive Ctrl-C exits.";
 struct Args {
     model: PathBuf,
     prompt: Option<String>,
@@ -72,6 +72,7 @@ struct Args {
     capacity: usize,
     chunk: usize,
     projection: ProjectionKernel,
+    backend: &'static str,
 }
 fn utf8(v: OsString) -> io::Result<String> {
     v.into_string()
@@ -100,6 +101,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         capacity: 2048,
         chunk: 128,
         projection: ProjectionKernel::Scalar,
+        backend: "cpu",
     };
     let mut seen = HashSet::new();
     let mut values = values.into_iter().peekable();
@@ -135,8 +137,16 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                 };
             }
             "--backend" => {
-                if value()? != "cpu" {
-                    return Err(invalid("only the qualified cpu backend is available"));
+                a.backend = match utf8(value()?)?.as_str() {
+                    "cpu" => "cpu",
+                    "metal" => "metal",
+                    _ => return Err(invalid("backend must be cpu or metal")),
+                };
+                #[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+                if a.backend == "metal" {
+                    return Err(invalid(
+                        "Metal requires the metal feature on Apple Silicon macOS",
+                    ));
                 }
             }
             "--raw" => a.raw = true,
@@ -146,6 +156,9 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--no-eos" => a.no_eos = true,
             _ => return Err(invalid(format!("unexpected argument {flag}"))),
         }
+    }
+    if a.backend == "metal" && seen.contains("--cpu-projection") {
+        return Err(invalid("--cpu-projection requires cpu backend"));
     }
     if a.model.as_os_str().is_empty() {
         return Err(invalid("--model is required"));
@@ -224,6 +237,7 @@ struct Frontend {
     memory_admitted_bytes: usize,
     requests: usize,
     cpu_projection: &'static str,
+    backend: &'static str,
 }
 #[derive(Default)]
 struct OutputTiming {
@@ -257,7 +271,7 @@ impl Frontend {
 
     fn execute(
         &mut self,
-        session: &mut Session<'_>,
+        session: &mut impl InferenceSession,
         r: UserRequest,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let count = [r.tokens.is_some(), r.prompt.is_some(), r.messages.is_some()]
@@ -397,7 +411,7 @@ impl Frontend {
                 report.reason = StopReason::Cancelled;
             }
             let cancelled = report.reason == StopReason::Cancelled;
-            let stats = json!({"generation":report,"cpu_projection":self.cpu_projection,"input_preparation_seconds":input_seconds,
+            let stats = json!({"generation":report,"backend":self.backend,"cpu_projection":self.cpu_projection,"input_preparation_seconds":input_seconds,
                 "input_formatting_seconds":input_formatting_seconds,"tokenization_seconds":tokenization_seconds,
                 "detokenization_seconds":output_timing.detokenization_seconds,"publication_seconds":output_timing.publication_seconds,
                 "load_seconds":if self.requests==0{self.load_seconds}else{0.0},"conversion_seconds":if self.requests==0{self.conversion_seconds}else{0.0},"tokenizer_load_seconds":if self.requests==0{self.tokenizer_load_seconds}else{0.0},"memory_admitted_bytes":self.memory_admitted_bytes});
@@ -492,23 +506,6 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             max_new_tokens: None,
         })
     };
-    let loaded = weights::load_qwen(
-        &a.model,
-        LoadOptions {
-            context_limit: a.capacity,
-            memory_limit_bytes: budget,
-        },
-    )?;
-    let model = loaded.model.with_projection_kernel(a.projection);
-    let mut session = Session::new(
-        &model,
-        Options {
-            capacity: a.capacity,
-            prefill_chunk_size: a.chunk,
-            memory_limit_bytes: budget,
-            ..Options::default()
-        },
-    )?;
     let mut frontend = Frontend {
         assets,
         decoder: OutputDecoder::default(),
@@ -518,19 +515,55 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         stats: a.stats,
         raw: a.raw,
         max: a.max,
-        load_seconds: loaded.report.load_seconds,
-        conversion_seconds: loaded.report.conversion_seconds,
+        load_seconds: 0.,
+        conversion_seconds: 0.,
         tokenizer_load_seconds,
-        memory_admitted_bytes: session
-            .memory()
-            .admitted_bytes
-            .checked_add(external_bytes)
-            .ok_or_else(|| invalid("memory accounting overflow"))?,
+        memory_admitted_bytes: 0,
         requests: 0,
-        cpu_projection: model.projection_kernel().name(),
+        cpu_projection: a.projection.name(),
+        backend: a.backend,
     };
+
+    let options = Options {
+        capacity: a.capacity,
+        prefill_chunk_size: a.chunk,
+        memory_limit_bytes: budget,
+        ..Options::default()
+    };
+    let load_options = LoadOptions {
+        context_limit: a.capacity,
+        memory_limit_bytes: budget,
+    };
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    if a.backend == "metal" {
+        let model = toklet::metal::Model::load(&a.model, load_options)?;
+        let mut session = toklet::metal::Session::new(&model, options)?;
+        frontend.load_seconds = model.load_timing.load_seconds;
+        frontend.conversion_seconds = model.load_timing.conversion_seconds;
+        frontend.cpu_projection = "none";
+        return run_session(frontend, &mut session, initial, a.capacity, external_bytes);
+    }
+    let loaded = weights::load_qwen(&a.model, load_options)?;
+    let model = loaded.model.with_projection_kernel(a.projection);
+    let mut session = Session::new(&model, options)?;
+    frontend.load_seconds = loaded.report.load_seconds;
+    frontend.conversion_seconds = loaded.report.conversion_seconds;
+    run_session(frontend, &mut session, initial, a.capacity, external_bytes)
+}
+fn run_session(
+    mut frontend: Frontend,
+    session: &mut impl InferenceSession,
+    initial: Option<UserRequest>,
+    capacity: usize,
+    external_bytes: usize,
+) -> Result<u8, Box<dyn std::error::Error>> {
+    frontend.memory_admitted_bytes = session
+        .memory()
+        .admitted_bytes
+        .checked_add(external_bytes)
+        .ok_or_else(|| invalid("memory accounting overflow"))?;
     if let Some(r) = initial {
-        return Ok(if frontend.execute(&mut session, r)? {
+        return Ok(if frontend.execute(session, r)? {
             130
         } else {
             0
@@ -540,7 +573,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     writeln!(
         io::stdout().lock(),
         "{}",
-        json!({"event":"ready", "backend":"cpu", "context_capacity":a.capacity,
+        json!({"event":"ready", "backend":frontend.backend, "context_capacity":capacity,
         "cpu_projection":frontend.cpu_projection,
         "memory_admitted_bytes":frontend.memory_admitted_bytes,
         "logical_memory":{"weights_bytes":memory.weights_bytes,
@@ -597,7 +630,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         let result = serde_json::from_slice::<UserRequest>(&line)
             .map_err(invalid)
             .map_err(|e| -> Box<dyn std::error::Error> { e.into() })
-            .and_then(|r| frontend.execute(&mut session, r));
+            .and_then(|r| frontend.execute(session, r));
         if let Err(e) = result {
             publish_terminal(&CANCELLED, |_| -> io::Result<()> {
                 writeln!(

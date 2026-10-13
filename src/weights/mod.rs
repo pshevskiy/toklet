@@ -746,3 +746,91 @@ pub fn load_qwen(directory: &Path, options: LoadOptions) -> Result<LoadedModel, 
     };
     Ok(LoadedModel { model, report })
 }
+
+/// Validated streaming source for the Metal Half loader. No full FP32 model is
+/// constructed. Tensor names/shapes are resolved before any GPU allocation.
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub(crate) struct HalfSource {
+    pub config: Config,
+    pub shapes: BTreeMap<String, Vec<usize>>,
+    source: Source,
+    embedding_digest: Option<[u8; 32]>,
+}
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+impl HalfSource {
+    pub fn open(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
+        if options.memory_limit_bytes == 0
+            || options.memory_limit_bytes > INITIAL_MEMORY_LIMIT_BYTES
+        {
+            return Err(invalid("Half loading budget must be within 6 GiB"));
+        }
+        let config = read_json::<QwenConfig>(&directory.join("config.json"))?.validate(options)?;
+        let source = Source::open(directory)?;
+        let shapes = expected(&config)?;
+        let mut validation = shapes.clone();
+        if source.locations.contains_key("lm_head.weight") {
+            validation.insert(
+                "lm_head.weight".into(),
+                vec![config.vocab_size, config.hidden_size],
+            );
+        }
+        source.validate(&validation)?;
+        Ok(Self {
+            config,
+            shapes,
+            source,
+            embedding_digest: None,
+        })
+    }
+    pub fn conversion_seconds(&self) -> f64 {
+        self.source.conversion_seconds
+    }
+    /// Stream a tensor directly to its admitted Half allocation. Finite source
+    /// values are checked by Source::visit; Half overflow is rejected here.
+    pub fn visit_half(
+        &mut self,
+        name: &str,
+        mut consume: impl FnMut(u16) -> Result<(), Error>,
+    ) -> Result<(), Error> {
+        use sha2::{Digest, Sha256};
+        let mut digest = Sha256::new();
+        let embedding = name == "model.embed_tokens.weight";
+        self.source.visit(name, |value| {
+            if embedding {
+                digest.update(if value == 0.0 { 0.0f32 } else { value }.to_le_bytes());
+            }
+            let value = f16::from_f32(value);
+            if !value.is_finite() {
+                return Err(invalid("weight exceeds finite Half range"));
+            }
+            consume(value.to_bits())
+        })?;
+        if embedding {
+            self.embedding_digest = Some(digest.finalize().into());
+        }
+        Ok(())
+    }
+    /// A redundant lm_head must equal the original source embedding values,
+    /// not merely their rounded Half representation. No second table is held.
+    pub fn check_tied_output(&mut self) -> Result<(), Error> {
+        use sha2::{Digest, Sha256};
+        if self.source.locations.contains_key("lm_head.weight") {
+            let expected = self
+                .embedding_digest
+                .ok_or_else(|| invalid("embedding must load before tied output check"))?;
+            let mut digest = Sha256::new();
+            self.source.visit("lm_head.weight", |value| {
+                digest.update(if value == 0.0 { 0.0f32 } else { value }.to_le_bytes());
+                Ok(())
+            })?;
+            let actual: [u8; 32] = digest.finalize().into();
+            if actual != expected {
+                return Err(invalid("lm_head differs from tied source embeddings"));
+            }
+        }
+        Ok(())
+    }
+}
+
+#[cfg(all(test, feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub(crate) mod half_tests;

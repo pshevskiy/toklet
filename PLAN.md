@@ -1236,9 +1236,28 @@ identities, idle, raw replay and guards retained. Astra accepted code and
 complete evidence after independent replay. ActualQwenpropagation and
 rootMetal residentbackend/session/trace remain pending; M4 stays open.
 
-- [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
-- [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
-- [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
+Root resident integration, 13 October 2026: the
+[opt-in Metal backend](docs/experiments/2026-10-13-metal-engine.md) streams
+validated Half weights, keeps KV/scratch/pipelines resident, uses the coarse
+static session interface and completes each chunk in one command/wait. Five
+tiny cases, full/3/1 chunks, all intermediate source gates, four greedy steps,
+pending-prefix/generation/error/budget checks and zero warmed Rust allocations
+pass. Full Qwen passes 612 selected intermediate/output comparisons and all
+source final greedy IDs; all 2048 positions pass a separate exact zero-model
+capacity oracle. Real overflow recovery and injected completion-status replay
+pass. Three warmups/ten resident requests repeat exact IDs; complete chat reaches
+EOS151645. Native charge peaks stay near1.135GB; admission with application
+allowance is1.330GB. Identity-bound raw records, trace bundle hashes and unchanged
+CPU release binaries are retained. 76 default/78 Metal-feature ordinary tests,
+125 Python checks, formatting and both strict Clippy configurations pass. Astra
+accepted code and complete evidence after independent replay. M4.1–M4.3 are
+functionally closed. Actual65,099,992-byte GPU trace capture succeeds; per-kernel/
+idle attribution remains M4.4. FP16 held-out10k-loss/100-task quality remains
+explicitly unqualified; the CPU default and frozen gates are preserved.
+
+- [x] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
+- [x] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
+- [x] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
 - [ ] **M4.4 Validate scheduling and failure boundaries.** Remove debugging waits after individual operators once parity passes. Preserve dependencies, wait at required request/token boundaries, and maintain committed state on cancellation or GPU failure. Capture a GPU trace that separates kernel time, host encoding, allocations, and idle gaps.
 
 Before writing a substantial custom GEMM, compare an available Apple matrix primitive or TensorOps implementation at the actual projection shapes. Retain compatible kernels when the API is absent or slower; record the chosen device/OS requirements.
@@ -1329,4 +1348,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: implement the root Metal backend with qualified numerical mechanisms, streamed Half weights and resident transactional sessions.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M4.4: attribute kernel, host encoding, allocation and idle costs using the captured GPU trace and supported timestamp counters; preserve the qualified resident backend and transactional session behavior.

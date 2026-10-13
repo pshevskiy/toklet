@@ -86,6 +86,7 @@ impl Memory {
 pub enum Error {
     Model(model::Error),
     InvalidOptions(&'static str),
+    Backend(String),
     MemoryBudget { required: usize, limit: usize },
 }
 
@@ -98,6 +99,7 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Model(error) => error.fmt(f),
+            Self::Backend(reason) => f.write_str(reason),
             Self::InvalidOptions(reason) => write!(f, "invalid session options: {reason}"),
             Self::MemoryBudget { required, limit } => write!(
                 f,
@@ -313,5 +315,60 @@ impl<'model> Session<'model> {
     pub fn reset(&mut self) {
         self.history.clear();
         self.evaluated_len = 0;
+    }
+}
+
+/// Coarse request/token boundary for concrete CPU and Metal sessions. Numerical
+/// loops remain inside statically dispatched backend implementations.
+pub trait InferenceSession {
+    fn history(&self) -> &[u32];
+    fn evaluated_len(&self) -> usize;
+    fn pending_len(&self) -> usize;
+    fn capacity(&self) -> usize;
+    fn vocab_size(&self) -> usize;
+    fn memory(&self) -> Memory;
+    fn logits(&self) -> Option<&[f32]>;
+    fn append(&mut self, tokens: &[u32]) -> Result<(), Error>;
+    fn set_tokens(&mut self, tokens: &[u32]) -> Result<(), Error>;
+    fn evaluate_next_chunk(&mut self) -> Result<usize, Error>;
+    fn discard_pending(&mut self);
+    fn reset(&mut self);
+}
+impl InferenceSession for Session<'_> {
+    fn history(&self) -> &[u32] {
+        Session::history(self)
+    }
+    fn evaluated_len(&self) -> usize {
+        Session::evaluated_len(self)
+    }
+    fn pending_len(&self) -> usize {
+        Session::pending_len(self)
+    }
+    fn capacity(&self) -> usize {
+        Session::capacity(self)
+    }
+    fn vocab_size(&self) -> usize {
+        Session::vocab_size(self)
+    }
+    fn memory(&self) -> Memory {
+        Session::memory(self)
+    }
+    fn logits(&self) -> Option<&[f32]> {
+        Session::logits(self)
+    }
+    fn append(&mut self, tokens: &[u32]) -> Result<(), Error> {
+        Session::append(self, tokens)
+    }
+    fn set_tokens(&mut self, tokens: &[u32]) -> Result<(), Error> {
+        Session::set_tokens(self, tokens)
+    }
+    fn evaluate_next_chunk(&mut self) -> Result<usize, Error> {
+        Session::evaluate_next_chunk(self)
+    }
+    fn discard_pending(&mut self) {
+        Session::discard_pending(self)
+    }
+    fn reset(&mut self) {
+        Session::reset(self)
     }
 }

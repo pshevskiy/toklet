@@ -19,3 +19,13 @@ serde_json = { version = "=1.0.149", features = ["float_roundtrip", "preserve_or
 tokenizers = { version = "=0.22.2", default-features = false, features = ["fancy-regex"] }
 ctrlc = "=3.5.2"
 sha2 = "=0.10.9"
+
+[features]
+default = []
+metal = ["dep:objc2", "dep:objc2-foundation", "dep:objc2-metal", "dep:objc2-metal-performance-shaders"]
+
+[target.'cfg(all(target_os = "macos", target_arch = "aarch64"))'.dependencies]
+objc2 = { version = "=0.6.5", optional = true }
+objc2-foundation = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "NSObject", "NSString", "NSError", "NSProcessInfo", "NSURL"] }
+objc2-metal = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "MTLDevice", "MTLBuffer", "MTLResource", "MTLLibrary", "MTLCommandQueue", "MTLCommandBuffer", "MTLCommandEncoder", "MTLComputeCommandEncoder", "MTLBlitCommandEncoder", "MTLComputePipeline", "MTLTypes", "MTLCaptureManager", "MTLCaptureScope", "objc2-core-foundation"] }
+objc2-metal-performance-shaders = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "MPSCore", "MPSCoreTypes", "MPSKernel", "MPSMatrix", "MPSMatrixMultiplication"] }

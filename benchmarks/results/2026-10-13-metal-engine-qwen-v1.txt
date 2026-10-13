@@ -1,0 +1,18 @@
+
+running 1 test
+test resident_qwen_full_forward ... Qwen device=Apple M1 Pro weights_bytes=988069596 load=LoadTiming { load_seconds: 76.078414791, conversion_seconds: 75.70209056100053, compilation_seconds: 0.051884791 }
+
+thread 'resident_qwen_full_forward' panicked at tests/metal.rs:208:5:
+assertion `left == right` failed
+  left: Null
+ right: "f32le"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    resident_qwen_full_forward
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1 filtered out; finished in 76.27s
+

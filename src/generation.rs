@@ -10,7 +10,7 @@
 
 use crate::{
     cpu, sampling,
-    session::{self, Session},
+    session::{self, InferenceSession},
 };
 use serde::Serialize;
 use std::{
@@ -92,7 +92,10 @@ impl fmt::Display for Error {
 impl std::error::Error for Error {}
 
 /// Validate admission before changing session or application output state.
-pub fn validate_request(session: &Session<'_>, request: &Request<'_>) -> Result<(), Error> {
+pub fn validate_request(
+    session: &impl InferenceSession,
+    request: &Request<'_>,
+) -> Result<(), Error> {
     let (tokens, base) = match &request.input {
         Input::Prompt(t) | Input::Reset(t) => (*t, 0),
         Input::Append(t) => (*t, session.history().len()),
@@ -126,7 +129,7 @@ pub fn validate_request(session: &Session<'_>, request: &Request<'_>) -> Result<
 /// Prompt IDs, stop IDs and prompt+output capacity are validated before mutation.
 /// No event collection is allocated here; sinks own token/text/UI storage.
 pub fn generate(
-    session: &mut Session<'_>,
+    session: &mut impl InferenceSession,
     request: Request<'_>,
     cancelled: &AtomicBool,
     mut emit: impl FnMut(TokenEvent) -> io::Result<()>,
@@ -221,7 +224,7 @@ pub fn generate(
     Ok(finish(report, session, started))
 }
 
-fn finish(mut report: Report, session: &Session<'_>, started: Instant) -> Report {
+fn finish(mut report: Report, session: &impl InferenceSession, started: Instant) -> Report {
     report.history_tokens = session.history().len();
     report.evaluated_tokens = session.evaluated_len();
     report.pending_tokens = session.pending_len();
