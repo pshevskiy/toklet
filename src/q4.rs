@@ -4,10 +4,44 @@
 use half::f16;
 use std::fmt;
 
+mod artifact;
+pub use artifact::Artifact;
+pub const QUANTIZER: &str = "toklet-q4-affine-f32-source-half-metadata-rne-v1";
+
 pub const GROUP: usize = 64;
 pub const RECORD_BYTES: usize = 36;
 pub const HEADER_BYTES: usize = 64;
 pub const MAGIC: &[u8; 8] = b"TOKQ4V1\0";
+
+/// The seven eligible row-major matrices per layer, resolved once at loading.
+pub fn matrix_shapes(
+    config: &crate::model::Config,
+) -> Result<std::collections::BTreeMap<String, Vec<usize>>, crate::model::Error> {
+    config.validate()?;
+    if config.num_layers > 1024 {
+        return Err(crate::model::Error::InvalidConfig(
+            "Q4 layer count exceeds bounded artifact inventory",
+        ));
+    }
+    let h = config.hidden_size;
+    let m = config.intermediate_size;
+    let k = config.kv_heads * config.head_dim;
+    let mut shapes = std::collections::BTreeMap::new();
+    for layer in 0..config.num_layers {
+        for (name, rows, columns) in [
+            ("self_attn.q_proj.weight", h, h),
+            ("self_attn.k_proj.weight", k, h),
+            ("self_attn.v_proj.weight", k, h),
+            ("self_attn.o_proj.weight", h, h),
+            ("mlp.gate_proj.weight", m, h),
+            ("mlp.up_proj.weight", m, h),
+            ("mlp.down_proj.weight", h, m),
+        ] {
+            shapes.insert(format!("model.layers.{layer}.{name}"), vec![rows, columns]);
+        }
+    }
+    Ok(shapes)
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Error(pub &'static str);
