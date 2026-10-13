@@ -37,3 +37,7 @@ required-features = ["metal"]
 [[example]]
 name = "metal_continue"
 required-features = ["metal"]
+
+[[example]]
+name = "metal_quality"
+required-features = ["metal"]

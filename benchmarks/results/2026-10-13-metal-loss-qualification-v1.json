@@ -1,0 +1,35 @@
+{
+  "format": "toklet-metal-loss-scoring-qualification-v1",
+  "scoring_code_checks_passed": true,
+  "scope": "Accepted scoring mechanism and honest rejection evidence; Q4 loss fails, FP16 batch parity stops, M5.2 open",
+  "source_sha256": {
+    "Cargo.toml": "c881879fb56ca16f7d635f3ec94dd078950b988cc4950e2d8748fda814d5ac3e",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "examples/metal_quality.rs": "652e97d286406ed627a95edc2906fc6fbc9564da3ae6e0b1dae72db068cdc16b",
+    "examples/support/loss.rs": "a2cbea031570c1aa539b1096d2af87711935064c844f600f5d0cc6b55ed4c0ff",
+    "examples/quality_bench.rs": "ecb0501d40aca0a1fe9d6d91d89a6d34222acca9bd56276b95cfe981155e5aa8",
+    "tools/experiments/metal_quality.py": "e57012733e3c018879502a78a6b4b42721e164cce4dc25dda4342c9013351fbf",
+    "tools/experiments/test_metal_quality.py": "cf64afb5f5f34429b3f281835a8cea837d29298ca9615d3cd900107c264d3f4e"
+  },
+  "checks": {
+    "artifacts/m5-metal-loss-clippy-metal-v1.txt": "1088795722dc9a976ee59eb020ae0a6fced5fdffb6a56bf9411a08806eaf9c1b",
+    "artifacts/m5-metal-loss-clippy-default-v1.txt": "bbf48e52831032c91181adbafa60a1cd3e2576ed961fe0f134d3b59f2de2fbe8",
+    "artifacts/m5-metal-loss-test-default-v1.txt": "8601075f4522bd9e5945c09ac284f27e291cd2b91cfbfe2b623889d32fd85efb",
+    "artifacts/m5-metal-loss-test-metal-v1.txt": "8d6d98306c17e8cb6fe39a22ca65c2cadc89740df63e187fa6842db439390ad1",
+    "artifacts/m5-metal-loss-build-v1.txt": "efe0fa449fdd601601eea3179d46b893d49d04fdafadbb140bf22ca943364e75",
+    "artifacts/m5-metal-loss-python-final-v1.txt": "60581827666c59a198603c3ce6d76624710834ad54ef293c754022405cb74fa0",
+    "artifacts/m5-metal-loss-fmt-final-v1.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m5-metal-loss-scoring-tests-v1.txt": "d01395018c626f2626696584d5090e893ed3260a8fecf04e8c07da557d98ac29",
+    "artifacts/m5-metal-loss-cpu-scoring-tests-v1.txt": "9221a52d0ac810b1f586b3c8cfa04b961d5df135ce68d57336f5dbeb6296cc78"
+  },
+  "records": {
+    "benchmarks/results/2026-10-13-metal-q4-held-out-loss-v1.json": "0f663dff769bfc25904892375484a828e5e6fe62eca83262123b162a962e0984",
+    "benchmarks/results/2026-10-13-metal-fp16-held-out-loss-v1.json": "b614ce7b465de30dbfd474e946de0fd8b33551af587baf5102fb854a88e8148c"
+  },
+  "binary_sha256": "fe59feac0eab536c45d9c0faa199728191824ebab1fa15b06b1a061a794b44ab",
+  "protected_cpu_sha256": {
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "review": "Astra accepted source/check/coverage/aggregation/rejection evidence, no remaining findings. Attribution of FP16 vendor sensitivity remains a hypothesis."
+}
