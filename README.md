@@ -3,6 +3,10 @@ Toklet — Fast, lightweight LLM inference on Apple Silicon. An open-source Rust
 
 See the [implementation plan](PLAN.md) for milestones, dependencies, and acceptance criteria, and the [Apple LLM performance proposal](apple_llm_performance_plan.md) for the design rationale.
 
+The [improvement record](docs/improvements.md) collects implemented capabilities,
+measured speedups, memory/scheduling changes, numerical fixes and rejected
+experiments, with links to their qualification evidence.
+
 The library provides a complete scalar decoder with FP32 storage, immutable weights, reusable scratch, tied output projection, and deterministic greedy selection. A separate diagnostic path retains all intermediate arrays. Projections, normalization, and softmax use FP64 accumulation for stability; the original FP32 projection functions remain available. The tiny decoder matches its frozen independent reference, and Qwen matches pinned Transformers on short numerical probes. Local safetensors loading supports FP32, FP16, BF16, and indexed shards. Bounded [CPU sessions](src/session.rs) retain per-layer KV, track pending versus evaluated tokens, and support exact append, cached prompts, reset, and replay. The CLI streams greedy generation with local tokenizer assets, the qualified Qwen chat template, stop IDs, cancellation and statistics.
 
 Use Rust 1.90 or newer. The library and CLI build without model downloads or Apple frameworks. Safetensors, Serde, and half-precision conversion dependencies are pinned. Fetch the locked dependencies once before running the offline checks:
