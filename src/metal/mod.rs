@@ -5,15 +5,15 @@ mod capture;
 mod diagnostic;
 pub use capture::Capture;
 mod memory;
+mod profile;
 use crate::{model, session, weights};
 pub use diagnostic::Diagnostic;
 use memory::{Buffer, Gpu, Kernel, Layout, matrix, multiply};
-use objc2::{
-    rc::{Retained, autoreleasepool},
-    runtime::ProtocolObject,
-};
+use objc2::rc::{Retained, autoreleasepool};
 use objc2_metal::{MTLCommandBuffer, MTLCommandBufferStatus, MTLDevice};
 use objc2_metal_performance_shaders::{MPSMatrix, MPSMatrixMultiplication};
+use profile::Command;
+pub use profile::{ClockPair, Profile, ProfileEvent};
 use std::{collections::BTreeMap, path::Path, time::Instant};
 const ALLOWANCE: usize = 64 * 1024 * 1024;
 type Result<T> = std::result::Result<T, Error>;
@@ -285,8 +285,11 @@ struct Views {
     mh: Retained<MPSMatrixMultiplication>,
     hv: Retained<MPSMatrixMultiplication>,
 }
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, serde::Serialize)]
 pub struct Timing {
+    pub command_creation_seconds: f64,
+    pub clock_calibration_seconds: f64,
+    pub commit_seconds: f64,
     pub host_encode_seconds: f64,
     pub wait_seconds: f64,
     pub gpu_start_seconds: f64,
@@ -315,6 +318,7 @@ pub struct Session<'m> {
     last_timing: Option<Timing>,
     diagnostics: Vec<diagnostic::Snapshot>,
     diagnostic_rows: usize,
+    trace: Option<profile::Trace>,
 }
 impl<'m> Session<'m> {
     pub fn new(model: &'m Model, options: session::Options) -> Result<Self> {
@@ -486,6 +490,7 @@ impl<'m> Session<'m> {
                 last_timing: None,
                 diagnostics: Vec::new(),
                 diagnostic_rows: 0,
+                trace: None,
             })
         })
     }
@@ -596,7 +601,17 @@ impl<'m> Session<'m> {
         let c = &self.model.config;
         let s = &self.scratch;
         let v = &self.views[n - 1];
-        let command = g.command()?;
+        let creation_clock = Instant::now();
+        let raw_command = g.command()?;
+        let command_creation_seconds = creation_clock.elapsed().as_secs_f64();
+        let mut clock_calibration_seconds = 0.;
+        if let Some(trace) = &self.trace {
+            clock_calibration_seconds += trace.reset(g);
+        }
+        let command = Command {
+            raw: &raw_command,
+            trace: self.trace.as_ref(),
+        };
         let clock = Instant::now();
         let h = c.hidden_size;
         let kv = c.kv_heads * c.head_dim;
@@ -902,7 +917,9 @@ impl<'m> Session<'m> {
         )?;
         self.snapshot(&command, None, "logits", &s.floats.raw)?;
         let host_encode_seconds = clock.elapsed().as_secs_f64();
+        let commit_clock = Instant::now();
         command.commit();
+        let commit_seconds = commit_clock.elapsed().as_secs_f64();
         let wait = Instant::now();
         command.waitUntilCompleted();
         let wait_seconds = wait.elapsed().as_secs_f64();
@@ -925,12 +942,19 @@ impl<'m> Session<'m> {
         if self.staged.iter().any(|v| !v.is_finite()) {
             return Err(Error::Nonfinite);
         }
+        let readback_seconds = readback.elapsed().as_secs_f64();
+        if let Some(trace) = &self.trace {
+            clock_calibration_seconds += trace.complete(g);
+        }
         Ok(Timing {
+            command_creation_seconds,
+            clock_calibration_seconds,
+            commit_seconds,
             host_encode_seconds,
             wait_seconds,
             gpu_start_seconds: command.GPUStartTime(),
             gpu_end_seconds: command.GPUEndTime(),
-            readback_seconds: readback.elapsed().as_secs_f64(),
+            readback_seconds,
             command_count: 1,
         })
     }
@@ -938,7 +962,7 @@ impl<'m> Session<'m> {
 #[allow(clippy::too_many_arguments)]
 fn rms(
     g: &Gpu,
-    c: &ProtocolObject<dyn MTLCommandBuffer>,
+    c: &Command<'_>,
     x: &Buffer<u16>,
     w: &Buffer<u16>,
     out: &Buffer<u16>,
@@ -959,7 +983,7 @@ fn rms(
 #[allow(clippy::too_many_arguments)]
 fn encode_multiply(
     g: &Gpu,
-    c: &ProtocolObject<dyn MTLCommandBuffer>,
+    c: &Command<'_>,
     weight: &Tensor,
     bias: &Buffer<u16>,
     kernel: &MPSMatrixMultiplication,
@@ -978,23 +1002,25 @@ fn encode_multiply(
         n * out,
         None,
     )?;
+    g.marker(c, floats, "mps_before")?;
     // SAFETY: exact same-device n-row views, validated input/output dimensions,
     // row-major weight transposed, distinct Half operands and FP32 result. Tracked
     // hazards order resident bias -> MPS -> consumers; owners survive checked wait.
     unsafe {
         kernel.encodeToCommandBuffer_leftMatrix_rightMatrix_resultMatrix(
-            c,
+            c.raw,
             left,
             &weight.matrix,
             result,
         );
     }
+    g.marker(c, floats, "mps_after")?;
     Ok(())
 }
 #[allow(clippy::too_many_arguments)]
 fn project(
     g: &Gpu,
-    c: &ProtocolObject<dyn MTLCommandBuffer>,
+    c: &Command<'_>,
     weight: &Tensor,
     bias: &Buffer<u16>,
     kernel: &MPSMatrixMultiplication,
@@ -1091,8 +1117,19 @@ mod tests {
             },
         )
         .unwrap();
+        session.enable_profile().unwrap();
         session.append(&[0]).unwrap();
         session.evaluate().unwrap();
+        assert!(session.profile().is_ok());
+        // Simulate command creation failing before trace.reset(): the per-attempt
+        // marker is cleared, but successful timing and counters remain stored.
+        session.diagnostic_rows = 0;
+        assert!(matches!(
+            session.finish_chunk(1, Err(Error::Native("injected creation failure".into()))),
+            Err(Error::Native(_))
+        ));
+        assert!(session.last_timing.is_some());
+        assert!(session.profile().is_err());
         let logits = session.logits().unwrap().to_vec();
         session.append(&[1]).unwrap();
         assert!(matches!(
@@ -1100,6 +1137,7 @@ mod tests {
             Err(Error::Nonfinite)
         ));
         assert_eq!(session.evaluated_len(), 1);
+        assert!(session.profile().is_err());
         assert!(session.logits().is_none());
         session.discard_pending();
         assert_eq!(session.logits().unwrap(), logits);

@@ -1,0 +1,92 @@
+{
+  "scope": "M4.4 functional exit; held-out FP16 quality/speed replacement acceptance deferred",
+  "parent_revision": "876a5f7603823968419270c86faf5e76fe2dea9d",
+  "evidence": {
+    "artifacts/m4-metal-trace-v1/release/examples/metal_trace": {
+      "bytes": 1175856,
+      "sha256": "036bd1ec2b665b25da8be09370b74767dd9418927a624b95d36f1d1c923fc6e4"
+    },
+    "artifacts/m4-metal-trace-v1/release/deps/metal-107a46ab23f56d73": {
+      "bytes": 2002464,
+      "sha256": "49b63b0a163a4d7d185183e005dcde04718232232bcbc92536c664c1217b4156"
+    },
+    "artifacts/m4-metal-trace-v1/release/deps/toklet-f8ac5e0ca609557c": {
+      "bytes": 1824976,
+      "sha256": "91203a5fb228fd7a6136b2fc979299ffc641c8828271841d74a788e0499bc35a"
+    },
+    "benchmarks/results/2026-10-13-metal-trace-qwen-analysis-v3.json": {
+      "bytes": 65048,
+      "sha256": "4c52167605d5c175939da7b0cd9e4d02397b4e0fa00cb175f35220d7c62fd397"
+    },
+    "benchmarks/results/2026-10-13-metal-trace-tiny-analysis-v3.json": {
+      "bytes": 64600,
+      "sha256": "997c076e52eba378a5505c832d9a7bb8cc07d4fa4d32edc92036aa88dc4ed824"
+    },
+    "benchmarks/results/2026-10-13-metal-trace-tiny-v3.json": {
+      "bytes": 14463,
+      "sha256": "12fe5b5e85f6925c61536492608e8447512aa06d08537a15f6e89090e4d2dbfc"
+    },
+    "benchmarks/results/2026-10-13-metal-trace-qwen-v3.json": {
+      "bytes": 111987,
+      "sha256": "8de87ab974a2ba75a1cc415d8d0d71afeaac42520f76b10d4b9962cdfca7a7a0"
+    },
+    "benchmarks/results/2026-10-13-metal-profile-qwen-final.txt": {
+      "bytes": 151,
+      "sha256": "7124572beeca93689e61926fcde50a08398a4fa9f57f2940a83c1b8a9695497a"
+    },
+    "benchmarks/results/2026-10-13-metal-profile-tiny-final.txt": {
+      "bytes": 167,
+      "sha256": "9cc8e8ecac38bd1d0b770112b0c517d8205dcf85b0c07b0b546f3c0957938e95"
+    },
+    "benchmarks/results/2026-10-13-metal-trace-python.txt": {
+      "bytes": 238,
+      "sha256": "9757db1b40bc235a24bbdcca897687653771cc2497a9aa0c0097d136d65dcae1"
+    },
+    "benchmarks/results/2026-10-13-metal-trace-final-build.txt": {
+      "bytes": 564,
+      "sha256": "70b81b7649cea31a90b52d598c4e7e68c7c59256c579e645e4286a67ba61f3fb"
+    },
+    "benchmarks/results/2026-10-13-metal-trace-final-rust.txt": {
+      "bytes": 11138,
+      "sha256": "2af8d3d801546be2d322b2385eac5ba47cca1e3483fd768b8f7e5ead9d9178b0"
+    },
+    "benchmarks/results/2026-10-13-metal-trace-final-clippy.txt": {
+      "bytes": 133,
+      "sha256": "ca6f60dd0666d9c214c9848a56bf226320fbe9f07a76c541dfd1d00680fe453d"
+    },
+    "benchmarks/results/2026-10-13-metal-trace-failure-final.txt": {
+      "bytes": 208,
+      "sha256": "27e6bf69044d21589cc21aa94e77e39fdfeb32cef82f75b1bfc9bce8eb3840d7"
+    }
+  },
+  "protected_cpu_release_sha256": {
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "checks": {
+    "cargo_fmt_check": 0,
+    "cargo_clippy_default_all_targets_D_warnings": 0,
+    "cargo_test_default": {
+      "exit": 0,
+      "passed": 76
+    },
+    "cargo_clippy_metal_all_targets_D_warnings": 0,
+    "cargo_test_metal": {
+      "exit": 0,
+      "passed": 80
+    },
+    "python_experiment_tests": {
+      "exit": 0,
+      "passed": 137
+    },
+    "release_profiled_tiny_contract": 0,
+    "release_profiled_qwen_frozen_gates": {
+      "exit": 0,
+      "comparisons": 612,
+      "runs": 12
+    },
+    "release_stale_profile_overflow_replay_unit": 0
+  },
+  "check_target_dir": "artifacts/m4-metal-trace-v1",
+  "capture_hashes": "Complete per-file bundle hashes retained in final v3 collector reports; native capture and checks serialized."
+}

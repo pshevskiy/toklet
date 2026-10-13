@@ -1,4 +1,4 @@
-use super::{Error, Result};
+use super::{Error, Result, profile::Command};
 use objc2::{AnyThread, rc::Retained, runtime::ProtocolObject};
 use objc2_foundation::{NSProcessInfo, NSString};
 use objc2_metal::*;
@@ -193,9 +193,10 @@ pub(super) enum Kernel {
     Silu,
     Gating,
     Validate,
+    Marker,
 }
 impl Kernel {
-    fn name(self) -> &'static str {
+    pub fn name(self) -> &'static str {
         [
             "embedding",
             "rms",
@@ -208,6 +209,7 @@ impl Kernel {
             "silu",
             "gating",
             "validate_float",
+            "marker",
         ][self as usize]
     }
 }
@@ -260,6 +262,7 @@ impl Gpu {
             Kernel::Silu,
             Kernel::Gating,
             Kernel::Validate,
+            Kernel::Marker,
         ] {
             let f = library
                 .newFunctionWithName(&NSString::from_str(k.name()))
@@ -297,7 +300,7 @@ impl Gpu {
     }
     pub fn encode(
         &self,
-        c: &ProtocolObject<dyn MTLCommandBuffer>,
+        c: &Command<'_>,
         k: Kernel,
         buffers: &[&ProtocolObject<dyn MTLBuffer>],
         shape: &[u32],
@@ -314,9 +317,16 @@ impl Gpu {
         {
             return Err(Error::Options("rounded dispatch overflow"));
         }
-        let e = c
-            .computeCommandEncoder()
-            .ok_or_else(|| Error::Native("encoder absent".into()))?;
+        let (index, e) = if let Some(trace) = c.trace {
+            let (i, e) = trace.encoder(c.raw, k.name())?;
+            (Some(i), e)
+        } else {
+            (
+                None,
+                c.computeCommandEncoder()
+                    .ok_or_else(|| Error::Native("encoder absent".into()))?,
+            )
+        };
         e.setLabel(Some(&NSString::from_str(k.name())));
         e.setComputePipelineState(&self.pipelines[k as usize]);
         // SAFETY: closed private call sites bind the documented exact shader ABIs,
@@ -349,6 +359,40 @@ impl Gpu {
             },
         );
         e.endEncoding();
+        if let Some(index) = index {
+            c.trace.unwrap().finish_encoder(index);
+        }
+        Ok(())
+    }
+    pub fn marker(&self, c: &Command<'_>, source: &Buffer<u32>, name: &'static str) -> Result<()> {
+        if let Some(trace) = c.trace {
+            let (index, e) = trace.encoder(c.raw, name)?;
+            e.setComputePipelineState(&self.pipelines[Kernel::Marker as usize]);
+            e.setLabel(Some(&NSString::from_str(name)));
+            // SAFETY: same-device live disjoint u32 buffers with at least one
+            // initialized element. Marker atomically ORs zero into the result bits to establish
+            // tracked read/write ordering around MPS, preserving every result bit;
+            // its dedicated sink retains the observed bits. Atomic u32 alignment
+            // matches the admitted four-byte FP32 storage. Access is serialized.
+            unsafe {
+                e.setBuffer_offset_atIndex(Some(&source.raw), 0, 0);
+                e.setBuffer_offset_atIndex(Some(&trace.sink.raw), 0, 1);
+            }
+            e.dispatchThreadgroups_threadsPerThreadgroup(
+                MTLSize {
+                    width: 1,
+                    height: 1,
+                    depth: 1,
+                },
+                MTLSize {
+                    width: 1,
+                    height: 1,
+                    depth: 1,
+                },
+            );
+            e.endEncoding();
+            trace.finish_encoder(index);
+        }
         Ok(())
     }
 }

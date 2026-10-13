@@ -170,6 +170,9 @@ fn resident_tiny_decoder_and_session_contract() {
         let gate = &half["arrays"][format!("cases.{case}.logits")]["gate_against_source_fp32"];
         for chunk in [tokens.len(), 3, 1] {
             let mut s = metal::Session::new(&model, options(chunk, offset)).unwrap();
+            if std::env::var_os("TOKLET_TEST_PROFILE").is_some() {
+                s.enable_profile().unwrap();
+            }
             s.enable_diagnostics(&[0, 1]).unwrap();
             s.set_tokens(&tokens).unwrap();
             s.evaluate().unwrap();
@@ -178,6 +181,12 @@ fn resident_tiny_decoder_and_session_contract() {
                 &reference[reference.len() - 64..],
                 gate,
             );
+            if std::env::var_os("TOKLET_TEST_PROFILE").is_some() {
+                assert_eq!(
+                    s.profile().unwrap().events.len(),
+                    38 * model.config().num_layers + 6
+                );
+            }
             for d in s.diagnostics().unwrap() {
                 let name = diagnostic_name(case, &d);
                 let expected = source.f32(&name);
@@ -337,10 +346,19 @@ fn resident_qwen_full_forward() {
                 },
             )
             .unwrap();
+            if std::env::var_os("TOKLET_TEST_PROFILE").is_some() {
+                s.enable_profile().unwrap();
+            }
             s.enable_diagnostics(&[0, 1, 23]).unwrap();
             s.append(&tokens).unwrap();
             s.evaluate().unwrap();
             let mut arrays = 0;
+            if std::env::var_os("TOKLET_TEST_PROFILE").is_some() {
+                assert_eq!(
+                    s.profile().unwrap().events.len(),
+                    38 * model.config().num_layers + 6
+                );
+            }
             for d in s.diagnostics().unwrap() {
                 let name = diagnostic_name(case, &d);
                 let expected = payload(&source_root, &source, &name);

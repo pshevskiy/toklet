@@ -1,0 +1,261 @@
+{
+  "scope": "M4.4 stage/host/allocation/transition attribution; instrumented intervals are not speed-parity acceptance",
+  "kind": "tiny",
+  "identities": {
+    "/Users/coloner/work/rust/toklet/Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "/Users/coloner/work/rust/toklet/Cargo.toml": "b3e9b08aedeaa6a4ca4fd3dd642f2afdb00a3855766e6af1a9b69024fe51e6d5",
+    "/Users/coloner/work/rust/toklet/examples/metal_trace.rs": "b4bb14b31921974d9278a6874f86dec6943827166538e5ffaadc25e380b2a7ce",
+    "/Users/coloner/work/rust/toklet/src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/mod.rs": "9cfa75d60ba5359bfa8a3f41b8b568ff5c33caf991ca8b0d811e22bb6c5aa48b",
+    "/Users/coloner/work/rust/toklet/src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "/Users/coloner/work/rust/toklet/src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "/Users/coloner/work/rust/toklet/src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "/Users/coloner/work/rust/toklet/src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "/Users/coloner/work/rust/toklet/src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "/Users/coloner/work/rust/toklet/src/generation.rs": "40496130b7928e87f6ad47c10ced4643b165894552108fe23d21cb42f6a115a5",
+    "/Users/coloner/work/rust/toklet/src/lib.rs": "f62cdeceabdc151601debb7401cd376438ef4519dc9445b0e7dc784d232e4818",
+    "/Users/coloner/work/rust/toklet/src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "/Users/coloner/work/rust/toklet/src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "/Users/coloner/work/rust/toklet/src/metal/kernels.metal": "53ff551beb7ef5f4b40a708d52044c522d659be367cc24f85db8220b26aa1d20",
+    "/Users/coloner/work/rust/toklet/src/metal/memory.rs": "8ff03f7db8c1421c4f6072fb16af76cd9cc7c8def6ee1e08923729810e765bf0",
+    "/Users/coloner/work/rust/toklet/src/metal/mod.rs": "f9ce80b02c9928e3a8e0b200ecb7c47ffb212cd066cad2b05d78678d01dd2b83",
+    "/Users/coloner/work/rust/toklet/src/metal/profile.rs": "97d0c78df30722f9263100eb764c1b3e9b9a483604e08103d3509698653772c5",
+    "/Users/coloner/work/rust/toklet/src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "/Users/coloner/work/rust/toklet/src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "/Users/coloner/work/rust/toklet/src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "/Users/coloner/work/rust/toklet/src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "/Users/coloner/work/rust/toklet/src/session.rs": "2bc30c319ba039d83453dcd3fa7753efe8fc21605c7534535f55ec18cde5ce14",
+    "/Users/coloner/work/rust/toklet/src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "/Users/coloner/work/rust/toklet/src/weights/mod.rs": "0cefed801fa42d157a8a1a83f0d656a60e414d9ea74f27956181f9167d95d5ef",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_engine.py": "9e8c5774d5a400d3f4ec0d7b1f2e2b90f333394608b2598e45d7912ec344af30",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_trace.py": "c2038ee4276129f7e583faf057f340cf64210413a3c7247f14587a744789f61e",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_trace_analysis.py": "4354a650ace3c8f1f688f57e82c219a699abe53017b7dca7f6655db1a05e46d7",
+    "/Users/coloner/work/rust/toklet/tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc",
+    "/Users/coloner/work/rust/toklet/artifacts/m4-metal-trace-v1/release/examples/metal_trace": "036bd1ec2b665b25da8be09370b74767dd9418927a624b95d36f1d1c923fc6e4",
+    "/Users/coloner/work/rust/toklet/artifacts/m4-metal-trace-v1/tiny-v3/tiny-model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "/Users/coloner/work/rust/toklet/artifacts/m4-metal-trace-v1/tiny-v3/tiny-model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+  },
+  "revision": "876a5f7603823968419270c86faf5e76fe2dea9d",
+  "raw_path": "/Users/coloner/work/rust/toklet/artifacts/m4-metal-trace-v1/tiny-v3/raw.jsonl",
+  "capture_path": "/Users/coloner/work/rust/toklet/artifacts/m4-metal-trace-v1/tiny-v3/tiny.gputrace",
+  "idle_usage": [
+    {
+      "run": -1,
+      "resident_size": 27394048,
+      "phys_footprint": 7471800,
+      "lifetime_max_phys_footprint": 7471800
+    },
+    {
+      "run": 0,
+      "resident_size": 30195712,
+      "phys_footprint": 18154168,
+      "lifetime_max_phys_footprint": 18154168
+    },
+    {
+      "run": 1,
+      "resident_size": 30228480,
+      "phys_footprint": 18186936,
+      "lifetime_max_phys_footprint": 18186936
+    },
+    {
+      "run": 2,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 3,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 4,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 5,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 6,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 7,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 8,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 9,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 10,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 11,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 12,
+      "resident_size": 30277632,
+      "phys_footprint": 18236088,
+      "lifetime_max_phys_footprint": 18236088
+    },
+    {
+      "run": 13,
+      "resident_size": 39239680,
+      "phys_footprint": 25510608,
+      "lifetime_max_phys_footprint": 25821904
+    }
+  ],
+  "build": "CARGO_TARGET_DIR=artifacts/m4-metal-trace-v1 cargo build --offline --release --features metal --example metal_trace",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)",
+  "platform": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+  "ready": {
+    "event": "ready",
+    "model": "tiny",
+    "device": "Apple M1 Pro",
+    "load_seconds": 0.060269584,
+    "conversion_seconds": 0.00011512999999999998,
+    "compilation_seconds": 0.059027875,
+    "session_allocation_seconds": 0.0019115,
+    "combined_admitted_bytes": 201398116,
+    "capture_memory_allowance_bytes": 67386984,
+    "capture_admitted_bytes": 268785100,
+    "debug_assertions": false,
+    "shared_weight_bytes": 41900,
+    "baseline_memory": {
+      "weights_bytes": 41900,
+      "kv_bytes": 4152,
+      "scratch_bytes": 9572,
+      "history_bytes": 128,
+      "logits_bytes": 512,
+      "metadata_bytes": 448,
+      "metadata_allowance_bytes": 67108864,
+      "admitted_bytes": 67165576
+    },
+    "profile_memory": {
+      "weights_bytes": 41900,
+      "kv_bytes": 4152,
+      "scratch_bytes": 9572,
+      "history_bytes": 128,
+      "logits_bytes": 512,
+      "metadata_bytes": 448,
+      "metadata_allowance_bytes": 134217728,
+      "admitted_bytes": 134274440
+    },
+    "runs": 14,
+    "operations": [
+      "prefill",
+      "decode"
+    ],
+    "events_per_operation": 82
+  },
+  "endpoint_identities": {
+    "/Users/coloner/work/rust/toklet/Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "/Users/coloner/work/rust/toklet/Cargo.toml": "b3e9b08aedeaa6a4ca4fd3dd642f2afdb00a3855766e6af1a9b69024fe51e6d5",
+    "/Users/coloner/work/rust/toklet/examples/metal_trace.rs": "b4bb14b31921974d9278a6874f86dec6943827166538e5ffaadc25e380b2a7ce",
+    "/Users/coloner/work/rust/toklet/src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/mod.rs": "9cfa75d60ba5359bfa8a3f41b8b568ff5c33caf991ca8b0d811e22bb6c5aa48b",
+    "/Users/coloner/work/rust/toklet/src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "/Users/coloner/work/rust/toklet/src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "/Users/coloner/work/rust/toklet/src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "/Users/coloner/work/rust/toklet/src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "/Users/coloner/work/rust/toklet/src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "/Users/coloner/work/rust/toklet/src/generation.rs": "40496130b7928e87f6ad47c10ced4643b165894552108fe23d21cb42f6a115a5",
+    "/Users/coloner/work/rust/toklet/src/lib.rs": "f62cdeceabdc151601debb7401cd376438ef4519dc9445b0e7dc784d232e4818",
+    "/Users/coloner/work/rust/toklet/src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "/Users/coloner/work/rust/toklet/src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "/Users/coloner/work/rust/toklet/src/metal/kernels.metal": "53ff551beb7ef5f4b40a708d52044c522d659be367cc24f85db8220b26aa1d20",
+    "/Users/coloner/work/rust/toklet/src/metal/memory.rs": "8ff03f7db8c1421c4f6072fb16af76cd9cc7c8def6ee1e08923729810e765bf0",
+    "/Users/coloner/work/rust/toklet/src/metal/mod.rs": "f9ce80b02c9928e3a8e0b200ecb7c47ffb212cd066cad2b05d78678d01dd2b83",
+    "/Users/coloner/work/rust/toklet/src/metal/profile.rs": "97d0c78df30722f9263100eb764c1b3e9b9a483604e08103d3509698653772c5",
+    "/Users/coloner/work/rust/toklet/src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "/Users/coloner/work/rust/toklet/src/model/mod.rs": "0b6288b46c980d66d5a9240e5e1740f39629dd59688d9f4d888f24e954fbbd14",
+    "/Users/coloner/work/rust/toklet/src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "/Users/coloner/work/rust/toklet/src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "/Users/coloner/work/rust/toklet/src/session.rs": "2bc30c319ba039d83453dcd3fa7753efe8fc21605c7534535f55ec18cde5ce14",
+    "/Users/coloner/work/rust/toklet/src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "/Users/coloner/work/rust/toklet/src/weights/mod.rs": "0cefed801fa42d157a8a1a83f0d656a60e414d9ea74f27956181f9167d95d5ef",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_engine.py": "9e8c5774d5a400d3f4ec0d7b1f2e2b90f333394608b2598e45d7912ec344af30",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_trace.py": "c2038ee4276129f7e583faf057f340cf64210413a3c7247f14587a744789f61e",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_trace_analysis.py": "4354a650ace3c8f1f688f57e82c219a699abe53017b7dca7f6655db1a05e46d7",
+    "/Users/coloner/work/rust/toklet/tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc",
+    "/Users/coloner/work/rust/toklet/artifacts/m4-metal-trace-v1/release/examples/metal_trace": "036bd1ec2b665b25da8be09370b74767dd9418927a624b95d36f1d1c923fc6e4",
+    "/Users/coloner/work/rust/toklet/artifacts/m4-metal-trace-v1/tiny-v3/tiny-model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "/Users/coloner/work/rust/toklet/artifacts/m4-metal-trace-v1/tiny-v3/tiny-model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+  },
+  "identities_unchanged": true,
+  "raw_sha256": "b4bc7bf1d6a5168997fbf2072ccfadc798bcabbcd675352acb264a58a0d5dcca",
+  "capture_files": {
+    "8D346F446C3947BD": {
+      "bytes": 3715112,
+      "sha256": "8ff3e4146e0d9ec03b63656932ea0f09c236c644156f37b2b0d44015768ed1ef"
+    },
+    "capture": {
+      "bytes": 544024,
+      "sha256": "952f260b6cd767939653b5af7693ec970ac5685639bfcd3d80463855b24849c2"
+    },
+    "delta-device-resources-0x105363da0": {
+      "bytes": 56,
+      "sha256": "3807df3a67ac273dd893340a70b72ac571bef91c5280e492d9ac5404a2fb88f0"
+    },
+    "device-resources-0x105363da0": {
+      "bytes": 97072,
+      "sha256": "cee2ff755b789b2f6855afacce8b770f03e1e63113bd30e5b11555fd8b556544"
+    },
+    "index": {
+      "bytes": 27457,
+      "sha256": "cb1b660b69540728ff92880f93863738a3daebb82b8e8f0b036563c83bf99054"
+    },
+    "metadata": {
+      "bytes": 1143,
+      "sha256": "66d71f13f70b594e9502cc23e64d3cef41bdd78e1b578e0a6a62cff0ecd6f201"
+    },
+    "startup-0-platform": {
+      "bytes": 76,
+      "sha256": "20c7aab2beb3e35b48f064737d5b77597ad42b911e7d22b0e53ddc9ef8d95d72"
+    },
+    "startup-1-platform": {
+      "bytes": 8,
+      "sha256": "307bca216804762e9741cc4d56a78333351e51a2b9ba29b1b623c5c07df79550"
+    },
+    "store0": {
+      "bytes": 95643,
+      "sha256": "ab75872682ea0e16779dc050786a0a4fb56ac7fa4ac23f0a421f7b41b386f7c1"
+    },
+    "unsorted-capture": {
+      "bytes": 524796,
+      "sha256": "6e1d8fb515655de43a7e7fd5193b8a69095646b6472b2c454934834352a655ae"
+    },
+    "unused-device-resources-0x105363da0": {
+      "bytes": 7060,
+      "sha256": "df9d3a10f08a0d521fc0e50840d49e8cad6f1886484b5ac39a0311ec286c991d"
+    }
+  }
+}

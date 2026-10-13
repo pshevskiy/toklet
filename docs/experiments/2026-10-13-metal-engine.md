@@ -100,3 +100,7 @@ metadata). Whole-command GPU start/end, host encoding, wait and readback are
 recorded. `xctrace` is unavailable in the installed Command Line Tools. Kernel/
 idle timing attribution remains a separate M4.4 task; the capture alone does not
 close that requirement. Astra accepted the code and evidence after independently checking 10 collector/native-ABI tests, all resident raw responses, source/log/bundle hashes, admission and links. No speed-parity, FP16 held-out quality or M5 claim is made. The plan’s 10,000-target NLL and 100-task lossy-quality gates remain outstanding before quality/performance replacement acceptance.
+
+Subsequent M4.4 qualification: the [final scheduling report](2026-10-13-metal-trace.md)
+closes functional M4 with calibrated stage counters, actual tiny/Qwen captures
+and independent Astra review. The quality/performance gates above remain open.

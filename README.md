@@ -93,7 +93,7 @@ Standalone Apple preparation includes a
 [pinned Rust Metal binding check](docs/experiments/2026-10-10-rust-metal-bindings.md)
 with exact small dispatches, owned shared buffers, completion/error checks and
 bounded isolated builds. It adds no engine dependency or GPU execution path;
-The [resident root backend](docs/experiments/2026-10-13-metal-engine.md) now passes tiny/Qwen forward and session checks; M4.4 kernel/idle trace attribution remains pending.
+The [resident root backend](docs/experiments/2026-10-13-metal-engine.md) passes tiny/Qwen forward and session checks. The [final scheduling trace](docs/experiments/2026-10-13-metal-trace.md) closes functional M4; FP16 held-out quality and performance replacement gates remain unqualified, and CPU stays the default.
 The [matched short CPU comparison](docs/experiments/2026-10-10-cpu-primary-comparison.md)
 confirms roughly 77.6% lower median TTFT for opt-in tiled projections in both
 comparison orders. Scalar remains default while full workload and application
@@ -300,7 +300,7 @@ The [CPU retention decision](docs/experiments/2026-10-12-cpu-tiled-retention.md)
 closes M3.1 and M3: retain the qualified tiled projection as an opt-in variant,
 with scalar as default/reference. Both primary comparisons improve warm TTFT
 by about 77.6%; complete workload/application and frozen quality/memory gates
-pass their recorded scope. Metal composition and M4–M7 remain pending.
+pass their recorded scope. Functional M4 is now complete as recorded below; M5–M7 remain pending.
 
 The [Metal gating tail extension](docs/experiments/2026-10-12-metal-gating-tails.md)
 checks nine bounded lengths with exact Half outputs and full inactive-lane

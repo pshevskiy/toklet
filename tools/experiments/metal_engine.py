@@ -40,7 +40,10 @@ def kill_owned_group(child):
 
 class Transport:
     """Bounded nonblocking pipes, with no reader threads or stream-close locks."""
-    def __init__(self, child, raw, stderr):
+    def __init__(self, child, raw, stderr, stdout_limit=8*1024*1024, event_limit=4096):
+        if not 1 <= stdout_limit <= 16*1024*1024 or not 1 <= event_limit <= 32768:
+            raise ValueError("transport limits outside admitted diagnostic bounds")
+        self.stdout_limit, self.event_limit = stdout_limit, event_limit
         self.child, self.raw, self.stderr = child, raw, stderr
         self.selector = selectors.DefaultSelector()
         for name, stream in [("stdout",child.stdout),("stderr",child.stderr)]:
@@ -65,8 +68,8 @@ class Transport:
                     raise ValueError("child stderr exceeds 1MiB bound")
             else:
                 self.stdout_bytes += len(data)
-                if self.stdout_bytes > 8*1024*1024:
-                    raise ValueError("child stdout exceeds 8MiB bound")
+                if self.stdout_bytes > self.stdout_limit:
+                    raise ValueError("child stdout exceeds admitted byte bound")
                 self.pending.extend(data)
                 if max(map(len,self.pending.split(b"\n"))) > 65536:
                     raise ValueError("child output exceeds bounded line limit")
@@ -77,7 +80,7 @@ class Transport:
                 line,_,tail = self.pending.partition(b"\n")
                 self.pending = bytearray(tail)
                 self.events += 1
-                if self.events > 4096: raise ValueError("child event count exceeds bound")
+                if self.events > self.event_limit: raise ValueError("child event count exceeds bound")
                 line = line.decode("utf-8")+"\n"
                 self.raw.write(line);self.raw.flush()
                 return json.loads(line)

@@ -37,7 +37,7 @@ impl Default for Options {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize)]
 pub struct Memory {
     pub weights_bytes: usize,
     pub kv_bytes: usize,

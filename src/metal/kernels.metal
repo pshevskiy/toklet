@@ -108,3 +108,8 @@ kernel void validate_float(device const float* x[[buffer(0)]],constant uint4& s[
     if(!isfinite(x[(i/s.y)*s.z+i%s.y]))atomic_fetch_or_explicit(status,4u,memory_order_relaxed);
 }
 
+
+// Diagnostic dependency marker; production execution never dispatches it.
+kernel void marker(device atomic_uint* source[[buffer(0)]],device uint* sink[[buffer(1)]],uint i[[thread_position_in_grid]]) {
+    if(i==0)sink[0]=atomic_fetch_or_explicit(source,0u,memory_order_relaxed);
+}

@@ -1255,10 +1255,29 @@ functionally closed. Actual65,099,992-byte GPU trace capture succeeds; per-kerne
 idle attribution remains M4.4. FP16 held-out10k-loss/100-task quality remains
 explicitly unqualified; the CPU default and frozen gates are preserved.
 
+Metal scheduling attribution, 13 October 2026: the
+[final counter/capture report](docs/experiments/2026-10-13-metal-trace.md)
+closes M4.4 at the public API boundary. Custom encoder timestamps, dependent MPS
+markers and paired CPU/GPU clock conversion explain kernel/enclosed-MPS,
+transition, host encoding, command creation, calibration and readback costs.
+Three warmups/ten uncaptured samples/one separate capture retain exact logits
+against ordinary sessions: 2,296 tiny and 25,704 Qwen stage events. Instrumentation
+overhead is explicit; transition intervals are not global GPU idle claims.
+Actual captures and source/binary/model/raw identities are hash-bound. Persistent
+allocations stay fixed; Qwen uncaptured native charge grows 96 KiB after warmup.
+Conservative capture admission estimate is 6,222,702,660 bytes under 6 GiB;
+observed peak charge is 2,136,459,400 bytes. Default/Metal CPU tests pass 76/80,
+Python checks 137, strict Clippy/fmt and final release tiny/Qwen gates pass.
+Astra found and accepted a tested stale-profile failure fix, then independently
+replayed both final analyses and verified every capture/manifest hash. Protected
+CPU release binaries are unchanged. M4's functional exit is complete; CPU stays
+default. Held-out FP16 10k-loss/100-task quality and performance replacement
+acceptance remain unqualified, separately from this functional milestone.
+
 - [x] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [x] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [x] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
-- [ ] **M4.4 Validate scheduling and failure boundaries.** Remove debugging waits after individual operators once parity passes. Preserve dependencies, wait at required request/token boundaries, and maintain committed state on cancellation or GPU failure. Capture a GPU trace that separates kernel time, host encoding, allocations, and idle gaps.
+- [x] **M4.4 Validate scheduling and failure boundaries.** Remove debugging waits after individual operators once parity passes. Preserve dependencies, wait at required request/token boundaries, and maintain committed state on cancellation or GPU failure. Capture a GPU trace that separates kernel time, host encoding, allocations, and idle gaps.
 
 Before writing a substantial custom GEMM, compare an available Apple matrix primitive or TensorOps implementation at the actual projection shapes. Retain compatible kernels when the API is absent or slower; record the chosen device/OS requirements.
 
@@ -1348,4 +1367,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is M4.4: attribute kernel, host encoding, allocation and idle costs using the captured GPU trace and supported timestamp counters; preserve the qualified resident backend and transactional session behavior.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. M4 is functionally complete. The next milestone is M5; implementation stops at the requested M4 scope. FP16 held-out quality and performance replacement gates remain outstanding before changing the CPU default.

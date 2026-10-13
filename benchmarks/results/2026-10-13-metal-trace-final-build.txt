@@ -1,0 +1,8 @@
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `release` profile [optimized] target(s) in 1.68s
+  Executable unittests src/lib.rs (artifacts/m4-metal-trace-v1/release/deps/toklet-f8ac5e0ca609557c)
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `release` profile [optimized] target(s) in 1.97s
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `release` profile [optimized] target(s) in 3.08s
+  Executable tests/metal.rs (artifacts/m4-metal-trace-v1/release/deps/metal-107a46ab23f56d73)
