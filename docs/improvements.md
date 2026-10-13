@@ -3,7 +3,7 @@
 Updated 14 October 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M4 are functionally
-complete; M5.1, M5.3 and M5.5 are complete in their recorded scopes. M5 remains
+complete; M5.1, M5.3, M5.4 and M5.5 are complete in their recorded scopes. M5 remains
 in progress. CPU/scalar remains the default. Speedups below
 apply to the named workload and comparison, and cannot be added together.
 
@@ -75,6 +75,7 @@ qualification does not establish acceptable end-to-end quantization quality.
 | Required-position vocabulary projection | Ordinary prefill computes only its final-row logits, using a precreated checked view; diagnostic paths retain all rows. | [Qualification](experiments/2026-10-13-required-position-logits.md); `d93264e`. Float scratch is unchanged; no measured latency/memory gain claimed. |
 | Explicit GPU greedy token readback | Exact finite FP32 ordering and lowest-ID ties select in the completed command; eight cached-ID bytes replace two host distributions, with a 32-byte guarded GPU buffer. Larger-session admission falls **1,215,448 bytes**. | [Selection task](experiments/2026-10-13-metal-greedy.md). Full logits remain default; diagnostics preserve full arrays. No quality or speed acceptance. |
 | Explicit Metal chunks through 1,024 | Checked admission and a shared-model four-chunk harness pass exact capacity/budget boundaries and larger offset/append/edit final-logit bit refinement. | [Chunk task](experiments/2026-10-13-metal-chunks.md). Default stays 128; this does not qualify every mode or full release workload. |
+| Scoped M5.4 evaluation closure | All four named mechanisms have checked, Astra-reviewed and committed decisions. Only explicit functional token-ID readback remains; all three fusion prototypes were removed. | [Synthesis](experiments/2026-10-14-m5-dispatch-closure.md). No retained fusion latency gain or release/default acceptance. |
 | Scoped M5.3 prefill closure | Required-position logits, independently qualified accurate Q4 prompt tile and completed chunk sweep satisfy the named prefill mechanisms; default chunk stays 128. | [Synthesis](experiments/2026-10-13-m5-prefill-closure.md). Experimental compensated path only; both Q4 quality failures and M5 release gates remain open. |
 | CPU caller-owned all-row logits | Bounded external chunk output supports teacher-forced scoring without full-prefix traces or duplicate weights; normal final-row execution remains unchanged. | [All-row logits](experiments/2026-10-13-cpu-all-row-logits.md); `3dd5485`. |
 | Streamed independent storage oracles | Cache one Half tied table, stream current tensors/Q4 stripes, pin exact bytes before parsing, publish only after completed native memory qualification. | [Oracle report](experiments/2026-10-13-streamed-storage-oracles.md); `962f206`. Evaluation memory benefit, not inference latency. |
@@ -112,7 +113,7 @@ These findings prevent unsuccessful experiments from being presented as improvem
 | Native macOS generated-code isolation prototype | Fixed resource admission fails; not adopted. Literal grading instead uses the separately qualified Linux controller. [Native rejection](experiments/2026-10-10-code-isolation.md), [Linux qualification](experiments/2026-10-11-linux-literal-controller.md). |
 
 The fixed quality gates, quantizer, checkpoint selection and corpus remain
-unchanged. Named dispatch/fusion synthesis, full GPU release workload/task
+unchanged. Full GPU release workload/task
 and application comparisons, sustained qualification and M5 exit remain open.
 Long-context attention/KV experiments and physical iPhone work belong to M6/M7.
 This record will be updated with each reviewed implementation or measurement
