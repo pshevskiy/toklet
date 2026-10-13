@@ -194,6 +194,7 @@ pub(super) enum Kernel {
     Gating,
     Validate,
     Marker,
+    Q4Matvec,
 }
 impl Kernel {
     pub fn name(self) -> &'static str {
@@ -210,6 +211,7 @@ impl Kernel {
             "gating",
             "validate_float",
             "marker",
+            "q4_matvec",
         ][self as usize]
     }
 }
@@ -263,6 +265,7 @@ impl Gpu {
             Kernel::Gating,
             Kernel::Validate,
             Kernel::Marker,
+            Kernel::Q4Matvec,
         ] {
             let f = library
                 .newFunctionWithName(&NSString::from_str(k.name()))
@@ -310,9 +313,23 @@ impl Gpu {
         if count == 0 || count > u32::MAX as usize || shape.is_empty() {
             return Err(Error::Options("invalid dispatch"));
         }
-        let groups = count.div_ceil(self.width);
+        // Q4 assigns one queried SIMD group to each output row. Other kernels
+        // assign one scalar lane per item; never assume an Apple SIMD width.
+        let width = if matches!(k, Kernel::Q4Matvec) {
+            self.pipelines[k as usize].threadExecutionWidth()
+        } else {
+            self.width
+        };
+        if width == 0 || width > self.pipelines[k as usize].maxTotalThreadsPerThreadgroup() {
+            return Err(Error::Unsupported("kernel launch width unsupported"));
+        }
+        let groups = if matches!(k, Kernel::Q4Matvec) {
+            count
+        } else {
+            count.div_ceil(width)
+        };
         if groups
-            .checked_mul(self.width)
+            .checked_mul(width)
             .is_none_or(|n| n > u32::MAX as usize)
         {
             return Err(Error::Options("rounded dispatch overflow"));
@@ -353,7 +370,7 @@ impl Gpu {
                 depth: 1,
             },
             MTLSize {
-                width: self.width,
+                width,
                 height: 1,
                 depth: 1,
             },

@@ -6,7 +6,7 @@ mod diagnostic;
 pub use capture::Capture;
 mod memory;
 mod profile;
-use crate::{model, session, weights};
+use crate::{model, q4, session, weights};
 pub use diagnostic::Diagnostic;
 use memory::{Buffer, Gpu, Kernel, Layout, matrix, multiply};
 use objc2::rc::{Retained, autoreleasepool};
@@ -77,10 +77,35 @@ fn geometry(c: &model::Config) -> Result<()> {
     }
     Ok(())
 }
+/// The planning source contributes shapes only. Reopen payload descriptors after
+/// artifact identity is established, then check metadata and endpoint identities.
+/// This prevents an atomic replacement before Artifact::open from leaving an
+/// older open descriptor supplying excluded weights under a newer path hash.
+fn bound_q4_source(
+    directory: &Path,
+    options: weights::LoadOptions,
+    planning: weights::HalfSource,
+    artifact: &q4::Artifact,
+) -> Result<weights::HalfSource> {
+    let config = planning.config.clone();
+    let files = planning.source_files(directory)?;
+    drop(planning);
+    let source = weights::HalfSource::open(directory, options)?;
+    geometry(&source.config)?;
+    if source.config != config || source.source_files(directory)? != files {
+        return Err(Error::Options("source metadata changed after Q4 planning"));
+    }
+    artifact.verify_sources()?;
+    Ok(source)
+}
 struct Tensor {
     buffer: Buffer<u16>,
     layout: Layout,
-    matrix: Retained<MPSMatrix>,
+    storage: TensorStorage,
+}
+enum TensorStorage {
+    Half(Retained<MPSMatrix>),
+    Q4 { stride: usize },
 }
 impl Tensor {
     fn allocate(g: &Gpu, l: Layout) -> Result<Self> {
@@ -89,7 +114,29 @@ impl Tensor {
         Ok(Self {
             buffer,
             layout: l,
-            matrix,
+            storage: TensorStorage::Half(matrix),
+        })
+    }
+    fn packed(g: &Gpu, layout: Layout, bytes: &[u8]) -> Result<Self> {
+        let matrix = q4::Matrix::parse(bytes).map_err(|e| Error::Options(e.0))?;
+        if matrix.rows() != layout.rows
+            || matrix.columns() != layout.columns
+            || bytes.len() > u32::MAX as usize
+        {
+            return Err(Error::Options("packed shader layout/index limits differ"));
+        }
+        let mut buffer = Buffer::new(g, bytes.len() / 2)?;
+        buffer.with_mut(|out| {
+            for (word, raw) in out.iter_mut().zip(bytes.chunks_exact(2)) {
+                *word = u16::from_le_bytes([raw[0], raw[1]]);
+            }
+        });
+        Ok(Self {
+            buffer,
+            layout,
+            storage: TensorStorage::Q4 {
+                stride: matrix.row_stride(),
+            },
         })
     }
 }
@@ -134,10 +181,38 @@ impl Model {
         self.gpu.device.name().to_string()
     }
     pub fn load(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
+        Self::load_impl(directory, None, options)
+    }
+    /// Opt-in Q4 layer matrices with resident Half exclusions; source stays on
+    /// disk and is checked against packed provenance before and after loading.
+    pub fn load_q4(directory: &Path, packed: &Path, options: weights::LoadOptions) -> Result<Self> {
+        Self::load_impl(directory, Some(packed), options)
+    }
+    fn load_impl(
+        directory: &Path,
+        packed: Option<&Path>,
+        options: weights::LoadOptions,
+    ) -> Result<Self> {
         autoreleasepool(|_| {
             let load_clock = Instant::now();
             let mut source = weights::HalfSource::open(directory, options)?;
             geometry(&source.config)?;
+            let quantized_shapes = q4::matrix_shapes(&source.config)
+                .map_err(|_| Error::Options("Q4 inventory invalid"))?;
+            let artifact = packed
+                .map(|path| {
+                    q4::Artifact::open(
+                        path,
+                        directory,
+                        &quantized_shapes,
+                        &source.source_files(directory)?,
+                        options.memory_limit_bytes,
+                    )
+                })
+                .transpose()?;
+            if let Some(artifact) = &artifact {
+                source = bound_q4_source(directory, options, source, artifact)?;
+            }
             let compile_clock = Instant::now();
             let gpu = Gpu::new()?;
             let compilation_seconds = compile_clock.elapsed().as_secs_f64();
@@ -150,10 +225,27 @@ impl Model {
                     _ => return Err(Error::Options("tensor rank differs")),
                 };
                 let l = Layout::new(rows, cols, true)?;
-                weight_bytes = add(weight_bytes, l.bytes(2)?)?;
+                let size = if artifact.is_some() && quantized_shapes.contains_key(name) {
+                    let groups = cols.div_ceil(q4::GROUP);
+                    let stride = groups
+                        .checked_mul(q4::RECORD_BYTES)
+                        .and_then(|v| v.checked_add(63))
+                        .ok_or(Error::Options("Q4 layout overflow"))?
+                        / 64
+                        * 64;
+                    rows.checked_mul(stride)
+                        .and_then(|v| v.checked_add(q4::HEADER_BYTES))
+                        .ok_or(Error::Options("Q4 layout overflow"))?
+                } else {
+                    l.bytes(2)?
+                };
+                weight_bytes = add(weight_bytes, size)?;
                 layouts.insert(name.clone(), l);
             }
-            let admitted = add(add(weight_bytes, ALLOWANCE)?, 64 * 1024)?;
+            let admitted = add(
+                add(add(weight_bytes, ALLOWANCE)?, 64 * 1024)?,
+                artifact.as_ref().map_or(0, |a| a.largest_matrix_bytes),
+            )?;
             if admitted > options.memory_limit_bytes {
                 return Err(Error::Budget {
                     required: admitted,
@@ -170,6 +262,14 @@ impl Model {
                     .cloned(),
             ) {
                 let l = layouts[&name];
+                if let Some(artifact) = &artifact
+                    && quantized_shapes.contains_key(&name)
+                {
+                    let data = artifact.read_matrix(&name)?;
+                    let tensor = Tensor::packed(&gpu, l, &data)?;
+                    tensors.insert(name, tensor);
+                    continue;
+                }
                 let mut t = Tensor::allocate(&gpu, l)?;
                 let mut index = 0;
                 t.buffer.with_mut(|data| {
@@ -190,6 +290,9 @@ impl Model {
                 tensors.insert(name, t);
             }
             source.check_tied_output()?;
+            if let Some(artifact) = &artifact {
+                artifact.verify_sources()?;
+            }
             let conversion_seconds = source.conversion_seconds();
             let mut model = Self::assemble(source.config, gpu, tensors, weight_bytes)?;
             model.load_timing = LoadTiming {
@@ -1010,7 +1113,12 @@ fn encode_multiply(
         kernel.encodeToCommandBuffer_leftMatrix_rightMatrix_resultMatrix(
             c.raw,
             left,
-            &weight.matrix,
+            match &weight.storage {
+                TensorStorage::Half(matrix) => matrix,
+                TensorStorage::Q4 { .. } => {
+                    return Err(Error::Options("Q4 requires fused projection"));
+                }
+            },
             result,
         );
     }
@@ -1033,6 +1141,30 @@ fn project(
     n: usize,
     status: &Buffer<u32>,
 ) -> Result<()> {
+    if let TensorStorage::Q4 { stride } = weight.storage {
+        // SAFETY: these views were created from owned, admitted same-device Half
+        // buffers. Immutable descriptor getters preserve their retained storage;
+        // no host payload access or mutation is performed while commands encode.
+        let (offset, row_bytes, input) = unsafe { (left.offset(), left.rowBytes(), left.data()) };
+        if offset != 0 || !row_bytes.is_multiple_of(2) {
+            return Err(Error::Options("Q4 input view offset/stride unsupported"));
+        }
+        return g.encode(
+            c,
+            Kernel::Q4Matvec,
+            &[&weight.buffer.raw, &bias.raw, &input, &out.raw],
+            &[
+                n as u32,
+                weight.layout.columns as u32,
+                weight.layout.rows as u32,
+                stride as u32,
+                (row_bytes / 2) as u32,
+                hl.stride as u32,
+            ],
+            n * weight.layout.rows,
+            Some(status),
+        );
+    }
     encode_multiply(
         g,
         c,
@@ -1103,6 +1235,331 @@ impl session::InferenceSession for Session<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn q4_binding_reopens_exclusions_after_atomic_source_replacement_without_gpu() {
+        use serde_json::json;
+        use sha2::{Digest, Sha256};
+        let owned = weights::half_tests::artifact(safetensors::Dtype::F32, None, false);
+        let directory = &owned.0;
+        let options = weights::LoadOptions::default();
+        let planning = weights::HalfSource::open(directory, options).unwrap();
+        let shapes = q4::matrix_shapes(&planning.config).unwrap();
+        let source_path = directory.join("model.safetensors");
+        let mut bytes = std::fs::read(&source_path).unwrap();
+        let (offset, length) = {
+            let tensors = safetensors::SafeTensors::deserialize(&bytes).unwrap();
+            let tensor = tensors.tensor("model.embed_tokens.weight").unwrap();
+            (
+                tensor.data().as_ptr() as usize - bytes.as_ptr() as usize,
+                tensor.data().len(),
+            )
+        };
+        for word in bytes[offset..offset + length].chunks_exact_mut(4) {
+            word.copy_from_slice(&2f32.to_le_bytes());
+        }
+        let replacement = directory.join("replacement");
+        std::fs::write(&replacement, &bytes).unwrap();
+        std::fs::rename(&replacement, &source_path).unwrap();
+        // planning still owns the old descriptor; the new artifact correctly binds
+        // the replaced source, whose excluded embedding is now 2 rather than 1.
+        let packed = directory.join("packed");
+        std::fs::create_dir(&packed).unwrap();
+        let mut entries = Vec::new();
+        let mut total = 0;
+        for (name, shape) in &shapes {
+            let (rows, cols) = (shape[0], shape[1]);
+            let stride = cols.div_ceil(64) * 36_usize;
+            let stride = stride.div_ceil(64) * 64;
+            let mut data = vec![0u8; 64 + rows * stride];
+            data[..8].copy_from_slice(q4::MAGIC);
+            data[8..12].copy_from_slice(&1u32.to_le_bytes());
+            data[12..16].copy_from_slice(&64u32.to_le_bytes());
+            for (offset, value) in [(16, rows), (24, cols), (32, stride), (40, rows * stride)] {
+                data[offset..offset + 8].copy_from_slice(&(value as u64).to_le_bytes());
+            }
+            for row in 0..rows {
+                for group in 0..cols.div_ceil(64) {
+                    let start = 64 + row * stride + group * 36;
+                    data[start + 2..start + 4]
+                        .copy_from_slice(&half::f16::ONE.to_bits().to_le_bytes());
+                }
+            }
+            let filename = format!("{name}.q4");
+            std::fs::write(packed.join(&filename), &data).unwrap();
+            total += data.len();
+            entries.push(json!({"name":name,"file":filename,"rows":rows,"columns":cols,"packed_bytes":data.len(),
+                "packed_sha256":format!("{:x}",Sha256::digest(&data)),"source_f32_sha256":format!("{:x}",Sha256::digest(1f32.to_le_bytes().repeat(rows*cols)))}));
+        }
+        let manifest = json!({"format":"toklet-q4-model-v1","quantizer":q4::QUANTIZER,
+            "config_sha256":format!("{:x}",Sha256::digest(std::fs::read(directory.join("config.json")).unwrap())),
+            "sources":[{"file":"model.safetensors","sha256":format!("{:x}",Sha256::digest(&bytes))}],
+            "matrices":entries,"packed_matrix_bytes":total,"exclusions":["norms","qkv_biases","tied_embedding_output"],"excluded_dtype":"F16"});
+        std::fs::write(
+            packed.join("manifest.json"),
+            serde_json::to_vec(&manifest).unwrap(),
+        )
+        .unwrap();
+        let artifact = q4::Artifact::open(
+            &packed,
+            directory,
+            &shapes,
+            &["model.safetensors".into()],
+            options.memory_limit_bytes,
+        )
+        .unwrap();
+        let mut source = bound_q4_source(directory, options, planning, &artifact).unwrap();
+        let mut count = 0;
+        source
+            .visit_half("model.embed_tokens.weight", |value| {
+                assert_eq!(value, half::f16::from_f32(2.).to_bits());
+                count += 1;
+                Ok(())
+            })
+            .unwrap();
+        assert_eq!(count, 64 * 32);
+        artifact.verify_sources().unwrap();
+    }
+    #[test]
+    #[ignore = "explicit pinned Qwen Q4 projection oracle on Apple GPU; local artifacts required"]
+    fn fused_q4_qwen_shapes_match_fp64_reconstruction_oracle() {
+        autoreleasepool(|_| {
+            let root = Path::new(env!("CARGO_MANIFEST_DIR"));
+            let source = root.join("models/Qwen2.5-0.5B-Instruct");
+            let packed = root.join("artifacts/m5-qwen-q4-v1");
+            let model = Model::load_q4(&source, &packed, weights::LoadOptions::default()).unwrap();
+            let artifact = q4::Artifact::open(
+                &packed,
+                &source,
+                &q4::matrix_shapes(model.config()).unwrap(),
+                &["model.safetensors".into()],
+                weights::INITIAL_MEMORY_LIMIT_BYTES,
+            )
+            .unwrap();
+            for index in [0, 1, 23] {
+                let layer = &model.layers[index];
+                let zero = Buffer::<u16>::new(&model.gpu, model.config.intermediate_size).unwrap();
+                for (name, weight, bias) in [
+                    ("self_attn.q_proj.weight", &layer.q, &layer.q_bias.buffer),
+                    ("self_attn.k_proj.weight", &layer.k, &layer.k_bias.buffer),
+                    ("self_attn.v_proj.weight", &layer.v, &layer.v_bias.buffer),
+                    ("self_attn.o_proj.weight", &layer.o, &zero),
+                    ("mlp.gate_proj.weight", &layer.gate, &zero),
+                    ("mlp.up_proj.weight", &layer.up, &zero),
+                    ("mlp.down_proj.weight", &layer.down, &zero),
+                ] {
+                    let data = artifact
+                        .read_matrix(&format!("model.layers.{index}.{name}"))
+                        .unwrap();
+                    let oracle = q4::Matrix::parse(&data).unwrap();
+                    let inputs: Vec<f32> = (0..oracle.columns())
+                        .map(|i| (i as i32 % 23 - 11) as f32 * 0.125)
+                        .collect();
+                    let mut x = Buffer::<u16>::new(&model.gpu, inputs.len()).unwrap();
+                    x.with_mut(|v| {
+                        for (dst, &src) in v.iter_mut().zip(&inputs) {
+                            *dst = half::f16::from_f32(src).to_bits();
+                        }
+                    });
+                    let out = Buffer::<u16>::new(&model.gpu, oracle.rows()).unwrap();
+                    let status = Buffer::<u32>::new(&model.gpu, 8).unwrap();
+                    let mut expected = vec![0.0; oracle.rows()];
+                    oracle.matvec(&inputs, &mut expected).unwrap();
+                    let biases: Vec<f32> = bias.with_slice(|v| {
+                        v[..oracle.rows()]
+                            .iter()
+                            .map(|&b| half::f16::from_bits(b).to_f32())
+                            .collect()
+                    });
+                    for (value, &b) in expected.iter_mut().zip(&biases) {
+                        *value += b;
+                    }
+                    let raw = model.gpu.command().unwrap();
+                    let command = Command {
+                        raw: &raw,
+                        trace: None,
+                    };
+                    model
+                        .gpu
+                        .encode(
+                            &command,
+                            Kernel::Q4Matvec,
+                            &[&weight.buffer.raw, &bias.raw, &x.raw, &out.raw],
+                            &[
+                                1,
+                                oracle.columns() as u32,
+                                oracle.rows() as u32,
+                                oracle.row_stride() as u32,
+                                oracle.columns() as u32,
+                                oracle.rows() as u32,
+                            ],
+                            oracle.rows(),
+                            Some(&status),
+                        )
+                        .unwrap();
+                    raw.commit();
+                    raw.waitUntilCompleted();
+                    assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                    assert_eq!(status.with_slice(|v| v[0]), 0);
+                    let unit = 2f64.powi(-24);
+                    let operations = (oracle.columns() + 2) as f64;
+                    let gamma = operations * unit / (1.0 - operations * unit);
+                    out.with_slice(|v| {
+                        for (row, (&bits, &want)) in v.iter().zip(&expected).enumerate() {
+                            let absolute: f64 = inputs
+                                .iter()
+                                .enumerate()
+                                .map(|(col, &x)| {
+                                    f64::from(oracle.value(row, col).unwrap()).abs()
+                                        * f64::from(x).abs()
+                                })
+                                .sum::<f64>()
+                                + f64::from(biases[row]).abs();
+                            let bound = gamma * absolute
+                                + 2f64.powi(-11) * f64::from(want).abs()
+                                + 2f64.powi(-25);
+                            let actual = half::f16::from_bits(bits).to_f32();
+                            assert!(
+                                actual.is_finite()
+                                    && (f64::from(actual) - f64::from(want)).abs() <= bound,
+                                "layer{index}/{name} row{row}: {actual}/{want} bound{bound}"
+                            );
+                        }
+                    });
+                    println!(
+                        "Q4 Qwen layer{index}/{name} {}x{} passed mathematical bound",
+                        oracle.rows(),
+                        oracle.columns()
+                    );
+                }
+            }
+            println!("Q4 resident weight bytes {}", model.weight_bytes);
+        });
+    }
+    #[test]
+    #[ignore = "explicit Apple GPU Q4 affine/subnormal/padding/overflow oracle check"]
+    fn fused_q4_matvec_matches_scalar_oracle_and_checks_storage_range() {
+        autoreleasepool(|_| {
+            let gpu = Gpu::new().unwrap();
+            let mut packed = include_bytes!("../../tests/fixtures/q4/rows.q4").to_vec();
+            let mut x = Buffer::<u16>::new(&gpu, 3 * 72).unwrap();
+            let mut bias = Buffer::<u16>::new(&gpu, 2).unwrap();
+            bias.with_mut(|v| {
+                v[0] = half::f16::from_f32(0.25).to_bits();
+                v[1] = half::f16::from_f32(-0.5).to_bits();
+            });
+            let mut output = Buffer::<u16>::new(&gpu, 3 * 8).unwrap();
+            let mut status = Buffer::<u32>::new(&gpu, 8).unwrap();
+            for case in 0..3 {
+                if case == 1 {
+                    packed[64..66].copy_from_slice(&1_u16.to_le_bytes());
+                    packed[66..68].copy_from_slice(&0_u16.to_le_bytes());
+                    bias.with_mut(|v| v.fill(0));
+                }
+                if case == 2 {
+                    packed[64..66]
+                        .copy_from_slice(&half::f16::from_f32(8736.).to_bits().to_le_bytes());
+                    packed[66..68]
+                        .copy_from_slice(&half::f16::from_f32(-65504.).to_bits().to_le_bytes());
+                }
+                let oracle = q4::Matrix::parse(&packed).unwrap();
+                let mut weight = Buffer::<u16>::new(&gpu, packed.len() / 2).unwrap();
+                weight.with_mut(|v| {
+                    for (dst, src) in v.iter_mut().zip(packed.chunks_exact(2)) {
+                        *dst = u16::from_le_bytes([src[0], src[1]]);
+                    }
+                });
+                x.with_mut(|v| {
+                    v.fill(0);
+                    for row in 0..3 {
+                        for col in 0..65 {
+                            let value = if case == 0 {
+                                (col as f32 % 7. - 3.) * 0.5
+                            } else if col == 1 {
+                                1.
+                            } else {
+                                0.
+                            };
+                            v[row * 72 + col] = half::f16::from_f32(value).to_bits();
+                        }
+                    }
+                });
+                output.with_mut(|v| v.fill(0x7bff));
+                status.with_mut(|v| v.fill(0));
+                let raw = gpu.command().unwrap();
+                let command = Command {
+                    raw: &raw,
+                    trace: None,
+                };
+                gpu.encode(
+                    &command,
+                    Kernel::Q4Matvec,
+                    &[&weight.raw, &bias.raw, &x.raw, &output.raw],
+                    &[3, 65, 2, 128, 72, 8],
+                    6,
+                    Some(&status),
+                )
+                .unwrap();
+                raw.commit();
+                raw.waitUntilCompleted();
+                assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                assert_eq!(status.with_slice(|v| v[0]), 0);
+                let mut inputs = [0.0; 65];
+                x.with_slice(|v| {
+                    for (dst, &bits) in inputs.iter_mut().zip(v) {
+                        *dst = half::f16::from_bits(bits).to_f32();
+                    }
+                });
+                let mut expected = [0.0; 2];
+                oracle.matvec(&inputs, &mut expected).unwrap();
+                bias.with_slice(|v| {
+                    for (e, &bits) in expected.iter_mut().zip(v) {
+                        *e += half::f16::from_bits(bits).to_f32();
+                    }
+                });
+                output.with_slice(|v| {
+                    for row in 0..3 {
+                        for col in 0..8 {
+                            if col < 2 {
+                                assert_eq!(
+                                    v[row * 8 + col],
+                                    half::f16::from_f32(expected[col]).to_bits(),
+                                    "case{case} row{row} col{col}"
+                                );
+                            } else {
+                                assert_eq!(v[row * 8 + col], 0x7bff);
+                            }
+                        }
+                    }
+                });
+                // Explicit finite FP32 -> nonfinite Half rejection.
+                if case == 2 {
+                    x.with_mut(|v| {
+                        v.fill(0);
+                        v[0] = half::f16::from_f32(2.).to_bits();
+                    });
+                    status.with_mut(|v| v.fill(0));
+                    let raw = gpu.command().unwrap();
+                    let command = Command {
+                        raw: &raw,
+                        trace: None,
+                    };
+                    gpu.encode(
+                        &command,
+                        Kernel::Q4Matvec,
+                        &[&weight.raw, &bias.raw, &x.raw, &output.raw],
+                        &[1, 65, 2, 128, 72, 8],
+                        2,
+                        Some(&status),
+                    )
+                    .unwrap();
+                    raw.commit();
+                    raw.waitUntilCompleted();
+                    assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                    assert_eq!(status.with_slice(|v| v[0]), 1);
+                }
+            }
+        });
+    }
     #[test]
     #[ignore = "explicit Apple GPU finite-overflow and injected completion-failure check"]
     fn failed_chunks_publish_no_state_and_completion_failure_requires_replay() {

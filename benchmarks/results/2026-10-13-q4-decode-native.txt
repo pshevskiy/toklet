@@ -1,0 +1,25 @@
+
+running 3 tests
+test q4_qwen_runs_complete_resident_generation ... {"scope":"execution smoke, no quality/performance acceptance","ids":[4460,311,1281,264,4285,2025,429,686],"report":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":4,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":12,"evaluated_tokens":11,"pending_tokens":1,"first_token_seconds":0.06376625,"prefill_seconds":0.063170833,"decode_seconds":0.22034008299999996,"sampling_seconds":0.004718375,"total_seconds":0.288233458},"memory":{"weights_bytes":476307372,"kv_bytes":393888,"scratch_bytes":2951268,"history_bytes":128,"logits_bytes":1215488,"metadata_bytes":1152,"metadata_allowance_bytes":67108864,"admitted_bytes":547978160},"last_command_timing":{"command_creation_seconds":6.375e-6,"clock_calibration_seconds":0.0,"commit_seconds":0.000019792,"host_encode_seconds":0.000425291,"wait_seconds":0.032218125,"gpu_start_seconds":1210742.8440655416,"gpu_end_seconds":1210742.875811875,"readback_seconds":0.000087167,"command_count":1}}
+ok
+test q4_sessions_generate_continue_cancel_and_allocate_no_steady_state_rust_buffers ... Q4 session/state suite: 20 warmed steps, 0 Rust allocations, 67159808 admitted bytes
+ok
+test resident_q4_tiny_matches_independent_oracle_at_all_stages_and_chunks ... Q4 single chunk1: 35 stage comparisons, weights 38504
+Q4 single chunk3: 35 stage comparisons, weights 38504
+Q4 single chunk1: 35 stage comparisons, weights 38504
+Q4 prompt chunk4: 35 stage comparisons, weights 38504
+Q4 prompt chunk3: 70 stage comparisons, weights 38504
+Q4 prompt chunk1: 140 stage comparisons, weights 38504
+Q4 future_changed chunk4: 35 stage comparisons, weights 38504
+Q4 future_changed chunk3: 70 stage comparisons, weights 38504
+Q4 future_changed chunk1: 140 stage comparisons, weights 38504
+Q4 offset chunk3: 35 stage comparisons, weights 38504
+Q4 offset chunk3: 35 stage comparisons, weights 38504
+Q4 offset chunk1: 105 stage comparisons, weights 38504
+Q4 capacity chunk32: 35 stage comparisons, weights 38504
+Q4 capacity chunk3: 385 stage comparisons, weights 38504
+Q4 capacity chunk1: 1120 stage comparisons, weights 38504
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 12.74s
+

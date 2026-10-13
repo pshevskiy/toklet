@@ -785,6 +785,19 @@ impl HalfSource {
     pub fn conversion_seconds(&self) -> f64 {
         self.source.conversion_seconds
     }
+    pub fn source_files(&self, directory: &Path) -> Result<Vec<String>, Error> {
+        let mut files: Vec<_> = self
+            .source
+            .shards
+            .iter()
+            .map(|s| s.path.file_name().unwrap().to_string_lossy().into_owned())
+            .collect();
+        let index = directory.join("model.safetensors.index.json");
+        if io(&index, index.try_exists())? {
+            files.push("model.safetensors.index.json".into());
+        }
+        Ok(files)
+    }
     /// Stream a tensor directly to its admitted Half allocation. Finite source
     /// values are checked by Source::visit; Half overflow is rejected here.
     pub fn visit_half(

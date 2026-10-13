@@ -1,0 +1,2855 @@
+{
+  "format": "toklet-q4-tiny-numerical-v1",
+  "policy": {
+    "reference": "scalar CPU Q4 reconstructed FP32 matrices, Half exclusions/activations, FP32 and independent FP64 accumulation",
+    "atol_floor": 0.0001,
+    "envelope_multiplier": 2.0,
+    "rtol": 0.001,
+    "gate": "max(atol_floor, 2*independent_FP32_FP64_max_abs) + rtol*abs(reference)",
+    "rationale": "rtol covers one Half-storage ULP after differently ordered FP32 reductions; held-out quality gates are unchanged"
+  },
+  "numpy": "2.3.2",
+  "source_manifest_sha256": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4",
+  "packed_manifest_sha256": "6de8c2784581fa054cb8a1620fadd6f8f97dc57cc1d1dc16168a03eddccc23ea",
+  "packed_matrix_hashes": {
+    "model.layers.0.self_attn.q_proj.weight": "d02170c41ce3afeb0228a0a1b1cb329f8e12ed0635afc885f4353f24c817e716",
+    "model.layers.0.self_attn.k_proj.weight": "60991ae1ca29066d33480ba1972f3591b8ec65dbaf56fb6a2a906fa3c9d1408b",
+    "model.layers.0.self_attn.v_proj.weight": "75279738e8fae729fc4a091576d380fb2b33863f03b4ea1cdf85b09d06aeff33",
+    "model.layers.0.self_attn.o_proj.weight": "0be2299e9bb2d4c3262ccbd3ee426879d548619a6e8e49cf5255d9fe18435477",
+    "model.layers.0.mlp.gate_proj.weight": "d88109eb29513f9f54b3083f8c620f13c9c2482b33f5ea1d4f123a135d67ef13",
+    "model.layers.0.mlp.up_proj.weight": "aaf724e974b80ba07cc4128782b9ed7d007f1f6c7657054ab990f72d87900bbc",
+    "model.layers.0.mlp.down_proj.weight": "04e993e8b75d04200ddb33fc6fca2d56458770fe76762cb220d9943a3961d80b",
+    "model.layers.1.self_attn.q_proj.weight": "05be4ce7e8ff8cbe0009abd1ac6e136d6b90c372cb64d85e7a7ecd8b77e87c68",
+    "model.layers.1.self_attn.k_proj.weight": "fbd760b4b3ea477fb4ac6581c157281baa826f7fe48af272c748c7b2bfe131e6",
+    "model.layers.1.self_attn.v_proj.weight": "17bca1a52374867f13a753a5baf9cd78293e54d7f8c65d0d936cce3886875339",
+    "model.layers.1.self_attn.o_proj.weight": "00033e7cd5b5a35796464a07e03cd00efd5fb047f0fd10c7108edd0b9f3b3565",
+    "model.layers.1.mlp.gate_proj.weight": "b2b3324f1c867e8d89483cd7e39da83a192803c6e6baf1be248ec3ec3d699ab3",
+    "model.layers.1.mlp.up_proj.weight": "e72d76da6b5ea3006f41b1e3242025763de13adddecac9cd306fb5a69861eb83",
+    "model.layers.1.mlp.down_proj.weight": "526d82605b1a5770fa9514d7eb0e6f5943deda30fe67c834ce6bcee03c8a5502"
+  },
+  "oracle_sources": {
+    "q4_tiny.py": "a1b90019081aef9ab0fc7cce68ccbdf4d1518131c8c716c8fc73d2a228b1286b",
+    "fp16.py": "181ac89a8b94f76f5f3a8149eb80089e9d7a0a63688e42951e6269be567fd9d6"
+  },
+  "model": {
+    "capacity": 32,
+    "head_dim": 8,
+    "hidden_size": 32,
+    "intermediate_size": 64,
+    "num_kv_heads": 2,
+    "num_layers": 2,
+    "num_query_heads": 4,
+    "projection_biases": [
+      "q",
+      "k",
+      "v"
+    ],
+    "rms_norm_eps": 1e-06,
+    "rope_pairing": "split_half",
+    "rope_theta": 1000000.0,
+    "tie_word_embeddings": true,
+    "vocab_size": 64
+  },
+  "cases": {
+    "single": {
+      "tokens": [
+        11
+      ],
+      "position_offset": 0,
+      "greedy": [
+        62
+      ]
+    },
+    "prompt": {
+      "tokens": [
+        1,
+        7,
+        13,
+        3
+      ],
+      "position_offset": 0,
+      "greedy": [
+        62,
+        7,
+        47,
+        47
+      ]
+    },
+    "future_changed": {
+      "tokens": [
+        1,
+        7,
+        13,
+        17
+      ],
+      "position_offset": 0,
+      "greedy": [
+        62,
+        7,
+        47,
+        47
+      ]
+    },
+    "offset": {
+      "tokens": [
+        7,
+        13,
+        3
+      ],
+      "position_offset": 5,
+      "greedy": [
+        47,
+        47,
+        3
+      ]
+    },
+    "capacity": {
+      "tokens": [
+        1,
+        8,
+        15,
+        22,
+        29,
+        36,
+        43,
+        50,
+        57,
+        0,
+        7,
+        14,
+        21,
+        28,
+        35,
+        42,
+        49,
+        56,
+        63,
+        6,
+        13,
+        20,
+        27,
+        34,
+        41,
+        48,
+        55,
+        62,
+        5,
+        12,
+        19,
+        26
+      ],
+      "position_offset": 0,
+      "greedy": [
+        62,
+        62,
+        62,
+        22,
+        29,
+        15,
+        62,
+        15,
+        4,
+        0,
+        7,
+        14,
+        21,
+        28,
+        35,
+        42,
+        22,
+        56,
+        33,
+        27,
+        13,
+        22,
+        27,
+        34,
+        46,
+        48,
+        55,
+        62,
+        5,
+        12,
+        19,
+        26
+      ]
+    }
+  },
+  "arrays": {
+    "cases.single.embedding": {
+      "file": "cases.single.embedding.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "af2ae5fb2bba6044a17fd5b6cf823d441b69d31c3590aeef37cb8ea54133afbf",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.input_norm": {
+      "file": "cases.single.layers.0.input_norm.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "c6f8fce1ee04dcd1a537c190fe49513451b4d04b9f0603036e94205959481638",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.q_projection": {
+      "file": "cases.single.layers.0.q_projection.f16le",
+      "shape": [
+        1,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "1cd2bcbc89f3a4aae0758ce92b0e8fbcc971d0e1a5f4b6d402bdc646c24ebe8e",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.k_projection": {
+      "file": "cases.single.layers.0.k_projection.f16le",
+      "shape": [
+        1,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 32,
+      "sha256": "9dafe8103af765c96c97ad32a4d491d49a0fe74effa769260c378ae44e00da5c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.v_projection": {
+      "file": "cases.single.layers.0.v_projection.f16le",
+      "shape": [
+        1,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 32,
+      "sha256": "4bc613f13a108280eace1bd3550af985346d04dbafb344cac9493ab3fcd87d35",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.q_rotary": {
+      "file": "cases.single.layers.0.q_rotary.f16le",
+      "shape": [
+        1,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "1cd2bcbc89f3a4aae0758ce92b0e8fbcc971d0e1a5f4b6d402bdc646c24ebe8e",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.k_rotary": {
+      "file": "cases.single.layers.0.k_rotary.f16le",
+      "shape": [
+        1,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 32,
+      "sha256": "9dafe8103af765c96c97ad32a4d491d49a0fe74effa769260c378ae44e00da5c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.attention_context": {
+      "file": "cases.single.layers.0.attention_context.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "b996e1f6f1182e5c1055742e2c23e866719664444c0f050bc4f4b8f6709fa309",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.attention_projection": {
+      "file": "cases.single.layers.0.attention_projection.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "ec02501ae262e377e3828ce894bb1d06b04b5168379934c838ace656c3bfbae3",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.attention_residual": {
+      "file": "cases.single.layers.0.attention_residual.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "6f8684d92ad128dbe6eda721c7178312f6259efdd8342c635a7768504256532c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.post_attention_norm": {
+      "file": "cases.single.layers.0.post_attention_norm.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "3cf682489f33b567d2bd30ba1c4d3ca128f55357643f1a82037191039982c8af",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.gate_projection": {
+      "file": "cases.single.layers.0.gate_projection.f16le",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "77e3dad5b9c9865b3da50b2217bd2f3896100c231db7c79877cb8a5d4db91940",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.up_projection": {
+      "file": "cases.single.layers.0.up_projection.f16le",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "8b4ef26775dc305d3d0dc9df9ddafe36719aac0adf8044d02ca3424f192da8b5",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.gate_silu": {
+      "file": "cases.single.layers.0.gate_silu.f16le",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "34021ce573cbf8f6a8e4035554b5c6a07f1ade2cf0b7481d223b3dcebfef891b",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.gated": {
+      "file": "cases.single.layers.0.gated.f16le",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "cad0f7e0bc6aefe918cffc96627326475176785c053efa9f3e6e8c8cbd7fba1d",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.down_projection": {
+      "file": "cases.single.layers.0.down_projection.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "b036a35cd3ff55e7ed38597df388b9fd69529a47f720af624b739d264191b15d",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.0.output": {
+      "file": "cases.single.layers.0.output.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "24b838e3005d6b53f1671792cb2dc90fa166364ccde4ab00aeacbaf6d91ba0c5",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.input_norm": {
+      "file": "cases.single.layers.1.input_norm.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "a4c9d984f9e6f2016c2162ddf9569072c4ea0cd458ff311a55ef43a723feeb8b",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.q_projection": {
+      "file": "cases.single.layers.1.q_projection.f16le",
+      "shape": [
+        1,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "3410fc23bbdac024c594f3aca4e859be889c6a351ec221b20c3a808027c36c5c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.k_projection": {
+      "file": "cases.single.layers.1.k_projection.f16le",
+      "shape": [
+        1,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 32,
+      "sha256": "adde99de6ffd45841224db9a3127b70e60f2d0cd4b6b73d792a4805a00b0c095",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.v_projection": {
+      "file": "cases.single.layers.1.v_projection.f16le",
+      "shape": [
+        1,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 32,
+      "sha256": "be86705fe2fa6c9e942004fc67990b600ceb8b1c9e5da558cbff8b06c1eb1784",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.q_rotary": {
+      "file": "cases.single.layers.1.q_rotary.f16le",
+      "shape": [
+        1,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "3410fc23bbdac024c594f3aca4e859be889c6a351ec221b20c3a808027c36c5c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.k_rotary": {
+      "file": "cases.single.layers.1.k_rotary.f16le",
+      "shape": [
+        1,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 32,
+      "sha256": "adde99de6ffd45841224db9a3127b70e60f2d0cd4b6b73d792a4805a00b0c095",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.attention_context": {
+      "file": "cases.single.layers.1.attention_context.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "d18cdf031ae7cfb99df93182058404d249e263e1ec361df0ec10233f5c47ef39",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.attention_projection": {
+      "file": "cases.single.layers.1.attention_projection.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "b08ca0e34944f80894ccae537de48e448e611d4e648261898ab26319c42af3ba",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.attention_residual": {
+      "file": "cases.single.layers.1.attention_residual.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "5210ab6c4664aa5db65499cc77eb20316f3c41bf3614ea03365b7b87aef88042",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.post_attention_norm": {
+      "file": "cases.single.layers.1.post_attention_norm.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "6c4a60a77a933cd56c2ad412af4ea92b18e2797de2dd278107c91013be99a41c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.gate_projection": {
+      "file": "cases.single.layers.1.gate_projection.f16le",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "941930aae0245954a27c6e862ecb8e71a0ae040ae31afee5e3befa134a12d971",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.up_projection": {
+      "file": "cases.single.layers.1.up_projection.f16le",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "855c19edc4f9ec3f9697fd24138f7ed79a3c5d4cbc2c45511bbef94d287b9225",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.gate_silu": {
+      "file": "cases.single.layers.1.gate_silu.f16le",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "269e8b62471b8e3598f6c3644ed3af4502abc19d74dd55c9207b99f7a0f7f379",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.gated": {
+      "file": "cases.single.layers.1.gated.f16le",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "59d826b7f3522b490916b2e373b65e5b507ec28304f26b918f75bc2930a3fa8b",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.down_projection": {
+      "file": "cases.single.layers.1.down_projection.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "5411347a9c3546c0eaa4e49362c2e76b75134a4851e959ca9cf2a5f1d1015968",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.layers.1.output": {
+      "file": "cases.single.layers.1.output.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "290bd522706f03d7aed80aa4a6b8835ca0d309b81db70a0cfbe998adefe3a8fc",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.final_norm": {
+      "file": "cases.single.final_norm.f16le",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 64,
+      "sha256": "e0fed1ab313e2ca049c67101b421c1dd0ba2edb1f3e93667ae559832eadbaf7c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.single.logits": {
+      "file": "cases.single.logits.f32le",
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "f32le",
+      "bytes": 256,
+      "sha256": "51fadd3644f33d360732d8db641005227413114112d601c0b4e5bdccdf8b7b4b",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 3.5762786865234375e-07
+    },
+    "cases.prompt.embedding": {
+      "file": "cases.prompt.embedding.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "609101769007eedaeedc580d8585b3d1a8f8670457c52a43acf6e56a125cbc3f",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.input_norm": {
+      "file": "cases.prompt.layers.0.input_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "e34573600b6d82ec07b2856ed93127d1977d8b8c50e338ff37ce90fc3fb7ce7a",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.q_projection": {
+      "file": "cases.prompt.layers.0.q_projection.f16le",
+      "shape": [
+        4,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "f3b7a36fba5503696c7f7b2bdcea82fbd55489377f88e8f388879f68efa60bbe",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.k_projection": {
+      "file": "cases.prompt.layers.0.k_projection.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "53e03f77c095a9f307268ba07e1c32bac969f12626b164e41d2458a8c773bdf0",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.v_projection": {
+      "file": "cases.prompt.layers.0.v_projection.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "36f148a7ee6508df259f12e417440beabe8d1d66280b5d460518aafad33977f1",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.q_rotary": {
+      "file": "cases.prompt.layers.0.q_rotary.f16le",
+      "shape": [
+        4,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "ba552e8f60100896921baeae6c2d9bc684d1aa26e5c416812d0cb0dd7fa0ac3a",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.k_rotary": {
+      "file": "cases.prompt.layers.0.k_rotary.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "9fd6f56a37338a27a40d4512d820f0e073784614cee0e73c69957b0928bb2c08",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.attention_context": {
+      "file": "cases.prompt.layers.0.attention_context.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "555a4a747ffca4ba976a4c7dd44a74d851b424b571995fff60f8f38e1ecebfe6",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.attention_projection": {
+      "file": "cases.prompt.layers.0.attention_projection.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "1f1be6581c5589cca80293f54f0486c57479e5acfe61929f78ff62c00dafc69d",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.attention_residual": {
+      "file": "cases.prompt.layers.0.attention_residual.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "6a34710d98ada2718028306448fedb8d93a4851fc6639d29f359d66a5d713e4a",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.post_attention_norm": {
+      "file": "cases.prompt.layers.0.post_attention_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "727ceef7e937c47ac568d21a1343a97d8a6e6bfb7a67b1d523b671dd67237d5a",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.gate_projection": {
+      "file": "cases.prompt.layers.0.gate_projection.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "eb5e0342614032e3162b324fa2297fde4afc01dfd9fe57e2aaa9a9ebc778c745",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.up_projection": {
+      "file": "cases.prompt.layers.0.up_projection.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "0409910b107d3acd65fca69e54fdd8008400c5a365f491ee402878cbf1c74944",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.gate_silu": {
+      "file": "cases.prompt.layers.0.gate_silu.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "a327540f9bfff93b872f3cfe24aeec6e12b87866aa1bec9e23f41205db67bbde",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.gated": {
+      "file": "cases.prompt.layers.0.gated.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "39601ea33c97a4ab991737d912896c64cd4e46d8dba2841c863bb5960f5bcf97",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.down_projection": {
+      "file": "cases.prompt.layers.0.down_projection.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "727f60814fa49390f8de112b34410b2d1db50cf1cceb08bcc35f93c9fcfc75bd",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.0.output": {
+      "file": "cases.prompt.layers.0.output.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "967230f25d87bad7b533de7961da59ef29b865f14f3b24df52778d60ee041eb0",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.input_norm": {
+      "file": "cases.prompt.layers.1.input_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "d74c3c19f4b6c5f748156a060e6dd37c21fc669dceebd3595531a107a765796c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.q_projection": {
+      "file": "cases.prompt.layers.1.q_projection.f16le",
+      "shape": [
+        4,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "937557eea50edb3cd2347eebad6868f1cc14d1fb3b140ca2075a2dec0e4cedb4",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.k_projection": {
+      "file": "cases.prompt.layers.1.k_projection.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "1dc3319f0ccfbc5a524b145d45233ef71dc4bb59b4d304bc89844b1dca4ed300",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.v_projection": {
+      "file": "cases.prompt.layers.1.v_projection.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "7e9b576f4c75c1535bbbc859c671f9a92746a13469445ae05c293d070ebc45bc",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.q_rotary": {
+      "file": "cases.prompt.layers.1.q_rotary.f16le",
+      "shape": [
+        4,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "fabd10a2705c447a0436ee3aaff3bc3d14692445a781ebaa47fcfffe0050972e",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.k_rotary": {
+      "file": "cases.prompt.layers.1.k_rotary.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "5c8655bc778c6bc5cebb5bcf5375ae856bdc0238a13e1854b8b4bcf0a9baea2b",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.attention_context": {
+      "file": "cases.prompt.layers.1.attention_context.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "2cae02ebda33a592282d2bc845b17a67edaecc367ef55dd21f13a9e33b79005f",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.attention_projection": {
+      "file": "cases.prompt.layers.1.attention_projection.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "393f4e51e472545f4836d67eac52e989de8ef863800051857264f99d794b7945",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.attention_residual": {
+      "file": "cases.prompt.layers.1.attention_residual.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "eadd3d8e3eb04df4bcf24c8ea41e67635151eb43b2a8614c46c14fc1e7a73994",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.post_attention_norm": {
+      "file": "cases.prompt.layers.1.post_attention_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "9e79e47c773a6057a49894772420a2a49116636ef4e2d629145b51a37d71bed3",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.gate_projection": {
+      "file": "cases.prompt.layers.1.gate_projection.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "2de951944f6bef5b8cedf2f5b68aba99da5dc898da16e8a5b5d350bb02a3ef52",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.up_projection": {
+      "file": "cases.prompt.layers.1.up_projection.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "818b9686e2141c5d8a2d513dd4ebe82079f11ed68d4f2cc85a6fb5cfc40d4b70",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.gate_silu": {
+      "file": "cases.prompt.layers.1.gate_silu.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "16956ebd013b968c13725ea62faaaa8dcdb511645fa331ed08aeee492809f894",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.gated": {
+      "file": "cases.prompt.layers.1.gated.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "e4fccac9145080e33e1e0852d7ee10160b54cd5b79b87ed97ff4588b5a4e49a7",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.down_projection": {
+      "file": "cases.prompt.layers.1.down_projection.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "a2e73b3b763a7017b95a8c4d5a7db35332608e76bc09e120d10657a5fbe558b3",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.layers.1.output": {
+      "file": "cases.prompt.layers.1.output.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "e00fcff2dc0b9d6f1908d35c5fb7dd4ff593645c1d58ffb9d2a7dca14aeffde8",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.final_norm": {
+      "file": "cases.prompt.final_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "47fac72d04c76b2fe5371c3cfb108d9e818f23895e7f6c5fa728bf54cc456981",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.prompt.logits": {
+      "file": "cases.prompt.logits.f32le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f32le",
+      "bytes": 1024,
+      "sha256": "a843f3dcc9e2d067c390da9295ea08a224711bf12f4723e544aacab39f9e5511",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 4.76837158203125e-07
+    },
+    "cases.future_changed.embedding": {
+      "file": "cases.future_changed.embedding.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "7eb22d9928b134309d20ae6cadd1c7d5160b1574f234023ef4c203f6f5534f38",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.input_norm": {
+      "file": "cases.future_changed.layers.0.input_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "805e73aae8e838453477c43d51d0d6211f10baa6ac1a37f68a50c51e3a4a5c67",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.q_projection": {
+      "file": "cases.future_changed.layers.0.q_projection.f16le",
+      "shape": [
+        4,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "215936ffd981a2c668c7ec86e5207cdd534506dc8f1ce4578661299822649392",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.k_projection": {
+      "file": "cases.future_changed.layers.0.k_projection.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "ab2d5bdd81d20d3b03e861ecd8219e2ccfe3bb58ed0c09d96503c81ac3a43644",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.v_projection": {
+      "file": "cases.future_changed.layers.0.v_projection.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "21473d777f1e865143b421581630ee50ee8c6fb6b4437a12381a090b4aa0b26c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.q_rotary": {
+      "file": "cases.future_changed.layers.0.q_rotary.f16le",
+      "shape": [
+        4,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "759965ddeebbb8c136ad37c29246bacc844e27cc66f382a0488329ed4788070e",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.k_rotary": {
+      "file": "cases.future_changed.layers.0.k_rotary.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "199c6332f669bfd2b353236753c7f727e8ef7a002fe527e16c824f6e9059c9ec",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.attention_context": {
+      "file": "cases.future_changed.layers.0.attention_context.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "dae669247ee1a69940514dce5216185b5b5e0307c6ec7e805275a99cd1e9ea77",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.attention_projection": {
+      "file": "cases.future_changed.layers.0.attention_projection.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "4d1164b7f68e5b6acd8de194246e34a74366bdf089e803c951e1a990723749a7",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.attention_residual": {
+      "file": "cases.future_changed.layers.0.attention_residual.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "6e67bb7780d1e7864c6ac3967e727d536899a55abcf0db2394919fce2cd14bd3",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.post_attention_norm": {
+      "file": "cases.future_changed.layers.0.post_attention_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "f26f03538042a478f10510686e3a724c8f58018088b11ee3431647172e072115",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.gate_projection": {
+      "file": "cases.future_changed.layers.0.gate_projection.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "303299184eb276a309cd7679e800e590773f600eafb9acbe3fb6cd9a97fbb5eb",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.up_projection": {
+      "file": "cases.future_changed.layers.0.up_projection.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "369eb4eece8293d34b67632629ca84af6e4f5ef6a6fed39806c64625899a80c1",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.gate_silu": {
+      "file": "cases.future_changed.layers.0.gate_silu.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "365eab83dfa4dcdaf803c82856b695066ef6f762cf46fd7bab90f8ce082c64bc",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.gated": {
+      "file": "cases.future_changed.layers.0.gated.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "28f5be4c6819c6f5c234920a4fd7b65931f5dc8d51eb4828aeb84f9eeda2d8c6",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.down_projection": {
+      "file": "cases.future_changed.layers.0.down_projection.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "49a9fa02a318c8fd63c88330b7352713699cdb82ee4dbbcc79757303599fd7d4",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.0.output": {
+      "file": "cases.future_changed.layers.0.output.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "c6b18e64924ba37acca8815a97e1efeb23e592a64fcaa4eb9604fe7529beecc7",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.input_norm": {
+      "file": "cases.future_changed.layers.1.input_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "a4574e276c928315fcebecbd44d9058708472add012eab786730a2ba666a8e21",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.q_projection": {
+      "file": "cases.future_changed.layers.1.q_projection.f16le",
+      "shape": [
+        4,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "7fad2e7f4932035bcbb38e99c6647793dee014e44f20a43fc20cb53b8aa1b142",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.k_projection": {
+      "file": "cases.future_changed.layers.1.k_projection.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "15ec6a68f813b39c61bfd080214a0cee6e26e1b4a5b4dcd4fc70479d01c3bcad",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.v_projection": {
+      "file": "cases.future_changed.layers.1.v_projection.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "c10a70537e3ce9a75597de2ad2c2b32556b000638958a5abe4cea4e26000354d",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.q_rotary": {
+      "file": "cases.future_changed.layers.1.q_rotary.f16le",
+      "shape": [
+        4,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "54b8b91fcd2d83e945f8994f794949587315b8702da3349e0949b06bc4963152",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.k_rotary": {
+      "file": "cases.future_changed.layers.1.k_rotary.f16le",
+      "shape": [
+        4,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 128,
+      "sha256": "06a3b81bef5849f330e966bcda83284d71d4869d3f43e1b292f87a92adbf7c81",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.attention_context": {
+      "file": "cases.future_changed.layers.1.attention_context.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "a5f70fb397899a8c867a7acc5990f16f432b5147256f5b70db629f989d33913e",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.attention_projection": {
+      "file": "cases.future_changed.layers.1.attention_projection.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "8832c547276af2440f52f1b91220f2967f0ce9e261d03a702f5f3f20c62feadb",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.attention_residual": {
+      "file": "cases.future_changed.layers.1.attention_residual.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "d04facbb8b0e864b6670f155faa72d70c3a6d51ad58b2e16e5b143796775eaba",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.post_attention_norm": {
+      "file": "cases.future_changed.layers.1.post_attention_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "edeb59faf957466eb406aba3cc08f52f11d09a9a99a1497f2e3619b0b30bc05c",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.gate_projection": {
+      "file": "cases.future_changed.layers.1.gate_projection.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "1bed9d4c43a70347c321ab592e7896061148794bffc9145120dc3972e54cf662",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.up_projection": {
+      "file": "cases.future_changed.layers.1.up_projection.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "45cfb75d900e0b25b6636df85213d4f44b4137a2007fff71def862799ca56e3a",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.gate_silu": {
+      "file": "cases.future_changed.layers.1.gate_silu.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "18d6ab2507891cfe4d57b03a9cf888da1f32982582e62ad7e952d6e574c70e2b",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.gated": {
+      "file": "cases.future_changed.layers.1.gated.f16le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 512,
+      "sha256": "1d8453076377994f3b38bf47b69080f6d9f1fad55d0cc3ba10a4bf90027936e4",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.down_projection": {
+      "file": "cases.future_changed.layers.1.down_projection.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "fe8433d847a1c202d833e1f32cdc638ea6f2483ac39dab382a0b55ec3929f1e9",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.layers.1.output": {
+      "file": "cases.future_changed.layers.1.output.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "ebc25596193dac3f72ac787c4dbc87a83aa0962bafb7a17ee7d27e6ba0485fe9",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.final_norm": {
+      "file": "cases.future_changed.final_norm.f16le",
+      "shape": [
+        4,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 256,
+      "sha256": "937fc867a4b236545d2f0a2ee898cb35199726e2a22ea0d73b9241426b1480be",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.future_changed.logits": {
+      "file": "cases.future_changed.logits.f32le",
+      "shape": [
+        4,
+        64
+      ],
+      "dtype": "f32le",
+      "bytes": 1024,
+      "sha256": "bc8326fd366550215489e645c16c70ba91a787d151a330d0d289f5613e528839",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 4.76837158203125e-07
+    },
+    "cases.offset.embedding": {
+      "file": "cases.offset.embedding.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "9ba777c123be9b27e53c9d3117289cbb9b0284f4019184a018141155c495f802",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.input_norm": {
+      "file": "cases.offset.layers.0.input_norm.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "4545e9727bed2b567c7031217ffc85248d867bed48a629e7a099296768547c3f",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.q_projection": {
+      "file": "cases.offset.layers.0.q_projection.f16le",
+      "shape": [
+        3,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "33dfd4132227a9feed05a602f7212414dc729d45cb287854c87948df800ad40a",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.k_projection": {
+      "file": "cases.offset.layers.0.k_projection.f16le",
+      "shape": [
+        3,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 96,
+      "sha256": "deb5e44e91824a5e32545abd33d347e6fa2c20aca3f8a44c1f6c7071e2716b9e",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.v_projection": {
+      "file": "cases.offset.layers.0.v_projection.f16le",
+      "shape": [
+        3,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 96,
+      "sha256": "60c9cf06f3c17664396ff09054515dbfe78168d967931de077b6bd41028ec794",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.q_rotary": {
+      "file": "cases.offset.layers.0.q_rotary.f16le",
+      "shape": [
+        3,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "56d718a255a3466bfbb1a382d316d21657c0a2b78769a8f8e9ba089199643ff3",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.k_rotary": {
+      "file": "cases.offset.layers.0.k_rotary.f16le",
+      "shape": [
+        3,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 96,
+      "sha256": "65325ec946a390edcb80d3bb2e6568b4cb2d129c032ea3f0966073e5ba7d4cce",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.attention_context": {
+      "file": "cases.offset.layers.0.attention_context.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "f67fb7a89ad862012fcafa6bb4046e9ca375d75cac0ef6a017a7ea274414d263",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.attention_projection": {
+      "file": "cases.offset.layers.0.attention_projection.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "e054cc8ef2bef1e08f5e02c7b79d9595038e721c33874ba64c8f536b422d199d",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.attention_residual": {
+      "file": "cases.offset.layers.0.attention_residual.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "68389b300fca7ca15ebed1ac1cba2167a730bc448c6c24926fb80cd7274c496d",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.post_attention_norm": {
+      "file": "cases.offset.layers.0.post_attention_norm.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "bceefef0ac0209ebd194256e28591851e75207074892d8d70c6e6c1df3c43962",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.gate_projection": {
+      "file": "cases.offset.layers.0.gate_projection.f16le",
+      "shape": [
+        3,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 384,
+      "sha256": "8870231bb25ca5f8e822e60f718aa1240d2b9fdc72ed1abdd2eccc230f36593d",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.up_projection": {
+      "file": "cases.offset.layers.0.up_projection.f16le",
+      "shape": [
+        3,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 384,
+      "sha256": "f844290c2a8f2fba6d65414a484450b893bd869be135fd344acbee8edd66c4b3",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.gate_silu": {
+      "file": "cases.offset.layers.0.gate_silu.f16le",
+      "shape": [
+        3,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 384,
+      "sha256": "84c331adbc2b183fa80ea76442eab3c2102336e89b471b0e57f5426cfdae89c7",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.gated": {
+      "file": "cases.offset.layers.0.gated.f16le",
+      "shape": [
+        3,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 384,
+      "sha256": "811c3ffa3c53d0d68d62ab6e426531ec379257a6b1e828d2a84060942524752d",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.down_projection": {
+      "file": "cases.offset.layers.0.down_projection.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "21ab9fbc6480cef5c7b8c9d3a4101e030daf1eb202ad263223fbc395550d2606",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.0.output": {
+      "file": "cases.offset.layers.0.output.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "0ba9e1de83d090d6b31825b438d85a65a472df1c91a4bb828db3aece2c05d3d1",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.input_norm": {
+      "file": "cases.offset.layers.1.input_norm.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "4a56d6e93e1c55830232d6d58c8a711d43dca6d39bbc21df3897ef348c0760f7",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.q_projection": {
+      "file": "cases.offset.layers.1.q_projection.f16le",
+      "shape": [
+        3,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "1cb7acc3de1045bbbb2c3bce99e96f6ac6adfafcf85ddfa82a5e27b7c32274b3",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.k_projection": {
+      "file": "cases.offset.layers.1.k_projection.f16le",
+      "shape": [
+        3,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 96,
+      "sha256": "8ee070835862c17b24ce6a451e98394312e2623f8a5a6bbde08d6979e60f9abc",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.v_projection": {
+      "file": "cases.offset.layers.1.v_projection.f16le",
+      "shape": [
+        3,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 96,
+      "sha256": "018394d127820cbfbb566156f437a7b609ba9b998c5bb5170db900d6505ba724",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.q_rotary": {
+      "file": "cases.offset.layers.1.q_rotary.f16le",
+      "shape": [
+        3,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "e624f0dd606f660d916f3ed97c54c65176e51b60205854b224cae5bf69876f31",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.k_rotary": {
+      "file": "cases.offset.layers.1.k_rotary.f16le",
+      "shape": [
+        3,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 96,
+      "sha256": "b9f488f66780fd4cdaa667ae030c029bbc2cc426df049e1986de2dabaadb04c9",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.attention_context": {
+      "file": "cases.offset.layers.1.attention_context.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "c738ad8f3677758197879578e80653cc012ffb57c19f69290f6435c3d24e4fc9",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.attention_projection": {
+      "file": "cases.offset.layers.1.attention_projection.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "3b15675c0e0c35091c4c16d47b4d1f809caf5bc4dada0397df7ef9738d837441",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.attention_residual": {
+      "file": "cases.offset.layers.1.attention_residual.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "b77c126195abd33150cb499df919ddee73de28e1ff65a9f6482e9ea47225c71a",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.post_attention_norm": {
+      "file": "cases.offset.layers.1.post_attention_norm.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "8d8ddadf0e20ddbf109dedc9a1e4f8ddb57a992436b94425655d7afd07ec0a25",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.gate_projection": {
+      "file": "cases.offset.layers.1.gate_projection.f16le",
+      "shape": [
+        3,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 384,
+      "sha256": "337cd873e41878cbe9df306ab6d9c8f359c1dbf8b79cd692551909fd2b386a92",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.up_projection": {
+      "file": "cases.offset.layers.1.up_projection.f16le",
+      "shape": [
+        3,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 384,
+      "sha256": "ba3bc7080486975f6f5659afed42280cf4d979f42b4d5818a29c1c648580a6b5",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.gate_silu": {
+      "file": "cases.offset.layers.1.gate_silu.f16le",
+      "shape": [
+        3,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 384,
+      "sha256": "6d4723f7cca0358e997098929e2cc709c4d89e05a0205a44604b97b4d0f6d572",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.gated": {
+      "file": "cases.offset.layers.1.gated.f16le",
+      "shape": [
+        3,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 384,
+      "sha256": "0c95cc5af4b13e593ed50f066b309a256ddfd1785eea4310778d6c488640a750",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.down_projection": {
+      "file": "cases.offset.layers.1.down_projection.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "7087db3486014e837040b55602567bce0356d4398e59f61759cb92ab1c5bad28",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.layers.1.output": {
+      "file": "cases.offset.layers.1.output.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "836f1446c1c8eed348501abfd894bbb451e7881a68a7ae9e92fb20dbdc6b3722",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.final_norm": {
+      "file": "cases.offset.final_norm.f16le",
+      "shape": [
+        3,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 192,
+      "sha256": "e1431567dff689556d4ed1f19bd13ab71bafd95a21693f9dcebde1a836d27a0a",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.offset.logits": {
+      "file": "cases.offset.logits.f32le",
+      "shape": [
+        3,
+        64
+      ],
+      "dtype": "f32le",
+      "bytes": 768,
+      "sha256": "c9544616c68a29b0cdc968ac30e418f19f506abb388adf4662a519e3b6f9d7d7",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 4.76837158203125e-07
+    },
+    "cases.capacity.embedding": {
+      "file": "cases.capacity.embedding.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "14b89155810cf9f300fc0bb23892ce734d79e2566f40670aa4706e99492de86a",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.capacity.layers.0.input_norm": {
+      "file": "cases.capacity.layers.0.input_norm.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "9e690cc112245495e78eca9750c3b9493bf863918889655ddfa124623a887115",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.capacity.layers.0.q_projection": {
+      "file": "cases.capacity.layers.0.q_projection.f16le",
+      "shape": [
+        32,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "1a93e77f6863a55ef45cff30151cfd169f3d6b44e6a1317a9b23b5ec66673bd8",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.capacity.layers.0.k_projection": {
+      "file": "cases.capacity.layers.0.k_projection.f16le",
+      "shape": [
+        32,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 1024,
+      "sha256": "e5529999a6d9cb362c18caf18b54638cd502f564b10fa17d5365d4d1a4afae0d",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.capacity.layers.0.v_projection": {
+      "file": "cases.capacity.layers.0.v_projection.f16le",
+      "shape": [
+        32,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 1024,
+      "sha256": "32b1ab55c20ac674fee3a97c54eb3b89e7c744fc798148088cb579f7018d08e1",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.capacity.layers.0.q_rotary": {
+      "file": "cases.capacity.layers.0.q_rotary.f16le",
+      "shape": [
+        32,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "0d6ced5b73c5fcc17777ec6c89278ab19c6c5e902e9590ee3c35dbe79bc516fb",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.capacity.layers.0.k_rotary": {
+      "file": "cases.capacity.layers.0.k_rotary.f16le",
+      "shape": [
+        32,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 1024,
+      "sha256": "0285b8d8c84cae1e55c57d2e6f9abc666a27f6e6e8cc515b7e9eda6141fb502f",
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0
+    },
+    "cases.capacity.layers.0.attention_context": {
+      "file": "cases.capacity.layers.0.attention_context.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "e75ac36bb637dc5036d18bd5d79dd1b21e5fa10feb5b067bf68e928351b633f8",
+      "gate": {
+        "atol": 0.00048828125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.000244140625
+    },
+    "cases.capacity.layers.0.attention_projection": {
+      "file": "cases.capacity.layers.0.attention_projection.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "cb4fcd9fb231c1206eb562ae13b9b9add8508d6033c42b064dd974daff2263ac",
+      "gate": {
+        "atol": 0.000244140625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0001220703125
+    },
+    "cases.capacity.layers.0.attention_residual": {
+      "file": "cases.capacity.layers.0.attention_residual.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "ea2593e4d3dabe2e3d44c2813c38484e3b618ea2ce557db05e41edd46c278411",
+      "gate": {
+        "atol": 0.000244140625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0001220703125
+    },
+    "cases.capacity.layers.0.post_attention_norm": {
+      "file": "cases.capacity.layers.0.post_attention_norm.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "9c7835774f7a7af88f506f1443ab2d173a2cd1a4edf532e88d2b40b1974a6ec0",
+      "gate": {
+        "atol": 0.0009765625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.00048828125
+    },
+    "cases.capacity.layers.0.gate_projection": {
+      "file": "cases.capacity.layers.0.gate_projection.f16le",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 4096,
+      "sha256": "027ee61a3a1d03aeeabaeb3f9ddb56f87aef2b4fa54b3fe4cfa06c9e105371dc",
+      "gate": {
+        "atol": 0.0009765625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.00048828125
+    },
+    "cases.capacity.layers.0.up_projection": {
+      "file": "cases.capacity.layers.0.up_projection.f16le",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 4096,
+      "sha256": "363839d5241b91efc434f466a00388f86b1ec6f0a1253b1900044b5e1f482936",
+      "gate": {
+        "atol": 0.001953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0009765625
+    },
+    "cases.capacity.layers.0.gate_silu": {
+      "file": "cases.capacity.layers.0.gate_silu.f16le",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 4096,
+      "sha256": "701409bac5041a7d56c488856b32783f4c06e8f33fe17b222395331c40953fcf",
+      "gate": {
+        "atol": 0.0009765625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.00048828125
+    },
+    "cases.capacity.layers.0.gated": {
+      "file": "cases.capacity.layers.0.gated.f16le",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 4096,
+      "sha256": "01ebd3664fa118110e131b1ba0c62295dda919fca9b045180fc5cb746034b231",
+      "gate": {
+        "atol": 0.00048828125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.000244140625
+    },
+    "cases.capacity.layers.0.down_projection": {
+      "file": "cases.capacity.layers.0.down_projection.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "e92e088da70ef5f3311fe540a7557f138bc12e7fd09aace47d3f6b86093242ed",
+      "gate": {
+        "atol": 0.00048828125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.000244140625
+    },
+    "cases.capacity.layers.0.output": {
+      "file": "cases.capacity.layers.0.output.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "feee780af721f801013201dcaba5abcb9b3531f1b72f2cb18127df4c97fbd809",
+      "gate": {
+        "atol": 0.00048828125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.000244140625
+    },
+    "cases.capacity.layers.1.input_norm": {
+      "file": "cases.capacity.layers.1.input_norm.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "8631966a59ce6be1f7ae35c7a044d4d1a52603c0127283c7d591df91a0a457a7",
+      "gate": {
+        "atol": 0.0020751953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.00103759765625
+    },
+    "cases.capacity.layers.1.q_projection": {
+      "file": "cases.capacity.layers.1.q_projection.f16le",
+      "shape": [
+        32,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "a9eee6b3e2a61d7a2dd9c4150d416b9b5bce4607c0646bbbf988350e311fbf5c",
+      "gate": {
+        "atol": 0.00390625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.001953125
+    },
+    "cases.capacity.layers.1.k_projection": {
+      "file": "cases.capacity.layers.1.k_projection.f16le",
+      "shape": [
+        32,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 1024,
+      "sha256": "8cd78fadf67f1f4e964019dbba313e7945d9070142137278c5d6a6f429bd6711",
+      "gate": {
+        "atol": 0.001953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0009765625
+    },
+    "cases.capacity.layers.1.v_projection": {
+      "file": "cases.capacity.layers.1.v_projection.f16le",
+      "shape": [
+        32,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 1024,
+      "sha256": "944036e99672d34c80b79e30513417df9eac256f00504e7cce0d1bd3810948b6",
+      "gate": {
+        "atol": 0.0010986328125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.00054931640625
+    },
+    "cases.capacity.layers.1.q_rotary": {
+      "file": "cases.capacity.layers.1.q_rotary.f16le",
+      "shape": [
+        32,
+        4,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "084c41518de070633481dc48caa5afb65ebc9c01dbe6fc25bdb67eea07a74345",
+      "gate": {
+        "atol": 0.00390625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.001953125
+    },
+    "cases.capacity.layers.1.k_rotary": {
+      "file": "cases.capacity.layers.1.k_rotary.f16le",
+      "shape": [
+        32,
+        2,
+        8
+      ],
+      "dtype": "f16le",
+      "bytes": 1024,
+      "sha256": "0827b7a62d68713930c6af4b8568f66bd601a536767196cca47b2fb38239e285",
+      "gate": {
+        "atol": 0.001953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0009765625
+    },
+    "cases.capacity.layers.1.attention_context": {
+      "file": "cases.capacity.layers.1.attention_context.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "9fc88d3dee95a6e37dc00de29896104b9140adb2655bfbe28ad9820607be80e6",
+      "gate": {
+        "atol": 0.001953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0009765625
+    },
+    "cases.capacity.layers.1.attention_projection": {
+      "file": "cases.capacity.layers.1.attention_projection.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "701c27a45d56fbd10560992c40c3013257e2a16c461791725473847ef70f0e3e",
+      "gate": {
+        "atol": 0.0009765625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.00048828125
+    },
+    "cases.capacity.layers.1.attention_residual": {
+      "file": "cases.capacity.layers.1.attention_residual.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "11be24c227db585360fd48955157ce68072e21acdbd5559c59c2f7b401056748",
+      "gate": {
+        "atol": 0.001953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0009765625
+    },
+    "cases.capacity.layers.1.post_attention_norm": {
+      "file": "cases.capacity.layers.1.post_attention_norm.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "9950b9f8e168e6e1f5479ae6a387d5b3b342656329bb3a3785885ffe51096220",
+      "gate": {
+        "atol": 0.00390625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.001953125
+    },
+    "cases.capacity.layers.1.gate_projection": {
+      "file": "cases.capacity.layers.1.gate_projection.f16le",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 4096,
+      "sha256": "d3f0477390d93a96a047a20edacec64ee4bb3ce4d1988c3fd65ea89c6ef4267c",
+      "gate": {
+        "atol": 0.001953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0009765625
+    },
+    "cases.capacity.layers.1.up_projection": {
+      "file": "cases.capacity.layers.1.up_projection.f16le",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 4096,
+      "sha256": "08323ea4d0851c311d63fca3fa7424bf4b4794bd01bef7420e6a2362a0c5ac09",
+      "gate": {
+        "atol": 0.001953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0009765625
+    },
+    "cases.capacity.layers.1.gate_silu": {
+      "file": "cases.capacity.layers.1.gate_silu.f16le",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 4096,
+      "sha256": "6c78e1689a9dffcc9ee1ecb16af111ab9e5a5752fded5574e9f0204f4d347abf",
+      "gate": {
+        "atol": 0.001953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0009765625
+    },
+    "cases.capacity.layers.1.gated": {
+      "file": "cases.capacity.layers.1.gated.f16le",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "f16le",
+      "bytes": 4096,
+      "sha256": "3d9df04298710ca4df809df1c6069780cb415965f7020e7ba43cb84e0b6457b3",
+      "gate": {
+        "atol": 0.00390625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.001953125
+    },
+    "cases.capacity.layers.1.down_projection": {
+      "file": "cases.capacity.layers.1.down_projection.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "6ef919151e812de32760a407fd9d5f445026ae9ca59e4e639cebeacf927342ce",
+      "gate": {
+        "atol": 0.0009765625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.00048828125
+    },
+    "cases.capacity.layers.1.output": {
+      "file": "cases.capacity.layers.1.output.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "ecd7fe342ae43cd9f28fadb655742261ee76402139e3877e9b64e1699f9cd55b",
+      "gate": {
+        "atol": 0.001953125,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0009765625
+    },
+    "cases.capacity.final_norm": {
+      "file": "cases.capacity.final_norm.f16le",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "f16le",
+      "bytes": 2048,
+      "sha256": "caae8ea9f3d8cc9e4592dc3c26614999cc6c3a1a1bd538e899eb694e2ac2e477",
+      "gate": {
+        "atol": 0.00390625,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.001953125
+    },
+    "cases.capacity.logits": {
+      "file": "cases.capacity.logits.f32le",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "f32le",
+      "bytes": 8192,
+      "sha256": "9277f5a8d8ca91ab0c20da4814c63f54e2e134e4ef0d0b54c96750b59e877057",
+      "gate": {
+        "atol": 0.006167411804199219,
+        "rtol": 0.001
+      },
+      "independent_precision_envelope": 0.0030837059020996094
+    }
+  }
+}

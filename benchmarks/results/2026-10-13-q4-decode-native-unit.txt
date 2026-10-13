@@ -1,0 +1,30 @@
+
+running 3 tests
+test metal::tests::failed_chunks_publish_no_state_and_completion_failure_requires_replay ... ok
+test metal::tests::fused_q4_matvec_matches_scalar_oracle_and_checks_storage_range ... ok
+test metal::tests::fused_q4_qwen_shapes_match_fp64_reconstruction_oracle ... Q4 Qwen layer0/self_attn.q_proj.weight 896x896 passed mathematical bound
+Q4 Qwen layer0/self_attn.k_proj.weight 128x896 passed mathematical bound
+Q4 Qwen layer0/self_attn.v_proj.weight 128x896 passed mathematical bound
+Q4 Qwen layer0/self_attn.o_proj.weight 896x896 passed mathematical bound
+Q4 Qwen layer0/mlp.gate_proj.weight 4864x896 passed mathematical bound
+Q4 Qwen layer0/mlp.up_proj.weight 4864x896 passed mathematical bound
+Q4 Qwen layer0/mlp.down_proj.weight 896x4864 passed mathematical bound
+Q4 Qwen layer1/self_attn.q_proj.weight 896x896 passed mathematical bound
+Q4 Qwen layer1/self_attn.k_proj.weight 128x896 passed mathematical bound
+Q4 Qwen layer1/self_attn.v_proj.weight 128x896 passed mathematical bound
+Q4 Qwen layer1/self_attn.o_proj.weight 896x896 passed mathematical bound
+Q4 Qwen layer1/mlp.gate_proj.weight 4864x896 passed mathematical bound
+Q4 Qwen layer1/mlp.up_proj.weight 4864x896 passed mathematical bound
+Q4 Qwen layer1/mlp.down_proj.weight 896x4864 passed mathematical bound
+Q4 Qwen layer23/self_attn.q_proj.weight 896x896 passed mathematical bound
+Q4 Qwen layer23/self_attn.k_proj.weight 128x896 passed mathematical bound
+Q4 Qwen layer23/self_attn.v_proj.weight 128x896 passed mathematical bound
+Q4 Qwen layer23/self_attn.o_proj.weight 896x896 passed mathematical bound
+Q4 Qwen layer23/mlp.gate_proj.weight 4864x896 passed mathematical bound
+Q4 Qwen layer23/mlp.up_proj.weight 4864x896 passed mathematical bound
+Q4 Qwen layer23/mlp.down_proj.weight 896x4864 passed mathematical bound
+Q4 resident weight bytes 476307372
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 15.96s
+

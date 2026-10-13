@@ -113,3 +113,22 @@ kernel void validate_float(device const float* x[[buffer(0)]],constant uint4& s[
 kernel void marker(device atomic_uint* source[[buffer(0)]],device uint* sink[[buffer(1)]],uint i[[thread_position_in_grid]]) {
     if(i==0)sink[0]=atomic_fetch_or_explicit(source,0u,memory_order_relaxed);
 }
+
+// One SIMD group per [token, output row]. Adjacent lanes read adjacent columns,
+// reconstruct affine weights in Float32, and reduce without expanded storage.
+// [tokens, inputs, outputs, packed row bytes, input Half stride, output Half stride].
+kernel void q4_matvec(device const uchar* w[[buffer(0)]],device const half* bias[[buffer(1)]],device const half* x[[buffer(2)]],device half* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    uint token=group/s[2],row=group%s[2];
+    if(token>=s[0])return;
+    float sum=0.0f;
+    for(uint column=lane;column<s[1];column+=width) {
+        uint start=64+row*s[3]+(column/64)*36;
+        device const ushort* metadata=reinterpret_cast<device const ushort*>(w+start);
+        float scale=float(as_type<half>(metadata[0])),b=float(as_type<half>(metadata[1]));
+        uint code=(w[start+4+(column%64)/2]>>(4*(column%2)))&15;
+        float weight=scale*float(code)+b;
+        sum=sum+weight*float(x[token*s[4]+column]);
+    }
+    float value=simd_sum(sum)+float(bias[row]);
+    if(lane==0)checked_half(out,token*s[5]+row,value,status);
+}
