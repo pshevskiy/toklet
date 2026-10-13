@@ -1206,6 +1206,24 @@ records retained. Astra accepted the complete code and evidence with no
 remaining findings after independent byte-identical replay. Propagated Qwen normalization/attention/layer/decoder/session,
 quality/performance/trace and M4 closure remain pending.
 
+Qwen input normalization→Q/K/V preparation, 13 October 2026 (M4 pending): the
+[resident layer0 front](docs/experiments/2026-10-13-rust-metal-qwen-front.md)
+normalizes savedembeddingHalf once and feeds actualGPUHalf to allthree
+projections in onecommand/wait. Fourprefixes pass16originalsourcegates and
+52commands/179,712retainedQKVoutputs. Independent10,752orderedRMSvalues exact;
+21normalization oneHalfULP differences from frozen reduction change309QKV
+values versus savednormpath, with alloriginalgates unchanged. Actualprojection
+casts and firstthree-token causality pass. SevenBF16tensors/1,034,240words
+convert independently exact. Same-binary projections/tinydecoder match prior;
+533positivecommands/fournegativejobs include completed-normalization discard.
+Admission73,591,540bytes/own-child peak18,383,496bytes;18buildchecks/41standalone
+Rust/113experimentPython/193benchmarkPython/76rootRust+fmt/Clippy pass. Both
+attempts retained: v1self-driver identity omission fixed/retested in accepted
+v2provenance. Idle/protected identities and byte-identical replay retained.
+Astra accepted the complete code and evidence with no remaining findings.
+Qwenrotary/cache/GQA/full-layer/decoder/session/quality/performance/trace and
+M4closure remain pending.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -1299,4 +1317,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: compose Qwen layer0 input normalization with the qualified Q/K/V projections.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: qualify Qwen split-half rotary at head dimension64 for14 query heads and two KV heads.

@@ -1,0 +1,93 @@
+"""Independent post-idle replay of actual Qwen normalization-to-QKV."""
+import copy,hashlib,json,math,struct,sys
+from pathlib import Path
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_qwen_front as front
+qp=front.qp;probe=front.probe
+read=lambda p:json.loads(Path(p).read_text())
+def sha(p):
+ with Path(p).open('rb')as f:return hashlib.file_digest(f,'sha256').hexdigest()
+base='2026-10-13-rust-metal-qwen-front-v2';rp=ROOT/f'benchmarks/results/{base}.json';raw_path=ROOT/f'benchmarks/raw/{base}.json.native.jsonl';stderr=ROOT/f'benchmarks/results/{base}.json.stderr.txt';idle_path=ROOT/'benchmarks/results/2026-10-13-rust-metal-qwen-front-idle-v1.json'
+r=read(rp);idle=read(idle_path);build=ROOT/'artifacts/rust-metal-qwen-front-v2';directory=ROOT/'artifacts/rust-metal-qwen-front-inputs-v2'
+assert r['completed']and 'failure'not in r and idle['all_recorded_processes_absent']and idle['machine']['State']=='stopped'and idle['native_session_exit_code']==0
+for field in('archive_sha256','protected_sha256'):
+ for name,h in idle[field].items():assert sha(ROOT/name)==h
+assert sha(raw_path)==r['native_raw_sha256']and sha(stderr)==r['stderr_sha256']
+for name,h in r['source_sha256'].items():
+ p=ROOT/name;target=build/('Cargo.toml'if name.endswith('.Cargo.toml')else'Cargo.lock'if name.endswith('.lock')else'src/main.rs'if name.endswith('rust_metal_probe.rs')else'src/'+p.name);assert sha(p)==sha(target)==h
+for name,h in{'tools/experiments/rust_metal_probe.py':r['driver_sha256'],'tools/experiments/metal_probe.py':r['common_helper_sha256'],'tools/bench/mlx_baseline.py':r['memory_helper_sha256']}.items():assert sha(ROOT/name)==h
+for field in('input_sha256','qualification_driver_sha256'):
+ for name,h in r['extra_context'][field].items():assert sha(name)==h
+assert str(Path(front.__file__).resolve())in r['extra_context']['qualification_driver_sha256']
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==r['binary_sha256']
+assert len(r['checks'])==len(r['build_commands'])==18 and[c['command']for c in r['checks']]==r['build_commands']
+assert 'test result: ok. 41 passed; 0 failed'in next(c['stdout']for c in r['checks']if'test'in c['command'])
+inputs,anchors=front.cases();provenance=r['extra_context']['weights'];weights={};biases={};norm=None;converted_count=0
+with qp.qwen.WEIGHTS.open('rb')as f:
+ size=struct.unpack('<Q',f.read(8))[0];metadata=json.loads(f.read(size))
+ for name,item in provenance.items():
+  assert metadata[name]['data_offsets']==item['data_offsets']and metadata[name]['shape']==item['shape']and metadata[name]['dtype']=='BF16'
+  n=math.prod(item['shape']);f.seek(8+size+item['data_offsets'][0]);data=f.read(n*2);assert len(data)==n*2 and hashlib.sha256(data).hexdigest()==item['source_bf16_sha256']
+  values=[struct.unpack('<f',struct.pack('<I',word<<16))[0]for(word,)in struct.iter_unpack('<H',data)];converted=struct.pack(f'<{n}e',*values);assert hashlib.sha256(converted).hexdigest()==item['half_sha256'];converted_count+=n
+  if 'input_layernorm'in name:norm=struct.unpack(f'<{n}e',converted)
+  else:
+   op=name.split('.')[-2][0]
+   if name.endswith('weight'):assert(directory/f'{op}.f16le').read_bytes()==converted;weights[op]=struct.unpack(f'<{n}e',converted)
+   else:biases[op]=struct.unpack(f'<{n}e',converted)
+raw=[json.loads(line)for line in raw_path.read_text().splitlines()];runs=r['native_runs'];assert len(raw)==len(runs)==31
+assert[run['mode']for run in runs]==['normal','invalid_shader','insufficient_budget']+[f'front_{i+1}'for i in range(4)]+['front_overflow']+[f'projection_{i+1}'for i in range(12)]+['tiny_projection','tiny_overflow']+[f'decoder_{i+1}'for i in range(9)]
+validators={};pi,pa=qp.cases();tiny,ta,_=qp.projection.cases();di,da,_=qp.decoder.cases()
+for i,item in enumerate(inputs):
+ c=read(directory/f'front_{i+1}.json');assert c['input_bits']==item['input_bits']and c['id']==item['id'];assert tuple(qp.decoder.unpack(c['norm_weight_bits'],'H'))==norm
+ for op in('q','k','v'):assert tuple(qp.decoder.unpack(c[f'{op}_bias_bits'],'H'))==biases[op]
+ a={**anchors[item['id']],'norm_weight_sha256':provenance['model.layers.0.input_layernorm.weight']['half_sha256']};validators[f'front_{i+1}']=lambda e,c=c,a=a:front.validate(e,c,a)
+validators['front_overflow']=front.overflow_rejected
+for i,item in enumerate(pi):
+ c=read(directory/f'projection_{i+1}.json')['cases'][0];op=item['op'];a={**pa[item['id']],'weight_sha256':provenance[f'model.layers.0.self_attn.{op}_proj.weight']['half_sha256'],'bias_sha256':provenance[f'model.layers.0.self_attn.{op}_proj.bias']['half_sha256']};validators[f'projection_{i+1}']=lambda e,c=c,a=a:qp.validate(e,c,a)
+validators.update({'tiny_projection':lambda e:qp.projection.validate(e,tiny,ta),'tiny_overflow':qp.projection.overflow_rejected});validators.update({f'decoder_{i+1}':lambda e,c=c:qp.decoder.validate(e,c,da[c['id']])for i,c in enumerate(di)})
+commands={};peak=0
+for e,run in zip(raw,runs):
+ replay=copy.deepcopy(e);probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']));assert replay==run['event']and not run['watchdog_killed']and 0<run['physical_process_charge_peak_bytes']<=probe.LIMIT
+ peak=max(peak,run['physical_process_charge_peak_bytes']);commands[run['mode']]=len(e.get('result',{}).get('rows',[]))+sum(len(c['rows'])for c in e.get('result',{}).get('cases',[]))
+assert sum(commands.values())==533
+f32=lambda n:struct.unpack('<f',struct.pack('<f',n))[0]
+first_values=norm_values=retained_output_values=0;norm_differences=[];stages={name:{'first_values':0,'equal_frozen_half':0,'max_original_gate_fraction':0.,'max_fp32_difference_from_fp64_dot_actual_norm':0.}for name in('input_norm','q_projection','k_projection','v_projection')};frames={};projected_delta_count=0
+for i,item in enumerate(inputs):
+ e=raw[3+i]['result'];n=item['rows'];h=e['first_half_intermediates'];s=e['first_fp32_intermediates'];x=qp.decoder.unpack(item['input_bits'],'H');out=[]
+ for row in range(n):
+  a=x[row*896:(row+1)*896];acc=0.
+  for value in a:acc=f32(acc+f32(value*value))
+  inv=f32(1/f32(math.sqrt(f32(f32(acc/896)+f32(1e-6)))))
+  out.extend(f32(f32(value*inv)*weight)for value,weight in zip(a,norm))
+ assert qp.projection.half_bits(out)==h[0];norm_values+=n*896
+ for name,bits,expected in zip(stages,h,anchors[item['id']]['stages']):
+  q=qp.decoder.qualify(bits,expected,'H');stage=stages[name];stage['first_values']+=q['values'];stage['equal_frozen_half']+=q['equal_frozen_bits'];stage['max_original_gate_fraction']=max(stage['max_original_gate_fraction'],q['source_fp32_max_gate_fraction']);first_values+=len(bits)
+ for j,(actual,frozen)in enumerate(zip(h[0],anchors[item['id']]['stages'][0]['bits'])):
+  if actual!=frozen:norm_differences.append({'case':item['id'],'index':j,'actual':actual,'frozen':frozen})
+ actual_norm=qp.decoder.unpack(h[0],'H')
+ for index,op in enumerate(('q','k','v')):
+  count=n*(896 if op=='q'else 128);floats=qp.decoder.unpack(s[index],'I');assert qp.projection.half_bits(floats)==h[index+1];width=count//n
+  for token in range(n):
+   a=actual_norm[token*896:(token+1)*896]
+   for col in range(width):
+    wide=sum(v*w for v,w in zip(a,weights[op][col*896:(col+1)*896]))+biases[op][col];stage=stages[f'{op}_projection'];stage['max_fp32_difference_from_fp64_dot_actual_norm']=max(stage['max_fp32_difference_from_fp64_dot_actual_norm'],abs(floats[token*width+col]-wide))
+  # Same binary saved-normalization projection vs actual propagated input.
+  name=item['id'].split('.')[1];old_index=next(j for j,c in enumerate(pi)if c['op']==op and c['id'].split('.')[1]==name)
+  old=raw[8+old_index]['result']['cases'][0]['rows'][0];projected_delta_count+=sum(a!=b for a,b in zip(h[index+1],old['output_bits']))
+ for row in e['rows']:assert row['output_bits']==h[1:];retained_output_values+=sum(map(len,row['output_bits']))
+ frames[item['id'].split('.')[1]]=h
+for stage in range(4):
+ width=896 if stage<2 else 128;assert frames['short'][stage][:3*width]==frames['future_changed'][stage][:3*width]
+previous=[json.loads(line)for line in Path('benchmarks/raw/2026-10-13-rust-metal-qwen-projections-v1.json.native.jsonl').read_text().splitlines()]
+for i in range(12):
+ for a,b in zip(raw[8+i]['result']['cases'][0]['rows'],previous[3+i]['result']['cases'][0]['rows']):assert a['output_bits']==b['output_bits']and a['fp32_bits']==b['fp32_bits']
+for i in range(9):
+ for key in('first_layers','first_embedding_bits','first_normalized_bits','first_logits_bits'):assert raw[22+i]['result'][key]==previous[17+i]['result'][key]
+superseded=read('benchmarks/results/2026-10-13-rust-metal-qwen-front-v1.json');old_raw=[json.loads(line)for line in Path('benchmarks/raw/2026-10-13-rust-metal-qwen-front-v1.json.native.jsonl').read_text().splitlines()]
+assert str(Path(front.__file__).resolve())not in superseded['extra_context']['qualification_driver_sha256']
+for i in range(4):
+ for key in('first_half_intermediates','first_fp32_intermediates'):assert raw[3+i]['result'][key]==old_raw[3+i]['result'][key]
+summary={'front_jobs':4,'front_commands':52,'all_positive_commands':533,'negative_jobs':4,'first_frame_half_values':first_values,'normalization_values_independent_ordered_exact':norm_values,'bf16_to_half_values_independently_reconstructed':converted_count,'all_retained_repetition_qkv_half_values':retained_output_values,'stages':stages,'normalization_half_differences':norm_differences,'propagated_qkv_half_differences_from_same_binary_saved_norm':projected_delta_count,'actual_normalization_fp64_projection_diagnostics_only':True,'all_actual_fp32_to_half_boundaries_exact':True,'future_prefix_first_three_tokens_all_stages_exact':True,'saved_norm_projections_and_nine_tiny_decoder_frames_match_preceding_qualification':True,'superseded_v1_first_frames_equal_final_v2':True,'max_front_admitted_bytes':max(raw[3+i]['result']['admitted_bytes']for i in range(4)),'max_own_child_peak_bytes':peak,'binary_sha256':r['binary_sha256'],'command_counts':commands,'scope':'ActualGPU layer0 RMS→QKV fromsavedembeddingHalf, originalfourper-casegates; no Qwenrotary/cache/GQA/full-layer/decoder/session/quality/performance/M4 closure. First4Half/3F32arrays retained, native12latercompleteframes exact, rawguards notarchived.'}
+result={'format':'toklet-qwen-metal-front-analysis-v1','completed':True,'records_sha256':{str(p.relative_to(ROOT)):sha(p)for p in(rp,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x')as f:f.write(json.dumps(result,indent=2,allow_nan=False)+'\n')
+print(json.dumps({k:v for k,v in summary.items()if k not in('command_counts','normalization_half_differences')},indent=2));print('Normalization Half differences:',len(norm_differences))

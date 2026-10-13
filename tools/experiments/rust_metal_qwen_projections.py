@@ -13,8 +13,9 @@ import rust_metal_projection as projection
 import rust_metal_decoder as decoder
 
 
-def weights(path,expected_sha,expected_bytes):
+def weights(path,expected_sha,expected_bytes,include_norm=False):
     tensors={f'model.layers.0.self_attn.{op}_proj.{kind}':([out,896]if kind=='weight'else[out]) for op,out in [('q',896),('k',128),('v',128)]for kind in ('weight','bias')}
+    if include_norm:tensors["model.layers.0.input_layernorm.weight"]=[896]
     result={};ranges=[]
     with path.open('rb')as file:
         before=os.fstat(file.fileno())

@@ -1,0 +1,111 @@
+"""Qualify propagated Qwen layer0 input normalization -> Q/K/V in one command."""
+import argparse
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import sys
+import rust_metal_qwen_projections as qp
+qwen=qp.qwen
+probe=qp.projection.rms.probe
+
+
+def cases():
+    half,single,epsilon=qwen.checked_manifests();pi,pa=qp.cases();inputs=[];anchors={}
+    if epsilon!=1e-6:raise ValueError('Qwen front epsilon differs')
+    for name,n in qwen.CASE_ROWS.items():
+        prefix=f'cases.{name}';data,item=qwen.rms.payload(qwen.HALF,half,prefix+'.embedding','f16le')
+        if item['shape']!=[n,896]:raise ValueError('Qwen front embedding shape differs')
+        norm_key=prefix+'.layers.0.input_norm';norm,ni=qwen.rms.payload(qwen.HALF,half,norm_key,'f16le');ref=single['arrays'][norm_key];source,si=qwen.rms.payload(qwen.SINGLE,{'arrays':{norm_key:{'dtype':'f32le',**ref}}},norm_key,'f32le')
+        if ni['shape']!=[n,896]or si['shape']!=[n,896]or ni['source_fp32_full_sha256']!=si['sha256']:raise ValueError('Qwen front normalization anchor differs')
+        id=prefix+'.layers.0.input_norm_qkv'
+        inputs.append({'format':'toklet-metal-qwen-front-input-v1','id':id,'rows':n,'epsilon_bits':probe.float_bits(epsilon),'input_bits':list(struct.unpack(f'<{n*896}H',data)),**{f'{op}_weight_file':f'{op}.f16le'for op in('q','k','v')}})
+        stages=[{'bits':list(struct.unpack(f'<{n*896}H',norm)),'source':list(struct.unpack(f'<{n*896}f',source)),'gate':ni['gate_against_source_fp32'],'oracle_sha256':ni['sha256'],'source_sha256':si['sha256']}]
+        for op in('q','k','v'):
+            a=pa[f'{prefix}.layers.0.{op}_projection'];stages.append({'bits':a['oracle_bits'],'source':a['source'],'gate':a['gate'],'oracle_sha256':a['oracle_sha256'],'source_sha256':a['source_sha256']})
+        anchors[id]={'input_sha256':item['sha256'],'stages':stages}
+    return inputs,anchors
+
+
+def validate(event,item,anchor):
+    if event.get('event')!='idle_result'or event.get('passed')is not True:raise ValueError('Native Qwen front failed')
+    r=event['result'];m=r['metadata'];n=item['rows'];width=r['threadgroup_width']
+    if (r['operation']!='resident_qwen_layer0_input_norm_qkv'or r['id']!=item['id']or r['rows_count']!=n or r['allocations_reused']is not True or m['mps_device_supported']is not True or m['unified_memory']is not True or m['math_mode']!='safe'or m['math_functions']!='precise'or m['language_version']!='2.3'or m['minimum_macos_major']!=15):raise ValueError('Qwen front topology/math policy differs')
+    caps=m['graph_pipeline_caps']
+    if[c['name']for c in caps]!=['toklet_projection_bias','toklet_rotary','toklet_cache_write','toklet_attention','toklet_rms_norm','toklet_residual','toklet_silu','toklet_gating']:raise ValueError('Qwen front pipeline inventory differs')
+    if type(width)is not int or not 0<width<=min([m['execution_width'],m['pipeline_max_threads'],m['device_max_threads'][0]]+[v for c in caps for v in(c['execution_width'],c['max_threads'])]):raise ValueError('Qwen front launch bounds differ')
+    il,hl,fl=(r[k]for k in('input_layouts','half_layouts','float_layouts'));normcap=math.ceil(n/width)*width
+    half_caps=[normcap]+[math.ceil(math.ceil(n*c/width)*width/c)for c in(896,128,128)]
+    desc=[(n,896,2,n),(1,896,2,1),(896,896,2,896),(128,896,2,128),(128,896,2,128),(1,896,2,1),(1,128,2,1),(1,128,2,1)]
+    groups=[(il,desc),(hl,[(n,c,2,capacity)for c,capacity in zip((896,896,128,128),half_caps)]),(fl,[(n,c,4,capacity)for c,capacity in zip((896,128,128),half_caps[1:])])]
+    if[len(il),len(hl),len(fl)]!=[8,4,3]:raise ValueError('Qwen front allocation inventory differs')
+    for layouts,descs in groups:
+        for l,(rows,cols,scalar,capacity)in zip(layouts,descs):
+            if (l['rows']!=rows or l['columns']!=cols or l['stride']<cols or l['elements']!=capacity*l['stride']+7 or l['bytes']!=l['elements']*scalar):raise ValueError('Qwen front guarded layout differs')
+    if il[0]['stride']!=896 or hl[0]['stride']!=896:raise ValueError('Qwen front contiguous normalization differs')
+    shared=sum(l['bytes']for g in(il,hl,fl)for l in g);total=3*shared+probe.ALLOWANCE
+    if r['shared_buffer_bytes']!=shared or r['host_snapshot_readback_bytes']!=2*shared or r['admitted_bytes']!=total or m['maximum_admitted_bytes']!=total or total>probe.LIMIT:raise ValueError('Qwen front combined admission differs')
+    halves=r['first_half_intermediates'];floats=r['first_fp32_intermediates'];reps=r['rows']
+    if len(halves)!=4 or len(floats)!=3 or len(reps)!=13 or any(len(a)!=n*c for a,c in zip(halves,(896,896,128,128)))or any(len(a)!=n*c for a,c in zip(floats,(896,128,128))):raise ValueError('Qwen front intermediate shapes differ')
+    for raw,stored in zip(floats,halves[1:]):
+        if any(type(v)is not int or not 0<=v<2**32 for v in raw):raise ValueError('Qwen front FP32 bit type differs')
+        values=qp.decoder.unpack(raw,'I')
+        if not all(map(math.isfinite,values))or qp.projection.half_bits(values)!=stored:raise ValueError('Qwen front projection boundary differs')
+    qualifications=[qp.decoder.qualify(bits,expected,'H')for bits,expected in zip(halves,anchor['stages'])]
+    for index,(row,phase)in enumerate(zip(reps,['warmup']*3+['sample']*10)):
+        if row['phase']!=phase or row['repetition']!=(index+1 if index<3 else index-2)or row['command_completed']is not True or row['commit_wait_pairs']!=1 or row['inputs_guards_and_intermediates_unchanged']is not True or row['output_bits']!=halves[1:]or not math.isfinite(row['encode_commit_wait_seconds'])or row['encode_commit_wait_seconds']<=0:raise ValueError('Qwen front repeated/completed propagation differs')
+        row['output_sha256']=[q['output_sha256']for q in qualifications[1:]];del row['output_bits']
+    r['qualification']=dict(zip(('input_norm','q_projection','k_projection','v_projection'),qualifications));r['fp32_sha256']=[hashlib.sha256(struct.pack(f'<{len(a)}I',*a)).hexdigest()for a in floats];r['anchors']={**anchor,'stages':[{k:v for k,v in a.items()if k not in('bits','source')}for a in anchor['stages']]}
+    del r['first_half_intermediates'];del r['first_fp32_intermediates']
+
+
+def overflow_rejected(event):
+    if event.get('passed')is not False or event.get('error')!={'stage':'validation','message':'completed Qwen front nonfinite; result discarded'}:raise ValueError('Qwen front nonfinite failure differs')
+    return False
+
+
+def run(output,build,directory):
+    probe.check_paths(output,build)
+    evidence=(output,output.with_suffix(output.suffix+'.stderr.txt'),output.with_suffix(output.suffix+'.native.jsonl'))
+    if directory.exists():raise ValueError('Refusing to overwrite Qwen front inputs')
+    for path in(build,*evidence):
+        if directory.resolve()==path.resolve()or directory.resolve()in path.resolve().parents or path.resolve()in directory.resolve().parents:raise ValueError('Qwen front paths must be disjoint')
+    for root in(qwen.HALF,qwen.SINGLE,qwen.HALF_PROBES,qwen.SINGLE_PROBES,qwen.WEIGHTS.parent,qp.projection.rms.FP16,qp.projection.rms.FP32):
+        if any(path.resolve()==root.resolve()or path.resolve().is_relative_to(root.resolve())for path in(build,directory,*evidence)):raise ValueError('Qwen front outputs must be outside source artifacts')
+    inputs,anchors=cases();pi,pa=qp.cases();loaded=qp.weights(qwen.WEIGHTS,qwen.WEIGHT_SHA,qwen.WEIGHT_BYTES,include_norm=True);directory.mkdir(parents=True);identities={};jobs=[]
+    for op in('q','k','v'):
+        path=directory/f'{op}.f16le'
+        with path.open('xb')as f:f.write(loaded[f'model.layers.0.self_attn.{op}_proj.weight']['data'])
+        identities[str(path.resolve())]=probe.common.digest(path)
+    norm=loaded['model.layers.0.input_layernorm.weight'];normbits=list(struct.unpack('<896H',norm['data']));biases={f'{op}_bias_bits':list(struct.unpack(f'<{out}H',loaded[f'model.layers.0.self_attn.{op}_proj.bias']['data']))for op,out in(('q',896),('k',128),('v',128))}
+    payloads=[]
+    for i,item in enumerate(inputs):
+        item={**item,**biases,'norm_weight_bits':normbits};anchors[item['id']]['norm_weight_sha256']=norm['half_sha256'];payloads.append((f'front_{i+1}',item,'--qwen-front-input',lambda e,item=item:validate(e,item,anchors[item['id']])))
+    overflow=copy.deepcopy(payloads[0][1]);overflow['id']='manual.overflow';overflow['rows']=1;overflow['input_bits']=[0x3c00]+[0]*895;overflow['norm_weight_bits']=[0x7bff]+[0]*895
+    payloads.append(('front_overflow',overflow,'--qwen-front-input',overflow_rejected))
+    for i,item in enumerate(pi):
+        item=copy.deepcopy(item);op=item.pop('op');item['bias_bits']=biases[f'{op}_bias_bits'];pa[item['id']].update(weight_sha256=loaded[f'model.layers.0.self_attn.{op}_proj.weight']['half_sha256'],bias_sha256=loaded[f'model.layers.0.self_attn.{op}_proj.bias']['half_sha256']);payloads.append((f'projection_{i+1}',{'format':'toklet-metal-qwen-projection-input-v1','cases':[item]},'--projection-input',lambda e,item=item:qp.validate(e,item,pa[item['id']])))
+    tiny,ta,to=qp.projection.cases();di,da,_=qp.decoder.cases()
+    payloads.extend([('tiny_projection',{'format':'toklet-metal-projection-input-v1','cases':tiny},'--projection-input',lambda e:qp.projection.validate(e,tiny,ta)),('tiny_overflow',{'format':'toklet-metal-projection-input-v1','cases':[to]},'--projection-input',qp.projection.overflow_rejected)])
+    payloads.extend((f'decoder_{i+1}',item,'--decoder-input',lambda e,item=item:qp.decoder.validate(e,item,da[item['id']]))for i,item in enumerate(di))
+    for label,payload,option,validator in payloads:
+        path=directory/f'{label}.json'
+        with path.open('x')as f:f.write(json.dumps(payload,separators=(',',':'))+'\n')
+        identities[str(path.resolve())]=probe.common.digest(path);jobs.append((label,[option,str(path.resolve())],validator))
+    drivers={str(Path(m.__file__).resolve()):probe.common.digest(Path(m.__file__))for name,m in list(sys.modules.items())if name.startswith('rust_metal_')and getattr(m,'__file__',None)};previous=jobs[-1][2]
+    def final(e):
+        result=previous(e)
+        if cases()!=(inputs,{k:{a:v for a,v in item.items()if a!='norm_weight_sha256'}for k,item in anchors.items()}):raise ValueError('Qwen front frozen references changed')
+        for path,h in{**identities,**drivers}.items():
+            if probe.common.digest(Path(path))!=h:raise ValueError('Qwen front inputs/drivers changed')
+        if probe.common.digest(qwen.WEIGHTS)!=qwen.WEIGHT_SHA:raise ValueError('Qwen front checkpoint changed')
+        return result
+    jobs[-1]=(jobs[-1][0],jobs[-1][1],final)
+    probe.run(output,build,extra_runs=jobs,extra_context={'input_sha256':identities,'qualification_driver_sha256':drivers,'weights':{name:{k:v for k,v in data.items()if k!='data'}for name,data in loaded.items()},'checkpoint_sha256':qwen.WEIGHT_SHA,'checkpoint_bytes':qwen.WEIGHT_BYTES,'half_manifest_sha256':qwen.IDENTITIES[qwen.HALF],'source_manifest_sha256':qwen.IDENTITIES[qwen.SINGLE],'scope':'Four Qwen layer0 embedding Half inputs -> actual GPU normalization -> QKV in one command/wait, original four per-case gates; twelve saved-normalization projection regressions, tiny projection and nine decoder regressions. No Qwen rotary/cache/GQA/full layer/session/decoder/quality/performance/M4 closure.'})
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--build-dir',type=Path,required=True);p.add_argument('--input-dir',type=Path,required=True);a=p.parse_args();run(a.output,a.build_dir,a.input_dir)
+if __name__=='__main__':main()

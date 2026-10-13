@@ -53,7 +53,7 @@ pub(super) fn half(value: &Value, name: &str, count: usize) -> Result<Vec<u16>, 
         })
         .collect()
 }
-fn weight_file(parent: &Path, value: &Value, count: usize) -> Result<Vec<u16>, Error> {
+pub(super) fn weight_file(parent: &Path, value: &Value, count: usize) -> Result<Vec<u16>, Error> {
     let name = value["weight_file"]
         .as_str()
         .filter(|name| {

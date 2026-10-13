@@ -1,0 +1,217 @@
+{
+  "format": "toklet-qwen-metal-front-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-13-rust-metal-qwen-front-v2.json": "c1857d4f5ff63437ab22ca61fe81cfba6f1e59523b074c3f2237b4b1d01d0caa",
+    "benchmarks/raw/2026-10-13-rust-metal-qwen-front-v2.json.native.jsonl": "5d307072c7b46c0777c5c4998a70f53f5fdcb57b78c7c6106612dc1f3834e324",
+    "benchmarks/results/2026-10-13-rust-metal-qwen-front-v2.json.stderr.txt": "5aed33d8c59d21993af2c0e09c3a3a56736e05f2b3f1b0241260a5328570dae9",
+    "benchmarks/results/2026-10-13-rust-metal-qwen-front-idle-v1.json": "3531b5248398523455aeee6ef83818f93dcd1db92599b2997da2c8b80414bfcb"
+  },
+  "summary": {
+    "front_jobs": 4,
+    "front_commands": 52,
+    "all_positive_commands": 533,
+    "negative_jobs": 4,
+    "first_frame_half_values": 24576,
+    "normalization_values_independent_ordered_exact": 10752,
+    "bf16_to_half_values_independently_reconstructed": 1034240,
+    "all_retained_repetition_qkv_half_values": 179712,
+    "stages": {
+      "input_norm": {
+        "first_values": 10752,
+        "equal_frozen_half": 10731,
+        "max_original_gate_fraction": 0.3884208651452362,
+        "max_fp32_difference_from_fp64_dot_actual_norm": 0.0
+      },
+      "q_projection": {
+        "first_values": 10752,
+        "equal_frozen_half": 10596,
+        "max_original_gate_fraction": 0.4244601277452769,
+        "max_fp32_difference_from_fp64_dot_actual_norm": 4.544899638858624e-06
+      },
+      "k_projection": {
+        "first_values": 1536,
+        "equal_frozen_half": 1512,
+        "max_original_gate_fraction": 0.44659268001919933,
+        "max_fp32_difference_from_fp64_dot_actual_norm": 6.9901324195598136e-06
+      },
+      "v_projection": {
+        "first_values": 1536,
+        "equal_frozen_half": 1406,
+        "max_original_gate_fraction": 0.3792962003027851,
+        "max_fp32_difference_from_fp64_dot_actual_norm": 6.818299880251288e-08
+      }
+    },
+    "normalization_half_differences": [
+      {
+        "case": "cases.future_changed.layers.0.input_norm_qkv",
+        "index": 0,
+        "actual": 11656,
+        "frozen": 11655
+      },
+      {
+        "case": "cases.future_changed.layers.0.input_norm_qkv",
+        "index": 924,
+        "actual": 40219,
+        "frozen": 40218
+      },
+      {
+        "case": "cases.future_changed.layers.0.input_norm_qkv",
+        "index": 2742,
+        "actual": 41137,
+        "frozen": 41136
+      },
+      {
+        "case": "cases.future_changed.layers.0.input_norm_qkv",
+        "index": 3154,
+        "actual": 45442,
+        "frozen": 45441
+      },
+      {
+        "case": "cases.future_changed.layers.0.input_norm_qkv",
+        "index": 3517,
+        "actual": 7087,
+        "frozen": 7086
+      },
+      {
+        "case": "cases.offset.layers.0.input_norm_qkv",
+        "index": 28,
+        "actual": 40219,
+        "frozen": 40218
+      },
+      {
+        "case": "cases.offset.layers.0.input_norm_qkv",
+        "index": 1850,
+        "actual": 13925,
+        "frozen": 13924
+      },
+      {
+        "case": "cases.offset.layers.0.input_norm_qkv",
+        "index": 1900,
+        "actual": 43167,
+        "frozen": 43166
+      },
+      {
+        "case": "cases.offset.layers.0.input_norm_qkv",
+        "index": 2266,
+        "actual": 6614,
+        "frozen": 6613
+      },
+      {
+        "case": "cases.offset.layers.0.input_norm_qkv",
+        "index": 2564,
+        "actual": 41124,
+        "frozen": 41123
+      },
+      {
+        "case": "cases.offset.layers.0.input_norm_qkv",
+        "index": 2592,
+        "actual": 44981,
+        "frozen": 44980
+      },
+      {
+        "case": "cases.offset.layers.0.input_norm_qkv",
+        "index": 2648,
+        "actual": 10710,
+        "frozen": 10709
+      },
+      {
+        "case": "cases.short.layers.0.input_norm_qkv",
+        "index": 0,
+        "actual": 11656,
+        "frozen": 11655
+      },
+      {
+        "case": "cases.short.layers.0.input_norm_qkv",
+        "index": 924,
+        "actual": 40219,
+        "frozen": 40218
+      },
+      {
+        "case": "cases.short.layers.0.input_norm_qkv",
+        "index": 2746,
+        "actual": 13925,
+        "frozen": 13924
+      },
+      {
+        "case": "cases.short.layers.0.input_norm_qkv",
+        "index": 2796,
+        "actual": 43167,
+        "frozen": 43166
+      },
+      {
+        "case": "cases.short.layers.0.input_norm_qkv",
+        "index": 3162,
+        "actual": 6614,
+        "frozen": 6613
+      },
+      {
+        "case": "cases.short.layers.0.input_norm_qkv",
+        "index": 3460,
+        "actual": 41124,
+        "frozen": 41123
+      },
+      {
+        "case": "cases.short.layers.0.input_norm_qkv",
+        "index": 3488,
+        "actual": 44981,
+        "frozen": 44980
+      },
+      {
+        "case": "cases.short.layers.0.input_norm_qkv",
+        "index": 3544,
+        "actual": 10710,
+        "frozen": 10709
+      },
+      {
+        "case": "cases.single.layers.0.input_norm_qkv",
+        "index": 0,
+        "actual": 11656,
+        "frozen": 11655
+      }
+    ],
+    "propagated_qkv_half_differences_from_same_binary_saved_norm": 309,
+    "actual_normalization_fp64_projection_diagnostics_only": true,
+    "all_actual_fp32_to_half_boundaries_exact": true,
+    "future_prefix_first_three_tokens_all_stages_exact": true,
+    "saved_norm_projections_and_nine_tiny_decoder_frames_match_preceding_qualification": true,
+    "superseded_v1_first_frames_equal_final_v2": true,
+    "max_front_admitted_bytes": 73591540,
+    "max_own_child_peak_bytes": 18383496,
+    "binary_sha256": "9c1c991070b002c48b2f9b979f7ac5b913b876a2086273c870a879f35ecd740a",
+    "command_counts": {
+      "normal": 39,
+      "invalid_shader": 0,
+      "insufficient_budget": 0,
+      "front_1": 13,
+      "front_2": 13,
+      "front_3": 13,
+      "front_4": 13,
+      "front_overflow": 0,
+      "projection_1": 13,
+      "projection_2": 13,
+      "projection_3": 13,
+      "projection_4": 13,
+      "projection_5": 13,
+      "projection_6": 13,
+      "projection_7": 13,
+      "projection_8": 13,
+      "projection_9": 13,
+      "projection_10": 13,
+      "projection_11": 13,
+      "projection_12": 13,
+      "tiny_projection": 169,
+      "tiny_overflow": 0,
+      "decoder_1": 13,
+      "decoder_2": 13,
+      "decoder_3": 13,
+      "decoder_4": 13,
+      "decoder_5": 13,
+      "decoder_6": 13,
+      "decoder_7": 13,
+      "decoder_8": 13,
+      "decoder_9": 13
+    },
+    "scope": "ActualGPU layer0 RMS\u2192QKV fromsavedembeddingHalf, originalfourper-casegates; no Qwenrotary/cache/GQA/full-layer/decoder/session/quality/performance/M4 closure. First4Half/3F32arrays retained, native12latercompleteframes exact, rawguards notarchived."
+  }
+}
