@@ -100,6 +100,7 @@ These findings prevent unsuccessful experiments from being presented as improvem
 | --- | --- |
 | Core ML / ANE supported slices | CPU slice/state behavior qualified; actual ANE acceleration unobserved. FP16 projection fails its frozen gate under both policies. No ANE backend adopted. [Closure](experiments/2026-10-11-ane-feasibility-closure.md). |
 | Dynamically indexed Original Q4 tile | **28.5% slower**; rejected in favor of the bounded fixed-index experiment. [Report](experiments/2026-10-13-q4-prefill.md). |
+| MLP SiLU/gating fusion | Exact Half storage and all numerical/state checks pass, but complete512/128 request gain is only **0.006032%**, below dispersion and5%. Prototype removed; Split retained. [Negative experiment](experiments/2026-10-14-mlp-gating.md). |
 | GPU greedy latency | Larger512-input/128-output median is **0.2890% slower** than full-logit CPU selection. Explicit ID-only capability retained for verified host storage/traffic; no performance default or speed acceptance. [Result](experiments/2026-10-13-metal-greedy.md). |
 | Larger Q4 chunk-size default changes | 256/512 improve the named 1,024-input/one-output median only **4.0506% / 2.6294%**, below the frozen 5% threshold; 1,024 is **8.4712% slower**. No larger default adopted. [Sweep](experiments/2026-10-13-metal-chunks.md). |
 | Original and Original-tiled expanded Q4 tiny decoder | Both fail the frozen offset17 independent gate. The compensated candidate passes; no tolerance was loosened. [Original report](experiments/2026-10-13-q4-prefill.md), [compensated report](experiments/2026-10-13-q4-compensated-storage.md). |
@@ -109,7 +110,7 @@ These findings prevent unsuccessful experiments from being presented as improvem
 | Native macOS generated-code isolation prototype | Fixed resource admission fails; not adopted. Literal grading instead uses the separately qualified Linux controller. [Native rejection](experiments/2026-10-10-code-isolation.md), [Linux qualification](experiments/2026-10-11-linux-literal-controller.md). |
 
 The fixed quality gates, quantizer, checkpoint selection and corpus remain
-unchanged. Remaining fusion evaluations, full GPU release workload/task
+unchanged. Remaining rotary/cache and residual/RMS fusion evaluations, full GPU release workload/task
 and application comparisons, sustained qualification and M5 exit remain open.
 Long-context attention/KV experiments and physical iPhone work belong to M6/M7.
 This record will be updated with each reviewed implementation or measurement
