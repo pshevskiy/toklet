@@ -208,6 +208,7 @@ pub(super) enum Kernel {
     Q4Matvec,
     Q4Prefill,
     Q4Compensated,
+    Q4CompensatedPrefill,
 }
 impl Kernel {
     pub fn name(self) -> &'static str {
@@ -227,6 +228,7 @@ impl Kernel {
             "q4_matvec",
             "q4_prefill",
             "q4_compensated",
+            "q4_compensated_prefill",
         ][self as usize]
     }
 }
@@ -286,6 +288,7 @@ impl Gpu {
             Kernel::Q4Matvec,
             Kernel::Q4Prefill,
             Kernel::Q4Compensated,
+            Kernel::Q4CompensatedPrefill,
         ] {
             let f = library
                 .newFunctionWithName(&NSString::from_str(k.name()))
@@ -337,7 +340,10 @@ impl Gpu {
         // assign one scalar lane per item; never assume an Apple SIMD width.
         let width = if matches!(
             k,
-            Kernel::Q4Matvec | Kernel::Q4Prefill | Kernel::Q4Compensated
+            Kernel::Q4Matvec
+                | Kernel::Q4Prefill
+                | Kernel::Q4Compensated
+                | Kernel::Q4CompensatedPrefill
         ) {
             self.execution_width(k)
         } else {
@@ -348,7 +354,10 @@ impl Gpu {
         }
         let groups = if matches!(
             k,
-            Kernel::Q4Matvec | Kernel::Q4Prefill | Kernel::Q4Compensated
+            Kernel::Q4Matvec
+                | Kernel::Q4Prefill
+                | Kernel::Q4Compensated
+                | Kernel::Q4CompensatedPrefill
         ) {
             count
         } else {

@@ -14,18 +14,23 @@ ROOT=Path(__file__).resolve().parents[2]
 LIMIT=6*1024**3
 SOURCE_SHA="fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
 CONFIG_SHA="18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45"
+LARGER_SOURCE_SHA="dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee"
+LARGER_CONFIG_SHA="98d2ff8cc47488d08a2b0b3acf4eb99ef210779b42bd48605f6b8e36acdbf670"
+LARGER_PACKED_SHA="236e2a2071ad90967008e81b3af262275fc7c81307f303eab577f8681bc6c8c3"
 digest=continuation.digest
 observation=continuation.observation
 endpoints=continuation.endpoints
 memory=continuation.memory
 
 
-def ready(event):
-    required={"event":"ready","format":"toklet-metal-q4-prefill-v1","projection_modes":["Original","Q4Tiled"],
+def ready(event,accurate=False,larger=False):
+    required={"event":"ready","format":"toklet-metal-q4-prefill-v1","projection_modes":["Q4Compensated","Q4CompensatedTiled"] if accurate else ["Original","Q4Tiled"],
               "debug_assertions":False,"warmups":3,"samples":10,"prompt_tokens":512,"output_tokens":1,"capacity":1024,"chunk":128}
+    if accurate:required.update(normalization_mode="Compensated",requires_logit_bits=True,hidden_size=1536 if larger else 896,num_layers=28 if larger else 24)
     if any(type(event.get(k)) is not type(v) or event[k]!=v for k,v in required.items()):raise ValueError("Prefill admission/mode differs")
     widths=event.get("q4_execution_widths")
     if type(widths) is not list or len(widths)!=2 or any(type(w) is not int or not 0<w<=0xffffffff for w in widths):raise ValueError("Queried Q4 SIMD widths invalid")
+    if accurate and widths[0]!=widths[1]:raise ValueError("Accurate tile refinement needs equal queried widths")
     a,b=event["original_memory"],event["tiled_memory"];memory(a);memory(b)
     if (type(event.get("application_bytes")) is not int or event["application_bytes"]!=64*1024**2
             or type(event.get("combined_admitted_bytes")) is not int
@@ -48,6 +53,7 @@ def sample(event,index,admission):
         if value!=admission[f"{mode}_memory"]:raise ValueError("Persistent prefill buffers changed")
     if (type(event.get("greedy_id")) is not int or not 0<=event["greedy_id"]<151936
             or type(event.get("max_logit_delta")) not in (int,float) or not math.isfinite(event["max_logit_delta"]) or event["max_logit_delta"]<0):raise ValueError("Prefill numerical evidence invalid")
+    if admission.get("requires_logit_bits") and event.get("logit_bits_equal") is not True:raise ValueError("Accurate tile logit bits differ")
 
 
 def analyze(events):
@@ -65,18 +71,21 @@ def analyze(events):
     return result
 
 
-def run(binary,output):
+def run(binary,output,accurate=False,larger=False):
+    if larger and not accurate:raise ValueError("Larger prefill requires accurate mode")
     paths=[output,output.with_suffix(".raw.jsonl"),output.with_suffix(".stderr")]
     if any(p.exists() for p in paths):raise ValueError("prefill evidence destination exists")
-    source=ROOT/"models/Qwen2.5-0.5B-Instruct";packed=ROOT/"artifacts/m5-qwen-q4-v1"
-    if digest(source/"model.safetensors")!="fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe":raise ValueError("pinned source identity differs")
+    source=ROOT/"models"/("Qwen2.5-1.5B-Instruct" if larger else "Qwen2.5-0.5B-Instruct");packed=ROOT/"artifacts"/("m5-larger-q4-v1" if larger else "m5-qwen-q4-v1")
+    source_sha=LARGER_SOURCE_SHA if larger else SOURCE_SHA;config_sha=LARGER_CONFIG_SHA if larger else CONFIG_SHA
+    if digest(source/"model.safetensors")!=source_sha:raise ValueError("pinned source identity differs")
     files=[Path(__file__),Path(metal_engine.__file__),Path(native_usage.__file__),ROOT/"Cargo.toml",ROOT/"Cargo.lock",ROOT/"examples/metal_prefill.rs",source/"config.json",source/"model.safetensors",binary,
            ROOT/"benchmarks/contract-v1/prompt_512.u32le"]+list((ROOT/"src").rglob("*.rs"))+list((ROOT/"src").rglob("*.metal"))+[Path(continuation.__file__)]
     files+=list(packed.glob("*.q4"))+[packed/"manifest.json"]
     identities={str(p):digest(p) for p in files}
-    if identities[str(source/"model.safetensors")]!=SOURCE_SHA or identities[str(source/"config.json")]!=CONFIG_SHA:raise ValueError("Initial pinned prefill source/config changed")
+    if identities[str(source/"model.safetensors")]!=source_sha or identities[str(source/"config.json")]!=config_sha:raise ValueError("Initial pinned prefill source/config changed")
+    if larger and identities[str(packed/"manifest.json")]!=LARGER_PACKED_SHA:raise ValueError("Frozen larger Q4 artifact changed")
     result={"format":"toklet-metal-q4-prefill-v1","passed":False,"scope":"Paired opt-in Q4 tile warm512-input/one-output engine TTFT; no full decode workload,heldout quality,external lead or release acceptance",
-            "revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=ROOT,text=True).strip(),"identities":identities,"events":[],"idle_usage":[],
+            "accurate":accurate,"larger":larger,"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=ROOT,text=True).strip(),"identities":identities,"events":[],"idle_usage":[],
             "platform":observation(["/usr/bin/sw_vers"]),"power_before":endpoints(),
             "compiler":observation(["rustc","-Vv"]),
             "build":{"command":"CARGO_TARGET_DIR=artifacts/m5-checks cargo build --offline --release --features metal --example metal_prefill",
@@ -85,10 +94,13 @@ def run(binary,output):
     child=None;transport=None
     with paths[0].open("x") as summary,paths[1].open("x") as raw,paths[2].open("xb") as stderr:
         try:
-            child=subprocess.Popen([str(binary),str(source),str(packed),str(ROOT/"benchmarks/contract-v1")],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
+            command=[str(binary),str(source),str(packed),str(ROOT/"benchmarks/contract-v1")]
+            if accurate:command.append("accurate")
+            if larger:command.append("larger")
+            child=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
             transport=metal_engine.Transport(child,raw,stderr,request_timeout=120,lifetime_timeout=1200)
             result["transport_policy"]={"request_seconds":120,"lifetime_seconds":1200}
-            admission=transport.read();ready(admission);result["ready"]=admission
+            admission=transport.read();ready(admission,accurate,larger);result["ready"]=admission
             def proceed():child.stdin.write(b"continue\n");child.stdin.flush()
             def usage(phase):
                 value=native_usage.usage(child.pid);driver=native_usage.usage()
@@ -133,4 +145,6 @@ def run(binary,output):
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--binary",type=Path,required=True);parser.add_argument("--output",type=Path,required=True)
-    args=parser.parse_args();run(args.binary.resolve(),args.output.resolve())
+    parser.add_argument("--accurate",action="store_true",help="compare compensated projection with its eight-row tile, requiring identical logit bits")
+    parser.add_argument("--larger",action="store_true",help="use the fixed larger checkpoint; requires --accurate")
+    args=parser.parse_args();run(args.binary.resolve(),args.output.resolve(),args.accurate,args.larger)

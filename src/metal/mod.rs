@@ -186,6 +186,12 @@ impl Model {
     pub fn q4_compensated_execution_width(&self) -> usize {
         self.gpu.execution_width(Kernel::Q4Compensated)
     }
+    pub fn q4_compensated_execution_widths(&self) -> [usize; 2] {
+        [
+            self.gpu.execution_width(Kernel::Q4Compensated),
+            self.gpu.execution_width(Kernel::Q4CompensatedPrefill),
+        ]
+    }
     pub fn device_name(&self) -> String {
         self.gpu.device.name().to_string()
     }
@@ -411,6 +417,9 @@ pub enum ProjectionMode {
     /// preserving Half rounding and unchanged Q4 reconstruction. Expanded tiny
     /// gates pass; larger Q4 and held-out quality remain unqualified.
     Q4Compensated,
+    /// Experimental eight-row reuse of the compensated projection. Single
+    /// rows and small chunks use Q4Compensated; quality remains unqualified.
+    Q4CompensatedTiled,
 }
 /// Select the RMS reduction once per operation. Original remains the default.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize)]
@@ -1287,12 +1296,22 @@ fn project(
         if offset != 0 || !row_bytes.is_multiple_of(2) {
             return Err(Error::Options("Q4 input view offset/stride unsupported"));
         }
-        let tiled = mode == ProjectionMode::Q4Tiled && n >= 8;
+        let tiled = matches!(
+            mode,
+            ProjectionMode::Q4Tiled | ProjectionMode::Q4CompensatedTiled
+        ) && n >= 8;
         return g.encode(
             c,
             if tiled {
-                Kernel::Q4Prefill
-            } else if mode == ProjectionMode::Q4Compensated {
+                if mode == ProjectionMode::Q4CompensatedTiled {
+                    Kernel::Q4CompensatedPrefill
+                } else {
+                    Kernel::Q4Prefill
+                }
+            } else if matches!(
+                mode,
+                ProjectionMode::Q4Compensated | ProjectionMode::Q4CompensatedTiled
+            ) {
                 Kernel::Q4Compensated
             } else {
                 Kernel::Q4Matvec
@@ -1749,7 +1768,12 @@ mod tests {
                             }
                         }
                     });
-                    for kernel in [Kernel::Q4Matvec, Kernel::Q4Prefill, Kernel::Q4Compensated] {
+                    for kernel in [
+                        Kernel::Q4Matvec,
+                        Kernel::Q4Prefill,
+                        Kernel::Q4Compensated,
+                        Kernel::Q4CompensatedPrefill,
+                    ] {
                         output.with_mut(|values| values.fill(0x7bff));
                         status.with_mut(|values| values.fill(0));
                         let raw = gpu.command().unwrap();
@@ -1762,7 +1786,7 @@ mod tests {
                             kernel,
                             &[&weight.raw, &bias.raw, &input.raw, &output.raw],
                             &[rows as u32, 65, 2, 128, 72, 8],
-                            if matches!(kernel, Kernel::Q4Prefill) {
+                            if matches!(kernel, Kernel::Q4Prefill | Kernel::Q4CompensatedPrefill) {
                                 rows.div_ceil(8) * 2
                             } else {
                                 rows * 2
@@ -1811,7 +1835,11 @@ mod tests {
                 }
             });
             bias.with_mut(|values| values.fill(0));
-            for kernel in [Kernel::Q4Prefill, Kernel::Q4Compensated] {
+            for kernel in [
+                Kernel::Q4Prefill,
+                Kernel::Q4Compensated,
+                Kernel::Q4CompensatedPrefill,
+            ] {
                 status.with_mut(|values| values.fill(0));
                 output.with_mut(|values| values.fill(0x7bff));
                 let raw = gpu.command().unwrap();
@@ -1824,7 +1852,7 @@ mod tests {
                     kernel,
                     &[&weight.raw, &bias.raw, &input.raw, &output.raw],
                     &[9, 65, 2, 128, 72, 8],
-                    if matches!(kernel, Kernel::Q4Prefill) {
+                    if matches!(kernel, Kernel::Q4Prefill | Kernel::Q4CompensatedPrefill) {
                         4
                     } else {
                         18
@@ -2004,36 +2032,39 @@ mod tests {
                         if want != half::f16::from_f32(expected as f32) {
                             double_rounding_cases += 1;
                         }
-                        output.with_mut(|v| v.fill(0x7bff));
-                        status.with_mut(|v| v.fill(0));
-                        let raw = gpu.command().unwrap();
-                        let command = Command {
-                            raw: &raw,
-                            trace: None,
-                        };
-                        gpu.encode(
-                            &command,
-                            Kernel::Q4Compensated,
-                            &[&weight.raw, &bias.raw, &input.raw, &output.raw],
-                            &[1, 65, 2, 128, 72, 8],
-                            2,
-                            Some(&status),
-                        )
-                        .unwrap();
-                        raw.commit();
-                        raw.waitUntilCompleted();
-                        assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
-                        assert_eq!(status.with_slice(|v| v[0]), u32::from(!want.is_finite()));
-                        output.with_slice(|v| {
-                            for &actual in &v[..2] {
-                                assert_eq!(
-                                    actual,
-                                    want.to_bits(),
-                                    "lower{lower:x} sign{sign} side{side} exact{expected}"
-                                );
-                            }
-                            assert!(v[2..].iter().all(|&v| v == 0x7bff));
-                        });
+                        for kernel in [Kernel::Q4Compensated, Kernel::Q4CompensatedPrefill] {
+                            output.with_mut(|v| v.fill(0x7bff));
+                            status.with_mut(|v| v.fill(0));
+                            let raw = gpu.command().unwrap();
+                            let command = Command {
+                                raw: &raw,
+                                trace: None,
+                            };
+                            gpu.encode(
+                                &command,
+                                kernel,
+                                &[&weight.raw, &bias.raw, &input.raw, &output.raw],
+                                &[1, 65, 2, 128, 72, 8],
+                                2,
+                                Some(&status),
+                            )
+                            .unwrap();
+                            raw.commit();
+                            raw.waitUntilCompleted();
+                            assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                            assert_eq!(status.with_slice(|v| v[0]), u32::from(!want.is_finite()));
+                            output.with_slice(|v| {
+                                for &actual in &v[..2] {
+                                    assert_eq!(
+                                        actual,
+                                        want.to_bits(),
+                                        "kernel{} lower{lower:x} sign{sign} side{side} exact{expected}",
+                                        kernel.name()
+                                    );
+                                }
+                                assert!(v[2..].iter().all(|&v| v == 0x7bff));
+                            });
+                        }
                         cases += 1;
                     }
                 }

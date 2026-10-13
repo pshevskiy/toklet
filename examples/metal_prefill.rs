@@ -59,13 +59,28 @@ mod apple {
         let source = PathBuf::from(args.next().ok_or("missing model path")?);
         let packed = args.next().ok_or("missing packed path or -")?;
         let contract = PathBuf::from(args.next().ok_or("missing contract path")?);
+        let accurate = match args.next() {
+            None => false,
+            Some(v) if v == "accurate" => true,
+            _ => return Err("optional prefill mode must be accurate".into()),
+        };
+        let larger = match args.next() {
+            None => false,
+            Some(v) if v == "larger" => true,
+            _ => return Err("optional prefill geometry must be larger".into()),
+        };
+        if larger && !accurate {
+            return Err("larger Q4 prefill requires accurate mode".into());
+        }
         if args.next().is_some() {
             return Err("too many prefill arguments".into());
         }
         let model =
             metal::Model::load_q4(&source, Path::new(&packed), weights::LoadOptions::default())?;
-        if model.config().hidden_size != 896 || model.config().num_layers != 24 {
-            return Err("named Qwen0.5B prefill geometry required".into());
+        if model.config().hidden_size != if larger { 1536 } else { 896 }
+            || model.config().num_layers != if larger { 28 } else { 24 }
+        {
+            return Err("selected frozen Qwen prefill geometry required".into());
         }
         let base = ids(
             &contract.join("prompt_512.u32le"),
@@ -78,17 +93,39 @@ mod apple {
             memory_limit_bytes: budget,
             ..Default::default()
         };
-        let mut baseline = metal::Session::new(&model, options)?;
+        let projection_modes = if accurate {
+            [
+                metal::ProjectionMode::Q4Compensated,
+                metal::ProjectionMode::Q4CompensatedTiled,
+            ]
+        } else {
+            [
+                metal::ProjectionMode::Original,
+                metal::ProjectionMode::Q4Tiled,
+            ]
+        };
+        let normalization = if accurate {
+            metal::NormalizationMode::Compensated
+        } else {
+            metal::NormalizationMode::Original
+        };
+        let mut baseline = metal::Session::with_execution_modes(
+            &model,
+            options,
+            projection_modes[0],
+            normalization,
+        )?;
         let remaining = budget
             .checked_sub(baseline.memory().admitted_bytes - model.weights_bytes())
             .ok_or("shared model admission overflow")?;
-        let mut reused = metal::Session::with_projection_mode(
+        let mut reused = metal::Session::with_execution_modes(
             &model,
             session::Options {
                 memory_limit_bytes: remaining,
                 ..options
             },
-            metal::ProjectionMode::Q4Tiled,
+            projection_modes[1],
+            normalization,
         )?;
         let combined = baseline
             .memory()
@@ -108,8 +145,9 @@ mod apple {
         writeln!(
             out,
             "{}",
-            json!({"event":"ready","format":"toklet-metal-q4-prefill-v1","projection_modes":["Original","Q4Tiled"],
-            "device":model.device_name(),"q4_execution_widths":model.q4_execution_widths(),"debug_assertions":cfg!(debug_assertions),"warmups":3,"samples":10,"prompt_tokens":512,"output_tokens":1,
+            json!({"event":"ready","format":"toklet-metal-q4-prefill-v1","projection_modes":projection_modes,
+            "normalization_mode":normalization,"requires_logit_bits":accurate,"hidden_size":model.config().hidden_size,"num_layers":model.config().num_layers,
+            "device":model.device_name(),"q4_execution_widths":if accurate {model.q4_compensated_execution_widths()}else{model.q4_execution_widths()},"debug_assertions":cfg!(debug_assertions),"warmups":3,"samples":10,"prompt_tokens":512,"output_tokens":1,
             "capacity":1024,"chunk":128,"combined_admitted_bytes":combined,"original_memory":baseline.memory(),"tiled_memory":reused.memory(),
             "application_bytes":APP,"load_seconds":model.load_timing.load_seconds,"numerical_gate":{"atol":atol,"rtol":rtol}})
         )?;
@@ -143,7 +181,9 @@ mod apple {
                 return Err("paired prefill vocabulary differs".into());
             }
             let mut maximum = 0f64;
+            let mut bits_equal = true;
             for (&want, &actual) in left.iter().zip(right) {
+                bits_equal &= want.to_bits() == actual.to_bits();
                 let delta = (f64::from(want) - f64::from(actual)).abs();
                 maximum = maximum.max(delta);
                 if !actual.is_finite()
@@ -156,11 +196,14 @@ mod apple {
                     .into());
                 }
             }
+            if accurate && !bits_equal {
+                return Err("accurate tiled prefill changes logit bits".into());
+            }
             writeln!(
                 out,
                 "{}",
                 json!({"event":"sample","run":run,"order":if run%2==0 {"original_first"}else{"tiled_first"},
-                "original_report":a.0,"tiled_report":b.0,"greedy_id":a.1,"max_logit_delta":maximum,
+                "original_report":a.0,"tiled_report":b.0,"greedy_id":a.1,"max_logit_delta":maximum,"logit_bits_equal":bits_equal,
                 "original_timing":baseline.timing(),"tiled_timing":reused.timing(),"original_memory":baseline.memory(),"tiled_memory":reused.memory()})
             )?;
             out.flush()?;

@@ -32,6 +32,24 @@ def fixture():
 
 
 class Prefill(unittest.TestCase):
+    def test_accurate_modes_geometry_widths_and_exact_logits_are_required(self):
+        for larger in (False,True):
+            admission,events=fixture()
+            admission.update(projection_modes=["Q4Compensated","Q4CompensatedTiled"],normalization_mode="Compensated",
+                             requires_logit_bits=True,hidden_size=1536 if larger else 896,num_layers=28 if larger else 24)
+            mp.ready(admission,accurate=True,larger=larger)
+            events[0]["logit_bits_equal"]=True;mp.sample(events[0],0,admission)
+            for key,value in (("normalization_mode","Original"),("requires_logit_bits",1),("hidden_size",32),
+                              ("num_layers",2),("q4_execution_widths",[32,16])):
+                changed=copy.deepcopy(admission);changed[key]=value
+                with self.subTest(larger=larger,key=key),self.assertRaises(ValueError):mp.ready(changed,True,larger)
+            for value in (None,False,1):
+                changed=copy.deepcopy(events[0]);changed["logit_bits_equal"]=value
+                with self.assertRaisesRegex(ValueError,"logit bits"):mp.sample(changed,0,admission)
+    def test_larger_requires_accurate_before_launch(self):
+        with patch.object(mp.subprocess,"Popen") as launch:
+            with self.assertRaisesRegex(ValueError,"requires accurate"):mp.run(Path("binary"),Path("output"),larger=True)
+            launch.assert_not_called()
     def test_complete_pairs_exclude_three_warmups_and_keep_dispersion(self):
         ready,events=fixture();mp.ready(ready)
         for i,event in enumerate(events):mp.sample(event,i,ready)

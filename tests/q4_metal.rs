@@ -514,6 +514,16 @@ fn compensated_q4_and_rms_match_expanded_independent_oracle() {
 }
 
 #[test]
+#[ignore = "Explicit accurate eight-row Q4 tile against unchanged expanded independent decoder gates"]
+fn compensated_tiled_q4_and_rms_match_expanded_independent_oracle() {
+    check_tiny_oracle_modes(
+        "q4-tiny-prefill-v1",
+        metal::ProjectionMode::Q4CompensatedTiled,
+        metal::NormalizationMode::Compensated,
+    );
+}
+
+#[test]
 #[ignore = "Explicit bounded numerical investigation; captures data, does not qualify decoder parity"]
 fn capture_compensated_offset_stages_for_investigation() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -585,6 +595,27 @@ fn capture_compensated_offset_stages_for_investigation() {
 #[test]
 #[ignore = "explicit Apple GPU tile refinement; expanded independent oracle remains a separate gate"]
 fn tiled_q4_prefill_preserves_every_original_stage_bit() {
+    check_tiny_refinement(
+        metal::ProjectionMode::Original,
+        metal::ProjectionMode::Q4Tiled,
+        metal::NormalizationMode::Original,
+    );
+}
+
+#[test]
+#[ignore = "Explicit accurate Q4 tile preserves every compensated decoder stage bit"]
+fn compensated_tiled_q4_preserves_every_compensated_stage_bit() {
+    check_tiny_refinement(
+        metal::ProjectionMode::Q4Compensated,
+        metal::ProjectionMode::Q4CompensatedTiled,
+        metal::NormalizationMode::Compensated,
+    );
+}
+fn check_tiny_refinement(
+    original_mode: metal::ProjectionMode,
+    tiled_mode: metal::ProjectionMode,
+    normalization: metal::NormalizationMode,
+) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let reference = manifest(&root.join("tests/fixtures/q4-tiny-prefill-v1"));
     assert_eq!(
@@ -605,7 +636,11 @@ fn tiled_q4_prefill_preserves_every_original_stage_bit() {
     .unwrap();
     // Bit preservation is qualified on the measured device's equal queried
     // widths. This is not a full-graph independent numerical acceptance.
-    let widths = model.q4_execution_widths();
+    let widths = if original_mode == metal::ProjectionMode::Original {
+        model.q4_execution_widths()
+    } else {
+        model.q4_compensated_execution_widths()
+    };
     assert_eq!(widths[0], widths[1]);
     let mut compared = 0;
     for (case, spec) in reference["cases"].as_object().unwrap() {
@@ -631,13 +666,12 @@ fn tiled_q4_prefill_preserves_every_original_stage_bit() {
                 position_offset: offset,
                 ..Default::default()
             };
-            let mut original = metal::Session::new(&model, options).unwrap();
-            let mut tiled = metal::Session::with_projection_mode(
-                &model,
-                options,
-                metal::ProjectionMode::Q4Tiled,
-            )
-            .unwrap();
+            let mut original =
+                metal::Session::with_execution_modes(&model, options, original_mode, normalization)
+                    .unwrap();
+            let mut tiled =
+                metal::Session::with_execution_modes(&model, options, tiled_mode, normalization)
+                    .unwrap();
             for session in [&mut original, &mut tiled] {
                 session.enable_diagnostics(&[0, 1]).unwrap();
                 session.set_tokens(&tokens).unwrap();
@@ -709,7 +743,7 @@ fn tiled_q4_prefill_preserves_every_original_stage_bit() {
     }
     assert_eq!(compared, 4550);
     println!(
-        "Experimental tile refinement: {compared} complete stage arrays preserve bits; queried widths {widths:?}. Expanded independent decoder gate remains unqualified."
+        "Experimental {original_mode:?}/{tiled_mode:?} refinement: {compared} complete stage arrays preserve bits; queried widths {widths:?}. Independent and quality gates are separate."
     );
 }
 fn check_tiny_oracle(fixture: &str, mode: metal::ProjectionMode) {
