@@ -1,0 +1,45 @@
+import copy,hashlib,json,sys,struct
+from pathlib import Path
+ROOT=Path.cwd().resolve();sys.path.insert(0,str(ROOT/'tools/experiments'))
+import rust_metal_qwen_rotary as q
+probe=q.probe
+read=lambda p:json.loads(Path(p).read_text())
+def sha(p):
+ with Path(p).open('rb')as f:return hashlib.file_digest(f,'sha256').hexdigest()
+base='2026-10-13-rust-metal-qwen-rotary-v1';record_path=ROOT/f'benchmarks/results/{base}.json';raw_path=ROOT/f'benchmarks/raw/{base}.json.native.jsonl';idle_path=ROOT/'benchmarks/results/2026-10-13-rust-metal-qwen-rotary-idle-v1.json';stderr=ROOT/f'benchmarks/results/{base}.json.stderr.txt';r=read(record_path);idle=read(idle_path);build=ROOT/'artifacts/rust-metal-qwen-rotary-v1'
+assert r['completed']and idle['all_recorded_processes_absent']and idle['machine']['State']=='stopped'and idle['native_session_exit_code']==0
+for field in('archive_sha256','protected_sha256'):
+ for name,h in idle[field].items():assert sha(ROOT/name)==h
+assert sha(raw_path)==r['native_raw_sha256']and sha(stderr)==r['stderr_sha256']
+for name,h in r['source_sha256'].items():
+ p=ROOT/name;target=build/('Cargo.toml'if name.endswith('.Cargo.toml')else'Cargo.lock'if name.endswith('.lock')else'src/main.rs'if name.endswith('rust_metal_probe.rs')else'src/'+p.name);assert sha(p)==sha(target)==h
+for field in('input_sha256','qualification_driver_sha256'):
+ for name,h in r['extra_context'][field].items():assert sha(name)==h
+assert sha(build/'target/aarch64-apple-darwin/release/toklet-rust-metal-probe')==r['binary_sha256']
+assert len(r['checks'])==18 and 'test result: ok. 42 passed; 0 failed'in next(c['stdout']for c in r['checks']if'test'in c['command'])
+inputs,a=q.cases();ti,ta,_=q.rotary.cases();fi,fa=q.front.cases();di,da,_=q.front.qp.decoder.cases();directory=ROOT/'artifacts/rust-metal-qwen-rotary-inputs-v1';prior=read('benchmarks/results/2026-10-13-rust-metal-qwen-front-v2.json')
+validators={f'qwen_{i+1}':lambda e,c=c:q.validate(e,c,a[c['id']])for i,c in enumerate(inputs)};validators.update({'tiny_rotary':lambda e:q.rotary.validate(e,ti,ta),'rotary_overflow':q.rotary.overflow_rejected})
+for i,c in enumerate(fi):
+ item=read(directory/f'front_{i+1}.json');anchor={**fa[c['id']],'norm_weight_sha256':prior['extra_context']['weights']['model.layers.0.input_layernorm.weight']['half_sha256']};validators[f'front_{i+1}']=lambda e,c=item,a=anchor:q.front.validate(e,c,a)
+validators.update({f'decoder_{i+1}':lambda e,c=c:q.front.qp.decoder.validate(e,c,da[c['id']])for i,c in enumerate(di)})
+raw=[json.loads(line)for line in raw_path.read_text().splitlines()];runs=r['native_runs'];assert len(raw)==len(runs)==27
+commands={};peak=0
+for e,run in zip(raw,runs):
+ replay=copy.deepcopy(e);probe.validate_run(run['mode'],{**run,'event':replay},validators.get(run['mode']));assert replay==run['event']and not run['watchdog_killed']and 0<run['physical_process_charge_peak_bytes']<=probe.LIMIT
+ peak=max(peak,run['physical_process_charge_peak_bytes']);commands[run['mode']]=len(e.get('result',{}).get('rows',[]))+sum(len(c['rows'])for c in e.get('result',{}).get('cases',[]))
+assert sum(commands.values())==598
+stages={op:{'first_values':0,'equal_frozen_half':0,'max_gate_fraction':0.}for op in('q','k','manual')};outputs=guards=0
+for i,c in enumerate(inputs):
+ case=raw[3+i]['result']['cases'][0];n=c['rows']*c['heads']*64;op=c['id'].split('.')[-1][0]if i<8 else'manual';s=stages[op];first=case['rows'][0]['output_bits'][:n];s['first_values']+=n;s['equal_frozen_half']+=sum(x==y for x,y in zip(first,a[c['id']]['bits']))
+ for rr,comp in zip(case['rows'],runs[3+i]['event']['result']['cases'][0]['rows']):
+  assert rr['output_bits'][:n]==first and rr['output_bits'][n:]==[q.rotary.GUARD]*case['guards'];outputs+=n;guards+=case['guards'];s['max_gate_fraction']=max(s['max_gate_fraction'],comp['qualification']['against_source_fp32_max_gate_fraction'])
+ if i==8:assert first==c['input_bits']
+previous=[json.loads(line)for line in Path('benchmarks/raw/2026-10-13-rust-metal-qwen-front-v2.json.native.jsonl').read_text().splitlines()]
+for i in range(4):
+ for key in('first_half_intermediates','first_fp32_intermediates'):assert raw[14+i]['result'][key]==previous[3+i]['result'][key]
+for i in range(9):
+ for key in('first_layers','first_embedding_bits','first_normalized_bits','first_logits_bits'):assert raw[18+i]['result'][key]==previous[22+i]['result'][key]
+summary={'stages':stages,'qwen_and_manual_commands':117,'all_repeated_active_half_values':outputs,'all_repeated_guard_words':guards,'all_positive_commands':598,'negative_jobs':3,'max_own_child_peak_bytes':peak,'max_rotary_admission_bytes':max(raw[3+i]['result']['cases'][0]['admitted_bytes']for i in range(9)),'front_and_full_tiny_frames_match_prior':True,'binary_sha256':r['binary_sha256'],'scope':'SavedQwenprojection→64dimrotary, exactposition0manual, unchangedoriginalgates; noQwenpropagatedrotary/cache/GQA/full-layer/decoder/session/performance/M4closure.'}
+result={'format':'toklet-qwen-rotary-analysis-v1','completed':True,'records_sha256':{str(p.relative_to(ROOT)):sha(p)for p in(record_path,raw_path,stderr,idle_path)},'summary':summary}
+with Path(sys.argv[1]).open('x')as f:f.write(json.dumps(result,indent=2)+'\n')
+print(json.dumps(summary,indent=2))

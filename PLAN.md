@@ -1224,6 +1224,18 @@ Astra accepted the complete code and evidence with no remaining findings.
 Qwenrotary/cache/GQA/full-layer/decoder/session/quality/performance/trace and
 M4closure remain pending.
 
+Qwen rotary64 preparation, 13 October 2026 (M4 pending): the
+[bounded split-half primitive](docs/experiments/2026-10-13-rust-metal-qwen-rotary.md)
+uses14Q/twoKVheads and64dimensions under unchanged gates. Eight saved stages
+plus exactposition0manual pass117commands/161,408Halfvalues/819guards.
+Q10,749/10,752,K1,536/1,536Halfexact; gatefractions≤0.453451. Tiny/front/fulltiny
+regressions give598positivecommands/threenegatives, preceding graphframesexact.
+18buildchecks42standaloneRust115experimentPython193benchmarkPython76rootRust+
+fmt/Clippy pass. Admission67,144,774bytes/own-child peak17,334,896bytes;
+identities, idle, raw replay and guards retained. Astra accepted code and
+complete evidence after independent replay. ActualQwenpropagation and
+rootMetal residentbackend/session/trace remain pending; M4 stays open.
+
 - [ ] **M4.1 Establish the Apple backend.** Qualify the Xcode/Metal toolchain, deployment target, device capability checks, buffer ownership, and command completion. Use a small `objc2`/`objc2-metal` boundary, following the [metal-rs migration recommendation](https://github.com/gfx-rs/metal-rs). Add a minimal kernel dispatch and CPU-versus-GPU comparison before porting the model.
 - [ ] **M4.2 Port the forward pass in slices.** Implement embedding, projections, RMSNorm, rotary/cache writes, causal GQA, gated MLP, residuals, final normalization, and output projection. Begin with one layer and then the full tiny model, followed by Qwen. Qualify reduction accumulation and FP16 ranges using intermediate checks. CPU greedy sampling is acceptable initially.
 - [ ] **M4.3 Keep model and session buffers resident.** Preallocate scratch for admitted shapes; cache pipeline objects. Load FP16 buffers without retaining an unnecessary full FP32 copy. Run CPU/GPU comparisons in separate processes when needed to respect peak memory. Introduce the narrow backend interface here.
@@ -1317,4 +1329,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: qualify Qwen split-half rotary at head dimension64 for14 query heads and two KV heads.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. The next action is a bounded M4.2 qualification task: implement the root Metal backend with qualified numerical mechanisms, streamed Half weights and resident transactional sessions.

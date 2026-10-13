@@ -11,8 +11,8 @@ import rust_metal_rotary as rotary
 def fixture(inputs,anchors):
     cases=[]
     for item in inputs:
-        count=item['rows']*item['heads']*8;rounded=math.ceil(count/2/32)*64;guards=rounded-count+7;size=(rounded+7)*2
-        cases.append({'id':item['id'],'rows_count':item['rows'],'heads':item['heads'],'dimension':8,'theta':1_000_000.0,
+        count=item['rows']*item['heads']*item['dimension'];rounded=math.ceil(count/2/32)*64;guards=rounded-count+7;size=(rounded+7)*2
+        cases.append({'id':item['id'],'rows_count':item['rows'],'heads':item['heads'],'dimension':item['dimension'],'theta':1_000_000.0,
             'offset':item['offset'],'pairing':'split_half','guards':guards,'output_guard_bits':rotary.GUARD,
             'allocations_reused_across_repetitions':True,'threadgroup_width':32,'threadgroups':math.ceil(count/2/32),
             'shared_buffer_bytes':size*2,'host_input_and_readback_bytes':size*3,'admitted_bytes':size*5+rotary.rms.probe.ALLOWANCE,

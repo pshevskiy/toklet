@@ -10,6 +10,7 @@ struct Case {
     id: String,
     rows: usize,
     heads: usize,
+    dimension: usize,
     offset: usize,
     input: Vec<u16>,
 }
@@ -40,7 +41,8 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
     }
     let value: Value =
         serde_json::from_slice(&data).map_err(|e| error("fixture", e.to_string()))?;
-    if value["format"] != "toklet-metal-rotary-input-v1" {
+    let qwen = value["format"] == "toklet-metal-qwen-rotary-input-v1";
+    if !qwen && value["format"] != "toklet-metal-rotary-input-v1" {
         return Err(error("fixture", "rotary format differs"));
     }
     let sources = value["cases"]
@@ -62,16 +64,20 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
         let rows = scalar(source, "rows")?;
         let heads = scalar(source, "heads")?;
         let offset = scalar(source, "offset")?;
-        if !(1..=32).contains(&rows)
-            || !matches!(heads, 2 | 4)
+        let dimension = scalar(source, "dimension")?;
+        let supported = if qwen {
+            (1..=4).contains(&rows) && matches!(heads, 2 | 14) && dimension == 64
+        } else {
+            (1..=32).contains(&rows) && matches!(heads, 2 | 4) && dimension == 8
+        };
+        if !supported
             || offset.checked_add(rows).is_none_or(|end| end > 2048)
-            || source["dimension"].as_u64() != Some(8)
             || source["theta"].as_f64() != Some(1_000_000.0)
         {
             return Err(error("fixture", "rotary prototype shape outside bounds"));
         }
         let count = rows
-            .checked_mul(heads * 8)
+            .checked_mul(heads * dimension)
             .ok_or_else(|| error("admission", "rotary shape overflow"))?;
         elements = elements
             .checked_add(count)
@@ -101,6 +107,7 @@ fn load(path: &Path) -> Result<Vec<Case>, Error> {
             id: id.to_owned(),
             rows,
             heads,
+            dimension,
             offset,
             input,
         });
@@ -127,7 +134,7 @@ fn storage(count: usize, width: usize) -> Result<usize, Error> {
 fn admitted(case: &Case, limit: usize, width: usize) -> Result<usize, Error> {
     let count = case
         .rows
-        .checked_mul(case.heads * 8)
+        .checked_mul(case.heads * case.dimension)
         .ok_or_else(|| error("admission", "rotary shape overflow"))?;
     // Shared input/output, one host baseline, two diagnostic readbacks. Bounded
     // retained fixture/JSON/repetition records use the fixed runtime allowance.
@@ -142,7 +149,7 @@ fn admitted(case: &Case, limit: usize, width: usize) -> Result<usize, Error> {
 }
 fn execute(probe: &mut Probe, case: &Case, limit: usize) -> Result<Value, Error> {
     let budget = admitted(case, limit, probe.width)?;
-    let count = case.rows * case.heads * 8;
+    let count = case.rows * case.heads * case.dimension;
     let bytes = storage(count, probe.width)?;
     let launch = groups(count / 2, probe.width)?;
     let mut input = Shared::<u16>::new(&probe.device, bytes)?;
@@ -153,7 +160,7 @@ fn execute(probe: &mut Probe, case: &Case, limit: usize) -> Result<Value, Error>
     let shape = [
         case.rows as u32,
         case.heads as u32,
-        8u32,
+        case.dimension as u32,
         case.offset as u32,
     ];
     let mut repetitions = Vec::with_capacity(13);
@@ -193,7 +200,7 @@ fn execute(probe: &mut Probe, case: &Case, limit: usize) -> Result<Value, Error>
         })?);
     }
     Ok(
-        json!({"id":case.id,"rows_count":case.rows,"heads":case.heads,"dimension":8,"theta":1_000_000.0,"offset":case.offset,"pairing":"split_half","guards":bytes / 2 - count,"output_guard_bits":OUTPUT_GUARD,
+        json!({"id":case.id,"rows_count":case.rows,"heads":case.heads,"dimension":case.dimension,"theta":1_000_000.0,"offset":case.offset,"pairing":"split_half","guards":bytes / 2 - count,"output_guard_bits":OUTPUT_GUARD,
         "threadgroup_width":probe.width,"threadgroups":launch,"shared_buffer_bytes":bytes*2,"host_input_and_readback_bytes":bytes*3,
         "admitted_bytes":budget,"allocations_reused_across_repetitions":true,"rows":repetitions}),
     )
@@ -256,6 +263,20 @@ mod tests {
         json!({"format":"toklet-metal-rotary-input-v1","cases":[{"id":"manual","rows":1,"heads":2,"dimension":8,"theta":1_000_000.0,"offset":2047,"input_bits":vec![0x3c00u16;16]}]})
     }
     #[test]
+    fn qwen_profile_supports_only_qualified_heads_dimension_and_rows() {
+        let v = json!({"format":"toklet-metal-qwen-rotary-input-v1","cases":[{"id":"manual","rows":1,"heads":14,"dimension":64,"theta":1_000_000.0,"offset":0,"input_bits":vec![0x3c00u16;896]}]});
+        assert_eq!(load_value(&v).unwrap()[0].dimension, 64);
+        for (key, val) in [
+            ("heads", json!(4)),
+            ("rows", json!(5)),
+            ("dimension", json!(8)),
+        ] {
+            let mut v = v.clone();
+            v["cases"][0][key] = val;
+            assert!(load_value(&v).is_err());
+        }
+    }
+    #[test]
     fn parser_bounds_positions_pairing_topology_and_finite_bits() {
         assert_eq!(load_value(&sample()).unwrap()[0].offset, 2047);
         for (key, value) in [
@@ -304,6 +325,7 @@ mod tests {
             id: String::new(),
             rows: 1,
             heads: 2,
+            dimension: 8,
             offset: 0,
             input: vec![0; 23],
         };

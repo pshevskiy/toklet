@@ -2,7 +2,7 @@
 using namespace metal;
 #pragma clang fp contract(off)
 
-// Experimental tiny split-half layout [tokens, heads,8], theta1e6.
+// Experimental split-half layout [tokens, heads, dimension], theta1e6.
 // One lane owns a pair, with no in-place input/output aliasing. FP32 angles,
 // precise trigonometry and uncontracted FP32 products/sums precede Half stores.
 kernel void toklet_rotary(device const half* input [[buffer(0)]],

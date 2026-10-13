@@ -59,8 +59,8 @@ def validate(event,inputs,anchors):
             or [case["id"] for case in result["cases"]]!=[item["id"] for item in inputs]):
         raise ValueError("Native rotary policy/inventory differs")
     for case,item in zip(result["cases"],inputs):
-        count=item["rows"]*item["heads"]*8;width=case["threadgroup_width"];rounded=math.ceil((count//2)/width)*width*2;guards=rounded-count+7;size=(rounded+7)*2
-        if (case["rows_count"]!=item["rows"] or case["heads"]!=item["heads"] or case["dimension"]!=8 or case["theta"]!=1_000_000.0 or case["offset"]!=item["offset"] or case["pairing"]!="split_half" or case["guards"]!=guards
+        count=item["rows"]*item["heads"]*item["dimension"];width=case["threadgroup_width"];rounded=math.ceil((count//2)/width)*width*2;guards=rounded-count+7;size=(rounded+7)*2
+        if (case["rows_count"]!=item["rows"] or case["heads"]!=item["heads"] or case["dimension"]!=item["dimension"] or case["theta"]!=1_000_000.0 or case["offset"]!=item["offset"] or case["pairing"]!="split_half" or case["guards"]!=guards
                 or case["output_guard_bits"]!=GUARD or case["allocations_reused_across_repetitions"] is not True
                 or len(case["rows"])!=13 or not 0<width<=min(metadata["execution_width"],metadata["pipeline_max_threads"],metadata["device_max_threads"][0])
                 or case["threadgroups"]!=math.ceil((count//2)/width) or case["shared_buffer_bytes"]!=size*2

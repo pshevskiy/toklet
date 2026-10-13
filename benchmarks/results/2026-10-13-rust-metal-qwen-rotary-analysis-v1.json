@@ -1,0 +1,39 @@
+{
+  "format": "toklet-qwen-rotary-analysis-v1",
+  "completed": true,
+  "records_sha256": {
+    "benchmarks/results/2026-10-13-rust-metal-qwen-rotary-v1.json": "9c98fc6fe7e69fdeaf7ad63735f0156f593be78bade40d459eb5de29165a00ac",
+    "benchmarks/raw/2026-10-13-rust-metal-qwen-rotary-v1.json.native.jsonl": "6494db887380adec09f69b537634757b0e27140f879f9c09349ec2cc97f1e541",
+    "benchmarks/results/2026-10-13-rust-metal-qwen-rotary-v1.json.stderr.txt": "6049d5d7d712075dd58cf2ece40d2e3306e68a20595e794d0d12977fdee12870",
+    "benchmarks/results/2026-10-13-rust-metal-qwen-rotary-idle-v1.json": "10191ffe6a88c83fb52cd54ab7d120d7904d73a01c0b7a3b1e075bf139694132"
+  },
+  "summary": {
+    "stages": {
+      "q": {
+        "first_values": 10752,
+        "equal_frozen_half": 10749,
+        "max_gate_fraction": 0.4534508051957432
+      },
+      "k": {
+        "first_values": 1536,
+        "equal_frozen_half": 1536,
+        "max_gate_fraction": 0.4464452288287914
+      },
+      "manual": {
+        "first_values": 128,
+        "equal_frozen_half": 128,
+        "max_gate_fraction": 0.0
+      }
+    },
+    "qwen_and_manual_commands": 117,
+    "all_repeated_active_half_values": 161408,
+    "all_repeated_guard_words": 819,
+    "all_positive_commands": 598,
+    "negative_jobs": 3,
+    "max_own_child_peak_bytes": 17334896,
+    "max_rotary_admission_bytes": 67144774,
+    "front_and_full_tiny_frames_match_prior": true,
+    "binary_sha256": "65bc2c075470488b6196e452963c1509cffda3be3052bb60c3c254f776ee39cd",
+    "scope": "SavedQwenprojection\u219264dimrotary, exactposition0manual, unchangedoriginalgates; noQwenpropagatedrotary/cache/GQA/full-layer/decoder/session/performance/M4closure."
+  }
+}
