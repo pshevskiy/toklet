@@ -1,0 +1,65 @@
+"""Repeat only the frozen short primary workload; never label this a full matrix."""
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+ROOT=next(p for p in Path(__file__).resolve().parents if (p/'Cargo.toml').is_file() and (p/'tools/experiments').is_dir())
+sys.path.insert(0,str(ROOT/'tools/experiments'))
+import metal_controlled as ctl
+
+BASELINES={
+    'small':('2026-10-14-small-half-controlled-full-v1.json','abe4446dd0c2a9d4c86bec841c9b70070cf8d693784ca7aa976c1a61708357e9'),
+    'larger':('2026-10-14-larger-half-controlled-full-v1.json','f5064b6762dc30ca3036039d12f4e8a66511029b4fe31b215cee6151f0422fac'),
+}
+
+
+def run(model,output):
+    output=Path(output).resolve();paths=[output,output.with_suffix('.raw.jsonl'),output.with_suffix('.stderr')]
+    if any(p.exists() for p in paths):raise ValueError('Exclusive confirmation evidence exists')
+    name,expected=BASELINES[model];baseline_path=ROOT/'benchmarks/results'/name
+    with baseline_path.open('rb') as f:data=f.read(32*1024**2+1)
+    if len(data)>32*1024**2 or hashlib.sha256(data).hexdigest()!=expected:raise ValueError('Accepted full baseline differs')
+    baseline=json.loads(data)
+    if baseline['model']!=model or baseline['passed'] is not True or baseline['measurements_completed'] is not True or baseline['check_only'] is not False:raise ValueError('Full baseline scope differs')
+    identities=baseline['identities'].copy()
+    if any(ctl.metal_engine.digest(Path(p))!=digest for p,digest in identities.items()):raise ValueError('Accepted initial source/binary/input inventory differs')
+    manifest,arrays=ctl.contract();source=ROOT/'models'/ctl.MODELS[model][0]
+    ctl.initial_pins(identities,manifest,source,ctl.MODELS[model])
+    binary=Path(baseline['runs'][0]['command'][0]);identities[str(Path(__file__).resolve())]=ctl.metal_engine.digest(Path(__file__))
+    identities[str(baseline_path)]=expected
+    observe=ctl.metal_prefill.observation
+    observations={'compiler':observe(['rustc','--version']),'device':{
+        'name':observe(['/usr/sbin/sysctl','-n','hw.model']),'chip':observe(['/usr/sbin/sysctl','-n','machdep.cpu.brand_string']),
+        'physical_memory_bytes':int(observe(['/usr/sbin/sysctl','-n','hw.memsize'])),
+        'os_version':observe(['/usr/bin/sw_vers','-productVersion']),'os_build':observe(['/usr/bin/sw_vers','-buildVersion']),
+        'power_mode':observe(['/usr/bin/pmset','-g','batt'])+'\n'+observe(['/usr/bin/pmset','-g','custom']),
+        'thermal_conditions':observe(['/usr/bin/pmset','-g','therm'])}}
+    record={'format':'toklet-half-primary-confirmation-v1','passed':False,'measurements_completed':False,
+            'scope':'Second independent three-warmup/ten-sample short workload only; no full matrix, baseline speed adoption or Q4 release acceptance',
+            'hypothesis':'Fixed Half primary TTFT/request measurements reproduce beyond initial-run dispersion; no kernel/configuration change',
+            'primary_metric':'Warm TTFT,128input/128fixedoutput IDs; completed GPU work and full last-logits readback',
+            'model':model,'baseline':str(baseline_path),'baseline_sha256':expected,'identities':identities,
+            'revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+            'working_tree_dirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),
+            'observations':observations}
+    with paths[0].open('x') as summary,paths[1].open('x') as raw,paths[2].open('xb') as stderr:
+        try:
+            record['run']=ctl.worker(binary,source,model,'short',manifest,arrays,raw,stderr,False)
+            if not record['run']['passed']:raise ValueError('Owned primary worker failed')
+            record['result']=ctl.result(record['run'],model,manifest,observations,record['revision'],record['working_tree_dirty'])
+            record['passed']=record['measurements_completed']=True
+        except BaseException as error:record['error']=f'{type(error).__name__}: {error}'
+        finally:
+            record['endpoint_errors']=[];record['identities_unchanged']=False
+            try:record['identities_unchanged']=all(ctl.metal_engine.digest(Path(p))==digest for p,digest in identities.items())
+            except BaseException as error:record['endpoint_errors'].append(f'{type(error).__name__}: {error}')
+            try:record['power_after']=ctl.metal_prefill.endpoints()
+            except BaseException as error:record['endpoint_errors'].append(f'{type(error).__name__}: {error}')
+            if record['endpoint_errors'] or not record['identities_unchanged']:record['passed']=record['measurements_completed']=False
+            json.dump(record,summary,indent=2,allow_nan=False);summary.write('\n')
+    if not record['passed']:raise ValueError('Primary confirmation failed; retained evidence')
+
+
+if __name__=='__main__':run(sys.argv[1],sys.argv[2])

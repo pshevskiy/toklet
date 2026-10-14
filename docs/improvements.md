@@ -170,6 +170,14 @@ scenario sum reaches600s; no purebackend speed or extra10min claim. See the
 [full application report](experiments/2026-10-14-half-application-full.md). Final
 Astra accepts completed application evidence before commit; confirming/release/Q4 gates remain open.
 
+Independent fixed Half primary repeats now retain secondthreewarmup/tensample
+short128/128collections on bothmodels.26requests/30events replay; TTFTmedian
+changes+0.003433%/−0.168474% and requestchanges+0.087202%/+0.005098%. These are
+repeatability, not a new paired optimization gain. Complete states/memory/inputs/
+endpoints and clean exits pass; caller source/fivefailurechecks cleared. See the
+[primary confirmation report](experiments/2026-10-14-half-primary-confirm.md); final
+Astra accepts final data before commit, applicationconfirmation/release/Q4 gates open.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
