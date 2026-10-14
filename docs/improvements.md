@@ -109,6 +109,13 @@ replacement; nine targeted/all410 Python checks pass. Published short probes can
 be scored. This is admission only; no full task score or VM execution is claimed.
 [Admission report](experiments/2026-10-14-task-grading-admission.md).
 
+A separate backend-aware literal grading window now connects full qualified task
+collections to the unchanged executor. It preserves literal programs and unresolved
+outcomes, requires all three matched models to exit, checks fresh PID/group absence
+immediately before VM startup and owns stopped restoration.22 mocked/all432 Python
+checks pass; actual grading/window execution awaits full responses.
+[Window report](experiments/2026-10-14-task-grading-window.md).
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
