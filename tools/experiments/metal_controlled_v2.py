@@ -31,7 +31,10 @@ def ready(event,model):
         raise ValueError('V2 complete admission differs')
 
 
-def run(binary,output,check=False):
+def run(binary,output,check=False,*,workloads=None):
+    selected=tuple(shared.frozen.WORKLOADS) if workloads is None else tuple(workloads)
+    if not selected or len(set(selected))!=len(selected) or any(name not in shared.frozen.WORKLOADS for name in selected):
+        raise ValueError('Distinct frozen controlled workloads required')
     paths=[output,output.with_suffix('.raw.jsonl'),output.with_suffix('.stderr')]
     if any(p.exists() for p in paths):raise ValueError('Exclusive v2 controlled evidence exists')
     manifest,arrays=shared.contract();spec=shared.MODELS[MODEL];source=ROOT/'models'/spec[0];packed=ROOT/'artifacts/m5-larger-q4-v2'
@@ -57,13 +60,14 @@ def run(binary,output,check=False):
                   'power_mode':observation(['/usr/bin/pmset','-g','batt'])+'\n'+observation(['/usr/bin/pmset','-g','custom']),
                   'thermal_conditions':observation(['/usr/bin/pmset','-g','therm'])}}
     record={'format':'toklet-q4-v2-controlled-collection-v1','passed':False,'check_only':check,'measurements_completed':False,
-            'scope':'Frozen larger v2 eight controlled workloads; release quality, application and gain acceptance separate',
+            'scope':'Selected frozen larger v2 controlled workloads; release quality, application and gain acceptance separate',
+            'selected_workloads':list(selected),'full_matrix_completed':False,
             'model':MODEL,'revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'identities':identities,
             'working_tree_dirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),
             'observations':observations,'runs':[],'results':[]}
     with paths[0].open('x') as summary,paths[1].open('x') as raw,paths[2].open('xb') as stderr:
         try:
-            for name in shared.frozen.WORKLOADS:
+            for name in selected:
                 item=shared.worker(binary,source,MODEL,name,manifest,arrays,raw,stderr,check,admission_check=ready,extra_args=(str(packed),'q4-v2-tiled'))
                 record['runs'].append(item)
                 if not item['passed']:raise ValueError(f'V2 controlled {name} failed')
@@ -73,7 +77,7 @@ def run(binary,output,check=False):
                     record['results'].append(shared.result(item,MODEL,manifest,observations,record['revision'],record['working_tree_dirty'],
                                             representation={'weight_dtype':'Q4','kv_dtype':'FP16','packed_format_version':2,'group_size':8},
                                             runtime='Toklet Q4 v2 CompensatedTiled Metal',execution_note=note))
-            record.update(passed=True,measurements_completed=not check)
+            record.update(passed=True,measurements_completed=not check,full_matrix_completed=not check and selected==tuple(shared.frozen.WORKLOADS))
         except BaseException as error:record['error']=f'{type(error).__name__}: {error}'
         finally:
             record['endpoint_errors']=[]
@@ -81,7 +85,7 @@ def run(binary,output,check=False):
             except BaseException as error:record['identities_unchanged']=False;record['endpoint_errors'].append(str(error))
             try:record['power_after']=shared.metal_prefill.endpoints()
             except BaseException as error:record['endpoint_errors'].append(str(error))
-            if not record['identities_unchanged'] or record['endpoint_errors']:record.update(passed=False,measurements_completed=False)
+            if not record['identities_unchanged'] or record['endpoint_errors']:record.update(passed=False,measurements_completed=False,full_matrix_completed=False)
             json.dump(record,summary,indent=2,allow_nan=False);summary.write('\n')
     if not record['passed']:raise ValueError('V2 controlled collection failed; see retained evidence')
     return record
@@ -89,5 +93,5 @@ def run(binary,output,check=False):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--binary',type=Path,required=True)
-    parser.add_argument('--output',type=Path,required=True);parser.add_argument('--check',action='store_true')
-    args=parser.parse_args();run(args.binary.resolve(),args.output.resolve(),args.check)
+    parser.add_argument('--output',type=Path,required=True);parser.add_argument('--check',action='store_true');parser.add_argument('--workload',choices=tuple(shared.frozen.WORKLOADS),action='append')
+    args=parser.parse_args();run(args.binary.resolve(),args.output.resolve(),args.check,workloads=args.workload)

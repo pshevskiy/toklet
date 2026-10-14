@@ -73,4 +73,39 @@ class V2Controlled(unittest.TestCase):
                     with self.subTest(replaced=replaced),self.assertRaisesRegex(ValueError,'Initial v2'):v2.run(binary,Path(directory)/'out.json',True)
                 worker.assert_not_called()
 
+class SelectedWorkloads(unittest.TestCase):
+    def test_invalid_empty_duplicate_or_unknown_selection_rejects_before_inputs(self):
+        for workloads in ([],['short','short'],['unknown'],['short','unknown']):
+            with patch.object(v2.shared,'contract') as contract,patch.object(v2.shared,'worker') as worker:
+                with self.subTest(workloads=workloads),self.assertRaisesRegex(ValueError,'Distinct frozen'):v2.run(Path('binary'),Path('output'),workloads=workloads)
+                contract.assert_not_called();worker.assert_not_called()
+
+    def invoke(self,workloads):
+        legacy=fixtures.Controlled();legacy.setUpClass();spec=v2.shared.MODELS['larger'];source=v2.ROOT/'models'/spec[0]
+        geometry={'passed':True,'review':{'accepted':True},'bindings':{'artifacts/m5-larger-q4-v2/manifest.json':{'sha256':v2.loss.SPECS['larger']['packed']}}}
+        original=v2.shared.metal_engine.digest
+        def digest(p):
+            if p==source/'model.safetensors':return spec[1]
+            if p==source/'config.json':return spec[2]
+            if p==source/'tokenizer.json':return 'c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539'
+            if p==v2.ROOT/v2.loss.GEOMETRY_REL:return v2.loss.GEOMETRY_SHA
+            if p==v2.ROOT/'artifacts/m5-larger-q4-v2/manifest.json':return v2.loss.SPECS['larger']['packed']
+            return original(p)
+        def worker(binary,source,model,name,manifest,arrays,raw,stderr,check,**kwargs):
+            response=legacy.fixture(name);response['memory']=admission()['memory'];setup,request,cache=v2.shared.requests(name,arrays,manifest)
+            return {'passed':True,'workload':name,'ready':admission(),'samples':[{'response':response,'process_peak_footprint_bytes':1}]*13,'idle_usage':[{'worker':{'lifetime_max_phys_footprint':1}}],'cache_state':cache}
+        with tempfile.TemporaryDirectory() as directory:
+            p=Path(directory);binary=p/'binary';binary.write_text('fixture')
+            with patch.object(v2.loss.shared,'frozen_bytes',return_value=json.dumps(geometry).encode()),patch.object(v2.shared.metal_engine,'digest',side_effect=digest),patch.object(v2.shared.metal_prefill,'observation',side_effect=lambda a:'17179869184' if a[-1]=='hw.memsize' else 'fixture'),patch.object(v2.shared.metal_prefill,'endpoints',return_value={}),patch.object(v2.shared,'worker',side_effect=worker) as call:
+                result=v2.run(binary,p/'out.json',False,workloads=workloads)
+            return result,[c.args[3] for c in call.call_args_list]
+
+    def test_scoped_confirmation_cannot_claim_full_matrix(self):
+        result,names=self.invoke(['short']);self.assertEqual(names,['short']);self.assertEqual(result['selected_workloads'],['short']);self.assertEqual(len(result['results']),1)
+        self.assertTrue(result['measurements_completed']);self.assertFalse(result['full_matrix_completed'])
+
+    def test_default_still_runs_canonical_all_eight_and_only_complete_scope_marks_full(self):
+        result,names=self.invoke(None);self.assertEqual(names,list(v2.shared.frozen.WORKLOADS));self.assertEqual(len(result['results']),8);self.assertTrue(result['full_matrix_completed'])
+        result,names=self.invoke(['cached','short']);self.assertEqual(names,['cached','short']);self.assertFalse(result['full_matrix_completed'])
+
 if __name__=='__main__':unittest.main()
