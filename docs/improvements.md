@@ -123,6 +123,13 @@ seven targeted/all439 Python checks and six short native turns/26event replay.
 Both model-plus-driver charges fit6GiB; short probes establish functionality only.
 [Application report](experiments/2026-10-14-metal-application.md).
 
+Full task response collection now covers all100 original cases for both Half
+checkpoints and the larger FP32 reference.18,027 native events, full provenance,
+state/memory and independent finalized text pass; all three workers exit cleanly
+and fit6GiB. Larger visible IDs match99/100 cases. This is response qualification;
+matched literal scores and latency acceptance remain pending.
+[Full response report](experiments/2026-10-14-full-task-responses.md).
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
