@@ -23,9 +23,10 @@ endpoints=continuation.endpoints
 memory=continuation.memory
 
 
-def ready(event,accurate=False,larger=False):
+def ready(event,accurate=False,larger=False,*,prompt_tokens=512,cached_prefix_tokens=0):
     required={"event":"ready","format":"toklet-metal-q4-prefill-v1","projection_modes":["Q4Compensated","Q4CompensatedTiled"] if accurate else ["Original","Q4Tiled"],
-              "debug_assertions":False,"warmups":3,"samples":10,"prompt_tokens":512,"output_tokens":1,"capacity":1024,"chunk":128}
+              "debug_assertions":False,"warmups":3,"samples":10,"prompt_tokens":prompt_tokens,"output_tokens":1,"capacity":1024,"chunk":128}
+    if "cached_prefix_tokens" in event or cached_prefix_tokens:required.update(cached_prefix_tokens=cached_prefix_tokens)
     if accurate:required.update(normalization_mode="Compensated",requires_logit_bits=True,hidden_size=1536 if larger else 896,num_layers=28 if larger else 24)
     if any(type(event.get(k)) is not type(v) or event[k]!=v for k,v in required.items()):raise ValueError("Prefill admission/mode differs")
     widths=event.get("q4_execution_widths")
@@ -44,7 +45,8 @@ def sample(event,index,admission):
         raise ValueError("Prefill paired sample coverage/order differs")
     for mode in ("original","tiled"):
         report=event[f"{mode}_report"]
-        expected={"reused_tokens":0,"prefill_tokens":512,"sampled_tokens":1,"emitted_tokens":1,"history_tokens":513,"evaluated_tokens":512,"pending_tokens":1}
+        prefix=admission.get("cached_prefix_tokens",0);tokens=admission["prompt_tokens"]
+        expected={"reused_tokens":prefix,"prefill_tokens":tokens,"sampled_tokens":1,"emitted_tokens":1,"history_tokens":prefix+tokens+1,"evaluated_tokens":prefix+tokens,"pending_tokens":1}
         if any(type(report.get(k)) is not int or report[k]!=v for k,v in expected.items()) or report.get("reason")!={"kind":"output_limit"}:raise ValueError("Prefill request semantics differ")
         for key in ("first_token_seconds","prefill_seconds","total_seconds"):
             if type(report.get(key)) not in (int,float) or not math.isfinite(report[key]) or report[key]<=0:raise ValueError("Prefill timing invalid")
@@ -67,11 +69,12 @@ def analyze(events):
                       "median_absolute_deviation_seconds":statistics.median(abs(v-median) for v in values),"raw_seconds":values}
     result["improvement_fraction"]=1-result["tiled"]["median_seconds"]/result["original"]["median_seconds"]
     result["max_logit_delta"]=max(event["max_logit_delta"] for event in measured)
-    result["primary_metric"]="Warm request reset/prefill to first token event;512input,1output; timings include GPU completion,full last-logits readback,CPUgreedy"
+    tokens=measured[0]["original_report"]["prefill_tokens"];prefix=measured[0]["original_report"]["reused_tokens"]
+    result["primary_metric"]=f"Warm request to first token event;{tokens}input,1output,{prefix}committed prefix prepared outside timers; GPU completion,full last-logits readback,CPUgreedy"
     return result
 
 
-def run(binary,output,accurate=False,larger=False,*,artifact_path=None,artifact_pins=None,admission_check=None,extra_identity_paths=()):
+def run(binary,output,accurate=False,larger=False,*,artifact_path=None,artifact_pins=None,admission_check=None,extra_identity_paths=(),extra_args=()):
     if larger and not accurate:raise ValueError("Larger prefill requires accurate mode")
     paths=[output,output.with_suffix(".raw.jsonl"),output.with_suffix(".stderr")]
     if any(p.exists() for p in paths):raise ValueError("prefill evidence destination exists")
@@ -88,7 +91,7 @@ def run(binary,output,accurate=False,larger=False,*,artifact_path=None,artifact_
     if identities[str(source/"model.safetensors")]!=source_sha or identities[str(source/"config.json")]!=config_sha:raise ValueError("Initial pinned prefill source/config changed")
     if larger and artifact_path is None and identities[str(packed/"manifest.json")]!=LARGER_PACKED_SHA:raise ValueError("Frozen larger Q4 artifact changed")
     if artifact_pins and any(identities.get(str(p))!=sha for p,sha in artifact_pins.items()):raise ValueError("Frozen explicit prefill artifact differs")
-    result={"format":"toklet-metal-q4-prefill-v1","passed":False,"scope":"Paired opt-in Q4 tile warm512-input/one-output engine TTFT; no full decode workload,heldout quality,external lead or release acceptance",
+    result={"format":"toklet-metal-q4-prefill-v1","passed":False,"scope":"Paired opt-in Q4 prefill/append to first token event; actual input/cache shape in readiness and reports; no full decode workload,heldout quality,external lead or release acceptance",
             "accurate":accurate,"larger":larger,"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=ROOT,text=True).strip(),"identities":identities,"events":[],"idle_usage":[],
             "platform":observation(["/usr/bin/sw_vers"]),"power_before":endpoints(),
             "compiler":observation(["rustc","-Vv"]),
@@ -101,6 +104,7 @@ def run(binary,output,accurate=False,larger=False,*,artifact_path=None,artifact_
             command=[str(binary),str(source),str(packed),str(ROOT/"benchmarks/contract-v1")]
             if accurate:command.append("accurate")
             if larger:command.append("larger")
+            command.extend(extra_args);result["command"]=command
             child=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
             transport=metal_engine.Transport(child,raw,stderr,request_timeout=120,lifetime_timeout=1200)
             result["transport_policy"]={"request_seconds":120,"lifetime_seconds":1200}

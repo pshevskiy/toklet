@@ -20,18 +20,52 @@ mod apple {
         }
         Ok(())
     }
-    fn ids(path: &Path, identity: &str) -> Result<Vec<u32>, Box<dyn std::error::Error>> {
+    fn ids(
+        path: &Path,
+        identity: &str,
+        count: usize,
+    ) -> Result<Vec<u32>, Box<dyn std::error::Error>> {
+        let bytes = count.checked_mul(4).ok_or("prefill token byte overflow")?;
+        let limit = bytes.checked_add(1).ok_or("prefill input bound overflow")?;
         let mut data = Vec::new();
         std::fs::File::open(path)?
-            .take(2049)
+            .take(u64::try_from(limit)?)
             .read_to_end(&mut data)?;
-        if data.len() != 2048 || format!("{:x}", Sha256::digest(&data)) != identity {
+        if data.len() != bytes || format!("{:x}", Sha256::digest(&data)) != identity {
             return Err("frozen prefill tokens changed".into());
         }
         Ok(data
             .chunks_exact(4)
             .map(|b| u32::from_le_bytes(b.try_into().unwrap()))
             .collect())
+    }
+    #[test]
+    fn bounded_token_files_accept_exact_shapes_and_reject_short_or_extra() {
+        let path = std::env::temp_dir().join(format!(
+            "toklet-prefill-shape-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        for count in [64usize, 128, 512] {
+            let expected: Vec<u32> = (0..count)
+                .map(|i| 0x11223344u32.wrapping_add(i as u32))
+                .collect();
+            let data: Vec<u8> = expected.iter().flat_map(|v| v.to_le_bytes()).collect();
+            let identity = format!("{:x}", Sha256::digest(&data));
+            std::fs::write(&path, &data).unwrap();
+            assert_eq!(ids(&path, &identity, count).unwrap(), expected);
+            std::fs::write(&path, &data[..data.len() - 1]).unwrap();
+            assert!(ids(&path, &identity, count).is_err());
+            let mut extra = data;
+            extra.push(0);
+            std::fs::write(&path, &extra).unwrap();
+            assert!(ids(&path, &identity, count).is_err());
+        }
+        std::fs::remove_file(&path).unwrap();
+        assert!(ids(&path, "unused", usize::MAX).is_err());
     }
     fn request(
         s: &mut metal::Session<'_>,
@@ -72,6 +106,12 @@ mod apple {
         if larger && !accurate {
             return Err("larger Q4 prefill requires accurate mode".into());
         }
+        let shape = match args.next() {
+            None => 512usize,
+            Some(v) if accurate && larger && v == "shape64" => 64,
+            Some(v) if accurate && larger && v == "shape128" => 128,
+            _ => return Err("optional v2 prefill shape must be shape64 or shape128".into()),
+        };
         if args.next().is_some() {
             return Err("too many prefill arguments".into());
         }
@@ -82,10 +122,38 @@ mod apple {
         {
             return Err("selected frozen Qwen prefill geometry required".into());
         }
-        let base = ids(
-            &contract.join("prompt_512.u32le"),
-            "4ff74dae2ee5b778f9313f4c707f9ccb6415609a9c0653684cce7be63d457dd6",
-        )?;
+        if shape != 512 && model.q4_format() != Some(toklet::q4::Format::V2) {
+            return Err("optional shape checks require frozen v2 artifact".into());
+        }
+        let (file, sha) = match shape {
+            64 => (
+                "append_64.u32le",
+                "e987cc8715b7a354f341995ded8a0c4b460f069a9dadd20f2ecf6f0494ef8334",
+            ),
+            128 => (
+                "prompt_128.u32le",
+                "ce91eac01d5557affc79d9aae44415b8902e963635c42d52cf156b325a76ddda",
+            ),
+            _ => (
+                "prompt_512.u32le",
+                "4ff74dae2ee5b778f9313f4c707f9ccb6415609a9c0653684cce7be63d457dd6",
+            ),
+        };
+        let base = ids(&contract.join(file), sha, shape)?;
+        if base.len() != shape {
+            return Err("frozen prefill shape length differs".into());
+        }
+        let prefix = if shape == 64 {
+            ids(
+                &contract.join("prompt_512.u32le"),
+                "4ff74dae2ee5b778f9313f4c707f9ccb6415609a9c0653684cce7be63d457dd6",
+                512,
+            )?
+        } else {
+            Vec::new()
+        };
+        let mut expected_history = prefix.clone();
+        expected_history.extend_from_slice(&base);
         let budget = weights::INITIAL_MEMORY_LIMIT_BYTES - APP;
         let options = session::Options {
             capacity: 1024,
@@ -147,31 +215,47 @@ mod apple {
             "{}",
             json!({"event":"ready","format":"toklet-metal-q4-prefill-v1","projection_modes":projection_modes,"weight_dtype":match model.q4_format() {Some(toklet::q4::Format::V2) => "Q4 v2 + FP16 exclusions",_ => "Q4 v1 + FP16 exclusions"},"packed_format_version":model.q4_format().map(|f| match f {toklet::q4::Format::V1 => 1,toklet::q4::Format::V2 => 2}),"group_size":model.q4_format().map(|f| f.group()),"quantizer":model.q4_format().map(|f| f.quantizer()),
             "normalization_mode":normalization,"requires_logit_bits":accurate,"hidden_size":model.config().hidden_size,"num_layers":model.config().num_layers,
-            "device":model.device_name(),"q4_execution_widths":if accurate {model.q4_compensated_execution_widths()}else{model.q4_execution_widths()},"debug_assertions":cfg!(debug_assertions),"warmups":3,"samples":10,"prompt_tokens":512,"output_tokens":1,
+            "device":model.device_name(),"q4_execution_widths":if accurate {model.q4_compensated_execution_widths()}else{model.q4_execution_widths()},"debug_assertions":cfg!(debug_assertions),"warmups":3,"samples":10,"prompt_tokens":shape,"cached_prefix_tokens":prefix.len(),"output_tokens":1,
             "capacity":1024,"chunk":128,"combined_admitted_bytes":combined,"original_memory":baseline.memory(),"tiled_memory":reused.memory(),
             "application_bytes":APP,"load_seconds":model.load_timing.load_seconds,"numerical_gate":{"atol":atol,"rtol":rtol}})
         )?;
         out.flush()?;
         handshake()?;
         for run in 0..13 {
+            // Prepare an exact 512-token cache outside the append64 timer.
+            if !prefix.is_empty() {
+                baseline.reset();
+                baseline.append(&prefix)?;
+                baseline.evaluate()?;
+                reused.reset();
+                reused.append(&prefix)?;
+                reused.evaluate()?;
+            }
+            let input = || {
+                if prefix.is_empty() {
+                    Input::Reset(&base)
+                } else {
+                    Input::Append(&base)
+                }
+            };
             let (a, b) = if run % 2 == 0 {
                 (
-                    request(&mut baseline, Input::Reset(&base))?,
-                    request(&mut reused, Input::Reset(&base))?,
+                    request(&mut baseline, input())?,
+                    request(&mut reused, input())?,
                 )
             } else {
-                let b = request(&mut reused, Input::Reset(&base))?;
-                (request(&mut baseline, Input::Reset(&base))?, b)
+                let b = request(&mut reused, input())?;
+                (request(&mut baseline, input())?, b)
             };
-            if a.0.reused_tokens != 0
-                || b.0.reused_tokens != 0
-                || a.0.prefill_tokens != 512
-                || b.0.prefill_tokens != 512
+            if a.0.reused_tokens != prefix.len()
+                || b.0.reused_tokens != prefix.len()
+                || a.0.prefill_tokens != shape
+                || b.0.prefill_tokens != shape
                 || a.1 != b.1
-                || baseline.evaluated_len() != 512
-                || reused.evaluated_len() != 512
-                || baseline.history() != base
-                || reused.history() != base
+                || baseline.evaluated_len() != expected_history.len()
+                || reused.evaluated_len() != expected_history.len()
+                || baseline.history() != expected_history
+                || reused.history() != expected_history
             {
                 return Err("paired prefill request/cache/greedy semantics differ".into());
             }
