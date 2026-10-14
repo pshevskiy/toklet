@@ -101,6 +101,14 @@ qualification does not establish acceptable end-to-end quantization quality.
 | Compensated Half full held-out loss | All10,000 targets per fixed model pass the unchanged0.05 NLL-increase gate:0.5B mean2.8836406 vs FP32 2.8837251;1.5B mean2.4859246 vs FP32 2.4859580. | [Full-loss qualification](experiments/2026-10-14-half-full-loss.md). Corpus-specific quality gate only; task quality, application/workload comparisons and overall M5 remain open. |
 | Astra code/evidence review per task | Review findings addressed before task commits; receipts bind sources, binaries, fixtures, checks and saved results. | Each linked task report records its review and acceptance scope. |
 
+Full task grading admission now preserves actual backend/model/modes and requires
+all100 original cases/caps, complete native replay, owned successful exit, full
+memory and independent finalized text. Exact backend inventories and executable
+hashes anchored in pinned qualification receipts reject omitted dependencies and
+replacement; nine targeted/all410 Python checks pass. Published short probes cannot
+be scored. This is admission only; no full task score or VM execution is claimed.
+[Admission report](experiments/2026-10-14-task-grading-admission.md).
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
