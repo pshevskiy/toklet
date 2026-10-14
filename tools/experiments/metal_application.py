@@ -162,13 +162,13 @@ def received_timing(events, received):
     return {'submission_to_first_token_seconds':tokens[0] if tokens else None,'submission_to_first_visible_text_seconds':visible[0] if visible else None,'submission_to_done_seconds':done[0],'submission_to_finalized_seconds':received[-1],'received_token_event_seconds':tokens}
 
 
-def child(binary,source,model,requests,prompts,raw,stderr,check):
+def child(binary,source,model,requests,prompts,raw,stderr,check,*,admission_check=None,projection_argument="half-compensated",extra_args=()):
     run={'passed':False,'model_exited':False,'samples':[],'warmups':[],'idle_usage':[],'cleanup_errors':[]};worker=None;transport=None
     try:
-        command=[str(binary),'--model',str(source),'--backend','metal','--metal-projection','half-compensated','--interactive','--json','--context-capacity','2048','--prefill-chunk','128'];run['command']=command
+        command=[str(binary),'--model',str(source),'--backend','metal','--metal-projection',projection_argument,'--interactive','--json','--context-capacity','2048','--prefill-chunk','128',*extra_args];run['command']=command
         started=time.perf_counter();worker=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True);run['worker_pid']=worker.pid
         transport=metal_engine.Transport(worker,raw,stderr,stdout_limit=16*1024**2,event_limit=16000,request_timeout=600,lifetime_timeout=86400)
-        ready=transport.read();ready_at=time.perf_counter();tasks.ready(ready,model);run['ready']=ready;run['submission_to_ready_seconds']=ready_at-started
+        ready=transport.read();ready_at=time.perf_counter();(admission_check or tasks.ready)(ready,model);run['ready']=ready;run['submission_to_ready_seconds']=ready_at-started
         def usage(label):
             own=native_usage.usage(worker.pid);driver=native_usage.usage();joint=own['lifetime_max_phys_footprint']+driver['lifetime_max_phys_footprint']
             if not 0<joint<=controlled.LIMIT:raise ValueError('Application native joint charge exceeds6GiB')
