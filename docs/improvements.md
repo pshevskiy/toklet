@@ -228,6 +228,14 @@ and portable Rust integrity pass; Astra accepted final evidence with no findings
 This is evaluation infrastructure/reference qualification, not inference speed
 or model quality acceptance.
 
+Both [real Q4 v2 GPU geometries](experiments/2026-10-14-q4-v2-real-geometry.md)
+now pass all 14,892 full-element stage-slice comparisons across frozen vector/
+tile modes, whole/irregular chunks, cached prefixes and offsets, with no greedy
+mismatches. Measured native lifetime charges758,334,616/1,910,425,496 bytes and
+admitted numerical+validation874,062,494/2,029,218,550 bytes fit6GiB. Capacity27
+is graph qualification, not full-context/application/quality/speed acceptance.
+Frozen held-out and repeated performance checks remain.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.

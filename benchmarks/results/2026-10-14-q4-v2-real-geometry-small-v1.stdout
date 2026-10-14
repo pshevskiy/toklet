@@ -1,0 +1,40 @@
+
+running 1 test
+test small_q4_v2_full_graph_and_memory ... V2 small/Q4Compensated/future_changed chunk1 full-array/state/memory check completed
+V2 small/Q4Compensated/future_changed chunk3 full-array/state/memory check completed
+V2 small/Q4Compensated/future_changed chunk4 full-array/state/memory check completed
+V2 small/Q4Compensated/offset chunk1 full-array/state/memory check completed
+V2 small/Q4Compensated/offset chunk3 full-array/state/memory check completed
+V2 small/Q4Compensated/short chunk1 full-array/state/memory check completed
+V2 small/Q4Compensated/short chunk3 full-array/state/memory check completed
+V2 small/Q4Compensated/short chunk4 full-array/state/memory check completed
+V2 small/Q4Compensated/single chunk1 full-array/state/memory check completed
+V2 small/Q4Compensated/tile17 chunk1 full-array/state/memory check completed
+V2 small/Q4Compensated/tile17 chunk3 full-array/state/memory check completed
+V2 small/Q4Compensated/tile17 chunk8 full-array/state/memory check completed
+V2 small/Q4Compensated/tile17 chunk17 full-array/state/memory check completed
+V2 small/Q4Compensated/tile17_offset5 chunk1 full-array/state/memory check completed
+V2 small/Q4Compensated/tile17_offset5 chunk3 full-array/state/memory check completed
+V2 small/Q4Compensated/tile17_offset5 chunk8 full-array/state/memory check completed
+V2 small/Q4Compensated/tile17_offset5 chunk17 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/future_changed chunk1 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/future_changed chunk3 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/future_changed chunk4 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/offset chunk1 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/offset chunk3 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/short chunk1 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/short chunk3 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/short chunk4 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/single chunk1 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/tile17 chunk1 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/tile17 chunk3 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/tile17 chunk8 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/tile17 chunk17 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/tile17_offset5 chunk1 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/tile17_offset5 chunk3 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/tile17_offset5 chunk8 full-array/state/memory check completed
+V2 small/Q4CompensatedTiled/tile17_offset5 chunk17 full-array/state/memory check completed
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 28.09s
+
