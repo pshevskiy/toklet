@@ -1,0 +1,138 @@
+{
+  "format": "toklet-q4-v2-cli-transitive-provenance-v1",
+  "scope": "Prior committed pre-launch qualification snapshots plus endpoint proof; native summary inventory itself omits these transitive helpers",
+  "launch_parent": "c4863aac278f6a94f94222e03717a0440c313d6b",
+  "prior_receipts": {
+    "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json": {
+      "bytes": 390855,
+      "sha256": "1a8d889927067505e22b19e857281e40cb46907d3a2e9d00848a0a8a6e34034c"
+    },
+    "benchmarks/results/2026-10-14-metal-controlled-qualification-v1.json": {
+      "bytes": 60950,
+      "sha256": "2d3e629c1da91e13330862c6a5e4d247fecc659778f2bb05bf9c127e2215a34a"
+    }
+  },
+  "helpers": [
+    {
+      "path": "tools/experiments/metal_quality_v2.py",
+      "binding": {
+        "bytes": 13215,
+        "sha256": "1b88d98c32b238d27600700410d95e5c929509bb6b2b20a714a7d5c7b824631a"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-q4-v2-scorer-source-v1/tools/experiments/metal_quality_v2.py"
+      ]
+    },
+    {
+      "path": "tools/experiments/metal_quality.py",
+      "binding": {
+        "bytes": 17473,
+        "sha256": "61edada2083390c1bc8a8c88bc58769cf7141e7ffec4b0c412ca00156f2c1a17"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-q4-v2-scorer-source-v1/tools/experiments/metal_quality.py"
+      ]
+    },
+    {
+      "path": "tools/experiments/metal_quality_larger.py",
+      "binding": {
+        "bytes": 11749,
+        "sha256": "6628119a1f0c1bf0e7840f9fabe52aed0ff7b7907f10b3c66b6a0335b4edcdf2"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-q4-v2-scorer-source-v1/tools/experiments/metal_quality_larger.py"
+      ]
+    },
+    {
+      "path": "tools/experiments/quality_rows.py",
+      "binding": {
+        "bytes": 12478,
+        "sha256": "ec90277e708d55b8184416c58210bf8411bd22753cd61b2d86162168d250ac72"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-q4-v2-scorer-source-v1/tools/experiments/quality_rows.py"
+      ]
+    },
+    {
+      "path": "tools/experiments/metal_continue.py",
+      "binding": {
+        "bytes": 9786,
+        "sha256": "48487c955a81cafb4149caf033d397d0403068cd6f31913a8a2b90a75f03b622"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-q4-v2-scorer-source-v1/tools/experiments/metal_continue.py"
+      ]
+    },
+    {
+      "path": "tools/experiments/metal_engine.py",
+      "binding": {
+        "bytes": 10905,
+        "sha256": "1541afc73738d91e13dc6d71c32f72632e4b2eb20174781dc193126362b73d0c"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-q4-v2-scorer-source-v1/tools/experiments/metal_engine.py"
+      ]
+    },
+    {
+      "path": "tools/experiments/native_usage.py",
+      "binding": {
+        "bytes": 1700,
+        "sha256": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-q4-v2-scorer-source-v1/tools/experiments/native_usage.py"
+      ]
+    },
+    {
+      "path": "tools/bench/quality.py",
+      "binding": {
+        "bytes": 20956,
+        "sha256": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-q4-v2-scorer-source-v1/tools/bench/quality.py"
+      ]
+    },
+    {
+      "path": "tools/bench/prepare.py",
+      "binding": {
+        "bytes": 15310,
+        "sha256": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-q4-v2-scorer-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-q4-v2-scorer-source-v1/tools/bench/prepare.py"
+      ]
+    },
+    {
+      "path": "tools/bench/cpu.py",
+      "binding": {
+        "bytes": 20248,
+        "sha256": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-metal-controlled-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-controlled-source-v1/tools/bench/cpu.py"
+      ]
+    },
+    {
+      "path": "tools/bench/mlx_baseline.py",
+      "binding": {
+        "bytes": 13938,
+        "sha256": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34"
+      },
+      "prior_receipt": "benchmarks/results/2026-10-14-metal-controlled-qualification-v1.json",
+      "prior_snapshots": [
+        "artifacts/m5-controlled-source-v1/tools/bench/mlx_baseline.py"
+      ]
+    }
+  ]
+}

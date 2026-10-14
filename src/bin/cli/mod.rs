@@ -44,7 +44,8 @@ Usage: toklet [OPTIONS]
   --prefill-chunk N          Prefill cancellation boundary (128)
   --backend cpu|metal       CPU (default), or opt-in Metal feature
   --cpu-projection MODE     scalar (default) or opt-in tiled projections
-  --metal-projection MODE   original (default) or opt-in half-compensated
+  --metal-projection MODE   original (default), half-compensated, q4-v2-compensated-tiled
+  --q4-weights PATH         Explicit Q4 v2 packed artifact for the v2 mode
   --stop-token ID           Additional stop ID; repeatable
   --no-eos                  Ignore configured EOS IDs
   --json                    JSON token events and statistics
@@ -75,6 +76,7 @@ struct Args {
     projection: ProjectionKernel,
     backend: &'static str,
     metal_projection: &'static str,
+    q4_weights: Option<PathBuf>,
 }
 fn utf8(v: OsString) -> io::Result<String> {
     v.into_string()
@@ -105,6 +107,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         projection: ProjectionKernel::Scalar,
         backend: "cpu",
         metal_projection: "original",
+        q4_weights: None,
     };
     let mut seen = HashSet::new();
     let mut values = values.into_iter().peekable();
@@ -126,13 +129,15 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                 a.metal_projection = match utf8(value()?)?.as_str() {
                     "original" => "original",
                     "half-compensated" => "half-compensated",
+                    "q4-v2-compensated-tiled" => "q4-v2-compensated-tiled",
                     _ => {
                         return Err(invalid(
-                            "--metal-projection must be original or half-compensated",
+                            "--metal-projection must be original, half-compensated or q4-v2-compensated-tiled",
                         ));
                     }
                 };
             }
+            "--q4-weights" => a.q4_weights = Some(value()?.into()),
             "--model" => a.model = value()?.into(),
             "--prompt" => a.prompt = Some(utf8(value()?)?),
             "--messages" => a.messages = Some(value()?.into()),
@@ -176,6 +181,14 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
     }
     if a.backend != "metal" && seen.contains("--metal-projection") {
         return Err(invalid("--metal-projection requires metal backend"));
+    }
+    if a.q4_weights.is_some() && a.backend != "metal" {
+        return Err(invalid("--q4-weights requires metal backend"));
+    }
+    if a.q4_weights.is_some() != (a.metal_projection == "q4-v2-compensated-tiled") {
+        return Err(invalid(
+            "--q4-weights and --metal-projection q4-v2-compensated-tiled are required together",
+        ));
     }
     if a.model.as_os_str().is_empty() {
         return Err(invalid("--model is required"));
@@ -247,6 +260,12 @@ struct ExecutionMetadata {
     normalization_mode: &'static str,
     readback_mode: &'static str,
     prefill_chunk_size: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    packed_format_version: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    quantization_group_size: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    quantizer: Option<&'static str>,
 }
 struct Frontend {
     assets: Option<Assets>,
@@ -557,6 +576,9 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             normalization_mode: "OrderedFP64",
             readback_mode: "FullLogits",
             prefill_chunk_size: a.chunk,
+            packed_format_version: None,
+            quantization_group_size: None,
+            quantizer: None,
         },
         external_bytes,
     };
@@ -573,25 +595,49 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     };
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     if a.backend == "metal" {
-        let model = toklet::metal::Model::load(&a.model, load_options)?;
-        let projection = if a.metal_projection == "half-compensated" {
-            toklet::metal::ProjectionMode::HalfCompensated
+        let q4_v2 = a.q4_weights.is_some();
+        let model = if let Some(packed) = &a.q4_weights {
+            toklet::metal::Model::load_q4(&a.model, packed, load_options)?
         } else {
-            toklet::metal::ProjectionMode::Original
+            toklet::metal::Model::load(&a.model, load_options)?
         };
-        let mut session =
-            toklet::metal::Session::with_projection_mode(&model, options, projection)?;
+        if q4_v2 && model.q4_format() != Some(toklet::q4::Format::V2) {
+            return Err(invalid("--q4-weights requires a Q4 v2 artifact").into());
+        }
+        let projection = match a.metal_projection {
+            "q4-v2-compensated-tiled" => toklet::metal::ProjectionMode::Q4CompensatedTiled,
+            "half-compensated" => toklet::metal::ProjectionMode::HalfCompensated,
+            _ => toklet::metal::ProjectionMode::Original,
+        };
+        let normalization = if q4_v2 {
+            toklet::metal::NormalizationMode::Compensated
+        } else {
+            toklet::metal::NormalizationMode::Original
+        };
+        let mut session = toklet::metal::Session::with_execution_modes(
+            &model,
+            options,
+            projection,
+            normalization,
+        )?;
         frontend.execution = ExecutionMetadata {
-            weight_dtype: "FP16",
-            kv_dtype: "FP16",
-            projection_mode: if projection == toklet::metal::ProjectionMode::HalfCompensated {
-                "HalfCompensated"
+            weight_dtype: if q4_v2 {
+                "Q4 v2 + FP16 exclusions"
             } else {
-                "Original"
+                "FP16"
             },
-            normalization_mode: "Original",
+            kv_dtype: "FP16",
+            projection_mode: match projection {
+                toklet::metal::ProjectionMode::Q4CompensatedTiled => "Q4CompensatedTiled",
+                toklet::metal::ProjectionMode::HalfCompensated => "HalfCompensated",
+                _ => "Original",
+            },
+            normalization_mode: if q4_v2 { "Compensated" } else { "Original" },
             readback_mode: "FullLogits",
             prefill_chunk_size: a.chunk,
+            packed_format_version: q4_v2.then_some(2),
+            quantization_group_size: model.q4_format().map(|f| f.group()),
+            quantizer: model.q4_format().map(|f| f.quantizer()),
         };
         frontend.load_seconds = model.load_timing.load_seconds;
         frontend.conversion_seconds = model.load_timing.conversion_seconds;

@@ -569,3 +569,90 @@ fn ctrl_c_during_prefill_can_resume_all_pending_input() {
     drop(input);
     assert!(child.wait().unwrap().success());
 }
+
+#[test]
+fn q4_cli_pairing_and_cpu_rejections_precede_model_access() {
+    for tail in [
+        vec!["--q4-weights", "/missing-packed"],
+        vec!["--q4-weights"],
+        vec!["--q4-weights", "/missing-packed", "--q4-weights", "/other"],
+        vec!["--q4-weights", "/missing-packed", "--backend", "cpu"],
+    ] {
+        let mut args = vec!["--model", "/no-such-toklet-model", "--tokens", "1"];
+        args.extend(tail);
+        let out = run(&args);
+        assert_eq!(out.status.code(), Some(2));
+        assert!(out.stdout.is_empty());
+        assert!(String::from_utf8_lossy(&out.stderr).contains("--q4-weights"));
+    }
+}
+
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn q4_metal_missing_partner_and_conflicting_modes_precede_model_access() {
+    for tail in [
+        vec!["--metal-projection", "q4-v2-compensated-tiled"],
+        vec!["--q4-weights", "/missing-packed"],
+        vec![
+            "--q4-weights",
+            "/missing-packed",
+            "--metal-projection",
+            "half-compensated",
+        ],
+        vec![
+            "--metal-projection",
+            "original",
+            "--q4-weights",
+            "/missing-packed",
+        ],
+    ] {
+        let mut args = vec![
+            "--model",
+            "/no-such-toklet-model",
+            "--backend",
+            "metal",
+            "--tokens",
+            "1",
+        ];
+        args.extend(tail);
+        let out = run(&args);
+        assert_eq!(out.status.code(), Some(2));
+        assert!(out.stdout.is_empty());
+        assert!(String::from_utf8_lossy(&out.stderr).contains("required together"));
+    }
+}
+
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn q4_cli_pair_is_accepted_in_both_orders_before_loading() {
+    for tail in [
+        vec![
+            "--q4-weights",
+            "/missing-packed",
+            "--metal-projection",
+            "q4-v2-compensated-tiled",
+        ],
+        vec![
+            "--metal-projection",
+            "q4-v2-compensated-tiled",
+            "--q4-weights",
+            "/missing-packed",
+        ],
+    ] {
+        let mut args = vec![
+            "--model",
+            "/no-such-toklet-model",
+            "--backend",
+            "metal",
+            "--tokens",
+            "1",
+        ];
+        args.extend(tail);
+        let out = run(&args);
+        assert_eq!(out.status.code(), Some(1));
+        assert!(out.stdout.is_empty());
+        let error = String::from_utf8_lossy(&out.stderr);
+        assert!(!error.contains("required together"));
+        assert!(!error.contains("unexpected argument"));
+    }
+}

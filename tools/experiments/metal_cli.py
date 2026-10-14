@@ -52,15 +52,15 @@ def stats(event,initial):
     if g['history_tokens']!=g['evaluated_tokens']+g['pending_tokens'] or g['emitted_tokens']>g['sampled_tokens'] or g['pending_tokens'] not in (0,1):raise ValueError('CLI generation state differs')
     return g
 
-def child(binary,source,mode,raw,stderr,script,*,capacity=32,chunk=3,extra=(),idle_exit=False):
+def child(binary,source,mode,raw,stderr,script,*,capacity=32,chunk=3,extra=(),idle_exit=False,admission=ready,projection_argument=None):
     command=[str(binary),'--model',str(source),'--backend','metal','--interactive','--context-capacity',str(capacity),'--prefill-chunk',str(chunk),*extra]
-    if mode!='Default':command+=['--metal-projection','half-compensated' if mode=='HalfCompensated' else 'original']
+    if mode!='Default':command+=['--metal-projection',projection_argument or ('half-compensated' if mode=='HalfCompensated' else 'original')]
     actual='Original' if mode=='Default' else mode
     worker=None;transport=None;record={'command':command,'passed':False,'phases':[],'idle_usage':[],'cleanup_errors':[]}
     try:
         worker=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
         record['worker_pid']=worker.pid;transport=metal_engine.Transport(worker,raw,stderr,request_timeout=120,lifetime_timeout=900,event_limit=4096,stdout_limit=1024**2)
-        initial=transport.read();ready(initial,actual,capacity,chunk);record['ready']=initial
+        initial=transport.read();admission(initial,actual,capacity,chunk);record['ready']=initial
         def usage(label):
             left=native_usage.usage(worker.pid);right=native_usage.usage();charge=left['lifetime_max_phys_footprint']+right['lifetime_max_phys_footprint']
             if not 0<charge<=LIMIT:raise ValueError('CLI joint native charge exceeds6GiB')

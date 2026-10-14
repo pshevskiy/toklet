@@ -251,6 +251,15 @@ owned exits, state, unchanged endpoints and≤6GiB budgets replay cleanly.
 This is larger loss acceptance only. Per the plan's explicit Half fallback,
 continue larger task-quality/release evidence while preserving small rejection.
 
+The [explicit v2 CLI](experiments/2026-10-14-q4-v2-cli.md) now requires a
+paired artifact/mode selection, rejects v1 before events, and publishes actual
+version/group/quantizer/dtype/modes while preserving legacy metadata/defaults.
+Eight native workers/109events qualify tiny and both real-model cached/pending/
+cancel/stop/text behavior within6GiB.95CPU/107Metal/13portable checks pass.
+The preflight fixture failure is retained/excluded; transitive helper provenance
+uses prior committed qualification/snapshots plus explicit endpoint proof.
+CLI functionality does not repair small v2 rejection or qualify tasks/speed.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
