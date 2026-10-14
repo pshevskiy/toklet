@@ -217,6 +217,17 @@ inventories and file replacement using hashes of consumed bytes and endpoint che
 This qualifies tiny execution only; real-model quality/memory/performance stay open.
 Astra accepted code, checks and native evidence after oracle fixes, with no findings.
 
+Both [Q4 v2 artifacts and real-model references](experiments/2026-10-14-q4-v2-real-oracles.md)
+now match the frozen layout on the two pinned checkpoints. Streaming conversion
+uses≤17,253,048bytes recorded native charge. Sixcases/342fullarrays permodel freeze
+independent reconstructed-math gates beforeGPU/heldout, with new17token/offset
+shape probes and explicit unavailable-source metadata. Reference admissions/
+complete native charges fit6GiB. Explicit stripe temporary release closes a
+memory-accounting overlap, verified with a lifetime regression.51Python checks
+and portable Rust integrity pass; Astra accepted final evidence with no findings.
+This is evaluation infrastructure/reference qualification, not inference speed
+or model quality acceptance.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.

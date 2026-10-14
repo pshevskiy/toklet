@@ -1,0 +1,47 @@
+{
+  "format": "toklet-q4-v2-model-artifacts-v1",
+  "passed": true,
+  "source_parent": "b18ce0fb2c437e122b75a8f3b836b55e31671b38",
+  "working_tree_dirty_at_launch": false,
+  "scope": "Frozen candidate source-bound artifact packing only; no model quality or latency qualification",
+  "code_identities": {
+    "tools/quantization/model.py": "9e22829ec470a434d4761bafd3c48fb860e22d31c148de42cb41c463ba69f855",
+    "tools/quantization/q4.py": "5854785cf731aac1f9af10ccb97394474a4c5673e6e4f6aae33870d788ef83d9",
+    "tools/quantization/q4v2.py": "b2d2ce0deb321e118b85c6943e7f690a30ac4840dcf4accb0d19459fc623c5fc",
+    "tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc"
+  },
+  "models": [
+    {
+      "model": "small",
+      "source": "models/Qwen2.5-0.5B-Instruct",
+      "packed": "artifacts/m5-small-q4-v2",
+      "manifest_sha256": "56b3ed180328892cb83489b4f5d252dc68b3584729e8994e4cf16419242f49f7",
+      "matrix_count": 168,
+      "packed_matrix_bytes": 357837312,
+      "largest_matrix_bytes": 4358208,
+      "predicted_resident_weights_bytes": 630251436,
+      "completed_native_usage": {
+        "resident_size": 22708224,
+        "phys_footprint": 14598792,
+        "lifetime_max_phys_footprint": 14598792
+      },
+      "functional_packing_wall_seconds": 264.4557034999598
+    },
+    {
+      "model": "larger",
+      "source": "models/Qwen2.5-1.5B-Instruct",
+      "packed": "artifacts/m5-larger-q4-v2",
+      "manifest_sha256": "55fd3877289139a74a815ea3e65d5f7ee6a39ef837b5b441f74e764e9113abdb",
+      "matrix_count": 196,
+      "packed_matrix_bytes": 1310208256,
+      "largest_matrix_bytes": 13762624,
+      "predicted_resident_weights_bytes": 1777247428,
+      "completed_native_usage": {
+        "resident_size": 18874368,
+        "phys_footprint": 17253048,
+        "lifetime_max_phys_footprint": 17253048
+      },
+      "functional_packing_wall_seconds": 977.4969781660475
+    }
+  ]
+}
