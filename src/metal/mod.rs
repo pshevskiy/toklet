@@ -5,6 +5,8 @@ mod capture;
 mod diagnostic;
 #[cfg(test)]
 mod half_consistency;
+#[cfg(test)]
+mod half_projection;
 pub use capture::Capture;
 mod memory;
 mod profile;
@@ -12,7 +14,7 @@ use crate::{model, q4, session, weights};
 pub use diagnostic::Diagnostic;
 use memory::{Buffer, Gpu, Kernel, Layout, matrix, matrix_offset, multiply};
 use objc2::rc::{Retained, autoreleasepool};
-use objc2_metal::{MTLCommandBuffer, MTLCommandBufferStatus, MTLDevice};
+use objc2_metal::{MTLBuffer, MTLCommandBuffer, MTLCommandBufferStatus, MTLDevice};
 use objc2_metal_performance_shaders::{MPSMatrix, MPSMatrixMultiplication};
 use profile::Command;
 pub use profile::{ClockPair, Profile, ProfileEvent};
@@ -196,6 +198,12 @@ impl Model {
     }
     pub fn greedy_execution_width(&self) -> usize {
         self.gpu.execution_width(Kernel::Greedy)
+    }
+    pub fn half_compensated_execution_widths(&self) -> [usize; 2] {
+        [
+            self.gpu.execution_width(Kernel::HalfCompensated),
+            self.gpu.execution_width(Kernel::HalfCompensatedFloat),
+        ]
     }
     pub fn device_name(&self) -> String {
         self.gpu.device.name().to_string()
@@ -426,6 +434,10 @@ pub enum ProjectionMode {
     /// Experimental eight-row reuse of the compensated projection. Single
     /// rows and small chunks use Q4Compensated; quality remains unqualified.
     Q4CompensatedTiled,
+    /// Experimental compensated accumulation of resident Half weights, with
+    /// midpoint-preserving Half storage and nearest FP32 vocabulary output.
+    /// Quality and performance require independent qualification.
+    HalfCompensated,
 }
 /// Select the RMS reduction once per operation. Original remains the default.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize)]
@@ -523,7 +535,20 @@ impl<'m> Session<'m> {
         readback_mode: ReadbackMode,
     ) -> Result<Self> {
         autoreleasepool(|_| {
-            if projection_mode != ProjectionMode::Original
+            if projection_mode == ProjectionMode::HalfCompensated {
+                if !matches!(model.layers[0].q.storage, TensorStorage::Half(_)) {
+                    return Err(Error::Options(
+                        "Half projection mode requires Half model weights",
+                    ));
+                }
+                if model.gpu.execution_width(Kernel::HalfCompensated)
+                    != model.gpu.execution_width(Kernel::HalfCompensatedFloat)
+                {
+                    return Err(Error::Unsupported(
+                        "Half projection reduction widths differ",
+                    ));
+                }
+            } else if projection_mode != ProjectionMode::Original
                 && !matches!(model.layers[0].q.storage, TensorStorage::Q4 { .. })
             {
                 return Err(Error::Options(
@@ -1213,19 +1238,34 @@ impl<'m> Session<'m> {
         } else {
             (1, &v.last_norm, &self.views[0].result_v, &self.views[0].hv)
         };
-        encode_multiply(
-            g,
-            &command,
-            &self.model.embedding,
-            &s.zero,
-            logit_kernel,
-            logit_input,
-            logit_output,
-            &s.floats,
-            self.f,
-            logit_rows,
-            c.vocab_size,
-        )?;
+        if self.projection_mode == ProjectionMode::HalfCompensated {
+            encode_half_compensated(
+                g,
+                &command,
+                &self.model.embedding,
+                &s.zero,
+                logit_input,
+                &s.floats.raw,
+                self.f.stride,
+                logit_rows,
+                Kernel::HalfCompensatedFloat,
+                &s.status,
+            )?;
+        } else {
+            encode_multiply(
+                g,
+                &command,
+                &self.model.embedding,
+                &s.zero,
+                logit_kernel,
+                logit_input,
+                logit_output,
+                &s.floats,
+                self.f,
+                logit_rows,
+                c.vocab_size,
+            )?;
+        }
         if self.readback_mode == ReadbackMode::FullLogits || all_logits {
             g.encode(
                 &command,
@@ -1390,6 +1430,98 @@ fn encode_multiply(
     Ok(())
 }
 #[allow(clippy::too_many_arguments)]
+fn encode_half_compensated(
+    g: &Gpu,
+    c: &Command<'_>,
+    weight: &Tensor,
+    bias: &Buffer<u16>,
+    left: &MPSMatrix,
+    output: &objc2::runtime::ProtocolObject<dyn MTLBuffer>,
+    output_stride: usize,
+    n: usize,
+    kernel: Kernel,
+    status: &Buffer<u32>,
+) -> Result<()> {
+    if !matches!(weight.storage, TensorStorage::Half(_))
+        || !matches!(
+            kernel,
+            Kernel::HalfCompensated | Kernel::HalfCompensatedFloat
+        )
+    {
+        return Err(Error::Options("compensated Half storage/kernel mismatch"));
+    }
+    // SAFETY: immutable descriptors refer to admitted, owned same-device Half
+    // storage. Honor the view's byte offset (ordinary last-row logits), retain
+    // owners through command completion and validate all accessed extents.
+    let (offset, row_bytes, rows, columns, input) = unsafe {
+        (
+            left.offset(),
+            left.rowBytes(),
+            left.rows(),
+            left.columns(),
+            left.data(),
+        )
+    };
+    let width = weight.layout.columns;
+    let out = weight.layout.rows;
+    if n == 0
+        || offset % 2 != 0
+        || row_bytes % 2 != 0
+        || rows != n
+        || columns != width
+        || row_bytes / 2 < width
+        || output_stride < out
+        || bias.len < out
+    {
+        return Err(Error::Options("compensated Half view shape differs"));
+    }
+    let input_end = add(
+        add(
+            offset / 2,
+            (n - 1)
+                .checked_mul(row_bytes / 2)
+                .ok_or(Error::Options("input extent overflow"))?,
+        )?,
+        width,
+    )?;
+    let output_end = add(
+        (n - 1)
+            .checked_mul(output_stride)
+            .ok_or(Error::Options("output extent overflow"))?,
+        out,
+    )?;
+    let output_bytes = if matches!(kernel, Kernel::HalfCompensated) {
+        2
+    } else {
+        4
+    };
+    if input_end > input.length() / 2 || output_end > output.length() / output_bytes {
+        return Err(Error::Options("compensated Half buffer extent differs"));
+    }
+    let mut shape = [0u32; 7];
+    for (dst, value) in shape.iter_mut().zip([
+        n,
+        width,
+        out,
+        weight.layout.stride,
+        row_bytes / 2,
+        output_stride,
+        offset / 2,
+    ]) {
+        *dst =
+            u32::try_from(value).map_err(|_| Error::Options("Half projection shape overflow"))?;
+    }
+    g.encode(
+        c,
+        kernel,
+        &[&weight.buffer.raw, &bias.raw, &input, output],
+        &shape,
+        n.checked_mul(out)
+            .ok_or(Error::Options("Half projection dispatch overflow"))?,
+        Some(status),
+    )
+}
+#[allow(clippy::too_many_arguments)]
 fn project(
     g: &Gpu,
     c: &Command<'_>,
@@ -1406,6 +1538,20 @@ fn project(
     mode: ProjectionMode,
     status: &Buffer<u32>,
 ) -> Result<()> {
+    if mode == ProjectionMode::HalfCompensated {
+        return encode_half_compensated(
+            g,
+            c,
+            weight,
+            bias,
+            left,
+            &out.raw,
+            hl.stride,
+            n,
+            Kernel::HalfCompensated,
+            status,
+        );
+    }
     if let TensorStorage::Q4 { stride } = weight.storage {
         // SAFETY: these views were created from owned, admitted same-device Half
         // buffers. Immutable descriptor getters preserve their retained storage;
@@ -2340,15 +2486,24 @@ mod tests {
     #[test]
     #[ignore = "explicit Apple GPU finite-overflow and injected completion-failure check"]
     fn failed_chunks_publish_no_state_and_completion_failure_requires_replay() {
+        check_failed_chunks(ProjectionMode::Original);
+    }
+    #[test]
+    #[ignore = "Explicit compensated Half finite overflow and transactional failure qualification"]
+    fn compensated_half_failed_chunks_preserve_valid_prefix() {
+        check_failed_chunks(ProjectionMode::HalfCompensated);
+    }
+    fn check_failed_chunks(mode: ProjectionMode) {
         let artifact = weights::half_tests::artifact(safetensors::Dtype::F32, None, true);
         let model = Model::load(&artifact.0, weights::LoadOptions::default()).unwrap();
-        let mut session = Session::new(
+        let mut session = Session::with_projection_mode(
             &model,
             session::Options {
                 capacity: 8,
                 prefill_chunk_size: 1,
                 ..Default::default()
             },
+            mode,
         )
         .unwrap();
         session.enable_profile().unwrap();
@@ -2500,6 +2655,15 @@ fn gpu_greedy_matches_cpu_ties_offsets_and_finite_policy() {
 #[test]
 #[ignore = "Explicit token-only failure/replay and late diagnostic/profile admission"]
 fn gpu_greedy_failure_and_diagnostic_profile_preserve_committed_selection() {
+    check_greedy_failure(ProjectionMode::Original);
+}
+#[test]
+#[ignore = "Explicit compensated Half token-only failure/replay and late diagnostics/profile"]
+fn compensated_half_greedy_failure_and_diagnostic_profile() {
+    check_greedy_failure(ProjectionMode::HalfCompensated);
+}
+#[cfg(test)]
+fn check_greedy_failure(mode: ProjectionMode) {
     let artifact = weights::half_tests::artifact(safetensors::Dtype::F32, None, true);
     let model = Model::load(&artifact.0, weights::LoadOptions::default()).unwrap();
     let mut s = Session::with_readback_mode(
@@ -2509,7 +2673,7 @@ fn gpu_greedy_failure_and_diagnostic_profile_preserve_committed_selection() {
             prefill_chunk_size: 1,
             ..Default::default()
         },
-        ProjectionMode::Original,
+        mode,
         NormalizationMode::Original,
         ReadbackMode::GreedyToken,
     )
@@ -2531,7 +2695,11 @@ fn gpu_greedy_failure_and_diagnostic_profile_preserve_committed_selection() {
     assert_eq!(selected, crate::sampling::greedy(logits).unwrap());
     assert_eq!(
         s.profile().unwrap().events.len(),
-        38 * model.config.num_layers + 7
+        if mode == ProjectionMode::HalfCompensated {
+            17 * model.config.num_layers + 5
+        } else {
+            38 * model.config.num_layers + 7
+        }
     );
     s.append(&[1]).unwrap();
     assert!(s.greedy_token().is_none());

@@ -194,7 +194,12 @@ mod native {
             format!("cases.{case}.{stage}")
         }
     }
-    fn run(kind: &str, normalization: metal::NormalizationMode, version: &str) {
+    fn run(
+        kind: &str,
+        projection: metal::ProjectionMode,
+        normalization: metal::NormalizationMode,
+        version: &str,
+    ) {
         let r = root();
         let probes = probe(kind);
         let full = r.join(format!("artifacts/m5-larger-{kind}-oracle-v3"));
@@ -320,18 +325,14 @@ mod native {
                         position_offset: offset,
                         ..Default::default()
                     },
-                    if kind == "q4" {
-                        metal::ProjectionMode::Q4Compensated
-                    } else {
-                        metal::ProjectionMode::Original
-                    },
+                    projection,
                     normalization,
                 )
                 .unwrap();
                 let budget = s.memory().admitted_bytes;
                 assert!(budget + 128 * 1024 * 1024 <= weights::INITIAL_MEMORY_LIMIT_BYTES);
                 if profile_events == 0 && case == "future_changed" && chunk == 1 {
-                    if kind == "q4" {
+                    if kind == "q4" || projection == metal::ProjectionMode::HalfCompensated {
                         s.enable_profile().unwrap();
                     } else {
                         assert!(matches!(
@@ -423,9 +424,19 @@ mod native {
                         compared += 1;
                     }
                     assert_eq!(seen, expected_names);
-                    if kind == "q4" && case == "future_changed" && chunk == 1 {
+                    if (kind == "q4" || projection == metal::ProjectionMode::HalfCompensated)
+                        && case == "future_changed"
+                        && chunk == 1
+                    {
                         let profile = s.profile().unwrap();
-                        assert_eq!(profile.events.len(), 482);
+                        assert_eq!(
+                            profile.events.len(),
+                            if projection == metal::ProjectionMode::HalfCompensated {
+                                480
+                            } else {
+                                482
+                            }
+                        );
                         profile_events = profile.events.len();
                     }
                 }
@@ -444,7 +455,7 @@ mod native {
         }
 
         let peak = physical_peak();
-        let mut report = json!({"format":"toklet-larger-metal-parity-v1","kind":kind,"passed":failures.is_empty(),"scope":"Short larger GPU geometry/storage numerical parity only; no lossy quality or performance acceptance","device":model.device_name(),"weights_bytes":model.weights_bytes(),"load_timing":{"load_seconds":model.load_timing.load_seconds,"conversion_seconds":model.load_timing.conversion_seconds,"compilation_seconds":model.load_timing.compilation_seconds},"q4_execution_widths":model.q4_execution_widths(),"compensated_execution_width":model.q4_compensated_execution_width(),"projection_mode":if kind=="q4" {"Q4Compensated"}else{"Original"},"full_arrays_compared":compared,"initial_native_lifetime_peak_bytes":initial_peak,"final_native_lifetime_peak_bytes":peak,"native_scope":"Own-process v4 lifetime charge includes fixture/hash/diagnostics; no concurrent model worker; complements allocation admission","profile_events":profile_events,"metrics":metrics,"failures":failures});
+        let mut report = json!({"format":"toklet-larger-metal-parity-v1","kind":kind,"passed":failures.is_empty(),"scope":"Short larger GPU geometry/storage numerical parity only; no lossy quality or performance acceptance","device":model.device_name(),"weights_bytes":model.weights_bytes(),"load_timing":{"load_seconds":model.load_timing.load_seconds,"conversion_seconds":model.load_timing.conversion_seconds,"compilation_seconds":model.load_timing.compilation_seconds},"q4_execution_widths":model.q4_execution_widths(),"half_compensated_execution_widths":model.half_compensated_execution_widths(),"compensated_execution_width":model.q4_compensated_execution_width(),"projection_mode":projection,"full_arrays_compared":compared,"initial_native_lifetime_peak_bytes":initial_peak,"final_native_lifetime_peak_bytes":peak,"native_scope":"Own-process v4 lifetime charge includes fixture/hash/diagnostics; no concurrent model worker; complements allocation admission","profile_events":profile_events,"metrics":metrics,"failures":failures});
         report["identities"] = json!({"source_sha256":source_sha,"config_sha256":config_sha,"packed_manifest_sha256":packed_sha});
         report["normalization_mode"] = json!(normalization);
         fs::OpenOptions::new()
@@ -459,18 +470,44 @@ mod native {
     #[test]
     #[ignore = "Explicit preselected larger Half geometry/parity on Apple GPU"]
     fn larger_half_matches_source_with_frozen_storage_envelope() {
-        run("half", metal::NormalizationMode::Original, "v3");
+        run(
+            "half",
+            metal::ProjectionMode::Original,
+            metal::NormalizationMode::Original,
+            "v3",
+        );
     }
     #[test]
     #[ignore = "Explicit preselected larger Q4 reconstructed oracle/profile on Apple GPU"]
     fn larger_q4_matches_frozen_reconstructed_oracle() {
-        run("q4", metal::NormalizationMode::Original, "v3");
+        run(
+            "q4",
+            metal::ProjectionMode::Q4Compensated,
+            metal::NormalizationMode::Original,
+            "v3",
+        );
     }
 
     #[test]
     #[ignore = "Explicit larger Q4 compensated projection and RMS qualification under unchanged gates"]
     fn larger_q4_compensated_rms_matches_frozen_reconstructed_oracle() {
-        run("q4", metal::NormalizationMode::Compensated, "v4");
+        run(
+            "q4",
+            metal::ProjectionMode::Q4Compensated,
+            metal::NormalizationMode::Compensated,
+            "v4",
+        );
+    }
+
+    #[test]
+    #[ignore = "Explicit larger compensated Half projection under unchanged independent storage gates"]
+    fn larger_half_compensated_matches_frozen_storage_envelope() {
+        run(
+            "half",
+            metal::ProjectionMode::HalfCompensated,
+            metal::NormalizationMode::Original,
+            "compensated-v1",
+        );
     }
 
     #[test]

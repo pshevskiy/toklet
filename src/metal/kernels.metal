@@ -239,6 +239,35 @@ inline float2 compensated_reduce(float2 sum,uint lane,uint width) {
     }
     return sum;
 }
+// Resident Half [out,in] weights and [tokens,in] activations. Products of two
+// finite Half values are exactly representable in FP32, including subnormals.
+// A queried SIMD group owns one complete output, independently of batch shape.
+// Shape: rows,in,out,weight_stride,input_stride,output_stride,input_offset.
+inline float2 half_compensated_dot(device const half* w,device const half* bias,device const half* x,constant uint* s,uint group,uint lane,uint width) {
+    uint token=group/s[2],row=group%s[2];
+    float2 sum=float2(0.0f);
+    for(uint column=lane;column<s[1];column+=width)
+        sum=compensated_add(sum,float(w[row*s[3]+column])*float(x[s[6]+token*s[4]+column]));
+    sum=compensated_reduce(sum,lane,width);
+    if(lane==0)sum=compensated_add(sum,float(bias[row]));
+    return sum;
+}
+kernel void half_compensated(device const half* w[[buffer(0)]],device const half* bias[[buffer(1)]],device const half* x[[buffer(2)]],device half* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    if(group/s[2]>=s[0])return;
+    float2 sum=half_compensated_dot(w,bias,x,s,group,lane,width);
+    if(lane==0)checked_half(out,(group/s[2])*s[5]+group%s[2],compensated_store_value(sum),status);
+}
+kernel void half_compensated_float(device const half* w[[buffer(0)]],device const half* bias[[buffer(1)]],device const half* x[[buffer(2)]],device float* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    if(group/s[2]>=s[0])return;
+    float2 sum=half_compensated_dot(w,bias,x,s,group,lane,width);
+    if(lane==0) {
+        // Final logits retain ordinary nearest FP32 rounding; odd rounding is
+        // only for the subsequent Half conversion in half_compensated.
+        float value=sum.x+sum.y;
+        out[(group/s[2])*s[5]+group%s[2]]=value;
+        if(!isfinite(value))atomic_fetch_or_explicit(status,1u,memory_order_relaxed);
+    }
+}
 kernel void q4_compensated(device const uchar* w[[buffer(0)]],device const half* bias[[buffer(1)]],device const half* x[[buffer(2)]],device half* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
     uint token=group/s[2],row=group%s[2];
     if(token>=s[0])return;

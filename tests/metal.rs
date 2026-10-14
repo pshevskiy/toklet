@@ -277,6 +277,192 @@ fn diagnostic_name(case: &str, d: &metal::Diagnostic) -> String {
         None => format!("cases.{case}.{stage}"),
     }
 }
+#[test]
+#[ignore = "Explicit compensated Half full tiny independent gates, offsets, publication and warmed allocation checks"]
+fn compensated_half_tiny_independent_graph_and_publication() {
+    use std::collections::BTreeSet;
+    let artifact = Artifact::tiny();
+    let model = metal::Model::load(
+        &artifact.0,
+        weights::LoadOptions {
+            context_limit: 32,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let half = manifest(
+        &root.join("tests/fixtures/fp16-v1"),
+        "4a416b21f52ecc89c6bbafd4c948b173cd9709c3f5b1a60cd6ce037a63964e6b",
+    );
+    let source = Fixture::tiny();
+    let mode = metal::ProjectionMode::HalfCompensated;
+    let mut compared = 0;
+    for (case, spec) in half["cases"].as_object().unwrap() {
+        let tokens = source.u32(&format!("cases.{case}.tokens"));
+        let offset = spec["position_offset"].as_u64().unwrap() as usize;
+        let mut expected_names = BTreeSet::from([
+            format!("cases.{case}.embedding"),
+            format!("cases.{case}.final_norm"),
+            format!("cases.{case}.logits"),
+        ]);
+        for layer in 0..2 {
+            for stage in [
+                "input_norm",
+                "q_projection",
+                "k_projection",
+                "v_projection",
+                "q_rotary",
+                "k_rotary",
+                "attention_context",
+                "attention_projection",
+                "attention_residual",
+                "post_attention_norm",
+                "gate_projection",
+                "gate_silu",
+                "up_projection",
+                "gated",
+                "down_projection",
+                "output",
+            ] {
+                let name = format!("cases.{case}.layers.{layer}.{stage}");
+                assert!(half["arrays"].get(&name).is_some());
+                assert!(expected_names.insert(name));
+            }
+        }
+        assert_eq!(expected_names.len(), 35);
+        let mut chunks = vec![tokens.len(), 8, 3, 1];
+        chunks.sort_unstable();
+        chunks.dedup();
+        for chunk in chunks {
+            let mut diagnostic =
+                metal::Session::with_projection_mode(&model, options(chunk, offset), mode).unwrap();
+            let mut ordinary =
+                metal::Session::with_projection_mode(&model, options(chunk, offset), mode).unwrap();
+            diagnostic.enable_diagnostics(&[0, 1]).unwrap();
+            diagnostic.enable_profile().unwrap();
+            for part in tokens.chunks(chunk) {
+                let start = diagnostic.evaluated_len();
+                diagnostic.append(part).unwrap();
+                ordinary.append(part).unwrap();
+                let rows = diagnostic.evaluate_next_chunk().unwrap();
+                assert_eq!(ordinary.evaluate_next_chunk().unwrap(), rows);
+                assert_eq!(
+                    diagnostic
+                        .logits()
+                        .unwrap()
+                        .iter()
+                        .map(|x| x.to_bits())
+                        .collect::<Vec<_>>(),
+                    ordinary
+                        .logits()
+                        .unwrap()
+                        .iter()
+                        .map(|x| x.to_bits())
+                        .collect::<Vec<_>>(),
+                    "ordinary final-row offset publication {case}/{chunk}/{start}"
+                );
+                let diagnostics = diagnostic.diagnostics().unwrap();
+                assert_eq!(diagnostics.len(), 35);
+                let mut seen = BTreeSet::new();
+                for d in diagnostics {
+                    let name = diagnostic_name(case, &d);
+                    assert!(expected_names.contains(&name) && seen.insert(name.clone()));
+                    let expected = source.f32(&name);
+                    assert_eq!(d.rows, rows);
+                    assert_eq!(expected.len(), tokens.len() * d.columns);
+                    qualify(
+                        &d.values,
+                        &expected[start * d.columns..(start + rows) * d.columns],
+                        &half["arrays"][&name]["gate_against_source_fp32"],
+                    );
+                    if d.stage == "logits" {
+                        for row in 0..rows {
+                            assert_eq!(
+                                toklet::sampling::greedy(
+                                    &d.values[row * d.columns..(row + 1) * d.columns]
+                                )
+                                .unwrap(),
+                                toklet::sampling::greedy(
+                                    &expected
+                                        [(start + row) * d.columns..(start + row + 1) * d.columns]
+                                )
+                                .unwrap(),
+                                "frozen source argmax {case}/{chunk}/{start}/{row}"
+                            );
+                        }
+                    }
+                    compared += 1;
+                }
+                assert_eq!(seen, expected_names);
+                assert_eq!(diagnostic.profile().unwrap().events.len(), 38);
+            }
+            assert_eq!(
+                (diagnostic.evaluated_len(), ordinary.evaluated_len()),
+                (tokens.len(), tokens.len())
+            );
+            // Exact admission boundaries apply to the explicit mode as well.
+            let budget = ordinary.memory().admitted_bytes;
+            assert!(
+                metal::Session::with_projection_mode(
+                    &model,
+                    session::Options {
+                        memory_limit_bytes: budget,
+                        ..options(chunk, offset)
+                    },
+                    mode
+                )
+                .is_ok()
+            );
+            assert!(
+                metal::Session::with_projection_mode(
+                    &model,
+                    session::Options {
+                        memory_limit_bytes: budget - 1,
+                        ..options(chunk, offset)
+                    },
+                    mode
+                )
+                .is_err()
+            );
+        }
+    }
+    let mut s = metal::Session::with_projection_mode(&model, options(3, 0), mode).unwrap();
+    let mut fresh = metal::Session::with_projection_mode(&model, options(3, 0), mode).unwrap();
+    for tokens in [
+        vec![1, 7, 13, 3],
+        vec![1, 7, 13, 3, 47],
+        vec![1, 7, 13, 3, 11],
+        vec![1, 7],
+        vec![11],
+    ] {
+        s.set_tokens(&tokens).unwrap();
+        s.evaluate().unwrap();
+        fresh.reset();
+        fresh.set_tokens(&tokens).unwrap();
+        fresh.evaluate().unwrap();
+        assert_eq!(s.logits().unwrap(), fresh.logits().unwrap());
+        assert_eq!((s.evaluated_len(), s.pending_len()), (tokens.len(), 0));
+    }
+    for _ in 0..3 {
+        s.reset();
+        s.append(&[1]).unwrap();
+        s.evaluate().unwrap();
+    }
+    let budget = s.memory();
+    TRACK.with(|v| v.set(true));
+    ALLOCATIONS.with(|v| v.set(0));
+    for _ in 0..20 {
+        s.append(&[7]).unwrap();
+        s.evaluate().unwrap();
+    }
+    TRACK.with(|v| v.set(false));
+    assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+    assert_eq!(s.memory(), budget);
+    println!(
+        "Compensated Half: {compared} complete independent tiny stage arrays; ordinary/diagnostic logits bit exact; exact budgets, append/edit/reset and20 allocation-free warmed steps pass"
+    );
+}
 fn manifest(root: &std::path::Path, digest: &str) -> Value {
     use sha2::{Digest, Sha256};
     let bytes = fs::read(root.join("manifest.json")).unwrap();

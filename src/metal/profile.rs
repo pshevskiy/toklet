@@ -282,12 +282,14 @@ impl Session<'_> {
         if self.trace.is_some() || !self.history.is_empty() || self.evaluated != 0 {
             return Err(Error::Options("enable profile on a fresh session"));
         }
-        // Seven Q4 projections use one custom encoder each. Half projections
-        // retain bias, two dependent MPS markers, and storage conversion.
+        // Seven custom projections use one encoder each. Original Half retains
+        // bias, two dependent MPS markers, and storage conversion.
+        let half_compensated = self.projection_mode == super::ProjectionMode::HalfCompensated;
         let per_layer = if matches!(
             self.model.layers[0].q.storage,
             super::TensorStorage::Q4 { .. }
-        ) {
+        ) || half_compensated
+        {
             17
         } else {
             38
@@ -296,7 +298,7 @@ impl Session<'_> {
         // Reserve one spare slot because diagnostics may be enabled later and
         // must validate every logit row in addition to selecting the final row.
         let events = per_layer * self.model.config.num_layers
-            + 6
+            + if half_compensated { 4 } else { 6 }
             + usize::from(self.readback_mode == super::ReadbackMode::GreedyToken);
         if events > MAX_EVENTS {
             return Err(Error::Unsupported(

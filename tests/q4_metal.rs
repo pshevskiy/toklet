@@ -56,9 +56,20 @@ static ALLOCATOR: allocations::Counting = allocations::Counting;
 #[test]
 #[ignore = "Explicit FP16/Q4 token-only generation, diagnostic refinement and prefix contracts"]
 fn token_only_selection_matches_full_logits_and_session_contracts() {
+    check_token_only(metal::ProjectionMode::Original, true);
+}
+#[test]
+#[ignore = "Explicit compensated Half token-only offsets/tails/full-stage refinement and session contracts"]
+fn half_compensated_token_only_matches_full_logits() {
+    check_token_only(metal::ProjectionMode::HalfCompensated, false);
+}
+fn check_token_only(half_mode: metal::ProjectionMode, include_q4: bool) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let source = root.join("artifacts/m5-tiny-source-v1");
     for quantized in [false, true] {
+        if quantized && !include_q4 {
+            continue;
+        }
         let model = if quantized {
             metal::Model::load_q4(
                 &source,
@@ -81,7 +92,7 @@ fn token_only_selection_matches_full_logits_and_session_contracts() {
         let projection = if quantized {
             metal::ProjectionMode::Q4CompensatedTiled
         } else {
-            metal::ProjectionMode::Original
+            half_mode
         };
         let normalization = if quantized {
             metal::NormalizationMode::Compensated
@@ -336,6 +347,35 @@ fn token_only_selection_matches_full_logits_and_session_contracts() {
         token.discard_pending();
         assert!(token.greedy_token().is_some());
     }
+}
+
+#[test]
+#[ignore = "Explicit experimental Half projection mode rejects a resident Q4 model"]
+fn half_compensated_rejects_q4_model() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let model = metal::Model::load_q4(
+        &root.join("artifacts/m5-tiny-source-v1"),
+        &root.join("artifacts/m5-tiny-q4-v1"),
+        weights::LoadOptions {
+            context_limit: 32,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    assert!(matches!(
+        metal::Session::with_projection_mode(
+            &model,
+            session::Options {
+                capacity: 32,
+                prefill_chunk_size: 3,
+                ..Default::default()
+            },
+            metal::ProjectionMode::HalfCompensated
+        ),
+        Err(metal::Error::Options(
+            "Half projection mode requires Half model weights"
+        ))
+    ));
 }
 
 #[test]
