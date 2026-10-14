@@ -243,6 +243,14 @@ Exact-byte probe admission and both-model prelaunch tuple checks close Astra's
 provenance findings;22portable and104ordinaryMetal-feature checks pass. This
 qualifies integration/shortguards only; full loss/task/speed remain open.
 
+The [frozen Q4 v2 full-loss evaluation](experiments/2026-10-14-q4-v2-full-loss.md)
+completes all10,000targets for both models. Larger meanNLL2.51426472772287 versus
+matchedFP322.485958031019153 increases0.02830669670371666, passing0.05.
+Small increases0.05129570579114473 and remains rejected. All20,268events,
+owned exits, state, unchanged endpoints and≤6GiB budgets replay cleanly.
+This is larger loss acceptance only. Per the plan's explicit Half fallback,
+continue larger task-quality/release evidence while preserving small rejection.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
@@ -261,6 +269,7 @@ These findings prevent unsuccessful experiments from being presented as improvem
 | 0.5B Original Half full-loss collection | Short batch/single NLL guard **0.004681 > 0.001** fails; collection stops before full loss. No full Half quality conclusion. [Result](experiments/2026-10-13-metal-held-out-loss.md). |
 | Larger Original Half full-loss collection | Short batch/single target NLL guard **0.001523869 > 0.001** fails at the first probe. Full scoring never starts; no full Half quality conclusion. [Result](experiments/2026-10-14-larger-half-loss.md). |
 | Larger Q4 held-out quality | Mean NLL **2.588645591385506** vs matched FP32 **2.485958031019153**; increase **0.10268756036635285 > 0.05**, rejected despite short numerical parity. [Result](experiments/2026-10-13-larger-metal-loss.md); `a082be5`. |
+| Small Q4 v2 group8 held-out loss | MeanNLL2.9350208557206288 vsFP322.883725149929484; increase0.05129570579114473 exceeds0.05. Rejected with no tuning/waiver. [Decision](experiments/2026-10-14-q4-v2-full-loss.md). |
 | Native macOS generated-code isolation prototype | Fixed resource admission fails; not adopted. Literal grading instead uses the separately qualified Linux controller. [Native rejection](experiments/2026-10-10-code-isolation.md), [Linux qualification](experiments/2026-10-11-linux-literal-controller.md). |
 
 The fixed quality gates, quantizer, checkpoint selection and corpus remain
