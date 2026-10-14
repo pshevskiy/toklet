@@ -59,11 +59,11 @@ ranking. No external-runtime speed lead follows from these internal comparisons.
 | Larger exact model geometry | Admits the preselected 28-layer, hidden-1536 Qwen2.5-1.5B checkpoint; larger CPU and Half/Q4 numerical references verified independently within 6 GiB. | [CPU oracle](experiments/2026-10-13-larger-independent-oracle.md), [GPU geometry](experiments/2026-10-13-q4-compensated-storage.md), [passing Q4 numerical qualification](experiments/2026-10-13-compensated-rms.md); `58dc39a`, `dee4bc3`, `8e76c3d`. |
 | Compensated Q4 projection | Explicit FMA residual plus two-component accumulation and round-to-odd Half storage fixes a localized double-rounding error without changing Q4 reconstruction. Expanded tiny gates and signed midpoint cases pass. | [Numerical investigation](experiments/2026-10-13-q4-compensated-storage.md); `dee4bc3`. |
 | Compensated RMS reduction | Compensated summation of exactly represented Half squares isolates and fixes 66 larger first-layer rounding differences. Passes 43,008 exact primitive values, 4,550 tiny stage comparisons and 969 selected larger comparisons under unchanged gates. | [RMS qualification](experiments/2026-10-13-compensated-rms.md); `8e76c3d`. |
-| Explicit compensated resident Half projection | Shape-independent per-row accumulation, bias last, midpoint-preserving Half storage and nearest FP32 vocabulary output pass1,668 primitive outputs,2,520 tiny captured arrays and969 selected larger arrays. | [Numerical qualification](experiments/2026-10-14-half-compensated.md), [short consistency](experiments/2026-10-14-half-scorer.md) and [full loss](experiments/2026-10-14-half-full-loss.md) pass. Task quality/performance release remains unqualified. |
-| Explicit compensated Half CLI | Opt-in mode, actual ready/done execution metadata and complete logical admission; six bounded native workers preserve cached/pending/error/reset/stop/cancellation and independently finalized raw/chat text. | [CLI qualification](experiments/2026-10-14-metal-cli-half.md); no workload/task/performance acceptance. |
-| Frozen controlled Metal worker/collector | Completed waits, exact consumed token-byte pins and full-history/state/memory checks preserve eight contract workloads on both fixed checkpoints, including explicit changed-prefix replay and the2048-position boundary. | [Functional qualification](experiments/2026-10-14-metal-controlled.md);16workers/62events pass. Repeated performance collection remains pending. |
-| Bounded larger FP32 task-reference worker | Raw prepared IDs, capacity562/chunk8 and post-exit tokenizer construction fit all100 original admissions without a simultaneous tokenizer/model allocation. Synthetic maximum/EOS/state checks and three real short probes pass. | [Reference prerequisite](experiments/2026-10-14-cpu-task-reference.md); full100responses/literal scores remain pending. |
-| Backend-aware Half task collection | Actual Metal execution/memory admission, exact frozen case grammar and independent finalized-text comparison; qualified receipt replacement rejects before launch. Six real short probes/55events pass. | [Collector qualification](experiments/2026-10-14-metal-tasks.md); full100responses and literal grading remain pending. |
+| Explicit compensated resident Half projection | Shape-independent per-row accumulation, bias last, midpoint-preserving Half storage and nearest FP32 vocabulary output pass1,668 primitive outputs,2,520 tiny captured arrays and969 selected larger arrays. | [Numerical qualification](experiments/2026-10-14-half-compensated.md), [short consistency](experiments/2026-10-14-half-scorer.md) and [full loss](experiments/2026-10-14-half-full-loss.md) pass. [Full task quality](experiments/2026-10-14-half-task-quality.md) now passes both checkpoints; [release decision](experiments/2026-10-14-m5-performance-decision.md) withholds replacement. |
+| Explicit compensated Half CLI | Opt-in mode, actual ready/done execution metadata and complete logical admission; six bounded native workers preserve cached/pending/error/reset/stop/cancellation and independently finalized raw/chat text. | [CLI qualification](experiments/2026-10-14-metal-cli-half.md); later [full qualification and decision](experiments/2026-10-14-m5-performance-decision.md) record quality, workloads and repeatability; default/replacement remains unaccepted. |
+| Frozen controlled Metal worker/collector | Completed waits, exact consumed token-byte pins and full-history/state/memory checks preserve eight contract workloads on both fixed checkpoints, including explicit changed-prefix replay and the2048-position boundary. | [Functional qualification](experiments/2026-10-14-metal-controlled.md);16workers/62events pass. both [full matrices and repeats](experiments/2026-10-14-m5-performance-decision.md) are now complete. |
+| Bounded larger FP32 task-reference worker | Raw prepared IDs, capacity562/chunk8 and post-exit tokenizer construction fit all100 original admissions without a simultaneous tokenizer/model allocation. Synthetic maximum/EOS/state checks and three real short probes pass. | [Reference prerequisite](experiments/2026-10-14-cpu-task-reference.md); [full100responses/literal scores](experiments/2026-10-14-half-task-quality.md) now complete; not an application baseline. |
+| Backend-aware Half task collection | Actual Metal execution/memory admission, exact frozen case grammar and independent finalized-text comparison; qualified receipt replacement rejects before launch. Six real short probes/55events pass. | [Collector qualification](experiments/2026-10-14-metal-tasks.md); [full100responses and literal grading](experiments/2026-10-14-half-task-quality.md) now complete. |
 
 Compensated projection/normalization are explicit options. Their numerical
 qualification does not establish acceptable end-to-end quantization quality.
@@ -97,8 +97,8 @@ qualification does not establish acceptable end-to-end quantization quality.
 | Frozen 10,000-target loss and 100-task grading | Causal target/block coverage, stable loss, all raw responses and literal grading; no generated-code repair. CPU scalar/tiled NLL and task results are identical. | [Loss](experiments/2026-10-11-held-out-tiled-loss.md), [tasks](experiments/2026-10-11-held-out-task-quality.md), [isolated grader](experiments/2026-10-11-linux-literal-controller.md). |
 | Matched larger references | Exact preselection before quality evaluation; larger FP32 mean NLL **2.485958031019153**, independent geometry/oracles and bounded native residency. | [Preselection](experiments/2026-10-13-larger-preselection.md), [FP32 collection](experiments/2026-10-13-larger-fp32-loss.md); `4f226ef`, `095dd91`. |
 | All-layer Half consistency localization | Reproduces all six scored rows, captures451 stage pairs/56 complete KV prefixes, and replays the first divergent projection with identical operands and exact dyadic rounding witnesses. | [Investigation](experiments/2026-10-14-half-consistency.md). Layer0 Q MPS shape-dependent rounding is localized; no arithmetic, quality or speed acceptance. |
-| Explicit compensated Half scorer | Both preselected checkpoints pass the unchanged short consistency guard with zero NLL difference and exact scored-row logits/target bits across chunk1/128. | [Scorer task](experiments/2026-10-14-half-scorer.md).12 scored observations per model; [full loss now passes](experiments/2026-10-14-half-full-loss.md), with task/release evidence pending. |
-| Compensated Half full held-out loss | All10,000 targets per fixed model pass the unchanged0.05 NLL-increase gate:0.5B mean2.8836406 vs FP32 2.8837251;1.5B mean2.4859246 vs FP32 2.4859580. | [Full-loss qualification](experiments/2026-10-14-half-full-loss.md). Corpus-specific quality gate only; task quality, application/workload comparisons and overall M5 remain open. |
+| Explicit compensated Half scorer | Both preselected checkpoints pass the unchanged short consistency guard with zero NLL difference and exact scored-row logits/target bits across chunk1/128. | [Scorer task](experiments/2026-10-14-half-scorer.md).12 scored observations per model; [full loss now passes](experiments/2026-10-14-half-full-loss.md), [full task quality](experiments/2026-10-14-half-task-quality.md) now passes; release replacement remains unaccepted. |
+| Compensated Half full held-out loss | All10,000 targets per fixed model pass the unchanged0.05 NLL-increase gate:0.5B mean2.8836406 vs FP32 2.8837251;1.5B mean2.4859246 vs FP32 2.4859580. | [Full-loss qualification](experiments/2026-10-14-half-full-loss.md). Corpus-specific quality gate; [full task quality and repeated measurements](experiments/2026-10-14-m5-performance-decision.md) now complete. Overall M5 remains open. |
 | Astra code/evidence review per task | Review findings addressed before task commits; receipts bind sources, binaries, fixtures, checks and saved results. | Each linked task report records its review and acceptance scope. |
 
 Full task grading admission now preserves actual backend/model/modes and requires
@@ -113,7 +113,7 @@ A separate backend-aware literal grading window now connects full qualified task
 collections to the unchanged executor. It preserves literal programs and unresolved
 outcomes, requires all three matched models to exit, checks fresh PID/group absence
 immediately before VM startup and owns stopped restoration.22 mocked/all432 Python
-checks pass; actual grading/window execution awaits full responses.
+checks pass; subsequent [full native grading](experiments/2026-10-14-half-task-quality.md) resolves all300 outcomes.
 [Window report](experiments/2026-10-14-task-grading-window.md).
 
 The frozen authored application trace now supports explicit compensated Half Metal
@@ -127,15 +127,15 @@ Full task response collection now covers all100 original cases for both Half
 checkpoints and the larger FP32 reference.18,027 native events, full provenance,
 state/memory and independent finalized text pass; all three workers exit cleanly
 and fit6GiB. Larger visible IDs match99/100 cases. This is response qualification;
-matched literal scores and latency acceptance remain pending.
+subsequent [matched literal scores](experiments/2026-10-14-half-task-quality.md) pass; latency replacement remains unaccepted.
 [Full response report](experiments/2026-10-14-full-task-responses.md).
 
 Full matched Half task quality now passes both checkpoints:2/100 versus2/100 small
 FP32 and11/100 versus11/100 larger FP32, with0pp loss under the unchanged2pp gate.
 Three native literal windows resolve300 outcomes/120 code programs, restore the VM
 stopped and replay exactly. Absolute code passes are0/40 per model, without repair.
-Together with full Half loss this closes frozen Half quality; performance/sustained
-and the Q4-blocked M5 exit remain open.
+Together with full Half loss this closes frozen Half quality; later repeated
+measurements and sustained scopes are complete, while the Q4-blocked M5 exit stays open.
 [Matched quality report](experiments/2026-10-14-half-task-quality.md).
 
 Full small-model compensated Half controlled measurements now complete all eight
@@ -186,6 +186,17 @@ sub600s/application-duration and unavailableend-power/sensor/timing limits. See
 [application confirmation](experiments/2026-10-14-half-application-confirm.md). Final
 Astra accepts final data before commit; finalrelease/Q4 gates remain open.
 
+The final [M5 evidence and decision report](experiments/2026-10-14-m5-performance-decision.md)
+consolidates all completed Half quality, eight-row matrices, sustained scopes and
+confirming runs. It retains explicit compensated Half and records all Q4/fusion/
+chunk/readback decisions without changing defaults. Historical CPU FP32 and
+external FP32/BF16 are different representation tracks; small Half boundary decode
+is slower than historical CPU, and application token counts differ. No matched
+external ranking or performance replacement follows. M5.2/.6 remain open;
+record completion is separate from milestone acceptance. Saved arithmetic,
+links/whitespace and protected executable checks pass; Astra accepted after two
+wording corrections with no remaining findings.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
@@ -208,8 +219,8 @@ These findings prevent unsuccessful experiments from being presented as improvem
 
 The fixed quality gates, quantizer, checkpoint selection and corpus remain
 unchanged. Full compensated Half loss/task quality passes both selected models.
-Confirming application/controlled comparisons,
-final release qualification and the Q4-blocked M5 exit remain open.
+Both confirming primary/application runs are complete. The [final decision](experiments/2026-10-14-m5-performance-decision.md)
+records performance baseline gaps, withholds default replacement and keeps the Q4-blocked M5 exit open.
 Long-context attention/KV experiments and physical iPhone work belong to M6/M7.
 This record will be updated with each reviewed implementation or measurement
 decision; unmeasured changes will remain explicitly marked.

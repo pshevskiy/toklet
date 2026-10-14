@@ -1,0 +1,36 @@
+import hashlib,json,statistics
+from pathlib import Path
+root=next(p for p in Path(__file__).resolve().parents if (p/'PLAN.md').is_file() and (p/'benchmarks/results').is_dir()); out=root/'benchmarks/results'; inputs={}
+def read(name):
+ p=out/name; b=p.read_bytes(); inputs[str(p.relative_to(root))]={'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}; return json.loads(b)
+def verify(s):
+ raw=s['raw']; assert len(raw)==10
+ assert statistics.median(raw)==s['median']
+ assert min(raw)==s.get('minimum',s.get('min'))
+ assert max(raw)==s.get('maximum',s.get('max'))
+ assert statistics.median(abs(v-s['median']) for v in raw)==s['mad']
+models=[]
+for model,name in [('small','2026-10-14-small-half-controlled-full-analysis-v2.json'),('larger','2026-10-14-larger-half-controlled-full-analysis-v1.json')]:
+ a=read(name); assert a['passed']; c=a['collections'][0]; assert c['model']==model and not c['working_tree_dirty']; assert c['raw_events']==187
+ assert [r['workload'] for r in c['rows']]==['short','medium','long','boundary','append','cached','pending','changed']
+ for r in c['rows']:
+  assert r['warmups']==3 and r['samples']==10
+  for k in ['ttft_seconds','request_seconds','decode_steps_per_second']:
+   if r[k] is not None: verify(r[k])
+  assert sum(r['request_seconds']['raw'])==r['measured_request_seconds']
+  assert r['measured_requests_exceed_ten_minutes']==(r['measured_request_seconds']>=600)
+ models.append({'model':model,'rows':c['rows'],'maximum_controlled_admission_bytes':max(r['admission_bytes'] for r in c['rows']),'maximum_controlled_joint_native_charge_bytes':max(r['sampled_joint_native_lifetime_charge_bytes'] for r in c['rows'])})
+loss=read('2026-10-14-half-full-loss-qualification-v1.json')['saved_data_replay']; tasks=read('2026-10-14-half-task-quality-qualification-v1.json'); assert tasks['passed']
+for m in models:
+ name=m['model']; l=loss[name]; t=tasks[name]; assert l['full_targets']==10000 and l['increase_nats_per_token']==l['mean_nll']-l['baseline_mean_nll']; assert l['increase_nats_per_token']<=.05; assert t['cases']==100 and t['drop_percentage_points']==t['fp32_passed']-t['half_passed']==0
+ m['half_loss']=l; m['half_tasks']=t
+primary=read('2026-10-14-half-primary-confirm-analysis-v1.json'); apps=read('2026-10-14-half-application-confirm-comparison-v1.json'); appdata=read('2026-10-14-half-application-confirm-analysis-v1.json'); assert primary['passed'] and apps['passed'] and appdata['passed']
+for c in primary['collections']:
+ for k,v in c['comparisons'].items():
+  verify(v['initial']); verify(v['confirmation']); assert v['median_change_fraction']==(v['confirmation']['median']/v['initial']['median']-1)
+for c in apps['collections']:
+ assert c['all39_response_ID_text_stop_state_signatures_match_first_run']; assert c['median_change_fraction']==c['confirmation_median_seconds']/c['first_median_seconds']-1
+for c in appdata['collections']: verify(c['scenario_seconds']); assert c['measured_scenario_seconds']==sum(c['scenario_seconds']['raw'])<600
+for name in ['2026-10-14-small-half-controlled-full-qualification-v1.json','2026-10-14-larger-half-controlled-full-qualification-v1.json','2026-10-14-half-primary-confirm-qualification-v1.json','2026-10-14-half-application-full-qualification-v1.json','2026-10-14-half-application-confirm-qualification-v1.json']: assert read(name)['passed']
+decision={'format':'toklet-m5-performance-decision-v1','saved_summary_checks_passed':True,'source_parent':'8e4afc3','m5_complete':False,'performance_default_changed':False,'external_speed_lead_claimed':False,'quality_gate_changed':False,'models':models,'primary_repeatability':primary['collections'],'application_repeatability':apps['collections'],'baseline_gaps':['No newly alternating same-representation CPU/Metal primary comparison','No matched FP16 external matrix with full quality and memory qualification','Historical small FP32 application emits different IDs; larger standard FP32 application exceeds budget'],'exit_blocker':'Both frozen Q4 v1 full-loss increases exceed 0.05 nats/token','inputs':inputs}
+print(json.dumps(decision,indent=2))

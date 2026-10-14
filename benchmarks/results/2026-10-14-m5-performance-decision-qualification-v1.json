@@ -1,0 +1,1938 @@
+{
+  "format": "toklet-m5-performance-decision-qualification-v1",
+  "passed": true,
+  "source_parent": "8e4afc3",
+  "scope": "Saved-data synthesis and documentation only; M5/replacement not accepted",
+  "checks": {
+    "byte_identical_producer_replay": true,
+    "quality_and_repeat_arithmetic": true,
+    "duration_and_dispersion": true,
+    "all_local_links_exist": true,
+    "whitespace": true,
+    "protected_binaries_unchanged": true,
+    "no_native_model_or_build_run": true
+  },
+  "review_required_before_commit": true,
+  "protected_binaries": {
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "bindings": {
+    "PLAN.md": {
+      "bytes": 164276,
+      "sha256": "fa8a8187679601d79edcedff9b29f074b9f4cdd9f075f1a732858471ab9802e1"
+    },
+    "docs/improvements.md": {
+      "bytes": 29418,
+      "sha256": "53d02a484c68bb2d6d292e3914bfc1c4daa505a213d3ee903e6f4c555851f232"
+    },
+    "docs/experiments/2026-10-14-m5-performance-decision.md": {
+      "bytes": 11696,
+      "sha256": "f99d4b02796dfb441065ea42787b97cb5dbb4d8aadfbc772a191e954df042683"
+    },
+    "benchmarks/results/2026-10-14-m5-performance-decision-v1.json": {
+      "bytes": 42415,
+      "sha256": "920a4f65a8b432049ac973f6aa74eb9ab3ebdbf1ee92d9710c2a25b9ca9b159a"
+    },
+    "benchmarks/results/2026-10-14-m5-performance-decision-producer-v1.py.txt": {
+      "bytes": 4086,
+      "sha256": "54bf9e96ad5200b6dc9c80f1c9f9c3f19b5e9759b1a4417b75ab9a4b39d87830"
+    },
+    "benchmarks/results/2026-10-14-small-half-controlled-full-analysis-v2.json": {
+      "bytes": 18952,
+      "sha256": "29f7bf118161e03ccefb511004734618aef614de4ed66edf601b241507d5db36"
+    },
+    "benchmarks/results/2026-10-14-larger-half-controlled-full-analysis-v1.json": {
+      "bytes": 18983,
+      "sha256": "ffcd0d9aab70925506e8630b4aff7cc8a922d7b0d1810f64190a572255629530"
+    },
+    "benchmarks/results/2026-10-14-half-full-loss-qualification-v1.json": {
+      "bytes": 43225,
+      "sha256": "80e4dffd408a8e4348683f50e263fc26afa7b1a0403e43e43529d833741fe40b"
+    },
+    "benchmarks/results/2026-10-14-half-task-quality-qualification-v1.json": {
+      "bytes": 39570,
+      "sha256": "9ad3e14409b0154b5ac9b73175fc7a5f6594e81f6f44c40b3cc448a11c3a0c92"
+    },
+    "benchmarks/results/2026-10-14-half-primary-confirm-analysis-v1.json": {
+      "bytes": 5250,
+      "sha256": "fdeeed42b6937d4d2fac0441e4140a657b90bb8536f92947492b30369c70e15e"
+    },
+    "benchmarks/results/2026-10-14-half-application-confirm-comparison-v1.json": {
+      "bytes": 762,
+      "sha256": "5cdf2cf7e3e3ed6f4be9023a3fdda97a1d170e963971c0bb5f5a058976fece85"
+    },
+    "benchmarks/results/2026-10-14-half-application-confirm-analysis-v1.json": {
+      "bytes": 20509,
+      "sha256": "889825f66fab72744abf31f20b3d1a8bf94a3de1a1a32ca42e6f18374cdf6bc2"
+    },
+    "benchmarks/results/2026-10-14-small-half-controlled-full-qualification-v1.json": {
+      "bytes": 62786,
+      "sha256": "d0ee31de4df4912865fdf7e7129044a1f68e9c915c739569bffc0b0be723b736"
+    },
+    "benchmarks/results/2026-10-14-larger-half-controlled-full-qualification-v1.json": {
+      "bytes": 62700,
+      "sha256": "431070806f2999805098a60499bd833fac4fe7fb17613f9c4cee33a5c041ccf4"
+    },
+    "benchmarks/results/2026-10-14-half-primary-confirm-qualification-v1.json": {
+      "bytes": 15441,
+      "sha256": "1ea5f04a62bed89fe895980dd13ea6b670998aaebdadfb1f07e8d40e616b2181"
+    },
+    "benchmarks/results/2026-10-14-half-application-full-qualification-v1.json": {
+      "bytes": 18927,
+      "sha256": "6ee08095b1acaba9b8dde3639d116c816bf527774bd9c6b0c379f49cfb691a46"
+    },
+    "benchmarks/results/2026-10-14-half-application-confirm-qualification-v1.json": {
+      "bytes": 17412,
+      "sha256": "d94c677487b9f53ade5db7b93dae83d579e311eb9d52149b6059191d17d9c5de"
+    },
+    "apple_llm_performance_plan.md": {
+      "bytes": 35117,
+      "sha256": "e9dad3d3efed59130180ca795388a89a0b8a5927f5152b6e1ab697a9cd42f098"
+    },
+    "tests/fixtures/tiny-v1/manifest.json": {
+      "bytes": 134120,
+      "sha256": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4"
+    },
+    "tools/reference/README.md": {
+      "bytes": 13217,
+      "sha256": "f591901fb4c0f19776387bebd0c49480f863388db54e6a97f37ecd1fbdcff289"
+    },
+    "benchmarks/sources.json": {
+      "bytes": 5858,
+      "sha256": "dc2f82fb50b3f1f763c4757a992429b9122f3628c049709bdd7cb2252c69ea28"
+    },
+    "benchmarks/contract-v1/manifest.json": {
+      "bytes": 6490,
+      "sha256": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66"
+    },
+    "benchmarks/README.md": {
+      "bytes": 20033,
+      "sha256": "41462fa7bef32e857c29155cb4e2891746f32ce8f49eb311f031585d6ff4a5dc"
+    },
+    "benchmarks/result.schema.json": {
+      "bytes": 11558,
+      "sha256": "503047553e2a79bbc637da756497494e2fc916c70cdfef1fcf0b687a7a4be852"
+    },
+    "tools/bench/mlx_baseline.py": {
+      "bytes": 13938,
+      "sha256": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34"
+    },
+    "benchmarks/results/2026-10-09-mlx-bf16-512-128.json": {
+      "bytes": 45840,
+      "sha256": "6cbdb30a2b21b11c88ead917667e08bee830796d23228b9bfee9318cc205c682"
+    },
+    "benchmarks/results/2026-10-09-mlx-bf16-512-128.md": {
+      "bytes": 3487,
+      "sha256": "e93c40c5a0d1a709b3eccb51135f6a7484372e167e333c28d051cef73a0591d3"
+    },
+    "src/cpu/mod.rs": {
+      "bytes": 9060,
+      "sha256": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265"
+    },
+    "tests/cpu_linear.rs": {
+      "bytes": 8565,
+      "sha256": "0aa924009e8803518cb9bce3c178872982b2bc87a7d5c87f6a085f6ee7b98b41"
+    },
+    "src/cpu/reductions.rs": {
+      "bytes": 7659,
+      "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d"
+    },
+    "tests/cpu_reductions.rs": {
+      "bytes": 10620,
+      "sha256": "b4529fba8df103e4e0f289b0595f3498af665d199a1e4aa7babb8ae693dde1e7"
+    },
+    "src/cpu/attention.rs": {
+      "bytes": 11201,
+      "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf"
+    },
+    "tests/cpu_attention.rs": {
+      "bytes": 9019,
+      "sha256": "804bb41795c868a0e0a4d1d9a1923270731e137eed986003f57de847bb5fb7e7"
+    },
+    "src/model/mod.rs": {
+      "bytes": 24014,
+      "sha256": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94"
+    },
+    "src/model/trace.rs": {
+      "bytes": 2807,
+      "sha256": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1"
+    },
+    "src/sampling.rs": {
+      "bytes": 616,
+      "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9"
+    },
+    "tests/cpu_decoder.rs": {
+      "bytes": 12789,
+      "sha256": "c97638807910b4307e56ded647088b10fdadf9eef50bfe9a21f8635ae83aed79"
+    },
+    "src/weights/mod.rs": {
+      "bytes": 30344,
+      "sha256": "a07f0e8b91973c22c3fe9b0c9c5f0f688fc4b602f5402ef0f9a95c05976399c1"
+    },
+    "tests/weights.rs": {
+      "bytes": 17426,
+      "sha256": "0b46e87a5c5eb22d4d997d0959b032366e5ef0a8cd1455d2f58d30ed3cf7598a"
+    },
+    "benchmarks/results/2026-10-09-qwen-load.md": {
+      "bytes": 2680,
+      "sha256": "bb2260673c73f00f068f86bb9640a141a08461a7539696dcaf0040afd1a15714"
+    },
+    "tools/reference/qwen.py": {
+      "bytes": 17305,
+      "sha256": "1fc77e3772c484f39c4c5df6a2ccc6c0aa3760ef74842fdc9d7cdb46df68e38b"
+    },
+    "tests/fixtures/qwen-v2/manifest.json": {
+      "bytes": 364640,
+      "sha256": "691429f672aa89875e06475f48b5b691343f03c08e47fd204fa60fec2eef20d1"
+    },
+    "tests/qwen_forward.rs": {
+      "bytes": 13246,
+      "sha256": "0cdd2529dac4c4ffb66e94d721571a40b12696486f26cbab31718cc9e767c7d5"
+    },
+    "benchmarks/results/2026-10-09-qwen-forward.md": {
+      "bytes": 5393,
+      "sha256": "f5b94c0a524996cc5c2395d7b01c4c922d0d9c7cdd114ac18b669488830f1c39"
+    },
+    "src/session.rs": {
+      "bytes": 16921,
+      "sha256": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0"
+    },
+    "tests/session.rs": {
+      "bytes": 41034,
+      "sha256": "958690e150c1235357a67830e0067b9c472024815d97832c77681a8da0e07c4c"
+    },
+    "tests/cached_attention.rs": {
+      "bytes": 3570,
+      "sha256": "44df14bec20ca607aa18470f36e8e74e2151d75e2db5fb65f0783b91f120b3a8"
+    },
+    "tests/qwen_session.rs": {
+      "bytes": 9265,
+      "sha256": "b163c685a3d8bbccc504e47ccc460b3ecc04893bbfa37bda9ceae83d3ccb84e5"
+    },
+    "benchmarks/results/2026-10-09-qwen-session.md": {
+      "bytes": 5038,
+      "sha256": "7e3952622a3b625b7c32f2849554871cd4a9b9a92028983f120d9f9b82e1046b"
+    },
+    "src/generation.rs": {
+      "bytes": 7870,
+      "sha256": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158"
+    },
+    "src/bin/cli/mod.rs": {
+      "bytes": 28255,
+      "sha256": "c7957092ea2dec2d24c268eb837c2720af1f455ceb0138294877988ddbb0d878"
+    },
+    "tests/fixtures/chat-v1/manifest.json": {
+      "bytes": 117260,
+      "sha256": "27988589738912067d64f25fd24217fd61e578c8981cd827fd3befdd8cdd6851"
+    },
+    "benchmarks/results/2026-10-10-qwen-cli.json": {
+      "bytes": 8624,
+      "sha256": "f0f805a2c73d51d9ad9116ffce1cb07cc64572b5c54cbec833787873bec3225e"
+    },
+    "benchmarks/results/2026-10-10-qwen-cli.md": {
+      "bytes": 4486,
+      "sha256": "54fa139401ec410becd641c80ef19a7646b59e43a6371d4129846b152c17792e"
+    },
+    "src/benchmark.rs": {
+      "bytes": 3360,
+      "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a"
+    },
+    "examples/cpu_bench.rs": {
+      "bytes": 4922,
+      "sha256": "d42eafa4f78ec0b9a618c137cd21a43b35f3c1d9af8621eba39d1055ddf2553a"
+    },
+    "tools/bench/cpu.py": {
+      "bytes": 20248,
+      "sha256": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a"
+    },
+    "benchmarks/results/2026-10-10-cpu-profiler-probe.json": {
+      "bytes": 3667,
+      "sha256": "9850335a41480bdf1604e06858cbb7b57c96e1380e3b020c52e24dc6651fd74b"
+    },
+    "benchmarks/results/2026-10-10-mlx-fp32-128-128.json": {
+      "bytes": 45970,
+      "sha256": "dde40fe61d6357110d828758e45269b07e9d12015d5147839ec90596157f75af"
+    },
+    "benchmarks/results/2026-10-10-mlx-fp32-128-128.md": {
+      "bytes": 3303,
+      "sha256": "089bce04de5d7600d47236bf6fa810883079ec8496a2a9cae945ca51487f377d"
+    },
+    "benchmarks/results/2026-10-10-cpu-short.md": {
+      "bytes": 3349,
+      "sha256": "1b4c0136baabeb3e535a9cb5e31fc9df99929cc22a8dbf3762df9eb2e3877253"
+    },
+    "tools/bench/llama/worker.cpp": {
+      "bytes": 11928,
+      "sha256": "5d4253f705481462245d4ec98dd660b2f3521057102cde0f2ceb3c346c87be53"
+    },
+    "benchmarks/results/2026-10-10-llama-fp32-short.md": {
+      "bytes": 4539,
+      "sha256": "938ef52ae8c9e3b3df0260cd846e1ef0e3328b7ffc00109455e5cdbf89e4b89f"
+    },
+    "tools/bench/application.py": {
+      "bytes": 15239,
+      "sha256": "9bcee63ef402a416d5a8cf743a81abfd7061add578544a383b633762418b57da"
+    },
+    "benchmarks/results/2026-10-10-application-probe.md": {
+      "bytes": 2300,
+      "sha256": "f4dbcc9e74ac69b19b4aa7ffada26495544e5975014fa25859251aa57bf5e074"
+    },
+    "benchmarks/results/2026-10-10-external-matrix.md": {
+      "bytes": 4307,
+      "sha256": "94ec846f17e5ebd810113d76a7908d61ab1e036933df738d32d22b13326b95c9"
+    },
+    "benchmarks/results/2026-10-10-cpu-boundary.md": {
+      "bytes": 4738,
+      "sha256": "d69f7e143b18383bd553ef39dcc0bd77aa6bd68ea03725579dcf968a579c4a0c"
+    },
+    "benchmarks/results/2026-10-10-cpu-medium.md": {
+      "bytes": 4602,
+      "sha256": "29f5a48fc638025133da56a9de3957b4bd3c4116818349086234a6c59dfc449d"
+    },
+    "docs/experiments/2026-10-10-cpu-long.md": {
+      "bytes": 5688,
+      "sha256": "fd4739cabd48ac4827d1445d1594665deeabb4c10f8c91a3630a0feaf9848321"
+    },
+    "docs/experiments/2026-10-10-cpu-append.md": {
+      "bytes": 6845,
+      "sha256": "fbbaac8b89eef56d7b6eee1e04a98b45d42a58e2c3b59be4948885c9d787fa87"
+    },
+    "docs/experiments/2026-10-10-cpu-cached.md": {
+      "bytes": 7127,
+      "sha256": "e9dd39eefc4451be93f7c9b92172196a94958294ec4449a4a165f19892366e25"
+    },
+    "docs/experiments/2026-10-10-cpu-pending.md": {
+      "bytes": 7339,
+      "sha256": "85c94d8609a83a79530276003e8094415753839d2ca314dc36d420f6a168a56b"
+    },
+    "docs/experiments/2026-10-10-held-out-loss-runner.md": {
+      "bytes": 6394,
+      "sha256": "2c901dd32c55982ef5d97ea6a9819df30389547d85ccd02cd40af545e59884d9"
+    },
+    "docs/experiments/2026-10-10-task-response-collector.md": {
+      "bytes": 7671,
+      "sha256": "5aa1dacb33bfc780d9490fd98601b7ce282d3212d4c764ffa3535fad5734880d"
+    },
+    "docs/experiments/2026-10-10-code-isolation.md": {
+      "bytes": 8457,
+      "sha256": "fd0b8eeade06d40ac745b5c9778c04a6d7392688f7df86b39124e9992ed3d952"
+    },
+    "docs/experiments/2026-10-10-linux-code-isolation.md": {
+      "bytes": 8874,
+      "sha256": "85dd6caca477845f936ad9f86a8e204bccbb12ae9980ab4ef1b733adc7c241eb"
+    },
+    "benchmarks/results/2026-10-11-linux-code-isolation-attempt-v1.json": {
+      "bytes": 3303,
+      "sha256": "cb80ca3796b32fa932266b9a364fd249635835ba61a3315086a5b13d22df5a02"
+    },
+    "docs/experiments/2026-10-11-linux-code-isolation-retry.md": {
+      "bytes": 7177,
+      "sha256": "68ed4d11e33a4120d52563aa583f4af57c823e6472bccb496010729b9e8e061f"
+    },
+    "docs/experiments/2026-10-11-cpu-changed.md": {
+      "bytes": 5449,
+      "sha256": "8f96ed0b7e51bdd8cadb9ad91adac647162ebdb9dfa197fd135b536f7315d70b"
+    },
+    "docs/experiments/2026-10-11-application-scalar.md": {
+      "bytes": 6244,
+      "sha256": "b9ca1f470cca7077f37115187e58a07618e9a33d86ee5ccd68ce0a7aef8a4e22"
+    },
+    "docs/experiments/2026-10-11-linux-task-preparation.md": {
+      "bytes": 4018,
+      "sha256": "deadb662442322695019019e5d86739040334f172106228b1b7d17d0d47a76c0"
+    },
+    "docs/experiments/2026-10-11-held-out-scalar-loss.md": {
+      "bytes": 4901,
+      "sha256": "ab0e611641110f098afff79164c4220ad035e38a22775ef55ccc078b3a68d052"
+    },
+    "docs/experiments/2026-10-11-linux-literal-controller.md": {
+      "bytes": 7179,
+      "sha256": "d870969b04f0fe2af0aac1303b31dcbbe6dde9215da1ebc6f691ed3c180af3d4"
+    },
+    "docs/experiments/2026-10-11-held-out-tiled-loss.md": {
+      "bytes": 4925,
+      "sha256": "5c87cfab4c59d7976e7ca5a35fcd2727ca5b3f6f7a9190a755438a3f7b0b2264"
+    },
+    "docs/experiments/2026-10-11-held-out-task-collector.md": {
+      "bytes": 4699,
+      "sha256": "5426f189228dd82f9eb56cc18b68e4d3b422fb91bda20901d756aaa7f0b987a1"
+    },
+    "docs/experiments/2026-10-11-held-out-task-scalar.md": {
+      "bytes": 4979,
+      "sha256": "83831ab6bc795c75eddf14c61b95f1f75337f6e09711f6c341d3809fb8bef493"
+    },
+    "docs/experiments/2026-10-11-held-out-task-grading.md": {
+      "bytes": 5233,
+      "sha256": "14aa35003112b1b7fb9301872c3a3cb311b0386e02ba96d734649f6c34c8588f"
+    },
+    "docs/experiments/2026-10-11-held-out-task-scalar-grading.md": {
+      "bytes": 5005,
+      "sha256": "3e092a61204a0a94237622fd20b0ec8118a6caff2fb9ae0ee7e248f18d031e43"
+    },
+    "docs/experiments/2026-10-11-held-out-task-tiled.md": {
+      "bytes": 4289,
+      "sha256": "fa0a9694b4b06b52948d913d1e42422d4bd407eac61f503209c13257ce758be0"
+    },
+    "docs/experiments/2026-10-11-held-out-task-quality.md": {
+      "bytes": 5348,
+      "sha256": "9d6ba4f1c0a49ddea3a6fb70093bf5ec30323fc6c7efff744033b0b770a7b14d"
+    },
+    "docs/experiments/2026-10-11-m2.5-scalar-comparison.md": {
+      "bytes": 8898,
+      "sha256": "725e0c3d573c707f477281092b700f20c67d63260c9094bcccac58b6675078b1"
+    },
+    "docs/experiments/2026-10-10-cpu-tile.md": {
+      "bytes": 6723,
+      "sha256": "8977c10c8ec9ca54349555f7b4131358b804cd94dd2da37a7ef791b7368cc17f"
+    },
+    "docs/experiments/2026-10-10-cpu-tiled-engine.md": {
+      "bytes": 6606,
+      "sha256": "8108d9722bb99fa49a8f9dabb583253e3a078a95e38e90241b18d152299dcc82"
+    },
+    "tests/fixtures/coreml-slice-v1/manifest.json": {
+      "bytes": 15435,
+      "sha256": "352cbf06380d357a4a81cd0358791f7500fe5aa0fc3c3fd8d0bbc36f9c43fd6b"
+    },
+    "docs/experiments/2026-10-10-cpu-primary-comparison.md": {
+      "bytes": 8481,
+      "sha256": "b546ca32092fe7e4c8775c353c1637c26fef5735945f1e3af9ca2a8c38dc1b99"
+    },
+    "docs/experiments/2026-10-10-cpu-tiled-cli.md": {
+      "bytes": 4523,
+      "sha256": "c273de7c84e20562378558565491f2d68e4fa03296344041b6a32ddf50961d66"
+    },
+    "docs/experiments/2026-10-10-cpu-tiled-application-adapter.md": {
+      "bytes": 5207,
+      "sha256": "c3e728f3f40c40313556d8859a878186d3ce12129f69a8973cfc876fc585b129"
+    },
+    "docs/experiments/2026-10-10-coreml-slices.md": {
+      "bytes": 10952,
+      "sha256": "6fc5713e1e240e57dd951a2171ab99b21b407d465ea8e15f00e59cc866f0c897"
+    },
+    "docs/experiments/2026-10-11-cpu-tiled-medium-excluded.md": {
+      "bytes": 2954,
+      "sha256": "42f312e245a87338c3eb25b84b3e9fc02dc104d6f6bc307f03ebe601a769d065"
+    },
+    "docs/experiments/2026-10-11-cpu-tiled-medium.md": {
+      "bytes": 6305,
+      "sha256": "50c29622e2edd75ab94752bc1f4b663bf3027d4c4808ce2c5066f4c8f6825a37"
+    },
+    "docs/experiments/2026-10-11-ane-feasibility-closure.md": {
+      "bytes": 3815,
+      "sha256": "8dedf285c69b09312f363d158f6374ecfe646306dcf656e98d51c6171f752d5d"
+    },
+    "docs/experiments/2026-10-11-cpu-tiled-long.md": {
+      "bytes": 6198,
+      "sha256": "f7f5cd25633fb7c2261380d7ca16c8a0f6f23f37223c5f3059d9e275b0d3a8fd"
+    },
+    "docs/experiments/2026-10-11-cpu-tiled-boundary.md": {
+      "bytes": 6605,
+      "sha256": "a7beacdc020166bb53684991beec25ac520c81682cf7fdc330ea96f65a51f1fe"
+    },
+    "docs/experiments/2026-10-12-cpu-tiled-append.md": {
+      "bytes": 5813,
+      "sha256": "bb9b0deae0c6504cab0f4720f5e4211209a63afce5a8541d8d4d7aadaaf8f4ce"
+    },
+    "docs/experiments/2026-10-12-cpu-tiled-cached-excluded.md": {
+      "bytes": 3540,
+      "sha256": "e9536f90780e65c5a6ec43af13f621157c1468471a3d66e2541f1d0f9034608f"
+    },
+    "docs/experiments/2026-10-12-cpu-tiled-cached.md": {
+      "bytes": 6586,
+      "sha256": "a7bf6a4405e3f67f1721805fa50e303aeed4e6fda882ea2ee6553e9e225eb367"
+    },
+    "docs/experiments/2026-10-12-cpu-tiled-pending.md": {
+      "bytes": 6388,
+      "sha256": "3fd0d4fbda7ebc720dc0359d7a8f39232a9538b52f4154b7c3b85c1fe26584fe"
+    },
+    "docs/experiments/2026-10-12-cpu-tiled-changed.md": {
+      "bytes": 6428,
+      "sha256": "1b6a65ecfe0a8b68e77f8313c6838f5b80603f6458c3d1ecdcc4caaccd53feba"
+    },
+    "docs/experiments/2026-10-12-application-tiled.md": {
+      "bytes": 6789,
+      "sha256": "afa82f231dcfa4f828f8f35a5dd7150e6d7c9cf155bbeba59a46bdd49f5e6d03"
+    },
+    "docs/experiments/2026-10-12-cpu-tiled-retention.md": {
+      "bytes": 10621,
+      "sha256": "7f1cf7956c212292c4ae250b63b850964014bae8fa4b714d424c246038dce4cc"
+    },
+    "docs/experiments/2026-10-10-metal-toolchain.md": {
+      "bytes": 4362,
+      "sha256": "17fd314cf1a5b1b541fbe8b46b040a9389c14601830c8d609583820b248667d8"
+    },
+    "docs/experiments/2026-10-10-qwen-fp16-reference.md": {
+      "bytes": 5791,
+      "sha256": "c5f62354fea9ff648853229634c9a53fa77ae878107bab037d84143279571d0b"
+    },
+    "docs/experiments/2026-10-10-mps-primitives.md": {
+      "bytes": 9554,
+      "sha256": "0a8f136890384a4283e393f8125d5c6a831d147cd7365237d475fdfffcfec566"
+    },
+    "docs/experiments/2026-10-10-mps-resident-projection.md": {
+      "bytes": 9201,
+      "sha256": "7714aa70afc7f686de9ae1b73d5e82e28c4d5c5fab5d3416ff36461c978af0b9"
+    },
+    "docs/experiments/2026-10-10-rust-metal-bindings.md": {
+      "bytes": 10126,
+      "sha256": "feb6076f7ad398f735c993c330f912d695dc1dcf530e5bb91475d7ab39749d44"
+    },
+    "docs/experiments/2026-10-10-metal-rms.md": {
+      "bytes": 9606,
+      "sha256": "5ce110c6402c262ffd6020436cea5f04e1cd5e722e390e5f614cc1cdb611db21"
+    },
+    "docs/experiments/2026-10-10-qwen-metal-rms.md": {
+      "bytes": 9233,
+      "sha256": "b463b8fd2eda5d161ebada42539b31d85359cb492169939c96c18f8158524e34"
+    },
+    "docs/experiments/2026-10-10-metal-embedding.md": {
+      "bytes": 8710,
+      "sha256": "c80817e78c485049b2d56d2df8c7c7b6a8712d21e1a3b8c6d91f330a56f51c7d"
+    },
+    "docs/experiments/2026-10-10-metal-residual.md": {
+      "bytes": 8831,
+      "sha256": "fe5efadf7b263064a8b2969e3fffca398143ff5476f1fa065183b627e408a3d5"
+    },
+    "docs/experiments/2026-10-10-qwen-metal-residual.md": {
+      "bytes": 8177,
+      "sha256": "d2d289c4f623b1f9da7f104d2bbae244bb0b719a2ecf8749ead9440fd7d89bf1"
+    },
+    "docs/experiments/2026-10-10-metal-silu.md": {
+      "bytes": 6744,
+      "sha256": "21174af8d711d0fc3f2b8575e2fe8e4843c6d8663fecf5343639b0a7d6daff9d"
+    },
+    "docs/experiments/2026-10-10-qwen-metal-silu.md": {
+      "bytes": 4875,
+      "sha256": "fe3048400882eae0bafea085ef88e8bc8a665b7e343c782656d9d95206d53aea"
+    },
+    "docs/experiments/2026-10-10-metal-gating.md": {
+      "bytes": 8504,
+      "sha256": "d6f03f73dcd98b0ec1f625881c7e7e708d39be0932ffbc83d91c4614eaef8bc7"
+    },
+    "docs/experiments/2026-10-10-qwen-metal-gating.md": {
+      "bytes": 7619,
+      "sha256": "70e2eb8690a5afcc22126e9599478788a1267d07bda7942fb29a358e13134da6"
+    },
+    "docs/experiments/2026-10-12-metal-gating-tails.md": {
+      "bytes": 7181,
+      "sha256": "895e77fc462f5e13a19b2543eeea0d55487aa6d7490f3509137ad49ab8730aac"
+    },
+    "docs/experiments/2026-10-12-rust-mps-projection.md": {
+      "bytes": 8918,
+      "sha256": "245057186529c7d1af77e5ffe8994d6105e806830d0103a5885ee9e4e09b5af8"
+    },
+    "docs/experiments/2026-10-12-rust-mps-mlp-projections.md": {
+      "bytes": 5616,
+      "sha256": "a3fa8fad95462599ce6974de1073c1fecd0a264e9a7b465e4ea023dd861bb8f8"
+    },
+    "docs/experiments/2026-10-12-rust-metal-mlp.md": {
+      "bytes": 7806,
+      "sha256": "82669a671e195889f590aad5308367fdf3d758379d5a586aabcaf4f143ab8f79"
+    },
+    "docs/experiments/2026-10-12-rust-mps-attention-projections.md": {
+      "bytes": 5551,
+      "sha256": "319a0191dc1fe6ee5e81329d9b55d4f18fee1de6d2f90177e8679942bccceb83"
+    },
+    "docs/experiments/2026-10-12-rust-metal-rotary.md": {
+      "bytes": 5959,
+      "sha256": "26175699893ff7f6a417aad5219238c26a09c4b1216f0df7207882465897325a"
+    },
+    "docs/experiments/2026-10-12-rust-metal-cache.md": {
+      "bytes": 5919,
+      "sha256": "aca56db530185b781eaffdeb5b014032daf3f1091a37428bdf59aae480851f5d"
+    },
+    "docs/experiments/2026-10-12-rust-metal-attention.md": {
+      "bytes": 7040,
+      "sha256": "68cae623c77f720a5cfd6da850af84d820392c37c512b3fd1a6d9a9cb94caa86"
+    },
+    "docs/experiments/2026-10-12-rust-metal-cached-attention.md": {
+      "bytes": 6853,
+      "sha256": "9dd880f4ab381883023f7f294bc05e2afd76f5bb06c626e4495dd300655aa48f"
+    },
+    "docs/experiments/2026-10-12-rust-metal-attention-graph.md": {
+      "bytes": 8944,
+      "sha256": "64938d011f45211173b0931031add841253d114e0f258cdae2f7a418881bdd72"
+    },
+    "docs/experiments/2026-10-12-rust-metal-layer.md": {
+      "bytes": 8194,
+      "sha256": "42d955853e0c916b44e7d946565a3ef8eb555cecb4321b5987aa589e6cdd85fb"
+    },
+    "docs/experiments/2026-10-12-rust-metal-decoder.md": {
+      "bytes": 9637,
+      "sha256": "d85c71ed8a1fff62b9fab0789f77edc6e99a116cab7b4fb5cc0bcdee55632c45"
+    },
+    "docs/experiments/2026-10-13-rust-metal-qwen-projections.md": {
+      "bytes": 7574,
+      "sha256": "f860da740e6554f686e2549355cceba56dadf2c1cb09064aaa61b0940e58d470"
+    },
+    "docs/experiments/2026-10-13-rust-metal-qwen-front.md": {
+      "bytes": 8521,
+      "sha256": "379f828d0b4a70c9b6fa68435f72c468a617ac3d924e50e22ace22954ffdda15"
+    },
+    "docs/experiments/2026-10-13-rust-metal-qwen-rotary.md": {
+      "bytes": 4262,
+      "sha256": "60b8408eb5a0a53c093df462f36fcc9712bfa7f94aa13d2124137f39e94b01b7"
+    },
+    "docs/experiments/2026-10-13-metal-engine.md": {
+      "bytes": 7045,
+      "sha256": "78b438bf1497bc0457d368f9ac81330088db4b85c7bdf7ee3a5f8b7f50c0715f"
+    },
+    "docs/experiments/2026-10-13-metal-trace.md": {
+      "bytes": 7961,
+      "sha256": "9220d584f9d719dcbf95ff92c3863d0056abd05ade6660b0302b85a651a9a182"
+    },
+    "docs/q4-v1.md": {
+      "bytes": 8769,
+      "sha256": "6a82b1eccb254f4ba40f3006dd3056cd928d283d54e774e79d164771a7ca3b70"
+    },
+    "docs/experiments/2026-10-13-q4-format.md": {
+      "bytes": 2173,
+      "sha256": "4d396b3430697417e8bff12ee3de4e9bbce37bd5ce499603e8526cf1726f88cd"
+    },
+    "docs/experiments/2026-10-13-q4-artifact.md": {
+      "bytes": 2761,
+      "sha256": "2a67fa4891c7e47801e3921b98ed3502be11ff02129a0635d30d5a56106a8e6e"
+    },
+    "docs/experiments/2026-10-13-q4-decode.md": {
+      "bytes": 4926,
+      "sha256": "3ba1f40545b006287574a72bb302c63d0014eac791812465658dd8a05a4bcfdd"
+    },
+    "docs/experiments/2026-10-13-prefix-continuation.md": {
+      "bytes": 5776,
+      "sha256": "8ccd8d8680b94082e7a540ecf1e5353e4edb29a76b411f2239ac66de877cd474"
+    },
+    "docs/experiments/2026-10-13-required-position-logits.md": {
+      "bytes": 2751,
+      "sha256": "d3b86e8977ce8ef2d3994725469eec147552c637bfc3d09ab532544fe5f9864d"
+    },
+    "docs/experiments/2026-10-13-metal-held-out-loss.md": {
+      "bytes": 4926,
+      "sha256": "d0266508617ae594e85a4f241fa4cc1a6d71491208cc93445d82df6ae6dddb69"
+    },
+    "docs/experiments/2026-10-13-larger-preselection.md": {
+      "bytes": 2327,
+      "sha256": "f226281d12f15a32417c9c1a16261b4e61be22df9e24c2a3f4b0478e96ee1d08"
+    },
+    "docs/experiments/2026-10-13-cpu-all-row-logits.md": {
+      "bytes": 2090,
+      "sha256": "ec64cf9af79d8d25cc513279a6a02e824d2570010670035db67f44032d85a11b"
+    },
+    "docs/experiments/2026-10-13-cpu-row-loss.md": {
+      "bytes": 3135,
+      "sha256": "dac8405f617cd41bb707db713167c341a9ca4e00a105f82efbd5b95bd338f048"
+    },
+    "docs/experiments/2026-10-13-larger-independent-oracle.md": {
+      "bytes": 3400,
+      "sha256": "c129d2d9f7c339301d41562632ae6b2bc4c5732f9bb19f6723c738f19e8cb014"
+    },
+    "docs/experiments/2026-10-13-larger-fp32-loss.md": {
+      "bytes": 2439,
+      "sha256": "be014b00ac79aeda7f5c27faaa17b4b933893923cb825197459c3f96bdecf67e"
+    },
+    "docs/experiments/2026-10-13-q4-prefill.md": {
+      "bytes": 4619,
+      "sha256": "b9d4391862e67cc4268cac7b36576ef2bdbb2f399a59e358da4f2f8f93551416"
+    },
+    "docs/experiments/2026-10-13-streamed-storage-oracles.md": {
+      "bytes": 4188,
+      "sha256": "bf1ea9f5f489ec029bda44e96a915e4609a6a727ce2fc77f2f4945e1ac498cf6"
+    },
+    "docs/experiments/2026-10-13-q4-compensated-storage.md": {
+      "bytes": 6043,
+      "sha256": "421ebf4fafda52819faa5fe1e7cd043ab30c619604c5c25ea6022af15ff56e69"
+    },
+    "docs/experiments/2026-10-13-compensated-rms.md": {
+      "bytes": 4592,
+      "sha256": "df5fba79f08c55d79c8a571beb90729af78ddae6e66f995dbddf8a6de27c560c"
+    },
+    "docs/experiments/2026-10-13-larger-metal-loss.md": {
+      "bytes": 4682,
+      "sha256": "a9e5b1a3a2b9e673b0ea860d233fd642cff82bd3386171d68f4c115990ab027a"
+    },
+    "docs/experiments/2026-10-13-accurate-q4-prefill.md": {
+      "bytes": 6296,
+      "sha256": "d14b6f40f2fed6d8d60dfa62368f295d5f7354702a8d1c7de3464be332550a91"
+    },
+    "docs/experiments/2026-10-13-metal-chunks.md": {
+      "bytes": 8548,
+      "sha256": "f636be0a41cc4e046aeef1d052009dc08638cd9f7029fbd0637c2d9b7506e88b"
+    },
+    "docs/experiments/2026-10-13-m5-prefill-closure.md": {
+      "bytes": 3718,
+      "sha256": "706465b8cbbed72268ce578a92b7bb24e703be45f35d23b3b3dcbe149aab73d8"
+    },
+    "docs/experiments/2026-10-13-metal-greedy.md": {
+      "bytes": 8180,
+      "sha256": "c100cba36d1223afe0b9416c5c94d1edb664691b273aaf431665d16b0e8034cf"
+    },
+    "docs/experiments/2026-10-14-mlp-gating.md": {
+      "bytes": 8528,
+      "sha256": "67d8f6798a21ea9369ad0c2552d01682da90b72ecb82d53e5d1194e2d1174bf3"
+    },
+    "docs/experiments/2026-10-14-rotary-cache.md": {
+      "bytes": 7979,
+      "sha256": "106675294a80cb9ed9430e12bcaf8c1d4f784a3375b094a69927da1e60f5c590"
+    },
+    "docs/experiments/2026-10-14-residual-rms.md": {
+      "bytes": 8417,
+      "sha256": "c5b28a5ee4b9a60781421557b27dea1491723f9f0a5cf0a705b383c5846e816a"
+    },
+    "docs/experiments/2026-10-14-m5-dispatch-closure.md": {
+      "bytes": 2744,
+      "sha256": "d76b5307b1f04e5bfc8668153742fb788b74ced54fccf36a21007513649b316d"
+    },
+    "docs/experiments/2026-10-14-larger-half-loss.md": {
+      "bytes": 4379,
+      "sha256": "bbf582dc72283ef0be859b14d42bfece2462e85f4eab533c36d0849fe51344a7"
+    },
+    "docs/experiments/2026-10-14-half-consistency.md": {
+      "bytes": 5423,
+      "sha256": "ea540920c472f4b0c68d7b464c31a863a524f6b3aacdf006ecea0ec5f8f1703b"
+    },
+    "docs/experiments/2026-10-14-half-compensated.md": {
+      "bytes": 6020,
+      "sha256": "7e8d1a2e64f2603b968a09d8e1e86668fd7b7746bb4697677a22197bd0df3ce5"
+    },
+    "docs/experiments/2026-10-14-half-scorer.md": {
+      "bytes": 5244,
+      "sha256": "bece02ef8207f167125c068132e41aa7927ccd3446417a212d8f11deaf112bce"
+    },
+    "docs/experiments/2026-10-14-half-full-loss.md": {
+      "bytes": 4623,
+      "sha256": "b441f8aad3319cc300dc7bd6031ec4860f8257b57affc78ba8e2e3e57d9869dc"
+    },
+    "docs/experiments/2026-10-14-metal-cli-half.md": {
+      "bytes": 4297,
+      "sha256": "7baa4fa1a02bd2cb64514d1b3100827c882784055c7af4615ef93f7998cb8cec"
+    },
+    "docs/experiments/2026-10-14-metal-controlled.md": {
+      "bytes": 6474,
+      "sha256": "eee69dab0004f7e0c4da7fe1f9964c3e455256865a014730fd83756f87ef2d8e"
+    },
+    "docs/experiments/2026-10-14-cpu-task-reference.md": {
+      "bytes": 5278,
+      "sha256": "c49013b59a6d97bf4ee4a3323d169ea2b4b1170e196d5debd489974e9ad59a67"
+    },
+    "docs/experiments/2026-10-14-metal-tasks.md": {
+      "bytes": 4837,
+      "sha256": "9634ba270bd2a90c2011c80ff3224ec2c8b9a62fc656b9f0c381b59539d244bc"
+    },
+    "docs/experiments/2026-10-14-task-grading-admission.md": {
+      "bytes": 2261,
+      "sha256": "d7c1a8fe0c56abba27380f14d69cb1329a9b34808d8d0c36763bb2c96d5256e8"
+    },
+    "docs/experiments/2026-10-14-task-grading-window.md": {
+      "bytes": 3145,
+      "sha256": "d3dfd1352877bccca5014fe256b7f69d4368c157410026964a28d8969ea2bb77"
+    },
+    "docs/experiments/2026-10-14-metal-application.md": {
+      "bytes": 4170,
+      "sha256": "283b7f4c241b2a4b5470465ae73e5a42450ff2900b02d4fa9b4d9da1fead8516"
+    },
+    "docs/experiments/2026-10-14-full-task-responses.md": {
+      "bytes": 3585,
+      "sha256": "5a8aa2808b44c7b61d27387d4e0c87a35e8fa58c06ceb770f06f7b37150fe5b3"
+    },
+    "docs/experiments/2026-10-14-half-task-quality.md": {
+      "bytes": 4952,
+      "sha256": "42675c2e8feb3d9e8e5883640c2d0c0350d8972aad22dafd1256b2a13a39651d"
+    },
+    "docs/experiments/2026-10-14-small-half-controlled-full.md": {
+      "bytes": 6925,
+      "sha256": "0e6b1583dcffee7cc8f7f1972942ab16696b0d7dd9afeacdd919b73ae52a637a"
+    },
+    "docs/experiments/2026-10-14-larger-half-controlled-full.md": {
+      "bytes": 6134,
+      "sha256": "3b2acc8ec9127ac8b12156f6c78b10becc430ca112e0282cd98e89a68935b132"
+    },
+    "docs/experiments/2026-10-14-half-application-full.md": {
+      "bytes": 7570,
+      "sha256": "3a4dc6e9d8acf72582ba0cf7685c2db34ca24042d89163ae3be21b19a3561db2"
+    },
+    "docs/experiments/2026-10-14-half-primary-confirm.md": {
+      "bytes": 5359,
+      "sha256": "135e2608a74189d47fdfb960f1a023133f18ebd552d022c22c6b00739f3aa4c3"
+    },
+    "docs/experiments/2026-10-14-half-application-confirm.md": {
+      "bytes": 4642,
+      "sha256": "58e5939091f11e07a2de70c949212f4eca45f7bf8e50b359799e3c04af8d3736"
+    },
+    "target/release/toklet": {
+      "bytes": 5367760,
+      "sha256": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    "target/release/examples/cpu_bench": {
+      "bytes": 1069664,
+      "sha256": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+    }
+  },
+  "links_checked": [
+    {
+      "source": "PLAN.md",
+      "target": "apple_llm_performance_plan.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/fixtures/tiny-v1/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/reference/README.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/sources.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/contract-v1/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/README.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/result.schema.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/mlx_baseline.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-mlx-bf16-512-128.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-mlx-bf16-512-128.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/cpu/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cpu_linear.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/cpu/reductions.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cpu_reductions.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/cpu/attention.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cpu_attention.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/model/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/model/trace.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/sampling.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cpu_decoder.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/weights/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/weights.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-qwen-load.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/reference/qwen.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/fixtures/qwen-v2/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/qwen_forward.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-qwen-forward.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/session.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/session.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cached_attention.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/qwen_session.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-qwen-session.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/generation.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/bin/cli/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/fixtures/chat-v1/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-qwen-cli.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-qwen-cli.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/benchmark.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "examples/cpu_bench.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/cpu.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-cpu-profiler-probe.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/mlx_baseline.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-mlx-fp32-128-128.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-mlx-fp32-128-128.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-cpu-short.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/llama/worker.cpp"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-llama-fp32-short.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/bin/cli/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/application.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-application-probe.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-external-matrix.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-cpu-boundary.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-cpu-medium.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-long.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-append.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-cached.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-pending.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-held-out-loss-runner.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-task-response-collector.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-code-isolation.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-linux-code-isolation.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-11-linux-code-isolation-attempt-v1.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-linux-code-isolation-retry.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-changed.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-application-scalar.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-linux-task-preparation.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-scalar-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-linux-literal-controller.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-tiled-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-collector.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-scalar.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-grading.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-scalar-grading.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-tiled.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-quality.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-m2.5-scalar-comparison.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-tile.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-tiled-engine.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/cpu.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/fixtures/coreml-slice-v1/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-primary-comparison.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-tiled-cli.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-tiled-application-adapter.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-coreml-slices.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/reference/README.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-tiled-medium-excluded.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-tiled-medium.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-ane-feasibility-closure.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-tiled-long.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-tiled-boundary.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-append.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-cached-excluded.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-cached.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-pending.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-changed.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-application-tiled.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-retention.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-toolchain.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-fp16-reference.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-mps-primitives.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-mps-resident-projection.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-rust-metal-bindings.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-rms.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-metal-rms.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-embedding.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-residual.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-metal-residual.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-silu.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-metal-silu.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-gating.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-metal-gating.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-metal-gating-tails.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-mps-projection.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-mps-mlp-projections.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-mlp.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-mps-attention-projections.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-rotary.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-cache.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-attention.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-cached-attention.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-attention-graph.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-layer.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-decoder.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-rust-metal-qwen-projections.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-rust-metal-qwen-front.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-rust-metal-qwen-rotary.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-trace.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/q4-v1.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-format.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-artifact.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-decode.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-required-position-logits.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-held-out-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-larger-preselection.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-cpu-all-row-logits.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-cpu-row-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-larger-independent-oracle.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-larger-fp32-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-streamed-storage-oracles.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-compensated-rms.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-larger-metal-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-accurate-q4-prefill.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-chunks.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-m5-prefill-closure.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-greedy.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-mlp-gating.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-rotary-cache.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-residual-rms.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-m5-dispatch-closure.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-larger-half-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-consistency.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-compensated.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-scorer.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-metal-cli-half.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-metal-controlled.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-cpu-task-reference.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-metal-tasks.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-task-grading-admission.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-task-grading-window.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-metal-application.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-full-task-responses.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-small-half-controlled-full.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-larger-half-controlled-full.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-application-full.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-primary-confirm.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-application-confirm.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-14-m5-performance-decision-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-retention.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-accurate-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-retention.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "tools/reference/README.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "PLAN.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-09-qwen-load.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-09-qwen-forward.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-09-qwen-session.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-10-qwen-cli.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-independent-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-compensated-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-compensated-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-compensated.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-scorer.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-metal-cli-half.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-metal-controlled.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-cpu-task-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-metal-tasks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-09-qwen-session.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-trace.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/q4-v1.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-artifact.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-decode.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-required-position-logits.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-greedy.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-chunks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-dispatch-closure.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-m5-prefill-closure.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-cpu-all-row-logits.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-streamed-storage-oracles.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "PLAN.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "tools/reference/README.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/README.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-10-external-matrix.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-m2.5-scalar-comparison.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-metal-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-trace.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-cpu-row-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-held-out-tiled-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-linux-literal-controller.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-preselection.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-fp32-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-consistency.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-scorer.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-task-grading-admission.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-task-grading-window.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-metal-application.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-full-task-responses.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-small-half-controlled-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-larger-half-controlled-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-application-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-primary-confirm.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-application-confirm.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-ane-feasibility-closure.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-residual-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-rotary-cache.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-mlp-gating.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-greedy.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-chunks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-held-out-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-held-out-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-larger-half-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-metal-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-10-code-isolation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-linux-literal-controller.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-14-small-half-controlled-full.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-14-larger-half-controlled-full.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-13-metal-held-out-loss.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-13-larger-metal-loss.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-14-half-primary-confirm.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-14-half-application-full.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-14-half-application-confirm.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-retention.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "benchmarks/results/2026-10-10-external-matrix.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "benchmarks/results/2026-10-09-mlx-bf16-512-128.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-13-m5-prefill-closure.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-14-m5-dispatch-closure.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "docs/improvements.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "benchmarks/results/2026-10-14-m5-performance-decision-v1.json"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "benchmarks/results/2026-10-14-m5-performance-decision-producer-v1.py.txt"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-m5-performance-decision.md",
+      "target": "benchmarks/results/2026-10-14-m5-performance-decision-qualification-v1.json"
+    }
+  ],
+  "review": {
+    "reviewer": "Astra",
+    "accepted": true,
+    "remaining_findings": 0,
+    "corrections": [
+      "Original normalization rather than prefill",
+      "Cached prefill throughput absent/null; decode rates retained"
+    ],
+    "independent_verification": "187 bindings,289 links,16 rows,quality/repeat arithmetic,duration,byte-identical producer replay,whitespace"
+  }
+}

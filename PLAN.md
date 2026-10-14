@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026; updated 14 October 2026. Status: M0–M4 are functionally complete; M5 is in progress and M6–M7 remain pending. FP16 held-out quality and performance replacement gates remain unqualified.
+Prepared 9 October 2026; updated 14 October 2026. Status: M0–M4 are functionally complete; M5 is in progress and M6–M7 remain pending. Both compensated Half configurations pass frozen full loss/task quality and repeated measurements; performance replacement remains unaccepted and both Q4 loss failures block M5.
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -1383,6 +1383,8 @@ M5.6 independent Half primary confirmation,14 October2026: [completed repeats](d
 
 M5.6 independent Half application confirmation,14 October2026: [completed repeats](docs/experiments/2026-10-14-half-application-confirm.md). Both second3warmup/10three-turn collections replay78turns/60measured/3589+3576events with exact initial-run IDs/text/stops/state signatures. Scenario medians20.456533/43.572448seconds change+0.055240%/+0.049678%; repeatability only. Admissions unchanged/nativejointcharges1,332,742,160/3,464,810,024bytes fit6GiB; recordedmodelPIDs/groupsabsent/machine stopped. Measured totals<600s, differingFP32output/end-power/timing limits retained. Astra accepts final evidence with no findings before commit; finalcomparison/release/Q4-blocked exit remain open.
 
+M5 final evidence synthesis,14 October2026: [decision report](docs/experiments/2026-10-14-m5-performance-decision.md) and [saved-data checks](benchmarks/results/2026-10-14-m5-performance-decision-v1.json) consolidate both full eight-row Half matrices, second primary/application runs, passing unchanged loss/task gates, complete admissions and recorded sustained scopes. Compensated Half remains explicit opt-in; CPU scalar/GPU Original/FullLogits/chunk128 defaults stay. Historical FP32 CPU/app and external data are separate representation tracks; small boundary Half decode is slower than historical CPU and application outputs differ. No alternating matched-representation replacement or qualified external speed lead is claimed. Final report records baseline gaps and retain/reject decisions; M5.2/M5.6 and overall M5 remain open because both Q4 loss gates fail and replacement evidence is incomplete. Content/link/whitespace/saved arithmetic and protected binaries checked; Astra accepted after two wording corrections, with no remaining findings. No new numerical/source/default/gate change or M6/M7 work.
+
 ## M6 Qualify longer context and attention
 
 - [ ] **M6.1 Implement tiled online-softmax attention.** Build separate decode and prefill paths without materializing the full attention-score matrix. Preserve causal boundaries, absolute positions, and GQA sharing. Compare irregular chunk sizes and substantial cached depths with the reference.
@@ -1453,4 +1455,4 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. M4 is functionally complete. M5 implementation is now authorized through its full exit criteria. Both selected compensated Half configurations pass the frozen full loss/task quality gates; final performance/replacement evidence remains outstanding before changing the CPU default. Both Q4 v1 full-loss failures still block the explicit M5 exit.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. M4 is functionally complete. M5 implementation is now authorized through its full exit criteria. Both selected compensated Half configurations pass the frozen full loss/task quality gates; the final comparison/decision report records baseline gaps and withholds performance replacement before changing the CPU default. Both Q4 v1 full-loss failures still block the explicit M5 exit.
