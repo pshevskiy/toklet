@@ -178,6 +178,14 @@ endpoints and clean exits pass; caller source/fivefailurechecks cleared. See the
 [primary confirmation report](experiments/2026-10-14-half-primary-confirm.md); final
 Astra accepts final data before commit, applicationconfirmation/release/Q4 gates open.
 
+Independent full Half application repeats now match all39turn response/state
+signatures permodel to the initial runs, with medians20.456533/43.572448s and
+changes+0.055240%/+0.049678%.78turns/60measured/7165events, memory/endpoints/
+owned-exit/idle proofs pass. This is repeatability, retaining differentFP32outputs,
+sub600s/application-duration and unavailableend-power/sensor/timing limits. See
+[application confirmation](experiments/2026-10-14-half-application-confirm.md). Final
+Astra accepts final data before commit; finalrelease/Q4 gates remain open.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.

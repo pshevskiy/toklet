@@ -1,0 +1,22 @@
+{
+  "format": "toklet-half-application-confirm-comparison-v1",
+  "passed": true,
+  "collections": [
+    {
+      "model": "small",
+      "first_median_seconds": 20.445239083492197,
+      "confirmation_median_seconds": 20.45653293747455,
+      "median_change_fraction": 0.0005523953002570803,
+      "all39_response_ID_text_stop_state_signatures_match_first_run": true,
+      "maximum_joint_native_charge_bytes": 1332742160
+    },
+    {
+      "model": "larger",
+      "first_median_seconds": 43.55081270809751,
+      "confirmation_median_seconds": 43.572447728947736,
+      "median_change_fraction": 0.0004967765124208601,
+      "all39_response_ID_text_stop_state_signatures_match_first_run": true,
+      "maximum_joint_native_charge_bytes": 3464810024
+    }
+  ]
+}
