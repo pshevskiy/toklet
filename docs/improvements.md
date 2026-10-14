@@ -130,6 +130,14 @@ and fit6GiB. Larger visible IDs match99/100 cases. This is response qualificatio
 matched literal scores and latency acceptance remain pending.
 [Full response report](experiments/2026-10-14-full-task-responses.md).
 
+Full matched Half task quality now passes both checkpoints:2/100 versus2/100 small
+FP32 and11/100 versus11/100 larger FP32, with0pp loss under the unchanged2pp gate.
+Three native literal windows resolve300 outcomes/120 code programs, restore the VM
+stopped and replay exactly. Absolute code passes are0/40 per model, without repair.
+Together with full Half loss this closes frozen Half quality; performance/sustained
+and the Q4-blocked M5 exit remain open.
+[Matched quality report](experiments/2026-10-14-half-task-quality.md).
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
