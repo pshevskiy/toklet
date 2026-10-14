@@ -295,3 +295,5 @@ records performance baseline gaps, withholds default replacement and keeps the Q
 Long-context attention/KV experiments and physical iPhone work belong to M6/M7.
 This record will be updated with each reviewed implementation or measurement
 decision; unmeasured changes will remain explicitly marked.
+
+The [larger v2 full response collection](experiments/2026-10-14-q4-v2-full-tasks.md) completes100original cases at256/32/16caps. Clean natural model exit,101ordered native-memory observations, exact raw/state/post-exit text and unchanged source/artifact endpoints qualify transport. Literal grading and task-quality/performance acceptance remain pending.
