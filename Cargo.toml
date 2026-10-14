@@ -53,3 +53,7 @@ required-features = ["metal"]
 [[example]]
 name = "metal_greedy"
 required-features = ["metal"]
+
+[[example]]
+name = "metal_bench"
+required-features = ["metal"]
