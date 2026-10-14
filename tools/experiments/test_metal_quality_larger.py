@@ -15,6 +15,19 @@ from test_metal_quality import fixture,struct_bytes
 
 
 class LargerLoss(unittest.TestCase):
+    def test_larger_compensated_half_requires_exact_mode_and_compatible_widths(self):
+        tokens=[1,2,3];event,*_,sha=fixture(tokens)
+        event.update(quantized=False,weight_dtype='FP16',hidden_size=1536,num_layers=28,vocab_size=151936,projection_mode='HalfCompensated',normalization_mode='Original',half_compensated_execution_widths=[32,32])
+        event['memory']['weights_bytes']=3087433340;event['memory']['admitted_bytes']=sum(v for k,v in event['memory'].items() if k!='admitted_bytes');event['memory_admitted_bytes']=event['memory']['admitted_bytes']+64*1024**2
+        large.ready(event,tokens,sha,False,128,True)
+        for key,value in [('projection_mode','Original'),('normalization_mode','Compensated'),('half_compensated_execution_widths',[32,64]),('half_compensated_execution_widths',[False,False]),('hidden_size',896)]:
+            altered=copy.deepcopy(event);altered[key]=value
+            with self.subTest(key=key),self.assertRaises(ValueError):large.ready(altered,tokens,sha,False,128,True)
+        with self.assertRaises(ValueError):large.ready(event,tokens,sha,True,128,True)
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.object(shared.subprocess,'Popen') as launch:
+                with self.assertRaisesRegex(ValueError,'requires --fp16'):large.run(Path('/missing'),Path(directory)/'report.json',half_compensated=True)
+                launch.assert_not_called()
     def test_parsed_contract_and_all_initial_pins_are_reasserted(self):
         source=Path('/source');corpus=Path('/contract/corpus');baseline=Path('/baseline');packed=Path('/packed')
         pins={str(source/'model.safetensors'):large.SOURCE_SHA,str(source/'config.json'):large.CONFIG_SHA,

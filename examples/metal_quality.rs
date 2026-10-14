@@ -34,11 +34,20 @@ mod apple {
         }
         let larger = match args.next() {
             None => false,
+            Some(v) if v == "small" => false,
             Some(v) if v == "larger" => true,
-            _ => return Err("optional quality geometry must be larger".into()),
+            _ => return Err("optional quality geometry must be small or larger".into()),
+        };
+        let half_compensated = match args.next() {
+            None => false,
+            Some(v) if v == "half-compensated" => true,
+            _ => return Err("optional projection must be half-compensated".into()),
         };
         if args.next().is_some() {
             return Err("extra quality argument".into());
+        }
+        if half_compensated && packed != "-" {
+            return Err("compensated Half scoring requires unquantized Half weights".into());
         }
         let (ids, corpus_sha) = tokens(&token_path)?;
         let targets = ids.len() - 1;
@@ -65,7 +74,9 @@ mod apple {
         {
             return Err("invalid loss token".into());
         }
-        let projection = if larger && quantized {
+        let projection = if half_compensated {
+            metal::ProjectionMode::HalfCompensated
+        } else if larger && quantized {
             metal::ProjectionMode::Q4Compensated
         } else {
             metal::ProjectionMode::Original
@@ -103,7 +114,7 @@ mod apple {
         writeln!(
             out,
             "{}",
-            json!({"event":"ready","format":"toklet-metal-held-out-loss-events-v1","backend":"metal","quantized":quantized,"device":model.device_name(),"debug_assertions":cfg!(debug_assertions),"target_tokens":targets,"corpus_sha256":corpus_sha,"context_policy":POLICY,"block_targets":BLOCK,"context_capacity":CAPACITY,"prefill_chunk_size":chunk,"logit_positions":"all_causal_rows","weight_dtype":if quantized {"Q4 v1 + FP16 exclusions"}else{"FP16"},"kv_dtype":"FP16","memory":memory,"application_allowance_bytes":APP_BYTES,"memory_admitted_bytes":admitted,"load_seconds":model.load_timing.load_seconds,"hidden_size":model.config().hidden_size,"num_layers":model.config().num_layers,"vocab_size":model.config().vocab_size,"projection_mode":projection,"normalization_mode":normalization})
+            json!({"event":"ready","format":"toklet-metal-held-out-loss-events-v1","backend":"metal","quantized":quantized,"device":model.device_name(),"debug_assertions":cfg!(debug_assertions),"target_tokens":targets,"corpus_sha256":corpus_sha,"context_policy":POLICY,"block_targets":BLOCK,"context_capacity":CAPACITY,"prefill_chunk_size":chunk,"logit_positions":"all_causal_rows","weight_dtype":if quantized {"Q4 v1 + FP16 exclusions"}else{"FP16"},"kv_dtype":"FP16","memory":memory,"application_allowance_bytes":APP_BYTES,"memory_admitted_bytes":admitted,"load_seconds":model.load_timing.load_seconds,"hidden_size":model.config().hidden_size,"num_layers":model.config().num_layers,"vocab_size":model.config().vocab_size,"projection_mode":projection,"normalization_mode":normalization,"half_compensated_execution_widths":model.half_compensated_execution_widths()})
         )?;
         out.flush()?;
         handshake()?;

@@ -1,0 +1,854 @@
+{
+  "format": "toklet-larger-metal-held-out-loss-v1",
+  "passed": true,
+  "probes_completed": true,
+  "collection_completed": false,
+  "quality_completed": false,
+  "full_corpus_requested": false,
+  "quantized": false,
+  "scope": "Matched larger loss only; task quality and latency separate",
+  "half_compensated": true,
+  "identities": {
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_quality_larger.py": "6628119a1f0c1bf0e7840f9fabe52aed0ff7b7907f10b3c66b6a0335b4edcdf2",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_quality.py": "61edada2083390c1bc8a8c88bc58769cf7141e7ffec4b0c412ca00156f2c1a17",
+    "/Users/coloner/work/rust/toklet/tools/experiments/quality_rows.py": "ec90277e708d55b8184416c58210bf8411bd22753cd61b2d86162168d250ac72",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_engine.py": "1541afc73738d91e13dc6d71c32f72632e4b2eb20174781dc193126362b73d0c",
+    "/Users/coloner/work/rust/toklet/tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_continue.py": "48487c955a81cafb4149caf033d397d0403068cd6f31913a8a2b90a75f03b622",
+    "/Users/coloner/work/rust/toklet/tools/bench/quality.py": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d",
+    "/Users/coloner/work/rust/toklet/tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-half-scorer-native-binary-v1/metal_quality": "f9d0de2c47886a6ebf1c9b7d86a74c1c75b72892baf78ee22c1009e936ea4914",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/held_out_loss.u32le": "f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/manifest.json": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-13-larger-fp32-held-out-loss-v1.json": "5967fb03c60420556bfbf3d3893269b27c3bb54df4328de19fc667074dc0da6b",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-1.5B-Instruct/config.json": "98d2ff8cc47488d08a2b0b3acf4eb99ef210779b42bd48605f6b8e36acdbf670",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-1.5B-Instruct/model.safetensors": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-1.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "/Users/coloner/work/rust/toklet/Cargo.toml": "a4b600e787d53f22c0b1ed53f9f0831fd1042648e59dcddbb3387c7acdb04418",
+    "/Users/coloner/work/rust/toklet/Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "/Users/coloner/work/rust/toklet/examples/metal_quality.rs": "3aca07b104541641a9be27abdf0bb29dd8f093317b7542ad5d956ab84ea06174",
+    "/Users/coloner/work/rust/toklet/examples/support/loss.rs": "a2cbea031570c1aa539b1096d2af87711935064c844f600f5d0cc6b55ed4c0ff",
+    "/Users/coloner/work/rust/toklet/tests/fixtures/qwen-larger-q4-v1/manifest.json": "83140123f91296412002aa5432b120401477be2213a243c48ad3ee8a43dd1508",
+    "/Users/coloner/work/rust/toklet/tests/fixtures/qwen-larger-half-v1/manifest.json": "6ba8fa4c41f98f13730662d85d06b9fb03b223b60a081e8f80662e417c20a71f",
+    "/Users/coloner/work/rust/toklet/tests/fixtures/qwen-v2/manifest.json": "691429f672aa89875e06475f48b5b691343f03c08e47fd204fa60fec2eef20d1",
+    "/Users/coloner/work/rust/toklet/artifacts/qwen-forward-v2/manifest.json": "bdd368d21dfae574197e3b64423b75d4f1b2b37c083c6172c429e36bb4dd69c7",
+    "/Users/coloner/work/rust/toklet/src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "/Users/coloner/work/rust/toklet/src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "/Users/coloner/work/rust/toklet/src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "/Users/coloner/work/rust/toklet/src/lib.rs": "a4cc758d947079d5cf715183edfa71039de4dc1735caac6a481cf7a0c9ae8962",
+    "/Users/coloner/work/rust/toklet/src/q4.rs": "6a419a51502a939937d95e454bf8d086175ae3b303c094e4b15730008fc843cd",
+    "/Users/coloner/work/rust/toklet/src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "/Users/coloner/work/rust/toklet/src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "/Users/coloner/work/rust/toklet/src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "/Users/coloner/work/rust/toklet/src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "/Users/coloner/work/rust/toklet/src/metal/memory.rs": "f0212be7f1557729a3c56868728967953c78cb4be339d986e52664dee72f5df4",
+    "/Users/coloner/work/rust/toklet/src/metal/mod.rs": "19cb3fe2acce31a38129e5535638e8f837ccfabf04649d7900ee8f7126e5266c",
+    "/Users/coloner/work/rust/toklet/src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "/Users/coloner/work/rust/toklet/src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "/Users/coloner/work/rust/toklet/src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "/Users/coloner/work/rust/toklet/src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "/Users/coloner/work/rust/toklet/src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "/Users/coloner/work/rust/toklet/src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "/Users/coloner/work/rust/toklet/src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "/Users/coloner/work/rust/toklet/src/weights/mod.rs": "a07f0e8b91973c22c3fe9b0c9c5f0f688fc4b602f5402ef0f9a95c05976399c1",
+    "/Users/coloner/work/rust/toklet/src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "/Users/coloner/work/rust/toklet/src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "/Users/coloner/work/rust/toklet/src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "/Users/coloner/work/rust/toklet/src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "/Users/coloner/work/rust/toklet/src/q4/artifact.rs": "b8cb3ded35f0db6a053d113a202df81c49e9c5a33755ec61c898899c9a694252",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/mod.rs": "9cfa75d60ba5359bfa8a3f41b8b568ff5c33caf991ca8b0d811e22bb6c5aa48b",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "/Users/coloner/work/rust/toklet/src/metal/kernels.metal": "b519966f706cabaf0260d68d5e682004d88e3d641a3d6c3c78f154f5a5be738c"
+  },
+  "runs": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m5-half-scorer-native-binary-v1/metal_quality",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-1.5B-Instruct",
+        "-",
+        "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/toklet-larger-metal-loss-2apnczyb/future_changed.u32le",
+        "1",
+        "larger",
+        "half-compensated"
+      ],
+      "worker_pid": 98903,
+      "passed": true,
+      "losses": [
+        {
+          "event": "loss",
+          "target_index": 0,
+          "block_index": 0,
+          "position": 0,
+          "prefix_tokens": 1,
+          "target_token": 11,
+          "negative_log_likelihood": 1.7201368224056295,
+          "target_logit_f32_bits": 1099584334,
+          "logits_sha256": "8ccff882e2965dd5f74f269e4d22b3615be17889d4c0ca4a2df65a28394ed2da"
+        },
+        {
+          "event": "loss",
+          "target_index": 1,
+          "block_index": 0,
+          "position": 1,
+          "prefix_tokens": 2,
+          "target_token": 358,
+          "negative_log_likelihood": 0.9133677693819084,
+          "target_logit_f32_bits": 1100035269,
+          "logits_sha256": "72f76d1046a970a9197744cb335539a559d63b2593f2cc02b8c3a1464c6988a0"
+        },
+        {
+          "event": "loss",
+          "target_index": 2,
+          "block_index": 0,
+          "position": 2,
+          "prefix_tokens": 3,
+          "target_token": 498,
+          "negative_log_likelihood": 11.183473125624188,
+          "target_logit_f32_bits": 1094626621,
+          "logits_sha256": "2831067b76b233be8c90ca02600e21c7ce733039811623225392414e8472e5b1"
+        }
+      ],
+      "chunks": [
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 1,
+          "evaluated_tokens": 1,
+          "scored_targets": 1,
+          "pending_tokens": 0
+        },
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 1,
+          "evaluated_tokens": 2,
+          "scored_targets": 2,
+          "pending_tokens": 0
+        },
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 1,
+          "evaluated_tokens": 3,
+          "scored_targets": 3,
+          "pending_tokens": 0
+        },
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 1,
+          "evaluated_tokens": 4,
+          "scored_targets": 3,
+          "pending_tokens": 0
+        }
+      ],
+      "blocks": [
+        {
+          "event": "block_done",
+          "block_index": 0,
+          "target_start": 0,
+          "target_end": 3,
+          "scored_targets": 3,
+          "total_negative_log_likelihood": 13.816977717411726,
+          "evaluated_tokens": 4,
+          "pending_tokens": 0
+        }
+      ],
+      "idle_usage": [
+        {
+          "phase": "ready",
+          "worker": {
+            "resident_size": 2759327744,
+            "phys_footprint": 3130608304,
+            "lifetime_max_phys_footprint": 3130608304
+          },
+          "driver": {
+            "resident_size": 20512768,
+            "phys_footprint": 37372528,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        },
+        {
+          "phase": "block_0",
+          "worker": {
+            "resident_size": 2757246976,
+            "phys_footprint": 3134687944,
+            "lifetime_max_phys_footprint": 3134687944
+          },
+          "driver": {
+            "resident_size": 20955136,
+            "phys_footprint": 37372528,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        },
+        {
+          "phase": "done",
+          "worker": {
+            "resident_size": 2757279744,
+            "phys_footprint": 3134720712,
+            "lifetime_max_phys_footprint": 3134720712
+          },
+          "driver": {
+            "resident_size": 21135360,
+            "phys_footprint": 37405296,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        }
+      ],
+      "cleanup_errors": [],
+      "transport_policy": {
+        "request_seconds": 120,
+        "lifetime_seconds": 3600,
+        "event_limit": 32768,
+        "stdout_bytes": 8388608
+      },
+      "ready": {
+        "event": "ready",
+        "format": "toklet-metal-held-out-loss-events-v1",
+        "backend": "metal",
+        "quantized": false,
+        "device": "Apple M1 Pro",
+        "debug_assertions": false,
+        "target_tokens": 3,
+        "corpus_sha256": "39e296d31ac8c69f727401382bf5897d8c86cca97c1b064d23c63ef778eb3ba5",
+        "context_policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once",
+        "block_targets": 1024,
+        "context_capacity": 1025,
+        "prefill_chunk_size": 1,
+        "logit_positions": "all_causal_rows",
+        "weight_dtype": "FP16",
+        "kv_dtype": "FP16",
+        "memory": {
+          "weights_bytes": 3087433340,
+          "kv_bytes": 29389584,
+          "scratch_bytes": 2336206,
+          "history_bytes": 4100,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 1000,
+          "metadata_allowance_bytes": 67108864,
+          "admitted_bytes": 3187488582
+        },
+        "application_allowance_bytes": 67108864,
+        "memory_admitted_bytes": 3254597446,
+        "load_seconds": 8.947007333,
+        "hidden_size": 1536,
+        "num_layers": 28,
+        "vocab_size": 151936,
+        "projection_mode": "HalfCompensated",
+        "normalization_mode": "Original",
+        "half_compensated_execution_widths": [
+          32,
+          32
+        ]
+      },
+      "mean_negative_log_likelihood": 4.605659239137242,
+      "done": {
+        "event": "done",
+        "scored_targets": 3,
+        "total_negative_log_likelihood": 13.816977717411726,
+        "mean_negative_log_likelihood": 4.605659239137242,
+        "evaluated_tokens": 4,
+        "pending_tokens": 0
+      },
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m5-half-scorer-native-binary-v1/metal_quality",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-1.5B-Instruct",
+        "-",
+        "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/toklet-larger-metal-loss-2apnczyb/future_changed.u32le",
+        "128",
+        "larger",
+        "half-compensated"
+      ],
+      "worker_pid": 98952,
+      "passed": true,
+      "losses": [
+        {
+          "event": "loss",
+          "target_index": 0,
+          "block_index": 0,
+          "position": 0,
+          "prefix_tokens": 1,
+          "target_token": 11,
+          "negative_log_likelihood": 1.7201368224056295,
+          "target_logit_f32_bits": 1099584334,
+          "logits_sha256": "8ccff882e2965dd5f74f269e4d22b3615be17889d4c0ca4a2df65a28394ed2da"
+        },
+        {
+          "event": "loss",
+          "target_index": 1,
+          "block_index": 0,
+          "position": 1,
+          "prefix_tokens": 2,
+          "target_token": 358,
+          "negative_log_likelihood": 0.9133677693819084,
+          "target_logit_f32_bits": 1100035269,
+          "logits_sha256": "72f76d1046a970a9197744cb335539a559d63b2593f2cc02b8c3a1464c6988a0"
+        },
+        {
+          "event": "loss",
+          "target_index": 2,
+          "block_index": 0,
+          "position": 2,
+          "prefix_tokens": 3,
+          "target_token": 498,
+          "negative_log_likelihood": 11.183473125624188,
+          "target_logit_f32_bits": 1094626621,
+          "logits_sha256": "2831067b76b233be8c90ca02600e21c7ce733039811623225392414e8472e5b1"
+        }
+      ],
+      "chunks": [
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 4,
+          "evaluated_tokens": 4,
+          "scored_targets": 3,
+          "pending_tokens": 0
+        }
+      ],
+      "blocks": [
+        {
+          "event": "block_done",
+          "block_index": 0,
+          "target_start": 0,
+          "target_end": 3,
+          "scored_targets": 3,
+          "total_negative_log_likelihood": 13.816977717411726,
+          "evaluated_tokens": 4,
+          "pending_tokens": 0
+        }
+      ],
+      "idle_usage": [
+        {
+          "phase": "ready",
+          "worker": {
+            "resident_size": 2734342144,
+            "phys_footprint": 3310586712,
+            "lifetime_max_phys_footprint": 3310586712
+          },
+          "driver": {
+            "resident_size": 21889024,
+            "phys_footprint": 37438064,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        },
+        {
+          "phase": "block_0",
+          "worker": {
+            "resident_size": 2689433600,
+            "phys_footprint": 3316140912,
+            "lifetime_max_phys_footprint": 3316140912
+          },
+          "driver": {
+            "resident_size": 21921792,
+            "phys_footprint": 37470832,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        },
+        {
+          "phase": "done",
+          "worker": {
+            "resident_size": 2689433600,
+            "phys_footprint": 3316140912,
+            "lifetime_max_phys_footprint": 3316140912
+          },
+          "driver": {
+            "resident_size": 21954560,
+            "phys_footprint": 37487216,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        }
+      ],
+      "cleanup_errors": [],
+      "transport_policy": {
+        "request_seconds": 120,
+        "lifetime_seconds": 3600,
+        "event_limit": 32768,
+        "stdout_bytes": 8388608
+      },
+      "ready": {
+        "event": "ready",
+        "format": "toklet-metal-held-out-loss-events-v1",
+        "backend": "metal",
+        "quantized": false,
+        "device": "Apple M1 Pro",
+        "debug_assertions": false,
+        "target_tokens": 3,
+        "corpus_sha256": "39e296d31ac8c69f727401382bf5897d8c86cca97c1b064d23c63ef778eb3ba5",
+        "context_policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once",
+        "block_targets": 1024,
+        "context_capacity": 1025,
+        "prefill_chunk_size": 128,
+        "logit_positions": "all_causal_rows",
+        "weight_dtype": "FP16",
+        "kv_dtype": "FP16",
+        "memory": {
+          "weights_bytes": 3087433340,
+          "kv_bytes": 29389584,
+          "scratch_bytes": 260364138,
+          "history_bytes": 4100,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 14208,
+          "metadata_allowance_bytes": 67108864,
+          "admitted_bytes": 3445529722
+        },
+        "application_allowance_bytes": 67108864,
+        "memory_admitted_bytes": 3512638586,
+        "load_seconds": 8.598495125,
+        "hidden_size": 1536,
+        "num_layers": 28,
+        "vocab_size": 151936,
+        "projection_mode": "HalfCompensated",
+        "normalization_mode": "Original",
+        "half_compensated_execution_widths": [
+          32,
+          32
+        ]
+      },
+      "mean_negative_log_likelihood": 4.605659239137242,
+      "done": {
+        "event": "done",
+        "scored_targets": 3,
+        "total_negative_log_likelihood": 13.816977717411726,
+        "mean_negative_log_likelihood": 4.605659239137242,
+        "evaluated_tokens": 4,
+        "pending_tokens": 0
+      },
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m5-half-scorer-native-binary-v1/metal_quality",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-1.5B-Instruct",
+        "-",
+        "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/toklet-larger-metal-loss-2apnczyb/short.u32le",
+        "1",
+        "larger",
+        "half-compensated"
+      ],
+      "worker_pid": 98988,
+      "passed": true,
+      "losses": [
+        {
+          "event": "loss",
+          "target_index": 0,
+          "block_index": 0,
+          "position": 0,
+          "prefix_tokens": 1,
+          "target_token": 11,
+          "negative_log_likelihood": 1.7201368224056295,
+          "target_logit_f32_bits": 1099584334,
+          "logits_sha256": "8ccff882e2965dd5f74f269e4d22b3615be17889d4c0ca4a2df65a28394ed2da"
+        },
+        {
+          "event": "loss",
+          "target_index": 1,
+          "block_index": 0,
+          "position": 1,
+          "prefix_tokens": 2,
+          "target_token": 358,
+          "negative_log_likelihood": 0.9133677693819084,
+          "target_logit_f32_bits": 1100035269,
+          "logits_sha256": "72f76d1046a970a9197744cb335539a559d63b2593f2cc02b8c3a1464c6988a0"
+        },
+        {
+          "event": "loss",
+          "target_index": 2,
+          "block_index": 0,
+          "position": 2,
+          "prefix_tokens": 3,
+          "target_token": 2776,
+          "negative_log_likelihood": 1.111195102858075,
+          "target_logit_f32_bits": 1102047909,
+          "logits_sha256": "2831067b76b233be8c90ca02600e21c7ce733039811623225392414e8472e5b1"
+        }
+      ],
+      "chunks": [
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 1,
+          "evaluated_tokens": 1,
+          "scored_targets": 1,
+          "pending_tokens": 0
+        },
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 1,
+          "evaluated_tokens": 2,
+          "scored_targets": 2,
+          "pending_tokens": 0
+        },
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 1,
+          "evaluated_tokens": 3,
+          "scored_targets": 3,
+          "pending_tokens": 0
+        },
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 1,
+          "evaluated_tokens": 4,
+          "scored_targets": 3,
+          "pending_tokens": 0
+        }
+      ],
+      "blocks": [
+        {
+          "event": "block_done",
+          "block_index": 0,
+          "target_start": 0,
+          "target_end": 3,
+          "scored_targets": 3,
+          "total_negative_log_likelihood": 3.744699694645613,
+          "evaluated_tokens": 4,
+          "pending_tokens": 0
+        }
+      ],
+      "idle_usage": [
+        {
+          "phase": "ready",
+          "worker": {
+            "resident_size": 2457337856,
+            "phys_footprint": 3130624688,
+            "lifetime_max_phys_footprint": 3130624688
+          },
+          "driver": {
+            "resident_size": 21921792,
+            "phys_footprint": 37585544,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        },
+        {
+          "phase": "block_0",
+          "worker": {
+            "resident_size": 2429960192,
+            "phys_footprint": 3134769864,
+            "lifetime_max_phys_footprint": 3134769864
+          },
+          "driver": {
+            "resident_size": 21954560,
+            "phys_footprint": 37585544,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        },
+        {
+          "phase": "done",
+          "worker": {
+            "resident_size": 2429960192,
+            "phys_footprint": 3134769864,
+            "lifetime_max_phys_footprint": 3134769864
+          },
+          "driver": {
+            "resident_size": 21954560,
+            "phys_footprint": 37585544,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        }
+      ],
+      "cleanup_errors": [],
+      "transport_policy": {
+        "request_seconds": 120,
+        "lifetime_seconds": 3600,
+        "event_limit": 32768,
+        "stdout_bytes": 8388608
+      },
+      "ready": {
+        "event": "ready",
+        "format": "toklet-metal-held-out-loss-events-v1",
+        "backend": "metal",
+        "quantized": false,
+        "device": "Apple M1 Pro",
+        "debug_assertions": false,
+        "target_tokens": 3,
+        "corpus_sha256": "892b01af9040cb4e825c0804bba3fec8854bd703b3094d1de4c0d725701bf848",
+        "context_policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once",
+        "block_targets": 1024,
+        "context_capacity": 1025,
+        "prefill_chunk_size": 1,
+        "logit_positions": "all_causal_rows",
+        "weight_dtype": "FP16",
+        "kv_dtype": "FP16",
+        "memory": {
+          "weights_bytes": 3087433340,
+          "kv_bytes": 29389584,
+          "scratch_bytes": 2336206,
+          "history_bytes": 4100,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 1000,
+          "metadata_allowance_bytes": 67108864,
+          "admitted_bytes": 3187488582
+        },
+        "application_allowance_bytes": 67108864,
+        "memory_admitted_bytes": 3254597446,
+        "load_seconds": 8.475721417,
+        "hidden_size": 1536,
+        "num_layers": 28,
+        "vocab_size": 151936,
+        "projection_mode": "HalfCompensated",
+        "normalization_mode": "Original",
+        "half_compensated_execution_widths": [
+          32,
+          32
+        ]
+      },
+      "mean_negative_log_likelihood": 1.2482332315485376,
+      "done": {
+        "event": "done",
+        "scored_targets": 3,
+        "total_negative_log_likelihood": 3.744699694645613,
+        "mean_negative_log_likelihood": 1.2482332315485376,
+        "evaluated_tokens": 4,
+        "pending_tokens": 0
+      },
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m5-half-scorer-native-binary-v1/metal_quality",
+        "/Users/coloner/work/rust/toklet/models/Qwen2.5-1.5B-Instruct",
+        "-",
+        "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/toklet-larger-metal-loss-2apnczyb/short.u32le",
+        "128",
+        "larger",
+        "half-compensated"
+      ],
+      "worker_pid": 99015,
+      "passed": true,
+      "losses": [
+        {
+          "event": "loss",
+          "target_index": 0,
+          "block_index": 0,
+          "position": 0,
+          "prefix_tokens": 1,
+          "target_token": 11,
+          "negative_log_likelihood": 1.7201368224056295,
+          "target_logit_f32_bits": 1099584334,
+          "logits_sha256": "8ccff882e2965dd5f74f269e4d22b3615be17889d4c0ca4a2df65a28394ed2da"
+        },
+        {
+          "event": "loss",
+          "target_index": 1,
+          "block_index": 0,
+          "position": 1,
+          "prefix_tokens": 2,
+          "target_token": 358,
+          "negative_log_likelihood": 0.9133677693819084,
+          "target_logit_f32_bits": 1100035269,
+          "logits_sha256": "72f76d1046a970a9197744cb335539a559d63b2593f2cc02b8c3a1464c6988a0"
+        },
+        {
+          "event": "loss",
+          "target_index": 2,
+          "block_index": 0,
+          "position": 2,
+          "prefix_tokens": 3,
+          "target_token": 2776,
+          "negative_log_likelihood": 1.111195102858075,
+          "target_logit_f32_bits": 1102047909,
+          "logits_sha256": "2831067b76b233be8c90ca02600e21c7ce733039811623225392414e8472e5b1"
+        }
+      ],
+      "chunks": [
+        {
+          "event": "chunk_done",
+          "block_index": 0,
+          "rows": 4,
+          "evaluated_tokens": 4,
+          "scored_targets": 3,
+          "pending_tokens": 0
+        }
+      ],
+      "blocks": [
+        {
+          "event": "block_done",
+          "block_index": 0,
+          "target_start": 0,
+          "target_end": 3,
+          "scored_targets": 3,
+          "total_negative_log_likelihood": 3.744699694645613,
+          "evaluated_tokens": 4,
+          "pending_tokens": 0
+        }
+      ],
+      "idle_usage": [
+        {
+          "phase": "ready",
+          "worker": {
+            "resident_size": 2578055168,
+            "phys_footprint": 3310455640,
+            "lifetime_max_phys_footprint": 3310455640
+          },
+          "driver": {
+            "resident_size": 22183936,
+            "phys_footprint": 37618312,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        },
+        {
+          "phase": "block_0",
+          "worker": {
+            "resident_size": 2509242368,
+            "phys_footprint": 3316124528,
+            "lifetime_max_phys_footprint": 3316124528
+          },
+          "driver": {
+            "resident_size": 22200320,
+            "phys_footprint": 37618312,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        },
+        {
+          "phase": "done",
+          "worker": {
+            "resident_size": 2509242368,
+            "phys_footprint": 3316124528,
+            "lifetime_max_phys_footprint": 3316124528
+          },
+          "driver": {
+            "resident_size": 22216704,
+            "phys_footprint": 37618312,
+            "lifetime_max_phys_footprint": 45417072
+          }
+        }
+      ],
+      "cleanup_errors": [],
+      "transport_policy": {
+        "request_seconds": 120,
+        "lifetime_seconds": 3600,
+        "event_limit": 32768,
+        "stdout_bytes": 8388608
+      },
+      "ready": {
+        "event": "ready",
+        "format": "toklet-metal-held-out-loss-events-v1",
+        "backend": "metal",
+        "quantized": false,
+        "device": "Apple M1 Pro",
+        "debug_assertions": false,
+        "target_tokens": 3,
+        "corpus_sha256": "892b01af9040cb4e825c0804bba3fec8854bd703b3094d1de4c0d725701bf848",
+        "context_policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once",
+        "block_targets": 1024,
+        "context_capacity": 1025,
+        "prefill_chunk_size": 128,
+        "logit_positions": "all_causal_rows",
+        "weight_dtype": "FP16",
+        "kv_dtype": "FP16",
+        "memory": {
+          "weights_bytes": 3087433340,
+          "kv_bytes": 29389584,
+          "scratch_bytes": 260364138,
+          "history_bytes": 4100,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 14208,
+          "metadata_allowance_bytes": 67108864,
+          "admitted_bytes": 3445529722
+        },
+        "application_allowance_bytes": 67108864,
+        "memory_admitted_bytes": 3512638586,
+        "load_seconds": 8.462336667,
+        "hidden_size": 1536,
+        "num_layers": 28,
+        "vocab_size": 151936,
+        "projection_mode": "HalfCompensated",
+        "normalization_mode": "Original",
+        "half_compensated_execution_widths": [
+          32,
+          32
+        ]
+      },
+      "mean_negative_log_likelihood": 1.2482332315485376,
+      "done": {
+        "event": "done",
+        "scored_targets": 3,
+        "total_negative_log_likelihood": 3.744699694645613,
+        "mean_negative_log_likelihood": 1.2482332315485376,
+        "evaluated_tokens": 4,
+        "pending_tokens": 0
+      },
+      "exit_code": 0
+    }
+  ],
+  "baseline_mean_negative_log_likelihood": 2.485958031019153,
+  "engine_revision": "b7768f69a9aa5f62b7ed6c6ebdd0c5042fa497e0",
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1",
+  "build": "CARGO_TARGET_DIR=artifacts/m5-checks cargo build --offline --release --features metal --example metal_quality; default release flags",
+  "platform": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "python": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]",
+  "power_before": {
+    "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+    "policy": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  },
+  "memory_scope": "One resident model; admission and idle worker+driver lifetime native peaks under6GiB; shared physical allocations counted once in admission.",
+  "probes": [
+    {
+      "name": "future_changed",
+      "tokens": [
+        9707,
+        11,
+        358,
+        498
+      ],
+      "path": "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/toklet-larger-metal-loss-2apnczyb/future_changed.u32le",
+      "corpus_sha256": "39e296d31ac8c69f727401382bf5897d8c86cca97c1b064d23c63ef778eb3ba5",
+      "matched_fp32_nll": [
+        1.720562665599749,
+        0.9124272334121313,
+        11.186710920570357
+      ],
+      "batch_minus_single_nll": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "batch_minus_matched_fp32_nll": [
+        -0.0004258431941195351,
+        0.0009405359697771676,
+        -0.003237794946169714
+      ]
+    },
+    {
+      "name": "short",
+      "tokens": [
+        9707,
+        11,
+        358,
+        2776
+      ],
+      "path": "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/toklet-larger-metal-loss-2apnczyb/short.u32le",
+      "corpus_sha256": "892b01af9040cb4e825c0804bba3fec8854bd703b3094d1de4c0d725701bf848",
+      "matched_fp32_nll": [
+        1.720562665599749,
+        0.9124272334121313,
+        1.1106248762588333
+      ],
+      "batch_minus_single_nll": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "batch_minus_matched_fp32_nll": [
+        -0.0004258431941195351,
+        0.0009405359697771676,
+        0.0005702265992417743
+      ]
+    }
+  ],
+  "endpoint_errors": [],
+  "identities_unchanged": true,
+  "power_after": {
+    "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+    "policy": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  }
+}

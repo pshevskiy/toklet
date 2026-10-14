@@ -43,6 +43,52 @@ def struct_bytes(tokens):
 
 
 class MetalLoss(unittest.TestCase):
+    def test_compensated_half_mode_width_geometry_and_residency_admission(self):
+        tokens=[1,2,3];event,*_,sha=fixture(tokens)
+        event.update(quantized=False,weight_dtype="FP16",projection_mode="HalfCompensated",normalization_mode="Original",half_compensated_execution_widths=[32,32],hidden_size=896,num_layers=24,vocab_size=151936)
+        event['memory']['weights_bytes']=988069596;event['memory']['admitted_bytes']=sum(v for k,v in event['memory'].items() if k!='admitted_bytes');event['memory_admitted_bytes']=event['memory']['admitted_bytes']+64*1024**2
+        mq.small_half_admission(event,tokens,sha,False,128)
+        for key,value in [('projection_mode','Original'),('normalization_mode','Compensated'),('half_compensated_execution_widths',[32,64]),('half_compensated_execution_widths',[True,True]),('half_compensated_execution_widths',[0,0]),('half_compensated_execution_widths',[32]),('hidden_size',1536),('num_layers',True)]:
+            altered=copy.deepcopy(event);altered[key]=value
+            with self.subTest(key=key,value=value),self.assertRaises(ValueError):mq.small_half_admission(altered,tokens,sha,False,128)
+        with self.assertRaises(ValueError):mq.small_half_admission(event,tokens,sha,True,128)
+        altered=copy.deepcopy(event);altered['memory']['weights_bytes']-=1;altered['memory']['admitted_bytes']-=1;altered['memory_admitted_bytes']-=1
+        with self.assertRaises(ValueError):mq.small_half_admission(altered,tokens,sha,False,128)
+
+    def test_half_only_option_rejects_before_access_or_spawn(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.object(mq.subprocess,'Popen') as launch:
+                with self.assertRaisesRegex(ValueError,'requires --fp16'):mq.run(Path('/missing'),Path(directory)/'report.json',half_compensated=True)
+                launch.assert_not_called()
+
+    def test_half_probe_guard_controls_full_worker_and_acceptance_scope(self):
+        for full,delta,fail_full,calls_expected,passed,replace_contract in [(True,.002,False,2,False,False),(False,0.,False,4,True,False),(True,0.,True,5,False,False),(True,0.,False,0,False,True)]:
+            with self.subTest(full=full,delta=delta,fail_full=fail_full),tempfile.TemporaryDirectory() as directory:
+                root=Path(directory);contract=root/'benchmarks/contract-v1';contract.mkdir(parents=True)
+                corpus=contract/'held_out_loss.u32le';corpus.write_bytes(struct_bytes([1]*10001));(contract/'manifest.json').write_text(json.dumps({'quality':{'mean_nll_increase_limit_nats_per_token':.05}}))
+                folder=root/'benchmarks/results';folder.mkdir();baseline=folder/'2026-10-11-held-out-scalar-loss-analysis-v1.json';baseline.write_text(json.dumps({'context_policy':mq.POLICY,'scored_targets':10000,'mean_negative_log_likelihood':2.}))
+                corpus_sha=hashlib.sha256(corpus.read_bytes()).hexdigest();baseline_sha=hashlib.sha256(baseline.read_bytes()).hexdigest();contract_sha=hashlib.sha256((contract/'manifest.json').read_bytes()).hexdigest();calls=[]
+                def digest(path):
+                    if path==contract/'manifest.json':
+                        if replace_contract:path.write_bytes(b'{}')
+                        return hashlib.sha256(path.read_bytes()).hexdigest()
+                    return {'model.safetensors':mq.SOURCE_SHA,'config.json':mq.CONFIG_SHA,'held_out_loss.u32le':corpus_sha,baseline.name:baseline_sha}.get(path.name,'test')
+                def probes(directory):return [{'name':name,'tokens':[1]*4,'path':str(directory/name),'source_nll':[1.]*3} for name in ('future_changed','short')]
+                def child(binary,source,packed,path,tokens,quantized,chunk,raw,stderr,*,admission,extra_args):
+                    calls.append(path);self.assertFalse(quantized);self.assertEqual(extra_args,('small','half-compensated'))
+                    event,rows,*_,sha=fixture(tokens,chunk);event.update(quantized=False,weight_dtype='FP16',projection_mode='HalfCompensated',normalization_mode='Original',half_compensated_execution_widths=[32,32],hidden_size=896,num_layers=24,vocab_size=151936)
+                    event['memory']['weights_bytes']=988069596;event['memory']['admitted_bytes']=sum(v for k,v in event['memory'].items() if k!='admitted_bytes');event['memory_admitted_bytes']=event['memory']['admitted_bytes']+64*1024**2;admission(event,tokens,sha,False,chunk)
+                    if path==corpus:return {'passed':not fail_full,'losses':rows,'mean_negative_log_likelihood':1.}
+                    for row in rows:row['negative_log_likelihood']=1.+(delta if chunk==128 else 0.)
+                    return {'passed':True,'losses':rows}
+                out=folder/'new.json'
+                with patch.object(mq,'ROOT',root),patch.object(mq,'CORPUS_SHA',corpus_sha),patch.object(mq,'BASELINE_SHA',baseline_sha),patch.object(mq,'CONTRACT_SHA',contract_sha),patch.object(mq,'digest',digest),patch.object(mq.quality,'probe_inputs',probes),patch.object(mq,'child',child),patch.object(mq.continuation,'observation',return_value='test'),patch.object(mq.continuation,'endpoints',return_value={}):
+                    if passed:mq.run(root/'binary',out,False,True,full)
+                    else:
+                        with self.assertRaisesRegex(ValueError,'Initial frozen' if replace_contract else 'collection failed'):mq.run(root/'binary',out,False,True,full)
+                if replace_contract:
+                    self.assertEqual(calls,[]);self.assertFalse(out.exists());self.assertEqual((contract/'manifest.json').read_bytes(),b'{}');continue
+                record=json.loads(out.read_text());self.assertEqual(len(calls),calls_expected);self.assertEqual(record['passed'],passed);self.assertFalse(record['quality_completed']);self.assertFalse(record['collection_completed']);self.assertEqual(record['probes_completed'],delta==0.);self.assertEqual(record['full_corpus_requested'],full)
     def test_exact_bounded_parsed_bytes_are_bound(self):
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/"payload";path.write_bytes(b"original")
@@ -117,7 +163,9 @@ class MetalLoss(unittest.TestCase):
             corpus=path/"benchmarks/contract-v1";corpus.mkdir(parents=True);(corpus/"held_out_loss.u32le").write_bytes(struct_bytes([1]*10001))
             (corpus/"manifest.json").write_text(json.dumps({"quality":{"mean_nll_increase_limit_nats_per_token":.05}}))
             baseline=path/"benchmarks/results";baseline.mkdir();(baseline/"2026-10-11-held-out-scalar-loss-analysis-v1.json").write_text(json.dumps({"context_policy":mq.POLICY,"scored_targets":10000}))
+            contract_sha=hashlib.sha256((corpus/"manifest.json").read_bytes()).hexdigest()
             def digest(p):
+                if p==corpus/"manifest.json":return contract_sha
                 if p.name=="model.safetensors":return mq.SOURCE_SHA
                 if p.name=="held_out_loss.u32le":return mq.CORPUS_SHA
                 if p.name.endswith("scalar-loss-analysis-v1.json"):return mq.BASELINE_SHA
@@ -126,7 +174,7 @@ class MetalLoss(unittest.TestCase):
             output=path/"result.json"
             corpus_sha=hashlib.sha256((corpus/"held_out_loss.u32le").read_bytes()).hexdigest()
             baseline_sha=hashlib.sha256((baseline/"2026-10-11-held-out-scalar-loss-analysis-v1.json").read_bytes()).hexdigest()
-            with patch.object(mq,"ROOT",path),patch.object(mq,"CORPUS_SHA",corpus_sha),patch.object(mq,"BASELINE_SHA",baseline_sha),patch.object(mq,"digest",digest),patch.object(mq.continuation,"observation",return_value="test"),patch.object(mq.continuation,"endpoints",power),patch.object(mq.quality,"probe_inputs",side_effect=ValueError("original probe failure")):
+            with patch.object(mq,"ROOT",path),patch.object(mq,"CORPUS_SHA",corpus_sha),patch.object(mq,"BASELINE_SHA",baseline_sha),patch.object(mq,"CONTRACT_SHA",contract_sha),patch.object(mq,"digest",digest),patch.object(mq.continuation,"observation",return_value="test"),patch.object(mq.continuation,"endpoints",power),patch.object(mq.quality,"probe_inputs",side_effect=ValueError("original probe failure")):
                 with self.assertRaisesRegex(ValueError,"collection failed"):mq.run(path/"binary",output)
             record=json.loads(output.read_text());self.assertFalse(record["passed"])
             self.assertIn("original probe failure",record["error"]);self.assertEqual(record["endpoint_errors"],["endpoint failure"])

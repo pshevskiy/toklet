@@ -1,5 +1,6 @@
 """Matched larger Metal loss collection under the frozen policy; no timing claims."""
 import argparse
+from functools import partial
 import json
 from pathlib import Path
 import struct
@@ -20,10 +21,11 @@ PACKED_SHA="236e2a2071ad90967008e81b3af262275fc7c81307f303eab577f8681bc6c8c3"
 digest=shared.digest
 
 
-def ready(event,tokens,sha,quantized,chunk):
-    shared.ready(event,tokens,sha,quantized,chunk)
+def ready(event,tokens,sha,quantized,chunk,half_compensated=False):
+    if half_compensated:shared.half_admission(event,tokens,sha,quantized,chunk)
+    else:shared.ready(event,tokens,sha,quantized,chunk)
     expected={"hidden_size":1536,"num_layers":28,"vocab_size":151936,
-              "projection_mode":"Q4Compensated" if quantized else "Original",
+              "projection_mode":"HalfCompensated" if half_compensated else "Q4Compensated" if quantized else "Original",
               "normalization_mode":"Compensated" if quantized else "Original"}
     if any(type(event.get(k)) is not type(v) or event[k]!=v for k,v in expected.items()):
         raise ValueError("Larger loss geometry/numerical mode differs")
@@ -66,9 +68,12 @@ def check_initial_pins(identities,source,corpus,baseline_path,packed,quantized,c
         raise ValueError("Frozen numerically qualified larger Q4 artifact changed")
 
 
-def run(binary,output,full=False,quantized=True):
+def run(binary,output,full=False,quantized=True,half_compensated=False):
     paths=[output,output.with_suffix(".raw.jsonl"),output.with_suffix(".stderr")]
     if any(p.exists() for p in paths):raise ValueError("Larger Metal evidence destination exists")
+    if half_compensated and quantized:raise ValueError("Compensated Half scoring requires --fp16")
+    admission=partial(ready,half_compensated=True) if half_compensated else ready
+    extra_args=("larger","half-compensated") if half_compensated else ("larger",)
     source=ROOT/"models/Qwen2.5-1.5B-Instruct"
     packed=ROOT/"artifacts/m5-larger-q4-v1"
     corpus=ROOT/"benchmarks/contract-v1/held_out_loss.u32le"
@@ -93,6 +98,7 @@ def run(binary,output,full=False,quantized=True):
     check_initial_pins(identities,source,corpus,baseline_path,packed,quantized,contract_shas[0])
     result={"format":"toklet-larger-metal-held-out-loss-v1","passed":False,"probes_completed":False,"collection_completed":False,"quality_completed":False,
             "full_corpus_requested":full,"quantized":quantized,"scope":"Matched larger loss only; task quality and latency separate",
+            "half_compensated":half_compensated,
             "identities":identities,"runs":[],"baseline_mean_negative_log_likelihood":BASELINE_MEAN,
             "engine_revision":shared.continuation.observation(["git","rev-parse","HEAD"]),"compiler":shared.continuation.observation(["rustc","-Vv"]),
             "build":"CARGO_TARGET_DIR=artifacts/m5-checks cargo build --offline --release --features metal --example metal_quality; default release flags",
@@ -112,7 +118,7 @@ def run(binary,output,full=False,quantized=True):
                     for key in ("source_nll","source_logit_path","source_logit_sha256"):del probe[key]
                     paired=[]
                     for chunk in (1,128):
-                        record=shared.child(binary,source,packed,Path(probe["path"]),probe["tokens"],quantized,chunk,raw,stderr,admission=ready,extra_args=("larger",))
+                        record=shared.child(binary,source,packed,Path(probe["path"]),probe["tokens"],quantized,chunk,raw,stderr,admission=admission,extra_args=extra_args)
                         result["runs"].append(record)
                         if not record["passed"]:raise ValueError("Larger Metal loss probe worker failed")
                         paired.append(record["losses"])
@@ -120,7 +126,7 @@ def run(binary,output,full=False,quantized=True):
                     probe["batch_minus_matched_fp32_nll"]=[r["negative_log_likelihood"]-n for r,n in zip(paired[1],probe["matched_fp32_nll"])]
             result["probes_completed"]=True;result["passed"]=True
             if full:
-                record=shared.child(binary,source,packed,corpus,tokens,quantized,128,raw,stderr,admission=ready,extra_args=("larger",))
+                record=shared.child(binary,source,packed,corpus,tokens,quantized,128,raw,stderr,admission=admission,extra_args=extra_args)
                 result["runs"].append(record)
                 if not record["passed"]:raise ValueError("Larger Metal full loss worker failed")
                 mean=record["mean_negative_log_likelihood"];delta=mean-BASELINE_MEAN
@@ -148,5 +154,6 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--binary",type=Path,required=True);parser.add_argument("--output",type=Path,required=True)
     parser.add_argument("--full",action="store_true");parser.add_argument("--fp16",action="store_true")
-    args=parser.parse_args();result=run(args.binary.resolve(),args.output.resolve(),args.full,not args.fp16)
+    parser.add_argument("--half-compensated",action="store_true")
+    args=parser.parse_args();result=run(args.binary.resolve(),args.output.resolve(),args.full,not args.fp16,args.half_compensated)
     if not result["passed"]:sys.exit(2)

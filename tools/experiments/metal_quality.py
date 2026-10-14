@@ -24,6 +24,8 @@ import quality
 LIMIT=6*1024**3
 CORPUS_SHA="f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb"
 SOURCE_SHA="fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+CONFIG_SHA="18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45"
+CONTRACT_SHA="3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66"
 BASELINE_SHA="1be6b1030c1835bde93a081bf4bf87f1a02bdb038a78c3f7a3109bafb17777ac"
 POLICY=quality.POLICY
 digest=continuation.digest
@@ -154,15 +156,31 @@ def child(binary,source,packed,token_path,tokens,quantized,chunk,raw,stderr,*,ad
     return result
 
 
-def run(binary,output,quantized=True):
+def half_admission(event,tokens,sha,quantized,chunk):
+    if quantized:raise ValueError("Compensated Half scoring requires --fp16")
+    ready(event,tokens,sha,False,chunk)
+    widths=event.get("half_compensated_execution_widths")
+    if (event.get("projection_mode")!="HalfCompensated" or event.get("normalization_mode")!="Original"
+            or type(widths) is not list or len(widths)!=2 or any(type(v) is not int or v<=0 for v in widths) or widths[0]!=widths[1]):raise ValueError("Compensated Half scoring mode/widths differ")
+
+def small_half_admission(event,tokens,sha,quantized,chunk):
+    half_admission(event,tokens,sha,quantized,chunk)
+    expected={"hidden_size":896,"num_layers":24,"vocab_size":151936}
+    if any(type(event.get(k)) is not type(v) or event[k]!=v for k,v in expected.items()) or event["memory"]["weights_bytes"]!=988069596:raise ValueError("Small compensated Half geometry/residency differs")
+
+def run(binary,output,quantized=True,half_compensated=False,full=True):
     paths=[output,output.with_suffix(".raw.jsonl"),output.with_suffix(".stderr")]
     if any(p.exists() for p in paths):raise ValueError("Metal loss evidence destination exists")
+    if half_compensated and quantized:raise ValueError("Compensated Half scoring requires --fp16")
+    admission=small_half_admission if half_compensated else ready
+    extra_args=("small","half-compensated") if half_compensated else ()
     source=ROOT/"models/Qwen2.5-0.5B-Instruct";packed=ROOT/"artifacts/m5-qwen-q4-v1"
     corpus=ROOT/"benchmarks/contract-v1/held_out_loss.u32le"
     baseline_path=ROOT/"benchmarks/results/2026-10-11-held-out-scalar-loss-analysis-v1.json"
     if digest(source/"model.safetensors")!=SOURCE_SHA:raise ValueError("Frozen source identity differs")
+    if half_compensated and digest(source/"config.json")!=CONFIG_SHA:raise ValueError("Frozen compensated Half config differs")
     data=frozen_bytes(corpus,10001*4,CORPUS_SHA);tokens=list(struct.unpack("<10001I",data))
-    baseline=json.loads(frozen_bytes(baseline_path,1024**2,BASELINE_SHA));contract=json.loads((corpus.parent/"manifest.json").read_text())
+    baseline=json.loads(frozen_bytes(baseline_path,1024**2,BASELINE_SHA));contract=json.loads(frozen_bytes(corpus.parent/"manifest.json",2*1024**2,CONTRACT_SHA))
     if baseline["context_policy"]!=POLICY or baseline["scored_targets"]!=10000 or contract["quality"]["mean_nll_increase_limit_nats_per_token"]!=.05:
         raise ValueError("Frozen loss context/gate changed")
     files=[Path(__file__),Path(metal_engine.__file__),Path(native_usage.__file__),Path(continuation.__file__),Path(quality.__file__),Path(quality.prepare.__file__),binary,
@@ -172,8 +190,10 @@ def run(binary,output,quantized=True):
     if quantized:files+=list(packed.glob("*.q4"))+[packed/"manifest.json"]
     identities={str(p):digest(p) for p in files}
     if (identities[str(source/"model.safetensors")]!=SOURCE_SHA or identities[str(corpus)]!=CORPUS_SHA
-            or identities[str(baseline_path)]!=BASELINE_SHA):raise ValueError("Initial frozen loss/source identities changed")
+            or identities[str(baseline_path)]!=BASELINE_SHA or identities[str(corpus.parent/"manifest.json")]!=CONTRACT_SHA
+            or (half_compensated and identities[str(source/"config.json")]!=CONFIG_SHA)):raise ValueError("Initial frozen loss/source identities changed")
     result={"format":"toklet-metal-held-out-loss-v1","passed":False,"collection_completed":False,"quality_completed":False,"quantized":quantized,
+            "half_compensated":half_compensated,"full_corpus_requested":full,"probes_completed":False,
             "scope":"Frozen 10000-target loss; task quality and latency acceptance separate","identities":identities,"runs":[],
             "engine_revision":continuation.observation(["git","rev-parse","HEAD"]),"compiler":continuation.observation(["rustc","-Vv"]),
             "build":"CARGO_TARGET_DIR=artifacts/m5-checks cargo build --offline --release --features metal --example metal_quality; default release flags",
@@ -186,19 +206,21 @@ def run(binary,output,quantized=True):
                 for probe in probes:
                     paired=[]
                     for chunk in (1,128):
-                        record=child(binary,source,packed,Path(probe["path"]),probe["tokens"],quantized,chunk,raw,stderr)
+                        record=child(binary,source,packed,Path(probe["path"]),probe["tokens"],quantized,chunk,raw,stderr,admission=admission,extra_args=extra_args)
                         result["runs"].append(record)
                         if not record["passed"]:raise ValueError("Metal loss probe worker failed")
                         paired.append(record["losses"])
                     probe["batch_minus_single_nll"]=quality.check_probe(paired[1],[r["negative_log_likelihood"] for r in paired[0]])
                     probe["batch_minus_unquantized_fp32_nll"]=[r["negative_log_likelihood"]-n for r,n in zip(paired[1],probe["source_nll"])]
-            record=child(binary,source,packed,corpus,tokens,quantized,128,raw,stderr);result["runs"].append(record)
-            if not record["passed"]:raise ValueError("Metal full loss worker failed")
-            delta=record["mean_negative_log_likelihood"]-baseline["mean_negative_log_likelihood"]
-            result.update(collection_completed=True,quality_completed=True,mean_negative_log_likelihood=record["mean_negative_log_likelihood"],
-                          baseline_mean_negative_log_likelihood=baseline["mean_negative_log_likelihood"],increase_nats_per_token=delta,
-                          quality_gate={"maximum_increase_nats_per_token":.05,"passed":delta<=.05},passed=delta<=.05)
-        except BaseException as error:result["error"]=f"{type(error).__name__}: {error}"
+            result.update(probes_completed=True,passed=True)
+            if full:
+                record=child(binary,source,packed,corpus,tokens,quantized,128,raw,stderr,admission=admission,extra_args=extra_args);result["runs"].append(record)
+                if not record["passed"]:raise ValueError("Metal full loss worker failed")
+                delta=record["mean_negative_log_likelihood"]-baseline["mean_negative_log_likelihood"]
+                result.update(collection_completed=True,quality_completed=True,mean_negative_log_likelihood=record["mean_negative_log_likelihood"],
+                              baseline_mean_negative_log_likelihood=baseline["mean_negative_log_likelihood"],increase_nats_per_token=delta,
+                              quality_gate={"maximum_increase_nats_per_token":.05,"passed":delta<=.05},passed=delta<=.05)
+        except BaseException as error:result["passed"]=False;result["error"]=f"{type(error).__name__}: {error}"
         finally:
             result["endpoint_errors"]=[]
             try:result["identities_unchanged"]=all(digest(Path(p))==sha for p,sha in identities.items())
@@ -208,13 +230,13 @@ def run(binary,output,quantized=True):
             if not result["identities_unchanged"] or result["endpoint_errors"]:
                 result["passed"]=False;result["collection_completed"]=False;result["quality_completed"]=False
             json.dump(result,summary,indent=2,allow_nan=False);summary.write("\n")
-    if not result["collection_completed"]:raise ValueError("Metal loss collection failed; see retained evidence")
+    if not result["probes_completed"] or (full and not result["collection_completed"]) or not result["identities_unchanged"] or result["endpoint_errors"]:raise ValueError("Metal loss collection failed; see retained evidence")
     return result
 
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--binary",type=Path,required=True);parser.add_argument("--output",type=Path,required=True)
-    parser.add_argument("--fp16",action="store_true");args=parser.parse_args()
-    result=run(args.binary.resolve(),args.output.resolve(),not args.fp16)
+    parser.add_argument("--fp16",action="store_true");parser.add_argument("--half-compensated",action="store_true");parser.add_argument("--probes-only",action="store_true");args=parser.parse_args()
+    result=run(args.binary.resolve(),args.output.resolve(),not args.fp16,args.half_compensated,not args.probes_only)
     if not result["passed"]:sys.exit(2)
