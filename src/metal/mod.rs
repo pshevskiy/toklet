@@ -239,6 +239,11 @@ impl Model {
                 })
                 .transpose()?;
             if let Some(artifact) = &artifact {
+                // The independent v2 storage/oracle task precedes GPU support.
+                // Refuse it before compilation, allocation or kernel selection.
+                if artifact.format() != q4::Format::V1 {
+                    return Err(Error::Unsupported("Q4 v2 GPU execution is not qualified"));
+                }
                 source = bound_q4_source(directory, options, source, artifact)?;
             }
             let compile_clock = Instant::now();

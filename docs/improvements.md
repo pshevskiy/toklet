@@ -197,6 +197,16 @@ record completion is separate from milestone acceptance. Saved arithmetic,
 links/whitespace and protected executable checks pass; Astra accepted after two
 wording corrections with no remaining findings.
 
+A separate [Q4 v2 group8 candidate](q4-v2.md) now has a checked [source-bound
+packer and independent CPU reconstruction oracle](experiments/2026-10-14-q4-v2-format.md).
+It uses8effectivebits/weight including Half scale/bias before padding, with distinct
+version/quantizer identities and immutable admitted format. V1 default/bytes and
+rejected quality remain. Manual cross-language fixtures, group/alignment tails,
+source replacement, output ownership, overflow and version mixing pass. V2 GPU
+loading rejects before allocation until qualified execution is implemented.
+No v2 quality or latency gain is claimed; Astra accepted design, code, checks
+and evidence with no findings before commit.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.

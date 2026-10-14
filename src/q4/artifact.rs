@@ -1,5 +1,5 @@
 //! Source-bound packed model inventory. No GPU or model-sized CPU allocation.
-use super::{GROUP, HEADER_BYTES, Matrix, QUANTIZER, RECORD_BYTES};
+use super::{Format, HEADER_BYTES, Matrix};
 use crate::weights::{Error, INITIAL_MEMORY_LIMIT_BYTES};
 use serde::Deserialize;
 use sha2::{Digest, Sha256};
@@ -110,11 +110,15 @@ pub struct Artifact {
     directory: PathBuf,
     source: PathBuf,
     manifest: Manifest,
+    format: Format,
     pub packed_matrix_bytes: usize,
     pub largest_matrix_bytes: usize,
     pub admitted_packed_load_bytes: usize,
 }
 impl Artifact {
+    pub fn format(&self) -> Format {
+        self.format
+    }
     pub fn open(
         directory: &Path,
         source: &Path,
@@ -149,9 +153,12 @@ impl Artifact {
             return Err(invalid("Q4 manifest size changed"));
         }
         let manifest: Manifest = serde_json::from_slice(&data)?;
-        if manifest.format != "toklet-q4-model-v1"
-            || manifest.quantizer != QUANTIZER
-            || manifest.excluded_dtype != "F16"
+        let format = match manifest.format.as_str() {
+            "toklet-q4-model-v1" if manifest.quantizer == Format::V1.quantizer() => Format::V1,
+            "toklet-q4-model-v2" if manifest.quantizer == Format::V2.quantizer() => Format::V2,
+            _ => return Err(invalid("unsupported Q4 model format or quantizer")),
+        };
+        if manifest.excluded_dtype != "F16"
             || manifest.exclusions != ["norms", "qkv_biases", "tied_embedding_output"]
         {
             return Err(invalid("unsupported Q4 model format or exclusions"));
@@ -188,8 +195,8 @@ impl Artifact {
             }
             let stride = entry
                 .columns
-                .div_ceil(GROUP)
-                .checked_mul(RECORD_BYTES)
+                .div_ceil(format.group())
+                .checked_mul(format.record_bytes())
                 .and_then(|v| v.checked_add(63))
                 .map(|v| v / 64 * 64)
                 .ok_or_else(|| invalid("Q4 size overflow"))?;
@@ -223,6 +230,7 @@ impl Artifact {
             directory: directory.to_owned(),
             source: source.to_owned(),
             manifest,
+            format,
             packed_matrix_bytes: bytes,
             largest_matrix_bytes: largest,
             admitted_packed_load_bytes: admitted,
@@ -275,7 +283,10 @@ impl Artifact {
             return Err(invalid("Q4 matrix changed after admission"));
         }
         let matrix = Matrix::parse(&data).map_err(|e| invalid(e.0))?;
-        if matrix.rows() != entry.rows || matrix.columns() != entry.columns {
+        if matrix.rows() != entry.rows
+            || matrix.columns() != entry.columns
+            || matrix.format() != self.format
+        {
             return Err(invalid("Q4 header shape differs from manifest"));
         }
         Ok(data)

@@ -1,0 +1,32 @@
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.36s
+     Running tests/q4.rs (artifacts/m5-checks/debug/deps/q4-6864ea6971737f39)
+
+running 3 tests
+test matvec_errors_preserve_all_output_and_half_extrema_use_fp32_reconstruction ... ok
+test rejects_bad_headers_overflow_metadata_and_noncanonical_padding ... ok
+test python_artifact_roundtrips_and_reconstructs_manual_values ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/q4_artifact.rs (artifacts/m5-checks/debug/deps/q4_artifact-fdd9475f4f44b20d)
+
+running 6 tests
+test packed_source_artifact_matches_independent_known_geometry ... ignored, explicit local source+packed artifact check; no GPU; set TOKLET_Q4_SOURCE and TOKLET_Q4_PACKED
+test matrix_inventory_rejects_unbounded_layers_before_allocating ... ok
+test rejects_oversized_metadata_and_hashed_but_invalid_matrix_bytes ... ok
+test validates_source_bound_inventory_and_exact_load_budget_without_gpu ... ok
+test v2_inventory_binds_header_version_and_preserves_v1 ... ok
+test rejects_identity_mismatch_duplicate_names_paths_shapes_and_policy ... ok
+
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/q4_v2.rs (artifacts/m5-checks/debug/deps/q4_v2-fbdad5d7e38eddf3)
+
+running 3 tests
+test group_eight_manual_bytes_reconstruct_and_multiply_without_expansion ... ok
+test group_eight_rejects_version_mixing_padding_metadata_and_overflow ... ok
+test group_eight_manual_records_cover_group_and_alignment_boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

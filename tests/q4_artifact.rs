@@ -242,3 +242,61 @@ fn packed_source_artifact_matches_independent_known_geometry() {
         "largest_matrix_bytes":artifact.largest_matrix_bytes,"admitted_packed_load_bytes":artifact.admitted_packed_load_bytes})
     );
 }
+
+#[test]
+fn v2_inventory_binds_header_version_and_preserves_v1() {
+    let mut f = Fixture::new();
+    let data = include_bytes!("fixtures/q4-v2/rows.q4");
+    fs::write(f.root.join("packed/test.q4"), data).unwrap();
+    f.manifest["format"] = json!("toklet-q4-model-v2");
+    f.manifest["quantizer"] = json!(q4::Format::V2.quantizer());
+    f.manifest["matrices"][0]["columns"] = json!(17);
+    f.manifest["matrices"][0]["packed_bytes"] = json!(data.len());
+    f.manifest["matrices"][0]["packed_sha256"] = json!(sha(data));
+    f.manifest["packed_matrix_bytes"] = json!(data.len());
+    f.save();
+    let open = || {
+        q4::Artifact::open(
+            &f.root.join("packed"),
+            &f.root.join("source"),
+            &BTreeMap::from([("test".into(), vec![2, 17])]),
+            &["model.safetensors".into()],
+            weights::INITIAL_MEMORY_LIMIT_BYTES,
+        )
+    };
+    let artifact = open().unwrap();
+    assert_eq!(artifact.format(), q4::Format::V2);
+    assert_eq!(artifact.read_matrix("test").unwrap(), data);
+    // Shape/byte count/hash can match while the authenticated matrix format differs.
+    let mut mixed = data.to_vec();
+    mixed[..8].copy_from_slice(q4::MAGIC);
+    mixed[8..12].copy_from_slice(&1u32.to_le_bytes());
+    mixed[12..16].copy_from_slice(&64u32.to_le_bytes());
+    mixed[64..].fill(0);
+    assert_eq!(q4::Matrix::parse(&mixed).unwrap().format(), q4::Format::V1);
+    fs::write(f.root.join("packed/test.q4"), &mixed).unwrap();
+    assert!(artifact.read_matrix("test").is_err());
+    f.manifest["matrices"][0]["packed_sha256"] = json!(sha(&mixed));
+    f.save();
+    let mixed_artifact = q4::Artifact::open(
+        &f.root.join("packed"),
+        &f.root.join("source"),
+        &BTreeMap::from([("test".into(), vec![2, 17])]),
+        &["model.safetensors".into()],
+        weights::INITIAL_MEMORY_LIMIT_BYTES,
+    )
+    .unwrap();
+    assert!(mixed_artifact.read_matrix("test").is_err());
+    f.manifest["quantizer"] = json!(q4::QUANTIZER);
+    f.save();
+    assert!(
+        q4::Artifact::open(
+            &f.root.join("packed"),
+            &f.root.join("source"),
+            &BTreeMap::from([("test".into(), vec![2, 17])]),
+            &["model.safetensors".into()],
+            weights::INITIAL_MEMORY_LIMIT_BYTES
+        )
+        .is_err()
+    );
+}

@@ -8,6 +8,7 @@ import struct
 import sys
 
 import q4
+import q4v2
 
 SUFFIXES = ("self_attn.q_proj.weight", "self_attn.k_proj.weight", "self_attn.v_proj.weight",
             "self_attn.o_proj.weight", "mlp.gate_proj.weight", "mlp.up_proj.weight", "mlp.down_proj.weight")
@@ -104,14 +105,16 @@ def decode(raw, dtype):
     raise ValueError("only F32/F16/BF16 sources supported")
 
 
-def pack_model(source, destination):
+def pack_model(source, destination, version="v1"):
+    if version not in ("v1", "v2"): raise ValueError("unsupported Q4 artifact version")
+    codec = q4 if version == "v1" else q4v2
     config, config_hash = read_json_identity(source / "config.json")
     if config.get("model_type") != "qwen2" or config.get("tie_word_embeddings") is not True:
         raise ValueError("only tied Qwen2 sources supported")
     shapes = dimensions(config)
     tensors, identities = shards(source)
-    total = q4.HEADER * len(shapes) + sum(q4.layout(*s)[1] for s in shapes.values())
-    if total > q4.LIMIT: raise ValueError("packed matrices exceed 6 GiB")
+    total = codec.HEADER * len(shapes) + sum(codec.layout(*s)[1] for s in shapes.values())
+    if total > codec.LIMIT: raise ValueError("packed matrices exceed 6 GiB")
     for name, shape in shapes.items():
         path, offset, count, item = tensors[name]
         width = {"F32": 4, "F16": 2, "BF16": 2}.get(item["dtype"])
@@ -130,13 +133,13 @@ def pack_model(source, destination):
             owned = output.open("xb")
             try:
                 with owned as dst:
-                    header = q4.header(rows, columns); dst.write(header); packed_hash.update(header)
+                    header = codec.header(rows, columns); dst.write(header); packed_hash.update(header)
                     for _ in range(rows):
                         raw = src.read(columns * width)
                         if len(raw) != columns * width: raise ValueError("source matrix shortened")
                         values = decode(raw, item["dtype"])
                         source_hash.update(struct.pack(f"<{columns}f", *values))
-                        packed = q4.pack_row(values); dst.write(packed); packed_hash.update(packed)
+                        packed = codec.pack_row(values); dst.write(packed); packed_hash.update(packed)
             except BaseException:
                 output.unlink(missing_ok=True)
                 raise
@@ -146,7 +149,7 @@ def pack_model(source, destination):
         print(f"packed {name}", file=sys.stderr, flush=True)
     if digest(source / "config.json") != config_hash or any(digest(source / i["file"]) != i["sha256"] for i in identities):
         raise ValueError("source identities changed during packing")
-    manifest = {"format": "toklet-q4-model-v1", "quantizer": q4.POLICY, "config_sha256": config_hash,
+    manifest = {"format": f"toklet-q4-model-{version}", "quantizer": codec.POLICY, "config_sha256": config_hash,
                 "sources": identities, "matrices": matrices, "packed_matrix_bytes": total,
                 "exclusions": ["norms", "qkv_biases", "tied_embedding_output"], "excluded_dtype": "F16"}
     manifest_path = destination / "manifest.json"
@@ -163,8 +166,9 @@ def pack_model(source, destination):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path); parser.add_argument("destination", type=Path)
+    parser.add_argument("--format", choices=("v1", "v2"), default="v1")
     args = parser.parse_args()
-    pack_model(args.source, args.destination)
+    pack_model(args.source, args.destination, args.format)
 
 
 if __name__ == "__main__": main()

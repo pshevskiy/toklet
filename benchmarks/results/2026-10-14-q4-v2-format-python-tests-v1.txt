@@ -1,0 +1,25 @@
+test_bad_shapes_names_offsets_duplicate_json_and_missing_matrices (test_model.ModelArtifact.test_bad_shapes_names_offsets_duplicate_json_and_missing_matrices) ... ok
+test_changed_source_has_no_usable_manifest (test_model.ModelArtifact.test_changed_source_has_no_usable_manifest) ... ok
+test_config_mutation_between_parse_and_original_first_digest_is_rejected (test_model.ModelArtifact.test_config_mutation_between_parse_and_original_first_digest_is_rejected) ... ok
+test_final_manifest_flush_failure_preserves_only_incomplete_directory (test_model.ModelArtifact.test_final_manifest_flush_failure_preserves_only_incomplete_directory) ... ok
+test_header_mutation_between_parse_and_original_first_digest_is_rejected (test_model.ModelArtifact.test_header_mutation_between_parse_and_original_first_digest_is_rejected) ... ok
+test_json_growth_after_stat_is_bounded_and_rejected (test_model.ModelArtifact.test_json_growth_after_stat_is_bounded_and_rejected) ... ok
+test_nonfinite_payload_never_publishes_manifest (test_model.ModelArtifact.test_nonfinite_payload_never_publishes_manifest) ... ok
+test_streamed_f32_f16_bf16_and_shard_identity (test_model.ModelArtifact.test_streamed_f32_f16_bf16_and_shard_identity) ... ok
+test_codes_round_ties_even_after_metadata_rounding (test_q4.Format.test_codes_round_ties_even_after_metadata_rounding) ... ok
+test_constant_signed_zero_half_rounding_and_subnormal (test_q4.Format.test_constant_signed_zero_half_rounding_and_subnormal) ... ok
+test_extreme_finite_range_and_rejected_source_metadata (test_q4.Format.test_extreme_finite_range_and_rejected_source_metadata) ... ok
+test_final_flush_failure_removes_only_owned_output (test_q4.Format.test_final_flush_failure_removes_only_owned_output) ... ok
+test_frozen_artifact_exact_bytes_and_reconstruction (test_q4.Format.test_frozen_artifact_exact_bytes_and_reconstruction) ... ok
+test_hand_calculated_nibbles_constant_tail_and_alignment (test_q4.Format.test_hand_calculated_nibbles_constant_tail_and_alignment) ... ok
+test_streaming_identity_existing_output_and_failure_cleanup (test_q4.Format.test_streaming_identity_existing_output_and_failure_cleanup) ... ok
+test_constants_subnormal_ties_extrema_and_rejections (test_q4v2.GroupEight.test_constants_subnormal_ties_extrema_and_rejections) ... ok
+test_file_identity_exclusive_ownership_and_failure_cleanup (test_q4v2.GroupEight.test_file_identity_exclusive_ownership_and_failure_cleanup) ... ok
+test_group_and_row_boundaries_have_canonical_padding (test_q4v2.GroupEight.test_group_and_row_boundaries_have_canonical_padding) ... ok
+test_independent_manual_artifact_bytes_and_values (test_q4v2.GroupEight.test_independent_manual_artifact_bytes_and_values) ... ok
+test_model_format_source_pins_and_version_selected_before_writes (test_q4v2.GroupEight.test_model_format_source_pins_and_version_selected_before_writes) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.048s
+
+OK
