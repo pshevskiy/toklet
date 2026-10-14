@@ -38,16 +38,22 @@ mod apple {
             Some(v) if v == "larger" => true,
             _ => return Err("optional quality geometry must be small or larger".into()),
         };
-        let half_compensated = match args.next() {
-            None => false,
-            Some(v) if v == "half-compensated" => true,
-            _ => return Err("optional projection must be half-compensated".into()),
+        let selection = match args.next() {
+            None => "original",
+            Some(v) if v == "half-compensated" => "half-compensated",
+            Some(v) if v == "q4-v2-compensated-tiled" => "q4-v2-compensated-tiled",
+            _ => return Err("unknown optional quality projection".into()),
         };
+        let half_compensated = selection == "half-compensated";
+        let q4_v2 = selection == "q4-v2-compensated-tiled";
         if args.next().is_some() {
             return Err("extra quality argument".into());
         }
         if half_compensated && packed != "-" {
             return Err("compensated Half scoring requires unquantized Half weights".into());
+        }
+        if q4_v2 && packed == "-" {
+            return Err("Q4 v2 scoring requires packed weights".into());
         }
         let (ids, corpus_sha) = tokens(&token_path)?;
         let targets = ids.len() - 1;
@@ -62,6 +68,14 @@ mod apple {
         } else {
             metal::Model::load(&source, load)
         }?;
+        if q4_v2 && model.q4_format() != Some(toklet::q4::Format::V2) {
+            return Err("explicit Q4 v2 scoring requires a v2 artifact".into());
+        }
+        let weight_dtype = match model.q4_format() {
+            Some(toklet::q4::Format::V1) => "Q4 v1 + FP16 exclusions",
+            Some(toklet::q4::Format::V2) => "Q4 v2 + FP16 exclusions",
+            None => "FP16",
+        };
         if model.config().hidden_size != if larger { 1536 } else { 896 }
             || model.config().num_layers != if larger { 28 } else { 24 }
             || model.config().vocab_size != 151936
@@ -74,14 +88,16 @@ mod apple {
         {
             return Err("invalid loss token".into());
         }
-        let projection = if half_compensated {
+        let projection = if q4_v2 {
+            metal::ProjectionMode::Q4CompensatedTiled
+        } else if half_compensated {
             metal::ProjectionMode::HalfCompensated
         } else if larger && quantized {
             metal::ProjectionMode::Q4Compensated
         } else {
             metal::ProjectionMode::Original
         };
-        let normalization = if larger && quantized {
+        let normalization = if q4_v2 || larger && quantized {
             metal::NormalizationMode::Compensated
         } else {
             metal::NormalizationMode::Original
@@ -114,7 +130,7 @@ mod apple {
         writeln!(
             out,
             "{}",
-            json!({"event":"ready","format":"toklet-metal-held-out-loss-events-v1","backend":"metal","quantized":quantized,"device":model.device_name(),"debug_assertions":cfg!(debug_assertions),"target_tokens":targets,"corpus_sha256":corpus_sha,"context_policy":POLICY,"block_targets":BLOCK,"context_capacity":CAPACITY,"prefill_chunk_size":chunk,"logit_positions":"all_causal_rows","weight_dtype":if quantized {"Q4 v1 + FP16 exclusions"}else{"FP16"},"kv_dtype":"FP16","memory":memory,"application_allowance_bytes":APP_BYTES,"memory_admitted_bytes":admitted,"load_seconds":model.load_timing.load_seconds,"hidden_size":model.config().hidden_size,"num_layers":model.config().num_layers,"vocab_size":model.config().vocab_size,"projection_mode":projection,"normalization_mode":normalization,"half_compensated_execution_widths":model.half_compensated_execution_widths()})
+            json!({"event":"ready","format":"toklet-metal-held-out-loss-events-v1","backend":"metal","quantized":quantized,"device":model.device_name(),"debug_assertions":cfg!(debug_assertions),"target_tokens":targets,"corpus_sha256":corpus_sha,"context_policy":POLICY,"block_targets":BLOCK,"context_capacity":CAPACITY,"prefill_chunk_size":chunk,"logit_positions":"all_causal_rows","weight_dtype":weight_dtype,"kv_dtype":"FP16","memory":memory,"application_allowance_bytes":APP_BYTES,"memory_admitted_bytes":admitted,"load_seconds":model.load_timing.load_seconds,"hidden_size":model.config().hidden_size,"num_layers":model.config().num_layers,"vocab_size":model.config().vocab_size,"projection_mode":projection,"normalization_mode":normalization,"half_compensated_execution_widths":model.half_compensated_execution_widths(),"q4_format":model.q4_format().map(|f| match f {toklet::q4::Format::V1 => "V1",toklet::q4::Format::V2 => "V2"}),"q4_quantizer":model.q4_format().map(|f| f.quantizer()),"q4_compensated_execution_widths":model.q4_compensated_execution_widths()})
         )?;
         out.flush()?;
         handshake()?;

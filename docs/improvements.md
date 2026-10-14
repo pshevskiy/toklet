@@ -236,6 +236,13 @@ admitted numerical+validation874,062,494/2,029,218,550 bytes fit6GiB. Capacity27
 is graph qualification, not full-context/application/quality/speed acceptance.
 Frozen held-out and repeated performance checks remain.
 
+The [explicit Q4 v2 scorer](experiments/2026-10-14-q4-v2-scorer.md) now reports
+actual format/quantizer/mode and resident admission, preserving legacy calls.
+Both unchanged short batch/single loss guards pass before any full-corpus worker.
+Exact-byte probe admission and both-model prelaunch tuple checks close Astra's
+provenance findings;22portable and104ordinaryMetal-feature checks pass. This
+qualifies integration/shortguards only; full loss/task/speed remain open.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
