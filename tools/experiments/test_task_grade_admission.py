@@ -9,6 +9,14 @@ from test_task_cases import inventory,events
 import test_metal_tasks as metal_fixtures
 import test_cpu_task_reference as reference_fixtures
 
+def current_inventory_fixture(record):
+ # Historical native records predate the new v2 Rust module. Add its synthetic
+ # identity only in this mocked unit fixture; never re-admit old native evidence.
+ ids=dict(record['identities']);extra=str(admission.ROOT/'src/metal/q4_v2_projection.rs')
+ assert extra not in ids
+ ids[extra]='a'*64
+ return ids
+
 class GradingAdmission(unittest.TestCase):
  def reference_fixture(self):
   cases,_=inventory();ready=reference_fixtures.Reference().admission();items=[]
@@ -63,7 +71,7 @@ class GradingAdmission(unittest.TestCase):
   for name,kind,model,binary in (
    ('small-half-tasks','toklet-metal-task-collection-v1','small',admission.ROOT/'artifacts/m5-cli-half-native-binary-v1/toklet'),
    ('larger-cpu-task-reference','toklet-cpu-task-reference-collection-v1','larger',admission.ROOT/'artifacts/m5-cpu-task-reference-native-binary-v1/cpu_task_reference')):
-   record=json.loads((admission.ROOT/f'benchmarks/results/2026-10-14-{name}-check-v1.json').read_text());ids=record['identities'];source=admission.ROOT/'models'/admission.controlled.MODELS[model][0]
+   record=json.loads((admission.ROOT/f'benchmarks/results/2026-10-14-{name}-check-v1.json').read_text());ids=current_inventory_fixture(record);source=admission.ROOT/'models'/admission.controlled.MODELS[model][0]
    self.assertEqual(set(ids),admission.inventory_paths(kind,binary,source,manifest))
    with patch.object(admission.metal_engine,'digest',side_effect=lambda p:ids[str(p)]):
     admission.validate_inventory(ids,kind,binary,ids[str(binary)],source,manifest,model)
@@ -75,7 +83,7 @@ class GradingAdmission(unittest.TestCase):
 
  def test_binary_replacement_never_becomes_expected_identity(self):
   manifest=admission.frozen_manifest();source=admission.ROOT/'models'/admission.controlled.MODELS['small'][0];kind='toklet-metal-task-collection-v1';binary=admission.ROOT/'artifacts/m5-cli-half-native-binary-v1/toklet'
-  record=json.loads((admission.ROOT/'benchmarks/results/2026-10-14-small-half-tasks-check-v1.json').read_text());ids=record['identities'];expected=ids[str(binary)];replacement='a'*64
+  record=json.loads((admission.ROOT/'benchmarks/results/2026-10-14-small-half-tasks-check-v1.json').read_text());ids=current_inventory_fixture(record);expected=ids[str(binary)];replacement='a'*64
   # Simulate replacement immediately after the earlier qualified source check.
   with patch.object(admission.metal,'qualified_cli',return_value=binary),patch.object(admission.metal_engine,'digest',return_value=replacement):
    self.assertEqual(admission.qualified_binary(kind),(binary,expected))

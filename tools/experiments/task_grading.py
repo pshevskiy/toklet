@@ -22,11 +22,11 @@ def check_collection(collection_path, collection):
         raise ValueError('Admitted task collection changed')
 
 
-def run(api, image_id, runtime, python_version, collection_path, output):
+def run(api, image_id, runtime, python_version, collection_path, output,*,collection_validator=None,extra_identity_modules=()):
     output = Path(output).resolve()
     if not output.is_relative_to((boundary.ROOT / "benchmarks/raw").resolve()) or output.exists():
         raise ValueError("Fresh held-out grading path is required")
-    collection = admission.validate_collection(collection_path)
+    collection = (collection_validator or admission.validate_collection)(collection_path)
     cases = collection["cases"]
     check_collection(collection_path, collection)
     source = controller.bundled_source()
@@ -40,6 +40,8 @@ def run(api, image_id, runtime, python_version, collection_path, output):
     for module in (admission, admission.metal, admission.reference, admission.controlled, admission.metal_engine, admission.metal.cli, admission.reference.native_usage,
                    admission.controlled.frozen, admission.controlled.common,
                    admission.controlled.metal_prefill, admission.controlled.metal_continue):
+        identities[str(Path(module.__file__).resolve().relative_to(boundary.ROOT))] = boundary.digest(module.__file__)
+    for module in extra_identity_modules:
         identities[str(Path(module.__file__).resolve().relative_to(boundary.ROOT))] = boundary.digest(module.__file__)
     identities[str(Path(__file__).resolve().relative_to(boundary.ROOT))] = boundary.digest(Path(__file__))
     record = {"format": "toklet-backend-task-grading-v1", "completed": False,

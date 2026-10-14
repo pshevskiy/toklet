@@ -92,8 +92,10 @@ def running_containers(api, record):
     raise ValueError('Running container inventory unavailable; machine retained')
 
 
-def run(args):
+def run(args,*,collection_admission=None,idle_admission=None,extra_source_paths=(),extra_grading_modules=()):
     global PREFIX, IDLE
+    collection_validator=(collection_admission or admission).validate_collection
+    idle_validator=idle_admission or admit_idle
     PREFIX = args.prefix
     IDLE = args.idle_proof.resolve()
     if not PREFIX.startswith("2026-10-14-backend-task-") or not PREFIX.replace("-", "").isalnum():
@@ -111,7 +113,7 @@ def run(args):
               'window_source_sha256': {str(path.relative_to(ROOT)): boundary.digest(path) for path in
                                       (Path(__file__).resolve(),
                                        ROOT / 'tools/bench/podman_machine_lifecycle.py',
-                                       ROOT/'tools/experiments/task_grading.py', ROOT/'tools/experiments/task_grade_admission.py')}}
+                                       ROOT/'tools/experiments/task_grading.py', ROOT/'tools/experiments/task_grade_admission.py',*extra_source_paths)}}
     owner = None
     api = None
 
@@ -129,7 +131,7 @@ def run(args):
     def idle():
         nonlocal idle_binding
         if idle_binding is None:
-            idle_binding = admit_idle(IDLE, args.collection)
+            idle_binding = idle_validator(IDLE, args.collection)
             record['idle_collections'] = idle_binding['collections']
         check_idle(idle_binding)
         return idle_binding['proof_sha256']
@@ -161,7 +163,7 @@ def run(args):
                 if boundary.digest(ROOT/name) != expected:
                     raise ValueError('Literal controller qualification source differs: '+name)
             record['literal_qualification_sha256']=LITERAL_SHA
-            collection=admission.validate_collection(args.collection)
+            collection=collection_validator(args.collection)
             record['collection_path']=str(args.collection)
             record['collection_sha256']=collection['collection_sha256']
             probe.check_collection(args.collection, collection)
@@ -219,7 +221,8 @@ def run(args):
                 raise ValueError('Qualified authored image metadata changed')
             idle()
             result = probe.run(api, IMAGE, record['admitted_runtime'],
-                               record['admitted_python_version'], args.collection, output)
+                               record['admitted_python_version'], args.collection, output,
+                               collection_validator=collection_validator,extra_identity_modules=extra_grading_modules)
             record['probe_path'] = str(output.relative_to(ROOT))
             record['probe_sha256'] = boundary.digest(output)
             record['quality_completed']=result.get('quality_completed',False)

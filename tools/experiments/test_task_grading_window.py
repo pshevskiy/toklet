@@ -64,7 +64,7 @@ class ContainerInventory(unittest.TestCase):
 
 
 class WindowRestoration(unittest.TestCase):
-    def invoke(self, foreign=False, initially_running=False, quality_completed=True, replaced=False, late_live=False):
+    def invoke(self, foreign=False, initially_running=False, quality_completed=True, replaced=False, late_live=False, custom_hooks=False, admission_failure=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve()
             (root / 'benchmarks/raw').mkdir(parents=True)
@@ -147,7 +147,15 @@ class WindowRestoration(unittest.TestCase):
                 start = stack.enter_context(patch.object(window.lifecycle, 'start_machine',
                     return_value=({'client_succeeded': True}, owner)))
                 await_owner = stack.enter_context(patch.object(window.lifecycle, 'await_stopped_owner'))
-                result = window.run(args)
+                if custom_hooks:
+                    validator=Mock(side_effect=ValueError('V2 admission failed') if admission_failure else None,
+                                   return_value={'identity':{'backend':'metal','model':'larger','packed_format_version':2},'collection_sha256':'authored-sha','raw_sha256':'authored-sha'})
+                    injected=SimpleNamespace(validate_collection=validator)
+                    result=window.run(args,collection_admission=injected,
+                                      idle_admission=lambda *args: {'proof_sha256':'authored-sha','collections':[]},
+                                      extra_source_paths=(producer,),extra_grading_modules=(injected,))
+                else:
+                    result = window.run(args)
                 record = json.loads((root / 'benchmarks/raw' / (args.prefix + '-window.json')).read_text())
             return result, record, commands, owner, start, await_owner, grade
 

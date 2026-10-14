@@ -297,3 +297,5 @@ This record will be updated with each reviewed implementation or measurement
 decision; unmeasured changes will remain explicitly marked.
 
 The [larger v2 full response collection](experiments/2026-10-14-q4-v2-full-tasks.md) completes100original cases at256/32/16caps. Clean natural model exit,101ordered native-memory observations, exact raw/state/post-exit text and unchanged source/artifact endpoints qualify transport. Literal grading and task-quality/performance acceptance remain pending.
+
+The [larger v2 full task gate](experiments/2026-10-14-q4-v2-task-quality.md) passes11/100 against matchedFP3211/100 with0pp precision loss. Exact v2 collection/inventory/pin admission and cold grading-window hooks preserve original literal/text semantics;43portable checks and the complete100-outcome/40code native window pass with zero unresolved infrastructure and stopped-VM restoration. Combined with its full loss pass, larger v2 quality is qualified; small v2 rejection and performance/release gaps remain.
