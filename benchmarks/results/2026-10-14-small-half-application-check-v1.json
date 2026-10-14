@@ -1,0 +1,934 @@
+{
+  "format": "toklet-metal-application-v1",
+  "passed": true,
+  "check_only": true,
+  "measurements_completed": false,
+  "quality_completed": false,
+  "revision": "29d2705e6db7a083df279c1c9ee3c7c4e9919263",
+  "identities": {
+    "/Users/coloner/work/rust/toklet/src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_512.u32le": "4ff74dae2ee5b778f9313f4c707f9ccb6415609a9c0653684cce7be63d457dd6",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_prefill.py": "4e0c72b67c31395360dfb1e46d18d4ca7277720be00f7461398633853c32372b",
+    "/Users/coloner/work/rust/toklet/src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "/Users/coloner/work/rust/toklet/tools/bench/mlx_baseline.py": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+    "/Users/coloner/work/rust/toklet/src/lib.rs": "a4cc758d947079d5cf715183edfa71039de4dc1735caac6a481cf7a0c9ae8962",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/application_trace.json": "879944437214e4c5e85e74a0d02a1e91cc20074d1bcab1aa53268c393ba6671d",
+    "/Users/coloner/work/rust/toklet/tools/bench/requirements.lock": "b05453a671689fbbc07c0ce5384ddebabdbfed4ba4229e19c75d416a79d2c8c2",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_tasks.py": "ef42100e47dea3a4d7929118eef72073b3bbaeb37fd1502df59cc7538246ae23",
+    "/Users/coloner/work/rust/toklet/benchmarks/sources.json": "dc2f82fb50b3f1f763c4757a992429b9122f3628c049709bdd7cb2252c69ea28",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_controlled.py": "32036bb8cfcd511d5c85e405f3e720da6d40691d3f27330e9fd8a3249b5004d9",
+    "/Users/coloner/work/rust/toklet/src/q4/artifact.rs": "b8cb3ded35f0db6a053d113a202df81c49e9c5a33755ec61c898899c9a694252",
+    "/Users/coloner/work/rust/toklet/src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "/Users/coloner/work/rust/toklet/src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_1920.u32le": "7852555756bf4cc51ea5726b216b1c619ebde1d9e3e7f066f5d4e26479e10248",
+    "/Users/coloner/work/rust/toklet/src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/held_out_loss.u32le": "f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_application.py": "867e07b4d5619742ecc08bfbeded7fdfec18db12daec79d2bd06f7cbd0e6bf59",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/mod.rs": "c7957092ea2dec2d24c268eb837c2720af1f455ceb0138294877988ddbb0d878",
+    "/Users/coloner/work/rust/toklet/tools/bench/cpu.py": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_engine.py": "1541afc73738d91e13dc6d71c32f72632e4b2eb20174781dc193126362b73d0c",
+    "/Users/coloner/work/rust/toklet/tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "/Users/coloner/work/rust/toklet/src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/changed_prompt_512.u32le": "e3b16c222cf07b09d6ded35fcdda26b540e6127fe37ee3a97fa929656d306162",
+    "/Users/coloner/work/rust/toklet/src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+    "/Users/coloner/work/rust/toklet/src/metal/kernels.metal": "b519966f706cabaf0260d68d5e682004d88e3d641a3d6c3c78f154f5a5be738c",
+    "/Users/coloner/work/rust/toklet/src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/append_64.u32le": "e987cc8715b7a354f341995ded8a0c4b460f069a9dadd20f2ecf6f0494ef8334",
+    "/Users/coloner/work/rust/toklet/tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc",
+    "/Users/coloner/work/rust/toklet/src/metal/mod.rs": "19cb3fe2acce31a38129e5535638e8f837ccfabf04649d7900ee8f7126e5266c",
+    "/Users/coloner/work/rust/toklet/src/weights/mod.rs": "a07f0e8b91973c22c3fe9b0c9c5f0f688fc4b602f5402ef0f9a95c05976399c1",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "/Users/coloner/work/rust/toklet/src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "/Users/coloner/work/rust/toklet/tools/experiments/cpu_task_reference.py": "fc21be426559355ad706259c6f01b6293bdf81c249c3ea7a545caa0098b47193",
+    "/Users/coloner/work/rust/toklet/Cargo.toml": "bc21dbd7fd1c0f257ad8b7debfb20016170a64505a583e368de1a48ca865593c",
+    "/Users/coloner/work/rust/toklet/benchmarks/result.schema.json": "503047553e2a79bbc637da756497494e2fc916c70cdfef1fcf0b687a7a4be852",
+    "/Users/coloner/work/rust/toklet/artifacts/m5-cli-half-native-binary-v1/toklet": "82c2e36b573d9fe62883c3d46e1c546acd5a96e87af44d3a9ffbabd2ae00b4ee",
+    "/Users/coloner/work/rust/toklet/tools/experiments/task_grade_admission.py": "0e8c225259677182ba17c1d795b246ca1aa827e0cb85de71a1e5e0a4e3b3c943",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_1024.u32le": "8acd07e9a1a11ae7e6642247f9e7621da9668863b58060620629bbad366a1ba9",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_1921.u32le": "30dcc4b2e5c5fbbb01c221ed28c0df658548fdf0df8498a4de90820209fd5a0c",
+    "/Users/coloner/work/rust/toklet/src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "/Users/coloner/work/rust/toklet/src/metal/memory.rs": "f0212be7f1557729a3c56868728967953c78cb4be339d986e52664dee72f5df4",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_128.u32le": "ce91eac01d5557affc79d9aae44415b8902e963635c42d52cf156b325a76ddda",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+    "/Users/coloner/work/rust/toklet/tools/bench/task_cases.py": "91b5f44840ba31b8f0aead2217b4638c0dbb7e2529389225ba58a6c4822f9e1d",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_continue.py": "48487c955a81cafb4149caf033d397d0403068cd6f31913a8a2b90a75f03b622",
+    "/Users/coloner/work/rust/toklet/src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-14-metal-cli-half-qualification-v1.json": "cb8a8f7117a46af6f81b340e2d92255e706b003beae62dc94330bc1766d52367",
+    "/Users/coloner/work/rust/toklet/src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/manifest.json": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66",
+    "/Users/coloner/work/rust/toklet/artifacts/quality-v1/tasks.jsonl": "b096b8eb40960f38ae0e9f3268484eed10bf2a6bebbc981a45a061ee461aab7c",
+    "/Users/coloner/work/rust/toklet/src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "/Users/coloner/work/rust/toklet/src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/continuation_128.u32le": "29fc3d4bc6b96644867b4d8df0c30f0009d814edf6e5579aa02d8f16ebedec07",
+    "/Users/coloner/work/rust/toklet/src/q4.rs": "6a419a51502a939937d95e454bf8d086175ae3b303c094e4b15730008fc843cd",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_cli.py": "de3a916482736866a762fa22f946c45c3e6d500122d3f2fad591e4d9945cb069",
+    "/Users/coloner/work/rust/toklet/src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "/Users/coloner/work/rust/toklet/src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "/Users/coloner/work/rust/toklet/src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "/Users/coloner/work/rust/toklet/Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "/Users/coloner/work/rust/toklet/src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158"
+  },
+  "model": "small",
+  "backend": "metal",
+  "projection_mode": "HalfCompensated",
+  "normalization_mode": "Original",
+  "readback_mode": "FullLogits",
+  "environment": {
+    "hardware": "MacBookPro18,3",
+    "chip": "Apple M1 Pro",
+    "physical_memory_bytes": 17179869184,
+    "os": "26.6.2",
+    "os_build": "25G83",
+    "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)",
+    "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\nBattery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+    "thermal_start": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded",
+    "thermal_end": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+  },
+  "policy": {
+    "warmups": 0,
+    "repetitions": 1,
+    "turns": 3,
+    "output_cap": 2,
+    "greedy": true,
+    "cache": "empty per turn; scripted assistant history; resident model"
+  },
+  "timing_scope": "Driver submission through receipt of complete JSON token/nonempty text/done/reset events; completed native numerical/sampling/formatting/tokenization/text/publication components overlap and are not summed; scenario includes per-turn driver validation/memory instrumentation. Model setup and independent oracle decode outside warm request timers; no cold storage/energy claim.",
+  "run": {
+    "passed": true,
+    "model_exited": true,
+    "samples": [
+      {
+        "turns": [
+          {
+            "request": {
+              "action": "generate",
+              "messages": [
+                {
+                  "content": "You are a Rust coding assistant. Describe changes and validation clearly.",
+                  "role": "system"
+                },
+                {
+                  "content": "Validate this rectangular linear operation and explain its shape.",
+                  "role": "user"
+                }
+              ],
+              "max_new_tokens": 2
+            },
+            "prompt_tokens": [
+              151644,
+              8948,
+              198,
+              2610,
+              525,
+              264,
+              33789,
+              10822,
+              17847,
+              13,
+              60785,
+              4344,
+              323,
+              10519,
+              9355,
+              13,
+              151645,
+              198,
+              151644,
+              872,
+              198,
+              17926,
+              419,
+              51424,
+              13482,
+              5666,
+              323,
+              10339,
+              1181,
+              6083,
+              13,
+              151645,
+              198,
+              151644,
+              77091,
+              198
+            ],
+            "native_events": [
+              {
+                "event": "token",
+                "token_id": 1249,
+                "index": 0,
+                "elapsed_seconds": 0.181166292,
+                "text": "To"
+              },
+              {
+                "event": "token",
+                "token_id": 9593,
+                "index": 1,
+                "elapsed_seconds": 0.217407708,
+                "text": " validate"
+              },
+              {
+                "event": "done",
+                "statistics": {
+                  "generation": {
+                    "reason": {
+                      "kind": "output_limit"
+                    },
+                    "reused_tokens": 0,
+                    "prefill_tokens": 36,
+                    "sampled_tokens": 2,
+                    "emitted_tokens": 2,
+                    "history_tokens": 38,
+                    "evaluated_tokens": 37,
+                    "pending_tokens": 1,
+                    "first_token_seconds": 0.181166292,
+                    "prefill_seconds": 0.180573167,
+                    "decode_seconds": 0.03560775,
+                    "sampling_seconds": 0.0011724169999999998,
+                    "total_seconds": 0.217420583
+                  },
+                  "backend": "metal",
+                  "cpu_projection": "none",
+                  "execution": {
+                    "weight_dtype": "FP16",
+                    "kv_dtype": "FP16",
+                    "projection_mode": "HalfCompensated",
+                    "normalization_mode": "Original",
+                    "readback_mode": "FullLogits",
+                    "prefill_chunk_size": 128
+                  },
+                  "logical_memory": {
+                    "weights_bytes": 988069596,
+                    "kv_bytes": 25166496,
+                    "scratch_bytes": 113911380,
+                    "history_bytes": 8192,
+                    "logits_bytes": 1215488,
+                    "metadata_bytes": 14080,
+                    "metadata_allowance_bytes": 67108864,
+                    "tokenizer_application_allowance_bytes": 247772624
+                  },
+                  "input_preparation_seconds": 0.001241916,
+                  "input_formatting_seconds": 3.334e-06,
+                  "tokenization_seconds": 0.001238292,
+                  "detokenization_seconds": 4.1958e-05,
+                  "publication_seconds": 2.3042e-05,
+                  "load_seconds": 3.436945791,
+                  "conversion_seconds": 3.2151020419999723,
+                  "tokenizer_load_seconds": 0.125749209,
+                  "memory_admitted_bytes": 1443266720
+                }
+              },
+              {
+                "event": "reset"
+              }
+            ],
+            "response": {
+              "visible_token_ids": [
+                1249,
+                9593
+              ],
+              "visible_text": "To validate",
+              "visible_text_sha256": "27b8d4609ff0ed9ad67d4960ca157fbba3fab1e3cd100466845b30d75f795bc8",
+              "stop_reason": {
+                "kind": "output_limit"
+              },
+              "statistics": {
+                "generation": {
+                  "reason": {
+                    "kind": "output_limit"
+                  },
+                  "reused_tokens": 0,
+                  "prefill_tokens": 36,
+                  "sampled_tokens": 2,
+                  "emitted_tokens": 2,
+                  "history_tokens": 38,
+                  "evaluated_tokens": 37,
+                  "pending_tokens": 1,
+                  "first_token_seconds": 0.181166292,
+                  "prefill_seconds": 0.180573167,
+                  "decode_seconds": 0.03560775,
+                  "sampling_seconds": 0.0011724169999999998,
+                  "total_seconds": 0.217420583
+                },
+                "backend": "metal",
+                "cpu_projection": "none",
+                "execution": {
+                  "weight_dtype": "FP16",
+                  "kv_dtype": "FP16",
+                  "projection_mode": "HalfCompensated",
+                  "normalization_mode": "Original",
+                  "readback_mode": "FullLogits",
+                  "prefill_chunk_size": 128
+                },
+                "logical_memory": {
+                  "weights_bytes": 988069596,
+                  "kv_bytes": 25166496,
+                  "scratch_bytes": 113911380,
+                  "history_bytes": 8192,
+                  "logits_bytes": 1215488,
+                  "metadata_bytes": 14080,
+                  "metadata_allowance_bytes": 67108864,
+                  "tokenizer_application_allowance_bytes": 247772624
+                },
+                "input_preparation_seconds": 0.001241916,
+                "input_formatting_seconds": 3.334e-06,
+                "tokenization_seconds": 0.001238292,
+                "detokenization_seconds": 4.1958e-05,
+                "publication_seconds": 2.3042e-05,
+                "load_seconds": 3.436945791,
+                "conversion_seconds": 3.2151020419999723,
+                "tokenizer_load_seconds": 0.125749209,
+                "memory_admitted_bytes": 1443266720
+              }
+            },
+            "submission_to_first_token_seconds": 0.1827624998986721,
+            "submission_to_first_visible_text_seconds": 0.1827624998986721,
+            "submission_to_done_seconds": 0.21883899997919798,
+            "submission_to_finalized_seconds": 0.21887891693040729,
+            "received_token_event_seconds": [
+              0.1827624998986721,
+              0.21879912493750453
+            ]
+          },
+          {
+            "request": {
+              "action": "generate",
+              "messages": [
+                {
+                  "content": "You are a Rust coding assistant. Describe changes and validation clearly.",
+                  "role": "system"
+                },
+                {
+                  "content": "Validate this rectangular linear operation and explain its shape.",
+                  "role": "user"
+                },
+                {
+                  "content": "I will compare the operation with the frozen NumPy fixture.",
+                  "role": "assistant"
+                },
+                {
+                  "content": "Tool result: formatting, Clippy, and all CPU tests passed. Continue with normalization.",
+                  "role": "user"
+                }
+              ],
+              "max_new_tokens": 2
+            },
+            "prompt_tokens": [
+              151644,
+              8948,
+              198,
+              2610,
+              525,
+              264,
+              33789,
+              10822,
+              17847,
+              13,
+              60785,
+              4344,
+              323,
+              10519,
+              9355,
+              13,
+              151645,
+              198,
+              151644,
+              872,
+              198,
+              17926,
+              419,
+              51424,
+              13482,
+              5666,
+              323,
+              10339,
+              1181,
+              6083,
+              13,
+              151645,
+              198,
+              151644,
+              77091,
+              198,
+              40,
+              686,
+              9429,
+              279,
+              5666,
+              448,
+              279,
+              19690,
+              16212,
+              13828,
+              12507,
+              13,
+              151645,
+              198,
+              151644,
+              872,
+              198,
+              7740,
+              1102,
+              25,
+              36566,
+              11,
+              2435,
+              45749,
+              11,
+              323,
+              678,
+              13940,
+              7032,
+              5823,
+              13,
+              15003,
+              448,
+              48723,
+              13,
+              151645,
+              198,
+              151644,
+              77091,
+              198
+            ],
+            "native_events": [
+              {
+                "event": "token",
+                "token_id": 40,
+                "index": 0,
+                "elapsed_seconds": 0.293066916,
+                "text": "I"
+              },
+              {
+                "event": "token",
+                "token_id": 686,
+                "index": 1,
+                "elapsed_seconds": 0.344040083,
+                "text": " will"
+              },
+              {
+                "event": "done",
+                "statistics": {
+                  "generation": {
+                    "reason": {
+                      "kind": "output_limit"
+                    },
+                    "reused_tokens": 0,
+                    "prefill_tokens": 76,
+                    "sampled_tokens": 2,
+                    "emitted_tokens": 2,
+                    "history_tokens": 78,
+                    "evaluated_tokens": 77,
+                    "pending_tokens": 1,
+                    "first_token_seconds": 0.293066916,
+                    "prefill_seconds": 0.292453,
+                    "decode_seconds": 0.050099084,
+                    "sampling_seconds": 0.001465542,
+                    "total_seconds": 0.344066625
+                  },
+                  "backend": "metal",
+                  "cpu_projection": "none",
+                  "execution": {
+                    "weight_dtype": "FP16",
+                    "kv_dtype": "FP16",
+                    "projection_mode": "HalfCompensated",
+                    "normalization_mode": "Original",
+                    "readback_mode": "FullLogits",
+                    "prefill_chunk_size": 128
+                  },
+                  "logical_memory": {
+                    "weights_bytes": 988069596,
+                    "kv_bytes": 25166496,
+                    "scratch_bytes": 113911380,
+                    "history_bytes": 8192,
+                    "logits_bytes": 1215488,
+                    "metadata_bytes": 14080,
+                    "metadata_allowance_bytes": 67108864,
+                    "tokenizer_application_allowance_bytes": 247772624
+                  },
+                  "input_preparation_seconds": 0.000527625,
+                  "input_formatting_seconds": 3.875e-06,
+                  "tokenization_seconds": 0.000523416,
+                  "detokenization_seconds": 1.5333e-05,
+                  "publication_seconds": 3.225e-05,
+                  "load_seconds": 0.0,
+                  "conversion_seconds": 0.0,
+                  "tokenizer_load_seconds": 0.0,
+                  "memory_admitted_bytes": 1443266720
+                }
+              },
+              {
+                "event": "reset"
+              }
+            ],
+            "response": {
+              "visible_token_ids": [
+                40,
+                686
+              ],
+              "visible_text": "I will",
+              "visible_text_sha256": "306c861a1fb4409de7e149ed3a1643410574839a87a8f19f35ecf15bcb380250",
+              "stop_reason": {
+                "kind": "output_limit"
+              },
+              "statistics": {
+                "generation": {
+                  "reason": {
+                    "kind": "output_limit"
+                  },
+                  "reused_tokens": 0,
+                  "prefill_tokens": 76,
+                  "sampled_tokens": 2,
+                  "emitted_tokens": 2,
+                  "history_tokens": 78,
+                  "evaluated_tokens": 77,
+                  "pending_tokens": 1,
+                  "first_token_seconds": 0.293066916,
+                  "prefill_seconds": 0.292453,
+                  "decode_seconds": 0.050099084,
+                  "sampling_seconds": 0.001465542,
+                  "total_seconds": 0.344066625
+                },
+                "backend": "metal",
+                "cpu_projection": "none",
+                "execution": {
+                  "weight_dtype": "FP16",
+                  "kv_dtype": "FP16",
+                  "projection_mode": "HalfCompensated",
+                  "normalization_mode": "Original",
+                  "readback_mode": "FullLogits",
+                  "prefill_chunk_size": 128
+                },
+                "logical_memory": {
+                  "weights_bytes": 988069596,
+                  "kv_bytes": 25166496,
+                  "scratch_bytes": 113911380,
+                  "history_bytes": 8192,
+                  "logits_bytes": 1215488,
+                  "metadata_bytes": 14080,
+                  "metadata_allowance_bytes": 67108864,
+                  "tokenizer_application_allowance_bytes": 247772624
+                },
+                "input_preparation_seconds": 0.000527625,
+                "input_formatting_seconds": 3.875e-06,
+                "tokenization_seconds": 0.000523416,
+                "detokenization_seconds": 1.5333e-05,
+                "publication_seconds": 3.225e-05,
+                "load_seconds": 0.0,
+                "conversion_seconds": 0.0,
+                "tokenizer_load_seconds": 0.0,
+                "memory_admitted_bytes": 1443266720
+              }
+            },
+            "submission_to_first_token_seconds": 0.2937610000371933,
+            "submission_to_first_visible_text_seconds": 0.2937610000371933,
+            "submission_to_done_seconds": 0.34482941683381796,
+            "submission_to_finalized_seconds": 0.3448912079911679,
+            "received_token_event_seconds": [
+              0.2937610000371933,
+              0.3447514579165727
+            ]
+          },
+          {
+            "request": {
+              "action": "generate",
+              "messages": [
+                {
+                  "content": "You are a Rust coding assistant. Describe changes and validation clearly.",
+                  "role": "system"
+                },
+                {
+                  "content": "Validate this rectangular linear operation and explain its shape.",
+                  "role": "user"
+                },
+                {
+                  "content": "I will compare the operation with the frozen NumPy fixture.",
+                  "role": "assistant"
+                },
+                {
+                  "content": "Tool result: formatting, Clippy, and all CPU tests passed. Continue with normalization.",
+                  "role": "user"
+                },
+                {
+                  "content": "The dimensions and fixture values agree. Normalization is the next task.",
+                  "role": "assistant"
+                },
+                {
+                  "content": "Tool result: the review has no findings. Commit the task and report its checks.",
+                  "role": "user"
+                }
+              ],
+              "max_new_tokens": 2
+            },
+            "prompt_tokens": [
+              151644,
+              8948,
+              198,
+              2610,
+              525,
+              264,
+              33789,
+              10822,
+              17847,
+              13,
+              60785,
+              4344,
+              323,
+              10519,
+              9355,
+              13,
+              151645,
+              198,
+              151644,
+              872,
+              198,
+              17926,
+              419,
+              51424,
+              13482,
+              5666,
+              323,
+              10339,
+              1181,
+              6083,
+              13,
+              151645,
+              198,
+              151644,
+              77091,
+              198,
+              40,
+              686,
+              9429,
+              279,
+              5666,
+              448,
+              279,
+              19690,
+              16212,
+              13828,
+              12507,
+              13,
+              151645,
+              198,
+              151644,
+              872,
+              198,
+              7740,
+              1102,
+              25,
+              36566,
+              11,
+              2435,
+              45749,
+              11,
+              323,
+              678,
+              13940,
+              7032,
+              5823,
+              13,
+              15003,
+              448,
+              48723,
+              13,
+              151645,
+              198,
+              151644,
+              77091,
+              198,
+              785,
+              15336,
+              323,
+              12507,
+              2750,
+              7503,
+              13,
+              18437,
+              2022,
+              374,
+              279,
+              1790,
+              3383,
+              13,
+              151645,
+              198,
+              151644,
+              872,
+              198,
+              7740,
+              1102,
+              25,
+              279,
+              3395,
+              702,
+              902,
+              14613,
+              13,
+              9205,
+              279,
+              3383,
+              323,
+              1895,
+              1181,
+              12341,
+              13,
+              151645,
+              198,
+              151644,
+              77091,
+              198
+            ],
+            "native_events": [
+              {
+                "event": "token",
+                "token_id": 785,
+                "index": 0,
+                "elapsed_seconds": 0.443938417,
+                "text": "The"
+              },
+              {
+                "event": "token",
+                "token_id": 5666,
+                "index": 1,
+                "elapsed_seconds": 0.510021167,
+                "text": " operation"
+              },
+              {
+                "event": "done",
+                "statistics": {
+                  "generation": {
+                    "reason": {
+                      "kind": "output_limit"
+                    },
+                    "reused_tokens": 0,
+                    "prefill_tokens": 117,
+                    "sampled_tokens": 2,
+                    "emitted_tokens": 2,
+                    "history_tokens": 119,
+                    "evaluated_tokens": 118,
+                    "pending_tokens": 1,
+                    "first_token_seconds": 0.443938417,
+                    "prefill_seconds": 0.443357209,
+                    "decode_seconds": 0.065478959,
+                    "sampling_seconds": 0.001161834,
+                    "total_seconds": 0.510030917
+                  },
+                  "backend": "metal",
+                  "cpu_projection": "none",
+                  "execution": {
+                    "weight_dtype": "FP16",
+                    "kv_dtype": "FP16",
+                    "projection_mode": "HalfCompensated",
+                    "normalization_mode": "Original",
+                    "readback_mode": "FullLogits",
+                    "prefill_chunk_size": 128
+                  },
+                  "logical_memory": {
+                    "weights_bytes": 988069596,
+                    "kv_bytes": 25166496,
+                    "scratch_bytes": 113911380,
+                    "history_bytes": 8192,
+                    "logits_bytes": 1215488,
+                    "metadata_bytes": 14080,
+                    "metadata_allowance_bytes": 67108864,
+                    "tokenizer_application_allowance_bytes": 247772624
+                  },
+                  "input_preparation_seconds": 0.000450791,
+                  "input_formatting_seconds": 5.542e-06,
+                  "tokenization_seconds": 0.000445083,
+                  "detokenization_seconds": 9.792e-06,
+                  "publication_seconds": 2.1917e-05,
+                  "load_seconds": 0.0,
+                  "conversion_seconds": 0.0,
+                  "tokenizer_load_seconds": 0.0,
+                  "memory_admitted_bytes": 1443266720
+                }
+              },
+              {
+                "event": "reset"
+              }
+            ],
+            "response": {
+              "visible_token_ids": [
+                785,
+                5666
+              ],
+              "visible_text": "The operation",
+              "visible_text_sha256": "2d8200cd5759abe09e10f675b5aa2b362341aa35d0e87b558a50f135f36887b9",
+              "stop_reason": {
+                "kind": "output_limit"
+              },
+              "statistics": {
+                "generation": {
+                  "reason": {
+                    "kind": "output_limit"
+                  },
+                  "reused_tokens": 0,
+                  "prefill_tokens": 117,
+                  "sampled_tokens": 2,
+                  "emitted_tokens": 2,
+                  "history_tokens": 119,
+                  "evaluated_tokens": 118,
+                  "pending_tokens": 1,
+                  "first_token_seconds": 0.443938417,
+                  "prefill_seconds": 0.443357209,
+                  "decode_seconds": 0.065478959,
+                  "sampling_seconds": 0.001161834,
+                  "total_seconds": 0.510030917
+                },
+                "backend": "metal",
+                "cpu_projection": "none",
+                "execution": {
+                  "weight_dtype": "FP16",
+                  "kv_dtype": "FP16",
+                  "projection_mode": "HalfCompensated",
+                  "normalization_mode": "Original",
+                  "readback_mode": "FullLogits",
+                  "prefill_chunk_size": 128
+                },
+                "logical_memory": {
+                  "weights_bytes": 988069596,
+                  "kv_bytes": 25166496,
+                  "scratch_bytes": 113911380,
+                  "history_bytes": 8192,
+                  "logits_bytes": 1215488,
+                  "metadata_bytes": 14080,
+                  "metadata_allowance_bytes": 67108864,
+                  "tokenizer_application_allowance_bytes": 247772624
+                },
+                "input_preparation_seconds": 0.000450791,
+                "input_formatting_seconds": 5.542e-06,
+                "tokenization_seconds": 0.000445083,
+                "detokenization_seconds": 9.792e-06,
+                "publication_seconds": 2.1917e-05,
+                "load_seconds": 0.0,
+                "conversion_seconds": 0.0,
+                "tokenizer_load_seconds": 0.0,
+                "memory_admitted_bytes": 1443266720
+              }
+            },
+            "submission_to_first_token_seconds": 0.4446066659875214,
+            "submission_to_first_visible_text_seconds": 0.4446066659875214,
+            "submission_to_done_seconds": 0.5106188331265002,
+            "submission_to_finalized_seconds": 0.510655082995072,
+            "received_token_event_seconds": [
+              0.4446066659875214,
+              0.5105892911087722
+            ]
+          }
+        ],
+        "scenario_seconds": 1.0750556669663638
+      }
+    ],
+    "warmups": [],
+    "idle_usage": [
+      {
+        "phase": "ready",
+        "worker": {
+          "resident_size": 1261797376,
+          "phys_footprint": 1250510312,
+          "lifetime_max_phys_footprint": 1250510312
+        },
+        "driver": {
+          "resident_size": 97632256,
+          "phys_footprint": 28901880,
+          "lifetime_max_phys_footprint": 79610312
+        },
+        "joint_native_lifetime_peak_bytes": 1330120624
+      },
+      {
+        "phase": "iteration_0_turn_0",
+        "worker": {
+          "resident_size": 1263075328,
+          "phys_footprint": 1251722752,
+          "lifetime_max_phys_footprint": 1251722752
+        },
+        "driver": {
+          "resident_size": 97648640,
+          "phys_footprint": 28901880,
+          "lifetime_max_phys_footprint": 79610312
+        },
+        "joint_native_lifetime_peak_bytes": 1331333064
+      },
+      {
+        "phase": "iteration_0_turn_1",
+        "worker": {
+          "resident_size": 1263124480,
+          "phys_footprint": 1251771904,
+          "lifetime_max_phys_footprint": 1251771904
+        },
+        "driver": {
+          "resident_size": 97648640,
+          "phys_footprint": 28901880,
+          "lifetime_max_phys_footprint": 79610312
+        },
+        "joint_native_lifetime_peak_bytes": 1331382216
+      },
+      {
+        "phase": "iteration_0_turn_2",
+        "worker": {
+          "resident_size": 1263206400,
+          "phys_footprint": 1251853824,
+          "lifetime_max_phys_footprint": 1251853824
+        },
+        "driver": {
+          "resident_size": 97665024,
+          "phys_footprint": 28918264,
+          "lifetime_max_phys_footprint": 79610312
+        },
+        "joint_native_lifetime_peak_bytes": 1331464136
+      }
+    ],
+    "cleanup_errors": [],
+    "command": [
+      "/Users/coloner/work/rust/toklet/artifacts/m5-cli-half-native-binary-v1/toklet",
+      "--model",
+      "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+      "--backend",
+      "metal",
+      "--metal-projection",
+      "half-compensated",
+      "--interactive",
+      "--json",
+      "--context-capacity",
+      "2048",
+      "--prefill-chunk",
+      "128"
+    ],
+    "worker_pid": 45960,
+    "ready": {
+      "event": "ready",
+      "backend": "metal",
+      "context_capacity": 2048,
+      "cpu_projection": "none",
+      "memory_admitted_bytes": 1443266720,
+      "execution": {
+        "weight_dtype": "FP16",
+        "kv_dtype": "FP16",
+        "projection_mode": "HalfCompensated",
+        "normalization_mode": "Original",
+        "readback_mode": "FullLogits",
+        "prefill_chunk_size": 128
+      },
+      "logical_memory": {
+        "weights_bytes": 988069596,
+        "kv_bytes": 25166496,
+        "scratch_bytes": 113911380,
+        "history_bytes": 8192,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "tokenizer_application_allowance_bytes": 247772624
+      }
+    },
+    "submission_to_ready_seconds": 3.5842463329900056,
+    "exit_code": 0
+  },
+  "endpoint_errors": [],
+  "identities_unchanged": true
+}

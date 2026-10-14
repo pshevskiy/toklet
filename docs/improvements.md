@@ -116,6 +116,13 @@ immediately before VM startup and owns stopped restoration.22 mocked/all432 Pyth
 checks pass; actual grading/window execution awaits full responses.
 [Window report](experiments/2026-10-14-task-grading-window.md).
 
+The frozen authored application trace now supports explicit compensated Half Metal
+on both selected checkpoints. Exact36/76/117 prompt IDs, scripted history/reset,
+actual memory/modes and first-token/nonempty-text/done/finalization boundaries pass
+seven targeted/all439 Python checks and six short native turns/26event replay.
+Both model-plus-driver charges fit6GiB; short probes establish functionality only.
+[Application report](experiments/2026-10-14-metal-application.md).
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
