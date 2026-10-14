@@ -138,6 +138,20 @@ Together with full Half loss this closes frozen Half quality; performance/sustai
 and the Q4-blocked M5 exit remain open.
 [Matched quality report](experiments/2026-10-14-half-task-quality.md).
 
+Full small-model compensated Half controlled measurements now complete all eight
+workloads with three warmups and ten samples,187raw events and clean owned exits.
+Median shortTTFT/request are0.484318/12.192120seconds. The ten boundary requests
+total1096.033071seconds qualify sustained-duration scope with recorded AC/thermal
+endpoints; continuous temperature, energy and system pressure remain unavailable.
+Maximum admission1,262,602,960/samplednativejointcharge1,166,575,656bytes fit6GiB.
+Independent raw/state/timing/memory replay and six evidence-mutation checks pass.
+Astra cleared the exact replay source after provenance/phase/memory/byte-binding
+fixes; completed evidence review is recorded in the [full data report](experiments/2026-10-14-small-half-controlled-full.md).
+An initial account usage-limit failure in automatic approval review blocked post-run
+inspection. The user's retry restores access: fresh observations find no controlled
+worker/collector commands and a stopped/not-starting machine. Astra accepts the
+completed small-model evidence before commit; historical PID/group IDs were not retained.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
@@ -159,8 +173,9 @@ These findings prevent unsuccessful experiments from being presented as improvem
 | Native macOS generated-code isolation prototype | Fixed resource admission fails; not adopted. Literal grading instead uses the separately qualified Linux controller. [Native rejection](experiments/2026-10-10-code-isolation.md), [Linux qualification](experiments/2026-10-11-linux-literal-controller.md). |
 
 The fixed quality gates, quantizer, checkpoint selection and corpus remain
-unchanged. Full GPU release workload/task
-and application comparisons, sustained qualification and M5 exit remain open.
+unchanged. Full compensated Half loss/task quality passes both selected models.
+Larger controlled measurements, full application and confirming comparisons,
+final release qualification and the Q4-blocked M5 exit remain open.
 Long-context attention/KV experiments and physical iPhone work belong to M6/M7.
 This record will be updated with each reviewed implementation or measurement
 decision; unmeasured changes will remain explicitly marked.

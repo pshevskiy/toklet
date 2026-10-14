@@ -1,0 +1,183 @@
+"""Offline full controlled evidence replay; run only with native workers idle."""
+import hashlib
+import contextlib
+import json
+from pathlib import Path
+import statistics
+import sys
+
+ROOT = next(p for p in Path(__file__).resolve().parents if (p/'Cargo.toml').is_file() and (p/'tools/experiments').is_dir())
+sys.path.insert(0, str(ROOT / 'tools/experiments'))
+import metal_controlled as ctl
+
+QUALIFICATION = ROOT/'benchmarks/results/2026-10-14-metal-controlled-qualification-v1.json'
+QUALIFICATION_SHA = '2d3e629c1da91e13330862c6a5e4d247fecc659778f2bb05bf9c127e2215a34a'
+BINARY = ROOT/'artifacts/m5-controlled-native-binary-v1/metal_bench'
+SNAPSHOT = ROOT/'artifacts/m5-controlled-source-v1'
+
+
+def distribution(values):
+    median = statistics.median(values)
+    return dict(median=median, minimum=min(values), maximum=max(values),
+                mad=statistics.median(abs(v-median) for v in values), raw=values)
+
+
+def sha(path):
+    digest = hashlib.sha256()
+    with path.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024**2), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def bounded(path, limit):
+    with path.open('rb') as stream:
+        data = stream.read(limit+1)
+    assert len(data) <= limit, path
+    return data
+
+
+def replay(path):
+    summary_bytes = bounded(path, 32*1024**2)
+    raw_path = path.with_suffix('.raw.jsonl')
+    raw_bytes = bounded(raw_path, 32*1024**2)
+    qualification_bytes = bounded(QUALIFICATION, 1024**2)
+    summary_sha = hashlib.sha256(summary_bytes).hexdigest()
+    raw_sha = hashlib.sha256(raw_bytes).hexdigest()
+    value = json.loads(summary_bytes)
+    assert value['format'] == 'toklet-metal-controlled-collection-v1'
+    assert value['passed'] and value['measurements_completed']
+    assert not value['check_only'] and value['identities_unchanged']
+    assert value['endpoint_errors'] == []
+    assert value['working_tree_dirty'] is False
+    assert list(r['workload'] for r in value['runs']) == list(ctl.frozen.WORKLOADS)
+    assert len(value['results']) == 8
+    with contextlib.redirect_stdout(sys.stderr):
+        manifest, arrays = ctl.contract()
+    model = value['model']
+    source = ROOT/'models'/ctl.MODELS[model][0]
+    assert hashlib.sha256(qualification_bytes).hexdigest() == QUALIFICATION_SHA
+    qualification = json.loads(qualification_bytes)
+    assert qualification['passed'] and qualification['format'] == 'toklet-metal-controlled-qualification-v1'
+    binary_sha = qualification['bindings'][str(BINARY.relative_to(ROOT))]['sha256']
+    files = [BINARY, Path(ctl.__file__), ROOT/'examples/metal_bench.rs', ROOT/'Cargo.toml', ROOT/'Cargo.lock',
+             ctl.prepare.CONTRACT/'manifest.json', ROOT/'benchmarks/result.schema.json', ROOT/'benchmarks/sources.json',
+             ROOT/'tools/bench/requirements.lock', Path(ctl.frozen.__file__), Path(ctl.prepare.__file__),
+             Path(ctl.common.__file__), Path(ctl.metal_engine.__file__), Path(ctl.native_usage.__file__),
+             Path(ctl.metal_prefill.__file__), Path(ctl.metal_continue.__file__), source/'model.safetensors',
+             source/'config.json', source/'tokenizer.json']
+    files += list((ROOT/'src').rglob('*.rs'))+list((ROOT/'src').rglob('*.metal'))
+    files += [ctl.prepare.CONTRACT/v['file'] for v in manifest['arrays'].values()]
+    assert set(value['identities']) == set(map(str, files))
+    ctl.initial_pins(value['identities'], manifest, source, ctl.MODELS[model])
+    assert value['identities'][str(BINARY)] == binary_sha
+    for p in [ROOT/'examples/metal_bench.rs', ROOT/'Cargo.lock', ROOT/'Cargo.toml']+list((ROOT/'src').rglob('*.rs'))+list((ROOT/'src').rglob('*.metal')):
+        saved = SNAPSHOT/p.relative_to(ROOT)
+        expected_sha = qualification['bindings'][str(saved.relative_to(ROOT))]['sha256']
+        assert sha(saved) == expected_sha and value['identities'][str(p)] == expected_sha
+    for p in files:
+        expected_sha = qualification['bindings'][str(p.relative_to(ROOT))]['sha256']
+        assert value['identities'][str(p)] == expected_sha
+    raw = [json.loads(s) for s in raw_bytes.splitlines()]
+    expected = []
+    rows = []
+    for run, result in zip(value['runs'], value['results'], strict=True):
+        name = run['workload']
+        assert run['passed'] and run['exit_code'] == 0 and not run['cleanup_errors']
+        assert run['command'] == [str(BINARY), str(source)]
+        ctl.ready(run['ready'], model)
+        expected.append(run['ready'])
+        expected.extend(p['response'] for p in run['phases'])
+        setup, request, cache = ctl.requests(name, arrays, manifest)
+        assert run['setup_requests'] == setup and run['measured_request'] == request
+        assert run['cache_state'] == cache
+        assert len(run['samples']) == 13
+        assert [s['index'] for s in run['samples']] == list(range(13))
+        assert [s['phase'] for s in run['samples']] == ['warmup']*3+['sample']*10
+        phase_requests = [p['request'] for p in run['phases']]
+        wanted = [{'action':'reset','tokens':arrays['prompt_1921'],
+                   'continuation':arrays['continuation_128']}]
+        for _ in range(13):
+            wanted.extend(setup)
+            wanted.append(request)
+        if name == 'boundary':
+            wanted.extend([{'action':'prepare','tokens':request['tokens']+request['continuation']},
+                           {'action':'stage','tokens':[1]}])
+        assert phase_requests == wanted
+        event_kinds = ['error']
+        for _ in range(13):
+            event_kinds.extend(['prepared']*len(setup))
+            event_kinds.append('sample')
+        if name == 'boundary':event_kinds.extend(['prepared','error'])
+        assert [p['response']['event'] for p in run['phases']] == event_kinds
+        assert [u['phase'] for u in run['idle_usage']] == ['ready']+[f'phase_{i+1}' for i in range(len(run['phases']))]
+        samples = [p['response'] for p in run['phases'] if p['response']['event'] == 'sample']
+        assert samples == [s['response'] for s in run['samples']]
+        sample_observations = [run['idle_usage'][i+1]['worker']['lifetime_max_phys_footprint'] for i,p in enumerate(run['phases']) if p['response']['event'] == 'sample']
+        assert [s['process_peak_footprint_bytes'] for s in run['samples']] == sample_observations
+        ctl.state(run['phases'][0]['response'], [], 0)
+        assert run['phases'][0]['response']['event'] == 'error'
+        for phase in run['phases']:
+            e = phase['response']
+            assert e['memory'] == run['ready']['memory']
+            if e['event'] == 'prepared':
+                if phase['request']['action'] == 'stage':
+                    ctl.state(e, arrays['prompt_512']+phase['request']['tokens'], 512)
+                else:
+                    ctl.state(e, phase['request']['tokens'], len(phase['request']['tokens']))
+            elif e['event'] == 'sample':
+                ctl.sample(e, name, run['ready'], arrays, manifest)
+        if name == 'boundary':
+            ids = request['tokens']+request['continuation']
+            ctl.state(run['phases'][-2]['response'], ids, 2048)
+            ctl.state(run['phases'][-1]['response'], ids, 2048)
+            assert run['phases'][-1]['response']['event'] == 'error'
+        assert result == ctl.result(run, model, manifest, value['observations'],
+                                    value['revision'], value['working_tree_dirty'])
+        measured = [s['response']['sample'] for s in run['samples'][3:]]
+        totals = [p['total_seconds'] for p in measured]
+        ttft = [p['ttft_seconds'] for p in measured]
+        decode = [127/p['decode_seconds'] for p in measured]
+        summary = result['summary']
+        assert summary['request_median_seconds'] == statistics.median(totals)
+        assert summary['ttft_median_seconds'] == statistics.median(ttft)
+        assert summary['decode_tokens_per_second_median'] == statistics.median(decode)
+        assert summary['ttft_min_seconds'] == min(ttft)
+        assert summary['ttft_max_seconds'] == max(ttft)
+        prefill = measured[0]['prefill_tokens']
+        expected_prefill = statistics.median(prefill/p['prefill_seconds'] for p in measured) if prefill else None
+        assert summary['prefill_tokens_per_second_median'] == expected_prefill
+        joint = max(u['joint_native_lifetime_peak_bytes'] for u in run['idle_usage'])
+        for usage in run['idle_usage']:
+            assert usage['joint_native_lifetime_peak_bytes'] == usage['worker']['lifetime_max_phys_footprint']+usage['driver']['lifetime_max_phys_footprint']
+            assert 0 < usage['joint_native_lifetime_peak_bytes'] <= ctl.LIMIT
+        rows.append(dict(workload=name, warmups=3, samples=10,
+                         ttft_seconds=distribution(ttft), request_seconds=distribution(totals),
+                         decode_steps_per_second=distribution(decode),
+                         measured_request_seconds=sum(totals),
+                         measured_requests_exceed_ten_minutes=sum(totals) >= 600,
+                         admission_bytes=run['ready']['memory_admitted_bytes'],
+                         sampled_joint_native_lifetime_charge_bytes=joint,
+                         committed_tokens=measured[0]['evaluated_tokens'],
+                         reused_tokens=measured[0]['reused_tokens'],
+                         pending_tokens=measured[0]['pending_tokens']))
+    assert raw == expected
+    for filename, digest in value['identities'].items():
+        assert sha(Path(filename)) == digest, filename
+    assert sha(QUALIFICATION) == QUALIFICATION_SHA
+    assert sha(path) == summary_sha and sha(raw_path) == raw_sha
+    return dict(model=model, parent=path.name, parent_sha256=summary_sha,
+                raw_sha256=raw_sha,
+                stderr_sha256=sha(path.with_suffix('.stderr')),
+                revision=value['revision'], working_tree_dirty=value['working_tree_dirty'],
+                raw_events=len(raw), rows=rows,
+                power_start=value['observations']['device']['power_mode'],
+                thermal_start=value['observations']['device']['thermal_conditions'],
+                power_thermal_end=value['power_after'])
+
+
+if __name__ == '__main__':
+    result = dict(format='toklet-half-controlled-full-analysis-v1', passed=True,
+                  scope='Completed fixed Half workloads; no alternating comparison, speed adoption or Q4 quality acceptance',
+                  collections=[replay(Path(arg).resolve()) for arg in sys.argv[1:]])
+    print(json.dumps(result, indent=2, allow_nan=False))
