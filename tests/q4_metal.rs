@@ -567,12 +567,23 @@ fn metal_prefix_edits_shortening_and_recovery_match_reset_replay() {
 #[test]
 #[ignore = "explicit Apple GPU Q4 generation/state/Rust-allocation suite; local tiny artifact required"]
 fn q4_sessions_generate_continue_cancel_and_allocate_no_steady_state_rust_buffers() {
+    check_q4_sessions(
+        "artifacts/m5-tiny-q4-v1",
+        metal::ProjectionMode::Original,
+        metal::NormalizationMode::Original,
+    );
+}
+fn check_q4_sessions(
+    packed: &str,
+    projection: metal::ProjectionMode,
+    normalization: metal::NormalizationMode,
+) {
     use std::sync::atomic::AtomicBool;
     use toklet::generation::{self, Input, Request, StopReason};
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let model = metal::Model::load_q4(
         &root.join("artifacts/m5-tiny-source-v1"),
-        &root.join("artifacts/m5-tiny-q4-v1"),
+        &root.join(packed),
         weights::LoadOptions {
             context_limit: 32,
             ..Default::default()
@@ -584,26 +595,43 @@ fn q4_sessions_generate_continue_cancel_and_allocate_no_steady_state_rust_buffer
         prefill_chunk_size: 3,
         ..Default::default()
     };
-    let mut s = metal::Session::new(&model, options).unwrap();
+    let make_session =
+        |options| metal::Session::with_execution_modes(&model, options, projection, normalization);
+    if model.q4_format() == Some(toklet::q4::Format::V2) {
+        for invalid in [
+            metal::ProjectionMode::Original,
+            metal::ProjectionMode::Q4Tiled,
+            metal::ProjectionMode::HalfCompensated,
+        ] {
+            assert!(
+                metal::Session::with_execution_modes(&model, options, invalid, normalization)
+                    .is_err()
+            );
+        }
+        assert!(
+            metal::Session::with_execution_modes(
+                &model,
+                options,
+                projection,
+                metal::NormalizationMode::Original
+            )
+            .is_err()
+        );
+    }
+    let mut s = make_session(options).unwrap();
     let exact = s.memory().admitted_bytes;
     assert!(
-        metal::Session::new(
-            &model,
-            session::Options {
-                memory_limit_bytes: exact,
-                ..options
-            }
-        )
+        make_session(session::Options {
+            memory_limit_bytes: exact,
+            ..options
+        })
         .is_ok()
     );
     assert!(
-        metal::Session::new(
-            &model,
-            session::Options {
-                memory_limit_bytes: exact - 1,
-                ..options
-            }
-        )
+        make_session(session::Options {
+            memory_limit_bytes: exact - 1,
+            ..options
+        })
         .is_err()
     );
     let cancel = AtomicBool::new(false);
@@ -627,7 +655,7 @@ fn q4_sessions_generate_continue_cancel_and_allocate_no_steady_state_rust_buffer
         (4, 7, 1)
     );
     let history = s.history().to_vec();
-    let mut replay = metal::Session::new(&model, options).unwrap();
+    let mut replay = make_session(options).unwrap();
     replay.set_tokens(&history).unwrap();
     replay.evaluate().unwrap();
     s.evaluate().unwrap();
@@ -761,7 +789,9 @@ fn manifest(root: &Path) -> Value {
     let data = fs::read(root.join("manifest.json")).unwrap();
     assert_eq!(
         format!("{:x}", Sha256::digest(&data)),
-        if root.ends_with("q4-tiny-prefill-v1") {
+        if root.ends_with("q4-v2-tiny-prefill-v1") {
+            "39dfd6e8580fc0d30fd1ee7795ab3a323cabfb63ea98e2eb889c607e7d6aaf25"
+        } else if root.ends_with("q4-tiny-prefill-v1") {
             "af489fadf32b1a2a46a04098fabc315152cf63f507ee2887bc6a4f13de2545c9"
         } else {
             "e4928e4c132c3971798ab67cfd9eec73dc1dfaeae0107797738fc45eb73c8a0c"
@@ -1083,7 +1113,11 @@ fn check_tiny_oracle_modes(
     let reference = root.join("tests/fixtures").join(fixture);
     let manifest = manifest(&reference);
     let source = root.join("artifacts/m5-tiny-source-v1");
-    let packed = root.join("artifacts/m5-tiny-q4-v1");
+    let packed = root.join(if fixture == "q4-v2-tiny-prefill-v1" {
+        "artifacts/m5-tiny-q4-v2"
+    } else {
+        "artifacts/m5-tiny-q4-v1"
+    });
     assert_eq!(
         format!(
             "{:x}",
@@ -1240,5 +1274,52 @@ fn frozen_q4_numerical_fixture_is_bounded_and_hash_checked_without_gpu() {
     assert_eq!(manifest["policy"]["rtol"].as_f64(), Some(1e-3));
     for entry in manifest["arrays"].as_object().unwrap().values() {
         assert!(read(&root, entry).iter().all(|v| v.is_finite()));
+    }
+}
+
+#[test]
+#[ignore = "Explicit Apple GPU Q4 v2 independently frozen tiny graph/vector/tile/chunks/offsets"]
+fn q4_v2_compensated_vector_and_tile_match_independent_graph() {
+    for mode in [
+        metal::ProjectionMode::Q4Compensated,
+        metal::ProjectionMode::Q4CompensatedTiled,
+    ] {
+        check_tiny_oracle_modes(
+            "q4-v2-tiny-prefill-v1",
+            mode,
+            metal::NormalizationMode::Compensated,
+        );
+    }
+}
+
+#[test]
+#[ignore = "Explicit Apple GPU Q4 v2 generation, pending/cached/cancel/sink failure, memory and warmed allocations"]
+fn q4_v2_sessions_preserve_admission_transaction_and_steady_state_buffers() {
+    for mode in [
+        metal::ProjectionMode::Q4Compensated,
+        metal::ProjectionMode::Q4CompensatedTiled,
+    ] {
+        check_q4_sessions(
+            "artifacts/m5-tiny-q4-v2",
+            mode,
+            metal::NormalizationMode::Compensated,
+        );
+    }
+}
+#[test]
+fn frozen_q4_v2_graph_is_independent_hash_checked_and_uses_unchanged_gates() {
+    let root =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/q4-v2-tiny-prefill-v1");
+    let manifest = manifest(&root);
+    assert_eq!(manifest["format"], "toklet-q4-tiny-prefill-numerical-v2");
+    assert_eq!(manifest["arrays"].as_object().unwrap().len(), 210);
+    assert_eq!(manifest["cases"].as_object().unwrap().len(), 6);
+    for entry in manifest["arrays"].as_object().unwrap().values() {
+        assert!(read(&root, entry).iter().all(|x| x.is_finite()));
+        assert_eq!(entry["gate"]["rtol"].as_f64(), Some(1e-3));
+        assert_eq!(
+            entry["gate"]["atol"].as_f64().unwrap(),
+            (2. * entry["independent_precision_envelope"].as_f64().unwrap()).max(1e-4)
+        );
     }
 }

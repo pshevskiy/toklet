@@ -1,0 +1,67 @@
+[
+  {
+    "check": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/m5-q4-v2-gpu-fmt-checks-v1.log"
+  },
+  {
+    "check": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--offline",
+      "--all-targets",
+      "--features",
+      "metal",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/m5-q4-v2-gpu-clippy-checks-v1.log"
+  },
+  {
+    "check": "cpu",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/m5-q4-v2-gpu-cpu-checks-v1.log"
+  },
+  {
+    "check": "metal",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "--features",
+      "metal"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/m5-q4-v2-gpu-metal-checks-v1.log"
+  },
+  {
+    "check": "reference",
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/reference",
+      "-v"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/m5-q4-v2-gpu-reference-checks-v1.log"
+  }
+]

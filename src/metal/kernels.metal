@@ -323,3 +323,61 @@ kernel void q4_compensated_prefill(device const uchar* w[[buffer(0)]],device con
         }
     }
 }
+
+// V2 group8/record8 specialization of the unchanged compensated arithmetic.
+// Format selection occurs on the host; no per-column version branch.
+kernel void q4_v2_compensated(device const uchar* w[[buffer(0)]],device const half* bias[[buffer(1)]],device const half* x[[buffer(2)]],device half* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    uint token=group/s[2],row=group%s[2];
+    if(token>=s[0])return;
+    float2 sum=float2(0.0f);
+    for(uint column=lane;column<s[1];column+=width) {
+        uint start=64+row*s[3]+(column/8)*8;
+        device const ushort* metadata=reinterpret_cast<device const ushort*>(w+start);
+        float scale=float(as_type<half>(metadata[0])),b=float(as_type<half>(metadata[1]));
+        uint code=(w[start+4+(column%8)/2]>>(4*(column%2)))&15;
+        float weight=scale*float(code)+b,input=float(x[token*s[4]+column]);
+        float product=weight*input;
+        sum=compensated_add(sum,product);
+        sum=compensated_add(sum,fma(weight,input,-product));
+    }
+    sum=compensated_reduce(sum,lane,width);
+    if(lane==0) {
+        sum=compensated_add(sum,float(bias[row]));
+        checked_half(out,token*s[5]+row,compensated_store_value(sum),status);
+    }
+}
+
+// Same compensated operation sequence per lane/token as q4_compensated, but
+// reconstruct each weight once for an eight-token tile. Fixed indices keep
+// independent high/low sums in registers. Partial tiles never access padding.
+kernel void q4_v2_compensated_prefill(device const uchar* w[[buffer(0)]],device const half* bias[[buffer(1)]],device const half* x[[buffer(2)]],device half* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    uint first=(group/s[2])*8,row=group%s[2];
+    if(first>=s[0])return;
+    uint active=min(8u,s[0]-first);
+    float2 sums[8]={float2(0.0f),float2(0.0f),float2(0.0f),float2(0.0f),float2(0.0f),float2(0.0f),float2(0.0f),float2(0.0f)};
+    for(uint column=lane;column<s[1];column+=width) {
+        uint start=64+row*s[3]+(column/8)*8;
+        device const ushort* metadata=reinterpret_cast<device const ushort*>(w+start);
+        float scale=float(as_type<half>(metadata[0])),b=float(as_type<half>(metadata[1]));
+        uint code=(w[start+4+(column%8)/2]>>(4*(column%2)))&15;
+        float weight=scale*float(code)+b;
+        #pragma unroll
+        for(uint token=0;token<8;token++) {
+            if(token<active) {
+                float input=float(x[(first+token)*s[4]+column]),product=weight*input;
+                sums[token]=compensated_add(sums[token],product);
+                sums[token]=compensated_add(sums[token],fma(weight,input,-product));
+            }
+        }
+    }
+    #pragma unroll
+    for(uint token=0;token<8;token++) {
+        if(token<active) {
+            float2 sum=compensated_reduce(sums[token],lane,width);
+            if(lane==0) {
+                sum=compensated_add(sum,float(bias[row]));
+                checked_half(out,(first+token)*s[5]+row,compensated_store_value(sum),status);
+            }
+        }
+    }
+}

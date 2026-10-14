@@ -1,0 +1,14 @@
+
+running 2 tests
+test q4_v2_compensated_vector_and_tile_match_independent_graph ... FAILED
+test q4_v2_sessions_preserve_admission_transaction_and_steady_state_buffers ... Q4 session/state suite: 20 warmed steps, 0 Rust allocations, 67159832 admitted bytes
+Q4 session/state suite: 20 warmed steps, 0 Rust allocations, 67159832 admitted bytes
+ok
+
+failures:
+
+failures:
+    q4_v2_compensated_vector_and_tile_match_independent_graph
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 18 filtered out; finished in 0.13s
+

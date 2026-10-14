@@ -207,6 +207,16 @@ loading rejects before allocation until qualified execution is implemented.
 No v2 quality or latency gain is claimed; Astra accepted design, code, checks
 and evidence with no findings before commit.
 
+The [Q4 v2 GPU task](experiments/2026-10-14-q4-v2-gpu.md) adds two static
+compensated kernels and immutable format dispatch without weight expansion.
+Independent tiny graph9100stage comparisons,4032exactprimitiveoutputs and16
+midpoint/overflow witnesses pass; both session modes preserve cancellation,
+pending/cache/failure/admission and zero warmed Rust allocations. Existing v1
+independent regression4550arrays passes. The oracle now rejects missing/duplicate
+inventories and file replacement using hashes of consumed bytes and endpoint checks.
+This qualifies tiny execution only; real-model quality/memory/performance stay open.
+Astra accepted code, checks and native evidence after oracle fixes, with no findings.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.

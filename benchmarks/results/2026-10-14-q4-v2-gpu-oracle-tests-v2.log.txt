@@ -1,0 +1,10 @@
+test_consumed_bytes_and_post_consumption_replacement_reject (test_q4_v2_tiny.V2Oracle.test_consumed_bytes_and_post_consumption_replacement_reject) ... ok
+test_duplicate_missing_or_remapped_inventory_rejects_before_forward (test_q4_v2_tiny.V2Oracle.test_duplicate_missing_or_remapped_inventory_rejects_before_forward) ... ok
+test_exact_graph_regeneration_uses_frozen_tiny_inputs_without_models (test_q4_v2_tiny.V2Oracle.test_exact_graph_regeneration_uses_frozen_tiny_inputs_without_models) ... ok
+test_malformed_version_padding_metadata_and_constant_reject (test_q4_v2_tiny.V2Oracle.test_malformed_version_padding_metadata_and_constant_reject) ... ok
+test_manual_all_nibbles_tail_values (test_q4_v2_tiny.V2Oracle.test_manual_all_nibbles_tail_values) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 6.974s
+
+OK

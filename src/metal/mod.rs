@@ -7,6 +7,8 @@ mod diagnostic;
 mod half_consistency;
 #[cfg(test)]
 mod half_projection;
+#[cfg(test)]
+mod q4_v2_projection;
 pub use capture::Capture;
 mod memory;
 mod profile;
@@ -107,7 +109,7 @@ struct Tensor {
 }
 enum TensorStorage {
     Half(Retained<MPSMatrix>),
-    Q4 { stride: usize },
+    Q4 { stride: usize, format: q4::Format },
 }
 impl Tensor {
     fn allocate(g: &Gpu, l: Layout) -> Result<Self> {
@@ -138,6 +140,7 @@ impl Tensor {
             layout,
             storage: TensorStorage::Q4 {
                 stride: matrix.row_stride(),
+                format: matrix.format(),
             },
         })
     }
@@ -182,19 +185,29 @@ impl Model {
     /// Queried SIMD widths `[one-row decode, eight-row prefill]`. Numerical
     /// qualification applies independently even when the widths differ.
     pub fn q4_execution_widths(&self) -> [usize; 2] {
+        if self.q4_format() == Some(q4::Format::V2) {
+            return self.q4_compensated_execution_widths();
+        }
         [
             self.gpu.execution_width(Kernel::Q4Matvec),
             self.gpu.execution_width(Kernel::Q4Prefill),
         ]
     }
+    pub fn q4_format(&self) -> Option<q4::Format> {
+        match self.layers[0].q.storage {
+            TensorStorage::Half(_) => None,
+            TensorStorage::Q4 { format, .. } => Some(format),
+        }
+    }
     pub fn q4_compensated_execution_width(&self) -> usize {
-        self.gpu.execution_width(Kernel::Q4Compensated)
+        self.q4_compensated_execution_widths()[0]
     }
     pub fn q4_compensated_execution_widths(&self) -> [usize; 2] {
-        [
-            self.gpu.execution_width(Kernel::Q4Compensated),
-            self.gpu.execution_width(Kernel::Q4CompensatedPrefill),
-        ]
+        let kernels = match self.q4_format() {
+            Some(q4::Format::V2) => [Kernel::Q4V2Compensated, Kernel::Q4V2CompensatedPrefill],
+            _ => [Kernel::Q4Compensated, Kernel::Q4CompensatedPrefill],
+        };
+        kernels.map(|kernel| self.gpu.execution_width(kernel))
     }
     pub fn greedy_execution_width(&self) -> usize {
         self.gpu.execution_width(Kernel::Greedy)
@@ -239,11 +252,6 @@ impl Model {
                 })
                 .transpose()?;
             if let Some(artifact) = &artifact {
-                // The independent v2 storage/oracle task precedes GPU support.
-                // Refuse it before compilation, allocation or kernel selection.
-                if artifact.format() != q4::Format::V1 {
-                    return Err(Error::Unsupported("Q4 v2 GPU execution is not qualified"));
-                }
                 source = bound_q4_source(directory, options, source, artifact)?;
             }
             let compile_clock = Instant::now();
@@ -258,10 +266,14 @@ impl Model {
                     _ => return Err(Error::Options("tensor rank differs")),
                 };
                 let l = Layout::new(rows, cols, true)?;
-                let size = if artifact.is_some() && quantized_shapes.contains_key(name) {
-                    let groups = cols.div_ceil(q4::GROUP);
+                let size = if let Some(artifact) = artifact
+                    .as_ref()
+                    .filter(|_| quantized_shapes.contains_key(name))
+                {
+                    let format = artifact.format();
+                    let groups = cols.div_ceil(format.group());
                     let stride = groups
-                        .checked_mul(q4::RECORD_BYTES)
+                        .checked_mul(format.record_bytes())
                         .and_then(|v| v.checked_add(63))
                         .ok_or(Error::Options("Q4 layout overflow"))?
                         / 64
@@ -540,6 +552,16 @@ impl<'m> Session<'m> {
         readback_mode: ReadbackMode,
     ) -> Result<Self> {
         autoreleasepool(|_| {
+            if model.q4_format() == Some(q4::Format::V2)
+                && (!matches!(
+                    projection_mode,
+                    ProjectionMode::Q4Compensated | ProjectionMode::Q4CompensatedTiled
+                ) || normalization_mode != NormalizationMode::Compensated)
+            {
+                return Err(Error::Options(
+                    "Q4 v2 requires frozen compensated execution modes",
+                ));
+            }
             if projection_mode == ProjectionMode::HalfCompensated {
                 if !matches!(model.layers[0].q.storage, TensorStorage::Half(_)) {
                     return Err(Error::Options(
@@ -1557,7 +1579,7 @@ fn project(
             status,
         );
     }
-    if let TensorStorage::Q4 { stride } = weight.storage {
+    if let TensorStorage::Q4 { stride, format } = weight.storage {
         // SAFETY: these views were created from owned, admitted same-device Half
         // buffers. Immutable descriptor getters preserve their retained storage;
         // no host payload access or mutation is performed while commands encode.
@@ -1571,19 +1593,28 @@ fn project(
         ) && n >= 8;
         return g.encode(
             c,
-            if tiled {
-                if mode == ProjectionMode::Q4CompensatedTiled {
-                    Kernel::Q4CompensatedPrefill
-                } else {
-                    Kernel::Q4Prefill
+            match (format, tiled, mode) {
+                (q4::Format::V2, true, ProjectionMode::Q4CompensatedTiled) => {
+                    Kernel::Q4V2CompensatedPrefill
                 }
-            } else if matches!(
-                mode,
-                ProjectionMode::Q4Compensated | ProjectionMode::Q4CompensatedTiled
-            ) {
-                Kernel::Q4Compensated
-            } else {
-                Kernel::Q4Matvec
+                (
+                    q4::Format::V2,
+                    false,
+                    ProjectionMode::Q4Compensated | ProjectionMode::Q4CompensatedTiled,
+                ) => Kernel::Q4V2Compensated,
+                (q4::Format::V2, _, _) => {
+                    return Err(Error::Options("unsupported Q4 v2 projection mode"));
+                }
+                (q4::Format::V1, true, ProjectionMode::Q4CompensatedTiled) => {
+                    Kernel::Q4CompensatedPrefill
+                }
+                (q4::Format::V1, true, _) => Kernel::Q4Prefill,
+                (
+                    q4::Format::V1,
+                    false,
+                    ProjectionMode::Q4Compensated | ProjectionMode::Q4CompensatedTiled,
+                ) => Kernel::Q4Compensated,
+                (q4::Format::V1, false, _) => Kernel::Q4Matvec,
             },
             &[&weight.buffer.raw, &bias.raw, &input, &out.raw],
             &[

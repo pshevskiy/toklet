@@ -1,0 +1,9 @@
+
+running 2 tests
+test metal::q4_v2_projection::v2_signed_midpoints_and_overflow_preserve_status_and_guards ... V2 16 signed midpoint/overflow dispatch witnesses; unchanged failure bits and guards
+ok
+test metal::q4_v2_projection::v2_vector_tile_match_exact_oracle_and_preserve_guards ... V2 exact FP64-rounded Half comparisons 4032; vector/tile queried SIMD widths 32/32; all inactive rows/padding guards pass
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 21 filtered out; finished in 0.35s
+

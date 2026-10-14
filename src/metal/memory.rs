@@ -212,6 +212,8 @@ pub(super) enum Kernel {
     Greedy,
     HalfCompensated,
     HalfCompensatedFloat,
+    Q4V2Compensated,
+    Q4V2CompensatedPrefill,
 }
 impl Kernel {
     pub fn name(self) -> &'static str {
@@ -235,6 +237,8 @@ impl Kernel {
             "greedy_token",
             "half_compensated",
             "half_compensated_float",
+            "q4_v2_compensated",
+            "q4_v2_compensated_prefill",
         ][self as usize]
     }
 }
@@ -298,6 +302,8 @@ impl Gpu {
             Kernel::Greedy,
             Kernel::HalfCompensated,
             Kernel::HalfCompensatedFloat,
+            Kernel::Q4V2Compensated,
+            Kernel::Q4V2CompensatedPrefill,
         ] {
             let f = library
                 .newFunctionWithName(&NSString::from_str(k.name()))
@@ -356,6 +362,8 @@ impl Gpu {
                 | Kernel::Greedy
                 | Kernel::HalfCompensated
                 | Kernel::HalfCompensatedFloat
+                | Kernel::Q4V2Compensated
+                | Kernel::Q4V2CompensatedPrefill
         ) {
             self.execution_width(k)
         } else {
@@ -373,6 +381,8 @@ impl Gpu {
                 | Kernel::Greedy
                 | Kernel::HalfCompensated
                 | Kernel::HalfCompensatedFloat
+                | Kernel::Q4V2Compensated
+                | Kernel::Q4V2CompensatedPrefill
         ) {
             count
         } else {

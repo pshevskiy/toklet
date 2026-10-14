@@ -1,0 +1,6 @@
+
+thread 'q4_v2_compensated_vector_and_tile_match_independent_graph' panicked at tests/q4_metal.rs:790:5:
+assertion `left == right` failed
+  left: "39dfd6e8580fc0d30fd1ee7795ab3a323cabfb63ea98e2eb889c607e7d6aaf25"
+ right: "e4928e4c132c3971798ab67cfd9eec73dc1dfaeae0107797738fc45eb73c8a0c"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,3300 @@
+{
+  "format": "toklet-q4-v2-gpu-qualification-v1",
+  "passed": true,
+  "source_parent": "8a3db35",
+  "scope": "Tiny GPU numerical/state qualification only; no realmodel/quality/performance/M5exit acceptance",
+  "quality_completed": false,
+  "performance_completed": false,
+  "frozen_reference_sha256": "39dfd6e8580fc0d30fd1ee7795ab3a323cabfb63ea98e2eb889c607e7d6aaf25",
+  "checks": {
+    "primitive_exact_fp64_half_outputs": 4032,
+    "midpoint_overflow_dispatches": 16,
+    "v2_full_stage_arrays": 9100,
+    "v1_regression_stage_arrays": 4550,
+    "two_modes_state_budget_cancel_sink_failure": true,
+    "warmed_rust_allocations": 0,
+    "warmed_steps_per_mode": 20,
+    "tiny_weights_bytes": 38504,
+    "tiny_numerical_metadata_admission_bytes": 67159832,
+    "complete_native_physical_peak_available": false,
+    "vector_tile_simd_widths": [
+      32,
+      32
+    ],
+    "cpu_passed": 93,
+    "metal_ordinary_passed": 103,
+    "metal_ignored": 49,
+    "reference_python_passed": 39,
+    "fmt_clippy": true,
+    "all_final_packages_exit_zero": true,
+    "native_tests_sequential_after_builds": true,
+    "end_prelaunch_bindings_match": true,
+    "fresh_native_test_commands_absent": true,
+    "historical_test_pid_group_ids_retained": false,
+    "protected_binaries_unchanged": true,
+    "links_whitespace": true
+  },
+  "excluded": [
+    "First graph binary/log fails the legacy fixture hash before graph evaluation",
+    "Two pre-GPU oracle draft exports before validation/inventory review fixes"
+  ],
+  "review_required_before_commit": true,
+  "bindings": {
+    "src/session.rs": {
+      "bytes": 16921,
+      "sha256": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0"
+    },
+    "src/benchmark.rs": {
+      "bytes": 3360,
+      "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a"
+    },
+    "src/generation.rs": {
+      "bytes": 7870,
+      "sha256": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158"
+    },
+    "src/lib.rs": {
+      "bytes": 496,
+      "sha256": "a4cc758d947079d5cf715183edfa71039de4dc1735caac6a481cf7a0c9ae8962"
+    },
+    "src/q4.rs": {
+      "bytes": 8842,
+      "sha256": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2"
+    },
+    "src/sampling.rs": {
+      "bytes": 616,
+      "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9"
+    },
+    "src/bin/toklet.rs": {
+      "bytes": 96,
+      "sha256": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb"
+    },
+    "src/metal/q4_v2_projection.rs": {
+      "bytes": 11730,
+      "sha256": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a"
+    },
+    "src/metal/half_consistency.rs": {
+      "bytes": 25953,
+      "sha256": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e"
+    },
+    "src/metal/profile.rs": {
+      "bytes": 13685,
+      "sha256": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d"
+    },
+    "src/metal/memory.rs": {
+      "bytes": 16485,
+      "sha256": "ce8f82e9d80a545d05971a76059c187ad44660d01e79206781bc770b6fa804fb"
+    },
+    "src/metal/mod.rs": {
+      "bytes": 109631,
+      "sha256": "389f179bc4dfa9f3c0338e8b5e5f8720a0670935f03b46887c50d6aea749071e"
+    },
+    "src/metal/half_projection.rs": {
+      "bytes": 10662,
+      "sha256": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0"
+    },
+    "src/metal/diagnostic.rs": {
+      "bytes": 7365,
+      "sha256": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8"
+    },
+    "src/metal/capture.rs": {
+      "bytes": 2365,
+      "sha256": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f"
+    },
+    "src/cpu/tiled.rs": {
+      "bytes": 6519,
+      "sha256": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb"
+    },
+    "src/cpu/attention.rs": {
+      "bytes": 11201,
+      "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf"
+    },
+    "src/cpu/mod.rs": {
+      "bytes": 9060,
+      "sha256": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265"
+    },
+    "src/cpu/reductions.rs": {
+      "bytes": 7659,
+      "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d"
+    },
+    "src/weights/mod.rs": {
+      "bytes": 30344,
+      "sha256": "a07f0e8b91973c22c3fe9b0c9c5f0f688fc4b602f5402ef0f9a95c05976399c1"
+    },
+    "src/weights/half_tests.rs": {
+      "bytes": 3814,
+      "sha256": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2"
+    },
+    "src/model/cache.rs": {
+      "bytes": 3096,
+      "sha256": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0"
+    },
+    "src/model/trace.rs": {
+      "bytes": 2807,
+      "sha256": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1"
+    },
+    "src/model/mod.rs": {
+      "bytes": 24014,
+      "sha256": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94"
+    },
+    "src/q4/artifact.rs": {
+      "bytes": 10397,
+      "sha256": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe"
+    },
+    "src/bin/cli/mod.rs": {
+      "bytes": 28255,
+      "sha256": "c7957092ea2dec2d24c268eb837c2720af1f455ceb0138294877988ddbb0d878"
+    },
+    "src/bin/cli/chat.rs": {
+      "bytes": 21958,
+      "sha256": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de"
+    },
+    "src/metal/kernels.metal": {
+      "bytes": 21210,
+      "sha256": "b8e64fde50c46d8d352a0cc02c510824280b6966c5e95e37a5443ba75a6d4025"
+    },
+    "Cargo.toml": {
+      "bytes": 2109,
+      "sha256": "bc21dbd7fd1c0f257ad8b7debfb20016170a64505a583e368de1a48ca865593c"
+    },
+    "Cargo.lock": {
+      "bytes": 24261,
+      "sha256": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9"
+    },
+    "tests/q4_metal.rs": {
+      "bytes": 50923,
+      "sha256": "dfeb8736a9209d89097aec87b02adf2c2d67ebba43081c70c5ea301b7c02b2a2"
+    },
+    "tools/reference/q4_v2_tiny.py": {
+      "bytes": 8454,
+      "sha256": "74d2662e7e5b1fca3d232218d0af31dd926655db2d6f8687b40c1b8337df61e2"
+    },
+    "tools/reference/test_q4_v2_tiny.py": {
+      "bytes": 6542,
+      "sha256": "7c234b57d5694f8f52fde6645142563c2939d4543d7e002a31db06bb71b3c77f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.up_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "274eeb28f19f9b79181f816fdf9eb057a54379408802fbf57d101b0654a95cc3"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.v_projection.f16le": {
+      "bytes": 288,
+      "sha256": "d27277f70870511e9d401cd133c7959509b5a12a96c41957bb9c2b75b2511fbd"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.q_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "8626165cad66455da4f84c48d46b6bd0dcd8f95ccd296d655556c0ff2d05b964"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.v_projection.f16le": {
+      "bytes": 544,
+      "sha256": "6e110bba072a4fafcdd26452f0a3040d6dc7be7e214b7d6725a1f980abd6180d"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.q_projection.f16le": {
+      "bytes": 576,
+      "sha256": "a902eb58e8b18d005cdd65a4e1dbb489120f6d4fa5c7b58ab26e97bc72122b69"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.up_projection.f16le": {
+      "bytes": 3072,
+      "sha256": "c44c5ebb7f51312fdd406990bf7da0ec67e7dc12cf35cedcc84b56b4e9263686"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.attention_context.f16le": {
+      "bytes": 1536,
+      "sha256": "f6ecb0f3e27d21a2d018666a64c819f82944cbf1951ed73448586ec571bfe4d8"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.final_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "4dd2ea8859206f0e62b9febf34406372eacb2b490a9228c23cd928b44a176c2a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.up_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "d4ba682f381675f372d44bd465350beae55cb940159732415925402998b12f76"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.logits.f32le": {
+      "bytes": 4352,
+      "sha256": "9bdb186b2f049811bc6af43d82ed63f4f09b4227a23749dfbc21009ec5b2fdc4"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.k_projection.f16le": {
+      "bytes": 224,
+      "sha256": "b89349d0d2845cf049b79dbb2e695a95503efd0a311bd5cd21bbc8006b81a168"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.up_projection.f16le": {
+      "bytes": 3072,
+      "sha256": "ea583f58495b06983fb3f4554997558f3c86d7c08a56ff95d821b464bcadca36"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.attention_context.f16le": {
+      "bytes": 448,
+      "sha256": "8b61456c41406e367cf4d558ef856bb556da2da1f8b87199fb4ec902db19af9c"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.k_projection.f16le": {
+      "bytes": 768,
+      "sha256": "a79e060eb369131cc3ac8991cf0b30471e21f5207d100e31140beb24515e8aa4"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.down_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "b7463730066979b0a8012348ca54bf7bd3e7a149ea6abdd5eba8944785683331"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.final_norm.f16le": {
+      "bytes": 512,
+      "sha256": "00834d1d7d13121542926ef2d9e7cd4090a25ad7798f135607627ff4a8bb1e6a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.down_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "0f799e780bc2f74e5da745c2d7510b57e281983b89d2063270b6d273bd564b0e"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.attention_residual.f16le": {
+      "bytes": 1088,
+      "sha256": "85c099cad390579c03a18d15f7a4c4391104b1ed54540f578f8a90313f49eeb3"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.input_norm.f16le": {
+      "bytes": 448,
+      "sha256": "fff6b10d5e8583d536527fbefe54d6543414c0c15636d15c7ea9511d13a85c41"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.logits.f32le": {
+      "bytes": 4352,
+      "sha256": "e0417a7a12ac5dbff6fc4c6b830b20852269dc81331e9f7e1eae8bc52a8c2308"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.post_attention_norm.f16le": {
+      "bytes": 512,
+      "sha256": "938c3f973300f7cac38bec35d0c73d36d7341f262f8ce8200edfded6e14c0db6"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.attention_context.f16le": {
+      "bytes": 1088,
+      "sha256": "eda92c8f7945bcd76e756c1790b0669cb38da1e9fd160f2b5dd184e0a80e5f8b"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.post_attention_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "301b3f719b383aead077fd4eea867d97a825d98256d41f874c99b5b5a2d4a984"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.attention_projection.f16le": {
+      "bytes": 576,
+      "sha256": "798a7ba6f0e8244828ee1edad8f117d38c78faf39e01c8cf59f63aa77a662067"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.q_rotary.f16le": {
+      "bytes": 576,
+      "sha256": "3066711943a691952decc6797ab9f1efeafb4b393dacd20033cfa272abca85ba"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.gated.f16le": {
+      "bytes": 1152,
+      "sha256": "7efe20e0a6258604cb4515b7bcb955fabdfa83c7f5c5fff6f67369f5e37983e9"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.down_projection.f16le": {
+      "bytes": 448,
+      "sha256": "d841cd4c3f3feafcbc7da7cc32cbb39c87616bf0febb3b2a1dcf15f1354ca523"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.input_norm.f16le": {
+      "bytes": 512,
+      "sha256": "5b870a447e3ae600b87d038480d39f503c7a502f618ed27970ef1788009c3d48"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.q_rotary.f16le": {
+      "bytes": 576,
+      "sha256": "db1c7bc6ba5c2e3dc0eace3a7f0999c62e27fe63d28e7b763731789a3b0322d1"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.gate_silu.f16le": {
+      "bytes": 2176,
+      "sha256": "02ad04272e894b839e15eb86c13bd6e64c701dd7ba657107746ec8ba0696eb69"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.attention_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "7b7f9bdf26923c1b1fc6a6708b8c60a8dc655e8f890c99eec9cc8b2552192f3d"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.gate_projection.f16le": {
+      "bytes": 1024,
+      "sha256": "8af3d37eeefa78b6267e7ef68cb97ff1b8d8b853608a36ab8779730fffa67d56"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.gated.f16le": {
+      "bytes": 3072,
+      "sha256": "896232d66c7b0e4be54748c50161b584b1cc6e9702b4f06b12534aa01427b418"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.embedding.f16le": {
+      "bytes": 1088,
+      "sha256": "41d95b380f84d2eb770f386f60beb4e28a7cf9f18090ee215bdeb560acab7474"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.input_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "c625aab065dae08ed4ca1a1dc9f0d4671bae2ca7fd68130b373f4a22d23ddfb0"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.down_projection.f16le": {
+      "bytes": 576,
+      "sha256": "3001eeaa48ccf2977242db5943fcc071dba02b2bffd55c51584f45324c3407cf"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.k_projection.f16le": {
+      "bytes": 256,
+      "sha256": "65c719ff0770df8b900a94d378158346b5d2424bc95594e6a6f460e96ba5d829"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.gated.f16le": {
+      "bytes": 2176,
+      "sha256": "e8d56527669c1fc942d1d7cc64f6ab042279e47618dc330c79c53279f8195802"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.attention_context.f16le": {
+      "bytes": 1088,
+      "sha256": "8a0f5506a4a8ea8f077d395119a21136da274ed3f191f2bd265523b38fb351c7"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.down_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "4aedd5c89199510eb53e24a86cfa4f1c1828ca66ef19ded8296cdc0d7d333919"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.k_projection.f16le": {
+      "bytes": 544,
+      "sha256": "80dd6b3e4c2758defd51fc88690fefe03c4e25c12d0ecc9c45fbb21fb2245694"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.gate_silu.f16le": {
+      "bytes": 896,
+      "sha256": "213eeec523acf638005c280e4cb74fe0ef62c7171002b426c062e8945851f54c"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.final_norm.f16le": {
+      "bytes": 448,
+      "sha256": "2e01203038c26a000f63f8ed88be64704cb952bb019b33da367ca3798c6da33d"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.attention_residual.f16le": {
+      "bytes": 1088,
+      "sha256": "019a6b0fb005223cc874087eece7ba38cb6cdd19b917a791017c8508fe6495cd"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.post_attention_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "f24fd89bea2e730a594c8f7dc41d05e30f32d0bcb7caabc0a6853dda6ea5abb6"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.gate_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "0d9966916d1100a6d3933732305ae70222db1bec5946a36ae3f5f6254d622320"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.gate_silu.f16le": {
+      "bytes": 2176,
+      "sha256": "376ad1ee397c2320ef7f0370fe97530aef8d5088ac9c7048bc9ac92af009af6f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.gate_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "4f263df76ad69dd55c8164afcdab3a0e6aaf962d37ba1edfc9718fb1c13b3e2b"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.output.f16le": {
+      "bytes": 512,
+      "sha256": "aaf1f508dc9f45b23dc2ef114dc9c1a59b5aaef4ac51bf932a849b96abe96e29"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.up_projection.f16le": {
+      "bytes": 896,
+      "sha256": "3402ed4883375076e1379bb0d6ae34eacaa0e1522c787f62444c2de79d68e51e"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.up_projection.f16le": {
+      "bytes": 1152,
+      "sha256": "960a7c4d52a39db59ee22f3e62974e29d8683084297b98f49d0bfdd3e975823a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.up_projection.f16le": {
+      "bytes": 1152,
+      "sha256": "79256db5c18e7bfe8a5aee62f26df2e3571a0ef9fef012007ad0436870e81103"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.attention_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "5a8c5514c777a35ba92287a3052c3e88b16256d66874453645637e210769aa7b"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.up_projection.f16le": {
+      "bytes": 896,
+      "sha256": "82fc188f55dd1d9a045e1ccc049d89c05690a8beb89ec6e5f933cdf7008c294f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.k_rotary.f16le": {
+      "bytes": 544,
+      "sha256": "4265eba0f19b88bffb662c1d897d7e5dfb8a799a5d086f2d36621c3538080a1d"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.output.f16le": {
+      "bytes": 1536,
+      "sha256": "1bbb6ae3cdfce5f779d3aa3ee1af03e11076c2e2a7c329b41dd0242976a7b1e4"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.q_projection.f16le": {
+      "bytes": 512,
+      "sha256": "a18fb45136733149fee317798f64be41e7cdb1abced0dbdd50280e73e654a1e1"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.k_rotary.f16le": {
+      "bytes": 256,
+      "sha256": "0acfe9b62e293f43c8398fe05a3a916470c9c1dad6fd5f94c325ed48d54cd1c4"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.attention_context.f16le": {
+      "bytes": 512,
+      "sha256": "d804f249e65c2ea0e4ed087da1b9fd1abfbf2e3ff321c6da3fe535b7019e3960"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.q_rotary.f16le": {
+      "bytes": 1536,
+      "sha256": "a7d167ca697e1188efb192c26d60b592b1102da7d568cf615a51b1b2c2086129"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.v_projection.f16le": {
+      "bytes": 256,
+      "sha256": "6f067741740330dfd3390f0561f01a4e7eb6bd5e9bf79407b80545965b837108"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.attention_residual.f16le": {
+      "bytes": 1088,
+      "sha256": "7f85b61d777fcfa70420c5875aba438c678a4e05e05af16a8137cf8540bf69eb"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.q_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "0f95720959fd516977eee27f787423cff7c45bfcd3683eb2c2376c726ca36327"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.input_norm.f16le": {
+      "bytes": 448,
+      "sha256": "c6b7709eeb7fd4a07219a96e879676c6acc3fb1dd880e150db4d6f92c9a5ecd3"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.gate_silu.f16le": {
+      "bytes": 896,
+      "sha256": "e2a27364448650ddb9789b052a5fac5a07e1991a5417f6668fb9dd98de6ddbd1"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.v_projection.f16le": {
+      "bytes": 544,
+      "sha256": "79013233a5484094f43a53c6259db1722d543c3264fd2ccea8c4e76a484f9112"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.k_rotary.f16le": {
+      "bytes": 544,
+      "sha256": "5c01bcc40921dbf3c3d96b573ba8fe928239507e91aa1dae059dd9c51a851eda"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.post_attention_norm.f16le": {
+      "bytes": 576,
+      "sha256": "02655d35c241aa0b95c34c061d54e2bc3849b6cbb3ab66990839a1f60a46dcfc"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.logits.f32le": {
+      "bytes": 2048,
+      "sha256": "b7734ca3a01c68ade5203491403d68ace9a8be5f13519530c18187bad0967c31"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.final_norm.f16le": {
+      "bytes": 576,
+      "sha256": "f9fa6e1f93a75f8fc6ee9a4c76f5090f59b2cbf4a7fdbee00f4a82e18807fc08"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.post_attention_norm.f16le": {
+      "bytes": 448,
+      "sha256": "02b4e3809e8bcfea94cda4d88f0ad406c01dd33b4d9c86cf9defc9223f2578c3"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.post_attention_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "144dd0bb28cdd49e8b6b41dc485a2f000df949a4e1fa569900b576b834be6e48"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.k_rotary.f16le": {
+      "bytes": 224,
+      "sha256": "5d657c5b14106d19dc95bf57a889b4df20b7b839c91e91b506661e3a0096095f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.attention_context.f16le": {
+      "bytes": 576,
+      "sha256": "b4c798d80fd885e6ca51f7ce200b426784762d432b36955a61a269ed17275121"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.k_rotary.f16le": {
+      "bytes": 544,
+      "sha256": "8b89ca3fe1dc2592028494d9451822d317c7f665571453c5a7420662471ea966"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.gate_projection.f16le": {
+      "bytes": 1152,
+      "sha256": "177a6c07106aa33cd063fbc0b428e00e01437c13a0020228a28ce49c2231c55b"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.k_rotary.f16le": {
+      "bytes": 224,
+      "sha256": "7d74d204d624f00cef3886ff5618c60c7b92a83b374bc03331dd98660c05863a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.k_projection.f16le": {
+      "bytes": 544,
+      "sha256": "f0c0d22a787aad106f0fb4456c00daba9273b6f3d7406fb68cf322c90f089c80"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.k_projection.f16le": {
+      "bytes": 288,
+      "sha256": "c1b448267d6a11c8d8f0ea6c7fb6376712711170cdd02130eb5e45595f273917"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.v_projection.f16le": {
+      "bytes": 224,
+      "sha256": "a2ce2a5a59d3a321ede748c4049946c24004de47e688f1846319ca43822b373b"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.q_rotary.f16le": {
+      "bytes": 1536,
+      "sha256": "426b56a42433694b7c7cb513ed82b264a23c491f759cb22755e12e401e5f5246"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.k_rotary.f16le": {
+      "bytes": 256,
+      "sha256": "4813c87bb7b49e1a544a09ddcf891e7ebc82a81aa5a31e33ae6a20ace4075227"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.q_projection.f16le": {
+      "bytes": 448,
+      "sha256": "12f1c33c6a1e6031c50aadbb28fbe018b222c9b6c5768cf2e3a76ddb4568f204"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.k_rotary.f16le": {
+      "bytes": 544,
+      "sha256": "c95746c80ad8724bb5ccabdff607b03affd5fc449e7d6ddd27d6c6c8bb2690da"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.gated.f16le": {
+      "bytes": 896,
+      "sha256": "3184125b4063e725c573568ce79dd27311161aa0bd8838b6a891558a5f0de56a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.gate_projection.f16le": {
+      "bytes": 3072,
+      "sha256": "329d97e019df88bf44a31e4f18582861e2d01173648e9b93bae4ea8ffb25d807"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.input_norm.f16le": {
+      "bytes": 512,
+      "sha256": "ec2f7da8141dbffab20f7319d9bfabbd9774f59a56a578deca8f292212a36c3f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.output.f16le": {
+      "bytes": 512,
+      "sha256": "d30aade29d12e9bf7db74a0da1729dde46582b8b760d670ccadca8dc422b116f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.gate_projection.f16le": {
+      "bytes": 896,
+      "sha256": "3aebe372fb2e21cc52128601b1c8e0f0a3c2e8fe0602c1dea62bc2645f337258"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.logits.f32le": {
+      "bytes": 2304,
+      "sha256": "cdee950992c13c5610fbbb06bc2d88f2e968ee5d2c168ec154cf246ebf8c08ed"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.v_projection.f16le": {
+      "bytes": 768,
+      "sha256": "4aecef6027d58b2504f7702f5e0e6b59b298037b655196c26a638c0ef50bde3f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.gated.f16le": {
+      "bytes": 2176,
+      "sha256": "a4130449371fc056da68d8dfc08c8da7174fc5701177fd6329976db69836cfc9"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.q_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "02891fbcf6cba3627ec32ad43d82540bf4085666df8602590dfb4a93cc38b829"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.gated.f16le": {
+      "bytes": 1024,
+      "sha256": "8079112e7c206ec8717499e7917abf44424f54f47aaaa52e480bb60aa136e7ea"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.attention_residual.f16le": {
+      "bytes": 1088,
+      "sha256": "37e893dcaa96c315ddafa8f4a0af7d7ec86cf1856d58d49cb5d3fcf928a0029e"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.output.f16le": {
+      "bytes": 1536,
+      "sha256": "d0d4c9d59ca48d8903a9784a23c184b65b3cf392b157ea153b0b5dc092d9364a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.input_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "27880f2cfd093db6bdfa35269fa4456bd53f04f6d292b549d26fb7cf2bb8a301"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.attention_projection.f16le": {
+      "bytes": 576,
+      "sha256": "f8d01770a8298f5dfc451869566cba00032e739be1a27ea7887267053c367d94"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.down_projection.f16le": {
+      "bytes": 512,
+      "sha256": "1e52ed07196ee3eb3daa15bc74efada3c711bbedfefe3c494128dea2a36a12a4"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.q_projection.f16le": {
+      "bytes": 448,
+      "sha256": "855f1607e366ad8aa0a3a15b8543246087dedc45a512c2c9ea0ea72eeb6771b6"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.down_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "6ba38a97d65b67502ab926ae62459583ff37b68bdad2438a0b951de0057c7cbc"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.v_projection.f16le": {
+      "bytes": 224,
+      "sha256": "31e96e685f81d4407e3c1862357888254bb80dbee54fa02481e699592facdd63"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.down_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "1aa316ce3ceceab42df1b5c11db1f79d55cf0013adf673d0012fec1192429d01"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.gate_silu.f16le": {
+      "bytes": 3072,
+      "sha256": "8765eae3e48f44c81eed8cd807505cc69b46c06fdd3ddaec6b85afaa427ca16d"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.attention_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "e0be19b42ee15a1e6cd7e2e98046dd570e6a512f0742695c7836c14e3c3ddcbf"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.attention_context.f16le": {
+      "bytes": 1088,
+      "sha256": "f82f8311fb779cfbbdc2b6432e7517dcfb5eb97c15e5222724bfac366125893e"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.gated.f16le": {
+      "bytes": 3072,
+      "sha256": "17129d90706c475781666d40a3f02b167b13a253b10debb6a32300c6c62aa451"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.gated.f16le": {
+      "bytes": 2176,
+      "sha256": "c9020eceaa335e77685bd24852d51783aeb698c4d8b677fa2cc494712e2addd1"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.gate_silu.f16le": {
+      "bytes": 2176,
+      "sha256": "1e6af37427d29938e2cab460c300b08cf5dc1bc5a840cc73556ca4e73a516c9a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.k_projection.f16le": {
+      "bytes": 288,
+      "sha256": "302d0c96f20fdcd1a02f1ff498081b7a37f3dfb1243f634c3bfeaff674635dd7"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.attention_projection.f16le": {
+      "bytes": 448,
+      "sha256": "89a1dd8366b8670aedc2895955ef302b6db728e910d8d7c07b911bed8d7c674f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.k_projection.f16le": {
+      "bytes": 544,
+      "sha256": "2d946506f4d98f5e06c6aa0e48caf63917915a02a85552cdbccadda485a31df9"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.q_rotary.f16le": {
+      "bytes": 1088,
+      "sha256": "f0c6a0a38f6c6ff626262d81c62a8a72a893cf4e7ea0c73b4a4a0bcf518bf6b6"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.attention_projection.f16le": {
+      "bytes": 512,
+      "sha256": "f0fb8f7e3d0e19ae0d4895426698f6b8a75f664627755b9ea72be2aa989f558c"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.gate_silu.f16le": {
+      "bytes": 1024,
+      "sha256": "cf6f158ba734cfa450f828afeabc4b752b28298ad25d8a847f6d474384549491"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.input_norm.f16le": {
+      "bytes": 576,
+      "sha256": "6cc2a0f0a197d6938994c0b2ff4ef5c6aab7968908e1ac8ca2fd0c234de6833f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.q_rotary.f16le": {
+      "bytes": 448,
+      "sha256": "27afac982b3a9302377f9ba6d453ea1dc9239582458074e00f766b410fbd65d8"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.output.f16le": {
+      "bytes": 448,
+      "sha256": "0bc7baa2cf5f888fa3de4b8c0b3552f863227662c8d2b1b1b5dffec118a102d2"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.output.f16le": {
+      "bytes": 1088,
+      "sha256": "63a62d4d1aeeeaa9f991cdd47e7e68309a9bff320e71fb52212afa90f52d77be"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.q_rotary.f16le": {
+      "bytes": 1088,
+      "sha256": "46854e13be1acdf090d8f21fb14ee56758f45d4ec8276784243465d637079dc8"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.q_rotary.f16le": {
+      "bytes": 512,
+      "sha256": "2b9d0f1bfd653147c0e933b4ec2ae1a7eec3877a3eb62848ef36dd8e46f2000f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.k_rotary.f16le": {
+      "bytes": 768,
+      "sha256": "f4cb628e7a0340cdd0c28dc805ea768aaecc8fa6c1f230c07e62cc921df5ecb1"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.gated.f16le": {
+      "bytes": 1152,
+      "sha256": "c8d98c885a3379c3c4fa4c4b27d6534b1ed1937d625a93f5a2e4e21e0959a495"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.q_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "5dae7916314d85d0bf44d275d343459fc03c98d3ad0fd7e9b8517f6a79664bb0"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.attention_residual.f16le": {
+      "bytes": 512,
+      "sha256": "5b9cb6dd7677ea5788bacbcae45938f8bf0fd52d9aebe407391fc544f5402137"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.v_projection.f16le": {
+      "bytes": 768,
+      "sha256": "c133559123798ac5176b40c97d6928a04780e2652239ce08a761333f97e9ee78"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.gate_silu.f16le": {
+      "bytes": 1152,
+      "sha256": "f40125b4a719419b8e92df1c47b212bf81a1a90a0d18b01623955b1b3e4f3b03"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.k_rotary.f16le": {
+      "bytes": 768,
+      "sha256": "2e4c0b290d31a93ddf1bd04e71b2a616080c0bb6548afbb9b9465e67a9584124"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.up_projection.f16le": {
+      "bytes": 1024,
+      "sha256": "9eea804358f780353ea6a4821201fee12a1db80da0fffecbefcb3160ef11cb4c"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.q_rotary.f16le": {
+      "bytes": 512,
+      "sha256": "bdd7ff4e57756aa2bcdac26ec22404256f004ba4998351e3805b6b02c40d9a62"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.down_projection.f16le": {
+      "bytes": 576,
+      "sha256": "0e2e006361e8ad50de1bc8801c55fa90d74c5f0eb279d907fced6daf8abe4034"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.attention_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "3c323b4f0abb03679d4c584a764fbcccad17baa0deb835a4194234096dc8152b"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.q_rotary.f16le": {
+      "bytes": 1088,
+      "sha256": "c34f7806ac4ad5a1e502c78cf8734c53ca852e91658986679043d3a18654c8c9"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.post_attention_norm.f16le": {
+      "bytes": 576,
+      "sha256": "e68b8b7809bdf10617085078c6d16bd3370b6860dd49351002e92f0e4bc579f7"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.post_attention_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "fe61fcadd859e1d7396d7fb5caa822cf3194178faba88723387189ff3caeed3a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.post_attention_norm.f16le": {
+      "bytes": 448,
+      "sha256": "1e458d2341ae99c57b1c08af154e54d404581f2be0bd3d7a64658620d8ab1b5d"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.attention_context.f16le": {
+      "bytes": 1088,
+      "sha256": "ee7e95c41209f66eea2b8fc879d1ce453ba218e1a88ec0ff6ba71acd6d63ab23"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.attention_residual.f16le": {
+      "bytes": 1536,
+      "sha256": "8b66331e7c6f05437e54b02fa766cbc2c0445b51df8c57823d2467788c031e77"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.embedding.f16le": {
+      "bytes": 448,
+      "sha256": "f29ee4dd7a2420cb3bf9b738a0225a8283a633c4e3d65bda7f04641f3ea3130a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.q_rotary.f16le": {
+      "bytes": 1088,
+      "sha256": "a779935a6b5d81f9f65782680a1a32b13b59d9c31c458d61ca7afea38fac4f7a"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.input_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "ffd83af4d1418991807c19149b92e1de1d041ec41348f74eb763a8e15aab2380"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.up_projection.f16le": {
+      "bytes": 1024,
+      "sha256": "5bc282841c8fc389568588d6a79a3c7d79da7cedd5f68377835ace820d95e8ab"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.q_rotary.f16le": {
+      "bytes": 448,
+      "sha256": "1ddf52e044ef2568abdf8d688d7875e704ce37359f9af4cbd513ca790f83612e"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.attention_context.f16le": {
+      "bytes": 448,
+      "sha256": "c5ff137bffacd2f873b6720cd5c65cef3aabefae611322eb6d60185254074ed0"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.down_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "f22b50a6c1e6ce3d35d5c8de810eb550066b29c2285d82dea08e622e038c13cb"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.v_projection.f16le": {
+      "bytes": 544,
+      "sha256": "cae3c2f15d22cdda2087fa6051c76c9d029a7f514d52aca81ec31a37d34c8132"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.q_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "8626165cad66455da4f84c48d46b6bd0dcd8f95ccd296d655556c0ff2d05b964"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/manifest.json": {
+      "bytes": 91297,
+      "sha256": "39dfd6e8580fc0d30fd1ee7795ab3a323cabfb63ea98e2eb889c607e7d6aaf25"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.final_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "7c8528d16234a6db27060e90422a6fdadcf50c50c7ec847dc2e898e6c1b791b9"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.embedding.f16le": {
+      "bytes": 512,
+      "sha256": "d51ebc986ad4022f1b5695d4ab0c7ee7816af143f4310b46bfe50167e5d60fa6"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.embedding.f16le": {
+      "bytes": 1088,
+      "sha256": "41d95b380f84d2eb770f386f60beb4e28a7cf9f18090ee215bdeb560acab7474"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.attention_residual.f16le": {
+      "bytes": 576,
+      "sha256": "402b0414a8dc4f52e9df5823239ec2afac877c8563458f29800fa9a33a067c55"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.final_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "36d57a9716836eb5044290b327bf80066e46dc383dadf00a79b4f2d418a1b81e"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.down_projection.f16le": {
+      "bytes": 448,
+      "sha256": "d46fa0ed7e9caf9ad7069e4b491dbdde12d988f64e69316a64ae2a42561a6826"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.attention_context.f16le": {
+      "bytes": 1536,
+      "sha256": "4d960d4d8f4bc70f762937eb6a71d53da1e1193e9751fcdbd6472cf6beff7d5f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.post_attention_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "60cb77550914074107dc63d3693b7165347dfca592efc204c4b5f6c27047e1b6"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.attention_residual.f16le": {
+      "bytes": 448,
+      "sha256": "cefbdb7e7dd6a4a7128f4c052fd2514cc4c85803d78536d38dd7767223889de5"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.v_projection.f16le": {
+      "bytes": 256,
+      "sha256": "147499a46e860eb6ad92d4b30bc2abdd28dd638bf893182f1f7beab6ae3c7935"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.gate_projection.f16le": {
+      "bytes": 1024,
+      "sha256": "8d17a5412316275957aeb7aa922f419fbebb1c1e656990ebf055e0d9f070b038"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.q_projection.f16le": {
+      "bytes": 512,
+      "sha256": "bbbf124ac26753cd55fec2e8e041ecc707ca965dc311d4823feb4fac1e322397"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.output.f16le": {
+      "bytes": 1088,
+      "sha256": "69070c61d99dc6c56f4552dbc8d475a134b8e537d35033300120240258889b05"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.output.f16le": {
+      "bytes": 448,
+      "sha256": "bd18f6a0cc377a3dc061d411fcada8fa299b0be6389256ba293a8723937d3bcd"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.input_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "a8f4c585cf3505e6d6b5ec1c78e477e2b3b91f9a02a0edddc81e89042a7f66dc"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.logits.f32le": {
+      "bytes": 1792,
+      "sha256": "ef0ea9483b11f3ce1a350f1d3407d64f19c1b27b97364657c9b107dc96e26144"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.attention_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "430963c3bce94f5d5bc9fa093c44c530da8575198560158a2876dacf1d327ae2"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.attention_residual.f16le": {
+      "bytes": 1536,
+      "sha256": "ca189c1f81229b1e2258db08165e60dcaefe97d85fc94514e47fdebcec46e9cb"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.gated.f16le": {
+      "bytes": 1024,
+      "sha256": "9e2f014b3ad3f486edf516dab7df3d088f5101555c00be824adb658eaaacc622"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.embedding.f16le": {
+      "bytes": 1536,
+      "sha256": "30c1d6c6ae1536da66087df897504453aeb452a14b0003dc35264dce5bcd6c52"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.gated.f16le": {
+      "bytes": 2176,
+      "sha256": "dba172a4ed7c6e4a9407beaf875d8aaef24c8c34a7c537ccebe442251e0f21bd"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.gate_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "852405510dde58fcbd4df930d00fc30f964ddffaa32caec1fe6e51f02f3a1ac1"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.gated.f16le": {
+      "bytes": 896,
+      "sha256": "1565f10cf62b26f1ba7b8d57968f8fa16f75c13c05350519c16b408b44fd3e08"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.output.f16le": {
+      "bytes": 576,
+      "sha256": "9857e70f4073a0bd39f8573cde2ef0868a1cbc4abd4ce00b6db8516fb8687744"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.attention_residual.f16le": {
+      "bytes": 448,
+      "sha256": "3589639585ee4292882ba5c2d252894fdac266bfdb12c16f4ba19af732bf8b91"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.gate_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "00a6502f16e92220a0301d1c88aefbcc2cac0540024bdf5fa1a71bc98dd4921f"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.k_projection.f16le": {
+      "bytes": 544,
+      "sha256": "f0c0d22a787aad106f0fb4456c00daba9273b6f3d7406fb68cf322c90f089c80"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.up_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "8b7a2b0800d1d3f20a137be0d5716cbc249c39e9eb6303ca9b8a5d1ac5945784"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.k_rotary.f16le": {
+      "bytes": 288,
+      "sha256": "cb31feb24fd65a10f6604aa4b17ed502ed130e99f49b1b220c4817cac922e12b"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.embedding.f16le": {
+      "bytes": 576,
+      "sha256": "0f602580b73813088c26478638f959d2e983a87c8c5cecf69345c4825870d921"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.attention_residual.f16le": {
+      "bytes": 576,
+      "sha256": "6adbaa5f1718b4b432a2a7526d5c4af8a9ec6781b2b3c70c3b72b7675b072f9c"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.input_norm.f16le": {
+      "bytes": 576,
+      "sha256": "c2a5df8061c5d7f43e964cda67730c78493a555ba0cbdcd8458bb9c53357dcbe"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.output.f16le": {
+      "bytes": 1088,
+      "sha256": "1c4dd79b6e85dc9f817d882768ebb4c724284acb1164b7e0d8fe244c42c52256"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.1.up_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "46e4b5344a8e3272f8038669eb4b4ab09aaf716c8e13fa272517fe7a2fe7b3b8"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.k_projection.f16le": {
+      "bytes": 256,
+      "sha256": "0d6a24960877104857ed7f14c260cb118ed7f4ed4b85fa2299decf29e14b42fe"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.attention_context.f16le": {
+      "bytes": 576,
+      "sha256": "31e8ea7f544b63526d4b6bd16c610d2adaa7a6a610da94aac908f3e4b08dd8fc"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.post_attention_norm.f16le": {
+      "bytes": 512,
+      "sha256": "c7cd38520e67c0102881eed120ec399a762fe6e16cdf0ff32da2e6051d9da417"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.gate_silu.f16le": {
+      "bytes": 3072,
+      "sha256": "c7764551f70c48ea123a8ad7bf042dd0c823cfc6ce5a836b70c663ba5610d6e5"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.post_attention_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "8aaf91237cb35092aab42dd3b810f23029a525f9e1bb6414891ee0d370beae72"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.1.k_projection.f16le": {
+      "bytes": 224,
+      "sha256": "877782861022603cc41c5e2b333ebdd52638f25850ca93841d2c6813d226756e"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.gate_projection.f16le": {
+      "bytes": 896,
+      "sha256": "7c67a4dc6c10c178c3a87443c5445850917acdc86bb3e03e480c63c8f05f6b3c"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.input_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "27880f2cfd093db6bdfa35269fa4456bd53f04f6d292b549d26fb7cf2bb8a301"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.logits.f32le": {
+      "bytes": 6144,
+      "sha256": "93111e1e030703fbd7e0026f6e5f730155de75fc716c77a244863fe8099a1a57"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.q_projection.f16le": {
+      "bytes": 576,
+      "sha256": "fef64c3c2206fb3ab8e606dea071b974f9917191330a43e8563af5c3f074258b"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.gate_silu.f16le": {
+      "bytes": 2176,
+      "sha256": "5028bf3a69bcc3f6ee788ee4012d022e14174f930bfb247c7bd417e21fa867ea"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.down_projection.f16le": {
+      "bytes": 512,
+      "sha256": "5f0b67b606959837664ca79a097c41f9af7cabca4c67b15fc1211f3bbcdd85bd"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.v_projection.f16le": {
+      "bytes": 544,
+      "sha256": "79013233a5484094f43a53c6259db1722d543c3264fd2ccea8c4e76a484f9112"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.1.q_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "f7377b71d1a7c058175dbd47ee0948e47771244ef221745075c39f228d8ef4dc"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows7.layers.0.attention_projection.f16le": {
+      "bytes": 448,
+      "sha256": "6b2aac6aa8566d27b701a04e4629bccf9bf6bd3da7b0f8f403e593379124b4c0"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.0.v_projection.f16le": {
+      "bytes": 288,
+      "sha256": "13614526d22845094dc2a6075b2ac290488696d305b2ca0e262b1fc1bbebcffb"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.k_rotary.f16le": {
+      "bytes": 288,
+      "sha256": "a486f6bc2f5d225f9ed34f1de146d5283a968537f1924e481c8c950e335dac8e"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.attention_context.f16le": {
+      "bytes": 512,
+      "sha256": "5715d9cf0418dc57a5968bb8a5b8e22f5437d5ba033ac44f56a2d449e3432fbd"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.offset17.layers.0.attention_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "c8aa9ed64b3afc7bdbd092671d230a911b39fc97063eceb622a466eeccece3f0"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.attention_projection.f16le": {
+      "bytes": 512,
+      "sha256": "154e96f71e7945373cc15a885833ebbea13dbdcc514c0d8cbb40f2b921bc8f5c"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows17.layers.0.output.f16le": {
+      "bytes": 1088,
+      "sha256": "98afeb99f3fd10358ec153db8bafd03a4e513780ff5a77dfb184c203a3d1ad59"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.0.gate_silu.f16le": {
+      "bytes": 1024,
+      "sha256": "c9131eb8ad6c0e4d8eb061cca3d888c95e172149172fcb6c44f96d007410f425"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.0.input_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "de6a67542d751490b24cedee944df9e60bfef22707477d6cb50403bb10f9c042"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.gate_projection.f16le": {
+      "bytes": 1152,
+      "sha256": "15c1d1253a0c3eb2b597d2ec481a3857c62201225be8d2bbfc7a5846516c4904"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows8.layers.1.attention_residual.f16le": {
+      "bytes": 512,
+      "sha256": "cd07791f7c79730817b1234ffeea644b566ff862d17c4af5390b6d3bd455739c"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.k_projection.f16le": {
+      "bytes": 768,
+      "sha256": "651683af551cd5a13b5996244c68b0012c1a3304690e252e4f699dadee736adc"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.output.f16le": {
+      "bytes": 576,
+      "sha256": "52e0f3217915f2b25b4c54f39d98e911e2d5da6b698283bfddc7387c990debc0"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows9.layers.1.gate_silu.f16le": {
+      "bytes": 1152,
+      "sha256": "e553a291a1187ff96f3dd4501480eee890cfe3f584d6ea04bc3484836f15e376"
+    },
+    "tests/fixtures/q4-v2-tiny-prefill-v1/cases.rows24.layers.1.gate_projection.f16le": {
+      "bytes": 3072,
+      "sha256": "0c0061c3fb9a5332b7fcad2895b1df12c5e9845be7ddca7c411263724d89b407"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.1.mlp.up_proj.weight.q4": {
+      "bytes": 4160,
+      "sha256": "f14552bb0260bae5c3bafda19c4e5d2d7e47aba76b1d8b489e288d1e45cf000c"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.1.self_attn.o_proj.weight.q4": {
+      "bytes": 2112,
+      "sha256": "7d6accbb80b1680f25e2545a68561b2c054c73972a6f06cde845dfbcd25539e6"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.0.self_attn.k_proj.weight.q4": {
+      "bytes": 1088,
+      "sha256": "175b724cabaf582dae18a1d2c663a6452fb78ba6d73ba418c754b862ca9e10c6"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.0.mlp.gate_proj.weight.q4": {
+      "bytes": 4160,
+      "sha256": "c2a7b2ae364bce17d6958a4b2e16cd90868b26cf1e3bc5aec001389af03c27bd"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.1.self_attn.k_proj.weight.q4": {
+      "bytes": 1088,
+      "sha256": "eee6592b98ccea7e0f280a0391c2b1d97ef3defb58d802257e706595cba5f8fb"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.1.mlp.down_proj.weight.q4": {
+      "bytes": 2112,
+      "sha256": "fb3ecf587d809c5298a37d06bab467f15c1d379a72ebb982a10f9580ab9fc09b"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.0.self_attn.o_proj.weight.q4": {
+      "bytes": 2112,
+      "sha256": "bba4294bb6e8ff07578d67b82de083a3dfd10b85f72ae36ef077e54d90e588ae"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.0.mlp.up_proj.weight.q4": {
+      "bytes": 4160,
+      "sha256": "9f7fcb1db53a305153f64f64431d36fc2e2fda1dfb1a14e79097a822e010c73b"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.1.self_attn.v_proj.weight.q4": {
+      "bytes": 1088,
+      "sha256": "a6ea1debc2b9721246c5a0c3fb999b54322ff0921f738822ee12e70158ede272"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.1.mlp.gate_proj.weight.q4": {
+      "bytes": 4160,
+      "sha256": "07d4006df8607380c8c24cfe18b7eec07f1f150ef450d25754fd073af86720b4"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.1.self_attn.q_proj.weight.q4": {
+      "bytes": 2112,
+      "sha256": "1dc1e7bb2ed14248f29c9d6e4af0595be761753c739cbca1f7fdc0ead7920dd8"
+    },
+    "artifacts/m5-tiny-q4-v2/manifest.json": {
+      "bytes": 5781,
+      "sha256": "1020eb07251b6a61099726ae96759a5da7a8508b076a1a6865f18468062132e2"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.0.mlp.down_proj.weight.q4": {
+      "bytes": 2112,
+      "sha256": "43e2599a038b130a137a0ba6c1a0ee0fc541d95a353b690d255b698eae2c2c70"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.0.self_attn.v_proj.weight.q4": {
+      "bytes": 1088,
+      "sha256": "18b8404dfb2a413852e836135414e8df6c02349d14e3c44c78f2f33676e91ee0"
+    },
+    "artifacts/m5-tiny-q4-v2/model.layers.0.self_attn.q_proj.weight.q4": {
+      "bytes": 2112,
+      "sha256": "8e58026d9508ec8d6e621a1627edef6ff9fbcb550faae0961be97fc3c1855fe1"
+    },
+    "artifacts/m5-q4-v2-gpu-native-v1/primitive-tests": {
+      "bytes": 2321408,
+      "sha256": "d5039d0689359ab347571c31504c507b97cc8f0a7e997fc55762f5236e1e0c40"
+    },
+    "artifacts/m5-q4-v2-gpu-native-v1/graph-tests": {
+      "bytes": 2073312,
+      "sha256": "4cf88a83c884bb90eafe44469697f032e5127d45d7644e978839f968adc63c4c"
+    },
+    "artifacts/m5-q4-v2-gpu-native-v1/graph-tests-v2": {
+      "bytes": 2073312,
+      "sha256": "fa878daf9198cf35dfee3086a6c104b73ac640cc2c37991be0d798bcf472ffd5"
+    },
+    "PLAN.md": {
+      "bytes": 166307,
+      "sha256": "48fe7fa2c416717e8abdbd4e7d5edfd73e7b9ac940f796db0b9c692f10e9edde"
+    },
+    "docs/improvements.md": {
+      "bytes": 30831,
+      "sha256": "0c879296129ac85725c2b0c85a450730dba4c565c64db43a320803b4cbc35958"
+    },
+    "docs/q4-v2.md": {
+      "bytes": 5583,
+      "sha256": "e9914e7cb3964df729371875f9350bfc41fcbdccc145c81877a7d1579aa6bded"
+    },
+    "docs/experiments/2026-10-14-q4-v2-gpu.md": {
+      "bytes": 5667,
+      "sha256": "9d60efce0e9cc7981c30330e9a91a1a8407a9cae34769e42e6374ba1c8d6f47a"
+    },
+    "tools/reference/fp16.py": {
+      "bytes": 13916,
+      "sha256": "181ac89a8b94f76f5f3a8149eb80089e9d7a0a63688e42951e6269be567fd9d6"
+    },
+    "tools/reference/q4_tiny.py": {
+      "bytes": 5122,
+      "sha256": "a1b90019081aef9ab0fc7cce68ccbdf4d1518131c8c716c8fc73d2a228b1286b"
+    },
+    "artifacts/m5-q4-v2-gpu-prelaunch-bindings-v1.json": {
+      "bytes": 47096,
+      "sha256": "37608497827c537a692da50cb2f56a515232009781e4ec3b953418e1f0ff815d"
+    },
+    "artifacts/m5-q4-v2-gpu-prelaunch-bindings-v2.json": {
+      "bytes": 47259,
+      "sha256": "31f12ea3b27b34aadd5a42c231b3a12e5ffa9e3e93dcf41ead3f0fe58e039974"
+    },
+    "artifacts/m5-q4-v2-gpu-final-processes-v1.txt": {
+      "bytes": 211652,
+      "sha256": "55602d30159963d10e163dbd8ed8867a7a84865abdc9d3476b8a646e108eb2af"
+    },
+    "artifacts/m5-tiny-source-v1/config.json": {
+      "bytes": 357,
+      "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+    },
+    "artifacts/m5-tiny-source-v1/model.safetensors": {
+      "bytes": 85640,
+      "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.up_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "b205fc6ac4b09ebee721c9640605e60023a213570e59f32cbb0024b328b6ef42"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.v_projection.f16le": {
+      "bytes": 288,
+      "sha256": "0569ccc6ffc3a8f56901877a2b3db3ac59b6c95582258662e7195c6fc15baea2"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.q_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "84d5551a7ed137107fc947caaa18cfe0b93c4ae5890acd535f14b4180dc08fcd"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.v_projection.f16le": {
+      "bytes": 544,
+      "sha256": "bc3067c009d13a31e081cb037d765c49e22a4bb5f393d253db9498da34892cf1"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.q_projection.f16le": {
+      "bytes": 576,
+      "sha256": "10698c6acfb92b819aa12ca12d03b35e24cd9bb2960f0d8f7dc59b814b3f49f0"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.up_projection.f16le": {
+      "bytes": 3072,
+      "sha256": "6f7c4cc853e0df9cfe3c4b394d75e4c6bc0afb414bb5b1cef005e185eb19e421"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.attention_context.f16le": {
+      "bytes": 1536,
+      "sha256": "8f783371bffb2f80892cc42cb5ce3ba803cd4c8704e0296baeb48eb21bbea616"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.final_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "ae7620c4df8f6c2b91b9e0163b961e5049e0b4f9e6b18a09fa59a8dd7d3d52ab"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.up_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "ba04bbd079ce64bc9fa9f84f5dbd5b6d87da1051d9b547a40d411fc6ec169a29"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.logits.f32le": {
+      "bytes": 4352,
+      "sha256": "7c97a0d9d7b5ff9d3eaaf152eaa99556dcdb72a3788955abe837484170542299"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.k_projection.f16le": {
+      "bytes": 224,
+      "sha256": "aff5e2feba0ec4b43db87e6f51766559a3df88cb60ec3b3367dac03c36237d1e"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.up_projection.f16le": {
+      "bytes": 3072,
+      "sha256": "f0f73e1d85da20a6e285b95c4b4ba0f7bdf0840ecaed6e4b259aa4d9974a3536"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.attention_context.f16le": {
+      "bytes": 448,
+      "sha256": "0edfd7d7401e07cd40a4497acc89c8a0880f1e9db168616a2c8ffe8df3cc9a49"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.k_projection.f16le": {
+      "bytes": 768,
+      "sha256": "34584900cc6afdef62c18365b9c83355edf60c132d124b0563bb171407efad48"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.down_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "a9ec5b91fa886f8db6b300767726f06a46927bc2a588e9b9098a68312c3a2956"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.final_norm.f16le": {
+      "bytes": 512,
+      "sha256": "15d7651880f90afd01b76221e5be5fb07bca98d7ccf066c0eb1e713d32fb0f11"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.down_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "0dfa12bede13da540b4cb55fa08644c14d77656368206decf67793be4a60b632"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.attention_residual.f16le": {
+      "bytes": 1088,
+      "sha256": "d9a9673ba50dde961335fcb2f78e07cb685886b4aa300bf256e811d58625aec5"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.input_norm.f16le": {
+      "bytes": 448,
+      "sha256": "0d367768cad2ea08ea4c1e6d641b26dc520a9b81d810998b0c2c35ad54e51ddd"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.logits.f32le": {
+      "bytes": 4352,
+      "sha256": "9384e36728f1f3dfe1f3dcc27934efdc0f48a3cf50820e139c9b67b125ac581d"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.post_attention_norm.f16le": {
+      "bytes": 512,
+      "sha256": "c6f77abad175a262f1d16dcdc7f31667dff100f0cd355df8efd655df9ee1c198"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.attention_context.f16le": {
+      "bytes": 1088,
+      "sha256": "83097fef204a80c324620367cbd129f85ecf53ec0badbf6c7ab3c734d213a6dc"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.post_attention_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "069624265f78a6c92c53ea71fe7f7c30956bc2888dccb14a8ed4af6ad89da587"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.attention_projection.f16le": {
+      "bytes": 576,
+      "sha256": "a400051395693f0c5a8a9ffe641d140a884696735ff63e17538a5d4de4f9bbbb"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.q_rotary.f16le": {
+      "bytes": 576,
+      "sha256": "2c9e68cb480443b491865817d6e967c0909bfb3ce13454e508406d549951717b"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.gated.f16le": {
+      "bytes": 1152,
+      "sha256": "a826003e9b179fd4a222643dab105b40c810df59e407679ff22b3c8647418baf"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.down_projection.f16le": {
+      "bytes": 448,
+      "sha256": "ad9e5a16506666498f7633a8cdec7e10009a77e4275a59d55d8f2a1667f18096"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.input_norm.f16le": {
+      "bytes": 512,
+      "sha256": "36a37c4c6c596bfd46a51858a539dd4513e4654d781819c2c2dd0e97ce11d16a"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.q_rotary.f16le": {
+      "bytes": 576,
+      "sha256": "3ee83a7ee4bd104242f268e9ff948c8e309780e6cfd64b3eb1e96e183ef736d2"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.gate_silu.f16le": {
+      "bytes": 2176,
+      "sha256": "e97388dcf2c72759d0582e5b996b6ada1ba5e97a42ebbb6534abdf4f5d69b628"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.attention_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "37a96cffaae8d845f75cf0ef2fb754251f97ce01b7cec9a4e30a629639759891"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.gate_projection.f16le": {
+      "bytes": 1024,
+      "sha256": "c886578b8967317af5aa1f6241d19ccb2f732a3739934011c3db9c0e8fc6fc1d"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.gated.f16le": {
+      "bytes": 3072,
+      "sha256": "4a5fba49d00adf07c26f52110625c90bfd7803c07dab9c9e71da8eba1c3d27d2"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.embedding.f16le": {
+      "bytes": 1088,
+      "sha256": "41d95b380f84d2eb770f386f60beb4e28a7cf9f18090ee215bdeb560acab7474"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.input_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "b71a9689664e06e24ab4a695b04f83d7ac0719b21cd7d8bac390612c0ffa73ef"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.down_projection.f16le": {
+      "bytes": 576,
+      "sha256": "09096b9c3c37c1e0db5ee69b2f5a7f2e2db806c1d44a915368a9d4159cdf2a9f"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.k_projection.f16le": {
+      "bytes": 256,
+      "sha256": "ef9d2ea59e0646f59a4cbd0c948c6b3349df54d9ba4f01973fc7b72e525df837"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.gated.f16le": {
+      "bytes": 2176,
+      "sha256": "c1f605d2016e2a5f039d37027cd035e2f0d1d9a04ed39f848b1552d9842fc6af"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.attention_context.f16le": {
+      "bytes": 1088,
+      "sha256": "6be340b21f5eb9009aa3fb0204e72d941d66562297216fe53729a05e2a7e8c92"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.down_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "3243bc63d6909fd9a68a9720bf8cfc4c16a39365f635d9ed5d6bda4d0014052f"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.k_projection.f16le": {
+      "bytes": 544,
+      "sha256": "dda7f9bfdf049cee2d413435b76d33adfb54a7e9235dd9dd4648f962eaa1b898"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.gate_silu.f16le": {
+      "bytes": 896,
+      "sha256": "a32c4910b951e79f404b387fca1f0ca314c1d74fe03366f48203eb4700f64911"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.final_norm.f16le": {
+      "bytes": 448,
+      "sha256": "a7853b3220cd2422591fcac2aff787d0f46645262dfd385e1fb0fbd094d8228f"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.attention_residual.f16le": {
+      "bytes": 1088,
+      "sha256": "e40c49efb174e05523aabe17178162bce0acfa69d6ba4209572b1990b96d27ba"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.post_attention_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "0db470b8760ddd308369e5dc7537c0905492219fec19ebb28f9f48feb531dbfd"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.gate_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "8b67180cc88981991213fda7530d4dba07f298560cf2a9755c6a5e131c4349b0"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.gate_silu.f16le": {
+      "bytes": 2176,
+      "sha256": "46ceda03cc3bf974b65243807ed293639d60e8344faeed64278ab6283b2aef23"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.gate_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "c47dad7165e7d4ed61fa8400687197ffc05c027ff9708f9c3a02eabcd2d357e5"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.output.f16le": {
+      "bytes": 512,
+      "sha256": "8c6b8630f6af8feaa52647a32df84319f8d509f42663d8c62f44fcb9e060e03c"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.up_projection.f16le": {
+      "bytes": 896,
+      "sha256": "85f330b073b6b258eb2877890f9dae4cac01832bfa653bcee48e4e4e3a2907db"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.up_projection.f16le": {
+      "bytes": 1152,
+      "sha256": "1a21f1de239fdcbdaab0f30a37e92d973cabf0126ec62f1f78b7a2ae0b88236e"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.up_projection.f16le": {
+      "bytes": 1152,
+      "sha256": "51e5994b32e0740579b57899539d8fb7c5e2e882650c2768e089974658458ea3"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.attention_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "76e47f27a33d4cafbaba7f0962954a9ee3e28174f8ebaf690cbd5bf8860e6128"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.up_projection.f16le": {
+      "bytes": 896,
+      "sha256": "759e8c90ba20e76cb088fd889109b3430bcc5c7e966b427edd017d53e6c7ef8b"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.k_rotary.f16le": {
+      "bytes": 544,
+      "sha256": "c13eb216d107f958a2c819dce4a9fc1a1804f0892444550ec3cb5bf6a732152f"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.output.f16le": {
+      "bytes": 1536,
+      "sha256": "035bbdb6116e40c0bec6638313ca084e3b0f9359d145fdf0e976ba1629e90a9b"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.q_projection.f16le": {
+      "bytes": 512,
+      "sha256": "18cef1d9178ed473a8665c63ca6dd3428c473eb56b4e0b3d52476e795f29c895"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.k_rotary.f16le": {
+      "bytes": 256,
+      "sha256": "5545b17313308c69e03e762d8f937fb2fd66513f9412c3cf74e3101fc165ae27"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.attention_context.f16le": {
+      "bytes": 512,
+      "sha256": "c632a44495dd13b361446f37249f5800ed3d7ddb494dc7588a42012ac2a601dc"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.q_rotary.f16le": {
+      "bytes": 1536,
+      "sha256": "5503000c1da80f55143cce2ac2972fc8fba8729ab381ee6c02827d9723e9b858"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.v_projection.f16le": {
+      "bytes": 256,
+      "sha256": "339bc6c58b8068fe91d6741be78b3db2306e915176ffd8169f96b764052ab057"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.attention_residual.f16le": {
+      "bytes": 1088,
+      "sha256": "3829e9571d865b2d604f6fa8c14f429e33d58c8f8e93ac2bf1fcb16aac033778"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.q_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "a9ecaca755edf045a540e8c3829f93378d25525d3e7bb4749eae6ff90a256605"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.input_norm.f16le": {
+      "bytes": 448,
+      "sha256": "c6b7709eeb7fd4a07219a96e879676c6acc3fb1dd880e150db4d6f92c9a5ecd3"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.gate_silu.f16le": {
+      "bytes": 896,
+      "sha256": "f4bb60cfcb1edc3245de3fb3b1cf9b42d98c6fbddfea6789a30ef70f2347fa74"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.v_projection.f16le": {
+      "bytes": 544,
+      "sha256": "853abdd331dd9bd7add347187e29424f7e01601b4a99b6cd70ab021e9bab9596"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.k_rotary.f16le": {
+      "bytes": 544,
+      "sha256": "245263532c35cd257c76bc2c9827155eac6afe22bb086299c3456957a89e7883"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.post_attention_norm.f16le": {
+      "bytes": 576,
+      "sha256": "9312d5e2c463b92d07f567ffcd5036454f5cc484d06e7b0ea5233cda78c2d2c8"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.logits.f32le": {
+      "bytes": 2048,
+      "sha256": "35a6c56bacc6925856ac1c64e5c0f07596831b6f5989e20ed197fe9b42c65af9"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.final_norm.f16le": {
+      "bytes": 576,
+      "sha256": "49bbcc2768453590732f03b8f4076e09b49afc2add8085070f9c8567b5f30b64"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.post_attention_norm.f16le": {
+      "bytes": 448,
+      "sha256": "4d6d57e08403895ac3b6d881742dc6368134729ef1667b8bce28c14d2147a1d5"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.post_attention_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "a446c1b6491fb1cbe4c6a99faa528d45f1caebe6662ec5f54a3b8b9eab54aa6b"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.k_rotary.f16le": {
+      "bytes": 224,
+      "sha256": "6e44393e027dcfeb42e09f7abb38895fd7c4e360dd79833b097e31ace0b80ef8"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.attention_context.f16le": {
+      "bytes": 576,
+      "sha256": "42d8fdea79753b8cdbd069d9d46359fc2d0ae304434bf4cf491b9ef942c8328d"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.k_rotary.f16le": {
+      "bytes": 544,
+      "sha256": "99540fc6ae5375574351f5a31cef2ff0531890a65cb11c65d561d34041f2a3e9"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.gate_projection.f16le": {
+      "bytes": 1152,
+      "sha256": "4d8b30b9af9245c8084a4423fbf21ea5907ab9be24f2013008b0d41c9b768f11"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.k_rotary.f16le": {
+      "bytes": 224,
+      "sha256": "65fdfae9725c0d4d96fd5184312b7798b703b3905bdaeb2bfabd2478443beb6b"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.k_projection.f16le": {
+      "bytes": 544,
+      "sha256": "21f77a510757c46c1f4bd5df14a8a9b0bd3379096f799df8d2af77931411ef52"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.k_projection.f16le": {
+      "bytes": 288,
+      "sha256": "01f802b310a627894bea018ee0a9847a38a2ad88a536c8ce61fd23c32c17d3a5"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.v_projection.f16le": {
+      "bytes": 224,
+      "sha256": "ea87b8c70c61626147ad5617ec488f0f42d51390b7a326cc5e9ef5f7dee5aace"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.q_rotary.f16le": {
+      "bytes": 1536,
+      "sha256": "de3fb053b3e3ace5a4b08d244931c34b46284713baf4c5b6b4f5548128fb89d3"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.k_rotary.f16le": {
+      "bytes": 256,
+      "sha256": "922ee2653bf79dfb1c605857f9f2ad5845a33a9926f09b2693980e491df2418a"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.q_projection.f16le": {
+      "bytes": 448,
+      "sha256": "3840d24bf3737d97928d1c0a9910dcfdab0da463c60ecde45d10e62c9fedcce5"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.k_rotary.f16le": {
+      "bytes": 544,
+      "sha256": "1d9d2daafcecab64d9437314fe486bc41bbd90057f280a6851f7fc598e38f06e"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.gated.f16le": {
+      "bytes": 896,
+      "sha256": "08a60fc3c0719b2a1828546122f0f233aba9cf4ff898fd241266f90af47af58e"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.gate_projection.f16le": {
+      "bytes": 3072,
+      "sha256": "6aa1b291bb2310cfe584c5c8ed14ca34b296034d60c0e223a54da3f9e33f8202"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.input_norm.f16le": {
+      "bytes": 512,
+      "sha256": "ec2f7da8141dbffab20f7319d9bfabbd9774f59a56a578deca8f292212a36c3f"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.output.f16le": {
+      "bytes": 512,
+      "sha256": "4c02679512b28eb8bd6e243f32d2a7696d75d4aa604788866ae6b7550b533737"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.gate_projection.f16le": {
+      "bytes": 896,
+      "sha256": "27aba969256fa0472bc5be081d53aea637875def5f61403ff4555fc3aa3a04fd"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.logits.f32le": {
+      "bytes": 2304,
+      "sha256": "f69e152434c963cdc8afe9e3ce5f8fe6c923bf4dc2313500f1d2a16461ee25fc"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.v_projection.f16le": {
+      "bytes": 768,
+      "sha256": "64e636a20d75d47ecff3e7158142025d7d59b56983afff9156142e3ddde61af0"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.gated.f16le": {
+      "bytes": 2176,
+      "sha256": "446e9d2983a683e08c98fca2daaab8d219523b0f1e9a1f1041c8110f7ef9b1ed"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.q_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "b98fb4b348157540d4b12b10f2ef3eb4570fbaa294eba376a12820b81ad8a2f1"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.gated.f16le": {
+      "bytes": 1024,
+      "sha256": "d58a9cfc7cb74acd4c8f7791e3f136629f704dfe86baa9f9ebd02a213d24735e"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.attention_residual.f16le": {
+      "bytes": 1088,
+      "sha256": "1a7ac0c5bf86cc99f263ca7f285d92f42c75d287c7998db3f3fb9c5fada84d7c"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.output.f16le": {
+      "bytes": 1536,
+      "sha256": "bae1b04b3cc35138be340703eb3a920bcd1a7e218bc6d4656bacf0f83f7409c7"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.input_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "27880f2cfd093db6bdfa35269fa4456bd53f04f6d292b549d26fb7cf2bb8a301"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.attention_projection.f16le": {
+      "bytes": 576,
+      "sha256": "784879a29a936de10e7e5af0dd115ed4fdf18339d71f474af9855a5388a5f5b4"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.down_projection.f16le": {
+      "bytes": 512,
+      "sha256": "b22c11dd06fc00507c6aefa0c6b24bc22ef549f43401b1b059e029257e4a243d"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.q_projection.f16le": {
+      "bytes": 448,
+      "sha256": "56cc60866ca6cb7e44dae6389beb77f4ba42793ef6277282aab63590192a40d7"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.down_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "379ab1b5399347e9ff04d2fe123a55e21a9acb131ce6b98d4db7bfcf01732970"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.v_projection.f16le": {
+      "bytes": 224,
+      "sha256": "3c15b2c611bedbe774aeef33393faa7e3d04a68dc00559786e86ea68bb3a841a"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.down_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "f6d9fd87476c10aecfcd046b146126b8a2e6f4259a4796c60ec1143ecac094fe"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.gate_silu.f16le": {
+      "bytes": 3072,
+      "sha256": "fc74a60d3a0b3fcbe17bae5e894b20dd8f054c393e818d6b0b4425ea995decbd"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.attention_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "2df55d20c06f5f41b350bc61d66f1bbcaae256d5036de895ff872f0d9aa6b241"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.attention_context.f16le": {
+      "bytes": 1088,
+      "sha256": "ac40d9fdba01ed044b2bb04409dfe556658c1b57fa71c0464667ce474130aa54"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.gated.f16le": {
+      "bytes": 3072,
+      "sha256": "2a6ce0bd29d64db351482da650d8f6d14aa4f6574e3dc35389d73082d1b7b42f"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.gated.f16le": {
+      "bytes": 2176,
+      "sha256": "48d06275049f6ad3223ab59a6acc98cde6b85c758b49cb550b9d719a677d4163"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.gate_silu.f16le": {
+      "bytes": 2176,
+      "sha256": "4914dd545dd42cf18afa6c079819ed602e0ed5f7a533711d4552db363466ada1"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.k_projection.f16le": {
+      "bytes": 288,
+      "sha256": "e4c84afe85bd3106d461c5122eae9ce70c0f976f212a3f7799b7c709f0d80c22"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.attention_projection.f16le": {
+      "bytes": 448,
+      "sha256": "ce1374d2349bc1b8dcfcf2746f754f55af34f47d4fea2b96fe634eaf4059a12a"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.k_projection.f16le": {
+      "bytes": 544,
+      "sha256": "bf053662c952cea1275cb385e0c8776ec5b0ce5a478174100bd3cf867315c196"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.q_rotary.f16le": {
+      "bytes": 1088,
+      "sha256": "31261fcd84a374c7d608794fc123e9a20f2e69aa6365a6aad3d1d9d0b2458863"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.attention_projection.f16le": {
+      "bytes": 512,
+      "sha256": "25c13e9ca62152ebfd4f1434fdc51fb239fe7266c22cd6688d24795eb0425018"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.gate_silu.f16le": {
+      "bytes": 1024,
+      "sha256": "5771bda23e477cda51849a8b26cf4830f64bbf56121726c44bfd766fd3f4785f"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.input_norm.f16le": {
+      "bytes": 576,
+      "sha256": "6cc2a0f0a197d6938994c0b2ff4ef5c6aab7968908e1ac8ca2fd0c234de6833f"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.q_rotary.f16le": {
+      "bytes": 448,
+      "sha256": "8ee3a7b1a8f1d57a43ede6367a2ac922963fea0b38bafd64bee447bf4e416c8b"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.output.f16le": {
+      "bytes": 448,
+      "sha256": "7125b66ba6477caa025e6cc3da5107572d106846f1ce46a36de8acfc8fa70762"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.output.f16le": {
+      "bytes": 1088,
+      "sha256": "8922d9e514c1ea7732f4961889f3c2a209746a27bf2cd9243cfac1ae45866231"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.q_rotary.f16le": {
+      "bytes": 1088,
+      "sha256": "18169d74d276d48719b9e529264708cae06a5b272c4be18f611f9d946eb78ae5"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.q_rotary.f16le": {
+      "bytes": 512,
+      "sha256": "b6130fb8ffc350f1d8dc1483613f572c2fdc0a32c06769a5a1fef6143829e42d"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.k_rotary.f16le": {
+      "bytes": 768,
+      "sha256": "0172da8d5c6e6ffb9b56f2e7bb8788167f1b3a40f06dc08aadc84b9df5c83357"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.gated.f16le": {
+      "bytes": 1152,
+      "sha256": "34d1c8ee15969a92cfb64d697517a412bf5ceb1daf186544b61147750c246baa"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.q_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "95a0159a19c4021358708f5e65fdf7081af5eb3455817e5f875fcea61d04e57e"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.attention_residual.f16le": {
+      "bytes": 512,
+      "sha256": "152498c6e22127cc443154ad23801b031d96fdf2b937f0cfc6b20e28f0a876e2"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.v_projection.f16le": {
+      "bytes": 768,
+      "sha256": "0101b74f8e62ae9f5b9fed3372108f03470ba8c8e1764184d941d3ef1307844a"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.gate_silu.f16le": {
+      "bytes": 1152,
+      "sha256": "32ea8b04cbf50e008adaecdb23c5e95dead67038907be1cb745c1f50cf925110"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.k_rotary.f16le": {
+      "bytes": 768,
+      "sha256": "e66c24c743f8ecab198b3a867a36a469a019dc19fabcaf19aefae7ae82228256"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.up_projection.f16le": {
+      "bytes": 1024,
+      "sha256": "9d5b4dc4478ea50392e898a6af99e2808fc9c5ee26bbe03c20ca6f0405c27448"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.q_rotary.f16le": {
+      "bytes": 512,
+      "sha256": "3f9a9f6a56698665aeaaa9bedc5c438934acefadbe8ea6b202b208cfc8271da4"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.down_projection.f16le": {
+      "bytes": 576,
+      "sha256": "b78a03633b5fbad10f846a8c3c5534d3261d3c193067b81a8f9b2f9972fb1cd6"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.attention_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "0d44ca535278da91cb513247bca99bf042ec0be183d3a149b78dbfe69be5bd56"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.q_rotary.f16le": {
+      "bytes": 1088,
+      "sha256": "bf9cc2c6ee0eeb2db0df40c93fcd1b72d9b3f661f7de25c63e4926d6038187e9"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.post_attention_norm.f16le": {
+      "bytes": 576,
+      "sha256": "b4dea598e9c4b44699d60ee5a40f1fe3ca7f987a51693dc0a29cc922f28986a3"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.post_attention_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "64a2556a1afa63016eb64cefb81b4dde61cf865ae796b3c55fd1d28f6ae84f79"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.post_attention_norm.f16le": {
+      "bytes": 448,
+      "sha256": "82d5bb5f108675b4af9eaa950bdf305cc3ceaef349c705e2f38ae2c95d5da441"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.attention_context.f16le": {
+      "bytes": 1088,
+      "sha256": "0f4e888139baf7c4a0ab8fcb879e52801ff21bf17c933f651d41878147607090"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.attention_residual.f16le": {
+      "bytes": 1536,
+      "sha256": "318e2c64c0749119b423fab08b23255c5073139b15f8f38f0f51434f04a72067"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.embedding.f16le": {
+      "bytes": 448,
+      "sha256": "f29ee4dd7a2420cb3bf9b738a0225a8283a633c4e3d65bda7f04641f3ea3130a"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.q_rotary.f16le": {
+      "bytes": 1088,
+      "sha256": "cb50c90dfeac96dcb04d598d88434c04f3a707da346d5350e8fa216818997227"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.input_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "706f8471fb9f8dee5fec21a841ccf355b5f24af3222563c40c37437616f7fffa"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.up_projection.f16le": {
+      "bytes": 1024,
+      "sha256": "6c98bb8b795cbda2de717c3d90e3d49dd3514140e05ce903427b522e5dd17c02"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.q_rotary.f16le": {
+      "bytes": 448,
+      "sha256": "6ca80d9e2d1f66e86f7eeb660063b4dc6390e1dd9e33b21bd46e1dd53240073b"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.attention_context.f16le": {
+      "bytes": 448,
+      "sha256": "25db83b14b45a6b6d714c475685731a5cab101864da801238025e263a0c51292"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.down_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "db84bc7ab0bbcb9358a3af474124e97868899dc346ce9ee5bd494c04a7bf0ad8"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.v_projection.f16le": {
+      "bytes": 544,
+      "sha256": "174793044016ab67ab94fef9c7835ade8299748be82b0605b1b1cd9c60d069f7"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.q_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "84d5551a7ed137107fc947caaa18cfe0b93c4ae5890acd535f14b4180dc08fcd"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/manifest.json": {
+      "bytes": 92055,
+      "sha256": "af489fadf32b1a2a46a04098fabc315152cf63f507ee2887bc6a4f13de2545c9"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.final_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "9d398f4338b5cb08471f25aa63d5bbdfc1e0203466b71588917e58b7bd8d4021"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.embedding.f16le": {
+      "bytes": 512,
+      "sha256": "d51ebc986ad4022f1b5695d4ab0c7ee7816af143f4310b46bfe50167e5d60fa6"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.embedding.f16le": {
+      "bytes": 1088,
+      "sha256": "41d95b380f84d2eb770f386f60beb4e28a7cf9f18090ee215bdeb560acab7474"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.attention_residual.f16le": {
+      "bytes": 576,
+      "sha256": "43bebee668bb64081f487939b8dffd0e6b0109ebc39abd84c98c251b71d41125"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.final_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "6b2ea717c3a3522b353130c10790eb24785483f96b3462ca9b13d5cd73d62b9b"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.down_projection.f16le": {
+      "bytes": 448,
+      "sha256": "2314a6217faa8c0ee634a376b1a4a2e21178d3dbcaecfc4cc9f2880a7ad8be6a"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.attention_context.f16le": {
+      "bytes": 1536,
+      "sha256": "e1729be20c1f1c43d66b5c91e4b60c22b3d6f3fac8dc0b8bd491a29b609ff2a0"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.post_attention_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "9573e9a9c881c0ddcdca46f9eb6ae76eff9961eaff0c1290e0aaa61522046462"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.attention_residual.f16le": {
+      "bytes": 448,
+      "sha256": "cceea9158675319695db2b34781f931e6df7aba2b848a5a54050cd683ba2af74"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.v_projection.f16le": {
+      "bytes": 256,
+      "sha256": "50a88a217783112b18eaf4d0e785594354cc980eb75453399e02194d0965885d"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.gate_projection.f16le": {
+      "bytes": 1024,
+      "sha256": "373d2de517b84798efcf555d9d9e53f7a481b292841352140bda3c35a2c063e1"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.q_projection.f16le": {
+      "bytes": 512,
+      "sha256": "2388c44e4cfd1812a5beabe786e3232f64f2b446929e94d36f0f04abbdf0fa95"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.output.f16le": {
+      "bytes": 1088,
+      "sha256": "3eeb7825644f840991b05286b72b83cfbb3f3b860dd211817d491366dce737f3"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.output.f16le": {
+      "bytes": 448,
+      "sha256": "3bcbd9bcc8183dd9f0120447fa47a8e0120e36e01a997dd9caff9d71ad678644"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.input_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "fcdd8c79496fe191a68a3987c280c304be43db8511e3f487f0adac8f7e89fc27"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.logits.f32le": {
+      "bytes": 1792,
+      "sha256": "49e3e2c6f0da724b2ee26d1f04b7cfada07e4534a7056ae22f88d61af451f3f4"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.attention_projection.f16le": {
+      "bytes": 1536,
+      "sha256": "0036c2e6379902ab3ffbb26580511f2a98da5a2f51833acb794a98b68d0c1eaa"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.attention_residual.f16le": {
+      "bytes": 1536,
+      "sha256": "437d53f6fa86336858b4d486cb6030cc17606e976a19b3799685c558b0a070cf"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.gated.f16le": {
+      "bytes": 1024,
+      "sha256": "0cda6da2d1617d625ae1d37f41cb529be19ad819b9fa7a5f6f8afc51a311d791"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.embedding.f16le": {
+      "bytes": 1536,
+      "sha256": "30c1d6c6ae1536da66087df897504453aeb452a14b0003dc35264dce5bcd6c52"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.gated.f16le": {
+      "bytes": 2176,
+      "sha256": "dbe70be32338218f106477a7255c18cef96fa4efee6e7cf35bcadc927b96e4aa"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.gate_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "31d58b382cc49efc58a2439a4c884850220ec94c268c546a3995612a47988ad5"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.gated.f16le": {
+      "bytes": 896,
+      "sha256": "80df1ac5b77b9c7dbb49dc4082275764ca7714d508823b3c4dd9b9514bd843bf"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.output.f16le": {
+      "bytes": 576,
+      "sha256": "4c35895413d96a5220f9c977d5cddfede8aaebadcac5e92a11a704cca339dd9c"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.attention_residual.f16le": {
+      "bytes": 448,
+      "sha256": "57e98bd56203d5a814fb88aa1fc1815610d30acaa69a64d2a7d383214037f431"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.gate_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "8c779ad0904994e527dfb59c2c3e91fc0ec82e67e255b58009cc1040772155a4"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.k_projection.f16le": {
+      "bytes": 544,
+      "sha256": "21f77a510757c46c1f4bd5df14a8a9b0bd3379096f799df8d2af77931411ef52"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.up_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "fbd5ac6c4156ff17433f129e6bf9237f39e1b940bad958e7ac58a93036bb1985"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.k_rotary.f16le": {
+      "bytes": 288,
+      "sha256": "cebf8241f62c66730f2207bbee2cc63067949d691b2ef39cdffd52211703e596"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.embedding.f16le": {
+      "bytes": 576,
+      "sha256": "0f602580b73813088c26478638f959d2e983a87c8c5cecf69345c4825870d921"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.attention_residual.f16le": {
+      "bytes": 576,
+      "sha256": "5e26b8588433890fcf680e5df0db5bbf43505c477c682320f0e51674427cda45"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.input_norm.f16le": {
+      "bytes": 576,
+      "sha256": "2acaeae4487cef58c34a07afa4f29f8867e79e4ed5b950afd1785f742226aa26"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.output.f16le": {
+      "bytes": 1088,
+      "sha256": "9522acbea71b3cc4d28016ba47d8cf1ce01ece8be958a92936bb9588ab21899c"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.1.up_projection.f16le": {
+      "bytes": 2176,
+      "sha256": "0f8311e19597cd60d96b8c438b7148fa371245d0c06219e57cea1737762b92fc"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.k_projection.f16le": {
+      "bytes": 256,
+      "sha256": "68191ba431aded4f795851367d37738a413c20a43b08305cb251a217a342d6dc"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.attention_context.f16le": {
+      "bytes": 576,
+      "sha256": "2b6930893f4c997792d7902ad62d8a5a3b97987d614fc69c91f0ba1947640546"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.post_attention_norm.f16le": {
+      "bytes": 512,
+      "sha256": "4f1ea7a256b71efe2f394673ac862a5bc2ee12d7442b148649504e3cb63c44f5"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.gate_silu.f16le": {
+      "bytes": 3072,
+      "sha256": "70e1cd12039189513a054acea59752dc6464a95f316eb4c324717e141dc9ed8b"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.post_attention_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "93789b2dabaeeb8a3e48854b8a39473bcbef7887729a726b24233627097b48af"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.1.k_projection.f16le": {
+      "bytes": 224,
+      "sha256": "c0478106dd9e42fd32aaef10f92b5ce301d16d546229c3bae6dc770f124bf8a8"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.gate_projection.f16le": {
+      "bytes": 896,
+      "sha256": "395fc0150e5d82215b6cae652c025bec18f16c4b9410cae998d6ef50d771e60c"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.input_norm.f16le": {
+      "bytes": 1088,
+      "sha256": "27880f2cfd093db6bdfa35269fa4456bd53f04f6d292b549d26fb7cf2bb8a301"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.logits.f32le": {
+      "bytes": 6144,
+      "sha256": "843dbe5ffef1f2b623788e234975b2cebe3aeb39610269b9219389da932561ee"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.q_projection.f16le": {
+      "bytes": 576,
+      "sha256": "adeaec99c73c058c34611ebe7206de0859b818518c9ca9dc7deb155e6c62afb5"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.gate_silu.f16le": {
+      "bytes": 2176,
+      "sha256": "869ed7eae4eb4c3a3d39839231b88a65a37fec71a880935f0f1054f9d690d492"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.down_projection.f16le": {
+      "bytes": 512,
+      "sha256": "4ddae55812248f9c7a65da1792a8a45fa221d4a5e26ca3929ac5ec7490c8a5d1"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.v_projection.f16le": {
+      "bytes": 544,
+      "sha256": "853abdd331dd9bd7add347187e29424f7e01601b4a99b6cd70ab021e9bab9596"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.1.q_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "7ed62d7b3eeaad25a3e37a6e04510b410710548885c5c3f15cd5eee091098b88"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows7.layers.0.attention_projection.f16le": {
+      "bytes": 448,
+      "sha256": "6fa3e644801936f60e87aa66e378bfa5f3055063c790f0a368c918563e6b5131"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.0.v_projection.f16le": {
+      "bytes": 288,
+      "sha256": "6cd6f412f3b99c85468c6ffc9523551f5838cba6c5f8fc6b9edd9061f5eeac62"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.k_rotary.f16le": {
+      "bytes": 288,
+      "sha256": "9f52d3995e0afb1ca320a5dae26f9ad9dc9b440c3d7de2252a00d79429854f49"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.attention_context.f16le": {
+      "bytes": 512,
+      "sha256": "bb331311c260d5a754f3d2f8d911a3c0169b0fec6ad213ca1306f589d4d59238"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.offset17.layers.0.attention_projection.f16le": {
+      "bytes": 1088,
+      "sha256": "d55d8a0a7dfa4faa845127f447bd84a69c254d1fa749e4ddad7b1e9a1dab0e50"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.attention_projection.f16le": {
+      "bytes": 512,
+      "sha256": "d4f960f9811886ff8626fdebd4c5c6aedef7aa66b0e304d61dd142f4c4fce270"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows17.layers.0.output.f16le": {
+      "bytes": 1088,
+      "sha256": "a100ad6ec84c38e1033d1cb2b17d49163743f47d750da93526f727d27d958056"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.0.gate_silu.f16le": {
+      "bytes": 1024,
+      "sha256": "f15d0f32a7f1e70c6367d43b9e70554ddcaa72e4eb0c6e07786d3231b8b8e770"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.0.input_norm.f16le": {
+      "bytes": 1536,
+      "sha256": "de6a67542d751490b24cedee944df9e60bfef22707477d6cb50403bb10f9c042"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.gate_projection.f16le": {
+      "bytes": 1152,
+      "sha256": "1c9b92a91d4725f5bb052ca778e21198866ded52e6b4a4138353c3896f995311"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows8.layers.1.attention_residual.f16le": {
+      "bytes": 512,
+      "sha256": "5b04146f6c36e847d2f41fc17ac3a04197c9efc86350c6145f7749b8beb84db7"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.k_projection.f16le": {
+      "bytes": 768,
+      "sha256": "cb3085d94054551413a4fa0bec899c9179f33308d54cab7567a3f1b7fd73a608"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.output.f16le": {
+      "bytes": 576,
+      "sha256": "e2e7c7e4bf9343933ee5d36bcdfbfdc22fd94cccfab67b13ef2141fe35e1d59d"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows9.layers.1.gate_silu.f16le": {
+      "bytes": 1152,
+      "sha256": "cd9ab7e138e63dda484e3cd7ae88a696207d0ab8cff400087a510ca04dd6a6c3"
+    },
+    "tests/fixtures/q4-tiny-prefill-v1/cases.rows24.layers.1.gate_projection.f16le": {
+      "bytes": 3072,
+      "sha256": "6fa71343d4dff5826aaeb7dfa5361c718d343d35d44470953494d369de680c5f"
+    },
+    "artifacts/m5-q4-v2-gpu-v1-regression-v1.stdout": {
+      "bytes": 1547,
+      "sha256": "622e6862431ec4ba4293fe73dfa644b2474876b43f54e67b92064ee353d8385f"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-v1-regression-v1.stdout.txt": {
+      "bytes": 1547,
+      "sha256": "622e6862431ec4ba4293fe73dfa644b2474876b43f54e67b92064ee353d8385f"
+    },
+    "artifacts/m5-q4-v2-gpu-tiny-v1.stdout": {
+      "bytes": 529,
+      "sha256": "d888280ecf79e9e90e194e9d8195933373737e9163c436b9ea13ef712b57776d"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-tiny-v1.stdout.txt": {
+      "bytes": 529,
+      "sha256": "d888280ecf79e9e90e194e9d8195933373737e9163c436b9ea13ef712b57776d"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-prelaunch-bindings-v1.json.txt": {
+      "bytes": 47096,
+      "sha256": "37608497827c537a692da50cb2f56a515232009781e4ec3b953418e1f0ff815d"
+    },
+    "artifacts/m5-q4-v2-gpu-tiny-v1.stderr": {
+      "bytes": 366,
+      "sha256": "704ae8a2be916d8d1e7dbc7069707d9109274ee85a2e823b10b8a5e1d09fd952"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-tiny-v1.stderr.txt": {
+      "bytes": 366,
+      "sha256": "704ae8a2be916d8d1e7dbc7069707d9109274ee85a2e823b10b8a5e1d09fd952"
+    },
+    "artifacts/m5-q4-v2-gpu-v1-regression-v1.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-v1-regression-v1.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m5-q4-v2-gpu-fmt-checks-v1.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-fmt-checks-v1.log.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m5-q4-v2-gpu-build-v1.log": {
+      "bytes": 308,
+      "sha256": "1e2bbb7727a290a3230f2822028a552b00c1539eb813e4421197dfc0cbe368dd"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-build-v1.log.txt": {
+      "bytes": 308,
+      "sha256": "1e2bbb7727a290a3230f2822028a552b00c1539eb813e4421197dfc0cbe368dd"
+    },
+    "artifacts/m5-q4-v2-gpu-reference-checks-v1.log": {
+      "bytes": 5866,
+      "sha256": "c239e2272b8abd6501c93489b45e1a00c4558d4c0d426bd40f0b041c4427bb4c"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-reference-checks-v1.log.txt": {
+      "bytes": 5866,
+      "sha256": "c239e2272b8abd6501c93489b45e1a00c4558d4c0d426bd40f0b041c4427bb4c"
+    },
+    "artifacts/m5-q4-v2-gpu-tiny-v2.stdout": {
+      "bytes": 3150,
+      "sha256": "7a50ca78064e81af0d5e687a6fb28e1e79bf273b39be448b3796a0e05caddc8a"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-tiny-v2.stdout.txt": {
+      "bytes": 3150,
+      "sha256": "7a50ca78064e81af0d5e687a6fb28e1e79bf273b39be448b3796a0e05caddc8a"
+    },
+    "artifacts/m5-q4-v2-gpu-build-v2.log": {
+      "bytes": 215,
+      "sha256": "882ad0c34d82a1d2dfcd07b911eccba2d8815b42eba94c15c6f24555a6f0c3c7"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-build-v2.log.txt": {
+      "bytes": 215,
+      "sha256": "882ad0c34d82a1d2dfcd07b911eccba2d8815b42eba94c15c6f24555a6f0c3c7"
+    },
+    "artifacts/m5-q4-v2-gpu-oracle-tests-v2.log": {
+      "bytes": 854,
+      "sha256": "f26670a8b3f839fec6f7e0eeed235ff1e948a3dbc05cedf970ae973b7c87aeff"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-oracle-tests-v2.log.txt": {
+      "bytes": 854,
+      "sha256": "f26670a8b3f839fec6f7e0eeed235ff1e948a3dbc05cedf970ae973b7c87aeff"
+    },
+    "artifacts/m5-q4-v2-gpu-primitives-v1.stdout": {
+      "bytes": 509,
+      "sha256": "619178d8f9c66c6328e328c772e68cb05dbf9940100e0cad6dabe62f3a93baf7"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-primitives-v1.stdout.txt": {
+      "bytes": 509,
+      "sha256": "619178d8f9c66c6328e328c772e68cb05dbf9940100e0cad6dabe62f3a93baf7"
+    },
+    "artifacts/m5-q4-v2-gpu-cpu-checks-v1.log": {
+      "bytes": 13061,
+      "sha256": "acb0909bc6ea097daf326bf2e0b98dfa365be03fe4739be058089e5f22371b7d"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-cpu-checks-v1.log.txt": {
+      "bytes": 13061,
+      "sha256": "acb0909bc6ea097daf326bf2e0b98dfa365be03fe4739be058089e5f22371b7d"
+    },
+    "artifacts/m5-q4-v2-gpu-oracle-tests-v1.log": {
+      "bytes": 854,
+      "sha256": "b5dd99e8efa821dd3ea0912931fd99121c92950c67b2130ff2ea820831c5a8e6"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-oracle-tests-v1.log.txt": {
+      "bytes": 854,
+      "sha256": "b5dd99e8efa821dd3ea0912931fd99121c92950c67b2130ff2ea820831c5a8e6"
+    },
+    "artifacts/m5-q4-v2-gpu-clippy-checks-v1.log": {
+      "bytes": 133,
+      "sha256": "5b39945d83c24968d7bd6c137f0a9eb12d8d1d5d7cd6cf4fc3d7f43b24d39d89"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-clippy-checks-v1.log.txt": {
+      "bytes": 133,
+      "sha256": "5b39945d83c24968d7bd6c137f0a9eb12d8d1d5d7cd6cf4fc3d7f43b24d39d89"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-prelaunch-bindings-v2.json.txt": {
+      "bytes": 47259,
+      "sha256": "31f12ea3b27b34aadd5a42c231b3a12e5ffa9e3e93dcf41ead3f0fe58e039974"
+    },
+    "artifacts/m5-q4-v2-gpu-checks-v1.json": {
+      "bytes": 1158,
+      "sha256": "f3ee4c413b8156d3a8353eaa586c28cbed3f6da2f672822d3f2a5c418e1673d2"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-checks-v1.json.txt": {
+      "bytes": 1158,
+      "sha256": "f3ee4c413b8156d3a8353eaa586c28cbed3f6da2f672822d3f2a5c418e1673d2"
+    },
+    "artifacts/m5-q4-v2-gpu-metal-checks-v1.log": {
+      "bytes": 20616,
+      "sha256": "6702f28999ffe966e157b0a8aef0e90bd2f6c21a34940ad577e59c62f3e7e4b8"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-metal-checks-v1.log.txt": {
+      "bytes": 20616,
+      "sha256": "6702f28999ffe966e157b0a8aef0e90bd2f6c21a34940ad577e59c62f3e7e4b8"
+    },
+    "artifacts/m5-q4-v2-gpu-primitives-v1.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-primitives-v1.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m5-q4-v2-gpu-tiny-v2.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-14-q4-v2-gpu-tiny-v2.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "target/release/toklet": {
+      "bytes": 5367760,
+      "sha256": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59"
+    },
+    "target/release/examples/cpu_bench": {
+      "bytes": 1069664,
+      "sha256": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+    }
+  },
+  "links_checked": [
+    {
+      "source": "PLAN.md",
+      "target": "apple_llm_performance_plan.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/fixtures/tiny-v1/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/reference/README.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/sources.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/contract-v1/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/README.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/result.schema.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/mlx_baseline.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-mlx-bf16-512-128.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-mlx-bf16-512-128.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/cpu/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cpu_linear.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/cpu/reductions.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cpu_reductions.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/cpu/attention.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cpu_attention.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/model/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/model/trace.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/sampling.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cpu_decoder.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/weights/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/weights.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-qwen-load.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/reference/qwen.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/fixtures/qwen-v2/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/qwen_forward.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-qwen-forward.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/session.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/session.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/cached_attention.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/qwen_session.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-09-qwen-session.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/generation.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/bin/cli/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/fixtures/chat-v1/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-qwen-cli.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-qwen-cli.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/benchmark.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "examples/cpu_bench.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/cpu.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-cpu-profiler-probe.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/mlx_baseline.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-mlx-fp32-128-128.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-mlx-fp32-128-128.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-cpu-short.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/llama/worker.cpp"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-llama-fp32-short.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "src/bin/cli/mod.rs"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/application.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-application-probe.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-external-matrix.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-cpu-boundary.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-10-cpu-medium.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-long.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-append.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-cached.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-pending.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-held-out-loss-runner.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-task-response-collector.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-code-isolation.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-linux-code-isolation.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-11-linux-code-isolation-attempt-v1.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-linux-code-isolation-retry.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-changed.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-application-scalar.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-linux-task-preparation.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-scalar-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-linux-literal-controller.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-tiled-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-collector.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-scalar.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-grading.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-scalar-grading.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-tiled.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-quality.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-m2.5-scalar-comparison.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-tile.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-tiled-engine.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/bench/cpu.py"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tests/fixtures/coreml-slice-v1/manifest.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-primary-comparison.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-tiled-cli.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-cpu-tiled-application-adapter.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-coreml-slices.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "tools/reference/README.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-tiled-medium-excluded.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-tiled-medium.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-ane-feasibility-closure.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-tiled-long.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-11-cpu-tiled-boundary.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-append.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-cached-excluded.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-cached.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-pending.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-changed.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-application-tiled.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-retention.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-toolchain.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-fp16-reference.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-mps-primitives.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-mps-resident-projection.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-rust-metal-bindings.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-rms.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-metal-rms.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-embedding.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-residual.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-metal-residual.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-silu.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-metal-silu.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-metal-gating.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-10-qwen-metal-gating.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-metal-gating-tails.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-mps-projection.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-mps-mlp-projections.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-mlp.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-mps-attention-projections.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-rotary.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-cache.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-attention.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-cached-attention.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-attention-graph.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-layer.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-12-rust-metal-decoder.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-rust-metal-qwen-projections.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-rust-metal-qwen-front.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-rust-metal-qwen-rotary.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-trace.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/q4-v1.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-format.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-artifact.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-decode.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-required-position-logits.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-held-out-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-larger-preselection.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-cpu-all-row-logits.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-cpu-row-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-larger-independent-oracle.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-larger-fp32-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-streamed-storage-oracles.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-compensated-rms.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-larger-metal-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-accurate-q4-prefill.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-chunks.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-m5-prefill-closure.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-13-metal-greedy.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-mlp-gating.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-rotary-cache.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-residual-rms.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-m5-dispatch-closure.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-larger-half-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-consistency.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-compensated.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-scorer.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-metal-cli-half.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-metal-controlled.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-cpu-task-reference.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-metal-tasks.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-task-grading-admission.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-task-grading-window.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-metal-application.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-full-task-responses.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-small-half-controlled-full.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-larger-half-controlled-full.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-application-full.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-primary-confirm.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-half-application-confirm.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "benchmarks/results/2026-10-14-m5-performance-decision-v1.json"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/q4-v2.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-q4-v2-format.md"
+    },
+    {
+      "source": "PLAN.md",
+      "target": "docs/experiments/2026-10-14-q4-v2-gpu.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-retention.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-accurate-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-12-cpu-tiled-retention.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "tools/reference/README.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "PLAN.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-09-qwen-load.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-09-qwen-forward.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-09-qwen-session.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-10-qwen-cli.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-independent-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-compensated-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-compensated-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-compensated.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-scorer.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-metal-cli-half.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-metal-controlled.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-cpu-task-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-metal-tasks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-09-qwen-session.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-trace.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/q4-v1.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-artifact.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-decode.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-required-position-logits.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-greedy.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-chunks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-dispatch-closure.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-m5-prefill-closure.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-cpu-all-row-logits.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-streamed-storage-oracles.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "PLAN.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "tools/reference/README.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/README.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "benchmarks/results/2026-10-10-external-matrix.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-m2.5-scalar-comparison.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-metal-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-trace.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-cpu-row-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-held-out-tiled-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-held-out-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-linux-literal-controller.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-preselection.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-fp32-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-consistency.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-scorer.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-task-grading-admission.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-task-grading-window.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-metal-application.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-full-task-responses.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-small-half-controlled-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-larger-half-controlled-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-application-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-primary-confirm.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-half-application-confirm.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/q4-v2.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-q4-v2-format.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-q4-v2-gpu.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-ane-feasibility-closure.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-residual-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-rotary-cache.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-mlp-gating.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-greedy.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-chunks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-held-out-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-metal-held-out-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-larger-half-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-13-larger-metal-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-10-code-isolation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-11-linux-literal-controller.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "docs/experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/q4-v2.md",
+      "target": "docs/q4-v1.md"
+    },
+    {
+      "source": "docs/q4-v2.md",
+      "target": "tools/quantization/model.py"
+    },
+    {
+      "source": "docs/q4-v2.md",
+      "target": "tools/quantization/q4v2.py"
+    },
+    {
+      "source": "docs/q4-v2.md",
+      "target": "src/q4.rs"
+    },
+    {
+      "source": "docs/q4-v2.md",
+      "target": "docs/experiments/2026-10-14-q4-v2-gpu.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-q4-v2-gpu.md",
+      "target": "docs/q4-v2.md"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-q4-v2-gpu.md",
+      "target": "src/metal/kernels.metal"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-q4-v2-gpu.md",
+      "target": "src/metal/mod.rs"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-q4-v2-gpu.md",
+      "target": "tools/reference/q4_v2_tiny.py"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-q4-v2-gpu.md",
+      "target": "tools/reference/test_q4_v2_tiny.py"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-q4-v2-gpu.md",
+      "target": "src/metal/q4_v2_projection.rs"
+    },
+    {
+      "source": "docs/experiments/2026-10-14-q4-v2-gpu.md",
+      "target": "benchmarks/results/2026-10-14-q4-v2-gpu-qualification-v1.json"
+    }
+  ],
+  "review": {
+    "reviewer": "Astra",
+    "accepted": true,
+    "remaining_findings": 0,
+    "independent_verification": "524bindings/prelaunchidentities/210fixturehashes-gates/9100v2-4550v1stagecomparisons/primitives-state/checklogs/288links/whitespace; no native reruns"
+  }
+}

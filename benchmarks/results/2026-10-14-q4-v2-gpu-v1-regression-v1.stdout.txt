@@ -1,0 +1,31 @@
+
+running 1 test
+test compensated_tiled_q4_and_rms_match_expanded_independent_oracle ... Q4 SIMD widths [32, 32], mode Q4CompensatedTiled
+Q4 rows7 chunk7: 35 stage comparisons, weights 38504
+Q4 rows7 chunk8: 35 stage comparisons, weights 38504
+Q4 rows7 chunk3: 105 stage comparisons, weights 38504
+Q4 rows7 chunk1: 245 stage comparisons, weights 38504
+Q4 rows8 chunk8: 35 stage comparisons, weights 38504
+Q4 rows8 chunk8: 35 stage comparisons, weights 38504
+Q4 rows8 chunk3: 105 stage comparisons, weights 38504
+Q4 rows8 chunk1: 280 stage comparisons, weights 38504
+Q4 rows9 chunk9: 35 stage comparisons, weights 38504
+Q4 rows9 chunk8: 70 stage comparisons, weights 38504
+Q4 rows9 chunk3: 105 stage comparisons, weights 38504
+Q4 rows9 chunk1: 315 stage comparisons, weights 38504
+Q4 rows17 chunk17: 35 stage comparisons, weights 38504
+Q4 rows17 chunk8: 105 stage comparisons, weights 38504
+Q4 rows17 chunk3: 210 stage comparisons, weights 38504
+Q4 rows17 chunk1: 595 stage comparisons, weights 38504
+Q4 rows24 chunk24: 35 stage comparisons, weights 38504
+Q4 rows24 chunk8: 105 stage comparisons, weights 38504
+Q4 rows24 chunk3: 280 stage comparisons, weights 38504
+Q4 rows24 chunk1: 840 stage comparisons, weights 38504
+Q4 offset17 chunk17: 35 stage comparisons, weights 38504
+Q4 offset17 chunk8: 105 stage comparisons, weights 38504
+Q4 offset17 chunk3: 210 stage comparisons, weights 38504
+Q4 offset17 chunk1: 595 stage comparisons, weights 38504
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.44s
+

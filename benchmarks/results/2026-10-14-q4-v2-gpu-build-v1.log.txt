@@ -1,0 +1,4 @@
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `release` profile [optimized] target(s) in 5.46s
+  Executable unittests src/lib.rs (artifacts/m5-checks/release/deps/toklet-f8ac5e0ca609557c)
+  Executable tests/q4_metal.rs (artifacts/m5-checks/release/deps/q4_metal-3a988d703d327c0f)
