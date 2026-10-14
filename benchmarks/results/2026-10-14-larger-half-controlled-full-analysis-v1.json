@@ -1,0 +1,554 @@
+{
+  "format": "toklet-half-controlled-full-analysis-v1",
+  "passed": true,
+  "scope": "Completed fixed Half workloads; no alternating comparison, speed adoption or Q4 quality acceptance",
+  "collections": [
+    {
+      "model": "larger",
+      "parent": "2026-10-14-larger-half-controlled-full-v1.json",
+      "parent_sha256": "f5064b6762dc30ca3036039d12f4e8a66511029b4fe31b215cee6151f0422fac",
+      "raw_sha256": "34e59e212ad5680cf9170022f112d4da5aeaf2f30b57552eb8e95d750f995e59",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "revision": "f778bb4b4d2a9299b4dab21f9dd5c632bb751c83",
+      "working_tree_dirty": false,
+      "raw_events": 187,
+      "rows": [
+        {
+          "workload": "short",
+          "warmups": 3,
+          "samples": 10,
+          "ttft_seconds": {
+            "median": 2.037335896,
+            "minimum": 1.856105875,
+            "maximum": 2.0408365,
+            "mad": 0.0021386455000000915,
+            "raw": [
+              2.027874625,
+              1.856105875,
+              1.921269166,
+              1.9432070000000001,
+              2.038112583,
+              2.037978459,
+              2.0377724170000002,
+              2.037788083,
+              2.0408365,
+              2.036899375
+            ]
+          },
+          "request_seconds": {
+            "median": 28.398589749499997,
+            "minimum": 28.197874834,
+            "maximum": 28.411423959,
+            "mad": 0.011763647000002209,
+            "raw": [
+              28.361515125,
+              28.197874834,
+              28.246755208,
+              28.329449958,
+              28.398700958,
+              28.40338175,
+              28.411423959,
+              28.398478541,
+              28.408616666,
+              28.409282834
+            ]
+          },
+          "decode_steps_per_second": {
+            "median": 4.817349190411225,
+            "minimum": 4.8131141824283805,
+            "maximum": 4.824222443620242,
+            "mad": 0.001821301829447286,
+            "raw": [
+              4.822728646704367,
+              4.82124045695717,
+              4.824222443620242,
+              4.8131141824283805,
+              4.817798426870265,
+              4.816918603607561,
+              4.8154121018064755,
+              4.81777977721489,
+              4.8164843685093075,
+              4.815643675357079
+            ]
+          },
+          "measured_request_seconds": 283.565479833,
+          "measured_requests_exceed_ten_minutes": false,
+          "admission_bytes": 3396602720,
+          "sampled_joint_native_lifetime_charge_bytes": 3294858552,
+          "committed_tokens": 255,
+          "reused_tokens": 0,
+          "pending_tokens": 1
+        },
+        {
+          "workload": "medium",
+          "warmups": 3,
+          "samples": 10,
+          "ttft_seconds": {
+            "median": 9.2330684585,
+            "minimum": 9.022994917,
+            "maximum": 9.2487465,
+            "mad": 0.015370979000000062,
+            "raw": [
+              9.242257208,
+              9.248132375,
+              9.022994917,
+              9.185973542,
+              9.041779,
+              9.2487465,
+              9.246188625,
+              9.228873042,
+              9.175899458,
+              9.237263875
+            ]
+          },
+          "request_seconds": {
+            "median": 75.44619483349999,
+            "minimum": 75.250164,
+            "maximum": 75.506916375,
+            "mad": 0.037574292000002174,
+            "raw": [
+              75.466809167,
+              75.447253959,
+              75.250164,
+              75.3994365,
+              75.268783541,
+              75.474585084,
+              75.425192708,
+              75.500905625,
+              75.445135708,
+              75.506916375
+            ]
+          },
+          "decode_steps_per_second": {
+            "median": 1.9176636395680506,
+            "minimum": 1.9163438284329966,
+            "maximum": 1.919037644043713,
+            "mad": 0.0005830661988942554,
+            "raw": [
+              1.917717779318018,
+              1.9184544652878333,
+              1.9176419949252326,
+              1.9180389462460565,
+              1.9176467581198196,
+              1.9176805210162815,
+              1.919037644043713,
+              1.9163438284329966,
+              1.916424686698068,
+              1.9164126457504709
+            ]
+          },
+          "measured_request_seconds": 754.1851826669999,
+          "measured_requests_exceed_ten_minutes": true,
+          "admission_bytes": 3396602720,
+          "sampled_joint_native_lifetime_charge_bytes": 3299888512,
+          "committed_tokens": 639,
+          "reused_tokens": 0,
+          "pending_tokens": 1
+        },
+        {
+          "workload": "long",
+          "warmups": 3,
+          "samples": 10,
+          "ttft_seconds": {
+            "median": 21.623262209,
+            "minimum": 21.576009,
+            "maximum": 21.717174875,
+            "mad": 0.036869937999998825,
+            "raw": [
+              21.689484375,
+              21.6044385,
+              21.690403625,
+              21.576009,
+              21.64193275,
+              21.717174875,
+              21.584727042,
+              21.638332834,
+              21.608191584,
+              21.5880575
+            ]
+          },
+          "request_seconds": {
+            "median": 141.15844050049998,
+            "minimum": 141.060826416,
+            "maximum": 141.264376709,
+            "mad": 0.06214579150000077,
+            "raw": [
+              141.226080041,
+              141.120616833,
+              141.223849625,
+              141.060826416,
+              141.176522334,
+              141.264376709,
+              141.092054625,
+              141.183534625,
+              141.099558042,
+              141.140358667
+            ]
+          },
+          "decode_steps_per_second": {
+            "median": 1.0624590614717526,
+            "minimum": 1.0622965774402247,
+            "maximum": 1.0628965504760255,
+            "mad": 0.00013787890732586128,
+            "raw": [
+              1.0624361474306836,
+              1.0626176479340954,
+              1.0624641437493616,
+              1.0628965504760255,
+              1.0624539791941434,
+              1.0623418901194437,
+              1.0626963468406618,
+              1.06235966355052,
+              1.0628382967166383,
+              1.0622965774402247
+            ]
+          },
+          "measured_request_seconds": 1411.587777917,
+          "measured_requests_exceed_ten_minutes": true,
+          "admission_bytes": 3396602720,
+          "sampled_joint_native_lifetime_charge_bytes": 3300658536,
+          "committed_tokens": 1151,
+          "reused_tokens": 0,
+          "pending_tokens": 1
+        },
+        {
+          "workload": "boundary",
+          "warmups": 3,
+          "samples": 10,
+          "ttft_seconds": {
+            "median": 51.3312136455,
+            "minimum": 51.290071666,
+            "maximum": 51.416502084,
+            "mad": 0.0281246039999985,
+            "raw": [
+              51.416502084,
+              51.320312166,
+              51.290071666,
+              51.30416,
+              51.302018083,
+              51.311341875,
+              51.342115125,
+              51.395286583,
+              51.356879958,
+              51.378820209
+            ]
+          },
+          "request_seconds": {
+            "median": 264.6845862705,
+            "minimum": 264.627476333,
+            "maximum": 264.785703209,
+            "mad": 0.0381548754999983,
+            "raw": [
+              264.785703209,
+              264.717591875,
+              264.627476333,
+              264.644627542,
+              264.648192208,
+              264.649398666,
+              264.680456541,
+              264.781501083,
+              264.688716,
+              264.724501959
+            ]
+          },
+          "decode_steps_per_second": {
+            "median": 0.5952853188040956,
+            "minimum": 0.5951341107569463,
+            "maximum": 0.5953166788421704,
+            "mad": 1.4911267990136423e-05,
+            "raw": [
+              0.5952124275864935,
+              0.5951341107569463,
+              0.5953011399781045,
+              0.5952925933933535,
+              0.5952766705055491,
+              0.595299320166067,
+              0.5952985261828428,
+              0.5951649711569813,
+              0.5953166788421704,
+              0.5952780442148377
+            ]
+          },
+          "measured_request_seconds": 2646.948165416,
+          "measured_requests_exceed_ten_minutes": true,
+          "admission_bytes": 3396602720,
+          "sampled_joint_native_lifetime_charge_bytes": 3301051824,
+          "committed_tokens": 2047,
+          "reused_tokens": 0,
+          "pending_tokens": 1
+        },
+        {
+          "workload": "append",
+          "warmups": 3,
+          "samples": 10,
+          "ttft_seconds": {
+            "median": 1.8216547705,
+            "minimum": 1.746421583,
+            "maximum": 1.825826,
+            "mad": 0.002129563000000001,
+            "raw": [
+              1.8219784159999999,
+              1.819120416,
+              1.825826,
+              1.821625458,
+              1.823415959,
+              1.821717333,
+              1.8189892909999998,
+              1.746421583,
+              1.821684083,
+              1.819156833
+            ]
+          },
+          "request_seconds": {
+            "median": 74.7246938335,
+            "minimum": 74.670475417,
+            "maximum": 74.754996792,
+            "mad": 0.01684272849999502,
+            "raw": [
+              74.739968208,
+              74.718417166,
+              74.754996792,
+              74.727956083,
+              74.721431584,
+              74.704194167,
+              74.743104916,
+              74.670475417,
+              74.73601575,
+              74.697871667
+            ]
+          },
+          "decode_steps_per_second": {
+            "median": 1.7418656421532184,
+            "minimum": 1.7414156617780754,
+            "maximum": 1.7426212902143678,
+            "mad": 0.0003110276702000814,
+            "raw": [
+              1.741682685618885,
+              1.742129294759381,
+              1.7414156617780754,
+              1.741961216174263,
+              1.7421599103248764,
+              1.7425313467060037,
+              1.741536377316163,
+              1.7415378549844762,
+              1.741770068132174,
+              1.7426212902143678
+            ]
+          },
+          "measured_request_seconds": 747.21443175,
+          "measured_requests_exceed_ten_minutes": true,
+          "admission_bytes": 3396602720,
+          "sampled_joint_native_lifetime_charge_bytes": 3301100952,
+          "committed_tokens": 703,
+          "reused_tokens": 512,
+          "pending_tokens": 1
+        },
+        {
+          "workload": "cached",
+          "warmups": 3,
+          "samples": 10,
+          "ttft_seconds": {
+            "median": 7.5e-07,
+            "minimum": 6.67e-07,
+            "maximum": 1.459e-06,
+            "mad": 4.1499999999999994e-08,
+            "raw": [
+              6.67e-07,
+              8.75e-07,
+              7.91e-07,
+              7.5e-07,
+              7.09e-07,
+              7.5e-07,
+              1.459e-06,
+              6.67e-07,
+              7.92e-07,
+              7.09e-07
+            ]
+          },
+          "request_seconds": {
+            "median": 66.27811929149999,
+            "minimum": 66.247524709,
+            "maximum": 66.292011792,
+            "mad": 0.0072743119999998385,
+            "raw": [
+              66.250759084,
+              66.281055125,
+              66.279181958,
+              66.283542916,
+              66.247524709,
+              66.281959334,
+              66.277056625,
+              66.268994292,
+              66.292011792,
+              66.250880834
+            ]
+          },
+          "decode_steps_per_second": {
+            "median": 1.9161678723543498,
+            "minimum": 1.9157662952770125,
+            "maximum": 1.9170527900619319,
+            "mad": 0.00021032133307674616,
+            "raw": [
+              1.9169591967671127,
+              1.9160829916722564,
+              1.916137139927525,
+              1.9160110665178394,
+              1.9170527900619319,
+              1.9160568479432334,
+              1.9161986047811748,
+              1.9164317091839929,
+              1.9157662952770125,
+              1.9169556775661103
+            ]
+          },
+          "measured_request_seconds": 662.712966669,
+          "measured_requests_exceed_ten_minutes": true,
+          "admission_bytes": 3396602720,
+          "sampled_joint_native_lifetime_charge_bytes": 3301559752,
+          "committed_tokens": 639,
+          "reused_tokens": 512,
+          "pending_tokens": 1
+        },
+        {
+          "workload": "pending",
+          "warmups": 3,
+          "samples": 10,
+          "ttft_seconds": {
+            "median": 0.47097731249999997,
+            "minimum": 0.469049542,
+            "maximum": 0.471307,
+            "mad": 0.0002498960000000272,
+            "raw": [
+              0.470982375,
+              0.471187042,
+              0.4711325,
+              0.470484167,
+              0.471307,
+              0.470057084,
+              0.469049542,
+              0.470972125,
+              0.47097225,
+              0.471267375
+            ]
+          },
+          "request_seconds": {
+            "median": 66.832539521,
+            "minimum": 66.801698417,
+            "maximum": 66.854758833,
+            "mad": 0.018126770500003886,
+            "raw": [
+              66.803374541,
+              66.854758833,
+              66.841359625,
+              66.84552675,
+              66.808919,
+              66.82103,
+              66.823719417,
+              66.852501208,
+              66.801698417,
+              66.848831375
+            ]
+          },
+          "decode_steps_per_second": {
+            "median": 1.9137329205553084,
+            "minimum": 1.9131239433291292,
+            "maximum": 1.9146481248963836,
+            "mad": 0.0004929644526766586,
+            "raw": [
+              1.9146000379320711,
+              1.9131239433291292,
+              1.913508603760083,
+              1.9133697801902338,
+              1.9144493895608634,
+              1.9140638796384288,
+              1.913957237350534,
+              1.9131828144286298,
+              1.9146481248963836,
+              1.9132970977766337
+            ]
+          },
+          "measured_request_seconds": 668.301719166,
+          "measured_requests_exceed_ten_minutes": true,
+          "admission_bytes": 3396602720,
+          "sampled_joint_native_lifetime_charge_bytes": 3301805536,
+          "committed_tokens": 640,
+          "reused_tokens": 512,
+          "pending_tokens": 1
+        },
+        {
+          "workload": "changed",
+          "warmups": 3,
+          "samples": 10,
+          "ttft_seconds": {
+            "median": 9.2759885205,
+            "minimum": 9.272663709,
+            "maximum": 9.301369084,
+            "mad": 0.0014075209999999672,
+            "raw": [
+              9.275715542,
+              9.276254791,
+              9.277508875,
+              9.278948375,
+              9.274693833,
+              9.301369084,
+              9.272663709,
+              9.285826041,
+              9.274895,
+              9.27572225
+            ]
+          },
+          "request_seconds": {
+            "median": 75.5848612295,
+            "minimum": 75.550447375,
+            "maximum": 75.607802542,
+            "mad": 0.0035131670000012605,
+            "raw": [
+              75.578658417,
+              75.580538833,
+              75.58603225,
+              75.550447375,
+              75.587428875,
+              75.607802542,
+              75.584997834,
+              75.591432,
+              75.584724625,
+              75.582157292
+            ]
+          },
+          "decode_steps_per_second": {
+            "median": 1.9153495728668255,
+            "minimum": 1.9151675852191732,
+            "maximum": 1.9163592518036283,
+            "mad": 8.009426815003273e-05,
+            "raw": [
+              1.9154504354078843,
+              1.9154116882912844,
+              1.9152892233955758,
+              1.9163592518036283,
+              1.9151675852191732,
+              1.9153495939249605,
+              1.9151791556762296,
+              1.915373501273257,
+              1.9152514997549843,
+              1.9153495518086905
+            ]
+          },
+          "measured_request_seconds": 755.8342200430001,
+          "measured_requests_exceed_ten_minutes": true,
+          "admission_bytes": 3396602720,
+          "sampled_joint_native_lifetime_charge_bytes": 3301821896,
+          "committed_tokens": 639,
+          "reused_tokens": 0,
+          "pending_tokens": 1
+        }
+      ],
+      "power_start": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true\nBattery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+      "thermal_start": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded",
+      "power_thermal_end": {
+        "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=35586147)\t80%; AC attached; not charging present: true",
+        "policy": "Battery Power:\n Sleep On Power Button 1\n lowpowermode         1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n lowpowermode         0\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         10\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10",
+        "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded"
+      }
+    }
+  ]
+}

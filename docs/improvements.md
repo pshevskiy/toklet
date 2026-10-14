@@ -152,6 +152,14 @@ inspection. The user's retry restores access: fresh observations find no control
 worker/collector commands and a stopped/not-starting machine. Astra accepts the
 completed small-model evidence before commit; historical PID/group IDs were not retained.
 
+Full larger-model compensated Half measurements complete the same eight workloads/
+24warmups/80samples and187raw events. Median shortTTFT/request2.037336/28.398590s;
+boundaryrequest264.684586s. Seven rows exceed ten measured minutes, with recorded
+AC/thermal endpoints. Admission3,396,602,720/nativejointcharge3,301,821,896bytes fit
+6GiB. Independent replay/sixmutation checks and recorded9PID/eightworker-group idle
+proof pass. Both full matrices now complete; see the [larger report](experiments/2026-10-14-larger-half-controlled-full.md).
+Astra accepts completed larger-model evidence before commit; no speed/default/Q4 adoption.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
@@ -174,7 +182,7 @@ These findings prevent unsuccessful experiments from being presented as improvem
 
 The fixed quality gates, quantizer, checkpoint selection and corpus remain
 unchanged. Full compensated Half loss/task quality passes both selected models.
-Larger controlled measurements, full application and confirming comparisons,
+Full application and confirming comparisons,
 final release qualification and the Q4-blocked M5 exit remain open.
 Long-context attention/KV experiments and physical iPhone work belong to M6/M7.
 This record will be updated with each reviewed implementation or measurement
