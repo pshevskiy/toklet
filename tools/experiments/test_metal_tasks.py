@@ -53,7 +53,12 @@ class MetalTasks(unittest.TestCase):
     if path.parent==source:return m.cli.ASSET_PINS[path.name]
     if path==m.ROOT/manifest['quality']['tasks_file']:return m.tasks.TASK_SHA
     return original(path)
-   with patch.object(m,'QUALIFICATION',q),patch.object(m.metal_engine,'digest',side_effect=digest),patch.object(m.tasks,'load_cases',return_value=inventory()[0]),patch.object(m,'child') as child:
+   # Isolate replacement after admission from the unrelated current CLI
+   # source version; qualification rejection is tested separately above.
+   def admitted_cli():
+    self.assertEqual(q.read_bytes(),payload)
+    return m.ROOT/'artifacts/m5-cli-half-native-binary-v1/toklet'
+   with patch.object(m,'QUALIFICATION',q),patch.object(m,'qualified_cli',side_effect=admitted_cli),patch.object(m.metal_engine,'digest',side_effect=digest),patch.object(m.tasks,'load_cases',return_value=inventory()[0]),patch.object(m,'child') as child:
     with self.assertRaisesRegex(ValueError,'changed after parsed'):m.run(root/'output.json','small',True)
    child.assert_not_called()
  def test_bad_ready_reaps_owned_worker(self):

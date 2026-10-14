@@ -260,6 +260,13 @@ The preflight fixture failure is retained/excluded; transitive helper provenance
 uses prior committed qualification/snapshots plus explicit endpoint proof.
 CLI functionality does not repair small v2 rejection or qualify tasks/speed.
 
+The [larger v2 task collector](experiments/2026-10-14-q4-v2-task-collector.md)
+now admits the exact reviewed loss-qualified CLI/source/artifact and preserves
+all frozen task/stop/reset/finalization rules. A prelaunch binary/source snapshot
+race is closed with reasserted pins and zero-launch mutation tests.14portable
+checks and the3category/24event native probe pass, with clean exit/post-exit
+text replay and≤6GiB accounting. Full100tasks, grading and speed remain open.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.

@@ -153,13 +153,13 @@ def finalized(responses,path,*,model_exited):
     if any(a['visible_text']!=b['visible_text'] or a['visible_text_sha256']!=b['visible_text_sha256'] for a,b in zip(copies,responses,strict=True)):raise ValueError('Native finalized task text differs from independent batch decode')
 
 
-def child(binary,source,model,cases,raw,stderr,check):
+def child(binary,source,model,cases,raw,stderr,check,*,admission_check=None,projection_argument="half-compensated",extra_args=()):
     run={'passed':False,'model_exited':False,'cases':[],'idle_usage':[],'cleanup_errors':[]};worker=None;transport=None
     try:
-        command=[str(binary),'--model',str(source),'--backend','metal','--metal-projection','half-compensated','--interactive','--json','--context-capacity','2048','--prefill-chunk','128'];run['command']=command
+        command=[str(binary),'--model',str(source),'--backend','metal','--metal-projection',projection_argument,'--interactive','--json','--context-capacity','2048','--prefill-chunk','128',*extra_args];run['command']=command
         worker=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True);run['worker_pid']=worker.pid
         transport=metal_engine.Transport(worker,raw,stderr,stdout_limit=8*1024**2,event_limit=16000,request_timeout=600,lifetime_timeout=24*3600)
-        admission=transport.read();ready(admission,model);run['ready']=admission
+        admission=transport.read();(admission_check or ready)(admission,model);run['ready']=admission
         def usage(label):
             own=native_usage.usage(worker.pid);driver=native_usage.usage();joint=own['lifetime_max_phys_footprint']+driver['lifetime_max_phys_footprint']
             if not 0<joint<=LIMIT:raise ValueError('Task model-phase joint native charge exceeds6GiB')
