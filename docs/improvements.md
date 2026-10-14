@@ -1,11 +1,13 @@
 # Toklet improvement record
 
-Updated 14 October 2026. This records implemented capabilities, measured benefits,
+Updated 15 October 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
-artifact hashes, raw samples, checks and Astra reviews. M0–M4 are functionally
-complete; M5.1, M5.3, M5.4 and M5.5 are complete in their recorded scopes. M5 remains
-in progress. CPU/scalar remains the default. Speedups below
-apply to the named workload and comparison, and cannot be added together.
+artifact hashes, raw samples, checks and Astra reviews. M0–M5 are complete in their
+qualified scopes: M5 selects the small compensated Half and frozen larger group8
+Q4 v2 configurations with full quality, repeated workload/application, sustained
+and memory evidence. M6/M7 remain pending. CPU/scalar and the existing GPU/readback/
+chunk defaults stay unchanged. Speedups below apply to the named workload and
+comparison, and cannot be added together. See the [M5 release decision](experiments/2026-10-15-m5-release.md).
 
 ## Measured performance improvements
 
@@ -291,7 +293,7 @@ These findings prevent unsuccessful experiments from being presented as improvem
 The fixed quality gates, quantizer, checkpoint selection and corpus remain
 unchanged. Full compensated Half loss/task quality passes both selected models.
 Both confirming primary/application runs are complete. The [final decision](experiments/2026-10-14-m5-performance-decision.md)
-records performance baseline gaps, withholds default replacement and keeps the Q4-blocked M5 exit open.
+records the historical performance baseline gaps and withheld default replacement. Its open-exit conclusion is superseded by the [15 October M5 release decision](experiments/2026-10-15-m5-release.md).
 Long-context attention/KV experiments and physical iPhone work belong to M6/M7.
 This record will be updated with each reviewed implementation or measurement
 decision; unmeasured changes will remain explicitly marked.
@@ -313,3 +315,5 @@ The [fresh v2 primary confirmation](experiments/2026-10-14-q4-v2-primary.md) com
 The [full larger v2 matrix and short confirmation](experiments/2026-10-15-q4-v2-controlled.md) complete117requests/202events at3warmup/10perrow. Exact cache/history/boundary2048/overflow preservation, source endpoints and≤6GiB admission/nativecharge pass. Completed matrix inference totals10,742.769647s includingwarmups (8,256.699921s measured-only), qualifying sustained duration without setup/hash gaps. Short medianTTFT/request change−3.349513%/−1.463285%; repeatability only. Full application/release acceptance remains pending.
 
 The [larger v2 full application and confirmation](experiments/2026-10-15-q4-v2-application-full.md) complete78turns/6086events, with39exactID/text/stop/state signatures repeated acrossruns,3warmup/10measuredscenariosperrun. Scenario medians41.267054271/41.301725271s change+0.084016%; outputcounts86/128/14 preserveEOS/capsemantics. Naturalexit, independentpostexittext, completepins/parserinventory/clockbounds and≤6GiB memorypass. Applicationmeasureddurations412.726713/412.866698s are not sustainedqualification; controlledsequence suppliesit. Finalrelease synthesis remains.
+
+The [15 October M5 release decision](experiments/2026-10-15-m5-release.md) supersedes the earlier open-exit conclusion: M5.1–M5.6 are complete. The selected small Half configuration and larger frozen group8 Q4 v2 configuration pass unchanged quality gates and full repeated/state/memory workloads; larger v2 confirms22.20–23.69% useful512/1prefill gains and the controlled sequence exceeds600s. Every optimization retains its measured scope, including slower cross-representation complete requests, rejected smallv2/v1, removed fusions, explicit GPUgreedy capability and unchanged defaults. Baseline gaps remain disclosed without externallead/defaultreplacement; M6/M7 remain pending.

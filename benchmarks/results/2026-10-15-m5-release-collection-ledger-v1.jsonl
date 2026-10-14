@@ -1,0 +1,8 @@
+{"phase": "start", "job": "controlled-full", "command": ["/Users/coloner/work/rust/toklet/.venv/bin/python", "tools/experiments/metal_controlled_v2.py", "--binary", "artifacts/m5-q4-v2-bench-native-v1/metal_bench", "--output", "artifacts/m5-larger-q4-v2-controlled-full-v1.json"], "unix_seconds": 1792005683.9934988}
+{"phase": "done", "job": "controlled-full", "exit_code": 0, "unix_seconds": 1792017340.6229818, "wall_seconds": 11656.629486083984}
+{"phase": "start", "job": "controlled-short-confirm", "command": ["/Users/coloner/work/rust/toklet/.venv/bin/python", "tools/experiments/metal_controlled_v2.py", "--binary", "artifacts/m5-q4-v2-bench-native-v1/metal_bench", "--output", "artifacts/m5-larger-q4-v2-controlled-short-confirm-v1.json", "--workload", "short"], "unix_seconds": 1792017340.623358}
+{"phase": "done", "job": "controlled-short-confirm", "exit_code": 0, "unix_seconds": 1792017787.971141, "wall_seconds": 447.34778594970703}
+{"phase": "start", "job": "application-full", "command": ["/Users/coloner/work/rust/toklet/.venv/bin/python", "tools/experiments/metal_application_v2.py", "--output", "artifacts/m5-larger-q4-v2-application-full-v1.json"], "unix_seconds": 1792017787.971641}
+{"phase": "done", "job": "application-full", "exit_code": 0, "unix_seconds": 1792018371.747218, "wall_seconds": 583.7755808830261}
+{"phase": "start", "job": "application-confirm", "command": ["/Users/coloner/work/rust/toklet/.venv/bin/python", "tools/experiments/metal_application_v2.py", "--output", "artifacts/m5-larger-q4-v2-application-confirm-v1.json"], "unix_seconds": 1792018371.747542}
+{"phase": "done", "job": "application-confirm", "exit_code": 0, "unix_seconds": 1792018955.595784, "wall_seconds": 583.8482441902161}

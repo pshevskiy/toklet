@@ -7,6 +7,8 @@ The [improvement record](docs/improvements.md) collects implemented capabilities
 measured speedups, memory/scheduling changes, numerical fixes and rejected
 experiments, with links to their qualification evidence.
 
+M5 is complete on the qualified Apple M1 Pro: the small model retains compensated Half, and the larger frozen group8 Q4 v2 model passes full quality gates with a confirmed22.20–23.69% tiled-prefill gain. Both are explicit Metal choices; CPU/GPU Original/FullLogits/chunk128 defaults stay unchanged. The [release report](docs/experiments/2026-10-15-m5-release.md) records full workload/application/sustained and memory evidence, supported invocation, rejected candidates and baseline limits. M6/M7 remain pending.
+
 The library provides a complete scalar decoder with FP32 storage, immutable weights, reusable scratch, tied output projection, and deterministic greedy selection. A separate diagnostic path retains all intermediate arrays. Projections, normalization, and softmax use FP64 accumulation for stability; the original FP32 projection functions remain available. The tiny decoder matches its frozen independent reference, and Qwen matches pinned Transformers on short numerical probes. Local safetensors loading supports FP32, FP16, BF16, and indexed shards. Bounded [CPU sessions](src/session.rs) retain per-layer KV, track pending versus evaluated tokens, and support exact append, cached prompts, reset, and replay. The CLI streams greedy generation with local tokenizer assets, the qualified Qwen chat template, stop IDs, cancellation and statistics.
 
 Use Rust 1.90 or newer. The library and CLI build without model downloads or Apple frameworks. Safetensors, Serde, and half-precision conversion dependencies are pinned. Fetch the locked dependencies once before running the offline checks:
@@ -304,7 +306,7 @@ The [CPU retention decision](docs/experiments/2026-10-12-cpu-tiled-retention.md)
 closes M3.1 and M3: retain the qualified tiled projection as an opt-in variant,
 with scalar as default/reference. Both primary comparisons improve warm TTFT
 by about 77.6%; complete workload/application and frozen quality/memory gates
-pass their recorded scope. Functional M4 is now complete as recorded below; M5–M7 remain pending.
+pass their recorded scope. Functional M4 is complete as recorded below; M5 is qualified in the [15 October release report](docs/experiments/2026-10-15-m5-release.md), and M6/M7 remain pending.
 
 The [Metal gating tail extension](docs/experiments/2026-10-12-metal-gating-tails.md)
 checks nine bounded lengths with exact Half outputs and full inactive-lane
