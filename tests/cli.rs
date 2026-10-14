@@ -299,6 +299,20 @@ fn interactive_cached_prompt_continuation_rejection_and_reset_keep_one_session()
         let r = records(&output);
         assert_eq!(r[0]["cpu_projection"], projection);
         assert_eq!(r[0]["backend"], "cpu");
+        assert_eq!(
+            r[0]["execution"],
+            json!({"weight_dtype":"FP32","kv_dtype":"FP32","projection_mode":projection,"normalization_mode":"OrderedFP64","readback_mode":"FullLogits","prefill_chunk_size":32})
+        );
+        let logical = &r[0]["logical_memory"];
+        assert_eq!(
+            logical
+                .as_object()
+                .unwrap()
+                .values()
+                .map(|v| v.as_u64().unwrap())
+                .sum::<u64>(),
+            r[0]["memory_admitted_bytes"].as_u64().unwrap()
+        );
         let done: Vec<_> = r
             .iter()
             .filter(|e| e["event"] == "done")
@@ -320,10 +334,19 @@ fn interactive_cached_prompt_continuation_rejection_and_reset_keep_one_session()
                 "ready" => {
                     let mut ready = event.clone();
                     ready.as_object_mut().unwrap().remove("cpu_projection");
+                    ready["execution"]
+                        .as_object_mut()
+                        .unwrap()
+                        .remove("projection_mode");
                     semantics.push(ready);
                 }
                 "done" => {
                     assert_eq!(event["statistics"]["cpu_projection"], projection);
+                    assert_eq!(event["statistics"]["execution"], r[0]["execution"]);
+                    assert_eq!(
+                        event["statistics"]["logical_memory"],
+                        r[0]["logical_memory"]
+                    );
                     let mut generation = event["statistics"]["generation"].clone();
                     generation
                         .as_object_mut()
@@ -360,6 +383,51 @@ fn invalid_projection_options_fail_before_model_access() {
         assert_eq!(out.status.code(), Some(2));
         assert!(out.stdout.is_empty());
         assert!(String::from_utf8_lossy(&out.stderr).contains("--cpu-projection"));
+    }
+}
+
+#[test]
+fn metal_projection_options_reject_invalid_values_and_cpu_use_before_model_access() {
+    for tail in [
+        vec!["--metal-projection", "bad"],
+        vec!["--metal-projection"],
+        vec![
+            "--metal-projection",
+            "original",
+            "--metal-projection",
+            "half-compensated",
+        ],
+        vec!["--metal-projection", "half-compensated"],
+        vec!["--backend", "cpu", "--metal-projection", "original"],
+        vec!["--metal-projection", "original", "--backend", "cpu"],
+    ] {
+        let mut args = vec!["--model", "/no-such-toklet-model", "--tokens", "1"];
+        args.extend(tail);
+        let out = run(&args);
+        assert_eq!(out.status.code(), Some(2));
+        assert!(out.stdout.is_empty());
+        assert!(String::from_utf8_lossy(&out.stderr).contains("--metal-projection"));
+    }
+}
+
+#[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+#[test]
+fn metal_projection_requires_supported_feature_before_model_access() {
+    for tail in [
+        vec![
+            "--metal-projection",
+            "half-compensated",
+            "--backend",
+            "metal",
+        ],
+        vec!["--backend", "metal", "--metal-projection", "original"],
+    ] {
+        let mut args = vec!["--model", "/no-such-toklet-model", "--tokens", "1"];
+        args.extend(tail);
+        let out = run(&args);
+        assert_eq!(out.status.code(), Some(2));
+        assert!(out.stdout.is_empty());
+        assert!(String::from_utf8_lossy(&out.stderr).contains("Metal requires"));
     }
 }
 

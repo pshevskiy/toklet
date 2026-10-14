@@ -1,6 +1,6 @@
 mod chat;
 use chat::{Assets, OutputDecoder, invalid};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::{
     collections::HashSet,
@@ -44,6 +44,7 @@ Usage: toklet [OPTIONS]
   --prefill-chunk N          Prefill cancellation boundary (128)
   --backend cpu|metal       CPU (default), or opt-in Metal feature
   --cpu-projection MODE     scalar (default) or opt-in tiled projections
+  --metal-projection MODE   original (default) or opt-in half-compensated
   --stop-token ID           Additional stop ID; repeatable
   --no-eos                  Ignore configured EOS IDs
   --json                    JSON token events and statistics
@@ -73,6 +74,7 @@ struct Args {
     chunk: usize,
     projection: ProjectionKernel,
     backend: &'static str,
+    metal_projection: &'static str,
 }
 fn utf8(v: OsString) -> io::Result<String> {
     v.into_string()
@@ -102,6 +104,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         chunk: 128,
         projection: ProjectionKernel::Scalar,
         backend: "cpu",
+        metal_projection: "original",
     };
     let mut seen = HashSet::new();
     let mut values = values.into_iter().peekable();
@@ -119,6 +122,17 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                 .ok_or_else(|| invalid(format!("missing value for {flag}")))
         };
         match flag.as_str() {
+            "--metal-projection" => {
+                a.metal_projection = match utf8(value()?)?.as_str() {
+                    "original" => "original",
+                    "half-compensated" => "half-compensated",
+                    _ => {
+                        return Err(invalid(
+                            "--metal-projection must be original or half-compensated",
+                        ));
+                    }
+                };
+            }
             "--model" => a.model = value()?.into(),
             "--prompt" => a.prompt = Some(utf8(value()?)?),
             "--messages" => a.messages = Some(value()?.into()),
@@ -159,6 +173,9 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
     }
     if a.backend == "metal" && seen.contains("--cpu-projection") {
         return Err(invalid("--cpu-projection requires cpu backend"));
+    }
+    if a.backend != "metal" && seen.contains("--metal-projection") {
+        return Err(invalid("--metal-projection requires metal backend"));
     }
     if a.model.as_os_str().is_empty() {
         return Err(invalid("--model is required"));
@@ -222,6 +239,15 @@ struct UserRequest {
     raw: Option<bool>,
     max_new_tokens: Option<usize>,
 }
+#[derive(Clone, Copy, Serialize)]
+struct ExecutionMetadata {
+    weight_dtype: &'static str,
+    kv_dtype: &'static str,
+    projection_mode: &'static str,
+    normalization_mode: &'static str,
+    readback_mode: &'static str,
+    prefill_chunk_size: usize,
+}
 struct Frontend {
     assets: Option<Assets>,
     decoder: OutputDecoder,
@@ -238,6 +264,8 @@ struct Frontend {
     requests: usize,
     cpu_projection: &'static str,
     backend: &'static str,
+    execution: ExecutionMetadata,
+    external_bytes: usize,
 }
 #[derive(Default)]
 struct OutputTiming {
@@ -411,7 +439,7 @@ impl Frontend {
                 report.reason = StopReason::Cancelled;
             }
             let cancelled = report.reason == StopReason::Cancelled;
-            let stats = json!({"generation":report,"backend":self.backend,"cpu_projection":self.cpu_projection,"input_preparation_seconds":input_seconds,
+            let stats = json!({"generation":report,"backend":self.backend,"cpu_projection":self.cpu_projection,"execution":self.execution,"logical_memory":logical_memory(session.memory(),self.external_bytes),"input_preparation_seconds":input_seconds,
                 "input_formatting_seconds":input_formatting_seconds,"tokenization_seconds":tokenization_seconds,
                 "detokenization_seconds":output_timing.detokenization_seconds,"publication_seconds":output_timing.publication_seconds,
                 "load_seconds":if self.requests==0{self.load_seconds}else{0.0},"conversion_seconds":if self.requests==0{self.conversion_seconds}else{0.0},"tokenizer_load_seconds":if self.requests==0{self.tokenizer_load_seconds}else{0.0},"memory_admitted_bytes":self.memory_admitted_bytes});
@@ -522,6 +550,15 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         requests: 0,
         cpu_projection: a.projection.name(),
         backend: a.backend,
+        execution: ExecutionMetadata {
+            weight_dtype: "FP32",
+            kv_dtype: "FP32",
+            projection_mode: a.projection.name(),
+            normalization_mode: "OrderedFP64",
+            readback_mode: "FullLogits",
+            prefill_chunk_size: a.chunk,
+        },
+        external_bytes,
     };
 
     let options = Options {
@@ -537,7 +574,25 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     if a.backend == "metal" {
         let model = toklet::metal::Model::load(&a.model, load_options)?;
-        let mut session = toklet::metal::Session::new(&model, options)?;
+        let projection = if a.metal_projection == "half-compensated" {
+            toklet::metal::ProjectionMode::HalfCompensated
+        } else {
+            toklet::metal::ProjectionMode::Original
+        };
+        let mut session =
+            toklet::metal::Session::with_projection_mode(&model, options, projection)?;
+        frontend.execution = ExecutionMetadata {
+            weight_dtype: "FP16",
+            kv_dtype: "FP16",
+            projection_mode: if projection == toklet::metal::ProjectionMode::HalfCompensated {
+                "HalfCompensated"
+            } else {
+                "Original"
+            },
+            normalization_mode: "Original",
+            readback_mode: "FullLogits",
+            prefill_chunk_size: a.chunk,
+        };
         frontend.load_seconds = model.load_timing.load_seconds;
         frontend.conversion_seconds = model.load_timing.conversion_seconds;
         frontend.cpu_projection = "none";
@@ -549,6 +604,11 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     frontend.load_seconds = loaded.report.load_seconds;
     frontend.conversion_seconds = loaded.report.conversion_seconds;
     run_session(frontend, &mut session, initial, a.capacity, external_bytes)
+}
+fn logical_memory(memory: toklet::session::Memory, external_bytes: usize) -> Value {
+    json!({"weights_bytes":memory.weights_bytes,"kv_bytes":memory.kv_bytes,"scratch_bytes":memory.scratch_bytes,
+        "history_bytes":memory.history_bytes,"logits_bytes":memory.logits_bytes,"metadata_bytes":memory.metadata_bytes,
+        "metadata_allowance_bytes":memory.metadata_allowance_bytes,"tokenizer_application_allowance_bytes":external_bytes})
 }
 fn run_session(
     mut frontend: Frontend,
@@ -576,12 +636,8 @@ fn run_session(
         json!({"event":"ready", "backend":frontend.backend, "context_capacity":capacity,
         "cpu_projection":frontend.cpu_projection,
         "memory_admitted_bytes":frontend.memory_admitted_bytes,
-        "logical_memory":{"weights_bytes":memory.weights_bytes,
-            "kv_bytes":memory.kv_bytes,"scratch_bytes":memory.scratch_bytes,
-            "history_bytes":memory.history_bytes,"logits_bytes":memory.logits_bytes,
-            "metadata_bytes":memory.metadata_bytes,
-            "metadata_allowance_bytes":memory.metadata_allowance_bytes,
-            "tokenizer_application_allowance_bytes":external_bytes}})
+        "execution":frontend.execution,
+        "logical_memory":logical_memory(memory,external_bytes)})
     )?;
     io::stdout().flush()?;
     let (sender, receiver) = mpsc::sync_channel(1);
