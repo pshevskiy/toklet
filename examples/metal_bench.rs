@@ -119,32 +119,53 @@ mod apple {
     pub fn run() -> Result<(), Box<dyn std::error::Error>> {
         let mut args = std::env::args_os().skip(1);
         let source = PathBuf::from(args.next().ok_or("usage: metal_bench MODEL")?);
+        let packed = args.next().map(PathBuf::from);
+        let selection = match (packed.as_ref(), args.next()) {
+            (None, None) => "half-compensated",
+            (Some(_), Some(v)) if v == "q4-v2-vector" => "q4-v2-vector",
+            (Some(_), Some(v)) if v == "q4-v2-tiled" => "q4-v2-tiled",
+            _ => return Err("usage: metal_bench MODEL [PACKED q4-v2-vector|q4-v2-tiled]".into()),
+        };
         if args.next().is_some() {
             return Err("too many arguments".into());
         }
         let budget = weights::INITIAL_MEMORY_LIMIT_BYTES - APP;
-        let model = metal::Model::load(
-            &source,
-            weights::LoadOptions {
-                memory_limit_bytes: budget,
-                ..Default::default()
-            },
-        )?;
+        let load = weights::LoadOptions {
+            memory_limit_bytes: budget,
+            ..Default::default()
+        };
+        let model = if let Some(path) = &packed {
+            metal::Model::load_q4(&source, path, load)?
+        } else {
+            metal::Model::load(&source, load)?
+        };
+        if packed.is_some() && model.q4_format() != Some(toklet::q4::Format::V2) {
+            return Err("explicit v2 benchmark requires v2 artifact".into());
+        }
+        let projection = match selection {
+            "q4-v2-vector" => metal::ProjectionMode::Q4Compensated,
+            "q4-v2-tiled" => metal::ProjectionMode::Q4CompensatedTiled,
+            _ => metal::ProjectionMode::HalfCompensated,
+        };
+        let normalization = if packed.is_some() {
+            metal::NormalizationMode::Compensated
+        } else {
+            metal::NormalizationMode::Original
+        };
         let options = session::Options {
             capacity: 2048,
             prefill_chunk_size: 128,
             memory_limit_bytes: budget,
             ..Default::default()
         };
-        let mut s =
-            Session::with_projection_mode(&model, options, metal::ProjectionMode::HalfCompensated)?;
+        let mut s = Session::with_execution_modes(&model, options, projection, normalization)?;
         let widths = model.half_compensated_execution_widths();
         let c = model.config();
         let mut out = io::stdout().lock();
         writeln!(
             out,
             "{}",
-            json!({"event":"ready","format":"toklet-metal-controlled-v1","debug_assertions":cfg!(debug_assertions),"backend":"metal","projection_mode":"HalfCompensated","normalization_mode":"Original","readback_mode":"FullLogits","weight_dtype":"FP16","kv_dtype":"FP16","half_compensated_execution_widths":widths,"device":model.device_name(),"hidden_size":c.hidden_size,"num_layers":c.num_layers,"vocab_size":c.vocab_size,"context_capacity":s.capacity(),"chunk_size":128,"memory":s.memory(),"application_bytes":APP,"memory_admitted_bytes":s.memory().admitted_bytes+APP,"load_seconds":model.load_timing.load_seconds,"conversion_seconds":model.load_timing.conversion_seconds})
+            json!({"event":"ready","format":"toklet-metal-controlled-v1","debug_assertions":cfg!(debug_assertions),"backend":"metal","projection_mode":projection,"normalization_mode":normalization,"readback_mode":"FullLogits","weight_dtype":if packed.is_some() {"Q4 v2 + FP16 exclusions"} else {"FP16"},"kv_dtype":"FP16","half_compensated_execution_widths":widths,"q4_compensated_execution_widths":model.q4_compensated_execution_widths(),"packed_format_version":model.q4_format().map(|_| 2),"group_size":model.q4_format().map(|f| f.group()),"quantizer":model.q4_format().map(|f| f.quantizer()),"device":model.device_name(),"hidden_size":c.hidden_size,"num_layers":c.num_layers,"vocab_size":c.vocab_size,"context_capacity":s.capacity(),"chunk_size":128,"memory":s.memory(),"application_bytes":APP,"memory_admitted_bytes":s.memory().admitted_bytes+APP,"load_seconds":model.load_timing.load_seconds,"conversion_seconds":model.load_timing.conversion_seconds})
         )?;
         out.flush()?;
         let mut input = io::BufReader::new(io::stdin());

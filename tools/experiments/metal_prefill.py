@@ -71,19 +71,23 @@ def analyze(events):
     return result
 
 
-def run(binary,output,accurate=False,larger=False):
+def run(binary,output,accurate=False,larger=False,*,artifact_path=None,artifact_pins=None,admission_check=None,extra_identity_paths=()):
     if larger and not accurate:raise ValueError("Larger prefill requires accurate mode")
     paths=[output,output.with_suffix(".raw.jsonl"),output.with_suffix(".stderr")]
     if any(p.exists() for p in paths):raise ValueError("prefill evidence destination exists")
     source=ROOT/"models"/("Qwen2.5-1.5B-Instruct" if larger else "Qwen2.5-0.5B-Instruct");packed=ROOT/"artifacts"/("m5-larger-q4-v1" if larger else "m5-qwen-q4-v1")
+    if artifact_path is not None:
+        if not artifact_pins:raise ValueError("Explicit prefill artifact needs frozen pins")
+        packed=Path(artifact_path)
     source_sha=LARGER_SOURCE_SHA if larger else SOURCE_SHA;config_sha=LARGER_CONFIG_SHA if larger else CONFIG_SHA
     if digest(source/"model.safetensors")!=source_sha:raise ValueError("pinned source identity differs")
     files=[Path(__file__),Path(metal_engine.__file__),Path(native_usage.__file__),ROOT/"Cargo.toml",ROOT/"Cargo.lock",ROOT/"examples/metal_prefill.rs",source/"config.json",source/"model.safetensors",binary,
            ROOT/"benchmarks/contract-v1/prompt_512.u32le"]+list((ROOT/"src").rglob("*.rs"))+list((ROOT/"src").rglob("*.metal"))+[Path(continuation.__file__)]
-    files+=list(packed.glob("*.q4"))+[packed/"manifest.json"]
+    files+=list(packed.glob("*.q4"))+[packed/"manifest.json"]+list(extra_identity_paths)
     identities={str(p):digest(p) for p in files}
     if identities[str(source/"model.safetensors")]!=source_sha or identities[str(source/"config.json")]!=config_sha:raise ValueError("Initial pinned prefill source/config changed")
-    if larger and identities[str(packed/"manifest.json")]!=LARGER_PACKED_SHA:raise ValueError("Frozen larger Q4 artifact changed")
+    if larger and artifact_path is None and identities[str(packed/"manifest.json")]!=LARGER_PACKED_SHA:raise ValueError("Frozen larger Q4 artifact changed")
+    if artifact_pins and any(identities.get(str(p))!=sha for p,sha in artifact_pins.items()):raise ValueError("Frozen explicit prefill artifact differs")
     result={"format":"toklet-metal-q4-prefill-v1","passed":False,"scope":"Paired opt-in Q4 tile warm512-input/one-output engine TTFT; no full decode workload,heldout quality,external lead or release acceptance",
             "accurate":accurate,"larger":larger,"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=ROOT,text=True).strip(),"identities":identities,"events":[],"idle_usage":[],
             "platform":observation(["/usr/bin/sw_vers"]),"power_before":endpoints(),
@@ -100,7 +104,7 @@ def run(binary,output,accurate=False,larger=False):
             child=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
             transport=metal_engine.Transport(child,raw,stderr,request_timeout=120,lifetime_timeout=1200)
             result["transport_policy"]={"request_seconds":120,"lifetime_seconds":1200}
-            admission=transport.read();ready(admission,accurate,larger);result["ready"]=admission
+            admission=transport.read();(admission_check or ready)(admission,accurate,larger);result["ready"]=admission
             def proceed():child.stdin.write(b"continue\n");child.stdin.flush()
             def usage(phase):
                 value=native_usage.usage(child.pid);driver=native_usage.usage()

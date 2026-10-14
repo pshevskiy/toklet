@@ -1,0 +1,9 @@
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+larger/short 1: 30.669685s
+larger/medium 1: 78.529015s
+larger/long 1: 153.024330s
+larger/boundary 1: 299.568279s
+larger/append 1: 81.404748s
+larger/cached 1: 68.461784s
+larger/pending 1: 69.112229s
+larger/changed 1: 78.533459s

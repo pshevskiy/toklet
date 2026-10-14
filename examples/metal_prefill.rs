@@ -145,7 +145,7 @@ mod apple {
         writeln!(
             out,
             "{}",
-            json!({"event":"ready","format":"toklet-metal-q4-prefill-v1","projection_modes":projection_modes,
+            json!({"event":"ready","format":"toklet-metal-q4-prefill-v1","projection_modes":projection_modes,"weight_dtype":match model.q4_format() {Some(toklet::q4::Format::V2) => "Q4 v2 + FP16 exclusions",_ => "Q4 v1 + FP16 exclusions"},"packed_format_version":model.q4_format().map(|f| match f {toklet::q4::Format::V1 => 1,toklet::q4::Format::V2 => 2}),"group_size":model.q4_format().map(|f| f.group()),"quantizer":model.q4_format().map(|f| f.quantizer()),
             "normalization_mode":normalization,"requires_logit_bits":accurate,"hidden_size":model.config().hidden_size,"num_layers":model.config().num_layers,
             "device":model.device_name(),"q4_execution_widths":if accurate {model.q4_compensated_execution_widths()}else{model.q4_execution_widths()},"debug_assertions":cfg!(debug_assertions),"warmups":3,"samples":10,"prompt_tokens":512,"output_tokens":1,
             "capacity":1024,"chunk":128,"combined_admitted_bytes":combined,"original_memory":baseline.memory(),"tiled_memory":reused.memory(),
