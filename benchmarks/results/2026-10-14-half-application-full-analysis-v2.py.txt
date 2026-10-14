@@ -1,0 +1,119 @@
+"""Offline replay of full application evidence, after native workers exit."""
+import contextlib
+import hashlib
+import json
+import math
+from pathlib import Path
+import statistics
+import sys
+
+ROOT = next(p for p in Path(__file__).resolve().parents if (p/'Cargo.toml').is_file() and (p/'tools/experiments').is_dir())
+sys.path.insert(0,str(ROOT/'tools/experiments'))
+import metal_application as app
+
+QUALIFICATION = ROOT/'benchmarks/results/2026-10-14-metal-application-qualification-v1.json'
+QUALIFICATION_SHA = '62b6f519e81ac7ef2c09cde09d633202d8484f7880877b417b96743b83144813'
+
+
+def bounded(path,limit=32*1024**2):
+    with path.open('rb') as f:data=f.read(limit+1)
+    assert len(data)<=limit
+    return data
+
+
+def sha(path):return app.metal_engine.digest(path)
+
+
+def distribution(values):
+    observed=[v for v in values if v is not None]
+    m=statistics.median(observed) if observed else None
+    return dict(median=m,minimum=min(observed) if observed else None,maximum=max(observed) if observed else None,
+                mad=statistics.median(abs(v-m) for v in observed) if observed else None,
+                observed_count=len(observed),total_count=len(values),raw=values)
+
+
+def finite(value):
+    assert type(value) in (int,float) and math.isfinite(value) and value>=0
+
+
+def receipt_timing(turn):
+    events=turn['native_events'];times=turn['received_token_event_seconds'];tokens=[e for e in events if e['event']=='token']
+    assert len(times)==len(tokens)
+    for value in times:finite(value)
+    assert all(a<=b for a,b in zip(times,times[1:]))
+    first=turn['submission_to_first_token_seconds']
+    if tokens:finite(first);assert first==times[0]
+    else:assert first is None
+    done=turn['submission_to_done_seconds'];final=turn['submission_to_finalized_seconds'];finite(done);finite(final)
+    assert final>=done>=(times[-1] if times else 0)
+    assert sum(e['event']=='done' for e in events)==1 and events[-1]['event']=='reset'
+    done_index=next(i for i,e in enumerate(events) if e['event']=='done')
+    visible=[(e,i) for i,e in enumerate(events) if e.get('event') in ('token','text') and e['text']]
+    first_visible=turn['submission_to_first_visible_text_seconds']
+    if not visible:assert first_visible is None
+    else:
+        finite(first_visible);event,index=visible[0]
+        if event['event']=='token':
+            token_index=sum(e['event']=='token' for e in events[:index]);assert first_visible==times[token_index]
+        elif index<done_index:assert (times[-1] if times else 0)<=first_visible<=done
+        else:assert done<=first_visible<=final
+
+
+def replay(path):
+    original=bounded(path);raw_path=path.with_suffix('.raw.jsonl');raw_bytes=bounded(raw_path)
+    qualified_bytes=bounded(QUALIFICATION,1024**2)
+    assert hashlib.sha256(qualified_bytes).hexdigest()==QUALIFICATION_SHA
+    qualified=json.loads(qualified_bytes);v=json.loads(original);r=v['run'];model=v['model']
+    assert v['format']=='toklet-metal-application-v1' and v['passed'] is True
+    assert {k:v[k] for k in ('backend','projection_mode','normalization_mode','readback_mode')}=={'backend':'metal','projection_mode':'HalfCompensated','normalization_mode':'Original','readback_mode':'FullLogits'}
+    assert v['measurements_completed'] is True and v['check_only'] is False and v['quality_completed'] is False
+    assert v['identities_unchanged'] is True and v['endpoint_errors']==[]
+    assert r['passed'] is True and r['model_exited'] is True and type(r['exit_code']) is int and r['exit_code']==0
+    assert r['cleanup_errors']==[] and len(r['warmups'])==3 and len(r['samples'])==10
+    assert v['policy']=={'warmups':3,'repetitions':10,'turns':3,'output_cap':128,'greedy':True,'cache':'empty per turn; scripted assistant history; resident model'}
+    source=ROOT/'models'/app.controlled.MODELS[model][0]
+    manifest=app.admission.frozen_manifest();binary,binary_sha=app.admission.qualified_binary('toklet-metal-task-collection-v1')
+    requests,prompts=app.trace_inputs(source,manifest,128)
+    paths=app.admission.inventory_paths('toklet-metal-task-collection-v1',binary,source,manifest)|{str(Path(app.__file__)),str(Path(app.admission.__file__)),str(app.controlled.prepare.CONTRACT/'application_trace.json')}
+    assert set(v['identities'])==paths and v['identities'][str(binary)]==binary_sha
+    for name,digest in v['identities'].items():
+        assert qualified['bindings'][str(Path(name).relative_to(ROOT))]['sha256']==digest,name
+        assert sha(Path(name))==digest,name
+    app.controlled.initial_pins(v['identities'],manifest,source,app.controlled.MODELS[model])
+    assert r['command']==[str(binary),'--model',str(source),'--backend','metal','--metal-projection','half-compensated','--interactive','--json','--context-capacity','2048','--prefill-chunk','128']
+    app.tasks.ready(r['ready'],model)
+    raw_expected=[r['ready']];responses=[];scenarios=r['warmups']+r['samples']
+    assert [u['phase'] for u in r['idle_usage']]==['ready']+[f'iteration_{i}_turn_{j}' for i in range(13) for j in range(3)]
+    for scenario in scenarios:
+        assert len(scenario['turns'])==3
+        finite(scenario['scenario_seconds'])
+        assert scenario['scenario_seconds']>=sum(t['submission_to_finalized_seconds'] for t in scenario['turns'])
+        for turn,request,prompt in zip(scenario['turns'],requests,prompts,strict=True):
+            assert turn['request']==request and turn['prompt_tokens']==prompt
+            response=app.collect_response(prompt,128,turn['native_events'],r['ready'])
+            assert response==turn['response'];responses.append(response);raw_expected.extend(turn['native_events'])
+            receipt_timing(turn)
+    assert [json.loads(line) for line in raw_bytes.splitlines()]==raw_expected
+    app.tasks.finalized(responses,source/'tokenizer.json',model_exited=True)
+    for u in r['idle_usage']:
+        assert u['joint_native_lifetime_peak_bytes']==u['worker']['lifetime_max_phys_footprint']+u['driver']['lifetime_max_phys_footprint']
+        assert 0<u['joint_native_lifetime_peak_bytes']<=app.controlled.LIMIT
+    durations=[s['scenario_seconds'] for s in r['samples']]
+    assert v['summary']=={'scenario_median_seconds':statistics.median(durations),'scenario_min_seconds':min(durations),'scenario_max_seconds':max(durations)}
+    assert sha(QUALIFICATION)==QUALIFICATION_SHA and sha(path)==hashlib.sha256(original).hexdigest() and sha(raw_path)==hashlib.sha256(raw_bytes).hexdigest()
+    turns=[]
+    for i in range(3):
+        values=[s['turns'][i] for s in r['samples']]
+        turns.append({'turn':i+1,'prompt_tokens':len(prompts[i]),'emitted_tokens':[len(t['response']['visible_token_ids']) for t in values],
+                      'first_token_seconds':distribution([t['submission_to_first_token_seconds'] for t in values]),
+                      'first_visible_text_seconds':distribution([t['submission_to_first_visible_text_seconds'] for t in values]),
+                      'finalized_seconds':distribution([t['submission_to_finalized_seconds'] for t in values]),
+                      'stop_reasons':[t['response']['stop_reason'] for t in values]})
+    return {'model':model,'parent_sha256':hashlib.sha256(original).hexdigest(),'raw_sha256':hashlib.sha256(raw_bytes).hexdigest(),'raw_events':len(raw_expected),
+            'turns_replayed':39,'scenario_seconds':distribution(durations),'measured_scenario_seconds':sum(durations),'turns':turns,
+            'maximum_admitted_bytes':r['ready']['memory_admitted_bytes'],'sampled_joint_native_lifetime_charge_bytes':max(u['joint_native_lifetime_peak_bytes'] for u in r['idle_usage'])}
+
+
+if __name__=='__main__':
+    with contextlib.redirect_stdout(sys.stderr):collections=[replay(Path(p).resolve()) for p in sys.argv[1:]]
+    print(json.dumps({'format':'toklet-half-application-full-analysis-v1','passed':True,'collections':collections},indent=2,allow_nan=False))

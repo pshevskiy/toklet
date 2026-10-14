@@ -160,6 +160,16 @@ AC/thermal endpoints. Admission3,396,602,720/nativejointcharge3,301,821,896bytes
 proof pass. Both full matrices now complete; see the [larger report](experiments/2026-10-14-larger-half-controlled-full.md).
 Astra accepts completed larger-model evidence before commit; no speed/default/Q4 adoption.
 
+Full compensated Half application traces complete both fixed models with3warmups/
+10three-turn scenarios,78total turns and60measured. Medians20.445239/43.550813s;
+admissions1,443,266,720/3,577,266,480/nativejointcharges1,331,447,848/3,467,005,408
+bytes fit6GiB. Independent finalized text/state/receipt-boundary/memory replay passes.
+Astra found audit timestamp/nullability gaps; corrected source and15invalidvariant
+checks pass. Small second-turn14tokens differs fromFP3218, and neither measured
+scenario sum reaches600s; no purebackend speed or extra10min claim. See the
+[full application report](experiments/2026-10-14-half-application-full.md). Final
+Astra accepts completed application evidence before commit; confirming/release/Q4 gates remain open.
+
 ## Rejected or inconclusive experiments
 
 These findings prevent unsuccessful experiments from being presented as improvements.
@@ -182,7 +192,7 @@ These findings prevent unsuccessful experiments from being presented as improvem
 
 The fixed quality gates, quantizer, checkpoint selection and corpus remain
 unchanged. Full compensated Half loss/task quality passes both selected models.
-Full application and confirming comparisons,
+Confirming application/controlled comparisons,
 final release qualification and the Q4-blocked M5 exit remain open.
 Long-context attention/KV experiments and physical iPhone work belong to M6/M7.
 This record will be updated with each reviewed implementation or measurement
