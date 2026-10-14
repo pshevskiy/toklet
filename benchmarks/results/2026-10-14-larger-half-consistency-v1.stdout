@@ -1,0 +1,12 @@
+
+running 1 test
+test metal::half_consistency::larger_half_probe_capture ... single_base:3stages,admitted3455924038
+batch_base:3stages,admitted3713965178
+single:451stages,admitted3464436038
+batch:451stages,admitted4798494330
+
+TOKLET_HALF_CAPTURE_DONE
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 20.82s
+
