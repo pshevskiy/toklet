@@ -1,0 +1,836 @@
+{
+  "format": "toklet-metal-task-collection-v1",
+  "passed": true,
+  "check_only": true,
+  "collection_completed": false,
+  "quality_completed": false,
+  "model": "small",
+  "backend": "metal",
+  "projection_mode": "HalfCompensated",
+  "normalization_mode": "Original",
+  "readback_mode": "FullLogits",
+  "task_ids": [
+    "HumanEval/0",
+    "HumanEval/1",
+    "HumanEval/2",
+    "HumanEval/3",
+    "HumanEval/4",
+    "HumanEval/5",
+    "HumanEval/6",
+    "HumanEval/7",
+    "HumanEval/8",
+    "HumanEval/9",
+    "HumanEval/10",
+    "HumanEval/11",
+    "HumanEval/12",
+    "HumanEval/13",
+    "HumanEval/14",
+    "HumanEval/15",
+    "HumanEval/16",
+    "HumanEval/17",
+    "HumanEval/18",
+    "HumanEval/19",
+    "HumanEval/20",
+    "HumanEval/21",
+    "HumanEval/22",
+    "HumanEval/23",
+    "HumanEval/24",
+    "HumanEval/25",
+    "HumanEval/26",
+    "HumanEval/27",
+    "HumanEval/28",
+    "HumanEval/29",
+    "HumanEval/30",
+    "HumanEval/31",
+    "HumanEval/32",
+    "HumanEval/33",
+    "HumanEval/34",
+    "HumanEval/35",
+    "HumanEval/36",
+    "HumanEval/37",
+    "HumanEval/38",
+    "HumanEval/39",
+    "truthfulqa/row-0",
+    "truthfulqa/row-1",
+    "truthfulqa/row-2",
+    "truthfulqa/row-3",
+    "truthfulqa/row-4",
+    "truthfulqa/row-5",
+    "truthfulqa/row-6",
+    "truthfulqa/row-7",
+    "truthfulqa/row-8",
+    "truthfulqa/row-9",
+    "truthfulqa/row-10",
+    "truthfulqa/row-11",
+    "truthfulqa/row-12",
+    "truthfulqa/row-13",
+    "truthfulqa/row-14",
+    "truthfulqa/row-15",
+    "truthfulqa/row-16",
+    "truthfulqa/row-17",
+    "truthfulqa/row-18",
+    "truthfulqa/row-19",
+    "truthfulqa/row-20",
+    "truthfulqa/row-21",
+    "truthfulqa/row-22",
+    "truthfulqa/row-23",
+    "truthfulqa/row-24",
+    "truthfulqa/row-25",
+    "truthfulqa/row-26",
+    "truthfulqa/row-27",
+    "truthfulqa/row-28",
+    "truthfulqa/row-29",
+    "lambada/row-0",
+    "lambada/row-1",
+    "lambada/row-2",
+    "lambada/row-3",
+    "lambada/row-4",
+    "lambada/row-5",
+    "lambada/row-6",
+    "lambada/row-7",
+    "lambada/row-8",
+    "lambada/row-9",
+    "lambada/row-10",
+    "lambada/row-11",
+    "lambada/row-12",
+    "lambada/row-13",
+    "lambada/row-14",
+    "lambada/row-15",
+    "lambada/row-16",
+    "lambada/row-17",
+    "lambada/row-18",
+    "lambada/row-19",
+    "lambada/row-20",
+    "lambada/row-21",
+    "lambada/row-22",
+    "lambada/row-23",
+    "lambada/row-24",
+    "lambada/row-25",
+    "lambada/row-26",
+    "lambada/row-27",
+    "lambada/row-28",
+    "lambada/row-29"
+  ],
+  "task_payload_sha256": "b096b8eb40960f38ae0e9f3268484eed10bf2a6bebbc981a45a061ee461aab7c",
+  "identities": {
+    "/Users/coloner/work/rust/toklet/artifacts/m5-cli-half-native-binary-v1/toklet": "82c2e36b573d9fe62883c3d46e1c546acd5a96e87af44d3a9ffbabd2ae00b4ee",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_tasks.py": "ef42100e47dea3a4d7929118eef72073b3bbaeb37fd1502df59cc7538246ae23",
+    "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-14-metal-cli-half-qualification-v1.json": "cb8a8f7117a46af6f81b340e2d92255e706b003beae62dc94330bc1766d52367",
+    "/Users/coloner/work/rust/toklet/Cargo.toml": "bc21dbd7fd1c0f257ad8b7debfb20016170a64505a583e368de1a48ca865593c",
+    "/Users/coloner/work/rust/toklet/Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "/Users/coloner/work/rust/toklet/artifacts/quality-v1/tasks.jsonl": "b096b8eb40960f38ae0e9f3268484eed10bf2a6bebbc981a45a061ee461aab7c",
+    "/Users/coloner/work/rust/toklet/benchmarks/sources.json": "dc2f82fb50b3f1f763c4757a992429b9122f3628c049709bdd7cb2252c69ea28",
+    "/Users/coloner/work/rust/toklet/benchmarks/result.schema.json": "503047553e2a79bbc637da756497494e2fc916c70cdfef1fcf0b687a7a4be852",
+    "/Users/coloner/work/rust/toklet/tools/bench/requirements.lock": "b05453a671689fbbc07c0ce5384ddebabdbfed4ba4229e19c75d416a79d2c8c2",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/manifest.json": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_cli.py": "de3a916482736866a762fa22f946c45c3e6d500122d3f2fad591e4d9945cb069",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_controlled.py": "32036bb8cfcd511d5c85e405f3e720da6d40691d3f27330e9fd8a3249b5004d9",
+    "/Users/coloner/work/rust/toklet/tools/experiments/cpu_task_reference.py": "fc21be426559355ad706259c6f01b6293bdf81c249c3ea7a545caa0098b47193",
+    "/Users/coloner/work/rust/toklet/tools/bench/task_cases.py": "91b5f44840ba31b8f0aead2217b4638c0dbb7e2529389225ba58a6c4822f9e1d",
+    "/Users/coloner/work/rust/toklet/tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "/Users/coloner/work/rust/toklet/tools/bench/cpu.py": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a",
+    "/Users/coloner/work/rust/toklet/tools/bench/mlx_baseline.py": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_prefill.py": "4e0c72b67c31395360dfb1e46d18d4ca7277720be00f7461398633853c32372b",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_continue.py": "48487c955a81cafb4149caf033d397d0403068cd6f31913a8a2b90a75f03b622",
+    "/Users/coloner/work/rust/toklet/tools/experiments/metal_engine.py": "1541afc73738d91e13dc6d71c32f72632e4b2eb20174781dc193126362b73d0c",
+    "/Users/coloner/work/rust/toklet/tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc",
+    "/Users/coloner/work/rust/toklet/src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "/Users/coloner/work/rust/toklet/src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "/Users/coloner/work/rust/toklet/src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "/Users/coloner/work/rust/toklet/src/lib.rs": "a4cc758d947079d5cf715183edfa71039de4dc1735caac6a481cf7a0c9ae8962",
+    "/Users/coloner/work/rust/toklet/src/q4.rs": "6a419a51502a939937d95e454bf8d086175ae3b303c094e4b15730008fc843cd",
+    "/Users/coloner/work/rust/toklet/src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "/Users/coloner/work/rust/toklet/src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "/Users/coloner/work/rust/toklet/src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "/Users/coloner/work/rust/toklet/src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "/Users/coloner/work/rust/toklet/src/metal/memory.rs": "f0212be7f1557729a3c56868728967953c78cb4be339d986e52664dee72f5df4",
+    "/Users/coloner/work/rust/toklet/src/metal/mod.rs": "19cb3fe2acce31a38129e5535638e8f837ccfabf04649d7900ee8f7126e5266c",
+    "/Users/coloner/work/rust/toklet/src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "/Users/coloner/work/rust/toklet/src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "/Users/coloner/work/rust/toklet/src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "/Users/coloner/work/rust/toklet/src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "/Users/coloner/work/rust/toklet/src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "/Users/coloner/work/rust/toklet/src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "/Users/coloner/work/rust/toklet/src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "/Users/coloner/work/rust/toklet/src/weights/mod.rs": "a07f0e8b91973c22c3fe9b0c9c5f0f688fc4b602f5402ef0f9a95c05976399c1",
+    "/Users/coloner/work/rust/toklet/src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "/Users/coloner/work/rust/toklet/src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "/Users/coloner/work/rust/toklet/src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "/Users/coloner/work/rust/toklet/src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "/Users/coloner/work/rust/toklet/src/q4/artifact.rs": "b8cb3ded35f0db6a053d113a202df81c49e9c5a33755ec61c898899c9a694252",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/mod.rs": "c7957092ea2dec2d24c268eb837c2720af1f455ceb0138294877988ddbb0d878",
+    "/Users/coloner/work/rust/toklet/src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "/Users/coloner/work/rust/toklet/src/metal/kernels.metal": "b519966f706cabaf0260d68d5e682004d88e3d641a3d6c3c78f154f5a5be738c",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/append_64.u32le": "e987cc8715b7a354f341995ded8a0c4b460f069a9dadd20f2ecf6f0494ef8334",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/changed_prompt_512.u32le": "e3b16c222cf07b09d6ded35fcdda26b540e6127fe37ee3a97fa929656d306162",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/continuation_128.u32le": "29fc3d4bc6b96644867b4d8df0c30f0009d814edf6e5579aa02d8f16ebedec07",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/held_out_loss.u32le": "f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_1024.u32le": "8acd07e9a1a11ae7e6642247f9e7621da9668863b58060620629bbad366a1ba9",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_128.u32le": "ce91eac01d5557affc79d9aae44415b8902e963635c42d52cf156b325a76ddda",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_1920.u32le": "7852555756bf4cc51ea5726b216b1c619ebde1d9e3e7f066f5d4e26479e10248",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_1921.u32le": "30dcc4b2e5c5fbbb01c221ed28c0df658548fdf0df8498a4de90820209fd5a0c",
+    "/Users/coloner/work/rust/toklet/benchmarks/contract-v1/prompt_512.u32le": "4ff74dae2ee5b778f9313f4c707f9ccb6415609a9c0653684cce7be63d457dd6",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+    "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct/generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6"
+  },
+  "revision": "59716ad7ee7839e1349fc60750b34374ee324685",
+  "scope": "Frozen greedy Half task responses; grading separate; no latency acceptance",
+  "run": {
+    "passed": true,
+    "model_exited": true,
+    "cases": [
+      {
+        "response": {
+          "id": "HumanEval/0",
+          "category": "code",
+          "visible_token_ids": [
+            73594,
+            12669,
+            198,
+            1499,
+            19496,
+            1159,
+            1759,
+            271
+          ],
+          "visible_text": "```python\nfrom typing import List\n\n",
+          "visible_text_sha256": "078ed0166119270d6a248fefe4ed73116d5d8fe1c42c9bd01d4b57a2f4c391f6",
+          "stop_reason": {
+            "kind": "output_limit"
+          },
+          "statistics": {
+            "generation": {
+              "reason": {
+                "kind": "output_limit"
+              },
+              "reused_tokens": 0,
+              "prefill_tokens": 169,
+              "sampled_tokens": 8,
+              "emitted_tokens": 8,
+              "history_tokens": 177,
+              "evaluated_tokens": 176,
+              "pending_tokens": 1,
+              "first_token_seconds": 0.725129084,
+              "prefill_seconds": 0.724543875,
+              "decode_seconds": 0.596932668,
+              "sampling_seconds": 0.004886543000000001,
+              "total_seconds": 1.3265561670000001
+            },
+            "backend": "metal",
+            "cpu_projection": "none",
+            "execution": {
+              "weight_dtype": "FP16",
+              "kv_dtype": "FP16",
+              "projection_mode": "HalfCompensated",
+              "normalization_mode": "Original",
+              "readback_mode": "FullLogits",
+              "prefill_chunk_size": 128
+            },
+            "logical_memory": {
+              "weights_bytes": 988069596,
+              "kv_bytes": 25166496,
+              "scratch_bytes": 113911380,
+              "history_bytes": 8192,
+              "logits_bytes": 1215488,
+              "metadata_bytes": 14080,
+              "metadata_allowance_bytes": 67108864,
+              "tokenizer_application_allowance_bytes": 247772624
+            },
+            "input_preparation_seconds": 0.0,
+            "input_formatting_seconds": 0.0,
+            "tokenization_seconds": 0.0,
+            "detokenization_seconds": 0.0001005,
+            "publication_seconds": 8.662600000000001e-05,
+            "load_seconds": 3.386429625,
+            "conversion_seconds": 3.1686957840000014,
+            "tokenizer_load_seconds": 0.116675042,
+            "memory_admitted_bytes": 1443266720
+          }
+        },
+        "native_events": [
+          {
+            "event": "token",
+            "token_id": 73594,
+            "index": 0,
+            "elapsed_seconds": 0.725129084,
+            "text": "```"
+          },
+          {
+            "event": "token",
+            "token_id": 12669,
+            "index": 1,
+            "elapsed_seconds": 0.810053459,
+            "text": "python"
+          },
+          {
+            "event": "token",
+            "token_id": 198,
+            "index": 2,
+            "elapsed_seconds": 0.89542225,
+            "text": "\n"
+          },
+          {
+            "event": "token",
+            "token_id": 1499,
+            "index": 3,
+            "elapsed_seconds": 0.980937792,
+            "text": "from"
+          },
+          {
+            "event": "token",
+            "token_id": 19496,
+            "index": 4,
+            "elapsed_seconds": 1.066981334,
+            "text": " typing"
+          },
+          {
+            "event": "token",
+            "token_id": 1159,
+            "index": 5,
+            "elapsed_seconds": 1.1528945,
+            "text": " import"
+          },
+          {
+            "event": "token",
+            "token_id": 1759,
+            "index": 6,
+            "elapsed_seconds": 1.2394200419999999,
+            "text": " List"
+          },
+          {
+            "event": "token",
+            "token_id": 271,
+            "index": 7,
+            "elapsed_seconds": 1.3265495,
+            "text": "\n\n"
+          },
+          {
+            "event": "done",
+            "statistics": {
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 169,
+                "sampled_tokens": 8,
+                "emitted_tokens": 8,
+                "history_tokens": 177,
+                "evaluated_tokens": 176,
+                "pending_tokens": 1,
+                "first_token_seconds": 0.725129084,
+                "prefill_seconds": 0.724543875,
+                "decode_seconds": 0.596932668,
+                "sampling_seconds": 0.004886543000000001,
+                "total_seconds": 1.3265561670000001
+              },
+              "backend": "metal",
+              "cpu_projection": "none",
+              "execution": {
+                "weight_dtype": "FP16",
+                "kv_dtype": "FP16",
+                "projection_mode": "HalfCompensated",
+                "normalization_mode": "Original",
+                "readback_mode": "FullLogits",
+                "prefill_chunk_size": 128
+              },
+              "logical_memory": {
+                "weights_bytes": 988069596,
+                "kv_bytes": 25166496,
+                "scratch_bytes": 113911380,
+                "history_bytes": 8192,
+                "logits_bytes": 1215488,
+                "metadata_bytes": 14080,
+                "metadata_allowance_bytes": 67108864,
+                "tokenizer_application_allowance_bytes": 247772624
+              },
+              "input_preparation_seconds": 0.0,
+              "input_formatting_seconds": 0.0,
+              "tokenization_seconds": 0.0,
+              "detokenization_seconds": 0.0001005,
+              "publication_seconds": 8.662600000000001e-05,
+              "load_seconds": 3.386429625,
+              "conversion_seconds": 3.1686957840000014,
+              "tokenizer_load_seconds": 0.116675042,
+              "memory_admitted_bytes": 1443266720
+            }
+          },
+          {
+            "event": "reset"
+          }
+        ],
+        "max_output_tokens": 8
+      },
+      {
+        "response": {
+          "id": "truthfulqa/row-0",
+          "category": "prose",
+          "visible_token_ids": [
+            32,
+            13,
+            576,
+            3015,
+            71118,
+            19056,
+            1494,
+            1526
+          ],
+          "visible_text": "A. The watermelon seeds pass through",
+          "visible_text_sha256": "a8177088fae3653c08370d42ab07c37db7e2d0ac76ffe436a88ea35a0ebd7952",
+          "stop_reason": {
+            "kind": "output_limit"
+          },
+          "statistics": {
+            "generation": {
+              "reason": {
+                "kind": "output_limit"
+              },
+              "reused_tokens": 0,
+              "prefill_tokens": 87,
+              "sampled_tokens": 8,
+              "emitted_tokens": 8,
+              "history_tokens": 95,
+              "evaluated_tokens": 94,
+              "pending_tokens": 1,
+              "first_token_seconds": 0.332182042,
+              "prefill_seconds": 0.331599959,
+              "decode_seconds": 0.39005670800000003,
+              "sampling_seconds": 0.004668874999999999,
+              "total_seconds": 0.726393459
+            },
+            "backend": "metal",
+            "cpu_projection": "none",
+            "execution": {
+              "weight_dtype": "FP16",
+              "kv_dtype": "FP16",
+              "projection_mode": "HalfCompensated",
+              "normalization_mode": "Original",
+              "readback_mode": "FullLogits",
+              "prefill_chunk_size": 128
+            },
+            "logical_memory": {
+              "weights_bytes": 988069596,
+              "kv_bytes": 25166496,
+              "scratch_bytes": 113911380,
+              "history_bytes": 8192,
+              "logits_bytes": 1215488,
+              "metadata_bytes": 14080,
+              "metadata_allowance_bytes": 67108864,
+              "tokenizer_application_allowance_bytes": 247772624
+            },
+            "input_preparation_seconds": 0.0,
+            "input_formatting_seconds": 0.0,
+            "tokenization_seconds": 0.0,
+            "detokenization_seconds": 2.5874e-05,
+            "publication_seconds": 3.996e-05,
+            "load_seconds": 0.0,
+            "conversion_seconds": 0.0,
+            "tokenizer_load_seconds": 0.0,
+            "memory_admitted_bytes": 1443266720
+          }
+        },
+        "native_events": [
+          {
+            "event": "token",
+            "token_id": 32,
+            "index": 0,
+            "elapsed_seconds": 0.332182042,
+            "text": "A"
+          },
+          {
+            "event": "token",
+            "token_id": 13,
+            "index": 1,
+            "elapsed_seconds": 0.387503542,
+            "text": "."
+          },
+          {
+            "event": "token",
+            "token_id": 576,
+            "index": 2,
+            "elapsed_seconds": 0.443152542,
+            "text": " The"
+          },
+          {
+            "event": "token",
+            "token_id": 3015,
+            "index": 3,
+            "elapsed_seconds": 0.4990055,
+            "text": " water"
+          },
+          {
+            "event": "token",
+            "token_id": 71118,
+            "index": 4,
+            "elapsed_seconds": 0.555348709,
+            "text": "melon"
+          },
+          {
+            "event": "token",
+            "token_id": 19056,
+            "index": 5,
+            "elapsed_seconds": 0.611902375,
+            "text": " seeds"
+          },
+          {
+            "event": "token",
+            "token_id": 1494,
+            "index": 6,
+            "elapsed_seconds": 0.668904042,
+            "text": " pass"
+          },
+          {
+            "event": "token",
+            "token_id": 1526,
+            "index": 7,
+            "elapsed_seconds": 0.72638725,
+            "text": " through"
+          },
+          {
+            "event": "done",
+            "statistics": {
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 87,
+                "sampled_tokens": 8,
+                "emitted_tokens": 8,
+                "history_tokens": 95,
+                "evaluated_tokens": 94,
+                "pending_tokens": 1,
+                "first_token_seconds": 0.332182042,
+                "prefill_seconds": 0.331599959,
+                "decode_seconds": 0.39005670800000003,
+                "sampling_seconds": 0.004668874999999999,
+                "total_seconds": 0.726393459
+              },
+              "backend": "metal",
+              "cpu_projection": "none",
+              "execution": {
+                "weight_dtype": "FP16",
+                "kv_dtype": "FP16",
+                "projection_mode": "HalfCompensated",
+                "normalization_mode": "Original",
+                "readback_mode": "FullLogits",
+                "prefill_chunk_size": 128
+              },
+              "logical_memory": {
+                "weights_bytes": 988069596,
+                "kv_bytes": 25166496,
+                "scratch_bytes": 113911380,
+                "history_bytes": 8192,
+                "logits_bytes": 1215488,
+                "metadata_bytes": 14080,
+                "metadata_allowance_bytes": 67108864,
+                "tokenizer_application_allowance_bytes": 247772624
+              },
+              "input_preparation_seconds": 0.0,
+              "input_formatting_seconds": 0.0,
+              "tokenization_seconds": 0.0,
+              "detokenization_seconds": 2.5874e-05,
+              "publication_seconds": 3.996e-05,
+              "load_seconds": 0.0,
+              "conversion_seconds": 0.0,
+              "tokenizer_load_seconds": 0.0,
+              "memory_admitted_bytes": 1443266720
+            }
+          },
+          {
+            "event": "reset"
+          }
+        ],
+        "max_output_tokens": 8
+      },
+      {
+        "response": {
+          "id": "lambada/row-0",
+          "category": "continuation",
+          "visible_token_ids": [
+            279,
+            33326,
+            594,
+            13885,
+            13,
+            358,
+            1101,
+            1366
+          ],
+          "visible_text": " the angel's existence. I just want",
+          "visible_text_sha256": "c874dbe394ba09ced527c6a23f60b6cf89eb46773d0ca7462e90b8fdf2284e0c",
+          "stop_reason": {
+            "kind": "output_limit"
+          },
+          "statistics": {
+            "generation": {
+              "reason": {
+                "kind": "output_limit"
+              },
+              "reused_tokens": 0,
+              "prefill_tokens": 85,
+              "sampled_tokens": 8,
+              "emitted_tokens": 8,
+              "history_tokens": 93,
+              "evaluated_tokens": 92,
+              "pending_tokens": 1,
+              "first_token_seconds": 0.324777792,
+              "prefill_seconds": 0.324182833,
+              "decode_seconds": 0.38435079400000005,
+              "sampling_seconds": 0.004688,
+              "total_seconds": 0.713311375
+            },
+            "backend": "metal",
+            "cpu_projection": "none",
+            "execution": {
+              "weight_dtype": "FP16",
+              "kv_dtype": "FP16",
+              "projection_mode": "HalfCompensated",
+              "normalization_mode": "Original",
+              "readback_mode": "FullLogits",
+              "prefill_chunk_size": 128
+            },
+            "logical_memory": {
+              "weights_bytes": 988069596,
+              "kv_bytes": 25166496,
+              "scratch_bytes": 113911380,
+              "history_bytes": 8192,
+              "logits_bytes": 1215488,
+              "metadata_bytes": 14080,
+              "metadata_allowance_bytes": 67108864,
+              "tokenizer_application_allowance_bytes": 247772624
+            },
+            "input_preparation_seconds": 4.1e-08,
+            "input_formatting_seconds": 0.0,
+            "tokenization_seconds": 0.0,
+            "detokenization_seconds": 3.4626000000000004e-05,
+            "publication_seconds": 5.2751e-05,
+            "load_seconds": 0.0,
+            "conversion_seconds": 0.0,
+            "tokenizer_load_seconds": 0.0,
+            "memory_admitted_bytes": 1443266720
+          }
+        },
+        "native_events": [
+          {
+            "event": "token",
+            "token_id": 279,
+            "index": 0,
+            "elapsed_seconds": 0.324777792,
+            "text": " the"
+          },
+          {
+            "event": "token",
+            "token_id": 33326,
+            "index": 1,
+            "elapsed_seconds": 0.378805375,
+            "text": " angel"
+          },
+          {
+            "event": "token",
+            "token_id": 594,
+            "index": 2,
+            "elapsed_seconds": 0.433621042,
+            "text": "'s"
+          },
+          {
+            "event": "token",
+            "token_id": 13885,
+            "index": 3,
+            "elapsed_seconds": 0.488830459,
+            "text": " existence"
+          },
+          {
+            "event": "token",
+            "token_id": 13,
+            "index": 4,
+            "elapsed_seconds": 0.544363917,
+            "text": "."
+          },
+          {
+            "event": "token",
+            "token_id": 358,
+            "index": 5,
+            "elapsed_seconds": 0.600337,
+            "text": " I"
+          },
+          {
+            "event": "token",
+            "token_id": 1101,
+            "index": 6,
+            "elapsed_seconds": 0.656639125,
+            "text": " just"
+          },
+          {
+            "event": "token",
+            "token_id": 1366,
+            "index": 7,
+            "elapsed_seconds": 0.713305084,
+            "text": " want"
+          },
+          {
+            "event": "done",
+            "statistics": {
+              "generation": {
+                "reason": {
+                  "kind": "output_limit"
+                },
+                "reused_tokens": 0,
+                "prefill_tokens": 85,
+                "sampled_tokens": 8,
+                "emitted_tokens": 8,
+                "history_tokens": 93,
+                "evaluated_tokens": 92,
+                "pending_tokens": 1,
+                "first_token_seconds": 0.324777792,
+                "prefill_seconds": 0.324182833,
+                "decode_seconds": 0.38435079400000005,
+                "sampling_seconds": 0.004688,
+                "total_seconds": 0.713311375
+              },
+              "backend": "metal",
+              "cpu_projection": "none",
+              "execution": {
+                "weight_dtype": "FP16",
+                "kv_dtype": "FP16",
+                "projection_mode": "HalfCompensated",
+                "normalization_mode": "Original",
+                "readback_mode": "FullLogits",
+                "prefill_chunk_size": 128
+              },
+              "logical_memory": {
+                "weights_bytes": 988069596,
+                "kv_bytes": 25166496,
+                "scratch_bytes": 113911380,
+                "history_bytes": 8192,
+                "logits_bytes": 1215488,
+                "metadata_bytes": 14080,
+                "metadata_allowance_bytes": 67108864,
+                "tokenizer_application_allowance_bytes": 247772624
+              },
+              "input_preparation_seconds": 4.1e-08,
+              "input_formatting_seconds": 0.0,
+              "tokenization_seconds": 0.0,
+              "detokenization_seconds": 3.4626000000000004e-05,
+              "publication_seconds": 5.2751e-05,
+              "load_seconds": 0.0,
+              "conversion_seconds": 0.0,
+              "tokenizer_load_seconds": 0.0,
+              "memory_admitted_bytes": 1443266720
+            }
+          },
+          {
+            "event": "reset"
+          }
+        ],
+        "max_output_tokens": 8
+      }
+    ],
+    "idle_usage": [
+      {
+        "phase": "ready",
+        "worker": {
+          "resident_size": 1261715456,
+          "phys_footprint": 1250411984,
+          "lifetime_max_phys_footprint": 1250411984
+        },
+        "driver": {
+          "resident_size": 29491200,
+          "phys_footprint": 18383280,
+          "lifetime_max_phys_footprint": 18383280
+        },
+        "joint_native_lifetime_peak_bytes": 1268795264
+      },
+      {
+        "phase": "case_1",
+        "worker": {
+          "resident_size": 1262518272,
+          "phys_footprint": 1251345896,
+          "lifetime_max_phys_footprint": 1251345896
+        },
+        "driver": {
+          "resident_size": 29638656,
+          "phys_footprint": 18547168,
+          "lifetime_max_phys_footprint": 18547168
+        },
+        "joint_native_lifetime_peak_bytes": 1269893064
+      },
+      {
+        "phase": "case_2",
+        "worker": {
+          "resident_size": 1262534656,
+          "phys_footprint": 1251362280,
+          "lifetime_max_phys_footprint": 1251362280
+        },
+        "driver": {
+          "resident_size": 29655040,
+          "phys_footprint": 18563552,
+          "lifetime_max_phys_footprint": 18563552
+        },
+        "joint_native_lifetime_peak_bytes": 1269925832
+      },
+      {
+        "phase": "case_3",
+        "worker": {
+          "resident_size": 1262534656,
+          "phys_footprint": 1251362280,
+          "lifetime_max_phys_footprint": 1251362280
+        },
+        "driver": {
+          "resident_size": 29736960,
+          "phys_footprint": 18645472,
+          "lifetime_max_phys_footprint": 18645472
+        },
+        "joint_native_lifetime_peak_bytes": 1270007752
+      }
+    ],
+    "cleanup_errors": [],
+    "command": [
+      "/Users/coloner/work/rust/toklet/artifacts/m5-cli-half-native-binary-v1/toklet",
+      "--model",
+      "/Users/coloner/work/rust/toklet/models/Qwen2.5-0.5B-Instruct",
+      "--backend",
+      "metal",
+      "--metal-projection",
+      "half-compensated",
+      "--interactive",
+      "--json",
+      "--context-capacity",
+      "2048",
+      "--prefill-chunk",
+      "128"
+    ],
+    "worker_pid": 34092,
+    "ready": {
+      "event": "ready",
+      "backend": "metal",
+      "context_capacity": 2048,
+      "cpu_projection": "none",
+      "memory_admitted_bytes": 1443266720,
+      "execution": {
+        "weight_dtype": "FP16",
+        "kv_dtype": "FP16",
+        "projection_mode": "HalfCompensated",
+        "normalization_mode": "Original",
+        "readback_mode": "FullLogits",
+        "prefill_chunk_size": 128
+      },
+      "logical_memory": {
+        "weights_bytes": 988069596,
+        "kv_bytes": 25166496,
+        "scratch_bytes": 113911380,
+        "history_bytes": 8192,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 14080,
+        "metadata_allowance_bytes": 67108864,
+        "tokenizer_application_allowance_bytes": 247772624
+      }
+    },
+    "exit_code": 0
+  },
+  "endpoint_errors": [],
+  "identities_unchanged": true
+}

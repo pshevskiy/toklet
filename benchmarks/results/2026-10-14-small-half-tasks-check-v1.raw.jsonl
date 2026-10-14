@@ -1,0 +1,31 @@
+{"event":"ready","backend":"metal","context_capacity":2048,"cpu_projection":"none","memory_admitted_bytes":1443266720,"execution":{"weight_dtype":"FP16","kv_dtype":"FP16","projection_mode":"HalfCompensated","normalization_mode":"Original","readback_mode":"FullLogits","prefill_chunk_size":128},"logical_memory":{"weights_bytes":988069596,"kv_bytes":25166496,"scratch_bytes":113911380,"history_bytes":8192,"logits_bytes":1215488,"metadata_bytes":14080,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624}}
+{"event":"token","token_id":73594,"index":0,"elapsed_seconds":0.725129084,"text":"```"}
+{"event":"token","token_id":12669,"index":1,"elapsed_seconds":0.810053459,"text":"python"}
+{"event":"token","token_id":198,"index":2,"elapsed_seconds":0.89542225,"text":"\n"}
+{"event":"token","token_id":1499,"index":3,"elapsed_seconds":0.980937792,"text":"from"}
+{"event":"token","token_id":19496,"index":4,"elapsed_seconds":1.066981334,"text":" typing"}
+{"event":"token","token_id":1159,"index":5,"elapsed_seconds":1.1528945,"text":" import"}
+{"event":"token","token_id":1759,"index":6,"elapsed_seconds":1.2394200419999999,"text":" List"}
+{"event":"token","token_id":271,"index":7,"elapsed_seconds":1.3265495,"text":"\n\n"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":169,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":177,"evaluated_tokens":176,"pending_tokens":1,"first_token_seconds":0.725129084,"prefill_seconds":0.724543875,"decode_seconds":0.596932668,"sampling_seconds":0.004886543000000001,"total_seconds":1.3265561670000001},"backend":"metal","cpu_projection":"none","execution":{"weight_dtype":"FP16","kv_dtype":"FP16","projection_mode":"HalfCompensated","normalization_mode":"Original","readback_mode":"FullLogits","prefill_chunk_size":128},"logical_memory":{"weights_bytes":988069596,"kv_bytes":25166496,"scratch_bytes":113911380,"history_bytes":8192,"logits_bytes":1215488,"metadata_bytes":14080,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624},"input_preparation_seconds":0.0,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.0001005,"publication_seconds":0.00008662600000000001,"load_seconds":3.386429625,"conversion_seconds":3.1686957840000014,"tokenizer_load_seconds":0.116675042,"memory_admitted_bytes":1443266720}}
+{"event":"reset"}
+{"event":"token","token_id":32,"index":0,"elapsed_seconds":0.332182042,"text":"A"}
+{"event":"token","token_id":13,"index":1,"elapsed_seconds":0.387503542,"text":"."}
+{"event":"token","token_id":576,"index":2,"elapsed_seconds":0.443152542,"text":" The"}
+{"event":"token","token_id":3015,"index":3,"elapsed_seconds":0.4990055,"text":" water"}
+{"event":"token","token_id":71118,"index":4,"elapsed_seconds":0.555348709,"text":"melon"}
+{"event":"token","token_id":19056,"index":5,"elapsed_seconds":0.611902375,"text":" seeds"}
+{"event":"token","token_id":1494,"index":6,"elapsed_seconds":0.668904042,"text":" pass"}
+{"event":"token","token_id":1526,"index":7,"elapsed_seconds":0.72638725,"text":" through"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":87,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":95,"evaluated_tokens":94,"pending_tokens":1,"first_token_seconds":0.332182042,"prefill_seconds":0.331599959,"decode_seconds":0.39005670800000003,"sampling_seconds":0.004668874999999999,"total_seconds":0.726393459},"backend":"metal","cpu_projection":"none","execution":{"weight_dtype":"FP16","kv_dtype":"FP16","projection_mode":"HalfCompensated","normalization_mode":"Original","readback_mode":"FullLogits","prefill_chunk_size":128},"logical_memory":{"weights_bytes":988069596,"kv_bytes":25166496,"scratch_bytes":113911380,"history_bytes":8192,"logits_bytes":1215488,"metadata_bytes":14080,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624},"input_preparation_seconds":0.0,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000025874,"publication_seconds":0.00003996,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1443266720}}
+{"event":"reset"}
+{"event":"token","token_id":279,"index":0,"elapsed_seconds":0.324777792,"text":" the"}
+{"event":"token","token_id":33326,"index":1,"elapsed_seconds":0.378805375,"text":" angel"}
+{"event":"token","token_id":594,"index":2,"elapsed_seconds":0.433621042,"text":"'s"}
+{"event":"token","token_id":13885,"index":3,"elapsed_seconds":0.488830459,"text":" existence"}
+{"event":"token","token_id":13,"index":4,"elapsed_seconds":0.544363917,"text":"."}
+{"event":"token","token_id":358,"index":5,"elapsed_seconds":0.600337,"text":" I"}
+{"event":"token","token_id":1101,"index":6,"elapsed_seconds":0.656639125,"text":" just"}
+{"event":"token","token_id":1366,"index":7,"elapsed_seconds":0.713305084,"text":" want"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":85,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":93,"evaluated_tokens":92,"pending_tokens":1,"first_token_seconds":0.324777792,"prefill_seconds":0.324182833,"decode_seconds":0.38435079400000005,"sampling_seconds":0.004688,"total_seconds":0.713311375},"backend":"metal","cpu_projection":"none","execution":{"weight_dtype":"FP16","kv_dtype":"FP16","projection_mode":"HalfCompensated","normalization_mode":"Original","readback_mode":"FullLogits","prefill_chunk_size":128},"logical_memory":{"weights_bytes":988069596,"kv_bytes":25166496,"scratch_bytes":113911380,"history_bytes":8192,"logits_bytes":1215488,"metadata_bytes":14080,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624},"input_preparation_seconds":4.1e-8,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000034626000000000004,"publication_seconds":0.000052751,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1443266720}}
+{"event":"reset"}
