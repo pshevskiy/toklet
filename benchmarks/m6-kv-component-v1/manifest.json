@@ -1,0 +1,55 @@
+{
+  "format": "toklet-m6-i8-kv-component-contract-v1",
+  "frozen_before_component_collection": true,
+  "trigger": "Reviewed small32K Online attention median0.9726384699489709 exceeds M6 threshold0.20; this is not a DRAM traffic measurement.",
+  "scope": "One isolated synthetic decode candidate; no production cache/API/default change, cross-layer activations or intervening engine kernels, cache-write cost, model/task quality, application admission or end-to-end performance claim.",
+  "representation": {
+    "version": "toklet-i8-kv-symmetric-half-scale-rne-g32-component-v1",
+    "layout": "Separate K/V. Original Half [kv_heads, capacity, head_dim]. Codes same logical order, even index in low8 bits and odd index in high8 bits of u16. Scales [kv_heads, capacity, head_dim/32], stored as Half bits. No padding inside payload.",
+    "supported_head_dimensions": [
+      64,
+      128
+    ],
+    "partial_groups_and_byte_tails": "Excluded by exact component geometries; every row is a multiple of32 and every packed pair complete.",
+    "group_size": 32,
+    "scale": "For a finite group, maxabs/127 rounded once to nearest-even Half. All-zero group uses positive-zero scale and all-zero codes. Nonzero group whose rounded scale is zero uses minimum positive Half subnormal (bits1).",
+    "codes": "Divide original exact stored Half value by the stored rounded Half scale in FP32; nearest-even integer rounding, clamp[-127,127]. Store signed two's-complement byte. Reserved-128 rejected; negative/nonfinite scales and nonzero codes with zero scale rejected.",
+    "reconstruction": "Signed code converted to FP32 times exact stored Half scale converted to FP32. No subsequent Half cast; independent FP64 attention oracle consumes these exact FP32 reconstructed inputs.",
+    "quantization_error": "Record max/RMS reconstruction error and clamped-value count separately from unchanged FP64-oracle arithmetic envelope. A rounded-down scale can clamp extrema.",
+    "storage_fraction_of_fp16": 0.53125,
+    "validation": "CPU pack_group validates all timed resident codes/scales before submission; owned buffers remain immutable. Timed GPU loader is a compile-time trusted specialization. A separate checked diagnostic specialization rejects malformed GPU data; malformed-buffer rejection is not a property of the trusted path."
+  },
+  "geometries": [
+    {
+      "model_shape": "small",
+      "layers": 24,
+      "query_heads": 14,
+      "kv_heads": 2,
+      "head_dim": 64,
+      "capacity": 32768
+    },
+    {
+      "model_shape": "larger",
+      "layers": 28,
+      "query_heads": 12,
+      "kv_heads": 2,
+      "head_dim": 128,
+      "capacity": 32768
+    }
+  ],
+  "inputs": "Deterministic distinct per-layer finite Half Q/K/V; identical original inputs feed FP16 baseline and quantized candidate. Every layer owns distinct K/V allocations and content, all layers resident simultaneously. No full CPU clones or reconstructed caches.",
+  "execution": "One ordinary serial compute encoder per layer in one command, same tracked output allocation overwritten by every layer (WAW dependence), one completed wait per sample; status atomics are not the serialization mechanism. Retained resources and no CPU mapped access while in flight. Same queried width, dispatch count and Safe/Precise Metal2.3 policy. Baseline is unchanged production AttentionDecode kernel.",
+  "correctness": "Untimed independent FP64 oracle checks every layer/output for FP16, trustedI8 and checkedI8. Frozen1e-4+1e-3*abs(expected) arithmetic envelope; finite/status/guards/input immutability required. Exact256GPUFP32-bit reconstruction values across bothI8specializations cover canonical zero, minimum-subnormal scales, signed code extremes and maximumfiniteHalfscales; bounded attention-level zero/extreme cases complement them. CPU golden cases cover sign/packing/ties/zeros/subnormals/clamp/reserved/nonfinite rules. Format-invalid diagnostic status is2; NaNquery status is3 (mass+output).",
+  "measurement": {
+    "warmup_pairs": 3,
+    "measured_pairs": 10,
+    "alternate_order": true,
+    "separate_confirmation_worker": true,
+    "completed_gpu_command_seconds": true,
+    "report_all_samples_median_mad_range": true,
+    "component_useful_gain_threshold": 0.05
+  },
+  "memory": "Count simultaneous FP16/I8/scales, all layers/queries, shared output/status, guards, bounded host oracle/packing storage, driver and framework allowance. Admission and conservatively summed owned native lifetime peaks must each fit6GiB. No model weights loaded in this component; actual application qualification is separate.",
+  "decision": "A negative result can reject this frozen candidate and retain FP16. A positive component result cannot adopt I8 without complete engine integration/cache-write/state/quality/end-to-end gates. Preserve all samples; do not relax gates to make it pass.",
+  "m6_complete": false
+}

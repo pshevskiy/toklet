@@ -446,3 +446,14 @@ or support an ordinary timing ranking. Astra accepted code/evidence after
 independent byte-identical replay, 14 passing tests, all 115 endpoint bindings,
 15 receipt pins and 13 published copies. Full long quality, other profiles,
 boundary/application runs and the KV decision remain open.
+
+The [M6 I8 KV component contract](../benchmarks/m6-kv-component-v1/manifest.json)
+is frozen before component collection, following the reviewed small-model 32K
+profile trigger. It specifies signed packed bytes, per-32-value Half scales,
+nearest-even rounding, independent reconstruction/arithmetic checks, distinct
+resident layer inputs, three warmup/ten alternating measured pairs and separate
+confirmations under complete 6 GiB admission/native limits. Its payload is
+53.125% of FP16. A negative result can reject this candidate; a positive result
+still requires integration, cache-write, state, quality and end-to-end evidence.
+This records the experiment design only: implementation checks and measurements
+are pending, with no I8 adoption or M6 completion claim.
