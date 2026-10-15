@@ -1,0 +1,52 @@
+{
+  "format": "toklet-m6-long-quality-audit-qualification-v1",
+  "source_parent": "fff4119",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Independent14portablechecks, byte-identical3record/2747event/115bindingreplay,256realwinnerrows,15receiptpins/13publicationcopies, sixprofilefractions/state/memory/naturalexit/cleanup/source/reportscope verified; all execution/hashing finished"
+  },
+  "scope": "Offline complete-long-quality coverage/gate checker and partial compatibility evidence; no full512-target/model or M6 completion claim",
+  "source_pins": {
+    "tools/experiments/m6_long_quality_audit.py": "faa54da80dcb766b134c38582e23c661f0e35423882ac79639eab17cdb4c9be4",
+    "tools/experiments/test_m6_long_quality_audit.py": "967c1ea5a4c4b9ae3f9901a41af993ff374220afe8b0f621b623303d7cef9fac"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-context-small-quality-4096-v1.json": "cc78f9f13c6c744a34a1af94c7b800d0e9d2d734063121fac26992060a5026ee",
+    "benchmarks/results/2026-10-15-m6-context-small-quality-4096-v1.raw.jsonl": "a7e88d04063192f49cfd6bf563f6f6b6b176a423d87c51e8e8d52ee9cce6cf6c",
+    "benchmarks/results/2026-10-15-m6-context-small-quality-4096-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-context-small-quality-8192-v1.json": "0fdb5fed7aa1ea6285501c9d3ad113d030d5352997ec5e9dcac6e8f0a512f006",
+    "benchmarks/results/2026-10-15-m6-context-small-quality-8192-v1.raw.jsonl": "686cc023fb6c4fd83d4416577bdd44baaff19dd8db24532ceed08d3c147a749e",
+    "benchmarks/results/2026-10-15-m6-context-small-quality-8192-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-context-small-profile-32768-v1.json": "bd4a46542ce22929b640468d689eb80732a57e7c2bf6290f9d1f6e2160078b65",
+    "benchmarks/results/2026-10-15-m6-context-small-profile-32768-v1.raw.jsonl": "d9a0af955654b038f240345ccc45ae645d9877632e26b12761f37c7763cf4c87",
+    "benchmarks/results/2026-10-15-m6-context-small-profile-32768-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-long-quality-audit-qualification-v1.py": "14ce9ea3dd77c7e198674b65c66c8653cee8ba691995ced53b098358370b6dae",
+    "benchmarks/results/2026-10-15-m6-long-quality-audit-compatibility-v1.json": "f39b12467d130030c8aea1fd9d5f3cd888862d5e15cf79936eaa60e519dd46fa",
+    "benchmarks/results/2026-10-15-m6-long-quality-audit-compatibility-v1.log": "c33581bc91c7cb8f03e248aec4d4d63762ad46cc03f411f034d1b73bc9646cbe",
+    "benchmarks/results/2026-10-15-m6-long-quality-audit-tests-v1.log": "85a735753cf80918a7383b695ff2f13763acdfc59b43892f89e3d43c79058fb1"
+  },
+  "portable_tests": 14,
+  "new_portable_tests": 7,
+  "compatibility": {
+    "records": 3,
+    "raw_events": 2747,
+    "bindings": 115,
+    "checked_real_winner_rows": 256,
+    "complete_long_quality": false
+  },
+  "small_max_profile": {
+    "depth": 32768,
+    "repetitions_per_mode": 3,
+    "reference_attention_fraction_median": 0.9981877789123689,
+    "online_attention_fraction_median": 0.9726384699489709,
+    "unique_admission_bytes": 2770507468,
+    "max_joint_native_bytes": 2518502184,
+    "kv_investigation_triggered": true,
+    "kv_decision_complete": false
+  },
+  "report_path": "docs/experiments/2026-10-15-m6-long-quality-audit.md",
+  "m6_complete": false
+}

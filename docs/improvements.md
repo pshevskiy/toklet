@@ -432,3 +432,17 @@ accepted matrices/confirmations while leaving every M6 long-context/KV checkbox
 open. This corrects documentation; it changes no runtime default or support gate.
 Astra accepted the three-file documentation review without findings; changed
 links/anchor, open-task content and whitespace checks pass.
+
+The [M6 long-quality synthesis checker](experiments/2026-10-15-m6-long-quality-audit.md)
+requires all four exact depths and 512 observations per model, preserves both
+per-depth and pooled loss gates, and checks saved winner/logit/tie consistency.
+Changed predictions receive two-candidate reversal accounting and remain open
+for separate investigation. Fourteen portable checks pass; partial exact replay
+of three records/2,747 events/115 bindings also validates 256 existing real winner
+rows. The first small-model 32K profile completes three repetitions per mode
+with exact committed state and bounded memory. Online attention's 97.2638%
+median contribution triggers KV investigation; it does not prove DRAM traffic
+or support an ordinary timing ranking. Astra accepted code/evidence after
+independent byte-identical replay, 14 passing tests, all 115 endpoint bindings,
+15 receipt pins and 13 published copies. Full long quality, other profiles,
+boundary/application runs and the KV decision remain open.
