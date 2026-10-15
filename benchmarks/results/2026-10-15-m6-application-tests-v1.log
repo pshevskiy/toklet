@@ -1,0 +1,9 @@
+test_existing_evidence_fails_before_model_admission (test_m6_application.Application.test_existing_evidence_fails_before_model_admission) ... ok
+test_no_eos_boundary_keeps_every_published_id_and_finalized_text (test_m6_application.Application.test_no_eos_boundary_keeps_every_published_id_and_finalized_text) ... ok
+test_startup_reassertion_precedes_native_launch (test_m6_application.Application.test_startup_reassertion_precedes_native_launch) ... ok
+test_token_order_completion_reset_timing_and_state_mutations_reject (test_m6_application.Application.test_token_order_completion_reset_timing_and_state_mutations_reject) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK

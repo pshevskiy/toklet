@@ -380,3 +380,12 @@ retains raw replay, natural exit, independent text and the existing isolated
 grading window. Nine new/seven legacy/seven v2/seventeen window checks and two
 native probes/55events pass. Astra accepted code/evidence; full100-task
 collection and grading remain pending.
+
+The [M6 maximum-context application adapter](experiments/2026-10-15-m6-application-collector.md)
+checks the actual tokenizer-owning Online CLI's32K storage/admission, complete
+published-ID/output-limit/pending semantics, reset/finalization and independent
+text after owned exit. Separate decoder charge and honest derived-history-hash
+scope are recorded. Four portable checks and two native full-capacity allocation
+probes/tenevents pass, with admissions1,791,516,840/3,122,841,472bytes and sampled
+joint native charges1,617,987,816/2,960,116,952bytes. Astra accepted code/evidence;
+full32640+128 generation and M6 qualification remain pending.

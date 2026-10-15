@@ -1,0 +1,42 @@
+{
+  "format": "toklet-m6-application-collector-qualification-v1",
+  "source_parent": "2a4bfb4",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Separate component accepted;335distinct jointauditbindings, all65rawevents and passingtestlogs independentlyverified; fullcollections remain pending"
+  },
+  "scope": "Collector/protocol/short probe qualification only; full task grading and max-context generation remain pending",
+  "source_pins": {
+    "tools/experiments/m6_application.py": "a6eac58e5b98823a9a9f7ea74e3b782f361aee77bd9879fc06e0c750ca9b0902",
+    "tools/experiments/test_m6_application.py": "02fdb7c8b3067282eb1baaf2a3145346e7a1ba0f937564be2e3bd1a95dccf038"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-application-small-probe-v1.json": "9cd0c41ec69087e968a4b23b26e4ce4615c0f6415619303985ef2f2e6c46b99c",
+    "benchmarks/results/2026-10-15-m6-application-small-probe-v1.raw.jsonl": "6064be020b950bf086b2882264951ffd4fe49144a72fd43db32843ebb4b7520c",
+    "benchmarks/results/2026-10-15-m6-application-small-probe-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-application-larger-probe-v1.json": "fb8cf32550b8e44f928510ab3856c443fde8a01a7917fbf631b542181d7a62bf",
+    "benchmarks/results/2026-10-15-m6-application-larger-probe-v1.raw.jsonl": "6e891559cc35cb054cf89d775d5771c2ea8bc1f1223f6f7e30834b994746bcfc",
+    "benchmarks/results/2026-10-15-m6-application-larger-probe-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-application-tests-v1.log": "9e2b8d8a3a6201ca8f594b46e9d7d2d0e26b352998bd6cbbaa65f310894fbecd"
+  },
+  "models": [
+    {
+      "model": "small",
+      "raw_events": 5,
+      "admission_bytes": 1791516840,
+      "max_joint_native_bytes": 1617987816
+    },
+    {
+      "model": "larger",
+      "raw_events": 5,
+      "admission_bytes": 3122841472,
+      "max_joint_native_bytes": 2960116952
+    }
+  ],
+  "native_workers": 2,
+  "native_raw_events": 10,
+  "m6_complete": false
+}
