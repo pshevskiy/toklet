@@ -1,0 +1,54 @@
+{
+  "format": "toklet-m6-context-collector-qualification-v1",
+  "source_parent": "52bddf8",
+  "passed": true,
+  "scope": "Reviewed paired context collection protocol and selected-model short probes only; long contexts, quality, performance and KV decision remain pending",
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "All3findings resolved;311endpointbindings/sixraw events/commands/state/timing/memory and10+7+7check logs independently verified"
+  },
+  "source_pins": {
+    "tools/experiments/m6_context.py": "4c19af2e2a58dd80f0012681e78d55da2bdc30a776deb9a1f8e1c2a510bd1463",
+    "tools/experiments/test_m6_context.py": "b99edf467d9336bbfdf5f34ce809827af14e14e2417296aa1c565ae61cda184a"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-context-small-collector-probe-v2.json": "bada7ac220dccf6a7d1d99591b881c11633bc4e5a8dc01ed0554b3e3059129c3",
+    "benchmarks/results/2026-10-15-m6-context-small-collector-probe-v2.raw.jsonl": "a7da6a14977df22d33aa6fea278dad34cdfbf933346c43eb00189b977c9a771c",
+    "benchmarks/results/2026-10-15-m6-context-small-collector-probe-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-context-larger-collector-probe-v2.json": "6e2b7c4d77a55759a16245c12c1cd1738a5ea4cf19326f54c7e6be6959aee8ba",
+    "benchmarks/results/2026-10-15-m6-context-larger-collector-probe-v2.raw.jsonl": "919a92ac9b56c4d5763223e40511ba6f5107bdd054d46e4c94277c152ecfb10e",
+    "benchmarks/results/2026-10-15-m6-context-larger-collector-probe-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-context-collector-tests-v1.log": "527078281c292fdf54b511447c6727c98a387497fb27a390b877ed26020cf3b2",
+    "benchmarks/results/2026-10-15-m6-context-collector-controlled-tests-v2.log": "728d77312447f3990f5532cfae2a0385e8fab98b35ca2ee537900da374768058",
+    "benchmarks/results/2026-10-15-m6-context-collector-transport-tests-v1.log": "d41ae43aea17a09a79d97b0be2236f46f912ecffd2469520815c322fcc76908d"
+  },
+  "checks": {
+    "portable_context_tests": 10,
+    "controlled_helper_tests": 7,
+    "transport_tests": 7,
+    "whitespace": true
+  },
+  "native_workers": 2,
+  "native_raw_events": 6,
+  "excluded": [
+    "artifacts/m6-context-small-collector-probe-v1.json",
+    "artifacts/m6-context-larger-collector-probe-v1.json",
+    "benchmarks/results/2026-10-15-m6-context-collector-controlled-tests-v1.log"
+  ],
+  "measurements_completed": false,
+  "m6_complete": false,
+  "models": [
+    {
+      "model": "small",
+      "unique_admission_bytes": 1440667340,
+      "max_joint_native_bytes": 1275987840
+    },
+    {
+      "model": "larger",
+      "unique_admission_bytes": 2303311508,
+      "max_joint_native_bytes": 2157775536
+    }
+  ]
+}

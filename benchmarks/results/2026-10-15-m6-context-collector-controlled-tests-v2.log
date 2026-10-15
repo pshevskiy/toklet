@@ -1,0 +1,13 @@
+test_actual_modes_typed_geometry_and_complete_budget (test_metal_controlled.Controlled.test_actual_modes_typed_geometry_and_complete_budget) ... ok
+test_eight_frozen_workloads_and_explicit_changed_reset (test_metal_controlled.Controlled.test_eight_frozen_workloads_and_explicit_changed_reset) ... ok
+test_initial_snapshot_must_match_every_admitted_array (test_metal_controlled.Controlled.test_initial_snapshot_must_match_every_admitted_array) ... ok
+test_invalid_ready_reaps_owned_worker_preserves_primary_error (test_metal_controlled.Controlled.test_invalid_ready_reaps_owned_worker_preserves_primary_error) ... ok
+test_result_schema_exact_repetitions_and_cached_throughput_null (test_metal_controlled.Controlled.test_result_schema_exact_repetitions_and_cached_throughput_null) ... ok
+test_state_completion_timing_and_inventory_mutations_reject (test_metal_controlled.Controlled.test_state_completion_timing_and_inventory_mutations_reject) ... ok
+test_token_replacement_after_verify_rejects_before_child (test_metal_controlled.Controlled.test_token_replacement_after_verify_rejects_before_child) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.080s
+
+OK
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
