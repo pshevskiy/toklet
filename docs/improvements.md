@@ -362,3 +362,12 @@ Metal checks and two native tiny workers/262 events pass exact cache/state,
 rejection, memory and profiling checks. A byte-pinned4K–32K stress contract was
 frozen before long real-model evaluation. Native collectors, long quality,
 performance and the measured FP16 KV decision remain pending.
+
+The [M6 context collector](experiments/2026-10-15-m6-context-collector.md)
+binds reviewed compiled/runtime/model/contract bytes before launch and after
+owned exit, validates exact paired quality/state/memory, and separates ordinary
+timing from matching-command GPU profiles. The512/128 primary and three/ten
+paired policy are explicit. Ten collector/seven controlled/seven transport tests
+and two selected-model short probes/six events pass. Astra accepted all311
+endpoint bindings and raw replay after three collector fixes. Long quality,
+performance, application admission, task gates and the KV decision remain open.
