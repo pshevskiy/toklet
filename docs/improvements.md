@@ -346,3 +346,10 @@ unchanged short/full loss gates and incomplete/rejected flags.26 portable checks
 97 CPU/110 ordinary Metal checks and eight real-model short-guard workers/68
 events pass; single/batch NLL differences are0 small and at most0.00001075 larger.
 Full10000-target loss/task quality and long-context release remain pending.
+
+The [M6 Online full-loss collections](experiments/2026-10-15-m6-online-full-loss.md)
+pass the unchanged10000-target gate for both selected representations: small
+mean2.8835716762 (−0.0001534737 vsFP32), larger v2 mean2.5142232720
+(+0.0282652410≤0.05). Ten serial workers/20268 raw events pass exact state,
+source/artifact/corpus and complete≤6GiB memory checks. The block policy remains
+near1K; task quality, long contexts, performance and M6 closure stay pending.

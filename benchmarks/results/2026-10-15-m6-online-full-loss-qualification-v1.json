@@ -1,0 +1,65 @@
+{
+  "format": "toklet-m6-online-full-loss-qualification-v1",
+  "scope": "Unchanged10000-target FP32-relative loss gate for selectedsmallHalf/largerQ4v2 Online attention. No task-quality/long-context/latency acceptance.",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "All20268events,294filehashes,exactsource/state/aggregate/memory/exit replay; full loss only"
+  },
+  "models": [
+    {
+      "model": "small",
+      "source_collection": "artifacts/m6-quality-small-full-v1.json",
+      "workers": 5,
+      "raw_events": 10134,
+      "scored_targets": 10000,
+      "mean_negative_log_likelihood": 2.8835716761956602,
+      "baseline_mean_negative_log_likelihood": 2.883725149929484,
+      "increase_nats_per_token": -0.0001534737338237946,
+      "loss_gate_passed": true,
+      "max_admission_bytes": 1377627122,
+      "max_joint_native_bytes": 1305102376
+    },
+    {
+      "model": "larger",
+      "source_collection": "artifacts/m6-quality-larger-full-v1.json",
+      "workers": 5,
+      "raw_events": 10134,
+      "scored_targets": 10000,
+      "mean_negative_log_likelihood": 2.5142232720120155,
+      "baseline_mean_negative_log_likelihood": 2.485958031019153,
+      "increase_nats_per_token": 0.028265240992862317,
+      "loss_gate_passed": true,
+      "max_admission_bytes": 2189857482,
+      "max_joint_native_bytes": 2144864992
+    }
+  ],
+  "bindings": {
+    "benchmarks/results/2026-10-15-m6-quality-small-full-v1.json": {
+      "sha256": "f42168eca2186be0be117e4f1987a51e574b60d6874d65231714ada000a774f7"
+    },
+    "benchmarks/results/2026-10-15-m6-quality-small-full-v1.raw.jsonl": {
+      "sha256": "59bc4e684ad2afb082d2d9f05ea34f364e1ee58e087ce2712b83feb4761083b2"
+    },
+    "benchmarks/results/2026-10-15-m6-quality-small-full-v1.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-15-m6-quality-larger-full-v1.json": {
+      "sha256": "e2f053912866604b9f796fa856efc6c5558c31ec771a8d7c46eba88a7ff6f25b"
+    },
+    "benchmarks/results/2026-10-15-m6-quality-larger-full-v1.raw.jsonl": {
+      "sha256": "491b5f3675f36f97f278fbfcd0e8dcbaf462b13b559d516dba1e8f72cef58794"
+    },
+    "benchmarks/results/2026-10-15-m6-quality-larger-full-v1.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "runtime_collection_revision": "1e71caf",
+  "collector_qualification": "benchmarks/results/2026-10-15-m6-quality-collector-qualification-v1.json",
+  "new_untracked_example_note": "examples/metal_context.rs prepared offline during collection; not part of compiledquality closure. No build/test/othernative/modelhash overlapped native scoring.",
+  "task_quality_completed": false,
+  "long_context_qualified": false,
+  "m6_complete": false
+}
