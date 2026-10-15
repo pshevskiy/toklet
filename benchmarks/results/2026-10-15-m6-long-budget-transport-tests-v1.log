@@ -1,0 +1,12 @@
+test_eof_reaps_child (test_metal_engine.Collector.test_eof_reaps_child) ... ok
+test_existing_evidence_is_preserved (test_metal_engine.Collector.test_existing_evidence_is_preserved) ... ok
+test_exited_leader_descendant_holding_pipes_is_cleaned (test_metal_engine.Collector.test_exited_leader_descendant_holding_pipes_is_cleaned) ... ok
+test_oversized_line_reaps_child (test_metal_engine.Collector.test_oversized_line_reaps_child) ... ok
+test_stderr_flood_is_capped_and_reaped (test_metal_engine.Collector.test_stderr_flood_is_capped_and_reaped) ... ok
+test_timeout_reaps_child (test_metal_engine.Collector.test_timeout_reaps_child) ... ok
+test_unexpected_event_reaps_child_and_retains_failure (test_metal_engine.Collector.test_unexpected_event_reaps_child_and_retains_failure) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.144s
+
+OK

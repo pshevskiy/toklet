@@ -1,0 +1,21 @@
+test_bounded_bytes_reject_truncation_replacement_and_excess (test_m6_context.Context.test_bounded_bytes_reject_truncation_replacement_and_excess) ... ok
+test_controlled_pins_bind_original_not_recaptured_mutations (test_m6_context.Context.test_controlled_pins_bind_original_not_recaptured_mutations) ... ok
+test_failed_startup_reaps_only_owned_worker (test_m6_context.Context.test_failed_startup_reaps_only_owned_worker) ... ok
+test_finalization_error_survives_cleanup_error_and_all_actions_run (test_m6_context.Context.test_finalization_error_survives_cleanup_error_and_all_actions_run) ... ok
+test_launch_reassertion_precedes_popen (test_m6_context.Context.test_launch_reassertion_precedes_popen) ... ok
+test_primary_sends_exact_frozen_512_128_alternating_three_plus_ten_pairs (test_m6_context.Context.test_primary_sends_exact_frozen_512_128_alternating_three_plus_ten_pairs) ... ok
+test_profile_conversion_and_denominator_use_matching_completed_gpu (test_m6_context.Context.test_profile_conversion_and_denominator_use_matching_completed_gpu) ... ok
+test_quality_coverage_states_gate_and_near_ties (test_m6_context.Context.test_quality_coverage_states_gate_and_near_ties) ... ok
+test_ready_exact_modes_geometry_complete_memory_all_depths (test_m6_context.Context.test_ready_exact_modes_geometry_complete_memory_all_depths) ... ok
+test_union_counts_overlaps_once_and_keeps_gaps (test_m6_context.Context.test_union_counts_overlaps_once_and_keeps_gaps) ... ok
+test_configuration_is_passed_to_bounded_transport_and_recorded (test_m6_context_long_budget.LongBudget.test_configuration_is_passed_to_bounded_transport_and_recorded) ... ok
+test_only_explicit_bounded_time_choices_are_accepted_before_launch (test_m6_context_long_budget.LongBudget.test_only_explicit_bounded_time_choices_are_accepted_before_launch) ... ok
+test_prelaunch_reassertion_still_precedes_popen (test_m6_context_long_budget.LongBudget.test_prelaunch_reassertion_still_precedes_popen) ... ok
+test_unknown_model_plan_depth_and_existing_evidence_fail_before_admission (test_m6_context_long_budget.LongBudget.test_unknown_model_plan_depth_and_existing_evidence_fail_before_admission) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.072s
+
+OK
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.

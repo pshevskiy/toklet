@@ -400,3 +400,14 @@ VM restoration pass. Astra accepted all411bindings and independent replay;
 absolute task scores stay disclosed. Full loss/task gates are now closed;
 long quality, profiles/performance, max-context generation and the KV decision
 remain before M6 completion.
+
+The [M6 bounded-wait adapter](experiments/2026-10-15-m6-long-budget.md)
+preserves completed collector identities while giving slow higher-depth
+collections explicit 2/6/12-hour per-event read bounds under the existing 24-hour
+worker lifetime. Four new/ten existing collector and seven transport checks pass;
+two serial selected-model probes/six events validate 21,600/43,200 second settings,
+exact state, endpoint identities and natural cleanup. No numerical gate or
+performance/support claim changes; the incomplete 16K attempt is retained for
+retry, and M6 long qualification remains open.
+Astra accepted the final code and evidence after independent six-event replay and
+313 binding checks.

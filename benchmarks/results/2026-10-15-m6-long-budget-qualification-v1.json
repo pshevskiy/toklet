@@ -1,0 +1,47 @@
+{
+  "format": "toklet-m6-long-budget-qualification-v1",
+  "source_parent": "dfba1f2",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Independent six-event replay,313 bindings, final4+10 collector and7Transport checks, natural exits/cleanup, publication copies and interruption accounting accepted"
+  },
+  "scope": "Bounded collector wait configuration only; no numerical, quality, performance or context support claim",
+  "source_pins": {
+    "tools/experiments/m6_context_long_budget.py": "817fb6dad35236aa11ec0e5498b44368630c9757e858c9d4064ecc894cf14fe3",
+    "tools/experiments/test_m6_context_long_budget.py": "2f1b955c6e5cd2d9bbec5dd678ffd9642f0b849387cb58ce51c10991b90ad8b0"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-long-budget-small-probe-v1.json": "a2e29952fe13f9e17094327411262eb539422b93c09d5694b7cee29834048d22",
+    "benchmarks/results/2026-10-15-m6-long-budget-small-probe-v1.raw.jsonl": "7061368552e91548fa63f32e23802d991e81f1bbd319118fa3302e30a6dcf2f5",
+    "benchmarks/results/2026-10-15-m6-long-budget-small-probe-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-long-budget-larger-probe-v1.json": "fe38bcaddb3fc03c8e09402ee42e1c3f2ed027e4a4f3d91bba744d4d3c2922b5",
+    "benchmarks/results/2026-10-15-m6-long-budget-larger-probe-v1.raw.jsonl": "f93f51adb365ef4e97f2ce5980d11f85d014386592b73de90da068e160735efc",
+    "benchmarks/results/2026-10-15-m6-long-budget-larger-probe-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-long-budget-transport-tests-v1.log": "2072dabe0b37a41a94ebc236cf60af6c60d769530714be146d1931c65e796529",
+    "benchmarks/results/2026-10-15-m6-long-budget-tests-v2.log": "6e8d82a74f20c5326ae255124926be5715b0b2e8ed2726918ad263a5eefbdc9b",
+    "benchmarks/results/2026-10-15-m6-long-budget-tests-v3.log": "f7133ae4b0f146779795919d7b7c4e97ecbaf90982679e3adb02fe3e5bd5f250",
+    "benchmarks/results/2026-10-15-m6-long-budget-tests-v1.log": "ea2631e44ce8e7f2a21ca35876d7b90a726d35b814fc54dfbd8b869a7f651f8a"
+  },
+  "models": [
+    {
+      "model": "small",
+      "event_read_timeout_seconds": 21600,
+      "raw_events": 3,
+      "admission_bytes": 1440667340,
+      "max_joint_native_bytes": 1274775496
+    },
+    {
+      "model": "larger",
+      "event_read_timeout_seconds": 43200,
+      "raw_events": 3,
+      "admission_bytes": 2303311508,
+      "max_joint_native_bytes": 2158414584
+    }
+  ],
+  "native_workers": 2,
+  "native_raw_events": 6,
+  "m6_complete": false
+}
