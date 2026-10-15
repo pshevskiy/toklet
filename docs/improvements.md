@@ -353,3 +353,12 @@ mean2.8835716762 (−0.0001534737 vsFP32), larger v2 mean2.5142232720
 (+0.0282652410≤0.05). Ten serial workers/20268 raw events pass exact state,
 source/artifact/corpus and complete≤6GiB memory checks. The block policy remains
 near1K; task quality, long contexts, performance and M6 closure stay pending.
+
+The [paired M6 context worker](experiments/2026-10-15-m6-context-worker.md)
+shares immutable weights once, admits both session/counter resource sets before
+allocation, and separates ordinary samples, paired vocabulary/loss checks and
+same-depth decode profiles. Five portable protocol checks,97 CPU/110 ordinary
+Metal checks and two native tiny workers/262 events pass exact cache/state,
+rejection, memory and profiling checks. A byte-pinned4K–32K stress contract was
+frozen before long real-model evaluation. Native collectors, long quality,
+performance and the measured FP16 KV decision remain pending.

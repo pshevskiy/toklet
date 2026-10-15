@@ -1,0 +1,104 @@
+{
+  "format": "toklet-m6-context-contract-v1",
+  "frozen_before_long_real_model_collection": true,
+  "source_corpus": "benchmarks/contract-v1/held_out_loss.u32le",
+  "source_sha256": "f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb",
+  "tokens": "Cyclic repetition of original10001-token held-out stream, truncated to each total capacity; final128 IDs are teacher-forced outputs. Repetition is a controlled numerical stress workload, not a natural long-document capability claim.",
+  "rows": [
+    {
+      "total_tokens": 4096,
+      "prompt_tokens": 3968,
+      "output_tokens": 128,
+      "file": "context_4096.u32le",
+      "sha256": "8c856d26c10cabedc9d7b5fbda6749b1f699b6ba015fc96aa7d8fe8d78026b83",
+      "prompt_sha256": "71753f52320ae115a2743425462f33dfe827cd5ce8537225890335d5f7f0a7bf",
+      "continuation_sha256": "30a5bd3744e291d7a15009d4cd81b5b89860922902ec44678da27cdc886c793d"
+    },
+    {
+      "total_tokens": 8192,
+      "prompt_tokens": 8064,
+      "output_tokens": 128,
+      "file": "context_8192.u32le",
+      "sha256": "c6dbbee41e2bba6ee88089844a9eddaf6099e56b91e455e3c75a1a62bb055870",
+      "prompt_sha256": "c59d8ffce91606f8dfc301da280ad2bd01c178bc78ecf23969c05942262ebd2a",
+      "continuation_sha256": "45be2bef97a23ee768a435b39863ae4eafa44c8be2482b72e86b305bdf1c7ea5"
+    },
+    {
+      "total_tokens": 16384,
+      "prompt_tokens": 16256,
+      "output_tokens": 128,
+      "file": "context_16384.u32le",
+      "sha256": "c35cb60d9394a9df2fbb71081828b45d9d61f3b8b3487900488b09ba6bafb953",
+      "prompt_sha256": "4791d3eb28ceb8a8059b3f90e98a194a4819f90408b24f021a584f81e2cba501",
+      "continuation_sha256": "7ee1d56c2328218e1ecb0f4183c25064e17163fcd5f0acae834b900eb19d81c7"
+    },
+    {
+      "total_tokens": 32768,
+      "prompt_tokens": 32640,
+      "output_tokens": 128,
+      "file": "context_32768.u32le",
+      "sha256": "af3cc0b92da9314323e2e123b40f4a25a7be355773b5bb5ce574067a87ae5283",
+      "prompt_sha256": "c00eb365ddc5ea0891c3cda060772b5f427bd36a66eedbc9bb708e6a661665f8",
+      "continuation_sha256": "eab70fb0c6469ff24e793179dc94aca0f5e60c66eb98d36bd97c7400c3aa6ce5"
+    }
+  ],
+  "models": [
+    "small_compensated_half",
+    "larger_frozen_q4_v2"
+  ],
+  "kv_dtype": "FP16",
+  "prefill_chunk": 128,
+  "quality": {
+    "paired_long_targets": 512,
+    "per_depth_targets": 128,
+    "max_mean_nll_increase_online_vs_selected_reference": 0.05,
+    "require_each_depth_and_pooled_gate": true,
+    "exact_teacher_forced_history_state": true,
+    "argmax_changes": "Record both winners, logits, reference margin and full-vocabulary max/RMS error. Investigate changes; no tolerance tuning.",
+    "scope": "Focused long-context regression against same selected weights/reference attention. Does not replace unchanged10000-target FP32-relative loss and100-case task gates or establish general long-context task ability."
+  },
+  "short_measurement": {
+    "primary_prompt_tokens": 512,
+    "output_tokens": 128,
+    "warmups": 3,
+    "measured_pairs": 10,
+    "alternate_order": true,
+    "useful_gain_requires_second_collection": true,
+    "retain_gain_threshold": 0.05,
+    "other_original_matrix_rows": {
+      "warmups": 1,
+      "measured_pairs": 3,
+      "scope": "Exploratory regression screen; investigate regressions before acceptance; no tail or strong ranking claim."
+    }
+  },
+  "long_measurement": {
+    "warmups": 1,
+    "measured_pairs": 2,
+    "separate_confirmation_pairs": 1,
+    "scope": "Expensive boundary qualification with raw descriptive timing, no accepted speedup ranking from this sample count.",
+    "output_reservation": true,
+    "one_token_beyond_rejected_before_mutation": true
+  },
+  "profile": {
+    "separate_worker": true,
+    "decode_depths": [
+      4096,
+      8192,
+      16384,
+      32768
+    ],
+    "repetitions": 3,
+    "scope": "Completed encoder and command timing; report counter interference separately from ordinary timings.",
+    "fraction_definition": "Per sample, union of Online attention GPU intervals divided by the matching completed decode command GPU duration; median across three profiles at the same named depth. No host-wait or calibration-bracket denominator.",
+    "reuse_policy": "First profile prepares the exact prefix. Subsequent profiles set the same prefix and recompute the final decode input using valid exact-prefix cache reuse; each finishes at the same committed named depth. Record actual reused/prefill counts."
+  },
+  "kv_decision": {
+    "rule": "Retain FP16 if every selected capacity fits complete6GiB admission/native charge and Online attention median contribution at maximum depth is no more than20% of completed profiled decode command time. Otherwise investigate capacity/traffic and consider separately versioned I8.",
+    "attention_fraction_threshold": 0.2,
+    "interpretation": "Predeclared experiment decision rule; stage time is not a direct KV traffic measurement."
+  },
+  "working_set_limit_bytes": 6442450944,
+  "default_changes": false,
+  "m7_in_scope": false,
+  "application_memory": "Additionally qualify each selected Online model with an actual tokenizer-owning interactive CLI at maximum accepted depth,128 outputs ignoring EOS, complete application admission and owned native charge. No natural long-document capability claim."
+}

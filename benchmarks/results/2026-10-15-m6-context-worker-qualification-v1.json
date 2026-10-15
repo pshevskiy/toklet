@@ -1,0 +1,89 @@
+{
+  "format": "toklet-m6-context-worker-qualification-v1",
+  "source_parent": "f3cb8bd",
+  "scope": "Paired native worker/protocol, complete joint admission, tiny numerical/state/profiling checks and frozen long-input contract only. No real-model latency/long-context qualification.",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Paired worker, frozen contract and all tiny state/profile evidence only"
+  },
+  "source_snapshot": "artifacts/m6-context-worker-source-v1",
+  "source_pins": {
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "a4cc758d947079d5cf715183edfa71039de4dc1735caac6a481cf7a0c9ae8962",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/memory.rs": "087b5e0fff4beb3dae8402d3ebc94f7df961df4db55491f8e73e2568f5608911",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/weights/mod.rs": "d0a489a0e00a794d895231f179acc93f4b22fd465fbae5f8065f7d5610f248ed",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "Cargo.toml": "bc21dbd7fd1c0f257ad8b7debfb20016170a64505a583e368de1a48ca865593c",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "examples/metal_context.rs": "52f210f93640cc9039d62143644b28e27a8a05dd91564502e4768b2f56db583f"
+  },
+  "log_pins": {
+    "benchmarks/results/2026-10-15-m6-context-worker-cpu-clippy-v2.log": "4ae14e534fe59a2013a73f5e5ebc3d9684168472fb01036273148d9040512cd7",
+    "benchmarks/results/2026-10-15-m6-context-worker-metal-clippy-v2.log": "41ea743f60f79694d4693c6350ab158e39f6d1d763dfe3a9ab04687c5ea839e7",
+    "benchmarks/results/2026-10-15-m6-context-worker-protocol-v2.log": "3951916bc221732d17e5954ea751248ce76237a29b738f095e428b0bccd04508",
+    "benchmarks/results/2026-10-15-m6-context-worker-cpu-tests-v1.log": "81b97b3491eacf9b3bf3971e0ff901e4f668a76da6ccf1337090167739d38168",
+    "benchmarks/results/2026-10-15-m6-context-worker-metal-tests-v1.log": "444fa7804793d80c63d105a04545221076ce1bd4b790321e22438db2705244e0",
+    "benchmarks/results/2026-10-15-m6-context-worker-build-v1.log": "2b4ff6541b3b754bf7138d02449948ce57292d95015cc1787e80b21929aa100e",
+    "benchmarks/results/2026-10-15-m6-context-worker-probe-v1.log": "29fb15dd8d4f7eb819c82d0406ddfba206ef6c02ee36f21e931ce6537e0d4386"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-context-worker-collector.py": "097c77a57a07f39855c8edef1bde994363a884fb155dc972b2d4e9d978380699",
+    "benchmarks/results/2026-10-15-m6-context-worker-result.json": "43c31ef09956e5377f48bcd3d67674f2a1928892230ac30faa21bc38202e043c",
+    "benchmarks/results/2026-10-15-m6-context-worker-raw.jsonl": "42e122a41e91c1dc17ed662a3dea307227bed3e5d679afa865e0d6bac40ccf9d",
+    "benchmarks/results/2026-10-15-m6-context-worker-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "binary": {
+    "path": "artifacts/m6-context-worker-native-v1/metal_context",
+    "sha256": "cdd0c356373e4a7b309363a0bb36934adade4f351f6a0242ee44747037e9af40"
+  },
+  "contract_pins": {
+    "benchmarks/m6-context-v1/context_32768.u32le": "af3cc0b92da9314323e2e123b40f4a25a7be355773b5bb5ce574067a87ae5283",
+    "benchmarks/m6-context-v1/context_4096.u32le": "8c856d26c10cabedc9d7b5fbda6749b1f699b6ba015fc96aa7d8fe8d78026b83",
+    "benchmarks/m6-context-v1/context_16384.u32le": "c35cb60d9394a9df2fbb71081828b45d9d61f3b8b3487900488b09ba6bafb953",
+    "benchmarks/m6-context-v1/context_8192.u32le": "c6dbbee41e2bba6ee88089844a9eddaf6099e56b91e455e3c75a1a62bb055870",
+    "benchmarks/m6-context-v1/manifest.json": "6a704eb37b681efacbdce88e58c6c86930e65a5ec1507a9e1b18551cc4a9dcaa"
+  },
+  "checks": {
+    "cpu_tests": 97,
+    "ordinary_metal_tests": 110,
+    "portable_rust_protocol_tests": 5,
+    "format": true,
+    "strict_cpu_clippy": true,
+    "strict_metal_clippy": true
+  },
+  "native_workers": 2,
+  "native_raw_events": 262,
+  "native_requests": 23,
+  "profile_operators": 228,
+  "max_unique_admission_bytes": 335608084,
+  "max_joint_native_bytes": 27378888,
+  "profile_scope": "Separate workers; first exact prefix preparation then valid-prefix recovery and repeat same committed depth. Full counter calibration/clock/operator stream retained.",
+  "m6_complete": false
+}
