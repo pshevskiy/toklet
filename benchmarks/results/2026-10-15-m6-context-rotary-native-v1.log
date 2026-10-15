@@ -1,0 +1,10 @@
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `release` profile [optimized] target(s) in 3.03s
+     Running unittests src/lib.rs (artifacts/m5-checks/release/deps/toklet-f8ac5e0ca609557c)
+
+running 1 test
+test metal::online_attention::high_position_rotary_matches_independent_math_envelope ... high-position rotary: 6912 independent values through32767; max_abs_error=0.003663682704437843
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 27 filtered out; finished in 0.06s
+

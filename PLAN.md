@@ -1405,7 +1405,7 @@ M5 larger Q4 v2 task collector code task,14 October2026: [qualification](docs/ex
 
 ## M6 Qualify longer context and attention
 
-In progress,15 October2026. The [first online attention component](docs/experiments/2026-10-15-m6-online-attention.md) passes independent primitive/tiny/session gates with bounded scratch. Real-model quality/performance, extended admission and long-context qualification remain before completion.
+In progress,15 October2026. The [online attention component](docs/experiments/2026-10-15-m6-online-attention.md) passes independent primitive/tiny/session gates with bounded scratch. [Explicit long admission](docs/experiments/2026-10-15-m6-long-admission.md) passes structural/tiny/high-position/CLI checks through32K. Real-model quality/performance and long-context qualification remain before completion.
 
 - [ ] **M6.1 Implement tiled online-softmax attention.** Build separate decode and prefill paths without materializing the full attention-score matrix. Preserve causal boundaries, absolute positions, and GQA sharing. Compare irregular chunk sizes and substantial cached depths with the reference.
 - [ ] **M6.2 Extend context admission and profiling.** Measure 4K, 8K, 16K, and 32K total-token workloads only where the pinned model permits them. Reserve output capacity: at a validated limit of 32,768, a 128-output boundary run has 32,640 prompt tokens. Account for allocated KV, workspace, and model limits before dispatch.

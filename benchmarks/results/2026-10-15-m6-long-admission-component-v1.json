@@ -1,0 +1,96 @@
+{
+  "format": "toklet-m6-long-admission-component-v1",
+  "source_parent": "a282a49",
+  "source_snapshot": "artifacts/m6-context-source-v1",
+  "scope": "Explicit Metal loading/admission/CLI and high-position arithmetic only. No long real-model prefix, quality, latency or supported-context qualification.",
+  "source_pins": {
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "a4cc758d947079d5cf715183edfa71039de4dc1735caac6a481cf7a0c9ae8962",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/memory.rs": "087b5e0fff4beb3dae8402d3ebc94f7df961df4db55491f8e73e2568f5608911",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/weights/mod.rs": "d0a489a0e00a794d895231f179acc93f4b22fd465fbae5f8065f7d5610f248ed",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "Cargo.toml": "bc21dbd7fd1c0f257ad8b7debfb20016170a64505a583e368de1a48ca865593c",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "tests/metal.rs": "5a7f02490404dc6bc90a4234c3fe54b4d48810e7d7fc4a0913ffdecafccf5252",
+    "tests/weights.rs": "16a026e1ca620b20f4aeb5a8d59231a8818fe5729426a777fa1f759168a9c3e7"
+  },
+  "log_pins": {
+    "benchmarks/results/2026-10-15-m6-context-admission-native-v1.log": "8787d3ca7f44efaf7190fd4aba75f467f543b3dd4c50e4b5e461e1ccbc3d69e1",
+    "benchmarks/results/2026-10-15-m6-context-cli-build-v1.log": "92434e198f27984c035c376ec77a7cf9e6ebdde782f8ccb1336ae3329b66ddb7",
+    "benchmarks/results/2026-10-15-m6-context-cli-probe-v1.log": "72762cb40a87555a35790ec9af7ffda62060c3d9237e42da4b900a355a7ee3ba",
+    "benchmarks/results/2026-10-15-m6-context-cpu-clippy-v1.log": "93eac6ec965f970167bf3d751c9ba942164d9b80818e61a359f4e5e077b9c6c8",
+    "benchmarks/results/2026-10-15-m6-context-cpu-tests-v1.log": "fdc363af8566380e79e9cc4205d8b3cfdc87d9c343d927a692ce5ff96839e993",
+    "benchmarks/results/2026-10-15-m6-context-metal-clippy-v1.log": "94c2648308d55be509d83e81a5af9516f34061108208b9e6763eaeb53e8fb407",
+    "benchmarks/results/2026-10-15-m6-context-metal-tests-v1.log": "b6d63696aaebec3908dca15f9afb3df222395c90935f8d5b1d874838c622de1e",
+    "benchmarks/results/2026-10-15-m6-context-rotary-native-v1.log": "83189288c8a06c4274c33031209fe2039869d38766f4b326c92ba6faaef634dd"
+  },
+  "cli_evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-context-cli-collector.py": "4f75286d5e8e8e944b276b43e55799b235f6904122e39ab7f0e942645ada1318",
+    "benchmarks/results/2026-10-15-m6-context-cli-result.json": "332ccc05fb846b738c60f49e89907ee6e0162f565dc121545f4577079f0dc7c8",
+    "benchmarks/results/2026-10-15-m6-context-cli-raw.jsonl": "52d136e94671c42e36e600962b467ca1aa0e19678abf46297cd4f5d62246f4ac",
+    "benchmarks/results/2026-10-15-m6-context-cli-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cli_binary": {
+    "path": "artifacts/m6-context-cli-native-v1/toklet",
+    "sha256": "4e724e995e7d7caf2760d745af587cccee33e40bf260763f8b929ba9d9450f54"
+  },
+  "checks": {
+    "cpu_tests": 97,
+    "metal_ordinary_tests": 110,
+    "format": true,
+    "strict_cpu_clippy": true,
+    "strict_metal_clippy": true,
+    "native_long_admission": true,
+    "native_high_rotary": true,
+    "native_cli_workers": 6,
+    "native_cli_raw_events": 122
+  },
+  "rotary": {
+    "oracle": "FP64 exact stored Half inputs, independent split-half math",
+    "compared_values": 6912,
+    "largest_position": 32767,
+    "max_absolute_error": 0.003663682704437843,
+    "envelope": "(|a|+|b|)*(8*f32::EPSILON*(abs(angle)+1)+0.0005)+1e-5",
+    "interpretation": "Predeclared numerical acceptance envelope motivated by FP32/FP16 error; not a proven vendor transcendental bound or model loss gate"
+  },
+  "cli_max_admission_bytes": 205869900,
+  "cli_max_joint_native_bytes": 31737056,
+  "context_capacities": [
+    4096,
+    8192,
+    16384,
+    32768
+  ],
+  "cpu_and_default_capacity": 2048,
+  "token_output_reservation_rejected_without_mutation": true,
+  "astra_review": {
+    "status": "accepted",
+    "remaining_findings": [],
+    "scope": "Code, source snapshot, bound native and portable evidence; component only"
+  },
+  "m6_complete": false
+}

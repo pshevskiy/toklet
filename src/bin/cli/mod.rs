@@ -40,11 +40,12 @@ Usage: toklet [OPTIONS]
   --tokens IDS              Comma-separated raw token IDs
   --token-file PATH         Little-endian u32 token IDs
   --max-new-tokens N         Sampled output limit, including stop token (32)
-  --context-capacity N      Prompt plus output limit, at most 2048 (2048)
+  --context-capacity N      Prompt plus output limit (2048; Metal up to32768)
   --prefill-chunk N          Prefill cancellation boundary (128)
   --backend cpu|metal       CPU (default), or opt-in Metal feature
   --cpu-projection MODE     scalar (default) or opt-in tiled projections
   --metal-projection MODE   original (default), half-compensated, q4-v2-compensated-tiled
+  --metal-attention MODE    reference (default) or experimental online
   --q4-weights PATH         Explicit Q4 v2 packed artifact for the v2 mode
   --stop-token ID           Additional stop ID; repeatable
   --no-eos                  Ignore configured EOS IDs
@@ -76,6 +77,7 @@ struct Args {
     projection: ProjectionKernel,
     backend: &'static str,
     metal_projection: &'static str,
+    metal_attention: &'static str,
     q4_weights: Option<PathBuf>,
 }
 fn utf8(v: OsString) -> io::Result<String> {
@@ -107,6 +109,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         projection: ProjectionKernel::Scalar,
         backend: "cpu",
         metal_projection: "original",
+        metal_attention: "reference",
         q4_weights: None,
     };
     let mut seen = HashSet::new();
@@ -135,6 +138,13 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                             "--metal-projection must be original, half-compensated or q4-v2-compensated-tiled",
                         ));
                     }
+                };
+            }
+            "--metal-attention" => {
+                a.metal_attention = match utf8(value()?)?.as_str() {
+                    "reference" => "reference",
+                    "online" => "online",
+                    _ => return Err(invalid("--metal-attention must be reference or online")),
                 };
             }
             "--q4-weights" => a.q4_weights = Some(value()?.into()),
@@ -182,6 +192,9 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
     if a.backend != "metal" && seen.contains("--metal-projection") {
         return Err(invalid("--metal-projection requires metal backend"));
     }
+    if a.backend != "metal" && seen.contains("--metal-attention") {
+        return Err(invalid("--metal-attention requires metal backend"));
+    }
     if a.q4_weights.is_some() && a.backend != "metal" {
         return Err(invalid("--q4-weights requires metal backend"));
     }
@@ -213,7 +226,12 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
     if a.tools.is_some() && a.prompt.is_none() && a.messages.is_none() {
         return Err(invalid("--tools needs chat input"));
     }
-    if a.capacity == 0 || a.capacity > 2048 || a.max > 2048 || a.chunk == 0 {
+    let context_limit = if a.backend == "metal" {
+        weights::MAX_CONTEXT_LIMIT
+    } else {
+        weights::INITIAL_CONTEXT_LIMIT
+    };
+    if a.capacity == 0 || a.capacity > context_limit || a.max > 2048 || a.chunk == 0 {
         return Err(invalid("invalid output/context/chunk limit"));
     }
     if a.prompt
@@ -259,6 +277,8 @@ struct ExecutionMetadata {
     projection_mode: &'static str,
     normalization_mode: &'static str,
     readback_mode: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    attention_mode: Option<&'static str>,
     prefill_chunk_size: usize,
     #[serde(skip_serializing_if = "Option::is_none")]
     packed_format_version: Option<u32>,
@@ -484,8 +504,8 @@ fn token_list(text: &str) -> io::Result<Vec<u32>> {
         .split(',')
         .map(|w| w.trim().parse().map_err(|_| invalid("invalid token ID")))
         .collect::<Result<_, _>>()?;
-    if tokens.len() > 2048 {
-        return Err(invalid("token list exceeds 2048 IDs"));
+    if tokens.len() > weights::MAX_CONTEXT_LIMIT {
+        return Err(invalid("token list exceeds32768 IDs"));
     }
     Ok(tokens)
 }
@@ -531,7 +551,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         let tokens = if let Some(text) = &a.tokens {
             Some(token_list(text)?)
         } else if let Some(path) = &a.token_file {
-            let b = chat::read_bounded(path, 2048 * 4)?;
+            let b = chat::read_bounded(path, a.capacity * 4)?;
             if !b.len().is_multiple_of(4) {
                 return Err(invalid("token file must contain complete u32 values").into());
             }
@@ -575,6 +595,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             projection_mode: a.projection.name(),
             normalization_mode: "OrderedFP64",
             readback_mode: "FullLogits",
+            attention_mode: None,
             prefill_chunk_size: a.chunk,
             packed_format_version: None,
             quantization_group_size: None,
@@ -614,11 +635,18 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         } else {
             toklet::metal::NormalizationMode::Original
         };
-        let mut session = toklet::metal::Session::with_execution_modes(
+        let attention = if a.metal_attention == "online" {
+            toklet::metal::AttentionMode::Online
+        } else {
+            toklet::metal::AttentionMode::Reference
+        };
+        let mut session = toklet::metal::Session::with_attention_mode(
             &model,
             options,
             projection,
             normalization,
+            toklet::metal::ReadbackMode::FullLogits,
+            attention,
         )?;
         frontend.execution = ExecutionMetadata {
             weight_dtype: if q4_v2 {
@@ -634,6 +662,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             },
             normalization_mode: if q4_v2 { "Compensated" } else { "Original" },
             readback_mode: "FullLogits",
+            attention_mode: (a.metal_attention == "online").then_some("Online"),
             prefill_chunk_size: a.chunk,
             packed_format_version: q4_v2.then_some(2),
             quantization_group_size: model.q4_format().map(|f| f.group()),
@@ -784,6 +813,64 @@ pub fn main() -> u8 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn args(values: &[&str]) -> Vec<OsString> {
+        values.iter().map(OsString::from).collect()
+    }
+    #[test]
+    fn attention_selection_and_context_bounds_reject_before_model_access() {
+        for tail in [
+            vec!["--metal-attention", "online"],
+            vec!["--metal-attention", "reference"],
+            vec!["--metal-attention", "bad"],
+            vec!["--metal-attention", "online", "--metal-attention", "online"],
+            vec!["--context-capacity", "2049"],
+        ] {
+            let mut values = args(&["--model", "missing", "--tokens", "1"]);
+            values.extend(args(&tail));
+            assert!(parse(values).is_err());
+        }
+        let base = parse(args(&["--model", "missing", "--tokens", "1"])).unwrap();
+        assert_eq!(
+            (base.capacity, base.chunk, base.metal_attention),
+            (2048, 128, "reference")
+        );
+    }
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    fn explicit_metal_context_and_attention_parse_with_default_compatibility() {
+        for mode in ["reference", "online"] {
+            for capacity in ["4096", "8192", "16384", "32768"] {
+                let values = args(&[
+                    "--model",
+                    "missing",
+                    "--tokens",
+                    "1",
+                    "--backend",
+                    "metal",
+                    "--context-capacity",
+                    capacity,
+                    "--metal-attention",
+                    mode,
+                ]);
+                let parsed = parse(values).unwrap();
+                assert_eq!(parsed.capacity, capacity.parse::<usize>().unwrap());
+                assert_eq!(parsed.metal_attention, mode);
+            }
+        }
+        assert!(
+            parse(args(&[
+                "--model",
+                "missing",
+                "--tokens",
+                "1",
+                "--backend",
+                "metal",
+                "--context-capacity",
+                "32769"
+            ]))
+            .is_err()
+        );
+    }
     #[test]
     fn idle_interrupt_after_terminal_boundary_is_preserved() {
         let flag = AtomicBool::new(true);

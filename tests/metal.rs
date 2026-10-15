@@ -975,3 +975,116 @@ fn online_attention_tiny_graph_and_session_contract() {
     ));
     println!("online tiny: {compared} independent stage values; warmed allocations=0");
 }
+
+#[test]
+#[ignore = "Explicit Metal long capacity/absolute-position admission and memory contracts"]
+fn long_context_admission_and_position_bounds() {
+    let artifact = Artifact::configured(32768, true);
+    let model = metal::Model::load(
+        &artifact.0,
+        weights::LoadOptions {
+            context_limit: 32768,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let make = |opts, attention| {
+        metal::Session::with_attention_mode(
+            &model,
+            opts,
+            metal::ProjectionMode::HalfCompensated,
+            metal::NormalizationMode::Original,
+            metal::ReadbackMode::FullLogits,
+            attention,
+        )
+    };
+    let mut previous = None;
+    for capacity in [4096, 8192, 16384, 32768] {
+        let opts = session::Options {
+            capacity,
+            prefill_chunk_size: 129,
+            ..Default::default()
+        };
+        let mut online = make(opts, metal::AttentionMode::Online).unwrap();
+        let reference = make(opts, metal::AttentionMode::Reference).unwrap();
+        let memory = online.memory();
+        assert_eq!(
+            reference.memory().scratch_bytes - memory.scratch_bytes,
+            4 * 129 * capacity * 8 - 8
+        );
+        assert_eq!(memory.kv_bytes, 2 * (2 * capacity * 8 + 7) * 4);
+        if let Some((oldcap, oldmem)) = previous {
+            assert_eq!(memory.scratch_bytes, oldmem);
+            assert!(capacity > oldcap);
+        }
+        previous = Some((capacity, memory.scratch_bytes));
+        let tokens = vec![1; capacity];
+        online.append(&tokens).unwrap();
+        let history = online.history().to_vec();
+        assert!(online.append(&[1]).is_err());
+        assert_eq!(online.history(), history);
+        let too_large = vec![1; capacity + 1];
+        assert!(online.set_tokens(&too_large).is_err());
+        assert_eq!(online.history(), history);
+        assert_eq!(online.evaluated_len(), 0);
+        drop(reference);
+        drop(online);
+        assert!(matches!(
+            make(
+                session::Options {
+                    memory_limit_bytes: memory.admitted_bytes - 1,
+                    ..opts
+                },
+                metal::AttentionMode::Online
+            ),
+            Err(metal::Error::Budget { .. })
+        ));
+        assert!(
+            make(
+                session::Options {
+                    memory_limit_bytes: memory.admitted_bytes,
+                    ..opts
+                },
+                metal::AttentionMode::Online
+            )
+            .is_ok()
+        );
+    }
+    // Actual high-position execution uses a short admitted suffix with absolute
+    // rotary offset, distinct from cache placement. Independent math is checked
+    // separately by the high-position primitive suite.
+    for offset in [4093, 8189, 16381, 32765] {
+        let mut s = make(
+            session::Options {
+                capacity: 3,
+                prefill_chunk_size: 2,
+                position_offset: offset,
+                ..Default::default()
+            },
+            metal::AttentionMode::Online,
+        )
+        .unwrap();
+        s.append(&[1; 3]).unwrap();
+        s.evaluate().unwrap();
+        assert_eq!(s.evaluated_len(), 3);
+        assert!(s.logits().unwrap().iter().all(|v| *v == 0.));
+        assert!(s.append(&[1]).is_err());
+    }
+    for (capacity, offset) in [(32769, 0), (32768, 1), (1, 32768), (1, usize::MAX)] {
+        assert!(
+            make(
+                session::Options {
+                    capacity,
+                    position_offset: offset,
+                    prefill_chunk_size: 1,
+                    ..Default::default()
+                },
+                metal::AttentionMode::Online
+            )
+            .is_err()
+        );
+    }
+    println!(
+        "long admission: all four capacities, bounded online scratch, exact budgets, overflow rejection and high-position execution pass"
+    );
+}

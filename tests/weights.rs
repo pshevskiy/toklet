@@ -490,3 +490,59 @@ fn pinned_qwen_loads_within_the_initial_budget() {
         );
     }
 }
+
+#[test]
+fn explicit_long_loading_is_model_bounded_and_preserves_cpu_session_limit() {
+    let mut artifact = Artifact::tiny();
+    artifact.config["max_position_embeddings"] = json!(32768);
+    artifact.write(false);
+    for capacity in [2048, 4096, 8192, 16384, 32768] {
+        let loaded = weights::load_qwen(
+            &artifact.root,
+            LoadOptions {
+                context_limit: capacity,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(loaded.model.config().max_positions, capacity);
+        if capacity > weights::INITIAL_CONTEXT_LIMIT {
+            assert!(
+                toklet::session::Session::new(
+                    &loaded.model,
+                    toklet::session::Options {
+                        capacity,
+                        ..Default::default()
+                    }
+                )
+                .is_err()
+            );
+        }
+    }
+    for capacity in [0, 32769, usize::MAX] {
+        assert!(
+            weights::load_qwen(
+                &artifact.root,
+                LoadOptions {
+                    context_limit: capacity,
+                    ..Default::default()
+                }
+            )
+            .is_err()
+        );
+    }
+    artifact.config["max_position_embeddings"] = json!(4096);
+    artifact.write(false);
+    assert!(
+        weights::load_qwen(
+            &artifact.root,
+            LoadOptions {
+                context_limit: 8192,
+                ..Default::default()
+            }
+        )
+        .is_err()
+    );
+    let default = weights::load_qwen(&artifact.root, LoadOptions::default()).unwrap();
+    assert_eq!(default.model.config().max_positions, 2048);
+}

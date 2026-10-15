@@ -29,6 +29,9 @@ const MAX_HEADER_BYTES: usize = 16 * 1024 * 1024;
 const METADATA_ALLOWANCE_BYTES: usize = 64 * 1024 * 1024;
 pub const INITIAL_MEMORY_LIMIT_BYTES: usize = 6 * 1024 * 1024 * 1024;
 pub const INITIAL_CONTEXT_LIMIT: usize = 2048;
+/// Explicit longer-context ceiling; defaults and CPU session admission remain
+/// at INITIAL_CONTEXT_LIMIT. The source model may impose a smaller bound.
+pub const MAX_CONTEXT_LIMIT: usize = 32768;
 
 #[derive(Clone, Copy)]
 pub struct LoadOptions {
@@ -219,11 +222,11 @@ impl QwenConfig {
             ));
         }
         if options.context_limit == 0
-            || options.context_limit > INITIAL_CONTEXT_LIMIT
+            || options.context_limit > MAX_CONTEXT_LIMIT
             || options.context_limit > self.max_position_embeddings
         {
             return Err(invalid(
-                "context limit must fit model positions and initial 2048-token limit",
+                "context limit must fit model positions and 32768-token ceiling",
             ));
         }
         let config = Config {

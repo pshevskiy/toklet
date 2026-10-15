@@ -624,18 +624,18 @@ impl<'m> Session<'m> {
             let c = &model.config;
             let chunk = options.prefill_chunk_size;
             if options.capacity == 0
-                || options.capacity > 2048
+                || options.capacity > weights::MAX_CONTEXT_LIMIT
                 || chunk == 0
                 || chunk > 1024
                 || chunk > options.capacity
                 || options
                     .position_offset
                     .checked_add(options.capacity)
-                    .is_none_or(|n| n > c.max_positions.min(2048))
+                    .is_none_or(|n| n > c.max_positions.min(weights::MAX_CONTEXT_LIMIT))
                 || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
             {
                 return Err(Error::Options(
-                    "Metal session options outside admitted initial bounds",
+                    "Metal session options outside admitted model/context bounds",
                 ));
             }
             let h = Layout::new(chunk, c.hidden_size, true)?;
@@ -648,8 +648,11 @@ impl<'m> Session<'m> {
             {
                 return Err(Error::Unsupported("requires contiguous Half activations"));
             }
-            let cache_count = (c.kv_heads * options.capacity * c.head_dim)
-                .checked_add(7)
+            let cache_count = c
+                .kv_heads
+                .checked_mul(options.capacity)
+                .and_then(|n| n.checked_mul(c.head_dim))
+                .and_then(|n| n.checked_add(7))
                 .ok_or(Error::Options("cache size overflow"))?;
             // Reference owns two [heads, chunk, capacity] FP32 matrices.
             // Online leaves only two eight-word guards, independent of depth.

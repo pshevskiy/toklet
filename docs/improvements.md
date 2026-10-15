@@ -328,3 +328,13 @@ strict linting pass. Calculated allocated scratch falls by about28MiB small/24Mi
 at capacity2048/chunk128 (exact byte accounting in the report). Retained as an
 explicit component; real-model quality, performance, longer-context admission and
 support, and the measured KV decision remain pending. Existing defaults stay.
+
+The [longer-context admission component](experiments/2026-10-15-m6-long-admission.md)
+permits explicit model-bounded Metal capacities through32K and adds
+`--metal-attention reference|online`, preserving2K/Reference defaults and the CPU
+session limit. Checked allocation/absolute positions/output reservation, exact
+budgets and state preservation pass.97 CPU/110 ordinary Metal checks and six
+native CLI workers/122 events pass;6912 independent high-position rotary values
+pass their predeclared arithmetic envelope through32767. Structural/tiny evidence
+is retained separately from the pending real-model long-prefix quality,
+performance, memory and supported-depth qualification.
