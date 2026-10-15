@@ -1,0 +1,13 @@
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.76s
+     Running tests/metal.rs (artifacts/m5-checks/debug/deps/metal-b3980a7247815399)
+
+running 5 tests
+test compensated_half_tiny_independent_graph_and_publication ... ignored, Explicit compensated Half full tiny independent gates, offsets, publication and warmed allocation checks
+test online_attention_tiny_graph_and_session_contract ... ignored, Explicit online attention full tiny independent stages and session state
+test resident_capacity_boundary ... ignored, Apple GPU full-capacity structural check, exact zero-weight oracle
+test resident_qwen_full_forward ... ignored, requires installed Qwen and frozen full references, Apple GPU; run explicitly
+test resident_tiny_decoder_and_session_contract ... ignored, requires Apple Silicon Metal; run explicitly with --ignored --test-threads=1
+
+test result: ok. 0 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

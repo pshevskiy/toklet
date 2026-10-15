@@ -1,0 +1,95 @@
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `release` profile [optimized] target(s) in 10.75s
+     Running unittests src/lib.rs (artifacts/m5-checks/release/deps/toklet-f8ac5e0ca609557c)
+
+running 4 tests
+test metal::online_attention::online_attention_adversarial_witnesses ... online adversarial: 81 uniform/max-jump/extreme/nonfinite witnesses; causal future perturbation passes
+ok
+test metal::online_attention::online_attention_matches_oracle_at_irregular_and_long_depths ... online oracle: 202048 outputs; max_abs_error=0.0006552625687139546
+ok
+test metal::online_greedy_failure_and_diagnostic_profile ... ok
+test metal::tests::online_failed_chunks_preserve_valid_prefix ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 3.66s
+
+     Running unittests src/bin/toklet.rs (artifacts/m5-checks/release/deps/toklet-0071ed4a6317bad2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+     Running tests/bench_contract.rs (artifacts/m5-checks/release/deps/bench_contract-234fa7fef68e7021)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/cached_attention.rs (artifacts/m5-checks/release/deps/cached_attention-11cb7568afb47f50)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (artifacts/m5-checks/release/deps/cli-53e161aab5d7c23b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+
+     Running tests/cpu_attention.rs (artifacts/m5-checks/release/deps/cpu_attention-0fe1221e2dda515f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/cpu_decoder.rs (artifacts/m5-checks/release/deps/cpu_decoder-6ca9c99e98b5de98)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
+     Running tests/cpu_linear.rs (artifacts/m5-checks/release/deps/cpu_linear-8dd0b2ac2428ea7f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+     Running tests/cpu_reductions.rs (artifacts/m5-checks/release/deps/cpu_reductions-1285aa631db28602)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/cpu_tiled.rs (artifacts/m5-checks/release/deps/cpu_tiled-ae4eddd983cab213)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/fixtures.rs (artifacts/m5-checks/release/deps/fixtures-ecf51a51c5761c8c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/metal.rs (artifacts/m5-checks/release/deps/metal-107a46ab23f56d73)
+
+running 1 test
+test online_attention_tiny_graph_and_session_contract ... 
+thread 'online_attention_tiny_graph_and_session_contract' panicked at tests/metal.rs:698:5:
+assertion failed: metal::Session::new(model,
+        session::Options {
+            memory_limit_bytes: m.admitted_bytes,
+            ..options(2, 0)
+        }).is_ok()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    online_attention_tiny_graph_and_session_contract
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.32s
+
+error: test failed, to rerun pass `--test metal`

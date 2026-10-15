@@ -8,6 +8,8 @@ mod half_consistency;
 #[cfg(test)]
 mod half_projection;
 #[cfg(test)]
+mod online_attention;
+#[cfg(test)]
 mod q4_v2_projection;
 pub use capture::Capture;
 mod memory;
@@ -465,6 +467,14 @@ pub enum NormalizationMode {
     /// arithmetic, epsilon and Half storage are unchanged.
     Compensated,
 }
+/// Explicit attention selection. The score-matrix reference stays the default.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize)]
+pub enum AttentionMode {
+    #[default]
+    Reference,
+    /// FP32 online softmax over bounded key tiles, with resident FP16 K/V.
+    Online,
+}
 /// Full logits remain the default. Token-only readback is an explicit experiment;
 /// full logits/stages are still available through admitted diagnostics.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize)]
@@ -493,6 +503,7 @@ pub struct Session<'m> {
     projection_mode: ProjectionMode,
     normalization_mode: NormalizationMode,
     readback_mode: ReadbackMode,
+    attention_mode: AttentionMode,
     memory: session::Memory,
     history: Vec<u32>,
     evaluated: usize,
@@ -551,7 +562,35 @@ impl<'m> Session<'m> {
         normalization_mode: NormalizationMode,
         readback_mode: ReadbackMode,
     ) -> Result<Self> {
+        Self::with_attention_mode(
+            model,
+            options,
+            projection_mode,
+            normalization_mode,
+            readback_mode,
+            AttentionMode::Reference,
+        )
+    }
+    /// Select attention before admission. Online mode needs no score matrix;
+    /// separate decode and two-query prefill pipelines share the same FP16 KV.
+    pub fn with_attention_mode(
+        model: &'m Model,
+        options: session::Options,
+        projection_mode: ProjectionMode,
+        normalization_mode: NormalizationMode,
+        readback_mode: ReadbackMode,
+        attention_mode: AttentionMode,
+    ) -> Result<Self> {
         autoreleasepool(|_| {
+            if attention_mode == AttentionMode::Online {
+                for kernel in [Kernel::AttentionDecode, Kernel::AttentionPrefill] {
+                    if model.gpu.execution_width(kernel) < 32 {
+                        return Err(Error::Unsupported(
+                            "online attention requires SIMD width >= 32",
+                        ));
+                    }
+                }
+            }
             if model.q4_format() == Some(q4::Format::V2)
                 && (!matches!(
                     projection_mode,
@@ -612,12 +651,17 @@ impl<'m> Session<'m> {
             let cache_count = (c.kv_heads * options.capacity * c.head_dim)
                 .checked_add(7)
                 .ok_or(Error::Options("cache size overflow"))?;
-            let score_count = c
-                .query_heads
-                .checked_mul(chunk)
-                .and_then(|n| n.checked_mul(options.capacity))
-                .and_then(|n| n.checked_add(7))
-                .ok_or(Error::Options("score size overflow"))?;
+            // Reference owns two [heads, chunk, capacity] FP32 matrices.
+            // Online leaves only two eight-word guards, independent of depth.
+            let score_count = if attention_mode == AttentionMode::Online {
+                8
+            } else {
+                c.query_heads
+                    .checked_mul(chunk)
+                    .and_then(|n| n.checked_mul(options.capacity))
+                    .and_then(|n| n.checked_add(7))
+                    .ok_or(Error::Options("score size overflow"))?
+            };
             let zero_count = c
                 .vocab_size
                 .max(c.intermediate_size)
@@ -752,6 +796,7 @@ impl<'m> Session<'m> {
                 projection_mode,
                 normalization_mode,
                 readback_mode,
+                attention_mode,
                 memory: session::Memory {
                     weights_bytes: model.weight_bytes,
                     kv_bytes,
@@ -1085,30 +1130,45 @@ impl<'m> Session<'m> {
                 n * kv,
                 None,
             )?;
-            g.encode(
-                &command,
-                Kernel::Attention,
-                &[
-                    &s.qr.raw,
-                    &cache.k.raw,
-                    &cache.v.raw,
-                    &s.scores.raw,
-                    &s.probs.raw,
-                    &s.context.raw,
-                ],
-                &[
-                    n as u32,
-                    c.query_heads as u32,
-                    c.kv_heads as u32,
-                    c.head_dim as u32,
-                    self.capacity() as u32,
-                    self.options.prefill_chunk_size as u32,
-                    start as u32,
-                    (start + n) as u32,
-                ],
-                n * c.query_heads,
-                Some(&s.status),
-            )?;
+            let attention_shape = [
+                n as u32,
+                c.query_heads as u32,
+                c.kv_heads as u32,
+                c.head_dim as u32,
+                self.capacity() as u32,
+                self.options.prefill_chunk_size as u32,
+                start as u32,
+                (start + n) as u32,
+            ];
+            match self.attention_mode {
+                AttentionMode::Reference => g.encode(
+                    &command,
+                    Kernel::Attention,
+                    &[
+                        &s.qr.raw,
+                        &cache.k.raw,
+                        &cache.v.raw,
+                        &s.scores.raw,
+                        &s.probs.raw,
+                        &s.context.raw,
+                    ],
+                    &attention_shape,
+                    n * c.query_heads,
+                    Some(&s.status),
+                )?,
+                AttentionMode::Online => g.encode(
+                    &command,
+                    if n == 1 {
+                        Kernel::AttentionDecode
+                    } else {
+                        Kernel::AttentionPrefill
+                    },
+                    &[&s.qr.raw, &cache.k.raw, &cache.v.raw, &s.context.raw],
+                    &attention_shape,
+                    n.div_ceil(if n == 1 { 1 } else { 2 }) * c.query_heads,
+                    Some(&s.status),
+                )?,
+            }
             self.snapshot(
                 &command,
                 Some(layer_index),
@@ -2529,10 +2589,18 @@ mod tests {
     fn compensated_half_failed_chunks_preserve_valid_prefix() {
         check_failed_chunks(ProjectionMode::HalfCompensated);
     }
+    #[test]
+    #[ignore = "Explicit online attention finite and completion failure recovery"]
+    fn online_failed_chunks_preserve_valid_prefix() {
+        check_failed_chunks_attention(ProjectionMode::HalfCompensated, AttentionMode::Online);
+    }
     fn check_failed_chunks(mode: ProjectionMode) {
+        check_failed_chunks_attention(mode, AttentionMode::Reference);
+    }
+    fn check_failed_chunks_attention(mode: ProjectionMode, attention: AttentionMode) {
         let artifact = weights::half_tests::artifact(safetensors::Dtype::F32, None, true);
         let model = Model::load(&artifact.0, weights::LoadOptions::default()).unwrap();
-        let mut session = Session::with_projection_mode(
+        let mut session = Session::with_attention_mode(
             &model,
             session::Options {
                 capacity: 8,
@@ -2540,6 +2608,9 @@ mod tests {
                 ..Default::default()
             },
             mode,
+            NormalizationMode::Original,
+            ReadbackMode::FullLogits,
+            attention,
         )
         .unwrap();
         session.enable_profile().unwrap();
@@ -2700,9 +2771,18 @@ fn compensated_half_greedy_failure_and_diagnostic_profile() {
 }
 #[cfg(test)]
 fn check_greedy_failure(mode: ProjectionMode) {
+    check_greedy_failure_attention(mode, AttentionMode::Reference);
+}
+#[test]
+#[ignore = "Explicit online attention token-only completion failure and diagnostics"]
+fn online_greedy_failure_and_diagnostic_profile() {
+    check_greedy_failure_attention(ProjectionMode::HalfCompensated, AttentionMode::Online);
+}
+#[cfg(test)]
+fn check_greedy_failure_attention(mode: ProjectionMode, attention: AttentionMode) {
     let artifact = weights::half_tests::artifact(safetensors::Dtype::F32, None, true);
     let model = Model::load(&artifact.0, weights::LoadOptions::default()).unwrap();
-    let mut s = Session::with_readback_mode(
+    let mut s = Session::with_attention_mode(
         &model,
         session::Options {
             capacity: 8,
@@ -2712,6 +2792,7 @@ fn check_greedy_failure(mode: ProjectionMode) {
         mode,
         NormalizationMode::Original,
         ReadbackMode::GreedyToken,
+        attention,
     )
     .unwrap();
     assert_eq!(s.memory.logits_bytes, 8);

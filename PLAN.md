@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026; updated 15 October 2026. Status: M0–M5 are complete in their qualified scopes; M6–M7 remain pending. The selected small compensated Half and frozen larger group8 Q4 v2 configurations pass unchanged full quality gates, repeated workload/application checks and sustained execution within6GiB. Larger v2 confirms a22.20–23.69% named prefill gain. Q4 v1 and small v2 remain rejected; defaults and documented baseline limits are preserved. See the [M5 release decision](docs/experiments/2026-10-15-m5-release.md).
+Prepared 9 October 2026; updated 15 October 2026. Status: M0–M5 are complete in their qualified scopes; M6 is in progress; M7 remains pending. The selected small compensated Half and frozen larger group8 Q4 v2 configurations pass unchanged full quality gates, repeated workload/application checks and sustained execution within6GiB. Larger v2 confirms a22.20–23.69% named prefill gain. Q4 v1 and small v2 remain rejected; defaults and documented baseline limits are preserved. See the [M5 release decision](docs/experiments/2026-10-15-m5-release.md).
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -1405,6 +1405,8 @@ M5 larger Q4 v2 task collector code task,14 October2026: [qualification](docs/ex
 
 ## M6 Qualify longer context and attention
 
+In progress,15 October2026. The [first online attention component](docs/experiments/2026-10-15-m6-online-attention.md) passes independent primitive/tiny/session gates with bounded scratch. Real-model quality/performance, extended admission and long-context qualification remain before completion.
+
 - [ ] **M6.1 Implement tiled online-softmax attention.** Build separate decode and prefill paths without materializing the full attention-score matrix. Preserve causal boundaries, absolute positions, and GQA sharing. Compare irregular chunk sizes and substantial cached depths with the reference.
 - [ ] **M6.2 Extend context admission and profiling.** Measure 4K, 8K, 16K, and 32K total-token workloads only where the pinned model permits them. Reserve output capacity: at a validated limit of 32,768, a 128-output boundary run has 32,640 prompt tokens. Account for allocated KV, workspace, and model limits before dispatch.
 - [ ] **M6.3 Evaluate optional KV quantization.** Only if measured KV traffic or capacity warrants it, try an eight-bit cache with explicit K/V grouping and dequantization inside attention tiles. Repeat loss, long-context behavior, and latency checks. Retain FP16 KV if the tradeoff is unfavorable.
@@ -1473,7 +1475,7 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. M4 and M5 are complete. The [15 October M5 release decision](docs/experiments/2026-10-15-m5-release.md) accepts the small compensated Half path and larger frozen Q4 v2 path, with unchanged full loss/task gates, confirmed useful prefill gain, complete repeated workload/application and sustained evidence within6GiB. Q4 v1 and small v2 remain rejected; CPU/GPU/readback/chunk defaults and baseline limitations remain. M6/M7 are pending and outside this implementation scope.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. M4 and M5 are complete. The [15 October M5 release decision](docs/experiments/2026-10-15-m5-release.md) accepts the small compensated Half path and larger frozen Q4 v2 path, with unchanged full loss/task gates, confirmed useful prefill gain, complete repeated workload/application and sustained evidence within6GiB. Q4 v1 and small v2 remain rejected; CPU/GPU/readback/chunk defaults and baseline limitations remain. M6 is now authorized and in progress; M7 remains pending.
 
 M5.6 frozen larger v2 full responses,14 October2026: [collection report](docs/experiments/2026-10-14-q4-v2-full-tasks.md). All100original cases/caps complete with clean natural exit, exact raw/state/post-exit-text replay and unchanged compiled/model/helper endpoints. Complete admission/native memory fits6GiB. Literal grading, task-quality/performance acceptance and overall M5 remain open.
 

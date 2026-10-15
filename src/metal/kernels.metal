@@ -130,6 +130,78 @@ kernel void attention(device const half* q[[buffer(0)]],device const half* k[[bu
     }
 }
 
+// One queried SIMD group owns one head and R query rows. Features are
+// striped across lanes; contiguous K/V features are read together. Prefill
+// shares each K load between two rows (V traversal remains per query). Only 16 scores per row are live,
+// never [rows, depth]. FP32 tile maximum/mass/numerator obey online softmax:
+// m'=max(m,tilemax), l'=exp(m-m')*l+sum(exp(score-m')).
+// q/out: [rows, query_heads, d]; K/V: [kv_heads, capacity, d]. Cache
+// placement is relative to this session; RoPE already used absolute positions.
+// Host admits d<=128 and queried SIMD width>=32, hence four feature slots.
+template <uint R>
+void online_attention(device const half* q, device const half* k,
+                      device const half* v, device half* out,
+                      constant uint* s, device atomic_uint* status,
+                      uint group, uint lane, uint width) {
+    uint heads=s[1],d=s[3],cap=s[4],head=group%heads;
+    uint first=(group/heads)*R,kv=head/(heads/s[2]);
+    float queries[R][4],numerator[R][4],maximum[R],mass[R];
+    for(uint r=0;r<R;++r) {
+        maximum[r]=-INFINITY;mass[r]=0;
+        for(uint j=0;j<4;++j) {
+            uint f=lane+j*width;
+            queries[r][j]=(first+r<s[0] && f<d)?float(q[((first+r)*heads+head)*d+f]):0.0f;
+            numerator[r][j]=0;
+        }
+    }
+    uint end=s[6]+min(first+R,s[0]);
+    for(uint tile=0;tile<end;tile+=16) {
+        float scores[R][16];
+        for(uint p=0;p<min(16u,end-tile);++p) {
+            float dots[R];
+            for(uint r=0;r<R;++r)dots[r]=0;
+            for(uint j=0;j<4;++j) {
+                uint f=lane+j*width;
+                float key=f<d?float(k[(kv*cap+tile+p)*d+f]):0.0f;
+                for(uint r=0;r<R;++r)dots[r]+=queries[r][j]*key;
+            }
+            for(uint r=0;r<R;++r)scores[r][p]=simd_sum(dots[r])/sqrt(float(d));
+        }
+        for(uint r=0;r<R;++r) {
+            if(first+r>=s[0] || tile>=s[6]+first+r+1)continue;
+            uint count=min(16u,s[6]+first+r+1-tile);
+            float next=maximum[r];
+            for(uint p=0;p<count;++p)next=max(next,scores[r][p]);
+            float rescale=exp(maximum[r]-next);
+            mass[r]*=rescale;
+            for(uint j=0;j<4;++j)numerator[r][j]*=rescale;
+            for(uint p=0;p<count;++p) {
+                float weight=exp(scores[r][p]-next);
+                mass[r]+=weight;
+                for(uint j=0;j<4;++j) {
+                    uint f=lane+j*width;
+                    if(f<d)numerator[r][j]+=weight*float(v[(kv*cap+tile+p)*d+f]);
+                }
+            }
+            maximum[r]=next;
+        }
+    }
+    for(uint r=0;r<R;++r) {
+        if(first+r>=s[0])continue;
+        if(!isfinite(mass[r]) || mass[r]<=0)atomic_fetch_or_explicit(status,2u,memory_order_relaxed);
+        for(uint j=0;j<4;++j) {
+            uint f=lane+j*width;
+            if(f<d)checked_half(out,((first+r)*heads+head)*d+f,numerator[r][j]/mass[r],status);
+        }
+    }
+}
+kernel void attention_decode_online(device const half* q[[buffer(0)]],device const half* k[[buffer(1)]],device const half* v[[buffer(2)]],device half* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    online_attention<1>(q,k,v,out,s,status,group,lane,width);
+}
+kernel void attention_prefill_online(device const half* q[[buffer(0)]],device const half* k[[buffer(1)]],device const half* v[[buffer(2)]],device half* out[[buffer(3)]],constant uint* s[[buffer(4)]],device atomic_uint* status[[buffer(5)]],uint group[[threadgroup_position_in_grid]],uint lane[[thread_index_in_simdgroup]],uint width[[threads_per_simdgroup]]) {
+    online_attention<2>(q,k,v,out,s,status,group,lane,width);
+}
+
 kernel void residual(device half* x[[buffer(0)]],device const half* delta[[buffer(1)]],constant uint& n[[buffer(2)]],device atomic_uint* status[[buffer(3)]],uint i[[thread_position_in_grid]]) {
     if(i>=n)return;
     checked_half(x,i,float(x[i])+float(delta[i]),status);

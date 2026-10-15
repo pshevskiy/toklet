@@ -1,0 +1,10 @@
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `release` profile [optimized] target(s) in 1.33s
+     Running tests/metal.rs (artifacts/m5-checks/release/deps/metal-107a46ab23f56d73)
+
+running 1 test
+test online_attention_tiny_graph_and_session_contract ... online tiny: 173184 independent stage values; warmed allocations=0
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.34s
+

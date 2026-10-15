@@ -5,7 +5,7 @@ and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M5 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
 Q4 v2 configurations with full quality, repeated workload/application, sustained
-and memory evidence. M6/M7 remain pending. CPU/scalar and the existing GPU/readback/
+and memory evidence. M6 is in progress; M7 remains pending. CPU/scalar and the existing GPU/readback/
 chunk defaults stay unchanged. Speedups below apply to the named workload and
 comparison, and cannot be added together. See the [M5 release decision](experiments/2026-10-15-m5-release.md).
 
@@ -317,3 +317,14 @@ The [full larger v2 matrix and short confirmation](experiments/2026-10-15-q4-v2-
 The [larger v2 full application and confirmation](experiments/2026-10-15-q4-v2-application-full.md) complete78turns/6086events, with39exactID/text/stop/state signatures repeated acrossruns,3warmup/10measuredscenariosperrun. Scenario medians41.267054271/41.301725271s change+0.084016%; outputcounts86/128/14 preserveEOS/capsemantics. Naturalexit, independentpostexittext, completepins/parserinventory/clockbounds and≤6GiB memorypass. Applicationmeasureddurations412.726713/412.866698s are not sustainedqualification; controlledsequence suppliesit. Finalrelease synthesis remains.
 
 The [15 October M5 release decision](experiments/2026-10-15-m5-release.md) supersedes the earlier open-exit conclusion: M5.1–M5.6 are complete. The selected small Half configuration and larger frozen group8 Q4 v2 configuration pass unchanged quality gates and full repeated/state/memory workloads; larger v2 confirms22.20–23.69% useful512/1prefill gains and the controlled sequence exceeds600s. Every optimization retains its measured scope, including slower cross-representation complete requests, rejected smallv2/v1, removed fusions, explicit GPUgreedy capability and unchanged defaults. Baseline gaps remain disclosed without externallead/defaultreplacement; M6/M7 remain pending.
+
+M6 implementation has started. The [bounded online attention component](experiments/2026-10-15-m6-online-attention.md)
+adds explicit separate decode/two-row prefill paths with16-key online softmax,
+GQA sharing and no depth-sized score matrices. Independent FP64 primitive checks
+cover202,048 outputs through32K depth;81 adversarial cases and173,184 existing
+tiny-stage values pass unchanged gates, along with session/failure/readback and
+zero warmed-allocation checks.95 CPU/107 ordinary Metal tests, formatting and
+strict linting pass. Calculated allocated scratch falls by about28MiB small/24MiB larger
+at capacity2048/chunk128 (exact byte accounting in the report). Retained as an
+explicit component; real-model quality, performance, longer-context admission and
+support, and the measured KV decision remain pending. Existing defaults stay.

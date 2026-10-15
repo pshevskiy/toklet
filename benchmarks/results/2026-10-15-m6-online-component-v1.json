@@ -1,0 +1,70 @@
+{
+  "format": "toklet-m6-online-component-v1",
+  "source_parent": "859ba9f",
+  "scope": "Bounded online attention component only; real-model quality, latency and longer-context support remain unqualified. Reference remains default.",
+  "source_snapshot": "artifacts/m6-online-source-final-v1",
+  "source_pins": {
+    "src/metal/mod.rs": "e77ca2093b70b5402d05cf7b3744e08c55090f281bbca9876ac6e50df67a16d8",
+    "src/metal/memory.rs": "087b5e0fff4beb3dae8402d3ebc94f7df961df4db55491f8e73e2568f5608911",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "src/metal/online_attention.rs": "60ca1e9168a8a666aa7fd512b9b54c4f34192395624afcd3dc931557cd536edd",
+    "tests/metal.rs": "4c2c4c75ab00649b72918678ae53771f480f3f81abd61bf68a5b58d190559a3d",
+    "Cargo.toml": "bc21dbd7fd1c0f257ad8b7debfb20016170a64505a583e368de1a48ca865593c",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "tests/fixtures/fp16-v1/manifest.json": "4a416b21f52ecc89c6bbafd4c948b173cd9709c3f5b1a60cd6ce037a63964e6b",
+    "tests/fixtures/tiny-v1/manifest.json": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4"
+  },
+  "log_pins": {
+    "benchmarks/results/2026-10-15-m6-online-primitive-v1.log": "e69c1c657a2b6cda043db80ffb64dc12de17dc9a98f8914bfd08557a645a6d4d",
+    "benchmarks/results/2026-10-15-m6-online-native-v2.log": "fd8cf489ac02bf1ad8da1ffb6bd2da30d8c2aa5bfdcdb00dc41856fe8e6f176b",
+    "benchmarks/results/2026-10-15-m6-online-graph-v3.log": "427ae1551e9acb841c3ce3160a60db7fa1a442a393061931c44ff92a8ae5e177",
+    "benchmarks/results/2026-10-15-m6-cpu-clippy-v1.log": "f7ae63913b480cac1c90d7f2530a5752a64fb5b944b756ac68bea09c977da4a0",
+    "benchmarks/results/2026-10-15-m6-cpu-tests-v1.log": "4bfa1d2a8db11dbea343b226359dd08112cab00418b3bfe8ca2a212f0770cdfd",
+    "benchmarks/results/2026-10-15-m6-metal-tests-v1.log": "b43264b72f22c87389747f963f1bbd958604889afb2ae805d863bae7eb69240e",
+    "benchmarks/results/2026-10-15-m6-online-graph-v4.log": "653bbf19001a77ca0041be498c45b262b712f1ed3ccc677b2b7911d212b28084",
+    "benchmarks/results/2026-10-15-m6-metal-clippy-v4.log": "2a88eb2553cafdf6690cbfff4cb3a38e30164ba19787242d82af9f4ca2a6aca4",
+    "benchmarks/results/2026-10-15-m6-metal-test-harness-v3.log": "89e4bb53996a5bc4640af79f54c911cf66bf5db4dbf016dc7d584610147c2e69"
+  },
+  "primitive_gate": {
+    "atol": 0.0001,
+    "rtol": 0.001,
+    "oracle": "Independent FP64 softmax of exact Half inputs; frozen before first native run",
+    "values": 202048,
+    "max_absolute_error": 0.0006552625687139546
+  },
+  "adversarial_cases": 81,
+  "tiny_stage_values": 173184,
+  "tiny_stage_inventory": 35,
+  "warmed_rust_allocations": 0,
+  "checks": {
+    "cpu_tests": 95,
+    "metal_ordinary_tests": 107,
+    "format": true,
+    "cpu_strict_clippy": true,
+    "metal_strict_clippy": true,
+    "native_primitive_and_failure_tests": 4,
+    "native_tiny_graph_session": true,
+    "exact_requested_chunk_rows": true
+  },
+  "preliminary_attempts": {
+    "sandbox_preflight": "No Metal device in sandbox; native tests rerun with GPU access.",
+    "v2_graph": "Library native tests passed; graph helper incorrectly recreated Reference with Online admission budget. Corrected mode-specific test helper; replacement v3 passes. No numerical/tolerance change."
+  },
+  "memory_change": "Two reference matrices replaced by two 8-word guard allocations (64B total) in explicit Online mode; numerator, mass, maxima and 16-key tiles are bounded SIMD-local state.",
+  "pending": [
+    "Real-model unchanged full quality gates",
+    "End-to-end paired workload and attention profiling",
+    "Explicit admission and high-position correctness up to32K",
+    "Long-context behavior/memory qualification",
+    "Measurement-based FP16 KV retain/quantization decision"
+  ],
+  "astra_review": {
+    "status": "accepted",
+    "scope": "Final code and all source/log/native-executable pins; primitive/tiny/session component only",
+    "remaining_findings": []
+  },
+  "native_test_binaries": {
+    "artifacts/m6-online-native-final-v1/toklet-f8ac5e0ca609557c": "d80573603f5d69543b3cf0289a0ac25c3f8c5cb8bf1fe3dd84b6a9be7a16ac27",
+    "artifacts/m6-online-native-final-v1/metal-107a46ab23f56d73": "e50056c17c0d4e136739c94a85cbf075ac2d13627368be1461db84909077258a"
+  }
+}

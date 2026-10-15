@@ -571,9 +571,32 @@ fn resident_qwen_full_forward() {
 }
 
 fn generation_contract(model: &metal::Model) {
+    let s = metal::Session::new(model, options(2, 0)).unwrap();
+    generation_contract_session(
+        model,
+        s,
+        metal::ProjectionMode::Original,
+        metal::AttentionMode::Reference,
+    );
+}
+fn generation_contract_session(
+    model: &metal::Model,
+    mut s: metal::Session<'_>,
+    projection: metal::ProjectionMode,
+    attention: metal::AttentionMode,
+) {
+    let make = |options| {
+        metal::Session::with_attention_mode(
+            model,
+            options,
+            projection,
+            metal::NormalizationMode::Original,
+            metal::ReadbackMode::FullLogits,
+            attention,
+        )
+    };
     use std::sync::atomic::{AtomicBool, Ordering};
     use toklet::generation::{self, Input, Request, StopReason};
-    let mut s = metal::Session::new(model, options(2, 0)).unwrap();
     let cancel = AtomicBool::new(true);
     let request = || Request {
         input: Input::Prompt(&[1, 7, 13, 3]),
@@ -683,23 +706,17 @@ fn generation_contract(model: &metal::Model) {
             + m.metadata_allowance_bytes
     );
     assert!(
-        metal::Session::new(
-            model,
-            session::Options {
-                memory_limit_bytes: m.admitted_bytes - 1,
-                ..options(2, 0)
-            }
-        )
+        make(session::Options {
+            memory_limit_bytes: m.admitted_bytes - 1,
+            ..options(2, 0)
+        })
         .is_err()
     );
     assert!(
-        metal::Session::new(
-            model,
-            session::Options {
-                memory_limit_bytes: m.admitted_bytes,
-                ..options(2, 0)
-            }
-        )
+        make(session::Options {
+            memory_limit_bytes: m.admitted_bytes,
+            ..options(2, 0)
+        })
         .is_ok()
     );
 }
@@ -773,4 +790,188 @@ fn resident_capacity_boundary() {
     println!(
         "Eight complete exact-zero capacity checks: chunks128/256/512/1024, offsets0/1; exact budget and rejected oversized bounds"
     );
+}
+
+#[test]
+#[ignore = "Explicit online attention full tiny independent stages and session state"]
+fn online_attention_tiny_graph_and_session_contract() {
+    let artifact = Artifact::tiny();
+    let model = metal::Model::load(
+        &artifact.0,
+        weights::LoadOptions {
+            context_limit: 32,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let source = Fixture::tiny();
+    let half: Value = serde_json::from_slice(
+        &fs::read(
+            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/fp16-v1/manifest.json"),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    let make = |chunk, offset| {
+        metal::Session::with_attention_mode(
+            &model,
+            options(chunk, offset),
+            metal::ProjectionMode::HalfCompensated,
+            metal::NormalizationMode::Original,
+            metal::ReadbackMode::FullLogits,
+            metal::AttentionMode::Online,
+        )
+        .unwrap()
+    };
+    let mut compared = 0;
+    for case in ["capacity", "future_changed", "offset", "prompt", "single"] {
+        let tokens = source.u32(&format!("cases.{case}.tokens"));
+        let offset = half["cases"][case]["position_offset"].as_u64().unwrap() as usize;
+        let mut expected_names = std::collections::BTreeSet::from([
+            format!("cases.{case}.embedding"),
+            format!("cases.{case}.final_norm"),
+            format!("cases.{case}.logits"),
+        ]);
+        for layer in 0..2 {
+            for stage in [
+                "input_norm",
+                "q_projection",
+                "k_projection",
+                "v_projection",
+                "q_rotary",
+                "k_rotary",
+                "attention_context",
+                "attention_projection",
+                "attention_residual",
+                "post_attention_norm",
+                "gate_projection",
+                "gate_silu",
+                "up_projection",
+                "gated",
+                "down_projection",
+                "output",
+            ] {
+                assert!(expected_names.insert(format!("cases.{case}.layers.{layer}.{stage}")));
+            }
+        }
+        assert_eq!(expected_names.len(), 35);
+        for chunk in [tokens.len(), 3.min(tokens.len()), 1] {
+            let mut s = make(chunk, offset);
+            let reference = metal::Session::new(&model, options(chunk, offset)).unwrap();
+            assert!(s.memory().scratch_bytes < reference.memory().scratch_bytes);
+            drop(reference);
+            s.enable_diagnostics(&[0, 1]).unwrap();
+            s.set_tokens(&tokens).unwrap();
+            let mut start = 0;
+            loop {
+                let rows = s.evaluate_next_chunk().unwrap();
+                if rows == 0 {
+                    break;
+                }
+                assert_eq!(rows, chunk.min(tokens.len() - start));
+                let diagnostics = s.diagnostics().unwrap();
+                assert_eq!(diagnostics.len(), 35);
+                let mut seen = std::collections::BTreeSet::new();
+                for d in diagnostics {
+                    let name = diagnostic_name(case, &d);
+                    assert!(expected_names.contains(&name) && seen.insert(name.clone()));
+                    let expected = source.f32(&name);
+                    let columns = expected.len() / tokens.len();
+                    assert_eq!(expected.len(), tokens.len() * columns);
+                    assert_eq!(
+                        (d.rows, d.columns, d.values.len()),
+                        (rows, columns, rows * columns)
+                    );
+                    qualify(
+                        &d.values,
+                        &expected[start * columns..(start + rows) * columns],
+                        &half["arrays"][&name]["gate_against_source_fp32"],
+                    );
+                    compared += d.values.len();
+                }
+                assert_eq!(seen, expected_names);
+                start += rows;
+            }
+            assert_eq!(start, tokens.len());
+            assert_eq!(s.evaluated_len(), tokens.len());
+            let saved = s.logits().unwrap().to_vec();
+            s.set_tokens(&tokens).unwrap();
+            assert_eq!(s.evaluate_next_chunk().unwrap(), 0);
+            assert_eq!(s.logits().unwrap(), saved);
+        }
+    }
+    let mut s = make(3, 0);
+    for tokens in [
+        vec![1, 7, 13, 3],
+        vec![1, 7, 13, 3, 47],
+        vec![1, 7, 13, 3, 11],
+        vec![1, 7],
+        vec![],
+        vec![11],
+    ] {
+        s.set_tokens(&tokens).unwrap();
+        s.evaluate().unwrap();
+        let mut fresh = make(3, 0);
+        fresh.set_tokens(&tokens).unwrap();
+        fresh.evaluate().unwrap();
+        assert_eq!(s.evaluated_len(), fresh.evaluated_len());
+        assert_eq!(s.logits(), fresh.logits());
+    }
+    s.reset();
+    s.append(&[1, 7, 13, 3]).unwrap();
+    s.evaluate().unwrap();
+    let memory = s.memory();
+    ALLOCATIONS.with(|v| v.set(0));
+    TRACK.with(|v| v.set(true));
+    for _ in 0..20 {
+        s.append(&[47]).unwrap();
+        s.evaluate().unwrap();
+    }
+    TRACK.with(|v| v.set(false));
+    assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+    assert_eq!(s.memory(), memory);
+    let before = s.history().to_vec();
+    assert!(s.append(&[0; 32]).is_err());
+    assert_eq!(s.history(), before);
+    generation_contract_session(
+        &model,
+        make(2, 0),
+        metal::ProjectionMode::HalfCompensated,
+        metal::AttentionMode::Online,
+    );
+    for readback in [
+        metal::ReadbackMode::FullLogits,
+        metal::ReadbackMode::GreedyToken,
+    ] {
+        let mut session = metal::Session::with_attention_mode(
+            &model,
+            options(3, 0),
+            metal::ProjectionMode::HalfCompensated,
+            metal::NormalizationMode::Original,
+            readback,
+            metal::AttentionMode::Online,
+        )
+        .unwrap();
+        session.set_tokens(&[1, 7, 13, 3]).unwrap();
+        session.evaluate().unwrap();
+        assert_eq!(session.greedy_token().unwrap().unwrap(), 47);
+        session.append(&[47]).unwrap();
+        assert!(session.greedy_token().is_none());
+        session.evaluate().unwrap();
+        assert_eq!(session.greedy_token().unwrap().unwrap(), 47);
+    }
+    let mut low_budget = options(3, 0);
+    low_budget.memory_limit_bytes = make(3, 0).memory().admitted_bytes - 1;
+    assert!(matches!(
+        metal::Session::with_attention_mode(
+            &model,
+            low_budget,
+            metal::ProjectionMode::HalfCompensated,
+            metal::NormalizationMode::Original,
+            metal::ReadbackMode::FullLogits,
+            metal::AttentionMode::Online
+        ),
+        Err(metal::Error::Budget { .. })
+    ));
+    println!("online tiny: {compared} independent stage values; warmed allocations=0");
 }

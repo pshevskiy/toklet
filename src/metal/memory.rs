@@ -200,6 +200,8 @@ pub(super) enum Kernel {
     Rotary,
     Cache,
     Attention,
+    AttentionDecode,
+    AttentionPrefill,
     Residual,
     Silu,
     Gating,
@@ -225,6 +227,8 @@ impl Kernel {
             "rotary",
             "cache",
             "attention",
+            "attention_decode_online",
+            "attention_prefill_online",
             "residual",
             "silu",
             "gating",
@@ -290,6 +294,8 @@ impl Gpu {
             Kernel::Rotary,
             Kernel::Cache,
             Kernel::Attention,
+            Kernel::AttentionDecode,
+            Kernel::AttentionPrefill,
             Kernel::Residual,
             Kernel::Silu,
             Kernel::Gating,
@@ -355,7 +361,9 @@ impl Gpu {
         // assign one scalar lane per item; never assume an Apple SIMD width.
         let width = if matches!(
             k,
-            Kernel::Q4Matvec
+            Kernel::AttentionDecode
+                | Kernel::AttentionPrefill
+                | Kernel::Q4Matvec
                 | Kernel::Q4Prefill
                 | Kernel::Q4Compensated
                 | Kernel::Q4CompensatedPrefill
@@ -374,7 +382,9 @@ impl Gpu {
         }
         let groups = if matches!(
             k,
-            Kernel::Q4Matvec
+            Kernel::AttentionDecode
+                | Kernel::AttentionPrefill
+                | Kernel::Q4Matvec
                 | Kernel::Q4Prefill
                 | Kernel::Q4Compensated
                 | Kernel::Q4CompensatedPrefill
