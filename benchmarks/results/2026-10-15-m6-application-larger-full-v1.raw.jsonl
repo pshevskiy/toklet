@@ -1,0 +1,131 @@
+{"event":"ready","backend":"metal","context_capacity":32768,"cpu_projection":"none","memory_admitted_bytes":3122841472,"execution":{"weight_dtype":"Q4 v2 + FP16 exclusions","kv_dtype":"FP16","projection_mode":"Q4CompensatedTiled","normalization_mode":"Compensated","readback_mode":"FullLogits","attention_mode":"Online","prefill_chunk_size":128,"packed_format_version":2,"quantization_group_size":8,"quantizer":"toklet-q4-affine-f32-source-half-metadata-rne-g8-v2"},"logical_memory":{"weights_bytes":1777247428,"kv_bytes":939524880,"scratch_bytes":89826908,"history_bytes":131072,"logits_bytes":1215488,"metadata_bytes":14208,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624}}
+{"event":"token","token_id":264,"index":0,"elapsed_seconds":1569.266603375,"text":" a"}
+{"event":"token","token_id":8922,"index":1,"elapsed_seconds":1571.195568917,"text":" minor"}
+{"event":"token","token_id":1736,"index":2,"elapsed_seconds":1573.125994208,"text":" post"}
+{"event":"token","token_id":1154,"index":3,"elapsed_seconds":1575.060727125,"text":" ,"}
+{"event":"token","token_id":304,"index":4,"elapsed_seconds":1576.980583,"text":" in"}
+{"event":"token","token_id":4622,"index":5,"elapsed_seconds":1578.910709125,"text":" normal"}
+{"event":"token","token_id":3039,"index":6,"elapsed_seconds":1580.840139583,"text":" times"}
+{"event":"token","token_id":432,"index":7,"elapsed_seconds":1582.770497,"text":" it"}
+{"event":"token","token_id":1035,"index":8,"elapsed_seconds":1584.699677292,"text":" would"}
+{"event":"token","token_id":614,"index":9,"elapsed_seconds":1586.617850625,"text":" have"}
+{"event":"token","token_id":1012,"index":10,"elapsed_seconds":1588.550097125,"text":" been"}
+{"event":"token","token_id":518,"index":11,"elapsed_seconds":1590.478110083,"text":" at"}
+{"event":"token","token_id":3245,"index":12,"elapsed_seconds":1592.408459708,"text":" least"}
+{"event":"token","token_id":279,"index":13,"elapsed_seconds":1594.342865208,"text":" the"}
+{"event":"token","token_id":1191,"index":14,"elapsed_seconds":1596.27425575,"text":" start"}
+{"event":"token","token_id":315,"index":15,"elapsed_seconds":1598.196157333,"text":" of"}
+{"event":"token","token_id":458,"index":16,"elapsed_seconds":1600.108173208,"text":" an"}
+{"event":"token","token_id":3946,"index":17,"elapsed_seconds":1602.027884125,"text":" official"}
+{"event":"token","token_id":6931,"index":18,"elapsed_seconds":1603.946354,"text":" career"}
+{"event":"token","token_id":659,"index":19,"elapsed_seconds":1605.875870542,"text":" ."}
+{"event":"token","token_id":7418,"index":20,"elapsed_seconds":1607.7943405,"text":" Even"}
+{"event":"token","token_id":1573,"index":21,"elapsed_seconds":1609.72205975,"text":" before"}
+{"event":"token","token_id":566,"index":22,"elapsed_seconds":1611.649749917,"text":" he"}
+{"event":"token","token_id":1030,"index":23,"elapsed_seconds":1613.577059083,"text":" had"}
+{"event":"token","token_id":21376,"index":24,"elapsed_seconds":1615.5023,"text":" begun"}
+{"event":"token","token_id":975,"index":25,"elapsed_seconds":1617.418604375,"text":" work"}
+{"event":"token","token_id":1154,"index":26,"elapsed_seconds":1619.348137292,"text":" ,"}
+{"event":"token","token_id":4764,"index":27,"elapsed_seconds":1621.27861925,"text":" however"}
+{"event":"token","token_id":1154,"index":28,"elapsed_seconds":1623.205751333,"text":" ,"}
+{"event":"token","token_id":279,"index":29,"elapsed_seconds":1625.142234125,"text":" the"}
+{"event":"token","token_id":2309,"index":30,"elapsed_seconds":1627.070911625,"text":" position"}
+{"event":"token","token_id":572,"index":31,"elapsed_seconds":1628.990595333,"text":" was"}
+{"event":"token","token_id":40223,"index":32,"elapsed_seconds":1630.919458417,"text":" swept"}
+{"event":"token","token_id":3123,"index":33,"elapsed_seconds":1632.840576917,"text":" away"}
+{"event":"token","token_id":553,"index":34,"elapsed_seconds":1634.773932417,"text":" by"}
+{"event":"token","token_id":4357,"index":35,"elapsed_seconds":1636.707488917,"text":" events"}
+{"event":"token","token_id":659,"index":36,"elapsed_seconds":1638.627741,"text":" ."}
+{"event":"token","token_id":4710,"index":37,"elapsed_seconds":1640.54574125,"text":" \n\n"}
+{"event":"token","token_id":284,"index":38,"elapsed_seconds":1642.467683792,"text":" ="}
+{"event":"token","token_id":284,"index":39,"elapsed_seconds":1644.391926542,"text":" ="}
+{"event":"token","token_id":284,"index":40,"elapsed_seconds":1646.323743333,"text":" ="}
+{"event":"token","token_id":5004,"index":41,"elapsed_seconds":1648.250282083,"text":" War"}
+{"event":"token","token_id":284,"index":42,"elapsed_seconds":1650.175810458,"text":" ="}
+{"event":"token","token_id":284,"index":43,"elapsed_seconds":1652.108368708,"text":" ="}
+{"event":"token","token_id":284,"index":44,"elapsed_seconds":1654.035353958,"text":" ="}
+{"event":"token","token_id":4710,"index":45,"elapsed_seconds":1655.960433125,"text":" \n\n"}
+{"event":"token","token_id":576,"index":46,"elapsed_seconds":1657.869810583,"text":" The"}
+{"event":"token","token_id":1527,"index":47,"elapsed_seconds":1659.782118542,"text":" An"}
+{"event":"token","token_id":444,"index":48,"elapsed_seconds":1661.707550208,"text":" L"}
+{"event":"token","token_id":1116,"index":49,"elapsed_seconds":1663.631859708,"text":"ush"}
+{"event":"token","token_id":276,"index":50,"elapsed_seconds":1665.567359958,"text":"an"}
+{"event":"token","token_id":93979,"index":51,"elapsed_seconds":1667.496009,"text":" Rebellion"}
+{"event":"token","token_id":6009,"index":52,"elapsed_seconds":1669.414606583,"text":" began"}
+{"event":"token","token_id":304,"index":53,"elapsed_seconds":1671.338774333,"text":" in"}
+{"event":"token","token_id":6652,"index":54,"elapsed_seconds":1673.265074417,"text":" December"}
+{"event":"token","token_id":220,"index":55,"elapsed_seconds":1675.189907542,"text":" "}
+{"event":"token","token_id":22,"index":56,"elapsed_seconds":1677.116350792,"text":"7"}
+{"event":"token","token_id":20,"index":57,"elapsed_seconds":1679.0402285,"text":"5"}
+{"event":"token","token_id":20,"index":58,"elapsed_seconds":1680.959937458,"text":"5"}
+{"event":"token","token_id":1154,"index":59,"elapsed_seconds":1682.887943292,"text":" ,"}
+{"event":"token","token_id":323,"index":60,"elapsed_seconds":1684.816262542,"text":" and"}
+{"event":"token","token_id":572,"index":61,"elapsed_seconds":1686.741504083,"text":" was"}
+{"event":"token","token_id":537,"index":62,"elapsed_seconds":1688.676002708,"text":" not"}
+{"event":"token","token_id":6587,"index":63,"elapsed_seconds":1690.591689375,"text":" completely"}
+{"event":"token","token_id":54989,"index":64,"elapsed_seconds":1692.523034792,"text":" suppressed"}
+{"event":"token","token_id":369,"index":65,"elapsed_seconds":1694.450007167,"text":" for"}
+{"event":"token","token_id":4558,"index":66,"elapsed_seconds":1696.376709417,"text":" almost"}
+{"event":"token","token_id":8063,"index":67,"elapsed_seconds":1698.308086042,"text":" eight"}
+{"event":"token","token_id":1635,"index":68,"elapsed_seconds":1700.226955125,"text":" years"}
+{"event":"token","token_id":659,"index":69,"elapsed_seconds":1702.153888,"text":" ."}
+{"event":"token","token_id":1084,"index":70,"elapsed_seconds":1704.085850875,"text":" It"}
+{"event":"token","token_id":8881,"index":71,"elapsed_seconds":1706.009297375,"text":" caused"}
+{"event":"token","token_id":22399,"index":72,"elapsed_seconds":1707.942051958,"text":" enormous"}
+{"event":"token","token_id":43119,"index":73,"elapsed_seconds":1709.870539292,"text":" disruption"}
+{"event":"token","token_id":311,"index":74,"elapsed_seconds":1711.791380625,"text":" to"}
+{"event":"token","token_id":8453,"index":75,"elapsed_seconds":1713.695120417,"text":" Chinese"}
+{"event":"token","token_id":8232,"index":76,"elapsed_seconds":1715.625680792,"text":" society"}
+{"event":"token","token_id":549,"index":77,"elapsed_seconds":1717.54925925,"text":" :"}
+{"event":"token","token_id":279,"index":78,"elapsed_seconds":1719.476202875,"text":" the"}
+{"event":"token","token_id":43602,"index":79,"elapsed_seconds":1721.386037917,"text":" census"}
+{"event":"token","token_id":315,"index":80,"elapsed_seconds":1723.318893083,"text":" of"}
+{"event":"token","token_id":220,"index":81,"elapsed_seconds":1725.247117083,"text":" "}
+{"event":"token","token_id":22,"index":82,"elapsed_seconds":1727.173912583,"text":"7"}
+{"event":"token","token_id":20,"index":83,"elapsed_seconds":1729.110171042,"text":"5"}
+{"event":"token","token_id":19,"index":84,"elapsed_seconds":1731.025703208,"text":"4"}
+{"event":"token","token_id":12433,"index":85,"elapsed_seconds":1732.956844375,"text":" recorded"}
+{"event":"token","token_id":220,"index":86,"elapsed_seconds":1734.884049125,"text":" "}
+{"event":"token","token_id":20,"index":87,"elapsed_seconds":1736.808988583,"text":"5"}
+{"event":"token","token_id":17,"index":88,"elapsed_seconds":1738.746858917,"text":"2"}
+{"event":"token","token_id":569,"index":89,"elapsed_seconds":1740.669133875,"text":" @"}
+{"event":"token","token_id":58462,"index":90,"elapsed_seconds":1742.591879417,"text":".@"}
+{"event":"token","token_id":220,"index":91,"elapsed_seconds":1744.527458958,"text":" "}
+{"event":"token","token_id":24,"index":92,"elapsed_seconds":1746.447889042,"text":"9"}
+{"event":"token","token_id":3526,"index":93,"elapsed_seconds":1748.383506458,"text":" million"}
+{"event":"token","token_id":1251,"index":94,"elapsed_seconds":1750.315038458,"text":" people"}
+{"event":"token","token_id":1154,"index":95,"elapsed_seconds":1752.233357958,"text":" ,"}
+{"event":"token","token_id":714,"index":96,"elapsed_seconds":1754.168280625,"text":" but"}
+{"event":"token","token_id":5779,"index":97,"elapsed_seconds":1756.08983175,"text":" ten"}
+{"event":"token","token_id":1635,"index":98,"elapsed_seconds":1758.022898208,"text":" years"}
+{"event":"token","token_id":2937,"index":99,"elapsed_seconds":1759.953461625,"text":" later"}
+{"event":"token","token_id":1154,"index":100,"elapsed_seconds":1761.870760708,"text":" ,"}
+{"event":"token","token_id":279,"index":101,"elapsed_seconds":1763.802378417,"text":" the"}
+{"event":"token","token_id":43602,"index":102,"elapsed_seconds":1765.72637475,"text":" census"}
+{"event":"token","token_id":29994,"index":103,"elapsed_seconds":1767.634200458,"text":" counted"}
+{"event":"token","token_id":1101,"index":104,"elapsed_seconds":1769.5656255,"text":" just"}
+{"event":"token","token_id":220,"index":105,"elapsed_seconds":1771.46851225,"text":" "}
+{"event":"token","token_id":16,"index":106,"elapsed_seconds":1773.385016,"text":"1"}
+{"event":"token","token_id":21,"index":107,"elapsed_seconds":1775.318128833,"text":"6"}
+{"event":"token","token_id":569,"index":108,"elapsed_seconds":1777.244740042,"text":" @"}
+{"event":"token","token_id":58462,"index":109,"elapsed_seconds":1779.172911292,"text":".@"}
+{"event":"token","token_id":220,"index":110,"elapsed_seconds":1781.093801125,"text":" "}
+{"event":"token","token_id":24,"index":111,"elapsed_seconds":1783.012349875,"text":"9"}
+{"event":"token","token_id":3526,"index":112,"elapsed_seconds":1784.946693375,"text":" million"}
+{"event":"token","token_id":1154,"index":113,"elapsed_seconds":1786.868044583,"text":" ,"}
+{"event":"token","token_id":279,"index":114,"elapsed_seconds":1788.80334225,"text":" the"}
+{"event":"token","token_id":26313,"index":115,"elapsed_seconds":1790.735859417,"text":" remainder"}
+{"event":"token","token_id":3432,"index":116,"elapsed_seconds":1792.661441,"text":" having"}
+{"event":"token","token_id":1012,"index":117,"elapsed_seconds":1794.579003292,"text":" been"}
+{"event":"token","token_id":48146,"index":118,"elapsed_seconds":1796.504445042,"text":" displaced"}
+{"event":"token","token_id":476,"index":119,"elapsed_seconds":1798.442015083,"text":" or"}
+{"event":"token","token_id":7425,"index":120,"elapsed_seconds":1800.370827375,"text":" killed"}
+{"event":"token","token_id":659,"index":121,"elapsed_seconds":1802.29262525,"text":" ."}
+{"event":"token","token_id":11954,"index":122,"elapsed_seconds":1804.222787792,"text":" During"}
+{"event":"token","token_id":419,"index":123,"elapsed_seconds":1806.153611792,"text":" this"}
+{"event":"token","token_id":882,"index":124,"elapsed_seconds":1808.084993208,"text":" time"}
+{"event":"token","token_id":1154,"index":125,"elapsed_seconds":1810.020888167,"text":" ,"}
+{"event":"token","token_id":15687,"index":126,"elapsed_seconds":1811.9509865,"text":" Du"}
+{"event":"token","token_id":29253,"index":127,"elapsed_seconds":1813.869925583,"text":" Fu"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":32640,"sampled_tokens":128,"emitted_tokens":128,"history_tokens":32768,"evaluated_tokens":32767,"pending_tokens":1,"first_token_seconds":1569.266603375,"prefill_seconds":1569.2659620390004,"decode_seconds":244.524725214,"sampling_seconds":0.07495682899999996,"total_seconds":1813.869962125},"backend":"metal","cpu_projection":"none","execution":{"weight_dtype":"Q4 v2 + FP16 exclusions","kv_dtype":"FP16","projection_mode":"Q4CompensatedTiled","normalization_mode":"Compensated","readback_mode":"FullLogits","attention_mode":"Online","prefill_chunk_size":128,"packed_format_version":2,"quantization_group_size":8,"quantizer":"toklet-q4-affine-f32-source-half-metadata-rne-g8-v2"},"logical_memory":{"weights_bytes":1777247428,"kv_bytes":939524880,"scratch_bytes":89826908,"history_bytes":131072,"logits_bytes":1215488,"metadata_bytes":14208,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624},"input_preparation_seconds":0.0,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.0024801690000000013,"publication_seconds":0.0017322929999999998,"load_seconds":40.624539667,"conversion_seconds":3.340285450000006,"tokenizer_load_seconds":0.128098208,"memory_admitted_bytes":3122841472}}
+{"event":"reset"}

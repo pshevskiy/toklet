@@ -484,3 +484,18 @@ decision after byte-identical 116-event/6,579-binding replay, 29 receipt pins,
 20 published copies and independent timing/memory/input checks. Eleven portable
 tests, four packing tests, formatting and strict all-target Metal lint pass;
 the engine and protected CPU binaries remain unchanged.
+
+Both [full M6 maximum-context applications](experiments/2026-10-15-m6-full-application.md)
+complete 32,640 prompt IDs plus 128 ordinary generated outputs with the real
+tokenizer-owning Online CLI. Exact published text/IDs, output-limit state,
+32,767 committed positions plus one pending token, reset, independent post-exit
+decode, unchanged identities and clean exits pass. Complete admissions are
+1,791,516,840/3,122,841,472 bytes and joint native lifetime maxima are
+1,615,907,072/2,960,706,752 bytes, within 6 GiB. Saved-data replay covers 262
+events and 322 bindings. This is application state/memory evidence under a
+cyclic fixed-ID input; input tokenization is excluded, and no latency ranking
+or natural long-document quality is claimed. M6 context/retention closure
+remains pending.
+Astra accepted the full application evidence after byte-identical replay of both
+records, all 322 bindings/262 events and eight published copies, with exact
+requests, state, output, memory and clean exits independently verified.

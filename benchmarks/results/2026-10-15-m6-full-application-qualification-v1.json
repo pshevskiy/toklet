@@ -1,0 +1,57 @@
+{
+  "format": "toklet-m6-full-application-qualification-v1",
+  "source_parent": "9b25aa6",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Independentbyte-identical2record/262event/322bindingreplay;8pins/copies;qualifiedCLIcommands/Online/frozenrawIDs/noforcedcontinuation/noEOS/128outputs/finalizedtext/derivedhistory/state/reset/admission/native/decoder/exits/cleanup/endpoints verified;reportnooverallM6claim. Allreviewexecution/hashingfinished"
+  },
+  "scope": "Two full actualtokenizer-owning fixedID32Kapplications; noinputtokenization/latencyranking/naturallongdocumentquality claim",
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-application-small-full-v1.json": "b7918059d2531f2b346dbf643ffdc09fc61837ba884d64809e28c7839435f0a7",
+    "benchmarks/results/2026-10-15-m6-application-small-full-v1.raw.jsonl": "1e8bf67f90753c18bd44d4ea17eb9a219ea184e5f8e6ab6e9c62ce8fdf23e866",
+    "benchmarks/results/2026-10-15-m6-application-small-full-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-application-larger-full-v1.json": "5aeb6066ec955da5f28694819711c0bd9abfb79e71bd101ea35b78e8d29ee682",
+    "benchmarks/results/2026-10-15-m6-application-larger-full-v1.raw.jsonl": "58d371246ae713443e39615896bbb6ab60a1b15070c2b172e9c215a7b530022d",
+    "benchmarks/results/2026-10-15-m6-application-larger-full-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-application-full-qualification-v1.py": "689d246e7c3c6208cabd8fc92820c1809362260e49ea1742aaaabea057bf3529",
+    "benchmarks/results/2026-10-15-m6-application-full-replay-v1.json": "740dd6232de4901d634d6abf5ffe1f3a8d8fcc63d925b0c13a563d6aa315bdf7"
+  },
+  "published_copies": {
+    "benchmarks/results/2026-10-15-m6-application-small-full-v1.json": "artifacts/m6-application-small-full-v1.json",
+    "benchmarks/results/2026-10-15-m6-application-small-full-v1.raw.jsonl": "artifacts/m6-application-small-full-v1.raw.jsonl",
+    "benchmarks/results/2026-10-15-m6-application-small-full-v1.stderr": "artifacts/m6-application-small-full-v1.stderr",
+    "benchmarks/results/2026-10-15-m6-application-larger-full-v1.json": "artifacts/m6-application-larger-full-v1.json",
+    "benchmarks/results/2026-10-15-m6-application-larger-full-v1.raw.jsonl": "artifacts/m6-application-larger-full-v1.raw.jsonl",
+    "benchmarks/results/2026-10-15-m6-application-larger-full-v1.stderr": "artifacts/m6-application-larger-full-v1.stderr",
+    "benchmarks/results/2026-10-15-m6-application-full-qualification-v1.py": "artifacts/m6-application-full-qualification-v1.py",
+    "benchmarks/results/2026-10-15-m6-application-full-replay-v1.json": "artifacts/m6-application-full-replay-v1.json"
+  },
+  "models": [
+    {
+      "model": "small",
+      "raw_events": 131,
+      "memory_admitted_bytes": 1791516840,
+      "max_joint_native_bytes": 1615907072,
+      "decoder_peak_bytes": 78037616,
+      "history_sha256": "af3cc0b92da9314323e2e123b40f4a25a7be355773b5bb5ce574067a87ae5283",
+      "visible_text_sha256": "59f46a3253d132c7a4201c79833a7d9e3afbd7ee05ebedc2bfac050bd8afcfbd"
+    },
+    {
+      "model": "larger",
+      "raw_events": 131,
+      "memory_admitted_bytes": 3122841472,
+      "max_joint_native_bytes": 2960706752,
+      "decoder_peak_bytes": 77202008,
+      "history_sha256": "af3cc0b92da9314323e2e123b40f4a25a7be355773b5bb5ce574067a87ae5283",
+      "visible_text_sha256": "59f46a3253d132c7a4201c79833a7d9e3afbd7ee05ebedc2bfac050bd8afcfbd"
+    }
+  ],
+  "records": 2,
+  "raw_events": 262,
+  "replay_bindings": 322,
+  "report_path": "docs/experiments/2026-10-15-m6-full-application.md",
+  "m6_complete": false
+}
