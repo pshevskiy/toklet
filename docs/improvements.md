@@ -457,3 +457,16 @@ confirmations under complete 6 GiB admission/native limits. Its payload is
 still requires integration, cache-write, state, quality and end-to-end evidence.
 This records the experiment design only: implementation checks and measurements
 are pending, with no I8 adoption or M6 completion claim.
+
+The [M6 context coverage checker](experiments/2026-10-15-m6-context-scope-audit.md)
+requires all 32 model/depth/quality/profile/timing/confirmation roles, exact saved
+replay, unchanged quality gates and frozen repetition counts. Six portable tests
+pass; four-record compatibility replays 5,652 raw events and rejects incomplete
+coverage. The larger 32K profile also completes three samples per mode with exact
+state, clean exit and bounded memory. Its 95.6989% Online attention median joins
+the small-model trigger for KV investigation. Profile stage time is not DRAM
+traffic or an ordinary timing ranking; full context/application evidence and the
+KV decision remain pending.
+Astra accepted source and partial evidence after independent six-test and
+byte-identical replay checks, 318 bindings, eight receipt pins and six published
+copies, with larger-profile state/memory/intervals independently recomputed.

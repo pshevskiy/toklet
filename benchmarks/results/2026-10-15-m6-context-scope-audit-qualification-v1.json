@@ -1,0 +1,54 @@
+{
+  "format": "toklet-m6-context-scope-audit-qualification-v1",
+  "source_parent": "5f2940e",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Independent6portabletests pass; byte-identical4record/5652event/318bindingreplay;8receiptpins/6exactcopies;largerprofileintervals/state/admission/nativecharge/naturalexit/cleanup/endpoints recomputed;allreviewexecution/hashingfinished"
+  },
+  "scope": "Complete32-role checker and partial four-record compatibility; no full context or M6 qualification",
+  "source_pins": {
+    "tools/experiments/m6_context_scope_audit.py": "0fcb2f63946ee93d9bd53e19e12dcc64e49aa163308bcd3379dcd4b322e71a1a",
+    "tools/experiments/test_m6_context_scope_audit.py": "748541e47c9fbe12cfb1e915176861b6fdee1e29c21fc18828f9a5ebeea61568"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-context-larger-profile-32768-v1.json": "7d1528884274c4d27353a893bd7240dbd170766a9a08ebfa94514e51422a7dda",
+    "benchmarks/results/2026-10-15-m6-context-larger-profile-32768-v1.raw.jsonl": "0c4e1b4407f5f944b3edfb0e6b252f8e4c46f81cfefbb91ade3b7c05ac2bdcba",
+    "benchmarks/results/2026-10-15-m6-context-larger-profile-32768-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-context-scope-qualification-v2.py": "82302070f04d0daa3f3e0ca5771256b563ce81668863d9c95d86dcbf44bfcb64",
+    "benchmarks/results/2026-10-15-m6-context-scope-compatibility-v2.json": "e7577a4e6aa36654f854c9a21c0dcefa13910f0d069093e1b85dfa425e62997c",
+    "benchmarks/results/2026-10-15-m6-pending-code-portable-tests-v1.log": "e4c07621935a0baf482e81d3693e344e2e6cfcad368d99c05b5353f499550ef1"
+  },
+  "published_copies": {
+    "benchmarks/results/2026-10-15-m6-context-larger-profile-32768-v1.json": "artifacts/m6-context-larger-profile-32768-v1.json",
+    "benchmarks/results/2026-10-15-m6-context-larger-profile-32768-v1.raw.jsonl": "artifacts/m6-context-larger-profile-32768-v1.raw.jsonl",
+    "benchmarks/results/2026-10-15-m6-context-larger-profile-32768-v1.stderr": "artifacts/m6-context-larger-profile-32768-v1.stderr",
+    "benchmarks/results/2026-10-15-m6-context-scope-qualification-v2.py": "artifacts/m6-context-scope-qualification-v2.py",
+    "benchmarks/results/2026-10-15-m6-context-scope-compatibility-v2.json": "artifacts/m6-context-scope-compatibility-v2.json",
+    "benchmarks/results/2026-10-15-m6-pending-code-portable-tests-v1.log": "artifacts/m6-pending-code-portable-tests-v1.log"
+  },
+  "portable_tests": 6,
+  "compatibility": {
+    "records": 4,
+    "raw_events": 5652,
+    "bindings": 318,
+    "complete_frozen_context_coverage": false,
+    "incomplete_coverage_rejected": true
+  },
+  "maximum_profiles": {
+    "small": {
+      "depth": 32768,
+      "reference": 0.9981877789123689,
+      "online": 0.9726384699489709
+    },
+    "larger": {
+      "depth": 32768,
+      "reference": 0.9965854035051728,
+      "online": 0.9569890151139241
+    }
+  },
+  "report_path": "docs/experiments/2026-10-15-m6-context-scope-audit.md",
+  "m6_complete": false
+}

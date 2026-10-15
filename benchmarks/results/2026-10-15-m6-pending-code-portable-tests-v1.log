@@ -1,0 +1,27 @@
+test_alternation_all_samples_and_descriptive_gain (test_m6_kv_component.Component.test_alternation_all_samples_and_descriptive_gain) ... ok
+test_baseline_receipt_checks_the_same_buffer_it_parses (test_m6_kv_component.Component.test_baseline_receipt_checks_the_same_buffer_it_parses) ... ok
+test_bounded_read_uses_one_descriptor_and_hashes_parsed_bytes (test_m6_kv_component.Component.test_bounded_read_uses_one_descriptor_and_hashes_parsed_bytes) ... ok
+test_bounded_record_and_repository_path_rejection (test_m6_kv_component.Component.test_bounded_record_and_repository_path_rejection) ... ok
+test_build_rejects_configuration_and_toolchain_on_actual_cwd_ancestry (test_m6_kv_component.Component.test_build_rejects_configuration_and_toolchain_on_actual_cwd_ancestry) ... ok
+test_complete_geometry_and_guarded_physical_accounting (test_m6_kv_component.Component.test_complete_geometry_and_guarded_physical_accounting) ... ok
+test_failure_preserves_evidence_and_cleans_owned_child (test_m6_kv_component.Component.test_failure_preserves_evidence_and_cleans_owned_child) ... ok
+test_nonfinite_events_and_endpoint_errors_preserve_primary_failure_and_report (test_m6_kv_component.Component.test_nonfinite_events_and_endpoint_errors_preserve_primary_failure_and_report) ... ok
+test_owned_success_records_all_events_and_samples_memory_before_final_ack (test_m6_kv_component.Component.test_owned_success_records_all_events_and_samples_memory_before_final_ack) ... ok
+test_source_closure_rejects_drift_missing_files_and_unbound_executable (test_m6_kv_component.Component.test_source_closure_rejects_drift_missing_files_and_unbound_executable) ... ok
+test_witness_coverage_and_no_quantization_gate_substitution (test_m6_kv_component.Component.test_witness_coverage_and_no_quantization_gate_substitution) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.043s
+
+OK
+test_all32_roles_preserve_descriptive_scope_and_conditional_rule (test_m6_context_scope_audit.ContextScope.test_all32_roles_preserve_descriptive_scope_and_conditional_rule) ... ok
+test_different_parsed_and_replayed_record_bytes_rejected (test_m6_context_scope_audit.ContextScope.test_different_parsed_and_replayed_record_bytes_rejected) ... ok
+test_failed_depth_and_winner_reversal_keep_coverage_but_fail_automatic_quality (test_m6_context_scope_audit.ContextScope.test_failed_depth_and_winner_reversal_keep_coverage_but_fail_automatic_quality) ... ok
+test_missing_duplicate_unknown_plan_or_depth_rejected (test_m6_context_scope_audit.ContextScope.test_missing_duplicate_unknown_plan_or_depth_rejected) ... ok
+test_profile_coverage_median_nonfinite_and_threshold_boundary (test_m6_context_scope_audit.ContextScope.test_profile_coverage_median_nonfinite_and_threshold_boundary) ... ok
+test_single_long_pair_cannot_replace_frozen_two_pair_collection (test_m6_context_scope_audit.ContextScope.test_single_long_pair_cannot_replace_frozen_two_pair_collection) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.059s
+
+OK
