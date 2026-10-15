@@ -1,0 +1,140 @@
+{
+  "format": "toklet-m6-quality-collector-qualification-v1",
+  "source_parent": "ca62a58",
+  "scope": "Reviewed Online loss worker/collector code and short real-model guards only. Full loss, task quality, performance and long-context release remain pending.",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Collector code, compiled source and all short native evidence; no full quality/latency/long-context acceptance"
+  },
+  "source_snapshot": "artifacts/m6-quality-collector-source-v1",
+  "source_pins": {
+    "examples/metal_quality.rs": "00d775e0acd3977907b95010c0b1275c430f621fd34b3bb114c5b920476fa84d",
+    "examples/support/loss.rs": "a2cbea031570c1aa539b1096d2af87711935064c844f600f5d0cc6b55ed4c0ff",
+    "tools/experiments/metal_quality.py": "ea560136824825fd7c21b7243b1ffe08455b7a07cf407d14fc99748faa6d9a5f",
+    "tools/experiments/m6_quality.py": "d9c38301bacef2a46919f2362c53cebfb29900b43c87619b01d86434d0ebad9a",
+    "tools/experiments/test_m6_quality.py": "32f272fa4e3fed92252bd1764d0337db8871212c754cce638988a3141ed1608b"
+  },
+  "log_pins": {
+    "benchmarks/results/2026-10-15-m6-quality-portable-v3.log": "5a6bc6ea824250d0d2ad3f0be57c98260d468f29bbd28a6589d7962dae3faccf",
+    "benchmarks/results/2026-10-15-m6-quality-cpu-clippy-v1.log": "fecede7c2157efe2f16c8c8b9dce94b0fb4dd384dca8207046c8bf7636eb0ffe",
+    "benchmarks/results/2026-10-15-m6-quality-metal-clippy-v1.log": "99f71393b9903dca098310bb446022a4bdee195ea9996f351a787195555210a6",
+    "benchmarks/results/2026-10-15-m6-quality-cpu-tests-v1.log": "9993e95f4506ae29b69896f70e80166951c11f3ecd3fc38e6763423f56075e50",
+    "benchmarks/results/2026-10-15-m6-quality-metal-tests-v1.log": "3532e0e1823e183790d271cee6fb088e51752c3f6b93a119cfacb2f469569b03",
+    "benchmarks/results/2026-10-15-m6-quality-build-v1.log": "163b514a3e8bcbefc8ca33038126d819a4cc7870d69c989eafddb1db610d9484"
+  },
+  "native_evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-quality-small-probes-v1.json": "1aa3b7ba99118f561a60290d80962e4cb3fd79426f15030111cca50b2e7716aa",
+    "benchmarks/results/2026-10-15-m6-quality-small-probes-v1.raw.jsonl": "44f02dcfb29f3a4bb1d4bde07dd4f053d68384fa5d471b2c73d511169dd38ea2",
+    "benchmarks/results/2026-10-15-m6-quality-small-probes-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-quality-larger-probes-v1.json": "95817f0966e8990041f92891b55b384b7463e424b69dac0c4c41cd300aae28eb",
+    "benchmarks/results/2026-10-15-m6-quality-larger-probes-v1.raw.jsonl": "ff85e4807deb3413dc48c446852e5662bbe3716d2ab3b50a8c7dee45e26287bc",
+    "benchmarks/results/2026-10-15-m6-quality-larger-probes-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "compiled_build": {
+    "format": "toklet-m6-quality-build-v1",
+    "snapshot": "artifacts/m6-quality-source-v1",
+    "sources": {
+      "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+      "Cargo.toml": "bc21dbd7fd1c0f257ad8b7debfb20016170a64505a583e368de1a48ca865593c",
+      "examples/metal_quality.rs": "00d775e0acd3977907b95010c0b1275c430f621fd34b3bb114c5b920476fa84d",
+      "examples/support/loss.rs": "a2cbea031570c1aa539b1096d2af87711935064c844f600f5d0cc6b55ed4c0ff",
+      "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+      "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+      "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+      "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+      "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+      "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+      "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+      "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+      "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+      "src/lib.rs": "a4cc758d947079d5cf715183edfa71039de4dc1735caac6a481cf7a0c9ae8962",
+      "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+      "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+      "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+      "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+      "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+      "src/metal/memory.rs": "087b5e0fff4beb3dae8402d3ebc94f7df961df4db55491f8e73e2568f5608911",
+      "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+      "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+      "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+      "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+      "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+      "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+      "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+      "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+      "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+      "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+      "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+      "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+      "src/weights/mod.rs": "d0a489a0e00a794d895231f179acc93f4b22fd465fbae5f8065f7d5610f248ed"
+    },
+    "binary": {
+      "path": "artifacts/m6-quality-native-v1/metal_quality",
+      "sha256": "d7e7036819695ceed041df20dc30a3c296d383f7c5b7dffe086cb85d6f908e08"
+    },
+    "build": "CARGO_TARGET_DIR=artifacts/m5-checks cargo build --release --features metal --example metal_quality",
+    "source_parent": "ca62a58",
+    "working_tree_runtime_diff": "examples/metal_quality.rs adds optional Online mode; complete source snapshot retained"
+  },
+  "compiled_manifest_sha256": "347f88e7b33054885b3a35a77345d46a7d0d2da53d4ed2698e64d987f6cc9fab",
+  "checks": {
+    "portable_tests": 26,
+    "cpu_tests": 97,
+    "ordinary_metal_tests": 110,
+    "format": true,
+    "strict_cpu_clippy": true,
+    "strict_metal_clippy": true
+  },
+  "models": [
+    {
+      "model": "small",
+      "workers": 4,
+      "raw_events": 34,
+      "short_guards_passed": true,
+      "full_loss_completed": false,
+      "max_admission_bytes": 1377627122,
+      "max_joint_native_bytes": 1220380664,
+      "batch_minus_single_nll": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "model": "larger",
+      "workers": 4,
+      "raw_events": 34,
+      "short_guards_passed": true,
+      "full_loss_completed": false,
+      "max_admission_bytes": 2189857482,
+      "max_joint_native_bytes": 2060208696,
+      "batch_minus_single_nll": [
+        [
+          -4.655824665800168e-06,
+          -1.0748787879322208e-05,
+          1.91528940263197e-06
+        ],
+        [
+          -4.655824665800168e-06,
+          -1.0748787879322208e-05,
+          -8.575128079169048e-06
+        ]
+      ]
+    }
+  ],
+  "native_workers": 8,
+  "raw_events": 68,
+  "full_loss_completed": false,
+  "task_quality_completed": false,
+  "m6_complete": false
+}

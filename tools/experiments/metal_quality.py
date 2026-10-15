@@ -97,8 +97,9 @@ def done(event,tokens,losses,blocks,evaluated):
     return total/count
 
 
-def child(binary,source,packed,token_path,tokens,quantized,chunk,raw,stderr,*,admission=ready,extra_args=()):
+def child(binary,source,packed,token_path,tokens,quantized,chunk,raw,stderr,*,admission=ready,extra_args=(),before_launch=None):
     command=[str(binary),str(source),str(packed) if quantized else "-",str(token_path),str(chunk)]+list(extra_args)
+    if before_launch is not None:before_launch()
     worker=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
     transport=None
     result={"command":command,"worker_pid":worker.pid,"passed":False,"losses":[],"chunks":[],"blocks":[],"idle_usage":[],"cleanup_errors":[],

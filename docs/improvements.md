@@ -338,3 +338,11 @@ native CLI workers/122 events pass;6912 independent high-position rotary values
 pass their predeclared arithmetic envelope through32767. Structural/tiny evidence
 is retained separately from the pending real-model long-prefix quality,
 performance, memory and supported-depth qualification.
+
+The [M6 Online quality collector](experiments/2026-10-15-m6-quality-collector.md)
+binds actual Online selection, compiled source/executable, model/corpus/baseline
+and packed payloads, reasserts them before worker launch, and preserves the
+unchanged short/full loss gates and incomplete/rejected flags.26 portable checks,
+97 CPU/110 ordinary Metal checks and eight real-model short-guard workers/68
+events pass; single/batch NLL differences are0 small and at most0.00001075 larger.
+Full10000-target loss/task quality and long-context release remain pending.
