@@ -389,3 +389,14 @@ scope are recorded. Four portable checks and two native full-capacity allocation
 probes/tenevents pass, with admissions1,791,516,840/3,122,841,472bytes and sampled
 joint native charges1,617,987,816/2,960,116,952bytes. Astra accepted code/evidence;
 full32640+128 generation and M6 qualification remain pending.
+
+The [full M6 Online task gate](experiments/2026-10-15-m6-online-task-quality.md)
+passes for both selected representations:2/100 small and11/100 larger, matching
+their FP32 baselines with0pp loss. Two serial collectors/12221events and two
+isolated literal windows resolve all200outcomes, including80 unchanged
+SyntaxError code failures and120text grades. Exact original caps/state/text,
+complete≤6GiB admission/native charge, source/published archives and fresh stopped
+VM restoration pass. Astra accepted all411bindings and independent replay;
+absolute task scores stay disclosed. Full loss/task gates are now closed;
+long quality, profiles/performance, max-context generation and the KV decision
+remain before M6 completion.

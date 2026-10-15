@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/opt/podman/bin/podman",
+    "machine",
+    "list",
+    "--format=json"
+  ],
+  "wall_timed_out": false,
+  "output_limit_exceeded": false,
+  "exit_code": 0,
+  "process_group_killed": false,
+  "cleanup_errors": [],
+  "surviving_group_members": [],
+  "elapsed_seconds": 0.036259124986827374,
+  "stdout_base64": "WwogICAgewogICAgICAgICJOYW1lIjogInBvZG1hbi1tYWNoaW5lLWRlZmF1bHQiLAogICAgICAgICJEZWZhdWx0IjogdHJ1ZSwKICAgICAgICAiQ3JlYXRlZCI6ICIyMDI2LTAxLTE1VDEyOjEyOjQyLjY2NjQ2MiswMzowMCIsCiAgICAgICAgIlJ1bm5pbmciOiBmYWxzZSwKICAgICAgICAiU3RhcnRpbmciOiBmYWxzZSwKICAgICAgICAiTGFzdFVwIjogIjIwMjYtMTAtMTVUMDk6NDk6MjEuOTMwNTQ0KzAzOjAwIiwKICAgICAgICAiU3RyZWFtIjogImRlZmF1bHQiLAogICAgICAgICJWTVR5cGUiOiAiYXBwbGVodiIsCiAgICAgICAgIkNQVXMiOiA1LAogICAgICAgICJNZW1vcnkiOiAiMjE0NzQ4MzY0OCIsCiAgICAgICAgIlN3YXAiOiAiMCIsCiAgICAgICAgIkRpc2tTaXplIjogIjEwNzM3NDE4MjQwMCIsCiAgICAgICAgIlBvcnQiOiA1MTM4NywKICAgICAgICAiUmVtb3RlVXNlcm5hbWUiOiAiY29yZSIsCiAgICAgICAgIklkZW50aXR5UGF0aCI6ICIvVXNlcnMvY29sb25lci8ubG9jYWwvc2hhcmUvY29udGFpbmVycy9wb2RtYW4vbWFjaGluZS9tYWNoaW5lIiwKICAgICAgICAiVXNlck1vZGVOZXR3b3JraW5nIjogdHJ1ZQogICAgfQpd",
+  "stdout_captured_bytes": 591,
+  "stdout_captured_sha256": "b33c4a536d98deffe44a750cf16ba7501ab8a93b0794d54a831d63fb9e71e771",
+  "stderr_base64": "",
+  "stderr_captured_bytes": 0,
+  "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
