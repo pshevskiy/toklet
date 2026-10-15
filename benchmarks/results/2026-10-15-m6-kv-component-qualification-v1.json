@@ -1,0 +1,106 @@
+{
+  "format": "toklet-m6-kv-component-qualification-v1",
+  "source_parent": "2345058",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Finalcode/data/decisionaccepted; byte-identical116event6579bindingreplay,7source+contract+21evidencepins/20copies, crossruninputhashes/quantization, allrawstats/native29eventsequences/power/protectedbinaries. Optionalnonadoptionvalid; Smallpositiveexplicit, noallfourfrozengate/endtoendfailure/adoptionclaim; finalM6retentionpending. Allreviewexecution/hashingfinished"
+  },
+  "scope": "Isolated synthetic component only; no production I8 adoption/fullmodel quality/endtoend claim",
+  "source_pins": {
+    "tools/experiments/m6_kv_component.py": "5ca24c031c197f13f0b742fa21ca9b7aeb2812f0205c48c8e717066bc1001731",
+    "tools/experiments/m6_kv_component_build.py": "086b4537cc0804560ec3e88d8b147d1660e910f186cd89c606324dd9479214d3",
+    "tools/experiments/test_m6_kv_component.py": "dc1a5b726877dbf8679565937032279408bebae28a6b63dbb10cffddb5d1df30",
+    "tools/experiments/m6_kv_probe/kv_probe.metal": "7dea2577a0a391b717a5b3dc0872251bbc4851fc8a2dd077050eded9fc373e4c",
+    "tools/experiments/m6_kv_probe/kv_probe.rs": "fda2645e1962cb79663fb93e9b17c307b5192c66489da28cbf337edb8b006cd7",
+    "tools/experiments/m6_kv_probe/kv_probe_witness.rs": "d43af40717b695c81e2d159555cf9c5ca2fa25b52844c40f5e93e7cddafa3a64",
+    "tools/experiments/m6_kv_probe/metal_kv_probe.rs": "ca26e13bd7ebdd369b3aed3864c60d0c34770622477506c25558b1f968e2bd1b"
+  },
+  "contract": {
+    "path": "benchmarks/m6-kv-component-v1/manifest.json",
+    "sha256": "12ff40a6161cea7ff2c5454fde303aba0c91517be32be46dd08e7e88e5451c21",
+    "pre_collection_commit": "5f2940e"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-kv-component-small-primary-v1.json": "f11293b0a6a4c54c8178832d8b9fdf25b61d501de13664c39075c63e38d104db",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-primary-v1.raw.jsonl": "80ecd423cf0558668510b369b1c0a648515ee8dda1fa2056838c1615307ee05c",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-primary-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-confirmation-v1.json": "5e03d4e28cab0430345ccc7ad679ff679457fa1ddc04c724358420bc50a51384",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-confirmation-v1.raw.jsonl": "77d946cc5cfc5f03bdb82582f35f70f0a88ace457bc1542554c755dad1ee935a",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-confirmation-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-primary-v1.json": "385006629ffdbfa74fd1ed7cd0e9f4950af52ac92f9eb09c316ffce16c3e3258",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-primary-v1.raw.jsonl": "624d7cade903432abc7cac2a89abaa5f9975c76e007871d922888fc6ccc0dcd9",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-primary-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-confirmation-v1.json": "deea9f1acb9fdb463bb51575b181d2fe91903cab3e2d4bbad16d8a4f7ebf1e3b",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-confirmation-v1.raw.jsonl": "6adddb4212d020fd563722b601e0530d240243988c6969f1972d07b12e710a25",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-confirmation-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-kv-component-qualification-v1.py": "0064f53e8051afdab01ace7ef819da2d6aae5066af4f3a12fb78a438d2e2981d",
+    "benchmarks/results/2026-10-15-m6-kv-component-replay-v1.json": "6af62581ef1cdf4be5d1a8cf19c0a01faffabc02b34151d163b40ed591627e38",
+    "benchmarks/results/2026-10-15-m6-kv-probe-build-v1.json": "845b65158b5b3cbe4f89a2e0e2fc7a4a4a766bbdca7bd4bf6c9495f4dbcad107",
+    "benchmarks/results/2026-10-15-m6-kv-probe-build-v1.log": "8ec3704965ed7131be0cb521f3306935571bbee665b2ae67a36e43eae6662de5",
+    "benchmarks/results/2026-10-15-m6-kv-probe-checks-v1.json": "ac044107f4938a867fb9dd99b6efecafb1aa62d1a5748d75911bfb187092266c",
+    "benchmarks/results/2026-10-15-m6-kv-probe-checks-v1.log": "b0dad838db454b80ad3613cfb9e75ae2ad1e34a1a98c56dd783570bb6820b46c",
+    "benchmarks/results/2026-10-15-m6-kv-probe-protected-binaries-v1.json": "c51f433eb596a5cec491c050c0cdd92b31f43c98b6d0bf6b6224d0cf11fba81a",
+    "benchmarks/results/2026-10-15-m6-kv-probe-protected-binaries-v2.json": "3797b87bb9388683fde59b65d443fc00bc652848284edf289dc4156dcd72d25c",
+    "benchmarks/results/2026-10-15-m6-pending-code-portable-tests-v1.log": "e4c07621935a0baf482e81d3693e344e2e6cfcad368d99c05b5353f499550ef1"
+  },
+  "published_copies": {
+    "benchmarks/results/2026-10-15-m6-kv-component-small-primary-v1.json": "artifacts/m6-kv-component-small-primary-v1.json",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-primary-v1.raw.jsonl": "artifacts/m6-kv-component-small-primary-v1.raw.jsonl",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-primary-v1.stderr": "artifacts/m6-kv-component-small-primary-v1.stderr",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-confirmation-v1.json": "artifacts/m6-kv-component-small-confirmation-v1.json",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-confirmation-v1.raw.jsonl": "artifacts/m6-kv-component-small-confirmation-v1.raw.jsonl",
+    "benchmarks/results/2026-10-15-m6-kv-component-small-confirmation-v1.stderr": "artifacts/m6-kv-component-small-confirmation-v1.stderr",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-primary-v1.json": "artifacts/m6-kv-component-larger-primary-v1.json",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-primary-v1.raw.jsonl": "artifacts/m6-kv-component-larger-primary-v1.raw.jsonl",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-primary-v1.stderr": "artifacts/m6-kv-component-larger-primary-v1.stderr",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-confirmation-v1.json": "artifacts/m6-kv-component-larger-confirmation-v1.json",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-confirmation-v1.raw.jsonl": "artifacts/m6-kv-component-larger-confirmation-v1.raw.jsonl",
+    "benchmarks/results/2026-10-15-m6-kv-component-larger-confirmation-v1.stderr": "artifacts/m6-kv-component-larger-confirmation-v1.stderr",
+    "benchmarks/results/2026-10-15-m6-kv-component-qualification-v1.py": "artifacts/m6-kv-component-qualification-v1.py",
+    "benchmarks/results/2026-10-15-m6-kv-component-replay-v1.json": "artifacts/m6-kv-component-replay-v1.json",
+    "benchmarks/results/2026-10-15-m6-kv-probe-build-v1.json": "artifacts/m6-kv-probe-build-v1.json",
+    "benchmarks/results/2026-10-15-m6-kv-probe-build-v1.log": "artifacts/m6-kv-probe-build-v1.log",
+    "benchmarks/results/2026-10-15-m6-kv-probe-checks-v1.json": "artifacts/m6-kv-probe-checks-v1.json",
+    "benchmarks/results/2026-10-15-m6-kv-probe-checks-v1.log": "artifacts/m6-kv-probe-checks-v1.log",
+    "benchmarks/results/2026-10-15-m6-kv-probe-protected-binaries-v1.json": "artifacts/m6-kv-probe-protected-binaries-v1.json",
+    "benchmarks/results/2026-10-15-m6-kv-probe-protected-binaries-v2.json": "artifacts/m6-kv-probe-protected-binaries-v2.json"
+  },
+  "build_sha256": "845b65158b5b3cbe4f89a2e0e2fc7a4a4a766bbdca7bd4bf6c9495f4dbcad107",
+  "portable_tests": 11,
+  "cpu_packing_tests": 4,
+  "fmt": true,
+  "all_target_metal_clippy": true,
+  "records": 4,
+  "raw_events": 116,
+  "replay_bindings": 6579,
+  "cross_collection_inputs_match": true,
+  "component_gpu_median_reductions": [
+    {
+      "model_shape": "small",
+      "collection": "primary",
+      "fraction": 0.0507603471108653
+    },
+    {
+      "model_shape": "small",
+      "collection": "confirmation",
+      "fraction": 0.05561723226146509
+    },
+    {
+      "model_shape": "larger",
+      "collection": "primary",
+      "fraction": 0.03199540529067901
+    },
+    {
+      "model_shape": "larger",
+      "collection": "confirmation",
+      "fraction": 0.02668763698910781
+    }
+  ],
+  "adoption_qualified": false,
+  "m6_complete": false,
+  "report_path": "docs/experiments/2026-10-15-m6-kv-component.md",
+  "decision": "Keep FP16; decline production integration of mixedbenefit candidate. Small positive component results remain disclosed; largerbelow5both; fullengine I8 gates not attempted or waived. Finalretention awaits fullM6capacity/application review."
+}

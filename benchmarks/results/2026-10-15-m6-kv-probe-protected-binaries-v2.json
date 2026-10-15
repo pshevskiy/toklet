@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "sha256": {
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "scope": "After all isolated build/check/native workers completed"
+}

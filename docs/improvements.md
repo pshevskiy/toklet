@@ -470,3 +470,17 @@ KV decision remain pending.
 Astra accepted source and partial evidence after independent six-test and
 byte-identical replay checks, 318 bindings, eight receipt pins and six published
 copies, with larger-profile state/memory/intervals independently recomputed.
+
+The [isolated M6 I8 KV experiment](experiments/2026-10-15-m6-kv-component.md)
+passes the unchanged independent arithmetic gate, exact packed-format witnesses,
+immutable-input checks and complete component memory limits across four serial
+workers/116 events. Small synthetic decode medians improve 5.08%/5.56%; larger
+improves 3.20%/2.67%, below the frozen 5% component usefulness threshold. I8 uses
+53.125% of FP16 payload. These mixed component results do not qualify engine
+adoption or model quality; FP16 remains in use, with full context/application
+qualification and final KV review pending.
+Astra accepted the code, four-worker evidence and mixed-benefit non-adoption
+decision after byte-identical 116-event/6,579-binding replay, 29 receipt pins,
+20 published copies and independent timing/memory/input checks. Eleven portable
+tests, four packing tests, formatting and strict all-target Metal lint pass;
+the engine and protected CPU binaries remain unchanged.
