@@ -1,0 +1,13 @@
+test_actual_metal_backend_and_modes_preserve_frozen_grammar (test_metal_tasks.MetalTasks.test_actual_metal_backend_and_modes_preserve_frozen_grammar) ... ok
+test_bad_ready_reaps_owned_worker (test_metal_tasks.MetalTasks.test_bad_ready_reaps_owned_worker) ... ok
+test_error_reset_state_timers_and_visible_eos_reject (test_metal_tasks.MetalTasks.test_error_reset_state_timers_and_visible_eos_reject) ... ok
+test_independent_finalization_requires_exit_and_exact_text (test_metal_tasks.MetalTasks.test_independent_finalization_requires_exit_and_exact_text) ... ok
+test_probe_cap_and_full_case_caps_are_distinct (test_metal_tasks.MetalTasks.test_probe_cap_and_full_case_caps_are_distinct) ... ok
+test_receipt_replaced_after_parse_rejects_before_worker (test_metal_tasks.MetalTasks.test_receipt_replaced_after_parse_rejects_before_worker) ... ok
+test_unqualified_cli_rejects_before_model (test_metal_tasks.MetalTasks.test_unqualified_cli_rejects_before_model) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.041s
+
+OK
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.

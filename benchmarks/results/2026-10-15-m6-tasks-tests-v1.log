@@ -1,0 +1,14 @@
+test_actual_online_and_selected_modes_complete_app_memory (test_m6_tasks.OnlineTasks.test_actual_online_and_selected_modes_complete_app_memory) ... ok
+test_changed_prelaunch_inputs_never_start_worker_or_decoder (test_m6_tasks.OnlineTasks.test_changed_prelaunch_inputs_never_start_worker_or_decoder) ... ok
+test_exclusive_output_rejects_before_model_admission (test_m6_tasks.OnlineTasks.test_exclusive_output_rejects_before_model_admission) ... ok
+test_full_caps_original_event_grammar_and_exact_online_identity (test_m6_tasks.OnlineTasks.test_full_caps_original_event_grammar_and_exact_online_identity) ... ok
+test_full_loss_prerequisite_for_each_selected_model (test_m6_tasks.OnlineTasks.test_full_loss_prerequisite_for_each_selected_model) ... ok
+test_idle_proof_matches_one_completed_collection (test_m6_tasks.OnlineTasks.test_idle_proof_matches_one_completed_collection) ... ok
+test_ordered_native_coverage_and_charge_are_required (test_m6_tasks.OnlineTasks.test_ordered_native_coverage_and_charge_are_required) ... ok
+test_partial_changed_caps_exit_and_raw_cannot_enter_grading (test_m6_tasks.OnlineTasks.test_partial_changed_caps_exit_and_raw_cannot_enter_grading) ... ok
+test_window_preserves_existing_literal_controller_and_idle_checks (test_m6_tasks.OnlineTasks.test_window_preserves_existing_literal_controller_and_idle_checks) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.300s
+
+OK

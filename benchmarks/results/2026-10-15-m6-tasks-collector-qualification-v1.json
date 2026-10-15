@@ -1,0 +1,48 @@
+{
+  "format": "toklet-m6-tasks-collector-qualification-v1",
+  "source_parent": "2a4bfb4",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Separate component accepted;335distinct jointauditbindings, all65rawevents and passingtestlogs independentlyverified; fullcollections remain pending"
+  },
+  "scope": "Collector/protocol/short probe qualification only; full task grading and max-context generation remain pending",
+  "source_pins": {
+    "tools/experiments/m6_tasks.py": "3286c3e3418a3a7908861b276eea0c691b781be6757eae6aad4116ef8fbf163d",
+    "tools/experiments/m6_task_admission.py": "4391d7205b5bc44db50e8f4247e680de201010b2cfa091a5d812cadc317cc9ee",
+    "tools/experiments/m6_task_window.py": "05bc60d8eb5449ed081a256fb0d6770b563a93ea9cd15d757dcdf45e86b52e35",
+    "tools/experiments/test_m6_tasks.py": "a91add629f039e5a5c92b0e6e4560b0d5c58480b4674ed7eb57709e983436355",
+    "tools/experiments/metal_tasks.py": "fb8e3d309c4d320a8b4ac0a2cf8ae8b2a932ff32ad15a9ae09a850473ef20bbd"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-tasks-small-probe-v1.json": "b1c6e142ad43eb791eb7b632dd8eab8945359c2fe864928dc5f6eec9d0ba25a4",
+    "benchmarks/results/2026-10-15-m6-tasks-small-probe-v1.raw.jsonl": "733cff45ca595d7186b11da7bd4d61f630bc5f870a84431719baa69d03499caf",
+    "benchmarks/results/2026-10-15-m6-tasks-small-probe-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-tasks-larger-probe-v1.json": "79c40add2a7628c5df9c1587173163f237c941b7e7cc42e868ff931119200728",
+    "benchmarks/results/2026-10-15-m6-tasks-larger-probe-v1.raw.jsonl": "3f6b1cd9beca530fe40f7d0002ff071428b136ad7fb4d77101f8b9ce92ab6ee3",
+    "benchmarks/results/2026-10-15-m6-tasks-larger-probe-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-tasks-tests-v1.log": "169df15ee75871ed22451b398d6bf76b6ce114102337a3e359692a269682b186",
+    "benchmarks/results/2026-10-15-m6-tasks-legacy-tests-v1.log": "523da468aec98f1e6c05a176fb5ceb2332cb807dfcd2350c001e5766d0c6e942",
+    "benchmarks/results/2026-10-15-m6-tasks-v2-legacy-tests-v1.log": "14d1b4dd669b350cf0e23f3683043c093ae68967b7f25331ad0ea5991bfb95b2",
+    "benchmarks/results/2026-10-15-m6-tasks-window-tests-v1.log": "517991f2a9e8ec0ef102096cf7a841851895f5ae0ff11489a223f86efc6e3f16"
+  },
+  "models": [
+    {
+      "model": "small",
+      "raw_events": 31,
+      "admission_bytes": 1413906600,
+      "max_joint_native_bytes": 1238321096
+    },
+    {
+      "model": "larger",
+      "raw_events": 24,
+      "admission_bytes": 2241914752,
+      "max_joint_native_bytes": 2076101248
+    }
+  ],
+  "native_workers": 2,
+  "native_raw_events": 55,
+  "m6_complete": false
+}

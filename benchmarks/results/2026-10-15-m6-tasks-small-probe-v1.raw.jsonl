@@ -1,0 +1,31 @@
+{"event":"ready","backend":"metal","context_capacity":2048,"cpu_projection":"none","memory_admitted_bytes":1413906600,"execution":{"weight_dtype":"FP16","kv_dtype":"FP16","projection_mode":"HalfCompensated","normalization_mode":"Original","readback_mode":"FullLogits","attention_mode":"Online","prefill_chunk_size":128},"logical_memory":{"weights_bytes":988069596,"kv_bytes":25166496,"scratch_bytes":84551260,"history_bytes":8192,"logits_bytes":1215488,"metadata_bytes":14080,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624}}
+{"event":"token","token_id":73594,"index":0,"elapsed_seconds":0.637705042,"text":"```"}
+{"event":"token","token_id":12669,"index":1,"elapsed_seconds":0.666307875,"text":"python"}
+{"event":"token","token_id":198,"index":2,"elapsed_seconds":0.694725125,"text":"\n"}
+{"event":"token","token_id":1499,"index":3,"elapsed_seconds":0.723186833,"text":"from"}
+{"event":"token","token_id":19496,"index":4,"elapsed_seconds":0.751817083,"text":" typing"}
+{"event":"token","token_id":1159,"index":5,"elapsed_seconds":0.780361,"text":" import"}
+{"event":"token","token_id":1759,"index":6,"elapsed_seconds":0.808917625,"text":" List"}
+{"event":"token","token_id":271,"index":7,"elapsed_seconds":0.837638292,"text":"\n\n"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":169,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":177,"evaluated_tokens":176,"pending_tokens":1,"first_token_seconds":0.637705042,"prefill_seconds":0.637122166,"decode_seconds":0.19568137600000002,"sampling_seconds":0.004662458000000001,"total_seconds":0.837668042},"backend":"metal","cpu_projection":"none","execution":{"weight_dtype":"FP16","kv_dtype":"FP16","projection_mode":"HalfCompensated","normalization_mode":"Original","readback_mode":"FullLogits","attention_mode":"Online","prefill_chunk_size":128},"logical_memory":{"weights_bytes":988069596,"kv_bytes":25166496,"scratch_bytes":84551260,"history_bytes":8192,"logits_bytes":1215488,"metadata_bytes":14080,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624},"input_preparation_seconds":0.0,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.000148084,"publication_seconds":0.000051083,"load_seconds":3.492054042,"conversion_seconds":3.2172666660000298,"tokenizer_load_seconds":0.137098125,"memory_admitted_bytes":1413906600}}
+{"event":"reset"}
+{"event":"token","token_id":32,"index":0,"elapsed_seconds":0.30393075,"text":"A"}
+{"event":"token","token_id":13,"index":1,"elapsed_seconds":0.329702875,"text":"."}
+{"event":"token","token_id":576,"index":2,"elapsed_seconds":0.355468834,"text":" The"}
+{"event":"token","token_id":3015,"index":3,"elapsed_seconds":0.381156,"text":" water"}
+{"event":"token","token_id":71118,"index":4,"elapsed_seconds":0.407115667,"text":"melon"}
+{"event":"token","token_id":19056,"index":5,"elapsed_seconds":0.432918792,"text":" seeds"}
+{"event":"token","token_id":1494,"index":6,"elapsed_seconds":0.458745542,"text":" pass"}
+{"event":"token","token_id":1526,"index":7,"elapsed_seconds":0.48450025,"text":" through"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":87,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":95,"evaluated_tokens":94,"pending_tokens":1,"first_token_seconds":0.30393075,"prefill_seconds":0.303347917,"decode_seconds":0.176353707,"sampling_seconds":0.0046722510000000005,"total_seconds":0.484517917},"backend":"metal","cpu_projection":"none","execution":{"weight_dtype":"FP16","kv_dtype":"FP16","projection_mode":"HalfCompensated","normalization_mode":"Original","readback_mode":"FullLogits","attention_mode":"Online","prefill_chunk_size":128},"logical_memory":{"weights_bytes":988069596,"kv_bytes":25166496,"scratch_bytes":84551260,"history_bytes":8192,"logits_bytes":1215488,"metadata_bytes":14080,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624},"input_preparation_seconds":0.0,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.00008895999999999999,"publication_seconds":0.000051915999999999996,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1413906600}}
+{"event":"reset"}
+{"event":"token","token_id":279,"index":0,"elapsed_seconds":0.297709792,"text":" the"}
+{"event":"token","token_id":33326,"index":1,"elapsed_seconds":0.323617584,"text":" angel"}
+{"event":"token","token_id":594,"index":2,"elapsed_seconds":0.349469792,"text":"'s"}
+{"event":"token","token_id":13885,"index":3,"elapsed_seconds":0.375300584,"text":" existence"}
+{"event":"token","token_id":13,"index":4,"elapsed_seconds":0.401098792,"text":"."}
+{"event":"token","token_id":358,"index":5,"elapsed_seconds":0.42692775,"text":" I"}
+{"event":"token","token_id":1101,"index":6,"elapsed_seconds":0.452941167,"text":" just"}
+{"event":"token","token_id":1366,"index":7,"elapsed_seconds":0.478821875,"text":" want"}
+{"event":"done","statistics":{"generation":{"reason":{"kind":"output_limit"},"reused_tokens":0,"prefill_tokens":85,"sampled_tokens":8,"emitted_tokens":8,"history_tokens":93,"evaluated_tokens":92,"pending_tokens":1,"first_token_seconds":0.297709792,"prefill_seconds":0.297082916,"decode_seconds":0.17690595800000003,"sampling_seconds":0.004698583,"total_seconds":0.478834959},"backend":"metal","cpu_projection":"none","execution":{"weight_dtype":"FP16","kv_dtype":"FP16","projection_mode":"HalfCompensated","normalization_mode":"Original","readback_mode":"FullLogits","attention_mode":"Online","prefill_chunk_size":128},"logical_memory":{"weights_bytes":988069596,"kv_bytes":25166496,"scratch_bytes":84551260,"history_bytes":8192,"logits_bytes":1215488,"metadata_bytes":14080,"metadata_allowance_bytes":67108864,"tokenizer_application_allowance_bytes":247772624},"input_preparation_seconds":0.0,"input_formatting_seconds":0.0,"tokenization_seconds":0.0,"detokenization_seconds":0.00008554,"publication_seconds":0.000059373,"load_seconds":0.0,"conversion_seconds":0.0,"tokenizer_load_seconds":0.0,"memory_admitted_bytes":1413906600}}
+{"event":"reset"}

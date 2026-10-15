@@ -371,3 +371,12 @@ paired policy are explicit. Ten collector/seven controlled/seven transport tests
 and two selected-model short probes/six events pass. Astra accepted all311
 endpoint bindings and raw replay after three collector fixes. Long quality,
 performance, application admission, task gates and the KV decision remain open.
+
+The [M6 Online task adapter](experiments/2026-10-15-m6-tasks-collector.md)
+preserves the original100-case caps/stops/literal rules, requires reviewed full
+loss, binds actual Online execution and reasserts the complete qualified CLI
+and consumed input inventory before launch. Separate full-collection admission
+retains raw replay, natural exit, independent text and the existing isolated
+grading window. Nine new/seven legacy/seven v2/seventeen window checks and two
+native probes/55events pass. Astra accepted code/evidence; full100-task
+collection and grading remain pending.
