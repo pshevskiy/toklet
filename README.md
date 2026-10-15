@@ -60,7 +60,13 @@ target/release/toklet --model models/Qwen2.5-0.5B-Instruct --prompt 'Answer brie
 target/release/toklet --model models/Qwen2.5-0.5B-Instruct --tokens 9707,11,358,2776 --max-new-tokens 4 --json
 ```
 
-`--raw` bypasses chat formatting; `--messages` and `--tools` accept local JSON arrays. `--token-file` accepts little-endian u32 IDs. Prompt plus requested output must fit `--context-capacity` (at most 2,048); admission occurs before changing session state. The default backend is `cpu`. On Apple Silicon macOS 15+, build with `--features metal` and select `--backend metal` for the resident FP16 backend. Model EOS IDs are hidden from output but remain pending in history; `--no-eos` disables them and repeated `--stop-token` adds IDs. Sampling has no penalties or RNG.
+`--raw` bypasses chat formatting; `--messages` and `--tools` accept local JSON arrays. `--token-file` accepts little-endian u32 IDs. Prompt plus requested output must fit `--context-capacity` (default 2,048). CPU sessions admit at most 2,048 positions. Experimental Metal admission permits explicit capacities through 32,768 only within the source model and 6 GiB budget; long-context quality, timing and application qualification remain pending in [M6](PLAN.md#m6-qualify-longer-context-and-attention). Admission occurs before changing session state. The default backend is `cpu`. On Apple Silicon macOS 15+, build with `--features metal` and select `--backend metal` for the resident FP16 backend. Model EOS IDs are hidden from output but remain pending in history; `--no-eos` disables them and repeated `--stop-token` adds IDs. Sampling has no penalties or RNG.
+
+`--metal-attention online` selects bounded online-softmax attention; `reference`
+remains default. The [reviewed short-workload comparison](docs/experiments/2026-10-15-m6-short-performance.md)
+covers the selected compensated Half and frozen Q4 v2 configurations at 2K
+capacity. Its numerical timing gains do not establish application or long-context
+support.
 
 `--cpu-projection tiled` selects the opt-in ordered FP64 projection tile before
 session creation; `scalar` remains default. JSON readiness and statistics name

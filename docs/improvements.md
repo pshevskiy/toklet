@@ -424,3 +424,11 @@ portable checks and eight-record/568-event/327-binding replay pass. The stricter
 all-metric range-separation diagnostic remains false and disclosed. Astra
 accepted final source/evidence after byte-identical replay, independent statistics
 and 23 receipt/publication bindings; long qualification and the KV decision remain open.
+
+The README now distinguishes the unchanged 2K CPU/default limit from explicit,
+model-bounded experimental Metal admission through 32K, and documents the Online
+attention selector with its reviewed short-workload scope. PLAN records the
+accepted matrices/confirmations while leaving every M6 long-context/KV checkbox
+open. This corrects documentation; it changes no runtime default or support gate.
+Astra accepted the three-file documentation review without findings; changed
+links/anchor, open-task content and whitespace checks pass.
