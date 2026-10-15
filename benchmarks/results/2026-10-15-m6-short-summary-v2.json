@@ -1,0 +1,557 @@
+{
+  "format": "toklet-m6-short-summary-v1",
+  "models": [
+    {
+      "model": "small",
+      "metrics": {
+        "prefill_seconds": {
+          "runs": {
+            "matrix": {
+              "reference": {
+                "median": 2.935537729,
+                "mad": 0.0037976664999999077,
+                "minimum": 2.351454084,
+                "maximum": 2.9422940410000002,
+                "count": 10
+              },
+              "online": {
+                "median": 2.3876698125,
+                "mad": 0.008521020999999962,
+                "minimum": 1.998207334,
+                "maximum": 2.398900125,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.18663289900437863,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.03398834897258414,
+              "paired_reduction_maximum": 0.3190096041384096
+            },
+            "confirmation": {
+              "reference": {
+                "median": 2.9341700625000002,
+                "mad": 0.004769208000000358,
+                "minimum": 2.352250417,
+                "maximum": 2.946705208,
+                "count": 10
+              },
+              "online": {
+                "median": 2.391910271,
+                "mad": 0.0004996040000000423,
+                "minimum": 2.206731541,
+                "maximum": 2.394284333,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.1848085761729771,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.06186368379332298,
+              "paired_reduction_maximum": 0.187470695575599
+            }
+          },
+          "combined_observed_ranges_separated": false,
+          "both_collections_at_least_five_percent": true
+        },
+        "ttft_seconds": {
+          "runs": {
+            "matrix": {
+              "reference": {
+                "median": 2.9355381874999997,
+                "mad": 0.003797708000000233,
+                "minimum": 2.351454375,
+                "maximum": 2.942294542,
+                "count": 10
+              },
+              "online": {
+                "median": 2.3876701875000004,
+                "mad": 0.008520937999999756,
+                "minimum": 1.998207833,
+                "maximum": 2.398900417,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.18663289829882324,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.03398820272666362,
+              "paired_reduction_maximum": 0.3190095403724338
+            },
+            "confirmation": {
+              "reference": {
+                "median": 2.9341705625000003,
+                "mad": 0.0047693955000003285,
+                "minimum": 2.352250958,
+                "maximum": 2.946705708,
+                "count": 10
+              },
+              "online": {
+                "median": 2.391910833,
+                "mad": 0.0004997295000002122,
+                "minimum": 2.206732083,
+                "maximum": 2.394284708,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.18480852355017122,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.06186366914001701,
+              "paired_reduction_maximum": 0.18747070618563455
+            }
+          },
+          "combined_observed_ranges_separated": false,
+          "both_collections_at_least_five_percent": true
+        },
+        "decode_seconds": {
+          "runs": {
+            "matrix": {
+              "reference": {
+                "median": 29.4013577495,
+                "mad": 0.007309124999999028,
+                "minimum": 29.38511125,
+                "maximum": 29.422282709,
+                "count": 10
+              },
+              "online": {
+                "median": 5.290396542,
+                "mad": 0.008250145500000361,
+                "minimum": 5.206512209,
+                "maximum": 5.306360209,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.8200628492372952,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.8195393759702835,
+              "paired_reduction_maximum": 0.8228180194825705
+            },
+            "confirmation": {
+              "reference": {
+                "median": 29.416334917,
+                "mad": 0.0037139789999987016,
+                "minimum": 29.343002167,
+                "maximum": 29.421419875,
+                "count": 10
+              },
+              "online": {
+                "median": 5.2944153335,
+                "mad": 0.0023459170000004193,
+                "minimum": 5.255572875,
+                "maximum": 5.309584,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.8200178455800657,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.819501377258206,
+              "paired_reduction_maximum": 0.8213644518564602
+            }
+          },
+          "combined_observed_ranges_separated": true,
+          "both_collections_at_least_five_percent": true
+        },
+        "total_seconds": {
+          "runs": {
+            "matrix": {
+              "reference": {
+                "median": 32.3378060835,
+                "mad": 0.011139416999998986,
+                "minimum": 31.748770416,
+                "maximum": 32.362281416,
+                "count": 10
+              },
+              "online": {
+                "median": 7.6765835625,
+                "mad": 0.015809229499999855,
+                "minimum": 7.288389833,
+                "maximum": 7.6978825,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.7626127281894708,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.7617755892307436,
+              "paired_reduction_maximum": 0.7746755562267318
+            },
+            "confirmation": {
+              "reference": {
+                "median": 32.350558146,
+                "mad": 0.007940375000003996,
+                "minimum": 31.695253292,
+                "maximum": 32.368125625,
+                "count": 10
+              },
+              "online": {
+                "median": 7.6865323335,
+                "mad": 0.004100041000000054,
+                "minimum": 7.496801666,
+                "maximum": 7.701460916,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.762398772261974,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.7619775491441688,
+              "paired_reduction_maximum": 0.7636048702380096
+            }
+          },
+          "combined_observed_ranges_separated": true,
+          "both_collections_at_least_five_percent": true
+        }
+      },
+      "regression_screen": [
+        {
+          "name": "short",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 12.348346167,
+          "online_seconds": 4.211044208,
+          "median_reduction_fraction": 0.6589790931474137
+        },
+        {
+          "name": "medium",
+          "warmups": 3,
+          "measured_pairs": 10,
+          "reference_seconds": 32.3378060835,
+          "online_seconds": 7.6765835625,
+          "median_reduction_fraction": 0.7626127281894708
+        },
+        {
+          "name": "long",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 60.291013334,
+          "online_seconds": 12.584141875,
+          "median_reduction_fraction": 0.7912766566837017
+        },
+        {
+          "name": "boundary",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 109.679009541,
+          "online_seconds": 22.255502,
+          "median_reduction_fraction": 0.7970851296602884
+        },
+        {
+          "name": "append",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 33.004220791,
+          "online_seconds": 5.911273959,
+          "median_reduction_fraction": 0.8208933943196757
+        },
+        {
+          "name": "cached",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 29.405642833,
+          "online_seconds": 5.300707041,
+          "median_reduction_fraction": 0.8197384403019625
+        },
+        {
+          "name": "pending",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 29.651589416,
+          "online_seconds": 5.346137709,
+          "median_reduction_fraction": 0.8197014792699368
+        },
+        {
+          "name": "changed",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 32.359912959,
+          "online_seconds": 7.700670709,
+          "median_reduction_fraction": 0.7620305493788951
+        }
+      ],
+      "max_admission_bytes": 1440667340,
+      "max_joint_native_bytes": 1276266392,
+      "raw_events": 150,
+      "device": "Apple M1 Pro",
+      "platform": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+      "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1",
+      "collector_revisions": {
+        "matrix": "c0a3c7d3a51fdd250589ebe958f4d454b08525b9",
+        "confirmation": "c0a3c7d3a51fdd250589ebe958f4d454b08525b9"
+      }
+    },
+    {
+      "model": "larger",
+      "metrics": {
+        "prefill_seconds": {
+          "runs": {
+            "matrix": {
+              "reference": {
+                "median": 9.989827646,
+                "mad": 0.012067271000000268,
+                "minimum": 9.961959584,
+                "maximum": 10.01282525,
+                "count": 10
+              },
+              "online": {
+                "median": 8.5857635005,
+                "mad": 0.010091354500000982,
+                "minimum": 8.55768275,
+                "maximum": 8.622890792,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.1405493863612549,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.13441821166898651,
+              "paired_reduction_maximum": 0.1436746919157508
+            },
+            "confirmation": {
+              "reference": {
+                "median": 9.974078938,
+                "mad": 0.01885202099999983,
+                "minimum": 9.761010875,
+                "maximum": 10.00748275,
+                "count": 10
+              },
+              "online": {
+                "median": 8.5721787915,
+                "mad": 0.011955416500000204,
+                "minimum": 8.543239708,
+                "maximum": 8.59614175,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.1405543464428514,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.12290682270139368,
+              "paired_reduction_maximum": 0.14631482047770702
+            }
+          },
+          "combined_observed_ranges_separated": true,
+          "both_collections_at_least_five_percent": true
+        },
+        "ttft_seconds": {
+          "runs": {
+            "matrix": {
+              "reference": {
+                "median": 9.989828334,
+                "mad": 0.012067291999999341,
+                "minimum": 9.961960125000001,
+                "maximum": 10.012825917,
+                "count": 10
+              },
+              "online": {
+                "median": 8.585764708,
+                "mad": 0.010091916499998632,
+                "minimum": 8.55768475,
+                "maximum": 8.622896417,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.14054932467871584,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.1344176940278609,
+              "paired_reduction_maximum": 0.14367470321815243
+            },
+            "confirmation": {
+              "reference": {
+                "median": 9.974079395499999,
+                "mad": 0.018851978999999908,
+                "minimum": 9.761011541,
+                "maximum": 10.007483375,
+                "count": 10
+              },
+              "online": {
+                "median": 8.572179417000001,
+                "mad": 0.011955500000000008,
+                "minimum": 8.54324,
+                "maximum": 8.596142292,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.1405543231521189,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.12290683562465014,
+              "paired_reduction_maximum": 0.14631484461496783
+            }
+          },
+          "combined_observed_ranges_separated": true,
+          "both_collections_at_least_five_percent": true
+        },
+        "decode_seconds": {
+          "runs": {
+            "matrix": {
+              "reference": {
+                "median": 68.5368332085,
+                "mad": 0.015903937000004476,
+                "minimum": 68.47666733300001,
+                "maximum": 68.553729458,
+                "count": 10
+              },
+              "online": {
+                "median": 12.588278978999998,
+                "mad": 0.010090937500001118,
+                "minimum": 12.51124775,
+                "maximum": 12.607089583000002,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.8163282662812208,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.8158921852652072,
+              "paired_reduction_maximum": 0.8173654949866944
+            },
+            "confirmation": {
+              "reference": {
+                "median": 68.5462366875,
+                "mad": 0.007035041500003558,
+                "minimum": 68.489567625,
+                "maximum": 68.55942329199999,
+                "count": 10
+              },
+              "online": {
+                "median": 12.600151583,
+                "mad": 0.007106062500000121,
+                "minimum": 12.554453125,
+                "maximum": 12.61298325,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.8161802574159736,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.8159467781718238,
+              "paired_reduction_maximum": 0.8168457548892532
+            }
+          },
+          "combined_observed_ranges_separated": true,
+          "both_collections_at_least_five_percent": true
+        },
+        "total_seconds": {
+          "runs": {
+            "matrix": {
+              "reference": {
+                "median": 78.516534416,
+                "mad": 0.03346076999999781,
+                "minimum": 78.446627125,
+                "maximum": 78.56457125,
+                "count": 10
+              },
+              "online": {
+                "median": 21.183725646,
+                "mad": 0.01937227099999994,
+                "minimum": 21.088357583,
+                "maximum": 21.204120375,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.7302004500891063,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.7297183720950196,
+              "paired_reduction_maximum": 0.7313187537044722
+            },
+            "confirmation": {
+              "reference": {
+                "median": 78.5036765205,
+                "mad": 0.02366716649999745,
+                "minimum": 78.309842541,
+                "maximum": 78.554134333,
+                "count": 10
+              },
+              "online": {
+                "median": 21.171541521,
+                "mad": 0.017459604000000795,
+                "minimum": 21.122927375,
+                "maximum": 21.1963465,
+                "count": 10
+              },
+              "median_reduction_fraction": 0.7303114648971709,
+              "at_least_five_percent": true,
+              "median_gap_exceeds_sum_mad": true,
+              "paired_reduction_minimum": 0.7299858532054057,
+              "paired_reduction_maximum": 0.7307171032096152
+            }
+          },
+          "combined_observed_ranges_separated": true,
+          "both_collections_at_least_five_percent": true
+        }
+      },
+      "regression_screen": [
+        {
+          "name": "short",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 30.811245875,
+          "online_seconds": 11.992552125,
+          "median_reduction_fraction": 0.6107735411397089
+        },
+        {
+          "name": "medium",
+          "warmups": 3,
+          "measured_pairs": 10,
+          "reference_seconds": 78.516534416,
+          "online_seconds": 21.183725646,
+          "median_reduction_fraction": 0.7302004500891063
+        },
+        {
+          "name": "long",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 144.969574417,
+          "online_seconds": 33.958518667,
+          "median_reduction_fraction": 0.765754167358459
+        },
+        {
+          "name": "boundary",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 269.569029541,
+          "online_seconds": 57.521298,
+          "median_reduction_fraction": 0.7866175572989874
+        },
+        {
+          "name": "append",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 77.146277292,
+          "online_seconds": 14.235315625,
+          "median_reduction_fraction": 0.8154763116939644
+        },
+        {
+          "name": "cached",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 68.556102208,
+          "online_seconds": 12.586785333,
+          "median_reduction_fraction": 0.8164016779307034
+        },
+        {
+          "name": "pending",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 69.137517125,
+          "online_seconds": 12.695419708,
+          "median_reduction_fraction": 0.8163743762298146
+        },
+        {
+          "name": "changed",
+          "warmups": 1,
+          "measured_pairs": 3,
+          "reference_seconds": 78.5362435,
+          "online_seconds": 21.204128125,
+          "median_reduction_fraction": 0.7300083734588095
+        }
+      ],
+      "max_admission_bytes": 2303311508,
+      "max_joint_native_bytes": 2157644392,
+      "raw_events": 150,
+      "device": "Apple M1 Pro",
+      "platform": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+      "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1",
+      "collector_revisions": {
+        "matrix": "c0a3c7d3a51fdd250589ebe958f4d454b08525b9",
+        "confirmation": "c0a3c7d3a51fdd250589ebe958f4d454b08525b9"
+      }
+    }
+  ],
+  "interpretation": "Frozen512/128 workload, reported primary complete numerical request. Show unchanged5% useful-gain check for all four recorded metrics, avoiding favorable metric selection; no tail/application/external ranking.",
+  "all_reported_metrics_confirmed_useful": false,
+  "m6_complete": false,
+  "confirmed_complete_request_useful": true,
+  "all_median_metrics_exceed_five_percent_and_sum_mad": true,
+  "strict_flag_definition": "all_reported_metrics_confirmed_useful additionally requires complete observed range separation for EVERY metric. This stricter diagnostic is false for small prefill/TTFT; it is not the frozen contract acceptance gate."
+}

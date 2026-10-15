@@ -411,3 +411,16 @@ performance/support claim changes; the incomplete 16K attempt is retained for
 retry, and M6 long qualification remains open.
 Astra accepted the final code and evidence after independent six-event replay and
 313 binding checks.
+
+The [M6 short-workload comparison](experiments/2026-10-15-m6-short-performance.md)
+completes both eight-row matrices and independent 512/128 primary confirmations.
+All four workers/300 events pass exact state, identity, native memory and cleanup
+checks. Complete-request median reductions repeat at 76.26/76.24% small and
+73.02/73.03% larger, with disjoint observed ranges. All primary timing medians
+improve by at least 5%; small prefill/TTFT ranges overlap, so no uniform prefill
+gain is claimed. Every original workload has a lower complete-request median.
+The saved-data auditor fixes exact-buffer identity and extra-event gaps; 35
+portable checks and eight-record/568-event/327-binding replay pass. The stricter
+all-metric range-separation diagnostic remains false and disclosed. Astra
+accepted final source/evidence after byte-identical replay, independent statistics
+and 23 receipt/publication bindings; long qualification and the KV decision remain open.

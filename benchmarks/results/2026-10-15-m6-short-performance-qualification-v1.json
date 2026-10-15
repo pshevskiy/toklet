@@ -1,0 +1,68 @@
+{
+  "format": "toklet-m6-short-performance-qualification-v1",
+  "source_parent": "c0a3c7d",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Independent byte-identical8record/568event/327bindingreplay,23receiptpins/publicationcopies,35portablechecks, allprimarymedians/MAD/ranges/pairedgains and8rowtotals, preservedstrictfalseflag, source/reportscope/retentionaccepted"
+  },
+  "scope": "Two full eight-row matrices and independent short primary confirmations; supplemental replay of two prior quality records and two budget probes. No long-context/M6 completion claim.",
+  "source_pins": {
+    "tools/experiments/m6_context_audit.py": "4fb170fa43cd047411c1b552d14064d38c4248680709667217881cbbe2297189",
+    "tools/experiments/test_m6_context_audit.py": "83b3e89b01f8fbe7026cfdf6eea834f290638f51c90269ceaeab9d5e8cd7c4ce"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-15-m6-context-small-matrix-v1.json": "45471e8aeabbee8bdd85cb6ea9dfdc318c767b175d56e645a193f97a6e1bba6c",
+    "benchmarks/results/2026-10-15-m6-context-small-matrix-v1.raw.jsonl": "5fca3bb8e39f22fc5c755e4ee740693b90df4808c84b86872129e5c326c30df3",
+    "benchmarks/results/2026-10-15-m6-context-small-matrix-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-context-small-confirmation-v1.json": "e744faa27b2c671b6e14d95b473c440e8eeb98bce93152b9c7689d1aae4f8aa6",
+    "benchmarks/results/2026-10-15-m6-context-small-confirmation-v1.raw.jsonl": "1bda1f0ba6dc6d978080dc4452695db8018fd2799e2ce6cbd61494bbfe00f411",
+    "benchmarks/results/2026-10-15-m6-context-small-confirmation-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-context-larger-matrix-v1.json": "101fb7a6161197ef721bb2f9f70bdcc62332fe862033516483ff6e36a9c9d5d4",
+    "benchmarks/results/2026-10-15-m6-context-larger-matrix-v1.raw.jsonl": "c45f7a82160bda4e1cd27bd97c3c1237df15d9c4228adb731411884484522a04",
+    "benchmarks/results/2026-10-15-m6-context-larger-matrix-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-context-larger-confirmation-v1.json": "6eb09c6c01c1e67383213ebdd9bbf1c4fd175997b5bf6ff7d2a58c0c44b48923",
+    "benchmarks/results/2026-10-15-m6-context-larger-confirmation-v1.raw.jsonl": "0cbf31d6150cdfc424a3c3a7f5dacf0da3aa1efe8a287dcf22cd4296f9ad2576",
+    "benchmarks/results/2026-10-15-m6-context-larger-confirmation-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-15-m6-short-audit-v1.json": "3ea2dd884c03f72b599d17c609016fa260abd0aafd3fd3735711966a62a049d0",
+    "benchmarks/results/2026-10-15-m6-short-audit-v1.log": "c33581bc91c7cb8f03e248aec4d4d63762ad46cc03f411f034d1b73bc9646cbe",
+    "benchmarks/results/2026-10-15-m6-short-summary-v1.py": "a13c7ee9e612a3bbc75a05b122d7cffe33bf78a37525934c7616c0cad2687e20",
+    "benchmarks/results/2026-10-15-m6-short-summary-v1.json": "f91a189ca39f76bb75bfe343c7321783837cf730d2d872044de75fff5948cb8d",
+    "benchmarks/results/2026-10-15-m6-short-summary-v1.log": "c316904f0858eb4fcf0ada2848e719c4b1658209f65ce2363863418946d553d0",
+    "benchmarks/results/2026-10-15-m6-short-summary-v2.py": "1fb179171d97b898c457e7c3d4dfddf6604fc989a3b1cfc5284ccf3bd5804f16",
+    "benchmarks/results/2026-10-15-m6-short-summary-v2.json": "e33bb8a347b0f6c73c6de94ddc9f34e79568107872134350fdf7272ab61d46da",
+    "benchmarks/results/2026-10-15-m6-short-summary-v2.log": "c316904f0858eb4fcf0ada2848e719c4b1658209f65ce2363863418946d553d0",
+    "benchmarks/results/2026-10-15-m6-context-audit-tests-v1.log": "6e9a5483b33c98ea9e0240335c02ccfee0bf5cf1e8f40cb6ba9cb112fc0ab859"
+  },
+  "native_workers": 4,
+  "native_raw_events": 300,
+  "audit": {
+    "records": 8,
+    "bindings": 327,
+    "raw_events": 568
+  },
+  "confirmed_complete_request_useful": true,
+  "all_primary_metric_medians_exceed_five_percent_and_sum_mad": true,
+  "strict_all_metric_range_separation": false,
+  "models": [
+    {
+      "model": "small",
+      "max_admission_bytes": 1440667340,
+      "max_joint_native_bytes": 1276266392,
+      "raw_events": 150
+    },
+    {
+      "model": "larger",
+      "max_admission_bytes": 2303311508,
+      "max_joint_native_bytes": 2157644392,
+      "raw_events": 150
+    }
+  ],
+  "m6_complete": false,
+  "report_paths": [
+    "docs/experiments/2026-10-15-m6-short-performance.md",
+    "docs/experiments/2026-10-15-m6-context-audit.md"
+  ]
+}

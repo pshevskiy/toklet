@@ -1,0 +1,11 @@
+Confirmed useful across all recorded primary metrics: False
+small 150 1440667340 1276266392
+prefill_seconds {'matrix': 18.66329, 'confirmation': 18.480858} ranges_separated False
+ttft_seconds {'matrix': 18.66329, 'confirmation': 18.480852} ranges_separated False
+decode_seconds {'matrix': 82.006285, 'confirmation': 82.001785} ranges_separated True
+total_seconds {'matrix': 76.261273, 'confirmation': 76.239877} ranges_separated True
+larger 150 2303311508 2157644392
+prefill_seconds {'matrix': 14.054939, 'confirmation': 14.055435} ranges_separated True
+ttft_seconds {'matrix': 14.054932, 'confirmation': 14.055432} ranges_separated True
+decode_seconds {'matrix': 81.632827, 'confirmation': 81.618026} ranges_separated True
+total_seconds {'matrix': 73.020045, 'confirmation': 73.031146} ranges_separated True
