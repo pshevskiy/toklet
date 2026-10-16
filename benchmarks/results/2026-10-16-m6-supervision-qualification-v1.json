@@ -1,0 +1,61 @@
+{
+  "format": "toklet-m6-supervision-qualification-v1",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Astra independently8tests includingreal3CPUprocesssignalfixture;3exactcurrent sourcepins11evidencepins11copies/interruptionpreservation/roles/report/links/whitespace verified. Allreviewexecution/hashfinished."
+  },
+  "source_parent": "33bb2f1",
+  "source_pins": {
+    "artifacts/m6-remaining-native-queue-v2.py": "fb8eae3f8c0e2b0b1cfb2d6e1bb2d7a47690295c13baf9d25c2a9c2b97b6f1cc",
+    "artifacts/m6-native-queue-launch-v2.py": "4a422e2e7e487b42fe6237f1be41cef52b6c0799bf589c4a5abb5ea27a42de77",
+    "artifacts/test_m6_native_queue_launch_v2.py": "dd64dc2488f9ac451a68df7c4ed3738b8d855884536f1f520a8d93bd8f65a806"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-16-m6-remaining-native-queue-v2.py": "fb8eae3f8c0e2b0b1cfb2d6e1bb2d7a47690295c13baf9d25c2a9c2b97b6f1cc",
+    "benchmarks/results/2026-10-16-m6-native-queue-launch-v2.py": "4a422e2e7e487b42fe6237f1be41cef52b6c0799bf589c4a5abb5ea27a42de77",
+    "benchmarks/results/2026-10-16-test_m6_native_queue_launch_v2.py": "dd64dc2488f9ac451a68df7c4ed3738b8d855884536f1f520a8d93bd8f65a806",
+    "benchmarks/results/2026-10-16-m6-native-queue-launch-tests-v4.log": "b5267b5d5fbe405fccfd846aff0ce9e4fe5ec5849eccdb102120a4ae2665b0b0",
+    "benchmarks/results/2026-10-16-m6-context-small-long-32768-v1.interruption.json": "d5b83780539813d5007ac7c8e4c5aa668b3aa43b1d14a5bfaf814095451fd822",
+    "benchmarks/results/2026-10-16-m6-context-small-long-32768-v1.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-16-m6-context-small-long-32768-v1.raw.jsonl": "50b38855ed9334660d8c1359a2da9861584c0bbdeac6f4aef5e03c4464b86076",
+    "benchmarks/results/2026-10-16-m6-context-small-long-32768-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-16-m6-remaining-native-queue-v1.py": "c473635eb707faf4ccbaebe06643c8ceec27f72bcf77573316d47e1e361d15a4",
+    "benchmarks/results/2026-10-16-m6-remaining-native-queue-v1.status.jsonl": "5def5b3655e31a1807100e1e0addacd3432dd97ce3523686fcb973c7caf1bf57",
+    "benchmarks/results/2026-10-16-m6-remaining-native-queue-v1.log": "782d8a590c77038ebfe36053c962cdbdfdb93747d6d8490645bd79d7850bdd0e"
+  },
+  "published_copies": {
+    "benchmarks/results/2026-10-16-m6-remaining-native-queue-v2.py": "artifacts/m6-remaining-native-queue-v2.py",
+    "benchmarks/results/2026-10-16-m6-native-queue-launch-v2.py": "artifacts/m6-native-queue-launch-v2.py",
+    "benchmarks/results/2026-10-16-test_m6_native_queue_launch_v2.py": "artifacts/test_m6_native_queue_launch_v2.py",
+    "benchmarks/results/2026-10-16-m6-native-queue-launch-tests-v4.log": "artifacts/m6-native-queue-launch-tests-v4.log",
+    "benchmarks/results/2026-10-16-m6-context-small-long-32768-v1.interruption.json": "artifacts/m6-context-small-long-32768-v1.interruption.json",
+    "benchmarks/results/2026-10-16-m6-context-small-long-32768-v1.json": "artifacts/m6-context-small-long-32768-v1.json",
+    "benchmarks/results/2026-10-16-m6-context-small-long-32768-v1.raw.jsonl": "artifacts/m6-context-small-long-32768-v1.raw.jsonl",
+    "benchmarks/results/2026-10-16-m6-context-small-long-32768-v1.stderr": "artifacts/m6-context-small-long-32768-v1.stderr",
+    "benchmarks/results/2026-10-16-m6-remaining-native-queue-v1.py": "artifacts/m6-remaining-native-queue-v1.py",
+    "benchmarks/results/2026-10-16-m6-remaining-native-queue-v1.status.jsonl": "artifacts/m6-remaining-native-queue-v1.status.jsonl",
+    "benchmarks/results/2026-10-16-m6-remaining-native-queue-v1.log": "artifacts/m6-remaining-native-queue-v1.log"
+  },
+  "portable_tests": 8,
+  "real_cpu_signal_fixture": true,
+  "separate_session_child_reaped_before_supervisor_exit": true,
+  "scope": "Collector ownership and graceful interruption supervision only; no numerical change or measurement acceptance",
+  "original_completed_roles_preserved": 13,
+  "remaining_roles": 10,
+  "interrupted_attempt_qualified": false,
+  "interrupted_attempt_files_unchanged": true,
+  "fresh_retry_role": [
+    "small",
+    "long",
+    32768,
+    2
+  ],
+  "actual_native_queue_started": false,
+  "collector_timeouts_unchanged": true,
+  "numerical_requests_and_gates_unchanged": true,
+  "m6_complete": false,
+  "report_path": "docs/experiments/2026-10-16-m6-supervised-runs.md"
+}

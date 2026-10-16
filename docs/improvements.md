@@ -540,3 +540,16 @@ flagged automatically; their manual resolution is recorded separately. Failed
 v1 and later interrupted ordinary-timing attempts remain unqualified. Astra accepted the final publication after all5source/6evidencepins and5copies
 verified; full long numerical quality is qualified. Boundary coverage and final
 KV/M6 completion stay open.
+
+The [M6 long-run supervisor](experiments/2026-10-16-m6-supervised-runs.md)
+keeps the collector attached to its GPU worker across chat-tool interruptions.
+An observed interrupted ordinary32K attempt is preserved as unqualified; its
+orphan was stopped and absence verified, while all13 completed roles remain.
+A detached owned serial queue resumes only10 unfinished roles, with a fresh
+small32K ordinaryv2 destination. Graceful group interruption joins collector
+cleanup, includes metadata/file-close failures and preserves primary errors.
+Eight CPU tests pass independently under Astra, including a real three-process
+fixture proving the separate-session child is reaped before supervisor exit.
+No numerical request, quality gate or collector timeout changes. Astra accepted publication after3source/11evidencepins and11exactcopies, with
+interruption preservation/role counts/report verified. This is prelaunch CPU
+supervision qualification; numerical boundary coverage/M6 remain open.

@@ -1,0 +1,37 @@
+{
+  "format": "toklet-m6-interrupted-native-attempt-v1",
+  "passed": false,
+  "collection_completed": false,
+  "natural_exit_recorded": false,
+  "role": [
+    "small",
+    "long",
+    32768,
+    1
+  ],
+  "queue": "artifacts/m6-remaining-native-queue-v1.py",
+  "utc": "2026-10-16T19:40:55.678245+00:00",
+  "reason": "Interrupted unified exec ended queue and collector. Read-only process inventory found numerical worker PID61156 PPID1/PGID61156 with exact original command. Root sent SIGTERM to owned group61156 and confirmed PID absent before further work.",
+  "orphan_cleanup": {
+    "pid": 61156,
+    "pgid": 61156,
+    "signal": "SIGTERM",
+    "absence_verified": true
+  },
+  "original_files_unchanged": {
+    "artifacts/m6-context-small-long-32768-v1.json": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m6-context-small-long-32768-v1.raw.jsonl": {
+      "bytes": 1056,
+      "sha256": "50b38855ed9334660d8c1359a2da9861584c0bbdeac6f4aef5e03c4464b86076"
+    },
+    "artifacts/m6-context-small-long-32768-v1.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "qualification": false,
+  "scope": "Interrupted/incomplete attempt only; retained files cannot replace a clean native collection. Previous13 completed queue roles remain unchanged."
+}

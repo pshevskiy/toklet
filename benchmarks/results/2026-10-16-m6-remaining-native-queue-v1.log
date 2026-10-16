@@ -1,0 +1,37 @@
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+small/long/4096/boundary/1/reference: 340.876762s
+small/long/4096/boundary/1/online: 48.368992s
+small/long/4096/boundary/2/online: 48.533598s
+small/long/4096/boundary/2/reference: 340.831438s
+small/long/4096/boundary/3/reference: 340.200333s
+small/long/4096/boundary/3/online: 48.464116s
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+small/long-confirmation/4096/boundary/1/reference: 340.648653s
+small/long-confirmation/4096/boundary/1/online: 48.496595s
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+small/long/8192/boundary/1/reference: 920.256048s
+small/long/8192/boundary/1/online: 118.512050s
+small/long/8192/boundary/2/online: 118.477487s
+small/long/8192/boundary/2/reference: 926.674856s
+small/long/8192/boundary/3/reference: 925.761523s
+small/long/8192/boundary/3/online: 118.442561s
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+small/long-confirmation/8192/boundary/1/reference: 921.697486s
+small/long-confirmation/8192/boundary/1/online: 118.741431s
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+small/long/16384/boundary/1/reference: 2465.482903s
+small/long/16384/boundary/1/online: 330.847327s
+small/long/16384/boundary/2/online: 331.275774s
+small/long/16384/boundary/2/reference: 2461.762814s
+small/long/16384/boundary/3/reference: 2459.892848s
+small/long/16384/boundary/3/online: 332.317196s
+Verified toklet-benchmark-contract-v1: fixed throughput tokens, 10,000 loss targets, 100 task identities.
+small/long-confirmation/16384/boundary/1/reference: 2466.404098s
+small/long-confirmation/16384/boundary/1/online: 333.624066s
