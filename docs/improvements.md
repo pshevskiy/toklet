@@ -499,3 +499,18 @@ remains pending.
 Astra accepted the full application evidence after byte-identical replay of both
 records, all 322 bindings/262 events and eight published copies, with exact
 requests, state, output, memory and clean exits independently verified.
+
+
+The [M6 producer-typed quality path](experiments/2026-10-16-m6-typed-quality.md)
+corrects shortest-FP32 JSON interpretation without changing raw events, FP64
+statistics, numerical gates or inference. The original larger32K attempt stays
+failed because the collector exception prevented natural successful completion.
+A separate typed collector/replay and mixed-format dispatcher preserve the old
+successful route. Twenty-five targeted portable tests pass; the broader40-test
+selection also passes independently under Astra. Seven original cases replay
+896 rows/917 events/334 bindings, with both larger4K winner changes still open.
+A fresh typed Small4K probe exits0, reproduces all original comparison events
+and quality exactly, and replays131 events/112 bindings within6GiB. Astra accepted
+code/data after byte-identical independent replay, all6source/26evidencepins and
+26exactcopies, with native state/memory/cleanexit verified. Fresh larger32K retry,
+winner investigations and full M6 completion remain pending.
