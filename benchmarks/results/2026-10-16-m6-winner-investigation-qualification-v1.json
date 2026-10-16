@@ -1,0 +1,99 @@
+{
+  "format": "toklet-m6-winner-investigation-qualification-v1",
+  "passed": true,
+  "source_parent": "65777b0",
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Astra independently byte-identical133event6843binding replay, unpacked fullvectors and verified allfouroriginalSHA/top5/uniquemax/candidatebits/margins/error/NLL/RMS/prefixes;12mutationchecks;6sourcepins16evidencepins16exactcopies; state/memory/cleanexit/endpoints verified. Allreviewexecution/hashfinished."
+  },
+  "source_pins": {
+    "tools/experiments/m6_winner_capture/metal_context_capture.rs": "10c7cd4760e2d57385c8146e1653b3ef9e08ef76d149f591ddf3e00683a5142a",
+    "tools/experiments/m6_winner_capture_build.py": "0e82410eaab07ac1aee4c8eb3ab715d658a4386c8f79eae4832baf659f058873",
+    "tools/experiments/m6_winner_capture.py": "abc83d9764728fcf86172ceba1f581c2d4f9d497936c20c8c8924b83084fcdb6",
+    "tools/experiments/m6_winner_analysis.py": "51d2103191de7df1f916b25386af5384148bf4d7e6fc84c61a9eda536b40c290",
+    "tools/experiments/test_m6_winner_capture.py": "f1f7753e75a7437b5ec726c412dff0a26780dc58c9bb9102c2edd5caa27552f3",
+    "tools/experiments/test_m6_winner_analysis.py": "523c9981c3d99a0de45ef4804d21545016cb3cb3905a45893e4fc82fbd6ca2f3"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-16-m6-winner-capture-build-v2.json": "b93b18054d010c4f8c6b3bd3d31a9719d12c5f5ac4e8785ef57c130c17a91e97",
+    "benchmarks/results/2026-10-16-m6-winner-capture-build-v2.log": "8b46d199e7a978c76deece3680f888544377e02c46f38dd4f431a19db2c345ad",
+    "benchmarks/results/2026-10-16-m6-winner-capture-checks-v2.py": "ccfc6f3dc0fe62774c6f89467170e4855fdd76f02149492f5b84ac7e1afb3cee",
+    "benchmarks/results/2026-10-16-m6-winner-capture-checks-v2.log": "9dc79ee71c184c5fc458ad2a1f9fbebe74742a5adec4e2d6a2b32e68c49d1982",
+    "benchmarks/results/2026-10-16-m6-winner-capture-portable-v1.log": "6462c561077ba56fc0731ccf766e0b9c5c948807cd33564f810d1b4991d4e0d7",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1.json": "709cc5e999318be2fca00da23c990c6be311dbf526fab29e6ceef4fd2e5ff53e",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1.raw.jsonl": "d4778d8c8ca1dbdd36edbbc5abdc5160d218722eb4ee8fc2dd535c26c7d8df83",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-16-m6-winner-capture-replay-v1.py": "87ccac06b39d1025b7ae67b0a36c74127bb67c7f64eb1f4b58ee16112221eabd",
+    "benchmarks/results/2026-10-16-m6-winner-capture-replay-v1.json": "38e54e19f08ef8c0f61da2ca426c2a24073c8aa1641433605a87054593b82a3f",
+    "benchmarks/results/2026-10-16-m6-winner-replay-mutations-v1.py": "02d8aa6868106346db6e9712f4def8be404b1a3610b2c1baa353707a08803b4d",
+    "benchmarks/results/2026-10-16-m6-winner-replay-mutations-v1.log": "3db96d24b87c96b75699b8550ac21d8921e84f1b5ef6dc43833c51d453374021",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1-online-target0090.fp32le": "532978800328aa2e30765b303643a4a258174489c8508542af928691334d0ee9",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1-online-target0127.fp32le": "b85ff13c0506fd6be60016ab9763a6d0b6a5ba284af3ec2fdb22afadab725df1",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1-reference-target0090.fp32le": "89c1bea12e509b9aafaf2a31f8c6fa63440cec4b8a9fb77633bf7bffe8e4172f",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1-reference-target0127.fp32le": "fb269e295c6f6d55fefffeff35c6da82ffe18b49bb0364329e2454caa581d22f"
+  },
+  "published_copies": {
+    "benchmarks/results/2026-10-16-m6-winner-capture-build-v2.json": "artifacts/m6-winner-capture-build-v2.json",
+    "benchmarks/results/2026-10-16-m6-winner-capture-build-v2.log": "artifacts/m6-winner-capture-build-v2.log",
+    "benchmarks/results/2026-10-16-m6-winner-capture-checks-v2.py": "artifacts/m6-winner-capture-checks-v2.py",
+    "benchmarks/results/2026-10-16-m6-winner-capture-checks-v2.log": "artifacts/m6-winner-capture-checks-v2.log",
+    "benchmarks/results/2026-10-16-m6-winner-capture-portable-v1.log": "artifacts/m6-winner-capture-portable-v1.log",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1.json": "artifacts/m6-winner-capture-larger-4096-v1.json",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1.raw.jsonl": "artifacts/m6-winner-capture-larger-4096-v1.raw.jsonl",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1.stderr": "artifacts/m6-winner-capture-larger-4096-v1.stderr",
+    "benchmarks/results/2026-10-16-m6-winner-capture-replay-v1.py": "artifacts/m6-winner-capture-replay-v1.py",
+    "benchmarks/results/2026-10-16-m6-winner-capture-replay-v1.json": "artifacts/m6-winner-capture-replay-v1.json",
+    "benchmarks/results/2026-10-16-m6-winner-replay-mutations-v1.py": "artifacts/m6-winner-replay-mutations-v1.py",
+    "benchmarks/results/2026-10-16-m6-winner-replay-mutations-v1.log": "artifacts/m6-winner-replay-mutations-v1.log",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1-online-target0090.fp32le": "artifacts/m6-winner-capture-larger-4096-v1/online-target0090.fp32le",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1-online-target0127.fp32le": "artifacts/m6-winner-capture-larger-4096-v1/online-target0127.fp32le",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1-reference-target0090.fp32le": "artifacts/m6-winner-capture-larger-4096-v1/reference-target0090.fp32le",
+    "benchmarks/results/2026-10-16-m6-winner-capture-larger-4096-v1-reference-target0127.fp32le": "artifacts/m6-winner-capture-larger-4096-v1/reference-target0127.fp32le"
+  },
+  "raw_events": 133,
+  "bindings": 6843,
+  "full_distribution_pairs": 2,
+  "values_per_distribution": 151936,
+  "portable_python_tests": 15,
+  "portable_rust_tests": 2,
+  "negative_replay_admission_mutations": 12,
+  "build_sha256": "b93b18054d010c4f8c6b3bd3d31a9719d12c5f5ac4e8785ef57c130c17a91e97",
+  "admission_bytes": 2445934228,
+  "max_joint_native_bytes": 2322762608,
+  "post_exit_driver_lifetime_max_bytes": 75105024,
+  "post_exit_memory_scope": "Driver sampled after native exit; not simultaneous worker allocation",
+  "original_quality_sha256": "1fc6cb52b8e19ce86dea5fedb9150e77bc2a8db5e276149cc8dbd4050bf42775",
+  "investigated_cases": [
+    {
+      "target_index": 90,
+      "prefix_sha256": "bd218f8023740b834dec886cbace120f9f39a5cabf864d375cb5bae37bb12418",
+      "reference_logits_sha256": "89c1bea12e509b9aafaf2a31f8c6fa63440cec4b8a9fb77633bf7bffe8e4172f",
+      "online_logits_sha256": "532978800328aa2e30765b303643a4a258174489c8508542af928691334d0ee9",
+      "model": "larger",
+      "depth": 4096,
+      "original_quality_sha256": "1fc6cb52b8e19ce86dea5fedb9150e77bc2a8db5e276149cc8dbd4050bf42775",
+      "assessment": "Exact complete original distributions confirm unique top-two numerical reversal; no internal cause or generic near-tie acceptance inferred"
+    },
+    {
+      "target_index": 127,
+      "prefix_sha256": "d2671e42e86d5664b4992b2a7303fd5ed74a5729b718ba9a19d1dff93fff54aa",
+      "reference_logits_sha256": "fb269e295c6f6d55fefffeff35c6da82ffe18b49bb0364329e2454caa581d22f",
+      "online_logits_sha256": "b85ff13c0506fd6be60016ab9763a6d0b6a5ba284af3ec2fdb22afadab725df1",
+      "model": "larger",
+      "depth": 4096,
+      "original_quality_sha256": "1fc6cb52b8e19ce86dea5fedb9150e77bc2a8db5e276149cc8dbd4050bf42775",
+      "assessment": "Exact complete original distributions confirm unique top-two numerical reversal; no internal cause or generic near-tie acceptance inferred"
+    }
+  ],
+  "investigation_assessment": {
+    "complete": true,
+    "scope": "Manual resolution of only the listed exact original record SHA/model/depth/index/token-prefix and distribution SHA cases; full distributions account for the top-two reversal. Original automatic false flags preserved. No generic margin rule, internal attention cause, natural ability claim, or loss/task gate waiver.",
+    "reviewer": "Astra"
+  },
+  "original_automatic_unresolved_results_preserved": true,
+  "full_long_quality_qualified": false,
+  "m6_complete": false,
+  "report_path": "docs/experiments/2026-10-16-m6-winner-investigation.md"
+}

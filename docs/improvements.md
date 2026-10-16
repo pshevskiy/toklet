@@ -514,3 +514,16 @@ and quality exactly, and replays131 events/112 bindings within6GiB. Astra accept
 code/data after byte-identical independent replay, all6source/26evidencepins and
 26exactcopies, with native state/memory/cleanexit verified. Fresh larger32K retry,
 winner investigations and full M6 completion remain pending.
+
+The [M6 full-distribution diagnostic](experiments/2026-10-16-m6-winner-investigation.md)
+reproduces all original larger4K comparison events and four complete distribution
+hashes for the two changed winners. Independent ordering, FP32 candidate bits,
+margins, vocabulary errors and target losses verify both top-two reversals.
+Fifteen portable Python tests, two Rust example tests, formatting/strict Clippy
+and 12 replay-admission mutation checks pass. Exact saved replay covers133 events
+and6,843 bindings. Admission2,445,934,228/native2,322,762,608 bytes and separate
+post-exit driver75,105,024 bytes fit6GiB; exit0/cleanup/endpoints/identities pass.
+Astra independently accepted code/data and manual investigation of only these
+two exact SHA/prefix cases after byte-identical replay and all6source/16evidence
+pins/16copies; original unresolved automatic flags remain. Full long-context
+qualification/M6 completion stay open.
