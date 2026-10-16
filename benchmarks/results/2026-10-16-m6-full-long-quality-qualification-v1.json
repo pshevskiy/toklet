@@ -1,0 +1,60 @@
+{
+  "format": "toklet-m6-long-numerical-quality-qualification-v1",
+  "passed": true,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "remaining_findings": [],
+    "scope": "Astra byte-identical8record1048event334binding replay; all512/model/perdepth/pooledNLLgates andcleanexits; exactmanualcasesreview;5sourcepins6evidencepins5exactcopies and report verified. Allreviewexecution/hashfinished."
+  },
+  "source_parent": "0a8fce4",
+  "source_pins": {
+    "tools/experiments/m6_fp32_context_audit.py": "3e584de94560453f6e6a327d5173214179f2f52e1ec3090d4d990ddccef7cb01",
+    "tools/experiments/m6_fp32_values.py": "b56eb04feb0ca1bc40382c888480fe1b0b282e313daa410987f93fae2cc51db3",
+    "tools/experiments/m6_typed_quality.py": "7c05a30ed41bfe3e0285999ce809e9fd3515e165cc0fd0f473d7dd92a53f272b",
+    "tools/experiments/m6_typed_quality_audit.py": "aa771e2c9f948707cc62a2a2edd81c5c2b428251bb25c38c2c7a855e2241acea",
+    "tools/experiments/m6_long_quality_audit.py": "faa54da80dcb766b134c38582e23c661f0e35423882ac79639eab17cdb4c9be4"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-16-m6-context-larger-quality-32768-v2.json": "486a277de74c30d006e7ac5fcf2b01cd6b2cf0250f1f52ccfe2f74ba8a5b9f8d",
+    "benchmarks/results/2026-10-16-m6-context-larger-quality-32768-v2.raw.jsonl": "6fedb2a81e5103da610c3739a0cabaaf8657860227bdf6bad5537d729bebd691",
+    "benchmarks/results/2026-10-16-m6-context-larger-quality-32768-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-16-m6-fp32-quality-qualification-v2.py": "8597c14136f029288ceb4b3f01b8efa981890ee3eedee594bd846a42a9c9f76d",
+    "benchmarks/results/2026-10-16-m6-fp32-quality-qualification-v2.json": "cb7984cd662dc2ac8e34e9b2a31b977c5bbee73dcec6e108525253bccab70b30",
+    "benchmarks/results/2026-10-16-m6-winner-investigation-qualification-v1.json": "1d10ed435bcbe355af2ed2c204728795489624a311f17338e7fe8c839e57c735"
+  },
+  "published_copies": {
+    "benchmarks/results/2026-10-16-m6-context-larger-quality-32768-v2.json": "artifacts/m6-context-larger-quality-32768-v2.json",
+    "benchmarks/results/2026-10-16-m6-context-larger-quality-32768-v2.raw.jsonl": "artifacts/m6-context-larger-quality-32768-v2.raw.jsonl",
+    "benchmarks/results/2026-10-16-m6-context-larger-quality-32768-v2.stderr": "artifacts/m6-context-larger-quality-32768-v2.stderr",
+    "benchmarks/results/2026-10-16-m6-fp32-quality-qualification-v2.py": "artifacts/m6-fp32-quality-qualification-v2.py",
+    "benchmarks/results/2026-10-16-m6-fp32-quality-qualification-v2.json": "artifacts/m6-fp32-quality-qualification-v2.json"
+  },
+  "records": 8,
+  "raw_events": 1048,
+  "bindings": 334,
+  "scored_targets_per_model": 512,
+  "all_four_depths_per_model": true,
+  "per_depth_and_pooled_nll_limit": 0.05,
+  "models": {
+    "small": {
+      "pooled_mean_nll_increase": -1.851999728900924e-05,
+      "per_depth_and_pooled_gates_passed": true,
+      "argmax_changes": 0
+    },
+    "larger": {
+      "pooled_mean_nll_increase": -0.0001262955813478074,
+      "per_depth_and_pooled_gates_passed": true,
+      "argmax_changes": 2
+    }
+  },
+  "automatic_audit_passed": false,
+  "automatic_unresolved_artifacts_preserved": true,
+  "exact_changed_cases_manually_investigated": true,
+  "manual_case_review_receipt": "benchmarks/results/2026-10-16-m6-winner-investigation-qualification-v1.json",
+  "full_long_numerical_quality_qualified": true,
+  "context_boundary_coverage_complete": false,
+  "kv_retention_qualified": false,
+  "m6_complete": false,
+  "report_path": "docs/experiments/2026-10-16-m6-full-long-quality.md"
+}

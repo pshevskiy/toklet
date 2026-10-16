@@ -527,3 +527,16 @@ Astra independently accepted code/data and manual investigation of only these
 two exact SHA/prefix cases after byte-identical replay and all6source/16evidence
 pins/16copies; original unresolved automatic flags remain. Full long-context
 qualification/M6 completion stay open.
+
+The [complete M6 long numerical quality](experiments/2026-10-16-m6-full-long-quality.md)
+now covers all four depths for both models:128 targets/depth and512/model.
+Every depth and pooled model mean passes the unchanged +.05 NLL limit; pooled
+increases are -0.00001851999728900924 small/-0.0001262955813478074 larger.
+Fresh typed larger32K v2 exits0 with no flips, unchanged identities/clean
+endpoints and4,442,652,308-byte admission/4,297,527,400-byte native maximum.
+Exact8-record replay covers1,048 events/334 bindings and independently matches
+under Astra. Only the two previously reviewed exact larger4K reversals remain
+flagged automatically; their manual resolution is recorded separately. Failed
+v1 and later interrupted ordinary-timing attempts remain unqualified. Astra accepted the final publication after all5source/6evidencepins and5copies
+verified; full long numerical quality is qualified. Boundary coverage and final
+KV/M6 completion stay open.
