@@ -8,6 +8,7 @@ pub mod benchmark;
 pub mod cpu;
 pub mod generation;
 pub mod model;
+pub mod native;
 pub mod q4;
 pub mod sampling;
 pub mod session;

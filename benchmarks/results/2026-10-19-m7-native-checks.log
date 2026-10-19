@@ -1,0 +1,19 @@
+   Compiling objc2 v0.6.5
+    Checking objc2-core-foundation v0.3.2
+    Checking block2 v0.6.2
+    Checking objc2-foundation v0.3.2
+    Checking dispatch2 v0.3.1
+    Checking ctrlc v3.5.2
+    Checking objc2-metal v0.3.2
+    Checking objc2-metal-performance-shaders v0.3.2
+    Checking toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+error[E0425]: cannot find value `emitted` in this scope
+   --> src/native.rs:431:42
+    |
+431 |                 summary.emitted_tokens = emitted;
+    |                                          ^^^^^^^ not found in this scope
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `toklet` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `toklet` (lib test) due to 1 previous error

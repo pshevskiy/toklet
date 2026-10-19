@@ -7,6 +7,9 @@ description = "A small Rust inference engine for Apple Silicon"
 license = "Apache-2.0"
 publish = false
 
+[lib]
+crate-type = ["rlib", "staticlib"]
+
 [[bin]]
 name = "toklet"
 path = "src/bin/toklet.rs"

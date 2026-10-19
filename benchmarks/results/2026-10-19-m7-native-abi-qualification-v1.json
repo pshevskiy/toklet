@@ -1,0 +1,109 @@
+{
+  "format": "toklet-m7-native-abi-component-v1",
+  "passed": true,
+  "review": {
+    "reviewer": "Astra",
+    "accepted": true,
+    "remaining_findings": [],
+    "scope": "Astra verified39source/8evidencepins/4exactcopies, all26tinyexportedtensors, savedCgreedy/state and allchecktotals/contracts; CPUonlycomponentaccepted. Reviewexecutionfinished."
+  },
+  "source_parent": "409c935fa63f1dcfa0421e5e21d301332c696e31",
+  "source_pins": {
+    "Cargo.toml": "76cca12da24d7b832170d65a2188934c9a5aee78b7f55332bb2ebfb314c4aa64",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "src/native.rs": "4c8cf22cc8ecae9e69cd0bfe9864c8671676face042a4fce34a69ff64790c48d",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "38c00d164b2b64b749272ddab4618f20a566335894a25aca47debc6a005d0220",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/native/tests.rs": "c23c458b278b55f2a4430f030f859ad58b9320d05f2c78cc8aa8a323fab638bb",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/memory.rs": "087b5e0fff4beb3dae8402d3ebc94f7df961df4db55491f8e73e2568f5608911",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/weights/mod.rs": "d0a489a0e00a794d895231f179acc93f4b22fd465fbae5f8065f7d5610f248ed",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "apple/include/toklet.h": "818c9b7039d1e91702fdc812b881535b86c334485af11f330566db70458ca723",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/tests/native_smoke.c": "77fb0e18bf2f15a10cddd2a60cbcca406d6809e2326bb0f1d1f64cc8af179a14",
+    "tools/experiments/m7_native_fixture.py": "9f97b525af81f3243a774bf73b1e48a6379c6dd34d9e5af7057992502e3b72be",
+    "tests/support/mod.rs": "627a8e94f9981ce53bc9373168c3a2b69eb4ba11bd08d00db52d376c0f02fd13",
+    "tests/fixtures/tiny-v1/manifest.json": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-19-m7-native-checks.log": "7c794ce9205cf8d49cf20a5c4ee986e3b668a13aa715864cceb1d76952ebdf3a",
+    "benchmarks/results/2026-10-19-m7-native-checks-v2.log": "5fd43060f95fd353d385ab163b90deb31f3a0befa96de96c3ee05a040d70b320",
+    "benchmarks/results/2026-10-19-m7-native-fixture-v2.json": "a9579e7320a89b048f3873a28b3d8a637b3a8e00117392bdffb790e8a8336290",
+    "benchmarks/results/2026-10-19-m7-native-c-smoke-v1.json": "b072c686a2f6cc3f55e154cb7b710770e5a0e44142d1fcd498d954900e72a9b8",
+    "artifacts/m7-check-target-v1/debug/libtoklet.a": "07ba92cc6e7a73b6f27388bb231dd6c66f7cd3bffc00ed47a5ad5f820df70c08",
+    "artifacts/m7-native-c-smoke-v1": "25e7abb146f6368e45d158eba9b25c49a0523347975b6cb832672cd85abfb8a2",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+  },
+  "published_copies": {
+    "benchmarks/results/2026-10-19-m7-native-checks.log": "artifacts/m7-logs-v1/native-checks.log",
+    "benchmarks/results/2026-10-19-m7-native-checks-v2.log": "artifacts/m7-logs-v1/native-checks-v2.log",
+    "benchmarks/results/2026-10-19-m7-native-fixture-v2.json": "artifacts/m7-logs-v1/native-fixture-v2.json",
+    "benchmarks/results/2026-10-19-m7-native-c-smoke-v1.json": "artifacts/m7-logs-v1/native-c-smoke-v1.json"
+  },
+  "abi_version": 1,
+  "backend": "CPU scalar",
+  "context_limit": 2048,
+  "explicit_budget": true,
+  "bridge_reserved_bytes": 4096,
+  "checks": {
+    "fmt": true,
+    "strict_all_target_metal_clippy": true,
+    "cpu": {
+      "passed": 105,
+      "ignored": 8
+    },
+    "metal_feature": {
+      "passed": 118,
+      "ignored": 58
+    },
+    "native_cases": 8,
+    "c_smoke_exact_ids": [
+      47,
+      47,
+      47,
+      47
+    ],
+    "cargo_toolchain": "rustup run 1.90 cargo",
+    "target_directory": "artifacts/m7-check-target-v1",
+    "commands": [
+      "cargo fmt --check",
+      "cargo clippy --locked --offline --all-targets --features metal -- -D warnings",
+      "cargo test --locked --offline",
+      "cargo test --locked --offline --features metal",
+      "cargo build --locked --offline --lib",
+      "clang -std=c11 -Wall -Wextra -Werror -Iapple/include apple/tests/native_smoke.c artifacts/m7-check-target-v1/debug/libtoklet.a -framework Foundation -framework Security -liconv -lresolv -lc++ -o artifacts/m7-native-c-smoke-v1",
+      "artifacts/m7-native-c-smoke-v1 artifacts/m7-native-tiny-v2"
+    ]
+  },
+  "scope": "CPU raw-ID C ABI ownership/state/errors/cancellation/panic component on Apple Silicon Mac; numerical kernels/defaults unchanged",
+  "metal_boundary_qualified": false,
+  "ios_integration_qualified": false,
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "report_path": "docs/experiments/2026-10-19-m7-native-abi.md"
+}

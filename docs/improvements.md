@@ -582,3 +582,16 @@ long-document ability remains unqualified. Defaults/baseline limits/rejections
 stay unchanged. Astra accepted final synthesis/publication after independently verifying all497
 bindings/11exactprerequisites/421localtargets and the final FP16 decision.
 M6.1–M6.3 are complete in this qualified scope; M7 stays pending.
+
+
+The first [M7 native boundary component](experiments/2026-10-19-m7-native-abi.md)
+adds a versioned CPU raw-ID C ABI with retained immutable models, session-owned
+KV/scratch, dedicated-thread operations and separate concurrent atomic cancellation.
+Callback reentry returns Busy; failed output preserves pending history and prior
+successful emission counts. Rust panics poison affected sessions for recreation.
+Eight ABI tests plus a real compiled C client match the independent tiny oracle
+and cover ownership, continuation, cancellation, errors/reset/release. Formatting,
+strict Metal Clippy,105CPU/118Metal-feature tests and staticlib build pass. Astra
+accepted code/data/publication after39source/8evidencepins/4copies and all26
+exported tensors independently verified.
+No numerical/default/mobile-budget change or M7 completion is claimed.
