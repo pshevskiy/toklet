@@ -648,3 +648,19 @@ weak-release checks pass. Swift UI/iOS and physical M7 qualification remain open
 
 Astra accepted the worker component after verifying30source/evidencebindings,
 18copies, the exact compiler command and four clean executions.
+
+The [M7 SwiftUI harness](experiments/2026-10-19-m7-swift-harness.md) adds the
+minimal raw-ID native app, shared self-test and arm64 Xcode project. Separate
+simulator/unsigned-device release builds verify deployment, resources, library
+provenance and simulator signing. Eight builder/five runner checks reject
+mutated inputs and preserve cleanup failures. The actual simulator self-test
+passes all ten native states, exact initial[47]*4 IDs, replay/cancel/resume,
+unload/close/deallocation; installed files/endpoints and Shutdown verify.
+Visual QA fixes persistent field labels and locks loaded-model settings.
+M7.2 software integration is complete; M7.3 remains blocked by phone Developer
+Mode/signing setup and lacks physical memory/thermal/sustained/lifecycle evidence.
+
+Astra accepted task6/M7.2 with no remaining findings after checking current and
+historical bindings,58copies, installed files, ten states, clean shutdown,
+helper checks, final UI/lifecycle wording and redacted device status.
+M7.3 and overall M7 remain pending physical qualification.

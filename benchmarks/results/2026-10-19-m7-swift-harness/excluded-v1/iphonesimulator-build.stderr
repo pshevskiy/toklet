@@ -1,0 +1,8 @@
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftDriver TokletHarness normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'TokletHarness' from project 'TokletHarness')
+	SwiftDriver TokletHarness normal arm64 com.apple.xcode.tools.swift.compiler (in target 'TokletHarness' from project 'TokletHarness')
+	Building project TokletHarness with scheme TokletHarness and configuration Release
+(3 failures)

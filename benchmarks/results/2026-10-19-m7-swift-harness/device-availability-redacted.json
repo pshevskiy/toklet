@@ -1,0 +1,13 @@
+{
+  "device_query_exit": 0,
+  "device_query_error": null,
+  "device_query_cleanup": [],
+  "signing_query_exit": 0,
+  "valid_signing_identities": 0,
+  "marketing_name": "iPhone 14 Pro Max",
+  "product_type": "iPhone15,3",
+  "reality": "physical",
+  "os_version": "26.6.1",
+  "developer_mode": "disabled",
+  "ddi_services_available": false
+}

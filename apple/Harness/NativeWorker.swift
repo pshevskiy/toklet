@@ -294,6 +294,9 @@ private final class Engine {
         case .load(let requested):
             guard model == nil else { throw invalid("Unload the current model first") }
             guard (1...32768).contains(requested.capacity), requested.chunk > 0 else { throw invalid("Invalid capacity/chunk") }
+            guard requested.directory.utf8.count <= 16384, requested.packedDirectory.utf8.count <= 16384 else {
+                throw invalid("Artifact path exceeds 16 KiB")
+            }
             let path = Array(requested.directory.utf8); let packed = Array(requested.packedDirectory.utf8)
             guard !path.isEmpty, path.count <= 16384, packed.count <= 16384,
                   !path.contains(0), !packed.contains(0) else { throw invalid("Invalid artifact path") }
