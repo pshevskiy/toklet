@@ -1,0 +1,153 @@
+{
+  "format": "toklet-m7-native-history-v1",
+  "passed": true,
+  "review": {
+    "reviewer": "Astra",
+    "accepted": true,
+    "remaining_findings": [],
+    "scope": "Astra verified4source/19evidencepins/14copies,protectedbinaries,compile/CPU/Metal workers andallcheckcounts. Source/publicationaccepted in history/tinyreplayintegration scope. Reviewfinished."
+  },
+  "source_parent": "8e2d157f2239df6d1405f3bad1488b8a506b40bc",
+  "source_pins": {
+    "src/native.rs": "5fea7b94ad538d0bae5f1acbdf06ab6970aa4bbd285fbdd7d94da67dc96d3352",
+    "src/native/tests.rs": "b4756e3d9084955d7b51c3ba46071f94f2a2864087a0ffdef5bc9f804bdc0949",
+    "apple/include/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "apple/tests/native_smoke.c": "28718100afb51303ddd34f362143bc14fbb2188a3d47e3e44ed3aafb6fb6c463"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-19-m7-native-history/history-fmt-v1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-native-history/history-clippy-v1.log": "1c0fe9a3a75a68f1beaef6f8ebf7285c36b4b6b6f80070591b17307cfd814c38",
+    "benchmarks/results/2026-10-19-m7-native-history/history-cpu-tests-v1.log": "86c52a521a269d4fe17ae371f302a0f0241f01b8048205d691ca3954cfea0f82",
+    "benchmarks/results/2026-10-19-m7-native-history/history-metal-tests-v1.log": "4d826f8f0a1cde06535721aa6e38bdc3e89b565063fcfeed63345d34880537d8",
+    "benchmarks/results/2026-10-19-m7-native-history/history-release-v1.log": "293793a3f947cdda7f03f9713f5cb64556feb5beaaabc168fa893f13366b5125",
+    "benchmarks/results/2026-10-19-m7-native-history/history-targeted-v2.log": "cd35ec10dcf41a217e0a2f4e68471dc32e79234424ff1dc01a72a582ce7aef7c",
+    "benchmarks/results/2026-10-19-m7-native-history/c-driver.py": "0c4785b6dae1ccd25645845cf2dc87c29f069092912f96d6996805dc6b4b1d88",
+    "benchmarks/results/2026-10-19-m7-native-history/validation.json": "dd2e6a5d7c17409f8209d35304cc203bd39c4f978a9edcbba2ac75ecde6a8b46",
+    "benchmarks/results/2026-10-19-m7-native-history/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-native-history/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-native-history/cpu.stdout": "b072c686a2f6cc3f55e154cb7b710770e5a0e44142d1fcd498d954900e72a9b8",
+    "benchmarks/results/2026-10-19-m7-native-history/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-native-history/metal.stdout": "b072c686a2f6cc3f55e154cb7b710770e5a0e44142d1fcd498d954900e72a9b8",
+    "benchmarks/results/2026-10-19-m7-native-history/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-history-target-v1/release/libtoklet.a": "25565678296ec9918e818184330adb88c8f81f6df1d3d558c4d4cfd5a2d0f966",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-history-c-driver-v1.py": "0c4785b6dae1ccd25645845cf2dc87c29f069092912f96d6996805dc6b4b1d88",
+    "artifacts/m7-history-native-v1/native-client": "8d88702631692a4b8a9ff78ff10981f86976f9b2d79a9fcf50af1c5ef07bf1fa"
+  },
+  "published_copies": {
+    "benchmarks/results/2026-10-19-m7-native-history/history-fmt-v1.log": "artifacts/m7-logs-v1/history-fmt-v1.log",
+    "benchmarks/results/2026-10-19-m7-native-history/history-clippy-v1.log": "artifacts/m7-logs-v1/history-clippy-v1.log",
+    "benchmarks/results/2026-10-19-m7-native-history/history-cpu-tests-v1.log": "artifacts/m7-logs-v1/history-cpu-tests-v1.log",
+    "benchmarks/results/2026-10-19-m7-native-history/history-metal-tests-v1.log": "artifacts/m7-logs-v1/history-metal-tests-v1.log",
+    "benchmarks/results/2026-10-19-m7-native-history/history-release-v1.log": "artifacts/m7-logs-v1/history-release-v1.log",
+    "benchmarks/results/2026-10-19-m7-native-history/history-targeted-v2.log": "artifacts/m7-logs-v1/history-targeted-v2.log",
+    "benchmarks/results/2026-10-19-m7-native-history/c-driver.py": "artifacts/m7-history-c-driver-v1.py",
+    "benchmarks/results/2026-10-19-m7-native-history/validation.json": "artifacts/m7-history-native-v1/validation.json",
+    "benchmarks/results/2026-10-19-m7-native-history/compile.stdout": "artifacts/m7-history-native-v1/compile.stdout",
+    "benchmarks/results/2026-10-19-m7-native-history/compile.stderr": "artifacts/m7-history-native-v1/compile.stderr",
+    "benchmarks/results/2026-10-19-m7-native-history/cpu.stdout": "artifacts/m7-history-native-v1/cpu.stdout",
+    "benchmarks/results/2026-10-19-m7-native-history/cpu.stderr": "artifacts/m7-history-native-v1/cpu.stderr",
+    "benchmarks/results/2026-10-19-m7-native-history/metal.stdout": "artifacts/m7-history-native-v1/metal.stdout",
+    "benchmarks/results/2026-10-19-m7-native-history/metal.stderr": "artifacts/m7-history-native-v1/metal.stderr"
+  },
+  "validation": {
+    "passed": true,
+    "bindings": {
+      "src/native.rs": "5fea7b94ad538d0bae5f1acbdf06ab6970aa4bbd285fbdd7d94da67dc96d3352",
+      "src/native/tests.rs": "b4756e3d9084955d7b51c3ba46071f94f2a2864087a0ffdef5bc9f804bdc0949",
+      "apple/include/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+      "apple/tests/native_smoke.c": "28718100afb51303ddd34f362143bc14fbb2188a3d47e3e44ed3aafb6fb6c463",
+      "artifacts/m7-history-target-v1/release/libtoklet.a": "25565678296ec9918e818184330adb88c8f81f6df1d3d558c4d4cfd5a2d0f966",
+      "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+      "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+      "artifacts/m7-history-c-driver-v1.py": "0c4785b6dae1ccd25645845cf2dc87c29f069092912f96d6996805dc6b4b1d88",
+      "artifacts/m7-history-native-v1/native-client": "8d88702631692a4b8a9ff78ff10981f86976f9b2d79a9fcf50af1c5ef07bf1fa"
+    },
+    "workers": [
+      {
+        "command": [
+          "xcrun",
+          "--sdk",
+          "macosx",
+          "clang",
+          "-target",
+          "arm64-apple-macos15.0",
+          "-isysroot",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+          "-std=c11",
+          "-Wall",
+          "-Wextra",
+          "-Werror",
+          "-I/Users/coloner/work/rust/toklet/apple/include",
+          "/Users/coloner/work/rust/toklet/apple/tests/native_smoke.c",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-history-target-v1/release/libtoklet.a",
+          "-framework",
+          "Metal",
+          "-framework",
+          "MetalPerformanceShaders",
+          "-framework",
+          "Foundation",
+          "-framework",
+          "Security",
+          "-lobjc",
+          "-liconv",
+          "-lresolv",
+          "-lc++",
+          "-Wl,-fatal_warnings",
+          "-o",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-history-native-v1/native-client"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 78731,
+        "stdout": "artifacts/m7-history-native-v1/compile.stdout",
+        "stderr": "artifacts/m7-history-native-v1/compile.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m7-history-native-v1/native-client",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 78734,
+        "stdout": "artifacts/m7-history-native-v1/cpu.stdout",
+        "stderr": "artifacts/m7-history-native-v1/cpu.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m7-history-native-v1/native-client",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2",
+          "metal"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 78738,
+        "stdout": "artifacts/m7-history-native-v1/metal.stdout",
+        "stderr": "artifacts/m7-history-native-v1/metal.stderr"
+      }
+    ],
+    "primary_error": null,
+    "endpoint_errors": [],
+    "physical_device_qualified": false
+  },
+  "checks": {
+    "fmt": true,
+    "strict_all_target_metal_clippy": true,
+    "cpu_passed": 108,
+    "cpu_ignored": 8,
+    "metal_passed": 120,
+    "metal_ignored": 59,
+    "targeted_history_tests": 1,
+    "rebuilt_c_cpu": true,
+    "rebuilt_c_metal": true
+  },
+  "scope": "Caller-owned sampled history and tiny native replay/C integration; no mobile qualification",
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "report_path": "docs/experiments/2026-10-19-m7-native-history.md"
+}

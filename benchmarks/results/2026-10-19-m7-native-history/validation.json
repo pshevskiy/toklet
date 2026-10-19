@@ -1,0 +1,84 @@
+{
+  "passed": true,
+  "bindings": {
+    "src/native.rs": "5fea7b94ad538d0bae5f1acbdf06ab6970aa4bbd285fbdd7d94da67dc96d3352",
+    "src/native/tests.rs": "b4756e3d9084955d7b51c3ba46071f94f2a2864087a0ffdef5bc9f804bdc0949",
+    "apple/include/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "apple/tests/native_smoke.c": "28718100afb51303ddd34f362143bc14fbb2188a3d47e3e44ed3aafb6fb6c463",
+    "artifacts/m7-history-target-v1/release/libtoklet.a": "25565678296ec9918e818184330adb88c8f81f6df1d3d558c4d4cfd5a2d0f966",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-history-c-driver-v1.py": "0c4785b6dae1ccd25645845cf2dc87c29f069092912f96d6996805dc6b4b1d88",
+    "artifacts/m7-history-native-v1/native-client": "8d88702631692a4b8a9ff78ff10981f86976f9b2d79a9fcf50af1c5ef07bf1fa"
+  },
+  "workers": [
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "clang",
+        "-target",
+        "arm64-apple-macos15.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I/Users/coloner/work/rust/toklet/apple/include",
+        "/Users/coloner/work/rust/toklet/apple/tests/native_smoke.c",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-history-target-v1/release/libtoklet.a",
+        "-framework",
+        "Metal",
+        "-framework",
+        "MetalPerformanceShaders",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "Security",
+        "-lobjc",
+        "-liconv",
+        "-lresolv",
+        "-lc++",
+        "-Wl,-fatal_warnings",
+        "-o",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-history-native-v1/native-client"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 78731,
+      "stdout": "artifacts/m7-history-native-v1/compile.stdout",
+      "stderr": "artifacts/m7-history-native-v1/compile.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m7-history-native-v1/native-client",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 78734,
+      "stdout": "artifacts/m7-history-native-v1/cpu.stdout",
+      "stderr": "artifacts/m7-history-native-v1/cpu.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m7-history-native-v1/native-client",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2",
+        "metal"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 78738,
+      "stdout": "artifacts/m7-history-native-v1/metal.stdout",
+      "stderr": "artifacts/m7-history-native-v1/metal.stderr"
+    }
+  ],
+  "primary_error": null,
+  "endpoint_errors": [],
+  "physical_device_qualified": false
+}

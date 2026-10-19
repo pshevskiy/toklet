@@ -29,6 +29,10 @@ int main(int argc, char **argv) {
     assert(report.history_tokens==6 && report.evaluated_tokens==5 && report.pending_tokens==1);
     assert(toklet_session_generate(s,2,NULL,0,2,NULL,0,c,emit,&sink,&report,&error)==TOKLET_OK);
     assert(report.history_tokens==8 && report.evaluated_tokens==7 && report.pending_tokens==1);
+    uint32_t history[32]={0};size_t count=0;
+    assert(toklet_session_history(s,history,32,&count,&error)==TOKLET_OK);
+    const uint32_t expected_history[]={1,7,13,3,47,47,47,47};
+    assert(count==8 && memcmp(history,expected_history,sizeof(expected_history))==0);
     const uint32_t expected[]={47,47,47,47};
     assert(sink.count==4 && memcmp(sink.ids,expected,sizeof(expected))==0);
     assert(toklet_cancel_set(c,1,&error)==TOKLET_OK);

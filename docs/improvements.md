@@ -625,3 +625,14 @@ Physical-device qualification and overall M7 completion remain pending.
 Astra accepted the final task after verifying41source/115evidencepins/94copies,
 protected binaries, historical source identities, all slices and native/shutdown
 results. M7.1 is complete in this scope; Swift and physical M7 remain open.
+
+The [M7 native history task](experiments/2026-10-19-m7-native-history.md) adds
+an allocation-free caller-owned snapshot of exact sampled history, including
+pending IDs. It removes cancellation/replacement-prompt ambiguity for Swift
+replay while retaining owner/busy/poison guards and existing ABI record layouts.
+A tiny recreation test distinguishes identical history from eagerly committed
+KV and checks independent continuation IDs; the C client also verifies history.
+Physical-device lifecycle and overall M7 qualification remain pending.
+
+Astra accepted final code/data/publication after verifying4source/19evidencepins/
+14copies, protected binaries, clean native workers and all check counts.

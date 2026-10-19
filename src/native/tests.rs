@@ -171,6 +171,11 @@ fn callback_reentry_is_busy_and_failure_preserves_the_sampled_token() {
         unsafe {
             assert_eq!(toklet_session_reset(s, ptr::null_mut()), BUSY);
             assert_eq!(toklet_session_release(s, ptr::null_mut()), BUSY);
+            let mut count = 0;
+            assert_eq!(
+                toklet_session_history(s, ptr::null_mut(), 0, &mut count, ptr::null_mut()),
+                BUSY
+            );
         }
         1
     }
@@ -353,6 +358,22 @@ fn wrong_thread_calls_reject_without_dropping_the_handle() {
     let address = m as usize;
     let code = thread::spawn(move || unsafe {
         toklet_model_release(address as *mut ModelHandle, ptr::null_mut())
+    })
+    .join()
+    .unwrap();
+    assert_eq!(code, WRONG_THREAD);
+    let address = s as usize;
+    let code = thread::spawn(move || unsafe {
+        let mut count = usize::MAX;
+        let code = toklet_session_history(
+            address as *const SessionHandle,
+            ptr::null_mut(),
+            0,
+            &mut count,
+            ptr::null_mut(),
+        );
+        assert_eq!(count, usize::MAX);
+        code
     })
     .join()
     .unwrap();
@@ -560,5 +581,105 @@ fn metal_native_selected_models_match_direct_sessions() {
         println!(
             "native_metal_model={name} ids={ids:?} state=7/6/1 combined_admission_bytes={combined} passed"
         );
+    }
+}
+
+#[test]
+fn history_copy_includes_pending_and_replays_without_guessing() {
+    let (m, s, c) = handles();
+    unsafe {
+        let (code, original) = generate(s, c, &[1, 7, 13, 3], 0, 2, None, ptr::null_mut());
+        assert_eq!(code, OK);
+        assert_eq!(original.pending_tokens, 1);
+        let mut count = usize::MAX;
+        assert_eq!(
+            toklet_session_history(s, ptr::null_mut(), 0, &mut count, ptr::null_mut()),
+            OK
+        );
+        assert_eq!(count, 6);
+        let mut too_small = [u32::MAX; 5];
+        assert_eq!(
+            toklet_session_history(s, too_small.as_mut_ptr(), 5, &mut count, ptr::null_mut()),
+            INVALID
+        );
+        assert_eq!(count, 6);
+        assert_eq!(too_small, [u32::MAX; 5]);
+        let mut history = [u32::MAX; 32];
+        assert_eq!(
+            toklet_session_history(s, history.as_mut_ptr(), 32, &mut count, ptr::null_mut()),
+            OK
+        );
+        assert_eq!(&history[..count], &[1, 7, 13, 3, 47, 47]);
+        assert_eq!(history[count], u32::MAX);
+        // A precancelled replacement prompt must leave the old exact IDs intact.
+        assert_eq!(toklet_cancel_set(c, 1, ptr::null_mut()), OK);
+        assert_eq!(
+            generate(s, c, &[3, 13, 7, 1], 0, 2, None, ptr::null_mut()).0,
+            OK
+        );
+        assert_eq!(
+            toklet_session_history(s, history.as_mut_ptr(), 32, &mut count, ptr::null_mut()),
+            OK
+        );
+        assert_eq!(&history[..count], &[1, 7, 13, 3, 47, 47]);
+        assert_eq!(toklet_cancel_set(c, 0, ptr::null_mut()), OK);
+        assert_eq!(toklet_session_release(s, ptr::null_mut()), OK);
+        let mut replay = ptr::null_mut();
+        assert_eq!(
+            toklet_session_create(m, &opts(), &mut replay, ptr::null_mut()),
+            OK
+        );
+        // Replaying the full sampled history eagerly commits pending IDs. The
+        // exact token prefix stays unchanged and continuation has the same oracle.
+        let (code, report) = generate(replay, c, &history[..count], 0, 0, None, ptr::null_mut());
+        assert_eq!(code, OK);
+        assert_eq!(
+            (
+                report.history_tokens,
+                report.evaluated_tokens,
+                report.pending_tokens
+            ),
+            (6, 6, 0)
+        );
+        let mut ids = Vec::new();
+        assert_eq!(
+            generate(
+                replay,
+                c,
+                &[],
+                2,
+                2,
+                Some(collect),
+                (&mut ids as *mut Vec<u32>).cast()
+            )
+            .0,
+            OK
+        );
+        assert_eq!(ids, [47_u32, 47]);
+        assert_eq!(
+            toklet_session_history(replay, ptr::null_mut(), 1, &mut count, ptr::null_mut()),
+            INVALID
+        );
+        assert_eq!(
+            toklet_session_history(
+                replay,
+                history.as_mut_ptr(),
+                32769,
+                &mut count,
+                ptr::null_mut()
+            ),
+            INVALID
+        );
+        assert_eq!(
+            toklet_session_history(
+                replay,
+                history.as_mut_ptr(),
+                32,
+                ptr::null_mut(),
+                ptr::null_mut()
+            ),
+            INVALID
+        );
+        cleanup(m, replay, c);
     }
 }

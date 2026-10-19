@@ -91,3 +91,18 @@ iPhone Metal runtime, quality and supported limits remain unqualified.
 The [Metal bridge report](experiments/2026-10-19-m7-metal-abi.md) separates
 integration/state/combined logical admission checks from performance and mobile
 qualification. No new latency or physical-memory claim follows from that test.
+
+## History and replay
+
+`toklet_session_history` returns exact sampled IDs, including pending samples and
+hidden stops, into caller-owned storage on the session thread. NULL output with
+zero capacity queries count. A small buffer returns Invalid with required count
+and no partial token copy. Keep output/count/error storage separate; reserve
+application memory for the bounded history copy.
+
+After releasing a session, a new session with the same retained immutable model
+can eagerly replay all copied IDs using prompt plus zero requested output.
+History is preserved; pending IDs become committed. Continue then evaluates from
+that exact token prefix. Reusing a path after replacing/reloading weights is not
+proof of model identity. A frontend must preserve the same model owner or
+independently validate identity before it offers replay.

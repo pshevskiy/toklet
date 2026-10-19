@@ -1,0 +1,338 @@
+   Compiling cfg-if v1.0.5
+   Compiling memchr v2.8.0
+   Compiling libc v0.2.190
+   Compiling serde_core v1.0.228
+   Compiling crossbeam-utils v0.8.23
+   Compiling zerocopy v0.8.62
+   Compiling objc2 v0.6.5
+   Compiling typenum v1.20.1
+   Compiling equivalent v1.0.2
+   Compiling either v1.19.0
+   Compiling itoa v1.0.17
+   Compiling hashbrown v0.17.1
+   Compiling objc2-encode v4.1.0
+   Compiling regex-syntax v0.8.11
+   Compiling crossbeam-epoch v0.9.21
+   Compiling aho-corasick v1.1.5
+   Compiling zmij v1.0.21
+   Compiling generic-array v0.14.7
+   Compiling crossbeam-deque v0.8.8
+   Compiling indexmap v2.14.2
+   Compiling rayon-core v1.13.0
+   Compiling minimal-lexical v0.2.1
+   Compiling getrandom v0.3.4
+   Compiling bitflags v2.13.2
+   Compiling bit-vec v0.8.0
+   Compiling rand_core v0.9.5
+   Compiling rayon v1.12.0
+   Compiling block-buffer v0.10.4
+   Compiling bit-set v0.8.0
+   Compiling crypto-common v0.1.7
+   Compiling nom v7.1.3
+   Compiling castaway v0.2.4
+   Compiling itertools v0.14.0
+   Compiling static_assertions v1.1.0
+   Compiling ryu v1.0.23
+   Compiling unicode-segmentation v1.13.3
+   Compiling serde v1.0.228
+   Compiling regex-automata v0.4.18
+   Compiling serde_json v1.0.149
+   Compiling once_cell v1.21.4
+   Compiling block2 v0.6.2
+   Compiling smallvec v1.16.2
+   Compiling base64 v0.13.1
+   Compiling unicode-normalization-alignments v0.1.12
+   Compiling dispatch2 v0.3.1
+   Compiling spm_precompiled v0.1.4
+   Compiling compact_str v0.9.1
+   Compiling dary_heap v0.3.9
+   Compiling monostate v0.1.18
+   Compiling macro_rules_attribute v0.2.3
+   Compiling nix v0.31.3
+   Compiling derive_builder v0.20.2
+   Compiling thiserror v2.0.21
+   Compiling esaxx-rs v0.1.10
+   Compiling rayon-cond v0.4.0
+   Compiling digest v0.10.7
+   Compiling cpufeatures v0.2.17
+   Compiling log v0.4.34
+   Compiling unicode_categories v0.1.1
+   Compiling safetensors v0.6.2
+   Compiling sha2 v0.10.9
+   Compiling ctrlc v3.5.2
+   Compiling ppv-lite86 v0.2.21
+   Compiling ahash v0.8.12
+   Compiling half v2.7.1
+   Compiling rand_chacha v0.9.0
+   Compiling rand v0.9.5
+   Compiling regex v1.13.1
+   Compiling fancy-regex v0.14.0
+   Compiling tokenizers v0.22.2
+   Compiling toklet v0.1.0 (/Users/coloner/work/rust/toklet)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.19s
+     Running unittests src/lib.rs (artifacts/m7-history-target-v1/debug/deps/toklet-0916da56359a0255)
+
+running 11 tests
+test native::tests::bridge_reservation_covers_owned_handle_and_wrapper_allocations ... ok
+test native::tests::unavailable_metal_returns_explicit_error_without_cpu_fallback ... ok
+test native::tests::panic_is_contained_and_session_requires_recreation ... ok
+test native::tests::cancellation_from_another_thread_stops_at_valid_pending_prefix ... ok
+test native::tests::invalid_abi_pointer_lengths_and_failed_load_do_not_publish_handles ... ok
+test native::tests::wrong_thread_calls_reject_without_dropping_the_handle ... ok
+test native::tests::callback_reentry_is_busy_and_failure_preserves_the_sampled_token ... ok
+test native::tests::history_copy_includes_pending_and_replays_without_guessing ... ok
+test native::tests::later_callback_failure_reports_already_delivered_events_and_can_continue ... ok
+test native::tests::hidden_stop_and_admission_errors_preserve_history ... ok
+test native::tests::retained_model_and_pending_continuation_match_independent_greedy_fixture ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/bin/toklet.rs (artifacts/m7-history-target-v1/debug/deps/toklet-8ce39ff56bf12706)
+
+running 8 tests
+test cli::chat::real_tests::full_pinned_tokenizer_matches_frozen_ids ... ignored, requires explicitly downloaded pinned local Qwen tokenizer assets
+test cli::tests::idle_interrupt_after_terminal_boundary_is_preserved ... ok
+test cli::tests::attention_selection_and_context_bounds_reject_before_model_access ... ok
+test cli::chat::tests::missing_generation_config_uses_model_eos ... ok
+test cli::chat::tests::python_tool_json_float_spelling_matches_independent_probes ... ok
+test cli::chat::tests::continued_output_preserves_split_unicode_and_finalizes_once ... ok
+test cli::chat::tests::invalid_roles_multimodal_content_and_nonfinite_tools_are_rejected ... ok
+test cli::chat::tests::frozen_transformers_chat_and_raw_ids_match_without_model_downloads ... ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/bench_contract.rs (artifacts/m7-history-target-v1/debug/deps/bench_contract-88d09b12dfaaa7a9)
+
+running 2 tests
+test quality_policy_and_pinned_source_model_are_available_without_downloads ... ok
+test offline_workload_arrays_have_frozen_identities_and_exact_admission_boundary ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/cached_attention.rs (artifacts/m7-history-target-v1/debug/deps/cached_attention-d7aaaba4d7a92b50)
+
+running 2 tests
+test cached_attention_rejects_invalid_shapes_or_valid_prefix_before_writes ... ok
+test head_major_cache_with_stale_tails_matches_frozen_gqa_at_all_offsets ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/cli.rs (artifacts/m7-history-target-v1/debug/deps/cli-74e8a2f017a0caa3)
+
+running 13 tests
+test metal_projection_requires_supported_feature_before_model_access ... ok
+test help_is_available_without_a_model ... ok
+test non_unicode_arguments_return_an_error_instead_of_panicking ... ok
+test invalid_arguments_fail_without_success_output ... ok
+test invalid_projection_options_fail_before_model_access ... ok
+test version_matches_the_package ... ok
+test metal_projection_options_reject_invalid_values_and_cpu_use_before_model_access ... ok
+test q4_cli_pairing_and_cpu_rejections_precede_model_access ... ok
+test invalid_cli_requests_and_over_capacity_fail_before_emitting_tokens ... ok
+test interactive_cached_prompt_continuation_rejection_and_reset_keep_one_session ... ok
+test local_token_input_streams_frozen_greedy_ids_and_honors_eos_and_stop_ids ... ok
+test actual_ctrl_c_cancels_decode_then_continues_and_exits_when_idle ... ok
+test ctrl_c_during_prefill_can_resume_all_pending_input ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.36s
+
+     Running tests/cpu_attention.rs (artifacts/m7-history-target-v1/debug/deps/cpu_attention-d3416dba6e4da94d)
+
+running 6 tests
+test invalid_position_and_attention_inputs_fail_before_mutation ... ok
+test arithmetic_overflow_requires_discarding_partial_outputs ... ok
+test grouped_heads_read_their_shared_value_head_without_expansion ... ok
+test changing_future_keys_queries_and_values_preserves_earlier_context ... ok
+test rotary_uses_split_half_pairing_and_absolute_chunk_offsets ... ok
+test rotary_and_gqa_attention_match_all_saved_intermediates ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/cpu_decoder.rs (artifacts/m7-history-target-v1/debug/deps/cpu_decoder-f5745f146460a078)
+
+running 8 tests
+test greedy_uses_lowest_id_ties_and_rejects_invalid_distributions ... ok
+test output_projection_shares_embedding_weights ... ok
+test composed_decoder_preserves_causal_outputs_when_future_tokens_change ... ok
+test full_prefix_greedy_generation_matches_saved_logits_and_tokens ... ok
+test admission_rejects_invalid_requests_and_scratch_remains_reusable ... ok
+test opt_in_tiled_decoder_preserves_every_scalar_trace_bit_and_final_logits ... ok
+test constructor_rejects_invalid_configuration_shapes_biases_and_weights ... ok
+test composed_decoder_matches_every_named_array_across_all_cases ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/cpu_linear.rs (artifacts/m7-history-target-v1/debug/deps/cpu_linear-18b6d642ef381f29)
+
+running 7 tests
+test arithmetic_overflow_is_reported ... ok
+test invalid_embedding_and_residual_inputs_fail_before_mutation ... ok
+test invalid_projection_inputs_fail_before_writing_output ... ok
+test rectangular_manual_projection_supports_batch_bias_and_matvec ... ok
+test fp64_projection_accumulation_preserves_small_terms_and_reference_inputs ... ok
+test embeddings_and_in_place_residuals_match_saved_values ... ok
+test every_tiny_linear_projection_agrees_with_independent_numpy_values ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/cpu_reductions.rs (artifacts/m7-history-target-v1/debug/deps/cpu_reductions-61d32bb891ce1b4e)
+
+running 6 tests
+test mlp_validates_all_buffers_and_reports_arithmetic_overflow ... ok
+test invalid_reduction_inputs_are_rejected_before_output_changes ... ok
+test stable_operations_cover_zero_and_extreme_finite_values ... ok
+test all_normalizations_match_the_frozen_numpy_reference ... ok
+test softmax_matches_all_causal_probability_arrays ... ok
+test activations_and_complete_gated_mlp_match_every_saved_layer ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/cpu_tiled.rs (artifacts/m7-history-target-v1/debug/deps/cpu_tiled-15a40f59d05305ef)
+
+running 4 tests
+test fp32_range_subnormals_and_signed_zeros_match_the_scalar_oracle ... ok
+test invalid_boundaries_fail_before_writes_and_arithmetic_reports_global_index ... ok
+test rectangular_tiles_and_all_tails_preserve_bias_and_ordered_cancellation ... ok
+test independent_tiny_projections_keep_frozen_tolerances_and_exact_scalar_bits ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/fixtures.rs (artifacts/m7-history-target-v1/debug/deps/fixtures-8d53d3641160dae7)
+
+running 4 tests
+test saved_linear_example_matches_hand_calculation ... ok
+test topology_and_numerical_policy_match_the_learning_model ... ok
+test causal_fixture_preserves_logits_before_the_changed_future_token ... ok
+test every_frozen_array_has_the_declared_shape_hash_and_finite_values ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/metal.rs (artifacts/m7-history-target-v1/debug/deps/metal-8d3baaddfc977f03)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/q4.rs (artifacts/m7-history-target-v1/debug/deps/q4-fff323cc590746a7)
+
+running 3 tests
+test matvec_errors_preserve_all_output_and_half_extrema_use_fp32_reconstruction ... ok
+test rejects_bad_headers_overflow_metadata_and_noncanonical_padding ... ok
+test python_artifact_roundtrips_and_reconstructs_manual_values ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/q4_artifact.rs (artifacts/m7-history-target-v1/debug/deps/q4_artifact-b59ed97712da97a2)
+
+running 6 tests
+test packed_source_artifact_matches_independent_known_geometry ... ignored, explicit local source+packed artifact check; no GPU; set TOKLET_Q4_SOURCE and TOKLET_Q4_PACKED
+test matrix_inventory_rejects_unbounded_layers_before_allocating ... ok
+test rejects_oversized_metadata_and_hashed_but_invalid_matrix_bytes ... ok
+test v2_inventory_binds_header_version_and_preserves_v1 ... ok
+test validates_source_bound_inventory_and_exact_load_budget_without_gpu ... ok
+test rejects_identity_mismatch_duplicate_names_paths_shapes_and_policy ... ok
+
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/q4_metal.rs (artifacts/m7-history-target-v1/debug/deps/q4_metal-f2b4f11d1de3d9ce)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/q4_v2.rs (artifacts/m7-history-target-v1/debug/deps/q4_v2-e3a3001603fed8c0)
+
+running 3 tests
+test group_eight_manual_bytes_reconstruct_and_multiply_without_expansion ... ok
+test group_eight_rejects_version_mixing_padding_metadata_and_overflow ... ok
+test group_eight_manual_records_cover_group_and_alignment_boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/q4_v2_models.rs (artifacts/m7-history-target-v1/debug/deps/q4_v2_models-620ec0db37a900d0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/q4_v2_storage.rs (artifacts/m7-history-target-v1/debug/deps/q4_v2_storage-d6d45f4f78498f51)
+
+running 1 test
+test real_model_v2_probes_bind_shapes_gates_and_available_references ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running tests/qwen_forward.rs (artifacts/m7-history-target-v1/debug/deps/qwen_forward-02dfd24bbf09efb3)
+
+running 3 tests
+test pinned_qwen_fp32_matches_full_transformers_forward ... ignored, requires pinned Qwen weights and explicitly regenerated full Transformers probes
+test pinned_qwen_tiled_fp32_matches_full_transformers_forward ... ignored, requires pinned Qwen weights and explicitly regenerated full Transformers probes
+test real_fp32_probes_have_frozen_identity_selection_and_independent_gates ... ok
+
+test result: ok. 1 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/qwen_larger_forward.rs (artifacts/m7-history-target-v1/debug/deps/qwen_larger_forward-1f21c56761603fc0)
+
+running 2 tests
+test preselected_larger_tiled_fp32_matches_independent_forward ... ignored, requires the preselected larger Qwen checkpoint, independent frozen oracle, and own-process memory access
+test larger_fp32_probes_have_frozen_identity_selection_and_independent_gates ... ok
+
+test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/qwen_larger_metal.rs (artifacts/m7-history-target-v1/debug/deps/qwen_larger_metal-1023361d5a5ffd13)
+
+running 1 test
+test larger_storage_probes_bind_complete_arrays_shapes_gates_and_argmax ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/qwen_session.rs (artifacts/m7-history-target-v1/debug/deps/qwen_session-a6c1cc05ee4a10ed)
+
+running 2 tests
+test pinned_qwen_cached_sessions_match_full_prefix ... ignored, requires the explicitly downloaded pinned Qwen checkpoint; Mac footprint requires own-process inspection
+test pinned_qwen_tiled_cached_sessions_match_full_prefix ... ignored, requires the explicitly downloaded pinned Qwen checkpoint; Mac footprint requires own-process inspection
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/session.rs (artifacts/m7-history-target-v1/debug/deps/session-96dbcebe2348403d)
+
+running 15 tests
+test layer_or_final_projection_failure_never_commits_a_staged_chunk ... ok
+test generation_admission_rejects_all_invalid_inputs_before_state_changes ... ok
+test cancellation_and_output_failure_preserve_recoverable_prefixes ... ok
+test generation_events_and_statistics_allocate_no_numerical_buffers ... ok
+test exact_append_cached_prompt_changed_prefix_reset_and_chunk_boundaries ... ok
+test admitted_prefill_decode_and_reuse_allocate_no_buffers ... ok
+test bounded_generation_matches_greedy_oracle_and_continues_pending_token ... ok
+test requests_and_memory_are_admitted_before_mutation ... ok
+test sampled_history_is_pending_until_evaluated_and_greedy_trace_matches ... ok
+test stop_ids_are_pending_and_hidden_and_zero_output_retains_cached_logits ... ok
+test teacher_forced_timing_keeps_exact_prefix_and_pending_state ... ok
+test longest_committed_prefix_edits_shortening_pending_and_discard_match_full_replay ... ok
+test explicit_all_row_cached_logits_match_each_independent_prefix_without_allocations ... ok
+test one_shot_irregular_chunks_and_decode_match_full_prefix_and_frozen_oracle ... ok
+test all_2048_tokens_and_nonzero_absolute_boundary_match_full_prefix ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.42s
+
+     Running tests/weights.rs (artifacts/m7-history-target-v1/debug/deps/weights-d9263c7e9a90bcc8)
+
+running 9 tests
+test pinned_qwen_loads_within_the_initial_budget ... ignored, requires the explicitly downloaded pinned Qwen checkpoint
+test malformed_and_duplicate_metadata_are_rejected ... ok
+test tied_output_is_checked_and_does_not_add_persistent_weights ... ok
+test explicit_long_loading_is_model_bounded_and_preserves_cpu_session_limit ... ok
+test explicit_fp16_and_bf16_little_endian_values_convert_exactly ... ok
+test single_and_indexed_shards_load_the_same_frozen_tiny_decoder ... ok
+test conversion_crosses_chunk_boundaries_and_preserves_the_short_tail ... ok
+test tensor_shape_dtype_names_nonfinite_and_shard_mapping_are_validated ... ok
+test unsupported_configuration_and_insufficient_budget_fail_before_loading ... ok
+
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+   Doc-tests toklet
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

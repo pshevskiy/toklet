@@ -517,6 +517,57 @@ pub unsafe extern "C" fn toklet_session_state(
         })
     }
 }
+/// Copy exact sampled history into caller-owned storage after a request.
+/// Null output with zero capacity queries the required count. Insufficient
+/// capacity returns INVALID, writes the required count and copies no tokens.
+/// # Safety
+/// Follow the foreign caller contract. Output/count/error storage must not
+/// overlap and the output extent must contain `capacity` writable u32 elements.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_session_history(
+    session: *const SessionHandle,
+    out: *mut u32,
+    capacity: usize,
+    count: *mut usize,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(session)?;
+            pointer(count)?;
+            if capacity > 32768 {
+                return Err(fail(INVALID, "history buffer exceeds boundary limit"));
+            }
+            if capacity > 0 {
+                pointer(out)?;
+            }
+            (*session).access(|s| {
+                let history = match s {
+                    NativeSession::Cpu(s) => s.history(),
+                    #[cfg(all(
+                        feature = "metal",
+                        any(target_os = "macos", target_os = "ios"),
+                        target_arch = "aarch64"
+                    ))]
+                    NativeSession::Metal(s) => s.history(),
+                };
+                count.write(history.len());
+                if capacity == 0 && out.is_null() {
+                    return Ok(());
+                }
+                if capacity < history.len() {
+                    return Err(fail(INVALID, "insufficient history output capacity"));
+                }
+                if !history.is_empty() {
+                    // SAFETY: validated aligned output has caller-guaranteed
+                    // writable capacity; immutable history cannot overlap it.
+                    ptr::copy_nonoverlapping(history.as_ptr(), out, history.len());
+                }
+                Ok(())
+            })
+        })
+    }
+}
 /// Clear KV/history after any completed request, retaining resident resources.
 /// # Safety
 /// Follow the foreign caller contract; no concurrent/reentrant mutation.

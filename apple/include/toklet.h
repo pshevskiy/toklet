@@ -19,7 +19,7 @@ extern "C" {
 /* All records use native C alignment. All nonnull pointers must refer to live,
    initialized storage for their full stated extent. Inputs and outputs/error
    records must not overlap. Counts are element counts; null+zero is permitted
-   for token/stop arrays only. Handles come only from this library.
+   for token/stop arrays and the documented history-size query. Handles come only from this library.
    Model/session operations and release stay on their creating dedicated thread.
    Callbacks run synchronously there, may not throw/unwind, and may not destroy
    active resources. Reentrant session calls return BUSY. Rust panic poisons a
@@ -52,6 +52,10 @@ uint32_t toklet_model_release(TokletModel *, TokletError *);
 uint32_t toklet_session_create(const TokletModel *, const TokletOptions *, TokletSession **, TokletError *);
 uint32_t toklet_session_release(TokletSession *, TokletError *);
 uint32_t toklet_session_state(const TokletSession *, TokletReport *, TokletError *);
+/* Exact sampled history, including pending IDs. NULL+0 queries count.
+   Small buffers return INVALID with required count and no partial copy.
+   Caller owns capacity uint32_t elements; count/output/error do not overlap. */
+uint32_t toklet_session_history(const TokletSession *, uint32_t *, size_t, size_t *, TokletError *);
 uint32_t toklet_session_reset(const TokletSession *, TokletError *);
 /* operation: 0 prompt, 1 append, 2 continue (no input), 3 reset+prompt.
    report reason: 0 query/error, 1 output limit, 2 hidden stop, 3 cancelled.
