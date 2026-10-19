@@ -64,14 +64,33 @@ to the frozen Inference Lab iPhone14 admission records, not arbitrary devices.
 
 ## Physical setup and remaining qualification
 
-The paired physical device is an iPhone14ProMax (`iPhone15,3`) on iOS26.6.1.
-A fresh check reports Developer Mode disabled, DDI services unavailable and zero
-valid local signing identities. No physical app was installed or run.
+The latest setup check,19 October2026, finds a wired physical iPhone14Pro
+(`iPhone15,2`) on iOS27.0.1 with Developer Mode enabled and developer services
+available. The earlier wireless iPhone14ProMax (`iPhone15,3`, iOS26.6.1) still
+reports Developer Mode disabled. These are separate devices. The wired Pro is
+the next qualification target; its results cannot establish base iPhone14 or
+ProMax limits. The first observation found no signed-in Xcode account. After
+owner sign-in, Xcode shows a Personal Team, but the Mac still has zero valid
+signing identities; development signing is not yet configured for the harness.
+No physical app was installed or run.
 
-Enable Developer Mode on the phone, restart and confirm it on-device using
+Connect the phone with a cable and keep it unlocked. In Xcode27, open
+Xcode > Open Developer Tool > Device Hub, select the physical phone and follow
+pairing instructions; accept Trust This Computer on the phone if prompted.
+Earlier Xcode versions use Window > Devices and Simulators. Developer Mode may
+stay hidden in Settings until pairing starts. Then enable Developer Mode under
+Settings > Privacy & Security, restart and confirm it on-device using
 [Apple's instructions](https://developer.apple.com/documentation/xcode/enabling-developer-mode-on-a-device).
-Assign the app target to a signing team with automatic signing using
+In Xcode > Settings > Apple Accounts, sign in with your Apple Account. Open
+`apple/TokletHarness.xcodeproj`, select TARGETS > TokletHarness > Signing &
+Capabilities, enable Automatically manage signing and choose your team.
+A Personal Team supports local device testing without paid membership. Use
 [Apple's team setup instructions](https://help.apple.com/xcode/mac/current/en.lproj/dev23aab79b4.html).
-Account authentication and the phone's confirmation require its owner.
+Account authentication and the phone's confirmation require its owner. Keep
+credentials and private device identifiers out of committed files. A successful
+sign-in alone does not prove that a valid development certificate/profile exists;
+verify the signed app and physical installation before accepting test results.
+The [latest setup observation](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
+records readiness only, not physical execution or qualification.
 See [the device qualification protocol](DEVICE_QUALIFICATION.md) before accepting
 any mobile model/context limit or closing M7.

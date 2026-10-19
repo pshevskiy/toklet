@@ -664,3 +664,18 @@ Astra accepted task6/M7.2 with no remaining findings after checking current and
 historical bindings,58copies, installed files, ten states, clean shutdown,
 helper checks, final UI/lifecycle wording and redacted device status.
 M7.3 and overall M7 remain pending physical qualification.
+
+The [physical setup follow-up](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
+distinguishes the newly connected physical iPhone14Pro from the earlier
+wireless ProMax and all simulators. The wired Pro's Developer Mode and developer
+services are ready; owner account sign-in and Personal Team availability are
+verified, while development signing remains open. The harness
+guide now explains initiating Xcode pairing before the hidden Developer Mode
+setting appears and assigning a Personal Team for local testing. Private
+inventories remain outside committed evidence. No engine/app code, numerical
+gate, supported phone limit or milestone completion changes; physical runs
+have not started.
+
+Astra accepted this setup documentation task with no remaining findings after
+verifying all12 pins,354 relative link targets and private-to-redacted facts.
+No physical workload or engine change is included.

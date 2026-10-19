@@ -1,0 +1,93 @@
+{
+  "format": "toklet-m7-physical-setup-observation-v1",
+  "observed_date_utc": "2026-10-19",
+  "recorded_at_utc": "2026-10-19T19:53:33.519282+00:00",
+  "engine_commit": "3dd9c8e577be911668e82de910536c7ed2dfe058",
+  "scope": "Setup readiness only; not a signed build, physical app execution or device qualification.",
+  "previous_wireless_device": {
+    "productType": "iPhone15,3",
+    "marketingName": "iPhone 14 Pro Max",
+    "reality": "physical",
+    "osVersionNumber": "26.6.1",
+    "developerModeStatus": "disabled",
+    "ddiServicesAvailable": false,
+    "pairingState": "paired",
+    "tunnelState": "connected",
+    "transportType": "localNetwork",
+    "validSigningIdentities": 0
+  },
+  "current_wired_target": {
+    "productType": "iPhone15,2",
+    "marketingName": "iPhone 14 Pro",
+    "reality": "physical",
+    "developerModeStatus": "enabled",
+    "ddiServicesAvailable": true,
+    "osVersionNumber": "27.0.1",
+    "pairingState": "paired",
+    "transportType": "wired",
+    "tunnelState": "connected"
+  },
+  "signing": {
+    "valid_local_identities": 0,
+    "xcode_apple_account_signed_in": false,
+    "observation": "Elevated security find-identity -v -p codesigning returned 0 valid identities; Xcode Settings > Apple Accounts displayed Sign In with no account."
+  },
+  "observation_commands": [
+    "devicectl list devices --timeout 25 --quiet --json-output -",
+    "devicectl device info details --device SELECTED_DEVICE --timeout 25 --quiet --json-output -",
+    "devicectl device info details --device WIRED_IPHONE15_2 --timeout 40 --quiet --json-output -",
+    "devicectl device info ddiServices --device WIRED_IPHONE15_2 --timeout 40 --quiet --json-output -",
+    "security find-identity -v -p codesigning"
+  ],
+  "private_input_pins": {
+    "artifacts/m7-device-availability-v3/private-details.json": "a4edf9c45c0b8b55ccb1cb19c22c7483f957cfea03e91cb193b1319ed7651669",
+    "artifacts/m7-device-availability-v3/private-inventory.json": "35e96ac89dfe304faf14bb255808bc1e90a01ee9ae1a67b11768d310012e4d4a",
+    "artifacts/m7-device-availability-v3/private-wired-ddiServices.json": "b9b51422c2ec994d3ed02e0f052a84f74645e8e6d95e3665e67af6e80a276cc3",
+    "artifacts/m7-device-availability-v3/private-wired-details.json": "86d323c1da00259c0176b752018da7b9de5ca59f36dd64684cece305540d9992"
+  },
+  "redacted_input_pins": {
+    "artifacts/m7-device-availability-v3/redacted-summary.json": "321923972ab72009b2bfba1ddaa775f32e0d692cfe83a80cc80637416b63e455",
+    "artifacts/m7-device-availability-v3/redacted-wired-summary.json": "48bfb7e82ae9af223c54c69b48082d8dfb920e8793868425e4a3f78adb2aa8f1",
+    "artifacts/m7-device-availability-v3/redacted-post-signin.json": "2bf98ef3523ad28005db5a2ff5e77eba8b5190232321a4c909f6a8230cf651a3"
+  },
+  "prior_qualification_pin": {
+    "path": "benchmarks/results/2026-10-19-m7-swift-harness-qualification-v1.json",
+    "sha256": "689dcf5b4a6f699482367ad7cd814cbc8424fd2a322c97b46e01c22f01d4c3bb"
+  },
+  "prior_docs_revision": "3dd9c8e",
+  "document_pins": {
+    "apple/README.md": "bae8ec412ac66e161913b03c5f2ebe6a7e062aac325a3aa794543d212957c77c",
+    "apple/DEVICE_QUALIFICATION.md": "745ff66defcca86e05926ab8f6fa578813212e3fc54aa10df7218ff2ef2becda",
+    "PLAN.md": "b9c2da46fb6b13ab6e3e9d15b1c709c0692809043d4c457cdf6b3813023f378b",
+    "docs/improvements.md": "fa260984bca734555a43f40fff52edf949ecc7877f4c20b5761b7d700fd43404"
+  },
+  "physical_app_signed": false,
+  "physical_app_installed": false,
+  "physical_app_tested": false,
+  "physical_device_qualified": false,
+  "m7_3_complete": false,
+  "m7_complete": false,
+  "limitations": [
+    "A wired iPhone 14 Pro is a distinct qualification target; no base iPhone 14, ProMax or simulator substitution.",
+    "Developer services responded successfully; no inference app was launched.",
+    "Physical memory, numerical/state, lifecycle, sustained throughput, thermal and energy evidence is absent.",
+    "Setup observations may change after user account authentication."
+  ],
+  "review": {
+    "reviewer": "Astra",
+    "accepted": true,
+    "remaining_findings": [],
+    "scope": "Setup documentation only; 12 pins and 354 local links verified, private-to-redacted observations consistent. Physical execution/M7.3/M7 remain unqualified."
+  },
+  "post_owner_signin": {
+    "observed_at_utc": "2026-10-19T19:57:32.269152+00:00",
+    "xcode_apple_account_signed_in": true,
+    "personal_team_available": true,
+    "valid_local_signing_identities": 0,
+    "source": "Xcode Apple Accounts and isolated target Team selector observed through native UI; elevated security find-identity check",
+    "team_selected_for_harness": false,
+    "development_signing_creation": "awaiting explicit action confirmation",
+    "physical_app_installed": false,
+    "physical_app_tested": false
+  }
+}

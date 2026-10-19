@@ -2,10 +2,15 @@
 
 Status: not executed. M7.1 packaging and M7.2 simulator integration do not close
 M7.3. No iPhone memory budget, model/context limit, sustained rate, thermal
-behavior or energy result is accepted. The paired device is a physical
-iPhone14ProMax (`iPhone15,3`), not the Inference Lab iPhone14 simulator. Qualify
-its limits under its exact name; do not transfer them to a base iPhone14, iPad
-or another Mac. Base iPhone14 evidence remains separate.
+behavior or energy result is accepted. The current wired target is a physical
+iPhone14Pro (`iPhone15,2`, iOS27.0.1), with Developer Mode enabled and developer
+services available. The older wireless iPhone14ProMax (`iPhone15,3`, iOS26.6.1)
+still reports Developer Mode disabled. Neither is the Inference Lab iPhone14
+simulator. Qualify each device under its exact name; do not transfer Pro results
+to a base iPhone14, ProMax, iPad or another Mac. Base iPhone14 evidence remains
+separate. The [setup observation](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
+records successful owner account sign-in and an available Personal Team, but
+zero valid signing identities and no signed or installed physical app.
 
 ## Admission and identity
 
@@ -76,5 +81,6 @@ Publish reproducible physical receipts, exact workload/configuration, numerical
 and lifecycle outcomes, whole-memory evidence, at least600s sustained samples,
 thermal behavior and energy availability. List passing device/model/context
 limits and failed/rejected cases. Keep M7.3 and M7 pending until this evidence
-exists and is reviewed. Current Developer Mode/signing prerequisites block
-physical execution; no desktop or simulator result waives this gate.
+exists and is reviewed. Development signing remains a prerequisite for
+the wired Pro's first physical execution; no desktop or simulator result waives
+this gate. Pro qualification cannot by itself close a base iPhone14 requirement.
