@@ -406,7 +406,11 @@ fn later_callback_failure_reports_already_delivered_events_and_can_continue() {
 fn bridge_reservation_covers_owned_handle_and_wrapper_allocations() {
     let mut model_bytes = size_of::<model::Model>();
     let mut session_bytes = size_of::<session::Session<'static>>();
-    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    #[cfg(all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    ))]
     {
         model_bytes = model_bytes.max(size_of::<crate::metal::Model>());
         session_bytes = session_bytes.max(size_of::<crate::metal::Session<'static>>());
@@ -425,7 +429,11 @@ fn bridge_reservation_covers_owned_handle_and_wrapper_allocations() {
     // Keep both feature configurations warning-free without hiding layout checks.
     let _ = (&mut model_bytes, &mut session_bytes);
 }
-#[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+#[cfg(not(all(
+    feature = "metal",
+    any(target_os = "macos", target_os = "ios"),
+    target_arch = "aarch64"
+)))]
 #[test]
 fn unavailable_metal_returns_explicit_error_without_cpu_fallback() {
     let mut m = ptr::dangling_mut::<ModelHandle>();

@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "workers": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/aarch64-apple-darwin-link-smoke",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 75914,
+      "stdout": "artifacts/m7-apple-package-v3/logs/mac-cpu.stdout",
+      "stderr": "artifacts/m7-apple-package-v3/logs/mac-cpu.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/aarch64-apple-darwin-link-smoke",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2",
+        "metal"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 75916,
+      "stdout": "artifacts/m7-apple-package-v3/logs/mac-metal.stdout",
+      "stderr": "artifacts/m7-apple-package-v3/logs/mac-metal.stderr"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "spawn",
+        "66CC7053-4EFC-4007-8A25-9FF7450CB411",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/aarch64-apple-ios-sim-link-smoke",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 75918,
+      "stdout": "artifacts/m7-apple-package-v3/logs/sim-cpu.stdout",
+      "stderr": "artifacts/m7-apple-package-v3/logs/sim-cpu.stderr"
+    }
+  ],
+  "physical_device_qualified": false
+}

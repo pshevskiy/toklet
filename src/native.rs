@@ -79,12 +79,20 @@ pub type Emit = Option<unsafe extern "C" fn(*mut c_void, TokenEvent) -> u32>;
 
 enum NativeModel {
     Cpu(Box<model::Model>),
-    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    #[cfg(all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    ))]
     Metal(Box<crate::metal::Model>),
 }
 enum NativeSession {
     Cpu(Box<session::Session<'static>>),
-    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    #[cfg(all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    ))]
     Metal(Box<crate::metal::Session<'static>>),
 }
 impl NativeSession {
@@ -97,14 +105,22 @@ impl NativeSession {
         // Backend selection is once per request, outside generation/kernels.
         match self {
             Self::Cpu(s) => generation::generate(s.as_mut(), request, cancel, emit),
-            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            #[cfg(all(
+                feature = "metal",
+                any(target_os = "macos", target_os = "ios"),
+                target_arch = "aarch64"
+            ))]
             Self::Metal(s) => generation::generate(s.as_mut(), request, cancel, emit),
         }
     }
     fn reset(&mut self) {
         match self {
             Self::Cpu(s) => s.reset(),
-            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            #[cfg(all(
+                feature = "metal",
+                any(target_os = "macos", target_os = "ios"),
+                target_arch = "aarch64"
+            ))]
             Self::Metal(s) => s.reset(),
         }
     }
@@ -243,7 +259,11 @@ fn report(s: &NativeSession) -> Report {
     }
     match s {
         NativeSession::Cpu(s) => snapshot(s.as_ref(), s.memory().admitted_bytes),
-        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        #[cfg(all(
+            feature = "metal",
+            any(target_os = "macos", target_os = "ios"),
+            target_arch = "aarch64"
+        ))]
         NativeSession::Metal(s) => snapshot(s.as_ref(), s.memory().admitted_bytes),
     }
 }
@@ -326,7 +346,11 @@ pub unsafe extern "C" fn toklet_model_load_metal(
             } else {
                 Some(local_path(packed, packed_len)?)
             };
-            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            #[cfg(all(
+                feature = "metal",
+                any(target_os = "macos", target_os = "ios"),
+                target_arch = "aarch64"
+            ))]
             {
                 let options = weights::LoadOptions {
                     context_limit: options.capacity,
@@ -346,7 +370,11 @@ pub unsafe extern "C" fn toklet_model_load_metal(
                 })));
                 Ok(())
             }
-            #[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+            #[cfg(not(all(
+                feature = "metal",
+                any(target_os = "macos", target_os = "ios"),
+                target_arch = "aarch64"
+            )))]
             {
                 let _ = (options, path, packed);
                 Err(fail(
@@ -402,7 +430,11 @@ pub unsafe extern "C" fn toklet_session_create(
                     session::Session::new(model, opts)
                         .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
                 )),
-                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                #[cfg(all(
+                    feature = "metal",
+                    any(target_os = "macos", target_os = "ios"),
+                    target_arch = "aarch64"
+                ))]
                 NativeModel::Metal(model) => {
                     use crate::metal::{
                         AttentionMode, NormalizationMode, ProjectionMode, ReadbackMode, Session,

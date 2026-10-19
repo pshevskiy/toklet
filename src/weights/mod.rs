@@ -752,14 +752,22 @@ pub fn load_qwen(directory: &Path, options: LoadOptions) -> Result<LoadedModel, 
 
 /// Validated streaming source for the Metal Half loader. No full FP32 model is
 /// constructed. Tensor names/shapes are resolved before any GPU allocation.
-#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+#[cfg(all(
+    feature = "metal",
+    any(target_os = "macos", target_os = "ios"),
+    target_arch = "aarch64"
+))]
 pub(crate) struct HalfSource {
     pub config: Config,
     pub shapes: BTreeMap<String, Vec<usize>>,
     source: Source,
     embedding_digest: Option<[u8; 32]>,
 }
-#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+#[cfg(all(
+    feature = "metal",
+    any(target_os = "macos", target_os = "ios"),
+    target_arch = "aarch64"
+))]
 impl HalfSource {
     pub fn open(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
         if options.memory_limit_bytes == 0

@@ -1,0 +1,17 @@
+Monitoring boot status for Inference Lab iPhone 14 (66CC7053-4EFC-4007-8A25-9FF7450CB411).
+Booting device...
+[2026-10-19 18:28:37 +0000] Status=0, isTerminal=NO, Elapsed=00:00.
+	Booting
+
+[2026-10-19 18:28:38 +0000] Status=1, isTerminal=NO, Elapsed=00:01.
+	Waiting on BackBoard
+
+[2026-10-19 18:28:39 +0000] Status=4, isTerminal=NO, Elapsed=00:02.
+	Waiting on System App
+
+[2026-10-19 18:28:39 +0000] Status=4, isTerminal=NO, Elapsed=00:02.
+	Waiting on System App
+
+[2026-10-19 18:28:40 +0000] Status=4294967295, isTerminal=YES, Elapsed=00:03.
+	Finished
+

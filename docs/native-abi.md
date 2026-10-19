@@ -82,9 +82,11 @@ The same retained owner, dedicated-thread requirement, busy guard, error/panic
 policy and cancellation flag apply. Boxed model/session allocations are fixed
 at creation and covered by the checked bridge reservation. Multiple sessions
 share the immutable model allocation and retain separate KV/scratch. Device and
-API capability checks still apply; this entrypoint is available on the current
-supported Apple Silicon macOS Metal build, with explicit unsupported errors in
-other builds. iOS deployment is a separate portability/packaging task.
+API capability checks still apply; this entrypoint compiles for arm64 macOS15+ and iOS18+ Metal builds, with
+explicit unsupported errors in other builds. The [Apple package report](experiments/2026-10-19-m7-apple-package.md)
+records separate Mac/device/simulator XCFramework slices, exact C export/linkage
+and deployment checks. Mac Metal and simulator CPU integration pass; physical
+iPhone Metal runtime, quality and supported limits remain unqualified.
 
 The [Metal bridge report](experiments/2026-10-19-m7-metal-abi.md) separates
 integration/state/combined logical admission checks from performance and mobile

@@ -1,0 +1,5 @@
+2026-10-19 21:21:10.141 xcodebuild[75830:35826180]  DVTFilePathFSEvents: Failed to start fs event stream.
+2026-10-19 21:21:10.282 xcodebuild[75830:35826178] [MT] DVTDeveloperPaths: Failed to get length of DARWIN_USER_CACHE_DIR from confstr(3), error = Error Domain=NSPOSIXErrorDomain Code=5 "Input/output error". Using NSCachesDirectory instead.
+2026-10-19 21:21:10.602 xcodebuild[75830:35826181] CoreSimulatorService connection became invalid.  Simulator services will no longer be available.
+2026-10-19 21:21:10.637 xcodebuild[75830:35826216]  IDEDownloadableMetalToolchainCoordinator: Failed to remount the Metal Toolchain: No downloaded assets found: Failed querying assets for assetType (com.apple.MobileAsset.MetalToolchain), queryDict ({
+}), installedOnly (1)

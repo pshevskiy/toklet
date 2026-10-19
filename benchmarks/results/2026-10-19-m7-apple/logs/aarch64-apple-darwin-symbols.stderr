@@ -1,0 +1,8 @@
+/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/target/aarch64-apple-darwin/release/libtoklet.a:rustc_std_workspace_alloc-254a7ed22f26dd9e.rustc_std_workspace_alloc.77779b7ab4ffcb25-cgu.0.rcgu.o: no symbols
+/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/target/aarch64-apple-darwin/release/libtoklet.a:unwind-752134edb4592c89.unwind.be1585ec29191c44-cgu.0.rcgu.o: no symbols
+/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/target/aarch64-apple-darwin/release/libtoklet.a:cfg_if-f157901651a0fbf7.cfg_if.90489991a60cf6e2-cgu.0.rcgu.o: no symbols
+/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/target/aarch64-apple-darwin/release/libtoklet.a:libc-97c97923a97d61ff.libc.6eca78c57d71bb04-cgu.0.rcgu.o: no symbols
+/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/target/aarch64-apple-darwin/release/libtoklet.a:rustc_std_workspace_core-99d3baad06697c99.rustc_std_workspace_core.f5ea1fd480cabeac-cgu.0.rcgu.o: no symbols
+/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/target/aarch64-apple-darwin/release/libtoklet.a:compiler_builtins-d4cfd55d1b455f62.compiler_builtins.fd478fddefe92704-cgu.208.rcgu.o: no symbols
+/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/target/aarch64-apple-darwin/release/libtoklet.a:compiler_builtins-d4cfd55d1b455f62.compiler_builtins.fd478fddefe92704-cgu.210.rcgu.o: no symbols
+/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v3/target/aarch64-apple-darwin/release/libtoklet.a:compiler_builtins-d4cfd55d1b455f62.compiler_builtins.fd478fddefe92704-cgu.211.rcgu.o: no symbols

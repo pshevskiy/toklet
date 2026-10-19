@@ -1415,9 +1415,9 @@ For the first Qwen config, calculated KV payload is `2 × 24 × tokens × 2 × 6
 
 ## M7 Integrate and qualify a physical iPhone
 
-In progress,19 October2026. The first [CPU raw-ID C boundary component](docs/experiments/2026-10-19-m7-native-abi.md) adds explicit ownership/thread/callback/cancellation/error contracts and checked static library integration. Metal/iOS integration, packaging, Swift/frontend harness and physical-device qualification remain before M7 exit.
+In progress,19 October2026. The first [CPU raw-ID C boundary component](docs/experiments/2026-10-19-m7-native-abi.md) adds explicit ownership/thread/callback/cancellation/error contracts and checked static library integration. The [Apple packaging component](docs/experiments/2026-10-19-m7-apple-package.md) adds three checked arm64 slices and MacCPU/MacMetal/simulatorCPU integration. Swift harness and physical-device qualification remain before M7 exit.
 
-- [ ] **M7.1 Add the native boundary.** Build a thin C ABI or other explicitly chosen Swift bridge with opaque model/session handles, ownership rules, structured errors, cancellation, and token events. Contain Rust panics at the boundary. Package libraries for supported Apple targets and set deployment requirements from qualified APIs.
+- [x] **M7.1 Add the native boundary.** Build a thin C ABI or other explicitly chosen Swift bridge with opaque model/session handles, ownership rules, structured errors, cancellation, and token events. Contain Rust panics at the boundary. Package libraries for supported Apple targets and set deployment requirements from qualified APIs.
 - [ ] **M7.2 Add a minimal Swift harness.** Exercise load, prompt, token streaming, continuation, reset, and cancellation. Run inference away from the UI thread and define callback lifetime and serialization. Reuse the same Rust engine and local artifact format.
 - [ ] **M7.3 Qualify the physical device.** Measure an independent iPhone 14 memory budget, thermal behavior, sustained throughput, and energy where instrumentation is available. Test inactive/background transitions, memory warnings, interruption during generation, resume/replay, and orderly resource release. Add iPad and newer Macs as separate device qualifications.
 

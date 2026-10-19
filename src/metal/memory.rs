@@ -257,12 +257,16 @@ impl Gpu {
         self.pipelines[kernel as usize].threadExecutionWidth()
     }
     pub fn new() -> Result<Self> {
+        // Safe/Precise compile options require macOS15 or iOS18 in the SDK.
+        // Keep the runtime guard before sending either selector; simulator and
+        // device still have to pass unified-memory/MPS/pipeline capabilities.
+        let minimum = if cfg!(target_os = "ios") { 18 } else { 15 };
         if NSProcessInfo::processInfo()
             .operatingSystemVersion()
             .majorVersion
-            < 15
+            < minimum
         {
-            return Err(Error::Unsupported("Metal requires macOS15+"));
+            return Err(Error::Unsupported("Metal requires macOS15+ or iOS18+"));
         }
         let device = MTLCreateSystemDefaultDevice().ok_or(Error::Unsupported("no Metal device"))?;
         if !device.hasUnifiedMemory() || !unsafe { MPSSupportsMTLDevice(Some(&device)) } {

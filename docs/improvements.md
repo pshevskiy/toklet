@@ -609,3 +609,19 @@ unqualified; fresh release validation passes all244 endpoint bindings with clean
 exits. Astra accepted source, native evidence and final publication after all7source/
 16evidencepins/244validationbindings,201frozenpayloads and14exactcopies verified.
 M7 iOS packaging, Swift/frontend and physical-device qualification remain open.
+
+The [M7 Apple package task](experiments/2026-10-19-m7-apple-package.md)
+extends production Metal/native target gates to arm64 iOS and guards precise-math
+APIs with macOS15/iOS18 minimums. Separate Mac/device/simulator static-library
+slices, C linkage/export/deployment checks and XCFramework file verification
+prepare native integration without changing numerical kernels or defaults.
+The builder admits a controlled environment and absent Cargo configurations,
+uses isolated temporary/build outputs, and drains owned descendant processes.
+Ten package and seven integration checks cover cleanup, environment, frozen
+provenance and package-integrity failures. Three release slices compile/link with
+exact exports/platform/minimums; CPU107/Metal119 tests, fmt and strictClippy pass.
+The bounded simulator timeout witness is stopped and verified Shutdown.
+Physical-device qualification and overall M7 completion remain pending.
+Astra accepted the final task after verifying41source/115evidencepins/94copies,
+protected binaries, historical source identities, all slices and native/shutdown
+results. M7.1 is complete in this scope; Swift and physical M7 remain open.
