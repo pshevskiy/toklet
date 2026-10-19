@@ -1,0 +1,77 @@
+{
+  "format": "toklet-m6-context-checks-v1",
+  "passed": true,
+  "recorded_utc": "2026-10-19T04:40:52.400680+00:00",
+  "python_tests": 105,
+  "rust_counts": {
+    "cpu": {
+      "passed": 97,
+      "failed": 0,
+      "ignored": 8
+    },
+    "metal": {
+      "passed": 110,
+      "failed": 0,
+      "ignored": 58
+    }
+  },
+  "rust_commands": [
+    [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--offline",
+      "--all-targets",
+      "--features",
+      "metal",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline"
+    ],
+    [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "--features",
+      "metal"
+    ]
+  ],
+  "command_group_exit_code": 0,
+  "cargo_target_directory": "artifacts/m6-final-check-target-v1",
+  "protected_cpu_binaries": {
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+  },
+  "logs": {
+    "artifacts/m6-context-canonical-python-tests-v1.log": "1adbcbf21b42a3c70dcc344ba7aa373ba8d4fabd525d64e7ecaf8b18c77634b5",
+    "artifacts/m6-context-reviewed-closure-replay-v1.log": "8a5740459b9f7c09353335c2edda24a01659ef8101495a92df3b6412592347a8",
+    "artifacts/m6-final-rust-checks-v1.log": "0fd0526610bc4cccadb46ea266b60a10ba50792c8db7f84d72921bd24144d65b"
+  },
+  "native_idle_check": {
+    "observed_utc": "2026-10-19T04:32:29+00:00",
+    "command": [
+      "ps",
+      "-p",
+      "88823,81220,81238",
+      "-o",
+      "pid=,ppid=,pgid=,state=,command="
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "all_owned_actors_absent": true,
+    "queue_complete_utc": "2026-10-19T04:32:04.574645+00:00"
+  },
+  "scope": "Checks run after completed native collection; ignored Cargo hardware/model cases are not claimed as executed; real-model context collection is separately replayed."
+}

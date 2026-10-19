@@ -1,0 +1,14 @@
+{
+  "format": "toklet-m6-owned-native-queue-v1",
+  "pid": 88823,
+  "pgid": 88823,
+  "command": [
+    "/Users/coloner/work/rust/toklet/.venv/bin/python",
+    "/Users/coloner/work/rust/toklet/artifacts/m6-remaining-native-queue-v2.py"
+  ],
+  "source_sha256": "fb8eae3f8c0e2b0b1cfb2d6e1bb2d7a47690295c13baf9d25c2a9c2b97b6f1cc",
+  "launched_utc": "2026-10-16T19:51:37.130385+00:00",
+  "supervisor_output": "artifacts/m6-remaining-native-queue-v2.supervisor.log",
+  "qualification": false,
+  "scope": "Owned serial collector supervision; no measurement acceptance"
+}

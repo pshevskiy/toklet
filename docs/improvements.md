@@ -553,3 +553,17 @@ fixture proving the separate-session child is reaped before supervisor exit.
 No numerical request, quality gate or collector timeout changes. Astra accepted publication after3source/11evidencepins and11exactcopies, with
 interruption preservation/role counts/report verified. This is prelaunch CPU
 supervision qualification; numerical boundary coverage/M6 remain open.
+
+The [complete M6 context qualification](experiments/2026-10-19-m6-context.md)
+closes all32 frozen roles across both models and4K/8K/16K/32K total tokens.
+Root and Astra replay22,752 events/429bindings byte identically, preserving the
+original automatic flags and only the two exact manually reviewed winner cases.
+All ordinary/independent boundary runs finish full-capacity recomputation and
+state-preserving overflow checks with clean exits and complete<=6GiB memory.
+Max admission/native bytes are2,770,507,468/2,518,502,184 small and
+4,576,870,036/4,357,935,304 larger.105Python/97CPU/110Metal-feature tests,
+formatting and strict Clippy pass; protected CPU binaries stay unchanged.
+Long timings remain descriptive, profiles measure completed GPU attention
+fractions, and cyclic stress does not establish natural long-document ability.
+Astra accepted code, data and final publication after all4source/126evidence
+pins and107exactcopies verified. Separate KV/M6 retention synthesis remains pending.
