@@ -7,7 +7,7 @@ The [improvement record](docs/improvements.md) collects implemented capabilities
 measured speedups, memory/scheduling changes, numerical fixes and rejected
 experiments, with links to their qualification evidence.
 
-M5 is complete on the qualified Apple M1 Pro: the small model retains compensated Half, and the larger frozen group8 Q4 v2 model passes full quality gates with a confirmed22.20–23.69% tiled-prefill gain. Both are explicit Metal choices; CPU/GPU Original/FullLogits/chunk128 defaults stay unchanged. The [release report](docs/experiments/2026-10-15-m5-release.md) records full workload/application/sustained and memory evidence, supported invocation, rejected candidates and baseline limits. M6/M7 remain pending.
+M5 is complete on the qualified Apple M1 Pro: the small model retains compensated Half, and the larger frozen group8 Q4 v2 model passes full quality gates with a confirmed22.20–23.69% tiled-prefill gain. Both are explicit Metal choices; CPU/GPU Original/FullLogits/chunk128 defaults stay unchanged. The [release report](docs/experiments/2026-10-15-m5-release.md) records full workload/application/sustained and memory evidence, supported invocation, rejected candidates and baseline limits. M6 is also complete for the selected configurations; see the [longer-context release](docs/experiments/2026-10-19-m6-release.md). M7 remains pending.
 
 The library provides a complete scalar decoder with FP32 storage, immutable weights, reusable scratch, tied output projection, and deterministic greedy selection. A separate diagnostic path retains all intermediate arrays. Projections, normalization, and softmax use FP64 accumulation for stability; the original FP32 projection functions remain available. The tiny decoder matches its frozen independent reference, and Qwen matches pinned Transformers on short numerical probes. Local safetensors loading supports FP32, FP16, BF16, and indexed shards. Bounded [CPU sessions](src/session.rs) retain per-layer KV, track pending versus evaluated tokens, and support exact append, cached prompts, reset, and replay. The CLI streams greedy generation with local tokenizer assets, the qualified Qwen chat template, stop IDs, cancellation and statistics.
 
@@ -60,13 +60,16 @@ target/release/toklet --model models/Qwen2.5-0.5B-Instruct --prompt 'Answer brie
 target/release/toklet --model models/Qwen2.5-0.5B-Instruct --tokens 9707,11,358,2776 --max-new-tokens 4 --json
 ```
 
-`--raw` bypasses chat formatting; `--messages` and `--tools` accept local JSON arrays. `--token-file` accepts little-endian u32 IDs. Prompt plus requested output must fit `--context-capacity` (default 2,048). CPU sessions admit at most 2,048 positions. Experimental Metal admission permits explicit capacities through 32,768 only within the source model and 6 GiB budget; long-context quality, timing and application qualification remain pending in [M6](PLAN.md#m6-qualify-longer-context-and-attention). Admission occurs before changing session state. The default backend is `cpu`. On Apple Silicon macOS 15+, build with `--features metal` and select `--backend metal` for the resident FP16 backend. Model EOS IDs are hidden from output but remain pending in history; `--no-eos` disables them and repeated `--stop-token` adds IDs. Sampling has no penalties or RNG.
+`--raw` bypasses chat formatting; `--messages` and `--tools` accept local JSON arrays. `--token-file` accepts little-endian u32 IDs. Prompt plus requested output must fit `--context-capacity` (default 2,048). CPU sessions admit at most 2,048 positions. Explicit Metal Online configurations are qualified at 4,096, 8,192, 16,384 and 32,768 total tokens for the selected compensated Half and larger frozen Q4 v2 models on Apple M1 Pro, within the source model and 6 GiB budget. The [M6 release](docs/experiments/2026-10-19-m6-release.md) records full numerical/state/memory and maximum application checks; cyclic stress does not establish natural long-document ability. Admission occurs before changing session state. The default backend is `cpu`. On Apple Silicon macOS 15+, build with `--features metal` and select `--backend metal` for the resident FP16 backend. Model EOS IDs are hidden from output but remain pending in history; `--no-eos` disables them and repeated `--stop-token` adds IDs. Sampling has no penalties or RNG.
 
 `--metal-attention online` selects bounded online-softmax attention; `reference`
 remains default. The [reviewed short-workload comparison](docs/experiments/2026-10-15-m6-short-performance.md)
 covers the selected compensated Half and frozen Q4 v2 configurations at 2K
-capacity. Its numerical timing gains do not establish application or long-context
-support.
+capacity. The [complete M6 qualification](docs/experiments/2026-10-19-m6-release.md) adds
+tested 4K/8K/16K/32K cases with FP16 KV and maximum-context application state
+and memory evidence. Numerical speedups exclude tokenization and visible text.
+Select `--context-capacity 32768` explicitly and reserve output positions inside
+that capacity; default capacity remains 2,048.
 
 `--cpu-projection tiled` selects the opt-in ordered FP64 projection tile before
 session creation; `scalar` remains default. JSON readiness and statistics name
@@ -312,7 +315,7 @@ The [CPU retention decision](docs/experiments/2026-10-12-cpu-tiled-retention.md)
 closes M3.1 and M3: retain the qualified tiled projection as an opt-in variant,
 with scalar as default/reference. Both primary comparisons improve warm TTFT
 by about 77.6%; complete workload/application and frozen quality/memory gates
-pass their recorded scope. Functional M4 is complete as recorded below; M5 is qualified in the [15 October release report](docs/experiments/2026-10-15-m5-release.md), and M6/M7 remain pending.
+pass their recorded scope. Functional M4 is complete as recorded below; M5 is qualified in the [15 October release report](docs/experiments/2026-10-15-m5-release.md), and M6 is qualified in the [19 October release](docs/experiments/2026-10-19-m6-release.md). M7 remains pending.
 
 The [Metal gating tail extension](docs/experiments/2026-10-12-metal-gating-tails.md)
 checks nine bounded lengths with exact Half outputs and full inactive-lane

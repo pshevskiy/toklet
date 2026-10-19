@@ -1,11 +1,12 @@
 # Toklet improvement record
 
-Updated 15 October 2026. This records implemented capabilities, measured benefits,
+Updated 19 October 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
-artifact hashes, raw samples, checks and Astra reviews. M0–M5 are complete in their
+artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
 Q4 v2 configurations with full quality, repeated workload/application, sustained
-and memory evidence. M6 is in progress; M7 remains pending. CPU/scalar and the existing GPU/readback/
+and memory evidence. M6 adds explicit Online attention, qualified4K/8K/16K/32K
+context cases and final FP16 KV retention; M7 remains pending. CPU/scalar and the existing GPU/readback/
 chunk defaults stay unchanged. Speedups below apply to the named workload and
 comparison, and cannot be added together. See the [M5 release decision](experiments/2026-10-15-m5-release.md).
 
@@ -567,3 +568,17 @@ Long timings remain descriptive, profiles measure completed GPU attention
 fractions, and cyclic stress does not establish natural long-document ability.
 Astra accepted code, data and final publication after all4source/126evidence
 pins and107exactcopies verified. Separate KV/M6 retention synthesis remains pending.
+
+The [M6 release decision](experiments/2026-10-19-m6-release.md) completes
+M6.1–M6.3 for the selected small compensated Half and larger frozen Q4 v2 models
+on Apple M1 Pro. It joins the unchanged full10,000-target loss/100-task gates,
+all32 context roles, both actual32K applications and a separate final KV decision.
+Retain FP16 after complete<=6GiB context/application qualification; preserve
+small positive I8 component gains and larger sub5% gains, with no I8 production
+adoption or waived cache-write/fullquality/state/end-to-end gates. Repeated
+short512/128 numerical request reductions76.26/76.24% small and73.02/73.03% larger
+remain scoped to their measurements; long timing is descriptive and natural
+long-document ability remains unqualified. Defaults/baseline limits/rejections
+stay unchanged. Astra accepted final synthesis/publication after independently verifying all497
+bindings/11exactprerequisites/421localtargets and the final FP16 decision.
+M6.1–M6.3 are complete in this qualified scope; M7 stays pending.
