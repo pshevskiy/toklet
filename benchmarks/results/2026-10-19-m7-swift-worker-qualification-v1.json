@@ -1,0 +1,618 @@
+{
+  "format": "toklet-m7-swift-worker-v1",
+  "passed": true,
+  "review": {
+    "reviewer": "Astra",
+    "accepted": true,
+    "remaining_findings": [],
+    "scope": "Astra verified30source/evidencebindings,18copies, exactoptimizedSwiftcompilecommand andfourclean toolchain/compile/CPU/Metalexecutions; fresh10state sequences match. Component source/data/publicationaccepted; iOS/physical/M7pending. Reviewfinished."
+  },
+  "source_parent": "03c1c090bc8edf19557d47dd5c319bb340650996",
+  "source_pins": {
+    "apple/Harness/NativeWorker.swift": "c5bc8448b77bff7e704651731fa6c6bbd8b6e435352ccaea58d2624c8bf38927",
+    "apple/tests/swift/WorkerChecks.swift": "e70d2c4c8516c5a5600c94a12fb533ca4512eb130eaab7fe3d9b5f1506fdf103",
+    "apple/tests/swift/main.swift": "6bd1b64fb1d4673b086fbe1e9a58db302f0f879bca034653618bb8e94e9f63dc"
+  },
+  "evidence_pins": {
+    "benchmarks/results/2026-10-19-m7-swift-worker/swift-worker-compile-v4.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-swift-worker/swift-worker-toolchain-v1.log": "dd5881ad49c05a44ae3eec513dbbb0a782ce8b2dfb0cf07bf75ab553150a8ad6",
+    "benchmarks/results/2026-10-19-m7-swift-worker/driver.py": "1ed386784b1312fd2c17733f91903026b0e51b10b7800fdf8ebfd01d9b347810",
+    "benchmarks/results/2026-10-19-m7-swift-worker/validation.json": "c57046beb220afb25ed0e6fd14a27537599c36cf641d00d97093089e39e491d7",
+    "benchmarks/results/2026-10-19-m7-swift-worker/cpu.stdout": "1330521caa57482009e4f35e0e4afcd153522ba4f18f306d20de4d267455b2e8",
+    "benchmarks/results/2026-10-19-m7-swift-worker/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-swift-worker/metal.stdout": "ad989e206e98fd1c09d8535c0810d19b85c5157a0e08cff41f52d91dd6b4ef3c",
+    "benchmarks/results/2026-10-19-m7-swift-worker/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-worker-check-v4": "67eb888ba15c9f1cc291ec67aadd55e4091e2381ed05af1ab335430179b36da0",
+    "artifacts/m7-history-target-v1/release/libtoklet.a": "25565678296ec9918e818184330adb88c8f81f6df1d3d558c4d4cfd5a2d0f966",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-worker-driver-v1.py": "1ed386784b1312fd2c17733f91903026b0e51b10b7800fdf8ebfd01d9b347810",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-validation.json": "676923cb3c11154acec294e00924fa3f3f86c3ee39e71234dd77e8f3d09d0324",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-toolchain.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-toolchain.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-cpu.stdout": "dbc569b99c0274ec3a6a5078de894a3bdca2c7c72472b8df38e22130fffa0282",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-metal.stdout": "f0f1fdf0cb773ecb5499b56767528f836ccfbca294de7f387aff128188f232ff",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-19-m7-swift-worker/driver-v2.py": "525fa27620e151359004d71de14747efb6eeb9109464bdfca1ad318a25f289c6",
+    "apple/include/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-swift-worker-driver-v2.py": "525fa27620e151359004d71de14747efb6eeb9109464bdfca1ad318a25f289c6",
+    "artifacts/m7-swift-worker-check-v5": "6d8bd2afe933606142360c6b84f2309509d29e99602d69b14281b3380fb95d3b"
+  },
+  "published_copies": {
+    "benchmarks/results/2026-10-19-m7-swift-worker/swift-worker-compile-v4.log": "artifacts/m7-logs-v1/swift-worker-compile-v4.log",
+    "benchmarks/results/2026-10-19-m7-swift-worker/swift-worker-toolchain-v1.log": "artifacts/m7-logs-v1/swift-worker-toolchain-v1.log",
+    "benchmarks/results/2026-10-19-m7-swift-worker/driver.py": "artifacts/m7-swift-worker-driver-v1.py",
+    "benchmarks/results/2026-10-19-m7-swift-worker/validation.json": "artifacts/m7-swift-worker-native-v1/validation.json",
+    "benchmarks/results/2026-10-19-m7-swift-worker/cpu.stdout": "artifacts/m7-swift-worker-native-v1/cpu.stdout",
+    "benchmarks/results/2026-10-19-m7-swift-worker/cpu.stderr": "artifacts/m7-swift-worker-native-v1/cpu.stderr",
+    "benchmarks/results/2026-10-19-m7-swift-worker/metal.stdout": "artifacts/m7-swift-worker-native-v1/metal.stdout",
+    "benchmarks/results/2026-10-19-m7-swift-worker/metal.stderr": "artifacts/m7-swift-worker-native-v1/metal.stderr",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-validation.json": "artifacts/m7-swift-worker-native-v2/validation.json",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-toolchain.stdout": "artifacts/m7-swift-worker-native-v2/toolchain.stdout",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-toolchain.stderr": "artifacts/m7-swift-worker-native-v2/toolchain.stderr",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-compile.stdout": "artifacts/m7-swift-worker-native-v2/compile.stdout",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-compile.stderr": "artifacts/m7-swift-worker-native-v2/compile.stderr",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-cpu.stdout": "artifacts/m7-swift-worker-native-v2/cpu.stdout",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-cpu.stderr": "artifacts/m7-swift-worker-native-v2/cpu.stderr",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-metal.stdout": "artifacts/m7-swift-worker-native-v2/metal.stdout",
+    "benchmarks/results/2026-10-19-m7-swift-worker/v2-metal.stderr": "artifacts/m7-swift-worker-native-v2/metal.stderr",
+    "benchmarks/results/2026-10-19-m7-swift-worker/driver-v2.py": "artifacts/m7-swift-worker-driver-v2.py"
+  },
+  "validation": {
+    "passed": true,
+    "controlled_environment": {
+      "HOME": "/Users/coloner",
+      "PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/Users/coloner/.cargo/bin",
+      "CARGO_HOME": "/Users/coloner/.cargo",
+      "RUSTUP_HOME": "/Users/coloner/.rustup",
+      "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer",
+      "LANG": "en_US.UTF-8",
+      "TMPDIR": "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-native-v2"
+    },
+    "bindings": {
+      "apple/Harness/NativeWorker.swift": "c5bc8448b77bff7e704651731fa6c6bbd8b6e435352ccaea58d2624c8bf38927",
+      "apple/tests/swift/WorkerChecks.swift": "e70d2c4c8516c5a5600c94a12fb533ca4512eb130eaab7fe3d9b5f1506fdf103",
+      "apple/tests/swift/main.swift": "6bd1b64fb1d4673b086fbe1e9a58db302f0f879bca034653618bb8e94e9f63dc",
+      "apple/include/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+      "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/m7-history-target-v1/release/libtoklet.a": "25565678296ec9918e818184330adb88c8f81f6df1d3d558c4d4cfd5a2d0f966",
+      "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+      "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+      "artifacts/m7-swift-worker-driver-v2.py": "525fa27620e151359004d71de14747efb6eeb9109464bdfca1ad318a25f289c6",
+      "artifacts/m7-swift-worker-check-v5": "6d8bd2afe933606142360c6b84f2309509d29e99602d69b14281b3380fb95d3b"
+    },
+    "workers": [
+      {
+        "command": [
+          "xcrun",
+          "swiftc",
+          "--version"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 79956,
+        "stdout": "artifacts/m7-swift-worker-native-v2/toolchain.stdout",
+        "stderr": "artifacts/m7-swift-worker-native-v2/toolchain.stderr"
+      },
+      {
+        "command": [
+          "xcrun",
+          "--sdk",
+          "macosx",
+          "swiftc",
+          "-sdk",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+          "-module-cache-path",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-swift-module-cache-v1",
+          "-swift-version",
+          "5",
+          "-strict-concurrency=complete",
+          "-warnings-as-errors",
+          "-target",
+          "arm64-apple-macos15.0",
+          "-O",
+          "-I",
+          "/Users/coloner/work/rust/toklet/apple/include",
+          "/Users/coloner/work/rust/toklet/apple/Harness/NativeWorker.swift",
+          "/Users/coloner/work/rust/toklet/apple/tests/swift/WorkerChecks.swift",
+          "/Users/coloner/work/rust/toklet/apple/tests/swift/main.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-history-target-v1/release/libtoklet.a",
+          "-framework",
+          "Metal",
+          "-framework",
+          "MetalPerformanceShaders",
+          "-framework",
+          "Foundation",
+          "-framework",
+          "Security",
+          "-lobjc",
+          "-liconv",
+          "-lresolv",
+          "-lc++",
+          "-o",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-check-v5"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 79969,
+        "stdout": "artifacts/m7-swift-worker-native-v2/compile.stdout",
+        "stderr": "artifacts/m7-swift-worker-native-v2/compile.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-check-v5",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 79990,
+        "stdout": "artifacts/m7-swift-worker-native-v2/cpu.stdout",
+        "stderr": "artifacts/m7-swift-worker-native-v2/cpu.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-check-v5",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2",
+          "metal"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 80033,
+        "stdout": "artifacts/m7-swift-worker-native-v2/metal.stdout",
+        "stderr": "artifacts/m7-swift-worker-native-v2/metal.stderr"
+      }
+    ],
+    "results": [
+      {
+        "released": true,
+        "states": [
+          {
+            "evaluated": 0,
+            "saved": 0,
+            "history": 0,
+            "pending": 0,
+            "reason": 0,
+            "name": "load"
+          },
+          {
+            "pending": 1,
+            "history": 6,
+            "saved": 6,
+            "reason": 1,
+            "name": "prompt",
+            "evaluated": 5
+          },
+          {
+            "reason": 1,
+            "history": 8,
+            "evaluated": 7,
+            "pending": 1,
+            "name": "continue",
+            "saved": 8
+          },
+          {
+            "reason": 0,
+            "history": 0,
+            "evaluated": 0,
+            "pending": 0,
+            "name": "suspend",
+            "saved": 8
+          },
+          {
+            "history": 0,
+            "evaluated": 0,
+            "saved": 8,
+            "reason": 3,
+            "pending": 0,
+            "name": "replay-cancelled"
+          },
+          {
+            "history": 8,
+            "evaluated": 8,
+            "saved": 8,
+            "reason": 1,
+            "pending": 0,
+            "name": "replay"
+          },
+          {
+            "history": 9,
+            "evaluated": 8,
+            "saved": 9,
+            "reason": 1,
+            "pending": 1,
+            "name": "after-replay"
+          },
+          {
+            "history": 0,
+            "evaluated": 0,
+            "saved": 0,
+            "reason": 0,
+            "pending": 0,
+            "name": "reset"
+          },
+          {
+            "history": 5,
+            "evaluated": 4,
+            "saved": 5,
+            "reason": 3,
+            "pending": 1,
+            "name": "cancel"
+          },
+          {
+            "history": 6,
+            "evaluated": 5,
+            "saved": 6,
+            "reason": 1,
+            "pending": 1,
+            "name": "resume"
+          }
+        ],
+        "tokens": [
+          47,
+          47,
+          47,
+          47
+        ],
+        "passed": true,
+        "physicalDeviceQualified": false,
+        "closed": true,
+        "backend": "cpu"
+      },
+      {
+        "tokens": [
+          47,
+          47,
+          47,
+          47
+        ],
+        "released": true,
+        "backend": "metal",
+        "states": [
+          {
+            "name": "load",
+            "history": 0,
+            "saved": 0,
+            "reason": 0,
+            "evaluated": 0,
+            "pending": 0
+          },
+          {
+            "name": "prompt",
+            "history": 6,
+            "saved": 6,
+            "reason": 1,
+            "evaluated": 5,
+            "pending": 1
+          },
+          {
+            "name": "continue",
+            "history": 8,
+            "saved": 8,
+            "reason": 1,
+            "evaluated": 7,
+            "pending": 1
+          },
+          {
+            "name": "suspend",
+            "history": 0,
+            "saved": 8,
+            "reason": 0,
+            "evaluated": 0,
+            "pending": 0
+          },
+          {
+            "name": "replay-cancelled",
+            "history": 0,
+            "saved": 8,
+            "reason": 3,
+            "evaluated": 0,
+            "pending": 0
+          },
+          {
+            "name": "replay",
+            "history": 8,
+            "saved": 8,
+            "reason": 1,
+            "evaluated": 8,
+            "pending": 0
+          },
+          {
+            "name": "after-replay",
+            "history": 9,
+            "saved": 9,
+            "reason": 1,
+            "evaluated": 8,
+            "pending": 1
+          },
+          {
+            "name": "reset",
+            "history": 0,
+            "saved": 0,
+            "reason": 0,
+            "evaluated": 0,
+            "pending": 0
+          },
+          {
+            "name": "cancel",
+            "history": 5,
+            "saved": 5,
+            "reason": 3,
+            "evaluated": 4,
+            "pending": 1
+          },
+          {
+            "name": "resume",
+            "history": 6,
+            "saved": 6,
+            "reason": 1,
+            "evaluated": 5,
+            "pending": 1
+          }
+        ],
+        "closed": true,
+        "physicalDeviceQualified": false,
+        "passed": true
+      }
+    ],
+    "primary_error": null,
+    "endpoint_errors": [],
+    "physical_device_qualified": false
+  },
+  "checks": {
+    "optimized_swift_compile": true,
+    "swift_language_mode": 5,
+    "strict_concurrency": "complete",
+    "warnings_as_errors": true,
+    "cpu": true,
+    "metal": true,
+    "states_per_backend": 10,
+    "recorded_compile_command": true
+  },
+  "scope": "Mac tiny Swift/native thread, callback, replay and resource integration; no physical qualification",
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "report_path": "docs/experiments/2026-10-19-m7-swift-worker.md",
+  "initial_validation": {
+    "passed": true,
+    "bindings": {
+      "apple/Harness/NativeWorker.swift": "c5bc8448b77bff7e704651731fa6c6bbd8b6e435352ccaea58d2624c8bf38927",
+      "apple/tests/swift/WorkerChecks.swift": "e70d2c4c8516c5a5600c94a12fb533ca4512eb130eaab7fe3d9b5f1506fdf103",
+      "apple/tests/swift/main.swift": "6bd1b64fb1d4673b086fbe1e9a58db302f0f879bca034653618bb8e94e9f63dc",
+      "artifacts/m7-swift-worker-check-v4": "67eb888ba15c9f1cc291ec67aadd55e4091e2381ed05af1ab335430179b36da0",
+      "artifacts/m7-history-target-v1/release/libtoklet.a": "25565678296ec9918e818184330adb88c8f81f6df1d3d558c4d4cfd5a2d0f966",
+      "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+      "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+      "artifacts/m7-swift-worker-driver-v1.py": "1ed386784b1312fd2c17733f91903026b0e51b10b7800fdf8ebfd01d9b347810"
+    },
+    "workers": [
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-check-v4",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 79232,
+        "stdout": "artifacts/m7-swift-worker-native-v1/cpu.stdout",
+        "stderr": "artifacts/m7-swift-worker-native-v1/cpu.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-check-v4",
+          "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2",
+          "metal"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 79233,
+        "stdout": "artifacts/m7-swift-worker-native-v1/metal.stdout",
+        "stderr": "artifacts/m7-swift-worker-native-v1/metal.stderr"
+      }
+    ],
+    "results": [
+      {
+        "states": [
+          {
+            "history": 0,
+            "evaluated": 0,
+            "name": "load",
+            "saved": 0,
+            "reason": 0,
+            "pending": 0
+          },
+          {
+            "history": 6,
+            "evaluated": 5,
+            "name": "prompt",
+            "saved": 6,
+            "reason": 1,
+            "pending": 1
+          },
+          {
+            "history": 8,
+            "evaluated": 7,
+            "name": "continue",
+            "saved": 8,
+            "reason": 1,
+            "pending": 1
+          },
+          {
+            "history": 0,
+            "evaluated": 0,
+            "name": "suspend",
+            "saved": 8,
+            "reason": 0,
+            "pending": 0
+          },
+          {
+            "evaluated": 0,
+            "saved": 8,
+            "name": "replay-cancelled",
+            "pending": 0,
+            "reason": 3,
+            "history": 0
+          },
+          {
+            "evaluated": 8,
+            "saved": 8,
+            "name": "replay",
+            "pending": 0,
+            "reason": 1,
+            "history": 8
+          },
+          {
+            "evaluated": 8,
+            "saved": 9,
+            "name": "after-replay",
+            "pending": 1,
+            "reason": 1,
+            "history": 9
+          },
+          {
+            "evaluated": 0,
+            "saved": 0,
+            "name": "reset",
+            "pending": 0,
+            "reason": 0,
+            "history": 0
+          },
+          {
+            "evaluated": 4,
+            "saved": 5,
+            "name": "cancel",
+            "pending": 1,
+            "reason": 3,
+            "history": 5
+          },
+          {
+            "evaluated": 5,
+            "saved": 6,
+            "name": "resume",
+            "pending": 1,
+            "reason": 1,
+            "history": 6
+          }
+        ],
+        "backend": "cpu",
+        "physicalDeviceQualified": false,
+        "released": true,
+        "passed": true,
+        "tokens": [
+          47,
+          47,
+          47,
+          47
+        ],
+        "closed": true
+      },
+      {
+        "states": [
+          {
+            "name": "load",
+            "saved": 0,
+            "history": 0,
+            "evaluated": 0,
+            "pending": 0,
+            "reason": 0
+          },
+          {
+            "name": "prompt",
+            "saved": 6,
+            "history": 6,
+            "evaluated": 5,
+            "pending": 1,
+            "reason": 1
+          },
+          {
+            "name": "continue",
+            "saved": 8,
+            "history": 8,
+            "evaluated": 7,
+            "pending": 1,
+            "reason": 1
+          },
+          {
+            "name": "suspend",
+            "saved": 8,
+            "history": 0,
+            "evaluated": 0,
+            "pending": 0,
+            "reason": 0
+          },
+          {
+            "name": "replay-cancelled",
+            "saved": 8,
+            "history": 0,
+            "evaluated": 0,
+            "pending": 0,
+            "reason": 3
+          },
+          {
+            "evaluated": 8,
+            "name": "replay",
+            "history": 8,
+            "pending": 0,
+            "reason": 1,
+            "saved": 8
+          },
+          {
+            "evaluated": 8,
+            "name": "after-replay",
+            "history": 9,
+            "pending": 1,
+            "reason": 1,
+            "saved": 9
+          },
+          {
+            "evaluated": 0,
+            "name": "reset",
+            "history": 0,
+            "pending": 0,
+            "reason": 0,
+            "saved": 0
+          },
+          {
+            "evaluated": 4,
+            "name": "cancel",
+            "history": 5,
+            "pending": 1,
+            "reason": 3,
+            "saved": 5
+          },
+          {
+            "evaluated": 5,
+            "name": "resume",
+            "history": 6,
+            "pending": 1,
+            "reason": 1,
+            "saved": 6
+          }
+        ],
+        "closed": true,
+        "backend": "metal",
+        "physicalDeviceQualified": false,
+        "tokens": [
+          47,
+          47,
+          47,
+          47
+        ],
+        "passed": true,
+        "released": true
+      }
+    ],
+    "primary_error": null,
+    "endpoint_errors": [],
+    "physical_device_qualified": false
+  }
+}

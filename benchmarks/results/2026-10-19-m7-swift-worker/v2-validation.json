@@ -1,0 +1,304 @@
+{
+  "passed": true,
+  "controlled_environment": {
+    "HOME": "/Users/coloner",
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/Users/coloner/.cargo/bin",
+    "CARGO_HOME": "/Users/coloner/.cargo",
+    "RUSTUP_HOME": "/Users/coloner/.rustup",
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer",
+    "LANG": "en_US.UTF-8",
+    "TMPDIR": "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-native-v2"
+  },
+  "bindings": {
+    "apple/Harness/NativeWorker.swift": "c5bc8448b77bff7e704651731fa6c6bbd8b6e435352ccaea58d2624c8bf38927",
+    "apple/tests/swift/WorkerChecks.swift": "e70d2c4c8516c5a5600c94a12fb533ca4512eb130eaab7fe3d9b5f1506fdf103",
+    "apple/tests/swift/main.swift": "6bd1b64fb1d4673b086fbe1e9a58db302f0f879bca034653618bb8e94e9f63dc",
+    "apple/include/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-history-target-v1/release/libtoklet.a": "25565678296ec9918e818184330adb88c8f81f6df1d3d558c4d4cfd5a2d0f966",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-worker-driver-v2.py": "525fa27620e151359004d71de14747efb6eeb9109464bdfca1ad318a25f289c6",
+    "artifacts/m7-swift-worker-check-v5": "6d8bd2afe933606142360c6b84f2309509d29e99602d69b14281b3380fb95d3b"
+  },
+  "workers": [
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 79956,
+      "stdout": "artifacts/m7-swift-worker-native-v2/toolchain.stdout",
+      "stderr": "artifacts/m7-swift-worker-native-v2/toolchain.stderr"
+    },
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "swiftc",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+        "-module-cache-path",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-swift-module-cache-v1",
+        "-swift-version",
+        "5",
+        "-strict-concurrency=complete",
+        "-warnings-as-errors",
+        "-target",
+        "arm64-apple-macos15.0",
+        "-O",
+        "-I",
+        "/Users/coloner/work/rust/toklet/apple/include",
+        "/Users/coloner/work/rust/toklet/apple/Harness/NativeWorker.swift",
+        "/Users/coloner/work/rust/toklet/apple/tests/swift/WorkerChecks.swift",
+        "/Users/coloner/work/rust/toklet/apple/tests/swift/main.swift",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-history-target-v1/release/libtoklet.a",
+        "-framework",
+        "Metal",
+        "-framework",
+        "MetalPerformanceShaders",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "Security",
+        "-lobjc",
+        "-liconv",
+        "-lresolv",
+        "-lc++",
+        "-o",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-check-v5"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 79969,
+      "stdout": "artifacts/m7-swift-worker-native-v2/compile.stdout",
+      "stderr": "artifacts/m7-swift-worker-native-v2/compile.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-check-v5",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 79990,
+      "stdout": "artifacts/m7-swift-worker-native-v2/cpu.stdout",
+      "stderr": "artifacts/m7-swift-worker-native-v2/cpu.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/m7-swift-worker-check-v5",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2",
+        "metal"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 80033,
+      "stdout": "artifacts/m7-swift-worker-native-v2/metal.stdout",
+      "stderr": "artifacts/m7-swift-worker-native-v2/metal.stderr"
+    }
+  ],
+  "results": [
+    {
+      "released": true,
+      "states": [
+        {
+          "evaluated": 0,
+          "saved": 0,
+          "history": 0,
+          "pending": 0,
+          "reason": 0,
+          "name": "load"
+        },
+        {
+          "pending": 1,
+          "history": 6,
+          "saved": 6,
+          "reason": 1,
+          "name": "prompt",
+          "evaluated": 5
+        },
+        {
+          "reason": 1,
+          "history": 8,
+          "evaluated": 7,
+          "pending": 1,
+          "name": "continue",
+          "saved": 8
+        },
+        {
+          "reason": 0,
+          "history": 0,
+          "evaluated": 0,
+          "pending": 0,
+          "name": "suspend",
+          "saved": 8
+        },
+        {
+          "history": 0,
+          "evaluated": 0,
+          "saved": 8,
+          "reason": 3,
+          "pending": 0,
+          "name": "replay-cancelled"
+        },
+        {
+          "history": 8,
+          "evaluated": 8,
+          "saved": 8,
+          "reason": 1,
+          "pending": 0,
+          "name": "replay"
+        },
+        {
+          "history": 9,
+          "evaluated": 8,
+          "saved": 9,
+          "reason": 1,
+          "pending": 1,
+          "name": "after-replay"
+        },
+        {
+          "history": 0,
+          "evaluated": 0,
+          "saved": 0,
+          "reason": 0,
+          "pending": 0,
+          "name": "reset"
+        },
+        {
+          "history": 5,
+          "evaluated": 4,
+          "saved": 5,
+          "reason": 3,
+          "pending": 1,
+          "name": "cancel"
+        },
+        {
+          "history": 6,
+          "evaluated": 5,
+          "saved": 6,
+          "reason": 1,
+          "pending": 1,
+          "name": "resume"
+        }
+      ],
+      "tokens": [
+        47,
+        47,
+        47,
+        47
+      ],
+      "passed": true,
+      "physicalDeviceQualified": false,
+      "closed": true,
+      "backend": "cpu"
+    },
+    {
+      "tokens": [
+        47,
+        47,
+        47,
+        47
+      ],
+      "released": true,
+      "backend": "metal",
+      "states": [
+        {
+          "name": "load",
+          "history": 0,
+          "saved": 0,
+          "reason": 0,
+          "evaluated": 0,
+          "pending": 0
+        },
+        {
+          "name": "prompt",
+          "history": 6,
+          "saved": 6,
+          "reason": 1,
+          "evaluated": 5,
+          "pending": 1
+        },
+        {
+          "name": "continue",
+          "history": 8,
+          "saved": 8,
+          "reason": 1,
+          "evaluated": 7,
+          "pending": 1
+        },
+        {
+          "name": "suspend",
+          "history": 0,
+          "saved": 8,
+          "reason": 0,
+          "evaluated": 0,
+          "pending": 0
+        },
+        {
+          "name": "replay-cancelled",
+          "history": 0,
+          "saved": 8,
+          "reason": 3,
+          "evaluated": 0,
+          "pending": 0
+        },
+        {
+          "name": "replay",
+          "history": 8,
+          "saved": 8,
+          "reason": 1,
+          "evaluated": 8,
+          "pending": 0
+        },
+        {
+          "name": "after-replay",
+          "history": 9,
+          "saved": 9,
+          "reason": 1,
+          "evaluated": 8,
+          "pending": 1
+        },
+        {
+          "name": "reset",
+          "history": 0,
+          "saved": 0,
+          "reason": 0,
+          "evaluated": 0,
+          "pending": 0
+        },
+        {
+          "name": "cancel",
+          "history": 5,
+          "saved": 5,
+          "reason": 3,
+          "evaluated": 4,
+          "pending": 1
+        },
+        {
+          "name": "resume",
+          "history": 6,
+          "saved": 6,
+          "reason": 1,
+          "evaluated": 5,
+          "pending": 1
+        }
+      ],
+      "closed": true,
+      "physicalDeviceQualified": false,
+      "passed": true
+    }
+  ],
+  "primary_error": null,
+  "endpoint_errors": [],
+  "physical_device_qualified": false
+}

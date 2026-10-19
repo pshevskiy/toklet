@@ -636,3 +636,15 @@ Physical-device lifecycle and overall M7 qualification remain pending.
 
 Astra accepted final code/data/publication after verifying4source/19evidencepins/
 14copies, protected binaries, clean native workers and all check counts.
+
+The [M7 Swift worker](experiments/2026-10-19-m7-swift-worker.md) serializes native
+owners on a dedicated OS thread with bounded queued work and polled raw-ID events.
+Cancellation and flag lifetime share the queue lock; callbacks have explicit
+ARC lifetime, and command autorelease pools drain temporary framework objects.
+Transactional replay retains the exact prefix through precancellation; suspend
+retains immutable weights, while unload clears replay state. Optimized strict
+Swift compilation and actual MacCPU/Metal tiny state/cancel/replay/unload/close/
+weak-release checks pass. Swift UI/iOS and physical M7 qualification remain open.
+
+Astra accepted the worker component after verifying30source/evidencebindings,
+18copies, the exact compiler command and four clean executions.
