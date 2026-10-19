@@ -67,3 +67,25 @@ source review, portable checks and a real C-to-Rust loader/generation smoke test
 The frozen tiny fixture supplies an independent greedy oracle. These checks
 establish ABI behavior on the named host, without phone integration, mobile
 quality, memory, throughput or lifecycle qualification.
+
+## Explicit Metal models
+
+`toklet_model_load_metal` is an additive entrypoint; ABI 1 record layouts and
+CPU behavior remain unchanged. A zero-length packed path selects compensated
+Half weights with Original normalization. An explicit packed directory selects
+Q4 v2 compensated tiled projection with Compensated normalization; v1 is rejected
+before a model handle is published. Sessions use Online attention, FP16 KV and
+FullLogits. Backend selection happens once per generation request before the
+statically dispatched numerical loop. No automatic CPU fallback occurs.
+
+The same retained owner, dedicated-thread requirement, busy guard, error/panic
+policy and cancellation flag apply. Boxed model/session allocations are fixed
+at creation and covered by the checked bridge reservation. Multiple sessions
+share the immutable model allocation and retain separate KV/scratch. Device and
+API capability checks still apply; this entrypoint is available on the current
+supported Apple Silicon macOS Metal build, with explicit unsupported errors in
+other builds. iOS deployment is a separate portability/packaging task.
+
+The [Metal bridge report](experiments/2026-10-19-m7-metal-abi.md) separates
+integration/state/combined logical admission checks from performance and mobile
+qualification. No new latency or physical-memory claim follows from that test.

@@ -15,11 +15,11 @@ static uint32_t emit(void *opaque, TokletTokenEvent event) {
     return 0;
 }
 int main(int argc, char **argv) {
-    assert(argc==2);
+    assert(argc==2 || argc==3);
     assert(toklet_abi_version()==TOKLET_ABI_VERSION);
     TokletOptions o={TOKLET_ABI_VERSION,sizeof(o),32,3,128u*1024u*1024u};
     TokletModel *m=NULL;TokletSession *s=NULL;TokletCancel *c=NULL;TokletError error={0};
-    uint32_t code=toklet_model_load((const uint8_t *)argv[1],strlen(argv[1]),&o,&m,&error);
+    uint32_t code=argc==3 ? toklet_model_load_metal((const uint8_t *)argv[1],strlen(argv[1]),NULL,0,&o,&m,&error) : toklet_model_load((const uint8_t *)argv[1],strlen(argv[1]),&o,&m,&error);
     if(code) { fprintf(stderr,"model load: %u %s\n",code,error.message);return 1; }
     assert(toklet_session_create(m,&o,&s,&error)==TOKLET_OK);
     assert(toklet_model_release(m,&error)==TOKLET_OK);

@@ -64,7 +64,7 @@ fn opts() -> Options {
 fn handles() -> (*mut ModelHandle, *mut SessionHandle, *mut CancelHandle) {
     let m = Box::into_raw(Box::new(ModelHandle {
         owner: thread::current().id(),
-        model: Rc::new(model()),
+        model: Rc::new(NativeModel::Cpu(Box::new(model()))),
     }));
     let mut s = ptr::null_mut();
     let mut c = ptr::null_mut();
@@ -399,5 +399,158 @@ fn later_callback_failure_reports_already_delivered_events_and_can_continue() {
     );
     unsafe {
         cleanup(m, s, c);
+    }
+}
+
+#[test]
+fn bridge_reservation_covers_owned_handle_and_wrapper_allocations() {
+    let mut model_bytes = size_of::<model::Model>();
+    let mut session_bytes = size_of::<session::Session<'static>>();
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    {
+        model_bytes = model_bytes.max(size_of::<crate::metal::Model>());
+        session_bytes = session_bytes.max(size_of::<crate::metal::Session<'static>>());
+    }
+    let required = size_of::<ModelHandle>()
+        + size_of::<NativeModel>()
+        + 2 * size_of::<usize>()
+        + size_of::<SessionHandle>()
+        + size_of::<CancelHandle>()
+        + model_bytes
+        + session_bytes;
+    assert!(
+        required <= BRIDGE_BYTES,
+        "bridge allocations {required} exceed reserved {BRIDGE_BYTES}"
+    );
+    // Keep both feature configurations warning-free without hiding layout checks.
+    let _ = (&mut model_bytes, &mut session_bytes);
+}
+#[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+#[test]
+fn unavailable_metal_returns_explicit_error_without_cpu_fallback() {
+    let mut m = ptr::dangling_mut::<ModelHandle>();
+    let path = b"missing";
+    let code = unsafe {
+        toklet_model_load_metal(
+            path.as_ptr(),
+            path.len(),
+            ptr::null(),
+            0,
+            &opts(),
+            &mut m,
+            ptr::null_mut(),
+        )
+    };
+    assert_eq!(code, UNSUPPORTED);
+    assert!(m.is_null());
+}
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+#[test]
+#[ignore = "explicit Apple GPU and pinned selected local model/artifact check"]
+fn metal_native_selected_models_match_direct_sessions() {
+    use crate::metal::{self, AttentionMode, NormalizationMode, ProjectionMode, ReadbackMode};
+    for (name, packed) in [
+        ("Qwen2.5-0.5B-Instruct", None),
+        ("Qwen2.5-1.5B-Instruct", Some("artifacts/m5-larger-q4-v2")),
+    ] {
+        let path = format!("{}/models/{name}", env!("CARGO_MANIFEST_DIR"));
+        let o = Options {
+            capacity: 16,
+            chunk: 3,
+            memory_limit_bytes: weights::INITIAL_MEMORY_LIMIT_BYTES as u64,
+            ..opts()
+        };
+        let mut m = ptr::null_mut();
+        let mut s = ptr::null_mut();
+        let mut c = ptr::null_mut();
+        let mut error = NativeError {
+            code: 0,
+            message: [0; 256],
+        };
+        let packed = packed.map(str::as_bytes).unwrap_or(&[]);
+        unsafe {
+            let code = toklet_model_load_metal(
+                path.as_ptr(),
+                path.len(),
+                packed.as_ptr(),
+                packed.len(),
+                &o,
+                &mut m,
+                &mut error,
+            );
+            assert_eq!(code, OK, "{}", String::from_utf8_lossy(&error.message));
+            assert_eq!(toklet_session_create(m, &o, &mut s, &mut error), OK);
+            assert_eq!(toklet_cancel_create(&mut c, &mut error), OK);
+        }
+        let NativeModel::Metal(model) = (unsafe { (*m).model.as_ref() }) else {
+            panic!("Metal request silently changed backend")
+        };
+        let (p, n) = if packed.is_empty() {
+            (ProjectionMode::HalfCompensated, NormalizationMode::Original)
+        } else {
+            (
+                ProjectionMode::Q4CompensatedTiled,
+                NormalizationMode::Compensated,
+            )
+        };
+        let mut direct = metal::Session::with_attention_mode(
+            model,
+            unsafe { options(&o).unwrap() },
+            p,
+            n,
+            ReadbackMode::FullLogits,
+            AttentionMode::Online,
+        )
+        .unwrap();
+        let mut native_memory = Report::default();
+        unsafe {
+            assert_eq!(toklet_session_state(s, &mut native_memory, &mut error), OK);
+        }
+        let combined = native_memory.admitted_bytes + direct.memory().admitted_bytes as u64
+            - direct.memory().weights_bytes as u64;
+        assert!(combined <= weights::INITIAL_MEMORY_LIMIT_BYTES as u64);
+        let prompt = [9707, 11, 358, 498];
+        let mut expected = Vec::new();
+        let expected_report = generation::generate(
+            &mut direct,
+            generation::Request {
+                input: generation::Input::Prompt(&prompt),
+                max_new_tokens: 3,
+                stop_tokens: &[],
+            },
+            &AtomicBool::new(false),
+            |e| {
+                expected.push(e.token_id);
+                Ok(())
+            },
+        )
+        .unwrap();
+        let mut ids = Vec::<u32>::new();
+        let (code, r) = unsafe {
+            generate(
+                s,
+                c,
+                &prompt,
+                0,
+                3,
+                Some(collect),
+                (&mut ids as *mut Vec<u32>).cast(),
+            )
+        };
+        assert_eq!(code, OK);
+        assert_eq!(ids, expected);
+        assert_eq!(r.history_tokens as usize, expected_report.history_tokens);
+        assert_eq!(
+            (r.history_tokens, r.evaluated_tokens, r.pending_tokens),
+            (7, 6, 1)
+        );
+        assert_eq!(unsafe { toklet_session_reset(s, ptr::null_mut()) }, OK);
+        drop(direct);
+        unsafe {
+            cleanup(m, s, c);
+        }
+        println!(
+            "native_metal_model={name} ids={ids:?} state=7/6/1 combined_admission_bytes={combined} passed"
+        );
     }
 }

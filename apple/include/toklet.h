@@ -15,6 +15,7 @@ extern "C" {
 #define TOKLET_PANIC 6u
 #define TOKLET_POISONED 7u
 #define TOKLET_CALLBACK_ERROR 8u
+#define TOKLET_UNSUPPORTED 9u
 /* All records use native C alignment. All nonnull pointers must refer to live,
    initialized storage for their full stated extent. Inputs and outputs/error
    records must not overlap. Counts are element counts; null+zero is permitted
@@ -43,6 +44,10 @@ typedef struct {
 typedef uint32_t (*TokletEmit)(void *, TokletTokenEvent);
 uint32_t toklet_abi_version(void);
 uint32_t toklet_model_load(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
+/* Explicit Metal: compensated Half when packed_len==0, otherwise Q4 v2.
+   Sessions select Online/FP16 KV/FullLogits. Unavailable builds fail without fallback. */
+uint32_t toklet_model_load_metal(const uint8_t *, size_t, const uint8_t *, size_t,
+    const TokletOptions *, TokletModel **, TokletError *);
 uint32_t toklet_model_release(TokletModel *, TokletError *);
 uint32_t toklet_session_create(const TokletModel *, const TokletOptions *, TokletSession **, TokletError *);
 uint32_t toklet_session_release(TokletSession *, TokletError *);

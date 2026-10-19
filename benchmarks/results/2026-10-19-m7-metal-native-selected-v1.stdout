@@ -1,0 +1,4 @@
+
+running 1 test
+test native::tests::metal_native_selected_models_match_direct_sessions has been running for over 60 seconds
+native_metal_model=Qwen2.5-0.5B-Instruct ids=[1410, 1492, 752] state=7/6/1 combined_admission_bytes=1129676764 passed

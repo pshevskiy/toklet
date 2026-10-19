@@ -595,3 +595,17 @@ strict Metal Clippy,105CPU/118Metal-feature tests and staticlib build pass. Astr
 accepted code/data/publication after39source/8evidencepins/4copies and all26
 exported tensors independently verified.
 No numerical/default/mobile-budget change or M7 completion is claimed.
+
+
+The [explicit M7 Metal bridge](experiments/2026-10-19-m7-metal-abi.md) adds
+compensated Half and frozen Q4 v2 native models with Online attention/FP16 KV,
+retained ownership and per-request static dispatch. Both selected real models
+match direct-session IDs and7/6/1 pending state; a compiled C Metal client matches
+the independent tiny oracle. Combined logical admission counts shared weights
+once and stays within6GiB; no new latency/native-footprint/mobile claim follows.
+107CPU/119Metal-feature tests, formatting, strict Clippy, six bounded-controller
+checks and release builds pass. The timed-out debug attempt stays preserved and
+unqualified; fresh release validation passes all244 endpoint bindings with clean
+exits. Astra accepted source, native evidence and final publication after all7source/
+16evidencepins/244validationbindings,201frozenpayloads and14exactcopies verified.
+M7 iOS packaging, Swift/frontend and physical-device qualification remain open.

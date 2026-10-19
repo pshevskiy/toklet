@@ -1,0 +1,11 @@
+test_changed_frozen_payload_is_rejected_before_any_launch (test_m7_native_metal_check.ControllerTests.test_changed_frozen_payload_is_rejected_before_any_launch) ... ok
+test_endpoint_failure_is_recorded_even_after_worker_failure (test_m7_native_metal_check.ControllerTests.test_endpoint_failure_is_recorded_even_after_worker_failure) ... ok
+test_final_reap_timeout_keeps_original_and_records_cleanup (test_m7_native_metal_check.ControllerTests.test_final_reap_timeout_keeps_original_and_records_cleanup) ... ok
+test_metadata_hash_and_parser_use_same_bounded_buffer (test_m7_native_metal_check.ControllerTests.test_metadata_hash_and_parser_use_same_bounded_buffer) ... ok
+test_natural_exit_race_does_not_skip_bounded_reap (test_m7_native_metal_check.ControllerTests.test_natural_exit_race_does_not_skip_bounded_reap) ... ok
+test_real_timeout_is_reaped_and_primary_preserved (test_m7_native_metal_check.ControllerTests.test_real_timeout_is_reaped_and_primary_preserved) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.072s
+
+OK

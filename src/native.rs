@@ -35,6 +35,7 @@ pub const WRONG_THREAD: u32 = 5;
 pub const PANIC: u32 = 6;
 pub const POISONED: u32 = 7;
 pub const CALLBACK_ERROR: u32 = 8;
+pub const UNSUPPORTED: u32 = 9;
 const BRIDGE_BYTES: usize = 4096;
 
 #[repr(C)]
@@ -76,16 +77,48 @@ pub struct Report {
 }
 pub type Emit = Option<unsafe extern "C" fn(*mut c_void, TokenEvent) -> u32>;
 
+enum NativeModel {
+    Cpu(Box<model::Model>),
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    Metal(Box<crate::metal::Model>),
+}
+enum NativeSession {
+    Cpu(Box<session::Session<'static>>),
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    Metal(Box<crate::metal::Session<'static>>),
+}
+impl NativeSession {
+    fn generate(
+        &mut self,
+        request: generation::Request<'_>,
+        cancel: &AtomicBool,
+        emit: impl FnMut(generation::TokenEvent) -> io::Result<()>,
+    ) -> std::result::Result<generation::Report, generation::Error> {
+        // Backend selection is once per request, outside generation/kernels.
+        match self {
+            Self::Cpu(s) => generation::generate(s.as_mut(), request, cancel, emit),
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            Self::Metal(s) => generation::generate(s.as_mut(), request, cancel, emit),
+        }
+    }
+    fn reset(&mut self) {
+        match self {
+            Self::Cpu(s) => s.reset(),
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            Self::Metal(s) => s.reset(),
+        }
+    }
+}
 pub struct ModelHandle {
     owner: ThreadId,
-    model: Rc<model::Model>,
+    model: Rc<NativeModel>,
 }
 // The borrow never escapes this private wrapper. Rc's allocation remains stable,
 // immutable, and owned for the entire session lifetime. Field order drops the
 // borrowed session BEFORE its retained model. No API exposes either field.
 struct OwnedSession {
-    session: session::Session<'static>,
-    _model: Rc<model::Model>,
+    session: NativeSession,
+    _model: Rc<NativeModel>,
 }
 pub struct SessionHandle {
     owner: ThreadId,
@@ -95,6 +128,7 @@ pub struct SessionHandle {
 pub struct CancelHandle {
     flag: AtomicBool,
 }
+#[derive(Debug)]
 struct Failure(u32, String);
 type Result<T> = std::result::Result<T, Failure>;
 fn fail(code: u32, message: impl Into<String>) -> Failure {
@@ -176,7 +210,7 @@ unsafe fn boundary(error: *mut NativeError, work: impl FnOnce() -> Result<()>) -
     code
 }
 impl SessionHandle {
-    fn access<T>(&self, work: impl FnOnce(&mut session::Session<'_>) -> Result<T>) -> Result<T> {
+    fn access<T>(&self, work: impl FnOnce(&mut NativeSession) -> Result<T>) -> Result<T> {
         owner(self.owner)?;
         if self.poisoned.get() {
             return Err(fail(POISONED, "session requires release and recreation"));
@@ -194,17 +228,33 @@ impl SessionHandle {
         }
     }
 }
-fn report(s: &session::Session<'_>) -> Report {
-    Report {
-        abi_version: ABI_VERSION,
-        struct_size: size_of::<Report>() as u32,
-        stop_token: u32::MAX,
-        history_tokens: s.history().len() as u32,
-        evaluated_tokens: s.evaluated_len() as u32,
-        pending_tokens: s.pending_len() as u32,
-        admitted_bytes: (s.memory().admitted_bytes + BRIDGE_BYTES) as u64,
-        ..Report::default()
+fn report(s: &NativeSession) -> Report {
+    fn snapshot(s: &impl session::InferenceSession, admitted: usize) -> Report {
+        Report {
+            abi_version: ABI_VERSION,
+            struct_size: size_of::<Report>() as u32,
+            stop_token: u32::MAX,
+            history_tokens: s.history().len() as u32,
+            evaluated_tokens: s.evaluated_len() as u32,
+            pending_tokens: s.pending_len() as u32,
+            admitted_bytes: (admitted + BRIDGE_BYTES) as u64,
+            ..Report::default()
+        }
     }
+    match s {
+        NativeSession::Cpu(s) => snapshot(s.as_ref(), s.memory().admitted_bytes),
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        NativeSession::Metal(s) => snapshot(s.as_ref(), s.memory().admitted_bytes),
+    }
+}
+unsafe fn local_path<'a>(p: *const u8, len: usize) -> Result<&'a Path> {
+    // SAFETY: bounded borrowed UTF-8 path uses the same caller extent contract.
+    let text = std::str::from_utf8(unsafe { slice(p, len, 16384)? })
+        .map_err(|_| fail(INVALID, "path must be UTF-8"))?;
+    if text.is_empty() || text.contains('\0') {
+        return Err(fail(INVALID, "empty or NUL-containing path"));
+    }
+    Ok(Path::new(text))
 }
 
 #[unsafe(no_mangle)]
@@ -244,9 +294,66 @@ pub unsafe extern "C" fn toklet_model_load(
             .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
             out.write(Box::into_raw(Box::new(ModelHandle {
                 owner: thread::current().id(),
-                model: Rc::new(loaded.model),
+                model: Rc::new(NativeModel::Cpu(Box::new(loaded.model))),
             })));
             Ok(())
+        })
+    }
+}
+/// Load the explicit selected Metal configuration: compensated Half if packed
+/// is NULL+zero, otherwise frozen Q4 v2; Online attention, FP16 KV, FullLogits.
+/// No CPU fallback. Available only on supported Metal builds/platforms.
+/// # Safety
+/// Follow this module's foreign caller contract for all pointers and handles.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_model_load_metal(
+    path: *const u8,
+    len: usize,
+    packed: *const u8,
+    packed_len: usize,
+    opts: *const Options,
+    out: *mut *mut ModelHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(out)?;
+            out.write(ptr::null_mut());
+            let options = options(opts)?;
+            let path = local_path(path, len)?;
+            let packed = if packed_len == 0 {
+                None
+            } else {
+                Some(local_path(packed, packed_len)?)
+            };
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            {
+                let options = weights::LoadOptions {
+                    context_limit: options.capacity,
+                    memory_limit_bytes: options.memory_limit_bytes,
+                };
+                let model = match packed {
+                    None => crate::metal::Model::load(path, options),
+                    Some(packed) => crate::metal::Model::load_q4(path, packed, options),
+                }
+                .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
+                if packed.is_some() && model.q4_format() != Some(crate::q4::Format::V2) {
+                    return Err(fail(INVALID, "native packed mode requires Q4 v2"));
+                }
+                out.write(Box::into_raw(Box::new(ModelHandle {
+                    owner: thread::current().id(),
+                    model: Rc::new(NativeModel::Metal(Box::new(model))),
+                })));
+                Ok(())
+            }
+            #[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+            {
+                let _ = (options, path, packed);
+                Err(fail(
+                    UNSUPPORTED,
+                    "Metal backend unavailable in this build/platform",
+                ))
+            }
         })
     }
 }
@@ -290,8 +397,37 @@ pub unsafe extern "C" fn toklet_session_create(
             // SAFETY: private OwnedSession retains this immutable stable allocation
             // and drops the session first. No reference can escape the wrapper.
             let borrowed = &*Rc::as_ptr(&retained);
-            let session = session::Session::new(borrowed, opts)
-                .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?;
+            let session = match borrowed {
+                NativeModel::Cpu(model) => NativeSession::Cpu(Box::new(
+                    session::Session::new(model, opts)
+                        .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
+                )),
+                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                NativeModel::Metal(model) => {
+                    use crate::metal::{
+                        AttentionMode, NormalizationMode, ProjectionMode, ReadbackMode, Session,
+                    };
+                    let (projection, normalization) = if model.q4_format().is_some() {
+                        (
+                            ProjectionMode::Q4CompensatedTiled,
+                            NormalizationMode::Compensated,
+                        )
+                    } else {
+                        (ProjectionMode::HalfCompensated, NormalizationMode::Original)
+                    };
+                    NativeSession::Metal(Box::new(
+                        Session::with_attention_mode(
+                            model,
+                            opts,
+                            projection,
+                            normalization,
+                            ReadbackMode::FullLogits,
+                            AttentionMode::Online,
+                        )
+                        .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
+                    ))
+                }
+            };
             out.write(Box::into_raw(Box::new(SessionHandle {
                 owner: thread::current().id(),
                 poisoned: Cell::new(false),
@@ -403,8 +539,7 @@ pub unsafe extern "C" fn toklet_session_generate(
             };
             (*session).access(|s| {
                 let mut emitted = 0;
-                let result = generation::generate(
-                    s,
+                let result = s.generate(
                     generation::Request {
                         input,
                         max_new_tokens: max_new_tokens as usize,
