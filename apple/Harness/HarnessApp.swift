@@ -176,12 +176,37 @@ private struct HarnessView: View {
 
 @main @MainActor
 struct TokletHarnessApp: App {
-    @StateObject private var store = HarnessStore(enabled:!ProcessInfo.processInfo.arguments.contains("--self-test"))
+    @StateObject private var store = HarnessStore(enabled:!ProcessInfo.processInfo.arguments.contains("--self-test") && !ProcessInfo.processInfo.arguments.contains("--measure"))
     @Environment(\.scenePhase) private var phase
     private let timer = Timer.publish(every:0.1,on:.main,in:.common).autoconnect()
 
     init() {
-        if ProcessInfo.processInfo.arguments.contains("--self-test") {
+        let arguments = ProcessInfo.processInfo.arguments
+        if let position = arguments.firstIndex(of:"--measure") {
+            UIApplication.shared.isIdleTimerDisabled = true
+            UIDevice.current.isBatteryMonitoringEnabled = true
+            let root = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
+            DispatchQueue.global(qos:.userInitiated).async {
+                do {
+                    guard !arguments.contains("--self-test"), position + 2 < arguments.count else {
+                        throw NSError(domain:"TokletMeasurement",code:2)
+                    }
+                    let config = try admitMeasurementConfig(root:root,name:arguments[position+1],sha256:arguments[position+2])
+                    try installedBundleProof("before")
+                    let result = runNativeMeasurement(config,root:root) { sample in
+                        let data = try JSONEncoder().encode(sample)
+                        try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_MEASUREMENT_SAMPLE_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+                    }
+                    try installedBundleProof("after")
+                    let data = try JSONEncoder().encode(result)
+                    try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_MEASUREMENT_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+                    exit(result.passed ? 0 : 1)
+                } catch {
+                    try? FileHandle.standardError.write(contentsOf:Data("TOKLET_MEASUREMENT_ERROR=\(error)\n".utf8))
+                    exit(1)
+                }
+            }
+        } else if arguments.contains("--self-test") {
             UIApplication.shared.isIdleTimerDisabled = true
             let directory = Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""
             let metal = ProcessInfo.processInfo.arguments.contains("--metal")

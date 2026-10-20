@@ -1430,7 +1430,10 @@ source/evidence pins and52 passing isolated helper checks. Development signing
 and profile trust are resolved. Real-model numerical/state qualification,
 whole-process memory limits, actual OS lifecycle transitions, sustained
 throughput/thermal observations and base iPhone14 evidence remain pending;
-M7.3 and overall M7 stay open.
+M7.3 and overall M7 stay open. The
+[measurement runner](docs/experiments/2026-10-20-m7-measurement-runner.md) now
+passes checked memory/timing/artifact/failure mechanics on Mac CPU/Metal and
+both iOS SDK builds; its real-model phone execution is still pending.
 
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 

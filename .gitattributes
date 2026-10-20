@@ -4,3 +4,6 @@ benchmarks/results/2026-10-20-m7-physical-tiny/m7-physical-tiny-v7/private-logs/
 # Xcode's raw build output includes whitespace-only lines; retain exact bytes.
 benchmarks/results/2026-10-20-m7-worker-timing/m7-swift-harness-build-v9/logs/iphoneos-build.stdout -text -whitespace
 benchmarks/results/2026-10-20-m7-worker-timing/m7-swift-harness-build-v9/logs/iphonesimulator-build.stdout -text -whitespace
+# Raw diagnostic runner Xcode build evidence retains tool-emitted whitespace.
+benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphoneos-build.stdout -text -whitespace
+benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphonesimulator-build.stdout -text -whitespace

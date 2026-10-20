@@ -118,3 +118,28 @@ that guard or launch against a stale installation. Private output stays ignored;
 publish only reviewed redacted receipts and safe exact console copies.
 See [the device qualification protocol](DEVICE_QUALIFICATION.md) before accepting
 any mobile model/context limit or closing M7.
+
+## Explicit measurement jobs
+
+The diagnostic `--measure RELATIVE_CONFIG SHA256` launch reads a bounded,
+SHA-authenticated JSON job relative to Documents. It does not run a job entered
+through UI text. A job specifies model/packed folders, exact relative file hashes,
+backend, capacity/chunk, numerical and separate process trial budgets, raw prompt,
+output count, expected output prefix, three warmups, ten initial repetitions and
+optional minimum native seconds. See the
+[runner report](../docs/experiments/2026-10-20-m7-measurement-runner.md) for the
+exact timing, memory and interruption boundaries. Model/packed inventory is
+checked before loading and after cleanup, including failed requests. JSON samples
+stream as `TOKLET_MEASUREMENT_SAMPLE_JSON=` and the final summary as
+`TOKLET_MEASUREMENT_JSON=`; errors, missing output or false qualification flags
+must not be interpreted as a supported mobile limit. Actual phone qualification
+still requires a separately reviewed physical run.
+
+Repeat the Mac mechanism checks with a new output directory:
+
+```sh
+python3 tools/experiments/m7_native_measurement_check.py artifacts/m7-apple-package-v4 REVIEWED_PACKAGE_SHA256 artifacts/measurement-check-local-v1
+```
+
+This compiles the Swift checker with the reviewed Mac archive and runs the tiny
+fixture; it does not install a phone app or qualify phone memory/performance.

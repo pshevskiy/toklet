@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "bindings": {
+    "apple/Harness/NativeWorker.swift": "9d00e2658540125b819c3ed1aef8adbebcadc99d887b8ca8a30cabaf114d63b6",
+    "apple/Harness/NativeMeasurement.swift": "1be78f8dd013db39216c62ece990f4926291e1ccf5d119f99157ad7c7863a613",
+    "apple/tests/swift/MeasurementMain.swift": "a6a7cf49f3b5122de3ff3e8593f158bfa95b4cbbf6b33a7f13fd194f3859d91e",
+    "artifacts/m7-measurement-check-v1/check": "f8b177695b21cafbd1e7505044f2b6d074a78b9eda762b8a050823ab2a28e5ff",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/macos-arm64/libtoklet.a": "cfb329d378256db06aaba43929bf05ad1f1743e5e88aa017698fec8128603559"
+  },
+  "command": {
+    "command": [
+      "/Users/coloner/work/rust/toklet/artifacts/m7-measurement-check-v1/check",
+      "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2",
+      "/Users/coloner/work/rust/toklet/artifacts/m7-measurement-check-v1/cases"
+    ],
+    "exit_code": 0,
+    "primary_error": null,
+    "cleanup_errors": [],
+    "pid": 9595,
+    "stdout": "artifacts/m7-measurement-check-v1/check.stdout",
+    "stderr": "artifacts/m7-measurement-check-v1/check.stderr"
+  },
+  "endpoint_errors": []
+}

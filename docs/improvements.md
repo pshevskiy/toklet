@@ -709,3 +709,17 @@ completion timestamps include wakeup delay. Nine commands/seven events per
 backend validate the mechanism; no phone throughput or memory claim follows.
 Astra accepted this task and publication with no remaining findings after
 verifying110 evidence pins,29 exact copies and all stated build/runtime checks.
+
+The [authenticated measurement runner](experiments/2026-10-20-m7-measurement-runner.md)
+adds streamed local artifact identity, explicit native/process trial budgets,
+SDK-layout-checked own-process physical footprint/lifetime peak, bounded raw
+request samples, separate warmups and optional sustained accumulation. iOS
+interruption notifications invalidate foreground trials and request serialized
+cleanup. Failure-path artifact proofs preserve original output errors. Twelve
+functional cases pass on actual Mac CPU/Metal, retaining26 timed samples;
+27 related checks and both strict SDK builds pass. Changed headers/archives/
+helpers prevent every owned child. Earlier endpoint/provenance/parser gaps and
+executed sources remain recorded. These mechanism checks do not qualify phone
+memory/performance or complete M7.3. Astra accepted code and publication with
+no remaining findings after verifying164 evidence pins, six code pins, five
+historical mappings,50 copies,27 checks and364 local link targets.

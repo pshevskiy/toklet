@@ -1,0 +1,394 @@
+{
+  "format": "toklet-m7-measurement-runner-qualification-v1",
+  "passed": true,
+  "parent_commit": "5e3159e",
+  "changed_code": {
+    "apple/Harness/NativeMeasurement.swift": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3",
+    "apple/Harness/HarnessApp.swift": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "9b6affa0e651f60d2ddb54a3a2bc3b6e1271c93b2ddaeb28be3e35203bb7ff0b",
+    "apple/tests/swift/MeasurementMain.swift": "743760225af3b95b04a66a5fafccf1db796f65018501ee791c84bb22d92671a6",
+    "tools/experiments/m7_native_measurement_check.py": "465cf65391aa65bfb075f8b7453cea86013ec1c2a1a158a9057948c199a84719",
+    "tools/experiments/test_m7_native_measurement_check.py": "85dd1ff0e0c19a54805a5530512b1df0f3fbca9eb644e75fb0accb5725b7f1c9"
+  },
+  "evidence_pins": {
+    ".gitignore": "ba0833fd4f9e6822f1a3620eb070b2319ee76b20a299461197c8de9627226705",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+    "apple/Generated/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "apple/Generated/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Harness/HarnessApp.swift": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+    "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+    "apple/Harness/NativeMeasurement.swift": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3",
+    "apple/Harness/NativeWorker.swift": "9d00e2658540125b819c3ed1aef8adbebcadc99d887b8ca8a30cabaf114d63b6",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "9b6affa0e651f60d2ddb54a3a2bc3b6e1271c93b2ddaeb28be3e35203bb7ff0b",
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/include/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "apple/tests/native_smoke.c": "28718100afb51303ddd34f362143bc14fbb2188a3d47e3e44ed3aafb6fb6c463",
+    "apple/tests/swift/MeasurementMain.swift": "743760225af3b95b04a66a5fafccf1db796f65018501ee791c84bb22d92671a6",
+    "apple/tests/swift/WorkerChecks.swift": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/Info.plist": "6831550f3db5d9ea4d931e6752cd871251e40543bc0329156bdd6f6acaf34c76",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "6125f3444ebf67bb513903e17e735a81d1fc8ccfee139b61c0ed7fa9d02c70c8",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64/Headers/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64/libtoklet.a": "4e6635fbec0fca3280ab0253a0edb6963797367112a98a4963869209fedebc51",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/macos-arm64/Headers/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/macos-arm64/libtoklet.a": "cfb329d378256db06aaba43929bf05ad1f1743e5e88aa017698fec8128603559",
+    "artifacts/m7-apple-package-v4/aarch64-apple-darwin-link-smoke": "c7ba47d0ded4396b50b47b300ef7940d42f2968f53147ab74cb4f16dccbbaf4b",
+    "artifacts/m7-apple-package-v4/aarch64-apple-ios-link-smoke": "4f9cc716e42bce02e856ac67b662620e806dc9b78964f80251e9a731826d5c71",
+    "artifacts/m7-apple-package-v4/aarch64-apple-ios-sim-link-smoke": "0738854db33b2ec3de0898ae5f597945081fac23b7932b9f9c5a33cf62eba7a8",
+    "artifacts/m7-apple-package-v4/build.json": "1185314043649692b7e41aff9b90e37355201eef71852965c20ef69513e6f13c",
+    "artifacts/m7-apple-package-v4/target/aarch64-apple-darwin/release/libtoklet.a": "cfb329d378256db06aaba43929bf05ad1f1743e5e88aa017698fec8128603559",
+    "artifacts/m7-apple-package-v4/target/aarch64-apple-ios-sim/release/libtoklet.a": "6125f3444ebf67bb513903e17e735a81d1fc8ccfee139b61c0ed7fa9d02c70c8",
+    "artifacts/m7-apple-package-v4/target/aarch64-apple-ios/release/libtoklet.a": "4e6635fbec0fca3280ab0253a0edb6963797367112a98a4963869209fedebc51",
+    "artifacts/m7-measurement-check-v1/check": "f8b177695b21cafbd1e7505044f2b6d074a78b9eda762b8a050823ab2a28e5ff",
+    "artifacts/m7-measurement-check-v1/check.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v1/check.stdout": "e23546052e4948d79509fc3c6f995d7f49014d882f7a923c3dfb6db18c2ef8e6",
+    "artifacts/m7-measurement-check-v2/check": "58f66b7adaf11e83f87575b7df7130a25ab85a41e24564c453a23541d0a0b7a8",
+    "artifacts/m7-measurement-check-v2/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v2/logs/checks.stdout": "915db0e5bba4c183464a4fa7313553d051307325890d4b9adebb4435d36eaf59",
+    "artifacts/m7-measurement-check-v2/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v2/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v3/check": "58f66b7adaf11e83f87575b7df7130a25ab85a41e24564c453a23541d0a0b7a8",
+    "artifacts/m7-measurement-check-v3/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v3/logs/checks.stdout": "c62b6950c7b41c6197794ccfba0910943998f00633462b9b6f34c4152e127f94",
+    "artifacts/m7-measurement-check-v3/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v3/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v3/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v3/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-measurement-check-v3/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-measurement-check-v3/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-measurement-check-v3/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v3/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-measurement-check-v4/check": "58f66b7adaf11e83f87575b7df7130a25ab85a41e24564c453a23541d0a0b7a8",
+    "artifacts/m7-measurement-check-v4/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v4/logs/checks.stdout": "f9b58244b72885fcfc107ed145c71a71a5ad238684a13754642833f4093026a2",
+    "artifacts/m7-measurement-check-v4/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v4/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v4/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v4/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-measurement-check-v4/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-measurement-check-v4/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-measurement-check-v4/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-measurement-check-v4/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v10/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-swift-harness-build-v10/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v10/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v10/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v10/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "cc05ec566e9d727bff7c4aeb32eb8384c92c04d594264ef8d74a44b514a7020e",
+    "artifacts/m7-swift-harness-build-v10/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+    "artifacts/m7-swift-harness-build-v10/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v10/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v10/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v10/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "7f557d21a196b3672e772b2f1e1970588024503c8ecf22ea6dcdebb9d4e4a7bb",
+    "artifacts/m7-swift-harness-build-v10/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+    "artifacts/m7-swift-harness-build-v10/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v10/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/iphoneos-build.stdout": "ec84f92ce145f2644c00f78b35f6608c91fd90b7e616f1194d99604c654aa88e",
+    "artifacts/m7-swift-harness-build-v10/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/iphoneos-load-commands.stdout": "63a7b6499d86859a33bf047815cd9cf8d2a36818e7d0af4be17359087003bc13",
+    "artifacts/m7-swift-harness-build-v10/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v10/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/iphonesimulator-build.stdout": "7e5982d3d427607b4e877f886d7d640a4069feb04eadcd3063e5a3ee09f83a29",
+    "artifacts/m7-swift-harness-build-v10/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/iphonesimulator-load-commands.stdout": "fe1e2aca6f61b6a2d1d33247a96d29ea96d02df88753604b043ec6a287dfa81c",
+    "artifacts/m7-swift-harness-build-v10/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/simulator-sign.stderr": "865ba146a16a4c6b20c0e6f0c0a8ddd29eb851890f1582464531b4a457cb0bb8",
+    "artifacts/m7-swift-harness-build-v10/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v10/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-swift-harness-build-v11/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-swift-harness-build-v11/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v11/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v11/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v11/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "21e01de2c36e3777fc574869c3f6f1f1db90fc1e13ae9653673da352d1cd3b99",
+    "artifacts/m7-swift-harness-build-v11/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+    "artifacts/m7-swift-harness-build-v11/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v11/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v11/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v11/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "bacbb3df224da3ed4678d84283e8dd39d16617e49816d183f8a30cfa314d7a7e",
+    "artifacts/m7-swift-harness-build-v11/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+    "artifacts/m7-swift-harness-build-v11/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v11/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/iphoneos-build.stdout": "b0b674c8a414588a9b665b202b75323346262dc4d610502c3851f759c069efc8",
+    "artifacts/m7-swift-harness-build-v11/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/iphoneos-load-commands.stdout": "6d97e25aa78c953f923130a6c45f198a610dd722168781d5d0c858624fc7b5f9",
+    "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-build.stdout": "2d32e7914678250fc4a9d7810295e4602d61d10650d4cea1129e86baa32e8137",
+    "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-load-commands.stdout": "9e733c4fc99224a1ad718e97c9c8f0e43b0c897d42d898a907e9f03cbda26217",
+    "artifacts/m7-swift-harness-build-v11/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/simulator-sign.stderr": "c9702bb20c4b45e717e4e37fd4473c4c8b2dc8c088072601716dcaf23c18fe17",
+    "artifacts/m7-swift-harness-build-v11/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v11/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/native.rs": "5fea7b94ad538d0bae5f1acbdf06ab6970aa4bbd285fbdd7d94da67dc96d3352",
+    "src/native/tests.rs": "b4756e3d9084955d7b51c3ba46071f94f2a2864087a0ffdef5bc9f804bdc0949",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_native_measurement_check.py": "465cf65391aa65bfb075f8b7453cea86013ec1c2a1a158a9057948c199a84719",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "tools/experiments/test_m7_native_measurement_check.py": "85dd1ff0e0c19a54805a5530512b1df0f3fbca9eb644e75fb0accb5725b7f1c9",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037"
+  },
+  "historical_source_pins": {
+    "artifacts/m7-measurement-check-v1/source-snapshot/apple/Harness/NativeMeasurement.swift": "1be78f8dd013db39216c62ece990f4926291e1ccf5d119f99157ad7c7863a613",
+    "artifacts/m7-measurement-check-v1/source-snapshot/apple/tests/swift/MeasurementMain.swift": "a6a7cf49f3b5122de3ff3e8593f158bfa95b4cbbf6b33a7f13fd194f3859d91e",
+    "artifacts/m7-measurement-check-v2/source-snapshot/tools/experiments/m7_native_measurement_check.py": "d4d4ef58aef37a984481bc47ce487af6038e5f2e8e73d93ae590f48e11675243",
+    "artifacts/m7-measurement-check-v3/source-snapshot/tools/experiments/test_m7_native_measurement_check.py": "ff1a76c3c5d25c2f38a3ed6fede43d54ba1b3b1f5a8e56a9ba9e6d7bc43318f1",
+    "artifacts/m7-swift-harness-build-v10/source-snapshot/apple/Harness/NativeMeasurement.swift": "82b85a320f1c359eedbfea02fb5e22722eedc1228e76784aef3ca8dd5777d09b"
+  },
+  "exact_published_copies": {
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v1/execution.json": {
+      "origin": "artifacts/m7-measurement-check-v1/execution.json",
+      "sha256": "7b15c66973e10bd2ae28eba8a98f129c5a79ed465ac16f21972de2dd8f28c542"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v1/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-measurement-check-v1/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "1be78f8dd013db39216c62ece990f4926291e1ccf5d119f99157ad7c7863a613"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v1/source-snapshot/apple/tests/swift/MeasurementMain.swift": {
+      "origin": "artifacts/m7-measurement-check-v1/source-snapshot/apple/tests/swift/MeasurementMain.swift",
+      "sha256": "a6a7cf49f3b5122de3ff3e8593f158bfa95b4cbbf6b33a7f13fd194f3859d91e"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v2/checks.json": {
+      "origin": "artifacts/m7-measurement-check-v2/checks.json",
+      "sha256": "4f47093e764f7545d43ef33d0eb755c3d40afb9927f6b746a91b7a8919cf2c41"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v2/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-measurement-check-v2/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v2/source-snapshot/apple/tests/swift/MeasurementMain.swift": {
+      "origin": "artifacts/m7-measurement-check-v2/source-snapshot/apple/tests/swift/MeasurementMain.swift",
+      "sha256": "743760225af3b95b04a66a5fafccf1db796f65018501ee791c84bb22d92671a6"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v2/source-snapshot/tools/experiments/m7_native_measurement_check.py": {
+      "origin": "artifacts/m7-measurement-check-v2/source-snapshot/tools/experiments/m7_native_measurement_check.py",
+      "sha256": "d4d4ef58aef37a984481bc47ce487af6038e5f2e8e73d93ae590f48e11675243"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v3/checks.json": {
+      "origin": "artifacts/m7-measurement-check-v3/checks.json",
+      "sha256": "860de77896b94150ebf6d6a263277402186be6df3d475184707fe7c2fe286579"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v3/source-snapshot/tools/experiments/test_m7_native_measurement_check.py": {
+      "origin": "artifacts/m7-measurement-check-v3/source-snapshot/tools/experiments/test_m7_native_measurement_check.py",
+      "sha256": "ff1a76c3c5d25c2f38a3ed6fede43d54ba1b3b1f5a8e56a9ba9e6d7bc43318f1"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/checks.json": {
+      "origin": "artifacts/m7-measurement-check-v4/checks.json",
+      "sha256": "2f5c6248728d37d971b48ce2d7a728a5828489e8d7c742a6d66c9dec3963907c"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/compile.stdout": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/compile.stderr": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/checks.stdout": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/checks.stdout",
+      "sha256": "f9b58244b72885fcfc107ed145c71a71a5ad238684a13754642833f4093026a2"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/checks.stderr": {
+      "origin": "artifacts/m7-measurement-check-v4/logs/checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v10/build.json": {
+      "origin": "artifacts/m7-swift-harness-build-v10/build.json",
+      "sha256": "193f842e5d0133c697edf7ad1f0805b468a238dfd890c768e3e247a78cd9e940"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v10/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-swift-harness-build-v10/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "82b85a320f1c359eedbfea02fb5e22722eedc1228e76784aef3ca8dd5777d09b"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/build.json": {
+      "origin": "artifacts/m7-swift-harness-build-v11/build.json",
+      "sha256": "2f6d3939391cd1e6e22b34724a2349fdf10d71a529454c8c1755b4b6e7840ee4"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphonesimulator-build.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-build.stdout",
+      "sha256": "2d32e7914678250fc4a9d7810295e4602d61d10650d4cea1129e86baa32e8137"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphonesimulator-build.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphonesimulator-arch.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphonesimulator-arch.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphonesimulator-load-commands.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-load-commands.stdout",
+      "sha256": "9e733c4fc99224a1ad718e97c9c8f0e43b0c897d42d898a907e9f03cbda26217"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphonesimulator-load-commands.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphonesimulator-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/simulator-sign.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/simulator-sign.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/simulator-sign.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/simulator-sign.stderr",
+      "sha256": "c9702bb20c4b45e717e4e37fd4473c4c8b2dc8c088072601716dcaf23c18fe17"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/simulator-sign-verify.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/simulator-sign-verify.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/simulator-sign-verify.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/simulator-sign-verify.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphoneos-build.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphoneos-build.stdout",
+      "sha256": "b0b674c8a414588a9b665b202b75323346262dc4d610502c3851f759c069efc8"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphoneos-build.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphoneos-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphoneos-arch.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphoneos-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphoneos-arch.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphoneos-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphoneos-load-commands.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphoneos-load-commands.stdout",
+      "sha256": "6d97e25aa78c953f923130a6c45f198a610dd722168781d5d0c858624fc7b5f9"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphoneos-load-commands.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v11/logs/iphoneos-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v1/check.stdout": {
+      "origin": "artifacts/m7-measurement-check-v1/check.stdout",
+      "sha256": "e23546052e4948d79509fc3c6f995d7f49014d882f7a923c3dfb6db18c2ef8e6"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v1/check.stderr": {
+      "origin": "artifacts/m7-measurement-check-v1/check.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-controller-check-v1.stdout": {
+      "origin": "artifacts/m7-measurement-controller-check-v1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-controller-check-v1.stderr": {
+      "origin": "artifacts/m7-measurement-controller-check-v1.stderr",
+      "sha256": "bc49ab84c5a946270088bf20e056cfd03cb581d20ce99574ec576f96eea293ad"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-controller-check-v2.stdout": {
+      "origin": "artifacts/m7-measurement-controller-check-v2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-controller-check-v2.stderr": {
+      "origin": "artifacts/m7-measurement-controller-check-v2.stderr",
+      "sha256": "3d9bae7f70566216773a0bd8a17a489f1bf972ccfa327c030b71d8ef41d703a2"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-related-check-v1.stdout": {
+      "origin": "artifacts/m7-measurement-related-check-v1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-related-check-v1.stderr": {
+      "origin": "artifacts/m7-measurement-related-check-v1.stderr",
+      "sha256": "63092cb5017760acad706d6cf1df524548d96f0147ac5ab47599abeb76659f82"
+    },
+    "benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/cases/job.json": {
+      "origin": "artifacts/m7-measurement-check-v4/cases/job.json",
+      "sha256": "dadf656821a2c5a8a34ea68ceca130fe8ac46580aff4d9e2f7d82df7e7b736ec"
+    }
+  },
+  "functional_cases": 12,
+  "actual_timed_samples": 26,
+  "related_python_checks": 27,
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "review": "Astra accepted code/publication with no remaining findings; verified164 evidence pins,6code pins,5historical mappings,50copies,234unique files,27test log and364local link targets. Phone/600s/OS lifecycle qualification remains open."
+}
