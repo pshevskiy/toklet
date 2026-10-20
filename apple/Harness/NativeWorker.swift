@@ -24,6 +24,14 @@ enum NativeCommand: Sendable {
     case reset, suspend, replay, unload
 }
 
+// The native elapsed clock starts inside generation; callback uptime is the
+// monotonic process clock observed at the Swift callback. Neither uses UI polls.
+struct NativeTokenTiming: Codable, Sendable {
+    let index: UInt32
+    let nativeElapsedSeconds: Double
+    let callbackUptimeNanoseconds: UInt64
+}
+
 struct NativeSnapshot: Sendable {
     var busy = false
     var closed = false
@@ -33,6 +41,7 @@ struct NativeSnapshot: Sendable {
     var status: UInt32 = 0
     var message = ""
     var ids: [UInt32] = [] // At most 128, retained until the next command.
+    var tokenTimings: [NativeTokenTiming] = [] // Same bounded emitted-token order.
     var reason: UInt32 = 0
     var history: UInt32 = 0
     var evaluated: UInt32 = 0
@@ -73,6 +82,7 @@ final class NativeWorker: @unchecked Sendable {
         var error = TokletError()
         try requireOK(toklet_cancel_create(&cancelFlag, &error), &error)
         view.ids.reserveCapacity(128)
+        view.tokenTimings.reserveCapacity(128)
         let thread = Thread { [weak self] in self?.run() }
         thread.name = "Toklet inference"
         self.thread = thread
@@ -95,8 +105,22 @@ final class NativeWorker: @unchecked Sendable {
         view.busy = true
         view.phase = "Queued"
         view.ids.removeAll(keepingCapacity: true)
+        view.tokenTimings.removeAll(keepingCapacity: true)
         condition.signal()
         return true
+    }
+
+    // Non-UI diagnostics can wait for command/queued-cleanup completion without
+    // retaining repeated snapshots or estimating completion from a polling tick.
+    // NSCondition uses a wall-clock deadline; event timestamps stay monotonic.
+    func waitUntilIdle(seconds: TimeInterval) -> NativeSnapshot? {
+        guard seconds.isFinite, seconds >= 0, seconds <= 3600 else { return nil }
+        condition.lock(); defer { condition.unlock() }
+        let end = Date(timeIntervalSinceNow: seconds)
+        while view.busy {
+            if !condition.wait(until: end) { return view.busy ? nil : view }
+        }
+        return view
     }
 
     func cancel() {
@@ -135,10 +159,15 @@ final class NativeWorker: @unchecked Sendable {
         return true
     }
 
-    fileprivate func record(_ id: UInt32, autoCancelAfter: Int) -> UInt32 {
+    fileprivate func record(_ event: TokletTokenEvent, autoCancelAfter: Int) -> UInt32 {
         condition.lock(); defer { condition.unlock() }
-        guard view.ids.count < 128 else { return 1 }
-        view.ids.append(id)
+        guard view.ids.count < 128, event.index == UInt32(view.ids.count),
+              event.elapsed_seconds.isFinite, event.elapsed_seconds >= 0,
+              event.elapsed_seconds >= (view.tokenTimings.last?.nativeElapsedSeconds ?? 0) else { return 1 }
+        let timing = NativeTokenTiming(index:event.index,nativeElapsedSeconds:event.elapsed_seconds,
+                                       callbackUptimeNanoseconds:DispatchTime.now().uptimeNanoseconds)
+        view.ids.append(event.token_id)
+        view.tokenTimings.append(timing)
         if autoCancelAfter > 0, view.ids.count == autoCancelAfter, let flag = cancelFlag {
             _ = toklet_cancel_set(flag, 1, nil)
         }
@@ -207,7 +236,7 @@ private final class Sink {
 private let nativeSink: @convention(c) (UnsafeMutableRawPointer?, TokletTokenEvent) -> UInt32 = { context, event in
     guard let context else { return 1 }
     let sink = Unmanaged<Sink>.fromOpaque(context).takeUnretainedValue()
-    return sink.worker.record(event.token_id, autoCancelAfter: sink.autoCancelAfter)
+    return sink.worker.record(event, autoCancelAfter: sink.autoCancelAfter)
 }
 
 // Private thread-local native owners. All FFI callbacks are synchronous and the

@@ -699,3 +699,13 @@ findings after verifying198 pins,69 copies, privacy and363 local links.
 Physical evidence storage now explicitly preserves the two console logs' mixed
 line endings. A post-commit blob check caught automatic normalization; the
 original raw bytes and hashes are retained through path-specific Git attributes.
+
+The [worker timing capture](experiments/2026-10-20-m7-worker-timing.md) preserves
+bounded native elapsed events and monotonic callback timestamps, and adds a
+non-UI completion wait. Strict Mac CPU/Metal checks retain exact state/ID/release
+behavior and validate timing order/reset; both SDK builds and16 controller
+regressions pass. Callback timestamps include lock acquisition delay and caller
+completion timestamps include wakeup delay. Nine commands/seven events per
+backend validate the mechanism; no phone throughput or memory claim follows.
+Astra accepted this task and publication with no remaining findings after
+verifying110 evidence pins,29 exact copies and all stated build/runtime checks.

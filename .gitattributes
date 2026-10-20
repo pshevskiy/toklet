@@ -1,3 +1,6 @@
 # Raw physical console evidence must retain its original mixed line endings.
 benchmarks/results/2026-10-20-m7-physical-tiny/m7-physical-tiny-v7/private-logs/cpu-self-test.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 benchmarks/results/2026-10-20-m7-physical-tiny/m7-physical-tiny-v7/private-logs/metal-self-test.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Xcode's raw build output includes whitespace-only lines; retain exact bytes.
+benchmarks/results/2026-10-20-m7-worker-timing/m7-swift-harness-build-v9/logs/iphoneos-build.stdout -text -whitespace
+benchmarks/results/2026-10-20-m7-worker-timing/m7-swift-harness-build-v9/logs/iphonesimulator-build.stdout -text -whitespace

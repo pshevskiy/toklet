@@ -48,6 +48,9 @@ No mobile budget is inferred from the Mac's6GiB qualification.
 The UI exposes Prompt, Append, Continue, Reset, Cancel, Suspend, Replay, Unload
 and Close. It polls bounded raw-ID events every100ms; this polling interval is
 not an engine timing measurement. The dedicated worker serializes native calls.
+Non-UI diagnostics can use `waitUntilIdle(seconds:)` and bounded `tokenTimings`
+in the returned snapshot. Native elapsed time and callback uptime have distinct
+boundaries; see the [timing component](../docs/experiments/2026-10-20-m7-worker-timing.md).
 Inactive requests cancellation. Background requests session release, retaining
 immutable weights and exact history for explicit replay. Memory warnings request
 full unload; saved replay state is then cleared. Actual completion around OS
