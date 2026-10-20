@@ -87,8 +87,8 @@ runs three warmups plus ten measured two-token requests;26 raw samples retain
 IDs, clocks, state, memory and environment. Both close/release acknowledgements
 pass. Twenty-seven related Python checks and both strict Release SDK builds
 pass. The inherited Xcode iPad orientation and AppIntents warnings remain;
-only the two raw Xcode stdout paths have whitespace exceptions so their original
-bytes remain intact. Source/documentation whitespace checks remain active.
+the two raw Xcode stdout paths and raw Swift-version stderr have narrow
+whitespace exceptions so their original tool-emitted bytes remain intact. Source/documentation whitespace checks remain active.
 No numerical Rust/ABI/default changes or new Cargo qualification are attributed
 to this task.
 
@@ -113,3 +113,7 @@ Astra accepted the code and publication with no remaining findings after
 verifying164 evidence pins, six code pins, five historical mappings,50 copies,
 current build/runtime maps,27 related checks and364 local link targets. Phone,
 sustained and actual OS lifecycle qualification remain open.
+
+The final staged check also found a trailing space in Swift's raw version line.
+That evidence-only path now preserves the original byte with a narrow Git
+attribute; source and documentation whitespace checks remain active.

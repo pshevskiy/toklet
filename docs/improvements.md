@@ -723,3 +723,6 @@ executed sources remain recorded. These mechanism checks do not qualify phone
 memory/performance or complete M7.3. Astra accepted code and publication with
 no remaining findings after verifying164 evidence pins, six code pins, five
 historical mappings,50 copies,27 checks and364 local link targets.
+
+Raw Swift-version evidence also preserves its tool-emitted trailing space through
+a path-specific Git attribute; engine/source whitespace checks remain active.
