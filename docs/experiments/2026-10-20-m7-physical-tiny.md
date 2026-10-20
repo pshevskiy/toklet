@@ -118,3 +118,8 @@ and energy only where actual instrumentation supplies it. The
 Astra accepted the code task and publication packet with no remaining findings,
 after verifying198 current/historical pins,69 exact copies, executed-source
 mappings, privacy,363 local link targets and whitespace. M7.3 remains open.
+
+A post-commit blob check found Git line-ending normalization in the two raw
+console stdout files. Explicit `-text` attributes preserve their original mixed
+line endings and receipt hashes in the repository; the other67 manifest
+entries already matched their committed blobs. No runtime evidence was rerun.

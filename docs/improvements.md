@@ -695,3 +695,7 @@ recorded. No numerical gate/default changes occur. Real-model memory, limits,
 performance, thermal and actual OS lifecycle evidence remain pending; M7.3 and
 overall M7 remain open. Astra accepted code and publication with no remaining
 findings after verifying198 pins,69 copies, privacy and363 local links.
+
+Physical evidence storage now explicitly preserves the two console logs' mixed
+line endings. A post-commit blob check caught automatic normalization; the
+original raw bytes and hashes are retained through path-specific Git attributes.
