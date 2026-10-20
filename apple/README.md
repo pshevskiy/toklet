@@ -64,15 +64,14 @@ to the frozen Inference Lab iPhone14 admission records, not arbitrary devices.
 
 ## Physical setup and remaining qualification
 
-The latest setup check,19 October2026, finds a wired physical iPhone14Pro
-(`iPhone15,2`) on iOS27.0.1 with Developer Mode enabled and developer services
-available. The earlier wireless iPhone14ProMax (`iPhone15,3`, iOS26.6.1) still
-reports Developer Mode disabled. These are separate devices. The wired Pro is
-the next qualification target; its results cannot establish base iPhone14 or
-ProMax limits. The first observation found no signed-in Xcode account. After
-owner sign-in, Xcode shows a Personal Team, but the Mac still has zero valid
-signing identities; development signing is not yet configured for the harness.
-No physical app was installed or run.
+The [20 October physical tiny integration](../docs/experiments/2026-10-20-m7-physical-tiny.md)
+passes CPU and Metal on the wired iPhone14Pro (`iPhone15,2`, iOS27.0.1).
+Development signing, profile trust, installed-file correspondence, exact native
+states and process absence are verified. The earlier
+[setup observation](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
+remains a historical pre-signing record. Real-model memory, performance, thermal
+and actual OS lifecycle qualification remain pending. Pro results cannot
+establish base iPhone14 or ProMax limits.
 
 Connect the phone with a cable and keep it unlocked. In Xcode27, open
 Xcode > Open Developer Tool > Device Hub, select the physical phone and follow
@@ -90,7 +89,29 @@ Account authentication and the phone's confirmation require its owner. Keep
 credentials and private device identifiers out of committed files. A successful
 sign-in alone does not prove that a valid development certificate/profile exists;
 verify the signed app and physical installation before accepting test results.
-The [latest setup observation](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
-records readiness only, not physical execution or qualification.
+If macOS requests access to the development signing key, its owner must approve
+the Keychain prompt. If iOS rejects the installed developer app, its owner must
+trust that developer under Settings > General > VPN & Device Management.
+An unlocked phone on the Home Screen is needed for launch.
+
+The physical controller takes the reviewed package path/SHA, a private selection
+JSON path/SHA, and a new output directory. Private selection fields are exactly
+`device_identifier`, `device_udid`, `development_team`, `product_type` and
+`os_version`; never commit their identifying values. This controller deliberately
+admits only the current iPhone15,2/iOS27.0.1 target. For example:
+
+```sh
+python3 tools/experiments/m7_physical_integration.py artifacts/m7-apple-package-v4 REVIEWED_PACKAGE_SHA256 PRIVATE_SELECTION.json PRIVATE_SELECTION_SHA256 artifacts/physical-prepared-local-v1 --prepare-only
+python3 tools/experiments/m7_physical_integration.py artifacts/m7-apple-package-v4 REVIEWED_PACKAGE_SHA256 PRIVATE_SELECTION.json PRIVATE_SELECTION_SHA256 artifacts/physical-run-local-v1 artifacts/physical-prepared-local-v1 REVIEWED_PREPARATION_SHA256
+```
+
+Preparation verifies a signed installation with zero inference launches. Reuse
+checks the original app/native inputs, signature/profile and current installed
+location before launching CPU and Metal. Save the three code files under the
+preparation's `source-snapshot/` with their repository-relative paths when
+retaining a preparation for later controller revisions; their hashes must match
+that receipt. Existing manual harness processes cause refusal. Do not bypass
+that guard or launch against a stale installation. Private output stays ignored;
+publish only reviewed redacted receipts and safe exact console copies.
 See [the device qualification protocol](DEVICE_QUALIFICATION.md) before accepting
 any mobile model/context limit or closing M7.

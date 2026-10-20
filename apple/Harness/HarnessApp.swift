@@ -1,6 +1,44 @@
 import SwiftUI
 import UIKit
 import Darwin
+import CryptoKit
+import Combine
+
+// Diagnostic-only correspondence proof for the installed signed bundle. Hash
+// incrementally, outside inference timing; never read the app's Documents data.
+private func installedBundleProof(_ phase: String) throws {
+    // Fixed signed-file names avoid comparing Foundation's /var and
+    // /private/var aliases. The host independently admits the signed inventory.
+    let root = Bundle.main.bundleURL
+    var names = ["Info.plist","PkgInfo","Tiny/config.json","Tiny/model.safetensors",
+                 "TokletHarness","_CodeSignature/CodeResources"]
+    #if targetEnvironment(simulator)
+    let simulator = true
+    #else
+    let simulator = false
+    names.append("embedded.mobileprovision")
+    #endif
+    var files: [String:String] = [:]
+    for name in names {
+        let url = root.appendingPathComponent(name)
+        let properties = try url.resourceValues(forKeys:[.isRegularFileKey,.isSymbolicLinkKey])
+        guard properties.isSymbolicLink != true, properties.isRegularFile == true else {
+            throw NSError(domain:"TokletBundleProof",code:2)
+        }
+        let handle = try FileHandle(forReadingFrom:url)
+        defer { try? handle.close() }
+        var hash = SHA256()
+        var count = 0
+        while let data = try handle.read(upToCount:256 * 1024), !data.isEmpty {
+            count += data.count
+            guard count <= 256 * 1024 * 1024 else { throw NSError(domain:"TokletBundleProof",code:4) }
+            hash.update(data:data)
+        }
+        files[name] = hash.finalize().map { String(format:"%02x",$0) }.joined()
+    }
+    let data = try JSONSerialization.data(withJSONObject:["phase":phase,"simulator":simulator,"files":files],options:[.sortedKeys])
+    try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_INSTALLATION_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+}
 
 @MainActor
 private final class HarnessStore: ObservableObject {
@@ -144,11 +182,14 @@ struct TokletHarnessApp: App {
 
     init() {
         if ProcessInfo.processInfo.arguments.contains("--self-test") {
+            UIApplication.shared.isIdleTimerDisabled = true
             let directory = Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""
             let metal = ProcessInfo.processInfo.arguments.contains("--metal")
             DispatchQueue.global(qos:.userInitiated).async {
                 do {
+                    try installedBundleProof("before")
                     let result = try runWorkerChecks(directory:directory,metal:metal)
+                    try installedBundleProof("after")
                     let data = try JSONEncoder().encode(result)
                     try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_SELFTEST_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
                     exit(0)

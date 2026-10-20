@@ -1,0 +1,6 @@
+test_real_timeout_reaps_owned_child (test_m7_apple_package.PackageTests.test_real_timeout_reaps_owned_child) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.112s
+
+OK

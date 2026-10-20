@@ -1,0 +1,128 @@
+{
+  "passed": true,
+  "test_sources": {
+    "tools/experiments/test_m7_apple_integration.py": "fcd82d74ad68f25972662ea4294e484506ac362959f33503c1b22e11937058fa",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "tools/experiments/test_m7_native_metal_check.py": "f3834817dcd660d2652a6447cbe6632acb33b1a98d60078712b20a5f31aa4a44",
+    "tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+    "tools/experiments/test_m7_swift_harness_run.py": "cd54ce8480c01dc81f85ef836618531e13af80a35b5a204d2e49863bd9369fbf"
+  },
+  "source_endpoints_match": true,
+  "commands": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_apple_integration.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 5254,
+      "stdout": "artifacts/m7-physical-isolated-checks-v3/test_m7_apple_integration.stdout",
+      "stderr": "artifacts/m7-physical-isolated-checks-v3/test_m7_apple_integration.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_apple_package.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 5256,
+      "stdout": "artifacts/m7-physical-isolated-checks-v3/test_m7_apple_package.stdout",
+      "stderr": "artifacts/m7-physical-isolated-checks-v3/test_m7_apple_package.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_native_metal_check.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 5263,
+      "stdout": "artifacts/m7-physical-isolated-checks-v3/test_m7_native_metal_check.stdout",
+      "stderr": "artifacts/m7-physical-isolated-checks-v3/test_m7_native_metal_check.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_physical_integration.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 5266,
+      "stdout": "artifacts/m7-physical-isolated-checks-v3/test_m7_physical_integration.stdout",
+      "stderr": "artifacts/m7-physical-isolated-checks-v3/test_m7_physical_integration.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_swift_harness_build.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 5268,
+      "stdout": "artifacts/m7-physical-isolated-checks-v3/test_m7_swift_harness_build.stdout",
+      "stderr": "artifacts/m7-physical-isolated-checks-v3/test_m7_swift_harness_build.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_swift_harness_run.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 5270,
+      "stdout": "artifacts/m7-physical-isolated-checks-v3/test_m7_swift_harness_run.stdout",
+      "stderr": "artifacts/m7-physical-isolated-checks-v3/test_m7_swift_harness_run.stderr"
+    }
+  ]
+}

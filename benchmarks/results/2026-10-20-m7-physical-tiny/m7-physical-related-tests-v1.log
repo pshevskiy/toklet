@@ -1,0 +1,67 @@
+test_conflicting_pins_are_rejected (test_m7_apple_integration.IntegrationTests.test_conflicting_pins_are_rejected) ... ok
+test_failed_worker_preserves_failure_and_endpoint_change (test_m7_apple_integration.IntegrationTests.test_failed_worker_preserves_failure_and_endpoint_change) ... ok
+test_missing_or_remapped_executable_prevents_launch (test_m7_apple_integration.IntegrationTests.test_missing_or_remapped_executable_prevents_launch) ... ok
+test_mutated_frozen_input_prevents_launch (test_m7_apple_integration.IntegrationTests.test_mutated_frozen_input_prevents_launch) ... ok
+test_shutdown_requires_actual_shutdown_state (test_m7_apple_integration.IntegrationTests.test_shutdown_requires_actual_shutdown_state) ... ok
+test_simulator_failure_always_cleans_and_preserves_both_errors (test_m7_apple_integration.IntegrationTests.test_simulator_failure_always_cleans_and_preserves_both_errors) ... ok
+test_unreviewed_build_metadata_prevents_launch (test_m7_apple_integration.IntegrationTests.test_unreviewed_build_metadata_prevents_launch) ... ok
+test_bundle_validates_platform_copies_and_paths (test_m7_apple_package.PackageTests.test_bundle_validates_platform_copies_and_paths) ... ok
+test_descendant_ignoring_term_is_drained_after_parent_exits (test_m7_apple_package.PackageTests.test_descendant_ignoring_term_is_drained_after_parent_exits) ... ok
+test_environment_is_allowlisted_and_configuration_rejected (test_m7_apple_package.PackageTests.test_environment_is_allowlisted_and_configuration_rejected) ... ok
+test_exit_race_is_reaped_and_primary_preserved (test_m7_apple_package.PackageTests.test_exit_race_is_reaped_and_primary_preserved) ... ok
+test_final_group_and_reap_failure_are_preserved (test_m7_apple_package.PackageTests.test_final_group_and_reap_failure_are_preserved) ... ok
+test_metadata_is_one_bounded_read (test_m7_apple_package.PackageTests.test_metadata_is_one_bounded_read) ... ok
+test_platform_and_minimum_are_exact (test_m7_apple_package.PackageTests.test_platform_and_minimum_are_exact) ... ok
+test_real_timeout_reaps_owned_child (test_m7_apple_package.PackageTests.test_real_timeout_reaps_owned_child) ... FAIL
+test_sigterm_unwinds_for_cleanup (test_m7_apple_package.PackageTests.test_sigterm_unwinds_for_cleanup) ... ok
+test_symbol_lines_are_bounded (test_m7_apple_package.PackageTests.test_symbol_lines_are_bounded) ... ok
+test_changed_frozen_payload_is_rejected_before_any_launch (test_m7_native_metal_check.ControllerTests.test_changed_frozen_payload_is_rejected_before_any_launch) ... ok
+test_endpoint_failure_is_recorded_even_after_worker_failure (test_m7_native_metal_check.ControllerTests.test_endpoint_failure_is_recorded_even_after_worker_failure) ... ok
+test_final_reap_timeout_keeps_original_and_records_cleanup (test_m7_native_metal_check.ControllerTests.test_final_reap_timeout_keeps_original_and_records_cleanup) ... ok
+test_metadata_hash_and_parser_use_same_bounded_buffer (test_m7_native_metal_check.ControllerTests.test_metadata_hash_and_parser_use_same_bounded_buffer) ... ok
+test_natural_exit_race_does_not_skip_bounded_reap (test_m7_native_metal_check.ControllerTests.test_natural_exit_race_does_not_skip_bounded_reap) ... ok
+test_real_timeout_is_reaped_and_primary_preserved (test_m7_native_metal_check.ControllerTests.test_real_timeout_is_reaped_and_primary_preserved) ... ok
+test_changed_private_selection_is_zero_launch_and_writes_failure (test_m7_physical_integration.PhysicalIntegrationTests.test_changed_private_selection_is_zero_launch_and_writes_failure) ... ok
+test_cleanup_inventory_failure_is_not_absence (test_m7_physical_integration.PhysicalIntegrationTests.test_cleanup_inventory_failure_is_not_absence) ... ok
+test_cleanup_requeries_and_does_not_signal_reused_unowned_pid (test_m7_physical_integration.PhysicalIntegrationTests.test_cleanup_requeries_and_does_not_signal_reused_unowned_pid) ... ok
+test_cleanup_requires_independent_absence_and_escalates (test_m7_physical_integration.PhysicalIntegrationTests.test_cleanup_requires_independent_absence_and_escalates) ... ok
+test_device_rejects_simulator_wireless_replacement_and_disabled_services (test_m7_physical_integration.PhysicalIntegrationTests.test_device_rejects_simulator_wireless_replacement_and_disabled_services) ... ok
+test_installed_path_cannot_redirect_to_another_app (test_m7_physical_integration.PhysicalIntegrationTests.test_installed_path_cannot_redirect_to_another_app) ... ok
+test_installed_proofs_require_exact_source_backend_and_physical_execution (test_m7_physical_integration.PhysicalIntegrationTests.test_installed_proofs_require_exact_source_backend_and_physical_execution) ... ok
+test_profile_requires_current_device_team_app_and_development_scope (test_m7_physical_integration.PhysicalIntegrationTests.test_profile_requires_current_device_team_app_and_development_scope) ... ok
+test_signed_inventory_rejects_extra_and_symlink_files (test_m7_physical_integration.PhysicalIntegrationTests.test_signed_inventory_rejects_extra_and_symlink_files) ... ok
+test_valid_profile_does_not_substitute_for_signature (test_m7_physical_integration.PhysicalIntegrationTests.test_valid_profile_does_not_substitute_for_signature) ... ok
+test_binary_plist_identity_and_executable_escape_are_checked (test_m7_swift_harness_build.HarnessBuildTests.test_binary_plist_identity_and_executable_escape_are_checked) ... ok
+test_fixture_mutation_prevents_copy (test_m7_swift_harness_build.HarnessBuildTests.test_fixture_mutation_prevents_copy) ... ok
+test_foreign_library_is_never_replaced (test_m7_swift_harness_build.HarnessBuildTests.test_foreign_library_is_never_replaced) ... ok
+test_generated_symlink_cannot_redirect_fixture (test_m7_swift_harness_build.HarnessBuildTests.test_generated_symlink_cannot_redirect_fixture) ... ok
+test_library_link_redirection_is_detected (test_m7_swift_harness_build.HarnessBuildTests.test_library_link_redirection_is_detected) ... ok
+test_oversize_metadata_uses_one_bounded_read (test_m7_swift_harness_build.HarnessBuildTests.test_oversize_metadata_uses_one_bounded_read) ... ok
+test_redirection_between_prepare_and_admission_is_rejected (test_m7_swift_harness_build.HarnessBuildTests.test_redirection_between_prepare_and_admission_is_rejected) ... ok
+test_unreviewed_build_is_zero_launch_and_has_failed_receipt (test_m7_swift_harness_build.HarnessBuildTests.test_unreviewed_build_is_zero_launch_and_has_failed_receipt) ... ok
+test_boot_failure_cleans_owned_simulator_and_preserves_errors (test_m7_swift_harness_run.HarnessRunTests.test_boot_failure_cleans_owned_simulator_and_preserves_errors) ... ok
+test_changed_build_is_zero_launch (test_m7_swift_harness_run.HarnessRunTests.test_changed_build_is_zero_launch) ... ok
+test_conflicting_executable_binding_is_rejected (test_m7_swift_harness_run.HarnessRunTests.test_conflicting_executable_binding_is_rejected) ... ok
+test_installed_bundle_copy_is_verified (test_m7_swift_harness_run.HarnessRunTests.test_installed_bundle_copy_is_verified) ... ok
+test_omitted_or_remapped_app_is_rejected (test_m7_swift_harness_run.HarnessRunTests.test_omitted_or_remapped_app_is_rejected) ... ok
+
+======================================================================
+FAIL: test_real_timeout_reaps_owned_child (test_m7_apple_package.PackageTests.test_real_timeout_reaps_owned_child)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/tools/experiments/test_m7_apple_package.py", line 29, in test_real_timeout_reaps_owned_child
+    self.assertIsNotNone(row['exit_code']);self.assertEqual(row['cleanup_errors'],[])
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['group cleanup: PermissionError: [Errno 1] Operation not permitted'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'group cleanup: PermissionError: [Errno 1] Operation not permitted'
+
+- ['group cleanup: PermissionError: [Errno 1] Operation not permitted']
++ []
+
+----------------------------------------------------------------------
+Ran 46 tests in 1.341s
+
+FAILED (failures=1)

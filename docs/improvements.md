@@ -679,3 +679,19 @@ have not started.
 Astra accepted this setup documentation task with no remaining findings after
 verifying all12 pins,354 relative link targets and private-to-redacted facts.
 No physical workload or engine change is included.
+
+The [signed physical tiny integration](experiments/2026-10-20-m7-physical-tiny.md)
+adds private device/team admission, strict signed Release/profile verification,
+streamed hashes for seven admitted files and independently verified phone-process
+cleanup. Preparation and exact-install reuse avoid rebuilding while waiting for
+owner trust/unlock. Failed cleanup and nested private identifiers cannot be
+hidden by a later successful command. Sixteen targeted and52 related isolated
+checks pass; both SDK Release builds pass strict Swift checks (inherited Xcode
+orientation/AppIntents warnings remain). Actual iPhone14Pro CPU and Metal checks
+pass exact initial IDs, ten states, replay/cancel/resume, unload, close and weak
+owner release, with matching before/after file proofs and verified process absence.
+Earlier failed attempts and intermittent host timeout-probe failures remain
+recorded. No numerical gate/default changes occur. Real-model memory, limits,
+performance, thermal and actual OS lifecycle evidence remain pending; M7.3 and
+overall M7 remain open. Astra accepted code and publication with no remaining
+findings after verifying198 pins,69 copies, privacy and363 local links.

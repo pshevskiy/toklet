@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026; updated 19 October 2026. Status: M0–M6 are complete in their qualified scopes; M7 remains pending. M6 qualifies explicit Online attention with FP16 KV for the selected small compensated Half and frozen larger group8 Q4 v2 models at4K/8K/16K/32K total tokens on Apple M1 Pro. Full quality, context boundary/state/memory and maximum application evidence pass within6GiB. Defaults and baseline limits remain. See the [M6 release decision](docs/experiments/2026-10-19-m6-release.md) and [M5 release decision](docs/experiments/2026-10-15-m5-release.md).
+Prepared 9 October 2026; updated 20 October 2026. Status: M0–M6 are complete in their qualified scopes; M7 remains pending. M6 qualifies explicit Online attention with FP16 KV for the selected small compensated Half and frozen larger group8 Q4 v2 models at4K/8K/16K/32K total tokens on Apple M1 Pro. Full quality, context boundary/state/memory and maximum application evidence pass within6GiB. Defaults and baseline limits remain. See the [M6 release decision](docs/experiments/2026-10-19-m6-release.md) and [M5 release decision](docs/experiments/2026-10-15-m5-release.md).
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -1421,14 +1421,16 @@ In progress,19 October2026. The first [CPU raw-ID C boundary component](docs/exp
 - [x] **M7.2 Add a minimal Swift harness.** Exercise load, prompt, token streaming, continuation, reset, and cancellation. Run inference away from the UI thread and define callback lifetime and serialization. Reuse the same Rust engine and local artifact format.
 - [ ] **M7.3 Qualify the physical device.** Measure an independent iPhone 14 memory budget, thermal behavior, sustained throughput, and energy where instrumentation is available. Test inactive/background transitions, memory warnings, interruption during generation, resume/replay, and orderly resource release. Add iPad and newer Macs as separate device qualifications.
 
-Physical setup update,19 October2026: the wired iPhone14Pro (`iPhone15,2`,
-iOS27.0.1) has Developer Mode enabled and developer services available. It is
-separate from the older wireless ProMax and the iPhone14 simulator. Owner
-account sign-in is verified and a Personal Team is available, but the Mac still
-has zero valid signing identities and development signing is not configured;
-no physical app has been installed or tested. The [setup observation](benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
-records readiness only. Qualify the wired Pro under its exact name; base
-iPhone14 limits and M7.3 exit remain pending.
+Physical integration update,20 October2026: the signed Release harness passes
+actual CPU and Metal tiny checks on the wired iPhone14Pro (`iPhone15,2`,
+iOS27.0.1). Exact token/state/replay/cancel/unload/close/owner-release assertions,
+seven admitted installed-file proofs and independent process absence pass.
+The [report](docs/experiments/2026-10-20-m7-physical-tiny.md) retains failures,
+source/evidence pins and52 passing isolated helper checks. Development signing
+and profile trust are resolved. Real-model numerical/state qualification,
+whole-process memory limits, actual OS lifecycle transitions, sustained
+throughput/thermal observations and base iPhone14 evidence remain pending;
+M7.3 and overall M7 stay open.
 
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
