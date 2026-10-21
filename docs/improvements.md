@@ -990,3 +990,10 @@ The [M0–M7 audit](experiments/2026-10-21-full-plan-audit.md) maps all 32 tasks
 ### Final implementation and performance summary — 21 October 2026
 
 The [final summary](final-summary.md) consolidates implemented M0–M7 capabilities, selected-path quality, measured M1 Pro and iPhone 14 Pro latencies/memory, sustained phone slowdown and remaining limitations. It separates numerical, native and application timing, paired mechanism gains, descriptive long-context trials and independent mobile budgets. It references immutable accepted reports without adding benchmarks, runtime changes or expanded qualification claims. Astra verified the numerical transcriptions and scopes; all 278 local links and whitespace checks pass.
+
+
+### Native Rust MLX affine storage foundation — 21 October 2026
+
+Following the user's explicit switch from Swift MLX integration to native Rust model support, the [affine reader/reference](mlx-affine.md) adds borrowed MLX U32 packing for 2/3/4/5/6/8 bits, groups 32/64/128 and F16/BF16/F32 metadata. It preserves negative/zero scales, separate biases, unaligned-safe decoding, checked sizes and failure-atomic scalar matvec output. Fifty-four pinned MLX CPU/GPU fixtures preserve every code and separate FP32 reconstruction from native-dtype rounding; 31 native-dtype CPU/GPU differences remain visible. Seven focused tests, 118 CPU tests, 130 Metal-feature tests, formatting, strict Clippy and offline fixture hashes pass. The initial expected-value failure used FP32 powi for a BF16 subnormal; exact expected bits fix the test without a parser/tolerance change. The uncommitted Swift prototype/setup failure and its investigation remain under ignored artifacts. Complete-model loading, architecture expansion, GPU execution, discovery/downloads and physical device qualification remain open in the [M8 plan](mlx-implementation-plan.md).
+
+Astra accepted the affine source and completed evidence with no blockers after independent fixture replay, source/raw hashes, failed-attempt correspondence and check-count verification. This acceptance covers the storage primitive only.

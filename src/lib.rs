@@ -7,6 +7,7 @@
 pub mod benchmark;
 pub mod cpu;
 pub mod generation;
+pub mod mlx;
 pub mod model;
 pub mod native;
 pub mod q4;

@@ -2,6 +2,10 @@
 
 Prepared 9 October 2026; updated 21 October 2026. Status: M0–M7 are complete in their qualified scopes. M7 qualifies the selected models on iPhone 14 Pro/iOS27.0.1 after the user explicitly amended the original base-device target; see the [M7 closure](docs/experiments/2026-10-21-m7-release.md). M6 qualifies explicit Online attention with FP16 KV for the selected small compensated Half and frozen larger group8 Q4 v2 models at4K/8K/16K/32K total tokens on Apple M1 Pro. Full quality, context boundary/state/memory and maximum application evidence pass within6GiB. Defaults and baseline limits remain. See the [M6 release decision](docs/experiments/2026-10-19-m6-release.md) and [M5 release decision](docs/experiments/2026-10-15-m5-release.md).
 
+New scope, 21 October 2026: the [MLX extension plan](docs/mlx-implementation-plan.md)
+adds native Rust execution of MLX-format models before device-aware Hugging Face discovery/downloads,
+with Mac and iPhone 14 Pro checks. M8 is in progress; prior M0–M7 closures remain scoped and immutable.
+
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
 This plan translates the [Apple LLM performance proposal](apple_llm_performance_plan.md) into repository work. The proposal supplies design context; its references to an existing linear layer and earlier plan do not establish completed work in this checkout.

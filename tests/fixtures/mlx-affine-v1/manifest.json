@@ -1,0 +1,2722 @@
+{
+  "format": "toklet-mlx-affine-reference-v1",
+  "mlx_version": "0.32.3",
+  "python_version": "3.12.8",
+  "machine": "arm64",
+  "os": "26.6.2",
+  "exporter_sha256": "45bf05e7d235f01de52a94e50c2175505405abc11e823e21871f2224394e8b30",
+  "oracle_binary": {
+    "name": "core.cpython-312-darwin.so",
+    "bytes": 1627528,
+    "sha256": "49eeb7232106aa9ab846b20e0417add980b1c7213ef6dda6e25c01d45ca54851"
+  },
+  "backends": [
+    "CPU",
+    "Metal GPU"
+  ],
+  "policy": "Promote original metadata to FP32; compare CPU/GPU dequantization bits for exact-product inputs. Native-dtype CPU/GPU outputs are separate rounding witnesses, not the Rust FP32 reconstruction contract. Matvec: reconstructed FP32 weights, ordered FP64 products/accumulation, final FP32.",
+  "cases": [
+    {
+      "bits": 2,
+      "group_size": 32,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 0,
+          "bytes": 128,
+          "sha256": "24d572d21f473f0ef149453b95c6776e6250947345d3adfa0992959f44a03b93"
+        },
+        "scales": {
+          "offset": 128,
+          "bytes": 32,
+          "sha256": "4bff7d6d50280b6a8cd82457ccd933c165e43bbf81886f2b7e39d632e5aff076"
+        },
+        "biases": {
+          "offset": 160,
+          "bytes": 32,
+          "sha256": "466cd23454fdbc3b44c9ed8890db6ee2ea53698f29f70d336ec5585eb08119c5"
+        },
+        "reconstructed_f32": {
+          "offset": 192,
+          "bytes": 2048,
+          "sha256": "e9b983b5cc88e8a8741c53632774b0044125c86e461742912de677c02580fa47"
+        },
+        "native_cpu": {
+          "offset": 2240,
+          "bytes": 1024,
+          "sha256": "cecff42051fe893f21b1609a203ed1070aebfb651ac8b84dd09316b5ffeb8452"
+        },
+        "native_gpu": {
+          "offset": 3264,
+          "bytes": 1024,
+          "sha256": "7ef33017fc9914e9730f89e8dd98697f2168a6c547fca274847d222108169c9b"
+        },
+        "input_f32": {
+          "offset": 4288,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 5312,
+          "bytes": 8,
+          "sha256": "fc4e0c1d22a72a959a2dab150c5298f55f8c0e66ba9c6c4b082ea27fad4b35ec"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 2,
+      "group_size": 32,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 5320,
+          "bytes": 128,
+          "sha256": "24d572d21f473f0ef149453b95c6776e6250947345d3adfa0992959f44a03b93"
+        },
+        "scales": {
+          "offset": 5448,
+          "bytes": 32,
+          "sha256": "2316a0fcd2a9d06fe71908dbe50d03e90a9dff7f3a3e21987e0db3ddc21ddec3"
+        },
+        "biases": {
+          "offset": 5480,
+          "bytes": 32,
+          "sha256": "105fd1cd67228aece41c62d97675e8f57e30c5118e9811273a9272cebeb7ad90"
+        },
+        "reconstructed_f32": {
+          "offset": 5512,
+          "bytes": 2048,
+          "sha256": "5c9e8ec8c222869461c3369f4fb6bd4628e3ae01c0be89c2b5075e7164049f41"
+        },
+        "native_cpu": {
+          "offset": 7560,
+          "bytes": 1024,
+          "sha256": "635b1bb36723615790c5d706f3333155596bc9cfe60039dd4060b47540dfb1e9"
+        },
+        "native_gpu": {
+          "offset": 8584,
+          "bytes": 1024,
+          "sha256": "635b1bb36723615790c5d706f3333155596bc9cfe60039dd4060b47540dfb1e9"
+        },
+        "input_f32": {
+          "offset": 9608,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 10632,
+          "bytes": 8,
+          "sha256": "3ef2af95e710653a48b6193ca636b6179c2a5cd15b354ce912ec6bcea3ea50e3"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 2,
+      "group_size": 32,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 10640,
+          "bytes": 128,
+          "sha256": "24d572d21f473f0ef149453b95c6776e6250947345d3adfa0992959f44a03b93"
+        },
+        "scales": {
+          "offset": 10768,
+          "bytes": 64,
+          "sha256": "8dbbe6e4a8e42c35287109ced2efeec42d9aecf95fca992f9899fa51e9074612"
+        },
+        "biases": {
+          "offset": 10832,
+          "bytes": 64,
+          "sha256": "6abfdfbb210b0d36d04ba8936a1a815426643c244d3ee5a2650fcd8956f55831"
+        },
+        "reconstructed_f32": {
+          "offset": 10896,
+          "bytes": 2048,
+          "sha256": "78f2288c5554cdd62224cb991aa3470369ead0448d418ee1a266a70ed708768b"
+        },
+        "native_cpu": {
+          "offset": 12944,
+          "bytes": 2048,
+          "sha256": "78f2288c5554cdd62224cb991aa3470369ead0448d418ee1a266a70ed708768b"
+        },
+        "native_gpu": {
+          "offset": 14992,
+          "bytes": 2048,
+          "sha256": "78f2288c5554cdd62224cb991aa3470369ead0448d418ee1a266a70ed708768b"
+        },
+        "input_f32": {
+          "offset": 17040,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 18064,
+          "bytes": 8,
+          "sha256": "fc4e0c1d22a72a959a2dab150c5298f55f8c0e66ba9c6c4b082ea27fad4b35ec"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 2,
+      "group_size": 64,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 18072,
+          "bytes": 128,
+          "sha256": "24d572d21f473f0ef149453b95c6776e6250947345d3adfa0992959f44a03b93"
+        },
+        "scales": {
+          "offset": 18200,
+          "bytes": 16,
+          "sha256": "6677a7ddea04449a65374cb16a5eb9da62144500beb9c313db335437bded7b61"
+        },
+        "biases": {
+          "offset": 18216,
+          "bytes": 16,
+          "sha256": "7ba1199ab89c52ca86d65dfc295effb10539f87014fc1f6fdb6a3246dc5beefb"
+        },
+        "reconstructed_f32": {
+          "offset": 18232,
+          "bytes": 2048,
+          "sha256": "f91063506beac1eed6c214d6e67302e91733da727a0a6faedf9a23501da35bae"
+        },
+        "native_cpu": {
+          "offset": 20280,
+          "bytes": 1024,
+          "sha256": "a68820dc1d1a900bcf1fec603d4bbe8f6a3b0bd812b61f6b88d762722ceeb6f0"
+        },
+        "native_gpu": {
+          "offset": 21304,
+          "bytes": 1024,
+          "sha256": "0f1648dc20f010d457cafa380b4ab3b3e59d73bba27ccb646d4a1cccb686e89c"
+        },
+        "input_f32": {
+          "offset": 22328,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 23352,
+          "bytes": 8,
+          "sha256": "6e28893c7be18d784ac76522a09a009d9bca7694254406c589857d38a4d4a1ac"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 2,
+      "group_size": 64,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 23360,
+          "bytes": 128,
+          "sha256": "24d572d21f473f0ef149453b95c6776e6250947345d3adfa0992959f44a03b93"
+        },
+        "scales": {
+          "offset": 23488,
+          "bytes": 16,
+          "sha256": "b3b6b846738e28b467310aec53d718bd9b62fc149f83f84117d2311a4b5b233d"
+        },
+        "biases": {
+          "offset": 23504,
+          "bytes": 16,
+          "sha256": "ddef07e29bc185fbbf0e50f384f619258057aaeeb0a9078a9b43b116ed5738ca"
+        },
+        "reconstructed_f32": {
+          "offset": 23520,
+          "bytes": 2048,
+          "sha256": "f183874fc7a09d9c329a2a4514bebc502eb3d6db5a37fcfb12281c1ae9fc077b"
+        },
+        "native_cpu": {
+          "offset": 25568,
+          "bytes": 1024,
+          "sha256": "3679b53f183f915a566010c0fff81e3fe228a62dd95f13a8f0f79de5d34fc7d7"
+        },
+        "native_gpu": {
+          "offset": 26592,
+          "bytes": 1024,
+          "sha256": "3679b53f183f915a566010c0fff81e3fe228a62dd95f13a8f0f79de5d34fc7d7"
+        },
+        "input_f32": {
+          "offset": 27616,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 28640,
+          "bytes": 8,
+          "sha256": "3cabbafbec10b5fbdcb600a3c01d95537ac28040acbe4fc1c9fc928825d73135"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 2,
+      "group_size": 64,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 28648,
+          "bytes": 128,
+          "sha256": "24d572d21f473f0ef149453b95c6776e6250947345d3adfa0992959f44a03b93"
+        },
+        "scales": {
+          "offset": 28776,
+          "bytes": 32,
+          "sha256": "a7c3f0bb4e4f76f053a51619e9fbbc606b06bb43d8843991b957c6d4fe1e1b6e"
+        },
+        "biases": {
+          "offset": 28808,
+          "bytes": 32,
+          "sha256": "4bcdf565e04182d6e64a68a8579a43668c488543e3edd7b21ab82e64b2dd4229"
+        },
+        "reconstructed_f32": {
+          "offset": 28840,
+          "bytes": 2048,
+          "sha256": "59f888209418571123a9190b9c512f76a193e8f019ab5fa7a6048fb44dd59f76"
+        },
+        "native_cpu": {
+          "offset": 30888,
+          "bytes": 2048,
+          "sha256": "59f888209418571123a9190b9c512f76a193e8f019ab5fa7a6048fb44dd59f76"
+        },
+        "native_gpu": {
+          "offset": 32936,
+          "bytes": 2048,
+          "sha256": "59f888209418571123a9190b9c512f76a193e8f019ab5fa7a6048fb44dd59f76"
+        },
+        "input_f32": {
+          "offset": 34984,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 36008,
+          "bytes": 8,
+          "sha256": "6e28893c7be18d784ac76522a09a009d9bca7694254406c589857d38a4d4a1ac"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 2,
+      "group_size": 128,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 36016,
+          "bytes": 128,
+          "sha256": "24d572d21f473f0ef149453b95c6776e6250947345d3adfa0992959f44a03b93"
+        },
+        "scales": {
+          "offset": 36144,
+          "bytes": 8,
+          "sha256": "91b3dae2030e4fec2e0f2d0582a67ab2fee8980dd6c4c8a73c65da92fd32b30c"
+        },
+        "biases": {
+          "offset": 36152,
+          "bytes": 8,
+          "sha256": "89638b04eade30bde370d6a181acd45842b59e1d10827159fcc6dc149dd04915"
+        },
+        "reconstructed_f32": {
+          "offset": 36160,
+          "bytes": 2048,
+          "sha256": "62b8a344fc547e2ed1ebc980d1019e3e00a1a0b62afa22ebab32eaf64cab4a9c"
+        },
+        "native_cpu": {
+          "offset": 38208,
+          "bytes": 1024,
+          "sha256": "8b51b56fdb09771a2e0f0a2d597ec7244393e6049596733c6650c67731c50708"
+        },
+        "native_gpu": {
+          "offset": 39232,
+          "bytes": 1024,
+          "sha256": "c7cd0971ddfd6b88f70c83f77fca9bb5186f3fb1e4ad29dca5cf59b0cf73857a"
+        },
+        "input_f32": {
+          "offset": 40256,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 41280,
+          "bytes": 8,
+          "sha256": "b5a9d2ce91e83c16fd0cf1da5f407b3e31a6ddd6725dd03a390c7f8a00f750b3"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 2,
+      "group_size": 128,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 41288,
+          "bytes": 128,
+          "sha256": "24d572d21f473f0ef149453b95c6776e6250947345d3adfa0992959f44a03b93"
+        },
+        "scales": {
+          "offset": 41416,
+          "bytes": 8,
+          "sha256": "4b58ddfa2a51347fcf72a24c907427fcca97e62ee591324027f1f40a16550c6b"
+        },
+        "biases": {
+          "offset": 41424,
+          "bytes": 8,
+          "sha256": "3b3e5aef7cda997cf5ca9d3e7bb8d0772d99adf84d9cb79a50f4774bf5b79f3b"
+        },
+        "reconstructed_f32": {
+          "offset": 41432,
+          "bytes": 2048,
+          "sha256": "da2436444c0d4d35df830e318de1cd614ee9f1da820260cf586142cbbc149b3e"
+        },
+        "native_cpu": {
+          "offset": 43480,
+          "bytes": 1024,
+          "sha256": "d257d9e03bd8220c5db4f442fdb5937772ae07379abf521118c937bcbc3a5f32"
+        },
+        "native_gpu": {
+          "offset": 44504,
+          "bytes": 1024,
+          "sha256": "d257d9e03bd8220c5db4f442fdb5937772ae07379abf521118c937bcbc3a5f32"
+        },
+        "input_f32": {
+          "offset": 45528,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 46552,
+          "bytes": 8,
+          "sha256": "c9e3b968e1f9d5c5f8386d3c04e564b668758a34c8ab274ff06ba4ef72df3423"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 2,
+      "group_size": 128,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 46560,
+          "bytes": 128,
+          "sha256": "24d572d21f473f0ef149453b95c6776e6250947345d3adfa0992959f44a03b93"
+        },
+        "scales": {
+          "offset": 46688,
+          "bytes": 16,
+          "sha256": "1c7ad5aa276e612b8a68c087ad4e331d04217785bfbf35b18bc9c103c879568e"
+        },
+        "biases": {
+          "offset": 46704,
+          "bytes": 16,
+          "sha256": "31c5459c2f068de006c5581f219363230c66c547ab4296999304c9cc447e9e67"
+        },
+        "reconstructed_f32": {
+          "offset": 46720,
+          "bytes": 2048,
+          "sha256": "5896c68242ab124c90c5c0cfffcd0a9f54aa2e8681ac1ea553750506ff0c6209"
+        },
+        "native_cpu": {
+          "offset": 48768,
+          "bytes": 2048,
+          "sha256": "5896c68242ab124c90c5c0cfffcd0a9f54aa2e8681ac1ea553750506ff0c6209"
+        },
+        "native_gpu": {
+          "offset": 50816,
+          "bytes": 2048,
+          "sha256": "5896c68242ab124c90c5c0cfffcd0a9f54aa2e8681ac1ea553750506ff0c6209"
+        },
+        "input_f32": {
+          "offset": 52864,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 53888,
+          "bytes": 8,
+          "sha256": "0ca344d46301f09d9b5c49bbddd7e009fdc2c4e85ae7ba4177a50bd5a7da4772"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 3,
+      "group_size": 32,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 53896,
+          "bytes": 192,
+          "sha256": "a31802a6bd2d94ae1ead60902273f188008ca89b751cc6eda77f14f1cbec0175"
+        },
+        "scales": {
+          "offset": 54088,
+          "bytes": 32,
+          "sha256": "4bff7d6d50280b6a8cd82457ccd933c165e43bbf81886f2b7e39d632e5aff076"
+        },
+        "biases": {
+          "offset": 54120,
+          "bytes": 32,
+          "sha256": "466cd23454fdbc3b44c9ed8890db6ee2ea53698f29f70d336ec5585eb08119c5"
+        },
+        "reconstructed_f32": {
+          "offset": 54152,
+          "bytes": 2048,
+          "sha256": "7d604a3acf3ef02a93cc43d6a8967e7307a7140047f6e18e9274e6cc93fa5237"
+        },
+        "native_cpu": {
+          "offset": 56200,
+          "bytes": 1024,
+          "sha256": "9c27e161c82b0308dbab7e05c6c83e28eea7becff5b0aafa34f8f62291ecc86e"
+        },
+        "native_gpu": {
+          "offset": 57224,
+          "bytes": 1024,
+          "sha256": "7ed17dc586d87880eb744536e7b672f24c5aefd651daded9d5909cd84c394e06"
+        },
+        "input_f32": {
+          "offset": 58248,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 59272,
+          "bytes": 8,
+          "sha256": "c2bc0f0c3e9dc5f0689173124307cdb0c3e74cf1ba028bd5086ce24c2a69c4a6"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 3,
+      "group_size": 32,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 59280,
+          "bytes": 192,
+          "sha256": "a31802a6bd2d94ae1ead60902273f188008ca89b751cc6eda77f14f1cbec0175"
+        },
+        "scales": {
+          "offset": 59472,
+          "bytes": 32,
+          "sha256": "2316a0fcd2a9d06fe71908dbe50d03e90a9dff7f3a3e21987e0db3ddc21ddec3"
+        },
+        "biases": {
+          "offset": 59504,
+          "bytes": 32,
+          "sha256": "105fd1cd67228aece41c62d97675e8f57e30c5118e9811273a9272cebeb7ad90"
+        },
+        "reconstructed_f32": {
+          "offset": 59536,
+          "bytes": 2048,
+          "sha256": "26b5cd7e01a36b24f5a20eda9bae4d4c29499d1d047ad2d6a6a9c9bc1f089768"
+        },
+        "native_cpu": {
+          "offset": 61584,
+          "bytes": 1024,
+          "sha256": "d0f6109acd3c798297922ae072fb76d6a5d4ffdd8944216cd97cbc834e2c8bac"
+        },
+        "native_gpu": {
+          "offset": 62608,
+          "bytes": 1024,
+          "sha256": "f7424319ac175e9fcedddd960069973b276fee98c5613d4d946af5a036617740"
+        },
+        "input_f32": {
+          "offset": 63632,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 64656,
+          "bytes": 8,
+          "sha256": "bcf7118de571b2a2baac09c2600953823b0df40d396d7145c634319e3dd70d66"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 3,
+      "group_size": 32,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 64664,
+          "bytes": 192,
+          "sha256": "a31802a6bd2d94ae1ead60902273f188008ca89b751cc6eda77f14f1cbec0175"
+        },
+        "scales": {
+          "offset": 64856,
+          "bytes": 64,
+          "sha256": "8dbbe6e4a8e42c35287109ced2efeec42d9aecf95fca992f9899fa51e9074612"
+        },
+        "biases": {
+          "offset": 64920,
+          "bytes": 64,
+          "sha256": "6abfdfbb210b0d36d04ba8936a1a815426643c244d3ee5a2650fcd8956f55831"
+        },
+        "reconstructed_f32": {
+          "offset": 64984,
+          "bytes": 2048,
+          "sha256": "f1c6dd1ffff7f3f7d2f43c442e4e0e26d95239f73f1d738645c9266a9c97f9e9"
+        },
+        "native_cpu": {
+          "offset": 67032,
+          "bytes": 2048,
+          "sha256": "f1c6dd1ffff7f3f7d2f43c442e4e0e26d95239f73f1d738645c9266a9c97f9e9"
+        },
+        "native_gpu": {
+          "offset": 69080,
+          "bytes": 2048,
+          "sha256": "f1c6dd1ffff7f3f7d2f43c442e4e0e26d95239f73f1d738645c9266a9c97f9e9"
+        },
+        "input_f32": {
+          "offset": 71128,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 72152,
+          "bytes": 8,
+          "sha256": "3fac9daa381558cbd349e4daa727e1c2baf05b0c371646c35c5f265fc3ffeccc"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 3,
+      "group_size": 64,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 72160,
+          "bytes": 192,
+          "sha256": "a31802a6bd2d94ae1ead60902273f188008ca89b751cc6eda77f14f1cbec0175"
+        },
+        "scales": {
+          "offset": 72352,
+          "bytes": 16,
+          "sha256": "6677a7ddea04449a65374cb16a5eb9da62144500beb9c313db335437bded7b61"
+        },
+        "biases": {
+          "offset": 72368,
+          "bytes": 16,
+          "sha256": "7ba1199ab89c52ca86d65dfc295effb10539f87014fc1f6fdb6a3246dc5beefb"
+        },
+        "reconstructed_f32": {
+          "offset": 72384,
+          "bytes": 2048,
+          "sha256": "5284fb70c6f66724bbf083b559f66f54963e1174a4d45cdb8c2dce7d721327ec"
+        },
+        "native_cpu": {
+          "offset": 74432,
+          "bytes": 1024,
+          "sha256": "8be5eb322b80113d076852c13efa7fab66e91305d4016e7afbfca6383a8deb0f"
+        },
+        "native_gpu": {
+          "offset": 75456,
+          "bytes": 1024,
+          "sha256": "9d5cbf981449741687fec607c99355286c6b93d4aad41176d5ccafb31a7e7649"
+        },
+        "input_f32": {
+          "offset": 76480,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 77504,
+          "bytes": 8,
+          "sha256": "b746ca40c2ba76697bcbb0ecf90181a4593f44f4ba348074a29e6a610de5eba0"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 3,
+      "group_size": 64,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 77512,
+          "bytes": 192,
+          "sha256": "a31802a6bd2d94ae1ead60902273f188008ca89b751cc6eda77f14f1cbec0175"
+        },
+        "scales": {
+          "offset": 77704,
+          "bytes": 16,
+          "sha256": "b3b6b846738e28b467310aec53d718bd9b62fc149f83f84117d2311a4b5b233d"
+        },
+        "biases": {
+          "offset": 77720,
+          "bytes": 16,
+          "sha256": "ddef07e29bc185fbbf0e50f384f619258057aaeeb0a9078a9b43b116ed5738ca"
+        },
+        "reconstructed_f32": {
+          "offset": 77736,
+          "bytes": 2048,
+          "sha256": "ebd34a86b125bc3c051fadadc9514064afa046f197b1c3ada46238e47b1ba349"
+        },
+        "native_cpu": {
+          "offset": 79784,
+          "bytes": 1024,
+          "sha256": "f9f934211569533d7bbc6f468cea7c5e1a99d6837012b8f9bb20a25ccdfdf0c1"
+        },
+        "native_gpu": {
+          "offset": 80808,
+          "bytes": 1024,
+          "sha256": "913b35a0317b254f8fc3a2321fb4bf9b87357540ea68f247c432770264e76c6c"
+        },
+        "input_f32": {
+          "offset": 81832,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 82856,
+          "bytes": 8,
+          "sha256": "ffb8372e94916e454d6fa47ca11f6f57e283b39d0be7d5616fe1a1bbf32fb6c5"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 3,
+      "group_size": 64,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 82864,
+          "bytes": 192,
+          "sha256": "a31802a6bd2d94ae1ead60902273f188008ca89b751cc6eda77f14f1cbec0175"
+        },
+        "scales": {
+          "offset": 83056,
+          "bytes": 32,
+          "sha256": "a7c3f0bb4e4f76f053a51619e9fbbc606b06bb43d8843991b957c6d4fe1e1b6e"
+        },
+        "biases": {
+          "offset": 83088,
+          "bytes": 32,
+          "sha256": "4bcdf565e04182d6e64a68a8579a43668c488543e3edd7b21ab82e64b2dd4229"
+        },
+        "reconstructed_f32": {
+          "offset": 83120,
+          "bytes": 2048,
+          "sha256": "bc46d73dfa389f72d7a461a527894042a9beb5641d1e9c6184de70d9f6fc5bf7"
+        },
+        "native_cpu": {
+          "offset": 85168,
+          "bytes": 2048,
+          "sha256": "bc46d73dfa389f72d7a461a527894042a9beb5641d1e9c6184de70d9f6fc5bf7"
+        },
+        "native_gpu": {
+          "offset": 87216,
+          "bytes": 2048,
+          "sha256": "bc46d73dfa389f72d7a461a527894042a9beb5641d1e9c6184de70d9f6fc5bf7"
+        },
+        "input_f32": {
+          "offset": 89264,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 90288,
+          "bytes": 8,
+          "sha256": "b746ca40c2ba76697bcbb0ecf90181a4593f44f4ba348074a29e6a610de5eba0"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 3,
+      "group_size": 128,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 90296,
+          "bytes": 192,
+          "sha256": "a31802a6bd2d94ae1ead60902273f188008ca89b751cc6eda77f14f1cbec0175"
+        },
+        "scales": {
+          "offset": 90488,
+          "bytes": 8,
+          "sha256": "91b3dae2030e4fec2e0f2d0582a67ab2fee8980dd6c4c8a73c65da92fd32b30c"
+        },
+        "biases": {
+          "offset": 90496,
+          "bytes": 8,
+          "sha256": "89638b04eade30bde370d6a181acd45842b59e1d10827159fcc6dc149dd04915"
+        },
+        "reconstructed_f32": {
+          "offset": 90504,
+          "bytes": 2048,
+          "sha256": "0789e2612f6b02d337f10d205fe69b65e9a85445f47e354bbed13339b255cf96"
+        },
+        "native_cpu": {
+          "offset": 92552,
+          "bytes": 1024,
+          "sha256": "cc406593d5712c148e51aec41919ac66440ec6cf6fa1585c4b5696dcaa8caa2d"
+        },
+        "native_gpu": {
+          "offset": 93576,
+          "bytes": 1024,
+          "sha256": "53261bb272b3ff6800786891c32b0300e63a64148114703808f7a72879766389"
+        },
+        "input_f32": {
+          "offset": 94600,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 95624,
+          "bytes": 8,
+          "sha256": "ea120466a8d78c8bd5ad8f9bff8f0458f05fe9b05918cf60010437c08af5702c"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 3,
+      "group_size": 128,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 95632,
+          "bytes": 192,
+          "sha256": "a31802a6bd2d94ae1ead60902273f188008ca89b751cc6eda77f14f1cbec0175"
+        },
+        "scales": {
+          "offset": 95824,
+          "bytes": 8,
+          "sha256": "4b58ddfa2a51347fcf72a24c907427fcca97e62ee591324027f1f40a16550c6b"
+        },
+        "biases": {
+          "offset": 95832,
+          "bytes": 8,
+          "sha256": "3b3e5aef7cda997cf5ca9d3e7bb8d0772d99adf84d9cb79a50f4774bf5b79f3b"
+        },
+        "reconstructed_f32": {
+          "offset": 95840,
+          "bytes": 2048,
+          "sha256": "a7157b38107875bd4ce2719fa38b5938e704a89ec8e3c925ecfe9aa91f7a002c"
+        },
+        "native_cpu": {
+          "offset": 97888,
+          "bytes": 1024,
+          "sha256": "c2f1a51556e1c1c1aca090a3da141c8e97925c0a00ea76eef1001161e1c81fb5"
+        },
+        "native_gpu": {
+          "offset": 98912,
+          "bytes": 1024,
+          "sha256": "220acbfebb205a1dda8cd0679b64666446e1741317396b30bca88a4d907f85ab"
+        },
+        "input_f32": {
+          "offset": 99936,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 100960,
+          "bytes": 8,
+          "sha256": "e10ca7201b1ec86e94270c41604bedd081600744cc7baaa0eb2b52fae475a76a"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 3,
+      "group_size": 128,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 100968,
+          "bytes": 192,
+          "sha256": "a31802a6bd2d94ae1ead60902273f188008ca89b751cc6eda77f14f1cbec0175"
+        },
+        "scales": {
+          "offset": 101160,
+          "bytes": 16,
+          "sha256": "1c7ad5aa276e612b8a68c087ad4e331d04217785bfbf35b18bc9c103c879568e"
+        },
+        "biases": {
+          "offset": 101176,
+          "bytes": 16,
+          "sha256": "31c5459c2f068de006c5581f219363230c66c547ab4296999304c9cc447e9e67"
+        },
+        "reconstructed_f32": {
+          "offset": 101192,
+          "bytes": 2048,
+          "sha256": "5fe0944fd9f351bcbfdf82005aa3179951755810cee206a40e98ed0aac286708"
+        },
+        "native_cpu": {
+          "offset": 103240,
+          "bytes": 2048,
+          "sha256": "5fe0944fd9f351bcbfdf82005aa3179951755810cee206a40e98ed0aac286708"
+        },
+        "native_gpu": {
+          "offset": 105288,
+          "bytes": 2048,
+          "sha256": "5fe0944fd9f351bcbfdf82005aa3179951755810cee206a40e98ed0aac286708"
+        },
+        "input_f32": {
+          "offset": 107336,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 108360,
+          "bytes": 8,
+          "sha256": "ea120466a8d78c8bd5ad8f9bff8f0458f05fe9b05918cf60010437c08af5702c"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 4,
+      "group_size": 32,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 108368,
+          "bytes": 256,
+          "sha256": "2ba30cacdcf41a78974e1c89b15be6a35bc01493f425afb91e7473d5b4101c42"
+        },
+        "scales": {
+          "offset": 108624,
+          "bytes": 32,
+          "sha256": "4bff7d6d50280b6a8cd82457ccd933c165e43bbf81886f2b7e39d632e5aff076"
+        },
+        "biases": {
+          "offset": 108656,
+          "bytes": 32,
+          "sha256": "466cd23454fdbc3b44c9ed8890db6ee2ea53698f29f70d336ec5585eb08119c5"
+        },
+        "reconstructed_f32": {
+          "offset": 108688,
+          "bytes": 2048,
+          "sha256": "bc532de2bc9f824fa075bca451f7ac4c4c88fc9be3508cbcceb74cf3ec3803c2"
+        },
+        "native_cpu": {
+          "offset": 110736,
+          "bytes": 1024,
+          "sha256": "9a0633a6e7ed7b780339ce8952977519b6f5e348a8c42cbd08a14266dd658010"
+        },
+        "native_gpu": {
+          "offset": 111760,
+          "bytes": 1024,
+          "sha256": "c19d3ebe73ec9e389ecd0d7cb7ca7316c334e5b5822c6ead185107ade39575dd"
+        },
+        "input_f32": {
+          "offset": 112784,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 113808,
+          "bytes": 8,
+          "sha256": "0348b99375c1b0a0dc9f5257283a2ae5b7b61e1cde4089038059e950ce2dbdc5"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 4,
+      "group_size": 32,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 113816,
+          "bytes": 256,
+          "sha256": "2ba30cacdcf41a78974e1c89b15be6a35bc01493f425afb91e7473d5b4101c42"
+        },
+        "scales": {
+          "offset": 114072,
+          "bytes": 32,
+          "sha256": "2316a0fcd2a9d06fe71908dbe50d03e90a9dff7f3a3e21987e0db3ddc21ddec3"
+        },
+        "biases": {
+          "offset": 114104,
+          "bytes": 32,
+          "sha256": "105fd1cd67228aece41c62d97675e8f57e30c5118e9811273a9272cebeb7ad90"
+        },
+        "reconstructed_f32": {
+          "offset": 114136,
+          "bytes": 2048,
+          "sha256": "270e1a6a1778041373051ff6ceae8d5368c5c6e507eb70b9104885f3e9f8d806"
+        },
+        "native_cpu": {
+          "offset": 116184,
+          "bytes": 1024,
+          "sha256": "cfa8e87c909b60cf82d4405d8fe74bd15c86f875884be8acd29d0b95837d1392"
+        },
+        "native_gpu": {
+          "offset": 117208,
+          "bytes": 1024,
+          "sha256": "4adff956afa81d8d48407ab322ee96c4815aca5d59d6bb62e4a0338c315f37d4"
+        },
+        "input_f32": {
+          "offset": 118232,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 119256,
+          "bytes": 8,
+          "sha256": "dab047ac0e84ee9f1c3c2c84101c1dd3e59996a069444d102707b764e24c932e"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 4,
+      "group_size": 32,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 119264,
+          "bytes": 256,
+          "sha256": "2ba30cacdcf41a78974e1c89b15be6a35bc01493f425afb91e7473d5b4101c42"
+        },
+        "scales": {
+          "offset": 119520,
+          "bytes": 64,
+          "sha256": "8dbbe6e4a8e42c35287109ced2efeec42d9aecf95fca992f9899fa51e9074612"
+        },
+        "biases": {
+          "offset": 119584,
+          "bytes": 64,
+          "sha256": "6abfdfbb210b0d36d04ba8936a1a815426643c244d3ee5a2650fcd8956f55831"
+        },
+        "reconstructed_f32": {
+          "offset": 119648,
+          "bytes": 2048,
+          "sha256": "dd120dd9887815243497d5cf3d732baf20a64383d7107b06a9b8e2476b0c1829"
+        },
+        "native_cpu": {
+          "offset": 121696,
+          "bytes": 2048,
+          "sha256": "dd120dd9887815243497d5cf3d732baf20a64383d7107b06a9b8e2476b0c1829"
+        },
+        "native_gpu": {
+          "offset": 123744,
+          "bytes": 2048,
+          "sha256": "dd120dd9887815243497d5cf3d732baf20a64383d7107b06a9b8e2476b0c1829"
+        },
+        "input_f32": {
+          "offset": 125792,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 126816,
+          "bytes": 8,
+          "sha256": "0348b99375c1b0a0dc9f5257283a2ae5b7b61e1cde4089038059e950ce2dbdc5"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 4,
+      "group_size": 64,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 126824,
+          "bytes": 256,
+          "sha256": "2ba30cacdcf41a78974e1c89b15be6a35bc01493f425afb91e7473d5b4101c42"
+        },
+        "scales": {
+          "offset": 127080,
+          "bytes": 16,
+          "sha256": "6677a7ddea04449a65374cb16a5eb9da62144500beb9c313db335437bded7b61"
+        },
+        "biases": {
+          "offset": 127096,
+          "bytes": 16,
+          "sha256": "7ba1199ab89c52ca86d65dfc295effb10539f87014fc1f6fdb6a3246dc5beefb"
+        },
+        "reconstructed_f32": {
+          "offset": 127112,
+          "bytes": 2048,
+          "sha256": "5081cd670d5bf8aed1eb084d202c181d6bafe7919ea8f686b8471c6e2a8e40b8"
+        },
+        "native_cpu": {
+          "offset": 129160,
+          "bytes": 1024,
+          "sha256": "650473407950827e7357d8090da3807b7f8f4d492164548a04c6460aef6df5ac"
+        },
+        "native_gpu": {
+          "offset": 130184,
+          "bytes": 1024,
+          "sha256": "fae4e2a5159eef0b78f86bc67ab2aa132df8b7320e81bb7e214aa22cee2b437c"
+        },
+        "input_f32": {
+          "offset": 131208,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 132232,
+          "bytes": 8,
+          "sha256": "8e6f92af83f0d227c96307333b38fb5a03825fb54a45638224a7e83226ad68bf"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 4,
+      "group_size": 64,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 132240,
+          "bytes": 256,
+          "sha256": "2ba30cacdcf41a78974e1c89b15be6a35bc01493f425afb91e7473d5b4101c42"
+        },
+        "scales": {
+          "offset": 132496,
+          "bytes": 16,
+          "sha256": "b3b6b846738e28b467310aec53d718bd9b62fc149f83f84117d2311a4b5b233d"
+        },
+        "biases": {
+          "offset": 132512,
+          "bytes": 16,
+          "sha256": "ddef07e29bc185fbbf0e50f384f619258057aaeeb0a9078a9b43b116ed5738ca"
+        },
+        "reconstructed_f32": {
+          "offset": 132528,
+          "bytes": 2048,
+          "sha256": "4da830a3959dc3c1c1b82fae60e14ebc2d8213010a1936a11330b9cde7d6b667"
+        },
+        "native_cpu": {
+          "offset": 134576,
+          "bytes": 1024,
+          "sha256": "82605c2ce19e25ca8efe6c1f079f770c5fe080b90f8d9ba16742b96c92032e85"
+        },
+        "native_gpu": {
+          "offset": 135600,
+          "bytes": 1024,
+          "sha256": "5ecccb456968329b082614eda33207bc847438cc77cc48e06e7ecd92092008e7"
+        },
+        "input_f32": {
+          "offset": 136624,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 137648,
+          "bytes": 8,
+          "sha256": "2b63217a42808c438e40b45e4b57e18119b6bb7848d47fd4521c944c1736c8ab"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 4,
+      "group_size": 64,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 137656,
+          "bytes": 256,
+          "sha256": "2ba30cacdcf41a78974e1c89b15be6a35bc01493f425afb91e7473d5b4101c42"
+        },
+        "scales": {
+          "offset": 137912,
+          "bytes": 32,
+          "sha256": "a7c3f0bb4e4f76f053a51619e9fbbc606b06bb43d8843991b957c6d4fe1e1b6e"
+        },
+        "biases": {
+          "offset": 137944,
+          "bytes": 32,
+          "sha256": "4bcdf565e04182d6e64a68a8579a43668c488543e3edd7b21ab82e64b2dd4229"
+        },
+        "reconstructed_f32": {
+          "offset": 137976,
+          "bytes": 2048,
+          "sha256": "3935606540fabf422e0df14b2643dba6f5fbbb8da87fd9b0de0433615d9903bc"
+        },
+        "native_cpu": {
+          "offset": 140024,
+          "bytes": 2048,
+          "sha256": "3935606540fabf422e0df14b2643dba6f5fbbb8da87fd9b0de0433615d9903bc"
+        },
+        "native_gpu": {
+          "offset": 142072,
+          "bytes": 2048,
+          "sha256": "3935606540fabf422e0df14b2643dba6f5fbbb8da87fd9b0de0433615d9903bc"
+        },
+        "input_f32": {
+          "offset": 144120,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 145144,
+          "bytes": 8,
+          "sha256": "8e6f92af83f0d227c96307333b38fb5a03825fb54a45638224a7e83226ad68bf"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 4,
+      "group_size": 128,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 145152,
+          "bytes": 256,
+          "sha256": "2ba30cacdcf41a78974e1c89b15be6a35bc01493f425afb91e7473d5b4101c42"
+        },
+        "scales": {
+          "offset": 145408,
+          "bytes": 8,
+          "sha256": "91b3dae2030e4fec2e0f2d0582a67ab2fee8980dd6c4c8a73c65da92fd32b30c"
+        },
+        "biases": {
+          "offset": 145416,
+          "bytes": 8,
+          "sha256": "89638b04eade30bde370d6a181acd45842b59e1d10827159fcc6dc149dd04915"
+        },
+        "reconstructed_f32": {
+          "offset": 145424,
+          "bytes": 2048,
+          "sha256": "d995bd406bc4690cd9631308e19aafad6d673b99cbf84d973d38f51aafd413d2"
+        },
+        "native_cpu": {
+          "offset": 147472,
+          "bytes": 1024,
+          "sha256": "ea72d1b4edc32bb074ce3a78ea823e63557207d89d1331e5d68d5e66f0b8b48d"
+        },
+        "native_gpu": {
+          "offset": 148496,
+          "bytes": 1024,
+          "sha256": "587855005c3367960125b1292acec05f3d18a06d175d17d3b43d2557e2ae81de"
+        },
+        "input_f32": {
+          "offset": 149520,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 150544,
+          "bytes": 8,
+          "sha256": "4f2d5e927936a6b6203d38e13d2c2b77ee10812a102164bd87ebbfb0e9645baa"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 4,
+      "group_size": 128,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 150552,
+          "bytes": 256,
+          "sha256": "2ba30cacdcf41a78974e1c89b15be6a35bc01493f425afb91e7473d5b4101c42"
+        },
+        "scales": {
+          "offset": 150808,
+          "bytes": 8,
+          "sha256": "4b58ddfa2a51347fcf72a24c907427fcca97e62ee591324027f1f40a16550c6b"
+        },
+        "biases": {
+          "offset": 150816,
+          "bytes": 8,
+          "sha256": "3b3e5aef7cda997cf5ca9d3e7bb8d0772d99adf84d9cb79a50f4774bf5b79f3b"
+        },
+        "reconstructed_f32": {
+          "offset": 150824,
+          "bytes": 2048,
+          "sha256": "e8e5e64ce297d31816157fa18f7cb63e607bdb221243478364dc4e663226da14"
+        },
+        "native_cpu": {
+          "offset": 152872,
+          "bytes": 1024,
+          "sha256": "784d6c42d1bda4926b5a2fd716edd075d314259d7f4c7102bc3cb68b171cf05f"
+        },
+        "native_gpu": {
+          "offset": 153896,
+          "bytes": 1024,
+          "sha256": "fdcce0f02160cfe24e823739076f438a0200702b18dd15525f6909f1da9cf1f6"
+        },
+        "input_f32": {
+          "offset": 154920,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 155944,
+          "bytes": 8,
+          "sha256": "1deb4fada47af38280f994c3a147b99bf0bc8751094f03c737bdb5e106fe7f92"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 4,
+      "group_size": 128,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 155952,
+          "bytes": 256,
+          "sha256": "2ba30cacdcf41a78974e1c89b15be6a35bc01493f425afb91e7473d5b4101c42"
+        },
+        "scales": {
+          "offset": 156208,
+          "bytes": 16,
+          "sha256": "1c7ad5aa276e612b8a68c087ad4e331d04217785bfbf35b18bc9c103c879568e"
+        },
+        "biases": {
+          "offset": 156224,
+          "bytes": 16,
+          "sha256": "31c5459c2f068de006c5581f219363230c66c547ab4296999304c9cc447e9e67"
+        },
+        "reconstructed_f32": {
+          "offset": 156240,
+          "bytes": 2048,
+          "sha256": "42e1540b641238866a52f85be97641398e54cd8df6bb97dcd9e641c689f44283"
+        },
+        "native_cpu": {
+          "offset": 158288,
+          "bytes": 2048,
+          "sha256": "42e1540b641238866a52f85be97641398e54cd8df6bb97dcd9e641c689f44283"
+        },
+        "native_gpu": {
+          "offset": 160336,
+          "bytes": 2048,
+          "sha256": "42e1540b641238866a52f85be97641398e54cd8df6bb97dcd9e641c689f44283"
+        },
+        "input_f32": {
+          "offset": 162384,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 163408,
+          "bytes": 8,
+          "sha256": "4f2d5e927936a6b6203d38e13d2c2b77ee10812a102164bd87ebbfb0e9645baa"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 5,
+      "group_size": 32,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 163416,
+          "bytes": 320,
+          "sha256": "03d15ba14f79319efbe67a24d134d6c5e45d3959440b30568b7f08d4a21939b5"
+        },
+        "scales": {
+          "offset": 163736,
+          "bytes": 32,
+          "sha256": "4bff7d6d50280b6a8cd82457ccd933c165e43bbf81886f2b7e39d632e5aff076"
+        },
+        "biases": {
+          "offset": 163768,
+          "bytes": 32,
+          "sha256": "466cd23454fdbc3b44c9ed8890db6ee2ea53698f29f70d336ec5585eb08119c5"
+        },
+        "reconstructed_f32": {
+          "offset": 163800,
+          "bytes": 2048,
+          "sha256": "6ad6d347ab297933f98d7ed018820cc76ae61ac687e4eb82c7e1571397787618"
+        },
+        "native_cpu": {
+          "offset": 165848,
+          "bytes": 1024,
+          "sha256": "6c11f078f924314a0f8d4f61475e803aa3ac8a30c7409ca3e47f43352b6675b1"
+        },
+        "native_gpu": {
+          "offset": 166872,
+          "bytes": 1024,
+          "sha256": "38c80d0a54115df932734f4c85609e4aee34d42c8f705cac3e11fb3efe88d796"
+        },
+        "input_f32": {
+          "offset": 167896,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 168920,
+          "bytes": 8,
+          "sha256": "ff3ebae1b2fd7b0d7531a686ab523cef596afa7ada7701fc8fc94617aed2f2cf"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 5,
+      "group_size": 32,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 168928,
+          "bytes": 320,
+          "sha256": "03d15ba14f79319efbe67a24d134d6c5e45d3959440b30568b7f08d4a21939b5"
+        },
+        "scales": {
+          "offset": 169248,
+          "bytes": 32,
+          "sha256": "2316a0fcd2a9d06fe71908dbe50d03e90a9dff7f3a3e21987e0db3ddc21ddec3"
+        },
+        "biases": {
+          "offset": 169280,
+          "bytes": 32,
+          "sha256": "105fd1cd67228aece41c62d97675e8f57e30c5118e9811273a9272cebeb7ad90"
+        },
+        "reconstructed_f32": {
+          "offset": 169312,
+          "bytes": 2048,
+          "sha256": "dc7d1783a6aeb0490ba66dbcbddddcc1b6a6d53fde948ceb67b6baaebec193bf"
+        },
+        "native_cpu": {
+          "offset": 171360,
+          "bytes": 1024,
+          "sha256": "7667e1ac75755079cb5ffa08dd335867fae7199d6e9778ba683cae68cd460c30"
+        },
+        "native_gpu": {
+          "offset": 172384,
+          "bytes": 1024,
+          "sha256": "6d52836dbf6c1e24199f58b6bf49eb134122175a993976ce48eacc6f6a1c7245"
+        },
+        "input_f32": {
+          "offset": 173408,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 174432,
+          "bytes": 8,
+          "sha256": "bf89f666c813a8b97a302cabb98f28010494c7c3aa8124cef2423cfff5a0c017"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 5,
+      "group_size": 32,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 174440,
+          "bytes": 320,
+          "sha256": "03d15ba14f79319efbe67a24d134d6c5e45d3959440b30568b7f08d4a21939b5"
+        },
+        "scales": {
+          "offset": 174760,
+          "bytes": 64,
+          "sha256": "8dbbe6e4a8e42c35287109ced2efeec42d9aecf95fca992f9899fa51e9074612"
+        },
+        "biases": {
+          "offset": 174824,
+          "bytes": 64,
+          "sha256": "6abfdfbb210b0d36d04ba8936a1a815426643c244d3ee5a2650fcd8956f55831"
+        },
+        "reconstructed_f32": {
+          "offset": 174888,
+          "bytes": 2048,
+          "sha256": "4b4981e73650d6c56ca94619cb9da31c970b9c139a1e7628c9f9c2457114fb57"
+        },
+        "native_cpu": {
+          "offset": 176936,
+          "bytes": 2048,
+          "sha256": "4b4981e73650d6c56ca94619cb9da31c970b9c139a1e7628c9f9c2457114fb57"
+        },
+        "native_gpu": {
+          "offset": 178984,
+          "bytes": 2048,
+          "sha256": "4b4981e73650d6c56ca94619cb9da31c970b9c139a1e7628c9f9c2457114fb57"
+        },
+        "input_f32": {
+          "offset": 181032,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 182056,
+          "bytes": 8,
+          "sha256": "ea22393bd9f6b2db1de4e466038dacf0ac330f2587dd9f9c0909d55b84312534"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 5,
+      "group_size": 64,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 182064,
+          "bytes": 320,
+          "sha256": "03d15ba14f79319efbe67a24d134d6c5e45d3959440b30568b7f08d4a21939b5"
+        },
+        "scales": {
+          "offset": 182384,
+          "bytes": 16,
+          "sha256": "6677a7ddea04449a65374cb16a5eb9da62144500beb9c313db335437bded7b61"
+        },
+        "biases": {
+          "offset": 182400,
+          "bytes": 16,
+          "sha256": "7ba1199ab89c52ca86d65dfc295effb10539f87014fc1f6fdb6a3246dc5beefb"
+        },
+        "reconstructed_f32": {
+          "offset": 182416,
+          "bytes": 2048,
+          "sha256": "dac0bf95af80accecf93faa5e12cf27f2ec0abc214a95f69fe8d70a36ad96842"
+        },
+        "native_cpu": {
+          "offset": 184464,
+          "bytes": 1024,
+          "sha256": "274f1a253370cc9b7ca716822fcd4f243ef083c8138fe59d194922e4f550d55f"
+        },
+        "native_gpu": {
+          "offset": 185488,
+          "bytes": 1024,
+          "sha256": "c148cba65923a625ceb41ac970c334285b6c188fe0757885e8683ceb7d256768"
+        },
+        "input_f32": {
+          "offset": 186512,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 187536,
+          "bytes": 8,
+          "sha256": "67f6abf5364326a806a0fe4b4eccfbb58eec6fa8b03c850aba4668c7f94b8404"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 5,
+      "group_size": 64,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 187544,
+          "bytes": 320,
+          "sha256": "03d15ba14f79319efbe67a24d134d6c5e45d3959440b30568b7f08d4a21939b5"
+        },
+        "scales": {
+          "offset": 187864,
+          "bytes": 16,
+          "sha256": "b3b6b846738e28b467310aec53d718bd9b62fc149f83f84117d2311a4b5b233d"
+        },
+        "biases": {
+          "offset": 187880,
+          "bytes": 16,
+          "sha256": "ddef07e29bc185fbbf0e50f384f619258057aaeeb0a9078a9b43b116ed5738ca"
+        },
+        "reconstructed_f32": {
+          "offset": 187896,
+          "bytes": 2048,
+          "sha256": "4f088fd98f285e0b43de48b202f8bafd5718fb6fae7da7f14f4315143c96085a"
+        },
+        "native_cpu": {
+          "offset": 189944,
+          "bytes": 1024,
+          "sha256": "0c873fc27bf70c9e6617a3175ef106187873c09ca9ce4bb03f6f86093618244a"
+        },
+        "native_gpu": {
+          "offset": 190968,
+          "bytes": 1024,
+          "sha256": "8c33ff4e80ab975966d82c82b93625a5aac70f8ec6ea8bed457c209fa588d884"
+        },
+        "input_f32": {
+          "offset": 191992,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 193016,
+          "bytes": 8,
+          "sha256": "1aa07a2f528b158945dd55393f03d38f8e171097444aa7aed34feb90e873c1b6"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 5,
+      "group_size": 64,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 193024,
+          "bytes": 320,
+          "sha256": "03d15ba14f79319efbe67a24d134d6c5e45d3959440b30568b7f08d4a21939b5"
+        },
+        "scales": {
+          "offset": 193344,
+          "bytes": 32,
+          "sha256": "a7c3f0bb4e4f76f053a51619e9fbbc606b06bb43d8843991b957c6d4fe1e1b6e"
+        },
+        "biases": {
+          "offset": 193376,
+          "bytes": 32,
+          "sha256": "4bcdf565e04182d6e64a68a8579a43668c488543e3edd7b21ab82e64b2dd4229"
+        },
+        "reconstructed_f32": {
+          "offset": 193408,
+          "bytes": 2048,
+          "sha256": "02ee520093479690ce5cd8e1868a5cf09fdc16cddee611420a3cab5117a1e72f"
+        },
+        "native_cpu": {
+          "offset": 195456,
+          "bytes": 2048,
+          "sha256": "02ee520093479690ce5cd8e1868a5cf09fdc16cddee611420a3cab5117a1e72f"
+        },
+        "native_gpu": {
+          "offset": 197504,
+          "bytes": 2048,
+          "sha256": "02ee520093479690ce5cd8e1868a5cf09fdc16cddee611420a3cab5117a1e72f"
+        },
+        "input_f32": {
+          "offset": 199552,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 200576,
+          "bytes": 8,
+          "sha256": "67f6abf5364326a806a0fe4b4eccfbb58eec6fa8b03c850aba4668c7f94b8404"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 5,
+      "group_size": 128,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 200584,
+          "bytes": 320,
+          "sha256": "03d15ba14f79319efbe67a24d134d6c5e45d3959440b30568b7f08d4a21939b5"
+        },
+        "scales": {
+          "offset": 200904,
+          "bytes": 8,
+          "sha256": "91b3dae2030e4fec2e0f2d0582a67ab2fee8980dd6c4c8a73c65da92fd32b30c"
+        },
+        "biases": {
+          "offset": 200912,
+          "bytes": 8,
+          "sha256": "89638b04eade30bde370d6a181acd45842b59e1d10827159fcc6dc149dd04915"
+        },
+        "reconstructed_f32": {
+          "offset": 200920,
+          "bytes": 2048,
+          "sha256": "8a9333b77a51f4ace799bce1f37924bba21da0cde1090ce44e5d0652df528ffd"
+        },
+        "native_cpu": {
+          "offset": 202968,
+          "bytes": 1024,
+          "sha256": "5ef96aae656ea8e2c84fd4a298d8f9c52be79377be960a8e2740e677168bc05f"
+        },
+        "native_gpu": {
+          "offset": 203992,
+          "bytes": 1024,
+          "sha256": "92037d36ccf9148eece181b4484e963d3dcf76167d7a4fcf4990fffcd02faf0b"
+        },
+        "input_f32": {
+          "offset": 205016,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 206040,
+          "bytes": 8,
+          "sha256": "d9767c6db981749a001fbe37f77c7e5f9c1ecc1e5fad5fc55bd453d55839afbc"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 5,
+      "group_size": 128,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 206048,
+          "bytes": 320,
+          "sha256": "03d15ba14f79319efbe67a24d134d6c5e45d3959440b30568b7f08d4a21939b5"
+        },
+        "scales": {
+          "offset": 206368,
+          "bytes": 8,
+          "sha256": "4b58ddfa2a51347fcf72a24c907427fcca97e62ee591324027f1f40a16550c6b"
+        },
+        "biases": {
+          "offset": 206376,
+          "bytes": 8,
+          "sha256": "3b3e5aef7cda997cf5ca9d3e7bb8d0772d99adf84d9cb79a50f4774bf5b79f3b"
+        },
+        "reconstructed_f32": {
+          "offset": 206384,
+          "bytes": 2048,
+          "sha256": "c1f31d4f68ea68d51b2bfdce8a1897ad072c126f7a5fb8e96cc2a131b7e7a411"
+        },
+        "native_cpu": {
+          "offset": 208432,
+          "bytes": 1024,
+          "sha256": "66712ecec88a6a132021c6a9cf1e29c47816550b80d44624c2635721f9634b24"
+        },
+        "native_gpu": {
+          "offset": 209456,
+          "bytes": 1024,
+          "sha256": "a9d79e98e5d223882e4080bd5b65c474dc5880a222c71344c4182bd631dd2a45"
+        },
+        "input_f32": {
+          "offset": 210480,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 211504,
+          "bytes": 8,
+          "sha256": "0181308981b3740a86fcab13a3a608ed6953f19e5bf71b41715f1cb3fb26da5c"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 5,
+      "group_size": 128,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 211512,
+          "bytes": 320,
+          "sha256": "03d15ba14f79319efbe67a24d134d6c5e45d3959440b30568b7f08d4a21939b5"
+        },
+        "scales": {
+          "offset": 211832,
+          "bytes": 16,
+          "sha256": "1c7ad5aa276e612b8a68c087ad4e331d04217785bfbf35b18bc9c103c879568e"
+        },
+        "biases": {
+          "offset": 211848,
+          "bytes": 16,
+          "sha256": "31c5459c2f068de006c5581f219363230c66c547ab4296999304c9cc447e9e67"
+        },
+        "reconstructed_f32": {
+          "offset": 211864,
+          "bytes": 2048,
+          "sha256": "de2914acc502aacce378eeef3d4035a9b4f8723fd9173485a2e0c895c7005187"
+        },
+        "native_cpu": {
+          "offset": 213912,
+          "bytes": 2048,
+          "sha256": "de2914acc502aacce378eeef3d4035a9b4f8723fd9173485a2e0c895c7005187"
+        },
+        "native_gpu": {
+          "offset": 215960,
+          "bytes": 2048,
+          "sha256": "de2914acc502aacce378eeef3d4035a9b4f8723fd9173485a2e0c895c7005187"
+        },
+        "input_f32": {
+          "offset": 218008,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 219032,
+          "bytes": 8,
+          "sha256": "d9767c6db981749a001fbe37f77c7e5f9c1ecc1e5fad5fc55bd453d55839afbc"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 6,
+      "group_size": 32,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 219040,
+          "bytes": 384,
+          "sha256": "9d33ec452be915b3cd4a33803b36aa94402be1f34bfb6bfc5077ec5ce0fb790c"
+        },
+        "scales": {
+          "offset": 219424,
+          "bytes": 32,
+          "sha256": "4bff7d6d50280b6a8cd82457ccd933c165e43bbf81886f2b7e39d632e5aff076"
+        },
+        "biases": {
+          "offset": 219456,
+          "bytes": 32,
+          "sha256": "466cd23454fdbc3b44c9ed8890db6ee2ea53698f29f70d336ec5585eb08119c5"
+        },
+        "reconstructed_f32": {
+          "offset": 219488,
+          "bytes": 2048,
+          "sha256": "45ef9dd2ced9bde21f9003918c689c20ee75ab4452f97bf97469423fd2dd27a8"
+        },
+        "native_cpu": {
+          "offset": 221536,
+          "bytes": 1024,
+          "sha256": "ae95e787e66e6bcaa56f875c877826c2a12b185e0c944d113941454719188d99"
+        },
+        "native_gpu": {
+          "offset": 222560,
+          "bytes": 1024,
+          "sha256": "a8d9ccf57520ebc0d31d9520fbf7962a5a28d6430d6a754286ed8817471435c4"
+        },
+        "input_f32": {
+          "offset": 223584,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 224608,
+          "bytes": 8,
+          "sha256": "27081ce1eef2b5d10a654fd0926b60c75583f08929925174f32a80767a9f5087"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 6,
+      "group_size": 32,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 224616,
+          "bytes": 384,
+          "sha256": "9d33ec452be915b3cd4a33803b36aa94402be1f34bfb6bfc5077ec5ce0fb790c"
+        },
+        "scales": {
+          "offset": 225000,
+          "bytes": 32,
+          "sha256": "2316a0fcd2a9d06fe71908dbe50d03e90a9dff7f3a3e21987e0db3ddc21ddec3"
+        },
+        "biases": {
+          "offset": 225032,
+          "bytes": 32,
+          "sha256": "105fd1cd67228aece41c62d97675e8f57e30c5118e9811273a9272cebeb7ad90"
+        },
+        "reconstructed_f32": {
+          "offset": 225064,
+          "bytes": 2048,
+          "sha256": "82c0244b218c278ea1cea7ab90e201b75df624d96ff90caa2b98c459c39f07f4"
+        },
+        "native_cpu": {
+          "offset": 227112,
+          "bytes": 1024,
+          "sha256": "8a8ba6fc79731ede799d97454b7f4eefe1f495952fb6b34de32690f3edf43362"
+        },
+        "native_gpu": {
+          "offset": 228136,
+          "bytes": 1024,
+          "sha256": "e69ec4f95f14ec916434699b80d2a6868cefc133f58a6f79ba3cb8073fa67709"
+        },
+        "input_f32": {
+          "offset": 229160,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 230184,
+          "bytes": 8,
+          "sha256": "6cacec6b8964fe9fd114f2b82aaa7128affc0f6a3e2417fe39560a0f282566d9"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 6,
+      "group_size": 32,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 230192,
+          "bytes": 384,
+          "sha256": "9d33ec452be915b3cd4a33803b36aa94402be1f34bfb6bfc5077ec5ce0fb790c"
+        },
+        "scales": {
+          "offset": 230576,
+          "bytes": 64,
+          "sha256": "8dbbe6e4a8e42c35287109ced2efeec42d9aecf95fca992f9899fa51e9074612"
+        },
+        "biases": {
+          "offset": 230640,
+          "bytes": 64,
+          "sha256": "6abfdfbb210b0d36d04ba8936a1a815426643c244d3ee5a2650fcd8956f55831"
+        },
+        "reconstructed_f32": {
+          "offset": 230704,
+          "bytes": 2048,
+          "sha256": "4fbbb021e63b4d4976c34edf88de42718ff92ba35da7c0eaa67438cb0d00593c"
+        },
+        "native_cpu": {
+          "offset": 232752,
+          "bytes": 2048,
+          "sha256": "4fbbb021e63b4d4976c34edf88de42718ff92ba35da7c0eaa67438cb0d00593c"
+        },
+        "native_gpu": {
+          "offset": 234800,
+          "bytes": 2048,
+          "sha256": "4fbbb021e63b4d4976c34edf88de42718ff92ba35da7c0eaa67438cb0d00593c"
+        },
+        "input_f32": {
+          "offset": 236848,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 237872,
+          "bytes": 8,
+          "sha256": "5ed434346ebb57dee8f2d222f48137adbb879a667c7ec0037751f70a3eba9523"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 6,
+      "group_size": 64,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 237880,
+          "bytes": 384,
+          "sha256": "9d33ec452be915b3cd4a33803b36aa94402be1f34bfb6bfc5077ec5ce0fb790c"
+        },
+        "scales": {
+          "offset": 238264,
+          "bytes": 16,
+          "sha256": "6677a7ddea04449a65374cb16a5eb9da62144500beb9c313db335437bded7b61"
+        },
+        "biases": {
+          "offset": 238280,
+          "bytes": 16,
+          "sha256": "7ba1199ab89c52ca86d65dfc295effb10539f87014fc1f6fdb6a3246dc5beefb"
+        },
+        "reconstructed_f32": {
+          "offset": 238296,
+          "bytes": 2048,
+          "sha256": "0172979a9aeb13bf55ff8503dcb2027646bd27b1f8e81e2c854cab38d70ce69b"
+        },
+        "native_cpu": {
+          "offset": 240344,
+          "bytes": 1024,
+          "sha256": "7f660e345ecc70831cfaee56d5cd44ef62029085b96480e7f32c0e5c9c4a4685"
+        },
+        "native_gpu": {
+          "offset": 241368,
+          "bytes": 1024,
+          "sha256": "79dd13d81f2b8b4b69c895c80ac0ae58f79b0e65ab256cb706eb9ddced21fceb"
+        },
+        "input_f32": {
+          "offset": 242392,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 243416,
+          "bytes": 8,
+          "sha256": "d98bd9480868a074c2cbc6edf1500e28fb22735849dd3c690869873845fe83dd"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 6,
+      "group_size": 64,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 243424,
+          "bytes": 384,
+          "sha256": "9d33ec452be915b3cd4a33803b36aa94402be1f34bfb6bfc5077ec5ce0fb790c"
+        },
+        "scales": {
+          "offset": 243808,
+          "bytes": 16,
+          "sha256": "b3b6b846738e28b467310aec53d718bd9b62fc149f83f84117d2311a4b5b233d"
+        },
+        "biases": {
+          "offset": 243824,
+          "bytes": 16,
+          "sha256": "ddef07e29bc185fbbf0e50f384f619258057aaeeb0a9078a9b43b116ed5738ca"
+        },
+        "reconstructed_f32": {
+          "offset": 243840,
+          "bytes": 2048,
+          "sha256": "3b923b3c0e34078d2aa6894371e659883cf20e2e1632a381127fac8924def86f"
+        },
+        "native_cpu": {
+          "offset": 245888,
+          "bytes": 1024,
+          "sha256": "1b85f74b6fbd160e439ceb549c2fb2d4b74470461a63f8a088941889089d6846"
+        },
+        "native_gpu": {
+          "offset": 246912,
+          "bytes": 1024,
+          "sha256": "7d58f89516868852badb6203790124d2e736b25066e1c4f0924913af74de33a8"
+        },
+        "input_f32": {
+          "offset": 247936,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 248960,
+          "bytes": 8,
+          "sha256": "c45ede4776ae390464d365969765faee7a2c7d23ac4f30608c69bc7da13a98b6"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 6,
+      "group_size": 64,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 248968,
+          "bytes": 384,
+          "sha256": "9d33ec452be915b3cd4a33803b36aa94402be1f34bfb6bfc5077ec5ce0fb790c"
+        },
+        "scales": {
+          "offset": 249352,
+          "bytes": 32,
+          "sha256": "a7c3f0bb4e4f76f053a51619e9fbbc606b06bb43d8843991b957c6d4fe1e1b6e"
+        },
+        "biases": {
+          "offset": 249384,
+          "bytes": 32,
+          "sha256": "4bcdf565e04182d6e64a68a8579a43668c488543e3edd7b21ab82e64b2dd4229"
+        },
+        "reconstructed_f32": {
+          "offset": 249416,
+          "bytes": 2048,
+          "sha256": "b3c78c1e7e7a0ef3e6763162b8d96a0d476521723ad5fa108082b929aa10462e"
+        },
+        "native_cpu": {
+          "offset": 251464,
+          "bytes": 2048,
+          "sha256": "b3c78c1e7e7a0ef3e6763162b8d96a0d476521723ad5fa108082b929aa10462e"
+        },
+        "native_gpu": {
+          "offset": 253512,
+          "bytes": 2048,
+          "sha256": "b3c78c1e7e7a0ef3e6763162b8d96a0d476521723ad5fa108082b929aa10462e"
+        },
+        "input_f32": {
+          "offset": 255560,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 256584,
+          "bytes": 8,
+          "sha256": "d98bd9480868a074c2cbc6edf1500e28fb22735849dd3c690869873845fe83dd"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 6,
+      "group_size": 128,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 256592,
+          "bytes": 384,
+          "sha256": "9d33ec452be915b3cd4a33803b36aa94402be1f34bfb6bfc5077ec5ce0fb790c"
+        },
+        "scales": {
+          "offset": 256976,
+          "bytes": 8,
+          "sha256": "91b3dae2030e4fec2e0f2d0582a67ab2fee8980dd6c4c8a73c65da92fd32b30c"
+        },
+        "biases": {
+          "offset": 256984,
+          "bytes": 8,
+          "sha256": "89638b04eade30bde370d6a181acd45842b59e1d10827159fcc6dc149dd04915"
+        },
+        "reconstructed_f32": {
+          "offset": 256992,
+          "bytes": 2048,
+          "sha256": "84a3371e7a010154324e854531489b86386bd4f3cb76ffa2730571fa5d79c713"
+        },
+        "native_cpu": {
+          "offset": 259040,
+          "bytes": 1024,
+          "sha256": "91297d5b6a93f633d930acdcb125bacfc5fd8894167104d76e615c448440b900"
+        },
+        "native_gpu": {
+          "offset": 260064,
+          "bytes": 1024,
+          "sha256": "46b65808da1b28b5b1acf93cc734633c4071978aef6bd43773876ec7967edbe2"
+        },
+        "input_f32": {
+          "offset": 261088,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 262112,
+          "bytes": 8,
+          "sha256": "befc62e83cf8b5e5779e04a52a19baafff25d3b1b4671d15b061c87e43c94538"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 6,
+      "group_size": 128,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 262120,
+          "bytes": 384,
+          "sha256": "9d33ec452be915b3cd4a33803b36aa94402be1f34bfb6bfc5077ec5ce0fb790c"
+        },
+        "scales": {
+          "offset": 262504,
+          "bytes": 8,
+          "sha256": "4b58ddfa2a51347fcf72a24c907427fcca97e62ee591324027f1f40a16550c6b"
+        },
+        "biases": {
+          "offset": 262512,
+          "bytes": 8,
+          "sha256": "3b3e5aef7cda997cf5ca9d3e7bb8d0772d99adf84d9cb79a50f4774bf5b79f3b"
+        },
+        "reconstructed_f32": {
+          "offset": 262520,
+          "bytes": 2048,
+          "sha256": "daaa753c71d7edecface805c3e66e32b8e3a687a2df4bccf2b5db26588559d78"
+        },
+        "native_cpu": {
+          "offset": 264568,
+          "bytes": 1024,
+          "sha256": "ea3a537167f238f7d504b2e277d7c718f8768144238c97b0b3e2a003111cf0c3"
+        },
+        "native_gpu": {
+          "offset": 265592,
+          "bytes": 1024,
+          "sha256": "b4df6bbb4975b319a15c9dcd32a677ea71edc306eec21281528df5a8da007df3"
+        },
+        "input_f32": {
+          "offset": 266616,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 267640,
+          "bytes": 8,
+          "sha256": "d18e79ac76345f5dbc50c5c20281aa2c7f393e449cc09da198d5ad590d181ef9"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 6,
+      "group_size": 128,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 267648,
+          "bytes": 384,
+          "sha256": "9d33ec452be915b3cd4a33803b36aa94402be1f34bfb6bfc5077ec5ce0fb790c"
+        },
+        "scales": {
+          "offset": 268032,
+          "bytes": 16,
+          "sha256": "1c7ad5aa276e612b8a68c087ad4e331d04217785bfbf35b18bc9c103c879568e"
+        },
+        "biases": {
+          "offset": 268048,
+          "bytes": 16,
+          "sha256": "31c5459c2f068de006c5581f219363230c66c547ab4296999304c9cc447e9e67"
+        },
+        "reconstructed_f32": {
+          "offset": 268064,
+          "bytes": 2048,
+          "sha256": "94aa7ca211d2abb12e59d1e0f07bd0f3262b937a9e322a63c93e94852013c27a"
+        },
+        "native_cpu": {
+          "offset": 270112,
+          "bytes": 2048,
+          "sha256": "94aa7ca211d2abb12e59d1e0f07bd0f3262b937a9e322a63c93e94852013c27a"
+        },
+        "native_gpu": {
+          "offset": 272160,
+          "bytes": 2048,
+          "sha256": "94aa7ca211d2abb12e59d1e0f07bd0f3262b937a9e322a63c93e94852013c27a"
+        },
+        "input_f32": {
+          "offset": 274208,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 275232,
+          "bytes": 8,
+          "sha256": "befc62e83cf8b5e5779e04a52a19baafff25d3b1b4671d15b061c87e43c94538"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 8,
+      "group_size": 32,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 275240,
+          "bytes": 512,
+          "sha256": "1c7454fdb5783a77693d566de1ea54b3f3ba558f48aae8f782c199c84e355143"
+        },
+        "scales": {
+          "offset": 275752,
+          "bytes": 32,
+          "sha256": "4bff7d6d50280b6a8cd82457ccd933c165e43bbf81886f2b7e39d632e5aff076"
+        },
+        "biases": {
+          "offset": 275784,
+          "bytes": 32,
+          "sha256": "466cd23454fdbc3b44c9ed8890db6ee2ea53698f29f70d336ec5585eb08119c5"
+        },
+        "reconstructed_f32": {
+          "offset": 275816,
+          "bytes": 2048,
+          "sha256": "69610ad4dc4376787042cbfa59c0d564277fd23d72c038a5cfb744efcbdb2261"
+        },
+        "native_cpu": {
+          "offset": 277864,
+          "bytes": 1024,
+          "sha256": "5b2c1931e2484ef2ea1bbda518c5116def430d0cbe8c8f617eb9ec553fe0c31f"
+        },
+        "native_gpu": {
+          "offset": 278888,
+          "bytes": 1024,
+          "sha256": "7306dc2b9ef94e5ab8500c058aa015660c22aa02052f437055d145635ba96568"
+        },
+        "input_f32": {
+          "offset": 279912,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 280936,
+          "bytes": 8,
+          "sha256": "7405594e0aa71ec1e3e201727d71e0ec243786937e90f3c43b42a6f013fe2640"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 8,
+      "group_size": 32,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 280944,
+          "bytes": 512,
+          "sha256": "1c7454fdb5783a77693d566de1ea54b3f3ba558f48aae8f782c199c84e355143"
+        },
+        "scales": {
+          "offset": 281456,
+          "bytes": 32,
+          "sha256": "2316a0fcd2a9d06fe71908dbe50d03e90a9dff7f3a3e21987e0db3ddc21ddec3"
+        },
+        "biases": {
+          "offset": 281488,
+          "bytes": 32,
+          "sha256": "105fd1cd67228aece41c62d97675e8f57e30c5118e9811273a9272cebeb7ad90"
+        },
+        "reconstructed_f32": {
+          "offset": 281520,
+          "bytes": 2048,
+          "sha256": "1d56157b89e9fc0a9b789e65de0b3e212df3ba4278106eaf2d787a284114e0fc"
+        },
+        "native_cpu": {
+          "offset": 283568,
+          "bytes": 1024,
+          "sha256": "98842549c5cbf0fef28e7eebcd6e86a29fe5cabd8e643bb96d4ca0016417ff80"
+        },
+        "native_gpu": {
+          "offset": 284592,
+          "bytes": 1024,
+          "sha256": "ef9389050e08142ee2489f642bfba5a05104804d4a5994f3aca13dcc9f796682"
+        },
+        "input_f32": {
+          "offset": 285616,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 286640,
+          "bytes": 8,
+          "sha256": "6cac86da6893e08a8dffc0b46134654b86ae7aafd80366526cebfab2c99375cb"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 8,
+      "group_size": 32,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 286648,
+          "bytes": 512,
+          "sha256": "1c7454fdb5783a77693d566de1ea54b3f3ba558f48aae8f782c199c84e355143"
+        },
+        "scales": {
+          "offset": 287160,
+          "bytes": 64,
+          "sha256": "8dbbe6e4a8e42c35287109ced2efeec42d9aecf95fca992f9899fa51e9074612"
+        },
+        "biases": {
+          "offset": 287224,
+          "bytes": 64,
+          "sha256": "6abfdfbb210b0d36d04ba8936a1a815426643c244d3ee5a2650fcd8956f55831"
+        },
+        "reconstructed_f32": {
+          "offset": 287288,
+          "bytes": 2048,
+          "sha256": "353e7f6fd5fb7d38458ee87368bd23c8d6c3ab21f476d08281f783e3962a9546"
+        },
+        "native_cpu": {
+          "offset": 289336,
+          "bytes": 2048,
+          "sha256": "353e7f6fd5fb7d38458ee87368bd23c8d6c3ab21f476d08281f783e3962a9546"
+        },
+        "native_gpu": {
+          "offset": 291384,
+          "bytes": 2048,
+          "sha256": "353e7f6fd5fb7d38458ee87368bd23c8d6c3ab21f476d08281f783e3962a9546"
+        },
+        "input_f32": {
+          "offset": 293432,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 294456,
+          "bytes": 8,
+          "sha256": "7405594e0aa71ec1e3e201727d71e0ec243786937e90f3c43b42a6f013fe2640"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 8,
+      "group_size": 64,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 294464,
+          "bytes": 512,
+          "sha256": "1c7454fdb5783a77693d566de1ea54b3f3ba558f48aae8f782c199c84e355143"
+        },
+        "scales": {
+          "offset": 294976,
+          "bytes": 16,
+          "sha256": "6677a7ddea04449a65374cb16a5eb9da62144500beb9c313db335437bded7b61"
+        },
+        "biases": {
+          "offset": 294992,
+          "bytes": 16,
+          "sha256": "7ba1199ab89c52ca86d65dfc295effb10539f87014fc1f6fdb6a3246dc5beefb"
+        },
+        "reconstructed_f32": {
+          "offset": 295008,
+          "bytes": 2048,
+          "sha256": "7e591f4913e308e20ab4ad0f07c287248a047a3a7ef2a2b8e21704135212b885"
+        },
+        "native_cpu": {
+          "offset": 297056,
+          "bytes": 1024,
+          "sha256": "d965aeff62ce847da82cf4e7d1c7b98a3c85f5e1d7c358ac6220eb48f28eac6f"
+        },
+        "native_gpu": {
+          "offset": 298080,
+          "bytes": 1024,
+          "sha256": "d965aeff62ce847da82cf4e7d1c7b98a3c85f5e1d7c358ac6220eb48f28eac6f"
+        },
+        "input_f32": {
+          "offset": 299104,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 300128,
+          "bytes": 8,
+          "sha256": "8ccfa3069da5d8cea03ab99f52c22875a286c94dd680339e0590a80163ebb632"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 8,
+      "group_size": 64,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 300136,
+          "bytes": 512,
+          "sha256": "1c7454fdb5783a77693d566de1ea54b3f3ba558f48aae8f782c199c84e355143"
+        },
+        "scales": {
+          "offset": 300648,
+          "bytes": 16,
+          "sha256": "b3b6b846738e28b467310aec53d718bd9b62fc149f83f84117d2311a4b5b233d"
+        },
+        "biases": {
+          "offset": 300664,
+          "bytes": 16,
+          "sha256": "ddef07e29bc185fbbf0e50f384f619258057aaeeb0a9078a9b43b116ed5738ca"
+        },
+        "reconstructed_f32": {
+          "offset": 300680,
+          "bytes": 2048,
+          "sha256": "5c22543e314c171ad21d099d79bfb02b6e3c69a0765f9caed5c8d27e6bb0b0d2"
+        },
+        "native_cpu": {
+          "offset": 302728,
+          "bytes": 1024,
+          "sha256": "6ddb9547b08dc6fa6f184ae8962bb069277f5bb97eff699d8fbd727b6ac5e91e"
+        },
+        "native_gpu": {
+          "offset": 303752,
+          "bytes": 1024,
+          "sha256": "6ddb9547b08dc6fa6f184ae8962bb069277f5bb97eff699d8fbd727b6ac5e91e"
+        },
+        "input_f32": {
+          "offset": 304776,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 305800,
+          "bytes": 8,
+          "sha256": "c84544bc65e43c63b9867a62f3ed52298d3357b883edde19a3f07cd27b1e51f3"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 8,
+      "group_size": 64,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 305808,
+          "bytes": 512,
+          "sha256": "1c7454fdb5783a77693d566de1ea54b3f3ba558f48aae8f782c199c84e355143"
+        },
+        "scales": {
+          "offset": 306320,
+          "bytes": 32,
+          "sha256": "a7c3f0bb4e4f76f053a51619e9fbbc606b06bb43d8843991b957c6d4fe1e1b6e"
+        },
+        "biases": {
+          "offset": 306352,
+          "bytes": 32,
+          "sha256": "4bcdf565e04182d6e64a68a8579a43668c488543e3edd7b21ab82e64b2dd4229"
+        },
+        "reconstructed_f32": {
+          "offset": 306384,
+          "bytes": 2048,
+          "sha256": "29aa7054d46172ce90ef6a9d8098e59b2b36beb82c26201c0bfd35dcd7751a84"
+        },
+        "native_cpu": {
+          "offset": 308432,
+          "bytes": 2048,
+          "sha256": "29aa7054d46172ce90ef6a9d8098e59b2b36beb82c26201c0bfd35dcd7751a84"
+        },
+        "native_gpu": {
+          "offset": 310480,
+          "bytes": 2048,
+          "sha256": "29aa7054d46172ce90ef6a9d8098e59b2b36beb82c26201c0bfd35dcd7751a84"
+        },
+        "input_f32": {
+          "offset": 312528,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 313552,
+          "bytes": 8,
+          "sha256": "8ccfa3069da5d8cea03ab99f52c22875a286c94dd680339e0590a80163ebb632"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    },
+    {
+      "bits": 8,
+      "group_size": 128,
+      "metadata_dtype": "F16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 313560,
+          "bytes": 512,
+          "sha256": "1c7454fdb5783a77693d566de1ea54b3f3ba558f48aae8f782c199c84e355143"
+        },
+        "scales": {
+          "offset": 314072,
+          "bytes": 8,
+          "sha256": "91b3dae2030e4fec2e0f2d0582a67ab2fee8980dd6c4c8a73c65da92fd32b30c"
+        },
+        "biases": {
+          "offset": 314080,
+          "bytes": 8,
+          "sha256": "89638b04eade30bde370d6a181acd45842b59e1d10827159fcc6dc149dd04915"
+        },
+        "reconstructed_f32": {
+          "offset": 314088,
+          "bytes": 2048,
+          "sha256": "357ba53ebdd8d3c2e29707452492241aac64c438e703ab9b9f656e7a6081de59"
+        },
+        "native_cpu": {
+          "offset": 316136,
+          "bytes": 1024,
+          "sha256": "b7ec863a519317616ea517389b7d7e11a8ad3b921088df0d6ba3a17dd4e53295"
+        },
+        "native_gpu": {
+          "offset": 317160,
+          "bytes": 1024,
+          "sha256": "ba45ed34823d8a93f8d9d1e9eef6070a012a601470e7718a7f28bd7ea25d4f72"
+        },
+        "input_f32": {
+          "offset": 318184,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 319208,
+          "bytes": 8,
+          "sha256": "65a2617b147460317c9a624ffaa2f97725f9dc2bebd1f6a09bcadb41a89a6aaf"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 8,
+      "group_size": 128,
+      "metadata_dtype": "BF16",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 319216,
+          "bytes": 512,
+          "sha256": "1c7454fdb5783a77693d566de1ea54b3f3ba558f48aae8f782c199c84e355143"
+        },
+        "scales": {
+          "offset": 319728,
+          "bytes": 8,
+          "sha256": "4b58ddfa2a51347fcf72a24c907427fcca97e62ee591324027f1f40a16550c6b"
+        },
+        "biases": {
+          "offset": 319736,
+          "bytes": 8,
+          "sha256": "3b3e5aef7cda997cf5ca9d3e7bb8d0772d99adf84d9cb79a50f4774bf5b79f3b"
+        },
+        "reconstructed_f32": {
+          "offset": 319744,
+          "bytes": 2048,
+          "sha256": "66190217a2ce809a7e9fc03488c41ae074d652df18e50a96062c2d126d008959"
+        },
+        "native_cpu": {
+          "offset": 321792,
+          "bytes": 1024,
+          "sha256": "9852e9edcea8dadaf8b65749cfdecc8d7f7d337bd834909b0468de6d7d12ea92"
+        },
+        "native_gpu": {
+          "offset": 322816,
+          "bytes": 1024,
+          "sha256": "68b2dd88bb75337c48f4db0c62e7b66f2d05d6cd3f7535912c7b967106d0f0b2"
+        },
+        "input_f32": {
+          "offset": 323840,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 324864,
+          "bytes": 8,
+          "sha256": "6ce56aff081799398768484b97b3dc64a6847c40ca96229e70ae61bd8346b8a0"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": false
+    },
+    {
+      "bits": 8,
+      "group_size": 128,
+      "metadata_dtype": "F32",
+      "rows": 2,
+      "columns": 256,
+      "arrays": {
+        "weight": {
+          "offset": 324872,
+          "bytes": 512,
+          "sha256": "1c7454fdb5783a77693d566de1ea54b3f3ba558f48aae8f782c199c84e355143"
+        },
+        "scales": {
+          "offset": 325384,
+          "bytes": 16,
+          "sha256": "1c7ad5aa276e612b8a68c087ad4e331d04217785bfbf35b18bc9c103c879568e"
+        },
+        "biases": {
+          "offset": 325400,
+          "bytes": 16,
+          "sha256": "31c5459c2f068de006c5581f219363230c66c547ab4296999304c9cc447e9e67"
+        },
+        "reconstructed_f32": {
+          "offset": 325416,
+          "bytes": 2048,
+          "sha256": "2c74f11b780f708f0e236d347a015b7d6454f01eab31c1317a10ed1c1ab5829a"
+        },
+        "native_cpu": {
+          "offset": 327464,
+          "bytes": 2048,
+          "sha256": "2c74f11b780f708f0e236d347a015b7d6454f01eab31c1317a10ed1c1ab5829a"
+        },
+        "native_gpu": {
+          "offset": 329512,
+          "bytes": 2048,
+          "sha256": "2c74f11b780f708f0e236d347a015b7d6454f01eab31c1317a10ed1c1ab5829a"
+        },
+        "input_f32": {
+          "offset": 331560,
+          "bytes": 1024,
+          "sha256": "e4c6f17e9c03b0ec4930bdd2d5fa0e6a4dbc87cd66646ccc6dc886d664220735"
+        },
+        "matvec_f32": {
+          "offset": 332584,
+          "bytes": 8,
+          "sha256": "65a2617b147460317c9a624ffaa2f97725f9dc2bebd1f6a09bcadb41a89a6aaf"
+        }
+      },
+      "native_dtype_cpu_gpu_equal": true
+    }
+  ],
+  "bytes": 332592,
+  "sha256": "8b625339201717836cb817e3acd6d07309ccc1c6e56e7526895940812308e3ac"
+}
