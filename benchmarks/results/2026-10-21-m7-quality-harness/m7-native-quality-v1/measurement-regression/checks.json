@@ -1,0 +1,458 @@
+{
+  "format": "toklet-m7-native-measurement-check-v1",
+  "passed": true,
+  "bindings": {
+    "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/native/tests.rs": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+    "src/native.rs": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "apple/include/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/tests/native_smoke.c": "642dad6db25398a1e5dbb9ca09e67a01edd8111a4517591b541ee02063c2e13c",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/Info.plist": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-darwin-link-smoke": "003e0c0ce0e8449de92b951199a6cfd0cf3de246914533f961ccb6b31c44d7c2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-darwin/release/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-link-smoke": "fc4e85048e91ad2469b11b62c3de00a514723b98f09049ad21e7e10e964392d6",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios/release/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-sim-link-smoke": "f3ec7566fd1ad5cb302b9a5730a4f1b71721d812f83530aeab52c7415208fad2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios-sim/release/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/build.json": "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+    "tools/experiments/test_m7_native_measurement_check.py": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+    "apple/Harness/NativeWorker.swift": "e31357548d1b232c47ea2c44227a93340bd369f3bf3c67745b5eb47e598ddde7",
+    "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+    "apple/tests/swift/MeasurementMain.swift": "80fa532ff7f2120cced10c5e8c48ee6113922daf04b303c686c128ec2780ac93",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-native-quality-v1/measurement-regression/proof-padding.bin": "a6d72ac7690f53be6ae46ba88506bd97302a093f7108472bd9efc3cefda06484",
+    "artifacts/m7-native-quality-v1/measurement-regression/check": "5d55b62c5f77709446bb1506efb6fde61ccdf1271bb01243caeef8bdc289eb25"
+  },
+  "commands": [
+    {
+      "command": [
+        "xcodebuild",
+        "-version"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 27236,
+      "stdout": "artifacts/m7-native-quality-v1/measurement-regression/logs/xcode-version.stdout",
+      "stderr": "artifacts/m7-native-quality-v1/measurement-regression/logs/xcode-version.stderr"
+    },
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "--show-sdk-path"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 27239,
+      "stdout": "artifacts/m7-native-quality-v1/measurement-regression/logs/sdk-path.stdout",
+      "stderr": "artifacts/m7-native-quality-v1/measurement-regression/logs/sdk-path.stderr"
+    },
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "swiftc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 27240,
+      "stdout": "artifacts/m7-native-quality-v1/measurement-regression/logs/swift-version.stdout",
+      "stderr": "artifacts/m7-native-quality-v1/measurement-regression/logs/swift-version.stderr"
+    },
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "swiftc",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+        "-module-cache-path",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-native-quality-v1/measurement-regression/ModuleCache",
+        "-swift-version",
+        "5",
+        "-strict-concurrency=complete",
+        "-warnings-as-errors",
+        "-target",
+        "arm64-apple-macos15.0",
+        "-O",
+        "-I",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/include",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/Harness/NativeWorker.swift",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/Harness/NativeMeasurement.swift",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/tests/swift/MeasurementMain.swift",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/libtoklet.a",
+        "-framework",
+        "Metal",
+        "-framework",
+        "MetalPerformanceShaders",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "Security",
+        "-lobjc",
+        "-liconv",
+        "-lresolv",
+        "-lc++",
+        "-o",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-native-quality-v1/measurement-regression/check"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 27241,
+      "stdout": "artifacts/m7-native-quality-v1/measurement-regression/logs/compile.stdout",
+      "stderr": "artifacts/m7-native-quality-v1/measurement-regression/logs/compile.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-native-quality-v1/measurement-regression/check",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-native-tiny-v2",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-native-quality-v1/measurement-regression/cases",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-native-quality-v1/measurement-regression/proof-padding.bin",
+        "a6d72ac7690f53be6ae46ba88506bd97302a093f7108472bd9efc3cefda06484"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 27250,
+      "stdout": "artifacts/m7-native-quality-v1/measurement-regression/logs/checks.stdout",
+      "stderr": "artifacts/m7-native-quality-v1/measurement-regression/logs/checks.stderr"
+    }
+  ],
+  "controlled_environment": {
+    "HOME": "/Users/coloner",
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/Users/coloner/.cargo/bin",
+    "CARGO_HOME": "/Users/coloner/.cargo",
+    "RUSTUP_HOME": "/Users/coloner/.rustup",
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer",
+    "LANG": "en_US.UTF-8",
+    "TMPDIR": "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-native-quality-v1/measurement-regression"
+  },
+  "checked": {
+    "results": [
+      {
+        "measuredCompleted": 10,
+        "endpointErrors": [],
+        "backend": "cpu",
+        "interruptionCount": 0,
+        "physicalDeviceQualified": false,
+        "filesBefore": {
+          "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+          "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+        },
+        "filesystemBefore": {
+          "freeBytes": 297423405056,
+          "instrument": "Foundation.FileManager.attributesOfFileSystem.systemFreeSize",
+          "scope": "trusted-root-filesystem",
+          "readStartedUptimeNanoseconds": 1897085158757416,
+          "readCompletedUptimeNanoseconds": 1897085158785333
+        },
+        "filesAfter": {
+          "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+          "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+        },
+        "warmupsCompleted": 3,
+        "released": true,
+        "loadAndSessionSeconds": 0.000834417,
+        "passed": true,
+        "m7Complete": false,
+        "cleanupErrors": [],
+        "sumNativeLastEventSeconds": 0.0008965830000000003,
+        "closed": true,
+        "checkpoints": [
+          {
+            "footprint": {
+              "lifetimePeakPhysicalBytes": 4604336,
+              "physicalBytes": 4604336,
+              "returnedNaturalCount": 93
+            },
+            "phase": "before-artifact-proof"
+          },
+          {
+            "footprint": {
+              "physicalBytes": 4768176,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 4768176
+            },
+            "phase": "after-artifact-proof"
+          },
+          {
+            "phase": "loaded",
+            "footprint": {
+              "physicalBytes": 4997552,
+              "lifetimePeakPhysicalBytes": 4997552,
+              "returnedNaturalCount": 93
+            }
+          },
+          {
+            "phase": "unloaded",
+            "footprint": {
+              "physicalBytes": 5112240,
+              "lifetimePeakPhysicalBytes": 5112240,
+              "returnedNaturalCount": 93
+            }
+          },
+          {
+            "phase": "closed",
+            "footprint": {
+              "physicalBytes": 5112240,
+              "lifetimePeakPhysicalBytes": 5112240,
+              "returnedNaturalCount": 93
+            }
+          },
+          {
+            "phase": "after-final-artifact-proof",
+            "footprint": {
+              "physicalBytes": 5177776,
+              "lifetimePeakPhysicalBytes": 5177776,
+              "returnedNaturalCount": 93
+            }
+          }
+        ]
+      },
+      {
+        "loadAndSessionSeconds": 0.234721916,
+        "passed": true,
+        "filesBefore": {
+          "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+          "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+        },
+        "physicalDeviceQualified": false,
+        "measuredCompleted": 10,
+        "filesystemBefore": {
+          "freeBytes": 297423396864,
+          "instrument": "Foundation.FileManager.attributesOfFileSystem.systemFreeSize",
+          "scope": "trusted-root-filesystem",
+          "readStartedUptimeNanoseconds": 1897085163024291,
+          "readCompletedUptimeNanoseconds": 1897085163062208
+        },
+        "interruptionCount": 0,
+        "cleanupErrors": [],
+        "sumNativeLastEventSeconds": 0.022990249000000004,
+        "warmupsCompleted": 3,
+        "m7Complete": false,
+        "checkpoints": [
+          {
+            "phase": "before-artifact-proof",
+            "footprint": {
+              "physicalBytes": 5325232,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 5325232
+            }
+          },
+          {
+            "phase": "after-artifact-proof",
+            "footprint": {
+              "physicalBytes": 5374384,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 5374384
+            }
+          },
+          {
+            "phase": "loaded",
+            "footprint": {
+              "physicalBytes": 8323648,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 8323648
+            }
+          },
+          {
+            "phase": "unloaded",
+            "footprint": {
+              "physicalBytes": 9028184,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 9077336
+            }
+          },
+          {
+            "phase": "closed",
+            "footprint": {
+              "physicalBytes": 9028184,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 9077336
+            }
+          },
+          {
+            "phase": "after-final-artifact-proof",
+            "footprint": {
+              "physicalBytes": 8995416,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 9077336
+            }
+          }
+        ],
+        "released": true,
+        "endpointErrors": [],
+        "closed": true,
+        "filesAfter": {
+          "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+          "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+        },
+        "backend": "metal"
+      }
+    ],
+    "sample_count": 26,
+    "hash_memory_result": {
+      "loadAndSessionSeconds": 0.000263083,
+      "passed": true,
+      "filesBefore": {
+        "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+        "Model/proof-padding.bin": "a6d72ac7690f53be6ae46ba88506bd97302a093f7108472bd9efc3cefda06484",
+        "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+      },
+      "physicalDeviceQualified": false,
+      "measuredCompleted": 10,
+      "filesystemBefore": {
+        "freeBytes": 297423183872,
+        "instrument": "Foundation.FileManager.attributesOfFileSystem.systemFreeSize",
+        "scope": "trusted-root-filesystem",
+        "readStartedUptimeNanoseconds": 1897085439609375,
+        "readCompletedUptimeNanoseconds": 1897085439622083
+      },
+      "interruptionCount": 0,
+      "cleanupErrors": [],
+      "sumNativeLastEventSeconds": 0.0007547089999999999,
+      "warmupsCompleted": 3,
+      "m7Complete": false,
+      "checkpoints": [
+        {
+          "phase": "before-artifact-proof",
+          "footprint": {
+            "physicalBytes": 9388632,
+            "returnedNaturalCount": 93,
+            "lifetimePeakPhysicalBytes": 9388632
+          }
+        },
+        {
+          "phase": "after-artifact-proof",
+          "footprint": {
+            "physicalBytes": 9405016,
+            "returnedNaturalCount": 93,
+            "lifetimePeakPhysicalBytes": 9405016
+          }
+        },
+        {
+          "phase": "loaded",
+          "footprint": {
+            "physicalBytes": 9437784,
+            "returnedNaturalCount": 93,
+            "lifetimePeakPhysicalBytes": 9437784
+          }
+        },
+        {
+          "phase": "unloaded",
+          "footprint": {
+            "physicalBytes": 9437784,
+            "returnedNaturalCount": 93,
+            "lifetimePeakPhysicalBytes": 9437784
+          }
+        },
+        {
+          "phase": "closed",
+          "footprint": {
+            "physicalBytes": 9437784,
+            "returnedNaturalCount": 93,
+            "lifetimePeakPhysicalBytes": 9437784
+          }
+        },
+        {
+          "phase": "after-final-artifact-proof",
+          "footprint": {
+            "physicalBytes": 9110104,
+            "returnedNaturalCount": 93,
+            "lifetimePeakPhysicalBytes": 9437784
+          }
+        }
+      ],
+      "released": true,
+      "endpointErrors": [],
+      "closed": true,
+      "filesAfter": {
+        "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+        "Model/proof-padding.bin": "a6d72ac7690f53be6ae46ba88506bd97302a093f7108472bd9efc3cefda06484",
+        "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+      },
+      "backend": "cpu"
+    },
+    "hash_memory_sample_count": 13,
+    "summary": {
+      "cases": [
+        "readonly filesystem free bytes/checked bridge/monotonic window/missing root",
+        "foreground startup already-active/delayed-active/monotonic-timeout gate",
+        "config SHA/path/unknown-field/size admission",
+        "SDK-layout bounded self TASK_VM_INFO",
+        "cpu actual3warmups10requests/exactIDs/state/timing/memory/close/release",
+        "metal actual3warmups10requests/exactIDs/state/timing/memory/close/release",
+        "trusted root alias/canonical inventory equivalence",
+        "changed artifact rejected before inference",
+        "exact inventory rejects extra artifact",
+        "artifact symlink rejected",
+        "artifact directory symlink rejected through trusted root alias",
+        "whole-process budget rejected before load",
+        "output failure preserves native close/release",
+        "combined source mutation/output failure preserves both errors and cleanup",
+        "wrong independent oracle rejected with cleanup",
+        "post-load endpoint mutation rejected after actual requests",
+        "256MiB independently hashed artifact/192MiB process budget/exact IDs/close/release"
+      ],
+      "passed": true,
+      "physicalDeviceQualified": false
+    }
+  },
+  "primary_error": null,
+  "endpoint_errors": [],
+  "physical_device_qualified": false,
+  "m7_complete": false
+}

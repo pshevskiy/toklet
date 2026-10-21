@@ -1455,6 +1455,47 @@ with exact output/state/source/install/storage/exit replay and trial peaks about
 supported limits, actual lifecycle/pressure, remaining sustained and base iPhone14
 evidence remain; this does not close M7.3.
 
+The [committed-distribution score API](docs/experiments/2026-10-21-m7-score-api.md)
+now passes independent CPU/selected-model Metal numerical checks, strict Cargo
+checks, all three Apple build/link targets and actual Mac C CPU/Metal clients.
+It enables later phone teacher forcing without full-logit copies. Full physical
+quality and the remaining M7.3 gates are unchanged and still pending.
+
+The [Swift score adapter](docs/experiments/2026-10-21-m7-worker-score.md) passes
+Mac CPU/Metal committed-prefix, failure and deterministic lifecycle-publication
+checks plus both SDK builds. The full phone quality collector remains pending.
+
+The [teacher-forcing coordinator](docs/experiments/2026-10-21-m7-teacher-forcing.md)
+passes frozen block-policy/failure simulation, independent tiny CPU and actual
+Metal sequencing, plus strict three-target compilation. Full physical corpus/
+task collection and app integration remain pending.
+
+The [sealed quality harness](docs/experiments/2026-10-21-m7-quality-harness.md)
+now passes109 portable checks,19 native admission/failure cases, tiny CPU/Metal
+loss collection, existing measurement/hash regressions and both SDK app builds.
+The full physical corpus/task collector and independent quality admission remain
+pending; no device qualification follows from Mac component checks.
+
+The [physical quality controller](docs/experiments/2026-10-21-m7-physical-quality.md)
+now passes sealed corpus/transport/stream admission checks and121 direct portable
+M7 tests. Failed wrapper/environment attempts remain. Actual new signed-app
+physical corpus/task collection and independent quality acceptance remain open.
+
+The [bounded raw task-response coordinator](docs/experiments/2026-10-21-m7-task-response.md)
+passes256-token/hidden-EOS/cancellation protocol checks, independent tiny first-ID
+and actualCPU/Metal continuation/lifetime checks,128 portable methods and both
+unsigned iOS app builds. Frozen physical100-task collection and grading remain.
+
+The [sealed raw task harness](docs/experiments/2026-10-21-m7-task-harness.md)
+passes exact input/response/reset/memory/endpoint mechanics,31 tiny test-program
+cases, existing quality/hash regressions and both iOS app builds. All140 portable
+methods pass in15 isolated modules; combined-run EPERM failures remain recorded.
+Physical frozen100-task collection, decoding and literal grading stay pending.
+
+The [literal task-ID compatibility](docs/experiments/2026-10-21-m7-task-id-compat.md)
+preserves slash-containing frozen benchmark IDs through checked CPU/Metal app
+response collection. Full physical100-task collection/grading remains pending.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy

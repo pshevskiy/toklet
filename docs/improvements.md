@@ -805,3 +805,92 @@ analyzer's all-natural refusal is retained, then narrowly corrected/reviewed wit
 12 checks plus six driver checks. Astra accepted completed exploratory evidence
 with no findings. Full physical quality/lifecycle/remaining sustained/base
 iPhone14 gates stay open.
+
+The [committed-distribution score API](experiments/2026-10-21-m7-score-api.md)
+adds a read-only48-byte diagnostic for target/greedy FP32 logits and compensated
+FP64 loss, enabling later phone teacher forcing without full-logit C copies.
+Final-row, exact-prefix, pending/reset and cancellation semantics remain explicit;
+owner/busy/poison/pointer guards preserve state and failure outputs. Three new
+independent CPU tests,111 ordinary CPU/123 Metal-feature tests, strict Clippy/fmt,
+both actual selected-model Metal comparisons, three Apple build/link targets and
+Mac C CPU/Metal score clients pass. All14 exports and original CPU binaries are
+checked. Astra accepted source, controller and completed evidence with no blocking
+findings after3,590 distinct pins,74 exact staged copies, four code pins,
+command/test/platform/C replays,379 links, privacy and whitespace. No numerical kernel/default/gate changes or full phone quality/
+performance/device-limit qualification follows; M7.3 remains open.
+
+The [Swift score adapter](experiments/2026-10-21-m7-worker-score.md) keeps native
+scoring on the owning thread and exposes only bounded validated scalars. Accepted
+commands and failures clear earlier scores; completion suppresses publication
+when lifecycle cleanup or close supersedes it. Deterministic CPU/Metal barriers
+cover both races, and an isolated former-predicate control fails the intended
+assertion. Seven portable checks,40 score-state rows/four races,20 legacy worker
+rows, strict Swift and both SDK builds pass. A first strict-compile failure and
+its exact old source remain recorded. Astra accepted source/regressions and completed evidence after156 bound paths,
+66 exact staged copies, one historical mapping, all runtime/SDK/negative
+replays, privacy,376 links and whitespace, with no remaining findings. No full physical quality or M7.3 completion follows.
+
+The [teacher-forcing coordinator](experiments/2026-10-21-m7-teacher-forcing.md)
+adds bounded reset/score-before-append sequencing, exact committed-prefix checks,
+final-target commitment and compensated loss aggregation. Failed append/output
+cannot return a complete summary. Seven simulated protocol cases include the
+full10000-target frozen block layout; these are not full model-quality results.
+Actual tiny CPU/Metal each pass three targets with independent CPU fixture loss,
+clean close/release, seven portable checks and strict Mac/both iOS module builds.
+Astra accepted source and completed evidence after100 pins,25 exact staged
+copies, four code pins, independent oracle/runtime/module replays,379 links,
+privacy and whitespace, with no findings. App admission and
+full physical corpus/task collection remain; M7.3 stays open.
+
+The [sealed quality harness](experiments/2026-10-21-m7-quality-harness.md) adds
+strict config/corpus SHA admission, exact target sequencing, foreground and
+interruption checks around each command, per-target process peaks and verified
+close/release/endpoint proofs. Shared measurement artifact rules and chunk pools
+remain, with parent sources retained. All109 portable M7 checks pass;19 native
+cases include six actual tiny CPU/Metal targets and five raw expected failures.
+The existing17-case/39-request measurement and256MiB bounded-hash regression,
+strict Swift and both complete SDK app builds pass. Exact marker-order and load
+bracket parser findings are fixed and tested. Astra accepted source and completed evidence after196 pins,58 exact staged
+copies, historical/helper mappings, all native/regression/SDK replays,109-test
+record,382 links, actual private-identifier scan and whitespace, with no findings. Full physical corpus/task quality and M7.3 remain.
+
+The [physical quality controller](experiments/2026-10-21-m7-physical-quality.md)
+adds sealed score-package/corpus jobs, exact corpus-inclusive transfer/storage
+admission, separate receipt types, authenticated no-copy reuse and full raw
+prefix/FP32/aggregate/memory/environment validation. Twelve offline methods include
+a synthetic10000-target stream and mocked complete prepare transport;121 direct
+M7 tests and10 direct package tests pass. Two wrapper-only process-group EPERM
+failures, a temporary-root test alias and shell-glob refusal remain recorded;
+no cleanup rule or gate changes. Astra accepted source and completed component evidence after58 pins,28 exact
+staged copies, both parent mappings, source/test/failure correspondence,385links,
+actual private-identifier scan and whitespace, with no findings. No new physical command/model run or full quality/M7.3 acceptance occurs.
+
+The [bounded task-response coordinator](experiments/2026-10-21-m7-task-response.md)
+keeps128-token worker commands while supporting256-token raw tasks through exact
+continuation. Whole-request preflight, hidden-EOS budget/state, callback order,
+persistent cancellation and failed command/sink behavior are checked. Astra's
+stale stop metadata finding is fixed with successful idle reason2 publication;
+failed/lifecycle commands clear it. Eleven protocol cases/backend and actualtiny
+CPU/Metal onecall/chunked/hidden-stop checks pass, as do128 portable methods,
+worker/score regressions and both unsigned iOS app builds. Two prior EPERM suite
+failures remain recorded. Astra accepted completed code/evidence with no findings. Physical100-task
+collection/grading remains; M7.3 is open.
+
+The [sealed raw task harness](experiments/2026-10-21-m7-task-harness.md) adds exact
+bounded task/config admission, foreground/cancellation enforcement, raw chunk
+clocks/admission/memory observations and per-case reset acknowledgements, with
+endpoint proofs and explicit release.31 native test cases/four tiny completions,
+12 parser checks,27 clean owned commands including quality/hash regressions and
+both iOS app builds pass. All140 portable methods pass across15 isolated modules;
+three combined EPERM failures and four corrected-discovery import failures stay
+recorded. Astra's clock/consumed-buffer findings and a preflight tiny-test prompt
+mistake are corrected with retained old evidence. Astra accepted completed code
+and evidence with no findings. Frozen physical100-task collection/grading and
+M7.3 remain open.
+
+The [literal task-ID compatibility fix](experiments/2026-10-21-m7-task-id-compat.md)
+preserves original labels such as HumanEval/0. All100 frozen IDs contain slash;
+Swift now accepts that literal character within the unchanged bounded/unique ID
+policy, without using IDs as paths. Twelve parser methods, actualCPU/Metal label
+roundtrip,31-case native checks and27 clean owned commands/both iOS apps pass.
+Original task IDs/prompts/caps/numerics/gates stay unchanged. Astra accepted source and completed evidence with no findings. Full physical task collection/grading remains.

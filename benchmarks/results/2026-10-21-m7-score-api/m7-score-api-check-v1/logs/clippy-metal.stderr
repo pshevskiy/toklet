@@ -1,0 +1,10 @@
+   Compiling objc2 v0.6.5
+    Checking block2 v0.6.2
+    Checking objc2-foundation v0.3.2
+    Checking objc2-core-foundation v0.3.2
+    Checking dispatch2 v0.3.1
+    Checking ctrlc v3.5.2
+    Checking objc2-metal v0.3.2
+    Checking objc2-metal-performance-shaders v0.3.2
+    Checking toklet v0.1.0 (/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.39s

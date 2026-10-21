@@ -1,0 +1,1 @@
+{"cases":[{"id":"first","promptTokens":[1,7,13],"maximum":3},{"promptTokens":[1,7,13,3],"maximum":2,"id":"second"}],"vocabulary":64,"version":1,"stops":[62,63]}

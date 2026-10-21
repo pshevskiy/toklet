@@ -1,0 +1,12 @@
+test_conflicting_pins_are_rejected (tools.experiments.test_m7_apple_integration.IntegrationTests.test_conflicting_pins_are_rejected) ... ok
+test_failed_worker_preserves_failure_and_endpoint_change (tools.experiments.test_m7_apple_integration.IntegrationTests.test_failed_worker_preserves_failure_and_endpoint_change) ... ok
+test_missing_or_remapped_executable_prevents_launch (tools.experiments.test_m7_apple_integration.IntegrationTests.test_missing_or_remapped_executable_prevents_launch) ... ok
+test_mutated_frozen_input_prevents_launch (tools.experiments.test_m7_apple_integration.IntegrationTests.test_mutated_frozen_input_prevents_launch) ... ok
+test_shutdown_requires_actual_shutdown_state (tools.experiments.test_m7_apple_integration.IntegrationTests.test_shutdown_requires_actual_shutdown_state) ... ok
+test_simulator_failure_always_cleans_and_preserves_both_errors (tools.experiments.test_m7_apple_integration.IntegrationTests.test_simulator_failure_always_cleans_and_preserves_both_errors) ... ok
+test_unreviewed_build_metadata_prevents_launch (tools.experiments.test_m7_apple_integration.IntegrationTests.test_unreviewed_build_metadata_prevents_launch) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.031s
+
+OK

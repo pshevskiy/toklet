@@ -1,0 +1,9 @@
+{
+  "format": "toklet-exec-invocation-failure-v1",
+  "exit_code": 1,
+  "recorded_from_exec_tool": true,
+  "python_started": false,
+  "command": "python -m unittest discover -s tools/experiments -p test_m7_*.py",
+  "observed_tool_output": "zsh:1: no matches found: test_m7_*.py\n",
+  "redirection_files_created": false
+}

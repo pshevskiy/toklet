@@ -1,0 +1,17 @@
+test_callback_clocks_coverage_and_order (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_callback_clocks_coverage_and_order) ... ok
+test_case_and_admission_identity (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_case_and_admission_identity) ... ok
+test_chunk_ids_prefix_and_reset (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_chunk_ids_prefix_and_reset) ... ok
+test_complete_case_inventory (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_complete_case_inventory) ... ok
+test_complete_output (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_complete_output) ... ok
+test_completed_command_brackets_do_not_overlap (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_completed_command_brackets_do_not_overlap) ... ok
+test_exact_marker_sequence (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_exact_marker_sequence) ... ok
+test_exact_task_sha_required (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_exact_task_sha_required) ... ok
+test_failed_output_or_mutation_cannot_pass (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_failed_output_or_mutation_cannot_pass) ... ok
+test_nested_metadata_hashes_consumed_buffer (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_nested_metadata_hashes_consumed_buffer) ... ok
+test_process_and_environment (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_process_and_environment) ... ok
+test_result_closure_and_proofs (tools.experiments.test_m7_native_tasks_check.TasksOutputChecks.test_result_closure_and_proofs) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.035s
+
+OK

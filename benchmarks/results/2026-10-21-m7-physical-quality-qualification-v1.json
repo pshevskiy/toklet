@@ -1,0 +1,210 @@
+{
+  "format": "toklet-m7-physical-quality-controller-qualification-v1",
+  "passed": true,
+  "parent_commit": "bcb4ec7",
+  "collection_root": "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet",
+  "evidence_pins": {
+    "artifacts/m7-native-quality-v1/source-snapshot/tools/experiments/m7_physical_measurement.py": "030c110d7053cd3c0ec753170796546c1701f32dd03e8fb8f210f201dec64a32",
+    "artifacts/m7-native-quality-v1/source-snapshot/tools/experiments/m7_physical_storage.py": "127e6520ccf7900b1190f4e7c77bca4d047b9d0030667067260f2e4fd71b1ae4",
+    "artifacts/m7-physical-quality-portable-v1/all-driver.py": "1dc5303c7e10beb751c7e992f49d4a0b6ae8eab9fa8784adc3191fad60efa2ff",
+    "artifacts/m7-physical-quality-portable-v1/all-driver.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-quality-portable-v1/all-driver.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-quality-portable-v1/all.json": "379221bef94e35aa1df866712ef9752d452f2fffd7c7a5a07c29ad008a39c9b6",
+    "artifacts/m7-physical-quality-portable-v1/all.stderr": "a413bee783f061e5093bf108ddaac2582b400c18975694a95c3d07d96ed6f7ae",
+    "artifacts/m7-physical-quality-portable-v1/all.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-quality-portable-v1/checks-v2.stderr": "91c28a11c890e53b0016f6f71b1e1db89614ed5d34e370466ff7a632173fef94",
+    "artifacts/m7-physical-quality-portable-v1/checks-v2.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-quality-portable-v1/checks-v3.stderr": "d93c616049e43384bb53ab60994c1b0bd20c200edca2f910b9727bc600c0fd54",
+    "artifacts/m7-physical-quality-portable-v1/checks-v3.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-quality-portable-v1/checks.stderr": "b8daf851afaa26a0ade695374b2378b564562cf0f7fa28098aad4eb68d85a95a",
+    "artifacts/m7-physical-quality-portable-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-quality-portable-v1/source-snapshot/test_m7_physical_quality.py": "618bb89387e7a69d9c6edf2c2e7bb0481728881e1b989ce07da2d675c73c1e49",
+    "artifacts/m7-physical-quality-portable-v2/all-driver.py": "1dc5303c7e10beb751c7e992f49d4a0b6ae8eab9fa8784adc3191fad60efa2ff",
+    "artifacts/m7-physical-quality-portable-v2/all-driver.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-quality-portable-v2/all-driver.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-quality-portable-v2/all.json": "d43d6f8a4cd97c45fced30a72f671ffd43fe7b524ba3fe0ca7d39999ec03a78a",
+    "artifacts/m7-physical-quality-portable-v2/all.stderr": "e12f8f4704b92be3d4b6ff40613cfc5444ef3de0845489fc85a907d8aca3a167",
+    "artifacts/m7-physical-quality-portable-v2/all.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-quality-portable-v2/direct-all-v2.stderr": "728f2fbcd9629ffc811d70854e35c147d25b8a18c0dc29d2ec1027eb5d04627d",
+    "artifacts/m7-physical-quality-portable-v2/direct-all-v2.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-quality-portable-v2/direct-source.json": "978e7a9192c4cd2ea521469faec1d65145be3695fc78641382befd57b01b5b34",
+    "artifacts/m7-physical-quality-portable-v2/direct.json": "2803bfc555db5f564279550a67c231dbdecf837321950e29cd0725d18e74f1da",
+    "artifacts/m7-physical-quality-portable-v2/package-retry.stderr": "81e7402a7c590420a5216ff5b997762178c7bc12e19dbf8440c63fdff18fc7ee",
+    "artifacts/m7-physical-quality-portable-v2/package-retry.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-quality-portable-v2/shell-glob-rejection.json": "5c45a3c9ea07a5c6c6829b291fe9d8633778b042514f11df127fb399cf6168dc",
+    "benchmarks/contract-v1/held_out_loss.u32le": "f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb",
+    "benchmarks/results/2026-10-21-m7-quality-harness-qualification-v1.json": "c7a3a1db48fce32d1d5de0d888243d10c3a0a02db75cf27558e0b60a931ca663",
+    "benchmarks/results/2026-10-21-m7-score-api-qualification-v1.json": "80fc7982f4bc9acfb65da6b3547aa9e41c0e966cd8ab8b589548d3044ecdd8c4",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_native_fixture.py": "9f97b525af81f3243a774bf73b1e48a6379c6dd34d9e5af7057992502e3b72be",
+    "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+    "tools/experiments/m7_native_metal_check.py": "09da441923c9fa4ebe7dc55fb02c6c1c9047664c09fda5bc349b84b656d0ec0f",
+    "tools/experiments/m7_native_quality_check.py": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+    "tools/experiments/m7_native_score_check.py": "90d27733655fd482485350eda54c351b63730b3e8082d8ea4ab710502bc71b24",
+    "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_measurement.py": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034",
+    "tools/experiments/m7_physical_quality.py": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+    "tools/experiments/m7_physical_storage.py": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/m7_swift_harness_run.py": "fcdae72727a2f850a75319aec0ffdb994159953800781ad02b80952160ec4a07",
+    "tools/experiments/test_m7_apple_integration.py": "fcd82d74ad68f25972662ea4294e484506ac362959f33503c1b22e11937058fa",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "tools/experiments/test_m7_native_measurement_check.py": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+    "tools/experiments/test_m7_native_metal_check.py": "f3834817dcd660d2652a6447cbe6632acb33b1a98d60078712b20a5f31aa4a44",
+    "tools/experiments/test_m7_native_quality_check.py": "bbe1edc476fcfdec0dcb6061d75bd55cf91452bd77e455e1074676d1bf772567",
+    "tools/experiments/test_m7_native_score_check.py": "dd9416f2978d6933e0c218bddd9048294ba029c744ed615208bc874b0f25d029",
+    "tools/experiments/test_m7_native_teacher_check.py": "91dcfa41c72eeaba8288c8cdae41e4db15962522a928f473f10d4a58c2f2f692",
+    "tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/test_m7_physical_measurement.py": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+    "tools/experiments/test_m7_physical_quality.py": "6e3e9cb824306ed7d19586cf48011c5deb9ca0bc017174783a6de3c8183e7987",
+    "tools/experiments/test_m7_physical_storage.py": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+    "tools/experiments/test_m7_swift_harness_run.py": "cd54ce8480c01dc81f85ef836618531e13af80a35b5a204d2e49863bd9369fbf"
+  },
+  "exact_published_copies": {
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all-driver.py": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/all-driver.py",
+      "sha256": "1dc5303c7e10beb751c7e992f49d4a0b6ae8eab9fa8784adc3191fad60efa2ff"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all-driver.stderr": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/all-driver.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all-driver.stdout": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/all-driver.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all.json": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/all.json",
+      "sha256": "379221bef94e35aa1df866712ef9752d452f2fffd7c7a5a07c29ad008a39c9b6"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all.stderr": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/all.stderr",
+      "sha256": "a413bee783f061e5093bf108ddaac2582b400c18975694a95c3d07d96ed6f7ae"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all.stdout": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/all.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks-v2.stderr": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/checks-v2.stderr",
+      "sha256": "91c28a11c890e53b0016f6f71b1e1db89614ed5d34e370466ff7a632173fef94"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks-v2.stdout": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/checks-v2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks-v3.stderr": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/checks-v3.stderr",
+      "sha256": "d93c616049e43384bb53ab60994c1b0bd20c200edca2f910b9727bc600c0fd54"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks-v3.stdout": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/checks-v3.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks.stderr": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/checks.stderr",
+      "sha256": "b8daf851afaa26a0ade695374b2378b564562cf0f7fa28098aad4eb68d85a95a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks.stdout": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/checks.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/source-snapshot/test_m7_physical_quality.py": {
+      "origin": "artifacts/m7-physical-quality-portable-v1/source-snapshot/test_m7_physical_quality.py",
+      "sha256": "618bb89387e7a69d9c6edf2c2e7bb0481728881e1b989ce07da2d675c73c1e49"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all-driver.py": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/all-driver.py",
+      "sha256": "1dc5303c7e10beb751c7e992f49d4a0b6ae8eab9fa8784adc3191fad60efa2ff"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all-driver.stderr": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/all-driver.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all-driver.stdout": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/all-driver.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all.json": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/all.json",
+      "sha256": "d43d6f8a4cd97c45fced30a72f671ffd43fe7b524ba3fe0ca7d39999ec03a78a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all.stderr": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/all.stderr",
+      "sha256": "e12f8f4704b92be3d4b6ff40613cfc5444ef3de0845489fc85a907d8aca3a167"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all.stdout": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/all.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/direct-all-v2.stderr": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/direct-all-v2.stderr",
+      "sha256": "728f2fbcd9629ffc811d70854e35c147d25b8a18c0dc29d2ec1027eb5d04627d"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/direct-all-v2.stdout": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/direct-all-v2.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/direct-source.json": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/direct-source.json",
+      "sha256": "978e7a9192c4cd2ea521469faec1d65145be3695fc78641382befd57b01b5b34"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/direct.json": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/direct.json",
+      "sha256": "2803bfc555db5f564279550a67c231dbdecf837321950e29cd0725d18e74f1da"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/package-retry.stderr": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/package-retry.stderr",
+      "sha256": "81e7402a7c590420a5216ff5b997762178c7bc12e19dbf8440c63fdff18fc7ee"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/package-retry.stdout": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/package-retry.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-native-quality-v1/source-snapshot/tools/experiments/m7_physical_measurement.py": {
+      "origin": "artifacts/m7-native-quality-v1/source-snapshot/tools/experiments/m7_physical_measurement.py",
+      "sha256": "030c110d7053cd3c0ec753170796546c1701f32dd03e8fb8f210f201dec64a32"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-native-quality-v1/source-snapshot/tools/experiments/m7_physical_storage.py": {
+      "origin": "artifacts/m7-native-quality-v1/source-snapshot/tools/experiments/m7_physical_storage.py",
+      "sha256": "127e6520ccf7900b1190f4e7c77bca4d047b9d0030667067260f2e4fd71b1ae4"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/shell-glob-rejection.json": {
+      "origin": "artifacts/m7-physical-quality-portable-v2/shell-glob-rejection.json",
+      "sha256": "5c45a3c9ea07a5c6c6829b291fe9d8633778b042514f11df127fb399cf6168dc"
+    }
+  },
+  "parent_source_correspondence": {
+    "tools/experiments/m7_physical_measurement.py": {
+      "sha256": "030c110d7053cd3c0ec753170796546c1701f32dd03e8fb8f210f201dec64a32",
+      "snapshot": "artifacts/m7-native-quality-v1/source-snapshot/tools/experiments/m7_physical_measurement.py"
+    },
+    "tools/experiments/m7_physical_storage.py": {
+      "sha256": "127e6520ccf7900b1190f4e7c77bca4d047b9d0030667067260f2e4fd71b1ae4",
+      "snapshot": "artifacts/m7-native-quality-v1/source-snapshot/tools/experiments/m7_physical_storage.py"
+    }
+  },
+  "code_pins": {
+    "tools/experiments/m7_physical_measurement.py": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034",
+    "tools/experiments/m7_physical_storage.py": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce",
+    "tools/experiments/m7_physical_quality.py": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+    "tools/experiments/test_m7_physical_quality.py": "6e3e9cb824306ed7d19586cf48011c5deb9ca0bc017174783a6de3c8183e7987"
+  },
+  "targeted_portable_checks": 12,
+  "direct_portable_checks": 121,
+  "failed_wrapper_suites": 2,
+  "failed_initial_targeted_fixture": 1,
+  "shell_glob_rejection": 1,
+  "direct_package_suite": 10,
+  "synthetic_full_stream_targets": 10000,
+  "real_model_runs": 0,
+  "physical_commands": 0,
+  "numerical_kernels_changed": false,
+  "full_quality_qualified": false,
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "review": "Astra accepted controller component with no findings:58pins,28 exact working/index copies,four code pins,two parent mappings,direct source closure,saved12/121/10passes and both retained wrapperfailures,385links,actual private-identifier scan,stagedagreement and whitespace"
+}

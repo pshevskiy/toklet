@@ -75,6 +75,62 @@ pub struct Report {
     pub emitted_tokens: u32,
     pub admitted_bytes: u64,
 }
+/// Read-only diagnostic of one fully committed next-token distribution.
+/// These scalar outputs avoid copying full logits across the C boundary.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct Score {
+    pub abi_version: u32,
+    pub struct_size: u32,
+    pub target_token: u32,
+    pub greedy_token: u32,
+    pub vocab_size: u32,
+    pub evaluated_tokens: u32,
+    pub target_logit: f64,
+    pub greedy_logit: f64,
+    pub negative_log_likelihood: f64,
+}
+
+// Diagnostic only: preserve the FP32 distribution, reduce exponentials in FP64
+// with compensated summation, and subtract before adding log(sum). This keeps
+// equal-logit loss meaningful even for finite values near f32::MAX.
+fn score_logits(logits: &[f32], target: u32, evaluated: usize) -> Result<Score> {
+    if target as usize >= logits.len() {
+        return Err(fail(INVALID, "score target outside model vocabulary"));
+    }
+    let vocab_size = u32::try_from(logits.len())
+        .map_err(|_| fail(INVALID, "score vocabulary count exceeds u32"))?;
+    let evaluated_tokens =
+        u32::try_from(evaluated).map_err(|_| fail(INVALID, "score evaluated count exceeds u32"))?;
+    let greedy_token =
+        crate::sampling::greedy(logits).map_err(|e| fail(ENGINE_ERROR, e.to_string()))?;
+    let greedy_logit = f64::from(logits[greedy_token as usize]);
+    let target_logit = f64::from(logits[target as usize]);
+    let mut sum = 0.0;
+    let mut correction = 0.0;
+    for &value in logits {
+        let adjusted = (f64::from(value) - greedy_logit).exp() - correction;
+        let next = sum + adjusted;
+        correction = (next - sum) - adjusted;
+        sum = next;
+    }
+    let negative_log_likelihood = (greedy_logit - target_logit) + sum.ln();
+    if !negative_log_likelihood.is_finite() || negative_log_likelihood < 0.0 {
+        return Err(fail(ENGINE_ERROR, "invalid score loss reduction"));
+    }
+    Ok(Score {
+        abi_version: ABI_VERSION,
+        struct_size: size_of::<Score>() as u32,
+        target_token: target,
+        greedy_token,
+        vocab_size,
+        evaluated_tokens,
+        target_logit,
+        greedy_logit,
+        negative_log_likelihood,
+    })
+}
+
 pub type Emit = Option<unsafe extern "C" fn(*mut c_void, TokenEvent) -> u32>;
 
 enum NativeModel {
@@ -113,6 +169,21 @@ impl NativeSession {
             Self::Metal(s) => generation::generate(s.as_mut(), request, cancel, emit),
         }
     }
+    fn score(&self, target: u32) -> Result<Score> {
+        let (logits, evaluated) = match self {
+            Self::Cpu(s) => (s.logits(), s.evaluated_len()),
+            #[cfg(all(
+                feature = "metal",
+                any(target_os = "macos", target_os = "ios"),
+                target_arch = "aarch64"
+            ))]
+            Self::Metal(s) => (s.logits(), s.evaluated_len()),
+        };
+        let logits =
+            logits.ok_or_else(|| fail(INVALID, "no fully committed distribution to score"))?;
+        score_logits(logits, target, evaluated)
+    }
+
     fn reset(&mut self) {
         match self {
             Self::Cpu(s) => s.reset(),
@@ -512,6 +583,35 @@ pub unsafe extern "C" fn toklet_session_state(
             pointer(out)?;
             (*session).access(|s| {
                 out.write(report(s));
+                Ok(())
+            })
+        })
+    }
+}
+/// Score only the final committed row, without mutation or recovery of earlier
+/// prefill rows. Full-corpus callers score before appending each target and must
+/// verify exact prefix/evaluated state after cancellation.
+/// A successful generate call with max_new_tokens=0 evaluates the supplied
+/// prompt/append without sampling. Pending/reset states reject; cancellation
+/// alone preserves a previously valid committed prefix. No logits vector,
+/// model copy or new numerical execution occurs.
+/// # Safety
+/// Follow the foreign caller contract; output is a complete writable Score,
+/// disjoint from the handle and error. Output is untouched unless status is OK.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_session_score(
+    session: *const SessionHandle,
+    target: u32,
+    out: *mut Score,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(session)?;
+            pointer(out)?;
+            (*session).access(|s| {
+                let score = s.score(target)?;
+                out.write(score);
                 Ok(())
             })
         })

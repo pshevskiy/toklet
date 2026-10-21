@@ -124,27 +124,35 @@ struct NativeMeasurementConfig: Codable, Sendable {
               minimumNativeSeconds.isFinite,
               minimumNativeSeconds == 0 || (600...3600).contains(minimumNativeSeconds),
               numericalBudget > 4096, numericalBudget < processBudget,
-              processBudget <= 4 * 1024 * 1024 * 1024,
-              !files.isEmpty, files.count <= 256,
-              files[modelFolder + "/config.json"] != nil,
-              packedFolder.isEmpty || metal,
-              packedFolder.isEmpty || (packedFolder != modelFolder
-                && !packedFolder.hasPrefix(modelFolder + "/") && !modelFolder.hasPrefix(packedFolder + "/")) else {
+              processBudget <= 4 * 1024 * 1024 * 1024 else {
             throw measurementError("Invalid explicit measurement policy")
         }
-        try validateRelative(modelFolder)
-        if !packedFolder.isEmpty { try validateRelative(packedFolder) }
-        for (name,hash) in files {
-            try validateRelative(name)
-            guard name.hasPrefix(modelFolder + "/") || (!packedFolder.isEmpty && name.hasPrefix(packedFolder + "/")),
-                  hash.count == 64, hash.utf8.allSatisfy({ (48...57).contains($0) || (97...102).contains($0) }) else {
-                throw measurementError("Invalid admitted artifact inventory")
-            }
+        try validateNativeArtifactFields(modelFolder:modelFolder,packedFolder:packedFolder,files:files,metal:metal)
+    }
+}
+
+// Shared by the measurement and teacher-forced quality configurations. Paths,
+// exact inventory and hashes keep identical admission rules in both diagnostics.
+func validateNativeArtifactFields(modelFolder: String, packedFolder: String,
+                                 files: [String:String], metal: Bool) throws {
+    guard !files.isEmpty, files.count <= 256, files[modelFolder + "/config.json"] != nil,
+          packedFolder.isEmpty || metal,
+          packedFolder.isEmpty || (packedFolder != modelFolder
+            && !packedFolder.hasPrefix(modelFolder + "/") && !modelFolder.hasPrefix(packedFolder + "/")) else {
+        throw measurementError("Invalid admitted artifact inventory")
+    }
+    try validateRelative(modelFolder)
+    if !packedFolder.isEmpty { try validateRelative(packedFolder) }
+    for (name,hash) in files {
+        try validateRelative(name)
+        guard name.hasPrefix(modelFolder + "/") || (!packedFolder.isEmpty && name.hasPrefix(packedFolder + "/")),
+              hash.count == 64, hash.utf8.allSatisfy({ (48...57).contains($0) || (97...102).contains($0) }) else {
+            throw measurementError("Invalid admitted artifact inventory")
         }
     }
 }
 
-private func validateRelative(_ name: String) throws {
+func validateRelative(_ name: String) throws {
     guard !name.isEmpty, name.utf8.count <= 16384, !name.hasPrefix("/"),
           name.split(separator:"/",omittingEmptySubsequences:false).allSatisfy({ component in
               !component.isEmpty && component != "." && component != ".." && component.utf8.allSatisfy {
@@ -153,7 +161,7 @@ private func validateRelative(_ name: String) throws {
           }) else { throw measurementError("Invalid relative artifact path") }
 }
 
-private func localURL(_ root: URL, _ name: String) throws -> URL {
+func localURL(_ root: URL, _ name: String) throws -> URL {
     try validateRelative(name)
     var url = root
     for component in name.split(separator:"/") {
@@ -164,7 +172,7 @@ private func localURL(_ root: URL, _ name: String) throws -> URL {
     return url
 }
 
-private func streamedHash(_ url: URL, maximum: UInt64) throws -> String {
+func streamedHash(_ url: URL, maximum: UInt64) throws -> String {
     let properties = try url.resourceValues(forKeys:[.isRegularFileKey,.isSymbolicLinkKey])
     guard properties.isRegularFile == true, properties.isSymbolicLink != true else {
         throw measurementError("Artifact must be a regular file")
@@ -207,13 +215,18 @@ func admitMeasurementConfig(root: URL, name: String, sha256: String) throws -> N
 }
 
 private func artifactProof(_ config: NativeMeasurementConfig, _ root: URL) throws -> [String:String] {
+    try nativeArtifactProof(modelFolder:config.modelFolder,packedFolder:config.packedFolder,files:config.files,root:root)
+}
+
+func nativeArtifactProof(modelFolder: String, packedFolder: String,
+                         files: [String:String], root: URL) throws -> [String:String] {
     // Foundation enumeration may return /private/var while Documents uses /var.
     // Canonicalize only the trusted root here; reject child links before
     // canonicalizing an enumerated entry so forbidden links cannot disappear.
     let root = root.standardizedFileURL.resolvingSymlinksInPath()
     var names = Set<String>()
     let rootComponents = root.pathComponents
-    for folder in [config.modelFolder,config.packedFolder] where !folder.isEmpty {
+    for folder in [modelFolder,packedFolder] where !folder.isEmpty {
         let directory = try localURL(root,folder)
         let properties = try directory.resourceValues(forKeys:[.isDirectoryKey,.isSymbolicLinkKey])
         var enumerationError: Error?
@@ -241,11 +254,11 @@ private func artifactProof(_ config: NativeMeasurementConfig, _ root: URL) throw
         }
         if let error = enumerationError { throw error }
     }
-    guard names == Set(config.files.keys) else { throw measurementError("Exact artifact inventory differs") }
+    guard names == Set(files.keys) else { throw measurementError("Exact artifact inventory differs") }
     var observed: [String:String] = [:]
     for name in names.sorted() {
         let hash = try streamedHash(try localURL(root,name),maximum:4 * 1024 * 1024 * 1024)
-        guard config.files[name] == hash else { throw measurementError("Artifact SHA differs: \(name)") }
+        guard files[name] == hash else { throw measurementError("Artifact SHA differs: \(name)") }
         observed[name] = hash
     }
     return observed
@@ -295,7 +308,7 @@ struct NativeMeasurementResult: Encodable, Sendable {
 // Notification callbacks may arrive on the main thread while native work owns
 // its dedicated thread. The lock protects the weak worker and interruption count;
 // native cancellation/cleanup is requested only after releasing this lock.
-private final class MeasurementInterruptions: @unchecked Sendable {
+final class NativeDiagnosticInterruptions: @unchecked Sendable {
     private let lock = NSLock()
     private weak var worker: NativeWorker?
     private var count: UInt64 = 0
@@ -364,7 +377,7 @@ func runNativeMeasurement(_ config: NativeMeasurementConfig, root: URL,
                           onSample: (NativeMeasurementRequest) throws -> Void) -> NativeMeasurementResult {
     precondition(!Thread.isMainThread)
     var result = NativeMeasurementResult(backend:config.metal ? "metal" : "cpu")
-    let interruptions = MeasurementInterruptions()
+    let interruptions = NativeDiagnosticInterruptions()
     defer { interruptions.stop() }
     var owner: NativeWorker?
     weak var weakOwner: NativeWorker?

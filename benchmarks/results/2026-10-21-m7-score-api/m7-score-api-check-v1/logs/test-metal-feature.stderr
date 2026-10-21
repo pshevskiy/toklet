@@ -1,0 +1,35 @@
+   Compiling objc2 v0.6.5
+   Compiling block2 v0.6.2
+   Compiling objc2-foundation v0.3.2
+   Compiling objc2-core-foundation v0.3.2
+   Compiling dispatch2 v0.3.1
+   Compiling ctrlc v3.5.2
+   Compiling objc2-metal v0.3.2
+   Compiling objc2-metal-performance-shaders v0.3.2
+   Compiling toklet v0.1.0 (/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.87s
+     Running unittests src/lib.rs (artifacts/m7-score-api-check-v1/target/debug/deps/toklet-c5375e4e4b68e5be)
+     Running unittests src/bin/toklet.rs (artifacts/m7-score-api-check-v1/target/debug/deps/toklet-e2f51b3975cb3134)
+     Running tests/bench_contract.rs (artifacts/m7-score-api-check-v1/target/debug/deps/bench_contract-83183b0cd86016dc)
+     Running tests/cached_attention.rs (artifacts/m7-score-api-check-v1/target/debug/deps/cached_attention-abc5ef587726ed1d)
+     Running tests/cli.rs (artifacts/m7-score-api-check-v1/target/debug/deps/cli-720966d2711f28e8)
+     Running tests/cpu_attention.rs (artifacts/m7-score-api-check-v1/target/debug/deps/cpu_attention-4853ef08597456c4)
+     Running tests/cpu_decoder.rs (artifacts/m7-score-api-check-v1/target/debug/deps/cpu_decoder-c8dfdb766e2333f8)
+     Running tests/cpu_linear.rs (artifacts/m7-score-api-check-v1/target/debug/deps/cpu_linear-eeb7b7a26a86a517)
+     Running tests/cpu_reductions.rs (artifacts/m7-score-api-check-v1/target/debug/deps/cpu_reductions-26d617d816d12bde)
+     Running tests/cpu_tiled.rs (artifacts/m7-score-api-check-v1/target/debug/deps/cpu_tiled-4084f98621986106)
+     Running tests/fixtures.rs (artifacts/m7-score-api-check-v1/target/debug/deps/fixtures-b0c6bd37805af909)
+     Running tests/metal.rs (artifacts/m7-score-api-check-v1/target/debug/deps/metal-f2719dec3ab719a8)
+     Running tests/q4.rs (artifacts/m7-score-api-check-v1/target/debug/deps/q4-0a9a5fbee3bdc42e)
+     Running tests/q4_artifact.rs (artifacts/m7-score-api-check-v1/target/debug/deps/q4_artifact-da56fce6d16cbcbb)
+     Running tests/q4_metal.rs (artifacts/m7-score-api-check-v1/target/debug/deps/q4_metal-df200e005118f695)
+     Running tests/q4_v2.rs (artifacts/m7-score-api-check-v1/target/debug/deps/q4_v2-aff5e6639cee28fe)
+     Running tests/q4_v2_models.rs (artifacts/m7-score-api-check-v1/target/debug/deps/q4_v2_models-d9c2a0a9c72b1c6c)
+     Running tests/q4_v2_storage.rs (artifacts/m7-score-api-check-v1/target/debug/deps/q4_v2_storage-e01d16f24cd0d985)
+     Running tests/qwen_forward.rs (artifacts/m7-score-api-check-v1/target/debug/deps/qwen_forward-709a7b6cd865f39c)
+     Running tests/qwen_larger_forward.rs (artifacts/m7-score-api-check-v1/target/debug/deps/qwen_larger_forward-e3a861a9e272b0d2)
+     Running tests/qwen_larger_metal.rs (artifacts/m7-score-api-check-v1/target/debug/deps/qwen_larger_metal-186f6ff630e99132)
+     Running tests/qwen_session.rs (artifacts/m7-score-api-check-v1/target/debug/deps/qwen_session-47617c4638a22cc6)
+     Running tests/session.rs (artifacts/m7-score-api-check-v1/target/debug/deps/session-1525c3662c7dce01)
+     Running tests/weights.rs (artifacts/m7-score-api-check-v1/target/debug/deps/weights-c25b1016c4277493)
+   Doc-tests toklet

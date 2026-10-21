@@ -106,3 +106,26 @@ History is preserved; pending IDs become committed. Continue then evaluates from
 that exact token prefix. Reusing a path after replacing/reloading weights is not
 proof of model identity. A frontend must preserve the same model owner or
 independently validate identity before it offers replay.
+
+## Read-only next-token scoring
+
+`toklet_session_score` queries the final fully committed next-token distribution
+on the owning thread. Its additive48-byte `TokletScore` record returns target
+and lowest-ID greedy tokens, vocabulary/evaluated counts, exactly widened FP32
+logits and a stable compensated FP64 negative log likelihood. Existing ABI1
+records keep their layouts. The query borrows the resident logits and allocates
+no logits vector or model copy; backend selection precedes the reduction.
+
+Generate with zero requested output to evaluate an exact prompt or append
+without sampling. Score before appending each target. Only the current final
+row is available; a multi-token prefill cannot retrospectively score its earlier
+rows. Pending sampled IDs, reset or invalid distributions reject. Cancellation
+alone preserves an earlier valid committed prefix, so a caller must verify exact
+history/evaluated counts after any cancelled generation before assigning a score
+to a target. This read-only query changes neither prefix nor cancellation flag.
+
+The normal owner, busy, poison, pointer and non-overlap contracts apply. Output
+is untouched unless the call succeeds. The [component report](experiments/2026-10-21-m7-score-api.md)
+records independent numerical checks, selected-model Metal comparisons and
+three-platform C build/link checks. Full phone corpus/task quality collection
+and device qualification remain separate work.

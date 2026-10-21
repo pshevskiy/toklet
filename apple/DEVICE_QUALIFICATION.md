@@ -105,3 +105,49 @@ and about1.114/1.945GB small/larger peaks. Serious thermal state and uncontrolle
 heating remain part of the observations. One initial owned preflight reset and47
 natural absences are distinguished. Full phone quality/lifecycle/supported-limit/
 remaining sustained/base iPhone14 gates remain before device qualification.
+
+The [score API component](../docs/experiments/2026-10-21-m7-score-api.md) adds a
+read-only final-committed-row diagnostic and passes independent CPU/Metal and
+three-target build/link checks. It is preparation for phone teacher forcing,
+not evidence of a completed phone corpus/task run. Score before appending each
+target, verify exact committed prefix after cancellation, and retain the frozen
+corpus/context/aggregation/gates when implementing the collector.
+
+The [Swift score adapter](../docs/experiments/2026-10-21-m7-worker-score.md)
+now exposes validated scalar diagnostics on the owning thread. Mac CPU/Metal,
+deterministic close/interruption publication and both SDK builds pass. This
+component neither runs a phone corpus nor qualifies actual OS lifecycle recovery.
+
+The [teacher-forcing coordinator](../docs/experiments/2026-10-21-m7-teacher-forcing.md)
+passes independent tiny CPU loss, Metal sequencing and strict Mac/device/simulator
+module compilation. Its10000-target check is simulated protocol coverage only.
+Full phone collection must still admit exact corpus/model/config inputs, enforce
+foreground interruption policy and observe process-memory peaks and cleanup.
+
+The [quality harness](../docs/experiments/2026-10-21-m7-quality-harness.md) now
+admits exact config/corpus/model bytes and streams committed teacher-forced rows
+with observed process peaks, foreground guards and cleanup/endpoint proofs.
+Mac tiny, rejection/regression and both SDK builds pass. Physical use still needs
+an admitted new signed installation/controller, full frozen corpus/task data and
+unchanged independent quality comparisons; component success is insufficient.
+
+The [physical quality controller](../docs/experiments/2026-10-21-m7-physical-quality.md)
+now seals the score-capable package, corpus-inclusive storage/copy clocks and
+exact raw target/prefix/logit/loss/memory/foreground outcomes. Portable direct
+checks pass; no new physical collection is counted by this component.
+
+The [bounded task-response coordinator](../docs/experiments/2026-10-21-m7-task-response.md)
+passes raw-ID chunk continuation, hidden-stop and persistent-cancellation checks,
+actualtiny CPU/Metal and both unsigned app builds. The256-token coverage is
+protocol simulation; physical frozen100-task collection/grading remains open.
+
+The [sealed raw task harness](../docs/experiments/2026-10-21-m7-task-harness.md)
+adds bounded task-set admission, chunk and reset-acknowledged response streaming,
+actual memory/admission/foreground observations and end proofs. Tiny CPU/Metal,
+quality/hash regressions and both SDK builds pass. Isolated portable module
+passes retain the combined EPERM limitation. Physical frozen task collection,
+post-exit decoding and literal grading remain before quality acceptance.
+
+The [literal task-ID compatibility](../docs/experiments/2026-10-21-m7-task-id-compat.md)
+preserves frozen slash-containing labels with unchanged artifact-path rules.
+Tiny CPU/Metal and both iOS app builds pass; full physical tasks remain pending.
