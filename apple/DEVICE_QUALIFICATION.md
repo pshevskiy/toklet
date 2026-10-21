@@ -116,3 +116,10 @@ passes independent tiny CPU loss, Metal sequencing and strict Mac/device/simulat
 module compilation. Its10000-target check is simulated protocol coverage only.
 Full phone collection must still admit exact corpus/model/config inputs, enforce
 foreground interruption policy and observe process-memory peaks and cleanup.
+
+The [quality harness](../docs/experiments/2026-10-21-m7-quality-harness.md) now
+admits exact config/corpus/model bytes and streams committed teacher-forced rows
+with observed process peaks, foreground guards and cleanup/endpoint proofs.
+Mac tiny, rejection/regression and both SDK builds pass. Physical use still needs
+an admitted new signed installation/controller, full frozen corpus/task data and
+unchanged independent quality comparisons; component success is insufficient.

@@ -1463,6 +1463,12 @@ passes frozen block-policy/failure simulation, independent tiny CPU and actual
 Metal sequencing, plus strict three-target compilation. Full physical corpus/
 task collection and app integration remain pending.
 
+The [sealed quality harness](docs/experiments/2026-10-21-m7-quality-harness.md)
+now passes109 portable checks,19 native admission/failure cases, tiny CPU/Metal
+loss collection, existing measurement/hash regressions and both SDK app builds.
+The full physical corpus/task collector and independent quality admission remain
+pending; no device qualification follows from Mac component checks.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy

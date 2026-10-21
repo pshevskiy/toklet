@@ -829,3 +829,15 @@ Astra accepted source and completed evidence after100 pins,25 exact staged
 copies, four code pins, independent oracle/runtime/module replays,379 links,
 privacy and whitespace, with no findings. App admission and
 full physical corpus/task collection remain; M7.3 stays open.
+
+The [sealed quality harness](experiments/2026-10-21-m7-quality-harness.md) adds
+strict config/corpus SHA admission, exact target sequencing, foreground and
+interruption checks around each command, per-target process peaks and verified
+close/release/endpoint proofs. Shared measurement artifact rules and chunk pools
+remain, with parent sources retained. All109 portable M7 checks pass;19 native
+cases include six actual tiny CPU/Metal targets and five raw expected failures.
+The existing17-case/39-request measurement and256MiB bounded-hash regression,
+strict Swift and both complete SDK app builds pass. Exact marker-order and load
+bracket parser findings are fixed and tested. Astra accepted source and completed evidence after196 pins,58 exact staged
+copies, historical/helper mappings, all native/regression/SDK replays,109-test
+record,382 links, actual private-identifier scan and whitespace, with no findings. Full physical corpus/task quality and M7.3 remain.

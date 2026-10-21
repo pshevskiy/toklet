@@ -180,13 +180,36 @@ private struct HarnessView: View {
 
 @main @MainActor
 struct TokletHarnessApp: App {
-    @StateObject private var store = HarnessStore(enabled:!ProcessInfo.processInfo.arguments.contains("--self-test") && !ProcessInfo.processInfo.arguments.contains("--measure"))
+    @StateObject private var store = HarnessStore(enabled:!ProcessInfo.processInfo.arguments.contains("--self-test") && !ProcessInfo.processInfo.arguments.contains("--measure") && !ProcessInfo.processInfo.arguments.contains("--quality"))
     @Environment(\.scenePhase) private var phase
     private let timer = Timer.publish(every:0.1,on:.main,in:.common).autoconnect()
 
     init() {
         let arguments = ProcessInfo.processInfo.arguments
-        if let position = arguments.firstIndex(of:"--measure") {
+        if let position = arguments.firstIndex(of:"--quality") {
+            UIApplication.shared.isIdleTimerDisabled = true
+            UIDevice.current.isBatteryMonitoringEnabled = true
+            let root = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
+            DispatchQueue.global(qos:.userInitiated).async {
+                do {
+                    guard position == 1, arguments.count == 4 else { throw NSError(domain:"TokletQuality",code:2) }
+                    try awaitNativeMeasurementForeground()
+                    let config = try admitQualityConfig(root:root,name:arguments[position+1],sha256:arguments[position+2])
+                    try installedBundleProof("before")
+                    let result = runNativeQuality(config,root:root) { sample in
+                        let data = try JSONEncoder().encode(sample)
+                        try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_QUALITY_SAMPLE_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+                    }
+                    try installedBundleProof("after")
+                    let data = try JSONEncoder().encode(result)
+                    try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_QUALITY_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+                    exit(result.passed ? 0 : 1)
+                } catch {
+                    try? FileHandle.standardError.write(contentsOf:Data("TOKLET_QUALITY_ERROR=\(error)\n".utf8))
+                    exit(1)
+                }
+            }
+        } else if let position = arguments.firstIndex(of:"--measure") {
             UIApplication.shared.isIdleTimerDisabled = true
             UIDevice.current.isBatteryMonitoringEnabled = true
             let root = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
