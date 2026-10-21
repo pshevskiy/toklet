@@ -153,3 +153,7 @@ preserves frozen slash-containing labels with unchanged artifact-path rules.
 Tiny CPU/Metal and both iOS app builds pass; full physical tasks remain pending.
 
 The [21 October physical loss report](../docs/experiments/2026-10-21-m7-phone-loss.md) accepts both unchanged 10,000-target held-out loss gates on actual iPhone 14 Pro/iOS 27.0.1. Small/larger full peaks were 1,028,770,136/1,835,338,624 bytes; thermal observations and retained preparation refusals are explicit. This does not qualify task quality, actual OS lifecycle, energy, the base iPhone 14, final supported limits or M7 completion.
+The [sealed task collector](../docs/experiments/2026-10-21-m7-physical-tasks.md)
+adds bounded frozen100-case transfer/admission and exact raw response checks,
+with six persistent reviewed runner pins and tiny independent output oracles.
+153 portable methods pass; no device quality acceptance follows.

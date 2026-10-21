@@ -1,0 +1,15 @@
+test_bundle_validates_platform_copies_and_paths (test_m7_apple_package.PackageTests.test_bundle_validates_platform_copies_and_paths) ... ok
+test_descendant_ignoring_term_is_drained_after_parent_exits (test_m7_apple_package.PackageTests.test_descendant_ignoring_term_is_drained_after_parent_exits) ... ok
+test_environment_is_allowlisted_and_configuration_rejected (test_m7_apple_package.PackageTests.test_environment_is_allowlisted_and_configuration_rejected) ... ok
+test_exit_race_is_reaped_and_primary_preserved (test_m7_apple_package.PackageTests.test_exit_race_is_reaped_and_primary_preserved) ... ok
+test_final_group_and_reap_failure_are_preserved (test_m7_apple_package.PackageTests.test_final_group_and_reap_failure_are_preserved) ... ok
+test_metadata_is_one_bounded_read (test_m7_apple_package.PackageTests.test_metadata_is_one_bounded_read) ... ok
+test_platform_and_minimum_are_exact (test_m7_apple_package.PackageTests.test_platform_and_minimum_are_exact) ... ok
+test_real_timeout_reaps_owned_child (test_m7_apple_package.PackageTests.test_real_timeout_reaps_owned_child) ... ok
+test_sigterm_unwinds_for_cleanup (test_m7_apple_package.PackageTests.test_sigterm_unwinds_for_cleanup) ... ok
+test_symbol_lines_are_bounded (test_m7_apple_package.PackageTests.test_symbol_lines_are_bounded) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.251s
+
+OK

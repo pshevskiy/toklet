@@ -1,0 +1,15 @@
+test_case_response_reset_and_order (test_m7_physical_tasks.PhysicalTasksChecks.test_case_response_reset_and_order) ... ok
+test_chunk_identity_callbacks_and_budget (test_m7_physical_tasks.PhysicalTasksChecks.test_chunk_identity_callbacks_and_budget) ... ok
+test_exact_reference_schema_and_sha (test_m7_physical_tasks.PhysicalTasksChecks.test_exact_reference_schema_and_sha) ... ok
+test_frozen_derivative_keeps_all_original_cases_and_caps (test_m7_physical_tasks.PhysicalTasksChecks.test_frozen_derivative_keeps_all_original_cases_and_caps) ... ok
+test_full_bounded_stream_and_hidden_stops (test_m7_physical_tasks.PhysicalTasksChecks.test_full_bounded_stream_and_hidden_stops) ... ok
+test_hidden_stop_cannot_be_exposed_or_changed (test_m7_physical_tasks.PhysicalTasksChecks.test_hidden_stop_cannot_be_exposed_or_changed) ... ok
+test_installation_result_and_unknown_markers (test_m7_physical_tasks.PhysicalTasksChecks.test_installation_result_and_unknown_markers) ... ok
+test_memory_foreground_and_power (test_m7_physical_tasks.PhysicalTasksChecks.test_memory_foreground_and_power) ... ok
+test_task_storage_inventory_and_copy_clock (test_m7_physical_tasks.PhysicalTasksChecks.test_task_storage_inventory_and_copy_clock) ... ok
+test_wrong_package_and_mode_conflict_prevent_children (test_m7_physical_tasks.PhysicalTasksChecks.test_wrong_package_and_mode_conflict_prevent_children) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.098s
+
+OK

@@ -898,3 +898,10 @@ Original task IDs/prompts/caps/numerics/gates stay unchanged. Astra accepted sou
 ### M7 physical held-out loss — 21 October 2026
 
 Hypothesis: the selected desktop-qualified paths preserve the frozen loss policy on the wired iPhone. The [full device report](experiments/2026-10-21-m7-phone-loss.md) accepts 10,000 scored targets per model with unchanged +0.05 nats/token gate: small −0.000153474, larger +0.028265241. Both means exactly match their frozen M6 Online results. Fourteen sealed stages, 20,012 total scored targets, 216 clean commands, independent tiny CPU reconstruction and 28 natural absence checks pass; four driver and ten analysis regressions pass. Full peaks 1,028,770,136/1,835,338,624 bytes fit the trial cap; thermal/power conditions and failed preparation/reuse attempts are retained. Retain the numerical evidence without a performance or energy claim. Physical tasks, actual OS lifecycle, small sustained work, supported-limit synthesis, the original base-device requirement and overall M7 remain open.
+The [sealed physical task collector](experiments/2026-10-21-m7-physical-tasks.md)
+keeps100 literal IDs/prompts/caps and original EOS, with full-payload storage
+admission and ordered raw chunks, hidden-stop/state/reset/clocks/peaks/proofs.
+Astra's pin-persistence and tiny-oracle findings are fixed; exact previous
+sources remain.153 methods/16 isolated modules/16 clean owned commands and an
+explicit unchanged frozen-input audit pass. Astra accepted source and completed evidence with no findings.
+Phone task collection/grading and M7.3 remain open.

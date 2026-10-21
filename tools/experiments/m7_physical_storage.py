@@ -47,9 +47,11 @@ def size_and_hash(path):
 
 def inventory(base,config,name,job_sha):
     wanted=dict(config['files']);wanted[name]=job_sha
-    if 'tokensFile' in config:
-        if config['tokensFile'] in wanted or not digest(config['tokensSHA256']):raise ValueError('Invalid explicit corpus payload')
-        wanted[config['tokensFile']]=config['tokensSHA256']
+    payloads=[(path,hash_key) for path,hash_key in [('tokensFile','tokensSHA256'),('tasksFile','tasksSHA256')] if path in config]
+    if len(payloads)>1:raise ValueError('Diagnostic payload modes conflict')
+    for field,hash_key in payloads:
+        if config[field] in wanted or not digest(config[hash_key]):raise ValueError('Invalid explicit diagnostic payload')
+        wanted[config[field]]=config[hash_key]
     actual=set()
     for path in base.rglob('*'):
         if path.is_symlink():raise ValueError('Transfer symlink rejected')
@@ -121,7 +123,7 @@ def admit_ready(record,base,config,name,job_sha,context,check_console):
     observed,pins=admit_proof(path.parent,proof['sha256'],context,check_console)
     payload,total=inventory(base,config,name,job_sha)
     expected=decision(observed,path.parent,proof['sha256'],payload,total)
-    labels=['copy-Model']+(['copy-Packed'] if config['packedFolder'] else [])+(['copy-corpus'] if 'tokensFile' in config else [])+['copy-job']
+    labels=['copy-Model']+(['copy-Packed'] if config['packedFolder'] else [])+(['copy-corpus'] if 'tokensFile' in config else [])+(['copy-tasks'] if 'tasksFile' in config else [])+['copy-job']
     checks=saved.get('checks')
     if type(checks) is not list or len(checks)!=len(labels):raise ValueError('Original storage checks incomplete')
     expected['checks']=[fresh(expected,observed['host_boot_token'],c['wallUnixNanoseconds'],c['monotonicNanoseconds'],label)

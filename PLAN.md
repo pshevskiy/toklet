@@ -1496,6 +1496,11 @@ The [literal task-ID compatibility](docs/experiments/2026-10-21-m7-task-id-compa
 preserves slash-containing frozen benchmark IDs through checked CPU/Metal app
 response collection. Full physical100-task collection/grading remains pending.
 
+The [sealed physical task collector](docs/experiments/2026-10-21-m7-physical-tasks.md)
+preserves all100 frozen IDs/prompts/caps with strict raw chunk/state/reset and
+signed/storage admission.153 portable methods pass; phone collection/grading
+and M7.3 remain pending.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy
