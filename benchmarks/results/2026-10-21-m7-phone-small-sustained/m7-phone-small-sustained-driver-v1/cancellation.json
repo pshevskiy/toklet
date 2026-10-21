@@ -1,0 +1,5 @@
+{
+  "action": "SIGTERM",
+  "owned_driver_pid": 55424,
+  "reason": "Prerequisite offline analysis failed before any sustained/device stage; preserve waiting driver and restart only against reviewed corrected evidence"
+}

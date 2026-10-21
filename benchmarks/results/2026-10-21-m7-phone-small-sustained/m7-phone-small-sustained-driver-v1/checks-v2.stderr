@@ -1,0 +1,8 @@
+test_dangling_output_prevents_children (__main__.Checks.test_dangling_output_prevents_children) ... ok
+test_input_bound (__main__.Checks.test_input_bound) ... ok
+test_receipt_sha_and_json_from_same_bytes_and_later_replacement_rejected (__main__.Checks.test_receipt_sha_and_json_from_same_bytes_and_later_replacement_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+OK

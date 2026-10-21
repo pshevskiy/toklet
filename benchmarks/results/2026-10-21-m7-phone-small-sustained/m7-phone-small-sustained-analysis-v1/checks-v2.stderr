@@ -1,0 +1,15 @@
+test_absence_wrong_device_and_process (__main__.Checks.test_absence_wrong_device_and_process) ... ok
+test_consumed_buffer_binding_and_conflict (__main__.Checks.test_consumed_buffer_binding_and_conflict) ... ok
+test_count_and_exact_ids (__main__.Checks.test_count_and_exact_ids) ... ok
+test_driver_failure_scope_and_digest (__main__.Checks.test_driver_failure_scope_and_digest) ... ok
+test_driver_order_and_count (__main__.Checks.test_driver_order_and_count) ... ok
+test_exact_driver_and_three_stages (__main__.Checks.test_exact_driver_and_three_stages) ... ok
+test_measured600_excludes_warmups (__main__.Checks.test_measured600_excludes_warmups) ... ok
+test_prerequisites_reject_failed_partial_or_wrong_pair (__main__.Checks.test_prerequisites_reject_failed_partial_or_wrong_pair) ... ok
+test_source_values_must_match_driver (__main__.Checks.test_source_values_must_match_driver) ... ok
+test_two_natural_absences (__main__.Checks.test_two_natural_absences) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.002s
+
+OK

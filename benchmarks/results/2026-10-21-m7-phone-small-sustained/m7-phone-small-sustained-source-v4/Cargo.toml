@@ -1,0 +1,62 @@
+[package]
+name = "toklet"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+description = "A small Rust inference engine for Apple Silicon"
+license = "Apache-2.0"
+publish = false
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+
+[[bin]]
+name = "toklet"
+path = "src/bin/toklet.rs"
+
+[dependencies]
+half = { version = "=2.7.1", features = ["std"] }
+safetensors = "=0.6.2"
+serde = { version = "=1.0.228", features = ["derive"] }
+serde_json = { version = "=1.0.149", features = ["float_roundtrip", "preserve_order", "arbitrary_precision"] }
+tokenizers = { version = "=0.22.2", default-features = false, features = ["fancy-regex"] }
+ctrlc = "=3.5.2"
+sha2 = "=0.10.9"
+
+[features]
+default = []
+metal = ["dep:objc2", "dep:objc2-foundation", "dep:objc2-metal", "dep:objc2-metal-performance-shaders"]
+
+[target.'cfg(all(any(target_os = "macos", target_os = "ios"), target_arch = "aarch64"))'.dependencies]
+objc2 = { version = "=0.6.5", optional = true }
+objc2-foundation = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "NSObject", "NSString", "NSError", "NSProcessInfo", "NSURL", "NSData"] }
+objc2-metal = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "MTLDevice", "MTLBuffer", "MTLResource", "MTLLibrary", "MTLCommandQueue", "MTLCommandBuffer", "MTLCommandEncoder", "MTLComputeCommandEncoder", "MTLBlitCommandEncoder", "MTLComputePipeline", "MTLTypes", "MTLCaptureManager", "MTLCaptureScope", "MTLCounters", "MTLComputePass", "objc2-core-foundation"] }
+objc2-metal-performance-shaders = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "MPSCore", "MPSCoreTypes", "MPSKernel", "MPSMatrix", "MPSMatrixMultiplication"] }
+
+[[example]]
+name = "metal_trace"
+required-features = ["metal"]
+
+[[example]]
+name = "metal_continue"
+required-features = ["metal"]
+
+[[example]]
+name = "metal_quality"
+required-features = ["metal"]
+
+[[example]]
+name = "metal_prefill"
+required-features = ["metal"]
+
+[[example]]
+name = "metal_chunks"
+required-features = ["metal"]
+
+[[example]]
+name = "metal_greedy"
+required-features = ["metal"]
+
+[[example]]
+name = "metal_bench"
+required-features = ["metal"]

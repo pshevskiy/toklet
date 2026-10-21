@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-small-sustained-analysis-v2/analyze.py", line 147, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-small-sustained-analysis-v2/analyze.py", line 114, in run
+    if len(installs)!=expected_count:raise ValueError('Current installed-app guard count differs')
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Current installed-app guard count differs

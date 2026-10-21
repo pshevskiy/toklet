@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-small-sustained-analysis-v2/analyze.py", line 149, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-small-sustained-analysis-v2/analyze.py", line 136, in run
+    result=checked['result'];duration=check_sustained(samples,config,result);measured=samples[3:]
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-small-sustained-analysis-v2/analyze.py", line 72, in check_sustained
+    if len(measured)<10 or config['minimumNativeSeconds']!=600 or duration!=result['sumNativeLastEventSeconds'] or duration<600:raise ValueError('At least600measured native seconds required')
+                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: At least600measured native seconds required
