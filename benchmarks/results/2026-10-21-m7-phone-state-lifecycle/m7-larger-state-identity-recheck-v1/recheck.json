@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "command": {
+    "command": [
+      "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+      "device",
+      "info",
+      "apps",
+      "--bundle-id",
+      "dev.toklet.harness",
+      "--device",
+      "<private-device_identifier>",
+      "--timeout",
+      "60",
+      "--quiet",
+      "--json-output",
+      "-"
+    ],
+    "exit_code": 0,
+    "primary_error": null,
+    "cleanup_errors": [],
+    "pid": 72870,
+    "stdout": "artifacts/m7-larger-state-identity-recheck-v1/query.stdout",
+    "stderr": "artifacts/m7-larger-state-identity-recheck-v1/query.stderr"
+  },
+  "apps": 1,
+  "private_pins": {
+    "artifacts/m7-larger-state-identity-recheck-v1/query.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-larger-state-identity-recheck-v1/query.stdout": "393657aed66bee1d9be4bcd640e5f76361661f115c36293bf322dd8b32a51700"
+  }
+}

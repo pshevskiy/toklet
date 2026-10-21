@@ -1,0 +1,7 @@
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": false, "primary_error": "ValueError: Current installed application differs; refuse launch", "endpoint_errors": [], "cleanup_errors": []}
+{"passed": false, "stages": 6, "primary_error": "ValueError: Physical workflow stage failed: state", "endpoint_errors": []}

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-state-lifecycle-analysis-v1/analyze.py", line 193, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-state-lifecycle-analysis-v1/analyze.py", line 158, in run
+    else:require_natural(r,base,lifecycle=not plain and not prepare and mode=='lifecycle');natural+=2
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-state-lifecycle-analysis-v1/analyze.py", line 117, in require_natural
+    need(record['remote_cleanup']==[NATURAL,NATURAL],'Two natural absences required')
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-state-lifecycle-analysis-v1/analyze.py", line 19, in need
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Two natural absences required

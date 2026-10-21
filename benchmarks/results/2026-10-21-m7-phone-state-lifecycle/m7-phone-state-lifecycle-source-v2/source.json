@@ -1,0 +1,561 @@
+{
+  "format": "toklet-m7-phone-state-lifecycle-source-v1",
+  "engine_revision": "619c1f020da722c068fb7a6d4c7bb4844a4ba8cb",
+  "sources": {
+    "Cargo.lock": {
+      "sha256": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/Cargo.lock",
+      "matches_collection_head": true
+    },
+    "Cargo.toml": {
+      "sha256": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/Cargo.toml",
+      "matches_collection_head": true
+    },
+    "apple/Harness/HarnessApp.swift": {
+      "sha256": "b8feddd676f7c71a07e0b27fc4ea68729505034cd4f10f63a7f7be5188ddc0a2",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/HarnessApp.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/Info.plist": {
+      "sha256": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/Info.plist",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeLifecycle.swift": {
+      "sha256": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeLifecycle.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeLifecycleRun.swift": {
+      "sha256": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeLifecycleRun.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeLifecycleSignals.swift": {
+      "sha256": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeLifecycleSignals.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeMeasurement.swift": {
+      "sha256": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeMeasurement.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeQuality.swift": {
+      "sha256": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeQuality.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeStateRun.swift": {
+      "sha256": "82209540413ef2251840a402cbda590003df665ed3f47a3759cf3f0f386abc95",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeStateRun.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeTaskResponse.swift": {
+      "sha256": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeTaskResponse.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeTasks.swift": {
+      "sha256": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeTasks.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeTeacherForcing.swift": {
+      "sha256": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeTeacherForcing.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "sha256": "4482a4b227105d5ff85201b091327b967b021a04de341da5ac3afeb8c40a8635",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/Harness/NativeWorker.swift",
+      "matches_collection_head": true
+    },
+    "apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "sha256": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/TokletHarness.xcodeproj/project.pbxproj",
+      "matches_collection_head": true
+    },
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": {
+      "sha256": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "matches_collection_head": true
+    },
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": {
+      "sha256": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme",
+      "matches_collection_head": true
+    },
+    "apple/include/module.modulemap": {
+      "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/include/module.modulemap",
+      "matches_collection_head": true
+    },
+    "apple/include/toklet.h": {
+      "sha256": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/include/toklet.h",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/LifecycleAppMain.swift": {
+      "sha256": "085052fffda0ca87dfc9116dfa46e4a40168c558a74c02fcaac3bd405fe8bb49",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/LifecycleAppMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/LifecycleMain.swift": {
+      "sha256": "bae2fcf2e902a8dec6a044deaa2ff1516979908d3836ad7a50166a3538891ae4",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/LifecycleMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/MeasurementMain.swift": {
+      "sha256": "80fa532ff7f2120cced10c5e8c48ee6113922daf04b303c686c128ec2780ac93",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/MeasurementMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/PrefixMain.swift": {
+      "sha256": "d9595f8a2f693a7a7caed06950cc9748ceba9985c24f108a89cdca4116773b9b",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/PrefixMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/QualityMain.swift": {
+      "sha256": "1cb6023f8c2ad3444d812fafb4f35d87e00dc0610cd4129c07d4c48476701750",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/QualityMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/ScoreMain.swift": {
+      "sha256": "efb78fc83a03efbf7563363835f6efd330bdebe36c9a23bb5f658bd99dc21f17",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/ScoreMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/StateMain.swift": {
+      "sha256": "267d3d5df28d37a6f746ec12b25254e8f8d6658386abdcc4098bdebcd446786a",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/StateMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/TaskResponseMain.swift": {
+      "sha256": "37c9df204e9724603877c66cd40bfa6f89e411be3806d053c52eb03aa114f6b1",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/TaskResponseMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/TasksMain.swift": {
+      "sha256": "b4701b2039f40691c07fcd09d7c9848b545a80723fa4ffaad52362ca12f6662e",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/TasksMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/TeacherForcingMain.swift": {
+      "sha256": "5eb9d62dedfea30520c3d400c3f528473265d14ddd0d5739f09d8211e2e73563",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/TeacherForcingMain.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/WorkerChecks.swift": {
+      "sha256": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/WorkerChecks.swift",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/main.swift": {
+      "sha256": "6bd1b64fb1d4673b086fbe1e9a58db302f0f879bca034653618bb8e94e9f63dc",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/apple/tests/swift/main.swift",
+      "matches_collection_head": true
+    },
+    "artifacts/m7-phone-state-lifecycle-driver-v1/checks.py": {
+      "sha256": "be8f2d5845373e5f930219bb0ccf30147e7ca9018c68cd80f80dee033665c1a3",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/artifacts/m7-phone-state-lifecycle-driver-v1/checks.py",
+      "matches_collection_head": false
+    },
+    "artifacts/m7-phone-state-lifecycle-driver-v1/driver.py": {
+      "sha256": "7016d9415697be78e37ccda400983d836c9c2d784486ff4350aeaea5ab48b8fe",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/artifacts/m7-phone-state-lifecycle-driver-v1/driver.py",
+      "matches_collection_head": false
+    },
+    "benchmarks/results/2026-10-21-m7-physical-state-qualification-v1.json": {
+      "sha256": "5697298de5559f304280621cfa6fc952d875fa2c421410b4591317975171fdd8",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/benchmarks/results/2026-10-21-m7-physical-state-qualification-v1.json",
+      "matches_collection_head": true
+    },
+    "benchmarks/results/2026-10-21-m7-state-app-qualification-v1.json": {
+      "sha256": "5320c1e7c48978ec4a14203a19b1675a80a854ec0b9f77bf5de0320653ca2ea1",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/benchmarks/results/2026-10-21-m7-state-app-qualification-v1.json",
+      "matches_collection_head": true
+    },
+    "src/benchmark.rs": {
+      "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/benchmark.rs",
+      "matches_collection_head": true
+    },
+    "src/bin/cli/chat.rs": {
+      "sha256": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/bin/cli/chat.rs",
+      "matches_collection_head": true
+    },
+    "src/bin/cli/mod.rs": {
+      "sha256": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/bin/cli/mod.rs",
+      "matches_collection_head": true
+    },
+    "src/bin/toklet.rs": {
+      "sha256": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/bin/toklet.rs",
+      "matches_collection_head": true
+    },
+    "src/cpu/attention.rs": {
+      "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/cpu/attention.rs",
+      "matches_collection_head": true
+    },
+    "src/cpu/mod.rs": {
+      "sha256": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/cpu/mod.rs",
+      "matches_collection_head": true
+    },
+    "src/cpu/reductions.rs": {
+      "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/cpu/reductions.rs",
+      "matches_collection_head": true
+    },
+    "src/cpu/tiled.rs": {
+      "sha256": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/cpu/tiled.rs",
+      "matches_collection_head": true
+    },
+    "src/generation.rs": {
+      "sha256": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/generation.rs",
+      "matches_collection_head": true
+    },
+    "src/lib.rs": {
+      "sha256": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/lib.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/capture.rs": {
+      "sha256": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/capture.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/diagnostic.rs": {
+      "sha256": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/diagnostic.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/half_consistency.rs": {
+      "sha256": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/half_consistency.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/half_projection.rs": {
+      "sha256": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/half_projection.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/kernels.metal": {
+      "sha256": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/kernels.metal",
+      "matches_collection_head": true
+    },
+    "src/metal/memory.rs": {
+      "sha256": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/memory.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/mod.rs": {
+      "sha256": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/mod.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/online_attention.rs": {
+      "sha256": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/online_attention.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/profile.rs": {
+      "sha256": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/profile.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/q4_v2_projection.rs": {
+      "sha256": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/metal/q4_v2_projection.rs",
+      "matches_collection_head": true
+    },
+    "src/model/cache.rs": {
+      "sha256": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/model/cache.rs",
+      "matches_collection_head": true
+    },
+    "src/model/mod.rs": {
+      "sha256": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/model/mod.rs",
+      "matches_collection_head": true
+    },
+    "src/model/trace.rs": {
+      "sha256": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/model/trace.rs",
+      "matches_collection_head": true
+    },
+    "src/native.rs": {
+      "sha256": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/native.rs",
+      "matches_collection_head": true
+    },
+    "src/native/tests.rs": {
+      "sha256": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/native/tests.rs",
+      "matches_collection_head": true
+    },
+    "src/q4.rs": {
+      "sha256": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/q4.rs",
+      "matches_collection_head": true
+    },
+    "src/q4/artifact.rs": {
+      "sha256": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/q4/artifact.rs",
+      "matches_collection_head": true
+    },
+    "src/sampling.rs": {
+      "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/sampling.rs",
+      "matches_collection_head": true
+    },
+    "src/session.rs": {
+      "sha256": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/session.rs",
+      "matches_collection_head": true
+    },
+    "src/weights/half_tests.rs": {
+      "sha256": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/weights/half_tests.rs",
+      "matches_collection_head": true
+    },
+    "src/weights/mod.rs": {
+      "sha256": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/src/weights/mod.rs",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_apple_integration.py": {
+      "sha256": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_apple_integration.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_apple_package.py": {
+      "sha256": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_apple_package.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_fixture.py": {
+      "sha256": "9f97b525af81f3243a774bf73b1e48a6379c6dd34d9e5af7057992502e3b72be",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_fixture.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_lifecycle_app_check.py": {
+      "sha256": "77e2d876928203c6fcd901ad4a8ef0d646affd0f88fcb40783982b3c49a10bdd",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_lifecycle_app_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_lifecycle_check.py": {
+      "sha256": "c22913ce29f450c2b63a05af4889015e281b5e1342dbfb7cf07500660029e4f8",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_lifecycle_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_measurement_check.py": {
+      "sha256": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_measurement_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_metal_check.py": {
+      "sha256": "09da441923c9fa4ebe7dc55fb02c6c1c9047664c09fda5bc349b84b656d0ec0f",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_metal_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_prefix_check.py": {
+      "sha256": "4071c413f9c9b86ebec3ba52e81ac36782813c887edd2540844dce23deb4dc87",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_prefix_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_quality_check.py": {
+      "sha256": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_quality_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_score_check.py": {
+      "sha256": "90d27733655fd482485350eda54c351b63730b3e8082d8ea4ab710502bc71b24",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_score_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_state_check.py": {
+      "sha256": "2f67354ec297098205373f50447e04092b034e46d8541014e4736594160a6dbc",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_state_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_task_check.py": {
+      "sha256": "e56e815c87278079cef1a8f9e55d60d83b617e5509b7806fed7850249296fb07",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_task_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_tasks_check.py": {
+      "sha256": "a869a158cb728c4e13cc74791462a200246feff6d9ffb8b2886517523d2056c1",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_tasks_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_teacher_check.py": {
+      "sha256": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_native_teacher_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_integration.py": {
+      "sha256": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_physical_integration.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_lifecycle.py": {
+      "sha256": "15acbe1c778aa8ccb38b09929769fbd461fdffa2a0b67fe6f7a1637f90aa4cbd",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_physical_lifecycle.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_measurement.py": {
+      "sha256": "19106d82c8447c537201a96a9992433b0b01ae3406c438ea4ad810dd4cc4b048",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_physical_measurement.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_quality.py": {
+      "sha256": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_physical_quality.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_state.py": {
+      "sha256": "fbcf3e27a7a49bba903c7c1a26a5e731d25bf85b2f6d481e7c36fb7a6c75f2b1",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_physical_state.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_storage.py": {
+      "sha256": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_physical_storage.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_tasks.py": {
+      "sha256": "87d990cf98f083db0d0451b3e13cdfee42dc38e1c1aeea710a6308ea1942c3eb",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_physical_tasks.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_swift_harness_build.py": {
+      "sha256": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_swift_harness_build.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_swift_harness_run.py": {
+      "sha256": "fcdae72727a2f850a75319aec0ffdb994159953800781ad02b80952160ec4a07",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/m7_swift_harness_run.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_apple_integration.py": {
+      "sha256": "fcd82d74ad68f25972662ea4294e484506ac362959f33503c1b22e11937058fa",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_apple_integration.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_apple_package.py": {
+      "sha256": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_apple_package.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_lifecycle_app_check.py": {
+      "sha256": "e28aaf5b6c311e3a5ee8808e27d680b2b4893086a6cdf044855f989a8985058c",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_lifecycle_app_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_lifecycle_check.py": {
+      "sha256": "5a5caeff1b5a967959ef4cc4af229fbc81668976ad128ab3401d3a5d2ffc4c14",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_lifecycle_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_measurement_check.py": {
+      "sha256": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_measurement_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_metal_check.py": {
+      "sha256": "f3834817dcd660d2652a6447cbe6632acb33b1a98d60078712b20a5f31aa4a44",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_metal_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_prefix_check.py": {
+      "sha256": "8c3d1b1c3abb7828dc1ccff130e960597e1e399cae1d54e2ad125de5afe468c5",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_prefix_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_quality_check.py": {
+      "sha256": "bbe1edc476fcfdec0dcb6061d75bd55cf91452bd77e455e1074676d1bf772567",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_quality_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_score_check.py": {
+      "sha256": "dd9416f2978d6933e0c218bddd9048294ba029c744ed615208bc874b0f25d029",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_score_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_state_check.py": {
+      "sha256": "84a447c53d761f0a5442ed79bb4469c041eb0f581626de0185dc38a43bf6d631",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_state_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_task_check.py": {
+      "sha256": "0aa39d3d5fac4cf0511146049ca92dc3572662f17830a0be4345d239f052bec5",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_task_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_tasks_check.py": {
+      "sha256": "c2a08e7ef6fd2677e0826fd9ed57e12bdb1dc8f56ac9b3c9b4dea800daa5024f",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_tasks_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_teacher_check.py": {
+      "sha256": "91dcfa41c72eeaba8288c8cdae41e4db15962522a928f473f10d4a58c2f2f692",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_native_teacher_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_integration.py": {
+      "sha256": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_physical_integration.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_lifecycle.py": {
+      "sha256": "90cd4be33b05faebe3b11674f773a75f5f2a813c80534a94d40cefbfd34f5d9b",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_physical_lifecycle.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_measurement.py": {
+      "sha256": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_physical_measurement.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_quality.py": {
+      "sha256": "6e3e9cb824306ed7d19586cf48011c5deb9ca0bc017174783a6de3c8183e7987",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_physical_quality.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_state.py": {
+      "sha256": "89c6d0172c8f7984f078c79ab94d5f53fb90fbc5f7ee93c705bd3086530f5933",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_physical_state.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_storage.py": {
+      "sha256": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_physical_storage.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_tasks.py": {
+      "sha256": "b29ee82e828c4671e1a711fd29f1aefce5520f8955a3ff179e9bfb073fe4cfde",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_physical_tasks.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_swift_harness_build.py": {
+      "sha256": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_swift_harness_build.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_swift_harness_run.py": {
+      "sha256": "cd54ce8480c01dc81f85ef836618531e13af80a35b5a204d2e49863bd9369fbf",
+      "snapshot": "artifacts/m7-phone-state-lifecycle-source-v2/tools/experiments/test_m7_swift_harness_run.py",
+      "matches_collection_head": true
+    }
+  }
+}

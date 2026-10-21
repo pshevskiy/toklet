@@ -958,3 +958,7 @@ The [sealed state controller](experiments/2026-10-21-m7-physical-state.md) reuse
 ### M7 physical activation argv fix — 21 October2026
 
 The [activation boundary fix](experiments/2026-10-21-m7-lifecycle-cli-fix.md) corrects the first actual lifecycle attempt's exit64: device/output options now precede the positional app bundle. The regression fake enforces the real devicectl parsing boundary; both Settings and original-process activation arrays are checked.217methods/22modules and18focused tests pass. The failed phone receipt/source remain pinned; no app/kernel/gate change or physical qualification is claimed.
+
+### M7 phone state and actual scene replay — 21 October2026
+
+The [physical state/lifecycle report](experiments/2026-10-21-m7-phone-state-lifecycle.md) passes both selected models against exact cached/changed-prefix, pending append, actual partial-prefill cancellation, full1152-position commitment and overflow-preservation oracles. Actual Settings/return callbacks interrupt generation in the same process; retained-prefix replay matches uninterrupted continuation.13accepted stages and all sealed sources/raw endpoints replay, with two failed attempts retained and two owned preflight resets disclosed. Synthetic warning-handler coverage stays separate from actual UIKit warning delivery/jetsam. Retain bounded mechanism evidence on iPhone14Pro; base-device scope, energy/limit synthesis and M7.3 remain open.

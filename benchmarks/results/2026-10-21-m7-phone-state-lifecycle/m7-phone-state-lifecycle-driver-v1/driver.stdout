@@ -1,0 +1,8 @@
+{"passed": true, "primary_error": null, "cleanup_errors": [], "endpoint_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": false, "primary_error": "ValueError: Owned lifecycle command failed: tool exit 64", "endpoint_errors": [], "cleanup_errors": []}
+{"passed": false, "stages": 7, "primary_error": "ValueError: Physical workflow stage failed: lifecycle", "endpoint_errors": []}
