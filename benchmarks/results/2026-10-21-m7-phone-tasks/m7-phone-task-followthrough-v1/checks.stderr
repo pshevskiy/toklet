@@ -1,0 +1,8 @@
+test_bounded_read_and_changed_guard (__main__.Checks.test_bounded_read_and_changed_guard) ... ok
+test_complete_driver_and_failures (__main__.Checks.test_complete_driver_and_failures) ... ok
+test_dangling_output_prevents_children (__main__.Checks.test_dangling_output_prevents_children) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.005s
+
+OK

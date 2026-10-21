@@ -1,0 +1,1 @@
+{"passed": false, "models": 0, "primary_error": "ValueError: Owned fresh absence guard failed: tool exit 1; diagnostic errors=[]", "endpoint_errors": []}

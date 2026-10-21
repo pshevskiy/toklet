@@ -1,0 +1,206 @@
+{
+  "passed": true,
+  "driver_bindings": {
+    "artifacts/m7-phone-tasks-driver-v1/driver.py": "733adaf45497b0ea8973e9ed04f263114544cd29de402c79e63dace50431c5a3",
+    "artifacts/m7-phone-tasks-driver-v1/checks.py": "3b1e58e5533aa0f40b44af6f71955a34eced9583ac4577bf8afd9d4d86505e2f",
+    "tools/experiments/m7_physical_tasks.py": "87d990cf98f083db0d0451b3e13cdfee42dc38e1c1aeea710a6308ea1942c3eb",
+    "tools/experiments/m7_physical_measurement.py": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "artifacts/m7-phone-tasks-tiny-cpu-v1/measurement.json": "e9f55459fffe00c602bc06a5af0046e016962166ce513ee3097efbe0abbe61d4",
+    "artifacts/m7-phone-tasks-tiny-cpu-v1/private-logs/measurement.stdout": "bc3a1ea2f58dad9da9944f2dd0313a4dd69f00056c5624696e4c48011e4f26eb",
+    "artifacts/m7-phone-tasks-tiny-cpu-v1/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-tasks-tiny-metal-v1/measurement.json": "04bf544e6b61bcbbea22fa020841044cdf0db988a8c9cae0e56eba5d1ffaa63d",
+    "artifacts/m7-phone-tasks-tiny-metal-v1/private-logs/measurement.stdout": "390b14b2da625a00c3a2c4a82440af5a1c0394f0033241d5b3dee233f8227cec",
+    "artifacts/m7-phone-tasks-tiny-metal-v1/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-tasks-small-short-storage-proof-v1/measurement.json": "f331d783048611eeffd97f2e0430abae176e7d9b171f26e3675b05a2229071b4",
+    "artifacts/m7-phone-tasks-small-short-ready-v1/measurement.json": "b494e077b2e45ac45e29463814c1b1f55128910ad2347f736401079e1b89ad0d",
+    "artifacts/m7-phone-tasks-small-short-v1/measurement.json": "8ff84b2a1d69535b447f4b699064d63adcc03c74ade767f8a31e1d7d41d8dad4",
+    "artifacts/m7-phone-tasks-small-full-storage-proof-v1/measurement.json": "d25498f1894fc1a27f5f20c1955eda63052bfc4262389e2fec0f75658918449f",
+    "artifacts/m7-phone-tasks-small-full-ready-v1/measurement.json": "e3b5b7df5805a2a96ea3870be43bd71a0ac3d55900f7bd4fdbf482dd7cd3286e",
+    "artifacts/m7-phone-tasks-small-full-v1/measurement.json": "917a789cc9821fb9125203312fa1c008f6fcdb2d04e65dcecb52b6bc1938783c",
+    "artifacts/m7-phone-tasks-larger-short-storage-proof-v1/measurement.json": "b90422d71e035199f26e0f226c001f4c986ae1b585cf74d9afe4f99b8267f98b",
+    "artifacts/m7-phone-tasks-larger-short-ready-v1/measurement.json": "78dd322c4079265b1fa2fc8d9edc597bee0b9c4edca258e24c7950e9ea79040e",
+    "artifacts/m7-phone-tasks-larger-short-v1/measurement.json": "396a6e84b76e07b6857810fb0a75629c17a9adfb098352b784bbf2a04dc80614",
+    "artifacts/m7-phone-tasks-larger-full-storage-proof-v1/measurement.json": "1daf8984d31ce3f50a959f575ab280402d5415fd6bdbb2d8326f7596ce4103cb",
+    "artifacts/m7-phone-tasks-larger-full-ready-v1/measurement.json": "19c175d84cfc093a9e32cfdb5a863da0594fb2e82c881710dcbc3aef8fae3207",
+    "artifacts/m7-phone-tasks-larger-full-v1/measurement.json": "0ccc63d9e25d60e3cc1ca062c6ff2c4ecfc6050794c4b1109ffb57c2929e876b"
+  },
+  "results": [
+    {
+      "stage": "tiny-tasks",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-tiny-cpu-v1/measurement.json",
+      "sha256": "e9f55459fffe00c602bc06a5af0046e016962166ce513ee3097efbe0abbe61d4",
+      "exit_code": 0
+    },
+    {
+      "stage": "tiny-tasks",
+      "model": "tiny-metal",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-tiny-metal-v1/measurement.json",
+      "sha256": "04bf544e6b61bcbbea22fa020841044cdf0db988a8c9cae0e56eba5d1ffaa63d",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-small-short-storage-proof-v1/measurement.json",
+      "sha256": "f331d783048611eeffd97f2e0430abae176e7d9b171f26e3675b05a2229071b4",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "small",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-small-short-ready-v1/measurement.json",
+      "sha256": "b494e077b2e45ac45e29463814c1b1f55128910ad2347f736401079e1b89ad0d",
+      "exit_code": 0
+    },
+    {
+      "stage": "tasks",
+      "model": "small",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-small-short-v1/measurement.json",
+      "sha256": "8ff84b2a1d69535b447f4b699064d63adcc03c74ade767f8a31e1d7d41d8dad4",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-small-full-storage-proof-v1/measurement.json",
+      "sha256": "d25498f1894fc1a27f5f20c1955eda63052bfc4262389e2fec0f75658918449f",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "small",
+      "workload": "full",
+      "path": "artifacts/m7-phone-tasks-small-full-ready-v1/measurement.json",
+      "sha256": "e3b5b7df5805a2a96ea3870be43bd71a0ac3d55900f7bd4fdbf482dd7cd3286e",
+      "exit_code": 0
+    },
+    {
+      "stage": "tasks",
+      "model": "small",
+      "workload": "full",
+      "path": "artifacts/m7-phone-tasks-small-full-v1/measurement.json",
+      "sha256": "917a789cc9821fb9125203312fa1c008f6fcdb2d04e65dcecb52b6bc1938783c",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-larger-short-storage-proof-v1/measurement.json",
+      "sha256": "b90422d71e035199f26e0f226c001f4c986ae1b585cf74d9afe4f99b8267f98b",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "larger",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-larger-short-ready-v1/measurement.json",
+      "sha256": "78dd322c4079265b1fa2fc8d9edc597bee0b9c4edca258e24c7950e9ea79040e",
+      "exit_code": 0
+    },
+    {
+      "stage": "tasks",
+      "model": "larger",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-larger-short-v1/measurement.json",
+      "sha256": "396a6e84b76e07b6857810fb0a75629c17a9adfb098352b784bbf2a04dc80614",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-tasks-larger-full-storage-proof-v1/measurement.json",
+      "sha256": "1daf8984d31ce3f50a959f575ab280402d5415fd6bdbb2d8326f7596ce4103cb",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "larger",
+      "workload": "full",
+      "path": "artifacts/m7-phone-tasks-larger-full-ready-v1/measurement.json",
+      "sha256": "19c175d84cfc093a9e32cfdb5a863da0594fb2e82c881710dcbc3aef8fae3207",
+      "exit_code": 0
+    },
+    {
+      "stage": "tasks",
+      "model": "larger",
+      "workload": "full",
+      "path": "artifacts/m7-phone-tasks-larger-full-v1/measurement.json",
+      "sha256": "0ccc63d9e25d60e3cc1ca062c6ff2c4ecfc6050794c4b1109ffb57c2929e876b",
+      "exit_code": 0
+    }
+  ],
+  "tiny_oracle": {
+    "tiny-cpu": [
+      {
+        "chunks": 1,
+        "ids": [
+          47,
+          47,
+          47
+        ],
+        "sampled": 3,
+        "evaluated": 5,
+        "reason": 1,
+        "history": 6,
+        "pending": 1
+      },
+      {
+        "chunks": 1,
+        "ids": [
+          47,
+          47
+        ],
+        "sampled": 2,
+        "evaluated": 5,
+        "reason": 1,
+        "history": 6,
+        "pending": 1
+      }
+    ],
+    "tiny-metal": [
+      {
+        "evaluated": 5,
+        "sampled": 3,
+        "chunks": 1,
+        "pending": 1,
+        "history": 6,
+        "ids": [
+          47,
+          47,
+          47
+        ],
+        "reason": 1
+      },
+      {
+        "evaluated": 5,
+        "sampled": 2,
+        "chunks": 1,
+        "pending": 1,
+        "history": 6,
+        "ids": [
+          47,
+          47
+        ],
+        "reason": 1
+      }
+    ]
+  },
+  "primary_error": null,
+  "endpoint_errors": [],
+  "scope": "Raw physical task response collection; post-exit decoding and literal grading remain",
+  "physical_device_qualified": false,
+  "m7_complete": false
+}

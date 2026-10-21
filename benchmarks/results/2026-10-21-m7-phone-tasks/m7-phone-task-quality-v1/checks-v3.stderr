@@ -1,0 +1,18 @@
+test_actual_historical_100case_replay_is_read_only (__main__.Checks.test_actual_historical_100case_replay_is_read_only) ... ok
+test_changed_classifier_result_rejected (__main__.Checks.test_changed_classifier_result_rejected) ... ok
+test_exact_hidden_stop (__main__.Checks.test_exact_hidden_stop) ... ok
+test_exact_limit_response (__main__.Checks.test_exact_limit_response) ... ok
+test_exact_serialized_output_pin_and_replacement_guard (__main__.Checks.test_exact_serialized_output_pin_and_replacement_guard) ... ok
+test_exclusive_outputs_reject_files_and_dangling_links (__main__.Checks.test_exclusive_outputs_reject_files_and_dangling_links) ... ok
+test_failed_absence_diagnostics_bound_before_rejection (__main__.Checks.test_failed_absence_diagnostics_bound_before_rejection) ... ok
+test_historical_program_test_and_response_binding (__main__.Checks.test_historical_program_test_and_response_binding) ... ok
+test_text_is_exact_and_not_repaired (__main__.Checks.test_text_is_exact_and_not_repaired) ... ok
+test_timeout_errors_private_and_public_redaction (__main__.Checks.test_timeout_errors_private_and_public_redaction) ... ok
+test_typed_hidden_stop_rejected (__main__.Checks.test_typed_hidden_stop_rejected) ... ok
+test_unresolved_inventory_or_outcome_cannot_aggregate (__main__.Checks.test_unresolved_inventory_or_outcome_cannot_aggregate) ... ok
+test_wrong_response_stop_cap_and_typed_counts (__main__.Checks.test_wrong_response_stop_cap_and_typed_counts) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.272s
+
+OK

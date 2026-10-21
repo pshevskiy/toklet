@@ -905,3 +905,7 @@ Astra's pin-persistence and tiny-oracle findings are fixed; exact previous
 sources remain.153 methods/16 isolated modules/16 clean owned commands and an
 explicit unchanged frozen-input audit pass. Astra accepted source and completed evidence with no findings.
 Phone task collection/grading and M7.3 remain open.
+
+### M7 physical frozen task quality — 21 October2026
+
+Hypothesis: selected desktop-qualified paths preserve the original task policy on the phone. The [full task report](experiments/2026-10-21-m7-phone-tasks.md) accepts100cases/model with zero baseline drop: small2/100,larger11/100. Every visible ID, hidden stop and independently decoded text matches;120text grades recompute and80exact literal-program/test outcomes replay from pinned historical grading, without fresh generated-code execution.14stages/206cases/218clean commands pass;12analyzer/13quality regressions pass. The audit accurately records27natural absences plus1owned pre-copy reset and retains the failed strict analysis/service guard attempts. Retain selected-path task numerical evidence without speed/energy/general-mobile claims; remaining M7 gates stay open.

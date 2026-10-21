@@ -157,3 +157,5 @@ The [sealed task collector](../docs/experiments/2026-10-21-m7-physical-tasks.md)
 adds bounded frozen100-case transfer/admission and exact raw response checks,
 with six persistent reviewed runner pins and tiny independent output oracles.
 153 portable methods pass; no device quality acceptance follows.
+
+The [full task-quality report](../docs/experiments/2026-10-21-m7-phone-tasks.md) accepts unchanged100-case gates for both selected model paths on iPhone14Pro/iOS27.0.1. Small2/100/larger11/100 exactly match FP32 baseline scores; original IDs, hidden stops and decoded text match accepted M6 outcomes. Historical literal grading is replayed with exact program/test bytes; no new generated-program execution is claimed. Peak1,927,990,216bytes and the27natural/1preflight-reset distinction remain explicit. Final mobile limits/lifecycle/state, energy and M7 completion remain open.

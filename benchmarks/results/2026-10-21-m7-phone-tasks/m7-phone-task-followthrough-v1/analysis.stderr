@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-tasks-analysis-v1/analyze.py", line 130, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-tasks-analysis-v1/analyze.py", line 95, in run
+    require_natural(record,base,metadata,remote,selected)
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-tasks-analysis-v1/analyze.py", line 34, in require_natural
+    if record['remote_cleanup']!=[natural,natural]:raise ValueError('Two natural process absences required')
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Two natural process absences required

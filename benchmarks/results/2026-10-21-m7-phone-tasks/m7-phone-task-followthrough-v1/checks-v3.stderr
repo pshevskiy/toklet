@@ -1,0 +1,21 @@
+test_bounded_read_and_changed_guard (__main__.Checks.test_bounded_read_and_changed_guard) ... ok
+test_complete_driver_and_failures (__main__.Checks.test_complete_driver_and_failures) ... ok
+test_dangling_output_prevents_children (__main__.Checks.test_dangling_output_prevents_children) ... ok
+test_unterminated_footer_waits_and_pins_complete_buffer (__main__.Checks.test_unterminated_footer_waits_and_pins_complete_buffer) ... ERROR
+
+======================================================================
+ERROR: test_unterminated_footer_waits_and_pins_complete_buffer (__main__.Checks.test_unterminated_footer_waits_and_pins_complete_buffer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-task-followthrough-v1/checks.py", line 40, in test_unterminated_footer_waits_and_pins_complete_buffer
+    with patch.object(b.p,'owned',side_effect=execute),patch.object(b.p,'build_environment',return_value=({},None)),patch.object(b.time,'sleep',side_effect=polling):self.assertEqual(b.main(),0)
+                                                                                                                                                                                      ^^^^^^^^
+  File "/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/tmpp178kd98/artifacts/m7-phone-task-followthrough-v1/run.py", line 24, in main
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 682, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: '/private/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/tmpp178kd98/artifacts/m7-phone-task-followthrough-v1/run.py' is not in the subpath of '/var/folders/9m/nsz6s70j1g10yz3_l77xwl3m0000gn/T/tmpp178kd98'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.008s
+
+FAILED (errors=1)
