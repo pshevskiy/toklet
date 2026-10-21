@@ -15,6 +15,13 @@ this does not establish real-model memory/performance or sustained behavior. Qua
 device under its exact name; do not transfer Pro results to a base iPhone14,
 ProMax, iPad or another Mac. Base iPhone14 evidence remains separate.
 
+The [bounded hashing confirmation](../docs/experiments/2026-10-21-m7-hash-memory.md)
+adds two identical small-model short runs (26 requests), preserving exact IDs,
+state and cleanup while reducing process-lifetime peak from2.098GB to about
+1.017GB. These observations validate the diagnostic memory fix under unchanged
+trial budgets; full quality, supported model/context limits, sustained behavior
+and actual OS lifecycle qualification remain open.
+
 ## Admission and identity
 
 Before a physical run, enable Developer Mode and establish a valid signing

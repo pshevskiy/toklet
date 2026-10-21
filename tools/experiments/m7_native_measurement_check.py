@@ -13,15 +13,28 @@ import m7_apple_integration as integration
 ROOT = package.ROOT
 
 
+def validate_hash_memory(result, samples):
+    phases = ['before-artifact-proof','after-artifact-proof','loaded','unloaded','closed','after-final-artifact-proof']
+    if [item['phase'] for item in result['checkpoints']] != phases or len(samples) != 13:
+        raise ValueError('Chunked hashing checkpoint/sample sequence incomplete')
+    for footprint in [*[item['footprint'] for item in result['checkpoints']],
+                      *[sample['footprint'] for sample in samples]]:
+        physical=footprint['physicalBytes'];peak=footprint['lifetimePeakPhysicalBytes']
+        if type(physical) is not int or type(peak) is not int or not 0 < physical <= peak <= 192*1024**2:
+            raise ValueError('Chunked hashing exceeded bounded process peak')
+
+
 def validate_output(text):
     def records(prefix):
         return [json.loads(line[len(prefix):]) for line in text.splitlines() if line.startswith(prefix)]
     results = records('MEASUREMENT_CHECK_RESULT_JSON=')
+    memory = records('MEASUREMENT_HASH_MEMORY_JSON=')
+    memory_samples = records('MEASUREMENT_HASH_MEMORY_SAMPLE_JSON=')
     samples = records('MEASUREMENT_CHECK_SAMPLE_JSON=')
     summaries = records('MEASUREMENT_CHECKS_JSON=')
-    if len(results) != 2 or len(samples) != 26 or len(summaries) != 1:
+    if len(results) != 2 or len(samples) != 26 or len(memory) != 1 or len(memory_samples) != 13 or len(summaries) != 1:
         raise ValueError('Incomplete actual measurement checks')
-    for backend, result, group in zip(('cpu','metal'), results, (samples[:13],samples[13:])):
+    for backend, result, group in zip(('cpu','metal','cpu'), [*results,*memory], (samples[:13],samples[13:],memory_samples)):
         if (result['backend'] != backend or result['passed'] is not True
             or result.get('error') is not None or result['cleanupErrors'] or result['endpointErrors']
             or result['closed'] is not True or result['released'] is not True
@@ -48,9 +61,11 @@ def validate_output(text):
         if total != result['sumNativeLastEventSeconds']:
             raise ValueError('Measured duration sum differs')
     summary = summaries[0]
-    if summary['passed'] is not True or len(summary['cases']) != 16 or summary['physicalDeviceQualified'] is not False:
+    if summary['passed'] is not True or len(summary['cases']) != 17 or summary['physicalDeviceQualified'] is not False:
         raise ValueError('Failure-case checks incomplete')
-    return dict(results=results,sample_count=len(samples),summary=summary)
+    validate_hash_memory(memory[0], memory_samples)
+    return dict(results=results,sample_count=len(samples),hash_memory_result=memory[0],
+                hash_memory_sample_count=len(memory_samples),summary=summary)
 
 
 def verify_inputs(pins):
@@ -83,6 +98,10 @@ def main(native, expected, output):
         integration.merge(pins,{str(p.relative_to(ROOT)):package.sha(p) for p in paths})
         for name,pin in integration.FIXTURE.items():
             if package.sha(fixture/Path(name).name)!=pin:raise ValueError('Independent tiny fixture differs')
+        padding=output/'proof-padding.bin'
+        with padding.open('xb') as stream:stream.truncate(256*1024**2)
+        padding_sha=package.sha(padding)
+        pins[str(padding.relative_to(ROOT))]=padding_sha
         binary=output/'check'
         execute(['xcodebuild','-version'],'xcode-version')
         sdk=package.small(execute(['xcrun','--sdk','macosx','--show-sdk-path'],'sdk-path')).strip()
@@ -94,10 +113,12 @@ def main(native, expected, output):
             '-target','arm64-apple-macos15.0','-O','-I',str(ROOT/'apple/include'),*[str(p) for p in sources],str(archive),
             '-framework','Metal','-framework','MetalPerformanceShaders','-framework','Foundation','-framework','Security',
             '-lobjc','-liconv','-lresolv','-lc++','-o',str(binary)]
-        for label,args in [('compile',command),('checks',[str(binary),str(fixture),str(output/'cases')])]:
+        for label,args in [('compile',command),('checks',[str(binary),str(fixture),str(output/'cases'),str(padding),padding_sha])]:
             execute(args,label)
             if label=='compile':pins[str(binary.relative_to(ROOT))]=package.sha(binary)
         checked=validate_output(package.small(logs/'checks.stdout'))
+        if checked['hash_memory_result']['filesBefore'].get('Model/proof-padding.bin') != padding_sha:
+            raise ValueError('Independent padding hash differs')
     except BaseException as error:primary=type(error).__name__+': '+str(error)
     finally:
         package.signal.signal(package.signal.SIGTERM,previous)

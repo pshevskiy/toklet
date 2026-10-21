@@ -1,0 +1,21 @@
+..............F.....................................................................
+======================================================================
+FAIL: test_real_timeout_reaps_owned_child (test_m7_apple_package.PackageTests.test_real_timeout_reaps_owned_child)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/tools/experiments/test_m7_apple_package.py", line 29, in test_real_timeout_reaps_owned_child
+    self.assertIsNotNone(row['exit_code']);self.assertEqual(row['cleanup_errors'],[])
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['group cleanup: PermissionError: [Errno 1] Operation not permitted'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'group cleanup: PermissionError: [Errno 1] Operation not permitted'
+
+- ['group cleanup: PermissionError: [Errno 1] Operation not permitted']
++ []
+
+----------------------------------------------------------------------
+Ran 84 tests in 1.597s
+
+FAILED (failures=1)

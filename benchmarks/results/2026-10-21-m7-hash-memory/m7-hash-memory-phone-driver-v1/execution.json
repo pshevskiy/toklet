@@ -1,0 +1,5 @@
+{
+  "driver_sha256": "04d17a0534b053f5067ffd71236d975e9d854a49da128dfec4b4ffc9b1a36608",
+  "exit_code": 1,
+  "proof": "artifacts/m7-hash-memory-storage-proof-v1"
+}

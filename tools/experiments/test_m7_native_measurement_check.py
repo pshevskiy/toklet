@@ -1,4 +1,5 @@
 """Changed admitted inputs must prevent every child, including compiler probes."""
+import copy
 import contextlib
 import io
 import json
@@ -45,6 +46,25 @@ class MeasurementCheckerTests(unittest.TestCase):
             checker.verify_inputs(pins)
             path.write_bytes(b'changed')
             with self.assertRaises(ValueError):checker.verify_inputs(pins)
+
+    def test_hash_memory_requires_all_phases_and_every_sample_under_cap(self):
+        footprint=dict(physicalBytes=100,lifetimePeakPhysicalBytes=200)
+        phases=['before-artifact-proof','after-artifact-proof','loaded','unloaded','closed','after-final-artifact-proof']
+        result=dict(checkpoints=[dict(phase=p,footprint=footprint.copy()) for p in phases])
+        samples=[dict(footprint=footprint.copy()) for _ in range(13)]
+        checker.validate_hash_memory(result,samples)
+        missing=copy.deepcopy(result);missing['checkpoints']=[]
+        with self.assertRaises(ValueError):checker.validate_hash_memory(missing,samples)
+        reordered=copy.deepcopy(result);reordered['checkpoints'].reverse()
+        with self.assertRaises(ValueError):checker.validate_hash_memory(reordered,samples)
+        with self.assertRaises(ValueError):checker.validate_hash_memory(result,samples[:-1])
+        for location in ('checkpoint','sample'):
+            for peak in (192*1024**2+1,True,0,100.5):
+                changed=copy.deepcopy(result);requests=copy.deepcopy(samples)
+                row=changed['checkpoints'][1] if location=='checkpoint' else requests[7]
+                row['footprint']['lifetimePeakPhysicalBytes']=peak
+                with self.subTest(location=location,peak=peak),self.assertRaises(ValueError):
+                    checker.validate_hash_memory(changed,requests)
 
     def test_incomplete_console_is_rejected(self):
         with self.assertRaises(ValueError):checker.validate_output('MEASUREMENT_CHECKS_JSON={"passed":true}\n')

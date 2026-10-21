@@ -172,11 +172,15 @@ private func streamedHash(_ url: URL, maximum: UInt64) throws -> String {
     let handle = try FileHandle(forReadingFrom:url)
     defer { try? handle.close() }
     var hash = SHA256(); var count: UInt64 = 0
-    while let data = try handle.read(upToCount:256 * 1024), !data.isEmpty {
+    // FileHandle's bridged Data can otherwise remain autoreleased for the
+    // entire diagnostic queue block. Only EOF escapes each chunk's pool.
+    while try autoreleasepool(invoking: { () throws -> Bool in
+        guard let data = try handle.read(upToCount:256 * 1024), !data.isEmpty else { return false }
         count += UInt64(data.count)
         guard count <= maximum else { throw measurementError("Artifact exceeds file limit") }
         hash.update(data:data)
-    }
+        return true
+    }) {}
     return hash.finalize().map { String(format:"%02x",$0) }.joined()
 }
 

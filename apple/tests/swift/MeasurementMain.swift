@@ -28,7 +28,7 @@ private func rejected(_ body: () throws -> Void) throws {
         dispatchMain()
     }
     private static func run() throws {
-        guard CommandLine.arguments.count == 3 else { throw NSError(domain:"MeasurementChecks",code:2) }
+        guard CommandLine.arguments.count == 5 else { throw NSError(domain:"MeasurementChecks",code:2) }
         let fixture = URL(fileURLWithPath:CommandLine.arguments[1],isDirectory:true)
         let root = URL(fileURLWithPath:CommandLine.arguments[2],isDirectory:true)
         try check(!FileManager.default.fileExists(atPath:root.path),"Exclusive check folder required")
@@ -102,9 +102,16 @@ private func rejected(_ body: () throws -> Void) throws {
         let extraData = try JSONSerialization.data(withJSONObject:extra)
         try extraData.write(to:root.appendingPathComponent("extra-job.json"),options:.withoutOverwriting)
         try rejected { _ = try admitMeasurementConfig(root:root,name:"extra-job.json",sha256:digest(extraData)) }
-        let largeData = Data(repeating:32,count:512*1024+1)
+        let boundaryData = encoded + Data(repeating:32,count:512*1024-encoded.count)
+        try boundaryData.write(to:root.appendingPathComponent("boundary-job.json"),options:.withoutOverwriting)
+        let boundary = try admitMeasurementConfig(root:root,name:"boundary-job.json",sha256:digest(boundaryData))
+        try check(boundary.files == files,"Exact config byte limit rejected")
+        let largeData = boundaryData + Data([32])
         try largeData.write(to:root.appendingPathComponent("large-job.json"),options:.withoutOverwriting)
-        try rejected { _ = try admitMeasurementConfig(root:root,name:"large-job.json",sha256:digest(largeData)) }
+        var sizeError = ""
+        do { _ = try admitMeasurementConfig(root:root,name:"large-job.json",sha256:digest(largeData)) }
+        catch { sizeError = error.localizedDescription }
+        try check(sizeError.contains("Artifact exceeds file limit"),"Oversize config lost streamed size error")
         cases.append("config SHA/path/unknown-field/size admission")
         let initial = try NativeFootprint.read()
         try check(initial.physicalBytes > 0 && initial.lifetimePeakPhysicalBytes >= initial.physicalBytes,"Self physical footprint unavailable")
@@ -199,6 +206,25 @@ private func rejected(_ body: () throws -> Void) throws {
         try check(!result.passed && result.closed && result.released && count == 13,"Endpoint mutation was lost")
         try original.write(to:modelConfig)
         cases.append("post-load endpoint mutation rejected after actual requests")
+        // An independently hashed sparse file exercises many Foundation reads
+        // without materializing padding in Swift or involving model allocation.
+        let padding = URL(fileURLWithPath:CommandLine.arguments[3])
+        let paddingHash = CommandLine.arguments[4]
+        let paddingTarget = root.appendingPathComponent("Model/proof-padding.bin")
+        try FileManager.default.linkItem(at:padding,to:paddingTarget)
+        files["Model/proof-padding.bin"] = paddingHash
+        var memorySamples: [NativeMeasurementRequest] = []
+        let memory = runNativeMeasurement(config(process:192*1024*1024),root:root) { memorySamples.append($0) }
+        print("MEASUREMENT_HASH_MEMORY_JSON=" + String(decoding:try JSONEncoder().encode(memory),as:UTF8.self))
+        for sample in memorySamples {
+            print("MEASUREMENT_HASH_MEMORY_SAMPLE_JSON=" + String(decoding:try JSONEncoder().encode(sample),as:UTF8.self))
+        }
+        try check(memory.passed && memory.closed && memory.released && memory.error == nil
+                  && memory.cleanupErrors.isEmpty && memory.endpointErrors.isEmpty,
+                  "Chunked hash memory budget failed: \(String(describing:memory.error))")
+        try check(memorySamples.count == 13 && memory.filesBefore == files && memory.filesAfter == files,
+                  "Large independent hash/oracle sequence incomplete")
+        cases.append("256MiB independently hashed artifact/192MiB process budget/exact IDs/close/release")
         let summary = try JSONSerialization.data(withJSONObject:["passed":true,"cases":cases,"physicalDeviceQualified":false],options:.sortedKeys)
         print("MEASUREMENT_CHECKS_JSON=" + String(decoding:summary,as:UTF8.self))
     }

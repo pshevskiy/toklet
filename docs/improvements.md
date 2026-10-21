@@ -766,3 +766,19 @@ freshness expiration blocks the job write and preserves clean cleanup. The fresh
 retry completes all copy checks within84s. Astra accepted978 bound paths,30 exact
 staged copies, proof/state/admission replays, privacy, links and whitespace.
 M7.3 stays open.
+
+The [bounded hashing fix](experiments/2026-10-21-m7-hash-memory.md) drains
+Foundation read buffers after each256KiB SHA update in both model and installed
+bundle proofs. The independently hashed256MiB regression fails before loading
+with old code (280,724,248byte after-proof footprint) and passes under192MiB with
+the pools, preserving hashes, limits and cleanup. Astra cleared source;84 portable
+checks,17 actual Mac cases/39 samples and both SDK builds pass. Two same-job
+small phone confirmations retain26 exact ID/state samples; after-proof memory
+falls from1,013,664,064 to18,990,728/18,826,888bytes and final lifetime peaks from
+2,097,663,088 to1,016,990,064/1,016,858,992bytes. Sandbox timeout-test restriction,
+existing-process preparation failure and missing-snapshot reuse refusal remain
+recorded. Budgets/defaults remain unchanged. Final reclamation varies; these
+short trials qualify neither full mobile quality nor model/context limits.
+M7.3 stays open.
+Astra accepted622 distinct paths,130 exact staged copies, seven historical
+mappings, baseline/fixed and storage replays, privacy, links and whitespace.

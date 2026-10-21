@@ -29,11 +29,15 @@ private func installedBundleProof(_ phase: String) throws {
         defer { try? handle.close() }
         var hash = SHA256()
         var count = 0
-        while let data = try handle.read(upToCount:256 * 1024), !data.isEmpty {
+        // Drain Foundation read buffers per chunk, outside inference timing.
+        // Returning only EOF keeps Data within its autorelease pool.
+        while try autoreleasepool(invoking: { () throws -> Bool in
+            guard let data = try handle.read(upToCount:256 * 1024), !data.isEmpty else { return false }
             count += data.count
             guard count <= 256 * 1024 * 1024 else { throw NSError(domain:"TokletBundleProof",code:4) }
             hash.update(data:data)
-        }
+            return true
+        }) {}
         files[name] = hash.finalize().map { String(format:"%02x",$0) }.joined()
     }
     let data = try JSONSerialization.data(withJSONObject:["phase":phase,"simulator":simulator,"files":files],options:[.sortedKeys])

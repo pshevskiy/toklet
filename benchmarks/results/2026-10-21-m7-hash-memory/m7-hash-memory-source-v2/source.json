@@ -1,0 +1,7 @@
+{
+  "apple/Harness/NativeMeasurement.swift": "131d49ed0e70c455a1fb5cf735b11ba4298af954e080d9dc3738c0d7489b91a9",
+  "apple/Harness/HarnessApp.swift": "c58d94be4731e323feccfc6b9eccd5f30a53f3c892ed0883614bb49a12587df9",
+  "apple/tests/swift/MeasurementMain.swift": "80fa532ff7f2120cced10c5e8c48ee6113922daf04b303c686c128ec2780ac93",
+  "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+  "tools/experiments/test_m7_native_measurement_check.py": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1"
+}

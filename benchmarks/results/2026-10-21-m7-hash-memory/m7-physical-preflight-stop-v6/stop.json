@@ -1,0 +1,180 @@
+{
+  "commands": [
+    {
+      "command": [
+        "codesign",
+        "--verify",
+        "--strict",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-physical-prepared-v9/derived/Build/Products/Release-iphoneos/TokletHarness.app"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 14871,
+      "stdout": "artifacts/m7-physical-preflight-stop-v6/private-logs/signature.stdout",
+      "stderr": "artifacts/m7-physical-preflight-stop-v6/private-logs/signature.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "details",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 14873,
+      "stdout": "artifacts/m7-physical-preflight-stop-v6/private-logs/device.stdout",
+      "stderr": "artifacts/m7-physical-preflight-stop-v6/private-logs/device.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "apps",
+        "--bundle-id",
+        "dev.toklet.harness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 14875,
+      "stdout": "artifacts/m7-physical-preflight-stop-v6/private-logs/current-install.stdout",
+      "stderr": "artifacts/m7-physical-preflight-stop-v6/private-logs/current-install.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "processes",
+        "--search",
+        "TokletHarness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 14878,
+      "stdout": "artifacts/m7-physical-preflight-stop-v6/private-logs/processes-1.stdout",
+      "stderr": "artifacts/m7-physical-preflight-stop-v6/private-logs/processes-1.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "process",
+        "signal",
+        "--pid",
+        "3755",
+        "--signal",
+        "SIGTERM",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 14880,
+      "stdout": "artifacts/m7-physical-preflight-stop-v6/private-logs/signal-2.stdout",
+      "stderr": "artifacts/m7-physical-preflight-stop-v6/private-logs/signal-2.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "processes",
+        "--search",
+        "TokletHarness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 14882,
+      "stdout": "artifacts/m7-physical-preflight-stop-v6/private-logs/processes-3.stdout",
+      "stderr": "artifacts/m7-physical-preflight-stop-v6/private-logs/processes-3.stderr"
+    }
+  ],
+  "bindings": {
+    "artifacts/m7-physical-prepared-v9/integration.json": "c7f5be741d76259bce3ac03820a4bd0ecda915c6761c1263947b2a465c41fbf7",
+    "artifacts/m7-physical-prepared-v9/private-logs/install.stdout": "054e5ae5ff513497824d79cb845d7f66fce06a3f266a7cab1a00eeb7d67856f0",
+    "artifacts/m7-physical-prepared-v9/derived/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-physical-prepared-v9/derived/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-physical-prepared-v9/derived/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-prepared-v9/derived/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-physical-prepared-v9/derived/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "b11df8e94f056e39eadde0ad5833d1c9f46f7fa005df23abe8b604a9febfdb73",
+    "artifacts/m7-physical-prepared-v9/derived/Build/Products/Release-iphoneos/TokletHarness.app/_CodeSignature/CodeResources": "f7a2be8763bdd7253ef302cd61ee0d9496a66bb954e33176b6eb23f81714a9db",
+    "artifacts/m7-physical-prepared-v9/derived/Build/Products/Release-iphoneos/TokletHarness.app/embedded.mobileprovision": "f205de44fba20484b45c00e44df01ad8183177b2427ba9b488679afb22697220",
+    "artifacts/m7-physical-preflight-stop-v6/driver.py": "0d07faa7d6ca0f5fed1a7c73fc3060726c1dd664e4e71e3ccf57e4e5387f83bf",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952"
+  },
+  "result": {
+    "absent": true,
+    "observations": [
+      [
+        3755
+      ],
+      []
+    ],
+    "signals": [
+      {
+        "pid": 3755,
+        "signal": "SIGTERM"
+      }
+    ],
+    "errors": []
+  },
+  "reason": "Close only exact historical verified signed install before replacing app; not inference reuse",
+  "private_pins": {
+    "artifacts/m7-physical-preflight-stop-v6/private-execution.json": "2d694c3625f98ae4550503b4f161237173e3a843a64008735caac61160a4b094",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/current-install.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/current-install.stdout": "c9074eb844445cef33f4ed0e1097d43bd34cede1e57620259077a01d58e5e5e5",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/device.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/device.stdout": "d1990492136710e6bedaa9b8a21e410ba2833f722f17e5c626dd081f435ffdfd",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/processes-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/processes-1.stdout": "edde9f47af64be756832ea3e22d46eb0e6b83a08de7fb8d478bbbea7ea774610",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/processes-3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/processes-3.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/signal-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/signal-2.stdout": "2853c5cd8ab8004e582ed6ee48e91c45c0540da6546f590f4032d2f5c07549a5",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/signature.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-preflight-stop-v6/private-logs/signature.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

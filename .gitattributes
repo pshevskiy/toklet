@@ -32,3 +32,14 @@ benchmarks/results/2026-10-21-m7-storage-admission/m7-storage-proof-v1/private-l
 benchmarks/results/2026-10-21-m7-storage-admission/m7-storage-proof-v2/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 benchmarks/results/2026-10-21-m7-storage-admission/m7-storage-proof-v3/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 benchmarks/results/2026-10-21-m7-storage-admission/m7-small-short-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Bounded hashing qualification preserves exact raw tool/console bytes.
+benchmarks/results/2026-10-21-m7-hash-memory/m7-native-measurement-check-v9/logs/swift-version.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-hash-memory/m7-native-measurement-check-v10/logs/swift-version.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-hash-memory/m7-native-measurement-check-v11/logs/swift-version.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-hash-memory/m7-swift-harness-build-v16/logs/iphonesimulator-build.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-hash-memory/m7-swift-harness-build-v16/logs/iphoneos-build.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-hash-memory/m7-hash-memory-storage-proof-v2/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-hash-memory/m7-hash-memory-small-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-hash-memory/m7-hash-memory-small-v2/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-hash-memory/m7-small-short-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
