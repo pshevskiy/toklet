@@ -152,7 +152,9 @@ def collect(native,private,private_sha,prepared,prepared_sha,ready,ready_sha,mod
   if full_guard:guard()
   return raw
  def command(parts,label,full_guard=True):
-  return json.loads(execute([m.physical.DEVICECTL,'device',*parts,'--device',selected['device_identifier'],'--timeout','90','--quiet','--json-output','-'],label,full_guard=full_guard))
+  # launch consumes everything after its positional bundle as app arguments.
+  # Keep device/output options before any command-specific positional value.
+  return json.loads(execute([m.physical.DEVICECTL,'device',*parts[:2],'--device',selected['device_identifier'],'--timeout','90','--quiet','--json-output','-',*parts[2:]],label,full_guard=full_guard))
  def current(label,full_guard=True):return command(['info','apps','--bundle-id',m.physical.BUNDLE],label,full_guard)
  def query(label):return command(['info','processes','--search','TokletHarness'],label,False)
  def same_pid(label):

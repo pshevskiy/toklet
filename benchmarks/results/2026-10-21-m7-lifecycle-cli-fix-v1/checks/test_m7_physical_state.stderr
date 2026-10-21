@@ -1,0 +1,16 @@
+test_actual_environment_typed_and_foreground (test_m7_physical_state.Checks.test_actual_environment_typed_and_foreground) ... ok
+test_complete_actual_result_and_prefix_witnesses (test_m7_physical_state.Checks.test_complete_actual_result_and_prefix_witnesses) ... ok
+test_component_wrapper_not_used_as_device_result (test_m7_physical_state.Checks.test_component_wrapper_not_used_as_device_result) ... ok
+test_explicit_real_model_scope_before_reads (test_m7_physical_state.Checks.test_explicit_real_model_scope_before_reads) ... ok
+test_install_order_identity_and_duplicates (test_m7_physical_state.Checks.test_install_order_identity_and_duplicates) ... ok
+test_job_pins_full_current_app_and_pure_replay_source (test_m7_physical_state.Checks.test_job_pins_full_current_app_and_pure_replay_source) ... ok
+test_modes_reject_before_children (test_m7_physical_state.Checks.test_modes_reject_before_children) ... ok
+test_real_partial_prefill_and_capacity_required (test_m7_physical_state.Checks.test_real_partial_prefill_and_capacity_required) ... ok
+test_shared_main_rejected_state_keeps_cleanup_and_endpoints (test_m7_physical_state.Checks.test_shared_main_rejected_state_keeps_cleanup_and_endpoints) ... ok
+test_shared_main_state_prepare_and_authenticated_reuse (test_m7_physical_state.Checks.test_shared_main_state_prepare_and_authenticated_reuse) ... ok
+test_stale_app_sources_or_unaccepted_proof_reject (test_m7_physical_state.Checks.test_stale_app_sources_or_unaccepted_proof_reject) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.149s
+
+OK

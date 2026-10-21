@@ -1,0 +1,9 @@
+test_changed_admitted_header_archive_or_helper_never_launches_child (test_m7_native_measurement_check.MeasurementCheckerTests.test_changed_admitted_header_archive_or_helper_never_launches_child) ... ok
+test_hash_memory_requires_all_phases_and_every_sample_under_cap (test_m7_native_measurement_check.MeasurementCheckerTests.test_hash_memory_requires_all_phases_and_every_sample_under_cap) ... ok
+test_incomplete_console_is_rejected (test_m7_native_measurement_check.MeasurementCheckerTests.test_incomplete_console_is_rejected) ... ok
+test_rechecks_map_before_subsequent_child (test_m7_native_measurement_check.MeasurementCheckerTests.test_rechecks_map_before_subsequent_child) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.010s
+
+OK

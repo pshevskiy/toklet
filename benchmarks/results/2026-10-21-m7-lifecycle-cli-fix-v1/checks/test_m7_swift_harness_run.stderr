@@ -1,0 +1,10 @@
+test_boot_failure_cleans_owned_simulator_and_preserves_errors (test_m7_swift_harness_run.HarnessRunTests.test_boot_failure_cleans_owned_simulator_and_preserves_errors) ... ok
+test_changed_build_is_zero_launch (test_m7_swift_harness_run.HarnessRunTests.test_changed_build_is_zero_launch) ... ok
+test_conflicting_executable_binding_is_rejected (test_m7_swift_harness_run.HarnessRunTests.test_conflicting_executable_binding_is_rejected) ... ok
+test_installed_bundle_copy_is_verified (test_m7_swift_harness_run.HarnessRunTests.test_installed_bundle_copy_is_verified) ... ok
+test_omitted_or_remapped_app_is_rejected (test_m7_swift_harness_run.HarnessRunTests.test_omitted_or_remapped_app_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.014s
+
+OK

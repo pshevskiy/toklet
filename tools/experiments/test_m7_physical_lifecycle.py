@@ -100,6 +100,12 @@ class Checks(unittest.TestCase):
     if 'processes' in args:data=process_data()
     elif 'signal' in args:state['alive']=False;data={}
     elif 'launch' in args:
+     bundle=next(v for v in args if v in ('com.apple.Preferences',p.m.physical.BUNDLE))
+     # devicectl parses all values after the bundle as remote app arguments.
+     # Enforce its actual boundary rather than accepting any option order.
+     if args[-1]!=bundle or args.index('--device')>args.index(bundle):
+      out.write_bytes(b'');err.write_text('Missing expected argument --device')
+      return dict(command=args,exit_code=64,primary_error='tool exit 64',cleanup_errors=[],pid=99999,stdout=str(out.relative_to(p.ROOT)),stderr=str(err.relative_to(p.ROOT)))
      system='com.apple.Preferences' in args;actual=43 if fail=='pid' and not system else 42
      data=dict(info=dict(outcome='success',commandType='devicectl.device.process.launch'),result=dict(deviceIdentifier=selected['device_identifier'],process=dict(processIdentifier=actual,executable='/Applications/Preferences.app/Preferences' if system else remote+'/TokletHarness')))
     else:data={}
@@ -160,6 +166,9 @@ class Checks(unittest.TestCase):
   self.assertEqual([v['phase'] for v in r['phase_observations']],['ready-consumed','ready-process','settings-activated','background-process','harness-activated'])
   self.assertEqual(len(r['remote_cleanup']),2);self.assertTrue(all(not v['signals'] for v in r['remote_cleanup']))
   self.assertEqual(len(calls),11);self.assertTrue(all(c['exit_code']==0 for c in private['commands']))
+  activations=[v for v in calls if 'launch' in v and '--console' not in v]
+  self.assertEqual([v[-2:] for v in activations],[['--activate','com.apple.Preferences'],['--activate',p.m.physical.BUNDLE]])
+  self.assertTrue(all(v.index('--json-output')<len(v)-2 and v.index('--device')<len(v)-2 for v in activations))
  def test_controller_rejects_new_foreground_pid_and_cleans_owned(self):
   code,r,private,calls=self.controller('pid');self.assertEqual(code,1);self.assertFalse(r['passed']);self.assertIn('activated process identity',r['primary_error']);self.assertTrue(r['remote_cleanup'][-1]['absent'])
  def test_controller_timeout_is_private_and_owned_resources_clean(self):

@@ -954,3 +954,7 @@ Hypothesis: the native session preserves exact usable prefixes through cache reu
 ### M7 physical state orchestration — 21 October2026
 
 The [sealed state controller](experiments/2026-10-21-m7-physical-state.md) reuses admitted storage/signing/cleanup transport, adds explicit --state mode, separates pure result replay from component-only error-close tests, and admits the complete reviewed current app closure for both state and lifecycle jobs.217portable methods/22modules,11focused parser/admission/shared-controller tests and one owned local two-model inventory/three-native-raw replay child pass. Exact job/SHA, no-copy reuse, absent auxiliary payloads and cleanup after combined console/input failure are verified. Retain for physical collection; no new native model/device/build/performance claim.
+
+### M7 physical activation argv fix — 21 October2026
+
+The [activation boundary fix](experiments/2026-10-21-m7-lifecycle-cli-fix.md) corrects the first actual lifecycle attempt's exit64: device/output options now precede the positional app bundle. The regression fake enforces the real devicectl parsing boundary; both Settings and original-process activation arrays are checked.217methods/22modules and18focused tests pass. The failed phone receipt/source remain pinned; no app/kernel/gate change or physical qualification is claimed.

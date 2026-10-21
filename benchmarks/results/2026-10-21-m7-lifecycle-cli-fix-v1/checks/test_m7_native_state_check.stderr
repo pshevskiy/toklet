@@ -1,0 +1,20 @@
+test_append_pending_reference (test_m7_native_state_check.Checks.test_append_pending_reference) ... ok
+test_cached_scalar (test_m7_native_state_check.Checks.test_cached_scalar) ... ok
+test_cancel_emission_or_late_trigger (test_m7_native_state_check.Checks.test_cancel_emission_or_late_trigger) ... ok
+test_changed_prompt_reference (test_m7_native_state_check.Checks.test_changed_prompt_reference) ... ok
+test_complete_real_and_tiny (test_m7_native_state_check.Checks.test_complete_real_and_tiny) ... ok
+test_each_overflow_preserves_state_and_scalar (test_m7_native_state_check.Checks.test_each_overflow_preserves_state_and_scalar) ... ok
+test_error_to_close_regression (test_m7_native_state_check.Checks.test_error_to_close_regression) ... ok
+test_error_wrapper_status_types_and_busy (test_m7_native_state_check.Checks.test_error_wrapper_status_types_and_busy) ... ok
+test_forged_types_and_missing_rows (test_m7_native_state_check.Checks.test_forged_types_and_missing_rows) ... ok
+test_integer_widths_and_scalar_identity_types (test_m7_native_state_check.Checks.test_integer_widths_and_scalar_identity_types) ... ok
+test_lifecycle_and_owner_release (test_m7_native_state_check.Checks.test_lifecycle_and_owner_release) ... ok
+test_memory_chronology_and_cap (test_m7_native_state_check.Checks.test_memory_chronology_and_cap) ... ok
+test_missing_partial_commit (test_m7_native_state_check.Checks.test_missing_partial_commit) ... ok
+test_resume_reference (test_m7_native_state_check.Checks.test_resume_reference) ... ok
+test_scope_and_file_endpoints (test_m7_native_state_check.Checks.test_scope_and_file_endpoints) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.139s
+
+OK
