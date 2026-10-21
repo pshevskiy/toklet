@@ -65,16 +65,20 @@ admits a reviewed app build SHA, verifies the installed copy, captures the idle
 UI and verifies Shutdown of the explicitly owned lab simulator. It is scoped
 to the frozen Inference Lab iPhone14 admission records, not arbitrary devices.
 
-## Physical setup and remaining qualification
+## Physical setup and qualification
 
 The [20 October physical tiny integration](../docs/experiments/2026-10-20-m7-physical-tiny.md)
 passes CPU and Metal on the wired iPhone14Pro (`iPhone15,2`, iOS27.0.1).
 Development signing, profile trust, installed-file correspondence, exact native
 states and process absence are verified. The earlier
 [setup observation](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
-remains a historical pre-signing record. Real-model memory, performance, thermal
-and actual OS lifecycle qualification remain pending. Pro results cannot
-establish base iPhone14 or ProMax limits.
+remains a historical pre-signing record. The subsequent
+[Pro device report](../docs/experiments/2026-10-21-m7-iphone14pro.md) accepts the
+selected models' full quality, repeated context/sustained, memory/thermal and
+actual scene lifecycle evidence within explicit trial limits. M7 is complete
+after the user's [explicit device-target amendment](../docs/experiments/2026-10-21-m7-release.md).
+Energy remains unavailable; real warning delivery/jetsam stay unqualified.
+Pro results cannot establish base iPhone14 or ProMax limits.
 
 Connect the phone with a cable and keep it unlocked. In Xcode27, open
 Xcode > Open Developer Tool > Device Hub, select the physical phone and follow

@@ -970,3 +970,9 @@ The [energy availability report](experiments/2026-10-21-m7-phone-energy.md) reco
 ### M7 joined iPhone14Pro trial limits — 21 October2026
 
 The [device report](experiments/2026-10-21-m7-iphone14pro.md) joins six accepted evidence components with exact quality policies, immutable model identities and33unchanged numerical-source files. Both selected paths retain full loss/task quality; named repeated contexts and sustained sequences fit explicit mobile trial budgets. The largest joined uninstrumented peak is1,944,701,920bytes; state/replay passes through1,152committed positions. Energy remains unset after both bounded instrument failures. Full-loss/task capacities stay distinct from context/state limits. Pro qualification does not silently replace the original base-device M7 requirement; Astra accepted the final Pro-only synthesis with no findings.
+
+### M7 completion after explicit device-target amendment — 21 October2026
+
+The user instructed “Amend M7 to iPhone 14 Pro.” The [M7 closure](experiments/2026-10-21-m7-release.md) updates the plan target and completes M7.1–M7.3 against the already accepted Pro report and six evidence components. The original base-device requirement is superseded for this milestone, not reported as physically tested. A separate closure receipt binds the immutable pre-amendment Pro qualification; historical flags, failed attempts, quality gates and all numerical/runtime bytes remain unchanged. Energy remains null and actual warning delivery/jetsam remain unqualified.
+
+Astra accepted the amended M7 closure and current documentation with no findings. All528documentation links, six accepted prerequisite hashes,43prior evidence pins,33unchanged numerical sources, protected CPU binaries and whitespace checks pass.

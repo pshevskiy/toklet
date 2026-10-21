@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Prepared 9 October 2026; updated 20 October 2026. Status: M0–M6 are complete in their qualified scopes; M7 remains pending. M6 qualifies explicit Online attention with FP16 KV for the selected small compensated Half and frozen larger group8 Q4 v2 models at4K/8K/16K/32K total tokens on Apple M1 Pro. Full quality, context boundary/state/memory and maximum application evidence pass within6GiB. Defaults and baseline limits remain. See the [M6 release decision](docs/experiments/2026-10-19-m6-release.md) and [M5 release decision](docs/experiments/2026-10-15-m5-release.md).
+Prepared 9 October 2026; updated 21 October 2026. Status: M0–M7 are complete in their qualified scopes. M7 qualifies the selected models on iPhone 14 Pro/iOS27.0.1 after the user explicitly amended the original base-device target; see the [M7 closure](docs/experiments/2026-10-21-m7-release.md). M6 qualifies explicit Online attention with FP16 KV for the selected small compensated Half and frozen larger group8 Q4 v2 models at4K/8K/16K/32K total tokens on Apple M1 Pro. Full quality, context boundary/state/memory and maximum application evidence pass within6GiB. Defaults and baseline limits remain. See the [M6 release decision](docs/experiments/2026-10-19-m6-release.md) and [M5 release decision](docs/experiments/2026-10-15-m5-release.md).
 
 Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session state, and use that reference to develop a measured Metal implementation. The first useful release is a CPU CLI with reliable continuation. The performance release adds FP16 Metal execution, Q4 weights, and separate prefill and decode paths. Physical iPhone qualification follows the Mac engine.
 
@@ -1415,11 +1415,21 @@ For the first Qwen config, calculated KV payload is `2 × 24 × tokens × 2 × 6
 
 ## M7 Integrate and qualify a physical iPhone
 
-In progress,19 October2026. The first [CPU raw-ID C boundary component](docs/experiments/2026-10-19-m7-native-abi.md) adds explicit ownership/thread/callback/cancellation/error contracts and checked static library integration. The [Apple packaging component](docs/experiments/2026-10-19-m7-apple-package.md) adds three checked arm64 slices and MacCPU/MacMetal/simulatorCPU integration. The [Swift harness component](docs/experiments/2026-10-19-m7-swift-harness.md) adds checked iOS builds and simulator integration. Physical-device qualification remains before M7 exit.
+**Complete, 21 October 2026, for iPhone 14 Pro (`iPhone15,2`), iOS27.0.1.**
+The user explicitly amended the original base iPhone14 target to this tested Pro.
+The [M7 closure](docs/experiments/2026-10-21-m7-release.md) binds the accepted
+[device report](docs/experiments/2026-10-21-m7-iphone14pro.md) and its six evidence
+components. Both selected models pass full numerical quality, repeated contexts,
+sustained duration, independent mobile memory policy, bounded state/overflow and
+actual same-process scene interruption/replay. Energy is unavailable after two
+bounded instrumentation failures; real warning delivery/jetsam remain unqualified.
+Base iPhone14 and other devices require separate future qualifications.
 
 - [x] **M7.1 Add the native boundary.** Build a thin C ABI or other explicitly chosen Swift bridge with opaque model/session handles, ownership rules, structured errors, cancellation, and token events. Contain Rust panics at the boundary. Package libraries for supported Apple targets and set deployment requirements from qualified APIs.
 - [x] **M7.2 Add a minimal Swift harness.** Exercise load, prompt, token streaming, continuation, reset, and cancellation. Run inference away from the UI thread and define callback lifetime and serialization. Reuse the same Rust engine and local artifact format.
-- [ ] **M7.3 Qualify the physical device.** Measure an independent iPhone 14 memory budget, thermal behavior, sustained throughput, and energy where instrumentation is available. Test inactive/background transitions, memory warnings, interruption during generation, resume/replay, and orderly resource release. Add iPad and newer Macs as separate device qualifications.
+- [x] **M7.3 Qualify the physical device.** Measure an independent iPhone 14 Pro memory budget, thermal behavior, sustained throughput, and energy where instrumentation is available. Test inactive/background transitions, memory warnings, interruption during generation, resume/replay, and orderly resource release. Add iPad and newer Macs as separate device qualifications.
+
+The following dated progress notes preserve earlier open gates; the closure above is the current status.
 
 Physical integration update,20 October2026: the signed Release harness passes
 actual CPU and Metal tiny checks on the wired iPhone14Pro (`iPhone15,2`,
@@ -1515,8 +1525,9 @@ The [joined iPhone14Pro report](docs/experiments/2026-10-21-m7-iphone14pro.md)
 assembles full selected-path quality, repeated context/sustained observations,
 bounded process/memory limits, state overflow and actual OS scene replay. Both
 bounded energy attachments fail without units, so energy stays unset. This is a
-Pro-only qualification accepted by Astra; the original base-iPhone14 scope
-remains open. M7.3 is not checked complete by this report.
+Pro-only qualification accepted by Astra. The user subsequently amended the M7
+target to this device; the [scope closure](docs/experiments/2026-10-21-m7-release.md)
+completes M7.3 without claiming base-device qualification.
 
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
@@ -1574,7 +1585,7 @@ At 10–14 hours per week, aim to finish M0 and establish the first trustworthy 
 | 7 | M1.3 | Rotary positions and causal GQA with intermediate parity |
 | 8 | M1.4 | Complete tiny decoder and a fixed greedy trace |
 
-Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. M4 and M5 are complete. The [15 October M5 release decision](docs/experiments/2026-10-15-m5-release.md) accepts the small compensated Half path and larger frozen Q4 v2 path, with unchanged full loss/task gates, confirmed useful prefill gain, complete repeated workload/application and sustained evidence within6GiB. Q4 v1 and small v2 remain rejected; CPU/GPU/readback/chunk defaults and baseline limitations remain. M6 is complete in its [19 October qualified scope](docs/experiments/2026-10-19-m6-release.md): explicit Online attention, selected4K–32K cases and retained FP16 KV. M7 remains pending.
+Implement one mechanism per reviewable change, including its memory layout, a small numerical trace, and targeted checks. Do not mark a milestone complete until its exit evidence exists. M4 and M5 are complete. The [15 October M5 release decision](docs/experiments/2026-10-15-m5-release.md) accepts the small compensated Half path and larger frozen Q4 v2 path, with unchanged full loss/task gates, confirmed useful prefill gain, complete repeated workload/application and sustained evidence within6GiB. Q4 v1 and small v2 remain rejected; CPU/GPU/readback/chunk defaults and baseline limitations remain. M6 is complete in its [19 October qualified scope](docs/experiments/2026-10-19-m6-release.md): explicit Online attention, selected4K–32K cases and retained FP16 KV. M7 is complete in its [amended iPhone14Pro scope](docs/experiments/2026-10-21-m7-release.md).
 
 M5.6 frozen larger v2 full responses,14 October2026: [collection report](docs/experiments/2026-10-14-q4-v2-full-tasks.md). All100original cases/caps complete with clean natural exit, exact raw/state/post-exit-text replay and unchanged compiled/model/helper endpoints. Complete admission/native memory fits6GiB. Literal grading, task-quality/performance acceptance and overall M5 remain open.
 
@@ -1618,3 +1629,5 @@ The [bounded state witness app](docs/experiments/2026-10-21-m7-state-app.md) add
 The [physical state controller](docs/experiments/2026-10-21-m7-physical-state.md) adds sealed state-mode preparation/reuse and exact phone result admission against the newly reviewed complete app-source closure.217methods/22modules,11focused tests and one owned local admission/raw-replay child pass; no app/kernel/ABI change or physical qualification is claimed. M7.3 remains open.
 
 The [completed phone state/lifecycle witnesses](docs/experiments/2026-10-21-m7-phone-state-lifecycle.md) pass both models on the current signed app: actual partial-prefill cancellation, exact prefix/append/reset, full1152-position commit and preserved overflow rejection, plus same-process active-generation interruption through actual Settings/return scene callbacks and exact replay/reference IDs.13accepted stages preserve failed argv/empty-app-query attempts. The memory-warning action is synthetic; UIKit warning delivery/jetsam remain unqualified. Base iPhone14, energy/limits and M7.3 remain open.
+
+M7 final closure,21 October2026: the user explicitly amended the original base iPhone14 requirement to the tested iPhone14Pro/iOS27.0.1. The [closure](docs/experiments/2026-10-21-m7-release.md) and [qualification](benchmarks/results/2026-10-21-m7-release-qualification-v1.json) accept all three M7 tasks within the existing selected-model trial limits. Six already accepted component results,33unchanged numerical sources, full loss/task gates, sustained/thermal/memory and actual state/scene replay remain unchanged. Energy stays unavailable; real warning delivery/jetsam and base/other devices remain unqualified. Historical pending flags and failed attempts are preserved; no additional runtime or device change is needed.

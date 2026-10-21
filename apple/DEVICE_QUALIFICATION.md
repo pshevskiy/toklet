@@ -9,8 +9,9 @@ two bounded actual profiler attachment failures. Synthetic warning-handler tests
 are separate from unobserved real warning delivery/jetsam. Supported limits and
 source/install lineages are explicit in the report. Astra accepted the final Pro-only synthesis with no findings.
 
-M7.3 remains open under PLAN.md's original base iPhone14 requirement; no target
-amendment is inferred from Pro results. Developer Mode, signing/profile, actual
+M7.3 is complete after the user's explicit target amendment from base iPhone14
+to this tested iPhone14Pro; see the [M7 closure](../docs/experiments/2026-10-21-m7-release.md).
+This amendment does not qualify the base device. Developer Mode, signing/profile, actual
 installation and orderly release are verified. The historical
 [setup observation](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json),
 [initial tiny integration](../docs/experiments/2026-10-20-m7-physical-tiny.md),
