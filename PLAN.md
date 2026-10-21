@@ -1454,6 +1454,10 @@ checks, all three Apple build/link targets and actual Mac C CPU/Metal clients.
 It enables later phone teacher forcing without full-logit copies. Full physical
 quality and the remaining M7.3 gates are unchanged and still pending.
 
+The [Swift score adapter](docs/experiments/2026-10-21-m7-worker-score.md) passes
+Mac CPU/Metal committed-prefix, failure and deterministic lifecycle-publication
+checks plus both SDK builds. The full phone quality collector remains pending.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy

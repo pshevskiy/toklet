@@ -1,0 +1,6 @@
+{
+  "apple/Harness/NativeWorker.swift": "e31357548d1b232c47ea2c44227a93340bd369f3bf3c67745b5eb47e598ddde7",
+  "apple/tests/swift/ScoreMain.swift": "8a5963fd89e04ca945ef656dd7cbad6b979a4742ba21cdc68a75b08b7c4848f9",
+  "tools/experiments/m7_native_score_check.py": "90d27733655fd482485350eda54c351b63730b3e8082d8ea4ab710502bc71b24",
+  "tools/experiments/test_m7_native_score_check.py": "dd9416f2978d6933e0c218bddd9048294ba029c744ed615208bc874b0f25d029"
+}

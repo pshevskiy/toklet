@@ -806,3 +806,14 @@ checked. Astra accepted source, controller and completed evidence with no blocki
 findings after3,590 distinct pins,74 exact staged copies, four code pins,
 command/test/platform/C replays,379 links, privacy and whitespace. No numerical kernel/default/gate changes or full phone quality/
 performance/device-limit qualification follows; M7.3 remains open.
+
+The [Swift score adapter](experiments/2026-10-21-m7-worker-score.md) keeps native
+scoring on the owning thread and exposes only bounded validated scalars. Accepted
+commands and failures clear earlier scores; completion suppresses publication
+when lifecycle cleanup or close supersedes it. Deterministic CPU/Metal barriers
+cover both races, and an isolated former-predicate control fails the intended
+assertion. Seven portable checks,40 score-state rows/four races,20 legacy worker
+rows, strict Swift and both SDK builds pass. A first strict-compile failure and
+its exact old source remain recorded. Astra accepted source/regressions and completed evidence after156 bound paths,
+66 exact staged copies, one historical mapping, all runtime/SDK/negative
+replays, privacy,376 links and whitespace, with no remaining findings. No full physical quality or M7.3 completion follows.

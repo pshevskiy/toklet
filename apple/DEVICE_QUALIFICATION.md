@@ -105,3 +105,8 @@ three-target build/link checks. It is preparation for phone teacher forcing,
 not evidence of a completed phone corpus/task run. Score before appending each
 target, verify exact committed prefix after cancellation, and retain the frozen
 corpus/context/aggregation/gates when implementing the collector.
+
+The [Swift score adapter](../docs/experiments/2026-10-21-m7-worker-score.md)
+now exposes validated scalar diagnostics on the owning thread. Mac CPU/Metal,
+deterministic close/interruption publication and both SDK builds pass. This
+component neither runs a phone corpus nor qualifies actual OS lifecycle recovery.

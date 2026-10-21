@@ -21,6 +21,7 @@ enum NativeCommand: Sendable {
     // Raw IDs only. autoCancelAfter is a deterministic diagnostic interruption.
     case generate(operation: UInt32, tokens: [UInt32], maximum: UInt32,
                   stops: [UInt32], autoCancelAfter: Int = 0)
+    case score(target: UInt32)
     case reset, suspend, replay, unload
 }
 
@@ -30,6 +31,17 @@ struct NativeTokenTiming: Codable, Sendable {
     let index: UInt32
     let nativeElapsedSeconds: Double
     let callbackUptimeNanoseconds: UInt64
+}
+
+// Scalar diagnostic only; the owning engine keeps all full logits resident.
+struct NativeDistributionScore: Codable, Equatable, Sendable {
+    let target: UInt32
+    let greedy: UInt32
+    let vocabulary: UInt32
+    let evaluated: UInt32
+    let targetLogit: Double
+    let greedyLogit: Double
+    let negativeLogLikelihood: Double
 }
 
 struct NativeSnapshot: Sendable {
@@ -48,6 +60,7 @@ struct NativeSnapshot: Sendable {
     var pending: UInt32 = 0
     var savedHistory = 0
     var admittedBytes: UInt64 = 0
+    var score: NativeDistributionScore?
     var workerFinished = false
 }
 
@@ -77,8 +90,17 @@ final class NativeWorker: @unchecked Sendable {
     private var view = NativeSnapshot()
     private var cancelFlag: OpaquePointer?
     private var thread: Thread?
+    // Cold diagnostic completion observer for deterministic non-UI checks.
+    // Runs after FFI returns, outside the condition lock, around publication;
+    // the after observer receives only whether a score was published. Neither
+    // receives native owners. Production callers leave both nil.
+    private let beforeScorePublication: (@Sendable () -> Void)?
+    private let afterScorePublication: (@Sendable (Bool) -> Void)?
 
-    init() throws {
+    init(beforeScorePublication: (@Sendable () -> Void)? = nil,
+         afterScorePublication: (@Sendable (Bool) -> Void)? = nil) throws {
+        self.beforeScorePublication = beforeScorePublication
+        self.afterScorePublication = afterScorePublication
         var error = TokletError()
         try requireOK(toklet_cancel_create(&cancelFlag, &error), &error)
         view.ids.reserveCapacity(128)
@@ -104,6 +126,7 @@ final class NativeWorker: @unchecked Sendable {
         queued = command
         view.busy = true
         view.phase = "Queued"
+        view.score = nil
         view.ids.removeAll(keepingCapacity: true)
         view.tokenTimings.removeAll(keepingCapacity: true)
         condition.signal()
@@ -138,6 +161,7 @@ final class NativeWorker: @unchecked Sendable {
         if case .unload? = queued {} else { queued = unload ? .unload : .suspend }
         view.busy = true
         view.phase = "Cancelling for lifecycle cleanup"
+        view.score = nil
         condition.signal()
     }
 
@@ -145,6 +169,7 @@ final class NativeWorker: @unchecked Sendable {
         condition.lock(); defer { condition.unlock() }
         guard !view.closed else { return }
         closing = true; queued = nil
+        view.score = nil
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
         view.busy = true
         condition.signal()
@@ -190,6 +215,7 @@ final class NativeWorker: @unchecked Sendable {
             var failure: NSError?
             do { try autoreleasepool { try engine.perform(command, flag: flag, worker: self) } }
             catch { failure = error as NSError }
+            if case .score = command { beforeScorePublication?() }
             condition.lock()
             view.hasModel = engine.model != nil
             view.hasSession = engine.session != nil
@@ -199,12 +225,15 @@ final class NativeWorker: @unchecked Sendable {
             view.pending = engine.report.pending_tokens
             view.reason = engine.report.reason
             view.admittedBytes = engine.admissionUpperBound
+            view.score = failure == nil && !closing && queued == nil ? engine.score : nil
             view.status = UInt32(clamping: failure?.code ?? 0)
             view.message = String((failure?.localizedDescription ?? "").prefix(512))
             view.busy = closing || queued != nil
             view.phase = view.busy ? "Cleanup queued" : engine.phase
+            let publishedScore = view.score != nil
             condition.broadcast()
             condition.unlock()
+            if case .score = command { afterScorePublication?(publishedScore) }
         }
         var releaseError: NSError?
         do { try autoreleasepool { try engine.unload() } } catch { releaseError = error as NSError }
@@ -219,6 +248,7 @@ final class NativeWorker: @unchecked Sendable {
         view.hasModel = false; view.hasSession = false
         view.savedHistory = 0; view.busy = false
         view.closed = true; view.workerFinished = true
+        view.score = nil
         view.phase = releaseError == nil ? "Closed" : "Release failed; restart required"
         if let error = releaseError {
             view.status = UInt32(clamping: error.code); view.message = error.localizedDescription
@@ -251,8 +281,10 @@ private final class Engine {
     var admissionUpperBound: UInt64 = 0
     var report = TokletReport()
     var phase = "Idle"
+    var score: NativeDistributionScore?
 
     func releaseSession() throws {
+        score = nil
         if let value = session {
             session = nil
             var error = TokletError()
@@ -319,7 +351,29 @@ private final class Engine {
         try requireOK(code, &error)
     }
     func perform(_ command: NativeCommand, flag: OpaquePointer, worker: NativeWorker) throws {
+        score = nil
         switch command {
+        case .score(let target):
+            guard let session else { throw invalid("Load or replay a session first") }
+            var error = TokletError(); var value = TokletScore()
+            try requireOK(toklet_session_score(session,target,&value,&error),&error)
+            guard value.abi_version == TOKLET_ABI_VERSION,
+                  value.struct_size == UInt32(MemoryLayout<TokletScore>.size),
+                  value.target_token == target, value.vocab_size > 0,
+                  target < value.vocab_size, value.greedy_token < value.vocab_size,
+                  value.evaluated_tokens > 0, value.evaluated_tokens == report.evaluated_tokens,
+                  report.history_tokens == report.evaluated_tokens, report.pending_tokens == 0,
+                  value.target_logit.isFinite, value.greedy_logit.isFinite,
+                  value.greedy_logit >= value.target_logit,
+                  value.negative_log_likelihood.isFinite, value.negative_log_likelihood >= 0 else {
+                throw invalid("Invalid committed-distribution score record")
+            }
+            score = NativeDistributionScore(target:target,greedy:value.greedy_token,
+                vocabulary:value.vocab_size,evaluated:value.evaluated_tokens,
+                targetLogit:value.target_logit,greedyLogit:value.greedy_logit,
+                negativeLogLikelihood:value.negative_log_likelihood)
+            phase = "Ready"
+
         case .load(let requested):
             guard model == nil else { throw invalid("Unload the current model first") }
             guard (1...32768).contains(requested.capacity), requested.chunk > 0 else { throw invalid("Invalid capacity/chunk") }
