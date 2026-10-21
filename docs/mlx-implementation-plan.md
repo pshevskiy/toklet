@@ -56,7 +56,9 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     mixed-precision tiny Qwen graph traces/native MLX CPU/GPU logits.
   - [x] Independent [Half-activation graph oracle](mlx-half-oracle.md), including
     original packed tied-output weights and gates frozen before GPU composition.
-  - [ ] Complete graph/strided execution, model parity/quality and app wiring.
+  - [x] [Complete resident tiny graph/session](mlx-metal-model.md), strided views,
+    frozen independent parity and transaction/admission checks on M1 Pro.
+  - [ ] Real-checkpoint quality/memory/performance and explicit CLI/native app wiring.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,

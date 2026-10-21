@@ -284,7 +284,10 @@ impl Session<'_> {
         }
         // Seven custom projections use one encoder each. Original Half retains
         // bias, two dependent MPS markers, and storage conversion.
-        let half_compensated = self.projection_mode == super::ProjectionMode::HalfCompensated;
+        let half_compensated = matches!(
+            self.projection_mode,
+            super::ProjectionMode::HalfCompensated | super::ProjectionMode::MlxAffine
+        );
         let per_layer = if matches!(
             self.model.layers[0].q.storage,
             super::TensorStorage::Q4 { .. }

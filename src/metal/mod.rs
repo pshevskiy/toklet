@@ -113,6 +113,7 @@ struct Tensor {
 enum TensorStorage {
     Half(Retained<MPSMatrix>),
     Q4 { stride: usize, format: q4::Format },
+    Mlx(mlx::Packed),
 }
 impl Tensor {
     fn allocate(g: &Gpu, l: Layout) -> Result<Self> {
@@ -176,6 +177,7 @@ pub struct Model {
     norm: Tensor,
     layers: Vec<Layer>,
     weight_bytes: usize,
+    mlx_artifact: bool,
     pub load_timing: LoadTiming,
 }
 impl Model {
@@ -200,6 +202,7 @@ impl Model {
         match self.layers[0].q.storage {
             TensorStorage::Half(_) => None,
             TensorStorage::Q4 { format, .. } => Some(format),
+            TensorStorage::Mlx(_) => None,
         }
     }
     pub fn q4_compensated_execution_width(&self) -> usize {
@@ -231,6 +234,96 @@ impl Model {
     /// disk and is checked against packed provenance before and after loading.
     pub fn load_q4(directory: &Path, packed: &Path, options: weights::LoadOptions) -> Result<Self> {
         Self::load_impl(directory, Some(packed), options)
+    }
+    /// Explicit native MLX artifact import. Packed tensors stream directly into
+    /// resident buffers, with no full FP32 model or temporary packed copy.
+    pub fn load_mlx(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
+        autoreleasepool(|_| {
+            let clock = Instant::now();
+            let mut source = crate::mlx::qwen::Source::open(directory, options)?;
+            let config = source.config().clone();
+            geometry(&config)?;
+            let compile_clock = Instant::now();
+            let gpu = Gpu::new()?;
+            let pipelines = mlx::compile(&gpu)?;
+            let compilation_seconds = compile_clock.elapsed().as_secs_f64();
+            let mut plans = BTreeMap::new();
+            let mut weight_bytes = 0;
+            for (name, spec) in source.tensors() {
+                let (rows, columns) = match spec.shape() {
+                    [n] => (1, *n),
+                    [r, c] => (*r, *c),
+                    _ => return Err(Error::Options("MLX tensor rank differs")),
+                };
+                let layout = Layout::new(rows, columns, true)?;
+                let bytes = match spec.storage() {
+                    crate::mlx::qwen::Storage::Float(_) => layout.bytes(2)?,
+                    crate::mlx::qwen::Storage::Affine(p) => mlx::packed_bytes(p)?,
+                };
+                weight_bytes = add(weight_bytes, bytes)?;
+                plans.insert(name.clone(), (layout, spec.storage()));
+            }
+            let admitted = add(add(weight_bytes, ALLOWANCE)?, 64 * 1024)?;
+            if admitted > options.memory_limit_bytes {
+                return Err(Error::Budget {
+                    required: admitted,
+                    limit: options.memory_limit_bytes,
+                });
+            }
+            let conversion_clock = Instant::now();
+            let mut tensors = BTreeMap::new();
+            for (name, (layout, storage)) in plans {
+                let tensor = match storage {
+                    crate::mlx::qwen::Storage::Affine(p) => {
+                        let mut buffer = Buffer::new(&gpu, p.weight_bytes() / 2)?;
+                        let mut packed = mlx::Packed::allocate(&gpu, p, &pipelines)?;
+                        packed.upload(&mut source, &name, &mut buffer)?;
+                        Tensor {
+                            buffer,
+                            layout,
+                            storage: TensorStorage::Mlx(packed),
+                        }
+                    }
+                    crate::mlx::qwen::Storage::Float(_) => {
+                        let mut tensor = Tensor::allocate(&gpu, layout)?;
+                        let mut index = 0;
+                        tensor.buffer.with_mut(|data| {
+                            source.visit_float(&name, |x| {
+                                let x = half::f16::from_f32(x);
+                                if !x.is_finite() {
+                                    return Err(weights::Error::Invalid(
+                                        "MLX float weight exceeds finite Half range".into(),
+                                    ));
+                                }
+                                if index >= layout.rows * layout.columns {
+                                    return Err(weights::Error::Invalid(
+                                        "MLX float count differs".into(),
+                                    ));
+                                }
+                                data[index / layout.columns * layout.stride
+                                    + index % layout.columns] = x.to_bits();
+                                index += 1;
+                                Ok(())
+                            })
+                        })?;
+                        if index != layout.rows * layout.columns {
+                            return Err(Error::Options("MLX float element count differs"));
+                        }
+                        tensor
+                    }
+                };
+                tensors.insert(name, tensor);
+            }
+            let conversion_seconds = conversion_clock.elapsed().as_secs_f64();
+            let mut model = Self::assemble(config, gpu, tensors, weight_bytes)?;
+            model.mlx_artifact = true;
+            model.load_timing = LoadTiming {
+                load_seconds: clock.elapsed().as_secs_f64(),
+                conversion_seconds,
+                compilation_seconds,
+            };
+            Ok(model)
+        })
     }
     fn load_impl(
         directory: &Path,
@@ -389,6 +482,7 @@ impl Model {
             norm,
             layers,
             weight_bytes,
+            mlx_artifact: false,
             load_timing: LoadTiming {
                 load_seconds: 0.,
                 conversion_seconds: 0.,
@@ -458,6 +552,8 @@ pub enum ProjectionMode {
     /// midpoint-preserving Half storage and nearest FP32 vocabulary output.
     /// Quality and performance require independent qualification.
     HalfCompensated,
+    /// Native MLX affine weights with resident Half exclusions/activations.
+    MlxAffine,
 }
 /// Select the RMS reduction once per operation. Original remains the default.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize)]
@@ -583,6 +679,11 @@ impl<'m> Session<'m> {
         attention_mode: AttentionMode,
     ) -> Result<Self> {
         autoreleasepool(|_| {
+            if model.mlx_artifact != (projection_mode == ProjectionMode::MlxAffine) {
+                return Err(Error::Options(
+                    "MLX artifacts require the explicit MlxAffine projection mode",
+                ));
+            }
             if attention_mode == AttentionMode::Online {
                 for kernel in [Kernel::AttentionDecode, Kernel::AttentionPrefill] {
                     if model.gpu.execution_width(kernel) < 32 {
@@ -615,8 +716,10 @@ impl<'m> Session<'m> {
                         "Half projection reduction widths differ",
                     ));
                 }
-            } else if projection_mode != ProjectionMode::Original
-                && !matches!(model.layers[0].q.storage, TensorStorage::Q4 { .. })
+            } else if !matches!(
+                projection_mode,
+                ProjectionMode::Original | ProjectionMode::MlxAffine
+            ) && !matches!(model.layers[0].q.storage, TensorStorage::Q4 { .. })
             {
                 return Err(Error::Options(
                     "Q4 projection mode requires Q4 model weights",
@@ -1017,14 +1120,26 @@ impl<'m> Session<'m> {
         let h = c.hidden_size;
         let kv = c.kv_heads * c.head_dim;
         let m = c.intermediate_size;
-        g.encode(
-            &command,
-            Kernel::Embedding,
-            &[&self.model.embedding.buffer.raw, &s.tokens.raw, &s.x.raw],
-            &[n as u32, h as u32, c.vocab_size as u32],
-            n * h,
-            None,
-        )?;
+        if matches!(self.model.embedding.storage, TensorStorage::Mlx(_)) {
+            mlx::gather(
+                &command,
+                &self.model.embedding,
+                &s.tokens,
+                &s.x,
+                self.h.stride,
+                n,
+                &s.status,
+            )?;
+        } else {
+            g.encode(
+                &command,
+                Kernel::Embedding,
+                &[&self.model.embedding.buffer.raw, &s.tokens.raw, &s.x.raw],
+                &[n as u32, h as u32, c.vocab_size as u32],
+                n * h,
+                None,
+            )?;
+        }
         self.snapshot(&command, None, "embedding", &s.x.raw)?;
         for (layer_index, (layer, cache)) in self.model.layers.iter().zip(&self.cache).enumerate() {
             rms(
@@ -1329,7 +1444,22 @@ impl<'m> Session<'m> {
         } else {
             (1, &v.last_norm, &self.views[0].result_v, &self.views[0].hv)
         };
-        if self.projection_mode == ProjectionMode::HalfCompensated {
+        if matches!(self.model.embedding.storage, TensorStorage::Mlx(_)) {
+            mlx::product(
+                &command,
+                &self.model.embedding,
+                &s.zero,
+                logit_input,
+                &s.floats.raw,
+                self.f.stride,
+                logit_rows,
+                false,
+                &s.status,
+            )?;
+        } else if matches!(
+            self.projection_mode,
+            ProjectionMode::HalfCompensated | ProjectionMode::MlxAffine
+        ) {
             encode_half_compensated(
                 g,
                 &command,
@@ -1510,7 +1640,7 @@ fn encode_multiply(
             left,
             match &weight.storage {
                 TensorStorage::Half(matrix) => matrix,
-                TensorStorage::Q4 { .. } => {
+                TensorStorage::Q4 { .. } | TensorStorage::Mlx(_) => {
                     return Err(Error::Options("Q4 requires fused projection"));
                 }
             },
@@ -1629,7 +1759,13 @@ fn project(
     mode: ProjectionMode,
     status: &Buffer<u32>,
 ) -> Result<()> {
-    if mode == ProjectionMode::HalfCompensated {
+    if matches!(weight.storage, TensorStorage::Mlx(_)) {
+        return mlx::product(c, weight, bias, left, &out.raw, hl.stride, n, true, status);
+    }
+    if matches!(
+        mode,
+        ProjectionMode::HalfCompensated | ProjectionMode::MlxAffine
+    ) {
         return encode_half_compensated(
             g,
             c,

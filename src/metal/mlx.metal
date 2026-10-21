@@ -44,7 +44,8 @@ inline void mlx_store(device void* output, uint index, float value, bool half_ou
         reinterpret_cast<device float*>(output)[index] = value;
     }
 }
-// Shape: [batch, logical columns, output rows, group size, half output].
+// Shape: [batch, columns, output rows, group size, half output,
+//         input stride, output stride, input offset], strides/offset in scalars.
 // One queried SIMD group per (token, output row); no fixed execution width.
 template<uint B, uint D> inline void mlx_product(
     device const uchar* weights, device const uint* scales, device const uint* biases,
@@ -61,7 +62,7 @@ template<uint B, uint D> inline void mlx_product(
             uint column = g * s[3] + j;
             // One FP32 fused affine reconstruction; separate product/reduction.
             float weight = fma(scale, float(mlx_code<B>(weights, columns * B / 8, row, column)), bias);
-            float x = float(input[token * columns + column]), product = weight * x;
+            float x = float(input[s[7] + token * s[5] + column]), product = weight * x;
             mlx_add(sum, product);
             mlx_add(sum, fma(weight, x, -product));
         }
@@ -72,7 +73,7 @@ template<uint B, uint D> inline void mlx_product(
     }
     if (lane == 0) {
         mlx_add(sum, float(linear_bias[row]));
-        mlx_store(output, token * s[2] + row, s[4] != 0 ? mlx_half_store_value(sum) : sum.x + sum.y, s[4] != 0, status);
+        mlx_store(output, token * s[6] + row, s[4] != 0 ? mlx_half_store_value(sum) : sum.x + sum.y, s[4] != 0, status);
     }
 }
 // Gather shape has the same fields, with s[2] the embedding vocabulary size.
@@ -86,7 +87,7 @@ template<uint B, uint D> inline void mlx_gather(
     uint metadata_index = row * (s[1] / s[3]) + column / s[3];
     float value = fma(mlx_metadata<D>(scales, metadata_index),
         float(mlx_code<B>(weights, s[1] * B / 8, row, column)), mlx_metadata<D>(biases, metadata_index));
-    mlx_store(output, index, value, s[4] != 0, status);
+    mlx_store(output, token * s[6] + column, value, s[4] != 0, status);
 }
 
 #define MLX_PAIR(B,D) \

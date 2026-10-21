@@ -73,6 +73,18 @@ impl<T: Scalar> Buffer<T> {
             ))
         }
     }
+    pub fn with_bytes_mut<R>(&mut self, f: impl FnOnce(&mut [u8]) -> R) -> R {
+        // SAFETY: the closed u16/u32 inventory accepts every bit pattern, and
+        // Buffer::new checked the exact initialized byte length/isize bounds.
+        // Byte views require no extra alignment. Private callers upload only
+        // before submission/after completion; no slice escapes this HRTB.
+        unsafe {
+            f(std::slice::from_raw_parts_mut(
+                self.raw.contents().as_ptr().cast::<u8>(),
+                self.len * size_of::<T>(),
+            ))
+        }
+    }
 }
 #[derive(Clone, Copy)]
 pub(super) struct Layout {
