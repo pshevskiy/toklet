@@ -1,0 +1,17 @@
+........E..
+======================================================================
+ERROR: test_storage_counts_corpus_and_requires_its_copy_clock (test_m7_physical_quality.PhysicalQualityChecks.test_storage_counts_corpus_and_requires_its_copy_clock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/tools/experiments/test_m7_physical_quality.py", line 108, in test_storage_counts_corpus_and_requires_its_copy_clock
+    value,_=m.storage.admit_ready(dict(storage_admission=saved),base,c,name,digest,{},None);self.assertEqual(value,saved)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/tools/experiments/m7_physical_storage.py", line 120, in admit_ready
+    if path.name!='measurement.json' or not path.is_relative_to(ROOT/'artifacts'):raise ValueError('Invalid original storage proof path')
+                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Invalid original storage proof path
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.159s
+
+FAILED (errors=1)

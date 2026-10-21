@@ -123,3 +123,8 @@ with observed process peaks, foreground guards and cleanup/endpoint proofs.
 Mac tiny, rejection/regression and both SDK builds pass. Physical use still needs
 an admitted new signed installation/controller, full frozen corpus/task data and
 unchanged independent quality comparisons; component success is insufficient.
+
+The [physical quality controller](../docs/experiments/2026-10-21-m7-physical-quality.md)
+now seals the score-capable package, corpus-inclusive storage/copy clocks and
+exact raw target/prefix/logit/loss/memory/foreground outcomes. Portable direct
+checks pass; no new physical collection is counted by this component.

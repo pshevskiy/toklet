@@ -1469,6 +1469,11 @@ loss collection, existing measurement/hash regressions and both SDK app builds.
 The full physical corpus/task collector and independent quality admission remain
 pending; no device qualification follows from Mac component checks.
 
+The [physical quality controller](docs/experiments/2026-10-21-m7-physical-quality.md)
+now passes sealed corpus/transport/stream admission checks and121 direct portable
+M7 tests. Failed wrapper/environment attempts remain. Actual new signed-app
+physical corpus/task collection and independent quality acceptance remain open.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy

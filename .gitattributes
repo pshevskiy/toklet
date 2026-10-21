@@ -254,3 +254,23 @@ benchmarks/results/2026-10-21-m7-quality-harness/m7-quality-portable-v1/checks-v
 benchmarks/results/2026-10-21-m7-quality-harness/m7-quality-portable-v1/checks-v3.stderr -text -whitespace
 benchmarks/results/2026-10-21-m7-quality-harness/m7-quality-portable-v1/native-v1.stdout -text -whitespace
 benchmarks/results/2026-10-21-m7-quality-harness/m7-quality-portable-v1/native-v1.stderr -text -whitespace
+
+# Physical quality portable logs retain exact collected bytes.
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all-driver.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all-driver.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/all.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks-v2.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks-v2.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks-v3.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks-v3.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v1/checks.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all-driver.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all-driver.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/all.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/direct-all-v2.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/direct-all-v2.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/package-retry.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-quality/m7-physical-quality-portable-v2/package-retry.stdout -text -whitespace

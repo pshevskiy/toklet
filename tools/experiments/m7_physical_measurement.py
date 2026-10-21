@@ -200,9 +200,9 @@ def validate_console(text,config,signed):
     return dict(result=result,sample_count=len(samples),measured=measured,installed_proofs=proofs)
 
 
-def admit_ready(folder,expected,config,inputs,prepared,prepared_sha,signed):
+def admit_ready(folder,expected,config,inputs,prepared,prepared_sha,signed,format_name="toklet-m7-physical-measurement-ready-v1"):
     record=integration.metadata(folder/'measurement.json',expected)
-    if (record['format']!='toklet-m7-physical-measurement-ready-v1' or record['passed'] is not True
+    if (record['format']!=format_name or record['passed'] is not True
         or record['checked'] is not None or record['config']!=config or record['signed_bundle']!=signed
         or record['prepared_receipt']!=dict(path=str((prepared/'integration.json').relative_to(ROOT)),sha256=prepared_sha)
         or record['primary_error'] is not None or record['endpoint_errors'] or record['cleanup_errors']
@@ -224,7 +224,13 @@ def admit_ready(folder,expected,config,inputs,prepared,prepared_sha,signed):
     return pins,receipt['relative_path'],digest
 
 
-def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,prepare_only=False,transfer=None,transfer_sha=None,storage_proof=None,storage_sha=None):
+def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,prepare_only=False,transfer=None,transfer_sha=None,storage_proof=None,storage_sha=None,native_sha=None,quality=False):
+    native_sha=NATIVE_SHA if native_sha is None else native_sha
+    if not storage.digest(native_sha):raise ValueError('Explicit native package SHA required')
+    quality_module=None
+    if quality:
+        import m7_physical_quality as quality_module
+        if native_sha!=quality_module.NATIVE_SHA:raise ValueError('Reviewed score package required for physical quality')
     native=native.resolve();private=private.resolve();prepared=prepared.resolve();output=output.resolve()
     transfer=transfer.resolve() if transfer else None
     storage_proof=storage_proof.resolve() if storage_proof else None
@@ -259,14 +265,19 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
         if not r['absent']:cleanup_errors.append('Remote process absence unverified')
     try:
         selected=physical.selection(private,private_sha)
-        integration.merge(pins,integration.admit_build(native,NATIVE_SHA))
-        app,reused,remote,signed=physical.admit_reuse(prepared,prepared_sha,selected,NATIVE_SHA);integration.merge(pins,reused)
+        integration.merge(pins,integration.admit_build(native,native_sha))
+        app,reused,remote,signed=physical.admit_reuse(prepared,prepared_sha,selected,native_sha);integration.merge(pins,reused)
         modules=[package,integration,physical,storage]
         paths=[Path(m.__file__).resolve() for m in modules]+[Path(__file__).resolve(),Path(__file__).with_name('test_m7_physical_measurement.py'),Path(__file__).with_name('test_m7_physical_storage.py')]
         integration.merge(pins,{str(p.relative_to(ROOT)):package.sha(p) for p in paths})
         integration.merge(pins,{str(private.relative_to(ROOT)):private_sha})
         common_pins=dict(pins)
-        config,host,inputs=job(model,workload,verify_sources=not transfer);integration.merge(pins,inputs)
+        if quality:
+            integration.merge(pins,{str(Path(quality_module.__file__).resolve().relative_to(ROOT)):package.sha(Path(quality_module.__file__).resolve()),
+                str(Path(__file__).with_name('test_m7_physical_quality.py').relative_to(ROOT)):package.sha(Path(__file__).with_name('test_m7_physical_quality.py'))})
+            config,host,inputs=quality_module.job(model,workload,verify_sources=not transfer)
+        else:config,host,inputs=job(model,workload,verify_sources=not transfer)
+        integration.merge(pins,inputs)
         real=model in ('small','larger')
         if real and not transfer and not storage_proof:raise ValueError('Real-model copy requires a fresh same-device storage proof')
         context=None
@@ -276,14 +287,15 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
             context=dict(tiny_config=tiny,prepared_receipt=dict(path=str((prepared/'integration.json').relative_to(ROOT)),sha256=prepared_sha),
                          signed_bundle=signed,selection_path=str(private.relative_to(ROOT)),selection_sha=private_sha,selected=selected,remote=remote,required_bindings=required)
         if transfer:
-            ready,name,digest=admit_ready(transfer,transfer_sha,config,inputs,prepared,prepared_sha,signed)
+            ready,name,digest=admit_ready(transfer,transfer_sha,config,inputs,prepared,prepared_sha,signed,
+                quality_module.READY_FORMAT if quality else "toklet-m7-physical-measurement-ready-v1")
             integration.merge(pins,ready);transfer_verified=True
             if real:
                 record=integration.metadata(transfer/'measurement.json',transfer_sha)
                 storage_admission,proof_pins=storage.admit_ready(record,transfer/'transfer',config,name,digest,context,validate_console)
                 integration.merge(pins,proof_pins)
         else:
-            base,name,digest=stage(config,host,output)
+            base,name,digest=quality_module.stage(config,host,output,model,workload) if quality else stage(config,host,output)
             staged={str(p.relative_to(ROOT)):package.sha(p) for p in base.rglob('*') if p.is_file()};integration.merge(pins,staged)
             if real:
                 observed_storage,proof_pins=storage.admit_proof(storage_proof,storage_sha,context,validate_console)
@@ -323,19 +335,29 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
                     '--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copy-'+kind,600),remote,selected)
             listed=json.loads(package.small(device_command(['info','files','--subdirectory','Documents/'+parent,'--recurse','--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copied-inventory')))
             validate_listing(listed,selected['device_identifier'],dict(config,host=host),parent)
+            if quality:
+                corpus_parent=str(Path(config['tokensFile']).parent)
+                physical.launch_verified(current,lambda:device_command(['copy','to','--source',str(base/corpus_parent),
+                    '--destination','Documents/'+corpus_parent,'--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],
+                    'copy-corpus',90),remote,selected)
+                observed=json.loads(package.small(device_command(['info','files','--subdirectory','Documents/'+corpus_parent,
+                    '--recurse','--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copied-corpus-inventory')))
+                quality_module.validate_corpus_listing(observed,selected['device_identifier'],config)
             physical.launch_verified(current,lambda:device_command(['copy','to','--source',str(base/'M7Jobs'),'--destination','Documents/M7Jobs','--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copy-job',90),remote,selected)
             transfer_verified=True
         if not prepare_only:
             metadata=logs/'launch.json'
-            args=[physical.DEVICECTL,'device','process','launch','--device',selected['device_identifier'],'--terminate-existing','--console','--timeout','2400','--json-output',str(metadata),physical.BUNDLE,'--','--measure',name,digest]
+            limit=7200 if quality else 2400
+            args=[physical.DEVICECTL,'device','process','launch','--device',selected['device_identifier'],'--terminate-existing','--console','--timeout',str(limit),'--json-output',str(metadata),physical.BUNDLE,'--','--quality' if quality else '--measure',name,digest]
             host_start=dict(wallUnixNanoseconds=time.time_ns(),monotonicNanoseconds=time.monotonic_ns())
-            raw=physical.launch_verified(current,lambda:execute(args,'measurement',2430),remote,selected)
+            raw=physical.launch_verified(current,lambda:execute(args,'measurement',limit+30),remote,selected)
             launch=physical.check_launch(json.loads(package.small(metadata)),remote,selected)
             # The admitted representative jobs are well below this bounded capture.
             with raw.open('rb') as f:stdout=f.read(64*1024**2+1)
             with (logs/'measurement.stderr').open('rb') as f:stderr=f.read(64*1024**2+1)
             if len(stdout)>64*1024**2 or len(stderr)>64*1024**2:raise ValueError('Measurement console exceeds capture limit')
-            checked=validate_console(stdout.decode()+'\n'+stderr.decode(),config,signed);checked['launch']=launch
+            checker=quality_module.validate_console if quality else validate_console
+            checked=checker(stdout.decode()+'\n'+stderr.decode(),config,signed);checked['launch']=launch
     except BaseException as error:primary=type(error).__name__+': '+str(error)
     finally:
         if remote and remote_admitted:
@@ -356,12 +378,13 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
     private_pins={str(p.relative_to(ROOT)):package.sha(p) for p in [private_record,*sorted(logs.iterdir())] if p.is_file()}
     complete=(transfer_verified and checked is None and profile is not None) if prepare_only else checked is not None
     passed=primary is None and not endpoints and not cleanup_errors and complete and len(cleanup)==2
-    record=dict(format='toklet-m7-physical-measurement-ready-v1' if prepare_only else 'toklet-m7-physical-measurement-v1',passed=passed,bindings=pins,device=device,signing=profile,config=config,
+    record=dict(format=(quality_module.READY_FORMAT if prepare_only else quality_module.RESULT_FORMAT) if quality else ('toklet-m7-physical-measurement-ready-v1' if prepare_only else 'toklet-m7-physical-measurement-v1'),passed=passed,bindings=pins,device=device,signing=profile,config=config,
         transfer_receipt=dict(path=str((transfer/'measurement.json').relative_to(ROOT)),sha256=transfer_sha) if transfer else None,
         prepared_receipt=dict(path=str((prepared/'integration.json').relative_to(ROOT)),sha256=prepared_sha),signed_bundle=signed,
         host_boot_token=host_boot,measurement_host_start=host_start,storage_admission=storage_admission,
         job_receipt=dict(relative_path=name,sha256=digest),checked=checked,commands=commands,controlled_environment=env,remote_cleanup=cleanup,private_evidence_pins=private_pins,
         primary_error=primary,endpoint_errors=endpoints,cleanup_errors=cleanup_errors,physical_device_qualified=False,m7_complete=False)
+    if quality:record['full_quality_qualified']=False
     record=physical.redact_record(record,selected,remote);(output/'measurement.json').write_text(json.dumps(record,indent=2)+'\n')
     print(json.dumps(dict(passed=passed,primary_error=record['primary_error'],endpoint_errors=record['endpoint_errors'],cleanup_errors=record['cleanup_errors'])))
     return 0 if passed else 1

@@ -841,3 +841,14 @@ strict Swift and both complete SDK app builds pass. Exact marker-order and load
 bracket parser findings are fixed and tested. Astra accepted source and completed evidence after196 pins,58 exact staged
 copies, historical/helper mappings, all native/regression/SDK replays,109-test
 record,382 links, actual private-identifier scan and whitespace, with no findings. Full physical corpus/task quality and M7.3 remain.
+
+The [physical quality controller](experiments/2026-10-21-m7-physical-quality.md)
+adds sealed score-package/corpus jobs, exact corpus-inclusive transfer/storage
+admission, separate receipt types, authenticated no-copy reuse and full raw
+prefix/FP32/aggregate/memory/environment validation. Twelve offline methods include
+a synthetic10000-target stream and mocked complete prepare transport;121 direct
+M7 tests and10 direct package tests pass. Two wrapper-only process-group EPERM
+failures, a temporary-root test alias and shell-glob refusal remain recorded;
+no cleanup rule or gate changes. Astra accepted source and completed component evidence after58 pins,28 exact
+staged copies, both parent mappings, source/test/failure correspondence,385links,
+actual private-identifier scan and whitespace, with no findings. No new physical command/model run or full quality/M7.3 acceptance occurs.
