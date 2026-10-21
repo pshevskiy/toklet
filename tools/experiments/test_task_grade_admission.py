@@ -10,14 +10,26 @@ import test_metal_tasks as metal_fixtures
 import test_cpu_task_reference as reference_fixtures
 
 def current_inventory_fixture(record):
- # Historical native records predate the new v2 Rust module. Add its synthetic
- # identity only in this mocked unit fixture; never re-admit old native evidence.
- ids=dict(record['identities']);extra=str(admission.ROOT/'src/metal/q4_v2_projection.rs')
- assert extra not in ids
- ids[extra]='a'*64
+ # Historical records predate later Rust modules. Add synthetic identities only
+ # for current Rust sources in this mocked fixture, preserving every recorded
+ # identity. Missing non-Rust inputs must still fail the exact inventory check.
+ # This never re-admits historical native evidence against current sources.
+ ids=dict(record['identities'])
+ for source in (admission.ROOT/'src').rglob('*.rs'):
+  ids.setdefault(str(source),'a'*64)
  return ids
 
 class GradingAdmission(unittest.TestCase):
+ def test_current_fixture_preserves_history_and_does_not_fill_other_inputs(self):
+  path=admission.ROOT/'benchmarks/results/2026-10-14-small-half-tasks-check-v1.json';record=json.loads(path.read_text());original=copy.deepcopy(record)
+  missing=str(admission.ROOT/'Cargo.lock');del record['identities'][missing]
+  ids=current_inventory_fixture(record)
+  self.assertNotIn(missing,ids)
+  self.assertEqual(record['identities'],{k:v for k,v in original['identities'].items() if k!=missing})
+  self.assertTrue(all(ids[k]==v for k,v in record['identities'].items()))
+  self.assertEqual(set(ids)-set(record['identities']),{str(p) for p in (admission.ROOT/'src').rglob('*.rs')}-set(record['identities']))
+  manifest=admission.frozen_manifest();binary=admission.ROOT/'artifacts/m5-cli-half-native-binary-v1/toklet';source=admission.ROOT/'models'/admission.controlled.MODELS['small'][0]
+  with self.assertRaisesRegex(ValueError,'Complete backend'):admission.validate_inventory(ids,'toklet-metal-task-collection-v1',binary,ids[str(binary)],source,manifest,'small')
  def reference_fixture(self):
   cases,_=inventory();ready=reference_fixtures.Reference().admission();items=[]
   empty={'history_tokens':0,'evaluated_tokens':0,'pending_tokens':0,'history_sha256':admission.reference.history_sha([])};error={'event':'error','state':empty,'memory':ready['memory']};raw=[ready,error]
