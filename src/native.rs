@@ -456,6 +456,59 @@ pub unsafe extern "C" fn toklet_model_load_metal(
         })
     }
 }
+/// Load a local native MLX Qwen artifact into resident Metal buffers. Sessions
+/// select MlxAffine/Compensated/Online/FP16 KV/FullLogits explicitly. No fallback.
+/// # Safety
+/// Follow this module's foreign caller contract for all pointers and handles.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_model_load_mlx(
+    path: *const u8,
+    len: usize,
+    opts: *const Options,
+    out: *mut *mut ModelHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(out)?;
+            out.write(ptr::null_mut());
+            let options = options(opts)?;
+            let path = local_path(path, len)?;
+            #[cfg(all(
+                feature = "metal",
+                any(target_os = "macos", target_os = "ios"),
+                target_arch = "aarch64"
+            ))]
+            {
+                let model = crate::metal::Model::load_mlx(
+                    path,
+                    weights::LoadOptions {
+                        context_limit: options.capacity,
+                        memory_limit_bytes: options.memory_limit_bytes,
+                    },
+                )
+                .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
+                out.write(Box::into_raw(Box::new(ModelHandle {
+                    owner: thread::current().id(),
+                    model: Rc::new(NativeModel::Metal(Box::new(model))),
+                })));
+                Ok(())
+            }
+            #[cfg(not(all(
+                feature = "metal",
+                any(target_os = "macos", target_os = "ios"),
+                target_arch = "aarch64"
+            )))]
+            {
+                let _ = (options, path);
+                Err(fail(
+                    UNSUPPORTED,
+                    "Native MLX Metal backend unavailable in this build/platform",
+                ))
+            }
+        })
+    }
+}
 /// Release a model handle. Live sessions retain the model; NULL is a no-op.
 /// # Safety
 /// Follow the foreign caller contract; release each non-null handle once.
@@ -510,7 +563,9 @@ pub unsafe extern "C" fn toklet_session_create(
                     use crate::metal::{
                         AttentionMode, NormalizationMode, ProjectionMode, ReadbackMode, Session,
                     };
-                    let (projection, normalization) = if model.q4_format().is_some() {
+                    let (projection, normalization) = if model.is_mlx() {
+                        (ProjectionMode::MlxAffine, NormalizationMode::Compensated)
+                    } else if model.q4_format().is_some() {
                         (
                             ProjectionMode::Q4CompensatedTiled,
                             NormalizationMode::Compensated,

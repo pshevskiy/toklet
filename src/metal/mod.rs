@@ -198,6 +198,9 @@ impl Model {
             self.gpu.execution_width(Kernel::Q4Prefill),
         ]
     }
+    pub(crate) fn is_mlx(&self) -> bool {
+        self.mlx_artifact
+    }
     pub fn q4_format(&self) -> Option<q4::Format> {
         match self.layers[0].q.storage {
             TensorStorage::Half(_) => None,

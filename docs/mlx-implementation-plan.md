@@ -60,6 +60,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     frozen independent parity and transaction/admission checks on M1 Pro.
   - [x] Explicit [CLI selection](mlx-cli.md), truthful mixed-precision statistics
     and local subprocess generation/state/stop checks.
+  - [x] Additive [native C bridge entry point](mlx-native-bridge.md), explicit
+    session selection, Mac C/Rust lifetime/state checks and iOS Rust compilation.
   - [ ] Real-checkpoint quality/memory/performance and native Apple app wiring.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal

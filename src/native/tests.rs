@@ -472,6 +472,14 @@ fn unavailable_metal_returns_explicit_error_without_cpu_fallback() {
     };
     assert_eq!(code, UNSUPPORTED);
     assert!(m.is_null());
+    m = ptr::dangling_mut();
+    assert_eq!(
+        unsafe {
+            toklet_model_load_mlx(path.as_ptr(), path.len(), &opts(), &mut m, ptr::null_mut())
+        },
+        UNSUPPORTED
+    );
+    assert!(m.is_null());
 }
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 #[test]
@@ -1005,4 +1013,179 @@ fn score_rejects_null_misaligned_wrong_thread_busy_and_poisoned_access() {
         assert_eq!(score, Score::default());
         cleanup(m, s, c);
     }
+}
+
+#[test]
+fn native_mlx_boundary_rejects_invalid_input_and_clears_output_without_loading() {
+    for (path, options) in [
+        (&b""[..], opts()),
+        (&b"bad\0path"[..], opts()),
+        (&b"\xff"[..], opts()),
+        (
+            &b"missing"[..],
+            Options {
+                abi_version: 99,
+                ..opts()
+            },
+        ),
+    ] {
+        let mut m = ptr::dangling_mut::<ModelHandle>();
+        assert_eq!(
+            unsafe {
+                toklet_model_load_mlx(path.as_ptr(), path.len(), &options, &mut m, ptr::null_mut())
+            },
+            INVALID
+        );
+        assert!(m.is_null());
+    }
+    assert_eq!(
+        unsafe {
+            toklet_model_load_mlx(
+                b"missing".as_ptr(),
+                7,
+                &opts(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+            )
+        },
+        INVALID
+    );
+}
+
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+#[test]
+#[ignore = "Explicit Apple GPU native MLX C boundary routing, retained ownership, score, state and cancellation"]
+fn native_mlx_boundary_matches_direct_sessions_and_retains_model() {
+    use crate::metal::{self, AttentionMode, NormalizationMode, ProjectionMode, ReadbackMode};
+    let path = format!(
+        "{}/tests/fixtures/mlx-qwen-v1/model",
+        env!("CARGO_MANIFEST_DIR")
+    );
+    let mut m = ptr::null_mut();
+    let mut s = ptr::null_mut();
+    let mut c = ptr::null_mut();
+    let mut error = NativeError {
+        code: 0,
+        message: [0; 256],
+    };
+    unsafe {
+        assert_eq!(
+            toklet_model_load_mlx(path.as_ptr(), path.len(), &opts(), &mut m, &mut error),
+            OK,
+            "{}",
+            String::from_utf8_lossy(&error.message)
+        );
+        assert_eq!(toklet_session_create(m, &opts(), &mut s, &mut error), OK);
+        assert_eq!(toklet_cancel_create(&mut c, &mut error), OK);
+    }
+    let NativeModel::Metal(model) = (unsafe { (*m).model.as_ref() }) else {
+        panic!("MLX silently changed backend")
+    };
+    assert!(model.is_mlx());
+    let mut direct = metal::Session::with_attention_mode(
+        model,
+        unsafe { options(&opts()).unwrap() },
+        ProjectionMode::MlxAffine,
+        NormalizationMode::Compensated,
+        ReadbackMode::FullLogits,
+        AttentionMode::Online,
+    )
+    .unwrap();
+    direct.set_tokens(&[1, 7, 13, 3]).unwrap();
+    direct.evaluate().unwrap();
+    let (code, r) = unsafe { generate(s, c, &[1, 7, 13, 3], 0, 0, None, ptr::null_mut()) };
+    assert_eq!(code, OK);
+    assert_eq!(
+        (r.history_tokens, r.evaluated_tokens, r.pending_tokens),
+        (4, 4, 0)
+    );
+    let mut score = Score::default();
+    assert_eq!(
+        unsafe { toklet_session_score(s, 47, &mut score, &mut error) },
+        OK
+    );
+    let logits = direct.logits().unwrap();
+    assert_eq!(score.greedy_token, 47);
+    assert_eq!(score.target_logit, f64::from(logits[47]));
+    let loss = logits
+        .iter()
+        .map(|&x| (f64::from(x) - score.target_logit).exp())
+        .sum::<f64>()
+        .ln();
+    assert!((score.negative_log_likelihood - loss).abs() < 1e-12);
+    let weak = unsafe { Rc::downgrade(&(*m).model) };
+    drop(direct);
+    assert_eq!(unsafe { toklet_model_release(m, &mut error) }, OK);
+    assert!(weak.upgrade().is_some());
+    let mut ids = Vec::<u32>::new();
+    for (count, history, evaluated) in [(2, 6, 5), (2, 8, 7)] {
+        let (code, r) = unsafe {
+            generate(
+                s,
+                c,
+                &[],
+                2,
+                count,
+                Some(collect),
+                (&mut ids as *mut Vec<u32>).cast(),
+            )
+        };
+        assert_eq!(code, OK);
+        assert_eq!(
+            (r.history_tokens, r.evaluated_tokens, r.pending_tokens),
+            (history, evaluated, 1)
+        );
+    }
+    assert_eq!(ids, [47; 4]);
+    assert_eq!(
+        unsafe { toklet_session_score(s, 47, &mut score, &mut error) },
+        INVALID
+    );
+    assert_eq!(unsafe { toklet_cancel_set(c, 1, &mut error) }, OK);
+    let (code, r) = unsafe { generate(s, c, &[], 2, 1, None, ptr::null_mut()) };
+    assert_eq!(code, OK);
+    assert_eq!(
+        (
+            r.reason,
+            r.history_tokens,
+            r.evaluated_tokens,
+            r.pending_tokens
+        ),
+        (3, 8, 7, 1)
+    );
+    assert_eq!(unsafe { toklet_cancel_set(c, 0, &mut error) }, OK);
+    let (code, _) = unsafe { generate(s, c, &[64], 0, 1, None, ptr::null_mut()) };
+    assert_eq!(code, INVALID);
+    let mut state = Report::default();
+    assert_eq!(
+        unsafe { toklet_session_state(s, &mut state, &mut error) },
+        OK
+    );
+    assert_eq!(
+        (
+            state.history_tokens,
+            state.evaluated_tokens,
+            state.pending_tokens
+        ),
+        (8, 7, 1)
+    );
+    assert_eq!(unsafe { toklet_session_reset(s, &mut error) }, OK);
+    assert_eq!(
+        unsafe { toklet_session_state(s, &mut state, &mut error) },
+        OK
+    );
+    assert_eq!(
+        (
+            state.history_tokens,
+            state.evaluated_tokens,
+            state.pending_tokens
+        ),
+        (0, 0, 0)
+    );
+    unsafe { cleanup(ptr::null_mut(), s, c) };
+    assert!(weak.upgrade().is_none());
+    println!(
+        "MLX_NATIVE {}",
+        serde_json::json!({"retained_model_released":true,"score_matches_direct":true,"ids":ids,"pending_state":[8,7,1],"cancellation_and_rejection_preserve_prefix":true,"physical_device_qualified":false,"performance_qualified":false})
+    );
 }
