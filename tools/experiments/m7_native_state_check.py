@@ -13,7 +13,18 @@ def names(prefill):
   + ['usable-reset','usable-fresh-reference','closed'])
 
 def validate_output(text,backend,kind,config):
- outer=json.loads(text);d=outer['diagnostic'];prefill=kind=='small';cap=config['capacity'];vocab=config['vocabulary'];prompt=config['prompt'];primer=prompt[:16];target=primer[-1]
+ outer=json.loads(text)
+ def need(ok,message):
+  if not ok:raise ValueError(message)
+ def uint(value,bits=32):return type(value) is int and 0<=value<2**bits
+ before=outer['errorBeforeClose'];after=outer['errorAfterClose']
+ need(uint(before['status']) and before['busy'] is False and before['status']==1 and before['closed'] is False and before['hasModel'] is False and before['hasSession'] is False,'Direct failing command witness required')
+ need(uint(after['status']) and after['busy'] is False and after['status']==0 and after['closed'] is True and after['workerFinished'] is True and after['hasModel'] is False and after['hasSession'] is False and after.get('savedPrefix') is None and after['ids']==[] and all(type(after[k]) is int and after[k]==0 for k in ('history','evaluated','pending','savedHistory','reason')) and type(outer['errorCloseAdmission']) is int and outer['errorCloseAdmission']==0 and type(outer['errorCloseCallbacks']) is int and outer['errorCloseCallbacks']==0 and outer['errorCloseMessage']=='','Error followed by successful zero close required')
+ validate_result(outer['diagnostic'],backend,kind,config)
+ return outer
+
+def validate_result(d,backend,kind,config):
+ prefill=kind=='small';cap=config['capacity'];vocab=config['vocabulary'];prompt=config['prompt'];primer=prompt[:16];target=primer[-1]
  def need(ok,message):
   if not ok:raise ValueError(message)
  def uint(value,bits=32):return type(value) is int and 0<=value<2**bits
@@ -21,9 +32,6 @@ def validate_output(text,backend,kind,config):
  need(d['passed'] is True and d['backend']==backend and d['prefillWitnessRequired'] is prefill and d['prefillWitness'] is prefill,'Explicit witness result differs')
  need(d.get('error') is None and d['cleanupErrors']==[] and d['endpointErrors']==[] and d['closed'] is True and d['released'] is True,'Successful cleanup and endpoints required')
  need(d['physicalDeviceQualified'] is False and d['m7Complete'] is False and d['filesBefore']==config['files'] and d['filesAfter']==config['files'],'Component scope/artifact proof differs')
- before=outer['errorBeforeClose'];after=outer['errorAfterClose']
- need(uint(before['status']) and before['busy'] is False and before['status']==1 and before['closed'] is False and before['hasModel'] is False and before['hasSession'] is False,'Direct failing command witness required')
- need(uint(after['status']) and after['busy'] is False and after['status']==0 and after['closed'] is True and after['workerFinished'] is True and after['hasModel'] is False and after['hasSession'] is False and after.get('savedPrefix') is None and after['ids']==[] and all(type(after[k]) is int and after[k]==0 for k in ('history','evaluated','pending','savedHistory','reason')) and type(outer['errorCloseAdmission']) is int and outer['errorCloseAdmission']==0 and type(outer['errorCloseCallbacks']) is int and outer['errorCloseCallbacks']==0 and outer['errorCloseMessage']=='','Error followed by successful zero close required')
  trace=d['trace'];need(trace['events']==[] and trace.get('error') is None and trace.get('activeCommand') is None and trace['detachedAfterClose'] is True,'Unexpected lifecycle observations')
  rows=d['rows'];need([r['name'] for r in rows]==names(prefill),'Exact state command sequence required')
  by={r['name']:r for r in rows};last=0;peaks=[]
@@ -71,7 +79,7 @@ def validate_output(text,backend,kind,config):
   for suffix in ('-before-score','','-after-score'):exact(n+suffix,full,0,[],1 if n=='overflow-continue' and suffix=='-before-score' else 0)
   need(by[n+'-before-score']['scalarScore']==by[n+'-after-score']['scalarScore'],'Rejected request changed scalar diagnostic')
  s=by['closed']['state'];need(s.get('savedPrefix') is None and all(s[k]==0 for k in ('history','evaluated','pending','savedHistory','reason','status')) and s['ids']==[],'Completed close must zero state')
- return outer
+ return d
 
 def main(native,expected,output,small=False):
  native=native.resolve();output=output.resolve()

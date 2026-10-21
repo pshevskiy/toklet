@@ -80,7 +80,7 @@ class Checks(unittest.TestCase):
   c,_=fixture();base=dict(c,version=1,modelFolder='M7Inputs/small/Model',packedFolder='',chunk=3,expectedPrefix=[],warmups=3,repetitions=10,minimumNativeSeconds=0)
   with patch.object(p.m,'job',return_value=(base,{},{})), patch.object(p.m,'verify_inputs') as verify:
    job,host,pins=p.job('small');self.assertEqual(set(job),{'version','modelFolder','packedFolder','files','metal','capacity','chunk','numericalBudget','processBudget','prompt','maximum','vocabulary'});self.assertEqual(job['vocabulary'],151936);self.assertIn(p.APP_PROOF,pins)
-   proof=json.loads((p.ROOT/p.APP_PROOF).read_text());self.assertTrue(set(proof['code_pins']).issubset(pins));verify.assert_called_once_with(proof['code_pins'])
+   proof=json.loads((p.ROOT/p.APP_PROOF).read_text());self.assertTrue(set(proof['app_code_pins']).issubset(pins));verify.assert_called_once_with(proof['app_code_pins'])
   for model,workload in [('tiny-cpu','512'),('small','short'),('larger','1024')]:
    with self.assertRaises(ValueError):p.job(model,workload)
  def test_job_rejects_stale_app_source_pins(self):

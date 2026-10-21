@@ -4,8 +4,8 @@ import json,sys,time
 import m7_physical_measurement as m
 ROOT=m.ROOT
 NATIVE_SHA='06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971'
-APP_PROOF='benchmarks/results/2026-10-21-m7-lifecycle-app-qualification-v1.json'
-APP_PROOF_SHA='40997d6fa69742477682db5fce105a37da3dc4863b8ccfafae33033b7c20ddcf'
+APP_PROOF='benchmarks/results/2026-10-21-m7-state-app-qualification-v1.json'
+APP_PROOF_SHA='5320c1e7c48978ec4a14203a19b1675a80a854ec0b9f77bf5de0320653ca2ea1'
 READY_FORMAT='toklet-m7-physical-lifecycle-ready-v1'
 RESULT_FORMAT='toklet-m7-physical-lifecycle-v1'
 
@@ -14,7 +14,7 @@ def job(model,workload='512',verify_sources=True):
  base,host,pins=m.job(model,workload,verify_sources=verify_sources)
  proof=m.integration.metadata(ROOT/APP_PROOF,APP_PROOF_SHA)
  if proof['passed'] is not True or proof['app_integration'] is not True or proof['review']!='Astra accepted source and completed app component evidence with no findings' or proof['actual_os_lifecycle_qualified'] is not False:raise ValueError('Accepted lifecycle app integration required')
- m.verify_inputs(proof['code_pins']);m.integration.merge(pins,proof['code_pins']);pins[APP_PROOF]=APP_PROOF_SHA
+ m.verify_inputs(proof['app_code_pins']);m.integration.merge(pins,proof['app_code_pins']);pins[APP_PROOF]=APP_PROOF_SHA
  config={k:base[k] for k in ('version','modelFolder','packedFolder','files','metal','capacity','chunk','numericalBudget','processBudget','prompt','maximum')};config['vocabulary']=151936
  return config,host,pins
 

@@ -170,3 +170,5 @@ requires actual phase provenance, original PID, exact replay outputs and indepen
 host/phone cleanup.190 portable checks pass; physical lifecycle remains pending.
 
 The [state witness app](../docs/experiments/2026-10-21-m7-state-app.md) checks exact history and scalar diagnostics through cache reuse, partial-prefill cancellation and capacity rejection. Tiny CPU/Metal and real small Mac checks plus both unsigned iOS builds pass. This is not physical qualification; collect both real-model phone state witnesses against the new reviewed app proof.
+
+The [physical state collection path](../docs/experiments/2026-10-21-m7-physical-state.md) now preserves canonical state job/SHA arguments, full current app proof, exact partial-prefill/capacity/prefix results and actual foreground environment. Mocked shared-controller prepare/reuse/failure cleanup passes; physical state and OS lifecycle collection remain required.
