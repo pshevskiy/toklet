@@ -793,3 +793,15 @@ app/native package and all numerical defaults. Full quality, supported limits,
 context/state/lifecycle/sustained and base iPhone14 qualification remain open.
 Astra accepted619 bound paths,14 exact staged copies, console/launch/boot and
 original admission replays, privacy, links and whitespace, with no findings.
+
+The [iPhone context matrix](experiments/2026-10-21-m7-phone-context.md) adds two
+repeats of all small/larger128/512/1024 raw-ID rows:156 requests/19,968 events,
+identical128-ID sequences per row, exact committed/pending state and end-to-end
+exit/storage/install/source closure. Peaks1,114,245,536/1,944,701,920bytes fit the
+explicit trial budgets. Heating to serious state is retained; no controlled
+speedup, quality, supported-limit or M7 release is claimed. One verified initial
+preflight reset precedes all testing;47 other absences are natural. The old
+analyzer's all-natural refusal is retained, then narrowly corrected/reviewed with
+12 checks plus six driver checks. Astra accepted completed exploratory evidence
+with no findings. Full physical quality/lifecycle/remaining sustained/base
+iPhone14 gates stay open.

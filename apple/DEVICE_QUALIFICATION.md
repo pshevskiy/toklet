@@ -98,3 +98,10 @@ limits and failed/rejected cases. Keep M7.3 and M7 pending until this evidence
 exists and is reviewed. Signed tiny integration satisfies the initial physical
 integration gate only. Pro qualification cannot by itself close a base iPhone14
 requirement.
+
+The [exploratory phone matrix](../docs/experiments/2026-10-21-m7-phone-context.md)
+records both repetitions of six raw context rows with complete156-request replay
+and about1.114/1.945GB small/larger peaks. Serious thermal state and uncontrolled
+heating remain part of the observations. One initial owned preflight reset and47
+natural absences are distinguished. Full phone quality/lifecycle/supported-limit/
+remaining sustained/base iPhone14 gates remain before device qualification.

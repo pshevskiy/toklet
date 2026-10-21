@@ -1,0 +1,204 @@
+{
+  "driver_bindings": {
+    "artifacts/m7-phone-context-driver-v1/driver.py": "5d4a8ab794aa08544538445a0755faac7991954beb35ccbb416d21eb7bd317e2",
+    "tools/experiments/m7_physical_measurement.py": "030c110d7053cd3c0ec753170796546c1701f32dd03e8fb8f210f201dec64a32",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_storage.py": "127e6520ccf7900b1190f4e7c77bca4d047b9d0030667067260f2e4fd71b1ae4",
+    "artifacts/m7-phone-context-small-128-storage-proof-v1/measurement.json": "6cdd0e7de868086c95906bf62d1e1576c38e35001c404dc472a2555ac7fedef4",
+    "artifacts/m7-phone-context-small-128-ready-v1/measurement.json": "7ca36646908c32b71f59005e9dc2969e38011453c1c0444c422edb8c0ab23a1a",
+    "artifacts/m7-phone-context-small-512-storage-proof-v1/measurement.json": "f0a4ab5a546a1c898b0b8f7e6d8ecb1f29df4ee932c9d90ccb291581b900ccf7",
+    "artifacts/m7-phone-context-small-512-ready-v1/measurement.json": "0f11c3686cdcb02a57e73b8b725b9234d916c787003a587efc00a2562574ead2",
+    "artifacts/m7-phone-context-small-1024-storage-proof-v1/measurement.json": "0c2453fe206f8dcf35995b9ffc99d564786e3764dc150cd03a15fc19371ae088",
+    "artifacts/m7-phone-context-small-1024-ready-v1/measurement.json": "22ca3421653f49ec2ab2c63a1cf1418012cba9243940082005d395136213d5f6",
+    "artifacts/m7-phone-context-larger-128-storage-proof-v1/measurement.json": "703539e6df2e094e867d9a508a66c86ef68394360f9fcd91dec9bc636f322dd3",
+    "artifacts/m7-phone-context-larger-128-ready-v1/measurement.json": "cc0b4c5f3cd4ff9bc34a3bb35f8ccd5238ba6c1174ec140ba4e2c44bf49c613f",
+    "artifacts/m7-phone-context-larger-512-storage-proof-v1/measurement.json": "5aa8f959618b4d5b06e5a4870049bd73be9a0207c24e8dfd5e2dd568f5bc3da6",
+    "artifacts/m7-phone-context-larger-512-ready-v1/measurement.json": "9a2e895279747632fbc2af33067acaf7006eb8c30807b03e311e82b38cada96a",
+    "artifacts/m7-phone-context-larger-1024-storage-proof-v1/measurement.json": "5dadfe4b8510ba3e782f02f1ae3fc861128b74aad3c2dd4388ed4ca58e13cb42",
+    "artifacts/m7-phone-context-larger-1024-ready-v1/measurement.json": "683bf4874bea18679f2831361903a29530fd4c7256f8786288ac2c8454950a48"
+  },
+  "ready_receipts": {
+    "artifacts/m7-phone-context-small-128-ready-v1/measurement.json": "7ca36646908c32b71f59005e9dc2969e38011453c1c0444c422edb8c0ab23a1a",
+    "artifacts/m7-phone-context-small-512-ready-v1/measurement.json": "0f11c3686cdcb02a57e73b8b725b9234d916c787003a587efc00a2562574ead2",
+    "artifacts/m7-phone-context-small-1024-ready-v1/measurement.json": "22ca3421653f49ec2ab2c63a1cf1418012cba9243940082005d395136213d5f6",
+    "artifacts/m7-phone-context-larger-128-ready-v1/measurement.json": "cc0b4c5f3cd4ff9bc34a3bb35f8ccd5238ba6c1174ec140ba4e2c44bf49c613f",
+    "artifacts/m7-phone-context-larger-512-ready-v1/measurement.json": "9a2e895279747632fbc2af33067acaf7006eb8c30807b03e311e82b38cada96a",
+    "artifacts/m7-phone-context-larger-1024-ready-v1/measurement.json": "683bf4874bea18679f2831361903a29530fd4c7256f8786288ac2c8454950a48"
+  },
+  "results": [
+    {
+      "stage": "storage-proof",
+      "model": "small",
+      "workload": "128",
+      "path": "artifacts/m7-phone-context-small-128-storage-proof-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "small",
+      "workload": "128",
+      "path": "artifacts/m7-phone-context-small-128-ready-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "small",
+      "workload": "128",
+      "path": "artifacts/m7-phone-context-small-128-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "small",
+      "workload": "128",
+      "path": "artifacts/m7-phone-context-small-128-v2",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "small",
+      "workload": "512",
+      "path": "artifacts/m7-phone-context-small-512-storage-proof-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "small",
+      "workload": "512",
+      "path": "artifacts/m7-phone-context-small-512-ready-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "small",
+      "workload": "512",
+      "path": "artifacts/m7-phone-context-small-512-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "small",
+      "workload": "512",
+      "path": "artifacts/m7-phone-context-small-512-v2",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "small",
+      "workload": "1024",
+      "path": "artifacts/m7-phone-context-small-1024-storage-proof-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "small",
+      "workload": "1024",
+      "path": "artifacts/m7-phone-context-small-1024-ready-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "small",
+      "workload": "1024",
+      "path": "artifacts/m7-phone-context-small-1024-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "small",
+      "workload": "1024",
+      "path": "artifacts/m7-phone-context-small-1024-v2",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "larger",
+      "workload": "128",
+      "path": "artifacts/m7-phone-context-larger-128-storage-proof-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "larger",
+      "workload": "128",
+      "path": "artifacts/m7-phone-context-larger-128-ready-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "larger",
+      "workload": "128",
+      "path": "artifacts/m7-phone-context-larger-128-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "larger",
+      "workload": "128",
+      "path": "artifacts/m7-phone-context-larger-128-v2",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "larger",
+      "workload": "512",
+      "path": "artifacts/m7-phone-context-larger-512-storage-proof-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "larger",
+      "workload": "512",
+      "path": "artifacts/m7-phone-context-larger-512-ready-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "larger",
+      "workload": "512",
+      "path": "artifacts/m7-phone-context-larger-512-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "larger",
+      "workload": "512",
+      "path": "artifacts/m7-phone-context-larger-512-v2",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "larger",
+      "workload": "1024",
+      "path": "artifacts/m7-phone-context-larger-1024-storage-proof-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "larger",
+      "workload": "1024",
+      "path": "artifacts/m7-phone-context-larger-1024-ready-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "larger",
+      "workload": "1024",
+      "path": "artifacts/m7-phone-context-larger-1024-v1",
+      "exit_code": 0
+    },
+    {
+      "stage": "measure",
+      "model": "larger",
+      "workload": "1024",
+      "path": "artifacts/m7-phone-context-larger-1024-v2",
+      "exit_code": 0
+    }
+  ],
+  "exit_code": 0,
+  "primary_error": null,
+  "endpoint_errors": [],
+  "scope": "Exploratory raw-ID context matrix; no quality or device qualification inferred"
+}

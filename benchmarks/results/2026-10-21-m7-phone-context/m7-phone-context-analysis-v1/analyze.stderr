@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-context-analysis-v1/analyze.py", line 182, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/Users/coloner/work/rust/toklet/artifacts/m7-phone-context-analysis-v1/analyze.py", line 135, in run
+    if clean!=dict(absent=True,observations=[[]],signals=[],errors=[]):raise ValueError('Cleanup intervention needs separate review')
+                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Cleanup intervention needs separate review
