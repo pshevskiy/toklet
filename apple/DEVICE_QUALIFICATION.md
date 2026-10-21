@@ -20,7 +20,11 @@ adds two identical small-model short runs (26 requests), preserving exact IDs,
 state and cleanup while reducing process-lifetime peak from2.098GB to about
 1.017GB. These observations validate the diagnostic memory fix under unchanged
 trial budgets; full quality, supported model/context limits, sustained behavior
-and actual OS lifecycle qualification remain open.
+and actual OS lifecycle qualification remain open. The
+[larger short oracle](../docs/experiments/2026-10-21-m7-larger-oracle.md) also
+passes two runs/26 requests within the same trial process policy, with exact
+independent IDs/state/proofs/release and about1.825GB observed lifetime peak.
+These short checks leave the same qualification gates open.
 
 ## Admission and identity
 

@@ -43,3 +43,8 @@ benchmarks/results/2026-10-21-m7-hash-memory/m7-hash-memory-storage-proof-v2/pri
 benchmarks/results/2026-10-21-m7-hash-memory/m7-hash-memory-small-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 benchmarks/results/2026-10-21-m7-hash-memory/m7-hash-memory-small-v2/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 benchmarks/results/2026-10-21-m7-hash-memory/m7-small-short-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Larger-model oracle raw phone consoles retain exact mixed line endings.
+benchmarks/results/2026-10-21-m7-larger-oracle/m7-larger-oracle-storage-proof-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-larger-oracle/m7-larger-oracle-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-larger-oracle/m7-larger-oracle-v2/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

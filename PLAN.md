@@ -1443,7 +1443,10 @@ observation. Thirteen small-model short requests pass exact raw IDs/state on
 iPhone14Pro. The [bounded hashing fix](docs/experiments/2026-10-21-m7-hash-memory.md)
 removes the file-sized proof retention:84 portable checks,17 Mac cases, both SDK
 builds and two matching small phone trials pass. Their lifetime peaks are about
-1.017GB versus2.098GB previously. Larger inference and M7.3 remain open.
+1.017GB versus2.098GB previously. The [larger short oracle](docs/experiments/2026-10-21-m7-larger-oracle.md)
+now passes two actual phone runs (26 requests) with frozen IDs/state and lifetime
+peaks about1.825GB. Full quality/state/context/lifecycle/sustained qualification
+and base iPhone14 evidence remain open; M7.3 is pending.
 
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 

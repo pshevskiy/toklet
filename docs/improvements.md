@@ -782,3 +782,14 @@ short trials qualify neither full mobile quality nor model/context limits.
 M7.3 stays open.
 Astra accepted622 distinct paths,130 exact staged copies, seven historical
 mappings, baseline/fixed and storage replays, privacy, links and whitespace.
+
+The [larger short phone oracle](experiments/2026-10-21-m7-larger-oracle.md)
+passes two runs/26 requests with frozen `[614,264,3405]`, exact pending state,
+before/after model and installed proofs, weak release and verified process
+absence. Fresh full-payload storage admission and no-copy reuse pass. Observed
+lifetime peaks1,825,098,624/1,824,607,104bytes fit unchanged trial policies;
+post-proof footprints stay near19MB. This evidence-only task retains the signed
+app/native package and all numerical defaults. Full quality, supported limits,
+context/state/lifecycle/sustained and base iPhone14 qualification remain open.
+Astra accepted619 bound paths,14 exact staged copies, console/launch/boot and
+original admission replays, privacy, links and whitespace, with no findings.
