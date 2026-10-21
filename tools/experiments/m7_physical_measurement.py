@@ -130,6 +130,17 @@ def validate_console(text,config,signed):
     if order!=['proof']+['sample']*len(samples)+['proof','result']:
         raise ValueError('App evidence marker order differs')
     result=summaries[0]
+    filesystem=result.get('filesystemBefore')
+    if (type(filesystem) is not dict or set(filesystem)!={'freeBytes','readStartedUptimeNanoseconds','readCompletedUptimeNanoseconds','instrument','scope'}
+        or not uint(filesystem['freeBytes']) or filesystem['freeBytes']==0
+        or filesystem['instrument']!='Foundation.FileManager.attributesOfFileSystem.systemFreeSize'
+        or filesystem['scope']!='trusted-root-filesystem'
+        or not uint(filesystem['readStartedUptimeNanoseconds']) or filesystem['readStartedUptimeNanoseconds']==0
+        or not uint(filesystem['readCompletedUptimeNanoseconds'])
+        or filesystem['readCompletedUptimeNanoseconds']<filesystem['readStartedUptimeNanoseconds']
+        or not uint(samples[0]['submittedUptimeNanoseconds'])
+        or filesystem['readCompletedUptimeNanoseconds']>samples[0]['submittedUptimeNanoseconds']):
+        raise ValueError('Filesystem observation scope/window differs')
     if ([p['phase'] for p in proofs]!=['before','after'] or any(p['simulator'] is not False or p['files']!=signed for p in proofs)
         or result['passed'] is not True or result.get('error') is not None or result['cleanupErrors'] or result['endpointErrors']
         or result['backend']!=('metal' if config['metal'] else 'cpu') or not uint(result['interruptionCount']) or result['interruptionCount']!=0

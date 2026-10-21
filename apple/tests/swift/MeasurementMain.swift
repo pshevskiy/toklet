@@ -46,6 +46,19 @@ private func rejected(_ body: () throws -> Void) throws {
                 maximum:2,expectedPrefix:expected,warmups:3,repetitions:10,minimumNativeSeconds:0)
         }
         var cases: [String] = []
+        let filesystem = try NativeFilesystemAvailability.read(root)
+        try check(filesystem.freeBytes > 0 && filesystem.readStartedUptimeNanoseconds <= filesystem.readCompletedUptimeNanoseconds
+                  && filesystem.readCompletedUptimeNanoseconds <= DispatchTime.now().uptimeNanoseconds,
+                  "Filesystem free-space observation/window differs")
+        let maximumFree = try nativeFilesystemFreeBytes(NSNumber(value:UInt64.max))
+        try check(maximumFree == UInt64.max,"Free-byte integer truncated")
+        let invalidFree: [Any?] = [nil,true,NSNumber(value:-1),NSNumber(value:0),NSNumber(value:0.5),NSNumber(value:Double.infinity),
+                                  NSNumber(value:Double.nan),NSDecimalNumber(string:"18446744073709551616"),"42"]
+        for invalid in invalidFree {
+            try rejected { _ = try nativeFilesystemFreeBytes(invalid) }
+        }
+        try rejected { _ = try NativeFilesystemAvailability.read(root.appendingPathComponent("missing-filesystem-root")) }
+        cases.append("readonly filesystem free bytes/checked bridge/monotonic window/missing root")
         var clock: UInt64 = 0
         var probes = 0
         var pauses = 0
@@ -104,6 +117,9 @@ private func rejected(_ body: () throws -> Void) throws {
             try check(result.warmupsCompleted == 3 && result.measuredCompleted == 10 && result.sumNativeLastEventSeconds > 0,
                       "Warmup/measured sequence differs")
             try check(samples.count == 13 && result.filesBefore == files && result.filesAfter == files,"Incomplete sequence/proofs")
+            try check((result.filesystemBefore?.freeBytes ?? 0) > 0
+                      && (result.filesystemBefore?.readCompletedUptimeNanoseconds ?? UInt64.max) <= samples[0].submittedUptimeNanoseconds,
+                      "Filesystem observation missing or after request")
             for (index,sample) in samples.enumerated() {
                 try check(sample.index == index && sample.role == (index < 3 ? "warmup" : "measured"),"Role/index differs")
                 try check(sample.tokens == [47,47] && sample.events.count == 2 && sample.status == 0,"Independent tiny ID/timing oracle")

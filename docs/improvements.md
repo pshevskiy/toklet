@@ -742,3 +742,13 @@ budgets or sustained performance. Failed attempts and executed sources remain
 bound. Astra accepted source and publication after checking815 distinct paths,
 35 historical mappings,106 exact staged copies, both console replays, privacy,
 links and whitespace. M7.3 remains open.
+
+The [filesystem observation](experiments/2026-10-21-m7-filesystem-observation.md)
+adds a read-only own-filesystem free-byte report before loading, with checked
+Foundation numeric conversion and an explicit instrument/monotonic window.
+Forty-five portable checks,16 actual Mac cases and both SDK builds pass; Astra
+cleared source. Actual iPhone14Pro observation reports32,768,000,000bytes before
+13 exact tiny requests, with matching artifact proofs and clean close/release/
+process absence. The earlier Locked failure remains recorded. Astra accepted261 bound paths,
+38 exact staged copies, independent phone replay, privacy, links and whitespace.
+Transfer admission and device limits remain separate; M7.3 stays open.

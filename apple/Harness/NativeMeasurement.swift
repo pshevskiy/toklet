@@ -1,4 +1,5 @@
 import Foundation
+import CoreFoundation
 import Darwin
 import CryptoKit
 #if canImport(UIKit)
@@ -7,6 +8,34 @@ import UIKit
 
 private func measurementError(_ message: String) -> NSError {
     NSError(domain:"TokletMeasurement",code:1,userInfo:[NSLocalizedDescriptionKey:message])
+}
+
+// Treat the Foundation bridge as checked metadata: no Boolean, negative,
+// fractional or truncating conversion may become an optimistic space report.
+func nativeFilesystemFreeBytes(_ value: Any?) throws -> UInt64 {
+    guard let number = value as? NSNumber,
+          CFGetTypeID(number) != CFBooleanGetTypeID(),
+          let bytes = UInt64(number.stringValue), bytes > 0,
+          number.compare(NSNumber(value:bytes)) == .orderedSame else {
+        throw measurementError("Filesystem free-byte observation unavailable")
+    }
+    return bytes
+}
+
+struct NativeFilesystemAvailability: Encodable, Sendable {
+    let freeBytes: UInt64
+    let readStartedUptimeNanoseconds: UInt64
+    let readCompletedUptimeNanoseconds: UInt64
+    let instrument = "Foundation.FileManager.attributesOfFileSystem.systemFreeSize"
+    let scope = "trusted-root-filesystem"
+
+    static func read(_ root: URL) throws -> NativeFilesystemAvailability {
+        let start = DispatchTime.now().uptimeNanoseconds
+        let attributes = try FileManager.default.attributesOfFileSystem(forPath:root.path)
+        let free = try nativeFilesystemFreeBytes(attributes[.systemFreeSize])
+        return NativeFilesystemAvailability(freeBytes:free,readStartedUptimeNanoseconds:start,
+            readCompletedUptimeNanoseconds:DispatchTime.now().uptimeNanoseconds)
+    }
 }
 
 struct NativeFootprint: Codable, Sendable {
@@ -247,6 +276,7 @@ struct NativeMeasurementResult: Encodable, Sendable {
     var filesBefore: [String:String] = [:]
     var filesAfter: [String:String] = [:]
     var checkpoints: [NativeMemoryCheckpoint] = []
+    var filesystemBefore: NativeFilesystemAvailability?
     var interruptionCount: UInt64 = 0
     var loadAndSessionSeconds: Double = 0
     var warmupsCompleted = 0
@@ -357,6 +387,7 @@ func runNativeMeasurement(_ config: NativeMeasurementConfig, root: URL,
     do {
         try config.validate()
         try requireForeground()
+        result.filesystemBefore = try NativeFilesystemAvailability.read(root)
         try memory("before-artifact-proof")
         result.filesBefore = try artifactProof(config,root)
         try memory("after-artifact-proof")

@@ -25,6 +25,8 @@ def fixture():
     total=0
     for sample in samples[3:]:total+=sample['events'][-1]['nativeElapsedSeconds']
     result=dict(passed=True,backend='cpu',interruptionCount=0,cleanupErrors=[],endpointErrors=[],closed=True,released=True,
+        filesystemBefore=dict(freeBytes=1024,readStartedUptimeNanoseconds=1,readCompletedUptimeNanoseconds=2,
+            instrument='Foundation.FileManager.attributesOfFileSystem.systemFreeSize',scope='trusted-root-filesystem'),
         physicalDeviceQualified=False,m7Complete=False,filesBefore=config['files'],filesAfter=config['files'],
         checkpoints=[dict(phase=p,footprint=memory(n)) for p,n in zip(phases,[100,200,300,500,600,700])],
         warmupsCompleted=3,measuredCompleted=10,sumNativeLastEventSeconds=total,loadAndSessionSeconds=1)
@@ -46,6 +48,21 @@ class PhysicalMeasurementTests(unittest.TestCase):
         c,f,r,s,p=fixture();observed=m.validate_console(console(r,s,p),c,f)
         self.assertEqual(observed['sample_count'],13);self.assertEqual(len(observed['measured']),10)
         self.assertEqual(observed['measured'][0]['decode_tokens_per_second'],10)
+
+    def test_filesystem_observation_has_checked_size_scope_and_pre_request_window(self):
+        for kind in ('missing','extra','bool','zero','negative','fractional','overflow','instrument','scope','boolTimestamp','zeroTimestamp','backwards','late'):
+            with self.subTest(kind=kind):
+                c,f,r,s,p=fixture();fs=r['filesystemBefore']
+                if kind=='missing':r.pop('filesystemBefore')
+                elif kind=='extra':fs['unexpected']=1
+                elif kind in ('bool','zero','negative','fractional','overflow'):
+                    fs['freeBytes']={'bool':True,'zero':0,'negative':-1,'fractional':1.5,'overflow':2**64}[kind]
+                elif kind in ('instrument','scope'):fs[kind]='unknown'
+                elif kind=='boolTimestamp':fs['readCompletedUptimeNanoseconds']=True
+                elif kind=='zeroTimestamp':fs['readStartedUptimeNanoseconds']=0
+                elif kind=='backwards':fs['readStartedUptimeNanoseconds']=3
+                else:fs['readCompletedUptimeNanoseconds']=s[0]['submittedUptimeNanoseconds']+1
+                with self.assertRaises(ValueError):m.validate_console(console(r,s,p),c,f)
 
     def test_marker_order_and_extra_repetitions_rejected(self):
         c,f,r,s,p=fixture();lines=console(r,s,p).splitlines()
