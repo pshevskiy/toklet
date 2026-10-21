@@ -1,0 +1,8 @@
+
+running 1 test
+native_metal_model=Qwen2.5-0.5B-Instruct ids=[1410, 1492, 752] state=7/6/1 combined_admission_bytes=1129676764 passed
+native_metal_model=Qwen2.5-1.5B-Instruct ids=[614, 264, 3405] state=7/6/1 combined_admission_bytes=1919626660 passed
+test native::tests::metal_native_selected_models_match_direct_sessions ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 41 filtered out; finished in 46.45s
+

@@ -98,3 +98,10 @@ limits and failed/rejected cases. Keep M7.3 and M7 pending until this evidence
 exists and is reviewed. Signed tiny integration satisfies the initial physical
 integration gate only. Pro qualification cannot by itself close a base iPhone14
 requirement.
+
+The [score API component](../docs/experiments/2026-10-21-m7-score-api.md) adds a
+read-only final-committed-row diagnostic and passes independent CPU/Metal and
+three-target build/link checks. It is preparation for phone teacher forcing,
+not evidence of a completed phone corpus/task run. Score before appending each
+target, verify exact committed prefix after cancellation, and retain the frozen
+corpus/context/aggregation/gates when implementing the collector.

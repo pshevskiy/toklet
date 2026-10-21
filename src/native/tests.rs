@@ -539,6 +539,119 @@ fn metal_native_selected_models_match_direct_sessions() {
             - direct.memory().weights_bytes as u64;
         assert!(combined <= weights::INITIAL_MEMORY_LIMIT_BYTES as u64);
         let prompt = [9707, 11, 358, 498];
+        // Independent FP64 balanced reduction over direct Metal logits. The
+        // boundary uses compensated summation; this oracle uses a different
+        // reduction tree and never invokes its score helper.
+        fn oracle(logits: &[f32], target: usize) -> f64 {
+            assert!(logits.iter().all(|v| v.is_finite()));
+            let maximum = logits
+                .iter()
+                .copied()
+                .map(f64::from)
+                .reduce(f64::max)
+                .unwrap();
+            let mut terms: Vec<f64> = logits
+                .iter()
+                .map(|&v| (f64::from(v) - maximum).exp())
+                .collect();
+            let mut count = terms.len();
+            while count > 1 {
+                let next = count.div_ceil(2);
+                for i in 0..next {
+                    terms[i] = terms[2 * i]
+                        + if 2 * i + 1 < count {
+                            terms[2 * i + 1]
+                        } else {
+                            0.0
+                        };
+                }
+                count = next;
+            }
+            (maximum - f64::from(logits[target])) + terms[0].ln()
+        }
+        let frozen = if packed.is_empty() {
+            [1410, 1492]
+        } else {
+            [614, 264]
+        };
+        for position in 0..2 {
+            let one = [frozen[0]];
+            let input = if position == 0 { &prompt[..] } else { &one[..] };
+            let kind = if position == 0 {
+                generation::Input::Prompt(input)
+            } else {
+                generation::Input::Append(input)
+            };
+            generation::generate(
+                &mut direct,
+                generation::Request {
+                    input: kind,
+                    max_new_tokens: 0,
+                    stop_tokens: &[],
+                },
+                &AtomicBool::new(false),
+                |_| Ok(()),
+            )
+            .unwrap();
+            let (status, state) = unsafe {
+                generate(
+                    s,
+                    c,
+                    input,
+                    if position == 0 { 0 } else { 1 },
+                    0,
+                    None,
+                    ptr::null_mut(),
+                )
+            };
+            assert_eq!(status, OK);
+            assert_eq!(
+                (
+                    state.history_tokens,
+                    state.evaluated_tokens,
+                    state.pending_tokens
+                ),
+                (4 + position as u32, 4 + position as u32, 0)
+            );
+            let logits = direct.logits().unwrap();
+            for target in [frozen[position], 3] {
+                let mut score = Score::default();
+                assert_eq!(
+                    unsafe { toklet_session_score(s, target, &mut score, ptr::null_mut()) },
+                    OK
+                );
+                assert_eq!(score.evaluated_tokens, 4 + position as u32);
+                assert_eq!(score.target_token, target);
+                assert_eq!(score.greedy_token, frozen[position]);
+                assert_eq!(score.vocab_size as usize, logits.len());
+                assert_eq!(
+                    score.target_logit.to_bits(),
+                    f64::from(logits[target as usize]).to_bits()
+                );
+                assert_eq!(
+                    score.greedy_logit.to_bits(),
+                    f64::from(logits[frozen[position] as usize]).to_bits()
+                );
+                assert!(
+                    (score.negative_log_likelihood - oracle(logits, target as usize)).abs() < 1e-12
+                );
+            }
+            let mut actual = [0; 32];
+            let mut count = 0;
+            assert_eq!(
+                unsafe {
+                    toklet_session_history(s, actual.as_mut_ptr(), 32, &mut count, ptr::null_mut())
+                },
+                OK
+            );
+            assert_eq!(&actual[..4], &prompt);
+            assert_eq!(count, 4 + position);
+            if position == 1 {
+                assert_eq!(actual[4], frozen[0]);
+            }
+        }
+        direct.reset();
+        assert_eq!(unsafe { toklet_session_reset(s, ptr::null_mut()) }, OK);
         let mut expected = Vec::new();
         let expected_report = generation::generate(
             &mut direct,
@@ -681,5 +794,215 @@ fn history_copy_includes_pending_and_replays_without_guessing() {
             INVALID
         );
         cleanup(m, replay, c);
+    }
+}
+
+#[test]
+fn score_reduction_matches_manual_distributions_and_extremes() {
+    assert_eq!(size_of::<Score>(), 48);
+    assert_eq!(align_of::<Score>(), align_of::<f64>());
+    assert_eq!(std::mem::offset_of!(Score, target_logit), 24);
+    assert_eq!(std::mem::offset_of!(Score, negative_log_likelihood), 40);
+    let one = score_logits(&[42.0], 0, 1).unwrap();
+    assert_eq!(one.negative_log_likelihood, 0.0);
+    assert_eq!(one.greedy_token, 0);
+    for offset in [-1000.0, 0.0, 1000.0, f32::MAX] {
+        let score = score_logits(&[offset; 3], 2, 7).unwrap();
+        assert_eq!(score.greedy_token, 0);
+        assert_eq!(score.evaluated_tokens, 7);
+        assert!((score.negative_log_likelihood - 3.0_f64.ln()).abs() < 1e-15);
+    }
+    let large = score_logits(&[f32::MAX, -f32::MAX], 1, 1).unwrap();
+    assert_eq!(large.negative_log_likelihood, 2.0 * f64::from(f32::MAX));
+    let shifted = score_logits(&[-1000.0, -999.0], 0, 1).unwrap();
+    let expected = 1.0 + (-1.0_f64).exp().ln_1p();
+    assert!((shifted.negative_log_likelihood - expected).abs() < 1e-15);
+    assert_eq!(
+        shifted.negative_log_likelihood,
+        score_logits(&[1000.0, 1001.0], 0, 1)
+            .unwrap()
+            .negative_log_likelihood
+    );
+    for logits in [&[][..], &[1.0][..]] {
+        assert!(matches!(
+            score_logits(logits, 1, 1),
+            Err(Failure(INVALID, _))
+        ));
+    }
+    for invalid in [f32::NAN, f32::INFINITY, f32::NEG_INFINITY] {
+        assert!(matches!(
+            score_logits(&[1.0, invalid], 0, 1),
+            Err(Failure(ENGINE_ERROR, _))
+        ));
+    }
+}
+
+#[test]
+fn score_is_readonly_and_matches_independent_tiny_logits() {
+    let (m, s, c) = handles();
+    let sentinel = Score {
+        target_logit: -999.0,
+        negative_log_likelihood: -1.0,
+        ..Score::default()
+    };
+    let mut score = sentinel;
+    unsafe {
+        assert_eq!(
+            toklet_session_score(s, 47, &mut score, ptr::null_mut()),
+            INVALID
+        );
+        assert_eq!(score, sentinel);
+        let (code, before) = generate(s, c, &[1, 7, 13, 3], 0, 0, None, ptr::null_mut());
+        assert_eq!(code, OK);
+        assert_eq!(
+            (
+                before.history_tokens,
+                before.evaluated_tokens,
+                before.pending_tokens
+            ),
+            (4, 4, 0)
+        );
+        assert_eq!(toklet_session_score(s, 47, &mut score, ptr::null_mut()), OK);
+        assert_eq!(
+            (
+                score.abi_version,
+                score.struct_size,
+                score.target_token,
+                score.greedy_token,
+                score.vocab_size,
+                score.evaluated_tokens
+            ),
+            (ABI_VERSION, 48, 47, 47, 64, 4)
+        );
+        let expected = fixtures::Fixture::tiny().f32("cases.prompt.logits");
+        let target = expected[3 * 64 + 47];
+        assert!(
+            (score.target_logit - f64::from(target)).abs() <= 1e-5 + 1e-4 * f64::from(target.abs())
+        );
+        assert_eq!(score.greedy_logit, score.target_logit);
+        // Python math.fsum over the independent PyTorch fixture's final row.
+        assert!((score.negative_log_likelihood - 1.6877391136919981).abs() < 1e-5);
+        let mut alternative = Score::default();
+        assert_eq!(
+            toklet_session_score(s, 3, &mut alternative, ptr::null_mut()),
+            OK
+        );
+        assert_eq!(alternative.greedy_token, score.greedy_token);
+        assert!(
+            ((alternative.negative_log_likelihood - score.negative_log_likelihood)
+                - (score.target_logit - alternative.target_logit))
+                .abs()
+                < 1e-12
+        );
+        let mut after = Report::default();
+        assert_eq!(toklet_session_state(s, &mut after, ptr::null_mut()), OK);
+        assert_eq!(
+            (
+                after.history_tokens,
+                after.evaluated_tokens,
+                after.pending_tokens,
+                after.admitted_bytes
+            ),
+            (
+                before.history_tokens,
+                before.evaluated_tokens,
+                before.pending_tokens,
+                before.admitted_bytes
+            )
+        );
+        let mut history = [0; 32];
+        let mut count = 0;
+        assert_eq!(
+            toklet_session_history(s, history.as_mut_ptr(), 32, &mut count, ptr::null_mut()),
+            OK
+        );
+        assert_eq!(&history[..count], &[1, 7, 13, 3]);
+        let saved = score;
+        assert_eq!(
+            toklet_session_score(s, 64, &mut score, ptr::null_mut()),
+            INVALID
+        );
+        assert_eq!(score, saved);
+        // Pre-cancellation preserves the valid distribution and flag unchanged.
+        assert_eq!(toklet_cancel_set(c, 1, ptr::null_mut()), OK);
+        assert_eq!(generate(s, c, &[], 2, 0, None, ptr::null_mut()).1.reason, 3);
+        assert_eq!(toklet_session_score(s, 47, &mut score, ptr::null_mut()), OK);
+        assert_eq!(score, saved);
+        assert!((*c).flag.load(Ordering::Relaxed));
+        assert_eq!(toklet_cancel_set(c, 0, ptr::null_mut()), OK);
+        assert_eq!(generate(s, c, &[], 2, 1, None, ptr::null_mut()).0, OK);
+        assert_eq!(
+            toklet_session_score(s, 47, &mut score, ptr::null_mut()),
+            INVALID
+        );
+        assert_eq!(score, saved);
+        assert_eq!(toklet_session_reset(s, ptr::null_mut()), OK);
+        assert_eq!(
+            toklet_session_score(s, 47, &mut score, ptr::null_mut()),
+            INVALID
+        );
+        assert_eq!(score, saved);
+        cleanup(m, s, c);
+    }
+}
+
+#[test]
+fn score_rejects_null_misaligned_wrong_thread_busy_and_poisoned_access() {
+    unsafe extern "C" fn reenter(context: *mut c_void, _: TokenEvent) -> u32 {
+        let mut out = Score::default();
+        assert_eq!(
+            unsafe { toklet_session_score(context.cast(), 47, &mut out, ptr::null_mut()) },
+            BUSY
+        );
+        0
+    }
+    let (m, s, c) = handles();
+    let mut score = Score::default();
+    unsafe {
+        assert_eq!(
+            toklet_session_score(ptr::null(), 0, &mut score, ptr::null_mut()),
+            INVALID
+        );
+        assert_eq!(
+            toklet_session_score(s, 0, ptr::null_mut(), ptr::null_mut()),
+            INVALID
+        );
+        let mut bytes = [0_u8; 64];
+        let base = bytes.as_mut_ptr() as usize;
+        let offset = (align_of::<Score>() - base % align_of::<Score>()) % align_of::<Score>() + 1;
+        assert_eq!(
+            toklet_session_score(s, 0, bytes.as_mut_ptr().add(offset).cast(), ptr::null_mut()),
+            INVALID
+        );
+        assert_eq!(bytes, [0; 64]);
+    }
+    let address = s as usize;
+    let status = thread::spawn(move || {
+        let mut out = Score::default();
+        unsafe {
+            toklet_session_score(
+                address as *const SessionHandle,
+                0,
+                &mut out,
+                ptr::null_mut(),
+            )
+        }
+    })
+    .join()
+    .unwrap();
+    assert_eq!(status, WRONG_THREAD);
+    unsafe {
+        assert_eq!(
+            generate(s, c, &[1, 7, 13, 3], 0, 1, Some(reenter), s.cast()).0,
+            OK
+        );
+        let result: Result<()> = (*s).access(|_| panic!("score diagnostic poison check"));
+        assert!(matches!(result, Err(Failure(PANIC, _))));
+        assert_eq!(
+            toklet_session_score(s, 47, &mut score, ptr::null_mut()),
+            POISONED
+        );
+        assert_eq!(score, Score::default());
+        cleanup(m, s, c);
     }
 }

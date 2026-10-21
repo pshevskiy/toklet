@@ -40,6 +40,14 @@ typedef struct {
     uint32_t history_tokens, evaluated_tokens, pending_tokens, emitted_tokens;
     uint64_t admitted_bytes;
 } TokletReport;
+/* Read-only scalar diagnostic; no full-logit copy. Native C alignment,48 bytes.
+   FP32 target/greedy logits are exactly widened to double; loss uses stable
+   compensated FP64 log-sum-exp. Tied greedy IDs choose the lowest token ID. */
+typedef struct {
+    uint32_t abi_version, struct_size, target_token, greedy_token;
+    uint32_t vocab_size, evaluated_tokens;
+    double target_logit, greedy_logit, negative_log_likelihood;
+} TokletScore;
 /* Return nonzero for output failure; sampled ID remains pending in history. */
 typedef uint32_t (*TokletEmit)(void *, TokletTokenEvent);
 uint32_t toklet_abi_version(void);
@@ -52,6 +60,15 @@ uint32_t toklet_model_release(TokletModel *, TokletError *);
 uint32_t toklet_session_create(const TokletModel *, const TokletOptions *, TokletSession **, TokletError *);
 uint32_t toklet_session_release(TokletSession *, TokletError *);
 uint32_t toklet_session_state(const TokletSession *, TokletReport *, TokletError *);
+/* Scores only the CURRENT FINAL committed row; earlier prefill rows are unavailable.
+   Full-corpus callers score each exact prefix BEFORE appending its target, and
+   verify evaluated/history counts after any cancelled request.
+   Requires an idle fully committed nonempty distribution. generate with maximum
+   zero evaluates prompt/append without sampling. Pending/reset/invalid states
+   reject; no prefix, cancellation flag or engine state is changed by this query.
+   Target must be in vocabulary. Output is untouched unless TOKLET_OK; the full
+   output record must be writable and disjoint from handle/error storage. */
+uint32_t toklet_session_score(const TokletSession *, uint32_t, TokletScore *, TokletError *);
 /* Exact sampled history, including pending IDs. NULL+0 queries count.
    Small buffers return INVALID with required count and no partial copy.
    Caller owns capacity uint32_t elements; count/output/error do not overlap. */

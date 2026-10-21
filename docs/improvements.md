@@ -793,3 +793,16 @@ app/native package and all numerical defaults. Full quality, supported limits,
 context/state/lifecycle/sustained and base iPhone14 qualification remain open.
 Astra accepted619 bound paths,14 exact staged copies, console/launch/boot and
 original admission replays, privacy, links and whitespace, with no findings.
+
+The [committed-distribution score API](experiments/2026-10-21-m7-score-api.md)
+adds a read-only48-byte diagnostic for target/greedy FP32 logits and compensated
+FP64 loss, enabling later phone teacher forcing without full-logit C copies.
+Final-row, exact-prefix, pending/reset and cancellation semantics remain explicit;
+owner/busy/poison/pointer guards preserve state and failure outputs. Three new
+independent CPU tests,111 ordinary CPU/123 Metal-feature tests, strict Clippy/fmt,
+both actual selected-model Metal comparisons, three Apple build/link targets and
+Mac C CPU/Metal score clients pass. All14 exports and original CPU binaries are
+checked. Astra accepted source, controller and completed evidence with no blocking
+findings after3,590 distinct pins,74 exact staged copies, four code pins,
+command/test/platform/C replays,379 links, privacy and whitespace. No numerical kernel/default/gate changes or full phone quality/
+performance/device-limit qualification follows; M7.3 remains open.

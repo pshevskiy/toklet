@@ -1448,6 +1448,12 @@ now passes two actual phone runs (26 requests) with frozen IDs/state and lifetim
 peaks about1.825GB. Full quality/state/context/lifecycle/sustained qualification
 and base iPhone14 evidence remain open; M7.3 is pending.
 
+The [committed-distribution score API](docs/experiments/2026-10-21-m7-score-api.md)
+now passes independent CPU/selected-model Metal numerical checks, strict Cargo
+checks, all three Apple build/link targets and actual Mac C CPU/Metal clients.
+It enables later phone teacher forcing without full-logit copies. Full physical
+quality and the remaining M7.3 gates are unchanged and still pending.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy
