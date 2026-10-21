@@ -852,3 +852,14 @@ failures, a temporary-root test alias and shell-glob refusal remain recorded;
 no cleanup rule or gate changes. Astra accepted source and completed component evidence after58 pins,28 exact
 staged copies, both parent mappings, source/test/failure correspondence,385links,
 actual private-identifier scan and whitespace, with no findings. No new physical command/model run or full quality/M7.3 acceptance occurs.
+
+The [bounded task-response coordinator](experiments/2026-10-21-m7-task-response.md)
+keeps128-token worker commands while supporting256-token raw tasks through exact
+continuation. Whole-request preflight, hidden-EOS budget/state, callback order,
+persistent cancellation and failed command/sink behavior are checked. Astra's
+stale stop metadata finding is fixed with successful idle reason2 publication;
+failed/lifecycle commands clear it. Eleven protocol cases/backend and actualtiny
+CPU/Metal onecall/chunked/hidden-stop checks pass, as do128 portable methods,
+worker/score regressions and both unsigned iOS app builds. Two prior EPERM suite
+failures remain recorded. Astra accepted completed code/evidence with no findings. Physical100-task
+collection/grading remains; M7.3 is open.

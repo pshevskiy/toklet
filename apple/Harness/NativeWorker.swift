@@ -55,6 +55,8 @@ struct NativeSnapshot: Sendable {
     var ids: [UInt32] = [] // At most 128, retained until the next command.
     var tokenTimings: [NativeTokenTiming] = [] // Same bounded emitted-token order.
     var reason: UInt32 = 0
+    // Meaningful only for reason 2; hidden EOS remains in sampled history.
+    var stopToken: UInt32 = .max
     var history: UInt32 = 0
     var evaluated: UInt32 = 0
     var pending: UInt32 = 0
@@ -127,6 +129,7 @@ final class NativeWorker: @unchecked Sendable {
         view.busy = true
         view.phase = "Queued"
         view.score = nil
+        view.stopToken = .max
         view.ids.removeAll(keepingCapacity: true)
         view.tokenTimings.removeAll(keepingCapacity: true)
         condition.signal()
@@ -162,6 +165,7 @@ final class NativeWorker: @unchecked Sendable {
         view.busy = true
         view.phase = "Cancelling for lifecycle cleanup"
         view.score = nil
+        view.stopToken = .max
         condition.signal()
     }
 
@@ -170,6 +174,7 @@ final class NativeWorker: @unchecked Sendable {
         guard !view.closed else { return }
         closing = true; queued = nil
         view.score = nil
+        view.stopToken = .max
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
         view.busy = true
         condition.signal()
@@ -224,6 +229,8 @@ final class NativeWorker: @unchecked Sendable {
             view.evaluated = engine.report.evaluated_tokens
             view.pending = engine.report.pending_tokens
             view.reason = engine.report.reason
+            view.stopToken = failure == nil && !closing && queued == nil && engine.report.reason == 2
+                ? engine.report.stop_token : .max
             view.admittedBytes = engine.admissionUpperBound
             view.score = failure == nil && !closing && queued == nil ? engine.score : nil
             view.status = UInt32(clamping: failure?.code ?? 0)
@@ -249,6 +256,7 @@ final class NativeWorker: @unchecked Sendable {
         view.savedHistory = 0; view.busy = false
         view.closed = true; view.workerFinished = true
         view.score = nil
+        view.stopToken = .max
         view.phase = releaseError == nil ? "Closed" : "Release failed; restart required"
         if let error = releaseError {
             view.status = UInt32(clamping: error.code); view.message = error.localizedDescription

@@ -128,3 +128,8 @@ The [physical quality controller](../docs/experiments/2026-10-21-m7-physical-qua
 now seals the score-capable package, corpus-inclusive storage/copy clocks and
 exact raw target/prefix/logit/loss/memory/foreground outcomes. Portable direct
 checks pass; no new physical collection is counted by this component.
+
+The [bounded task-response coordinator](../docs/experiments/2026-10-21-m7-task-response.md)
+passes raw-ID chunk continuation, hidden-stop and persistent-cancellation checks,
+actualtiny CPU/Metal and both unsigned app builds. The256-token coverage is
+protocol simulation; physical frozen100-task collection/grading remains open.

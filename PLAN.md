@@ -1474,6 +1474,11 @@ now passes sealed corpus/transport/stream admission checks and121 direct portabl
 M7 tests. Failed wrapper/environment attempts remain. Actual new signed-app
 physical corpus/task collection and independent quality acceptance remain open.
 
+The [bounded raw task-response coordinator](docs/experiments/2026-10-21-m7-task-response.md)
+passes256-token/hidden-EOS/cancellation protocol checks, independent tiny first-ID
+and actualCPU/Metal continuation/lifetime checks,128 portable methods and both
+unsigned iOS app builds. Frozen physical100-task collection and grading remain.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy
