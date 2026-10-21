@@ -863,3 +863,15 @@ CPU/Metal onecall/chunked/hidden-stop checks pass, as do128 portable methods,
 worker/score regressions and both unsigned iOS app builds. Two prior EPERM suite
 failures remain recorded. Astra accepted completed code/evidence with no findings. Physical100-task
 collection/grading remains; M7.3 is open.
+
+The [sealed raw task harness](experiments/2026-10-21-m7-task-harness.md) adds exact
+bounded task/config admission, foreground/cancellation enforcement, raw chunk
+clocks/admission/memory observations and per-case reset acknowledgements, with
+endpoint proofs and explicit release.31 native test cases/four tiny completions,
+12 parser checks,27 clean owned commands including quality/hash regressions and
+both iOS app builds pass. All140 portable methods pass across15 isolated modules;
+three combined EPERM failures and four corrected-discovery import failures stay
+recorded. Astra's clock/consumed-buffer findings and a preflight tiny-test prompt
+mistake are corrected with retained old evidence. Astra accepted completed code
+and evidence with no findings. Frozen physical100-task collection/grading and
+M7.3 remain open.

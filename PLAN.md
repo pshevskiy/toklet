@@ -1479,6 +1479,12 @@ passes256-token/hidden-EOS/cancellation protocol checks, independent tiny first-
 and actualCPU/Metal continuation/lifetime checks,128 portable methods and both
 unsigned iOS app builds. Frozen physical100-task collection and grading remain.
 
+The [sealed raw task harness](docs/experiments/2026-10-21-m7-task-harness.md)
+passes exact input/response/reset/memory/endpoint mechanics,31 tiny test-program
+cases, existing quality/hash regressions and both iOS app builds. All140 portable
+methods pass in15 isolated modules; combined-run EPERM failures remain recorded.
+Physical frozen100-task collection, decoding and literal grading stay pending.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy

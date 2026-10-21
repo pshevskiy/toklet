@@ -1,0 +1,19 @@
+test_m7_physical_quality (unittest.loader._FailedTest.test_m7_physical_quality) ... ERROR
+
+======================================================================
+ERROR: test_m7_physical_quality (unittest.loader._FailedTest.test_m7_physical_quality)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_m7_physical_quality
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/tools/experiments/test_m7_physical_quality.py", line 10, in <module>
+    import m7_physical_quality as q
+ModuleNotFoundError: No module named 'm7_physical_quality'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

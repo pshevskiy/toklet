@@ -1,0 +1,12 @@
+test_complete_independent_oracle_required (tools.experiments.test_m7_native_teacher_check.TeacherOutputChecks.test_complete_independent_oracle_required) ... ok
+test_complete_tiny_output (tools.experiments.test_m7_native_teacher_check.TeacherOutputChecks.test_complete_tiny_output) ... ok
+test_independent_fixture_hash_precedes_reduction (tools.experiments.test_m7_native_teacher_check.TeacherOutputChecks.test_independent_fixture_hash_precedes_reduction) ... ok
+test_independent_losses_and_aggregation_reject (tools.experiments.test_m7_native_teacher_check.TeacherOutputChecks.test_independent_losses_and_aggregation_reject) ... ok
+test_lifetime_and_simulation_evidence_reject (tools.experiments.test_m7_native_teacher_check.TeacherOutputChecks.test_lifetime_and_simulation_evidence_reject) ... ok
+test_policy_and_coverage_reject (tools.experiments.test_m7_native_teacher_check.TeacherOutputChecks.test_policy_and_coverage_reject) ... ok
+test_row_and_committed_prefix_reject (tools.experiments.test_m7_native_teacher_check.TeacherOutputChecks.test_row_and_committed_prefix_reject) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK

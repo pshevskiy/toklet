@@ -1,0 +1,626 @@
+{
+  "format": "toklet-m7-isolated-portable-check-v1",
+  "passed": true,
+  "exit_code": 0,
+  "bindings": {
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_native_fixture.py": "9f97b525af81f3243a774bf73b1e48a6379c6dd34d9e5af7057992502e3b72be",
+    "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+    "tools/experiments/m7_native_metal_check.py": "09da441923c9fa4ebe7dc55fb02c6c1c9047664c09fda5bc349b84b656d0ec0f",
+    "tools/experiments/m7_native_quality_check.py": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+    "tools/experiments/m7_native_score_check.py": "90d27733655fd482485350eda54c351b63730b3e8082d8ea4ab710502bc71b24",
+    "tools/experiments/m7_native_task_check.py": "e56e815c87278079cef1a8f9e55d60d83b617e5509b7806fed7850249296fb07",
+    "tools/experiments/m7_native_tasks_check.py": "aff4c3b2ddfdd3572579b9009da2c3dbcccbd814361e8b6e47e4a794ebbef42d",
+    "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_measurement.py": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034",
+    "tools/experiments/m7_physical_quality.py": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+    "tools/experiments/m7_physical_storage.py": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/m7_swift_harness_run.py": "fcdae72727a2f850a75319aec0ffdb994159953800781ad02b80952160ec4a07",
+    "tools/experiments/test_m7_apple_integration.py": "fcd82d74ad68f25972662ea4294e484506ac362959f33503c1b22e11937058fa",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "tools/experiments/test_m7_native_measurement_check.py": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+    "tools/experiments/test_m7_native_metal_check.py": "f3834817dcd660d2652a6447cbe6632acb33b1a98d60078712b20a5f31aa4a44",
+    "tools/experiments/test_m7_native_quality_check.py": "bbe1edc476fcfdec0dcb6061d75bd55cf91452bd77e455e1074676d1bf772567",
+    "tools/experiments/test_m7_native_score_check.py": "dd9416f2978d6933e0c218bddd9048294ba029c744ed615208bc874b0f25d029",
+    "tools/experiments/test_m7_native_task_check.py": "0aa39d3d5fac4cf0511146049ca92dc3572662f17830a0be4345d239f052bec5",
+    "tools/experiments/test_m7_native_tasks_check.py": "592d762a30bc1a1434f4cfc3b67d13f7606aed8e01825e66d434c130a5f52699",
+    "tools/experiments/test_m7_native_teacher_check.py": "91dcfa41c72eeaba8288c8cdae41e4db15962522a928f473f10d4a58c2f2f692",
+    "tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/test_m7_physical_measurement.py": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+    "tools/experiments/test_m7_physical_quality.py": "6e3e9cb824306ed7d19586cf48011c5deb9ca0bc017174783a6de3c8183e7987",
+    "tools/experiments/test_m7_physical_storage.py": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+    "tools/experiments/test_m7_swift_harness_run.py": "cd54ce8480c01dc81f85ef836618531e13af80a35b5a204d2e49863bd9369fbf",
+    "artifacts/m7-native-tasks-portable-v1/direct-source.json": "f029cc7ee627a20bb88318d17948dffd04a6e70cb5f508908c558ba0a72a771a",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_integration.stderr": "4b1d55000d181e332fa7fe3acb8260fbb58877e6555da8b9c5cdba3a5c7d38ed",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_package.stderr": "88fe5fcc29daf0fb94ee45f080aa736fe7a93c04da2924ef3193890600e71940",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_measurement_check.stderr": "5212103e450d2804b54c43e6062842be0a3d44e6568275a412853a2e4cf712ab",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_metal_check.stderr": "9981aa194bcd50611b9febb45b5f86eab1bcfe5ba7c728475e55cb248270ae96",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_quality_check.stderr": "0417177058d18893cbf7df994bac7e32950a62545fd2565d79450746285073d3",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_score_check.stderr": "b5db2daad6888d8f44241431548d7fd3c268db35a2ef39f3e3c1a0df7d4c8e85",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_task_check.stderr": "7e3765cac729eaee2555d2d1e61d56e92d1e38c440205630406e66cd8fb7a853",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_tasks_check.stderr": "cf91ab5ea6e7d892a88768ccf35b23e38ca09f211a3e8b02a2166bdb387b9cd4",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_teacher_check.stderr": "ddfe873ec28c0ef2849c67975bb4a3d6cb5397acf0aca6bd4aa00f1277e78ade",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_integration.stderr": "8535bf309e7b0afaac26c1ede9136953bd06fc828b48bbc73f9abd1dfa7653a5",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_measurement.stderr": "e8ea2413a22aead2e8e6c6d5e25c3898c2fdb9674eafe7b9ba2101b96ad36c75",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_quality.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_quality.stderr": "a0b2d705f9d06becadea3175f2d07152e8b6cb8e537a5fcc43a682f83f4ccdd0",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_storage.stderr": "07b01713113257ea3a0aad2a06f131d2d36010c2f81f278d76369d04dc6ef589",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_build.stderr": "aba263032f3dbe4c420e266464d582f5da66da3a925870b48328501150f5cb04",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_run.stderr": "7c0f76be294edfdeab9ce8b88795e89548d9b48babf21ce0b120c781c6fdae2b",
+    "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_native_measurement_check.stderr": "57b53a851aba52c209032595d9a2ddfcfb8687b7e5b325dcc03fe12e7629cb82",
+    "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_measurement.stderr": "02149b5b11eae90aa6871e9e38d4b8d51a94a8ff97933f57a4c3087558963287",
+    "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_quality.stderr": "bffc93fb7615794802d14d15756b71d8d116f40e0411569d52d9ae810086b946",
+    "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_storage.stderr": "1078170284b8998d097c721276b101d9af340bbe4ea4c0b06f5966f52a307dda"
+  },
+  "source_endpoints_match": true,
+  "tests": 140,
+  "modules": [
+    {
+      "module": "test_m7_apple_integration",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_apple_integration"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_integration.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_integration.stderr",
+      "tests": 7
+    },
+    {
+      "module": "test_m7_apple_package",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_apple_package"
+      ],
+      "exec_session": 42623,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_package.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_package.stderr",
+      "tests": 10
+    },
+    {
+      "module": "test_m7_native_metal_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_metal_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_metal_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_metal_check.stderr",
+      "tests": 6
+    },
+    {
+      "module": "test_m7_native_quality_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_quality_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_quality_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_quality_check.stderr",
+      "tests": 11
+    },
+    {
+      "module": "test_m7_native_score_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_score_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_score_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_score_check.stderr",
+      "tests": 7
+    },
+    {
+      "module": "test_m7_native_task_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_task_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_task_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_task_check.stderr",
+      "tests": 7
+    },
+    {
+      "module": "test_m7_native_tasks_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_tasks_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_tasks_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_tasks_check.stderr",
+      "tests": 12
+    },
+    {
+      "module": "test_m7_native_teacher_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_teacher_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_teacher_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_teacher_check.stderr",
+      "tests": 7
+    },
+    {
+      "module": "test_m7_physical_integration",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_physical_integration"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_integration.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_integration.stderr",
+      "tests": 16
+    },
+    {
+      "module": "test_m7_swift_harness_build",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_swift_harness_build"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_build.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_build.stderr",
+      "tests": 8
+    },
+    {
+      "module": "test_m7_swift_harness_run",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_swift_harness_run"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_run.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_run.stderr",
+      "tests": 5
+    },
+    {
+      "module": "test_m7_native_measurement_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_native_measurement_check.py"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_native_measurement_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_native_measurement_check.stderr",
+      "tests": 4
+    },
+    {
+      "module": "test_m7_physical_measurement",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_physical_measurement.py"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_measurement.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_measurement.stderr",
+      "tests": 18
+    },
+    {
+      "module": "test_m7_physical_quality",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_physical_quality.py"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_quality.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_quality.stderr",
+      "tests": 12
+    },
+    {
+      "module": "test_m7_physical_storage",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_physical_storage.py"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_storage.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_storage.stderr",
+      "tests": 10
+    }
+  ],
+  "initial_module_attempts": [
+    {
+      "module": "test_m7_apple_integration",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_apple_integration"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_integration.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_integration.stderr",
+      "tests": 7
+    },
+    {
+      "module": "test_m7_apple_package",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_apple_package"
+      ],
+      "exec_session": 42623,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_package.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_apple_package.stderr",
+      "tests": 10
+    },
+    {
+      "module": "test_m7_native_measurement_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_measurement_check"
+      ],
+      "exec_session": null,
+      "exit_code": 1,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_measurement_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_measurement_check.stderr"
+    },
+    {
+      "module": "test_m7_native_metal_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_metal_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_metal_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_metal_check.stderr",
+      "tests": 6
+    },
+    {
+      "module": "test_m7_native_quality_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_quality_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_quality_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_quality_check.stderr",
+      "tests": 11
+    },
+    {
+      "module": "test_m7_native_score_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_score_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_score_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_score_check.stderr",
+      "tests": 7
+    },
+    {
+      "module": "test_m7_native_task_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_task_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_task_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_task_check.stderr",
+      "tests": 7
+    },
+    {
+      "module": "test_m7_native_tasks_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_tasks_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_tasks_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_tasks_check.stderr",
+      "tests": 12
+    },
+    {
+      "module": "test_m7_native_teacher_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_native_teacher_check"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_teacher_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_native_teacher_check.stderr",
+      "tests": 7
+    },
+    {
+      "module": "test_m7_physical_integration",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_physical_integration"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_integration.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_integration.stderr",
+      "tests": 16
+    },
+    {
+      "module": "test_m7_physical_measurement",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_physical_measurement"
+      ],
+      "exec_session": null,
+      "exit_code": 1,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_measurement.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_measurement.stderr"
+    },
+    {
+      "module": "test_m7_physical_quality",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_physical_quality"
+      ],
+      "exec_session": null,
+      "exit_code": 1,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_quality.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_quality.stderr"
+    },
+    {
+      "module": "test_m7_physical_storage",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_physical_storage"
+      ],
+      "exec_session": null,
+      "exit_code": 1,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_storage.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_physical_storage.stderr"
+    },
+    {
+      "module": "test_m7_swift_harness_build",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_swift_harness_build"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_build.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_build.stderr",
+      "tests": 8
+    },
+    {
+      "module": "test_m7_swift_harness_run",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.experiments.test_m7_swift_harness_run"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_run.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-test_m7_swift_harness_run.stderr",
+      "tests": 5
+    }
+  ],
+  "corrected_discovery_attempts": [
+    {
+      "module": "test_m7_native_measurement_check",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_native_measurement_check.py"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_native_measurement_check.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_native_measurement_check.stderr",
+      "tests": 4
+    },
+    {
+      "module": "test_m7_physical_measurement",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_physical_measurement.py"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_measurement.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_measurement.stderr",
+      "tests": 18
+    },
+    {
+      "module": "test_m7_physical_quality",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_physical_quality.py"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_quality.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_quality.stderr",
+      "tests": 12
+    },
+    {
+      "module": "test_m7_physical_storage",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tools/experiments",
+        "-p",
+        "test_m7_physical_storage.py"
+      ],
+      "exec_session": null,
+      "exit_code": 0,
+      "stdout": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_storage.stdout",
+      "stderr": "artifacts/m7-native-tasks-portable-v1/isolated-v2-test_m7_physical_storage.stderr",
+      "tests": 10
+    }
+  ],
+  "initial_module_import_failures": 4,
+  "execution_environment": "Direct Codex exec; zsh login=false; inherited host environment; source closure verified before and after the entire module collection; all actual exit statuses observed from exec tools; modules run in separate ordinary Python processes; no invented owned-process or PID metadata",
+  "combined_suite_passed": false
+}
