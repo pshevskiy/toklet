@@ -1592,3 +1592,5 @@ M7.3 stays open.
 The [sealed physical lifecycle controller](docs/experiments/2026-10-21-m7-physical-lifecycle.md)
 passes190 portable methods and two local inventory/help commands. Same-PID real
 OS round trips are now executable but remain uncollected; M7.3 stays open.
+
+The [bounded state witness app](docs/experiments/2026-10-21-m7-state-app.md) adds exact cached/changed-prefix, pending append, active partial-prefill cancellation and fully committed capacity/overflow diagnostics.59 native/build commands,206 methods/21 modules and15 focused mutations pass; current Mac small Metal proves the512-token interruption and1152-position boundary. Successful close now clears stale status/admission/emissions. Physical witnesses and M7.3 remain open.

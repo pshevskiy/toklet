@@ -1,0 +1,11 @@
+test_clocks_process_and_bounded_history (test_m7_native_lifecycle_check.Checks.test_clocks_process_and_bounded_history) ... ok
+test_exact_settled_state_and_replay (test_m7_native_lifecycle_check.Checks.test_exact_settled_state_and_replay) ... ok
+test_exact_synthetic_trace (test_m7_native_lifecycle_check.Checks.test_exact_synthetic_trace) ... ok
+test_failure_and_detach_must_be_clean (test_m7_native_lifecycle_check.Checks.test_failure_and_detach_must_be_clean) ... ok
+test_pre_action_prefix_and_command_identity (test_m7_native_lifecycle_check.Checks.test_pre_action_prefix_and_command_identity) ... ok
+test_provenance_order_and_scope (test_m7_native_lifecycle_check.Checks.test_provenance_order_and_scope) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.005s
+
+OK

@@ -168,3 +168,5 @@ remain unqualified.
 The [sealed physical lifecycle controller](../docs/experiments/2026-10-21-m7-physical-lifecycle.md)
 requires actual phase provenance, original PID, exact replay outputs and independent
 host/phone cleanup.190 portable checks pass; physical lifecycle remains pending.
+
+The [state witness app](../docs/experiments/2026-10-21-m7-state-app.md) checks exact history and scalar diagnostics through cache reuse, partial-prefill cancellation and capacity rejection. Tiny CPU/Metal and real small Mac checks plus both unsigned iOS builds pass. This is not physical qualification; collect both real-model phone state witnesses against the new reviewed app proof.

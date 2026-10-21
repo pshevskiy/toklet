@@ -1,0 +1,1 @@
+{"passed": false, "commands": 15, "primary_error": "RuntimeError: Failed module: test_m7_physical_lifecycle", "endpoint_errors": []}

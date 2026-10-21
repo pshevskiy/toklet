@@ -1,0 +1,11 @@
+test_actual_post_publication_witness_is_mandatory (test_m7_native_prefix_check.Checks.test_actual_post_publication_witness_is_mandatory) ... ok
+test_complete_bounded_snapshot_sequence (test_m7_native_prefix_check.Checks.test_complete_bounded_snapshot_sequence) ... ok
+test_default_and_close_cannot_publish (test_m7_native_prefix_check.Checks.test_default_and_close_cannot_publish) ... ok
+test_exact_pending_replay_and_suspension_states (test_m7_native_prefix_check.Checks.test_exact_pending_replay_and_suspension_states) ... ok
+test_outcome_order_and_failure_status (test_m7_native_prefix_check.Checks.test_outcome_order_and_failure_status) ... ok
+test_wrong_history_or_saved_prefix (test_m7_native_prefix_check.Checks.test_wrong_history_or_saved_prefix) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.003s
+
+OK

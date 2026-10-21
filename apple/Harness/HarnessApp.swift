@@ -200,10 +200,30 @@ struct TokletHarnessApp: App {
 
     init() {
         let arguments = ProcessInfo.processInfo.arguments
-        let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle"]
-        let state = HarnessStore(enabled:!diagnostics.contains(where:arguments.contains),lifecycleEnabled:arguments.contains("--lifecycle"))
+        let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle","--state"]
+        let state = HarnessStore(enabled:!diagnostics.contains(where:arguments.contains),lifecycleEnabled:arguments.contains("--lifecycle") || arguments.contains("--state"))
         _store = StateObject(wrappedValue:state)
-        if let position = arguments.firstIndex(of:"--lifecycle") {
+        if let position = arguments.firstIndex(of:"--state") {
+            UIApplication.shared.isIdleTimerDisabled = true
+            UIDevice.current.isBatteryMonitoringEnabled = true
+            let root = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
+            let signals = state.lifecycleSignals!
+            DispatchQueue.global(qos:.userInitiated).async {
+                do {
+                    guard position == 1, arguments.count == 4 else { throw NSError(domain:"TokletState",code:2) }
+                    try awaitNativeMeasurementForeground()
+                    let config = try admitLifecycleConfig(root:root,name:arguments[position+1],sha256:arguments[position+2])
+                    try installedBundleProof("before")
+                    let result = runNativeState(config,root:root,signals:signals)
+                    try installedBundleProof("after")
+                    let data = try JSONEncoder().encode(result)
+                    try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_STATE_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+                    exit(result.passed ? 0:1)
+                } catch {
+                    try? FileHandle.standardError.write(contentsOf:Data("TOKLET_STATE_ERROR=\(error)\n".utf8));exit(1)
+                }
+            }
+        } else if let position = arguments.firstIndex(of:"--lifecycle") {
             UIApplication.shared.isIdleTimerDisabled = true
             UIDevice.current.isBatteryMonitoringEnabled = true
             let root = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]

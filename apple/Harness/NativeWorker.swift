@@ -275,6 +275,11 @@ final class NativeWorker: @unchecked Sendable {
         view.phase = releaseError == nil ? "Closed" : "Release failed; restart required"
         if let error = releaseError {
             view.status = UInt32(clamping: error.code); view.message = error.localizedDescription
+        } else {
+            // Completed close describes the released owner, not the previous
+            // request. Earlier operation errors remain in caller diagnostics.
+            view.status = 0; view.message = ""; view.admittedBytes = 0
+            view.ids.removeAll(keepingCapacity:true);view.tokenTimings.removeAll(keepingCapacity:true)
         }
         thread = nil
         condition.broadcast(); condition.unlock()
