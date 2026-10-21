@@ -1,0 +1,2 @@
+{"passed": false, "primary_error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/coloner/work/rust/toklet/artifacts/m7-physical-prepared-v14/source-snapshot/tools/experiments/m7_physical_integration.py'", "endpoint_errors": [], "cleanup_errors": []}
+{"passed": false, "stages": 1, "primary_error": "RuntimeError: tiny-quality failed: tiny-cpu/short", "endpoint_errors": []}

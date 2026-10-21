@@ -1,0 +1,774 @@
+{
+  "format": "toklet-m7-physical-measurement-v1",
+  "passed": true,
+  "bindings": {
+    "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/native/tests.rs": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+    "src/native.rs": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "apple/include/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/tests/native_smoke.c": "642dad6db25398a1e5dbb9ca09e67a01edd8111a4517591b541ee02063c2e13c",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/Info.plist": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-darwin-link-smoke": "003e0c0ce0e8449de92b951199a6cfd0cf3de246914533f961ccb6b31c44d7c2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-darwin/release/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-link-smoke": "fc4e85048e91ad2469b11b62c3de00a514723b98f09049ad21e7e10e964392d6",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios/release/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-sim-link-smoke": "f3ec7566fd1ad5cb302b9a5730a4f1b71721d812f83530aeab52c7415208fad2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios-sim/release/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/build.json": "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971",
+    "artifacts/m7-physical-admission-v1/private-selection.json": "711ef5916ad223096bcb91cd93d7814f2c44056ab7494882d87af7d42a9804db",
+    "apple/Harness/HarnessApp.swift": "699813ca61b981bd2e2334e6600e59bd567a62cadb39a20d7d0d260601c204af",
+    "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+    "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+    "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/Harness/NativeWorker.swift": "0f9293f77459ac681de151cf756df1dc800981d04e679572ce8c8c9443b6662e",
+    "apple/tests/swift/WorkerChecks.swift": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "18ea2468847dde1072e0d653ec2c6e554a00f52ecfb96b9d1eacb131a0e5c919",
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+    "artifacts/m7-physical-prepared-v14/source-snapshot/tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "artifacts/m7-physical-prepared-v14/source-snapshot/tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Generated/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Generated/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-prepared-v14/integration.json": "c5fd8e28d90413ece9d400f43c626e7b052f802241b6596c52d64229967e19b8",
+    "artifacts/m7-physical-prepared-v14/private-logs/install.stdout": "cea93e0469e6df4d7287c8cd6ef47bcfbe768b9e700ac062badc591095323c58",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_storage.py": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce",
+    "tools/experiments/m7_physical_measurement.py": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034",
+    "tools/experiments/test_m7_physical_measurement.py": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+    "tools/experiments/test_m7_physical_storage.py": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/transfer/M7Jobs/93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d.json": "93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+  },
+  "device": {
+    "product_type": "iPhone15,2",
+    "marketing_name": "iPhone 14 Pro",
+    "reality": "physical",
+    "os_version": "27.0.1",
+    "developer_mode": "enabled",
+    "ddi_services": true,
+    "transport": "wired"
+  },
+  "signing": {
+    "development": true,
+    "device_in_profile": true,
+    "signature_team_matches": true,
+    "application_matches": true,
+    "expires_utc": "2026-10-26T19:59:46+00:00"
+  },
+  "config": {
+    "version": 1,
+    "modelFolder": "M7Inputs/tiny-cpu/Model",
+    "packedFolder": "",
+    "files": {
+      "M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+      "M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+    },
+    "metal": false,
+    "capacity": 32,
+    "chunk": 3,
+    "numericalBudget": 134217728,
+    "processBudget": 268435456,
+    "prompt": [
+      1,
+      7,
+      13,
+      3
+    ],
+    "maximum": 2,
+    "expectedPrefix": [
+      47,
+      47
+    ],
+    "warmups": 3,
+    "repetitions": 10,
+    "minimumNativeSeconds": 0
+  },
+  "transfer_receipt": null,
+  "prepared_receipt": {
+    "path": "artifacts/m7-physical-prepared-v14/integration.json",
+    "sha256": "c5fd8e28d90413ece9d400f43c626e7b052f802241b6596c52d64229967e19b8"
+  },
+  "signed_bundle": {
+    "Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "TokletHarness": "82f8de2c536895de837ae72413d95aa760a3d61e61188b953acfe37017eee858",
+    "_CodeSignature/CodeResources": "f7a2be8763bdd7253ef302cd61ee0d9496a66bb954e33176b6eb23f81714a9db",
+    "embedded.mobileprovision": "f205de44fba20484b45c00e44df01ad8183177b2427ba9b488679afb22697220"
+  },
+  "host_boot_token": "b7f1037d876060a01e17c9c4c851a53c67f6889ca06fc8e0061eeafef266346b",
+  "measurement_host_start": {
+    "wallUnixNanoseconds": 1792589972195473000,
+    "monotonicNanoseconds": 1904908965076416
+  },
+  "storage_admission": null,
+  "job_receipt": {
+    "relative_path": "M7Jobs/93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d.json",
+    "sha256": "93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d"
+  },
+  "checked": {
+    "result": {
+      "released": true,
+      "backend": "cpu",
+      "warmupsCompleted": 3,
+      "m7Complete": false,
+      "filesystemBefore": {
+        "readStartedUptimeNanoseconds": 150562384603083,
+        "instrument": "Foundation.FileManager.attributesOfFileSystem.systemFreeSize",
+        "scope": "trusted-root-filesystem",
+        "readCompletedUptimeNanoseconds": 150562384701125,
+        "freeBytes": 27648000000
+      },
+      "closed": true,
+      "physicalDeviceQualified": false,
+      "checkpoints": [
+        {
+          "footprint": {
+            "physicalBytes": 19023496,
+            "lifetimePeakPhysicalBytes": 19269256,
+            "returnedNaturalCount": 93
+          },
+          "phase": "before-artifact-proof"
+        },
+        {
+          "footprint": {
+            "physicalBytes": 19039880,
+            "lifetimePeakPhysicalBytes": 19269256,
+            "returnedNaturalCount": 93
+          },
+          "phase": "after-artifact-proof"
+        },
+        {
+          "footprint": {
+            "physicalBytes": 19220104,
+            "lifetimePeakPhysicalBytes": 19269256,
+            "returnedNaturalCount": 93
+          },
+          "phase": "loaded"
+        },
+        {
+          "footprint": {
+            "physicalBytes": 19089032,
+            "lifetimePeakPhysicalBytes": 19269256,
+            "returnedNaturalCount": 93
+          },
+          "phase": "unloaded"
+        },
+        {
+          "footprint": {
+            "physicalBytes": 19089032,
+            "lifetimePeakPhysicalBytes": 19269256,
+            "returnedNaturalCount": 93
+          },
+          "phase": "closed"
+        },
+        {
+          "footprint": {
+            "physicalBytes": 19072648,
+            "lifetimePeakPhysicalBytes": 19269256,
+            "returnedNaturalCount": 93
+          },
+          "phase": "after-final-artifact-proof"
+        }
+      ],
+      "sumNativeLastEventSeconds": 0.000724584,
+      "endpointErrors": [],
+      "loadAndSessionSeconds": 0.000608125,
+      "cleanupErrors": [],
+      "filesBefore": {
+        "M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+        "M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+      },
+      "measuredCompleted": 10,
+      "interruptionCount": 0,
+      "passed": true,
+      "filesAfter": {
+        "M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+        "M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+      }
+    },
+    "sample_count": 13,
+    "measured": [
+      {
+        "native_ttft_seconds": 5.3167e-05,
+        "caller_ttft_seconds": 5.6583e-05,
+        "decode_tokens_per_second": 53333.33333333335,
+        "caller_completed_seconds": 7.8417e-05
+      },
+      {
+        "native_ttft_seconds": 5.3125e-05,
+        "caller_ttft_seconds": 5.5708e-05,
+        "decode_tokens_per_second": 53333.33333333333,
+        "caller_completed_seconds": 7.7417e-05
+      },
+      {
+        "native_ttft_seconds": 5.3083e-05,
+        "caller_ttft_seconds": 5.5666e-05,
+        "decode_tokens_per_second": 53333.33333333333,
+        "caller_completed_seconds": 7.7958e-05
+      },
+      {
+        "native_ttft_seconds": 5.8084e-05,
+        "caller_ttft_seconds": 6.1083e-05,
+        "decode_tokens_per_second": 51174.453712706614,
+        "caller_completed_seconds": 8.4083e-05
+      },
+      {
+        "native_ttft_seconds": 5.325e-05,
+        "caller_ttft_seconds": 5.5916e-05,
+        "decode_tokens_per_second": 53570.471955857945,
+        "caller_completed_seconds": 7.775e-05
+      },
+      {
+        "native_ttft_seconds": 5.2667e-05,
+        "caller_ttft_seconds": 5.525e-05,
+        "decode_tokens_per_second": 53333.33333333335,
+        "caller_completed_seconds": 7.8125e-05
+      },
+      {
+        "native_ttft_seconds": 5.4208e-05,
+        "caller_ttft_seconds": 5.6833e-05,
+        "decode_tokens_per_second": 53095.46564723374,
+        "caller_completed_seconds": 7.9833e-05
+      },
+      {
+        "native_ttft_seconds": 5.3125e-05,
+        "caller_ttft_seconds": 5.7792e-05,
+        "decode_tokens_per_second": 53333.33333333333,
+        "caller_completed_seconds": 7.9958e-05
+      },
+      {
+        "native_ttft_seconds": 5.2875e-05,
+        "caller_ttft_seconds": 5.5333e-05,
+        "decode_tokens_per_second": 53812.624441693995,
+        "caller_completed_seconds": 7.7e-05
+      },
+      {
+        "native_ttft_seconds": 5.2917e-05,
+        "caller_ttft_seconds": 5.55e-05,
+        "decode_tokens_per_second": 53453.068206115015,
+        "caller_completed_seconds": 7.7542e-05
+      }
+    ],
+    "installed_proofs": [
+      {
+        "files": {
+          "_CodeSignature/CodeResources": "f7a2be8763bdd7253ef302cd61ee0d9496a66bb954e33176b6eb23f81714a9db",
+          "embedded.mobileprovision": "f205de44fba20484b45c00e44df01ad8183177b2427ba9b488679afb22697220",
+          "Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+          "PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+          "Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+          "Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+          "TokletHarness": "82f8de2c536895de837ae72413d95aa760a3d61e61188b953acfe37017eee858"
+        },
+        "phase": "before",
+        "simulator": false
+      },
+      {
+        "files": {
+          "_CodeSignature/CodeResources": "f7a2be8763bdd7253ef302cd61ee0d9496a66bb954e33176b6eb23f81714a9db",
+          "embedded.mobileprovision": "f205de44fba20484b45c00e44df01ad8183177b2427ba9b488679afb22697220",
+          "Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+          "PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+          "Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+          "Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+          "TokletHarness": "82f8de2c536895de837ae72413d95aa760a3d61e61188b953acfe37017eee858"
+        },
+        "phase": "after",
+        "simulator": false
+      }
+    ],
+    "launch": {
+      "pid": 4158,
+      "executable_matches": true,
+      "reported_exit_code": 0,
+      "reported_core_dump": false
+    }
+  },
+  "commands": [
+    {
+      "command": [
+        "/usr/sbin/sysctl",
+        "-n",
+        "kern.bootsessionuuid"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42916,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/host-boot.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/host-boot.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "details",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42918,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/device-before.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/device-before.stderr"
+    },
+    {
+      "command": [
+        "codesign",
+        "--verify",
+        "--strict",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-physical-prepared-v14/derived/Build/Products/Release-iphoneos/TokletHarness.app"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42921,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/signature-verify.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/signature-verify.stderr"
+    },
+    {
+      "command": [
+        "security",
+        "cms",
+        "-D",
+        "-i",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-physical-prepared-v14/derived/Build/Products/Release-iphoneos/TokletHarness.app/embedded.mobileprovision"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42923,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/profile.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/profile.stderr"
+    },
+    {
+      "command": [
+        "codesign",
+        "-d",
+        "--entitlements",
+        ":-",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-physical-prepared-v14/derived/Build/Products/Release-iphoneos/TokletHarness.app"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42925,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/entitlements.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/entitlements.stderr"
+    },
+    {
+      "command": [
+        "codesign",
+        "-dvv",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-physical-prepared-v14/derived/Build/Products/Release-iphoneos/TokletHarness.app"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42927,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/signature-details.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/signature-details.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "apps",
+        "--bundle-id",
+        "dev.toklet.harness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42929,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-6.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-6.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "processes",
+        "--search",
+        "TokletHarness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42931,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/process-1.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/process-1.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "apps",
+        "--bundle-id",
+        "dev.toklet.harness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42938,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-8.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-8.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "copy",
+        "to",
+        "--source",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-phone-loss-larger-full-storage-proof-v1/transfer/M7Inputs/tiny-cpu/Model",
+        "--destination",
+        "Documents/M7Inputs/tiny-cpu/Model",
+        "--domain-type",
+        "appDataContainer",
+        "--domain-identifier",
+        "dev.toklet.harness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "600",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42944,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copy-Model.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copy-Model.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "files",
+        "--subdirectory",
+        "Documents/M7Inputs/tiny-cpu",
+        "--recurse",
+        "--domain-type",
+        "appDataContainer",
+        "--domain-identifier",
+        "dev.toklet.harness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42948,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copied-inventory.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copied-inventory.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "apps",
+        "--bundle-id",
+        "dev.toklet.harness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42951,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-11.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-11.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "copy",
+        "to",
+        "--source",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-phone-loss-larger-full-storage-proof-v1/transfer/M7Jobs",
+        "--destination",
+        "Documents/M7Jobs",
+        "--domain-type",
+        "appDataContainer",
+        "--domain-identifier",
+        "dev.toklet.harness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42954,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copy-job.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copy-job.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "apps",
+        "--bundle-id",
+        "dev.toklet.harness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42957,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-13.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-13.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "process",
+        "launch",
+        "--device",
+        "<private-device_identifier>",
+        "--terminate-existing",
+        "--console",
+        "--timeout",
+        "2400",
+        "--json-output",
+        "/Users/coloner/work/rust/toklet/artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/launch.json",
+        "dev.toklet.harness",
+        "--",
+        "--measure",
+        "M7Jobs/93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d.json",
+        "93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42960,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/measurement.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/measurement.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "processes",
+        "--search",
+        "TokletHarness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42963,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/process-2.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/process-2.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "details",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "90",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42965,
+      "stdout": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/device-after.stdout",
+      "stderr": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/device-after.stderr"
+    }
+  ],
+  "controlled_environment": {
+    "HOME": "/Users/coloner",
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/Users/coloner/.cargo/bin",
+    "CARGO_HOME": "/Users/coloner/.cargo",
+    "RUSTUP_HOME": "/Users/coloner/.rustup",
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer",
+    "LANG": "en_US.UTF-8",
+    "TMPDIR": "/Users/coloner/work/rust/toklet/artifacts/m7-phone-loss-larger-full-storage-proof-v1"
+  },
+  "remote_cleanup": [
+    {
+      "absent": true,
+      "observations": [
+        []
+      ],
+      "signals": [],
+      "errors": []
+    },
+    {
+      "absent": true,
+      "observations": [
+        []
+      ],
+      "signals": [],
+      "errors": []
+    }
+  ],
+  "private_evidence_pins": {
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-execution.json": "d93ff0a8f8f3d086c1de8b21d12cda4c75b1f099987229f61e6c13f4f844e447",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copied-inventory.stdout": "cf5e821bca8487a6670583fb0e536ddd9ff2ba966532e6ab9a8d35cffe9869ec",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copy-Model.stdout": "ec882ae152271340ff75b2cdea0964df50ef969d2730b22cdfc2a0b5b834bc35",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/copy-job.stdout": "2906b6d557f1fc89263ebc786b52d1f1bb8d149551da766b6149b87d0e432cbf",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-11.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-11.stdout": "9922f4e92ea3390d423c0b48e7208bf540e378b2d8fd44b8fd2add9ec39c2e0a",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-13.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-13.stdout": "9922f4e92ea3390d423c0b48e7208bf540e378b2d8fd44b8fd2add9ec39c2e0a",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-6.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-6.stdout": "9922f4e92ea3390d423c0b48e7208bf540e378b2d8fd44b8fd2add9ec39c2e0a",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-8.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/current-install-8.stdout": "9922f4e92ea3390d423c0b48e7208bf540e378b2d8fd44b8fd2add9ec39c2e0a",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/device-after.stdout": "efb88ddb2a40419877b5bc7b9efd23262baaa4b495008e0fa37ac2358eaa0e63",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/device-before.stdout": "efb88ddb2a40419877b5bc7b9efd23262baaa4b495008e0fa37ac2358eaa0e63",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/entitlements.stderr": "831d1cf4a305750f2e64cff4dc2e526a65bf4b5218768bc984d93cb79153b1ad",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/host-boot.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/host-boot.stdout": "707281110b6c739b1471b31417b9fac61a26540c62b8db4cde2aa0cb2e26fbd8",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/launch.json": "a8b312fa6236afc2936661d8ac64b37df7ca3ba5fc60343af2d3b77665582fd0",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/measurement.stdout": "efe745437fe59afb0602d3d937c9989a0dabb4537004d22af2d06019f89a0fb2",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/signature-details.stderr": "4ae056fbf788a145efd4a3c3354ca5c4adffbca777c12d08af540e0e17d68fb1",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "primary_error": null,
+  "endpoint_errors": [],
+  "cleanup_errors": [],
+  "physical_device_qualified": false,
+  "m7_complete": false
+}

@@ -151,3 +151,5 @@ post-exit decoding and literal grading remain before quality acceptance.
 The [literal task-ID compatibility](../docs/experiments/2026-10-21-m7-task-id-compat.md)
 preserves frozen slash-containing labels with unchanged artifact-path rules.
 Tiny CPU/Metal and both iOS app builds pass; full physical tasks remain pending.
+
+The [21 October physical loss report](../docs/experiments/2026-10-21-m7-phone-loss.md) accepts both unchanged 10,000-target held-out loss gates on actual iPhone 14 Pro/iOS 27.0.1. Small/larger full peaks were 1,028,770,136/1,835,338,624 bytes; thermal observations and retained preparation refusals are explicit. This does not qualify task quality, actual OS lifecycle, energy, the base iPhone 14, final supported limits or M7 completion.

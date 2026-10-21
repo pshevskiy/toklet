@@ -1,0 +1,411 @@
+{
+  "format": "toklet-m7-phone-loss-source-snapshot-v1",
+  "engine_revision": "c2e44fb772a9dcea1fa70c8ca64e1baa20218e23",
+  "sources": {
+    "Cargo.lock": {
+      "sha256": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/Cargo.lock",
+      "matches_collection_head": true
+    },
+    "Cargo.toml": {
+      "sha256": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/Cargo.toml",
+      "matches_collection_head": true
+    },
+    "apple/Harness/HarnessApp.swift": {
+      "sha256": "699813ca61b981bd2e2334e6600e59bd567a62cadb39a20d7d0d260601c204af",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/Harness/HarnessApp.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/Info.plist": {
+      "sha256": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/Harness/Info.plist",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeMeasurement.swift": {
+      "sha256": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/Harness/NativeMeasurement.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeQuality.swift": {
+      "sha256": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/Harness/NativeQuality.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeTaskResponse.swift": {
+      "sha256": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/Harness/NativeTaskResponse.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeTasks.swift": {
+      "sha256": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/Harness/NativeTasks.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeTeacherForcing.swift": {
+      "sha256": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/Harness/NativeTeacherForcing.swift",
+      "matches_collection_head": true
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "sha256": "0f9293f77459ac681de151cf756df1dc800981d04e679572ce8c8c9443b6662e",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/Harness/NativeWorker.swift",
+      "matches_collection_head": true
+    },
+    "apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "sha256": "18ea2468847dde1072e0d653ec2c6e554a00f52ecfb96b9d1eacb131a0e5c919",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/TokletHarness.xcodeproj/project.pbxproj",
+      "matches_collection_head": true
+    },
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": {
+      "sha256": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+      "matches_collection_head": true
+    },
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": {
+      "sha256": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme",
+      "matches_collection_head": true
+    },
+    "apple/include/module.modulemap": {
+      "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/include/module.modulemap",
+      "matches_collection_head": true
+    },
+    "apple/include/toklet.h": {
+      "sha256": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/include/toklet.h",
+      "matches_collection_head": true
+    },
+    "apple/tests/native_smoke.c": {
+      "sha256": "642dad6db25398a1e5dbb9ca09e67a01edd8111a4517591b541ee02063c2e13c",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/tests/native_smoke.c",
+      "matches_collection_head": true
+    },
+    "apple/tests/swift/WorkerChecks.swift": {
+      "sha256": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/apple/tests/swift/WorkerChecks.swift",
+      "matches_collection_head": true
+    },
+    "artifacts/m7-phone-loss-driver-v2/checks.py": {
+      "sha256": "ddb6e4c458c6f19c20f006e13f51c5496521a5c1fe13dbe0d0b95b40c78290a0",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/artifacts/m7-phone-loss-driver-v2/checks.py",
+      "matches_collection_head": false
+    },
+    "artifacts/m7-phone-loss-driver-v2/driver.py": {
+      "sha256": "43c2f7b2b1518e07ace97f19139038946ed3e7bc6e114269156e006c028bc0f2",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/artifacts/m7-phone-loss-driver-v2/driver.py",
+      "matches_collection_head": false
+    },
+    "src/benchmark.rs": {
+      "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/benchmark.rs",
+      "matches_collection_head": true
+    },
+    "src/bin/cli/chat.rs": {
+      "sha256": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/bin/cli/chat.rs",
+      "matches_collection_head": true
+    },
+    "src/bin/cli/mod.rs": {
+      "sha256": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/bin/cli/mod.rs",
+      "matches_collection_head": true
+    },
+    "src/bin/toklet.rs": {
+      "sha256": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/bin/toklet.rs",
+      "matches_collection_head": true
+    },
+    "src/cpu/attention.rs": {
+      "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/cpu/attention.rs",
+      "matches_collection_head": true
+    },
+    "src/cpu/mod.rs": {
+      "sha256": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/cpu/mod.rs",
+      "matches_collection_head": true
+    },
+    "src/cpu/reductions.rs": {
+      "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/cpu/reductions.rs",
+      "matches_collection_head": true
+    },
+    "src/cpu/tiled.rs": {
+      "sha256": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/cpu/tiled.rs",
+      "matches_collection_head": true
+    },
+    "src/generation.rs": {
+      "sha256": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/generation.rs",
+      "matches_collection_head": true
+    },
+    "src/lib.rs": {
+      "sha256": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/lib.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/capture.rs": {
+      "sha256": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/capture.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/diagnostic.rs": {
+      "sha256": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/diagnostic.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/half_consistency.rs": {
+      "sha256": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/half_consistency.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/half_projection.rs": {
+      "sha256": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/half_projection.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/kernels.metal": {
+      "sha256": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/kernels.metal",
+      "matches_collection_head": true
+    },
+    "src/metal/memory.rs": {
+      "sha256": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/memory.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/mod.rs": {
+      "sha256": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/mod.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/online_attention.rs": {
+      "sha256": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/online_attention.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/profile.rs": {
+      "sha256": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/profile.rs",
+      "matches_collection_head": true
+    },
+    "src/metal/q4_v2_projection.rs": {
+      "sha256": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/metal/q4_v2_projection.rs",
+      "matches_collection_head": true
+    },
+    "src/model/cache.rs": {
+      "sha256": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/model/cache.rs",
+      "matches_collection_head": true
+    },
+    "src/model/mod.rs": {
+      "sha256": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/model/mod.rs",
+      "matches_collection_head": true
+    },
+    "src/model/trace.rs": {
+      "sha256": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/model/trace.rs",
+      "matches_collection_head": true
+    },
+    "src/native.rs": {
+      "sha256": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/native.rs",
+      "matches_collection_head": true
+    },
+    "src/native/tests.rs": {
+      "sha256": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/native/tests.rs",
+      "matches_collection_head": true
+    },
+    "src/q4.rs": {
+      "sha256": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/q4.rs",
+      "matches_collection_head": true
+    },
+    "src/q4/artifact.rs": {
+      "sha256": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/q4/artifact.rs",
+      "matches_collection_head": true
+    },
+    "src/sampling.rs": {
+      "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/sampling.rs",
+      "matches_collection_head": true
+    },
+    "src/session.rs": {
+      "sha256": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/session.rs",
+      "matches_collection_head": true
+    },
+    "src/weights/half_tests.rs": {
+      "sha256": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/weights/half_tests.rs",
+      "matches_collection_head": true
+    },
+    "src/weights/mod.rs": {
+      "sha256": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/src/weights/mod.rs",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_apple_integration.py": {
+      "sha256": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_apple_integration.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_apple_package.py": {
+      "sha256": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_apple_package.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_fixture.py": {
+      "sha256": "9f97b525af81f3243a774bf73b1e48a6379c6dd34d9e5af7057992502e3b72be",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_native_fixture.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_measurement_check.py": {
+      "sha256": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_native_measurement_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_metal_check.py": {
+      "sha256": "09da441923c9fa4ebe7dc55fb02c6c1c9047664c09fda5bc349b84b656d0ec0f",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_native_metal_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_quality_check.py": {
+      "sha256": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_native_quality_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_score_check.py": {
+      "sha256": "90d27733655fd482485350eda54c351b63730b3e8082d8ea4ab710502bc71b24",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_native_score_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_task_check.py": {
+      "sha256": "e56e815c87278079cef1a8f9e55d60d83b617e5509b7806fed7850249296fb07",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_native_task_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_tasks_check.py": {
+      "sha256": "a869a158cb728c4e13cc74791462a200246feff6d9ffb8b2886517523d2056c1",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_native_tasks_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_native_teacher_check.py": {
+      "sha256": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_native_teacher_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_integration.py": {
+      "sha256": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_physical_integration.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_measurement.py": {
+      "sha256": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_physical_measurement.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_quality.py": {
+      "sha256": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_physical_quality.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_physical_storage.py": {
+      "sha256": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_physical_storage.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_swift_harness_build.py": {
+      "sha256": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_swift_harness_build.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/m7_swift_harness_run.py": {
+      "sha256": "fcdae72727a2f850a75319aec0ffdb994159953800781ad02b80952160ec4a07",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/m7_swift_harness_run.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_apple_integration.py": {
+      "sha256": "fcd82d74ad68f25972662ea4294e484506ac362959f33503c1b22e11937058fa",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_apple_integration.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_apple_package.py": {
+      "sha256": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_apple_package.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_measurement_check.py": {
+      "sha256": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_native_measurement_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_metal_check.py": {
+      "sha256": "f3834817dcd660d2652a6447cbe6632acb33b1a98d60078712b20a5f31aa4a44",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_native_metal_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_quality_check.py": {
+      "sha256": "bbe1edc476fcfdec0dcb6061d75bd55cf91452bd77e455e1074676d1bf772567",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_native_quality_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_score_check.py": {
+      "sha256": "dd9416f2978d6933e0c218bddd9048294ba029c744ed615208bc874b0f25d029",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_native_score_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_task_check.py": {
+      "sha256": "0aa39d3d5fac4cf0511146049ca92dc3572662f17830a0be4345d239f052bec5",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_native_task_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_tasks_check.py": {
+      "sha256": "c2a08e7ef6fd2677e0826fd9ed57e12bdb1dc8f56ac9b3c9b4dea800daa5024f",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_native_tasks_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_native_teacher_check.py": {
+      "sha256": "91dcfa41c72eeaba8288c8cdae41e4db15962522a928f473f10d4a58c2f2f692",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_native_teacher_check.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_integration.py": {
+      "sha256": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_physical_integration.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_measurement.py": {
+      "sha256": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_physical_measurement.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_quality.py": {
+      "sha256": "6e3e9cb824306ed7d19586cf48011c5deb9ca0bc017174783a6de3c8183e7987",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_physical_quality.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_physical_storage.py": {
+      "sha256": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_physical_storage.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_swift_harness_build.py": {
+      "sha256": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_swift_harness_build.py",
+      "matches_collection_head": true
+    },
+    "tools/experiments/test_m7_swift_harness_run.py": {
+      "sha256": "cd54ce8480c01dc81f85ef836618531e13af80a35b5a204d2e49863bd9369fbf",
+      "snapshot": "artifacts/m7-phone-loss-source-v1/tools/experiments/test_m7_swift_harness_run.py",
+      "matches_collection_head": true
+    }
+  }
+}

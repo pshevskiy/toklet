@@ -1,0 +1,15 @@
+{
+  "before": {
+    "path": "apple/Binaries/Toklet.xcframework",
+    "target": "/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v4/Toklet.xcframework",
+    "resolved_target": "/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v4/Toklet.xcframework"
+  },
+  "after": {
+    "path": "apple/Binaries/Toklet.xcframework",
+    "target": "/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v5/Toklet.xcframework"
+  },
+  "previous_failed_receipt": {
+    "path": "artifacts/m7-physical-prepared-v12/integration.json",
+    "sha256": "04954cd98395dff2674239f09a40dd52badc2b3524603ad5bf969d42064946e5"
+  }
+}

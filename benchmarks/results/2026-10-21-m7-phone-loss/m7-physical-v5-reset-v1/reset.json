@@ -1,0 +1,157 @@
+{
+  "passed": true,
+  "bindings": {
+    "artifacts/m7-physical-v5-reset-v1/reset.py": "1fffbbcbb1c735fbb8aed423a2294c773f5a0d5449fbd3197ab170c578ad581b",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "artifacts/m7-physical-prepared-v11/private-logs/install.stdout": "3e0062530e7cdd4b6a3dacbd628aa33c31793baf6eadfce4f1953ab765094d94",
+    "artifacts/m7-physical-prepared-v11/integration.json": "661010123ba4cc9539dee098aefaf9bb5399c184c57f84b3fa748d4563fd6577"
+  },
+  "commands": [
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "details",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 39730,
+      "stdout": "artifacts/m7-physical-v5-reset-v1/private-logs/1-device.stdout",
+      "stderr": "artifacts/m7-physical-v5-reset-v1/private-logs/1-device.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "apps",
+        "--bundle-id",
+        "dev.toklet.harness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 39732,
+      "stdout": "artifacts/m7-physical-v5-reset-v1/private-logs/2-installed.stdout",
+      "stderr": "artifacts/m7-physical-v5-reset-v1/private-logs/2-installed.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "processes",
+        "--search",
+        "TokletHarness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 39734,
+      "stdout": "artifacts/m7-physical-v5-reset-v1/private-logs/3-processes.stdout",
+      "stderr": "artifacts/m7-physical-v5-reset-v1/private-logs/3-processes.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "process",
+        "signal",
+        "--pid",
+        "4072",
+        "--signal",
+        "SIGTERM",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 39736,
+      "stdout": "artifacts/m7-physical-v5-reset-v1/private-logs/4-signal.stdout",
+      "stderr": "artifacts/m7-physical-v5-reset-v1/private-logs/4-signal.stderr"
+    },
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "info",
+        "processes",
+        "--search",
+        "TokletHarness",
+        "--device",
+        "<private-device_identifier>",
+        "--timeout",
+        "45",
+        "--quiet",
+        "--json-output",
+        "-"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 39739,
+      "stdout": "artifacts/m7-physical-v5-reset-v1/private-logs/5-processes.stdout",
+      "stderr": "artifacts/m7-physical-v5-reset-v1/private-logs/5-processes.stderr"
+    }
+  ],
+  "cleanup": {
+    "absent": true,
+    "observations": [
+      [
+        4072
+      ],
+      []
+    ],
+    "signals": [
+      {
+        "pid": 4072,
+        "signal": "SIGTERM"
+      }
+    ],
+    "errors": []
+  },
+  "primary_error": null,
+  "endpoint_errors": [],
+  "private_evidence_pins": {
+    "artifacts/m7-physical-v5-reset-v1/private-logs/1-device.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-v5-reset-v1/private-logs/2-installed.stdout": "6144efeb5f5bb1adbaec2303202ed037fc7365ade574cfb17ed6dd1569c530c2",
+    "artifacts/m7-physical-v5-reset-v1/private-logs/5-processes.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-v5-reset-v1/private-logs/5-processes.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-v5-reset-v1/private-logs/2-installed.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-v5-reset-v1/private-logs/1-device.stdout": "29e35692eb8a6e5088df71a8aecbbdc84fdea79cedb2d95d8f83234486a924d6",
+    "artifacts/m7-physical-v5-reset-v1/private-logs/3-processes.stdout": "ab9eae65d1f5b08e05524faa02ea2e5e9cfe402c129548f97663f583a728dd08",
+    "artifacts/m7-physical-v5-reset-v1/private-logs/4-signal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-v5-reset-v1/private-logs/4-signal.stdout": "031928f94005522f3ecd74553fb5b12ed501c68a5278c02a2cd50193a3d7d87c",
+    "artifacts/m7-physical-v5-reset-v1/private-logs/3-processes.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

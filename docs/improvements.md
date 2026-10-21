@@ -894,3 +894,7 @@ Swift now accepts that literal character within the unchanged bounded/unique ID
 policy, without using IDs as paths. Twelve parser methods, actualCPU/Metal label
 roundtrip,31-case native checks and27 clean owned commands/both iOS apps pass.
 Original task IDs/prompts/caps/numerics/gates stay unchanged. Astra accepted source and completed evidence with no findings. Full physical task collection/grading remains.
+
+### M7 physical held-out loss — 21 October 2026
+
+Hypothesis: the selected desktop-qualified paths preserve the frozen loss policy on the wired iPhone. The [full device report](experiments/2026-10-21-m7-phone-loss.md) accepts 10,000 scored targets per model with unchanged +0.05 nats/token gate: small −0.000153474, larger +0.028265241. Both means exactly match their frozen M6 Online results. Fourteen sealed stages, 20,012 total scored targets, 216 clean commands, independent tiny CPU reconstruction and 28 natural absence checks pass; four driver and ten analysis regressions pass. Full peaks 1,028,770,136/1,835,338,624 bytes fit the trial cap; thermal/power conditions and failed preparation/reuse attempts are retained. Retain the numerical evidence without a performance or energy claim. Physical tasks, actual OS lifecycle, small sustained work, supported-limit synthesis, the original base-device requirement and overall M7 remain open.

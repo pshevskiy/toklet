@@ -1,0 +1,33 @@
+{
+  "passed": false,
+  "driver_bindings": {
+    "artifacts/m7-phone-loss-driver-v1/driver.py": "4a2f3746edfb3bb36f5fa72bacfd2260815857254f08c7473c069c6a63719967",
+    "artifacts/m7-phone-loss-driver-v1/checks.py": "ddb6e4c458c6f19c20f006e13f51c5496521a5c1fe13dbe0d0b95b40c78290a0",
+    "tools/experiments/m7_physical_quality.py": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+    "tools/experiments/m7_physical_measurement.py": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_storage.py": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce",
+    "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+    "tests/fixtures/tiny-v1/manifest.json": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4",
+    "tests/fixtures/tiny-v1/cases.prompt.logits.f32le": "45b1def79d59fd9b37fa2b8504af2b5b2eea72d41a2c44187f9cd68e46b95c23",
+    "artifacts/m7-phone-loss-tiny-cpu-v1/measurement.json": "980267ca4b23336cd4968979f4eaba895eadd10f3c3184be62f7ee9c5abcbb5c"
+  },
+  "results": [
+    {
+      "stage": "tiny-quality",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-tiny-cpu-v1/measurement.json",
+      "sha256": "980267ca4b23336cd4968979f4eaba895eadd10f3c3184be62f7ee9c5abcbb5c",
+      "exit_code": 1
+    }
+  ],
+  "tiny_oracle": {},
+  "primary_error": "RuntimeError: tiny-quality failed: tiny-cpu/short",
+  "endpoint_errors": [],
+  "scope": "Raw physical loss collection; independent full quality analysis remains",
+  "physical_device_qualified": false,
+  "m7_complete": false
+}

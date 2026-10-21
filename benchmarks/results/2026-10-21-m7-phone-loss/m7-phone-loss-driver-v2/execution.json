@@ -1,0 +1,189 @@
+{
+  "passed": true,
+  "driver_bindings": {
+    "artifacts/m7-phone-loss-driver-v2/driver.py": "43c2f7b2b1518e07ace97f19139038946ed3e7bc6e114269156e006c028bc0f2",
+    "artifacts/m7-phone-loss-driver-v2/checks.py": "ddb6e4c458c6f19c20f006e13f51c5496521a5c1fe13dbe0d0b95b40c78290a0",
+    "tools/experiments/m7_physical_quality.py": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+    "tools/experiments/m7_physical_measurement.py": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_storage.py": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce",
+    "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+    "tests/fixtures/tiny-v1/manifest.json": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4",
+    "tests/fixtures/tiny-v1/cases.prompt.logits.f32le": "45b1def79d59fd9b37fa2b8504af2b5b2eea72d41a2c44187f9cd68e46b95c23",
+    "artifacts/m7-phone-loss-tiny-cpu-v2/measurement.json": "1226cc259fb9031293e4320bb702c0819e93caa3e0c6a77d08b5137ce7a4328c",
+    "artifacts/m7-phone-loss-tiny-cpu-v2/private-logs/measurement.stdout": "84b7abe7f9239853de5392f4c444a9255f5c051e48b605cf98ebd9d0debc3eaf",
+    "artifacts/m7-phone-loss-tiny-cpu-v2/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-tiny-metal-v2/measurement.json": "5006cb596a673e0ae28b808ab2c7641279ec54122018ef2eea2de24d2256d7ed",
+    "artifacts/m7-phone-loss-tiny-metal-v2/private-logs/measurement.stdout": "cce16b6d631e8551a333a22f3e557a256e15a7aa505174d4b225bc8f385dc806",
+    "artifacts/m7-phone-loss-tiny-metal-v2/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-loss-small-short-storage-proof-v1/measurement.json": "70c7ce4384db1686268394135f453dcb63be0024b74ead79818d39aa5af7439a",
+    "artifacts/m7-phone-loss-small-short-ready-v1/measurement.json": "577d96963dce143201f25c71594156dba3e621e96576f09fe062d60c410c41d5",
+    "artifacts/m7-phone-loss-small-short-v1/measurement.json": "e018570261dd1ffb0924fa8ffb86143fd6fc5e66924d7335142607b295b5be72",
+    "artifacts/m7-phone-loss-small-full-storage-proof-v1/measurement.json": "0e8d56559b3af03022235581769d88f59474b501488c2a040c14294e82f6bff0",
+    "artifacts/m7-phone-loss-small-full-ready-v1/measurement.json": "9b16a5b25b738211f9f72029943d482d050111d8e5b133c563a5b0491746d509",
+    "artifacts/m7-phone-loss-small-full-v1/measurement.json": "4e07eaa5eee097bdac15d5c5c820de5b5c5ffa3a17b5ff11ef0c5803c723d440",
+    "artifacts/m7-phone-loss-larger-short-storage-proof-v1/measurement.json": "3e18396b7d7b5de628e87f69d042f8c7a4cc364ebfa833e8bde58b445a83b4ae",
+    "artifacts/m7-phone-loss-larger-short-ready-v1/measurement.json": "9003908786b4ce5fca306ddb13e2ad9d3f11dbc6a87b2ff05218fdad10b4e8e8",
+    "artifacts/m7-phone-loss-larger-short-v1/measurement.json": "2874cc5c814d3c20fa4ba788bac8cf3c32d4790731618a88c64963f5678753d3",
+    "artifacts/m7-phone-loss-larger-full-storage-proof-v1/measurement.json": "8a529f551aa02c9171f6a93e8ea894bdd4fec801061206e9579eccc88fb66057",
+    "artifacts/m7-phone-loss-larger-full-ready-v1/measurement.json": "68940f9b8185cdf7d612fb9ec969cc1627122f9b9de88b270273cbf3136f56a8",
+    "artifacts/m7-phone-loss-larger-full-v1/measurement.json": "eb9a3547c8b1adf1403ba92e014ab0d43092c8f882e83c157990d5ea7d1d3c6c"
+  },
+  "results": [
+    {
+      "stage": "tiny-quality",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-tiny-cpu-v2/measurement.json",
+      "sha256": "1226cc259fb9031293e4320bb702c0819e93caa3e0c6a77d08b5137ce7a4328c",
+      "exit_code": 0
+    },
+    {
+      "stage": "tiny-quality",
+      "model": "tiny-metal",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-tiny-metal-v2/measurement.json",
+      "sha256": "5006cb596a673e0ae28b808ab2c7641279ec54122018ef2eea2de24d2256d7ed",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-small-short-storage-proof-v1/measurement.json",
+      "sha256": "70c7ce4384db1686268394135f453dcb63be0024b74ead79818d39aa5af7439a",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "small",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-small-short-ready-v1/measurement.json",
+      "sha256": "577d96963dce143201f25c71594156dba3e621e96576f09fe062d60c410c41d5",
+      "exit_code": 0
+    },
+    {
+      "stage": "quality",
+      "model": "small",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-small-short-v1/measurement.json",
+      "sha256": "e018570261dd1ffb0924fa8ffb86143fd6fc5e66924d7335142607b295b5be72",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-small-full-storage-proof-v1/measurement.json",
+      "sha256": "0e8d56559b3af03022235581769d88f59474b501488c2a040c14294e82f6bff0",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "small",
+      "workload": "full",
+      "path": "artifacts/m7-phone-loss-small-full-ready-v1/measurement.json",
+      "sha256": "9b16a5b25b738211f9f72029943d482d050111d8e5b133c563a5b0491746d509",
+      "exit_code": 0
+    },
+    {
+      "stage": "quality",
+      "model": "small",
+      "workload": "full",
+      "path": "artifacts/m7-phone-loss-small-full-v1/measurement.json",
+      "sha256": "4e07eaa5eee097bdac15d5c5c820de5b5c5ffa3a17b5ff11ef0c5803c723d440",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-larger-short-storage-proof-v1/measurement.json",
+      "sha256": "3e18396b7d7b5de628e87f69d042f8c7a4cc364ebfa833e8bde58b445a83b4ae",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "larger",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-larger-short-ready-v1/measurement.json",
+      "sha256": "9003908786b4ce5fca306ddb13e2ad9d3f11dbc6a87b2ff05218fdad10b4e8e8",
+      "exit_code": 0
+    },
+    {
+      "stage": "quality",
+      "model": "larger",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-larger-short-v1/measurement.json",
+      "sha256": "2874cc5c814d3c20fa4ba788bac8cf3c32d4790731618a88c64963f5678753d3",
+      "exit_code": 0
+    },
+    {
+      "stage": "storage-proof",
+      "model": "tiny-cpu",
+      "workload": "short",
+      "path": "artifacts/m7-phone-loss-larger-full-storage-proof-v1/measurement.json",
+      "sha256": "8a529f551aa02c9171f6a93e8ea894bdd4fec801061206e9579eccc88fb66057",
+      "exit_code": 0
+    },
+    {
+      "stage": "prepare",
+      "model": "larger",
+      "workload": "full",
+      "path": "artifacts/m7-phone-loss-larger-full-ready-v1/measurement.json",
+      "sha256": "68940f9b8185cdf7d612fb9ec969cc1627122f9b9de88b270273cbf3136f56a8",
+      "exit_code": 0
+    },
+    {
+      "stage": "quality",
+      "model": "larger",
+      "workload": "full",
+      "path": "artifacts/m7-phone-loss-larger-full-v1/measurement.json",
+      "sha256": "eb9a3547c8b1adf1403ba92e014ab0d43092c8f882e83c157990d5ea7d1d3c6c",
+      "exit_code": 0
+    }
+  ],
+  "tiny_oracle": {
+    "tiny-cpu": {
+      "losses": [
+        4.3894996946527876,
+        5.483734047170558,
+        5.548312473275883
+      ],
+      "greedy": [
+        62,
+        7,
+        47
+      ],
+      "independent_cpu_oracle": [
+        4.389499721216301,
+        5.483734151464388,
+        5.5483128169001885
+      ]
+    },
+    "tiny-metal": {
+      "losses": [
+        4.389063103038202,
+        5.482922330877592,
+        5.548105836146251
+      ],
+      "greedy": [
+        62,
+        7,
+        47
+      ],
+      "independent_cpu_oracle": [
+        4.389499721216301,
+        5.483734151464388,
+        5.5483128169001885
+      ]
+    }
+  },
+  "primary_error": null,
+  "endpoint_errors": [],
+  "scope": "Raw physical loss collection; independent full quality analysis remains",
+  "physical_device_qualified": false,
+  "m7_complete": false
+}
