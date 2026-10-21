@@ -966,3 +966,7 @@ The [physical state/lifecycle report](experiments/2026-10-21-m7-phone-state-life
 ### M7 bounded energy instrumentation observation — 21 October2026
 
 The [energy availability report](experiments/2026-10-21-m7-phone-energy.md) records two bounded actual PowerProfiler attempts against the exact owned process, using PID then guarded-name selection. The instruments fail with exits21/19 without a trace; energy stays null/unqualified. Both separate native diagnostics pass with independent natural release. Source reviews close parent-cleanup and evidence-binding gaps;11regressions per version cover threaded failure cleanup and exact byte/hash capture. Retain reproducible availability evidence without joules/efficiency claims or production changes.
+
+### M7 joined iPhone14Pro trial limits — 21 October2026
+
+The [device report](experiments/2026-10-21-m7-iphone14pro.md) joins six accepted evidence components with exact quality policies, immutable model identities and33unchanged numerical-source files. Both selected paths retain full loss/task quality; named repeated contexts and sustained sequences fit explicit mobile trial budgets. The largest joined uninstrumented peak is1,944,701,920bytes; state/replay passes through1,152committed positions. Energy remains unset after both bounded instrument failures. Full-loss/task capacities stay distinct from context/state limits. Pro qualification does not silently replace the original base-device M7 requirement; Astra accepted the final Pro-only synthesis with no findings.

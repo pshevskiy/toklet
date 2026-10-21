@@ -1511,6 +1511,13 @@ passes syntheticCPU/Metal requests, exact prefix/replay/cleanup evidence, both
 SDK type checks and165 portable methods. Actual app/OS integration remains;
 M7.3 stays open.
 
+The [joined iPhone14Pro report](docs/experiments/2026-10-21-m7-iphone14pro.md)
+assembles full selected-path quality, repeated context/sustained observations,
+bounded process/memory limits, state overflow and actual OS scene replay. Both
+bounded energy attachments fail without units, so energy stays unset. This is a
+Pro-only qualification accepted by Astra; the original base-iPhone14 scope
+remains open. M7.3 is not checked complete by this report.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy

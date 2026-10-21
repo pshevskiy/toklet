@@ -1,30 +1,23 @@
 # M7 physical-device acceptance protocol
 
-Status,21 October2026: signed tiny CPU and Metal integration passes on the wired
-physical iPhone14Pro (`iPhone15,2`, iOS27.0.1). See the
-[physical integration report](../docs/experiments/2026-10-20-m7-physical-tiny.md).
-Developer Mode, development signing/profile, actual installation and process
-release are verified. M7.3 remains open: no real-model iPhone memory budget,
-model/context limit, sustained rate, thermal behavior, energy or actual OS
-lifecycle result is accepted. The earlier
-[setup observation](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
-records the historical pre-signing state and remains unchanged. The
-[physical measurement controller](../docs/experiments/2026-10-21-m7-physical-measurement.md)
-also passes26 raw tiny timing/memory samples with exact IDs/state and cleanup;
-this does not establish real-model memory/performance or sustained behavior. Qualify each
-device under its exact name; do not transfer Pro results to a base iPhone14,
-ProMax, iPad or another Mac. Base iPhone14 evidence remains separate.
+Status, 21 October 2026: the wired physical iPhone 14 Pro (`iPhone15,2`,
+iOS27.0.1) completes the [selected-model trial qualification](../docs/experiments/2026-10-21-m7-iphone14pro.md):
+full unchanged loss/task gates, repeated128/512/1024 contexts, sustained duration,
+independent process/numerical trial budgets, exact1,152-position state boundaries,
+and same-process actual OS scene interruption/replay. Energy remains unset after
+two bounded actual profiler attachment failures. Synthetic warning-handler tests
+are separate from unobserved real warning delivery/jetsam. Supported limits and
+source/install lineages are explicit in the report. Astra accepted the final Pro-only synthesis with no findings.
 
-The [bounded hashing confirmation](../docs/experiments/2026-10-21-m7-hash-memory.md)
-adds two identical small-model short runs (26 requests), preserving exact IDs,
-state and cleanup while reducing process-lifetime peak from2.098GB to about
-1.017GB. These observations validate the diagnostic memory fix under unchanged
-trial budgets; full quality, supported model/context limits, sustained behavior
-and actual OS lifecycle qualification remain open. The
-[larger short oracle](../docs/experiments/2026-10-21-m7-larger-oracle.md) also
-passes two runs/26 requests within the same trial process policy, with exact
-independent IDs/state/proofs/release and about1.825GB observed lifetime peak.
-These short checks leave the same qualification gates open.
+M7.3 remains open under PLAN.md's original base iPhone14 requirement; no target
+amendment is inferred from Pro results. Developer Mode, signing/profile, actual
+installation and orderly release are verified. The historical
+[setup observation](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json),
+[initial tiny integration](../docs/experiments/2026-10-20-m7-physical-tiny.md),
+[bounded hashing correction](../docs/experiments/2026-10-21-m7-hash-memory.md)
+and [larger short oracle](../docs/experiments/2026-10-21-m7-larger-oracle.md)
+remain preserved. Qualify each device under its exact name; Pro results do not
+qualify a base14, ProMax, iPad or another Mac.
 
 ## Admission and identity
 
