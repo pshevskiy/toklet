@@ -1,0 +1,494 @@
+{
+  "format": "toklet-m7-phone-energy-observation-v1",
+  "passed": true,
+  "bounded_observation_complete": true,
+  "evidence_pins": {
+    "artifacts/m7-phone-energy-probe-v1/probe.py": "a858354197c653bc4ac848dc438ac041db3dd7e746e4c5645c31d01a7edcc21f",
+    "artifacts/m7-phone-energy-probe-v1/checks.py": "352c5f40559b1853b237a916f89ca7311ddd2c09a6687e78c92ab03def321d62",
+    "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/native/tests.rs": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+    "src/native.rs": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "apple/include/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/tests/native_smoke.c": "642dad6db25398a1e5dbb9ca09e67a01edd8111a4517591b541ee02063c2e13c",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/Info.plist": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-darwin-link-smoke": "003e0c0ce0e8449de92b951199a6cfd0cf3de246914533f961ccb6b31c44d7c2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-darwin/release/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-link-smoke": "fc4e85048e91ad2469b11b62c3de00a514723b98f09049ad21e7e10e964392d6",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios/release/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-sim-link-smoke": "f3ec7566fd1ad5cb302b9a5730a4f1b71721d812f83530aeab52c7415208fad2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios-sim/release/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/build.json": "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971",
+    "artifacts/m7-physical-admission-v1/private-selection.json": "711ef5916ad223096bcb91cd93d7814f2c44056ab7494882d87af7d42a9804db",
+    "apple/Harness/HarnessApp.swift": "b8feddd676f7c71a07e0b27fc4ea68729505034cd4f10f63a7f7be5188ddc0a2",
+    "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+    "apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+    "apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+    "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+    "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+    "apple/Harness/NativeStateRun.swift": "82209540413ef2251840a402cbda590003df665ed3f47a3759cf3f0f386abc95",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/Harness/NativeWorker.swift": "4482a4b227105d5ff85201b091327b967b021a04de341da5ac3afeb8c40a8635",
+    "apple/tests/swift/WorkerChecks.swift": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5",
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+    "artifacts/m7-physical-prepared-v16/source-snapshot/tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "artifacts/m7-physical-prepared-v16/source-snapshot/tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Generated/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Generated/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-prepared-v16/integration.json": "e1989a8d078a3660a9c516d7257b93147eca63640eb0d9feda1d63ea0bb4398e",
+    "artifacts/m7-physical-prepared-v16/private-logs/install.stdout": "e523f729ee29d8f4aee8bd7cb9afa08fcb9c615fa7ae1d25c40a802de9b132ec",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "tools/experiments/m7_physical_measurement.py": "19106d82c8447c537201a96a9992433b0b01ae3406c438ea4ad810dd4cc4b048",
+    "tools/experiments/test_m7_physical_measurement.py": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+    "tools/experiments/test_m7_physical_storage.py": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+    "tools/experiments/m7_physical_state.py": "fbcf3e27a7a49bba903c7c1a26a5e731d25bf85b2f6d481e7c36fb7a6c75f2b1",
+    "tools/experiments/test_m7_physical_state.py": "89c6d0172c8f7984f078c79ab94d5f53fb90fbc5f7ee93c705bd3086530f5933",
+    "benchmarks/results/2026-10-19-m6-context-reviewed-closure-v1.json": "9873fe34fb887a6dac2936f5ea505ee57bc2bbe7ae0da742b6e1cfc52ddb9320",
+    "benchmarks/results/2026-10-19-m7-metal-abi-qualification-v1.json": "7fa4bc0b15869fa5ff445d4860932faf9f812a67204344c27e1b653ef9bbb631",
+    "benchmarks/contract-v1/manifest.json": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66",
+    "benchmarks/contract-v1/prompt_512.u32le": "4ff74dae2ee5b778f9313f4c707f9ccb6415609a9c0653684cce7be63d457dd6",
+    "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "benchmarks/results/2026-10-21-m7-state-app-qualification-v1.json": "5320c1e7c48978ec4a14203a19b1675a80a854ec0b9f77bf5de0320653ca2ea1",
+    "tools/experiments/m7_native_state_check.py": "2f67354ec297098205373f50447e04092b034e46d8541014e4736594160a6dbc",
+    "artifacts/m7-phone-state-small-ready-v1/transfer/M7Jobs/08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928.json": "08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928",
+    "artifacts/m7-phone-state-small-ready-v1/transfer/M7Inputs/small/Model/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "artifacts/m7-phone-state-small-ready-v1/transfer/M7Inputs/small/Model/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "artifacts/m7-phone-state-small-storage-proof-v1/transfer/M7Jobs/93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d.json": "93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d",
+    "artifacts/m7-phone-state-small-storage-proof-v1/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-phone-state-small-storage-proof-v1/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-execution.json": "49b6d05b78b9b7cd87b178e920a1123eb2f7679b550be03cbb62dfe459ae0612",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/copied-inventory.stdout": "cf5e821bca8487a6670583fb0e536ddd9ff2ba966532e6ab9a8d35cffe9869ec",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/copy-Model.stdout": "e15b7f602c255baf24e5a5dbcda0f57604c1d1a2af661a416049cf3e05449d76",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/copy-job.stdout": "0f28423a841f2ad9c865056774417a5f02a8109edd73cf40095cfee46c566453",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/current-install-11.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/current-install-11.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/current-install-13.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/current-install-13.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/current-install-6.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/current-install-6.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/current-install-8.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/current-install-8.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/device-after.stdout": "e0e2fc6db3ec8fd6a59894e4046b76ee4be5f4f4fb50fd062b43ba47655d0ff3",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/device-before.stdout": "e0e2fc6db3ec8fd6a59894e4046b76ee4be5f4f4fb50fd062b43ba47655d0ff3",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/entitlements.stderr": "10c8c104e6b81f13436d51de29d785b84887069caa0ce787073583730b918564",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/host-boot.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/host-boot.stdout": "707281110b6c739b1471b31417b9fac61a26540c62b8db4cde2aa0cb2e26fbd8",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/launch.json": "4abda2d5950a889c2247e44d71a402036ab9fdfe9466a2165c7ca3933e48c819",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/measurement.stdout": "37e397575a4fe6839a2f8c07e372cca9f6d65fbdfbbf734dd6690f54a4897f95",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/signature-details.stderr": "489c8143ef154552e1277c7fc0c811b5fc223894c084db869a16008d950ca4b0",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-storage-proof-v1/measurement.json": "f4bd99291127d4cc072fe07b9690d4d13fd48cb3f155d1de6d33903809c5f756",
+    "artifacts/m7-phone-state-small-ready-v1/private-execution.json": "e94c5e3176608e2b69cedf3ac5c3c4f54f2cab9cc1a89915b809af3dd53c28eb",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/copied-inventory.stdout": "91eb808d1821ded0efd5c2a789793de10cce25f932fe2d8fd6dcf22ff667f15a",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/copy-Model.stdout": "b0325bd0bd681a9eb0f9ecd9e8cdc822005d61c5266585e864d00e3d3b3608bc",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/copy-job.stdout": "93999b930ca29b4ffcec41a4d740dfb3213908e39f9ff7cbc659e1a5509dbc5b",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/current-install-11.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/current-install-11.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/current-install-6.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/current-install-6.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/current-install-8.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/current-install-8.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/device-after.stdout": "e0e2fc6db3ec8fd6a59894e4046b76ee4be5f4f4fb50fd062b43ba47655d0ff3",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/device-before.stdout": "e0e2fc6db3ec8fd6a59894e4046b76ee4be5f4f4fb50fd062b43ba47655d0ff3",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/entitlements.stderr": "10c8c104e6b81f13436d51de29d785b84887069caa0ce787073583730b918564",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/host-boot.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/host-boot.stdout": "707281110b6c739b1471b31417b9fac61a26540c62b8db4cde2aa0cb2e26fbd8",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/signature-details.stderr": "489c8143ef154552e1277c7fc0c811b5fc223894c084db869a16008d950ca4b0",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-state-small-ready-v1/measurement.json": "4065c91c7c3021cf370636efcdbb2a6cb03540a517853aaa8bf7f07dc03df007",
+    "artifacts/m7-phone-energy-state-small-v1/private-execution.json": "848f665df2351505ed7946a14b97fddb4433089569787fa6e97a99ec950b3de2",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/current-install-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/current-install-2.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/current-install-4.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/current-install-4.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/device-after.stdout": "bec27638ac1c570f215d528bbf777d30312bce5b4a13deb748fa44dc8412439b",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/device-before.stdout": "119d6f7b6fd84cad30643d9bdb02f7f876588fdca20df99253b107c51ce5644c",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/host-boot.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/host-boot.stdout": "707281110b6c739b1471b31417b9fac61a26540c62b8db4cde2aa0cb2e26fbd8",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/launch.json": "d8f22eff5e12102a1537c072c83cd84966231a8780354fe781b07c0e287bb1b5",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/measurement.stdout": "1b9e59c8adaf7aab1570d14cc8c58a0320f92a05114677fe6d5ebdb3bb8b464e",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v1/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-energy-state-small-v1/measurement.json": "768025c065abc3e9e2d70888868103b0d39b2a2a380424ae1b8e7da2b8674523",
+    "artifacts/m7-phone-energy-probe-v1/private-trace-inventory.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/native-state-child.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/cleanup-install.stdout": "393657aed66bee1d9be4bcd640e5f76361661f115c36293bf322dd8b32a51700",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/target-process.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/target-process.stdout": "db7035bcd458c87133b6d59b800b2e379fb7090317c4050b2ded0ed9414ef29c",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/cleanup-install.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/native-state-child.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/target-install.stdout": "393657aed66bee1d9be4bcd640e5f76361661f115c36293bf322dd8b32a51700",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/cleanup-process-1.stdout": "896573becd47f0d0027e9f56bc04f12073a8427e151c147b9e41d4f74ce871ec",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/power-profiler.stderr": "745159cf131159fcbd1168e6a93ea5456a9749b7480388ecbea5eafac3c6ad7e",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/power-profiler.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/target-install.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v1/private-logs/cleanup-process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v1/private-execution.json": "f814451624c66d63abb00d62458b4fe308899b4c80d22cd90790aa19a98368a9",
+    "artifacts/m7-phone-energy-probe-v1/attempt.json": "1df780741e0e557c005ca31af5a9d0ffae1af112ac7a8c5b859df7e77f17fb3d",
+    "artifacts/m7-phone-energy-probe-v1/checks-v2.stderr": "b7fd8b52d99435a4320197979f8ff788cd3eb1449be1f56ecf1b54f8f23cedb6",
+    "artifacts/m7-phone-energy-probe-v1/checks-v2.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v1/checks-v3.stderr": "b8010f28c9db0bbf4bae85d8fa8f94e037815cf1159a90a13d524a2807b0bab3",
+    "artifacts/m7-phone-energy-probe-v1/checks-v3.stdout": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504",
+    "artifacts/m7-phone-energy-probe-v1/checks-v4.stderr": "b59469fc5e0ab95b5ee5ae31881cdbcff0682ccbc8e9c40e5a6aecd59045ea01",
+    "artifacts/m7-phone-energy-probe-v1/checks-v4.stdout": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504",
+    "artifacts/m7-phone-energy-probe-v1/checks-v5.stderr": "b59469fc5e0ab95b5ee5ae31881cdbcff0682ccbc8e9c40e5a6aecd59045ea01",
+    "artifacts/m7-phone-energy-probe-v1/checks-v5.stdout": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504",
+    "artifacts/m7-phone-energy-probe-v1/checks-v6.stderr": "c302a8d2527169c758b2e986e2d1b17576e0f5b186908a13a2e53173bab0cd18",
+    "artifacts/m7-phone-energy-probe-v1/checks-v6.stdout": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504",
+    "artifacts/m7-phone-energy-probe-v1/checks.stderr": "d094b1bd2c8318c96097f80c50da282add5b2972970a77046de8db6c8935f6ca",
+    "artifacts/m7-phone-energy-probe-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v1/probe.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v1/probe.stdout": "2f8ff384702bd58145433ba95145a82b0655cf0b3091d3fc562ae341f573362a",
+    "artifacts/m7-phone-energy-probe-v1/source-before-cleanup-v1/checks.py": "0819980a2eb3cf9ee938b9a1301b711961d03e2946c8b83f7037f5a01fc86f2f",
+    "artifacts/m7-phone-energy-probe-v1/source-before-cleanup-v1/probe.py": "6abd876772ff1521e8f02555249fd2d4a199d3b4d1d0ae2878c6a1e883c78ad0",
+    "artifacts/m7-phone-energy-probe-v1/source-before-privacy-fixture-fix-v1/checks.py": "cb4542c3059d992d9aef0bdf092a7ab8ec9ad3e671c986a17397d976030833b4",
+    "artifacts/m7-phone-energy-probe-v2/probe.py": "797a273341c2c3cfad775f4032965737c176f7a3988f0dfc74b422a0e08bce2d",
+    "artifacts/m7-phone-energy-probe-v2/checks.py": "682e233c3aa81de01f15ac0b81de495e9d20be908d8945ae9e76166e34e9bba0",
+    "artifacts/m7-phone-energy-state-small-v2/private-execution.json": "a4d431b8eaa72938a352394e69c4078aa6ca4fb26708ca531956e204e342fdd9",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/current-install-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/current-install-2.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/current-install-4.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/current-install-4.stdout": "b65d0bbc32117f08cef1fc1471f8d51457628eb901151c4453d1a80f15e8d97f",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/device-after.stdout": "dbf02bbe89d07f68b9deb69d40a84152ae93c7db9d5405004cad852fc0c88e1e",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/device-before.stdout": "5c088b8270cd693a848cd4a491e7f6a876521220a56bc0afe3e95542bc77b10f",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/host-boot.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/host-boot.stdout": "707281110b6c739b1471b31417b9fac61a26540c62b8db4cde2aa0cb2e26fbd8",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/launch.json": "2627cdeb48b6440587970e100d60383babcf680e1b537e002b22c1bde92873e1",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/measurement.stdout": "ae9ceb297236abbec1d4ec6ca5b6f5c28fb300fd830b1a1bc56a15b206614d0d",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-state-small-v2/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-phone-energy-state-small-v2/measurement.json": "a7a0bd173235c1824c7afa0808209d5266820cda7ccfdca65f2595179dc198b5",
+    "artifacts/m7-phone-energy-probe-v2/private-trace-inventory.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/native-state-child.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/cleanup-install.stdout": "393657aed66bee1d9be4bcd640e5f76361661f115c36293bf322dd8b32a51700",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/target-process.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/target-process.stdout": "022aefbfce0499843e9b341567faf5c907baa447a800304311c8fb48ad4b7a32",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/cleanup-install.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/native-state-child.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/target-install.stdout": "393657aed66bee1d9be4bcd640e5f76361661f115c36293bf322dd8b32a51700",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/cleanup-process-1.stdout": "896573becd47f0d0027e9f56bc04f12073a8427e151c147b9e41d4f74ce871ec",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/power-profiler.stderr": "ebfef4506a18855055f2755084527ce1ab3089b4bfe0b6766f09cf91781447e4",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/power-profiler.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/target-install.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v2/private-logs/cleanup-process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v2/private-execution.json": "e26b09950beeb672c15ddefc039027b67e84cabbd246b6070350df3e0735704c",
+    "artifacts/m7-phone-energy-probe-v2/attempt.json": "f343996d37829b12c577a765783803ed4c48a098a0c421d6d67aa88276c6622d",
+    "artifacts/m7-phone-energy-probe-v2/checks.stderr": "ac983830891e593b4b5a42dc353e35b6799637377945dd16ba4e5d42eb974fca",
+    "artifacts/m7-phone-energy-probe-v2/checks.stdout": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504",
+    "artifacts/m7-phone-energy-probe-v2/probe.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-phone-energy-probe-v2/probe.stdout": "2f8ff384702bd58145433ba95145a82b0655cf0b3091d3fc562ae341f573362a",
+    "artifacts/m7-energy-capability-v1/templates.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-energy-capability-v1/templates.stdout": "6e71632e368787ef85e5c7e8a2c80cac45a9b5b0963fc92de01bbfa69a63b880",
+    "artifacts/m7-energy-capability-v1/capability.json": "7b95674ed74553bfeb0b87ed947e34d01af0f43ad1c97fa3ce7c5b1486117c4c",
+    "artifacts/m7-energy-capability-v1/record-help.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-energy-capability-v1/record-help.stdout": "5034932d6e8d6fd2ed50fca9194565b58728893a6ab6dfd00d954cf1a28aafad",
+    "artifacts/m7-energy-publication-incomplete-v1/source.py": "dd2994b4d7558a9126aa1c4b45326a98adf0ab08392172f195f6be046fd4cf60"
+  },
+  "exact_published_copies": {
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/attempt.json": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/attempt.json",
+      "sha256": "1df780741e0e557c005ca31af5a9d0ffae1af112ac7a8c5b859df7e77f17fb3d"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v1/measurement.json": {
+      "origin": "artifacts/m7-phone-energy-state-small-v1/measurement.json",
+      "sha256": "768025c065abc3e9e2d70888868103b0d39b2a2a380424ae1b8e7da2b8674523"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/private-logs/power-profiler.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/private-logs/power-profiler.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v1/private-logs/measurement.stdout": {
+      "origin": "artifacts/m7-phone-energy-state-small-v1/private-logs/measurement.stdout",
+      "sha256": "1b9e59c8adaf7aab1570d14cc8c58a0320f92a05114677fe6d5ebdb3bb8b464e"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/private-logs/power-profiler.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/private-logs/power-profiler.stderr",
+      "sha256": "745159cf131159fcbd1168e6a93ea5456a9749b7480388ecbea5eafac3c6ad7e"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v1/private-logs/measurement.stderr": {
+      "origin": "artifacts/m7-phone-energy-state-small-v1/private-logs/measurement.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v2.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v2.stderr",
+      "sha256": "b7fd8b52d99435a4320197979f8ff788cd3eb1449be1f56ecf1b54f8f23cedb6"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v2.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v3.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v3.stderr",
+      "sha256": "b8010f28c9db0bbf4bae85d8fa8f94e037815cf1159a90a13d524a2807b0bab3"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v3.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v3.stdout",
+      "sha256": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v4.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v4.stderr",
+      "sha256": "b59469fc5e0ab95b5ee5ae31881cdbcff0682ccbc8e9c40e5a6aecd59045ea01"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v4.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v4.stdout",
+      "sha256": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v5.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v5.stderr",
+      "sha256": "b59469fc5e0ab95b5ee5ae31881cdbcff0682ccbc8e9c40e5a6aecd59045ea01"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v5.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v5.stdout",
+      "sha256": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v6.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v6.stderr",
+      "sha256": "c302a8d2527169c758b2e986e2d1b17576e0f5b186908a13a2e53173bab0cd18"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v6.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks-v6.stdout",
+      "sha256": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks.py": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks.py",
+      "sha256": "352c5f40559b1853b237a916f89ca7311ddd2c09a6687e78c92ab03def321d62"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks.stderr",
+      "sha256": "d094b1bd2c8318c96097f80c50da282add5b2972970a77046de8db6c8935f6ca"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/checks.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/probe.py": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/probe.py",
+      "sha256": "a858354197c653bc4ac848dc438ac041db3dd7e746e4c5645c31d01a7edcc21f"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/probe.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/probe.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/probe.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/probe.stdout",
+      "sha256": "2f8ff384702bd58145433ba95145a82b0655cf0b3091d3fc562ae341f573362a"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/source-before-cleanup-v1/checks.py": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/source-before-cleanup-v1/checks.py",
+      "sha256": "0819980a2eb3cf9ee938b9a1301b711961d03e2946c8b83f7037f5a01fc86f2f"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/source-before-cleanup-v1/probe.py": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/source-before-cleanup-v1/probe.py",
+      "sha256": "6abd876772ff1521e8f02555249fd2d4a199d3b4d1d0ae2878c6a1e883c78ad0"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/source-before-privacy-fixture-fix-v1/checks.py": {
+      "origin": "artifacts/m7-phone-energy-probe-v1/source-before-privacy-fixture-fix-v1/checks.py",
+      "sha256": "cb4542c3059d992d9aef0bdf092a7ab8ec9ad3e671c986a17397d976030833b4"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/attempt.json": {
+      "origin": "artifacts/m7-phone-energy-probe-v2/attempt.json",
+      "sha256": "f343996d37829b12c577a765783803ed4c48a098a0c421d6d67aa88276c6622d"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v2/measurement.json": {
+      "origin": "artifacts/m7-phone-energy-state-small-v2/measurement.json",
+      "sha256": "a7a0bd173235c1824c7afa0808209d5266820cda7ccfdca65f2595179dc198b5"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/private-logs/power-profiler.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v2/private-logs/power-profiler.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v2/private-logs/measurement.stdout": {
+      "origin": "artifacts/m7-phone-energy-state-small-v2/private-logs/measurement.stdout",
+      "sha256": "ae9ceb297236abbec1d4ec6ca5b6f5c28fb300fd830b1a1bc56a15b206614d0d"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/private-logs/power-profiler.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v2/private-logs/power-profiler.stderr",
+      "sha256": "ebfef4506a18855055f2755084527ce1ab3089b4bfe0b6766f09cf91781447e4"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v2/private-logs/measurement.stderr": {
+      "origin": "artifacts/m7-phone-energy-state-small-v2/private-logs/measurement.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/checks.py": {
+      "origin": "artifacts/m7-phone-energy-probe-v2/checks.py",
+      "sha256": "682e233c3aa81de01f15ac0b81de495e9d20be908d8945ae9e76166e34e9bba0"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/checks.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v2/checks.stderr",
+      "sha256": "ac983830891e593b4b5a42dc353e35b6799637377945dd16ba4e5d42eb974fca"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/checks.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v2/checks.stdout",
+      "sha256": "210373c96e4b12be8524ff1bba993b6d525362a676cee7d0f510d0cc0567f504"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/probe.py": {
+      "origin": "artifacts/m7-phone-energy-probe-v2/probe.py",
+      "sha256": "797a273341c2c3cfad775f4032965737c176f7a3988f0dfc74b422a0e08bce2d"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/probe.stderr": {
+      "origin": "artifacts/m7-phone-energy-probe-v2/probe.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/probe.stdout": {
+      "origin": "artifacts/m7-phone-energy-probe-v2/probe.stdout",
+      "sha256": "2f8ff384702bd58145433ba95145a82b0655cf0b3091d3fc562ae341f573362a"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/templates.stderr": {
+      "origin": "artifacts/m7-energy-capability-v1/templates.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/templates.stdout": {
+      "origin": "artifacts/m7-energy-capability-v1/templates.stdout",
+      "sha256": "6e71632e368787ef85e5c7e8a2c80cac45a9b5b0963fc92de01bbfa69a63b880"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/capability.json": {
+      "origin": "artifacts/m7-energy-capability-v1/capability.json",
+      "sha256": "7b95674ed74553bfeb0b87ed947e34d01af0f43ad1c97fa3ce7c5b1486117c4c"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/record-help.stderr": {
+      "origin": "artifacts/m7-energy-capability-v1/record-help.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/record-help.stdout": {
+      "origin": "artifacts/m7-energy-capability-v1/record-help.stdout",
+      "sha256": "5034932d6e8d6fd2ed50fca9194565b58728893a6ab6dfd00d954cf1a28aafad"
+    }
+  },
+  "attempts": [
+    {
+      "selector": "verified_pid",
+      "attempt_receipt": "artifacts/m7-phone-energy-probe-v1/attempt.json",
+      "native_receipt": "artifacts/m7-phone-energy-state-small-v1/measurement.json",
+      "instrument_exit": 21,
+      "instrument_error": "Cannot find process for provided PID",
+      "native_diagnostic_passed": true,
+      "independent_natural_absence": true,
+      "trace_created": false,
+      "attributable_energy_units": null
+    },
+    {
+      "selector": "name_after_unique_pid_guard",
+      "attempt_receipt": "artifacts/m7-phone-energy-probe-v2/attempt.json",
+      "native_receipt": "artifacts/m7-phone-energy-state-small-v2/measurement.json",
+      "instrument_exit": 19,
+      "instrument_error": "Cannot find process matching name: TokletHarness",
+      "native_diagnostic_passed": true,
+      "independent_natural_absence": true,
+      "trace_created": false,
+      "attributable_energy_units": null
+    }
+  ],
+  "hardware": {
+    "product_type": "iPhone15,2",
+    "os_version": "27.0.1"
+  },
+  "local_power_profiler_template_available": true,
+  "actual_recording_available_in_tested_setup": false,
+  "probe_checks_per_version": 11,
+  "energy_joules": null,
+  "energy_qualified": false,
+  "controlled_speedup_qualified": false,
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "review": {
+    "accepted": true,
+    "reviewer": "Astra",
+    "scope": "Source, complete bounded availability packet, two exact raw-state replays, trace absence, command statuses, independent cleanup and privacy accepted with no findings"
+  },
+  "retained_publication_failure": {
+    "source": "artifacts/m7-energy-publication-incomplete-v1/source.py",
+    "sha256": "dd2994b4d7558a9126aa1c4b45326a98adf0ab08392172f195f6be046fd4cf60",
+    "reason": "Initial publication expected both instrument exits21; second actual exit is19; partial copies/source retained and no device rerun"
+  }
+}

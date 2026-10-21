@@ -1603,3 +1603,35 @@ benchmarks/results/2026-10-21-m7-phone-state-lifecycle/m7-phone-lifecycle-larger
 benchmarks/results/2026-10-21-m7-phone-state-lifecycle/m7-phone-lifecycle-larger-storage-proof-v3/private-logs/measurement.stderr -text -whitespace
 benchmarks/results/2026-10-21-m7-phone-state-lifecycle/m7-phone-lifecycle-larger-v3/private-logs/lifecycle.stdout -text -whitespace
 benchmarks/results/2026-10-21-m7-phone-state-lifecycle/m7-phone-lifecycle-larger-v3/private-logs/lifecycle.stderr -text -whitespace
+
+# Exact bounded phone energy attempt evidence.
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/private-logs/power-profiler.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v1/private-logs/measurement.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/private-logs/power-profiler.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v1/private-logs/measurement.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v2.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v2.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v3.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v3.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v4.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v4.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v5.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v5.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v6.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks-v6.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/checks.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/probe.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v1/probe.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/private-logs/power-profiler.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v2/private-logs/measurement.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/private-logs/power-profiler.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-state-small-v2/private-logs/measurement.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/checks.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/checks.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/probe.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-phone-energy-probe-v2/probe.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/templates.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/templates.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/record-help.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/record-help.stdout -text -whitespace

@@ -1,0 +1,4 @@
+{"attempt_completed": true, "recording_completed": true, "primary_errors": ["Native child: TimeoutExpired: injected child timeout []", "Native receipt failed"], "endpoint_errors": ["Independent phone cleanup did not verify absence: ['SIGTERM: ValueError: Owned instrumentation identity query failed', 'SIGKILL: ValueError: Owned instrumentation identity query failed', 'Owned phone process remains after bounded termination']"]}
+{"attempt_completed": true, "recording_completed": true, "primary_errors": ["Parent: InterruptedError: Injected parent interruption", "Native receipt failed"], "endpoint_errors": []}
+{"attempt_completed": true, "recording_completed": true, "primary_errors": [], "endpoint_errors": []}
+{"attempt_completed": true, "recording_completed": true, "primary_errors": ["Native child: TimeoutExpired: injected child timeout []", "Native receipt failed"], "endpoint_errors": []}

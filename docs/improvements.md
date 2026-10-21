@@ -962,3 +962,7 @@ The [activation boundary fix](experiments/2026-10-21-m7-lifecycle-cli-fix.md) co
 ### M7 phone state and actual scene replay — 21 October2026
 
 The [physical state/lifecycle report](experiments/2026-10-21-m7-phone-state-lifecycle.md) passes both selected models against exact cached/changed-prefix, pending append, actual partial-prefill cancellation, full1152-position commitment and overflow-preservation oracles. Actual Settings/return callbacks interrupt generation in the same process; retained-prefix replay matches uninterrupted continuation.13accepted stages and all sealed sources/raw endpoints replay, with two failed attempts retained and two owned preflight resets disclosed. Synthetic warning-handler coverage stays separate from actual UIKit warning delivery/jetsam. Retain bounded mechanism evidence on iPhone14Pro; base-device scope, energy/limit synthesis and M7.3 remain open.
+
+### M7 bounded energy instrumentation observation — 21 October2026
+
+The [energy availability report](experiments/2026-10-21-m7-phone-energy.md) records two bounded actual PowerProfiler attempts against the exact owned process, using PID then guarded-name selection. The instruments fail with exits21/19 without a trace; energy stays null/unqualified. Both separate native diagnostics pass with independent natural release. Source reviews close parent-cleanup and evidence-binding gaps;11regressions per version cover threaded failure cleanup and exact byte/hash capture. Retain reproducible availability evidence without joules/efficiency claims or production changes.

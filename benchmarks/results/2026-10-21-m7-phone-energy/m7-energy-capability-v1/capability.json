@@ -1,0 +1,40 @@
+{
+  "commands": [
+    {
+      "command": [
+        "xcrun",
+        "xctrace",
+        "list",
+        "templates"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 70024,
+      "stdout": "artifacts/m7-energy-capability-v1/templates.stdout",
+      "stderr": "artifacts/m7-energy-capability-v1/templates.stderr"
+    },
+    {
+      "command": [
+        "xcrun",
+        "xctrace",
+        "help",
+        "record"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 70029,
+      "stdout": "artifacts/m7-energy-capability-v1/record-help.stdout",
+      "stderr": "artifacts/m7-energy-capability-v1/record-help.stderr"
+    }
+  ],
+  "bindings": {
+    "artifacts/m7-energy-capability-v1/templates.stdout": "6e71632e368787ef85e5c7e8a2c80cac45a9b5b0963fc92de01bbfa69a63b880",
+    "artifacts/m7-energy-capability-v1/templates.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-energy-capability-v1/record-help.stdout": "5034932d6e8d6fd2ed50fca9194565b58728893a6ab6dfd00d954cf1a28aafad",
+    "artifacts/m7-energy-capability-v1/record-help.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "device_commands": 0,
+  "scope": "Local instrument availability and usage only; no recording or energy measurement"
+}
