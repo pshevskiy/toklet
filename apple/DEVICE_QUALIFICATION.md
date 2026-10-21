@@ -154,3 +154,8 @@ The [completed-prefix diagnostic](../docs/experiments/2026-10-21-m7-worker-prefi
 checks exact sampled history through cancellation/suspend/replay and terminal
 close reporting, including actual publication-race witnesses. It prepares later
 real OS transition tests; Mac/SDK evidence does not qualify phone lifecycle.
+
+The [bounded lifecycle core](../docs/experiments/2026-10-21-m7-lifecycle-core.md)
+records request/completion distinctions and never lets trace failure prevent
+resource cleanup. CPU/Metal/supported-SDK checks are synthetic integration
+evidence; actual app notifications and physical lifecycle remain pending.

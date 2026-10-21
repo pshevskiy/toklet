@@ -899,3 +899,12 @@ Exact failing sources/receipt remain. Astra's race-witness/state-matrix findings
 are fixed.26 states/backend, four actual publication witnesses,34 native/build
 commands/both unsigned apps and159 portable methods/17 modules pass. Astra accepted source and
 completed evidence with no findings. Actual phone lifecycle and M7.3 remain open.
+
+The [bounded lifecycle core](experiments/2026-10-21-m7-lifecycle-core.md)
+adds64-event/1152-ID weak-owner traces with before/requested states, separate
+observation/record clocks, command/provenance/footprint and completed-close
+detach. Astra's cleanup-after-trace-failure and pre-action-bound findings are
+fixed. Fourteen events/13 scenarios perCPU/Metal backend,43 native/build commands
+and165 portable methods/18 modules pass. The initial fixture-alias parser
+failure remains recorded. Astra accepted source and completed evidence with no findings. Actual app/OS/phone
+lifecycle qualification and M7.3 remain open.

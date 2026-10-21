@@ -1499,6 +1499,11 @@ adds opt-in exact saved IDs for lifecycle evidence and clears stale close counts
 CPU/Metal states,34 clean native/build commands and159 portable methods pass.
 Actual physical lifecycle qualification and M7.3 remain open.
 
+The [bounded lifecycle core](docs/experiments/2026-10-21-m7-lifecycle-core.md)
+passes syntheticCPU/Metal requests, exact prefix/replay/cleanup evidence, both
+SDK type checks and165 portable methods. Actual app/OS integration remains;
+M7.3 stays open.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy

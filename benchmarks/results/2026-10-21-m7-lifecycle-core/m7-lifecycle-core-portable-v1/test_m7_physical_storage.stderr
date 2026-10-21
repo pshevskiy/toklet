@@ -1,0 +1,15 @@
+test_boot_identity_requires_exact_uuid_and_hashes_case_consistently (test_m7_physical_storage.StorageTests.test_boot_identity_requires_exact_uuid_and_hashes_case_consistently) ... ok
+test_capacity_accepts_exact_requirement_rejects_one_byte_short_and_overflow (test_m7_physical_storage.StorageTests.test_capacity_accepts_exact_requirement_rejects_one_byte_short_and_overflow) ... ok
+test_file_replacement_between_metadata_and_hash_cannot_undercount_payload (test_m7_physical_storage.StorageTests.test_file_replacement_between_metadata_and_hash_cannot_undercount_payload) ... ok
+test_freshness_uses_start_both_clocks_and_same_boot (test_m7_physical_storage.StorageTests.test_freshness_uses_start_both_clocks_and_same_boot) ... ok
+test_main_checks_age_after_hashing_before_model_and_job_copy_and_still_cleans (test_m7_physical_storage.StorageTests.test_main_checks_age_after_hashing_before_model_and_job_copy_and_still_cleans) ... ok
+test_options_reject_conflicts_duplicates_and_unused_flags (test_m7_physical_storage.StorageTests.test_options_reject_conflicts_duplicates_and_unused_flags) ... ok
+test_payload_inventory_includes_job_and_rejects_changed_or_extra_entries (test_m7_physical_storage.StorageTests.test_payload_inventory_includes_job_and_rejects_changed_or_extra_entries) ... ok
+test_proof_replays_same_install_and_rejects_identity_clock_binding_or_console_changes (test_m7_physical_storage.StorageTests.test_proof_replays_same_install_and_rejects_identity_clock_binding_or_console_changes) ... ok
+test_ready_requires_complete_original_inventory_and_every_copy_decision (test_m7_physical_storage.StorageTests.test_ready_requires_complete_original_inventory_and_every_copy_decision) ... ok
+test_real_copy_without_storage_proof_has_zero_children (test_m7_physical_storage.StorageTests.test_real_copy_without_storage_proof_has_zero_children) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.086s
+
+OK

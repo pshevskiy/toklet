@@ -1,0 +1,828 @@
+{
+  "format": "toklet-m7-native-quality-check-v1",
+  "passed": true,
+  "collection_root": "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet",
+  "bindings": {
+    "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/native/tests.rs": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+    "src/native.rs": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "apple/include/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/tests/native_smoke.c": "642dad6db25398a1e5dbb9ca09e67a01edd8111a4517591b541ee02063c2e13c",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/Info.plist": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-darwin-link-smoke": "003e0c0ce0e8449de92b951199a6cfd0cf3de246914533f961ccb6b31c44d7c2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-darwin/release/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-link-smoke": "fc4e85048e91ad2469b11b62c3de00a514723b98f09049ad21e7e10e964392d6",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios/release/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-sim-link-smoke": "f3ec7566fd1ad5cb302b9a5730a4f1b71721d812f83530aeab52c7415208fad2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios-sim/release/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/build.json": "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "tests/fixtures/tiny-v1/manifest.json": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4",
+    "tests/fixtures/tiny-v1/cases.prompt.logits.f32le": "45b1def79d59fd9b37fa2b8504af2b5b2eea72d41a2c44187f9cd68e46b95c23",
+    "apple/Harness/NativeWorker.swift": "1733199d8b7ac9cef84e2bd45037b993e89dc1e46dfb8ce09346b64082190ff2",
+    "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+    "apple/tests/swift/QualityMain.swift": "1cb6023f8c2ad3444d812fafb4f35d87e00dc0610cd4129c07d4c48476701750",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+    "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/m7_native_quality_check.py": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+    "tools/experiments/test_m7_native_quality_check.py": "bbe1edc476fcfdec0dcb6061d75bd55cf91452bd77e455e1074676d1bf772567",
+    "apple/Harness/HarnessApp.swift": "699813ca61b981bd2e2334e6600e59bd567a62cadb39a20d7d0d260601c204af",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "18ea2468847dde1072e0d653ec2c6e554a00f52ecfb96b9d1eacb131a0e5c919",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/quality": "fa5a37403b5238cabc7f430dc111cf1fdbc1511d1a6e925c5123ad25062a94a6",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stdout": "ac4e44e7401e7ea6bd9657c8cdaea0434f18edefe80e17dfe6d8aa51efdc31a2",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json": "cabb3c430f18dc3c29df24cd8f7b15e11803cc8c4d74b09b79912e77ccf99e44",
+    "tools/experiments/test_m7_native_measurement_check.py": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+    "apple/tests/swift/MeasurementMain.swift": "80fa532ff7f2120cced10c5e8c48ee6113922daf04b303c686c128ec2780ac93",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/proof-padding.bin": "a6d72ac7690f53be6ae46ba88506bd97302a093f7108472bd9efc3cefda06484",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/check": "872d152fe87e336a6e5ffd7c47d9f7c441c4dad6c406cca8d739743c17559e4d",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout": "313d623c735aef8a3993ed6cf5e97fc5acb7083170db8a9f165da6e65924b707",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/build.json": "0196c15708aeac6dfa73a409cbc9f19739a49f7369ecec76780e1e15c9531c41",
+    ".gitignore": "ba0833fd4f9e6822f1a3620eb070b2319ee76b20a299461197c8de9627226705",
+    "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+    "apple/Harness/NativeLifecycle.swift": "8dae9830967d23ea4f7afcabff185cf3283c28ed45df5338198480cf4c638c01",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+    "apple/tests/swift/WorkerChecks.swift": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+    "apple/Generated/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Generated/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "09ac8c195d980a6097ff17e658c2ec8c5148d0a4cc1fde636c61f52f13e70dbe",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "8ed80fd97963acd28b8f6fac357e08ae1542c61548ec7505a741c6e6db81587d",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout": "e2b971d5e6c1a0fcd6555ab89cab3548370ee44abbf9c3b75d377b08e23862b4",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout": "b3cbff8785263adf5ca609a4331d928f1c5e6db3c1f605a569507f6339348230",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr": "12a4689c6024c55467c60a6791513ad9d5d2ec77bbc7d47e947f1ea2b4a2ae16",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout": "3d4b86910a74e83a7dada02fdfdfa9c238854ae26a71e3c75a136ffa50d2fc09",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout": "cfdfd354232d0bbafba637fdca124271a1616ef0047ed6c793346860788be450",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "commands": [
+    {
+      "command": [
+        "xcodebuild",
+        "-version"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 45316,
+      "stdout": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stdout",
+      "stderr": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stderr"
+    },
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "swiftc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 45317,
+      "stdout": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stdout",
+      "stderr": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stderr"
+    },
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "--show-sdk-path"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 45318,
+      "stdout": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stdout",
+      "stderr": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stderr"
+    },
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "swiftc",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+        "-module-cache-path",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/ModuleCache",
+        "-swift-version",
+        "5",
+        "-strict-concurrency=complete",
+        "-warnings-as-errors",
+        "-target",
+        "arm64-apple-macos15.0",
+        "-O",
+        "-I",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/include",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/Harness/NativeWorker.swift",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/Harness/NativeMeasurement.swift",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/Harness/NativeTeacherForcing.swift",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/Harness/NativeQuality.swift",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/apple/tests/swift/QualityMain.swift",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/libtoklet.a",
+        "-framework",
+        "Metal",
+        "-framework",
+        "MetalPerformanceShaders",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "Security",
+        "-lobjc",
+        "-liconv",
+        "-lresolv",
+        "-lc++",
+        "-o",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/quality"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 45327,
+      "stdout": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/compile.stdout",
+      "stderr": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/compile.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/quality",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-native-tiny-v2",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/cases"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 45338,
+      "stdout": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stdout",
+      "stderr": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/tools/experiments/m7_native_measurement_check.py",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-apple-package-v5",
+        "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 45340,
+      "stdout": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stdout",
+      "stderr": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/tools/experiments/m7_swift_harness_build.py",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-apple-package-v5",
+        "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 45357,
+      "stdout": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stdout",
+      "stderr": "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stderr"
+    }
+  ],
+  "checked": {
+    "results": [
+      {
+        "filesBefore": {
+          "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+          "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+        },
+        "endpointErrors": [],
+        "m7Complete": false,
+        "summary": {
+          "negativeLogLikelihoodSum": 15.421546215099228,
+          "targets": 3,
+          "blockSize": 3,
+          "blocks": 1,
+          "meanNegativeLogLikelihood": 5.140515405033076,
+          "policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once"
+        },
+        "filesAfter": {
+          "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+          "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+        },
+        "passed": true,
+        "closed": true,
+        "loadAndSessionSeconds": 0.00081225,
+        "samplesCompleted": 3,
+        "cleanupErrors": [],
+        "physicalDeviceQualified": false,
+        "fullQualityQualified": false,
+        "backend": "cpu",
+        "tokensBeforeSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+        "tokensAfterSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+        "released": true,
+        "interruptionCount": 0,
+        "checkpoints": [
+          {
+            "footprint": {
+              "lifetimePeakPhysicalBytes": 2359704,
+              "physicalBytes": 2359704,
+              "returnedNaturalCount": 93
+            },
+            "phase": "before-artifact-proof"
+          },
+          {
+            "footprint": {
+              "physicalBytes": 2687384,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 2687384
+            },
+            "phase": "after-artifact-proof"
+          },
+          {
+            "footprint": {
+              "lifetimePeakPhysicalBytes": 2998680,
+              "returnedNaturalCount": 93,
+              "physicalBytes": 2998680
+            },
+            "phase": "loaded"
+          },
+          {
+            "footprint": {
+              "physicalBytes": 3064216,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 3064216
+            },
+            "phase": "block-0"
+          },
+          {
+            "footprint": {
+              "physicalBytes": 3064216,
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 3064216
+            },
+            "phase": "unloaded"
+          },
+          {
+            "footprint": {
+              "physicalBytes": 3064216,
+              "lifetimePeakPhysicalBytes": 3064216,
+              "returnedNaturalCount": 93
+            },
+            "phase": "closed"
+          },
+          {
+            "footprint": {
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 3146160,
+              "physicalBytes": 3146160
+            },
+            "phase": "after-final-artifact-proof"
+          }
+        ]
+      },
+      {
+        "loadAndSessionSeconds": 0.138678,
+        "closed": true,
+        "released": true,
+        "physicalDeviceQualified": false,
+        "fullQualityQualified": false,
+        "filesAfter": {
+          "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+          "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+        },
+        "m7Complete": false,
+        "samplesCompleted": 3,
+        "passed": true,
+        "endpointErrors": [],
+        "checkpoints": [
+          {
+            "phase": "before-artifact-proof",
+            "footprint": {
+              "returnedNaturalCount": 93,
+              "physicalBytes": 3211696,
+              "lifetimePeakPhysicalBytes": 3211696
+            }
+          },
+          {
+            "phase": "after-artifact-proof",
+            "footprint": {
+              "lifetimePeakPhysicalBytes": 3260848,
+              "physicalBytes": 3260848,
+              "returnedNaturalCount": 93
+            }
+          },
+          {
+            "phase": "loaded",
+            "footprint": {
+              "lifetimePeakPhysicalBytes": 6439488,
+              "physicalBytes": 6439488,
+              "returnedNaturalCount": 93
+            }
+          },
+          {
+            "phase": "block-0",
+            "footprint": {
+              "lifetimePeakPhysicalBytes": 7209560,
+              "returnedNaturalCount": 93,
+              "physicalBytes": 7209560
+            }
+          },
+          {
+            "phase": "unloaded",
+            "footprint": {
+              "returnedNaturalCount": 93,
+              "physicalBytes": 7160408,
+              "lifetimePeakPhysicalBytes": 7209560
+            }
+          },
+          {
+            "phase": "closed",
+            "footprint": {
+              "returnedNaturalCount": 93,
+              "physicalBytes": 7160408,
+              "lifetimePeakPhysicalBytes": 7209560
+            }
+          },
+          {
+            "phase": "after-final-artifact-proof",
+            "footprint": {
+              "returnedNaturalCount": 93,
+              "lifetimePeakPhysicalBytes": 7209560,
+              "physicalBytes": 7160408
+            }
+          }
+        ],
+        "summary": {
+          "negativeLogLikelihoodSum": 15.420091270062045,
+          "blocks": 1,
+          "targets": 3,
+          "blockSize": 3,
+          "meanNegativeLogLikelihood": 5.140030423354015,
+          "policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once"
+        },
+        "filesBefore": {
+          "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+          "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+        },
+        "tokensAfterSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+        "cleanupErrors": [],
+        "backend": "metal",
+        "tokensBeforeSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+        "interruptionCount": 0
+      }
+    ],
+    "sample_count": 6,
+    "failures": [
+      {
+        "label": "overflow-targets",
+        "result": {
+          "cleanupErrors": [],
+          "filesBefore": {},
+          "passed": false,
+          "error": "Error Domain=TokletQuality Code=1 \"Invalid explicit teacher-forcing policy\" UserInfo={NSLocalizedDescription=Invalid explicit teacher-forcing policy}",
+          "released": true,
+          "samplesCompleted": 0,
+          "m7Complete": false,
+          "interruptionCount": 0,
+          "filesAfter": {},
+          "checkpoints": [
+            {
+              "phase": "closed",
+              "footprint": {
+                "physicalBytes": 7225944,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7225944
+              }
+            }
+          ],
+          "endpointErrors": [],
+          "loadAndSessionSeconds": 0,
+          "backend": "cpu",
+          "closed": false,
+          "physicalDeviceQualified": false,
+          "fullQualityQualified": false
+        }
+      },
+      {
+        "result": {
+          "cleanupErrors": [],
+          "filesBefore": {},
+          "passed": false,
+          "error": "Error Domain=TokletQuality Code=1 \"Invalid explicit teacher-forcing policy\" UserInfo={NSLocalizedDescription=Invalid explicit teacher-forcing policy}",
+          "released": true,
+          "samplesCompleted": 0,
+          "m7Complete": false,
+          "interruptionCount": 0,
+          "filesAfter": {},
+          "checkpoints": [
+            {
+              "phase": "closed",
+              "footprint": {
+                "physicalBytes": 7258712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7258712
+              }
+            }
+          ],
+          "endpointErrors": [],
+          "loadAndSessionSeconds": 0,
+          "backend": "cpu",
+          "closed": false,
+          "physicalDeviceQualified": false,
+          "fullQualityQualified": false
+        },
+        "label": "overflow-block"
+      },
+      {
+        "result": {
+          "loadAndSessionSeconds": 0.000313292,
+          "closed": true,
+          "released": true,
+          "physicalDeviceQualified": false,
+          "fullQualityQualified": false,
+          "filesAfter": {
+            "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+            "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+          },
+          "m7Complete": false,
+          "samplesCompleted": 1,
+          "passed": false,
+          "endpointErrors": [],
+          "checkpoints": [
+            {
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7340632,
+                "physicalBytes": 7340632
+              },
+              "phase": "before-artifact-proof"
+            },
+            {
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "physicalBytes": 7357016,
+                "lifetimePeakPhysicalBytes": 7357016
+              },
+              "phase": "after-artifact-proof"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7455320,
+                "returnedNaturalCount": 93,
+                "physicalBytes": 7455320
+              },
+              "phase": "loaded"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7455320,
+                "physicalBytes": 7455320,
+                "returnedNaturalCount": 93
+              },
+              "phase": "closed"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7455320,
+                "physicalBytes": 7438936,
+                "returnedNaturalCount": 93
+              },
+              "phase": "after-final-artifact-proof"
+            }
+          ],
+          "filesBefore": {
+            "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+            "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+          },
+          "tokensAfterSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+          "cleanupErrors": [],
+          "error": "Error Domain=InjectedOutput Code=1 \"(null)\"",
+          "backend": "cpu",
+          "tokensBeforeSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+          "interruptionCount": 0
+        },
+        "label": "output"
+      },
+      {
+        "label": "model-endpoint",
+        "result": {
+          "loadAndSessionSeconds": 0.000240583,
+          "closed": true,
+          "released": true,
+          "physicalDeviceQualified": false,
+          "fullQualityQualified": false,
+          "filesAfter": {},
+          "m7Complete": false,
+          "samplesCompleted": 3,
+          "passed": false,
+          "endpointErrors": [
+            "Error Domain=TokletMeasurement Code=1 \"Exact artifact inventory differs\" UserInfo={NSLocalizedDescription=Exact artifact inventory differs}"
+          ],
+          "checkpoints": [
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7455320,
+                "physicalBytes": 7438936,
+                "returnedNaturalCount": 93
+              },
+              "phase": "before-artifact-proof"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7455320,
+                "returnedNaturalCount": 93,
+                "physicalBytes": 7455320
+              },
+              "phase": "after-artifact-proof"
+            },
+            {
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "physicalBytes": 7520856,
+                "lifetimePeakPhysicalBytes": 7520856
+              },
+              "phase": "loaded"
+            },
+            {
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7520856,
+                "physicalBytes": 7520856
+              },
+              "phase": "block-0"
+            },
+            {
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "physicalBytes": 7520856,
+                "lifetimePeakPhysicalBytes": 7520856
+              },
+              "phase": "unloaded"
+            },
+            {
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "physicalBytes": 7520856,
+                "lifetimePeakPhysicalBytes": 7520856
+              },
+              "phase": "closed"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7520856,
+                "lifetimePeakPhysicalBytes": 7520856,
+                "returnedNaturalCount": 93
+              },
+              "phase": "after-final-artifact-proof"
+            }
+          ],
+          "summary": {
+            "negativeLogLikelihoodSum": 15.421546215099228,
+            "targets": 3,
+            "meanNegativeLogLikelihood": 5.140515405033076,
+            "blockSize": 3,
+            "policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once",
+            "blocks": 1
+          },
+          "filesBefore": {
+            "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+            "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+          },
+          "cleanupErrors": [],
+          "backend": "cpu",
+          "tokensBeforeSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+          "interruptionCount": 0
+        }
+      },
+      {
+        "label": "corpus-endpoint",
+        "result": {
+          "loadAndSessionSeconds": 0.000246541,
+          "closed": true,
+          "released": true,
+          "physicalDeviceQualified": false,
+          "fullQualityQualified": false,
+          "filesAfter": {
+            "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+            "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+          },
+          "m7Complete": false,
+          "samplesCompleted": 3,
+          "passed": false,
+          "endpointErrors": [
+            "Error Domain=TokletQuality Code=1 \"Corpus SHA differs\" UserInfo={NSLocalizedDescription=Corpus SHA differs}"
+          ],
+          "checkpoints": [
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7520856,
+                "physicalBytes": 7520856,
+                "returnedNaturalCount": 93
+              },
+              "phase": "before-artifact-proof"
+            },
+            {
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "physicalBytes": 7537240,
+                "lifetimePeakPhysicalBytes": 7537240
+              },
+              "phase": "after-artifact-proof"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7570008,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7570008
+              },
+              "phase": "loaded"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7570008,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7570008
+              },
+              "phase": "block-0"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7570008,
+                "physicalBytes": 7570008,
+                "returnedNaturalCount": 93
+              },
+              "phase": "unloaded"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7570008,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7570008
+              },
+              "phase": "closed"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7570008,
+                "returnedNaturalCount": 93,
+                "physicalBytes": 7553624
+              },
+              "phase": "after-final-artifact-proof"
+            }
+          ],
+          "summary": {
+            "meanNegativeLogLikelihood": 5.140515405033076,
+            "blockSize": 3,
+            "policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once",
+            "negativeLogLikelihoodSum": 15.421546215099228,
+            "blocks": 1,
+            "targets": 3
+          },
+          "filesBefore": {
+            "Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+            "Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+          },
+          "cleanupErrors": [],
+          "backend": "cpu",
+          "tokensBeforeSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+          "interruptionCount": 0
+        }
+      }
+    ],
+    "summary": {
+      "physicalDeviceQualified": false,
+      "passed": true,
+      "cases": [
+        "cpu-complete",
+        "metal-complete",
+        "reject-version",
+        "reject-overflow-targets",
+        "reject-overflow-block",
+        "reject-capacity",
+        "reject-chunk",
+        "reject-budget",
+        "reject-corpus-path",
+        "reject-corpus-in-model",
+        "reject-corpus-hash",
+        "reject-inventory",
+        "reject-extra-fields",
+        "reject-config-sha",
+        "reject-corpus-size",
+        "reject-corpus-symlink",
+        "reject-output",
+        "reject-model-endpoint",
+        "reject-corpus-endpoint"
+      ]
+    }
+  },
+  "nested_receipts": {
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json": "cabb3c430f18dc3c29df24cd8f7b15e11803cc8c4d74b09b79912e77ccf99e44",
+    "artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/apple-build/build.json": "0196c15708aeac6dfa73a409cbc9f19739a49f7369ecec76780e1e15c9531c41"
+  },
+  "controlled_environment": {
+    "HOME": "/Users/coloner",
+    "PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/Users/coloner/.cargo/bin",
+    "CARGO_HOME": "/Users/coloner/.cargo",
+    "RUSTUP_HOME": "/Users/coloner/.rustup",
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer",
+    "LANG": "en_US.UTF-8",
+    "TMPDIR": "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-lifecycle-core-native-v1/prefix-regression/tasks-regression/quality-regression/tmp"
+  },
+  "primary_error": null,
+  "endpoint_errors": [],
+  "full_quality_qualified": false,
+  "physical_device_qualified": false,
+  "m7_complete": false
+}
