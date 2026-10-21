@@ -48,6 +48,9 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   output, independent tiny/reference parity, session/failure/memory checks and
   explicit CLI/native app selection. Start with supported Qwen semantics; do not
   automatically adopt previously rejected quality configurations.
+  - [x] Validated [local artifact source](mlx-qwen-source.md), packed/floating
+    tensor inventory, per-module settings, bounded streaming and tied ownership.
+  - [ ] Resident numerical execution, complete-model parity/quality and app wiring.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,

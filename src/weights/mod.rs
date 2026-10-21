@@ -246,6 +246,12 @@ impl QwenConfig {
     }
 }
 
+/// Reuse the existing strict Qwen graph validation after an MLX importer has
+/// independently removed and validated its artifact quantization instructions.
+pub(crate) fn qwen_config(value: serde_json::Value, options: LoadOptions) -> Result<Config, Error> {
+    serde_json::from_value::<QwenConfig>(value)?.validate(options)
+}
+
 /// Reject duplicate object keys before passing the header to the reused parser.
 struct UniqueKeys;
 impl<'de> Deserialize<'de> for UniqueKeys {
@@ -367,14 +373,14 @@ impl Shard {
     }
 }
 
-struct Source {
+pub(crate) struct Source {
     shards: Vec<Shard>,
     locations: BTreeMap<String, usize>,
     buffer: Vec<u8>,
     conversion_seconds: f64,
 }
 impl Source {
-    fn open(directory: &Path) -> Result<Self, Error> {
+    pub(crate) fn open(directory: &Path) -> Result<Self, Error> {
         let index_path = directory.join("model.safetensors.index.json");
         let index = if index_path.try_exists().map_err(|source| Error::Io {
             path: index_path.clone(),
@@ -477,7 +483,7 @@ impl Source {
         Ok(())
     }
 
-    fn visit(
+    pub(crate) fn visit(
         &mut self,
         name: &str,
         mut consume: impl FnMut(f32) -> Result<(), Error>,
@@ -564,9 +570,51 @@ impl Source {
         }
         Ok(values)
     }
+
+    pub(crate) fn names(&self) -> impl Iterator<Item = &str> {
+        self.locations.keys().map(String::as_str)
+    }
+
+    pub(crate) fn info(&self, name: &str) -> Option<&safetensors::tensor::TensorInfo> {
+        self.locations
+            .get(name)
+            .and_then(|&index| self.shards[index].metadata.info(name))
+    }
+
+    /// Stream bytes from the validated open shard handle. Callers own decoding
+    /// and must discard partial destination state if either read/consumer fails.
+    pub(crate) fn visit_raw(
+        &mut self,
+        name: &str,
+        mut consume: impl FnMut(&[u8]) -> Result<(), Error>,
+    ) -> Result<(), Error> {
+        let index = *self
+            .locations
+            .get(name)
+            .ok_or_else(|| invalid(format!("missing tensor: {name}")))?;
+        let shard = &mut self.shards[index];
+        let (begin, end) = shard.metadata.info(name).unwrap().data_offsets;
+        io(
+            &shard.path,
+            shard
+                .file
+                .seek(SeekFrom::Start(shard.data_start + begin as u64)),
+        )?;
+        let mut remaining = end - begin;
+        while remaining > 0 {
+            let count = remaining.min(self.buffer.len());
+            io(
+                &shard.path,
+                shard.file.read_exact(&mut self.buffer[..count]),
+            )?;
+            consume(&self.buffer[..count])?;
+            remaining -= count;
+        }
+        Ok(())
+    }
 }
 
-fn expected(c: &Config) -> Result<BTreeMap<String, Vec<usize>>, Error> {
+pub(crate) fn expected(c: &Config) -> Result<BTreeMap<String, Vec<usize>>, Error> {
     let h = c.hidden_size;
     let kv = cpu::product(c.kv_heads, c.head_dim)?;
     let mut tensors = BTreeMap::from([
