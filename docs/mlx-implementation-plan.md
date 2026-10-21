@@ -52,6 +52,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     tensor inventory, per-module settings, bounded streaming and tied ownership.
   - [x] [Resident affine product/gather operators](mlx-metal-affine.md), explicit
     GPU value domain and independent primitive qualification on M1 Pro.
+  - [x] Explicit [full-model scalar reference import](mlx-reference.md) and frozen
+    mixed-precision tiny Qwen graph traces/native MLX CPU/GPU logits.
   - [ ] Complete graph/strided execution, model parity/quality and app wiring.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal

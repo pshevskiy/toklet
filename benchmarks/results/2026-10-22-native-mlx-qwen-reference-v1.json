@@ -1,0 +1,450 @@
+{
+  "format": "toklet-native-mlx-qwen-reference-qualification-v1",
+  "passed": true,
+  "base_revision": "09e78c9",
+  "scope": "Diagnostic FP32 expansion and existing scalar Qwen2 full-graph execution of a mixed MLX-format tiny artifact; no production GPU model or checkpoint qualification.",
+  "scalar_reference_import_complete": true,
+  "m8_2_complete": false,
+  "m8_complete": false,
+  "production_model_execution_qualified": false,
+  "architecture_support_expanded": false,
+  "iphone_qualified": false,
+  "performance_qualified": false,
+  "checks": {
+    "format": "toklet-native-mlx-qwen-reference-checks-v1",
+    "passed": true,
+    "source_pins": {
+      "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+      "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+      "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+      "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+      "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+      "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+      "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+      "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+      "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+      "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+      "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+      "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+      "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+      "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+      "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+      "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+      "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+      "src/metal/mlx.rs": "50f4dcb3eae5df3afd40d6b55f4773c4ead4631b7396e2ce3c88d9eac0ded3de",
+      "src/metal/mod.rs": "be646b67bbc3c8716a0cc7b4eeebe152dd361f63065d6869fbf79ade566d45e0",
+      "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+      "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+      "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+      "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+      "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+      "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+      "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+      "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+      "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+      "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+      "src/native/tests.rs": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+      "src/native.rs": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+      "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+      "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+      "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+      "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+      "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+      "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+      "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+      "src/metal/mlx.metal": "8cb303e012f07b2459178c76f2f864702e8d14e2e848f8bba73201ac33d19294",
+      "tests/bench_contract.rs": "8510550dc5062555509c1f77d8c9b6169fe6122edd802aaa6cc45220d74e7ea1",
+      "tests/cached_attention.rs": "44df14bec20ca607aa18470f36e8e74e2151d75e2db5fb65f0783b91f120b3a8",
+      "tests/cli.rs": "c4dc02a39078a9f28a873edc4c4bb7d8aa935dcda0f097459a77d40483e843a1",
+      "tests/cpu_attention.rs": "804bb41795c868a0e0a4d1d9a1923270731e137eed986003f57de847bb5fb7e7",
+      "tests/cpu_decoder.rs": "c97638807910b4307e56ded647088b10fdadf9eef50bfe9a21f8635ae83aed79",
+      "tests/cpu_linear.rs": "0aa924009e8803518cb9bce3c178872982b2bc87a7d5c87f6a085f6ee7b98b41",
+      "tests/cpu_reductions.rs": "b4529fba8df103e4e0f289b0595f3498af665d199a1e4aa7babb8ae693dde1e7",
+      "tests/cpu_tiled.rs": "0d1f700ee99000e8c396dd4dc963aaaaa7a2b0d8753e088c2eab8c22ee06ec20",
+      "tests/fixtures.rs": "9cb5a5d77894bf8d946a1d01e9f63929d79e48e64060ccdced9e76ed8780831c",
+      "tests/metal.rs": "5a7f02490404dc6bc90a4234c3fe54b4d48810e7d7fc4a0913ffdecafccf5252",
+      "tests/mlx_affine.rs": "619a80e6825f9a8d3622c8ad5b5f8cd6b762a54f2c7b658cd3fef7a106a9ff26",
+      "tests/mlx_metal.rs": "eb8568aff9177b768aa8945e1143a9f0ba9ec8873a306a8081cdb5dd0b3adf88",
+      "tests/mlx_qwen.rs": "c643477945f615f39582886a45c83df1ae2ff26c30608d8d720bc662ac96d878",
+      "tests/mlx_reference.rs": "6c8db8e1067b2eb5b279bf7eec195cd5cb40f1c9e314e6ff74bd27e7d17f581b",
+      "tests/q4.rs": "3a567d03f08b327264f086324d99e0b586681f090a025ee1307bbca3c1a76952",
+      "tests/q4_artifact.rs": "f878274e04453ba705488e239d9d5d985b7718c42f832c11ced2168503b2bd3c",
+      "tests/q4_metal.rs": "dfeb8736a9209d89097aec87b02adf2c2d67ebba43081c70c5ea301b7c02b2a2",
+      "tests/q4_v2.rs": "fc3a7aad5ab8e7182a6c11981075691712a5c771cbcadd0a95908229c13943a4",
+      "tests/q4_v2_models.rs": "e2d38d78a0f9095a4146039aca2639405f9a6d550a5b20c276495df102fbaa72",
+      "tests/q4_v2_storage.rs": "04d408d1758eb4f44bd7760b099f7b771e596f3c15c80357cd7b0ed26d89bf6e",
+      "tests/qwen_forward.rs": "0cdd2529dac4c4ffb66e94d721571a40b12696486f26cbab31718cc9e767c7d5",
+      "tests/qwen_larger_forward.rs": "76a755bd50c8f127f91db33ee625a7a4dd24e68ee8388497af98c3ceb8ab1058",
+      "tests/qwen_larger_metal.rs": "0a9a6dfd013269da3a78878f6ebdcb015842b9ed900b31cbc1662e707c4d301d",
+      "tests/qwen_session.rs": "b163c685a3d8bbccc504e47ccc460b3ecc04893bbfa37bda9ceae83d3ccb84e5",
+      "tests/session.rs": "958690e150c1235357a67830e0067b9c472024815d97832c77681a8da0e07c4c",
+      "tests/weights.rs": "16a026e1ca620b20f4aeb5a8d59231a8818fe5729426a777fa1f759168a9c3e7",
+      "tests/fixtures/mlx-affine-v1/arrays.bin": "8b625339201717836cb817e3acd6d07309ccc1c6e56e7526895940812308e3ac",
+      "tests/fixtures/mlx-affine-v1/manifest.json": "e4c9a4df265b8d84397dc4cbcd39f615d152497c2ba06c25aa44b89ddc6e25aa",
+      "tools/reference/mlx_affine.py": "45bf05e7d235f01de52a94e50c2175505405abc11e823e21871f2224394e8b30",
+      "tools/reference/mlx_qwen.py": "06ae076a6c5b5058b9e396aa3bc26b03d22b130cbbcbf56d1a2531972e82ed0b",
+      "tools/reference/tiny.py": "85fa09a1415b8481dfac453d445b0ab28b0f7169c14e52318c5ad7dee13361a0",
+      "tests/fixtures/mlx-qwen-v1/arrays.bin": "0a7a4d33b78a1b9ada37e30fa35726ebb1788680866b2c0e01b61d2c03c5ec56",
+      "tests/fixtures/mlx-qwen-v1/manifest.json": "fdd390667091a78d69b2f09086a3919eb7499ee1f065c7944801f65a5e1953cd",
+      "tests/fixtures/mlx-qwen-v1/model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+      "tests/fixtures/mlx-qwen-v1/model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+      "artifacts/m8-qwen-reference-checks-v3/checks.py": "9ce29d9596b96f584b20a55876a9c306b7ca4494d32610ddeddc8ec217f5c36c",
+      "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae"
+    },
+    "protected_binary_pins": {
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+    },
+    "commands": [
+      {
+        "command": [
+          "cargo",
+          "+1.90",
+          "test",
+          "--locked",
+          "--offline",
+          "--test",
+          "mlx_reference"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 5201,
+        "stdout": "artifacts/m8-qwen-reference-checks-v3/reference-focused.stdout",
+        "stderr": "artifacts/m8-qwen-reference-checks-v3/reference-focused.stderr"
+      },
+      {
+        "command": [
+          "cargo",
+          "+1.90",
+          "fmt",
+          "--check"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 5205,
+        "stdout": "artifacts/m8-qwen-reference-checks-v3/fmt.stdout",
+        "stderr": "artifacts/m8-qwen-reference-checks-v3/fmt.stderr"
+      },
+      {
+        "command": [
+          "cargo",
+          "+1.90",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 5213,
+        "stdout": "artifacts/m8-qwen-reference-checks-v3/cpu-clippy.stdout",
+        "stderr": "artifacts/m8-qwen-reference-checks-v3/cpu-clippy.stderr"
+      },
+      {
+        "command": [
+          "cargo",
+          "+1.90",
+          "test",
+          "--locked",
+          "--offline"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 5227,
+        "stdout": "artifacts/m8-qwen-reference-checks-v3/cpu-test.stdout",
+        "stderr": "artifacts/m8-qwen-reference-checks-v3/cpu-test.stderr"
+      },
+      {
+        "command": [
+          "cargo",
+          "+1.90",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--features",
+          "metal",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 5331,
+        "stdout": "artifacts/m8-qwen-reference-checks-v3/metal-clippy.stdout",
+        "stderr": "artifacts/m8-qwen-reference-checks-v3/metal-clippy.stderr"
+      },
+      {
+        "command": [
+          "cargo",
+          "+1.90",
+          "test",
+          "--locked",
+          "--offline",
+          "--features",
+          "metal"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 5338,
+        "stdout": "artifacts/m8-qwen-reference-checks-v3/metal-test.stdout",
+        "stderr": "artifacts/m8-qwen-reference-checks-v3/metal-test.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/.venv/bin/python",
+          "tools/reference/mlx_affine.py",
+          "--check",
+          "tests/fixtures/mlx-affine-v1"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 5430,
+        "stdout": "artifacts/m8-qwen-reference-checks-v3/fixture.stdout",
+        "stderr": "artifacts/m8-qwen-reference-checks-v3/fixture.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/.venv/bin/python",
+          "tools/reference/mlx_qwen.py",
+          "--check",
+          "tests/fixtures/mlx-qwen-v1"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 5432,
+        "stdout": "artifacts/m8-qwen-reference-checks-v3/qwen-fixture.stdout",
+        "stderr": "artifacts/m8-qwen-reference-checks-v3/qwen-fixture.stderr"
+      }
+    ],
+    "primary_error": null,
+    "endpoint_errors": []
+  },
+  "oracle_export": {
+    "format": "toklet-native-mlx-qwen-oracle-export-v1",
+    "passed": true,
+    "source_pins": {
+      "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+      "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+      "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+      "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+      "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+      "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+      "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+      "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+      "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+      "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+      "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+      "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+      "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+      "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+      "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+      "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+      "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+      "src/metal/mlx.rs": "50f4dcb3eae5df3afd40d6b55f4773c4ead4631b7396e2ce3c88d9eac0ded3de",
+      "src/metal/mod.rs": "be646b67bbc3c8716a0cc7b4eeebe152dd361f63065d6869fbf79ade566d45e0",
+      "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+      "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+      "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+      "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+      "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+      "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+      "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+      "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+      "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+      "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+      "src/native/tests.rs": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+      "src/native.rs": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+      "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+      "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+      "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+      "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+      "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+      "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+      "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+      "src/metal/mlx.metal": "8cb303e012f07b2459178c76f2f864702e8d14e2e848f8bba73201ac33d19294",
+      "tests/bench_contract.rs": "8510550dc5062555509c1f77d8c9b6169fe6122edd802aaa6cc45220d74e7ea1",
+      "tests/cached_attention.rs": "44df14bec20ca607aa18470f36e8e74e2151d75e2db5fb65f0783b91f120b3a8",
+      "tests/cli.rs": "c4dc02a39078a9f28a873edc4c4bb7d8aa935dcda0f097459a77d40483e843a1",
+      "tests/cpu_attention.rs": "804bb41795c868a0e0a4d1d9a1923270731e137eed986003f57de847bb5fb7e7",
+      "tests/cpu_decoder.rs": "c97638807910b4307e56ded647088b10fdadf9eef50bfe9a21f8635ae83aed79",
+      "tests/cpu_linear.rs": "0aa924009e8803518cb9bce3c178872982b2bc87a7d5c87f6a085f6ee7b98b41",
+      "tests/cpu_reductions.rs": "b4529fba8df103e4e0f289b0595f3498af665d199a1e4aa7babb8ae693dde1e7",
+      "tests/cpu_tiled.rs": "0d1f700ee99000e8c396dd4dc963aaaaa7a2b0d8753e088c2eab8c22ee06ec20",
+      "tests/fixtures.rs": "9cb5a5d77894bf8d946a1d01e9f63929d79e48e64060ccdced9e76ed8780831c",
+      "tests/metal.rs": "5a7f02490404dc6bc90a4234c3fe54b4d48810e7d7fc4a0913ffdecafccf5252",
+      "tests/mlx_affine.rs": "619a80e6825f9a8d3622c8ad5b5f8cd6b762a54f2c7b658cd3fef7a106a9ff26",
+      "tests/mlx_metal.rs": "eb8568aff9177b768aa8945e1143a9f0ba9ec8873a306a8081cdb5dd0b3adf88",
+      "tests/mlx_qwen.rs": "c643477945f615f39582886a45c83df1ae2ff26c30608d8d720bc662ac96d878",
+      "tests/mlx_reference.rs": "6c8db8e1067b2eb5b279bf7eec195cd5cb40f1c9e314e6ff74bd27e7d17f581b",
+      "tests/q4.rs": "3a567d03f08b327264f086324d99e0b586681f090a025ee1307bbca3c1a76952",
+      "tests/q4_artifact.rs": "f878274e04453ba705488e239d9d5d985b7718c42f832c11ced2168503b2bd3c",
+      "tests/q4_metal.rs": "dfeb8736a9209d89097aec87b02adf2c2d67ebba43081c70c5ea301b7c02b2a2",
+      "tests/q4_v2.rs": "fc3a7aad5ab8e7182a6c11981075691712a5c771cbcadd0a95908229c13943a4",
+      "tests/q4_v2_models.rs": "e2d38d78a0f9095a4146039aca2639405f9a6d550a5b20c276495df102fbaa72",
+      "tests/q4_v2_storage.rs": "04d408d1758eb4f44bd7760b099f7b771e596f3c15c80357cd7b0ed26d89bf6e",
+      "tests/qwen_forward.rs": "0cdd2529dac4c4ffb66e94d721571a40b12696486f26cbab31718cc9e767c7d5",
+      "tests/qwen_larger_forward.rs": "76a755bd50c8f127f91db33ee625a7a4dd24e68ee8388497af98c3ceb8ab1058",
+      "tests/qwen_larger_metal.rs": "0a9a6dfd013269da3a78878f6ebdcb015842b9ed900b31cbc1662e707c4d301d",
+      "tests/qwen_session.rs": "b163c685a3d8bbccc504e47ccc460b3ecc04893bbfa37bda9ceae83d3ccb84e5",
+      "tests/session.rs": "958690e150c1235357a67830e0067b9c472024815d97832c77681a8da0e07c4c",
+      "tests/weights.rs": "16a026e1ca620b20f4aeb5a8d59231a8818fe5729426a777fa1f759168a9c3e7",
+      "tests/fixtures/mlx-affine-v1/arrays.bin": "8b625339201717836cb817e3acd6d07309ccc1c6e56e7526895940812308e3ac",
+      "tests/fixtures/mlx-affine-v1/manifest.json": "e4c9a4df265b8d84397dc4cbcd39f615d152497c2ba06c25aa44b89ddc6e25aa",
+      "tools/reference/mlx_affine.py": "45bf05e7d235f01de52a94e50c2175505405abc11e823e21871f2224394e8b30",
+      "tools/reference/mlx_qwen.py": "06ae076a6c5b5058b9e396aa3bc26b03d22b130cbbcbf56d1a2531972e82ed0b",
+      "tools/reference/tiny.py": "85fa09a1415b8481dfac453d445b0ab28b0f7169c14e52318c5ad7dee13361a0",
+      "artifacts/m8-qwen-reference-oracle-v2/checks.py": "773e6ac2ad3c16bda66df55a9010898e8bfd6191b21f0f423d879be8be9475b7",
+      "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae"
+    },
+    "protected_binary_pins": {
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+    },
+    "commands": [
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/.venv/bin/python",
+          "tools/reference/mlx_qwen.py",
+          "--export",
+          "tests/fixtures/mlx-qwen-v1"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 5082,
+        "stdout": "artifacts/m8-qwen-reference-oracle-v2/export.stdout",
+        "stderr": "artifacts/m8-qwen-reference-oracle-v2/export.stderr"
+      }
+    ],
+    "primary_error": null,
+    "endpoint_errors": []
+  },
+  "test_counts": {
+    "cpu-test": {
+      "passed": 130,
+      "ignored": 8,
+      "suites": 29
+    },
+    "metal-test": {
+      "passed": 144,
+      "ignored": 63,
+      "suites": 29
+    }
+  },
+  "focused_tests": 4,
+  "fixture": {
+    "path": "tests/fixtures/mlx-qwen-v1/manifest.json",
+    "sha256": "fdd390667091a78d69b2f09086a3919eb7499ee1f065c7944801f65a5e1953cd",
+    "files": {
+      "model/config.json": {
+        "bytes": 587,
+        "sha256": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e"
+      },
+      "model/model.safetensors": {
+        "bytes": 25873,
+        "sha256": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+      },
+      "arrays.bin": {
+        "bytes": 320128,
+        "sha256": "0a7a4d33b78a1b9ada37e30fa35726ebb1788680866b2c0e01b61d2c03c5ec56"
+      }
+    },
+    "numpy_trace_arrays": 195,
+    "native_mlx_logits_arrays": 8,
+    "array_bytes": 320128,
+    "mlx": "0.32.3",
+    "mlx_lm": "0.32.0",
+    "policy": {
+      "tolerances": {
+        "linear": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        },
+        "rmsnorm": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        },
+        "rotary": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        },
+        "attention_scores": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        },
+        "softmax": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        },
+        "attention_output": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        },
+        "silu": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        },
+        "gated_mlp": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        },
+        "residual": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        },
+        "logits": {
+          "atol": 1e-05,
+          "rtol": 0.0001
+        }
+      },
+      "reconstruction": "Independent unsigned 4/8-bit codes, FP64 affine multiply/add, FP32 weights; existing NumPy FP32 graph.",
+      "native": "Actual mlx-lm quantized Qwen2 FP32 CPU/GPU logits for zero-offset cases only; not identical arithmetic or quality qualification."
+    },
+    "producer": {
+      "mlx": "0.32.3",
+      "mlx_lm": "0.32.0",
+      "numpy": "2.3.2",
+      "selected_file_pins": {
+        "tools/reference/mlx_qwen.py": "06ae076a6c5b5058b9e396aa3bc26b03d22b130cbbcbf56d1a2531972e82ed0b",
+        "tools/reference/tiny.py": "85fa09a1415b8481dfac453d445b0ab28b0f7169c14e52318c5ad7dee13361a0",
+        ".venv/lib/python3.12/site-packages/mlx_lm/models/qwen2.py": "937e0321ef06a34efbd66d2ce0ce1e715aab98da4acefa376c8cd29291a0bc83",
+        ".venv/lib/python3.12/site-packages/mlx/core.cpython-312-darwin.so": "49eeb7232106aa9ab846b20e0417add980b1c7213ef6dda6e25c01d45ca54851"
+      },
+      "endpoint_inputs_unchanged": true,
+      "complete_dependency_closure_claimed": false
+    },
+    "source_fixture_manifest_sha256": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4"
+  },
+  "retained_attempts": {
+    "first_oracle": "Initial exporter had post-computation source/producer hashes, identified by Astra as provenance gap. Original fixture and exporter retained unchanged; it is not reattributed to corrected source.",
+    "corrected_oracle": "Bounded manifest admitted against literal accepted root before parsing, selected code pinned before numerical imports, consumed inputs and versions rechecked before publication. Numerical arrays, safetensors and config byte-identical to initial export.",
+    "preliminary_checks": "Four focused and full ordinary checks passed on original fixture; final checked receipt binds corrected manifest/exporter."
+  },
+  "raw_files": {
+    "path": "benchmarks/results/2026-10-22-native-mlx-qwen-reference-raw-v1.json",
+    "sha256": "f1f4643e3de69672e1e46dcb1ed074b1761b5c3191628bea18046e1aee7f6b63",
+    "files": 61
+  },
+  "documentation_pins": {
+    "docs/mlx-implementation-plan.md": "150a88eb09d41a42dde8d13b154af89dde0d13bd54916f4392baa35f8a8a39f0",
+    "docs/mlx-reference.md": "9437ca483c9be8713234dc8db5bd9f62692e45a6af106eb1873c74e539a5e36a",
+    "docs/improvements.md": "5dc8784c3a11f86d59e39cded3ba01ea97ab22daffecf5f5bc878bc80fd3c136"
+  },
+  "review": {
+    "reviewer": "Astra",
+    "source_accepted": true,
+    "completed_evidence_accepted": true
+  }
+}
