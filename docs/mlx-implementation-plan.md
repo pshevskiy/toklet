@@ -54,6 +54,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     GPU value domain and independent primitive qualification on M1 Pro.
   - [x] Explicit [full-model scalar reference import](mlx-reference.md) and frozen
     mixed-precision tiny Qwen graph traces/native MLX CPU/GPU logits.
+  - [x] Independent [Half-activation graph oracle](mlx-half-oracle.md), including
+    original packed tied-output weights and gates frozen before GPU composition.
   - [ ] Complete graph/strided execution, model parity/quality and app wiring.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
