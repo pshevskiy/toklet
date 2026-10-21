@@ -882,3 +882,11 @@ Swift now accepts that literal character within the unchanged bounded/unique ID
 policy, without using IDs as paths. Twelve parser methods, actualCPU/Metal label
 roundtrip,31-case native checks and27 clean owned commands/both iOS apps pass.
 Original task IDs/prompts/caps/numerics/gates stay unchanged. Astra accepted source and completed evidence with no findings. Full physical task collection/grading remains.
+
+The [sealed physical task collector](experiments/2026-10-21-m7-physical-tasks.md)
+keeps100 literal IDs/prompts/caps and original EOS, with full-payload storage
+admission and ordered raw chunks, hidden-stop/state/reset/clocks/peaks/proofs.
+Astra's pin-persistence and tiny-oracle findings are fixed; exact previous
+sources remain.153 methods/16 isolated modules/16 clean owned commands and an
+explicit unchanged frozen-input audit pass. Astra accepted source and completed evidence with no findings.
+Phone task collection/grading and M7.3 remain open.

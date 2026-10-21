@@ -1,0 +1,12 @@
+test_exact_cpu_and_metal_sequence (test_m7_native_score_check.ScoreOutputTests.test_exact_cpu_and_metal_sequence) ... ok
+test_failed_backend_or_lifetime_reject (test_m7_native_score_check.ScoreOutputTests.test_failed_backend_or_lifetime_reject) ... ok
+test_legacy_sequence_not_replaceable_by_score_results (test_m7_native_score_check.ScoreOutputTests.test_legacy_sequence_not_replaceable_by_score_results) ... ok
+test_missing_reordered_and_boolean_states_reject (test_m7_native_score_check.ScoreOutputTests.test_missing_reordered_and_boolean_states_reject) ... ok
+test_repeat_recovery_and_loss_identities_reject (test_m7_native_score_check.ScoreOutputTests.test_repeat_recovery_and_loss_identities_reject) ... ok
+test_score_identity_and_values_reject (test_m7_native_score_check.ScoreOutputTests.test_score_identity_and_values_reject) ... ok
+test_stale_and_missing_scores_reject (test_m7_native_score_check.ScoreOutputTests.test_stale_and_missing_scores_reject) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+OK

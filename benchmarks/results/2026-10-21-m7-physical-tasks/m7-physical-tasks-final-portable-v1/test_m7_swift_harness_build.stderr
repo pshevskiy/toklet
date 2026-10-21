@@ -1,0 +1,13 @@
+test_binary_plist_identity_and_executable_escape_are_checked (test_m7_swift_harness_build.HarnessBuildTests.test_binary_plist_identity_and_executable_escape_are_checked) ... ok
+test_fixture_mutation_prevents_copy (test_m7_swift_harness_build.HarnessBuildTests.test_fixture_mutation_prevents_copy) ... ok
+test_foreign_library_is_never_replaced (test_m7_swift_harness_build.HarnessBuildTests.test_foreign_library_is_never_replaced) ... ok
+test_generated_symlink_cannot_redirect_fixture (test_m7_swift_harness_build.HarnessBuildTests.test_generated_symlink_cannot_redirect_fixture) ... ok
+test_library_link_redirection_is_detected (test_m7_swift_harness_build.HarnessBuildTests.test_library_link_redirection_is_detected) ... ok
+test_oversize_metadata_uses_one_bounded_read (test_m7_swift_harness_build.HarnessBuildTests.test_oversize_metadata_uses_one_bounded_read) ... ok
+test_redirection_between_prepare_and_admission_is_rejected (test_m7_swift_harness_build.HarnessBuildTests.test_redirection_between_prepare_and_admission_is_rejected) ... ok
+test_unreviewed_build_is_zero_launch_and_has_failed_receipt (test_m7_swift_harness_build.HarnessBuildTests.test_unreviewed_build_is_zero_launch_and_has_failed_receipt) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.013s
+
+OK

@@ -1,0 +1,661 @@
+{
+  "format": "toklet-m7-physical-task-collector-qualification-v1",
+  "passed": true,
+  "collection_root": "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet",
+  "code_pins": {
+    "tools/experiments/m7_physical_measurement.py": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb",
+    "tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "tools/experiments/m7_physical_tasks.py": "87d990cf98f083db0d0451b3e13cdfee42dc38e1c1aeea710a6308ea1942c3eb",
+    "tools/experiments/test_m7_physical_tasks.py": "b29ee82e828c4671e1a711fd29f1aefce5520f8955a3ff179e9bfb073fe4cfde"
+  },
+  "parent_revision": "f268d7f221601cbaf967fa96577f867d96d4d19e",
+  "parent_source_correspondence": {
+    "tools/experiments/m7_physical_measurement.py": {
+      "snapshot": "artifacts/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_measurement.py",
+      "sha256": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034"
+    },
+    "tools/experiments/m7_physical_storage.py": {
+      "snapshot": "artifacts/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_storage.py",
+      "sha256": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce"
+    }
+  },
+  "pre_review_source_correspondence": {
+    "tools/experiments/m7_physical_tasks.py": {
+      "snapshot": "artifacts/m7-physical-tasks-source-before-review-v1/m7_physical_tasks.py",
+      "sha256": "aaaee0e3027fcfff2564e8344bf4e03de53ebadba5390bcd6518f941c1772bc6"
+    },
+    "tools/experiments/test_m7_physical_tasks.py": {
+      "snapshot": "artifacts/m7-physical-tasks-source-before-review-v1/test_m7_physical_tasks.py",
+      "sha256": "ccc895bbf539278192c272fb3a4e7992162b5bb58bb67c5cf3f4514f0d04af59"
+    }
+  },
+  "runner_proof": {
+    "path": "benchmarks/results/2026-10-21-m7-task-id-compat-qualification-v1.json",
+    "sha256": "08e784ebe4274ec9cf8c643b46382eb4a659dbdbb4c4188f89ce4faba83089dc"
+  },
+  "runner_code_pins": {
+    "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+    "apple/Harness/HarnessApp.swift": "699813ca61b981bd2e2334e6600e59bd567a62cadb39a20d7d0d260601c204af",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "18ea2468847dde1072e0d653ec2c6e554a00f52ecfb96b9d1eacb131a0e5c919",
+    "apple/tests/swift/TasksMain.swift": "b4701b2039f40691c07fcd09d7c9848b545a80723fa4ffaad52362ca12f6662e",
+    "tools/experiments/m7_native_tasks_check.py": "a869a158cb728c4e13cc74791462a200246feff6d9ffb8b2886517523d2056c1",
+    "tools/experiments/test_m7_native_tasks_check.py": "c2a08e7ef6fd2677e0826fd9ed57e12bdb1dc8f56ac9b3c9b4dea800daa5024f"
+  },
+  "evidence_pins": {
+    "artifacts/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_measurement.py": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_measurement.py": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034",
+    "artifacts/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_storage.py": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_storage.py": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce",
+    "artifacts/m7-physical-tasks-source-before-review-v1/m7_physical_measurement.py": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-source-before-review-v1/m7_physical_measurement.py": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb",
+    "artifacts/m7-physical-tasks-source-before-review-v1/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-source-before-review-v1/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "artifacts/m7-physical-tasks-source-before-review-v1/m7_physical_tasks.py": "aaaee0e3027fcfff2564e8344bf4e03de53ebadba5390bcd6518f941c1772bc6",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-source-before-review-v1/m7_physical_tasks.py": "aaaee0e3027fcfff2564e8344bf4e03de53ebadba5390bcd6518f941c1772bc6",
+    "artifacts/m7-physical-tasks-source-before-review-v1/test_m7_physical_tasks.py": "ccc895bbf539278192c272fb3a4e7992162b5bb58bb67c5cf3f4514f0d04af59",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-source-before-review-v1/test_m7_physical_tasks.py": "ccc895bbf539278192c272fb3a4e7992162b5bb58bb67c5cf3f4514f0d04af59",
+    "artifacts/m7-physical-tasks-draft-v1/sources.json": "43ed1b2232c430b7bcf9230a8b8748ab87aae53d336c1a2e02c78fcbc0d35806",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/sources.json": "43ed1b2232c430b7bcf9230a8b8748ab87aae53d336c1a2e02c78fcbc0d35806",
+    "artifacts/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_measurement.py": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_measurement.py": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb",
+    "artifacts/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "artifacts/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_tasks.py": "d9ddbccdb2f39b0acb9053fb9b5cc4a76d5ba16afd88da6292852dbab8a491ac",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_tasks.py": "d9ddbccdb2f39b0acb9053fb9b5cc4a76d5ba16afd88da6292852dbab8a491ac",
+    "artifacts/m7-physical-tasks-draft-v1/tools/experiments/test_m7_physical_tasks.py": "0cb063922c4a71b637ca0dfa968deff1c28749a12fa637a88ed0af86ce232d08",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/tools/experiments/test_m7_physical_tasks.py": "0cb063922c4a71b637ca0dfa968deff1c28749a12fa637a88ed0af86ce232d08",
+    "artifacts/m7-physical-tasks-portable-v1/checks-v3.stderr": "b412e714d1650130773ef7c9f16df1a8592e81b835d0f917799024db7a53f438",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks-v3.stderr": "b412e714d1650130773ef7c9f16df1a8592e81b835d0f917799024db7a53f438",
+    "artifacts/m7-physical-tasks-portable-v1/checks-v3.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks-v3.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-tasks-portable-v1/checks-v4.stderr": "ad53d6f39e27c8ad58774917939228ee2eb404b740f4215992f06edfd85f7fa0",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks-v4.stderr": "ad53d6f39e27c8ad58774917939228ee2eb404b740f4215992f06edfd85f7fa0",
+    "artifacts/m7-physical-tasks-portable-v1/checks-v4.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks-v4.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-tasks-portable-v1/checks.json": "32fafb418580ded301424a314ecdc8e225e32a781e7dc804ef9fbc8a54a8a0b3",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks.json": "32fafb418580ded301424a314ecdc8e225e32a781e7dc804ef9fbc8a54a8a0b3",
+    "artifacts/m7-physical-tasks-portable-v1/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "artifacts/m7-physical-tasks-portable-v1/checks.stderr": "ba2b9d727361720fb6d583bb1be00c879f93b8fc3e79632b0ff1b5cc0afca56a",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks.stderr": "ba2b9d727361720fb6d583bb1be00c879f93b8fc3e79632b0ff1b5cc0afca56a",
+    "artifacts/m7-physical-tasks-portable-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/physical-subset-v2.stderr": "20dcec7134eb5eaa2b92f22e8a854556336000ae1e7300d5e67d267c5ea70699",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/physical-subset-v2.stderr": "20dcec7134eb5eaa2b92f22e8a854556336000ae1e7300d5e67d267c5ea70699",
+    "artifacts/m7-physical-tasks-portable-v1/physical-subset-v2.stdout": "bf8856a9a5bf317438f2856007b75b970ea70135d323fc8e76647d9442cc6d88",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/physical-subset-v2.stdout": "bf8856a9a5bf317438f2856007b75b970ea70135d323fc8e76647d9442cc6d88",
+    "artifacts/m7-physical-tasks-portable-v1/physical-subset.stderr": "45a94d9d110997d52b0b9c0fdfb37aa86ff8bf58973cfb48f397e6465b61e38f",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/physical-subset.stderr": "45a94d9d110997d52b0b9c0fdfb37aa86ff8bf58973cfb48f397e6465b61e38f",
+    "artifacts/m7-physical-tasks-portable-v1/physical-subset.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/physical-subset.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-tasks-portable-v1/source-initial/test_m7_physical_tasks.py": "fd8bcfbfcdb01785947a1e08cce3050d39aad09227556a6df536d5953dbf84d9",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/source-initial/test_m7_physical_tasks.py": "fd8bcfbfcdb01785947a1e08cce3050d39aad09227556a6df536d5953dbf84d9",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_apple_integration.stderr": "e96ff5172d1d5a7ecec5fd3624c79090826b2aa78b60740a8a9fb6dbcc6a8408",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_apple_integration.stderr": "e96ff5172d1d5a7ecec5fd3624c79090826b2aa78b60740a8a9fb6dbcc6a8408",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_apple_package.stderr": "be594bf6376ad3657bb2b0672580092fd796523be9c7bfae98cad969ebdc2320",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_apple_package.stderr": "be594bf6376ad3657bb2b0672580092fd796523be9c7bfae98cad969ebdc2320",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_measurement_check.stderr": "57b53a851aba52c209032595d9a2ddfcfb8687b7e5b325dcc03fe12e7629cb82",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_measurement_check.stderr": "57b53a851aba52c209032595d9a2ddfcfb8687b7e5b325dcc03fe12e7629cb82",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_metal_check.stderr": "41bdfb1c49a8e9399351e68972dd28f9fe57a7293da483ea1562db10851fe57b",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_metal_check.stderr": "41bdfb1c49a8e9399351e68972dd28f9fe57a7293da483ea1562db10851fe57b",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_quality_check.stderr": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_quality_check.stderr": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_score_check.stderr": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_score_check.stderr": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_task_check.stderr": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_task_check.stderr": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_tasks_check.stderr": "c5b196934a82c95936415e5943e568ae7d86ac93024f3b9ab880cb4489f093d3",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_tasks_check.stderr": "c5b196934a82c95936415e5943e568ae7d86ac93024f3b9ab880cb4489f093d3",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_integration.stderr": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_integration.stderr": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_measurement.stderr": "02149b5b11eae90aa6871e9e38d4b8d51a94a8ff97933f57a4c3087558963287",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_measurement.stderr": "02149b5b11eae90aa6871e9e38d4b8d51a94a8ff97933f57a4c3087558963287",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_quality.stderr": "3baf1fae29f69d6956b5e19ea930395b01303672908713126c332e2bdcfc30e3",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_quality.stderr": "3baf1fae29f69d6956b5e19ea930395b01303672908713126c332e2bdcfc30e3",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_storage.stderr": "1078170284b8998d097c721276b101d9af340bbe4ea4c0b06f5966f52a307dda",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_storage.stderr": "1078170284b8998d097c721276b101d9af340bbe4ea4c0b06f5966f52a307dda",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_tasks.stderr": "f369c7e42c96b877a2d23301c23da120b9f83749bde9a604300337daceda86bc",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_tasks.stderr": "f369c7e42c96b877a2d23301c23da120b9f83749bde9a604300337daceda86bc",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_tasks.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_tasks.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_swift_harness_build.stderr": "115b8dac5a912a37f741d40a497980e5050a6dccd054ed60a4a834373cb7bfb6",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_swift_harness_build.stderr": "115b8dac5a912a37f741d40a497980e5050a6dccd054ed60a4a834373cb7bfb6",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_swift_harness_run.stderr": "b031521cc7d1ee655055f27ddcba98c1cf14175e3ced1cd96de4e7721fb6c9b6",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_swift_harness_run.stderr": "b031521cc7d1ee655055f27ddcba98c1cf14175e3ced1cd96de4e7721fb6c9b6",
+    "artifacts/m7-physical-tasks-portable-v1/test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/checks.json": "729966f3e7e272eca3adde59383f8e97f58157da1a31ef65a94d249270242e1a",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/checks.json": "729966f3e7e272eca3adde59383f8e97f58157da1a31ef65a94d249270242e1a",
+    "artifacts/m7-physical-tasks-final-portable-v1/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "artifacts/m7-physical-tasks-final-portable-v1/frozen-audit.json": "87bd592076acc72b97e4bca8343f3361eae403038caa300198c1d982cd3fc2b5",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/frozen-audit.json": "87bd592076acc72b97e4bca8343f3361eae403038caa300198c1d982cd3fc2b5",
+    "artifacts/m7-physical-tasks-final-portable-v1/frozen-audit.py": "166a98125c6fa577468417ea07de0d06685c3e4dbb0e0977a6660a6546c2979a",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/frozen-audit.py": "166a98125c6fa577468417ea07de0d06685c3e4dbb0e0977a6660a6546c2979a",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_apple_integration.stderr": "ae4f149c4f018d6f3725ddfc39ab67265b0e6aa9a7e0246e2417d045ffb4d4b0",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_apple_integration.stderr": "ae4f149c4f018d6f3725ddfc39ab67265b0e6aa9a7e0246e2417d045ffb4d4b0",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_apple_package.stderr": "5ebb30bfaf1ac76b92d96c31f023f14c09276c54602a61894bfae96d2fbad552",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_apple_package.stderr": "5ebb30bfaf1ac76b92d96c31f023f14c09276c54602a61894bfae96d2fbad552",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_measurement_check.stderr": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_measurement_check.stderr": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_metal_check.stderr": "ae6d3e3ca5b153bd192f58c83d77d4f96afa3c6ea4e6a977a3c4fd5ba850f116",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_metal_check.stderr": "ae6d3e3ca5b153bd192f58c83d77d4f96afa3c6ea4e6a977a3c4fd5ba850f116",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_quality_check.stderr": "5aa01cc52c38bae21117717f54714505f70f0f3e617a7d8d9d93fa202c3b9861",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_quality_check.stderr": "5aa01cc52c38bae21117717f54714505f70f0f3e617a7d8d9d93fa202c3b9861",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_score_check.stderr": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_score_check.stderr": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_task_check.stderr": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_task_check.stderr": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_tasks_check.stderr": "db21147ddf6e9f94f9b8b6909f01ab5d5ff1f017733024a22679055dec346055",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_tasks_check.stderr": "db21147ddf6e9f94f9b8b6909f01ab5d5ff1f017733024a22679055dec346055",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_integration.stderr": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_integration.stderr": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_measurement.stderr": "b80efb638fa10476c074e8e2635c37834929a71857b95a52356bfff2d6b8d939",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_measurement.stderr": "b80efb638fa10476c074e8e2635c37834929a71857b95a52356bfff2d6b8d939",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_quality.stderr": "091f77c5b09070479532db4a7c457e3047b9cc53c3272449045be2a0890b461f",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_quality.stderr": "091f77c5b09070479532db4a7c457e3047b9cc53c3272449045be2a0890b461f",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_storage.stderr": "a2760edbb277ec9357502221b359644b3ca0d820a0c35d22053a3f407ade2117",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_storage.stderr": "a2760edbb277ec9357502221b359644b3ca0d820a0c35d22053a3f407ade2117",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_tasks.stderr": "e828494f9a99f502c4fef2b9534f1cdea906ebdbd7a947dd974d8d3f8ed29595",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_tasks.stderr": "e828494f9a99f502c4fef2b9534f1cdea906ebdbd7a947dd974d8d3f8ed29595",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_tasks.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_tasks.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_build.stderr": "5fe2f5c2465377e9a481daa86e6c6d2ff4b0b8517b33c6041488e55ed92e199a",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_build.stderr": "5fe2f5c2465377e9a481daa86e6c6d2ff4b0b8517b33c6041488e55ed92e199a",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_run.stderr": "b031521cc7d1ee655055f27ddcba98c1cf14175e3ced1cd96de4e7721fb6c9b6",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_run.stderr": "b031521cc7d1ee655055f27ddcba98c1cf14175e3ced1cd96de4e7721fb6c9b6",
+    "artifacts/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tools/experiments/m7_physical_measurement.py": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb",
+    "tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "tools/experiments/m7_physical_tasks.py": "87d990cf98f083db0d0451b3e13cdfee42dc38e1c1aeea710a6308ea1942c3eb",
+    "tools/experiments/test_m7_physical_tasks.py": "b29ee82e828c4671e1a711fd29f1aefce5520f8955a3ff179e9bfb073fe4cfde",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_native_fixture.py": "9f97b525af81f3243a774bf73b1e48a6379c6dd34d9e5af7057992502e3b72be",
+    "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+    "tools/experiments/m7_native_metal_check.py": "09da441923c9fa4ebe7dc55fb02c6c1c9047664c09fda5bc349b84b656d0ec0f",
+    "tools/experiments/m7_native_quality_check.py": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+    "tools/experiments/m7_native_score_check.py": "90d27733655fd482485350eda54c351b63730b3e8082d8ea4ab710502bc71b24",
+    "tools/experiments/m7_native_task_check.py": "e56e815c87278079cef1a8f9e55d60d83b617e5509b7806fed7850249296fb07",
+    "tools/experiments/m7_native_tasks_check.py": "a869a158cb728c4e13cc74791462a200246feff6d9ffb8b2886517523d2056c1",
+    "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_quality.py": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/m7_swift_harness_run.py": "fcdae72727a2f850a75319aec0ffdb994159953800781ad02b80952160ec4a07",
+    "tools/experiments/test_m7_apple_integration.py": "fcd82d74ad68f25972662ea4294e484506ac362959f33503c1b22e11937058fa",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "tools/experiments/test_m7_native_measurement_check.py": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+    "tools/experiments/test_m7_native_metal_check.py": "f3834817dcd660d2652a6447cbe6632acb33b1a98d60078712b20a5f31aa4a44",
+    "tools/experiments/test_m7_native_quality_check.py": "bbe1edc476fcfdec0dcb6061d75bd55cf91452bd77e455e1074676d1bf772567",
+    "tools/experiments/test_m7_native_score_check.py": "dd9416f2978d6933e0c218bddd9048294ba029c744ed615208bc874b0f25d029",
+    "tools/experiments/test_m7_native_task_check.py": "0aa39d3d5fac4cf0511146049ca92dc3572662f17830a0be4345d239f052bec5",
+    "tools/experiments/test_m7_native_tasks_check.py": "c2a08e7ef6fd2677e0826fd9ed57e12bdb1dc8f56ac9b3c9b4dea800daa5024f",
+    "tools/experiments/test_m7_native_teacher_check.py": "91dcfa41c72eeaba8288c8cdae41e4db15962522a928f473f10d4a58c2f2f692",
+    "tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/test_m7_physical_measurement.py": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+    "tools/experiments/test_m7_physical_quality.py": "6e3e9cb824306ed7d19586cf48011c5deb9ca0bc017174783a6de3c8183e7987",
+    "tools/experiments/test_m7_physical_storage.py": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+    "tools/experiments/test_m7_swift_harness_run.py": "cd54ce8480c01dc81f85ef836618531e13af80a35b5a204d2e49863bd9369fbf",
+    "benchmarks/results/2026-10-21-m7-task-id-compat-qualification-v1.json": "08e784ebe4274ec9cf8c643b46382eb4a659dbdbb4c4188f89ce4faba83089dc",
+    "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+    "apple/Harness/HarnessApp.swift": "699813ca61b981bd2e2334e6600e59bd567a62cadb39a20d7d0d260601c204af",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "18ea2468847dde1072e0d653ec2c6e554a00f52ecfb96b9d1eacb131a0e5c919",
+    "apple/tests/swift/TasksMain.swift": "b4701b2039f40691c07fcd09d7c9848b545a80723fa4ffaad52362ca12f6662e",
+    "benchmarks/results/2026-10-19-m6-context-reviewed-closure-v1.json": "9873fe34fb887a6dac2936f5ea505ee57bc2bbe7ae0da742b6e1cfc52ddb9320",
+    "benchmarks/contract-v1/manifest.json": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66",
+    "artifacts/quality-v1/tasks.jsonl": "b096b8eb40960f38ae0e9f3268484eed10bf2a6bebbc981a45a061ee461aab7c",
+    "tools/bench/task_cases.py": "91b5f44840ba31b8f0aead2217b4638c0dbb7e2529389225ba58a6c4822f9e1d",
+    "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "benchmarks/results/2026-10-19-m7-metal-abi-qualification-v1.json": "7fa4bc0b15869fa5ff445d4860932faf9f812a67204344c27e1b653ef9bbb631"
+  },
+  "exact_published_copies": {
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_measurement.py": {
+      "origin": "artifacts/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_measurement.py",
+      "sha256": "9c38e226bd4140e276ffab2ef4a0bf9a20329bf3328c4cf6abdf1199d85ef034"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_storage.py": {
+      "origin": "artifacts/m7-physical-tasks-parent-v1/tools/experiments/m7_physical_storage.py",
+      "sha256": "7c57e5766c12fccf3066e823830cfaf57864b5aa89dc0349e1161362149747ce"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-source-before-review-v1/m7_physical_measurement.py": {
+      "origin": "artifacts/m7-physical-tasks-source-before-review-v1/m7_physical_measurement.py",
+      "sha256": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-source-before-review-v1/m7_physical_storage.py": {
+      "origin": "artifacts/m7-physical-tasks-source-before-review-v1/m7_physical_storage.py",
+      "sha256": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-source-before-review-v1/m7_physical_tasks.py": {
+      "origin": "artifacts/m7-physical-tasks-source-before-review-v1/m7_physical_tasks.py",
+      "sha256": "aaaee0e3027fcfff2564e8344bf4e03de53ebadba5390bcd6518f941c1772bc6"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-source-before-review-v1/test_m7_physical_tasks.py": {
+      "origin": "artifacts/m7-physical-tasks-source-before-review-v1/test_m7_physical_tasks.py",
+      "sha256": "ccc895bbf539278192c272fb3a4e7992162b5bb58bb67c5cf3f4514f0d04af59"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/sources.json": {
+      "origin": "artifacts/m7-physical-tasks-draft-v1/sources.json",
+      "sha256": "43ed1b2232c430b7bcf9230a8b8748ab87aae53d336c1a2e02c78fcbc0d35806"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_measurement.py": {
+      "origin": "artifacts/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_measurement.py",
+      "sha256": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_storage.py": {
+      "origin": "artifacts/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_storage.py",
+      "sha256": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_tasks.py": {
+      "origin": "artifacts/m7-physical-tasks-draft-v1/tools/experiments/m7_physical_tasks.py",
+      "sha256": "d9ddbccdb2f39b0acb9053fb9b5cc4a76d5ba16afd88da6292852dbab8a491ac"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-draft-v1/tools/experiments/test_m7_physical_tasks.py": {
+      "origin": "artifacts/m7-physical-tasks-draft-v1/tools/experiments/test_m7_physical_tasks.py",
+      "sha256": "0cb063922c4a71b637ca0dfa968deff1c28749a12fa637a88ed0af86ce232d08"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks-v3.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/checks-v3.stderr",
+      "sha256": "b412e714d1650130773ef7c9f16df1a8592e81b835d0f917799024db7a53f438"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks-v3.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/checks-v3.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks-v4.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/checks-v4.stderr",
+      "sha256": "ad53d6f39e27c8ad58774917939228ee2eb404b740f4215992f06edfd85f7fa0"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks-v4.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/checks-v4.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks.json": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/checks.json",
+      "sha256": "32fafb418580ded301424a314ecdc8e225e32a781e7dc804ef9fbc8a54a8a0b3"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks.py": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/checks.py",
+      "sha256": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/checks.stderr",
+      "sha256": "ba2b9d727361720fb6d583bb1be00c879f93b8fc3e79632b0ff1b5cc0afca56a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/checks.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/checks.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/physical-subset-v2.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/physical-subset-v2.stderr",
+      "sha256": "20dcec7134eb5eaa2b92f22e8a854556336000ae1e7300d5e67d267c5ea70699"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/physical-subset-v2.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/physical-subset-v2.stdout",
+      "sha256": "bf8856a9a5bf317438f2856007b75b970ea70135d323fc8e76647d9442cc6d88"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/physical-subset.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/physical-subset.stderr",
+      "sha256": "45a94d9d110997d52b0b9c0fdfb37aa86ff8bf58973cfb48f397e6465b61e38f"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/physical-subset.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/physical-subset.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/source-initial/test_m7_physical_tasks.py": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/source-initial/test_m7_physical_tasks.py",
+      "sha256": "fd8bcfbfcdb01785947a1e08cce3050d39aad09227556a6df536d5953dbf84d9"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_apple_integration.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_apple_integration.stderr",
+      "sha256": "e96ff5172d1d5a7ecec5fd3624c79090826b2aa78b60740a8a9fb6dbcc6a8408"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_apple_integration.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_apple_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_apple_package.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_apple_package.stderr",
+      "sha256": "be594bf6376ad3657bb2b0672580092fd796523be9c7bfae98cad969ebdc2320"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_apple_package.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_apple_package.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_measurement_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_measurement_check.stderr",
+      "sha256": "57b53a851aba52c209032595d9a2ddfcfb8687b7e5b325dcc03fe12e7629cb82"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_measurement_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_measurement_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_metal_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_metal_check.stderr",
+      "sha256": "41bdfb1c49a8e9399351e68972dd28f9fe57a7293da483ea1562db10851fe57b"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_metal_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_metal_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_quality_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_quality_check.stderr",
+      "sha256": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_quality_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_quality_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_score_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_score_check.stderr",
+      "sha256": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_score_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_score_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_task_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_task_check.stderr",
+      "sha256": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_task_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_task_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_tasks_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_tasks_check.stderr",
+      "sha256": "c5b196934a82c95936415e5943e568ae7d86ac93024f3b9ab880cb4489f093d3"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_tasks_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_tasks_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_teacher_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_teacher_check.stderr",
+      "sha256": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_native_teacher_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_native_teacher_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_integration.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_integration.stderr",
+      "sha256": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_integration.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_measurement.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_measurement.stderr",
+      "sha256": "02149b5b11eae90aa6871e9e38d4b8d51a94a8ff97933f57a4c3087558963287"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_measurement.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_measurement.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_quality.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_quality.stderr",
+      "sha256": "3baf1fae29f69d6956b5e19ea930395b01303672908713126c332e2bdcfc30e3"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_quality.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_quality.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_storage.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_storage.stderr",
+      "sha256": "1078170284b8998d097c721276b101d9af340bbe4ea4c0b06f5966f52a307dda"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_storage.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_storage.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_tasks.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_tasks.stderr",
+      "sha256": "f369c7e42c96b877a2d23301c23da120b9f83749bde9a604300337daceda86bc"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_physical_tasks.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_physical_tasks.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_swift_harness_build.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_swift_harness_build.stderr",
+      "sha256": "115b8dac5a912a37f741d40a497980e5050a6dccd054ed60a4a834373cb7bfb6"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_swift_harness_build.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_swift_harness_build.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_swift_harness_run.stderr": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_swift_harness_run.stderr",
+      "sha256": "b031521cc7d1ee655055f27ddcba98c1cf14175e3ced1cd96de4e7721fb6c9b6"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-portable-v1/test_m7_swift_harness_run.stdout": {
+      "origin": "artifacts/m7-physical-tasks-portable-v1/test_m7_swift_harness_run.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/checks.json": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/checks.json",
+      "sha256": "729966f3e7e272eca3adde59383f8e97f58157da1a31ef65a94d249270242e1a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/checks.py": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/checks.py",
+      "sha256": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/frozen-audit.json": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/frozen-audit.json",
+      "sha256": "87bd592076acc72b97e4bca8343f3361eae403038caa300198c1d982cd3fc2b5"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/frozen-audit.py": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/frozen-audit.py",
+      "sha256": "166a98125c6fa577468417ea07de0d06685c3e4dbb0e0977a6660a6546c2979a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_apple_integration.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_apple_integration.stderr",
+      "sha256": "ae4f149c4f018d6f3725ddfc39ab67265b0e6aa9a7e0246e2417d045ffb4d4b0"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_apple_integration.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_apple_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_apple_package.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_apple_package.stderr",
+      "sha256": "5ebb30bfaf1ac76b92d96c31f023f14c09276c54602a61894bfae96d2fbad552"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_apple_package.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_apple_package.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_measurement_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_measurement_check.stderr",
+      "sha256": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_measurement_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_measurement_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_metal_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_metal_check.stderr",
+      "sha256": "ae6d3e3ca5b153bd192f58c83d77d4f96afa3c6ea4e6a977a3c4fd5ba850f116"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_metal_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_metal_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_quality_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_quality_check.stderr",
+      "sha256": "5aa01cc52c38bae21117717f54714505f70f0f3e617a7d8d9d93fa202c3b9861"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_quality_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_quality_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_score_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_score_check.stderr",
+      "sha256": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_score_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_score_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_task_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_task_check.stderr",
+      "sha256": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_task_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_task_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_tasks_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_tasks_check.stderr",
+      "sha256": "db21147ddf6e9f94f9b8b6909f01ab5d5ff1f017733024a22679055dec346055"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_tasks_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_tasks_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_teacher_check.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_teacher_check.stderr",
+      "sha256": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_native_teacher_check.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_native_teacher_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_integration.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_integration.stderr",
+      "sha256": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_integration.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_measurement.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_measurement.stderr",
+      "sha256": "b80efb638fa10476c074e8e2635c37834929a71857b95a52356bfff2d6b8d939"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_measurement.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_measurement.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_quality.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_quality.stderr",
+      "sha256": "091f77c5b09070479532db4a7c457e3047b9cc53c3272449045be2a0890b461f"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_quality.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_quality.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_storage.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_storage.stderr",
+      "sha256": "a2760edbb277ec9357502221b359644b3ca0d820a0c35d22053a3f407ade2117"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_storage.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_storage.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_tasks.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_tasks.stderr",
+      "sha256": "e828494f9a99f502c4fef2b9534f1cdea906ebdbd7a947dd974d8d3f8ed29595"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_physical_tasks.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_physical_tasks.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_build.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_build.stderr",
+      "sha256": "5fe2f5c2465377e9a481daa86e6c6d2ff4b0b8517b33c6041488e55ed92e199a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_build.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_build.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_run.stderr": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_run.stderr",
+      "sha256": "b031521cc7d1ee655055f27ddcba98c1cf14175e3ced1cd96de4e7721fb6c9b6"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-tasks/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_run.stdout": {
+      "origin": "artifacts/m7-physical-tasks-final-portable-v1/test_m7_swift_harness_run.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "final_portable_receipt": "artifacts/m7-physical-tasks-final-portable-v1/checks.json",
+  "initial_portable_receipt": "artifacts/m7-physical-tasks-portable-v1/checks.json",
+  "portable_methods": 153,
+  "portable_modules": 16,
+  "clean_owned_commands": 16,
+  "targeted_methods": 13,
+  "frozen_audit": "artifacts/m7-physical-tasks-final-portable-v1/frozen-audit.json",
+  "full_payload_sha256": "ccb24a6f0b6e4798cabc393c475e377d3b941a640e5b6414cc9359bf5ee5659b",
+  "full_payload_bytes": 58475,
+  "original_case_count": 100,
+  "full_quality_qualified": false,
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "numerical_kernels_changed": false,
+  "review": "Astra accepted source and completed component evidence with no findings"
+}

@@ -144,3 +144,8 @@ post-exit decoding and literal grading remain before quality acceptance.
 The [literal task-ID compatibility](../docs/experiments/2026-10-21-m7-task-id-compat.md)
 preserves frozen slash-containing labels with unchanged artifact-path rules.
 Tiny CPU/Metal and both iOS app builds pass; full physical tasks remain pending.
+
+The [sealed task collector](../docs/experiments/2026-10-21-m7-physical-tasks.md)
+adds bounded frozen100-case transfer/admission and exact raw response checks,
+with six persistent reviewed runner pins and tiny independent output oracles.
+153 portable methods pass; no device quality acceptance follows.
