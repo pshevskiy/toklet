@@ -58,7 +58,9 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     original packed tied-output weights and gates frozen before GPU composition.
   - [x] [Complete resident tiny graph/session](mlx-metal-model.md), strided views,
     frozen independent parity and transaction/admission checks on M1 Pro.
-  - [ ] Real-checkpoint quality/memory/performance and explicit CLI/native app wiring.
+  - [x] Explicit [CLI selection](mlx-cli.md), truthful mixed-precision statistics
+    and local subprocess generation/state/stop checks.
+  - [ ] Real-checkpoint quality/memory/performance and native Apple app wiring.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,

@@ -44,7 +44,7 @@ Usage: toklet [OPTIONS]
   --prefill-chunk N          Prefill cancellation boundary (128)
   --backend cpu|metal       CPU (default), or opt-in Metal feature
   --cpu-projection MODE     scalar (default) or opt-in tiled projections
-  --metal-projection MODE   original (default), half-compensated, q4-v2-compensated-tiled
+  --metal-projection MODE   original (default), half-compensated, q4-v2-compensated-tiled, mlx-affine
   --metal-attention MODE    reference (default) or experimental online
   --q4-weights PATH         Explicit Q4 v2 packed artifact for the v2 mode
   --stop-token ID           Additional stop ID; repeatable
@@ -131,11 +131,12 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--metal-projection" => {
                 a.metal_projection = match utf8(value()?)?.as_str() {
                     "original" => "original",
+                    "mlx-affine" => "mlx-affine",
                     "half-compensated" => "half-compensated",
                     "q4-v2-compensated-tiled" => "q4-v2-compensated-tiled",
                     _ => {
                         return Err(invalid(
-                            "--metal-projection must be original, half-compensated or q4-v2-compensated-tiled",
+                            "--metal-projection must be original, half-compensated, q4-v2-compensated-tiled or mlx-affine",
                         ));
                     }
                 };
@@ -617,7 +618,10 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     if a.backend == "metal" {
         let q4_v2 = a.q4_weights.is_some();
-        let model = if let Some(packed) = &a.q4_weights {
+        let mlx = a.metal_projection == "mlx-affine";
+        let model = if mlx {
+            toklet::metal::Model::load_mlx(&a.model, load_options)?
+        } else if let Some(packed) = &a.q4_weights {
             toklet::metal::Model::load_q4(&a.model, packed, load_options)?
         } else {
             toklet::metal::Model::load(&a.model, load_options)?
@@ -628,9 +632,10 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         let projection = match a.metal_projection {
             "q4-v2-compensated-tiled" => toklet::metal::ProjectionMode::Q4CompensatedTiled,
             "half-compensated" => toklet::metal::ProjectionMode::HalfCompensated,
+            "mlx-affine" => toklet::metal::ProjectionMode::MlxAffine,
             _ => toklet::metal::ProjectionMode::Original,
         };
-        let normalization = if q4_v2 {
+        let normalization = if q4_v2 || mlx {
             toklet::metal::NormalizationMode::Compensated
         } else {
             toklet::metal::NormalizationMode::Original
@@ -649,7 +654,9 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             attention,
         )?;
         frontend.execution = ExecutionMetadata {
-            weight_dtype: if q4_v2 {
+            weight_dtype: if mlx {
+                "MLX affine + FP16 exclusions"
+            } else if q4_v2 {
                 "Q4 v2 + FP16 exclusions"
             } else {
                 "FP16"
@@ -658,15 +665,24 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             projection_mode: match projection {
                 toklet::metal::ProjectionMode::Q4CompensatedTiled => "Q4CompensatedTiled",
                 toklet::metal::ProjectionMode::HalfCompensated => "HalfCompensated",
+                toklet::metal::ProjectionMode::MlxAffine => "MlxAffine",
                 _ => "Original",
             },
-            normalization_mode: if q4_v2 { "Compensated" } else { "Original" },
+            normalization_mode: if q4_v2 || mlx {
+                "Compensated"
+            } else {
+                "Original"
+            },
             readback_mode: "FullLogits",
             attention_mode: (a.metal_attention == "online").then_some("Online"),
             prefill_chunk_size: a.chunk,
             packed_format_version: q4_v2.then_some(2),
             quantization_group_size: model.q4_format().map(|f| f.group()),
-            quantizer: model.q4_format().map(|f| f.quantizer()),
+            quantizer: if mlx {
+                Some("MLX affine (per-tensor bits/groups)")
+            } else {
+                model.q4_format().map(|f| f.quantizer())
+            },
         };
         frontend.load_seconds = model.load_timing.load_seconds;
         frontend.conversion_seconds = model.load_timing.conversion_seconds;
@@ -870,6 +886,24 @@ mod tests {
             ]))
             .is_err()
         );
+    }
+    #[test]
+    fn native_mlx_selection_is_explicit_and_conflicts_reject_before_loading() {
+        let mut base = args(&["--model", "missing", "--tokens", "1"]);
+        base.extend(args(&["--metal-projection", "mlx-affine"]));
+        assert!(parse(base.clone()).is_err());
+        base.extend(args(&["--backend", "metal"]));
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        {
+            assert_eq!(parse(base.clone()).unwrap().metal_projection, "mlx-affine");
+            let mut duplicate = base.clone();
+            duplicate.extend(args(&["--metal-projection", "mlx-affine"]));
+            assert!(parse(duplicate).is_err());
+        }
+        #[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+        assert!(parse(base.clone()).is_err());
+        base.extend(args(&["--q4-weights", "missing-packed"]));
+        assert!(parse(base).is_err());
     }
     #[test]
     fn idle_interrupt_after_terminal_boundary_is_preserved() {
