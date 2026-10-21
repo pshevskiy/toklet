@@ -1,0 +1,12 @@
+test_bounded_native_output (test_m7_native_task_check.TaskOutputChecks.test_bounded_native_output) ... ok
+test_complete_output (test_m7_native_task_check.TaskOutputChecks.test_complete_output) ... ok
+test_exact_scope (test_m7_native_task_check.TaskOutputChecks.test_exact_scope) ... ok
+test_frozen_fixture_identity (test_m7_native_task_check.TaskOutputChecks.test_frozen_fixture_identity) ... ok
+test_hidden_stop_budget (test_m7_native_task_check.TaskOutputChecks.test_hidden_stop_budget) ... ok
+test_independent_oracle_required (test_m7_native_task_check.TaskOutputChecks.test_independent_oracle_required) ... ok
+test_integer_counts_and_prefix (test_m7_native_task_check.TaskOutputChecks.test_integer_counts_and_prefix) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK

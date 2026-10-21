@@ -15,7 +15,7 @@ func requestNativeLifecycle(_ action: NativeLifecycleAction, worker: NativeWorke
 }
 
 enum NativeLifecycleOrigin: String, Codable, Sendable {
-    case systemNotification, syntheticCheck, coordinator
+    case systemNotification, scenePhase, syntheticCheck, coordinator
 }
 struct NativeLifecycleState: Codable, Sendable {
     let busy: Bool
@@ -164,7 +164,7 @@ final class NativeLifecycleTrace: @unchecked Sendable {
         lock.lock();defer { lock.unlock() }
         if let failure { throw lifecycleError(failure) }
         guard command == nil, let owner = worker, owner.snapshot().closed,
-              owner.snapshot().workerFinished else { throw failed("Lifecycle detach requires completed close") }
+              owner.snapshot().workerFinished else { throw failed("Lifecycle detach requires completed close and no active command") }
         worker = nil;detachedAfterClose = true
     }
 }

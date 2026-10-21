@@ -1,0 +1,1308 @@
+{
+  "format": "toklet-m7-lifecycle-app-qualification-v1",
+  "passed": true,
+  "collection_root": "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet",
+  "parent_revision": "ceaa2918dd21f40c7118d2886101a405588a3902",
+  "code_pins": {
+    "apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+    "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+    "apple/Harness/HarnessApp.swift": "938bb3f6a74d4b07db9c4f8b8cec767617559e717bda1fbe6ba9ba42991cb0b0",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "c09b04e464610077abc3e0f25e903ef4a42b4a58382488e1c7d81cfed687b195",
+    "apple/tests/swift/LifecycleAppMain.swift": "085052fffda0ca87dfc9116dfa46e4a40168c558a74c02fcaac3bd405fe8bb49",
+    "tools/experiments/m7_native_lifecycle_app_check.py": "77e2d876928203c6fcd901ad4a8ef0d646affd0f88fcb40783982b3c49a10bdd",
+    "tools/experiments/test_m7_native_lifecycle_app_check.py": "e28aaf5b6c311e3a5ee8808e27d680b2b4893086a6cdf044855f989a8985058c"
+  },
+  "lifecycle_core_proof": {
+    "path": "benchmarks/results/2026-10-21-m7-lifecycle-core-qualification-v1.json",
+    "sha256": "5a3242c054e8c960ae5dcfe717871f9db5e4334217cbdc1788c32bd95ff1bb5f"
+  },
+  "evidence_pins": {
+    "apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+    "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+    "apple/Harness/HarnessApp.swift": "938bb3f6a74d4b07db9c4f8b8cec767617559e717bda1fbe6ba9ba42991cb0b0",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "c09b04e464610077abc3e0f25e903ef4a42b4a58382488e1c7d81cfed687b195",
+    "apple/tests/swift/LifecycleAppMain.swift": "085052fffda0ca87dfc9116dfa46e4a40168c558a74c02fcaac3bd405fe8bb49",
+    "tools/experiments/m7_native_lifecycle_app_check.py": "77e2d876928203c6fcd901ad4a8ef0d646affd0f88fcb40783982b3c49a10bdd",
+    "tools/experiments/test_m7_native_lifecycle_app_check.py": "e28aaf5b6c311e3a5ee8808e27d680b2b4893086a6cdf044855f989a8985058c",
+    "artifacts/m7-lifecycle-app-parent-v1/apple/Harness/HarnessApp.swift": "699813ca61b981bd2e2334e6600e59bd567a62cadb39a20d7d0d260601c204af",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-parent-v1/apple/Harness/HarnessApp.swift": "699813ca61b981bd2e2334e6600e59bd567a62cadb39a20d7d0d260601c204af",
+    "artifacts/m7-lifecycle-app-parent-v1/apple/Harness/NativeLifecycle.swift": "8dae9830967d23ea4f7afcabff185cf3283c28ed45df5338198480cf4c638c01",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-parent-v1/apple/Harness/NativeLifecycle.swift": "8dae9830967d23ea4f7afcabff185cf3283c28ed45df5338198480cf4c638c01",
+    "artifacts/m7-lifecycle-app-parent-v1/apple/TokletHarness.xcodeproj/project.pbxproj": "18ea2468847dde1072e0d653ec2c6e554a00f52ecfb96b9d1eacb131a0e5c919",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-parent-v1/apple/TokletHarness.xcodeproj/project.pbxproj": "18ea2468847dde1072e0d653ec2c6e554a00f52ecfb96b9d1eacb131a0e5c919",
+    "artifacts/m7-lifecycle-app-source-before-review-v1/NativeLifecycleRun.swift": "5781bf29e98446e74684ef0b6cb1b1eededee7a0ef1a291b04b583b8b1b541ff",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-source-before-review-v1/NativeLifecycleRun.swift": "5781bf29e98446e74684ef0b6cb1b1eededee7a0ef1a291b04b583b8b1b541ff",
+    "artifacts/m7-lifecycle-app-source-before-review-v1/NativeLifecycleSignals.swift": "b6d9ff2550b404ec77cdb1b87974c1ba88f51c4984245b3954a066e67df457f2",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-source-before-review-v1/NativeLifecycleSignals.swift": "b6d9ff2550b404ec77cdb1b87974c1ba88f51c4984245b3954a066e67df457f2",
+    "artifacts/m7-lifecycle-app-failed-source-v1/apple/Harness/HarnessApp.swift": "938bb3f6a74d4b07db9c4f8b8cec767617559e717bda1fbe6ba9ba42991cb0b0",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/Harness/HarnessApp.swift": "938bb3f6a74d4b07db9c4f8b8cec767617559e717bda1fbe6ba9ba42991cb0b0",
+    "artifacts/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+    "artifacts/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+    "artifacts/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "artifacts/m7-lifecycle-app-failed-source-v1/apple/TokletHarness.xcodeproj/project.pbxproj": "c09b04e464610077abc3e0f25e903ef4a42b4a58382488e1c7d81cfed687b195",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/TokletHarness.xcodeproj/project.pbxproj": "c09b04e464610077abc3e0f25e903ef4a42b4a58382488e1c7d81cfed687b195",
+    "artifacts/m7-lifecycle-app-failed-source-v1/apple/tests/swift/LifecycleAppMain.swift": "0353bb6783648647d5feb7049a624984b84e730fcc38b43ac126ccc3cbf7c537",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/tests/swift/LifecycleAppMain.swift": "0353bb6783648647d5feb7049a624984b84e730fcc38b43ac126ccc3cbf7c537",
+    "artifacts/m7-lifecycle-app-failed-source-v1/tools/experiments/m7_native_lifecycle_app_check.py": "4fe40a97de68126c51d107845725d99d5717e240d45570f73472275edebe7238",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/tools/experiments/m7_native_lifecycle_app_check.py": "4fe40a97de68126c51d107845725d99d5717e240d45570f73472275edebe7238",
+    "artifacts/m7-lifecycle-app-failed-source-v1/tools/experiments/test_m7_native_lifecycle_app_check.py": "3f779631ad6879c1726fdccdc4ef2a8cfb41a4283fb9aaaf9400325d9ad4015c",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/tools/experiments/test_m7_native_lifecycle_app_check.py": "3f779631ad6879c1726fdccdc4ef2a8cfb41a4283fb9aaaf9400325d9ad4015c",
+    "artifacts/m7-lifecycle-app-portable-v1/checks-v2.stderr": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-portable-v1/checks-v2.stderr": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e",
+    "artifacts/m7-lifecycle-app-portable-v1/checks-v2.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-portable-v1/checks-v2.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-portable-v1/checks.stderr": "7c03f17d85093056a971c1a8c50733545563e7803b81cbe9e35c1322734836ef",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-portable-v1/checks.stderr": "7c03f17d85093056a971c1a8c50733545563e7803b81cbe9e35c1322734836ef",
+    "artifacts/m7-lifecycle-app-portable-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-portable-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/checks.json": "dd58358d10524e0cebb7a4b9a2514efece6e0f41867d682ec6c68e78a78845a9",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/checks.json": "dd58358d10524e0cebb7a4b9a2514efece6e0f41867d682ec6c68e78a78845a9",
+    "artifacts/m7-lifecycle-app-all-portable-v1/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "artifacts/m7-lifecycle-app-all-portable-v1/run.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/run.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/run.stdout": "a063f16e7d3e23138b6ba2c104b083ea555ee13f2321c5001ac45312915d0143",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/run.stdout": "a063f16e7d3e23138b6ba2c104b083ea555ee13f2321c5001ac45312915d0143",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_apple_integration.stderr": "caf1b7b61b76d15cb1bf89121e5cba3d9df66fdb1c29f0bbaa8aeec22f325349",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_apple_integration.stderr": "caf1b7b61b76d15cb1bf89121e5cba3d9df66fdb1c29f0bbaa8aeec22f325349",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_apple_package.stderr": "309f0f715b41b7e4fe4882dbb7e1cf7b99db98d981b489ee98df124c6dd1c561",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_apple_package.stderr": "309f0f715b41b7e4fe4882dbb7e1cf7b99db98d981b489ee98df124c6dd1c561",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_app_check.stderr": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_app_check.stderr": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_app_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_app_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_check.stderr": "37ef6684249ecca3f8d41770ad1a47445699eece5e37d0b799944840cfec9a1c",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_check.stderr": "37ef6684249ecca3f8d41770ad1a47445699eece5e37d0b799944840cfec9a1c",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_measurement_check.stderr": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_measurement_check.stderr": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_metal_check.stderr": "6281aba84bbb5aa26976633c184dc3976244511eb40661c0360e0da54c78437b",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_metal_check.stderr": "6281aba84bbb5aa26976633c184dc3976244511eb40661c0360e0da54c78437b",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_prefix_check.stderr": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_prefix_check.stderr": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_prefix_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_prefix_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_quality_check.stderr": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_quality_check.stderr": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_score_check.stderr": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_score_check.stderr": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_task_check.stderr": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_task_check.stderr": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_tasks_check.stderr": "db21147ddf6e9f94f9b8b6909f01ab5d5ff1f017733024a22679055dec346055",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_tasks_check.stderr": "db21147ddf6e9f94f9b8b6909f01ab5d5ff1f017733024a22679055dec346055",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_integration.stderr": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_integration.stderr": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_measurement.stderr": "5c08758a9c5f8d3429bb616325de7ee7ae841472ad05222eb83cd2af488cdd87",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_measurement.stderr": "5c08758a9c5f8d3429bb616325de7ee7ae841472ad05222eb83cd2af488cdd87",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_quality.stderr": "093404f6fd02cb2a0587cddc074e443555aa883b95d8eb1a9e933e6dcd47ce62",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_quality.stderr": "093404f6fd02cb2a0587cddc074e443555aa883b95d8eb1a9e933e6dcd47ce62",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_storage.stderr": "468daea803e9f0988d50820efa88b379dbd9231096a86a232ffc8375d15063b4",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_storage.stderr": "468daea803e9f0988d50820efa88b379dbd9231096a86a232ffc8375d15063b4",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_tasks.stderr": "af9a27e7906a5ff03494edc0e6077ac53eb8853766d5fc953a3ca762fd48aae6",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_tasks.stderr": "af9a27e7906a5ff03494edc0e6077ac53eb8853766d5fc953a3ca762fd48aae6",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_tasks.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_tasks.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_build.stderr": "a742fa561ef9dc3c00dd31182434b2e6aa6d4566f3038d59ae2f7ca3472a7aea",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_build.stderr": "a742fa561ef9dc3c00dd31182434b2e6aa6d4566f3038d59ae2f7ca3472a7aea",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_run.stderr": "c20e44b5ecc373f7064d3b79c9c5938ed18d71c50f6526dd991be237bed9ab38",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_run.stderr": "c20e44b5ecc373f7064d3b79c9c5938ed18d71c50f6526dd991be237bed9ab38",
+    "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v1/checks.json": "4abb5276963286d77c3a418c99992aa76ecb8e579fb53255ac2a772f1144265d",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/checks.json": "4abb5276963286d77c3a418c99992aa76ecb8e579fb53255ac2a772f1144265d",
+    "artifacts/m7-lifecycle-app-native-v1/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v1/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v1/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v1/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-lifecycle-app-native-v1/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-lifecycle-app-native-v1/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-lifecycle-app-native-v1/logs/tiny-cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/tiny-cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v1/logs/tiny-cpu.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/tiny-cpu.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v1/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v1/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-app-native-v2/checks.json": "cdf8e798aff33af7bfda7e23fb2e00a39018fa06b2a08569db9ff370308953fd",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/checks.json": "cdf8e798aff33af7bfda7e23fb2e00a39018fa06b2a08569db9ff370308953fd",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/checks.json": "696464c12e3c20bb4e480717f081103302bdf3e15aa7ac57fc1974418df15396",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/checks.json": "696464c12e3c20bb4e480717f081103302bdf3e15aa7ac57fc1974418df15396",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/cpu.stdout": "b29348ce416706ed8a82d2002f5671c0af02c2937aaea2f41451807e2609debc",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/cpu.stdout": "b29348ce416706ed8a82d2002f5671c0af02c2937aaea2f41451807e2609debc",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/iphoneos-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/iphoneos-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/iphoneos-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/iphoneos-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/iphonesimulator-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/iphonesimulator-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/iphonesimulator-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/iphonesimulator-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/metal.stdout": "d05b6f8f35974886b4cd224e49fd91d9b11071cbf5c43dab91e5d727b511776f",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/metal.stdout": "d05b6f8f35974886b4cd224e49fd91d9b11071cbf5c43dab91e5d727b511776f",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/prefix-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/prefix-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/prefix-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/prefix-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/checks.json": "ce35411fac3877bac8d7dc6ad7b4ffa2ab4c8fe8a997b28eeb508b8529f7cf0e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/checks.json": "ce35411fac3877bac8d7dc6ad7b4ffa2ab4c8fe8a997b28eeb508b8529f7cf0e",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/cpu.stdout": "e95f16e7feb90842e37ac1f27253b9098b71e8ea7ea761e6e88b377cded4ede8",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/cpu.stdout": "e95f16e7feb90842e37ac1f27253b9098b71e8ea7ea761e6e88b377cded4ede8",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/metal.stdout": "c2c0a6c659caf1d3ced7389c35c9f94d0461c67c8b416d05b632a932568d6ad3",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/metal.stdout": "c2c0a6c659caf1d3ced7389c35c9f94d0461c67c8b416d05b632a932568d6ad3",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/tasks-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/tasks-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/tasks-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/tasks-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/checks.json": "d5b0442df98fd28dd5ae7024dd0ad823259aed5c870408857599763679828910",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/checks.json": "d5b0442df98fd28dd5ae7024dd0ad823259aed5c870408857599763679828910",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stdout": "1d530b02de1b6c612f7f459a1abf8d4b9ff53e85eca09257c7239a1cf0bc9193",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stdout": "1d530b02de1b6c612f7f459a1abf8d4b9ff53e85eca09257c7239a1cf0bc9193",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/build.json": "03b72fe2eba31d01ed628ebf5ef61bfa710fbdf42167a2dbd976e50e87d7c7a4",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/build.json": "03b72fe2eba31d01ed628ebf5ef61bfa710fbdf42167a2dbd976e50e87d7c7a4",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout": "c258a34ed447e90a6f482000f1c2a2eb6f9a9055c2e7caa6c1c536fffb613dae",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout": "c258a34ed447e90a6f482000f1c2a2eb6f9a9055c2e7caa6c1c536fffb613dae",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout": "0758597aa22f84b5da6ba7d004ce5a2db72b06f50006ae795c4fef507868c364",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout": "0758597aa22f84b5da6ba7d004ce5a2db72b06f50006ae795c4fef507868c364",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout": "125081526f63b9d8fb873b71ebfe29a9b6570f5cedd1047851eeb602c26486e9",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout": "125081526f63b9d8fb873b71ebfe29a9b6570f5cedd1047851eeb602c26486e9",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout": "01cb42f6e171e1aac6e3e37e02a6bb13881a8b32f5f7229dad6c777bbf063405",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout": "01cb42f6e171e1aac6e3e37e02a6bb13881a8b32f5f7229dad6c777bbf063405",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr": "bb356f008f1fdb8b989dcc9dc30d0f6469d21d21beb81a19144700696d814aa2",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr": "bb356f008f1fdb8b989dcc9dc30d0f6469d21d21beb81a19144700696d814aa2",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/checks.json": "076afb502ebb555d8f4712072c81538821efdacc1f00690075e5b4c72ac3701f",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/checks.json": "076afb502ebb555d8f4712072c81538821efdacc1f00690075e5b4c72ac3701f",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stdout": "9936ce310dbb806f8da2683a1f7560aa451e065676de060a226ee8120130f76b",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stdout": "9936ce310dbb806f8da2683a1f7560aa451e065676de060a226ee8120130f76b",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json": "c236119d9704d1e755aa93541e99087199c13d342bb8d894388f97131e547e17",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json": "c236119d9704d1e755aa93541e99087199c13d342bb8d894388f97131e547e17",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout": "bbad47008aaab6c4cdd49226b8353cf185fb708905dd6771e19396b6f944bf71",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout": "bbad47008aaab6c4cdd49226b8353cf185fb708905dd6771e19396b6f944bf71",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-lifecycle-app-native-v2/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/logs/core-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/core-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/logs/core-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/core-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-lifecycle-app-native-v2/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-lifecycle-app-native-v2/logs/small.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/small.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/logs/small.stdout": "a7edb7e5a0eab15f70d491a446f4b3d74e8df2f820046040cafc85d0463f8a64",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/small.stdout": "a7edb7e5a0eab15f70d491a446f4b3d74e8df2f820046040cafc85d0463f8a64",
+    "artifacts/m7-lifecycle-app-native-v2/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-lifecycle-app-native-v2/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-lifecycle-app-native-v2/logs/tiny-cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/tiny-cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/logs/tiny-cpu.stdout": "2bf995f5b046174d0a8cfbc3f182c7037269b5aae0e85d9c0a2789b691b5158f",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/tiny-cpu.stdout": "2bf995f5b046174d0a8cfbc3f182c7037269b5aae0e85d9c0a2789b691b5158f",
+    "artifacts/m7-lifecycle-app-native-v2/logs/tiny-metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/tiny-metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/logs/tiny-metal.stdout": "ec7786cd85177043c1ca5166b756adb30d5c556e1772a53df52f2bd8aaff49ed",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/tiny-metal.stdout": "ec7786cd85177043c1ca5166b756adb30d5c556e1772a53df52f2bd8aaff49ed",
+    "artifacts/m7-lifecycle-app-native-v2/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-lifecycle-app-native-v2/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/native/tests.rs": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+    "src/native.rs": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "apple/include/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/tests/native_smoke.c": "642dad6db25398a1e5dbb9ca09e67a01edd8111a4517591b541ee02063c2e13c",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/Info.plist": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-darwin-link-smoke": "003e0c0ce0e8449de92b951199a6cfd0cf3de246914533f961ccb6b31c44d7c2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-darwin/release/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-link-smoke": "fc4e85048e91ad2469b11b62c3de00a514723b98f09049ad21e7e10e964392d6",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios/release/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-sim-link-smoke": "f3ec7566fd1ad5cb302b9a5730a4f1b71721d812f83530aeab52c7415208fad2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios-sim/release/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/build.json": "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Harness/NativeWorker.swift": "1733199d8b7ac9cef84e2bd45037b993e89dc1e46dfb8ce09346b64082190ff2",
+    "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+    "tools/experiments/m7_native_lifecycle_check.py": "c22913ce29f450c2b63a05af4889015e281b5e1342dbfb7cf07500660029e4f8",
+    "tools/experiments/m7_physical_measurement.py": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "artifacts/m7-lifecycle-app-native-v2/tiny-cpu/transfer/M7Jobs/1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5.json": "1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5",
+    "artifacts/m7-lifecycle-app-native-v2/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-lifecycle-app-native-v2/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-lifecycle-app-native-v2/tiny-metal/transfer/M7Jobs/5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8.json": "5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8",
+    "artifacts/m7-lifecycle-app-native-v2/tiny-metal/transfer/M7Inputs/tiny-metal/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-lifecycle-app-native-v2/tiny-metal/transfer/M7Inputs/tiny-metal/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "benchmarks/results/2026-10-19-m6-context-reviewed-closure-v1.json": "9873fe34fb887a6dac2936f5ea505ee57bc2bbe7ae0da742b6e1cfc52ddb9320",
+    "benchmarks/results/2026-10-19-m7-metal-abi-qualification-v1.json": "7fa4bc0b15869fa5ff445d4860932faf9f812a67204344c27e1b653ef9bbb631",
+    "benchmarks/contract-v1/manifest.json": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66",
+    "benchmarks/contract-v1/prompt_512.u32le": "4ff74dae2ee5b778f9313f4c707f9ccb6415609a9c0653684cce7be63d457dd6",
+    "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "artifacts/m7-lifecycle-app-native-v2/small/transfer/M7Jobs/08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928.json": "08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928",
+    "artifacts/m7-lifecycle-app-native-v2/small/transfer/M7Inputs/small/Model/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "artifacts/m7-lifecycle-app-native-v2/small/transfer/M7Inputs/small/Model/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "artifacts/m7-lifecycle-app-native-v2/lifecycle-app-checks": "ade0a034236c8b60e30ba5ce39382588a5d83c9c179500576699d759f4a44d38",
+    "apple/tests/swift/LifecycleMain.swift": "bae2fcf2e902a8dec6a044deaa2ff1516979908d3836ad7a50166a3538891ae4",
+    "tools/experiments/m7_native_prefix_check.py": "4071c413f9c9b86ebec3ba52e81ac36782813c887edd2540844dce23deb4dc87",
+    "tools/experiments/test_m7_native_lifecycle_check.py": "5a5caeff1b5a967959ef4cc4af229fbc81668976ad128ab3401d3a5d2ffc4c14",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/lifecycle-checks": "a1b4e98f62048a7d20c36f3a98b982b5182afc95a66639982d4622ff8dd1929f",
+    "apple/tests/swift/PrefixMain.swift": "d9595f8a2f693a7a7caed06950cc9748ceba9985c24f108a89cdca4116773b9b",
+    "tools/experiments/m7_native_tasks_check.py": "a869a158cb728c4e13cc74791462a200246feff6d9ffb8b2886517523d2056c1",
+    "tools/experiments/test_m7_native_prefix_check.py": "8c3d1b1c3abb7828dc1ccff130e960597e1e399cae1d54e2ad125de5afe468c5",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/prefix-checks": "66799083a1f06c484abb8387650de488fcb0cc868bfa0736c2b2af1c47365f83",
+    "tests/fixtures/tiny-v1/manifest.json": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4",
+    "tests/fixtures/tiny-v1/cases.prompt.logits.f32le": "45b1def79d59fd9b37fa2b8504af2b5b2eea72d41a2c44187f9cd68e46b95c23",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+    "apple/tests/swift/TasksMain.swift": "b4701b2039f40691c07fcd09d7c9848b545a80723fa4ffaad52362ca12f6662e",
+    "tools/experiments/m7_native_task_check.py": "e56e815c87278079cef1a8f9e55d60d83b617e5509b7806fed7850249296fb07",
+    "tools/experiments/m7_native_quality_check.py": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+    "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/test_m7_native_tasks_check.py": "c2a08e7ef6fd2677e0826fd9ed57e12bdb1dc8f56ac9b3c9b4dea800daa5024f",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/tasks": "31831da7fd760248aeb1e2ef62a8654c32ab6f140ad720ed62a26e2b9cc05725",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/cases/cpu/tasks.json": "b435ee78615765dbb46f952648b9850f2dc6d370f041fe37c752f3167b5c233b",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/cases/cpu/job.json": "46d510e66850fa63b02338cc06a83f753975498052f7d1c3ed4415c91c1fb05b",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/cases/metal/tasks.json": "b435ee78615765dbb46f952648b9850f2dc6d370f041fe37c752f3167b5c233b",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/cases/metal/job.json": "6f570ccaa78580849316efb5be44af49c84e957542c7ac996cfcc088ce76ab24",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+    "apple/tests/swift/QualityMain.swift": "1cb6023f8c2ad3444d812fafb4f35d87e00dc0610cd4129c07d4c48476701750",
+    "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+    "tools/experiments/test_m7_native_quality_check.py": "bbe1edc476fcfdec0dcb6061d75bd55cf91452bd77e455e1074676d1bf772567",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/quality": "fa5a37403b5238cabc7f430dc111cf1fdbc1511d1a6e925c5123ad25062a94a6",
+    "tools/experiments/test_m7_native_measurement_check.py": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+    "apple/tests/swift/MeasurementMain.swift": "80fa532ff7f2120cced10c5e8c48ee6113922daf04b303c686c128ec2780ac93",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/proof-padding.bin": "a6d72ac7690f53be6ae46ba88506bd97302a093f7108472bd9efc3cefda06484",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/check": "872d152fe87e336a6e5ffd7c47d9f7c441c4dad6c406cca8d739743c17559e4d",
+    ".gitignore": "ba0833fd4f9e6822f1a3620eb070b2319ee76b20a299461197c8de9627226705",
+    "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+    "apple/tests/swift/WorkerChecks.swift": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+    "apple/Generated/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Generated/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "2b7ca336284ada0f91211c628db855f6c0291b29ba467164e011b59f20f4c63e",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "8ce263e9e7c001830ef96498a640e513705eeea772d19192646cb1acc4ed1deb",
+    "tools/experiments/m7_native_fixture.py": "9f97b525af81f3243a774bf73b1e48a6379c6dd34d9e5af7057992502e3b72be",
+    "tools/experiments/m7_native_metal_check.py": "09da441923c9fa4ebe7dc55fb02c6c1c9047664c09fda5bc349b84b656d0ec0f",
+    "tools/experiments/m7_native_score_check.py": "90d27733655fd482485350eda54c351b63730b3e8082d8ea4ab710502bc71b24",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_quality.py": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+    "tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "tools/experiments/m7_physical_tasks.py": "87d990cf98f083db0d0451b3e13cdfee42dc38e1c1aeea710a6308ea1942c3eb",
+    "tools/experiments/m7_swift_harness_run.py": "fcdae72727a2f850a75319aec0ffdb994159953800781ad02b80952160ec4a07",
+    "tools/experiments/test_m7_apple_integration.py": "fcd82d74ad68f25972662ea4294e484506ac362959f33503c1b22e11937058fa",
+    "tools/experiments/test_m7_native_metal_check.py": "f3834817dcd660d2652a6447cbe6632acb33b1a98d60078712b20a5f31aa4a44",
+    "tools/experiments/test_m7_native_score_check.py": "dd9416f2978d6933e0c218bddd9048294ba029c744ed615208bc874b0f25d029",
+    "tools/experiments/test_m7_native_task_check.py": "0aa39d3d5fac4cf0511146049ca92dc3572662f17830a0be4345d239f052bec5",
+    "tools/experiments/test_m7_native_teacher_check.py": "91dcfa41c72eeaba8288c8cdae41e4db15962522a928f473f10d4a58c2f2f692",
+    "tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/test_m7_physical_measurement.py": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+    "tools/experiments/test_m7_physical_quality.py": "6e3e9cb824306ed7d19586cf48011c5deb9ca0bc017174783a6de3c8183e7987",
+    "tools/experiments/test_m7_physical_storage.py": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+    "tools/experiments/test_m7_physical_tasks.py": "b29ee82e828c4671e1a711fd29f1aefce5520f8955a3ff179e9bfb073fe4cfde",
+    "tools/experiments/test_m7_swift_harness_run.py": "cd54ce8480c01dc81f85ef836618531e13af80a35b5a204d2e49863bd9369fbf",
+    "artifacts/m7-lifecycle-app-native-v1/tiny-cpu/transfer/M7Jobs/1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5.json": "1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5",
+    "artifacts/m7-lifecycle-app-native-v1/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-lifecycle-app-native-v1/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-lifecycle-app-native-v1/tiny-metal/transfer/M7Jobs/5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8.json": "5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8",
+    "artifacts/m7-lifecycle-app-native-v1/tiny-metal/transfer/M7Inputs/tiny-metal/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-lifecycle-app-native-v1/tiny-metal/transfer/M7Inputs/tiny-metal/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-lifecycle-app-native-v1/small/transfer/M7Jobs/08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928.json": "08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928",
+    "artifacts/m7-lifecycle-app-native-v1/small/transfer/M7Inputs/small/Model/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "artifacts/m7-lifecycle-app-native-v1/small/transfer/M7Inputs/small/Model/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "artifacts/m7-lifecycle-app-native-v1/lifecycle-app-checks": "f5de04b28c4db17b6d10d63274305cbd6d5f3635955c7e64e6de5c0ea5934b2b",
+    "benchmarks/results/2026-10-21-m7-lifecycle-core-qualification-v1.json": "5a3242c054e8c960ae5dcfe717871f9db5e4334217cbdc1788c32bd95ff1bb5f"
+  },
+  "exact_published_copies": {
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-parent-v1/apple/Harness/HarnessApp.swift": {
+      "origin": "artifacts/m7-lifecycle-app-parent-v1/apple/Harness/HarnessApp.swift",
+      "sha256": "699813ca61b981bd2e2334e6600e59bd567a62cadb39a20d7d0d260601c204af"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-parent-v1/apple/Harness/NativeLifecycle.swift": {
+      "origin": "artifacts/m7-lifecycle-app-parent-v1/apple/Harness/NativeLifecycle.swift",
+      "sha256": "8dae9830967d23ea4f7afcabff185cf3283c28ed45df5338198480cf4c638c01"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-parent-v1/apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "origin": "artifacts/m7-lifecycle-app-parent-v1/apple/TokletHarness.xcodeproj/project.pbxproj",
+      "sha256": "18ea2468847dde1072e0d653ec2c6e554a00f52ecfb96b9d1eacb131a0e5c919"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-source-before-review-v1/NativeLifecycleRun.swift": {
+      "origin": "artifacts/m7-lifecycle-app-source-before-review-v1/NativeLifecycleRun.swift",
+      "sha256": "5781bf29e98446e74684ef0b6cb1b1eededee7a0ef1a291b04b583b8b1b541ff"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-source-before-review-v1/NativeLifecycleSignals.swift": {
+      "origin": "artifacts/m7-lifecycle-app-source-before-review-v1/NativeLifecycleSignals.swift",
+      "sha256": "b6d9ff2550b404ec77cdb1b87974c1ba88f51c4984245b3954a066e67df457f2"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/Harness/HarnessApp.swift": {
+      "origin": "artifacts/m7-lifecycle-app-failed-source-v1/apple/Harness/HarnessApp.swift",
+      "sha256": "938bb3f6a74d4b07db9c4f8b8cec767617559e717bda1fbe6ba9ba42991cb0b0"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycle.swift": {
+      "origin": "artifacts/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycle.swift",
+      "sha256": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycleRun.swift": {
+      "origin": "artifacts/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycleRun.swift",
+      "sha256": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycleSignals.swift": {
+      "origin": "artifacts/m7-lifecycle-app-failed-source-v1/apple/Harness/NativeLifecycleSignals.swift",
+      "sha256": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "origin": "artifacts/m7-lifecycle-app-failed-source-v1/apple/TokletHarness.xcodeproj/project.pbxproj",
+      "sha256": "c09b04e464610077abc3e0f25e903ef4a42b4a58382488e1c7d81cfed687b195"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/apple/tests/swift/LifecycleAppMain.swift": {
+      "origin": "artifacts/m7-lifecycle-app-failed-source-v1/apple/tests/swift/LifecycleAppMain.swift",
+      "sha256": "0353bb6783648647d5feb7049a624984b84e730fcc38b43ac126ccc3cbf7c537"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/tools/experiments/m7_native_lifecycle_app_check.py": {
+      "origin": "artifacts/m7-lifecycle-app-failed-source-v1/tools/experiments/m7_native_lifecycle_app_check.py",
+      "sha256": "4fe40a97de68126c51d107845725d99d5717e240d45570f73472275edebe7238"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-failed-source-v1/tools/experiments/test_m7_native_lifecycle_app_check.py": {
+      "origin": "artifacts/m7-lifecycle-app-failed-source-v1/tools/experiments/test_m7_native_lifecycle_app_check.py",
+      "sha256": "3f779631ad6879c1726fdccdc4ef2a8cfb41a4283fb9aaaf9400325d9ad4015c"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-portable-v1/checks-v2.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-portable-v1/checks-v2.stderr",
+      "sha256": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-portable-v1/checks-v2.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-portable-v1/checks-v2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-portable-v1/checks.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-portable-v1/checks.stderr",
+      "sha256": "7c03f17d85093056a971c1a8c50733545563e7803b81cbe9e35c1322734836ef"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-portable-v1/checks.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-portable-v1/checks.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/checks.json": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/checks.json",
+      "sha256": "dd58358d10524e0cebb7a4b9a2514efece6e0f41867d682ec6c68e78a78845a9"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/checks.py": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/checks.py",
+      "sha256": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/run.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/run.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/run.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/run.stdout",
+      "sha256": "a063f16e7d3e23138b6ba2c104b083ea555ee13f2321c5001ac45312915d0143"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_apple_integration.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_apple_integration.stderr",
+      "sha256": "caf1b7b61b76d15cb1bf89121e5cba3d9df66fdb1c29f0bbaa8aeec22f325349"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_apple_integration.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_apple_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_apple_package.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_apple_package.stderr",
+      "sha256": "309f0f715b41b7e4fe4882dbb7e1cf7b99db98d981b489ee98df124c6dd1c561"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_apple_package.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_apple_package.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_app_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_app_check.stderr",
+      "sha256": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_app_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_app_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_check.stderr",
+      "sha256": "37ef6684249ecca3f8d41770ad1a47445699eece5e37d0b799944840cfec9a1c"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_lifecycle_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_measurement_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_measurement_check.stderr",
+      "sha256": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_measurement_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_measurement_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_metal_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_metal_check.stderr",
+      "sha256": "6281aba84bbb5aa26976633c184dc3976244511eb40661c0360e0da54c78437b"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_metal_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_metal_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_prefix_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_prefix_check.stderr",
+      "sha256": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_prefix_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_prefix_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_quality_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_quality_check.stderr",
+      "sha256": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_quality_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_quality_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_score_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_score_check.stderr",
+      "sha256": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_score_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_score_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_task_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_task_check.stderr",
+      "sha256": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_task_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_task_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_tasks_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_tasks_check.stderr",
+      "sha256": "db21147ddf6e9f94f9b8b6909f01ab5d5ff1f017733024a22679055dec346055"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_tasks_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_tasks_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_teacher_check.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_teacher_check.stderr",
+      "sha256": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_native_teacher_check.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_native_teacher_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_integration.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_integration.stderr",
+      "sha256": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_integration.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_measurement.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_measurement.stderr",
+      "sha256": "5c08758a9c5f8d3429bb616325de7ee7ae841472ad05222eb83cd2af488cdd87"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_measurement.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_measurement.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_quality.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_quality.stderr",
+      "sha256": "093404f6fd02cb2a0587cddc074e443555aa883b95d8eb1a9e933e6dcd47ce62"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_quality.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_quality.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_storage.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_storage.stderr",
+      "sha256": "468daea803e9f0988d50820efa88b379dbd9231096a86a232ffc8375d15063b4"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_storage.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_storage.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_tasks.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_tasks.stderr",
+      "sha256": "af9a27e7906a5ff03494edc0e6077ac53eb8853766d5fc953a3ca762fd48aae6"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_physical_tasks.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_physical_tasks.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_build.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_build.stderr",
+      "sha256": "a742fa561ef9dc3c00dd31182434b2e6aa6d4566f3038d59ae2f7ca3472a7aea"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_build.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_build.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_run.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_run.stderr",
+      "sha256": "c20e44b5ecc373f7064d3b79c9c5938ed18d71c50f6526dd991be237bed9ab38"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_run.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-all-portable-v1/test_m7_swift_harness_run.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/checks.json": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/checks.json",
+      "sha256": "4abb5276963286d77c3a418c99992aa76ecb8e579fb53255ac2a772f1144265d"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/compile.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/compile.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/tiny-cpu.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/tiny-cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/tiny-cpu.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/tiny-cpu.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v1/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v1/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/checks.json": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/checks.json",
+      "sha256": "cdf8e798aff33af7bfda7e23fb2e00a39018fa06b2a08569db9ff370308953fd"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/checks.json": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/checks.json",
+      "sha256": "696464c12e3c20bb4e480717f081103302bdf3e15aa7ac57fc1974418df15396"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/cpu.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/cpu.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/cpu.stdout",
+      "sha256": "b29348ce416706ed8a82d2002f5671c0af02c2937aaea2f41451807e2609debc"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/iphoneos-typecheck.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/iphoneos-typecheck.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/iphoneos-typecheck.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/iphoneos-typecheck.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/iphonesimulator-typecheck.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/iphonesimulator-typecheck.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/iphonesimulator-typecheck.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/iphonesimulator-typecheck.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/metal.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/metal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/metal.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/metal.stdout",
+      "sha256": "d05b6f8f35974886b4cd224e49fd91d9b11071cbf5c43dab91e5d727b511776f"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/prefix-regression.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/prefix-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/prefix-regression.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/prefix-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/checks.json": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/checks.json",
+      "sha256": "ce35411fac3877bac8d7dc6ad7b4ffa2ab4c8fe8a997b28eeb508b8529f7cf0e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/cpu.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/cpu.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/cpu.stdout",
+      "sha256": "e95f16e7feb90842e37ac1f27253b9098b71e8ea7ea761e6e88b377cded4ede8"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/metal.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/metal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/metal.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/metal.stdout",
+      "sha256": "c2c0a6c659caf1d3ced7389c35c9f94d0461c67c8b416d05b632a932568d6ad3"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/tasks-regression.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/tasks-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/tasks-regression.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/tasks-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/checks.json": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/checks.json",
+      "sha256": "d5b0442df98fd28dd5ae7024dd0ad823259aed5c870408857599763679828910"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stdout",
+      "sha256": "1d530b02de1b6c612f7f459a1abf8d4b9ff53e85eca09257c7239a1cf0bc9193"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/build.json": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/build.json",
+      "sha256": "03b72fe2eba31d01ed628ebf5ef61bfa710fbdf42167a2dbd976e50e87d7c7a4"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout",
+      "sha256": "c258a34ed447e90a6f482000f1c2a2eb6f9a9055c2e7caa6c1c536fffb613dae"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout",
+      "sha256": "0758597aa22f84b5da6ba7d004ce5a2db72b06f50006ae795c4fef507868c364"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout",
+      "sha256": "125081526f63b9d8fb873b71ebfe29a9b6570f5cedd1047851eeb602c26486e9"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout",
+      "sha256": "01cb42f6e171e1aac6e3e37e02a6bb13881a8b32f5f7229dad6c777bbf063405"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr",
+      "sha256": "bb356f008f1fdb8b989dcc9dc30d0f6469d21d21beb81a19144700696d814aa2"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/checks.json": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/checks.json",
+      "sha256": "076afb502ebb555d8f4712072c81538821efdacc1f00690075e5b4c72ac3701f"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stdout",
+      "sha256": "9936ce310dbb806f8da2683a1f7560aa451e065676de060a226ee8120130f76b"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json",
+      "sha256": "c236119d9704d1e755aa93541e99087199c13d342bb8d894388f97131e547e17"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout",
+      "sha256": "bbad47008aaab6c4cdd49226b8353cf185fb708905dd6771e19396b6f944bf71"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/compile.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/compile.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/core-regression.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/core-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/core-regression.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/core-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/small.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/small.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/small.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/small.stdout",
+      "sha256": "a7edb7e5a0eab15f70d491a446f4b3d74e8df2f820046040cafc85d0463f8a64"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/tiny-cpu.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/tiny-cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/tiny-cpu.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/tiny-cpu.stdout",
+      "sha256": "2bf995f5b046174d0a8cfbc3f182c7037269b5aae0e85d9c0a2789b691b5158f"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/tiny-metal.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/tiny-metal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/tiny-metal.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/tiny-metal.stdout",
+      "sha256": "ec7786cd85177043c1ca5166b756adb30d5c556e1772a53df52f2bd8aaff49ed"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-lifecycle-app/m7-lifecycle-app-native-v2/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-lifecycle-app-native-v2/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    }
+  },
+  "native_receipts": [
+    "artifacts/m7-lifecycle-app-native-v2/checks.json",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/checks.json",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/checks.json",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/checks.json",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/build.json",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/checks.json",
+    "artifacts/m7-lifecycle-app-native-v2/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json"
+  ],
+  "clean_native_build_commands": 51,
+  "portable_methods": 173,
+  "portable_modules": 19,
+  "targeted_methods": 8,
+  "unit_cases_per_backend": 34,
+  "small_synthetic_trace_events": 19,
+  "failed_native_source_snapshots": {
+    "apple/tests/swift/LifecycleAppMain.swift": {
+      "snapshot": "artifacts/m7-lifecycle-app-failed-source-v1/apple/tests/swift/LifecycleAppMain.swift",
+      "sha256": "0353bb6783648647d5feb7049a624984b84e730fcc38b43ac126ccc3cbf7c537"
+    },
+    "tools/experiments/m7_native_lifecycle_app_check.py": {
+      "snapshot": "artifacts/m7-lifecycle-app-failed-source-v1/tools/experiments/m7_native_lifecycle_app_check.py",
+      "sha256": "4fe40a97de68126c51d107845725d99d5717e240d45570f73472275edebe7238"
+    },
+    "tools/experiments/test_m7_native_lifecycle_app_check.py": {
+      "snapshot": "artifacts/m7-lifecycle-app-failed-source-v1/tools/experiments/test_m7_native_lifecycle_app_check.py",
+      "sha256": "3f779631ad6879c1726fdccdc4ef2a8cfb41a4283fb9aaaf9400325d9ad4015c"
+    }
+  },
+  "retained_initial_native_failure": {
+    "receipt": "artifacts/m7-lifecycle-app-native-v1/checks.json",
+    "child_exit_code": -5,
+    "empty_child_logs": true,
+    "cause": "Test main-thread call violated background-only coordinator precondition; async detached test entry now matches app contract"
+  },
+  "app_integration": true,
+  "actual_os_lifecycle_qualified": false,
+  "numerical_kernels_changed": false,
+  "full_quality_qualified": false,
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "review": "Astra accepted source and completed app component evidence with no findings"
+}

@@ -1582,3 +1582,9 @@ M5 finalclosure,15 October2026: [release decision](docs/experiments/2026-10-15-m
 
 
 M6 final closure,19 October2026: [release decision](docs/experiments/2026-10-19-m6-release.md) and [qualification](benchmarks/results/2026-10-19-m6-release-qualification-v1.json). M6.1–M6.3 complete after independent component/state checks, full unchanged loss/task gates,32-role context replay, all4depth profiles/descriptive timing/confirmations, full-capacity boundaries, both maximum applications and separate final FP16 retention. Mixed I8 component evidence is preserved without production adoption or waived gates.105Python/97CPU/110Metal-feature tests, formatting and strictClippy pass; current runtime/payload identities and protected CPU binaries are rechecked. Defaults, baseline limits and failed attempts remain; M7 is pending.
+
+The [lifecycle app integration](docs/experiments/2026-10-21-m7-lifecycle-app.md)
+connects real scene/notification handlers to opt-in sealed diagnostics. Fifty-one
+native/build commands and173 portable methods pass; 19 Mac synthetic events
+validate exact prefix/replay/reference/cleanup. Physical OS collection remains;
+M7.3 stays open.

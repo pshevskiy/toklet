@@ -47,10 +47,12 @@ private func installedBundleProof(_ phase: String) throws {
 @MainActor
 private final class HarnessStore: ObservableObject {
     let worker: NativeWorker?
+    let lifecycleSignals: NativeLifecycleSignals?
     @Published var state = NativeSnapshot()
     @Published var inputError = ""
 
-    init(enabled: Bool) {
+    init(enabled: Bool, lifecycleEnabled: Bool = false) {
+        lifecycleSignals = lifecycleEnabled ? NativeLifecycleSignals():nil
         do { worker = enabled ? try NativeWorker() : nil }
         catch { worker = nil; inputError = error.localizedDescription }
     }
@@ -61,12 +63,24 @@ private final class HarnessStore: ObservableObject {
         poll()
     }
     func lifecycle(_ phase: ScenePhase) {
+        let observed = DispatchTime.now().uptimeNanoseconds
+        let action: NativeLifecycleAction
         switch phase {
-        case .inactive: worker?.cancel()
-        case .background: worker?.interrupt(unload: false)
-        case .active: break // Resume/replay is an explicit user action.
-        @unknown default: worker?.cancel()
+        case .inactive: action = .inactive
+        case .background: action = .background
+        case .active: action = .active
+        @unknown default: action = .inactive
         }
+        if let lifecycleSignals {
+            lifecycleSignals.observe(action,origin:.scenePhase,applicationState:UIApplication.shared.applicationState.rawValue,observedUptimeNanoseconds:observed)
+        } else if let worker { requestNativeLifecycle(action,worker:worker) }
+        poll()
+    }
+    func memoryWarning() {
+        let observed = DispatchTime.now().uptimeNanoseconds
+        if let lifecycleSignals {
+            lifecycleSignals.observe(.memoryWarning,origin:.systemNotification,applicationState:UIApplication.shared.applicationState.rawValue,observedUptimeNanoseconds:observed)
+        } else if let worker { requestNativeLifecycle(.memoryWarning,worker:worker) }
         poll()
     }
 }
@@ -180,13 +194,40 @@ private struct HarnessView: View {
 
 @main @MainActor
 struct TokletHarnessApp: App {
-    @StateObject private var store = HarnessStore(enabled:!ProcessInfo.processInfo.arguments.contains("--self-test") && !ProcessInfo.processInfo.arguments.contains("--measure") && !ProcessInfo.processInfo.arguments.contains("--quality") && !ProcessInfo.processInfo.arguments.contains("--tasks"))
+    @StateObject private var store: HarnessStore
     @Environment(\.scenePhase) private var phase
     private let timer = Timer.publish(every:0.1,on:.main,in:.common).autoconnect()
 
     init() {
         let arguments = ProcessInfo.processInfo.arguments
-        if let position = arguments.firstIndex(of:"--tasks") {
+        let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle"]
+        let state = HarnessStore(enabled:!diagnostics.contains(where:arguments.contains),lifecycleEnabled:arguments.contains("--lifecycle"))
+        _store = StateObject(wrappedValue:state)
+        if let position = arguments.firstIndex(of:"--lifecycle") {
+            UIApplication.shared.isIdleTimerDisabled = true
+            UIDevice.current.isBatteryMonitoringEnabled = true
+            let root = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
+            let signals = state.lifecycleSignals!
+            DispatchQueue.global(qos:.userInitiated).async {
+                do {
+                    guard position == 1, arguments.count == 4 else { throw NSError(domain:"TokletLifecycle",code:2) }
+                    try awaitNativeMeasurementForeground()
+                    let config = try admitLifecycleConfig(root:root,name:arguments[position+1],sha256:arguments[position+2])
+                    try installedBundleProof("before")
+                    let result = runNativeLifecycle(config,root:root,signals:signals,requireSystem:true) { ready in
+                        let data = try JSONEncoder().encode(ready)
+                        try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_LIFECYCLE_READY_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+                    }
+                    try installedBundleProof("after")
+                    let data = try JSONEncoder().encode(result)
+                    try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_LIFECYCLE_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+                    exit(result.passed ? 0:1)
+                } catch {
+                    try? FileHandle.standardError.write(contentsOf:Data("TOKLET_LIFECYCLE_ERROR=\(error)\n".utf8))
+                    exit(1)
+                }
+            }
+        } else if let position = arguments.firstIndex(of:"--tasks") {
             UIApplication.shared.isIdleTimerDisabled = true
             UIDevice.current.isBatteryMonitoringEnabled = true
             let root = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
@@ -285,7 +326,7 @@ struct TokletHarnessApp: App {
                 .onReceive(timer) { _ in store.poll() }
                 .onChange(of:phase) { _,new in store.lifecycle(new) }
                 .onReceive(NotificationCenter.default.publisher(for:UIApplication.didReceiveMemoryWarningNotification)) { _ in
-                    store.worker?.interrupt(unload:true)
+                    store.memoryWarning()
                 }
                 .onDisappear { store.worker?.close() }
         }

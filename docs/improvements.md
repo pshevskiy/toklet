@@ -908,3 +908,11 @@ fixed. Fourteen events/13 scenarios perCPU/Metal backend,43 native/build command
 and165 portable methods/18 modules pass. The initial fixture-alias parser
 failure remains recorded. Astra accepted source and completed evidence with no findings. Actual app/OS/phone
 lifecycle qualification and M7.3 remain open.
+
+The [lifecycle app integration](experiments/2026-10-21-m7-lifecycle-app.md)
+shares scene/warning actions, preserves original callback times, requires active
+foreground READY, and tests exact original-prefix replay against uninterrupted
+decode without a second model. Astra findings and the initial test-thread trap
+are fixed with old sources retained.51 native/build commands,173 portable methods
+and19 Mac synthetic events pass. Retain for physical collection; actual OS/device
+qualification and M7.3 remain open.
