@@ -3,6 +3,9 @@ Toklet — Fast, lightweight LLM inference on Apple Silicon. An open-source Rust
 
 See the [implementation plan](PLAN.md) for milestones, dependencies, and acceptance criteria, and the [Apple LLM performance proposal](apple_llm_performance_plan.md) for the design rationale.
 
+The [final implementation and performance summary](docs/final-summary.md) covers
+what is implemented, measured Mac/iPhone 14 Pro results and remaining limitations.
+
 The [improvement record](docs/improvements.md) collects implemented capabilities,
 measured speedups, memory/scheduling changes, numerical fixes and rejected
 experiments, with links to their qualification evidence.

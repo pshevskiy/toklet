@@ -985,3 +985,8 @@ The [fixture repair](experiments/2026-10-21-grading-fixture-audit.md) restores t
 ### Full-plan audit and current documentation reconciliation — 21 October 2026
 
 The [M0–M7 audit](experiments/2026-10-21-full-plan-audit.md) maps all 32 tasks and exit criteria to implementation and accepted scoped evidence. It closes stale ABI/backend/device descriptions, marks README and PLAN chronology as historical, and points the early CPU profiling probe to completed matrix/application/retention evidence. The separately reviewed fixture fix is committed as `ff8ba28`. All 887 Python tests, 111 CPU and 123 Metal-feature Rust tests, formatting and strict Clippy pass; ignored hardware/model tests remain explicit. The final audit records Astra review and link/content/hash/whitespace checks. No additional required implementation gap remains within the accepted plan scopes; energy availability, real warning/jetsam, other devices and rejected/deferred mechanisms retain their stated limits. No runtime, defaults, tolerances, quality policy or historical receipt changes.
+
+
+### Final implementation and performance summary — 21 October 2026
+
+The [final summary](final-summary.md) consolidates implemented M0–M7 capabilities, selected-path quality, measured M1 Pro and iPhone 14 Pro latencies/memory, sustained phone slowdown and remaining limitations. It separates numerical, native and application timing, paired mechanism gains, descriptive long-context trials and independent mobile budgets. It references immutable accepted reports without adding benchmarks, runtime changes or expanded qualification claims. Astra verified the numerical transcriptions and scopes; all 278 local links and whitespace checks pass.
