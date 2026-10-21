@@ -9,3 +9,14 @@ benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/l
 benchmarks/results/2026-10-20-m7-measurement-runner/m7-swift-harness-build-v11/logs/iphonesimulator-build.stdout -text -whitespace
 # Swift's raw version line includes a trailing space; retain that evidence byte.
 benchmarks/results/2026-10-20-m7-measurement-runner/m7-measurement-check-v4/logs/swift-version.stderr -text -whitespace
+
+# Exact physical measurement consoles retain their mixed line endings.
+benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v3/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v4/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v6/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-metal-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# These raw tool logs preserve their original trailing whitespace.
+benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/swift-version.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v1.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphoneos-build.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphonesimulator-build.stdout -text -whitespace

@@ -1,0 +1,1517 @@
+{
+  "format": "toklet-m7-physical-measurement-qualification-v1",
+  "passed": true,
+  "parent_commit": "f6f44d2",
+  "changed_code": {
+    "apple/Harness/NativeMeasurement.swift": "5e434e8544d369178ba115256ec4d653ec75517bba697106af1f24c10b0ae053",
+    "apple/Harness/HarnessApp.swift": "75486361edb0c9e169bc40275aac44c5755273bb11d36bf55ec9812fb89ac195",
+    "apple/tests/swift/MeasurementMain.swift": "4c4fe26a7853761100afdb564372d4ab9ab8967290325e91909a51026d9ec5d8",
+    "tools/experiments/m7_native_measurement_check.py": "3608660cbabdb31beff44a6c12ea72e9a72a457d82f9bf1c71c2f8e083de76db",
+    "tools/experiments/m7_physical_measurement.py": "13ceb9225482559cc26a9feaad9159071f5e6f394308089f69a277ef7260dc68",
+    "tools/experiments/test_m7_physical_measurement.py": "b346a5d5a223d51cc485564dcc5f998f010c9a9c50df551c6dac7a9971c7a74d"
+  },
+  "evidence_pins": {
+    ".gitignore": "ba0833fd4f9e6822f1a3620eb070b2319ee76b20a299461197c8de9627226705",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+    "apple/Generated/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "apple/Generated/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Harness/HarnessApp.swift": "75486361edb0c9e169bc40275aac44c5755273bb11d36bf55ec9812fb89ac195",
+    "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+    "apple/Harness/NativeMeasurement.swift": "5e434e8544d369178ba115256ec4d653ec75517bba697106af1f24c10b0ae053",
+    "apple/Harness/NativeWorker.swift": "9d00e2658540125b819c3ed1aef8adbebcadc99d887b8ca8a30cabaf114d63b6",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "9b6affa0e651f60d2ddb54a3a2bc3b6e1271c93b2ddaeb28be3e35203bb7ff0b",
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/include/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "apple/tests/native_smoke.c": "28718100afb51303ddd34f362143bc14fbb2188a3d47e3e44ed3aafb6fb6c463",
+    "apple/tests/swift/MeasurementMain.swift": "4c4fe26a7853761100afdb564372d4ab9ab8967290325e91909a51026d9ec5d8",
+    "apple/tests/swift/WorkerChecks.swift": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/Info.plist": "6831550f3db5d9ea4d931e6752cd871251e40543bc0329156bdd6f6acaf34c76",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "6125f3444ebf67bb513903e17e735a81d1fc8ccfee139b61c0ed7fa9d02c70c8",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64/Headers/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/ios-arm64/libtoklet.a": "4e6635fbec0fca3280ab0253a0edb6963797367112a98a4963869209fedebc51",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/macos-arm64/Headers/toklet.h": "13e1140e16edfcc55a9279569797eac4ca65daa1e6c9bff508c5712535ace475",
+    "artifacts/m7-apple-package-v4/Toklet.xcframework/macos-arm64/libtoklet.a": "cfb329d378256db06aaba43929bf05ad1f1743e5e88aa017698fec8128603559",
+    "artifacts/m7-apple-package-v4/aarch64-apple-darwin-link-smoke": "c7ba47d0ded4396b50b47b300ef7940d42f2968f53147ab74cb4f16dccbbaf4b",
+    "artifacts/m7-apple-package-v4/aarch64-apple-ios-link-smoke": "4f9cc716e42bce02e856ac67b662620e806dc9b78964f80251e9a731826d5c71",
+    "artifacts/m7-apple-package-v4/aarch64-apple-ios-sim-link-smoke": "0738854db33b2ec3de0898ae5f597945081fac23b7932b9f9c5a33cf62eba7a8",
+    "artifacts/m7-apple-package-v4/build.json": "1185314043649692b7e41aff9b90e37355201eef71852965c20ef69513e6f13c",
+    "artifacts/m7-apple-package-v4/target/aarch64-apple-darwin/release/libtoklet.a": "cfb329d378256db06aaba43929bf05ad1f1743e5e88aa017698fec8128603559",
+    "artifacts/m7-apple-package-v4/target/aarch64-apple-ios-sim/release/libtoklet.a": "6125f3444ebf67bb513903e17e735a81d1fc8ccfee139b61c0ed7fa9d02c70c8",
+    "artifacts/m7-apple-package-v4/target/aarch64-apple-ios/release/libtoklet.a": "4e6635fbec0fca3280ab0253a0edb6963797367112a98a4963869209fedebc51",
+    "artifacts/m7-native-measurement-check-v5/check": "33185ef2d76fcdf0acffcbf00b66216b9fd9d009e3dd055568bbe5d2f36e1b5c",
+    "artifacts/m7-native-measurement-check-v5/checks.json": "7c763a266f61311652c90b732fe9c44fde80e812509d2863fadf40d85c13b8d5",
+    "artifacts/m7-native-measurement-check-v5/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v5/logs/checks.stdout": "4d04742aedb88fbeea0e5fd869b81bf8a459649caf06c7a58251e35dbffd52e2",
+    "artifacts/m7-native-measurement-check-v5/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v5/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v5/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v5/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-native-measurement-check-v5/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-native-measurement-check-v5/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-native-measurement-check-v5/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v5/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-native-measurement-check-v6/check": "1cbb1215fa8508c2eba0f357262e1b17a682612727655216557b550b97f9e670",
+    "artifacts/m7-native-measurement-check-v6/checks.json": "570550169b02a468438fa4e0922bdf31cef6d3135811c5cc895ef6d283aa3da6",
+    "artifacts/m7-native-measurement-check-v6/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v6/logs/checks.stdout": "61cbadb5dc56f5bc4451bde8985e425567daeaf6a0865ec11c04a013ed686ea4",
+    "artifacts/m7-native-measurement-check-v6/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v6/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v6/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v6/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-native-measurement-check-v6/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-native-measurement-check-v6/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-native-measurement-check-v6/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v6/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-native-measurement-check-v7/check": "20512022cd5d92ef9d05e9d742fe44e02caed0e1e43d1b33012724f02873be3f",
+    "artifacts/m7-native-measurement-check-v7/checks.json": "3954d9bd81881fe958a8c04e4b548b89f989f3191c7701c7f792df1b82937885",
+    "artifacts/m7-native-measurement-check-v7/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v7/logs/checks.stdout": "e4f3191d4305b4d68af69b634b57244da675e6c8b3f5f92a3d7fc44da20055d5",
+    "artifacts/m7-native-measurement-check-v7/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v7/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v7/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v7/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-native-measurement-check-v7/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-native-measurement-check-v7/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-native-measurement-check-v7/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-native-measurement-check-v7/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-path-alias-probe-v1/probe.swift": "50afd4d36654ab744f27d7850d270cb700a9c8c9338255021de6ad88fa2158e9",
+    "artifacts/m7-path-alias-probe-v1/stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-path-alias-probe-v1/stdout": "d9c3b8b35b63d3354d9b13aa68e215dab999b662cfb3cab14d2c0d1a3e1f9e0a",
+    "artifacts/m7-physical-admission-v1/private-selection.json": "711ef5916ad223096bcb91cd93d7814f2c44056ab7494882d87af7d42a9804db",
+    "artifacts/m7-physical-measurement-tests-v1.stderr": "2a125a080f235b486acd09f704f3069aeb9a7e6cd2b047d40f6af68d2b5dadaa",
+    "artifacts/m7-physical-measurement-tests-v1.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v10.stderr": "0d55a80cb05ea8f25a8b20d656782527609036a0b0889fa18ded06e44e060331",
+    "artifacts/m7-physical-measurement-tests-v10.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v11.stderr": "e7df0d4cc218dd37b132fcc9df27a52119c93ce5c83e4d7db32d7da5c46750f3",
+    "artifacts/m7-physical-measurement-tests-v11.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v12.stderr": "e2d24df29e2f01fa4a61d436577d00dbc5fa962d973422f2c46292c59a865d43",
+    "artifacts/m7-physical-measurement-tests-v12.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v2.stderr": "f99b6c4dba87494838a125b6668e6ac68668aecc198f11496a886bb79ce82a57",
+    "artifacts/m7-physical-measurement-tests-v2.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v3.stderr": "33343b89ca49a00273538b043896c64e9d372fc6b81303d20521456468110781",
+    "artifacts/m7-physical-measurement-tests-v3.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v4.stderr": "3198475c8b60c8f16529bfb96192dee51cc64c5746763ebfa6c789d33157617c",
+    "artifacts/m7-physical-measurement-tests-v4.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v5.stderr": "7927a630465391cabe55672d7bfc3b560135ad357e335892502b561948c11a84",
+    "artifacts/m7-physical-measurement-tests-v5.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v6.stderr": "29e1d2e3287ffb7608cb3cea4af0274c293ac54c90cea6ffe425320004de0936",
+    "artifacts/m7-physical-measurement-tests-v6.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v7.stderr": "7c434f063954dce7ecc2e465601724bb1ce9aee09e8922a104be59599ccd0ec9",
+    "artifacts/m7-physical-measurement-tests-v7.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v8.stderr": "84dbff521a9fcf94a7026e63b53c3b6aea97a80c8e5c232896c5eb3494f56779",
+    "artifacts/m7-physical-measurement-tests-v8.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tests-v9.stderr": "f7449281286da95725b04975497928252726f23ce37b890c46166415be10840a",
+    "artifacts/m7-physical-measurement-tests-v9.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/measurement.json": "01e159beb4ceefc3d5d2114af5f019f3a89b2649634f86bc9d778882c4d8fa8b",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-execution.json": "fb4f3c062f618180d0b2686abc8416fe7af4502bcd889134e8372fe6fa74e851",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/copied-inventory.stdout": "8057c40b226206f3ba49c7d64c105b5ffb7478a3e879e99494f4e6c6a263f6c1",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/copy-Model.stdout": "bd3819a538bc847865a304d2d449c1be126536bb907408a5d1124dfac7073fca",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/copy-job.stdout": "c55c25dc53b3c4bbc4ab494905794a974e9e846067a21b375ece87ae98ce4859",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/current-install-5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/current-install-5.stdout": "997e4cbbb032330cec2cc97baccbaa1e0191a669e7c45f3d758d2167200d7b7e",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/device-after.stdout": "275c1189e7c94261c98bec9d3ba18710d8f173857bd171933c7e284d35295bbc",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/device-before.stdout": "275c1189e7c94261c98bec9d3ba18710d8f173857bd171933c7e284d35295bbc",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/entitlements.stderr": "ba66e1bc68939c4ebfa01ac4423eae63311462e2026d882ef22efe984624be02",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/signature-details.stderr": "08bd1b51b8afb85d87b93a0354dc62a758c4e848adf94cb2a66e6cb82f138319",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/transfer/M7Jobs/93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d.json": "93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/measurement.json": "80024e9b65951ebfe7d8200256c85b16da6d0ab78ee03799186dd362a5eced9a",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-execution.json": "0ac6ef53e4824d15daad97c06d33ccb84510bb62ee2adc3a6071e02fab94e610",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/copied-inventory.stdout": "cf5e821bca8487a6670583fb0e536ddd9ff2ba966532e6ab9a8d35cffe9869ec",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/copy-Model.stdout": "4a9dd961ab0785bc6acf2d635ffa4e32104b73ad39f819ca22daee58f9a9dd24",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/copy-job.stdout": "568e1560e816a2c4efe9d9a7ce7500eb3ac50f3303ffe4ff4e18240bbe8b8c58",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/current-install-5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/current-install-5.stdout": "d006d310a395b7e47cc93a573d72c94997aafe0f2d5619259039fbcf9e602502",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/device-after.stdout": "9919fcedc2bdf8f2a5da807a36d1c42934c009e8b97e820861964bb812c92dd6",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/device-before.stdout": "9919fcedc2bdf8f2a5da807a36d1c42934c009e8b97e820861964bb812c92dd6",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/entitlements.stderr": "43ed7ed4b4b7b9ac85f54843c5ba2f5c97e1148ce4564d38a99b61b023a43402",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/signature-details.stderr": "dbc1fd29afd83d4df62665449cf6dff247dd56de3bfc433f49b2bbc16ac90f8d",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/transfer/M7Jobs/93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d.json": "93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/measurement.json": "1e973aa014da9576a0af85db0cd70e55a12db335c94cf9d8bc2e82aa995ce79a",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-execution.json": "b2553782655f8e1d60b6f99a441acaf42d223dc83c5de88e67292660a93bb3fc",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/copied-inventory.stdout": "cf5e821bca8487a6670583fb0e536ddd9ff2ba966532e6ab9a8d35cffe9869ec",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/copy-Model.stdout": "ca8d7ef9a99a06bbcac665b81f5082d83b0bc5f1dcbf47d2b9238205ed92ee2a",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/copy-job.stdout": "cb9262599848d85476c7888b30ca643f3deac90c24a94197d6e053673536f9d5",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/current-install-5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/current-install-5.stdout": "91a1a7300ff0320022842195efe5674d66818e5a7f12d26477a4ae39bc6f09cd",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/device-after.stdout": "c4654689f0dfab7b376206c3a9148e680bcd2524d1c44a5dec989d9ec2a06c0a",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/device-before.stdout": "c4654689f0dfab7b376206c3a9148e680bcd2524d1c44a5dec989d9ec2a06c0a",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/entitlements.stderr": "5ac7149952a8cdb7fa9d05a669a8ad725679404afaf27f6856df25ee2273cb64",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/signature-details.stderr": "074800408f1254d9d5df33f8b369992acd91d693301f4c3f093e8fb0c36ab6bd",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/transfer/M7Jobs/93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d.json": "93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/measurement.json": "db23c6ad78c16377fbcf58f9a042cb7d2a266e51e5635867bef30575dd9936f7",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-execution.json": "73f729b52074cc0fd63660baabd8cf08f512767ac52a6f208f910535c181badf",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/copied-inventory.stdout": "8057c40b226206f3ba49c7d64c105b5ffb7478a3e879e99494f4e6c6a263f6c1",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/copy-Model.stdout": "08ae3de493dadd70f8666cbf287ec82ce0308bd3fedcc292ade10be807068e52",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/copy-job.stdout": "b86eafc98e8961cec2bd04594dba289d324c984ddb59425a35f12546f813fb9f",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/current-install-10.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/current-install-10.stdout": "997e4cbbb032330cec2cc97baccbaa1e0191a669e7c45f3d758d2167200d7b7e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/current-install-5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/current-install-5.stdout": "997e4cbbb032330cec2cc97baccbaa1e0191a669e7c45f3d758d2167200d7b7e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/device-after.stdout": "01b9ede9a905e787b3339f2cdcd757709f6aa2b22f0bd3187b0d1fc3a6e902a2",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/device-before.stdout": "01b9ede9a905e787b3339f2cdcd757709f6aa2b22f0bd3187b0d1fc3a6e902a2",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/entitlements.stderr": "ba66e1bc68939c4ebfa01ac4423eae63311462e2026d882ef22efe984624be02",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/launch.json": "e2680f07ae2784cc2f0e1483e4e925b2bf194a536e6a8308cc947b80d00b798d",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/measurement.stderr": "393749c503db15c1a42c0843c393ce8649c5cf5191791f94261672e060e31efa",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/signature-details.stderr": "08bd1b51b8afb85d87b93a0354dc62a758c4e848adf94cb2a66e6cb82f138319",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/transfer/M7Jobs/93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d.json": "93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/measurement.json": "f6632c6585496737c291f1724dd76e7ba3b95175dab0d056b725c559a5fd65cd",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-execution.json": "5c1c880950a4438a8f84fb96186ba26f4207216a989c93782f1b963347f8af64",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/copied-inventory.stdout": "8057c40b226206f3ba49c7d64c105b5ffb7478a3e879e99494f4e6c6a263f6c1",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/copy-Model.stdout": "466b9a9afa4dd8b9e895275b0a51c096ad86486e149e15a0da0468768b26ce1e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/copy-job.stdout": "b8e7a166e2a7b756fef7f5b2b34406d7feafee00b93f557a9b0704e84f7df4ad",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/current-install-10.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/current-install-10.stdout": "997e4cbbb032330cec2cc97baccbaa1e0191a669e7c45f3d758d2167200d7b7e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/current-install-5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/current-install-5.stdout": "997e4cbbb032330cec2cc97baccbaa1e0191a669e7c45f3d758d2167200d7b7e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/device-after.stdout": "2d053e781de94ddbab35af9f392c43f1d12c992df89dc530c197ea14d269cd3f",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/device-before.stdout": "ef549adbd52e9fd071e448824ff3a7ad076c03e92e29a42365ee0a6c99e5cf6e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/entitlements.stderr": "ba66e1bc68939c4ebfa01ac4423eae63311462e2026d882ef22efe984624be02",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/launch.json": "e2055bd125146d772d7e42854296873a9328578637d28b4d5ce334660f504034",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/measurement.stderr": "1f0cd577c0e900e178d4ae1408019fc42e662ae7b7742d3231269a9c364bee9f",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/signature-details.stderr": "08bd1b51b8afb85d87b93a0354dc62a758c4e848adf94cb2a66e6cb82f138319",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/transfer/M7Jobs/93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d.json": "93b7400d3299a6739efd6f09d674fb66e6865821bba4ff67b8165e8756a2ce2d",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/measurement.json": "23341941b50dcc947af0658f632d3b938d84bf9ef8d052c666001bdbfdc59b75",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-execution.json": "b8484cf916d695e24787b5c20ec43dd5358c99ad3d40b73794a648e7b5b58bd2",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/current-install-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/current-install-1.stdout": "997e4cbbb032330cec2cc97baccbaa1e0191a669e7c45f3d758d2167200d7b7e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/current-install-3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/current-install-3.stdout": "997e4cbbb032330cec2cc97baccbaa1e0191a669e7c45f3d758d2167200d7b7e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/device-after.stdout": "0ec0d4cb223b77227d12d0ac644c220365e3e5bb889f5e8123de8f815078d329",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/device-before.stdout": "0ec0d4cb223b77227d12d0ac644c220365e3e5bb889f5e8123de8f815078d329",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/launch.json": "c4d75e61737522c2ce979db3dcea4216d7d8ffbcbed3818db358272822827272",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/measurement.stdout": "2fcea729db37dd23d282bbf47509f447d3e099632f0925b43906873f8ad1c4e9",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/measurement.json": "0d1f552f852866dc7fa8fa2d386eeb7c1afcd8459561072fe6ffd6e7b26bc381",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-execution.json": "c09a77884e5c6970e95ee5538372303d98f9f02644c1932d616edb3dd4c3c127",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/current-install-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/current-install-1.stdout": "d006d310a395b7e47cc93a573d72c94997aafe0f2d5619259039fbcf9e602502",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/current-install-5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/current-install-5.stdout": "d006d310a395b7e47cc93a573d72c94997aafe0f2d5619259039fbcf9e602502",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/device-after.stdout": "30bcbf42560053734a76775da79922a1a8c7d560307852b8812cee9a1ff5f394",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/device-before.stdout": "30bcbf42560053734a76775da79922a1a8c7d560307852b8812cee9a1ff5f394",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/launch.json": "3b99f6afdf06703afacb6901464515e61fb154213152fc72e06b7661fc7b2aa7",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/measurement.stdout": "f909701b21b3b915707c7d25d5c1ff521ebcb79b5b7377cffb0c4c62f8fe79ff",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/process-1.stdout": "173300e75904df988350e8345b23b6008ac8c597833ee2bd62c3ea633e619a3b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/process-3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/process-3.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/process-4.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/process-4.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/signal-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/signal-2.stdout": "a993f3229a587647e11d73589919515ac899b1f5639495bb4e71af0c38607abc",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/measurement.json": "014455fb687adfc6e6d37f91ce2a0facbf949b157e4b75e9e6fbf9d126723848",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-execution.json": "c713671f1b4afed102eb8f30a8ffa288a6d72fa0f636df70ad88b42d66fa070c",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/current-install-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/current-install-1.stdout": "91a1a7300ff0320022842195efe5674d66818e5a7f12d26477a4ae39bc6f09cd",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/current-install-3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/current-install-3.stdout": "91a1a7300ff0320022842195efe5674d66818e5a7f12d26477a4ae39bc6f09cd",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/device-after.stdout": "88a5700d8e4ffad05320414fcff59d5b4b3396d986e8a6f534c5afd88cd41424",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/device-before.stdout": "c4654689f0dfab7b376206c3a9148e680bcd2524d1c44a5dec989d9ec2a06c0a",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/launch.json": "586bd115c486cf455334666b7e9d13c27c92d86b37eb4111710aa3775b29a8c2",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/measurement.stderr": "f5f39ad7173c375dae58c8882613b57d802d33eabfb06949ad0f94c1a5764a9b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/measurement.json": "e6e0a1ec6463c04dcd227781dbc30a23e145a95255546c994fe9b07d206c160c",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-execution.json": "affc61e4ea3b2a1307ffe2c779ae405aae33800cfce2121a4319a0ad73f01653",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/current-install-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/current-install-1.stdout": "91a1a7300ff0320022842195efe5674d66818e5a7f12d26477a4ae39bc6f09cd",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/current-install-3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/current-install-3.stdout": "91a1a7300ff0320022842195efe5674d66818e5a7f12d26477a4ae39bc6f09cd",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/device-after.stdout": "7cd99b703c72d74dd03e5612fb4d4748eec8829172c7734f9e8b756221cc3a9f",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/device-before.stdout": "7cd99b703c72d74dd03e5612fb4d4748eec8829172c7734f9e8b756221cc3a9f",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/launch.json": "a5c1e8152f697d5311cd79c0977c88a99c5d72b1a02f488c96914b23e74a3e3e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/measurement.stdout": "5ae6f9fd5e08342d4991eb0766254af73e788f9bae4cba7aafad4c38f5255aca",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/measurement.json": "beaeaeb868183c0913dd6fa504e7de9c8afc87c17bad17ce66e9367d9fe7e4c6",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-execution.json": "b8178e0d667fc52fc186e6c167c48a5e78a18dd5dbccf4186ee0727d3af75708",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/copied-inventory.stdout": "eefeb416e2eb61d37199edfa97ce5ca3c57030a69c08f275d6f85db8bfe035cb",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/copy-Model.stdout": "820906ab94d36400e62065d2e16d019e425968cdee05de593283538aed8c172c",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/copy-job.stdout": "661b1277ccac3b73f5c22b09bbd5217080dd12e67ff5a67c631c43039168f33b",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/current-install-5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/current-install-5.stdout": "997e4cbbb032330cec2cc97baccbaa1e0191a669e7c45f3d758d2167200d7b7e",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/device-after.stdout": "275c1189e7c94261c98bec9d3ba18710d8f173857bd171933c7e284d35295bbc",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/device-before.stdout": "275c1189e7c94261c98bec9d3ba18710d8f173857bd171933c7e284d35295bbc",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/entitlements.stderr": "ba66e1bc68939c4ebfa01ac4423eae63311462e2026d882ef22efe984624be02",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/signature-details.stderr": "08bd1b51b8afb85d87b93a0354dc62a758c4e848adf94cb2a66e6cb82f138319",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/transfer/M7Inputs/tiny-metal/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/transfer/M7Inputs/tiny-metal/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v1/transfer/M7Jobs/a6e55487bb3644cdaee6ac6bcda7b950a365dfc23b6bbf097c90420b92bff665.json": "a6e55487bb3644cdaee6ac6bcda7b950a365dfc23b6bbf097c90420b92bff665",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/measurement.json": "c1827673bfc948c90d2ab0a601860084b91ba6c5979c839d2242fa59b375a9e2",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-execution.json": "55b47929cfd63a334ef98b061300b5a220fa55425b775af38b61b85250188308",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/copied-inventory.stdout": "e93fd3705f206769066a60ed95912ddfad05b07b0415e6c112a1b777058f1052",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/copy-Model.stdout": "3e1e840dcfd068837054a694fcd267b69e05b1e5c13cb244ebdac9732e329dd3",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/copy-job.stdout": "9b3bd9c1f35cdeb2234450b8dc583c9ab72bbe92fcfb93392a28a85ca53d4e97",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/current-install-5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/current-install-5.stdout": "d006d310a395b7e47cc93a573d72c94997aafe0f2d5619259039fbcf9e602502",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/device-after.stdout": "9919fcedc2bdf8f2a5da807a36d1c42934c009e8b97e820861964bb812c92dd6",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/device-before.stdout": "9919fcedc2bdf8f2a5da807a36d1c42934c009e8b97e820861964bb812c92dd6",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/entitlements.stderr": "43ed7ed4b4b7b9ac85f54843c5ba2f5c97e1148ce4564d38a99b61b023a43402",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/signature-details.stderr": "dbc1fd29afd83d4df62665449cf6dff247dd56de3bfc433f49b2bbc16ac90f8d",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/transfer/M7Inputs/tiny-metal/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/transfer/M7Inputs/tiny-metal/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v2/transfer/M7Jobs/a6e55487bb3644cdaee6ac6bcda7b950a365dfc23b6bbf097c90420b92bff665.json": "a6e55487bb3644cdaee6ac6bcda7b950a365dfc23b6bbf097c90420b92bff665",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/measurement.json": "635305ff02836dbe53ed3ace84d9b5caef5676c232adf4fbbe7f17c6a703b97a",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-execution.json": "f5be20c5bf17f0d6ee07e8d77aec91bd59ce1a3e677df1d46343b0b1700ad36c",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/copied-inventory.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/copied-inventory.stdout": "e93fd3705f206769066a60ed95912ddfad05b07b0415e6c112a1b777058f1052",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/copy-Model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/copy-Model.stdout": "9b7a73ab8f614ebf80545f713a3c709cec966e0d02f463c085825af480d889a9",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/copy-job.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/copy-job.stdout": "2f025ce8f889ef335fb0f3d902f63e239ddcec8ca56f7937191f1ec336560633",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/current-install-5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/current-install-5.stdout": "91a1a7300ff0320022842195efe5674d66818e5a7f12d26477a4ae39bc6f09cd",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/device-after.stdout": "c4654689f0dfab7b376206c3a9148e680bcd2524d1c44a5dec989d9ec2a06c0a",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/device-before.stdout": "c4654689f0dfab7b376206c3a9148e680bcd2524d1c44a5dec989d9ec2a06c0a",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/entitlements.stderr": "5ac7149952a8cdb7fa9d05a669a8ad725679404afaf27f6856df25ee2273cb64",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/profile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/profile.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/signature-details.stderr": "074800408f1254d9d5df33f8b369992acd91d693301f4c3f093e8fb0c36ab6bd",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/transfer/M7Inputs/tiny-metal/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/transfer/M7Inputs/tiny-metal/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-physical-measurement-tiny-metal-ready-v3/transfer/M7Jobs/a6e55487bb3644cdaee6ac6bcda7b950a365dfc23b6bbf097c90420b92bff665.json": "a6e55487bb3644cdaee6ac6bcda7b950a365dfc23b6bbf097c90420b92bff665",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/measurement.json": "8850a75c5fd6882c924a1a6242f1c37944484cecd33941d1acea6cd34bc6211f",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-execution.json": "d9f1bfa6630d6029c3e76d01b0e23569112c71d82cb0b96fa9eec7327cbc5c06",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/current-install-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/current-install-1.stdout": "91a1a7300ff0320022842195efe5674d66818e5a7f12d26477a4ae39bc6f09cd",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/current-install-3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/current-install-3.stdout": "91a1a7300ff0320022842195efe5674d66818e5a7f12d26477a4ae39bc6f09cd",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/device-after.stdout": "7cd99b703c72d74dd03e5612fb4d4748eec8829172c7734f9e8b756221cc3a9f",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/device-before.stdout": "7cd99b703c72d74dd03e5612fb4d4748eec8829172c7734f9e8b756221cc3a9f",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/launch.json": "1114f8a251458530aae92cba7e73004040a9b855937efa77d35f86b981f49245",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/measurement.stdout": "34cbc0376e751348bfca176af3fb5487774606a9316cb1c3561db58ab972ffba",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/process-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/process-1.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/process-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/process-2.stdout": "98f7545eaec2f22aa2ca58551e78648bd107c2603d84140c121d22c65e9ea21b",
+    "artifacts/m7-physical-prepared-v4/integration.json": "f92e0f0ce67cc2d3c9dad014081ea5decae35315ed4f9b87eeaa77825c02f59b",
+    "artifacts/m7-physical-prepared-v4/private-execution.json": "7c5d703eea64dc22ae5edccb07f8c4d1340937aaec149a704cbca97be2195c37",
+    "artifacts/m7-physical-prepared-v4/private-logs/architecture.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/architecture.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-physical-prepared-v4/private-logs/deployment.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/deployment.stdout": "ab69cea5655d09e2491404650efe1c684c2b98ea4643f7d97cbe6ea4030e93b6",
+    "artifacts/m7-physical-prepared-v4/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/device-after.stdout": "b018a705f81038d51be38ff59551a5405dc279e85b9bcc99f0a4dff594c77c0d",
+    "artifacts/m7-physical-prepared-v4/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/device-before.stdout": "b018a705f81038d51be38ff59551a5405dc279e85b9bcc99f0a4dff594c77c0d",
+    "artifacts/m7-physical-prepared-v4/private-logs/device-preinstall.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/device-preinstall.stdout": "b018a705f81038d51be38ff59551a5405dc279e85b9bcc99f0a4dff594c77c0d",
+    "artifacts/m7-physical-prepared-v4/private-logs/entitlements.stderr": "ba66e1bc68939c4ebfa01ac4423eae63311462e2026d882ef22efe984624be02",
+    "artifacts/m7-physical-prepared-v4/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-prepared-v4/private-logs/install.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/install.stdout": "699a9345944262fc972b247e20f065563cf765c5dc026971f0da9cb45a161ef6",
+    "artifacts/m7-physical-prepared-v4/private-logs/processes-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/processes-1.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-prepared-v4/private-logs/processes-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/processes-2.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-prepared-v4/private-logs/provisioning.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/provisioning.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-prepared-v4/private-logs/signature-details.stderr": "08bd1b51b8afb85d87b93a0354dc62a758c4e848adf94cb2a66e6cb82f138319",
+    "artifacts/m7-physical-prepared-v4/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/signed-release-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v4/private-logs/signed-release-build.stdout": "cc5e31ddeeb598c44c12f848f01e78790c331505af9bbff5bafb1595c3cff36e",
+    "artifacts/m7-physical-prepared-v4/source-snapshot/tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "artifacts/m7-physical-prepared-v4/source-snapshot/tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "artifacts/m7-physical-prepared-v5/integration.json": "ac477f93d129a9b8ede848838cd864b66573fdb92f75cec6a67367eae7a82d1c",
+    "artifacts/m7-physical-prepared-v5/private-execution.json": "2323837130c9de826d3524772236fcb4ca9499cd80a0ee118d5b4a0aa8c9d920",
+    "artifacts/m7-physical-prepared-v5/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v5/private-logs/device-after.stdout": "45f5c1c5748847e34de0562ac70083fe213f0b4d9c1345534da71d0a8a8b664f",
+    "artifacts/m7-physical-prepared-v5/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v5/private-logs/device-before.stdout": "45f5c1c5748847e34de0562ac70083fe213f0b4d9c1345534da71d0a8a8b664f",
+    "artifacts/m7-physical-prepared-v5/private-logs/processes-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v5/private-logs/processes-1.stdout": "d088fb3d97b55f792b26e6e3533af446f05bbf8ee00ea40eb3d3f2a305c4e642",
+    "artifacts/m7-physical-prepared-v6/integration.json": "abd4a0845b5aaf014c0755d873cec5492c68aee329c6113ea17ba7b1fdf11657",
+    "artifacts/m7-physical-prepared-v6/private-execution.json": "4ba2eb3d5347a426f9e98f5cfebbb484b88084e86ff834062f8646ad1c42dfd5",
+    "artifacts/m7-physical-prepared-v6/private-logs/architecture.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/architecture.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-physical-prepared-v6/private-logs/deployment.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/deployment.stdout": "f640afa91b4bf02355803f0457a6dd0817d2595fbe564cf4e9013a1647a1c39b",
+    "artifacts/m7-physical-prepared-v6/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/device-after.stdout": "45f5c1c5748847e34de0562ac70083fe213f0b4d9c1345534da71d0a8a8b664f",
+    "artifacts/m7-physical-prepared-v6/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/device-before.stdout": "45f5c1c5748847e34de0562ac70083fe213f0b4d9c1345534da71d0a8a8b664f",
+    "artifacts/m7-physical-prepared-v6/private-logs/device-preinstall.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/device-preinstall.stdout": "45f5c1c5748847e34de0562ac70083fe213f0b4d9c1345534da71d0a8a8b664f",
+    "artifacts/m7-physical-prepared-v6/private-logs/entitlements.stderr": "43ed7ed4b4b7b9ac85f54843c5ba2f5c97e1148ce4564d38a99b61b023a43402",
+    "artifacts/m7-physical-prepared-v6/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-prepared-v6/private-logs/install.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/install.stdout": "9b2f97fa7c36da281852a3d08267830402c6bc9369509c1fea79e638b8391345",
+    "artifacts/m7-physical-prepared-v6/private-logs/processes-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/processes-1.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-prepared-v6/private-logs/processes-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/processes-2.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-prepared-v6/private-logs/provisioning.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/provisioning.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-prepared-v6/private-logs/signature-details.stderr": "dbc1fd29afd83d4df62665449cf6dff247dd56de3bfc433f49b2bbc16ac90f8d",
+    "artifacts/m7-physical-prepared-v6/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/signed-release-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v6/private-logs/signed-release-build.stdout": "06f0712022321ccd4c460119d0b52fa438158a0c0679110aec2fa5de0a3df5c8",
+    "artifacts/m7-physical-prepared-v6/source-snapshot/tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "artifacts/m7-physical-prepared-v6/source-snapshot/tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "artifacts/m7-physical-prepared-v7/integration.json": "e53cbdd8aa798a3b744035ddf209d72c93c116ddeaa23ca0e5a78f1ce976456c",
+    "artifacts/m7-physical-prepared-v7/private-execution.json": "aa11053b1fa9416d0810018ffc2ca9c6dfb20469ebcd2bbdf73e299c078726b0",
+    "artifacts/m7-physical-prepared-v7/private-logs/architecture.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/architecture.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-physical-prepared-v7/private-logs/deployment.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/deployment.stdout": "12f186fb7c5c4646d0a855d7a453d383337ceec8a0db6f4646e40805dc892c86",
+    "artifacts/m7-physical-prepared-v7/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/device-after.stdout": "0fc6e4f92d7f7b9f859cf071b128cfe2b4d7c91506da8d34835ff7ebd841abaa",
+    "artifacts/m7-physical-prepared-v7/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/device-before.stdout": "af5483e162e26ffd2243de219c4dbef0b0bf307d8019706a0804be038b038128",
+    "artifacts/m7-physical-prepared-v7/private-logs/device-preinstall.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/device-preinstall.stdout": "0fc6e4f92d7f7b9f859cf071b128cfe2b4d7c91506da8d34835ff7ebd841abaa",
+    "artifacts/m7-physical-prepared-v7/private-logs/entitlements.stderr": "364e7f13bbd1886f4fa9783c9038ebc588a77d5250728279b564fb6ebab2bf01",
+    "artifacts/m7-physical-prepared-v7/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-prepared-v7/private-logs/install.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/install.stdout": "8b48a984a0f72b155b44dbad36937013eaf3300dd22f6c908cc7fe8d3f472350",
+    "artifacts/m7-physical-prepared-v7/private-logs/processes-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/processes-1.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-prepared-v7/private-logs/processes-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/processes-2.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-prepared-v7/private-logs/provisioning.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/provisioning.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-prepared-v7/private-logs/signature-details.stderr": "3671b190c52bf974cc3f9e068775ffad8def22144152a8e12f4efd2f75aa92a4",
+    "artifacts/m7-physical-prepared-v7/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/signed-release-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v7/private-logs/signed-release-build.stdout": "6c73914ffc41c588c2730c16dc914620cbad3b17d8506e441614fbe469b50909",
+    "artifacts/m7-physical-prepared-v8/integration.json": "5f1548518e722ede8b828f5f68a5c599a7f37552926bd38ae376e4c229e922fc",
+    "artifacts/m7-physical-prepared-v8/private-execution.json": "0d1b9ce37cebf148a8b515de7c3662cf72752682663c77248902c8efb0531d56",
+    "artifacts/m7-physical-prepared-v8/private-logs/architecture.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/architecture.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-physical-prepared-v8/private-logs/deployment.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/deployment.stdout": "8675e9f157ce90fe6a1a2fdd89be3e6749845ec50dd399346adf7fbbe385b5d3",
+    "artifacts/m7-physical-prepared-v8/private-logs/device-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/device-after.stdout": "bd1049d61f299866f773155d33358270e0e89ef374161759faec13778e7ae58f",
+    "artifacts/m7-physical-prepared-v8/private-logs/device-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/device-before.stdout": "68b489f2cec756585595cb408b248397f649bf710cd2403972d0f0949a0d5e0e",
+    "artifacts/m7-physical-prepared-v8/private-logs/device-preinstall.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/device-preinstall.stdout": "68b489f2cec756585595cb408b248397f649bf710cd2403972d0f0949a0d5e0e",
+    "artifacts/m7-physical-prepared-v8/private-logs/entitlements.stderr": "5ac7149952a8cdb7fa9d05a669a8ad725679404afaf27f6856df25ee2273cb64",
+    "artifacts/m7-physical-prepared-v8/private-logs/entitlements.stdout": "3491ef73c969a6df21eb069b1b2f0362728d54c02ae2a72d46abff2b73b192e5",
+    "artifacts/m7-physical-prepared-v8/private-logs/install.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/install.stdout": "1293bf1a417d0ebabc3377f8cbeffe295834f3dad541305653aebed8407a8a09",
+    "artifacts/m7-physical-prepared-v8/private-logs/processes-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/processes-1.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-prepared-v8/private-logs/processes-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/processes-2.stdout": "4ec5486de68a045ad91fffe524ded542ec0931c55de0ee9e7910194b480446d3",
+    "artifacts/m7-physical-prepared-v8/private-logs/provisioning.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/provisioning.stdout": "e7c7ea9adf6ba4a6b7bb72af001161022d38683f1533ae6cb64242d78b78d1bb",
+    "artifacts/m7-physical-prepared-v8/private-logs/signature-details.stderr": "074800408f1254d9d5df33f8b369992acd91d693301f4c3f093e8fb0c36ab6bd",
+    "artifacts/m7-physical-prepared-v8/private-logs/signature-details.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/signature-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/signature-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/signed-release-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-physical-prepared-v8/private-logs/signed-release-build.stdout": "2789874f0f6e79e395c380aa5a3798b8b0b5c9f2d7e8ece0eeb2c15f44bd9007",
+    "artifacts/m7-physical-prepared-v8/source-snapshot/tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "artifacts/m7-physical-prepared-v8/source-snapshot/tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "artifacts/m7-swift-harness-build-v12/build.json": "ca9a1760cf9287936c666b78d165f4a723ac9f7690d1745834c5a20f9101e87d",
+    "artifacts/m7-swift-harness-build-v12/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-swift-harness-build-v12/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v12/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v12/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v12/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "be17c3b48b3c711a6702296cd5024fe93093cde57388e5a1a737f8f7b6df38b9",
+    "artifacts/m7-swift-harness-build-v12/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+    "artifacts/m7-swift-harness-build-v12/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v12/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v12/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v12/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "4c7d1e33a6007dbcb3ad3d0ea93955bc28191b122de5c9b1dd555016d916d237",
+    "artifacts/m7-swift-harness-build-v12/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+    "artifacts/m7-swift-harness-build-v12/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v12/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/iphoneos-build.stdout": "bf539e75ec33100a7d5154c0eaa3e51e4e2794b3fda464b7739712aa7f50e461",
+    "artifacts/m7-swift-harness-build-v12/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/iphoneos-load-commands.stdout": "de523ddcfacb1720a34811fe7488a50dfd4a1af37b16985042227ff082b55b1d",
+    "artifacts/m7-swift-harness-build-v12/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v12/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/iphonesimulator-build.stdout": "3bfa0a4141b207349a58aa75adade6f6b5143b4c15051b8c5de7d01fd0c8cbac",
+    "artifacts/m7-swift-harness-build-v12/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/iphonesimulator-load-commands.stdout": "05220e830f718fad4c227b96602f75825b76c05ae5281683df3e766f5d7f1fa6",
+    "artifacts/m7-swift-harness-build-v12/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/simulator-sign.stderr": "533a20292cc6fa25e4f4b75de42b8d6ab35867ca8bdbfdb93ef3fdd9d4a7803b",
+    "artifacts/m7-swift-harness-build-v12/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v12/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-swift-harness-build-v13/build.json": "8b093bede09ad7487029f323aed04e164c15da9d0eb5c9b52406d518a439fbac",
+    "artifacts/m7-swift-harness-build-v13/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-swift-harness-build-v13/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v13/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v13/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v13/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "67b143b8ed5c936fa82f2773d46794c935d40b27e051bcf9ff5e69d506fa9c33",
+    "artifacts/m7-swift-harness-build-v13/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+    "artifacts/m7-swift-harness-build-v13/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v13/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v13/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v13/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "ef4c877f77174c54d7a87c1e320d7188d50fccdef5dca8dbb709572fae0d20c9",
+    "artifacts/m7-swift-harness-build-v13/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+    "artifacts/m7-swift-harness-build-v13/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v13/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/iphoneos-build.stdout": "1f74748fc40b94ec25d2433047b07b0b05c9a0856a3e04170772594b29c78444",
+    "artifacts/m7-swift-harness-build-v13/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/iphoneos-load-commands.stdout": "56062583f1a9f32833ce11ac27c1c6c5c9c6b54a4464dcfdaa4fc44a5776fe4e",
+    "artifacts/m7-swift-harness-build-v13/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v13/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/iphonesimulator-build.stdout": "5fbe7e7e1eac2a65f449c95f77452e3e444e0feecf28048bf35104a987ea7f9f",
+    "artifacts/m7-swift-harness-build-v13/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/iphonesimulator-load-commands.stdout": "d40418b13a1cba1954cf65a3a889f63826fa85adfb58d338666577ce16deba1d",
+    "artifacts/m7-swift-harness-build-v13/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/simulator-sign.stderr": "42851aee14a1a48a5ac5f94d379d1ee651e9f63cd2f67638cb0b94b369e3295c",
+    "artifacts/m7-swift-harness-build-v13/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v13/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-swift-harness-build-v14/build.json": "800434e5a74c1cc35600e023b3739420c97c5b0d282ede10683cb45de4d2e799",
+    "artifacts/m7-swift-harness-build-v14/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-swift-harness-build-v14/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v14/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v14/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v14/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "0591f0153fe98b08675217149b47536bc578abbdbdbe5bf87c5735cbf332a458",
+    "artifacts/m7-swift-harness-build-v14/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+    "artifacts/m7-swift-harness-build-v14/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-swift-harness-build-v14/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-swift-harness-build-v14/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-swift-harness-build-v14/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "6eb9562d6144c054fb89948a7a4ee2ee16845789c5b725aa46930fa526da9b7d",
+    "artifacts/m7-swift-harness-build-v14/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+    "artifacts/m7-swift-harness-build-v14/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v14/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/iphoneos-build.stdout": "b2f2c56df4d8dd7eeb68e0d8ebb27214c4e103010388d041b9b3b826b06ce11c",
+    "artifacts/m7-swift-harness-build-v14/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/iphoneos-load-commands.stdout": "848105926035cb1b58428f445d2870e1d8ef261fafc0ac115724373abafd7c19",
+    "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-build.stdout": "9b96fa2efeb4b52f212f7c648c5e0707c912d98b3558acf60f74bd1371eec87a",
+    "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-load-commands.stdout": "e30bb8d8a1b1a7285d4ad4d0af54826e934e5bb5bc24ed8f0d30b2f40e7c4398",
+    "artifacts/m7-swift-harness-build-v14/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/simulator-sign.stderr": "30e2418d121591388f50affa5963add2b56b98b35f0b5ca819711e185d8512d9",
+    "artifacts/m7-swift-harness-build-v14/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-swift-harness-build-v14/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/native.rs": "5fea7b94ad538d0bae5f1acbdf06ab6970aa4bbd285fbdd7d94da67dc96d3352",
+    "src/native/tests.rs": "b4756e3d9084955d7b51c3ba46071f94f2a2864087a0ffdef5bc9f804bdc0949",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/m7_native_measurement_check.py": "3608660cbabdb31beff44a6c12ea72e9a72a457d82f9bf1c71c2f8e083de76db",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_measurement.py": "13ceb9225482559cc26a9feaad9159071f5e6f394308089f69a277ef7260dc68",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "tools/experiments/test_m7_native_measurement_check.py": "85dd1ff0e0c19a54805a5530512b1df0f3fbca9eb644e75fb0accb5725b7f1c9",
+    "tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/test_m7_physical_measurement.py": "b346a5d5a223d51cc485564dcc5f998f010c9a9c50df551c6dac7a9971c7a74d",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037"
+  },
+  "historical_source_pins": {
+    "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+    "artifacts/m7-physical-measurement-tiny-cpu-v3/source-snapshot/apple/Harness/NativeMeasurement.swift": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/source-snapshot/tools/experiments/m7_physical_measurement.py": "1ca18b2bcbe84b8691a79ca9d1e0387b68841e7be8175b3f260e8dd56b2ff40c",
+    "artifacts/m7-physical-measurement-tiny-cpu-v1/source-snapshot/tools/experiments/test_m7_physical_measurement.py": "b61d0e2ba4f9191332d81cc81ad6c3148ce0f7dddbd9e50df067078853ade65e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/source-snapshot/tools/experiments/m7_physical_measurement.py": "1ca18b2bcbe84b8691a79ca9d1e0387b68841e7be8175b3f260e8dd56b2ff40c",
+    "artifacts/m7-physical-measurement-tiny-cpu-v2/source-snapshot/tools/experiments/test_m7_physical_measurement.py": "b61d0e2ba4f9191332d81cc81ad6c3148ce0f7dddbd9e50df067078853ade65e",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/source-snapshot/apple/Harness/HarnessApp.swift": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+    "artifacts/m7-physical-measurement-tiny-cpu-v4/source-snapshot/apple/Harness/NativeMeasurement.swift": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+    "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/NativeMeasurement.swift": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+    "artifacts/m7-physical-prepared-v4/source-snapshot/apple/Harness/HarnessApp.swift": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+    "artifacts/m7-physical-prepared-v6/source-snapshot/apple/Harness/NativeMeasurement.swift": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+    "artifacts/m7-physical-prepared-v7/source-snapshot/apple/Harness/NativeMeasurement.swift": "d21c4d67910165ec5aacc7b0a6b87fb4016b8bf7ab4058480d2456ea523c8a70",
+    "artifacts/m7-native-measurement-check-v5/source-snapshot/tools/experiments/m7_native_measurement_check.py": "a5d5e145f7d152ed61ae74b2778c7e60355ce864ef14fe774acf316373408e9c",
+    "artifacts/m7-native-measurement-check-v5/source-snapshot/apple/Harness/NativeMeasurement.swift": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+    "artifacts/m7-native-measurement-check-v5/source-snapshot/apple/tests/swift/MeasurementMain.swift": "62b3f4770845399a2bdc4e71db0276a2fe261aa035d72aeadcbb413c61f32f85",
+    "artifacts/m7-native-measurement-check-v6/source-snapshot/apple/Harness/NativeMeasurement.swift": "d21c4d67910165ec5aacc7b0a6b87fb4016b8bf7ab4058480d2456ea523c8a70",
+    "artifacts/m7-native-measurement-check-v6/source-snapshot/apple/tests/swift/MeasurementMain.swift": "3cd2293027d316baa12f697871a75e1fe813f33b006907835f5df43a7cd9f925",
+    "artifacts/m7-swift-harness-build-v13/source-snapshot/apple/Harness/NativeMeasurement.swift": "d21c4d67910165ec5aacc7b0a6b87fb4016b8bf7ab4058480d2456ea523c8a70"
+  },
+  "historical_source_mappings": [
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v1/measurement.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v1/measurement.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v3/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v1/measurement.json",
+      "original": "tools/experiments/m7_physical_measurement.py",
+      "sha256": "1ca18b2bcbe84b8691a79ca9d1e0387b68841e7be8175b3f260e8dd56b2ff40c",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v1/source-snapshot/tools/experiments/m7_physical_measurement.py"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v1/measurement.json",
+      "original": "tools/experiments/test_m7_physical_measurement.py",
+      "sha256": "b61d0e2ba4f9191332d81cc81ad6c3148ce0f7dddbd9e50df067078853ade65e",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v1/source-snapshot/tools/experiments/test_m7_physical_measurement.py"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v2/measurement.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v2/measurement.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v3/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v2/measurement.json",
+      "original": "tools/experiments/m7_physical_measurement.py",
+      "sha256": "1ca18b2bcbe84b8691a79ca9d1e0387b68841e7be8175b3f260e8dd56b2ff40c",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v2/source-snapshot/tools/experiments/m7_physical_measurement.py"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v2/measurement.json",
+      "original": "tools/experiments/test_m7_physical_measurement.py",
+      "sha256": "b61d0e2ba4f9191332d81cc81ad6c3148ce0f7dddbd9e50df067078853ade65e",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v2/source-snapshot/tools/experiments/test_m7_physical_measurement.py"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v3/measurement.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v3/measurement.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v3/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v4/measurement.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v4/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-v4/measurement.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v4/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/measurement.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/measurement.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v3/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-metal-ready-v1/measurement.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-metal-ready-v1/measurement.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v3/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/measurement.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/measurement.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-metal-ready-v2/measurement.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-measurement-tiny-metal-ready-v2/measurement.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-prepared-v4/integration.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-physical-prepared-v4/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-prepared-v4/integration.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3",
+      "snapshot": "artifacts/m7-physical-measurement-tiny-cpu-v3/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-prepared-v5/integration.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-prepared-v5/integration.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-prepared-v6/integration.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-prepared-v6/integration.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+      "snapshot": "artifacts/m7-physical-prepared-v6/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-physical-prepared-v7/integration.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "d21c4d67910165ec5aacc7b0a6b87fb4016b8bf7ab4058480d2456ea523c8a70",
+      "snapshot": "artifacts/m7-physical-prepared-v7/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-native-measurement-check-v5/checks.json",
+      "original": "tools/experiments/m7_native_measurement_check.py",
+      "sha256": "a5d5e145f7d152ed61ae74b2778c7e60355ce864ef14fe774acf316373408e9c",
+      "snapshot": "artifacts/m7-native-measurement-check-v5/source-snapshot/tools/experiments/m7_native_measurement_check.py"
+    },
+    {
+      "record": "artifacts/m7-native-measurement-check-v5/checks.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+      "snapshot": "artifacts/m7-native-measurement-check-v5/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-native-measurement-check-v5/checks.json",
+      "original": "apple/tests/swift/MeasurementMain.swift",
+      "sha256": "62b3f4770845399a2bdc4e71db0276a2fe261aa035d72aeadcbb413c61f32f85",
+      "snapshot": "artifacts/m7-native-measurement-check-v5/source-snapshot/apple/tests/swift/MeasurementMain.swift"
+    },
+    {
+      "record": "artifacts/m7-native-measurement-check-v6/checks.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "d21c4d67910165ec5aacc7b0a6b87fb4016b8bf7ab4058480d2456ea523c8a70",
+      "snapshot": "artifacts/m7-native-measurement-check-v6/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-native-measurement-check-v6/checks.json",
+      "original": "apple/tests/swift/MeasurementMain.swift",
+      "sha256": "3cd2293027d316baa12f697871a75e1fe813f33b006907835f5df43a7cd9f925",
+      "snapshot": "artifacts/m7-native-measurement-check-v6/source-snapshot/apple/tests/swift/MeasurementMain.swift"
+    },
+    {
+      "record": "artifacts/m7-swift-harness-build-v12/build.json",
+      "original": "apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift"
+    },
+    {
+      "record": "artifacts/m7-swift-harness-build-v12/build.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e",
+      "snapshot": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    },
+    {
+      "record": "artifacts/m7-swift-harness-build-v13/build.json",
+      "original": "apple/Harness/NativeMeasurement.swift",
+      "sha256": "d21c4d67910165ec5aacc7b0a6b87fb4016b8bf7ab4058480d2456ea523c8a70",
+      "snapshot": "artifacts/m7-swift-harness-build-v13/source-snapshot/apple/Harness/NativeMeasurement.swift"
+    }
+  ],
+  "exact_published_copies": {
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v1/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v1/measurement.json",
+      "sha256": "db23c6ad78c16377fbcf58f9a042cb7d2a266e51e5635867bef30575dd9936f7"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift": {
+      "origin": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v3/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v3/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "e1427c8bf9682199d50381986621524596fe8aee9e42a72289914da8fd0caef3"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v1/source-snapshot/tools/experiments/m7_physical_measurement.py": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v1/source-snapshot/tools/experiments/m7_physical_measurement.py",
+      "sha256": "1ca18b2bcbe84b8691a79ca9d1e0387b68841e7be8175b3f260e8dd56b2ff40c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v1/source-snapshot/tools/experiments/test_m7_physical_measurement.py": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v1/source-snapshot/tools/experiments/test_m7_physical_measurement.py",
+      "sha256": "b61d0e2ba4f9191332d81cc81ad6c3148ce0f7dddbd9e50df067078853ade65e"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v1/private-logs/measurement.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v1/private-logs/measurement.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v2/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v2/measurement.json",
+      "sha256": "f6632c6585496737c291f1724dd76e7ba3b95175dab0d056b725c559a5fd65cd"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v2/source-snapshot/tools/experiments/m7_physical_measurement.py": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v2/source-snapshot/tools/experiments/m7_physical_measurement.py",
+      "sha256": "1ca18b2bcbe84b8691a79ca9d1e0387b68841e7be8175b3f260e8dd56b2ff40c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v2/source-snapshot/tools/experiments/test_m7_physical_measurement.py": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v2/source-snapshot/tools/experiments/test_m7_physical_measurement.py",
+      "sha256": "b61d0e2ba4f9191332d81cc81ad6c3148ce0f7dddbd9e50df067078853ade65e"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v2/private-logs/measurement.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v2/private-logs/measurement.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v3/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v3/measurement.json",
+      "sha256": "23341941b50dcc947af0658f632d3b938d84bf9ef8d052c666001bdbfdc59b75"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v3/private-logs/measurement.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v3/private-logs/measurement.stdout",
+      "sha256": "2fcea729db37dd23d282bbf47509f447d3e099632f0925b43906873f8ad1c4e9"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v4/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v4/measurement.json",
+      "sha256": "0d1f552f852866dc7fa8fa2d386eeb7c1afcd8459561072fe6ffd6e7b26bc381"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v4/source-snapshot/apple/Harness/HarnessApp.swift": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v4/source-snapshot/apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v4/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v4/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v4/private-logs/measurement.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v4/private-logs/measurement.stdout",
+      "sha256": "f909701b21b3b915707c7d25d5c1ff521ebcb79b5b7377cffb0c4c62f8fe79ff"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v5/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v5/measurement.json",
+      "sha256": "014455fb687adfc6e6d37f91ce2a0facbf949b157e4b75e9e6fbf9d126723848"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v5/private-logs/measurement.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v5/private-logs/measurement.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-ready-v1/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-ready-v1/measurement.json",
+      "sha256": "01e159beb4ceefc3d5d2114af5f019f3a89b2649634f86bc9d778882c4d8fa8b"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-metal-ready-v1/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-metal-ready-v1/measurement.json",
+      "sha256": "beaeaeb868183c0913dd6fa504e7de9c8afc87c17bad17ce66e9367d9fe7e4c6"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-ready-v2/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-ready-v2/measurement.json",
+      "sha256": "80024e9b65951ebfe7d8200256c85b16da6d0ab78ee03799186dd362a5eced9a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v12/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-swift-harness-build-v12/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-metal-ready-v2/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-metal-ready-v2/measurement.json",
+      "sha256": "c1827673bfc948c90d2ab0a601860084b91ba6c5979c839d2242fa59b375a9e2"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-ready-v3/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-ready-v3/measurement.json",
+      "sha256": "1e973aa014da9576a0af85db0cd70e55a12db335c94cf9d8bc2e82aa995ce79a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-metal-ready-v3/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-metal-ready-v3/measurement.json",
+      "sha256": "635305ff02836dbe53ed3ace84d9b5caef5676c232adf4fbbe7f17c6a703b97a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-prepared-v4/integration.json": {
+      "origin": "artifacts/m7-physical-prepared-v4/integration.json",
+      "sha256": "f92e0f0ce67cc2d3c9dad014081ea5decae35315ed4f9b87eeaa77825c02f59b"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-prepared-v4/source-snapshot/apple/Harness/HarnessApp.swift": {
+      "origin": "artifacts/m7-physical-prepared-v4/source-snapshot/apple/Harness/HarnessApp.swift",
+      "sha256": "11646bb07cf95048c239a2d61eb52c11c8b7275f07d474ae931a204046c39602"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-prepared-v5/integration.json": {
+      "origin": "artifacts/m7-physical-prepared-v5/integration.json",
+      "sha256": "ac477f93d129a9b8ede848838cd864b66573fdb92f75cec6a67367eae7a82d1c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-prepared-v6/integration.json": {
+      "origin": "artifacts/m7-physical-prepared-v6/integration.json",
+      "sha256": "abd4a0845b5aaf014c0755d873cec5492c68aee329c6113ea17ba7b1fdf11657"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-prepared-v6/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-physical-prepared-v6/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-prepared-v7/integration.json": {
+      "origin": "artifacts/m7-physical-prepared-v7/integration.json",
+      "sha256": "e53cbdd8aa798a3b744035ddf209d72c93c116ddeaa23ca0e5a78f1ce976456c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-prepared-v7/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-physical-prepared-v7/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "d21c4d67910165ec5aacc7b0a6b87fb4016b8bf7ab4058480d2456ea523c8a70"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-prepared-v8/integration.json": {
+      "origin": "artifacts/m7-physical-prepared-v8/integration.json",
+      "sha256": "5f1548518e722ede8b828f5f68a5c599a7f37552926bd38ae376e4c229e922fc"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v5/checks.json": {
+      "origin": "artifacts/m7-native-measurement-check-v5/checks.json",
+      "sha256": "7c763a266f61311652c90b732fe9c44fde80e812509d2863fadf40d85c13b8d5"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v5/source-snapshot/tools/experiments/m7_native_measurement_check.py": {
+      "origin": "artifacts/m7-native-measurement-check-v5/source-snapshot/tools/experiments/m7_native_measurement_check.py",
+      "sha256": "a5d5e145f7d152ed61ae74b2778c7e60355ce864ef14fe774acf316373408e9c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v5/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-native-measurement-check-v5/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "3d4b5a5ccabc21a5e5ab0c1b1fc3accb161f17a16bf7eb04049b8c7868be286e"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v5/source-snapshot/apple/tests/swift/MeasurementMain.swift": {
+      "origin": "artifacts/m7-native-measurement-check-v5/source-snapshot/apple/tests/swift/MeasurementMain.swift",
+      "sha256": "62b3f4770845399a2bdc4e71db0276a2fe261aa035d72aeadcbb413c61f32f85"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v6/checks.json": {
+      "origin": "artifacts/m7-native-measurement-check-v6/checks.json",
+      "sha256": "570550169b02a468438fa4e0922bdf31cef6d3135811c5cc895ef6d283aa3da6"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v6/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-native-measurement-check-v6/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "d21c4d67910165ec5aacc7b0a6b87fb4016b8bf7ab4058480d2456ea523c8a70"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v6/source-snapshot/apple/tests/swift/MeasurementMain.swift": {
+      "origin": "artifacts/m7-native-measurement-check-v6/source-snapshot/apple/tests/swift/MeasurementMain.swift",
+      "sha256": "3cd2293027d316baa12f697871a75e1fe813f33b006907835f5df43a7cd9f925"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/checks.json": {
+      "origin": "artifacts/m7-native-measurement-check-v7/checks.json",
+      "sha256": "3954d9bd81881fe958a8c04e4b548b89f989f3191c7701c7f792df1b82937885"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/compile.stdout": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/compile.stderr": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/checks.stdout": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/checks.stdout",
+      "sha256": "e4f3191d4305b4d68af69b634b57244da675e6c8b3f5f92a3d7fc44da20055d5"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-native-measurement-check-v7/logs/checks.stderr": {
+      "origin": "artifacts/m7-native-measurement-check-v7/logs/checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v12/build.json": {
+      "origin": "artifacts/m7-swift-harness-build-v12/build.json",
+      "sha256": "ca9a1760cf9287936c666b78d165f4a723ac9f7690d1745834c5a20f9101e87d"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v13/build.json": {
+      "origin": "artifacts/m7-swift-harness-build-v13/build.json",
+      "sha256": "8b093bede09ad7487029f323aed04e164c15da9d0eb5c9b52406d518a439fbac"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v13/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "origin": "artifacts/m7-swift-harness-build-v13/source-snapshot/apple/Harness/NativeMeasurement.swift",
+      "sha256": "d21c4d67910165ec5aacc7b0a6b87fb4016b8bf7ab4058480d2456ea523c8a70"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/build.json": {
+      "origin": "artifacts/m7-swift-harness-build-v14/build.json",
+      "sha256": "800434e5a74c1cc35600e023b3739420c97c5b0d282ede10683cb45de4d2e799"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphonesimulator-build.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-build.stdout",
+      "sha256": "9b96fa2efeb4b52f212f7c648c5e0707c912d98b3558acf60f74bd1371eec87a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphonesimulator-build.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphonesimulator-arch.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphonesimulator-arch.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphonesimulator-load-commands.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-load-commands.stdout",
+      "sha256": "e30bb8d8a1b1a7285d4ad4d0af54826e934e5bb5bc24ed8f0d30b2f40e7c4398"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphonesimulator-load-commands.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphonesimulator-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/simulator-sign.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/simulator-sign.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/simulator-sign.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/simulator-sign.stderr",
+      "sha256": "30e2418d121591388f50affa5963add2b56b98b35f0b5ca819711e185d8512d9"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/simulator-sign-verify.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/simulator-sign-verify.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/simulator-sign-verify.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/simulator-sign-verify.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphoneos-build.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphoneos-build.stdout",
+      "sha256": "b2f2c56df4d8dd7eeb68e0d8ebb27214c4e103010388d041b9b3b826b06ce11c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphoneos-build.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphoneos-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphoneos-arch.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphoneos-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphoneos-arch.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphoneos-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphoneos-load-commands.stdout": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphoneos-load-commands.stdout",
+      "sha256": "848105926035cb1b58428f445d2870e1d8ef261fafc0ac115724373abafd7c19"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-swift-harness-build-v14/logs/iphoneos-load-commands.stderr": {
+      "origin": "artifacts/m7-swift-harness-build-v14/logs/iphoneos-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v1.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v1.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v1.stderr",
+      "sha256": "2a125a080f235b486acd09f704f3069aeb9a7e6cd2b047d40f6af68d2b5dadaa"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v2.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v2.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v2.stderr",
+      "sha256": "f99b6c4dba87494838a125b6668e6ac68668aecc198f11496a886bb79ce82a57"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v3.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v3.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v3.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v3.stderr",
+      "sha256": "33343b89ca49a00273538b043896c64e9d372fc6b81303d20521456468110781"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v4.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v4.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v4.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v4.stderr",
+      "sha256": "3198475c8b60c8f16529bfb96192dee51cc64c5746763ebfa6c789d33157617c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v5.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v5.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v5.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v5.stderr",
+      "sha256": "7927a630465391cabe55672d7bfc3b560135ad357e335892502b561948c11a84"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v6.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v6.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v6.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v6.stderr",
+      "sha256": "29e1d2e3287ffb7608cb3cea4af0274c293ac54c90cea6ffe425320004de0936"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v7.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v7.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v7.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v7.stderr",
+      "sha256": "7c434f063954dce7ecc2e465601724bb1ce9aee09e8922a104be59599ccd0ec9"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v8.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v8.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v8.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v8.stderr",
+      "sha256": "84dbff521a9fcf94a7026e63b53c3b6aea97a80c8e5c232896c5eb3494f56779"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v9.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v9.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v9.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v9.stderr",
+      "sha256": "f7449281286da95725b04975497928252726f23ce37b890c46166415be10840a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v10.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v10.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v10.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v10.stderr",
+      "sha256": "0d55a80cb05ea8f25a8b20d656782527609036a0b0889fa18ded06e44e060331"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v11.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v11.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v11.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v11.stderr",
+      "sha256": "e7df0d4cc218dd37b132fcc9df27a52119c93ce5c83e4d7db32d7da5c46750f3"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v12.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tests-v12.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tests-v12.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tests-v12.stderr",
+      "sha256": "e2d24df29e2f01fa4a61d436577d00dbc5fa962d973422f2c46292c59a865d43"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-path-alias-probe-v1/probe.swift": {
+      "origin": "artifacts/m7-path-alias-probe-v1/probe.swift",
+      "sha256": "50afd4d36654ab744f27d7850d270cb700a9c8c9338255021de6ad88fa2158e9"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-path-alias-probe-v1/stdout": {
+      "origin": "artifacts/m7-path-alias-probe-v1/stdout",
+      "sha256": "d9c3b8b35b63d3354d9b13aa68e215dab999b662cfb3cab14d2c0d1a3e1f9e0a"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-path-alias-probe-v1/stderr": {
+      "origin": "artifacts/m7-path-alias-probe-v1/stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v6/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v6/measurement.json",
+      "sha256": "e6e0a1ec6463c04dcd227781dbc30a23e145a95255546c994fe9b07d206c160c"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v6/private-logs/measurement.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/measurement.stdout",
+      "sha256": "5ae6f9fd5e08342d4991eb0766254af73e788f9bae4cba7aafad4c38f5255aca"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-cpu-v6/private-logs/measurement.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tiny-cpu-v6/private-logs/measurement.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-metal-v1/measurement.json": {
+      "origin": "artifacts/m7-physical-measurement-tiny-metal-v1/measurement.json",
+      "sha256": "8850a75c5fd6882c924a1a6242f1c37944484cecd33941d1acea6cd34bc6211f"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-metal-v1/private-logs/measurement.stdout": {
+      "origin": "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/measurement.stdout",
+      "sha256": "34cbc0376e751348bfca176af3fb5487774606a9316cb1c3561db58ab972ffba"
+    },
+    "benchmarks/results/2026-10-21-m7-physical-measurement/m7-physical-measurement-tiny-metal-v1/private-logs/measurement.stderr": {
+      "origin": "artifacts/m7-physical-measurement-tiny-metal-v1/private-logs/measurement.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "outcomes": {
+    "m7-physical-measurement-tiny-cpu-v1": {
+      "passed": false,
+      "primary_error": "RuntimeError: measurement: tool exit 1 []",
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-cpu-v2": {
+      "passed": false,
+      "primary_error": "RuntimeError: measurement: tool exit 1 []",
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-cpu-v3": {
+      "passed": false,
+      "primary_error": "ValueError: Incomplete bounded measurement output",
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-cpu-v4": {
+      "passed": false,
+      "primary_error": "RuntimeError: measurement: tool exit 1 []",
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-cpu-v5": {
+      "passed": false,
+      "primary_error": "RuntimeError: measurement: tool exit 1 []",
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-cpu-ready-v1": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-metal-ready-v1": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-cpu-ready-v2": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-metal-ready-v2": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-cpu-ready-v3": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-metal-ready-v3": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-prepared-v4": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-prepared-v5": {
+      "passed": false,
+      "primary_error": "ValueError: Existing harness process is not owned by this run",
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-prepared-v6": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-prepared-v7": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-prepared-v8": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-native-measurement-check-v5": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-native-measurement-check-v6": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-native-measurement-check-v7": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-swift-harness-build-v12": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-swift-harness-build-v13": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-swift-harness-build-v14": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-cpu-v6": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    },
+    "m7-physical-measurement-tiny-metal-v1": {
+      "passed": true,
+      "primary_error": null,
+      "endpoint_errors": [],
+      "cleanup_errors": []
+    }
+  },
+  "related_python_checks": 44,
+  "mac_functional_cases": 15,
+  "mac_timed_samples": 26,
+  "phone_timed_samples": 26,
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "review": "Accepted by Astra: source/runtime evidence,815 distinct paths,35 historical mappings,106 exact staged copies, privacy, links and staged whitespace; no remaining findings. Offline review/replay finished; no native/device workloads."
+}

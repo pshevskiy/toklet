@@ -48,7 +48,7 @@ def validate_output(text):
         if total != result['sumNativeLastEventSeconds']:
             raise ValueError('Measured duration sum differs')
     summary = summaries[0]
-    if summary['passed'] is not True or len(summary['cases']) != 12 or summary['physicalDeviceQualified'] is not False:
+    if summary['passed'] is not True or len(summary['cases']) != 15 or summary['physicalDeviceQualified'] is not False:
         raise ValueError('Failure-case checks incomplete')
     return dict(results=results,sample_count=len(samples),summary=summary)
 

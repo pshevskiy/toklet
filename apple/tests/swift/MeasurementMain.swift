@@ -46,10 +46,43 @@ private func rejected(_ body: () throws -> Void) throws {
                 maximum:2,expectedPrefix:expected,warmups:3,repetitions:10,minimumNativeSeconds:0)
         }
         var cases: [String] = []
+        var clock: UInt64 = 0
+        var probes = 0
+        var pauses = 0
+        try awaitNativeMeasurementForeground(timeoutNanoseconds:10,now:{ clock },isActive:{ probes += 1; return true },
+                                            pause:{ pauses += 1; clock += 1 })
+        try check(probes == 1 && pauses == 0,"Active startup unexpectedly waited")
+        probes = 0
+        try awaitNativeMeasurementForeground(timeoutNanoseconds:10,now:{ clock },isActive:{ probes += 1; return probes == 3 },
+                                            pause:{ pauses += 1; clock += 1 })
+        try check(probes == 3 && pauses == 2,"Inactive startup did not wait for active")
+        probes = 0; pauses = 0; clock = 0
+        var continued = false
+        try rejected {
+            try awaitNativeMeasurementForeground(timeoutNanoseconds:3,now:{ clock },isActive:{ probes += 1; return false },
+                                                pause:{ pauses += 1; clock += 1 })
+            continued = true
+        }
+        try check(probes == 3 && pauses == 3 && clock == 3 && !continued,"Inactive startup deadline/continuation differs")
+        for delayed: UInt64 in [3,4] {
+            clock = 0; continued = false; pauses = 0
+            try rejected {
+                try awaitNativeMeasurementForeground(timeoutNanoseconds:3,now:{ clock },isActive:{ clock = delayed; return true },
+                                                    pause:{ pauses += 1 })
+                continued = true
+            }
+            try check(!continued && pauses == 0,"Late active state admitted past startup deadline")
+        }
+        cases.append("foreground startup already-active/delayed-active/monotonic-timeout gate")
         let encoded = try JSONEncoder().encode(config())
         try encoded.write(to:root.appendingPathComponent("job.json"),options:.withoutOverwriting)
         let admitted = try admitMeasurementConfig(root:root,name:"job.json",sha256:digest(encoded))
         try check(admitted.files == files,"Config admission changed inventory")
+        let alias = root.appendingPathComponent("trusted-root-alias",isDirectory:true)
+        try FileManager.default.createSymbolicLink(atPath:alias.path,withDestinationPath:root.path)
+        defer { try? FileManager.default.removeItem(at:alias) }
+        let aliased = try admitMeasurementConfig(root:alias,name:"job.json",sha256:digest(encoded))
+        try check(aliased.files == admitted.files,"Trusted root alias changed config admission")
         try rejected { _ = try admitMeasurementConfig(root:root,name:"job.json",sha256:String(repeating:"0",count:64)) }
         try rejected { _ = try admitMeasurementConfig(root:root,name:"../job.json",sha256:digest(encoded)) }
         var extra = try JSONSerialization.jsonObject(with:encoded) as! [String:Any]; extra["misspelledPolicy"] = 1
@@ -65,7 +98,7 @@ private func rejected(_ body: () throws -> Void) throws {
         cases.append("SDK-layout bounded self TASK_VM_INFO")
         for metal in [false,true] {
             var samples: [NativeMeasurementRequest] = []
-            let result = runNativeMeasurement(config(metal),root:root) { samples.append($0) }
+            let result = runNativeMeasurement(config(metal),root:metal ? root : alias) { samples.append($0) }
             try check(result.passed && result.closed && result.released && result.error == nil && result.cleanupErrors.isEmpty && result.endpointErrors.isEmpty,
                       "Actual backend measurement failed: \(String(describing:result.error)) \(result.cleanupErrors)")
             try check(result.warmupsCompleted == 3 && result.measuredCompleted == 10 && result.sumNativeLastEventSeconds > 0,
@@ -85,6 +118,7 @@ private func rejected(_ body: () throws -> Void) throws {
             }
             cases.append("\(metal ? "metal" : "cpu") actual3warmups10requests/exactIDs/state/timing/memory/close/release")
         }
+        cases.append("trusted root alias/canonical inventory equivalence")
         let modelConfig = root.appendingPathComponent("Model/config.json")
         let original = try Data(contentsOf:modelConfig)
         try (original + Data([10])).write(to:modelConfig)
@@ -102,11 +136,22 @@ private func rejected(_ body: () throws -> Void) throws {
         let outside = root.appendingPathComponent("outside.safetensors")
         try FileManager.default.moveItem(at:weights,to:outside)
         try FileManager.default.createSymbolicLink(atPath:weights.path,withDestinationPath:"../outside.safetensors")
-        result = runNativeMeasurement(config(),root:root) { _ in }
-        try check(!result.passed && result.warmupsCompleted == 0,"Artifact symlink admitted")
+        result = runNativeMeasurement(config(),root:alias) { _ in }
+        try check(!result.passed && result.warmupsCompleted == 0 && result.error?.contains("symlink") == true,
+                  "Artifact symlink admitted through trusted alias")
         try FileManager.default.removeItem(at:weights)
         try FileManager.default.moveItem(at:outside,to:weights)
         cases.append("artifact symlink rejected")
+        let model = root.appendingPathComponent("Model",isDirectory:true)
+        let outsideModel = root.appendingPathComponent("outside-model",isDirectory:true)
+        try FileManager.default.moveItem(at:model,to:outsideModel)
+        try FileManager.default.createSymbolicLink(atPath:model.path,withDestinationPath:outsideModel.path)
+        result = runNativeMeasurement(config(),root:alias) { _ in }
+        try check(!result.passed && result.warmupsCompleted == 0 && result.error?.contains("symlink") == true,
+                  "Artifact directory symlink admitted through trusted alias")
+        try FileManager.default.removeItem(at:model)
+        try FileManager.default.moveItem(at:outsideModel,to:model)
+        cases.append("artifact directory symlink rejected through trusted root alias")
         result = runNativeMeasurement(config(numerical:4097,process:8192),root:root) { _ in }
         try check(!result.passed && result.warmupsCompleted == 0,"Whole-process budget admitted")
         cases.append("whole-process budget rejected before load")

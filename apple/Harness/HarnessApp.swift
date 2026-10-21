@@ -191,6 +191,7 @@ struct TokletHarnessApp: App {
                     guard !arguments.contains("--self-test"), position + 2 < arguments.count else {
                         throw NSError(domain:"TokletMeasurement",code:2)
                     }
+                    try awaitNativeMeasurementForeground()
                     let config = try admitMeasurementConfig(root:root,name:arguments[position+1],sha256:arguments[position+2])
                     try installedBundleProof("before")
                     let result = runNativeMeasurement(config,root:root) { sample in

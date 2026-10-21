@@ -1,6 +1,6 @@
 # M7 physical-device acceptance protocol
 
-Status,20 October2026: signed tiny CPU and Metal integration passes on the wired
+Status,21 October2026: signed tiny CPU and Metal integration passes on the wired
 physical iPhone14Pro (`iPhone15,2`, iOS27.0.1). See the
 [physical integration report](../docs/experiments/2026-10-20-m7-physical-tiny.md).
 Developer Mode, development signing/profile, actual installation and process
@@ -8,7 +8,10 @@ release are verified. M7.3 remains open: no real-model iPhone memory budget,
 model/context limit, sustained rate, thermal behavior, energy or actual OS
 lifecycle result is accepted. The earlier
 [setup observation](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
-records the historical pre-signing state and remains unchanged. Qualify each
+records the historical pre-signing state and remains unchanged. The
+[physical measurement controller](../docs/experiments/2026-10-21-m7-physical-measurement.md)
+also passes26 raw tiny timing/memory samples with exact IDs/state and cleanup;
+this does not establish real-model memory/performance or sustained behavior. Qualify each
 device under its exact name; do not transfer Pro results to a base iPhone14,
 ProMax, iPad or another Mac. Base iPhone14 evidence remains separate.
 

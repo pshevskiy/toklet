@@ -726,3 +726,19 @@ historical mappings,50 copies,27 checks and364 local link targets.
 
 Raw Swift-version evidence also preserves its tool-emitted trailing space through
 a path-specific Git attribute; engine/source whitespace checks remain active.
+
+The [physical measurement controller](experiments/2026-10-21-m7-physical-measurement.md)
+admits exact signed installation and frozen inputs, stages immutable hard links,
+checks remote inventory and validates ordered raw token/state/memory/timing output.
+Transfer-only preparation and authenticated launch-only reuse avoid rebuilding or
+copying after owner unlock. Forty-four related portable checks and15 Mac cases
+pass. Actual phone failures exposed filesystem alias containment and startup
+activation ordering; both are fixed while retaining child-symlink rejection,
+strict foreground checks and checked deadlines. Both SDK builds and actual
+physical CPU/Metal runs pass26 raw samples overall, exact tiny IDs/state,
+installed/model proofs, close/release and independent process absence. Observed
+tiny lifetime peaks are21,546,656/23,037,600bytes; these do not qualify model
+budgets or sustained performance. Failed attempts and executed sources remain
+bound. Astra accepted source and publication after checking815 distinct paths,
+35 historical mappings,106 exact staged copies, both console replays, privacy,
+links and whitespace. M7.3 remains open.

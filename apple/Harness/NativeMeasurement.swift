@@ -174,6 +174,10 @@ func admitMeasurementConfig(root: URL, name: String, sha256: String) throws -> N
 }
 
 private func artifactProof(_ config: NativeMeasurementConfig, _ root: URL) throws -> [String:String] {
+    // Foundation enumeration may return /private/var while Documents uses /var.
+    // Canonicalize only the trusted root here; reject child links before
+    // canonicalizing an enumerated entry so forbidden links cannot disappear.
+    let root = root.standardizedFileURL.resolvingSymlinksInPath()
     var names = Set<String>()
     let rootComponents = root.pathComponents
     for folder in [config.modelFolder,config.packedFolder] where !folder.isEmpty {
@@ -189,14 +193,18 @@ private func artifactProof(_ config: NativeMeasurementConfig, _ root: URL) throw
         var count = 0
         for case let url as URL in iterator {
             count += 1
-            guard count <= 512, Array(url.pathComponents.prefix(rootComponents.count)) == rootComponents else {
+            guard count <= 512 else {
                 throw measurementError("Artifact inventory exceeds bounds")
             }
             let p = try url.resourceValues(forKeys:[.isDirectoryKey,.isRegularFileKey,.isSymbolicLinkKey])
             guard p.isSymbolicLink != true else { throw measurementError("Artifact symlink rejected") }
+            let canonical = url.standardizedFileURL.resolvingSymlinksInPath().pathComponents
+            guard Array(canonical.prefix(rootComponents.count)) == rootComponents else {
+                throw measurementError("Artifact inventory leaves trusted root")
+            }
             if p.isDirectory == true { continue }
             guard p.isRegularFile == true else { throw measurementError("Nonregular artifact rejected") }
-            names.insert(url.pathComponents.dropFirst(rootComponents.count).joined(separator:"/"))
+            names.insert(canonical.dropFirst(rootComponents.count).joined(separator:"/"))
         }
         if let error = enumerationError { throw error }
     }
@@ -289,6 +297,35 @@ private final class MeasurementInterruptions: @unchecked Sendable {
 // This bounded raw-ID measurement has no tokenizer, hidden stops or lifecycle
 // qualification. The explicit numerical cap admits native allocations before
 // loading; whole-process peak is an observed post-operation rejection policy.
+// App.init may run before UIKit reports active. This startup-only gate runs off
+// the main thread, before any artifact/load/request timing or interruption
+// observer. Once measurement begins, all existing foreground checks stay strict.
+func awaitNativeMeasurementForeground(timeoutNanoseconds: UInt64 = 30_000_000_000,
+    now: () -> UInt64 = { DispatchTime.now().uptimeNanoseconds },
+    isActive: () -> Bool = {
+        let state = NativeEnvironment.read().applicationState
+        return state == nil || state == 0
+    },
+    pause: () -> Void = { Thread.sleep(forTimeInterval:0.02) }) throws {
+    precondition(!Thread.isMainThread)
+    let start = now()
+    while true {
+        let current = now()
+        guard current >= start, current - start < timeoutNanoseconds else {
+            throw measurementError("Foreground startup deadline exceeded")
+        }
+        let active = isActive()
+        // A synchronous main-queue state read may itself be delayed. Enforce
+        // the checked deadline after it too; the host owns the process watchdog.
+        let observed = now()
+        guard observed >= current, observed - start < timeoutNanoseconds else {
+            throw measurementError("Foreground startup deadline exceeded")
+        }
+        if active { return }
+        pause()
+    }
+}
+
 func runNativeMeasurement(_ config: NativeMeasurementConfig, root: URL,
                           onSample: (NativeMeasurementRequest) throws -> Void) -> NativeMeasurementResult {
     precondition(!Thread.isMainThread)
@@ -311,11 +348,19 @@ func runNativeMeasurement(_ config: NativeMeasurementConfig, root: URL,
         guard state.status == 0 else { throw measurementError("Native status \(state.status): \(state.message)") }
         return state
     }
+    func requireForeground() throws {
+        let state = NativeEnvironment.read().applicationState
+        guard (state == nil || state == 0), interruptions.observed() == 0 else {
+            throw measurementError("Foreground measurement interrupted")
+        }
+    }
     do {
         try config.validate()
+        try requireForeground()
         try memory("before-artifact-proof")
         result.filesBefore = try artifactProof(config,root)
         try memory("after-artifact-proof")
+        try requireForeground()
         owner = try NativeWorker(); weakOwner = owner; interruptions.attach(owner)
         var settings = NativeSettings(directory:try localURL(root,config.modelFolder).path)
         settings.packedDirectory = config.packedFolder.isEmpty ? "" : try localURL(root,config.packedFolder).path
