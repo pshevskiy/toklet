@@ -110,3 +110,9 @@ The [Swift score adapter](../docs/experiments/2026-10-21-m7-worker-score.md)
 now exposes validated scalar diagnostics on the owning thread. Mac CPU/Metal,
 deterministic close/interruption publication and both SDK builds pass. This
 component neither runs a phone corpus nor qualifies actual OS lifecycle recovery.
+
+The [teacher-forcing coordinator](../docs/experiments/2026-10-21-m7-teacher-forcing.md)
+passes independent tiny CPU loss, Metal sequencing and strict Mac/device/simulator
+module compilation. Its10000-target check is simulated protocol coverage only.
+Full phone collection must still admit exact corpus/model/config inputs, enforce
+foreground interruption policy and observe process-memory peaks and cleanup.

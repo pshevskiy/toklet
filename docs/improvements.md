@@ -817,3 +817,15 @@ rows, strict Swift and both SDK builds pass. A first strict-compile failure and
 its exact old source remain recorded. Astra accepted source/regressions and completed evidence after156 bound paths,
 66 exact staged copies, one historical mapping, all runtime/SDK/negative
 replays, privacy,376 links and whitespace, with no remaining findings. No full physical quality or M7.3 completion follows.
+
+The [teacher-forcing coordinator](experiments/2026-10-21-m7-teacher-forcing.md)
+adds bounded reset/score-before-append sequencing, exact committed-prefix checks,
+final-target commitment and compensated loss aggregation. Failed append/output
+cannot return a complete summary. Seven simulated protocol cases include the
+full10000-target frozen block layout; these are not full model-quality results.
+Actual tiny CPU/Metal each pass three targets with independent CPU fixture loss,
+clean close/release, seven portable checks and strict Mac/both iOS module builds.
+Astra accepted source and completed evidence after100 pins,25 exact staged
+copies, four code pins, independent oracle/runtime/module replays,379 links,
+privacy and whitespace, with no findings. App admission and
+full physical corpus/task collection remain; M7.3 stays open.

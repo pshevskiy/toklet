@@ -176,3 +176,29 @@ benchmarks/results/2026-10-21-m7-worker-score/m7-worker-score-portable-v1/native
 benchmarks/results/2026-10-21-m7-worker-score/m7-worker-score-portable-v1/native-v1.stderr -text -whitespace
 benchmarks/results/2026-10-21-m7-worker-score/m7-worker-score-portable-v1/native-v2.stdout -text -whitespace
 benchmarks/results/2026-10-21-m7-worker-score/m7-worker-score-portable-v1/native-v2.stderr -text -whitespace
+
+# Teacher-forcing compiler logs retain exact collected bytes.
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/iphoneos-sdk.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/iphoneos-compile.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/xcode-version.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/swift-version.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/iphonesimulator-sdk.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/mac-compile.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/mac-compile.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/iphonesimulator-sdk.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/swift-version.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/iphoneos-compile.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/iphoneos-sdk.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/xcode-version.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/metal.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/mac-sdk.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/cpu.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/iphonesimulator-compile.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/iphonesimulator-compile.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/cpu.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/metal.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-native-teacher-v1/logs/mac-sdk.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-teacher-portable-v1/checks.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-teacher-portable-v1/checks.stderr -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-teacher-portable-v1/native-v1.stdout -text -whitespace
+benchmarks/results/2026-10-21-m7-teacher-forcing/m7-teacher-portable-v1/native-v1.stderr -text -whitespace

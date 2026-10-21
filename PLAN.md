@@ -1458,6 +1458,11 @@ The [Swift score adapter](docs/experiments/2026-10-21-m7-worker-score.md) passes
 Mac CPU/Metal committed-prefix, failure and deterministic lifecycle-publication
 checks plus both SDK builds. The full phone quality collector remains pending.
 
+The [teacher-forcing coordinator](docs/experiments/2026-10-21-m7-teacher-forcing.md)
+passes frozen block-policy/failure simulation, independent tiny CPU and actual
+Metal sequencing, plus strict three-target compilation. Full physical corpus/
+task collection and app integration remain pending.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy
