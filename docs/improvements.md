@@ -890,3 +890,12 @@ Astra's pin-persistence and tiny-oracle findings are fixed; exact previous
 sources remain.153 methods/16 isolated modules/16 clean owned commands and an
 explicit unchanged frozen-input audit pass. Astra accepted source and completed evidence with no findings.
 Phone task collection/grading and M7.3 remain open.
+
+The [completed-prefix diagnostic](experiments/2026-10-21-m7-worker-prefix.md)
+adds opt-in bounded saved-ID snapshots from the owning thread; ordinary callers
+retain no prefix copy. The first native check caught stale active counts after
+close; fixed terminal publication keeps the strict zero-state oracle unchanged.
+Exact failing sources/receipt remain. Astra's race-witness/state-matrix findings
+are fixed.26 states/backend, four actual publication witnesses,34 native/build
+commands/both unsigned apps and159 portable methods/17 modules pass. Astra accepted source and
+completed evidence with no findings. Actual phone lifecycle and M7.3 remain open.

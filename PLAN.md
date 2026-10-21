@@ -1494,6 +1494,11 @@ preserves all100 frozen IDs/prompts/caps with strict raw chunk/state/reset and
 signed/storage admission.153 portable methods pass; phone collection/grading
 and M7.3 remain pending.
 
+The [completed-prefix diagnostic](docs/experiments/2026-10-21-m7-worker-prefix.md)
+adds opt-in exact saved IDs for lifecycle evidence and clears stale close counts.
+CPU/Metal states,34 clean native/build commands and159 portable methods pass.
+Actual physical lifecycle qualification and M7.3 remain open.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy

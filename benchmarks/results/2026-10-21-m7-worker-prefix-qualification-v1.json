@@ -1,0 +1,1021 @@
+{
+  "format": "toklet-m7-worker-prefix-qualification-v1",
+  "passed": true,
+  "collection_root": "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet",
+  "parent_revision": "8109277686399cb70a1471ea86f484bceb3dbd5a",
+  "code_pins": {
+    "apple/Harness/NativeWorker.swift": "1733199d8b7ac9cef84e2bd45037b993e89dc1e46dfb8ce09346b64082190ff2",
+    "apple/tests/swift/PrefixMain.swift": "d9595f8a2f693a7a7caed06950cc9748ceba9985c24f108a89cdca4116773b9b",
+    "tools/experiments/m7_native_prefix_check.py": "4071c413f9c9b86ebec3ba52e81ac36782813c887edd2540844dce23deb4dc87",
+    "tools/experiments/test_m7_native_prefix_check.py": "8c3d1b1c3abb7828dc1ccff130e960597e1e399cae1d54e2ad125de5afe468c5"
+  },
+  "parent_source_correspondence": {
+    "apple/Harness/NativeWorker.swift": {
+      "snapshot": "artifacts/m7-worker-prefix-parent-v1/NativeWorker.swift",
+      "sha256": "0f9293f77459ac681de151cf756df1dc800981d04e679572ce8c8c9443b6662e"
+    }
+  },
+  "failed_source_correspondence": {
+    "apple/Harness/NativeWorker.swift": {
+      "snapshot": "artifacts/m7-worker-prefix-failed-source-v1/NativeWorker.swift",
+      "sha256": "a462a0fd8c721a9344159524b3444432a84e4c66576f3286364ac61f888f5d47"
+    },
+    "apple/tests/swift/PrefixMain.swift": {
+      "snapshot": "artifacts/m7-worker-prefix-failed-source-v1/PrefixMain.swift",
+      "sha256": "cd6a26bcf5230b4051a68eb6a1b0a85e0990d5bfd6184c7e91fc3b49ce51e1b6"
+    }
+  },
+  "evidence_pins": {
+    "apple/Harness/NativeWorker.swift": "1733199d8b7ac9cef84e2bd45037b993e89dc1e46dfb8ce09346b64082190ff2",
+    "apple/tests/swift/PrefixMain.swift": "d9595f8a2f693a7a7caed06950cc9748ceba9985c24f108a89cdca4116773b9b",
+    "tools/experiments/m7_native_prefix_check.py": "4071c413f9c9b86ebec3ba52e81ac36782813c887edd2540844dce23deb4dc87",
+    "tools/experiments/test_m7_native_prefix_check.py": "8c3d1b1c3abb7828dc1ccff130e960597e1e399cae1d54e2ad125de5afe468c5",
+    "artifacts/m7-worker-prefix-parent-v1/NativeWorker.swift": "0f9293f77459ac681de151cf756df1dc800981d04e679572ce8c8c9443b6662e",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-parent-v1/NativeWorker.swift": "0f9293f77459ac681de151cf756df1dc800981d04e679572ce8c8c9443b6662e",
+    "artifacts/m7-worker-prefix-source-before-review-v1/NativeWorker.swift": "a462a0fd8c721a9344159524b3444432a84e4c66576f3286364ac61f888f5d47",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-source-before-review-v1/NativeWorker.swift": "a462a0fd8c721a9344159524b3444432a84e4c66576f3286364ac61f888f5d47",
+    "artifacts/m7-worker-prefix-source-before-review-v1/PrefixMain.swift": "046c1fa76628faafc02c77a13ef45bfa5edef6a6901de3e7e6313827df64dda9",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-source-before-review-v1/PrefixMain.swift": "046c1fa76628faafc02c77a13ef45bfa5edef6a6901de3e7e6313827df64dda9",
+    "artifacts/m7-worker-prefix-source-before-review-v1/m7_native_prefix_check.py": "42963e54ebd22019eb4f972e306066f4d7987feb005b778ade52e83e44e79b7a",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-source-before-review-v1/m7_native_prefix_check.py": "42963e54ebd22019eb4f972e306066f4d7987feb005b778ade52e83e44e79b7a",
+    "artifacts/m7-worker-prefix-source-before-review-v1/test_m7_native_prefix_check.py": "18d6e1e785ff7d79a5c25260160f4ff518fea864a4b81d9b4f4768ccdee453e5",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-source-before-review-v1/test_m7_native_prefix_check.py": "18d6e1e785ff7d79a5c25260160f4ff518fea864a4b81d9b4f4768ccdee453e5",
+    "artifacts/m7-worker-prefix-failed-source-v1/NativeWorker.swift": "a462a0fd8c721a9344159524b3444432a84e4c66576f3286364ac61f888f5d47",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-failed-source-v1/NativeWorker.swift": "a462a0fd8c721a9344159524b3444432a84e4c66576f3286364ac61f888f5d47",
+    "artifacts/m7-worker-prefix-failed-source-v1/PrefixMain.swift": "cd6a26bcf5230b4051a68eb6a1b0a85e0990d5bfd6184c7e91fc3b49ce51e1b6",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-failed-source-v1/PrefixMain.swift": "cd6a26bcf5230b4051a68eb6a1b0a85e0990d5bfd6184c7e91fc3b49ce51e1b6",
+    "artifacts/m7-worker-prefix-failed-source-v1/m7_native_prefix_check.py": "4071c413f9c9b86ebec3ba52e81ac36782813c887edd2540844dce23deb4dc87",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-failed-source-v1/m7_native_prefix_check.py": "4071c413f9c9b86ebec3ba52e81ac36782813c887edd2540844dce23deb4dc87",
+    "artifacts/m7-worker-prefix-failed-source-v1/test_m7_native_prefix_check.py": "8c3d1b1c3abb7828dc1ccff130e960597e1e399cae1d54e2ad125de5afe468c5",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-failed-source-v1/test_m7_native_prefix_check.py": "8c3d1b1c3abb7828dc1ccff130e960597e1e399cae1d54e2ad125de5afe468c5",
+    "artifacts/m7-worker-prefix-portable-v1/checks-v2.stderr": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks-v2.stderr": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e",
+    "artifacts/m7-worker-prefix-portable-v1/checks-v2.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks-v2.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/checks.json": "7965f986fd276cfdb930b2acfe7af289d2a5edccdc8cfe5c91093513ca302d91",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks.json": "7965f986fd276cfdb930b2acfe7af289d2a5edccdc8cfe5c91093513ca302d91",
+    "artifacts/m7-worker-prefix-portable-v1/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "artifacts/m7-worker-prefix-portable-v1/checks.stderr": "f0d056be878845466e81a9cd055df5d681d442eec66999ddab873e09910d88ea",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks.stderr": "f0d056be878845466e81a9cd055df5d681d442eec66999ddab873e09910d88ea",
+    "artifacts/m7-worker-prefix-portable-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/native-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/native-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/native-v2.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/native-v2.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-worker-prefix-portable-v1/native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/native.stdout": "2855792c21d8c496cdd4e2fc2d9c4eac9b7e96a0b9dee9639af3e3266f50b854",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/native.stdout": "2855792c21d8c496cdd4e2fc2d9c4eac9b7e96a0b9dee9639af3e3266f50b854",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_apple_integration.stderr": "23b5e38aee5cf0b0f3d56faef01ca20ef0feb8d03c11939398a116cfcc2e667e",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_apple_integration.stderr": "23b5e38aee5cf0b0f3d56faef01ca20ef0feb8d03c11939398a116cfcc2e667e",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_apple_package.stderr": "3f32c3a70d890bdb4173d9c93dec0414f53cea3703c10afa8441498f1ef731b0",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_apple_package.stderr": "3f32c3a70d890bdb4173d9c93dec0414f53cea3703c10afa8441498f1ef731b0",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_measurement_check.stderr": "57b53a851aba52c209032595d9a2ddfcfb8687b7e5b325dcc03fe12e7629cb82",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_measurement_check.stderr": "57b53a851aba52c209032595d9a2ddfcfb8687b7e5b325dcc03fe12e7629cb82",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_metal_check.stderr": "5b3a70e7824b8eecc6a73148fcf9c8c879e60d4e7c000b8ec9a4a32d505f9824",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_metal_check.stderr": "5b3a70e7824b8eecc6a73148fcf9c8c879e60d4e7c000b8ec9a4a32d505f9824",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_prefix_check.stderr": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_prefix_check.stderr": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_prefix_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_prefix_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_quality_check.stderr": "5aa01cc52c38bae21117717f54714505f70f0f3e617a7d8d9d93fa202c3b9861",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_quality_check.stderr": "5aa01cc52c38bae21117717f54714505f70f0f3e617a7d8d9d93fa202c3b9861",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_score_check.stderr": "ca2286966a724282e8dd5bf77a537ae34cd50e320b16c121fc59491d65a4af8a",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_score_check.stderr": "ca2286966a724282e8dd5bf77a537ae34cd50e320b16c121fc59491d65a4af8a",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_task_check.stderr": "2e91713b08ec66a3e09570d85ee4f7c09ebce1834fa4ea9e503fc3c2a8ffe169",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_task_check.stderr": "2e91713b08ec66a3e09570d85ee4f7c09ebce1834fa4ea9e503fc3c2a8ffe169",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_tasks_check.stderr": "c1bf6990a05df455324f6c121a294c35c93f03a56117fd63e9a10cd2621f1451",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_tasks_check.stderr": "c1bf6990a05df455324f6c121a294c35c93f03a56117fd63e9a10cd2621f1451",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_integration.stderr": "59c1b09f890914384868a336d1d6c254dddde253d856c1a16f872133e7408177",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_integration.stderr": "59c1b09f890914384868a336d1d6c254dddde253d856c1a16f872133e7408177",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_measurement.stderr": "bb6369583ddfb4b29ae1c525e4a349191c49baf8340c7f3651ef48767477bb8b",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_measurement.stderr": "bb6369583ddfb4b29ae1c525e4a349191c49baf8340c7f3651ef48767477bb8b",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_quality.stderr": "861d1e456abc6c3294f59fb3d78f195ae8448e601edfc1a34de027c5cb29687c",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_quality.stderr": "861d1e456abc6c3294f59fb3d78f195ae8448e601edfc1a34de027c5cb29687c",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_storage.stderr": "468daea803e9f0988d50820efa88b379dbd9231096a86a232ffc8375d15063b4",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_storage.stderr": "468daea803e9f0988d50820efa88b379dbd9231096a86a232ffc8375d15063b4",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_tasks.stderr": "f873cf0f341aec6a500bbac0406da2eda2a8b8f94a5432668e128298a81e0fa8",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_tasks.stderr": "f873cf0f341aec6a500bbac0406da2eda2a8b8f94a5432668e128298a81e0fa8",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_tasks.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_tasks.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_swift_harness_build.stderr": "a742fa561ef9dc3c00dd31182434b2e6aa6d4566f3038d59ae2f7ca3472a7aea",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_swift_harness_build.stderr": "a742fa561ef9dc3c00dd31182434b2e6aa6d4566f3038d59ae2f7ca3472a7aea",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_swift_harness_run.stderr": "b031521cc7d1ee655055f27ddcba98c1cf14175e3ced1cd96de4e7721fb6c9b6",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_swift_harness_run.stderr": "b031521cc7d1ee655055f27ddcba98c1cf14175e3ced1cd96de4e7721fb6c9b6",
+    "artifacts/m7-worker-prefix-portable-v1/test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v1/checks.json": "31eeffa68fabf708220adb043dd7c8290fda9198c4aafbd8da23155277d17781",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/checks.json": "31eeffa68fabf708220adb043dd7c8290fda9198c4aafbd8da23155277d17781",
+    "artifacts/m7-worker-prefix-native-v1/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v1/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v1/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v1/logs/cpu.stdout": "67f6ed72c8083256ce1788cc7e9947827faf9d6cc8e4baed54d9f7ca7b669bd5",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/cpu.stdout": "67f6ed72c8083256ce1788cc7e9947827faf9d6cc8e4baed54d9f7ca7b669bd5",
+    "artifacts/m7-worker-prefix-native-v1/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v1/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-worker-prefix-native-v1/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-worker-prefix-native-v1/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-worker-prefix-native-v1/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v1/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-worker-prefix-native-v2/checks.json": "613a19bbf541e78f199dc9698b0d6de1d2e58dbb2556ed85598ec97e945991c7",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/checks.json": "613a19bbf541e78f199dc9698b0d6de1d2e58dbb2556ed85598ec97e945991c7",
+    "artifacts/m7-worker-prefix-native-v2/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/logs/cpu.stdout": "6a79d9d545088d3aab43e59ffe90b9ae8c447af69b2870957f3a39e9b6e56865",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/cpu.stdout": "6a79d9d545088d3aab43e59ffe90b9ae8c447af69b2870957f3a39e9b6e56865",
+    "artifacts/m7-worker-prefix-native-v2/logs/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/logs/metal.stdout": "6cef0f327dbf352758fb9df45dddb70dd1702fe5701728a77204c1495d506151",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/metal.stdout": "6cef0f327dbf352758fb9df45dddb70dd1702fe5701728a77204c1495d506151",
+    "artifacts/m7-worker-prefix-native-v2/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-worker-prefix-native-v2/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-worker-prefix-native-v2/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-worker-prefix-native-v2/logs/tasks-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/tasks-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/logs/tasks-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/tasks-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-worker-prefix-native-v2/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/checks.json": "ff21f07cca29f86cf48ce07a35a61c7db48f820330eb3b871a36b6360b927af1",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/checks.json": "ff21f07cca29f86cf48ce07a35a61c7db48f820330eb3b871a36b6360b927af1",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/quality-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/quality-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/quality-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/quality-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/tasks-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/tasks-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/tasks-checks.stdout": "3831f7bfbda1d398ceac74788ba4de3ab8ceb2f0c35ed78dafd616415c102936",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/tasks-checks.stdout": "3831f7bfbda1d398ceac74788ba4de3ab8ceb2f0c35ed78dafd616415c102936",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/build.json": "f5b5209ae98f7fe67fd9f33ee026c8d0bb3b09eaa3bf8b605e88e4f6d2d6c2d7",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/build.json": "f5b5209ae98f7fe67fd9f33ee026c8d0bb3b09eaa3bf8b605e88e4f6d2d6c2d7",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout": "94a8d3c518ddfc72744167107b32a527d6541b5024f7b1d675d8c57bde7a16ad",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout": "94a8d3c518ddfc72744167107b32a527d6541b5024f7b1d675d8c57bde7a16ad",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout": "5a883b1c981f52f5d839ac7f885e5ab25112dd0be6f3e24e3fc6d60e870f1a3f",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout": "5a883b1c981f52f5d839ac7f885e5ab25112dd0be6f3e24e3fc6d60e870f1a3f",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout": "da3784f2a315a663f956e533ebcee7de60690f69af8439ebe32854decfea2bc7",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout": "da3784f2a315a663f956e533ebcee7de60690f69af8439ebe32854decfea2bc7",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout": "edeba62b42865dfae76018eb9b1f48a1ed9c8325f10ec25707aa9bbb4d864b66",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout": "edeba62b42865dfae76018eb9b1f48a1ed9c8325f10ec25707aa9bbb4d864b66",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr": "2c155c85760999da116589eb645243812635b30c842ab108b4471002b757c3b9",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr": "2c155c85760999da116589eb645243812635b30c842ab108b4471002b757c3b9",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/checks.json": "7bdea83d3faa66ae2d5751a2d75491e7b4fe6c7e746b35adfded06d2dc80adea",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/checks.json": "7bdea83d3faa66ae2d5751a2d75491e7b4fe6c7e746b35adfded06d2dc80adea",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/apple-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/apple-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/apple-build.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/apple-build.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/measurement-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/measurement-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/measurement-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/measurement-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/quality-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/quality-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/quality-checks.stdout": "747a2c196a9aeefbc2632b89d1c50829f025decc205dde7bdba40f9424465294",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/quality-checks.stdout": "747a2c196a9aeefbc2632b89d1c50829f025decc205dde7bdba40f9424465294",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/checks.json": "6d6e2a203de7a1af36d15d80b37e8212c5eea26ed2f889de2a1d63560df76f3f",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/checks.json": "6d6e2a203de7a1af36d15d80b37e8212c5eea26ed2f889de2a1d63560df76f3f",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout": "2aced38dd57dd3358838e3cb00122b8a0a0ac7734dbbdc2950736a5f6f25c40b",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout": "2aced38dd57dd3358838e3cb00122b8a0a0ac7734dbbdc2950736a5f6f25c40b",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/native/tests.rs": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+    "src/native.rs": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "apple/include/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/tests/native_smoke.c": "642dad6db25398a1e5dbb9ca09e67a01edd8111a4517591b541ee02063c2e13c",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/Info.plist": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-darwin-link-smoke": "003e0c0ce0e8449de92b951199a6cfd0cf3de246914533f961ccb6b31c44d7c2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-darwin/release/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-link-smoke": "fc4e85048e91ad2469b11b62c3de00a514723b98f09049ad21e7e10e964392d6",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios/release/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-sim-link-smoke": "f3ec7566fd1ad5cb302b9a5730a4f1b71721d812f83530aeab52c7415208fad2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios-sim/release/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/build.json": "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "tools/experiments/m7_native_tasks_check.py": "a869a158cb728c4e13cc74791462a200246feff6d9ffb8b2886517523d2056c1",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "artifacts/m7-worker-prefix-native-v2/prefix-checks": "66799083a1f06c484abb8387650de488fcb0cc868bfa0736c2b2af1c47365f83",
+    "tests/fixtures/tiny-v1/manifest.json": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4",
+    "tests/fixtures/tiny-v1/cases.prompt.logits.f32le": "45b1def79d59fd9b37fa2b8504af2b5b2eea72d41a2c44187f9cd68e46b95c23",
+    "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+    "apple/tests/swift/TasksMain.swift": "b4701b2039f40691c07fcd09d7c9848b545a80723fa4ffaad52362ca12f6662e",
+    "tools/experiments/m7_native_task_check.py": "e56e815c87278079cef1a8f9e55d60d83b617e5509b7806fed7850249296fb07",
+    "tools/experiments/m7_native_quality_check.py": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+    "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/test_m7_native_tasks_check.py": "c2a08e7ef6fd2677e0826fd9ed57e12bdb1dc8f56ac9b3c9b4dea800daa5024f",
+    "apple/Harness/HarnessApp.swift": "699813ca61b981bd2e2334e6600e59bd567a62cadb39a20d7d0d260601c204af",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "18ea2468847dde1072e0d653ec2c6e554a00f52ecfb96b9d1eacb131a0e5c919",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/tasks": "aa2348e1d1c8e5c44062cfce4a4cc81e1b5eecaf23c46e4e3dee38538984b12a",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/cases/cpu/tasks.json": "782902c664b149b8985e991ea66e0c09a7a2676ab5928513c3ede974567dcea1",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/cases/cpu/job.json": "5b7b2d15f5b6e54338fedfaf121b4b7c21dcafcf105f0c09c0c498373d269b16",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/cases/metal/tasks.json": "782902c664b149b8985e991ea66e0c09a7a2676ab5928513c3ede974567dcea1",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/cases/metal/job.json": "8f75121e0172a105cd75a1a38d04861ff944c9f88da06a517dcfdef7f37b8519",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+    "apple/tests/swift/QualityMain.swift": "1cb6023f8c2ad3444d812fafb4f35d87e00dc0610cd4129c07d4c48476701750",
+    "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+    "tools/experiments/test_m7_native_quality_check.py": "bbe1edc476fcfdec0dcb6061d75bd55cf91452bd77e455e1074676d1bf772567",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/quality": "9516e42df5e01a7e54ddd179c318ae1868dabd2758f7893ef53bcedaaafd5d4b",
+    "tools/experiments/test_m7_native_measurement_check.py": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+    "apple/tests/swift/MeasurementMain.swift": "80fa532ff7f2120cced10c5e8c48ee6113922daf04b303c686c128ec2780ac93",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/proof-padding.bin": "a6d72ac7690f53be6ae46ba88506bd97302a093f7108472bd9efc3cefda06484",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/check": "10927f642311507911b4be64771d9424321601aa1f86c1a65922b214a4908703",
+    ".gitignore": "ba0833fd4f9e6822f1a3620eb070b2319ee76b20a299461197c8de9627226705",
+    "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+    "apple/tests/swift/WorkerChecks.swift": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+    "apple/Generated/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Generated/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "0b96e2ce5df0571f8356f2e71757973fc17b1890a31f59ed738d9eda3982d631",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "16b895ac23b836d60842a3289639f6e23b8899b8444f8a8d7401ef2488024919",
+    "artifacts/m7-worker-prefix-native-v1/prefix-checks": "40af880807229c708adfaa2d56d9afe70d53e24714ff121fb41f36fe8cddd557",
+    "tools/experiments/m7_native_fixture.py": "9f97b525af81f3243a774bf73b1e48a6379c6dd34d9e5af7057992502e3b72be",
+    "tools/experiments/m7_native_metal_check.py": "09da441923c9fa4ebe7dc55fb02c6c1c9047664c09fda5bc349b84b656d0ec0f",
+    "tools/experiments/m7_native_score_check.py": "90d27733655fd482485350eda54c351b63730b3e8082d8ea4ab710502bc71b24",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_measurement.py": "d5161fd38f8603321e458488048934fed605de7c47dd09ee2231c8da65c495fb",
+    "tools/experiments/m7_physical_quality.py": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+    "tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "tools/experiments/m7_physical_tasks.py": "87d990cf98f083db0d0451b3e13cdfee42dc38e1c1aeea710a6308ea1942c3eb",
+    "tools/experiments/m7_swift_harness_run.py": "fcdae72727a2f850a75319aec0ffdb994159953800781ad02b80952160ec4a07",
+    "tools/experiments/test_m7_apple_integration.py": "fcd82d74ad68f25972662ea4294e484506ac362959f33503c1b22e11937058fa",
+    "tools/experiments/test_m7_native_metal_check.py": "f3834817dcd660d2652a6447cbe6632acb33b1a98d60078712b20a5f31aa4a44",
+    "tools/experiments/test_m7_native_score_check.py": "dd9416f2978d6933e0c218bddd9048294ba029c744ed615208bc874b0f25d029",
+    "tools/experiments/test_m7_native_task_check.py": "0aa39d3d5fac4cf0511146049ca92dc3572662f17830a0be4345d239f052bec5",
+    "tools/experiments/test_m7_native_teacher_check.py": "91dcfa41c72eeaba8288c8cdae41e4db15962522a928f473f10d4a58c2f2f692",
+    "tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/test_m7_physical_measurement.py": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+    "tools/experiments/test_m7_physical_quality.py": "6e3e9cb824306ed7d19586cf48011c5deb9ca0bc017174783a6de3c8183e7987",
+    "tools/experiments/test_m7_physical_storage.py": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+    "tools/experiments/test_m7_physical_tasks.py": "b29ee82e828c4671e1a711fd29f1aefce5520f8955a3ff179e9bfb073fe4cfde",
+    "tools/experiments/test_m7_swift_harness_run.py": "cd54ce8480c01dc81f85ef836618531e13af80a35b5a204d2e49863bd9369fbf"
+  },
+  "exact_published_copies": {
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-parent-v1/NativeWorker.swift": {
+      "origin": "artifacts/m7-worker-prefix-parent-v1/NativeWorker.swift",
+      "sha256": "0f9293f77459ac681de151cf756df1dc800981d04e679572ce8c8c9443b6662e"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-source-before-review-v1/NativeWorker.swift": {
+      "origin": "artifacts/m7-worker-prefix-source-before-review-v1/NativeWorker.swift",
+      "sha256": "a462a0fd8c721a9344159524b3444432a84e4c66576f3286364ac61f888f5d47"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-source-before-review-v1/PrefixMain.swift": {
+      "origin": "artifacts/m7-worker-prefix-source-before-review-v1/PrefixMain.swift",
+      "sha256": "046c1fa76628faafc02c77a13ef45bfa5edef6a6901de3e7e6313827df64dda9"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-source-before-review-v1/m7_native_prefix_check.py": {
+      "origin": "artifacts/m7-worker-prefix-source-before-review-v1/m7_native_prefix_check.py",
+      "sha256": "42963e54ebd22019eb4f972e306066f4d7987feb005b778ade52e83e44e79b7a"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-source-before-review-v1/test_m7_native_prefix_check.py": {
+      "origin": "artifacts/m7-worker-prefix-source-before-review-v1/test_m7_native_prefix_check.py",
+      "sha256": "18d6e1e785ff7d79a5c25260160f4ff518fea864a4b81d9b4f4768ccdee453e5"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-failed-source-v1/NativeWorker.swift": {
+      "origin": "artifacts/m7-worker-prefix-failed-source-v1/NativeWorker.swift",
+      "sha256": "a462a0fd8c721a9344159524b3444432a84e4c66576f3286364ac61f888f5d47"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-failed-source-v1/PrefixMain.swift": {
+      "origin": "artifacts/m7-worker-prefix-failed-source-v1/PrefixMain.swift",
+      "sha256": "cd6a26bcf5230b4051a68eb6a1b0a85e0990d5bfd6184c7e91fc3b49ce51e1b6"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-failed-source-v1/m7_native_prefix_check.py": {
+      "origin": "artifacts/m7-worker-prefix-failed-source-v1/m7_native_prefix_check.py",
+      "sha256": "4071c413f9c9b86ebec3ba52e81ac36782813c887edd2540844dce23deb4dc87"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-failed-source-v1/test_m7_native_prefix_check.py": {
+      "origin": "artifacts/m7-worker-prefix-failed-source-v1/test_m7_native_prefix_check.py",
+      "sha256": "8c3d1b1c3abb7828dc1ccff130e960597e1e399cae1d54e2ad125de5afe468c5"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks-v2.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/checks-v2.stderr",
+      "sha256": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks-v2.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/checks-v2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks.json": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/checks.json",
+      "sha256": "7965f986fd276cfdb930b2acfe7af289d2a5edccdc8cfe5c91093513ca302d91"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks.py": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/checks.py",
+      "sha256": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/checks.stderr",
+      "sha256": "f0d056be878845466e81a9cd055df5d681d442eec66999ddab873e09910d88ea"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/checks.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/checks.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/native-v2.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/native-v2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/native-v2.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/native-v2.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/native.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/native.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/native.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/native.stdout",
+      "sha256": "2855792c21d8c496cdd4e2fc2d9c4eac9b7e96a0b9dee9639af3e3266f50b854"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_apple_integration.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_apple_integration.stderr",
+      "sha256": "23b5e38aee5cf0b0f3d56faef01ca20ef0feb8d03c11939398a116cfcc2e667e"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_apple_integration.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_apple_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_apple_package.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_apple_package.stderr",
+      "sha256": "3f32c3a70d890bdb4173d9c93dec0414f53cea3703c10afa8441498f1ef731b0"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_apple_package.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_apple_package.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_measurement_check.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_measurement_check.stderr",
+      "sha256": "57b53a851aba52c209032595d9a2ddfcfb8687b7e5b325dcc03fe12e7629cb82"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_measurement_check.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_measurement_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_metal_check.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_metal_check.stderr",
+      "sha256": "5b3a70e7824b8eecc6a73148fcf9c8c879e60d4e7c000b8ec9a4a32d505f9824"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_metal_check.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_metal_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_prefix_check.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_prefix_check.stderr",
+      "sha256": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_prefix_check.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_prefix_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_quality_check.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_quality_check.stderr",
+      "sha256": "5aa01cc52c38bae21117717f54714505f70f0f3e617a7d8d9d93fa202c3b9861"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_quality_check.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_quality_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_score_check.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_score_check.stderr",
+      "sha256": "ca2286966a724282e8dd5bf77a537ae34cd50e320b16c121fc59491d65a4af8a"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_score_check.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_score_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_task_check.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_task_check.stderr",
+      "sha256": "2e91713b08ec66a3e09570d85ee4f7c09ebce1834fa4ea9e503fc3c2a8ffe169"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_task_check.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_task_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_tasks_check.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_tasks_check.stderr",
+      "sha256": "c1bf6990a05df455324f6c121a294c35c93f03a56117fd63e9a10cd2621f1451"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_tasks_check.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_tasks_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_teacher_check.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_teacher_check.stderr",
+      "sha256": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_native_teacher_check.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_native_teacher_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_integration.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_integration.stderr",
+      "sha256": "59c1b09f890914384868a336d1d6c254dddde253d856c1a16f872133e7408177"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_integration.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_measurement.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_measurement.stderr",
+      "sha256": "bb6369583ddfb4b29ae1c525e4a349191c49baf8340c7f3651ef48767477bb8b"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_measurement.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_measurement.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_quality.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_quality.stderr",
+      "sha256": "861d1e456abc6c3294f59fb3d78f195ae8448e601edfc1a34de027c5cb29687c"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_quality.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_quality.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_storage.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_storage.stderr",
+      "sha256": "468daea803e9f0988d50820efa88b379dbd9231096a86a232ffc8375d15063b4"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_storage.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_storage.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_tasks.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_tasks.stderr",
+      "sha256": "f873cf0f341aec6a500bbac0406da2eda2a8b8f94a5432668e128298a81e0fa8"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_physical_tasks.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_physical_tasks.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_swift_harness_build.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_swift_harness_build.stderr",
+      "sha256": "a742fa561ef9dc3c00dd31182434b2e6aa6d4566f3038d59ae2f7ca3472a7aea"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_swift_harness_build.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_swift_harness_build.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_swift_harness_run.stderr": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_swift_harness_run.stderr",
+      "sha256": "b031521cc7d1ee655055f27ddcba98c1cf14175e3ced1cd96de4e7721fb6c9b6"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-portable-v1/test_m7_swift_harness_run.stdout": {
+      "origin": "artifacts/m7-worker-prefix-portable-v1/test_m7_swift_harness_run.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/checks.json": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/checks.json",
+      "sha256": "31eeffa68fabf708220adb043dd7c8290fda9198c4aafbd8da23155277d17781"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/compile.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/compile.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/cpu.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/cpu.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/cpu.stdout",
+      "sha256": "67f6ed72c8083256ce1788cc7e9947827faf9d6cc8e4baed54d9f7ca7b669bd5"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v1/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v1/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/checks.json": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/checks.json",
+      "sha256": "613a19bbf541e78f199dc9698b0d6de1d2e58dbb2556ed85598ec97e945991c7"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/compile.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/compile.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/cpu.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/cpu.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/cpu.stdout",
+      "sha256": "6a79d9d545088d3aab43e59ffe90b9ae8c447af69b2870957f3a39e9b6e56865"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/metal.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/metal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/metal.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/metal.stdout",
+      "sha256": "6cef0f327dbf352758fb9df45dddb70dd1702fe5701728a77204c1495d506151"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/tasks-regression.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/tasks-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/tasks-regression.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/tasks-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/checks.json": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/checks.json",
+      "sha256": "ff21f07cca29f86cf48ce07a35a61c7db48f820330eb3b871a36b6360b927af1"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/quality-regression.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/quality-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/quality-regression.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/quality-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/tasks-checks.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/tasks-checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/tasks-checks.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/tasks-checks.stdout",
+      "sha256": "3831f7bfbda1d398ceac74788ba4de3ab8ceb2f0c35ed78dafd616415c102936"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/build.json": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/build.json",
+      "sha256": "f5b5209ae98f7fe67fd9f33ee026c8d0bb3b09eaa3bf8b605e88e4f6d2d6c2d7"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout",
+      "sha256": "94a8d3c518ddfc72744167107b32a527d6541b5024f7b1d675d8c57bde7a16ad"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout",
+      "sha256": "5a883b1c981f52f5d839ac7f885e5ab25112dd0be6f3e24e3fc6d60e870f1a3f"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout",
+      "sha256": "da3784f2a315a663f956e533ebcee7de60690f69af8439ebe32854decfea2bc7"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout",
+      "sha256": "edeba62b42865dfae76018eb9b1f48a1ed9c8325f10ec25707aa9bbb4d864b66"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr",
+      "sha256": "2c155c85760999da116589eb645243812635b30c842ab108b4471002b757c3b9"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/checks.json": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/checks.json",
+      "sha256": "7bdea83d3faa66ae2d5751a2d75491e7b4fe6c7e746b35adfded06d2dc80adea"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/apple-build.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/apple-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/apple-build.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/apple-build.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/measurement-regression.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/measurement-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/measurement-regression.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/measurement-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/quality-checks.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/quality-checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/quality-checks.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/quality-checks.stdout",
+      "sha256": "747a2c196a9aeefbc2632b89d1c50829f025decc205dde7bdba40f9424465294"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/checks.json": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/checks.json",
+      "sha256": "6d6e2a203de7a1af36d15d80b37e8212c5eea26ed2f889de2a1d63560df76f3f"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout",
+      "sha256": "2aced38dd57dd3358838e3cb00122b8a0a0ac7734dbbdc2950736a5f6f25c40b"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-worker-prefix/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    }
+  },
+  "native_receipts": [
+    "artifacts/m7-worker-prefix-native-v2/checks.json",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/checks.json",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/apple-build/build.json",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/checks.json",
+    "artifacts/m7-worker-prefix-native-v2/tasks-regression/quality-regression/measurement-regression/checks.json"
+  ],
+  "clean_native_build_commands": 34,
+  "prefix_states_per_backend": 26,
+  "post_publication_witnesses": 4,
+  "portable_methods": 159,
+  "portable_modules": 17,
+  "targeted_methods": 6,
+  "failed_attempt": {
+    "receipt": "artifacts/m7-worker-prefix-native-v1/checks.json",
+    "clean_owned_commands": 5,
+    "observed_stale_closed_state": [
+      4,
+      4,
+      0,
+      1
+    ],
+    "expected_closed_state": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "default_prefix_capture": false,
+  "numerical_kernels_changed": false,
+  "full_quality_qualified": false,
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "review": "Astra accepted source, close-state fix and completed component evidence with no findings"
+}

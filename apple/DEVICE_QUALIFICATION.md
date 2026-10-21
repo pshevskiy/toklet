@@ -149,3 +149,8 @@ The [sealed task collector](../docs/experiments/2026-10-21-m7-physical-tasks.md)
 adds bounded frozen100-case transfer/admission and exact raw response checks,
 with six persistent reviewed runner pins and tiny independent output oracles.
 153 portable methods pass; no device quality acceptance follows.
+
+The [completed-prefix diagnostic](../docs/experiments/2026-10-21-m7-worker-prefix.md)
+checks exact sampled history through cancellation/suspend/replay and terminal
+close reporting, including actual publication-race witnesses. It prepares later
+real OS transition tests; Mac/SDK evidence does not qualify phone lifecycle.
