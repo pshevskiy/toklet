@@ -1,0 +1,1661 @@
+{
+  "format": "toklet-m7-state-app-qualification-v1",
+  "passed": true,
+  "collection_root": "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet",
+  "parent_revision": "75d5eaf1812c712eac8fe2fdfcabdfa9803ba1c6",
+  "code_pins": {
+    "apple/Harness/NativeWorker.swift": "4482a4b227105d5ff85201b091327b967b021a04de341da5ac3afeb8c40a8635",
+    "apple/Harness/NativeStateRun.swift": "82209540413ef2251840a402cbda590003df665ed3f47a3759cf3f0f386abc95",
+    "apple/Harness/HarnessApp.swift": "b8feddd676f7c71a07e0b27fc4ea68729505034cd4f10f63a7f7be5188ddc0a2",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5",
+    "apple/tests/swift/StateMain.swift": "267d3d5df28d37a6f746ec12b25254e8f8d6658386abdcc4098bdebcd446786a",
+    "tools/experiments/m7_native_state_check.py": "e4d92529b5db5a1aaf0431f857d60f2e32f419ed7252d5ef132078cfb193db61",
+    "tools/experiments/test_m7_native_state_check.py": "84a447c53d761f0a5442ed79bb4469c041eb0f581626de0185dc38a43bf6d631",
+    "tools/experiments/test_m7_physical_lifecycle.py": "20a4af0467c9986ef1305df8e693e9cb95220b0b397e0c9cadd8459ea25cfa55"
+  },
+  "app_code_pins": {
+    "apple/Harness/HarnessApp.swift": "b8feddd676f7c71a07e0b27fc4ea68729505034cd4f10f63a7f7be5188ddc0a2",
+    "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+    "apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+    "apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+    "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+    "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+    "apple/Harness/NativeStateRun.swift": "82209540413ef2251840a402cbda590003df665ed3f47a3759cf3f0f386abc95",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/Harness/NativeWorker.swift": "4482a4b227105d5ff85201b091327b967b021a04de341da5ac3afeb8c40a8635",
+    "apple/tests/swift/WorkerChecks.swift": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5",
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477"
+  },
+  "evidence_pins": {
+    "apple/Harness/NativeWorker.swift": "4482a4b227105d5ff85201b091327b967b021a04de341da5ac3afeb8c40a8635",
+    "apple/Harness/NativeStateRun.swift": "82209540413ef2251840a402cbda590003df665ed3f47a3759cf3f0f386abc95",
+    "apple/Harness/HarnessApp.swift": "b8feddd676f7c71a07e0b27fc4ea68729505034cd4f10f63a7f7be5188ddc0a2",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5",
+    "apple/tests/swift/StateMain.swift": "267d3d5df28d37a6f746ec12b25254e8f8d6658386abdcc4098bdebcd446786a",
+    "tools/experiments/m7_native_state_check.py": "e4d92529b5db5a1aaf0431f857d60f2e32f419ed7252d5ef132078cfb193db61",
+    "tools/experiments/test_m7_native_state_check.py": "84a447c53d761f0a5442ed79bb4469c041eb0f581626de0185dc38a43bf6d631",
+    "tools/experiments/test_m7_physical_lifecycle.py": "20a4af0467c9986ef1305df8e693e9cb95220b0b397e0c9cadd8459ea25cfa55",
+    "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+    "apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+    "apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+    "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+    "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/tests/swift/WorkerChecks.swift": "ee101aeb964eb0bd533eb1b5ebdaf721f556aa9a88b00027cb967297ae664ac9",
+    "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+    "artifacts/m7-state-app-parent-v1/apple/Harness/HarnessApp.swift": "938bb3f6a74d4b07db9c4f8b8cec767617559e717bda1fbe6ba9ba42991cb0b0",
+    "artifacts/m7-state-app-parent-v1/apple/TokletHarness.xcodeproj/project.pbxproj": "c09b04e464610077abc3e0f25e903ef4a42b4a58382488e1c7d81cfed687b195",
+    "artifacts/m7-state-app-source-before-review-v1/apple/Harness/HarnessApp.swift": "b8feddd676f7c71a07e0b27fc4ea68729505034cd4f10f63a7f7be5188ddc0a2",
+    "artifacts/m7-state-app-source-before-review-v1/apple/Harness/NativeStateRun.swift": "59db6ad0115044300a018dcd6420d4c683efb362ece79a3ac8a94adc3e172d91",
+    "artifacts/m7-state-app-source-before-review-v1/apple/TokletHarness.xcodeproj/project.pbxproj": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5",
+    "artifacts/m7-state-app-source-before-review-v1/apple/tests/swift/StateMain.swift": "0635e1c11994d7c049e310e2cdbbfa4beef6f6ce8bfb51a7be7fbc4b2f393449",
+    "artifacts/m7-state-app-source-before-review-v1/tools/experiments/m7_native_state_check.py": "0d25c06c12ff557f323563b67f46ac585e5c728e941eb7194cf268e84c4ad097",
+    "artifacts/m7-state-app-source-before-review-v1/tools/experiments/test_m7_native_state_check.py": "4c101dc8546de9d49ac55779d7a02f252bbd5111a5fe1b683ca76e35e4c30a80",
+    "artifacts/m7-state-app-source-before-close-fix-v1/apple/Harness/NativeStateRun.swift": "6858a489a1dd6c3a9cffc8d0940f3bd358847db3bfa1e7b036ba708256ef143a",
+    "artifacts/m7-state-app-source-before-close-fix-v1/apple/Harness/NativeWorker.swift": "1733199d8b7ac9cef84e2bd45037b993e89dc1e46dfb8ce09346b64082190ff2",
+    "artifacts/m7-state-app-source-before-close-fix-v1/apple/tests/swift/StateMain.swift": "0635e1c11994d7c049e310e2cdbbfa4beef6f6ce8bfb51a7be7fbc4b2f393449",
+    "artifacts/m7-state-app-source-before-close-fix-v1/tools/experiments/m7_native_state_check.py": "66ff12404501f333f3ad4bf8ed54dbfc77edb75a27f45fd5adafc36672fe56c9",
+    "artifacts/m7-state-app-source-before-close-fix-v1/tools/experiments/test_m7_native_state_check.py": "f4facffa212bfeb7528a6cae636e6273e6d44bef57bd9208fe8a35bde51699e4",
+    "artifacts/m7-state-app-source-before-types-v1/tools/experiments/m7_native_state_check.py": "fc890a9b60a8d2847032e4369b5847cafba242c4972fde3fbc668675e1d9c567",
+    "artifacts/m7-state-app-source-before-types-v1/tools/experiments/test_m7_native_state_check.py": "09c6eab48eb34a83ef0f51b774431d7315dfa86cf81fdb874c529f73bcbad462",
+    "artifacts/m7-state-app-source-before-wrapper-v1/tools/experiments/m7_native_state_check.py": "473a03d28feb1a9466e4c12e6973381f28559fc642385d4c88949d5c83de0275",
+    "artifacts/m7-state-app-source-before-wrapper-v1/tools/experiments/test_m7_native_state_check.py": "2eabd5f55176425076a0f428b5dd113b3ca52ee40c896c087077f4ebf61d1fab",
+    "artifacts/m7-state-app-old-lifecycle-test-v1/tools/experiments/test_m7_physical_lifecycle.py": "a925d2d8e63c7eaa57e2027cb95aebbeb56c4ea98b20cd0502db797f405de8a6",
+    "artifacts/m7-state-app-portable-v1/checks-v2.stderr": "ca18cc8e8cf94f56e58232f50620b1e8cacd8cccd6a6b7690d4968cc5d62d3ac",
+    "artifacts/m7-state-app-portable-v1/checks-v2.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-portable-v1/checks-v3.stderr": "9cde5da416851a57b5cdd8da0196a0d451d78f867e09e82992ff0e6efda5c74e",
+    "artifacts/m7-state-app-portable-v1/checks-v3.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-portable-v1/checks-v4.stderr": "5867e86c055541ae2a6fc540ab1c6fff73cfe8905b2e0fc32694f3d4dca9bdb7",
+    "artifacts/m7-state-app-portable-v1/checks-v4.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-portable-v1/checks-v5.stderr": "d5cd8fbdf814f649138c0872e740aa59985e8b38ec315a1acc4873be9976e6c5",
+    "artifacts/m7-state-app-portable-v1/checks-v5.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-portable-v1/checks.stderr": "ca18cc8e8cf94f56e58232f50620b1e8cacd8cccd6a6b7690d4968cc5d62d3ac",
+    "artifacts/m7-state-app-portable-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-portable-v1/native-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-portable-v1/native-v2.stdout": "cf5006918d3ef2175b9c637f21ea46b9e9f7c111a3859eb05c99919b6bcaced4",
+    "artifacts/m7-state-app-portable-v1/native-v3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-portable-v1/native-v3.stdout": "28952e72828b14233333cf6a1b6fedc306029f15760680510e49532bf79f4356",
+    "artifacts/m7-state-app-portable-v1/native-v4.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-portable-v1/native-v4.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-state-app-portable-v1/native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-portable-v1/native.stdout": "7beb87c9789f625d6f4988f514ee6d5bfb656e9f5cebb4b758703ae6db446ca6",
+    "artifacts/m7-state-app-all-portable-v1/checks.json": "790861121ed1f9df6cf43996cd0953ca662fa66bdadec5b0d71f22acabdc3a64",
+    "artifacts/m7-state-app-all-portable-v1/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "artifacts/m7-state-app-all-portable-v1/run.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/run.stdout": "10760f19449e2290af367e09be64e263c0a6b072ffd47685d30bea8eeb89682c",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_apple_integration.stderr": "ae4f149c4f018d6f3725ddfc39ab67265b0e6aa9a7e0246e2417d045ffb4d4b0",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_apple_package.stderr": "ea5f393ca89ec40efe94e06c79b7d99db29a9ec61d95c4d07ed63a80f8c122a7",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_lifecycle_app_check.stderr": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_lifecycle_app_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_lifecycle_check.stderr": "37ef6684249ecca3f8d41770ad1a47445699eece5e37d0b799944840cfec9a1c",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_lifecycle_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_measurement_check.stderr": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_metal_check.stderr": "6281aba84bbb5aa26976633c184dc3976244511eb40661c0360e0da54c78437b",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_prefix_check.stderr": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_prefix_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_quality_check.stderr": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_score_check.stderr": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_state_check.stderr": "dabf682cbc9725fe1967ac990abf418806169d3a6e3ff3117270248ff2c2e14c",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_state_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_task_check.stderr": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_tasks_check.stderr": "db21147ddf6e9f94f9b8b6909f01ab5d5ff1f017733024a22679055dec346055",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_physical_integration.stderr": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_physical_lifecycle.stderr": "ef7e13a0db98822b5ba3ab32bd9e67271b3109436c33e958b64a22e40e806d62",
+    "artifacts/m7-state-app-all-portable-v1/test_m7_physical_lifecycle.stdout": "82d252112d2f9545750b21bd249f5cff2b482ca9ab9d38120ff606f50ce30135",
+    "artifacts/m7-state-app-all-portable-v2/checks.json": "3464e065744508469938df701d3720ed4ee16c2f0a2cd7a16fd4182e51568ed7",
+    "artifacts/m7-state-app-all-portable-v2/checks.py": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704",
+    "artifacts/m7-state-app-all-portable-v2/run.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/run.stdout": "49043ec11c09d35f33ec305f296c728b315fb22c524051330bce156bb1d9b10d",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_apple_integration.stderr": "6c5c9843c814cb96ce39eb74e356049fd728d81dc6ddd11e16f76db2868a760c",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_apple_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_apple_package.stderr": "6800df0c862b10e04ed4ee513e1077ad9979b01ca3c6b7c3133fb00a20064a21",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_apple_package.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_lifecycle_app_check.stderr": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_lifecycle_app_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_lifecycle_check.stderr": "37ef6684249ecca3f8d41770ad1a47445699eece5e37d0b799944840cfec9a1c",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_lifecycle_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_measurement_check.stderr": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_measurement_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_metal_check.stderr": "6281aba84bbb5aa26976633c184dc3976244511eb40661c0360e0da54c78437b",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_metal_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_prefix_check.stderr": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_prefix_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_quality_check.stderr": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_quality_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_score_check.stderr": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_score_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_state_check.stderr": "2ff02f4f43598387e35d4e82c1f904e2b42098a3e2adfc56152797fdbef27ebd",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_state_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_task_check.stderr": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_task_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_tasks_check.stderr": "c5b196934a82c95936415e5943e568ae7d86ac93024f3b9ab880cb4489f093d3",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_tasks_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_teacher_check.stderr": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_native_teacher_check.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_integration.stderr": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_integration.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_lifecycle.stderr": "1aaabb2ccea97edf76b3db52985cdbf866d5982579a2c5e1d19316fe47fb9cb2",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_lifecycle.stdout": "82d252112d2f9545750b21bd249f5cff2b482ca9ab9d38120ff606f50ce30135",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_measurement.stderr": "b80efb638fa10476c074e8e2635c37834929a71857b95a52356bfff2d6b8d939",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_measurement.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_quality.stderr": "f9485f041a6460fef9c17fed63adf49ab8f7072088931741ef761c2fc99a9f62",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_quality.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_storage.stderr": "1078170284b8998d097c721276b101d9af340bbe4ea4c0b06f5966f52a307dda",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_storage.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_tasks.stderr": "9023fd333f4056910d50340dec785373d41d12fb3ab1b1b48a0b303f5f2992d9",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_physical_tasks.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_swift_harness_build.stderr": "5fe2f5c2465377e9a481daa86e6c6d2ff4b0b8517b33c6041488e55ed92e199a",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_swift_harness_build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_swift_harness_run.stderr": "c20e44b5ecc373f7064d3b79c9c5938ed18d71c50f6526dd991be237bed9ab38",
+    "artifacts/m7-state-app-all-portable-v2/test_m7_swift_harness_run.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v1/checks.json": "199805412977dcf8e5759d0d265c1dbc0d2911f85237916f53b19245577890cd",
+    "artifacts/m7-state-app-native-v2/checks.json": "34f156b22a2e4ced706bc1e67cb553da8589fa1ae7a1e2858265b24a69a0ce03",
+    "artifacts/m7-state-app-native-v2/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v2/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v2/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v2/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-state-app-native-v2/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-state-app-native-v2/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-state-app-native-v2/logs/tiny-cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v2/logs/tiny-cpu.stdout": "04b43bbe7791d45492f33acf52b68cdc300f15d194bb6e8baa585e839e9f0582",
+    "artifacts/m7-state-app-native-v2/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v2/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+    "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/mod.rs": "31b67bb97fbcc2a55b5004c561dc0ee7a95737c98376bb9e179c043fcb07b9c8",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "3387e466080ba545827eae9c52c4351d76ad71167b018029c1e6075e3be85753",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+    "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/memory.rs": "25b76f7b964c5e0021cdc869ec3d06eb35948ec04b13472ccfa0536b0ee28939",
+    "src/metal/mod.rs": "7c0168627ef5a8b2df226607b2fee3f894f160517493688c59a166aaddd303ac",
+    "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+    "src/metal/profile.rs": "3bfad137bf37666946fe7d853a77c0bf3b2f4df7679b2b6eb7fb7bfcc3e5f43d",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+    "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+    "src/native/tests.rs": "d9a6d0463c9fc13996b84fd1d8a2158be8b7736e631cb63273a97ccecd0787f6",
+    "src/native.rs": "a71b1e76b3a60a28cf98a78bec360d4b6e4cc7164fb3093a877b945e6f73bcb3",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "e9ead19ec7b26b0929341dc3a28759876e4f77bf356fa979042bc05643adf827",
+    "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+    "apple/include/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "apple/tests/native_smoke.c": "642dad6db25398a1e5dbb9ca09e67a01edd8111a4517591b541ee02063c2e13c",
+    "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae",
+    "tools/experiments/test_m7_apple_package.py": "4bfa463863c0fec5f647b3feb57f1f384c9d43709f4ec93d980ecb40bbdcb632",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/Info.plist": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/Headers/toklet.h": "f172c7fe5b7c166ac0033e913e36eb27a4ddef3fe27bdce7d2a1141f1a7a1575",
+    "artifacts/m7-apple-package-v5/Toklet.xcframework/macos-arm64/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-darwin-link-smoke": "003e0c0ce0e8449de92b951199a6cfd0cf3de246914533f961ccb6b31c44d7c2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-darwin/release/libtoklet.a": "a5c268fb8b3825e8280ebaf52d0eb3e9a10d9c1cd7e78f429fba82c617d3c2ab",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-link-smoke": "fc4e85048e91ad2469b11b62c3de00a514723b98f09049ad21e7e10e964392d6",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios/release/libtoklet.a": "f6ca6e3a84edb45001b7d80934d6b69144ba7ebac6fa44ae3a17374113dd04ee",
+    "artifacts/m7-apple-package-v5/aarch64-apple-ios-sim-link-smoke": "f3ec7566fd1ad5cb302b9a5730a4f1b71721d812f83530aeab52c7415208fad2",
+    "artifacts/m7-apple-package-v5/target/aarch64-apple-ios-sim/release/libtoklet.a": "69eec1102ae4f8c0bd7b0e6de31505977a3656421573fdffb2bcf1e8c031a922",
+    "artifacts/m7-apple-package-v5/build.json": "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "tools/experiments/m7_native_lifecycle_app_check.py": "77e2d876928203c6fcd901ad4a8ef0d646affd0f88fcb40783982b3c49a10bdd",
+    "tools/experiments/m7_physical_measurement.py": "b67152f75531cf66e0cc48892695a4595f4f6cec1ad2b78e9a2ef20abd90c1e3",
+    "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+    "artifacts/m7-state-app-native-v2/tiny-cpu/transfer/M7Jobs/1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5.json": "1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5",
+    "artifacts/m7-state-app-native-v2/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v2/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v2/tiny-metal/transfer/M7Jobs/5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8.json": "5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8",
+    "artifacts/m7-state-app-native-v2/tiny-metal/transfer/M7Inputs/tiny-metal/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v2/tiny-metal/transfer/M7Inputs/tiny-metal/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "benchmarks/results/2026-10-19-m6-context-reviewed-closure-v1.json": "9873fe34fb887a6dac2936f5ea505ee57bc2bbe7ae0da742b6e1cfc52ddb9320",
+    "benchmarks/results/2026-10-19-m7-metal-abi-qualification-v1.json": "7fa4bc0b15869fa5ff445d4860932faf9f812a67204344c27e1b653ef9bbb631",
+    "benchmarks/contract-v1/manifest.json": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66",
+    "benchmarks/contract-v1/prompt_512.u32le": "4ff74dae2ee5b778f9313f4c707f9ccb6415609a9c0653684cce7be63d457dd6",
+    "models/Qwen2.5-0.5B-Instruct/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "models/Qwen2.5-0.5B-Instruct/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "artifacts/m7-state-app-native-v2/small/transfer/M7Jobs/08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928.json": "08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928",
+    "artifacts/m7-state-app-native-v2/small/transfer/M7Inputs/small/Model/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "artifacts/m7-state-app-native-v2/small/transfer/M7Inputs/small/Model/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "artifacts/m7-state-app-native-v2/state-checks": "086443c6189005cb27ff95773ba17cdb941cb82a950a80b49e48edcc6b49a99c",
+    "artifacts/m7-state-app-native-v3/checks.json": "2b9dc976bc15155eddf054605423eee281889a73c48a41fd58abcb0bfbdd7b99",
+    "artifacts/m7-state-app-native-v3/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v3/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v3/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v3/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-state-app-native-v3/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-state-app-native-v3/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-state-app-native-v3/logs/tiny-cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v3/logs/tiny-cpu.stdout": "95dfd43911ca5d97c42680deaf1b7ded0cbeb9904b00161c76d8895e30ba4052",
+    "artifacts/m7-state-app-native-v3/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v3/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-state-app-native-v3/tiny-cpu/transfer/M7Jobs/1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5.json": "1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5",
+    "artifacts/m7-state-app-native-v3/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v3/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v3/tiny-metal/transfer/M7Jobs/5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8.json": "5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8",
+    "artifacts/m7-state-app-native-v3/tiny-metal/transfer/M7Inputs/tiny-metal/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v3/tiny-metal/transfer/M7Inputs/tiny-metal/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v3/small/transfer/M7Jobs/08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928.json": "08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928",
+    "artifacts/m7-state-app-native-v3/small/transfer/M7Inputs/small/Model/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "artifacts/m7-state-app-native-v3/small/transfer/M7Inputs/small/Model/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "artifacts/m7-state-app-native-v3/state-checks": "7246768f10172ac7424e33c0df612c8a39bfe93c37a633dc924156d307f9b4ce",
+    "artifacts/m7-state-app-native-v4/checks.json": "691d7637daa5be35650b0a3892e2cab87cfccab6bf6767f68f756fb42b4df791",
+    "artifacts/m7-state-app-native-v4/core-regression/checks.json": "085d8937451afe558e5e0c8b424e874eef37c65322ec6f8684d62dd2ca1ab803",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/checks.json": "56ec6218e421ac2ab49400707fe6ac0e2f0442c0967bb3b87a20a0ce0cfcbf47",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/cpu.stdout": "81f83475c5dfc59a6cfdff3a72da6f054e7cc17f209054c30f8e92d7981f755e",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/iphoneos-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/iphoneos-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/iphonesimulator-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/iphonesimulator-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/metal.stdout": "3406a061134aa10ef66b1c44eb07172190868ed5e090277b581e17efacea4567",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/prefix-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/prefix-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/checks.json": "f4b9efe4dc26c29e5d6106b4c6073b4b13b5e144496111a2654aaae3de70223a",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/cpu.stdout": "dcfb20354c941da7623c9ca65a5a42a80ff9dda1a72107081911bfa10fcba832",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/metal.stdout": "386a96410ae064a62c48cb2f519adfed94b11661c58f3204f4a4a2c53104991c",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/tasks-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/tasks-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/checks.json": "e99e9e5f43e7003bb22f27b2210b5901d6a186ebfa696caa6ffa8b87c1815782",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stdout": "b2530962658491a70b8c48ebb3f5141222facfa296bb0fe06848672a48904aef",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/build.json": "912619af9975ea0fe48bcef995a35480550e784848b40c77861cc6176a412aee",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout": "37a1c6fbcbbbec6e20f2a2eccaa58734b2a574e11b5595c0331a8c607835fddd",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout": "7206bfd5b22d84432f5c722439a4b85acaf1c69d53d2c014b914af896fafdb70",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout": "c0562d730b005a7fa30b2f7ab7c2026e3d4feab79129968ee3539bbf3ef3cf31",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout": "9f836ad9edfdc54d03d644b4a0443c9f5578d68591db93287f07c9a3feea751d",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr": "b0ed38fd5a0dd828761b1879ba3981979cd23f7082dddc8a7ffb1ba6a294b865",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/checks.json": "ca2353285028ae407623bc5d3b9e8225e06541021f554246d63d2d8e180dba63",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stdout": "84442d0f0c517bcf2e889d739c11bce7548d38ace9940744cea4a6a4a5db5d0d",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json": "de4fbfb13c7a6ce24e7a01b87311628c64b4b95d0499ef8ceec815390f5a0f50",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout": "058904988cf7876887ed73bc063d7995959e0f0f965f30b76eb8f3b4384644e7",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/core-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/core-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/small.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/small.stdout": "ce6d4c68cdd76272f8644ca2fa85b2cc6e3ac3408e7e0961e5d6fd0e2cf5e1f9",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/tiny-cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/tiny-cpu.stdout": "fe595ff4b1dbae49fe2bbe3f740347b0e03094022ff020986bf545f56a535db9",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/tiny-metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/tiny-metal.stdout": "40d3309d36db27705beb064a3eccac730cb8833b31eb7f2e931c87df63958a95",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/core-regression/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-state-app-native-v4/logs/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/logs/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/logs/core-regression.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/logs/core-regression.stdout": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b",
+    "artifacts/m7-state-app-native-v4/logs/sdk-path.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/logs/sdk-path.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+    "artifacts/m7-state-app-native-v4/logs/small.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/logs/small.stdout": "03c402a438cc3bc4d98e653bd79ed08ec5f02b7a5be5df58d44d8b13f44760c9",
+    "artifacts/m7-state-app-native-v4/logs/swift-version.stderr": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e",
+    "artifacts/m7-state-app-native-v4/logs/swift-version.stdout": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922",
+    "artifacts/m7-state-app-native-v4/logs/tiny-cpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/logs/tiny-cpu.stdout": "9fc1cb1f8fc942f66eb46d9e82b3f5d3230f99a05aa246c6a2beb3cdd2633b17",
+    "artifacts/m7-state-app-native-v4/logs/tiny-metal.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/logs/tiny-metal.stdout": "3932c7d472f6acf43c1d1778ab98d80bbaaf8ffea18d8394cce87d2f9d07cff7",
+    "artifacts/m7-state-app-native-v4/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m7-state-app-native-v4/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "artifacts/m7-state-app-native-v4/tiny-cpu/transfer/M7Jobs/1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5.json": "1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5",
+    "artifacts/m7-state-app-native-v4/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v4/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v4/tiny-metal/transfer/M7Jobs/5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8.json": "5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8",
+    "artifacts/m7-state-app-native-v4/tiny-metal/transfer/M7Inputs/tiny-metal/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v4/tiny-metal/transfer/M7Inputs/tiny-metal/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v4/small/transfer/M7Jobs/08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928.json": "08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928",
+    "artifacts/m7-state-app-native-v4/small/transfer/M7Inputs/small/Model/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "artifacts/m7-state-app-native-v4/small/transfer/M7Inputs/small/Model/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "artifacts/m7-state-app-native-v4/state-checks": "f7c41122bf2d71737f799db11ae4549bac6b99b47e54ca79a6079f1aac15910e",
+    "apple/tests/swift/LifecycleAppMain.swift": "085052fffda0ca87dfc9116dfa46e4a40168c558a74c02fcaac3bd405fe8bb49",
+    "tools/experiments/m7_native_lifecycle_check.py": "c22913ce29f450c2b63a05af4889015e281b5e1342dbfb7cf07500660029e4f8",
+    "tools/experiments/test_m7_native_lifecycle_app_check.py": "e28aaf5b6c311e3a5ee8808e27d680b2b4893086a6cdf044855f989a8985058c",
+    "artifacts/m7-state-app-native-v4/core-regression/tiny-cpu/transfer/M7Jobs/1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5.json": "1894fc2b80646fc3faed74afc742fac092156d74cccd2ffd6a69cf7e00f7e7e5",
+    "artifacts/m7-state-app-native-v4/core-regression/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v4/core-regression/tiny-cpu/transfer/M7Inputs/tiny-cpu/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v4/core-regression/tiny-metal/transfer/M7Jobs/5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8.json": "5535e7b25af2742b3c6be489531378c98a687815a70133111a1340837bb7e9c8",
+    "artifacts/m7-state-app-native-v4/core-regression/tiny-metal/transfer/M7Inputs/tiny-metal/Model/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v4/core-regression/tiny-metal/transfer/M7Inputs/tiny-metal/Model/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v4/core-regression/small/transfer/M7Jobs/08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928.json": "08b69d1091b48be2d06b84e4a9973357f0a36f6db178b54c889ebbd998a2e928",
+    "artifacts/m7-state-app-native-v4/core-regression/small/transfer/M7Inputs/small/Model/model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "artifacts/m7-state-app-native-v4/core-regression/small/transfer/M7Inputs/small/Model/config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "artifacts/m7-state-app-native-v4/core-regression/lifecycle-app-checks": "29a46968a25cd38345d8fd5989f65ba1042ddc0bffb6ded54484cbc3bf3b6468",
+    "apple/tests/swift/LifecycleMain.swift": "bae2fcf2e902a8dec6a044deaa2ff1516979908d3836ad7a50166a3538891ae4",
+    "tools/experiments/m7_native_prefix_check.py": "4071c413f9c9b86ebec3ba52e81ac36782813c887edd2540844dce23deb4dc87",
+    "tools/experiments/test_m7_native_lifecycle_check.py": "5a5caeff1b5a967959ef4cc4af229fbc81668976ad128ab3401d3a5d2ffc4c14",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/lifecycle-checks": "8b0ec3411e246f46eb9253329fae90a9297c22898ea35dac3595094555e98d92",
+    "apple/tests/swift/PrefixMain.swift": "d9595f8a2f693a7a7caed06950cc9748ceba9985c24f108a89cdca4116773b9b",
+    "tools/experiments/m7_native_tasks_check.py": "a869a158cb728c4e13cc74791462a200246feff6d9ffb8b2886517523d2056c1",
+    "tools/experiments/test_m7_native_prefix_check.py": "8c3d1b1c3abb7828dc1ccff130e960597e1e399cae1d54e2ad125de5afe468c5",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/prefix-checks": "cea44c2e1d29cf06c647580bae333e9626a4c97432f65a060c8566d6b32522e2",
+    "tests/fixtures/tiny-v1/manifest.json": "1d40cec4f24ece5fdc7b727d3e96f41237621120908833ee6c7df83352acfdd4",
+    "tests/fixtures/tiny-v1/cases.prompt.logits.f32le": "45b1def79d59fd9b37fa2b8504af2b5b2eea72d41a2c44187f9cd68e46b95c23",
+    "apple/tests/swift/TasksMain.swift": "b4701b2039f40691c07fcd09d7c9848b545a80723fa4ffaad52362ca12f6662e",
+    "tools/experiments/m7_native_task_check.py": "e56e815c87278079cef1a8f9e55d60d83b617e5509b7806fed7850249296fb07",
+    "tools/experiments/m7_native_quality_check.py": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+    "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+    "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+    "tools/experiments/test_m7_native_tasks_check.py": "c2a08e7ef6fd2677e0826fd9ed57e12bdb1dc8f56ac9b3c9b4dea800daa5024f",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/tasks": "f45e66c156cd36790354af1be2f6256de42be85e2019ceb05f630d88d0560b19",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/cases/cpu/tasks.json": "17307d9f0880b1fa9f69f38e9bf010f250921d94b611509ae7407d9f294804df",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/cases/cpu/job.json": "88565b37325be9536279a6e022c1f215d46e0afcb0ec76a785c7472169650b5a",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/cases/metal/tasks.json": "17307d9f0880b1fa9f69f38e9bf010f250921d94b611509ae7407d9f294804df",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/cases/metal/job.json": "96f3aef617e3b40ce17b905fe37c7222e5ba698777d73d9df015ebd30e5f8f95",
+    "apple/tests/swift/QualityMain.swift": "1cb6023f8c2ad3444d812fafb4f35d87e00dc0610cd4129c07d4c48476701750",
+    "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+    "tools/experiments/test_m7_native_quality_check.py": "bbe1edc476fcfdec0dcb6061d75bd55cf91452bd77e455e1074676d1bf772567",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/quality": "637054106eafd7483aa558e1ab18619ca4e287f85b52949531615d999a8b2cb2",
+    "tools/experiments/test_m7_native_measurement_check.py": "b1bf89c045d20bd27f23592f03bf37205817ce697f87e39aca36f589437ee4a1",
+    "apple/tests/swift/MeasurementMain.swift": "80fa532ff7f2120cced10c5e8c48ee6113922daf04b303c686c128ec2780ac93",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/proof-padding.bin": "a6d72ac7690f53be6ae46ba88506bd97302a093f7108472bd9efc3cefda06484",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/check": "c9010a412a2248ef73edbab16f96f76e0f8b978e275a1a6532401a68d16a7172",
+    ".gitignore": "ba0833fd4f9e6822f1a3620eb070b2319ee76b20a299461197c8de9627226705",
+    "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+    "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+    "apple/Generated/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/Generated/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "c77f81a224f9e3627fab0fc1363ab216c0e89dcba3283442911e14d2322b0a31",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "b6cae72b3b6c52d71a2f51d5e7f695de2b254167c30c9296fe97daec2800c31a",
+    "tools/experiments/m7_native_fixture.py": "9f97b525af81f3243a774bf73b1e48a6379c6dd34d9e5af7057992502e3b72be",
+    "tools/experiments/m7_native_metal_check.py": "09da441923c9fa4ebe7dc55fb02c6c1c9047664c09fda5bc349b84b656d0ec0f",
+    "tools/experiments/m7_native_score_check.py": "90d27733655fd482485350eda54c351b63730b3e8082d8ea4ab710502bc71b24",
+    "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+    "tools/experiments/m7_physical_lifecycle.py": "042d3c3c2dbd0a0535d17f53b4c5e6f3ef11b8a4998f0cd3a778396ebabf7679",
+    "tools/experiments/m7_physical_quality.py": "9420634cfbbb35ab7ef750a60d6e43bd6fea7c9b6d021e06857051c5a99f792d",
+    "tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+    "tools/experiments/m7_physical_tasks.py": "87d990cf98f083db0d0451b3e13cdfee42dc38e1c1aeea710a6308ea1942c3eb",
+    "tools/experiments/m7_swift_harness_run.py": "fcdae72727a2f850a75319aec0ffdb994159953800781ad02b80952160ec4a07",
+    "tools/experiments/test_m7_apple_integration.py": "fcd82d74ad68f25972662ea4294e484506ac362959f33503c1b22e11937058fa",
+    "tools/experiments/test_m7_native_metal_check.py": "f3834817dcd660d2652a6447cbe6632acb33b1a98d60078712b20a5f31aa4a44",
+    "tools/experiments/test_m7_native_score_check.py": "dd9416f2978d6933e0c218bddd9048294ba029c744ed615208bc874b0f25d029",
+    "tools/experiments/test_m7_native_task_check.py": "0aa39d3d5fac4cf0511146049ca92dc3572662f17830a0be4345d239f052bec5",
+    "tools/experiments/test_m7_native_teacher_check.py": "91dcfa41c72eeaba8288c8cdae41e4db15962522a928f473f10d4a58c2f2f692",
+    "tools/experiments/test_m7_physical_integration.py": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3",
+    "tools/experiments/test_m7_physical_measurement.py": "f91f51f5b1806b1640280e4b6dd772cb493888f6de417c3819324904bd479164",
+    "tools/experiments/test_m7_physical_quality.py": "6e3e9cb824306ed7d19586cf48011c5deb9ca0bc017174783a6de3c8183e7987",
+    "tools/experiments/test_m7_physical_storage.py": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619",
+    "tools/experiments/test_m7_physical_tasks.py": "b29ee82e828c4671e1a711fd29f1aefce5520f8955a3ff179e9bfb073fe4cfde",
+    "tools/experiments/test_m7_swift_harness_run.py": "cd54ce8480c01dc81f85ef836618531e13af80a35b5a204d2e49863bd9369fbf",
+    "benchmarks/results/2026-10-21-m7-lifecycle-app-qualification-v1.json": "40997d6fa69742477682db5fce105a37da3dc4863b8ccfafae33033b7c20ddcf"
+  },
+  "exact_published_copies": {
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-parent-v1/apple/Harness/HarnessApp.swift": {
+      "origin": "artifacts/m7-state-app-parent-v1/apple/Harness/HarnessApp.swift",
+      "sha256": "938bb3f6a74d4b07db9c4f8b8cec767617559e717bda1fbe6ba9ba42991cb0b0"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-parent-v1/apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "origin": "artifacts/m7-state-app-parent-v1/apple/TokletHarness.xcodeproj/project.pbxproj",
+      "sha256": "c09b04e464610077abc3e0f25e903ef4a42b4a58382488e1c7d81cfed687b195"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-review-v1/apple/Harness/HarnessApp.swift": {
+      "origin": "artifacts/m7-state-app-source-before-review-v1/apple/Harness/HarnessApp.swift",
+      "sha256": "b8feddd676f7c71a07e0b27fc4ea68729505034cd4f10f63a7f7be5188ddc0a2"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-review-v1/apple/Harness/NativeStateRun.swift": {
+      "origin": "artifacts/m7-state-app-source-before-review-v1/apple/Harness/NativeStateRun.swift",
+      "sha256": "59db6ad0115044300a018dcd6420d4c683efb362ece79a3ac8a94adc3e172d91"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-review-v1/apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "origin": "artifacts/m7-state-app-source-before-review-v1/apple/TokletHarness.xcodeproj/project.pbxproj",
+      "sha256": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-review-v1/apple/tests/swift/StateMain.swift": {
+      "origin": "artifacts/m7-state-app-source-before-review-v1/apple/tests/swift/StateMain.swift",
+      "sha256": "0635e1c11994d7c049e310e2cdbbfa4beef6f6ce8bfb51a7be7fbc4b2f393449"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-review-v1/tools/experiments/m7_native_state_check.py": {
+      "origin": "artifacts/m7-state-app-source-before-review-v1/tools/experiments/m7_native_state_check.py",
+      "sha256": "0d25c06c12ff557f323563b67f46ac585e5c728e941eb7194cf268e84c4ad097"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-review-v1/tools/experiments/test_m7_native_state_check.py": {
+      "origin": "artifacts/m7-state-app-source-before-review-v1/tools/experiments/test_m7_native_state_check.py",
+      "sha256": "4c101dc8546de9d49ac55779d7a02f252bbd5111a5fe1b683ca76e35e4c30a80"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-close-fix-v1/apple/Harness/NativeStateRun.swift": {
+      "origin": "artifacts/m7-state-app-source-before-close-fix-v1/apple/Harness/NativeStateRun.swift",
+      "sha256": "6858a489a1dd6c3a9cffc8d0940f3bd358847db3bfa1e7b036ba708256ef143a"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-close-fix-v1/apple/Harness/NativeWorker.swift": {
+      "origin": "artifacts/m7-state-app-source-before-close-fix-v1/apple/Harness/NativeWorker.swift",
+      "sha256": "1733199d8b7ac9cef84e2bd45037b993e89dc1e46dfb8ce09346b64082190ff2"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-close-fix-v1/apple/tests/swift/StateMain.swift": {
+      "origin": "artifacts/m7-state-app-source-before-close-fix-v1/apple/tests/swift/StateMain.swift",
+      "sha256": "0635e1c11994d7c049e310e2cdbbfa4beef6f6ce8bfb51a7be7fbc4b2f393449"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-close-fix-v1/tools/experiments/m7_native_state_check.py": {
+      "origin": "artifacts/m7-state-app-source-before-close-fix-v1/tools/experiments/m7_native_state_check.py",
+      "sha256": "66ff12404501f333f3ad4bf8ed54dbfc77edb75a27f45fd5adafc36672fe56c9"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-close-fix-v1/tools/experiments/test_m7_native_state_check.py": {
+      "origin": "artifacts/m7-state-app-source-before-close-fix-v1/tools/experiments/test_m7_native_state_check.py",
+      "sha256": "f4facffa212bfeb7528a6cae636e6273e6d44bef57bd9208fe8a35bde51699e4"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-types-v1/tools/experiments/m7_native_state_check.py": {
+      "origin": "artifacts/m7-state-app-source-before-types-v1/tools/experiments/m7_native_state_check.py",
+      "sha256": "fc890a9b60a8d2847032e4369b5847cafba242c4972fde3fbc668675e1d9c567"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-types-v1/tools/experiments/test_m7_native_state_check.py": {
+      "origin": "artifacts/m7-state-app-source-before-types-v1/tools/experiments/test_m7_native_state_check.py",
+      "sha256": "09c6eab48eb34a83ef0f51b774431d7315dfa86cf81fdb874c529f73bcbad462"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-wrapper-v1/tools/experiments/m7_native_state_check.py": {
+      "origin": "artifacts/m7-state-app-source-before-wrapper-v1/tools/experiments/m7_native_state_check.py",
+      "sha256": "473a03d28feb1a9466e4c12e6973381f28559fc642385d4c88949d5c83de0275"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-source-before-wrapper-v1/tools/experiments/test_m7_native_state_check.py": {
+      "origin": "artifacts/m7-state-app-source-before-wrapper-v1/tools/experiments/test_m7_native_state_check.py",
+      "sha256": "2eabd5f55176425076a0f428b5dd113b3ca52ee40c896c087077f4ebf61d1fab"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-old-lifecycle-test-v1/tools/experiments/test_m7_physical_lifecycle.py": {
+      "origin": "artifacts/m7-state-app-old-lifecycle-test-v1/tools/experiments/test_m7_physical_lifecycle.py",
+      "sha256": "a925d2d8e63c7eaa57e2027cb95aebbeb56c4ea98b20cd0502db797f405de8a6"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks-v2.stderr": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks-v2.stderr",
+      "sha256": "ca18cc8e8cf94f56e58232f50620b1e8cacd8cccd6a6b7690d4968cc5d62d3ac"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks-v2.stdout": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks-v2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks-v3.stderr": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks-v3.stderr",
+      "sha256": "9cde5da416851a57b5cdd8da0196a0d451d78f867e09e82992ff0e6efda5c74e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks-v3.stdout": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks-v3.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks-v4.stderr": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks-v4.stderr",
+      "sha256": "5867e86c055541ae2a6fc540ab1c6fff73cfe8905b2e0fc32694f3d4dca9bdb7"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks-v4.stdout": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks-v4.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks-v5.stderr": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks-v5.stderr",
+      "sha256": "d5cd8fbdf814f649138c0872e740aa59985e8b38ec315a1acc4873be9976e6c5"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks-v5.stdout": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks-v5.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks.stderr": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks.stderr",
+      "sha256": "ca18cc8e8cf94f56e58232f50620b1e8cacd8cccd6a6b7690d4968cc5d62d3ac"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/checks.stdout": {
+      "origin": "artifacts/m7-state-app-portable-v1/checks.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/native-v2.stderr": {
+      "origin": "artifacts/m7-state-app-portable-v1/native-v2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/native-v2.stdout": {
+      "origin": "artifacts/m7-state-app-portable-v1/native-v2.stdout",
+      "sha256": "cf5006918d3ef2175b9c637f21ea46b9e9f7c111a3859eb05c99919b6bcaced4"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/native-v3.stderr": {
+      "origin": "artifacts/m7-state-app-portable-v1/native-v3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/native-v3.stdout": {
+      "origin": "artifacts/m7-state-app-portable-v1/native-v3.stdout",
+      "sha256": "28952e72828b14233333cf6a1b6fedc306029f15760680510e49532bf79f4356"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/native-v4.stderr": {
+      "origin": "artifacts/m7-state-app-portable-v1/native-v4.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/native-v4.stdout": {
+      "origin": "artifacts/m7-state-app-portable-v1/native-v4.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/native.stderr": {
+      "origin": "artifacts/m7-state-app-portable-v1/native.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-portable-v1/native.stdout": {
+      "origin": "artifacts/m7-state-app-portable-v1/native.stdout",
+      "sha256": "7beb87c9789f625d6f4988f514ee6d5bfb656e9f5cebb4b758703ae6db446ca6"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/checks.json": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/checks.json",
+      "sha256": "790861121ed1f9df6cf43996cd0953ca662fa66bdadec5b0d71f22acabdc3a64"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/checks.py": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/checks.py",
+      "sha256": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/run.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/run.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/run.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/run.stdout",
+      "sha256": "10760f19449e2290af367e09be64e263c0a6b072ffd47685d30bea8eeb89682c"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_apple_integration.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_apple_integration.stderr",
+      "sha256": "ae4f149c4f018d6f3725ddfc39ab67265b0e6aa9a7e0246e2417d045ffb4d4b0"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_apple_integration.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_apple_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_apple_package.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_apple_package.stderr",
+      "sha256": "ea5f393ca89ec40efe94e06c79b7d99db29a9ec61d95c4d07ed63a80f8c122a7"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_apple_package.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_apple_package.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_lifecycle_app_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_lifecycle_app_check.stderr",
+      "sha256": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_lifecycle_app_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_lifecycle_app_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_lifecycle_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_lifecycle_check.stderr",
+      "sha256": "37ef6684249ecca3f8d41770ad1a47445699eece5e37d0b799944840cfec9a1c"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_lifecycle_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_lifecycle_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_measurement_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_measurement_check.stderr",
+      "sha256": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_measurement_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_measurement_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_metal_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_metal_check.stderr",
+      "sha256": "6281aba84bbb5aa26976633c184dc3976244511eb40661c0360e0da54c78437b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_metal_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_metal_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_prefix_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_prefix_check.stderr",
+      "sha256": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_prefix_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_prefix_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_quality_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_quality_check.stderr",
+      "sha256": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_quality_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_quality_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_score_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_score_check.stderr",
+      "sha256": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_score_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_score_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_state_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_state_check.stderr",
+      "sha256": "dabf682cbc9725fe1967ac990abf418806169d3a6e3ff3117270248ff2c2e14c"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_state_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_state_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_task_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_task_check.stderr",
+      "sha256": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_task_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_task_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_tasks_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_tasks_check.stderr",
+      "sha256": "db21147ddf6e9f94f9b8b6909f01ab5d5ff1f017733024a22679055dec346055"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_tasks_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_tasks_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_teacher_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_teacher_check.stderr",
+      "sha256": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_native_teacher_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_native_teacher_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_physical_integration.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_physical_integration.stderr",
+      "sha256": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_physical_integration.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_physical_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_physical_lifecycle.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_physical_lifecycle.stderr",
+      "sha256": "ef7e13a0db98822b5ba3ab32bd9e67271b3109436c33e958b64a22e40e806d62"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v1/test_m7_physical_lifecycle.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v1/test_m7_physical_lifecycle.stdout",
+      "sha256": "82d252112d2f9545750b21bd249f5cff2b482ca9ab9d38120ff606f50ce30135"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/checks.json": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/checks.json",
+      "sha256": "3464e065744508469938df701d3720ed4ee16c2f0a2cd7a16fd4182e51568ed7"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/checks.py": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/checks.py",
+      "sha256": "7f315d3e3afdccc12afc3b9bcef6c998c235f16bfdedf6e213daacc133ff3704"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/run.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/run.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/run.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/run.stdout",
+      "sha256": "49043ec11c09d35f33ec305f296c728b315fb22c524051330bce156bb1d9b10d"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_apple_integration.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_apple_integration.stderr",
+      "sha256": "6c5c9843c814cb96ce39eb74e356049fd728d81dc6ddd11e16f76db2868a760c"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_apple_integration.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_apple_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_apple_package.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_apple_package.stderr",
+      "sha256": "6800df0c862b10e04ed4ee513e1077ad9979b01ca3c6b7c3133fb00a20064a21"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_apple_package.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_apple_package.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_lifecycle_app_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_lifecycle_app_check.stderr",
+      "sha256": "8fe25d808fe8d97ad2c026c484a305b712dfb4a469734ba351ec5a4e3b47ca5e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_lifecycle_app_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_lifecycle_app_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_lifecycle_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_lifecycle_check.stderr",
+      "sha256": "37ef6684249ecca3f8d41770ad1a47445699eece5e37d0b799944840cfec9a1c"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_lifecycle_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_lifecycle_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_measurement_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_measurement_check.stderr",
+      "sha256": "a50e888f3fc7542084a0ab9671915c94ded7229ad3cc526037ba9a67e69d9938"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_measurement_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_measurement_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_metal_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_metal_check.stderr",
+      "sha256": "6281aba84bbb5aa26976633c184dc3976244511eb40661c0360e0da54c78437b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_metal_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_metal_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_prefix_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_prefix_check.stderr",
+      "sha256": "b4389c05a0f3f6c1bde6cb49fc61b89ca8f0ed551c53aab80dfae7a960d30b1e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_prefix_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_prefix_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_quality_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_quality_check.stderr",
+      "sha256": "5a2b4a9b60fddc794d100a866dedd3901ed8c69129eaf91583bca05fbdc0e079"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_quality_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_quality_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_score_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_score_check.stderr",
+      "sha256": "02ac35f93b9d144717c44b43b179767f7b20d88836f03cfa69bc2b25d537e57e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_score_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_score_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_state_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_state_check.stderr",
+      "sha256": "2ff02f4f43598387e35d4e82c1f904e2b42098a3e2adfc56152797fdbef27ebd"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_state_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_state_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_task_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_task_check.stderr",
+      "sha256": "30dcc5089b82b57fa2f5865382168d6ffd397855d7ea0b43c048149f8ddee210"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_task_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_task_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_tasks_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_tasks_check.stderr",
+      "sha256": "c5b196934a82c95936415e5943e568ae7d86ac93024f3b9ab880cb4489f093d3"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_tasks_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_tasks_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_teacher_check.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_teacher_check.stderr",
+      "sha256": "575f5e2f30993a63f3836d00386da64a37a9b5c4cbf3c851f13dadbb1026b07c"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_native_teacher_check.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_native_teacher_check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_integration.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_integration.stderr",
+      "sha256": "4c5300c54df0444d623fe44535a10b47635d1e60325d524f57dd87c056ab8857"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_integration.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_integration.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_lifecycle.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_lifecycle.stderr",
+      "sha256": "1aaabb2ccea97edf76b3db52985cdbf866d5982579a2c5e1d19316fe47fb9cb2"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_lifecycle.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_lifecycle.stdout",
+      "sha256": "82d252112d2f9545750b21bd249f5cff2b482ca9ab9d38120ff606f50ce30135"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_measurement.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_measurement.stderr",
+      "sha256": "b80efb638fa10476c074e8e2635c37834929a71857b95a52356bfff2d6b8d939"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_measurement.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_measurement.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_quality.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_quality.stderr",
+      "sha256": "f9485f041a6460fef9c17fed63adf49ab8f7072088931741ef761c2fc99a9f62"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_quality.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_quality.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_storage.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_storage.stderr",
+      "sha256": "1078170284b8998d097c721276b101d9af340bbe4ea4c0b06f5966f52a307dda"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_storage.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_storage.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_tasks.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_tasks.stderr",
+      "sha256": "9023fd333f4056910d50340dec785373d41d12fb3ab1b1b48a0b303f5f2992d9"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_physical_tasks.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_physical_tasks.stdout",
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_swift_harness_build.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_swift_harness_build.stderr",
+      "sha256": "5fe2f5c2465377e9a481daa86e6c6d2ff4b0b8517b33c6041488e55ed92e199a"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_swift_harness_build.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_swift_harness_build.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_swift_harness_run.stderr": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_swift_harness_run.stderr",
+      "sha256": "c20e44b5ecc373f7064d3b79c9c5938ed18d71c50f6526dd991be237bed9ab38"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-all-portable-v2/test_m7_swift_harness_run.stdout": {
+      "origin": "artifacts/m7-state-app-all-portable-v2/test_m7_swift_harness_run.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v1/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v1/checks.json",
+      "sha256": "199805412977dcf8e5759d0d265c1dbc0d2911f85237916f53b19245577890cd"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v2/checks.json",
+      "sha256": "34f156b22a2e4ced706bc1e67cb553da8589fa1ae7a1e2858265b24a69a0ce03"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/compile.stderr": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/compile.stdout": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/tiny-cpu.stderr": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/tiny-cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/tiny-cpu.stdout": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/tiny-cpu.stdout",
+      "sha256": "04b43bbe7791d45492f33acf52b68cdc300f15d194bb6e8baa585e839e9f0582"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v2/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v2/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v3/checks.json",
+      "sha256": "2b9dc976bc15155eddf054605423eee281889a73c48a41fd58abcb0bfbdd7b99"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/compile.stderr": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/compile.stdout": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/tiny-cpu.stderr": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/tiny-cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/tiny-cpu.stdout": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/tiny-cpu.stdout",
+      "sha256": "95dfd43911ca5d97c42680deaf1b7ded0cbeb9904b00161c76d8895e30ba4052"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v3/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v3/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v4/checks.json",
+      "sha256": "691d7637daa5be35650b0a3892e2cab87cfccab6bf6767f68f756fb42b4df791"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/checks.json",
+      "sha256": "085d8937451afe558e5e0c8b424e874eef37c65322ec6f8684d62dd2ca1ab803"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/checks.json",
+      "sha256": "56ec6218e421ac2ab49400707fe6ac0e2f0442c0967bb3b87a20a0ce0cfcbf47"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/cpu.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/cpu.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/cpu.stdout",
+      "sha256": "81f83475c5dfc59a6cfdff3a72da6f054e7cc17f209054c30f8e92d7981f755e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/iphoneos-typecheck.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/iphoneos-typecheck.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/iphoneos-typecheck.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/iphoneos-typecheck.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/iphonesimulator-typecheck.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/iphonesimulator-typecheck.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/iphonesimulator-typecheck.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/iphonesimulator-typecheck.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/metal.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/metal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/metal.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/metal.stdout",
+      "sha256": "3406a061134aa10ef66b1c44eb07172190868ed5e090277b581e17efacea4567"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/prefix-regression.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/prefix-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/prefix-regression.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/prefix-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/checks.json",
+      "sha256": "f4b9efe4dc26c29e5d6106b4c6073b4b13b5e144496111a2654aaae3de70223a"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/cpu.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/cpu.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/cpu.stdout",
+      "sha256": "dcfb20354c941da7623c9ca65a5a42a80ff9dda1a72107081911bfa10fcba832"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/metal.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/metal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/metal.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/metal.stdout",
+      "sha256": "386a96410ae064a62c48cb2f519adfed94b11661c58f3204f4a4a2c53104991c"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/tasks-regression.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/tasks-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/tasks-regression.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/tasks-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/checks.json",
+      "sha256": "e99e9e5f43e7003bb22f27b2210b5901d6a186ebfa696caa6ffa8b87c1815782"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/quality-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/tasks-checks.stdout",
+      "sha256": "b2530962658491a70b8c48ebb3f5141222facfa296bb0fe06848672a48904aef"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/build.json": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/build.json",
+      "sha256": "912619af9975ea0fe48bcef995a35480550e784848b40c77861cc6176a412aee"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-build.stdout",
+      "sha256": "37a1c6fbcbbbec6e20f2a2eccaa58734b2a574e11b5595c0331a8c607835fddd"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphoneos-load-commands.stdout",
+      "sha256": "7206bfd5b22d84432f5c722439a4b85acaf1c69d53d2c014b914af896fafdb70"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-arch.stdout",
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-build.stdout",
+      "sha256": "c0562d730b005a7fa30b2f7ab7c2026e3d4feab79129968ee3539bbf3ef3cf31"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/iphonesimulator-load-commands.stdout",
+      "sha256": "9f836ad9edfdc54d03d644b4a0443c9f5578d68591db93287f07c9a3feea751d"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign-verify.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stderr",
+      "sha256": "b0ed38fd5a0dd828761b1879ba3981979cd23f7082dddc8a7ffb1ba6a294b865"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/simulator-sign.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/checks.json",
+      "sha256": "ca2353285028ae407623bc5d3b9e8225e06541021f554246d63d2d8e180dba63"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/apple-build.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/measurement-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/quality-checks.stdout",
+      "sha256": "84442d0f0c517bcf2e889d739c11bce7548d38ace9940744cea4a6a4a5db5d0d"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json",
+      "sha256": "de4fbfb13c7a6ce24e7a01b87311628c64b4b95d0499ef8ceec815390f5a0f50"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/checks.stdout",
+      "sha256": "058904988cf7876887ed73bc063d7995959e0f0f965f30b76eb8f3b4384644e7"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/compile.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/compile.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/core-regression.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/core-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/core-regression.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/core-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/small.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/small.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/small.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/small.stdout",
+      "sha256": "ce6d4c68cdd76272f8644ca2fa85b2cc6e3ac3408e7e0961e5d6fd0e2cf5e1f9"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/tiny-cpu.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/tiny-cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/tiny-cpu.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/tiny-cpu.stdout",
+      "sha256": "fe595ff4b1dbae49fe2bbe3f740347b0e03094022ff020986bf545f56a535db9"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/tiny-metal.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/tiny-metal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/tiny-metal.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/tiny-metal.stdout",
+      "sha256": "40d3309d36db27705beb064a3eccac730cb8833b31eb7f2e931c87df63958a95"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/core-regression/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/core-regression/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/compile.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/compile.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/core-regression.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/core-regression.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/core-regression.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/core-regression.stdout",
+      "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/sdk-path.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/sdk-path.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/sdk-path.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/sdk-path.stdout",
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/small.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/small.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/small.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/small.stdout",
+      "sha256": "03c402a438cc3bc4d98e653bd79ed08ec5f02b7a5be5df58d44d8b13f44760c9"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/swift-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/swift-version.stderr",
+      "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/swift-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/swift-version.stdout",
+      "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/tiny-cpu.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/tiny-cpu.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/tiny-cpu.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/tiny-cpu.stdout",
+      "sha256": "9fc1cb1f8fc942f66eb46d9e82b3f5d3230f99a05aa246c6a2beb3cdd2633b17"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/tiny-metal.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/tiny-metal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/tiny-metal.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/tiny-metal.stdout",
+      "sha256": "3932c7d472f6acf43c1d1778ab98d80bbaaf8ffea18d8394cce87d2f9d07cff7"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/xcode-version.stderr": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/xcode-version.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "benchmarks/results/2026-10-21-m7-state-app/m7-state-app-native-v4/logs/xcode-version.stdout": {
+      "origin": "artifacts/m7-state-app-native-v4/logs/xcode-version.stdout",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+    }
+  },
+  "native_receipts": [
+    "artifacts/m7-state-app-native-v4/checks.json",
+    "artifacts/m7-state-app-native-v4/core-regression/checks.json",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/checks.json",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/checks.json",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/checks.json",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/checks.json",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/measurement-regression/checks.json",
+    "artifacts/m7-state-app-native-v4/core-regression/core-regression/prefix-regression/tasks-regression/quality-regression/apple-build/build.json"
+  ],
+  "source_snapshots": {
+    "artifacts/m7-state-app-native-v2/checks.json": {
+      "apple/Harness/NativeWorker.swift": {
+        "snapshot": "artifacts/m7-state-app-source-before-close-fix-v1/apple/Harness/NativeWorker.swift",
+        "sha256": "1733199d8b7ac9cef84e2bd45037b993e89dc1e46dfb8ce09346b64082190ff2"
+      },
+      "apple/Harness/NativeStateRun.swift": {
+        "snapshot": "artifacts/m7-state-app-source-before-review-v1/apple/Harness/NativeStateRun.swift",
+        "sha256": "59db6ad0115044300a018dcd6420d4c683efb362ece79a3ac8a94adc3e172d91"
+      },
+      "apple/tests/swift/StateMain.swift": {
+        "snapshot": "artifacts/m7-state-app-source-before-review-v1/apple/tests/swift/StateMain.swift",
+        "sha256": "0635e1c11994d7c049e310e2cdbbfa4beef6f6ce8bfb51a7be7fbc4b2f393449"
+      },
+      "tools/experiments/m7_native_state_check.py": {
+        "snapshot": "artifacts/m7-state-app-source-before-review-v1/tools/experiments/m7_native_state_check.py",
+        "sha256": "0d25c06c12ff557f323563b67f46ac585e5c728e941eb7194cf268e84c4ad097"
+      },
+      "tools/experiments/test_m7_native_state_check.py": {
+        "snapshot": "artifacts/m7-state-app-source-before-review-v1/tools/experiments/test_m7_native_state_check.py",
+        "sha256": "4c101dc8546de9d49ac55779d7a02f252bbd5111a5fe1b683ca76e35e4c30a80"
+      }
+    },
+    "artifacts/m7-state-app-native-v3/checks.json": {
+      "apple/Harness/NativeWorker.swift": {
+        "snapshot": "artifacts/m7-state-app-source-before-close-fix-v1/apple/Harness/NativeWorker.swift",
+        "sha256": "1733199d8b7ac9cef84e2bd45037b993e89dc1e46dfb8ce09346b64082190ff2"
+      },
+      "apple/Harness/NativeStateRun.swift": {
+        "snapshot": "artifacts/m7-state-app-source-before-close-fix-v1/apple/Harness/NativeStateRun.swift",
+        "sha256": "6858a489a1dd6c3a9cffc8d0940f3bd358847db3bfa1e7b036ba708256ef143a"
+      },
+      "apple/tests/swift/StateMain.swift": {
+        "snapshot": "artifacts/m7-state-app-source-before-review-v1/apple/tests/swift/StateMain.swift",
+        "sha256": "0635e1c11994d7c049e310e2cdbbfa4beef6f6ce8bfb51a7be7fbc4b2f393449"
+      },
+      "tools/experiments/m7_native_state_check.py": {
+        "snapshot": "artifacts/m7-state-app-source-before-close-fix-v1/tools/experiments/m7_native_state_check.py",
+        "sha256": "66ff12404501f333f3ad4bf8ed54dbfc77edb75a27f45fd5adafc36672fe56c9"
+      },
+      "tools/experiments/test_m7_native_state_check.py": {
+        "snapshot": "artifacts/m7-state-app-source-before-close-fix-v1/tools/experiments/test_m7_native_state_check.py",
+        "sha256": "f4facffa212bfeb7528a6cae636e6273e6d44bef57bd9208fe8a35bde51699e4"
+      }
+    },
+    "artifacts/m7-state-app-native-v4/checks.json": {
+      "tools/experiments/m7_native_state_check.py": {
+        "snapshot": "artifacts/m7-state-app-source-before-wrapper-v1/tools/experiments/m7_native_state_check.py",
+        "sha256": "473a03d28feb1a9466e4c12e6973381f28559fc642385d4c88949d5c83de0275"
+      },
+      "tools/experiments/test_m7_native_state_check.py": {
+        "snapshot": "artifacts/m7-state-app-source-before-wrapper-v1/tools/experiments/test_m7_native_state_check.py",
+        "sha256": "2eabd5f55176425076a0f428b5dd113b3ca52ee40c896c087077f4ebf61d1fab"
+      }
+    },
+    "artifacts/m7-state-app-all-portable-v1/checks.json": {
+      "tools/experiments/test_m7_physical_lifecycle.py": {
+        "snapshot": "artifacts/m7-state-app-old-lifecycle-test-v1/tools/experiments/test_m7_physical_lifecycle.py",
+        "sha256": "a925d2d8e63c7eaa57e2027cb95aebbeb56c4ea98b20cd0502db797f405de8a6"
+      }
+    }
+  },
+  "clean_native_build_commands": 59,
+  "portable_modules": 21,
+  "portable_methods": 206,
+  "targeted_methods": 15,
+  "replayed": {
+    "tiny-cpu": {
+      "rows": 26,
+      "prefill_witness": false,
+      "peak": 3178928
+    },
+    "tiny-metal": {
+      "rows": 26,
+      "prefill_witness": false,
+      "peak": 7029312
+    },
+    "small": {
+      "rows": 33,
+      "prefill_witness": true,
+      "peak": 1100842280
+    }
+  },
+  "prior_lifecycle_app_proof": {
+    "path": "benchmarks/results/2026-10-21-m7-lifecycle-app-qualification-v1.json",
+    "sha256": "40997d6fa69742477682db5fce105a37da3dc4863b8ccfafae33033b7c20ddcf"
+  },
+  "app_integration": true,
+  "actual_os_lifecycle_qualified": false,
+  "numerical_kernels_changed": false,
+  "full_quality_qualified": false,
+  "physical_device_qualified": false,
+  "m7_complete": false,
+  "review": "Astra accepted source and completed app component evidence with no findings",
+  "scope": "Mac tiny CPU/Metal and small-model state witnesses plus unsigned iOS builds; no physical state qualification"
+}

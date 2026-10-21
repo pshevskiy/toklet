@@ -1,0 +1,17 @@
+test_corpus_listing_rejects_wrong_device_size_or_symlink (test_m7_physical_quality.PhysicalQualityChecks.test_corpus_listing_rejects_wrong_device_size_or_symlink) ... ok
+test_exact_short_and_full_policy (test_m7_physical_quality.PhysicalQualityChecks.test_exact_short_and_full_policy) ... ok
+test_frozen_corpus_admits_original_and_rejects_replacement (test_m7_physical_quality.PhysicalQualityChecks.test_frozen_corpus_admits_original_and_rejects_replacement) ... ok
+test_job_seals_score_proof_and_full_block_policy (test_m7_physical_quality.PhysicalQualityChecks.test_job_seals_score_proof_and_full_block_policy) ... ok
+test_peak_foreground_and_power_reject (test_m7_physical_quality.PhysicalQualityChecks.test_peak_foreground_and_power_reject) ... ok
+test_prefix_and_teacher_ids_reject (test_m7_physical_quality.PhysicalQualityChecks.test_prefix_and_teacher_ids_reject) ... ok
+test_quality_prepare_transport_selects_package_corpus_and_receipt (test_m7_physical_quality.PhysicalQualityChecks.test_quality_prepare_transport_selects_package_corpus_and_receipt) ... ok
+test_ready_formats_cannot_be_interchanged (test_m7_physical_quality.PhysicalQualityChecks.test_ready_formats_cannot_be_interchanged) ... ok
+test_result_summary_and_reference_identity_reject (test_m7_physical_quality.PhysicalQualityChecks.test_result_summary_and_reference_identity_reject) ... ok
+test_storage_counts_corpus_and_requires_its_copy_clock (test_m7_physical_quality.PhysicalQualityChecks.test_storage_counts_corpus_and_requires_its_copy_clock) ... ok
+test_stream_and_installation_proofs_reject (test_m7_physical_quality.PhysicalQualityChecks.test_stream_and_installation_proofs_reject) ... ok
+test_wrong_native_package_blocks_quality_before_output_or_children (test_m7_physical_quality.PhysicalQualityChecks.test_wrong_native_package_blocks_quality_before_output_or_children) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.176s
+
+OK

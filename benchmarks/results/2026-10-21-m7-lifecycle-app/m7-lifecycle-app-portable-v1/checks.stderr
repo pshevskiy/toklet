@@ -1,0 +1,11 @@
+test_exact_replay_reference_and_fresh_load (test_m7_native_lifecycle_app_check.Checks.test_exact_replay_reference_and_fresh_load) ... ok
+test_exact_synthetic_real_model_protocol (test_m7_native_lifecycle_app_check.Checks.test_exact_synthetic_real_model_protocol) ... ok
+test_original_prefix_and_source_identity (test_m7_native_lifecycle_app_check.Checks.test_original_prefix_and_source_identity) ... ok
+test_provenance_process_and_close (test_m7_native_lifecycle_app_check.Checks.test_provenance_process_and_close) ... ok
+test_trace_binding_and_ready_causality (test_m7_native_lifecycle_app_check.Checks.test_trace_binding_and_ready_causality) ... ok
+test_typed_prefix_and_ordered_clocks (test_m7_native_lifecycle_app_check.Checks.test_typed_prefix_and_ordered_clocks) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.009s
+
+OK

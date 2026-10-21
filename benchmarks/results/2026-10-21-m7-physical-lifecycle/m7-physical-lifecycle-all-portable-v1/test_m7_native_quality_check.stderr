@@ -1,0 +1,16 @@
+test_artifact_corpus_and_cleanup_reject (test_m7_native_quality_check.QualityOutputChecks.test_artifact_corpus_and_cleanup_reject) ... ok
+test_complete_native_case (test_m7_native_quality_check.QualityOutputChecks.test_complete_native_case) ... ok
+test_failure_results_cannot_claim_success_or_full_output (test_m7_native_quality_check.QualityOutputChecks.test_failure_results_cannot_claim_success_or_full_output) ... ok
+test_invalid_oracles_reject (test_m7_native_quality_check.QualityOutputChecks.test_invalid_oracles_reject) ... ok
+test_load_bracket_requires_finite_number (test_m7_native_quality_check.QualityOutputChecks.test_load_bracket_requires_finite_number) ... ok
+test_losses_and_aggregates_reject (test_m7_native_quality_check.QualityOutputChecks.test_losses_and_aggregates_reject) ... ok
+test_mac_environment_cannot_be_device_or_nonfinite (test_m7_native_quality_check.QualityOutputChecks.test_mac_environment_cannot_be_device_or_nonfinite) ... ok
+test_marker_order_and_unexpected_output_reject (test_m7_native_quality_check.QualityOutputChecks.test_marker_order_and_unexpected_output_reject) ... ok
+test_missing_stream_and_failure_records_reject (test_m7_native_quality_check.QualityOutputChecks.test_missing_stream_and_failure_records_reject) ... ok
+test_peak_and_checkpoint_phases_reject (test_m7_native_quality_check.QualityOutputChecks.test_peak_and_checkpoint_phases_reject) ... ok
+test_prefix_identity_and_integer_counts_reject (test_m7_native_quality_check.QualityOutputChecks.test_prefix_identity_and_integer_counts_reject) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.016s
+
+OK

@@ -1,0 +1,22 @@
+test_actual_os_direct_and_inactive_return (test_m7_physical_lifecycle.Checks.test_actual_os_direct_and_inactive_return) ... ok
+test_consistent_interruption_and_stage_ids_must_match_retained (test_m7_physical_lifecycle.Checks.test_consistent_interruption_and_stage_ids_must_match_retained) ... ok
+test_controller_capture_close_error_still_publishes (test_m7_physical_lifecycle.Checks.test_controller_capture_close_error_still_publishes) ... ok
+test_controller_drain_error_still_reaps (test_m7_physical_lifecycle.Checks.test_controller_drain_error_still_reaps) ... ok
+test_controller_launch_race_drains_before_remote_absence (test_m7_physical_lifecycle.Checks.test_controller_launch_race_drains_before_remote_absence) ... ok
+test_controller_rejects_new_foreground_pid_and_cleans_owned (test_m7_physical_lifecycle.Checks.test_controller_rejects_new_foreground_pid_and_cleans_owned) ... ok
+test_controller_same_pid_roundtrip_and_clean_capture (test_m7_physical_lifecycle.Checks.test_controller_same_pid_roundtrip_and_clean_capture) ... ok
+test_controller_timeout_is_private_and_owned_resources_clean (test_m7_physical_lifecycle.Checks.test_controller_timeout_is_private_and_owned_resources_clean) ... ok
+test_job_is_exact_and_preserves_app_source_pins (test_m7_physical_lifecycle.Checks.test_job_is_exact_and_preserves_app_source_pins) ... ok
+test_marker_duplicates_unknown_and_ready_binding (test_m7_physical_lifecycle.Checks.test_marker_duplicates_unknown_and_ready_binding) ... ok
+test_memory_identity_and_close (test_m7_physical_lifecycle.Checks.test_memory_identity_and_close) ... ok
+test_modes_reject_before_children (test_m7_physical_lifecycle.Checks.test_modes_reject_before_children) ... ok
+test_partial_ready_and_duplicates (test_m7_physical_lifecycle.Checks.test_partial_ready_and_duplicates) ... ok
+test_ready_must_precede_busy_foreground_interruption (test_m7_physical_lifecycle.Checks.test_ready_must_precede_busy_foreground_interruption) ... ok
+test_same_pid_activation_and_settings_scope (test_m7_physical_lifecycle.Checks.test_same_pid_activation_and_settings_scope) ... ok
+test_system_provenance_cannot_be_synthetic (test_m7_physical_lifecycle.Checks.test_system_provenance_cannot_be_synthetic) ... ok
+test_trace_binding_prefix_and_exact_replay (test_m7_physical_lifecycle.Checks.test_trace_binding_prefix_and_exact_replay) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.131s
+
+OK

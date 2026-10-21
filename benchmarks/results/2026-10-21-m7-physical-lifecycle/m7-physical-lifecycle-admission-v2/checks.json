@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "commands": [
+    {
+      "command": [
+        "/Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/Resources/bin/devicectl",
+        "device",
+        "process",
+        "launch",
+        "--help"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 54006,
+      "stdout": "artifacts/m7-physical-lifecycle-admission-v2/launch-help.stdout",
+      "stderr": "artifacts/m7-physical-lifecycle-admission-v2/launch-help.stderr"
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-physical-lifecycle-admission-v2/check.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 54007,
+      "stdout": "artifacts/m7-physical-lifecycle-admission-v2/jobs.stdout",
+      "stderr": "artifacts/m7-physical-lifecycle-admission-v2/jobs.stderr"
+    }
+  ]
+}

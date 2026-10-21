@@ -1,0 +1,16 @@
+{
+  "format": "toklet-m7-state-check-v1",
+  "passed": false,
+  "collection_root": "/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet",
+  "bindings": {},
+  "commands": [],
+  "jobs": {},
+  "checked": {},
+  "nested_receipt": null,
+  "primary_error": "NotADirectoryError: [Errno 20] Not a directory: '/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-apple-package-v5/build.json/build.json'",
+  "endpoint_errors": [],
+  "real_model_checked": true,
+  "actual_os_lifecycle_qualified": false,
+  "physical_device_qualified": false,
+  "m7_complete": false
+}

@@ -1501,6 +1501,16 @@ preserves all100 frozen IDs/prompts/caps with strict raw chunk/state/reset and
 signed/storage admission.153 portable methods pass; phone collection/grading
 and M7.3 remain pending.
 
+The [completed-prefix diagnostic](docs/experiments/2026-10-21-m7-worker-prefix.md)
+adds opt-in exact saved IDs for lifecycle evidence and clears stale close counts.
+CPU/Metal states,34 clean native/build commands and159 portable methods pass.
+Actual physical lifecycle qualification and M7.3 remain open.
+
+The [bounded lifecycle core](docs/experiments/2026-10-21-m7-lifecycle-core.md)
+passes syntheticCPU/Metal requests, exact prefix/replay/cleanup evidence, both
+SDK type checks and165 portable methods. Actual app/OS integration remains;
+M7.3 stays open.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy
@@ -1585,3 +1595,17 @@ The [physical full loss result](docs/experiments/2026-10-21-m7-phone-loss.md) cl
 The [full physical task-quality result](docs/experiments/2026-10-21-m7-phone-tasks.md) passes both unchanged100-case gates on iPhone14Pro/iOS27.0.1: small2/100 and larger11/100, zero drop from their FP32 baselines. Exact IDs/stops/text and historical literal-program outcomes match.14stages/206cases/218clean commands,27natural absences and1owned pre-copy reset are explicit. Together with accepted full loss this closes selected-path numerical quality on this Pro; actual lifecycle/state, small sustained, energy/limits, original base-device scope and M7.3 remain open.
 
 The [dedicated small phone sustained sequence](docs/experiments/2026-10-21-m7-phone-small-sustained.md) completes3warmups+24measured512/128requests and620.5660416229999native seconds excluding warmups. All128IDs repeat;42clean commands,5natural absences/1owned initial preflight reset and83frozen sources replay. Decode median13.474IDs/s falls from15.511(first5) to8.386(last5), with fair/serious thermals; peak1,114,180,024bytes. This closes the small-model duration observation on this Pro, without steady-rate/speedup/energy/general-device claims. Physical state/lifecycle, final limits, base-device scope and M7.3 remain open.
+
+The [lifecycle app integration](docs/experiments/2026-10-21-m7-lifecycle-app.md)
+connects real scene/notification handlers to opt-in sealed diagnostics. Fifty-one
+native/build commands and173 portable methods pass; 19 Mac synthetic events
+validate exact prefix/replay/reference/cleanup. Physical OS collection remains;
+M7.3 stays open.
+
+The [sealed physical lifecycle controller](docs/experiments/2026-10-21-m7-physical-lifecycle.md)
+passes190 portable methods and two local inventory/help commands. Same-PID real
+OS round trips are now executable but remain uncollected; M7.3 stays open.
+
+The [bounded state witness app](docs/experiments/2026-10-21-m7-state-app.md) adds exact cached/changed-prefix, pending append, active partial-prefill cancellation and fully committed capacity/overflow diagnostics.59 native/build commands,206 methods/21 modules and15 focused mutations pass; current Mac small Metal proves the512-token interruption and1152-position boundary. Successful close now clears stale status/admission/emissions. Physical witnesses and M7.3 remain open.
+
+The [physical state controller](docs/experiments/2026-10-21-m7-physical-state.md) adds sealed state-mode preparation/reuse and exact phone result admission against the newly reviewed complete app-source closure.217methods/22modules,11focused tests and one owned local admission/raw-replay child pass; no app/kernel/ABI change or physical qualification is claimed. M7.3 remains open.

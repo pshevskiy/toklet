@@ -161,3 +161,26 @@ with six persistent reviewed runner pins and tiny independent output oracles.
 The [full task-quality report](../docs/experiments/2026-10-21-m7-phone-tasks.md) accepts unchanged100-case gates for both selected model paths on iPhone14Pro/iOS27.0.1. Small2/100/larger11/100 exactly match FP32 baseline scores; original IDs, hidden stops and decoded text match accepted M6 outcomes. Historical literal grading is replayed with exact program/test bytes; no new generated-program execution is claimed. Peak1,927,990,216bytes and the27natural/1preflight-reset distinction remain explicit. Final mobile limits/lifecycle/state, energy and M7 completion remain open.
 
 The [dedicated small sustained report](../docs/experiments/2026-10-21-m7-phone-small-sustained.md) records620.566seconds across24measured512/128requests after3warmups, identical outputs and1.114GBpeak. Fair/serious thermal observations and slowing first/last-five decode medians15.511/8.386IDs/s remain explicit.42clean commands and5natural absences/1owned preflight reset replay. This qualifies duration/memory/thermal observations on iPhone14Pro/iOS27.0.1, not constant performance, energy, other hardware or M7 completion.
+
+The [completed-prefix diagnostic](../docs/experiments/2026-10-21-m7-worker-prefix.md)
+checks exact sampled history through cancellation/suspend/replay and terminal
+close reporting, including actual publication-race witnesses. It prepares later
+real OS transition tests; Mac/SDK evidence does not qualify phone lifecycle.
+
+The [bounded lifecycle core](../docs/experiments/2026-10-21-m7-lifecycle-core.md)
+records request/completion distinctions and never lets trace failure prevent
+resource cleanup. CPU/Metal/supported-SDK checks are synthetic integration
+evidence; actual app notifications and physical lifecycle remain pending.
+
+The [lifecycle app integration](../docs/experiments/2026-10-21-m7-lifecycle-app.md)
+adds actual callback provenance and an active-generation READY boundary. Both iOS
+builds and Mac synthetic tests pass; actual physical OS transitions and pressure
+remain unqualified.
+
+The [sealed physical lifecycle controller](../docs/experiments/2026-10-21-m7-physical-lifecycle.md)
+requires actual phase provenance, original PID, exact replay outputs and independent
+host/phone cleanup.190 portable checks pass; physical lifecycle remains pending.
+
+The [state witness app](../docs/experiments/2026-10-21-m7-state-app.md) checks exact history and scalar diagnostics through cache reuse, partial-prefill cancellation and capacity rejection. Tiny CPU/Metal and real small Mac checks plus both unsigned iOS builds pass. This is not physical qualification; collect both real-model phone state witnesses against the new reviewed app proof.
+
+The [physical state collection path](../docs/experiments/2026-10-21-m7-physical-state.md) now preserves canonical state job/SHA arguments, full current app proof, exact partial-prefill/capacity/prefix results and actual foreground environment. Mocked shared-controller prepare/reuse/failure cleanup passes; physical state and OS lifecycle collection remain required.

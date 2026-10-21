@@ -913,3 +913,44 @@ Hypothesis: selected desktop-qualified paths preserve the original task policy o
 ### M7 dedicated small-model phone duration — 21 October2026
 
 The [sustained phone report](experiments/2026-10-21-m7-phone-small-sustained.md) closes the≥600-second measured-native observation:3warmups+24measured requests total620.566seconds, all128IDs identical. Peak1,114,180,024bytes and fair/serious thermals stay explicit; first/last-five decode medians slow15.511→8.386IDs/s.42clean commands/83sources/3456events replay, with5natural absences and1verified initial owned reset.6driver/16analyzer tests pass. Retained failed analyses corrected cleanup/count/producer-sum assumptions without tolerances, threshold changes or numerical reruns. Retain duration/thermal/memory evidence without controlled speedup, constant-rate, energy or overall device claims.
+
+The [completed-prefix diagnostic](experiments/2026-10-21-m7-worker-prefix.md)
+adds opt-in bounded saved-ID snapshots from the owning thread; ordinary callers
+retain no prefix copy. The first native check caught stale active counts after
+close; fixed terminal publication keeps the strict zero-state oracle unchanged.
+Exact failing sources/receipt remain. Astra's race-witness/state-matrix findings
+are fixed.26 states/backend, four actual publication witnesses,34 native/build
+commands/both unsigned apps and159 portable methods/17 modules pass. Astra accepted source and
+completed evidence with no findings. Actual phone lifecycle and M7.3 remain open.
+
+The [bounded lifecycle core](experiments/2026-10-21-m7-lifecycle-core.md)
+adds64-event/1152-ID weak-owner traces with before/requested states, separate
+observation/record clocks, command/provenance/footprint and completed-close
+detach. Astra's cleanup-after-trace-failure and pre-action-bound findings are
+fixed. Fourteen events/13 scenarios perCPU/Metal backend,43 native/build commands
+and165 portable methods/18 modules pass. The initial fixture-alias parser
+failure remains recorded. Astra accepted source and completed evidence with no findings. Actual app/OS/phone
+lifecycle qualification and M7.3 remain open.
+
+The [lifecycle app integration](experiments/2026-10-21-m7-lifecycle-app.md)
+shares scene/warning actions, preserves original callback times, requires active
+foreground READY, and tests exact original-prefix replay against uninterrupted
+decode without a second model. Astra findings and the initial test-thread trap
+are fixed with old sources retained.51 native/build commands,173 portable methods
+and19 Mac synthetic events pass. Retain for physical collection; actual OS/device
+qualification and M7.3 remain open.
+
+The [sealed physical lifecycle controller](experiments/2026-10-21-m7-physical-lifecycle.md)
+adds sealed jobs, active READY, Settings/foreground activation without replacement,
+exact observed/saved/rebuilt IDs and owned cleanup. Astra launch-race and prefix
+findings are fixed.190 portable methods/20 modules and two local commands pass;
+no native model or device was used. Initial mock/wrapper failures remain. Retain
+for actual OS collection; lifecycle/device qualification and M7.3 remain open.
+
+### M7 bounded state diagnostics — 21 October 2026
+
+Hypothesis: the native session preserves exact usable prefixes through cache reuse, active prefill cancellation and rejected capacity requests. The [state app report](experiments/2026-10-21-m7-state-app.md) adds one-model diagnostics and independent fresh references, exact scalar before/after rejection checks and real partial-prefill evidence. It also fixes successful close publishing stale error/admission/emission fields, with direct error-to-close and generated-output-to-close regressions. Astra findings and failed attempts remain pinned.59 native/build commands,206 methods across21 modules and15 focused tests pass; small Mac Metal covers512-token prefill cancellation and1152 fully committed positions. Retain for phone testing, without mobile/performance/energy claims.
+
+### M7 physical state orchestration — 21 October2026
+
+The [sealed state controller](experiments/2026-10-21-m7-physical-state.md) reuses admitted storage/signing/cleanup transport, adds explicit --state mode, separates pure result replay from component-only error-close tests, and admits the complete reviewed current app closure for both state and lifecycle jobs.217portable methods/22modules,11focused parser/admission/shared-controller tests and one owned local two-model inventory/three-native-raw replay child pass. Exact job/SHA, no-copy reuse, absent auxiliary payloads and cleanup after combined console/input failure are verified. Retain for physical collection; no new native model/device/build/performance claim.

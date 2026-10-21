@@ -61,6 +61,8 @@ struct NativeSnapshot: Sendable {
     var evaluated: UInt32 = 0
     var pending: UInt32 = 0
     var savedHistory = 0
+    // Opt-in cold diagnostic only, published after a completed command.
+    var savedPrefix: [UInt32]?
     var admittedBytes: UInt64 = 0
     var score: NativeDistributionScore?
     var workerFinished = false
@@ -96,11 +98,13 @@ final class NativeWorker: @unchecked Sendable {
     // Runs after FFI returns, outside the condition lock, around publication;
     // the after observer receives only whether a score was published. Neither
     // receives native owners. Production callers leave both nil.
+    private let captureSavedPrefix: Bool
     private let beforeScorePublication: (@Sendable () -> Void)?
     private let afterScorePublication: (@Sendable (Bool) -> Void)?
 
-    init(beforeScorePublication: (@Sendable () -> Void)? = nil,
+    init(captureSavedPrefix: Bool = false, beforeScorePublication: (@Sendable () -> Void)? = nil,
          afterScorePublication: (@Sendable (Bool) -> Void)? = nil) throws {
+        self.captureSavedPrefix = captureSavedPrefix
         self.beforeScorePublication = beforeScorePublication
         self.afterScorePublication = afterScorePublication
         var error = TokletError()
@@ -129,6 +133,7 @@ final class NativeWorker: @unchecked Sendable {
         view.busy = true
         view.phase = "Queued"
         view.score = nil
+        view.savedPrefix = nil
         view.stopToken = .max
         view.ids.removeAll(keepingCapacity: true)
         view.tokenTimings.removeAll(keepingCapacity: true)
@@ -165,6 +170,7 @@ final class NativeWorker: @unchecked Sendable {
         view.busy = true
         view.phase = "Cancelling for lifecycle cleanup"
         view.score = nil
+        view.savedPrefix = nil
         view.stopToken = .max
         condition.signal()
     }
@@ -174,6 +180,7 @@ final class NativeWorker: @unchecked Sendable {
         guard !view.closed else { return }
         closing = true; queued = nil
         view.score = nil
+        view.savedPrefix = nil
         view.stopToken = .max
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
         view.busy = true
@@ -225,6 +232,10 @@ final class NativeWorker: @unchecked Sendable {
             view.hasModel = engine.model != nil
             view.hasSession = engine.session != nil
             view.savedHistory = engine.savedCount
+            // Only this owning thread reads the engine prefix. The copy is
+            // bounded by admitted capacity and absent from ordinary callers.
+            view.savedPrefix = captureSavedPrefix && !closing && queued == nil
+                ? Array(engine.saved.prefix(engine.savedCount)) : nil
             view.history = engine.report.history_tokens
             view.evaluated = engine.report.evaluated_tokens
             view.pending = engine.report.pending_tokens
@@ -253,13 +264,22 @@ final class NativeWorker: @unchecked Sendable {
             cancelFlag = nil
         }
         view.hasModel = false; view.hasSession = false
+        // Closed means there is no active numerical prefix. Do not retain the
+        // last command's counts when close supersedes an in-flight operation.
+        view.history = 0; view.evaluated = 0; view.pending = 0; view.reason = 0
         view.savedHistory = 0; view.busy = false
         view.closed = true; view.workerFinished = true
         view.score = nil
+        view.savedPrefix = nil
         view.stopToken = .max
         view.phase = releaseError == nil ? "Closed" : "Release failed; restart required"
         if let error = releaseError {
             view.status = UInt32(clamping: error.code); view.message = error.localizedDescription
+        } else {
+            // Completed close describes the released owner, not the previous
+            // request. Earlier operation errors remain in caller diagnostics.
+            view.status = 0; view.message = ""; view.admittedBytes = 0
+            view.ids.removeAll(keepingCapacity:true);view.tokenTimings.removeAll(keepingCapacity:true)
         }
         thread = nil
         condition.broadcast(); condition.unlock()

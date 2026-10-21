@@ -1,0 +1,1 @@
+{"passed": false, "primary_error": "NotADirectoryError: [Errno 20] Not a directory: '/Users/coloner/.codex/worktrees/m7-score-diagnostic/toklet/artifacts/m7-apple-package-v5/build.json/build.json'", "endpoint_errors": []}
