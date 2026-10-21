@@ -13,6 +13,7 @@ mod online_attention;
 mod q4_v2_projection;
 pub use capture::Capture;
 mod memory;
+pub mod mlx;
 mod profile;
 use crate::{model, q4, session, weights};
 pub use diagnostic::Diagnostic;
