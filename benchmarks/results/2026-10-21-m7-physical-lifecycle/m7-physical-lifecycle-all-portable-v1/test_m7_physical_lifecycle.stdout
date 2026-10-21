@@ -1,0 +1,6 @@
+{"passed": false, "primary_error": null, "endpoint_errors": [], "cleanup_errors": ["Capture close: OSError: Synthetic capture close"]}
+{"passed": false, "primary_error": "TimeoutExpired: Command '['devicectl', '<private-device_identifier>', '<private-device_udid>', '<private-development_team>', '<installed-app>']' timed out after 600 seconds", "endpoint_errors": [], "cleanup_errors": []}
+{"passed": false, "primary_error": "ValueError: Same live lifecycle PID required", "endpoint_errors": [], "cleanup_errors": []}
+{"passed": false, "primary_error": "ValueError: Exact activated process identity differs", "endpoint_errors": [], "cleanup_errors": []}
+{"passed": true, "primary_error": null, "endpoint_errors": [], "cleanup_errors": []}
+{"passed": false, "primary_error": "TimeoutExpired: Command '['devicectl', '<private-device_identifier>', '<private-device_udid>', '<private-development_team>', '<installed-app>']' timed out after 600 seconds", "endpoint_errors": [], "cleanup_errors": []}

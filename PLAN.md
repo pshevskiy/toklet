@@ -1588,3 +1588,7 @@ connects real scene/notification handlers to opt-in sealed diagnostics. Fifty-on
 native/build commands and173 portable methods pass; 19 Mac synthetic events
 validate exact prefix/replay/reference/cleanup. Physical OS collection remains;
 M7.3 stays open.
+
+The [sealed physical lifecycle controller](docs/experiments/2026-10-21-m7-physical-lifecycle.md)
+passes190 portable methods and two local inventory/help commands. Same-PID real
+OS round trips are now executable but remain uncollected; M7.3 stays open.

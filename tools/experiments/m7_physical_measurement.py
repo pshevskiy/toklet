@@ -224,12 +224,15 @@ def admit_ready(folder,expected,config,inputs,prepared,prepared_sha,signed,forma
     return pins,receipt['relative_path'],digest
 
 
-def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,prepare_only=False,transfer=None,transfer_sha=None,storage_proof=None,storage_sha=None,native_sha=None,quality=False,tasks=False):
+def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,prepare_only=False,transfer=None,transfer_sha=None,storage_proof=None,storage_sha=None,native_sha=None,quality=False,tasks=False,lifecycle=False):
     native_sha=NATIVE_SHA if native_sha is None else native_sha
     if not storage.digest(native_sha):raise ValueError('Explicit native package SHA required')
-    if quality and tasks:raise ValueError('Physical diagnostic modes conflict')
+    if sum((quality,tasks,lifecycle))>1:raise ValueError('Physical diagnostic modes conflict')
+    if lifecycle and not prepare_only:raise ValueError('Lifecycle collection requires the separate round-trip controller')
     diagnostic_module=None
-    if tasks:
+    if lifecycle:
+        import m7_physical_lifecycle as diagnostic_module
+    elif tasks:
         import m7_physical_tasks as diagnostic_module
     elif quality:
         import m7_physical_quality as diagnostic_module
@@ -277,7 +280,7 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
         integration.merge(pins,{str(private.relative_to(ROOT)):private_sha})
         common_pins=dict(pins)
         if diagnostic_module:
-            test_name='test_m7_physical_tasks.py' if tasks else 'test_m7_physical_quality.py'
+            test_name='test_m7_physical_lifecycle.py' if lifecycle else 'test_m7_physical_tasks.py' if tasks else 'test_m7_physical_quality.py'
             integration.merge(pins,{str(Path(diagnostic_module.__file__).resolve().relative_to(ROOT)):package.sha(Path(diagnostic_module.__file__).resolve()),
                 str(Path(__file__).with_name(test_name).relative_to(ROOT)):package.sha(Path(__file__).with_name(test_name))})
             config,host,inputs=diagnostic_module.job(model,workload,verify_sources=not transfer)
@@ -340,7 +343,7 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
                     '--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copy-'+kind,600),remote,selected)
             listed=json.loads(package.small(device_command(['info','files','--subdirectory','Documents/'+parent,'--recurse','--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copied-inventory')))
             validate_listing(listed,selected['device_identifier'],dict(config,host=host),parent)
-            if diagnostic_module:
+            if quality or tasks:
                 payload_key='tasksFile' if tasks else 'tokensFile'
                 payload_label='tasks' if tasks else 'corpus'
                 corpus_parent=str(Path(config[payload_key]).parent)

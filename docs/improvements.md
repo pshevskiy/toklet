@@ -916,3 +916,10 @@ decode without a second model. Astra findings and the initial test-thread trap
 are fixed with old sources retained.51 native/build commands,173 portable methods
 and19 Mac synthetic events pass. Retain for physical collection; actual OS/device
 qualification and M7.3 remain open.
+
+The [sealed physical lifecycle controller](experiments/2026-10-21-m7-physical-lifecycle.md)
+adds sealed jobs, active READY, Settings/foreground activation without replacement,
+exact observed/saved/rebuilt IDs and owned cleanup. Astra launch-race and prefix
+findings are fixed.190 portable methods/20 modules and two local commands pass;
+no native model or device was used. Initial mock/wrapper failures remain. Retain
+for actual OS collection; lifecycle/device qualification and M7.3 remain open.

@@ -164,3 +164,7 @@ The [lifecycle app integration](../docs/experiments/2026-10-21-m7-lifecycle-app.
 adds actual callback provenance and an active-generation READY boundary. Both iOS
 builds and Mac synthetic tests pass; actual physical OS transitions and pressure
 remain unqualified.
+
+The [sealed physical lifecycle controller](../docs/experiments/2026-10-21-m7-physical-lifecycle.md)
+requires actual phase provenance, original PID, exact replay outputs and independent
+host/phone cleanup.190 portable checks pass; physical lifecycle remains pending.
