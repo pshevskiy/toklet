@@ -52,10 +52,12 @@ struct NativeTaskSet: Codable, Sendable {
               stops.allSatisfy({ $0 < vocabulary }), Set(cases.map(\.id)).count == cases.count else {
             throw tasksError("Task set identity/stop policy differs")
         }
+        // Benchmark IDs are literal labels, never filesystem paths. Preserve
+        // frozen IDs such as HumanEval/0 without renaming or encoding them.
         for item in cases {
             guard !item.id.isEmpty, item.id.utf8.count <= 80,
                   item.id.utf8.allSatisfy({ (48...57).contains($0) || (65...90).contains($0)
-                    || (97...122).contains($0) || [45,46,95].contains($0) }),
+                    || (97...122).contains($0) || [45,46,47,95].contains($0) }),
                   (1...306).contains(item.promptTokens.count), (1...256).contains(item.maximum),
                   item.promptTokens.allSatisfy({ $0 < vocabulary }),
                   UInt32(item.promptTokens.count + item.maximum) <= config.capacity else {

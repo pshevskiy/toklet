@@ -12,7 +12,7 @@ import m7_native_measurement_check as measurement
 import m7_swift_harness_build as builder
 ROOT=package.ROOT
 EXPECTED_FILES={'Model/'+Path(name).name:sha for name,sha in integration.FIXTURE.items()}
-EXPECTED_TASKS=dict(version=1,vocabulary=64,stops=[62,63],cases=[dict(id='first',promptTokens=[1,7,13],maximum=3),dict(id='second',promptTokens=[1,7,13,3],maximum=2)])
+EXPECTED_TASKS=dict(version=1,vocabulary=64,stops=[62,63],cases=[dict(id='HumanEval/0',promptTokens=[1,7,13],maximum=3),dict(id='second',promptTokens=[1,7,13,3],maximum=2)])
 CASES=['cpu-complete','metal-complete',*('reject-'+key for key in ['version','overflow-count','capacity','chunk','budget','tasks-path','tasks-in-model','tasks-hash','inventory','extra-config','config-sha','set-version','vocabulary','duplicate-stops','stop-range','case-count','extra-set','duplicate-case','case-id','overflow-output','prompt-range','prompt-capacity','extra-case','tasks-symlink','tasks-size','output-chunk','output-case','model-endpoint','tasks-endpoint'])]
 
 
@@ -64,7 +64,7 @@ def validate_output(text,tasks_sha):
   for index in (0,1):
    chunk=group[index*2][1];case=group[index*2+1][1];item=chunk['chunk'];maximum=(3,2)[index];prompt=(3,4)[index]
    for sample in (chunk,case):
-    if integer(sample['caseIndex'])!=index or sample['caseID']!=('first','second')[index] or integer(sample['admittedBytes'],1,128*1024**2)!=admission:raise ValueError('Task sample identity/admission differs')
+    if integer(sample['caseIndex'])!=index or sample['caseID']!=('HumanEval/0','second')[index] or integer(sample['admittedBytes'],1,128*1024**2)!=admission:raise ValueError('Task sample identity/admission differs')
     environment(sample['environment'])
    for key,expected_value in [('index',0),('requested',maximum),('reason',1),('history',prompt+maximum),('evaluated',prompt+maximum-1),('pending',1)]:
     if integer(item[key])!=expected_value:raise ValueError('Task chunk prefix/budget differs')

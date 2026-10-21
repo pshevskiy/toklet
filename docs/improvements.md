@@ -875,3 +875,10 @@ recorded. Astra's clock/consumed-buffer findings and a preflight tiny-test promp
 mistake are corrected with retained old evidence. Astra accepted completed code
 and evidence with no findings. Frozen physical100-task collection/grading and
 M7.3 remain open.
+
+The [literal task-ID compatibility fix](experiments/2026-10-21-m7-task-id-compat.md)
+preserves original labels such as HumanEval/0. All100 frozen IDs contain slash;
+Swift now accepts that literal character within the unchanged bounded/unique ID
+policy, without using IDs as paths. Twelve parser methods, actualCPU/Metal label
+roundtrip,31-case native checks and27 clean owned commands/both iOS apps pass.
+Original task IDs/prompts/caps/numerics/gates stay unchanged. Astra accepted source and completed evidence with no findings. Full physical task collection/grading remains.

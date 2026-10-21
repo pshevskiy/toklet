@@ -1485,6 +1485,10 @@ cases, existing quality/hash regressions and both iOS app builds. All140 portabl
 methods pass in15 isolated modules; combined-run EPERM failures remain recorded.
 Physical frozen100-task collection, decoding and literal grading stay pending.
 
+The [literal task-ID compatibility](docs/experiments/2026-10-21-m7-task-id-compat.md)
+preserves slash-containing frozen benchmark IDs through checked CPU/Metal app
+response collection. Full physical100-task collection/grading remains pending.
+
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 
 ## Validation and performance policy

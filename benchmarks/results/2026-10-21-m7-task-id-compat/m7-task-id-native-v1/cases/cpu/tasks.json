@@ -1,0 +1,1 @@
+{"cases":[{"id":"HumanEval\/0","promptTokens":[1,7,13],"maximum":3},{"maximum":2,"id":"second","promptTokens":[1,7,13,3]}],"stops":[62,63],"vocabulary":64,"version":1}

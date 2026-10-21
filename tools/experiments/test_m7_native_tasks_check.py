@@ -23,7 +23,7 @@ def fixture():
   for index in (0,1):
    maximum=(3,2)[index];prompt=(3,4)[index];start=(offset*3+index+1)*1_000_000_000
    item=dict(index=0,requested=maximum,ids=[47]*maximum,tokenTimings=[dict(index=i,nativeElapsedSeconds=(i+1)/10,callbackUptimeNanoseconds=start+(i+1)*100_000_000) for i in range(maximum)],reason=1,history=prompt+maximum,evaluated=prompt+maximum-1,pending=1)
-   common=dict(caseIndex=index,caseID=('first','second')[index],admittedBytes=100,footprint=mem(),environment=env())
+   common=dict(caseIndex=index,caseID=('HumanEval/0','second')[index],admittedBytes=100,footprint=mem(),environment=env())
    events.append(('TASKS_CHECK_CHUNK_JSON=',dict(**common,chunk=item,submittedUptimeNanoseconds=start,completedUptimeNanoseconds=start+1_000_000_000)))
    events.append(('TASKS_CHECK_CASE_JSON=',dict(**common,response=dict(ids=[47]*maximum,sampled=maximum,reason=1,history=prompt+maximum,evaluated=prompt+maximum-1,pending=1,chunks=1),resetHistory=0,resetEvaluated=0,resetPending=0)))
   events.append(('TASKS_CHECK_RESULT_JSON=',result(backend)))

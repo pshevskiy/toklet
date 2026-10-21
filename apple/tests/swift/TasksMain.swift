@@ -27,7 +27,7 @@ private struct TasksCheckSummary: Encodable { let passed: Bool;let cases: [Strin
                 let files = ["Model/config.json":"84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
                              "Model/model.safetensors":"b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"]
                 let taskSet = NativeTaskSet(version:1,vocabulary:64,stops:[62,63],cases:[
-                    NativeTaskCase(id:"first",promptTokens:[1,7,13],maximum:3),
+                    NativeTaskCase(id:"HumanEval/0",promptTokens:[1,7,13],maximum:3),
                     NativeTaskCase(id:"second",promptTokens:[1,7,13,3],maximum:2)])
                 let rawTasks = try JSONEncoder().encode(taskSet)
                 var names: [String] = []
@@ -52,7 +52,7 @@ private struct TasksCheckSummary: Encodable { let passed: Bool;let cases: [Strin
                     let raw = try JSONEncoder().encode(config);try raw.write(to:root.appendingPathComponent("job.json"),options:.withoutOverwriting)
                     let admitted = try admitTasksConfig(root:root,name:"job.json",sha256:tasksSHA(raw))
                     let admittedSet = try admitTaskSet(admitted,root:root)
-                    try checkTasks(admittedSet.cases.map(\.id) == ["first","second"],"Ordered task admission")
+                    try checkTasks(admittedSet.cases.map(\.id) == ["HumanEval/0","second"],"Ordered task admission")
                     var chunks: [NativeTaskChunkSample] = [];var responses: [NativeTaskCaseSample] = []
                     let result = runNativeTasks(admitted,root:root,onChunk:{ sample in
                         chunks.append(sample);try emitTasks("TASKS_CHECK_CHUNK_JSON=",sample)
@@ -61,7 +61,7 @@ private struct TasksCheckSummary: Encodable { let passed: Bool;let cases: [Strin
                     })
                     try checkTasks(result.passed && result.closed && result.released && result.casesCompleted == 2 && result.chunksCompleted == 2,
                         "Actual task result: \(String(describing:result.error))")
-                    try checkTasks(chunks.map(\.caseIndex) == [0,1] && responses.map(\.caseID) == ["first","second"],"Case/chunk coverage")
+                    try checkTasks(chunks.map(\.caseIndex) == [0,1] && responses.map(\.caseID) == ["HumanEval/0","second"],"Case/chunk coverage")
                     try checkTasks(responses[0].response.ids == [47,47,47] && responses[1].response.ids == [47,47],"Independent tiny greedy IDs")
                     try checkTasks(result.filesBefore == files && result.filesAfter == files && result.tasksBeforeSHA256 == config.tasksSHA256
                         && result.tasksAfterSHA256 == config.tasksSHA256 && result.loadedAdmittedBytes > 0,"Endpoint/admission proofs")
@@ -98,8 +98,8 @@ private struct TasksCheckSummary: Encodable { let passed: Bool;let cases: [Strin
                     ("duplicate-stops",{ d in d["stops"] = [62,62] }),("stop-range",{ d in d["stops"] = [64] }),
                     ("case-count",{ d in d["cases"] = [] as [[String:Any]] }),
                     ("extra-set",{ d in d["extra"] = true }),
-                    ("duplicate-case",{ d in var rows = d["cases"] as! [[String:Any]];rows[1]["id"] = "first";d["cases"] = rows }),
-                    ("case-id",{ d in var rows = d["cases"] as! [[String:Any]];rows[0]["id"] = "bad/id";d["cases"] = rows }),
+                    ("duplicate-case",{ d in var rows = d["cases"] as! [[String:Any]];rows[1]["id"] = "HumanEval/0";d["cases"] = rows }),
+                    ("case-id",{ d in var rows = d["cases"] as! [[String:Any]];rows[0]["id"] = "bad id";d["cases"] = rows }),
                     ("overflow-output",{ d in var rows = d["cases"] as! [[String:Any]];rows[0]["maximum"] = Int.max;d["cases"] = rows }),
                     ("prompt-range",{ d in var rows = d["cases"] as! [[String:Any]];rows[0]["promptTokens"] = [64];d["cases"] = rows }),
                     ("prompt-capacity",{ d in var rows = d["cases"] as! [[String:Any]];rows[0]["maximum"] = 4;d["cases"] = rows }),

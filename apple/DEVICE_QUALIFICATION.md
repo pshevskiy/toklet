@@ -140,3 +140,7 @@ actual memory/admission/foreground observations and end proofs. Tiny CPU/Metal,
 quality/hash regressions and both SDK builds pass. Isolated portable module
 passes retain the combined EPERM limitation. Physical frozen task collection,
 post-exit decoding and literal grading remain before quality acceptance.
+
+The [literal task-ID compatibility](../docs/experiments/2026-10-21-m7-task-id-compat.md)
+preserves frozen slash-containing labels with unchanged artifact-path rules.
+Tiny CPU/Metal and both iOS app builds pass; full physical tasks remain pending.
