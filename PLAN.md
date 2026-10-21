@@ -6,7 +6,7 @@ Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session 
 
 This plan translates the [Apple LLM performance proposal](apple_llm_performance_plan.md) into repository work. The proposal supplies design context; its references to an existing linear layer and earlier plan do not establish completed work in this checkout.
 
-## Starting point
+## Historical starting point
 
 Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0 establishes the package, frozen independent fixtures, workloads, quality gates, and the first native MLX baseline. M1 implements the complete scalar tiny decoder and greedy trace. M2.1 loads the pinned Qwen checkpoint into validated FP32 weights; M2.2 qualifies its full-prefix forward pass on short independent numerical probes. M2.3 adds bounded KV sessions and exact continuation; M2.4 adds bounded CLI generation; engine profiling remains next.
 
@@ -70,6 +70,11 @@ Implement these before optimizing state reuse:
 5. Keep final logits or final hidden state when the whole prompt is already evaluated. A session with no pending token still needs a next-token distribution; KV alone is insufficient.
 6. Cancellation stops submission at a documented boundary and leaves either a committed prefix or an explicit replay requirement. Reset clears positions and pending output state; a later request must not see stale KV.
 7. Preallocate or grow in coarse bounded increments. Include allocated capacity, scratch, and retained conversion buffers in memory admission. Count shared CPU/GPU allocations once.
+
+For the current requirement-to-exit-evidence map and remaining-limit classification,
+see the [full-plan audit](docs/experiments/2026-10-21-full-plan-audit.md).
+Dated evidence notes below retain the status known at collection; their pending
+statements do not override subsequent accepted milestone closures.
 
 ## Milestones and dependencies
 

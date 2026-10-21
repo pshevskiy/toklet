@@ -87,7 +87,7 @@ adoption; see the [CLI qualification](docs/experiments/2026-10-10-cpu-tiled-cli.
 
 Use `generate` (the default) with exactly one `prompt`, `messages`, or `tokens` field. Exact history extensions reuse evaluated KV; other changes reset and replay. `append` accepts raw text or IDs, so the caller supplies any turn delimiters. `continue` evaluates the pending suffix and resumes greedy output; `reset` accepts no other fields. Token events carry IDs and decoded text; `done` carries timings, state counts and admitted memory. Unfinished Unicode remains buffered across output limits or cancellation and subsequent `continue`; EOS, a new response, reset or process exit flushes it, sometimes through a separate `text` event. Parsed validation or admission errors produce a recoverable `error` event and preserve the valid prefix. An input line exceeding the 1 MiB transport limit terminates the process with an error on stderr.
 
-Ctrl-C is checked between synchronous chunks/steps. An active interactive request reports `cancelled` and can be continued; idle Ctrl-C exits with status 130. `--prefill-chunk` controls the cancellation boundary. Numerical decode allocates no new buffers, while tokenization, JSON and output decoding use bounded application storage. Timers separate loading, input preparation, prefill, decode and sampling; total request time also includes output. These are functional statistics, pending controlled performance qualification.
+Ctrl-C is checked between synchronous chunks/steps. An active interactive request reports `cancelled` and can be continued; idle Ctrl-C exits with status 130. `--prefill-chunk` controls the cancellation boundary. Numerical decode allocates no new buffers, while tokenization, JSON and output decoding use bounded application storage. Timers separate loading, input preparation, prefill, decode and sampling; total request time also includes output. These statistics were initially qualified for functionality. The accepted [CPU application/profiling closure](docs/experiments/2026-10-11-m2.5-scalar-comparison.md) and [M5 release](docs/experiments/2026-10-15-m5-release.md) record later controlled measurements within their named workloads and representation limits.
 
 The [CLI qualification](benchmarks/results/2026-10-10-qwen-cli.md) records short real-model checks. Ordinary tokenizer tests use a frozen small subset without downloading models. Explicit checks use the complete pinned assets:
 
@@ -95,6 +95,20 @@ The [CLI qualification](benchmarks/results/2026-10-10-qwen-cli.md) records short
 cargo test --locked --offline --release --bin toklet full_pinned_tokenizer_matches_frozen_ids -- --ignored --nocapture
 python3 tools/reference/cli.py --output artifacts/qwen-cli-check
 ```
+
+## Historical implementation and qualification notes
+
+The following notes preserve the implementation sequence and the scope known at
+each collection. Their pending statements are historical, superseded by the
+accepted [CPU profiling closure](docs/experiments/2026-10-11-m2.5-scalar-comparison.md),
+[CPU retention](docs/experiments/2026-10-12-cpu-tiled-retention.md),
+[M4 trace](docs/experiments/2026-10-13-metal-trace.md),
+[M5 release](docs/experiments/2026-10-15-m5-release.md),
+[M6 release](docs/experiments/2026-10-19-m6-release.md) and
+[M7 closure](docs/experiments/2026-10-21-m7-release.md).
+The [full-plan audit](docs/experiments/2026-10-21-full-plan-audit.md) maps each
+milestone to its accepted exit evidence and separates explicit limitations from
+missing implementation.
 
 The [profiling adapter](tools/bench/cpu.py) runs the frozen teacher-forced CPU
 workloads and records completed token timings without sampling or text output.

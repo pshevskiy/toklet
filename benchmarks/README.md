@@ -161,9 +161,13 @@ allocation and final model validation. It must not be added to total load again.
 
 [The short worker probe](results/2026-10-10-cpu-profiler-probe.json) is functional
 evidence for this harness, with eleven worker records and a 2,033,928,208-byte
-own-child peak. It is not a workload benchmark. The full matrix, controlled
-external comparison, sustained/application records and qualification are still
-pending. Native BF16 MLX records remain on the application track; the adapter's
+own-child peak. It is not a workload benchmark. At that early collection,
+the full matrix, controlled external comparison and sustained/application records
+were pending. The subsequent [M2.5 closure](../docs/experiments/2026-10-11-m2.5-scalar-comparison.md)
+accepts the complete scalar matrix, scoped external comparison and application/
+sustained evidence; [CPU retention](../docs/experiments/2026-10-12-cpu-tiled-retention.md)
+separately closes the tiled candidate. The original probe remains unchanged.
+Native BF16 MLX records remain on the application track; the adapter's
 optional FP32 conversion provides a compatible storage representation for the
 controlled track. The [short FP32 baseline](results/2026-10-10-mlx-fp32-128-128.md)
 records completed timings and memory, with no quality ranking.

@@ -1,10 +1,14 @@
 # Native raw-token boundary, ABI 1
 
-The [C header](../apple/include/toklet.h) exposes the existing CPU scalar model,
-transactional session and greedy generator. This first component takes local
-UTF-8 model paths and raw token IDs. Tokenization, chat templates, text decoding,
+The [C header](../apple/include/toklet.h) exposes CPU scalar and explicit Metal
+models, transactional sessions and greedy generation. Inputs are local UTF-8
+model paths and raw token IDs. Tokenization, chat templates, text decoding,
 model downloads and UI remain outside numerical execution. CPU capacity remains
-at most 2,048; Metal/iOS integration and physical-device limits are separate tasks.
+at most 2,048. Metal sessions use their separately qualified configuration limits;
+the [M6 release](experiments/2026-10-19-m6-release.md) covers selected Mac contexts,
+and the [M7 closure](experiments/2026-10-21-m7-release.md) qualifies the explicitly
+amended iPhone14Pro/iOS27.0.1 target within its named trial limits. It does not
+qualify other devices, real warning delivery/jetsam or energy measurements.
 
 Build the library with `cargo build --locked --offline --lib`. The package emits
 both the ordinary Rust library and `libtoklet.a`. Import `CToklet` through the
@@ -45,7 +49,7 @@ exposed. Callbacks must return normally, without foreign exceptions or unwinding
 
 An independent cancellation handle contains an atomic flag. Setting it is the
 only supported concurrent action during inference. It stops at existing chunk
-or token boundaries, after completed GPU work when that backend is added. Clear
+or token boundaries, after completed GPU work on the Metal backend. Clear
 it explicitly while idle before a new request; cancellation is never cleared
 implicitly. Keep the flag alive until generation and all concurrent setters
 return, then release it. Cancellation does not free resources or interrupt a
@@ -85,8 +89,11 @@ share the immutable model allocation and retain separate KV/scratch. Device and
 API capability checks still apply; this entrypoint compiles for arm64 macOS15+ and iOS18+ Metal builds, with
 explicit unsupported errors in other builds. The [Apple package report](experiments/2026-10-19-m7-apple-package.md)
 records separate Mac/device/simulator XCFramework slices, exact C export/linkage
-and deployment checks. Mac Metal and simulator CPU integration pass; physical
-iPhone Metal runtime, quality and supported limits remain unqualified.
+and deployment checks. Mac Metal, simulator CPU and physical iPhone14Pro Metal
+integration pass their recorded scopes. The [Pro device report](experiments/2026-10-21-m7-iphone14pro.md)
+records full selected-path quality, mobile memory/context limits, thermal/sustained
+observations and actual OS scene replay. Its limits are separate from the Mac's;
+other devices and unavailable energy/pressure guarantees remain unqualified.
 
 The [Metal bridge report](experiments/2026-10-19-m7-metal-abi.md) separates
 integration/state/combined logical admission checks from performance and mobile
@@ -127,5 +134,8 @@ to a target. This read-only query changes neither prefix nor cancellation flag.
 The normal owner, busy, poison, pointer and non-overlap contracts apply. Output
 is untouched unless the call succeeds. The [component report](experiments/2026-10-21-m7-score-api.md)
 records independent numerical checks, selected-model Metal comparisons and
-three-platform C build/link checks. Full phone corpus/task quality collection
-and device qualification remain separate work.
+three-platform C build/link checks. Subsequent [full phone loss](experiments/2026-10-21-m7-phone-loss.md),
+[task quality](experiments/2026-10-21-m7-phone-tasks.md) and
+[device qualification](experiments/2026-10-21-m7-iphone14pro.md) supply the
+completed physical evidence; the earlier component report remains scoped to
+its original API checks.
