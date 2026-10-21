@@ -10,9 +10,11 @@ from pathlib import Path
 import plistlib
 import struct
 import sys
+import time
 import m7_apple_package as package
 import m7_apple_integration as integration
 import m7_physical_integration as physical
+import m7_physical_storage as storage
 
 ROOT=package.ROOT
 NATIVE_SHA='1185314043649692b7e41aff9b90e37355201eef71852965c20ef69513e6f13c'
@@ -222,17 +224,24 @@ def admit_ready(folder,expected,config,inputs,prepared,prepared_sha,signed):
     return pins,receipt['relative_path'],digest
 
 
-def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,prepare_only=False,transfer=None,transfer_sha=None):
+def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,prepare_only=False,transfer=None,transfer_sha=None,storage_proof=None,storage_sha=None):
     native=native.resolve();private=private.resolve();prepared=prepared.resolve();output=output.resolve()
     transfer=transfer.resolve() if transfer else None
+    storage_proof=storage_proof.resolve() if storage_proof else None
     if prepare_only and transfer:raise ValueError('Preparation and transfer reuse are separate')
-    if any(not p.is_relative_to(ROOT/'artifacts') for p in (native,private,prepared,output,*([transfer] if transfer else []))):raise ValueError('Repository artifact paths required')
+    if storage_proof and (transfer or model.startswith('tiny')):raise ValueError('Storage proof is only for new real-model transfers')
+    if any(not p.is_relative_to(ROOT/'artifacts') for p in (native,private,prepared,output,*([transfer] if transfer else []),*([storage_proof] if storage_proof else []))):raise ValueError('Repository artifact paths required')
     output.mkdir();logs=output/'private-logs';logs.mkdir();env,_=package.build_environment();env['TMPDIR']=str(output)
     pins={};commands=[];config={};remote=None;app=None;signed={};checked=None;primary=None;endpoints=[];cleanup=[];cleanup_errors=[];counter=0
     selected={};device=None;profile=None;remote_admitted=False;device_observed=False;name=None;digest=None;transfer_verified=False
+    host_boot=None;host_start=None;storage_admission=None;observed_storage=None
     previous=package.signal.signal(package.signal.SIGTERM,package.interrupted)
     def execute(args,label,timeout=90,admit=True):
         if admit:verify_inputs(pins)
+        # This must be the last admission work before the actual copy child.
+        # In particular, no subsequent full-input hashing can age the proof.
+        if label.startswith('copy-') and storage_admission is not None:
+            storage_admission['checks'].append(storage.fresh(storage_admission,host_boot,time.time_ns(),time.monotonic_ns(),label))
         row=package.owned(args,logs/(label+'.stdout'),logs/(label+'.stderr'),env,timeout);commands.append(row)
         if row['primary_error'] or row['cleanup_errors']:raise RuntimeError(label+': '+str(row['primary_error'])+' '+repr(row['cleanup_errors']))
         return ROOT/row['stdout']
@@ -252,19 +261,42 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
         selected=physical.selection(private,private_sha)
         integration.merge(pins,integration.admit_build(native,NATIVE_SHA))
         app,reused,remote,signed=physical.admit_reuse(prepared,prepared_sha,selected,NATIVE_SHA);integration.merge(pins,reused)
-        modules=[package,integration,physical]
-        paths=[Path(m.__file__).resolve() for m in modules]+[Path(__file__).resolve(),Path(__file__).with_name('test_m7_physical_measurement.py')]
+        modules=[package,integration,physical,storage]
+        paths=[Path(m.__file__).resolve() for m in modules]+[Path(__file__).resolve(),Path(__file__).with_name('test_m7_physical_measurement.py'),Path(__file__).with_name('test_m7_physical_storage.py')]
         integration.merge(pins,{str(p.relative_to(ROOT)):package.sha(p) for p in paths})
         integration.merge(pins,{str(private.relative_to(ROOT)):private_sha})
+        common_pins=dict(pins)
         config,host,inputs=job(model,workload,verify_sources=not transfer);integration.merge(pins,inputs)
+        real=model in ('small','larger')
+        if real and not transfer and not storage_proof:raise ValueError('Real-model copy requires a fresh same-device storage proof')
+        context=None
+        if real:
+            tiny,_,tiny_inputs=job('tiny-cpu','short',verify_sources=False)
+            required=dict(common_pins);integration.merge(required,tiny_inputs)
+            context=dict(tiny_config=tiny,prepared_receipt=dict(path=str((prepared/'integration.json').relative_to(ROOT)),sha256=prepared_sha),
+                         signed_bundle=signed,selection_path=str(private.relative_to(ROOT)),selection_sha=private_sha,selected=selected,remote=remote,required_bindings=required)
         if transfer:
             ready,name,digest=admit_ready(transfer,transfer_sha,config,inputs,prepared,prepared_sha,signed)
             integration.merge(pins,ready);transfer_verified=True
+            if real:
+                record=integration.metadata(transfer/'measurement.json',transfer_sha)
+                storage_admission,proof_pins=storage.admit_ready(record,transfer/'transfer',config,name,digest,context,validate_console)
+                integration.merge(pins,proof_pins)
         else:
             base,name,digest=stage(config,host,output)
             staged={str(p.relative_to(ROOT)):package.sha(p) for p in base.rglob('*') if p.is_file()};integration.merge(pins,staged)
+            if real:
+                observed_storage,proof_pins=storage.admit_proof(storage_proof,storage_sha,context,validate_console)
+                integration.merge(pins,proof_pins)
+                payload,total=storage.inventory(base,config,name,digest)
+                storage_admission=storage.decision(observed_storage,storage_proof,storage_sha,payload,total)
+        if not prepare_only or real:
+            host_boot=storage.boot_token(package.small(execute(['/usr/sbin/sysctl','-n','kern.bootsessionuuid'],'host-boot')))
+        if real and not transfer:
+            storage.fresh(storage_admission,host_boot,time.time_ns(),time.monotonic_ns(),'initial-admission')
         device=physical.admit_device(json.loads(package.small(device_command(['info','details'],'device-before'))),selected)
         device_observed=True
+        if observed_storage and device!=observed_storage['device']:raise ValueError('Storage observation device details differ')
         if transfer:
             # Immutable signed files and all cached signing observations are
             # hash-checked above. Re-evaluate team/device/app/expiry now without
@@ -287,15 +319,16 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
         if not transfer:
             parent='M7Inputs/'+model
             for kind in ('Model','Packed') if config['packedFolder'] else ('Model',):
-                device_command(['copy','to','--source',str(base/parent/kind),'--destination','Documents/'+parent+'/'+kind,
-                    '--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copy-'+kind,600)
+                physical.launch_verified(current,lambda:device_command(['copy','to','--source',str(base/parent/kind),'--destination','Documents/'+parent+'/'+kind,
+                    '--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copy-'+kind,600),remote,selected)
             listed=json.loads(package.small(device_command(['info','files','--subdirectory','Documents/'+parent,'--recurse','--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copied-inventory')))
             validate_listing(listed,selected['device_identifier'],dict(config,host=host),parent)
-            device_command(['copy','to','--source',str(base/'M7Jobs'),'--destination','Documents/M7Jobs','--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copy-job',90)
+            physical.launch_verified(current,lambda:device_command(['copy','to','--source',str(base/'M7Jobs'),'--destination','Documents/M7Jobs','--domain-type','appDataContainer','--domain-identifier',physical.BUNDLE],'copy-job',90),remote,selected)
             transfer_verified=True
         if not prepare_only:
             metadata=logs/'launch.json'
             args=[physical.DEVICECTL,'device','process','launch','--device',selected['device_identifier'],'--terminate-existing','--console','--timeout','2400','--json-output',str(metadata),physical.BUNDLE,'--','--measure',name,digest]
+            host_start=dict(wallUnixNanoseconds=time.time_ns(),monotonicNanoseconds=time.monotonic_ns())
             raw=physical.launch_verified(current,lambda:execute(args,'measurement',2430),remote,selected)
             launch=physical.check_launch(json.loads(package.small(metadata)),remote,selected)
             # The admitted representative jobs are well below this bounded capture.
@@ -326,6 +359,7 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
     record=dict(format='toklet-m7-physical-measurement-ready-v1' if prepare_only else 'toklet-m7-physical-measurement-v1',passed=passed,bindings=pins,device=device,signing=profile,config=config,
         transfer_receipt=dict(path=str((transfer/'measurement.json').relative_to(ROOT)),sha256=transfer_sha) if transfer else None,
         prepared_receipt=dict(path=str((prepared/'integration.json').relative_to(ROOT)),sha256=prepared_sha),signed_bundle=signed,
+        host_boot_token=host_boot,measurement_host_start=host_start,storage_admission=storage_admission,
         job_receipt=dict(relative_path=name,sha256=digest),checked=checked,commands=commands,controlled_environment=env,remote_cleanup=cleanup,private_evidence_pins=private_pins,
         primary_error=primary,endpoint_errors=endpoints,cleanup_errors=cleanup_errors,physical_device_qualified=False,m7_complete=False)
     record=physical.redact_record(record,selected,remote);(output/'measurement.json').write_text(json.dumps(record,indent=2)+'\n')
@@ -333,10 +367,23 @@ def main(native,private,private_sha,prepared,prepared_sha,model,workload,output,
     return 0 if passed else 1
 
 
+def options(extra):
+    result={};seen=set()
+    while extra:
+        flag=extra[0];extra=extra[1:]
+        if flag in seen:raise ValueError('Duplicate diagnostic option')
+        seen.add(flag)
+        if flag=='--prepare-only':result['prepare_only']=True
+        elif flag in ('--reuse-transfer','--storage-proof'):
+            if len(extra)<2:raise ValueError('Expected evidence folder and SHA')
+            name='transfer' if flag=='--reuse-transfer' else 'storage_proof'
+            result[name]=Path(extra[0]);result['transfer_sha' if name=='transfer' else 'storage_sha']=extra[1];extra=extra[2:]
+        else:raise ValueError('Unknown diagnostic option')
+    if result.get('prepare_only') and result.get('transfer'):raise ValueError('Preparation and reuse conflict')
+    if result.get('transfer') and result.get('storage_proof'):raise ValueError('Reuse does not copy new files')
+    return result
+
+
 if __name__=='__main__':
-    extra=sys.argv[9:]
-    prepare_only=extra==['--prepare-only']
-    if extra and not prepare_only and not (len(extra)==3 and extra[0]=='--reuse-transfer'):
-        raise ValueError('Expected --prepare-only or --reuse-transfer READY_FOLDER REVIEWED_SHA')
     sys.exit(main(Path(sys.argv[1]),Path(sys.argv[2]),sys.argv[3],Path(sys.argv[4]),sys.argv[5],sys.argv[6],sys.argv[7],Path(sys.argv[8]),
-                  prepare_only,Path(extra[1]) if len(extra)==3 else None,extra[2] if len(extra)==3 else None))
+                  **options(sys.argv[9:])))

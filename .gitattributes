@@ -26,3 +26,9 @@ benchmarks/results/2026-10-21-m7-filesystem-observation/m7-filesystem-tiny-cpu-v
 benchmarks/results/2026-10-21-m7-filesystem-observation/m7-native-measurement-check-v8/logs/swift-version.stderr -text -whitespace
 benchmarks/results/2026-10-21-m7-filesystem-observation/m7-swift-harness-build-v15/logs/iphoneos-build.stdout -text -whitespace
 benchmarks/results/2026-10-21-m7-filesystem-observation/m7-swift-harness-build-v15/logs/iphonesimulator-build.stdout -text -whitespace
+
+# Storage admission raw phone consoles preserve exact mixed line endings.
+benchmarks/results/2026-10-21-m7-storage-admission/m7-storage-proof-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-storage-admission/m7-storage-proof-v2/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-storage-admission/m7-storage-proof-v3/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+benchmarks/results/2026-10-21-m7-storage-admission/m7-small-short-v1/private-logs/measurement.stdout -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

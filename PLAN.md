@@ -1435,9 +1435,13 @@ M7.3 and overall M7 stay open. The
 passes checked memory/timing/artifact/failure mechanics on Mac CPU/Metal and
 both iOS SDK builds. The [physical measurement controller](docs/experiments/2026-10-21-m7-physical-measurement.md)
 now passes26 raw tiny CPU/Metal phone samples after filesystem-alias and startup
-activation fixes; these qualify measurement mechanics only. Real-model phone
-execution, supported limits, sustained/thermal and actual lifecycle evidence
-remain pending.
+activation fixes; these qualify measurement mechanics only. Full real-model phone
+qualification, supported limits, sustained/thermal and actual lifecycle evidence
+remain pending. The [storage admission](docs/experiments/2026-10-21-m7-storage-admission.md)
+now gates actual small/larger payload preparation and preserves a failed stale
+observation. Thirteen small-model short requests pass exact raw IDs/state on
+iPhone14Pro; an unexpected proof-phase memory increase remains under investigation.
+Larger inference and M7.3 remain open.
 
 Exit: publish a reproducible device report and supported model/context limits. If physical hardware is unavailable, leave M7 pending; simulator results establish integration behavior only.
 

@@ -752,3 +752,17 @@ cleared source. Actual iPhone14Pro observation reports32,768,000,000bytes before
 process absence. The earlier Locked failure remains recorded. Astra accepted261 bound paths,
 38 exact staged copies, independent phone replay, privacy, links and whitespace.
 Transfer admission and device limits remain separate; M7.3 stays open.
+
+The [storage admission](experiments/2026-10-21-m7-storage-admission.md)
+binds fresh same-device/signed-app observations to checked full payload bytes,
+2GiB reserve, both host clocks and a private boot proof. Freshness is rechecked
+after hashing directly before every copy, and no-copy retry replays original
+admission. Fifty-five portable checks pass, including the stat/hash replacement
+fix and expiration with independent cleanup. Small-model transfer and13 actual
+short-oracle requests pass exact IDs/state/proofs/release. A near-file-sized
+footprint increase during artifact proof is recorded for separate memory work;
+larger inference is deferred. Larger packed preparation passes after an earlier
+freshness expiration blocks the job write and preserves clean cleanup. The fresh
+retry completes all copy checks within84s. Astra accepted978 bound paths,30 exact
+staged copies, proof/state/admission replays, privacy, links and whitespace.
+M7.3 stays open.

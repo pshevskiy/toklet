@@ -208,7 +208,8 @@ class PhysicalMeasurementTests(unittest.TestCase):
                 elif label=='copied-inventory':
                     data=dict(info=dict(outcome='success'),result=dict(deviceIdentifier='selected',domain='appDataContainer',domainIdentifier=m.physical.BUNDLE,
                         files=[dict(name='Model/config.json',relativePath='Model/config.json',resources=dict(isDirectory=False,isSymbolicLink=False),metadata=dict(size=5))]))
-                if label in ('profile','entitlements'):stdout.write_bytes(plistlib.dumps({}))
+                if label=='host-boot':stdout.write_text('00000000-0000-4000-8000-000000000001\n')
+                elif label in ('profile','entitlements'):stdout.write_bytes(plistlib.dumps({}))
                 elif label=='measurement':
                     stdout.write_text(console(r,s,p));Path(args[args.index('--json-output')+1]).write_text('{}')
                     private.write_text('{"changed":true}');running=True
@@ -339,7 +340,8 @@ class PhysicalMeasurementTests(unittest.TestCase):
                 elif label=='copied-inventory':
                     data=dict(info=dict(outcome='success'),result=dict(deviceIdentifier='selected',domain='appDataContainer',domainIdentifier=m.physical.BUNDLE,
                         files=[dict(name='Model/config.json',relativePath='Model/config.json',resources=dict(isDirectory=False,isSymbolicLink=False),metadata=dict(size=5))]))
-                if label in ('profile','entitlements'):stdout.write_bytes(plistlib.dumps({}))
+                if label=='host-boot':stdout.write_text('00000000-0000-4000-8000-000000000001\n')
+                elif label in ('profile','entitlements'):stdout.write_bytes(plistlib.dumps({}))
                 elif label=='measurement':
                     stdout.write_text(console(r,s,p));Path(args[args.index('--json-output')+1]).write_text('{}')
                     running=True
