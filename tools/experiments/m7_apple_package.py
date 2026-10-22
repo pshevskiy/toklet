@@ -128,6 +128,13 @@ def interrupted(signum,frame):
     raise InterruptedError('Received signal '+str(signum))
 
 
+def numerical_sources():
+    # Runtime includes more than one embedded Metal library. Bind every shader
+    # alongside Rust sources so an admitted archive cannot omit its kernel input.
+    return [ROOT/'Cargo.toml', ROOT/'Cargo.lock',
+            *sorted((ROOT/'src').rglob('*.rs')), *sorted((ROOT/'src').rglob('*.metal'))]
+
+
 def main(destination):
     destination=destination.resolve()
     if not destination.is_relative_to(ROOT/'artifacts'):raise ValueError('Build destination must be inside repository artifacts')
@@ -146,7 +153,7 @@ def main(destination):
         env,config_absence=build_environment()
         temporary=destination/'tmp';temporary.mkdir()
         env['TMPDIR']=str(temporary)
-        paths=[ROOT/'Cargo.toml',ROOT/'Cargo.lock',*sorted((ROOT/'src').rglob('*.rs')),ROOT/'src/metal/kernels.metal',
+        paths=[*numerical_sources(),
                ROOT/'apple/include/toklet.h',ROOT/'apple/include/module.modulemap',ROOT/'apple/tests/native_smoke.c',Path(__file__).resolve(),Path(__file__).with_name('test_m7_apple_package.py')]
         before={str(p.relative_to(ROOT)):sha(p) for p in paths}
         rustc=Path(small(execute(['rustup','which','--toolchain','1.90','rustc'],'rustc-path')).strip())

@@ -1,0 +1,1129 @@
+{
+  "format": "toklet-native-mlx-apple-package-qualification-v1",
+  "passed": true,
+  "base_revision": "5c5d06c",
+  "scope": "All embedded-shader provenance, three arm64 native slices, linked simulator/unsigned device apps and Mac C CPU/Half/MLX functional execution.",
+  "native_package_sha256": "00d3701912b3371a70485bf4cff7bd4d8217db0d99e53206274c17d47095bee5",
+  "linked_app_sha256": "51f3ce3c804085525d8902e85b72de8388f5abe76f16237b10b10ea325cb900d",
+  "checks": {
+    "outer": {
+      "format": "toklet-mlx-apple-package-checks-v1",
+      "passed": true,
+      "source_pins": {
+        "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+        "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+        "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+        "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+        "src/bin/cli/mod.rs": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24",
+        "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+        "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+        "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+        "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+        "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+        "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+        "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+        "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+        "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+        "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+        "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+        "src/metal/memory.rs": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6",
+        "src/metal/mlx.rs": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177",
+        "src/metal/mod.rs": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65",
+        "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+        "src/metal/profile.rs": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3",
+        "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+        "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+        "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+        "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+        "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+        "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+        "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+        "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+        "src/native/tests.rs": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856",
+        "src/native.rs": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc",
+        "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+        "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+        "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+        "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+        "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+        "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+        "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+        "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+        "apple/include/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "apple/tests/native_smoke.c": "c5b0cf0a96bb4b2489275cabb02acf89a53deccfc977c1dc63e9ff9d6b7a9d61",
+        "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+        "tools/experiments/test_m7_apple_package.py": "efdd9835b9c8301cdb91f3e466b5b8791155d4eb5d663f56a267588dc700f162",
+        "artifacts/m8-mlx-app-package-checks-v1/checks.py": "89aa998b5324c999139e251539780fd42849077f5f896923883c82871cf382ff"
+      },
+      "protected_binary_pins": {
+        "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+        "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+      },
+      "commands": [
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/.venv/bin/python",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "tools/experiments",
+            "-p",
+            "test_m7_apple_package.py",
+            "-v"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25190,
+          "stdout": "artifacts/m8-mlx-app-package-checks-v1/portable.stdout",
+          "stderr": "artifacts/m8-mlx-app-package-checks-v1/portable.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/.venv/bin/python",
+            "tools/experiments/m7_apple_package.py",
+            "artifacts/m8-apple-package-v1"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25198,
+          "stdout": "artifacts/m8-mlx-app-package-checks-v1/package.stdout",
+          "stderr": "artifacts/m8-mlx-app-package-checks-v1/package.stderr"
+        }
+      ],
+      "primary_error": null,
+      "endpoint_errors": []
+    },
+    "native": {
+      "format": "toklet-m7-apple-package-build-v1",
+      "passed": true,
+      "source_pins": {
+        "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+        "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+        "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+        "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+        "src/bin/cli/mod.rs": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24",
+        "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+        "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+        "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+        "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+        "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+        "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+        "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+        "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+        "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+        "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+        "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+        "src/metal/memory.rs": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6",
+        "src/metal/mlx.rs": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177",
+        "src/metal/mod.rs": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65",
+        "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+        "src/metal/profile.rs": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3",
+        "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+        "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+        "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+        "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+        "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+        "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+        "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+        "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+        "src/native/tests.rs": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856",
+        "src/native.rs": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc",
+        "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+        "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+        "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+        "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+        "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+        "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+        "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+        "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+        "apple/include/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "apple/tests/native_smoke.c": "c5b0cf0a96bb4b2489275cabb02acf89a53deccfc977c1dc63e9ff9d6b7a9d61",
+        "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+        "tools/experiments/test_m7_apple_package.py": "efdd9835b9c8301cdb91f3e466b5b8791155d4eb5d663f56a267588dc700f162"
+      },
+      "controlled_environment": {
+        "HOME": "/Users/coloner",
+        "PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/Users/coloner/.cargo/bin",
+        "CARGO_HOME": "/Users/coloner/.cargo",
+        "RUSTUP_HOME": "/Users/coloner/.rustup",
+        "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer",
+        "LANG": "en_US.UTF-8",
+        "TMPDIR": "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/tmp",
+        "RUSTC": "/Users/coloner/.rustup/toolchains/1.90-aarch64-apple-darwin/bin/rustc",
+        "RUSTDOC": "/Users/coloner/.rustup/toolchains/1.90-aarch64-apple-darwin/bin/rustdoc",
+        "RUSTFLAGS": "-Cpanic=unwind",
+        "CARGO_TARGET_DIR": "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target",
+        "MACOSX_DEPLOYMENT_TARGET": "15.0",
+        "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
+        "CARGO_PROFILE_RELEASE_PANIC": "unwind",
+        "cargo": "/Users/coloner/.rustup/toolchains/1.90-aarch64-apple-darwin/bin/cargo"
+      },
+      "absent_cargo_configs": [
+        "/.cargo/config",
+        "/.cargo/config.toml",
+        "/Users/.cargo/config",
+        "/Users/.cargo/config.toml",
+        "/Users/coloner/.cargo/config",
+        "/Users/coloner/.cargo/config.toml",
+        "/Users/coloner/work/.cargo/config",
+        "/Users/coloner/work/.cargo/config.toml",
+        "/Users/coloner/work/rust/.cargo/config",
+        "/Users/coloner/work/rust/.cargo/config.toml",
+        "/Users/coloner/work/rust/toklet/.cargo/config",
+        "/Users/coloner/work/rust/toklet/.cargo/config.toml"
+      ],
+      "package_pins": {
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/Info.plist": "92cff745c9ca18676c24497dd08ea06ce054aff86d8c223f1e15257fd9d867ba",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64/Headers/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64/libtoklet.a": "b4a9a1349c39c5db779b56b41d43bc87df778026ee3d00491ed63844c4efa407",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "3da9f79c87f1fdad11da7a841553e8a231c69eba724439c46a123091bc680519",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/Headers/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/libtoklet.a": "5761519e94764026bcce21d5e60b21a50d16ed651038f148bd76a5207663746b"
+      },
+      "commands": [
+        {
+          "command": [
+            "rustup",
+            "which",
+            "--toolchain",
+            "1.90",
+            "rustc"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25200,
+          "stdout": "artifacts/m8-apple-package-v1/logs/rustc-path.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/rustc-path.stderr"
+        },
+        {
+          "command": [
+            "rustup",
+            "which",
+            "--toolchain",
+            "1.90",
+            "cargo"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25201,
+          "stdout": "artifacts/m8-apple-package-v1/logs/cargo-path.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/cargo-path.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/.rustup/toolchains/1.90-aarch64-apple-darwin/bin/rustc",
+            "-vV"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25202,
+          "stdout": "artifacts/m8-apple-package-v1/logs/rustc-version.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/rustc-version.stderr"
+        },
+        {
+          "command": [
+            "xcodebuild",
+            "-version"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25204,
+          "stdout": "artifacts/m8-apple-package-v1/logs/xcode-version.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/xcode-version.stderr"
+        },
+        {
+          "command": [
+            "rustup",
+            "target",
+            "list",
+            "--installed",
+            "--toolchain",
+            "1.90"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25206,
+          "stdout": "artifacts/m8-apple-package-v1/logs/installed-targets.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/installed-targets.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "macosx",
+            "--show-sdk-path"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25208,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-sdk.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-sdk.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/.rustup/toolchains/1.90-aarch64-apple-darwin/bin/cargo",
+            "build",
+            "--locked",
+            "--offline",
+            "--release",
+            "--lib",
+            "--features",
+            "metal",
+            "--target",
+            "aarch64-apple-darwin"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25209,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-build.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-build.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "nm",
+            "-gU",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target/aarch64-apple-darwin/release/libtoklet.a"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25696,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-symbols.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-symbols.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "macosx",
+            "clang",
+            "-target",
+            "arm64-apple-macos15.0",
+            "-isysroot",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+            "-std=c11",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-I/Users/coloner/work/rust/toklet/apple/include",
+            "/Users/coloner/work/rust/toklet/apple/tests/native_smoke.c",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target/aarch64-apple-darwin/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Foundation",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-Wl,-fatal_warnings",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/aarch64-apple-darwin-link-smoke"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25702,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-link.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-link.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "otool",
+            "-l",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/aarch64-apple-darwin-link-smoke"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25707,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-load-commands.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-darwin-load-commands.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "iphoneos",
+            "--show-sdk-path"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25713,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sdk.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sdk.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/.rustup/toolchains/1.90-aarch64-apple-darwin/bin/cargo",
+            "build",
+            "--locked",
+            "--offline",
+            "--release",
+            "--lib",
+            "--features",
+            "metal",
+            "--target",
+            "aarch64-apple-ios"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25715,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-build.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-build.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "nm",
+            "-gU",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target/aarch64-apple-ios/release/libtoklet.a"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25938,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-symbols.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-symbols.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "iphoneos",
+            "clang",
+            "-target",
+            "arm64-apple-ios18.0",
+            "-isysroot",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+            "-std=c11",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-I/Users/coloner/work/rust/toklet/apple/include",
+            "/Users/coloner/work/rust/toklet/apple/tests/native_smoke.c",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target/aarch64-apple-ios/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Foundation",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-Wl,-fatal_warnings",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/aarch64-apple-ios-link-smoke"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25943,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-link.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-link.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "otool",
+            "-l",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/aarch64-apple-ios-link-smoke"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25951,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-load-commands.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-load-commands.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "iphonesimulator",
+            "--show-sdk-path"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25957,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-sdk.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-sdk.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/.rustup/toolchains/1.90-aarch64-apple-darwin/bin/cargo",
+            "build",
+            "--locked",
+            "--offline",
+            "--release",
+            "--lib",
+            "--features",
+            "metal",
+            "--target",
+            "aarch64-apple-ios-sim"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 25961,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-build.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-build.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "nm",
+            "-gU",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target/aarch64-apple-ios-sim/release/libtoklet.a"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26178,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-symbols.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-symbols.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "iphonesimulator",
+            "clang",
+            "-target",
+            "arm64-apple-ios18.0-simulator",
+            "-isysroot",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk",
+            "-std=c11",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-I/Users/coloner/work/rust/toklet/apple/include",
+            "/Users/coloner/work/rust/toklet/apple/tests/native_smoke.c",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target/aarch64-apple-ios-sim/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Foundation",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-Wl,-fatal_warnings",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/aarch64-apple-ios-sim-link-smoke"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26182,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-link.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-link.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "otool",
+            "-l",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/aarch64-apple-ios-sim-link-smoke"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26190,
+          "stdout": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-load-commands.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/aarch64-apple-ios-sim-load-commands.stderr"
+        },
+        {
+          "command": [
+            "xcodebuild",
+            "-create-xcframework",
+            "-library",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target/aarch64-apple-darwin/release/libtoklet.a",
+            "-headers",
+            "/Users/coloner/work/rust/toklet/apple/include",
+            "-library",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target/aarch64-apple-ios/release/libtoklet.a",
+            "-headers",
+            "/Users/coloner/work/rust/toklet/apple/include",
+            "-library",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/target/aarch64-apple-ios-sim/release/libtoklet.a",
+            "-headers",
+            "/Users/coloner/work/rust/toklet/apple/include",
+            "-output",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/Toklet.xcframework"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26196,
+          "stdout": "artifacts/m8-apple-package-v1/logs/xcframework.stdout",
+          "stderr": "artifacts/m8-apple-package-v1/logs/xcframework.stderr"
+        }
+      ],
+      "slices": [
+        {
+          "target": "aarch64-apple-darwin",
+          "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+          "triple": "arm64-apple-macos15.0",
+          "platform": 1,
+          "minos": "15.0",
+          "name": "macos",
+          "variant": "",
+          "library": "artifacts/m8-apple-package-v1/target/aarch64-apple-darwin/release/libtoklet.a",
+          "library_sha256": "5761519e94764026bcce21d5e60b21a50d16ed651038f148bd76a5207663746b",
+          "link_executable": "artifacts/m8-apple-package-v1/aarch64-apple-darwin-link-smoke",
+          "link_sha256": "1b19a8fbd6f8e173469e8fc636df3e7def0badbe159d2134f91fd87a2d148327",
+          "exported_c_symbols": [
+            "toklet_abi_version",
+            "toklet_cancel_create",
+            "toklet_cancel_release",
+            "toklet_cancel_set",
+            "toklet_model_load",
+            "toklet_model_load_metal",
+            "toklet_model_load_mlx",
+            "toklet_model_release",
+            "toklet_session_create",
+            "toklet_session_generate",
+            "toklet_session_history",
+            "toklet_session_release",
+            "toklet_session_reset",
+            "toklet_session_score",
+            "toklet_session_state"
+          ]
+        },
+        {
+          "target": "aarch64-apple-ios",
+          "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+          "triple": "arm64-apple-ios18.0",
+          "platform": 2,
+          "minos": "18.0",
+          "name": "ios",
+          "variant": "",
+          "library": "artifacts/m8-apple-package-v1/target/aarch64-apple-ios/release/libtoklet.a",
+          "library_sha256": "b4a9a1349c39c5db779b56b41d43bc87df778026ee3d00491ed63844c4efa407",
+          "link_executable": "artifacts/m8-apple-package-v1/aarch64-apple-ios-link-smoke",
+          "link_sha256": "3887121ef843392c723973688a5fe4605aaa497e99b5ed06eba77be31151b426",
+          "exported_c_symbols": [
+            "toklet_abi_version",
+            "toklet_cancel_create",
+            "toklet_cancel_release",
+            "toklet_cancel_set",
+            "toklet_model_load",
+            "toklet_model_load_metal",
+            "toklet_model_load_mlx",
+            "toklet_model_release",
+            "toklet_session_create",
+            "toklet_session_generate",
+            "toklet_session_history",
+            "toklet_session_release",
+            "toklet_session_reset",
+            "toklet_session_score",
+            "toklet_session_state"
+          ]
+        },
+        {
+          "target": "aarch64-apple-ios-sim",
+          "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk",
+          "triple": "arm64-apple-ios18.0-simulator",
+          "platform": 7,
+          "minos": "18.0",
+          "name": "ios",
+          "variant": "simulator",
+          "library": "artifacts/m8-apple-package-v1/target/aarch64-apple-ios-sim/release/libtoklet.a",
+          "library_sha256": "3da9f79c87f1fdad11da7a841553e8a231c69eba724439c46a123091bc680519",
+          "link_executable": "artifacts/m8-apple-package-v1/aarch64-apple-ios-sim-link-smoke",
+          "link_sha256": "f2f0da5606a7aaeaff2f3dc7e177e215b1e87a0ffdab713c6e09e6d61aeee6e8",
+          "exported_c_symbols": [
+            "toklet_abi_version",
+            "toklet_cancel_create",
+            "toklet_cancel_release",
+            "toklet_cancel_set",
+            "toklet_model_load",
+            "toklet_model_load_metal",
+            "toklet_model_load_mlx",
+            "toklet_model_release",
+            "toklet_session_create",
+            "toklet_session_generate",
+            "toklet_session_history",
+            "toklet_session_release",
+            "toklet_session_reset",
+            "toklet_session_score",
+            "toklet_session_state"
+          ]
+        }
+      ],
+      "primary_error": null,
+      "endpoint_errors": [],
+      "precise_math_unchanged": true,
+      "panic": "unwind",
+      "supported_build_platforms": [
+        "macOS15-arm64",
+        "iOS18-arm64",
+        "iOS18-simulator-arm64"
+      ],
+      "ios_runtime_qualified": false,
+      "physical_device_qualified": false,
+      "m7_complete": false
+    },
+    "driver": {
+      "format": "toklet-mlx-linked-app-driver-v1",
+      "passed": true,
+      "native_package_sha256": "00d3701912b3371a70485bf4cff7bd4d8217db0d99e53206274c17d47095bee5",
+      "source_pins": {
+        "artifacts/m8-mlx-linked-app-driver-v1/build.py": "003441fa6472713c0da71f4d5c0d5014172a5fd3b7623da052475178a0a72379"
+      },
+      "protected_binary_pins": {
+        "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+        "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+      },
+      "library_switch": {
+        "alias": "apple/Binaries/Toklet.xcframework",
+        "before_target": "/Users/coloner/work/rust/toklet/artifacts/m7-apple-package-v5/Toklet.xcframework",
+        "after_target": "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/Toklet.xcframework",
+        "old_package_unchanged_sha256": "06016a4e6eeea98c9c9c0f898cc4fd107c85415ed26cd3faa8de221386002971"
+      },
+      "commands": [
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/.venv/bin/python",
+            "tools/experiments/m7_swift_harness_build.py",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1",
+            "00d3701912b3371a70485bf4cff7bd4d8217db0d99e53206274c17d47095bee5",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26438,
+          "stdout": "artifacts/m8-mlx-linked-app-driver-v1/build.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-driver-v1/build.stderr"
+        }
+      ],
+      "primary_error": null,
+      "endpoint_errors": []
+    },
+    "app": {
+      "format": "toklet-m7-swift-harness-build-v1",
+      "passed": true,
+      "reviewed_package_sha256": "00d3701912b3371a70485bf4cff7bd4d8217db0d99e53206274c17d47095bee5",
+      "bindings": {
+        "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+        "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+        "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+        "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+        "src/bin/cli/mod.rs": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24",
+        "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+        "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+        "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+        "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+        "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+        "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+        "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+        "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+        "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+        "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+        "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+        "src/metal/memory.rs": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6",
+        "src/metal/mlx.rs": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177",
+        "src/metal/mod.rs": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65",
+        "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+        "src/metal/profile.rs": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3",
+        "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+        "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+        "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+        "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+        "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+        "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+        "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+        "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+        "src/native/tests.rs": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856",
+        "src/native.rs": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc",
+        "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+        "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+        "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+        "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+        "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+        "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+        "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+        "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+        "apple/include/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "apple/tests/native_smoke.c": "c5b0cf0a96bb4b2489275cabb02acf89a53deccfc977c1dc63e9ff9d6b7a9d61",
+        "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+        "tools/experiments/test_m7_apple_package.py": "efdd9835b9c8301cdb91f3e466b5b8791155d4eb5d663f56a267588dc700f162",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/Info.plist": "92cff745c9ca18676c24497dd08ea06ce054aff86d8c223f1e15257fd9d867ba",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64/Headers/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64/libtoklet.a": "b4a9a1349c39c5db779b56b41d43bc87df778026ee3d00491ed63844c4efa407",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "3da9f79c87f1fdad11da7a841553e8a231c69eba724439c46a123091bc680519",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/Headers/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/libtoklet.a": "5761519e94764026bcce21d5e60b21a50d16ed651038f148bd76a5207663746b",
+        "artifacts/m8-apple-package-v1/aarch64-apple-darwin-link-smoke": "1b19a8fbd6f8e173469e8fc636df3e7def0badbe159d2134f91fd87a2d148327",
+        "artifacts/m8-apple-package-v1/target/aarch64-apple-darwin/release/libtoklet.a": "5761519e94764026bcce21d5e60b21a50d16ed651038f148bd76a5207663746b",
+        "artifacts/m8-apple-package-v1/aarch64-apple-ios-link-smoke": "3887121ef843392c723973688a5fe4605aaa497e99b5ed06eba77be31151b426",
+        "artifacts/m8-apple-package-v1/target/aarch64-apple-ios/release/libtoklet.a": "b4a9a1349c39c5db779b56b41d43bc87df778026ee3d00491ed63844c4efa407",
+        "artifacts/m8-apple-package-v1/aarch64-apple-ios-sim-link-smoke": "f2f0da5606a7aaeaff2f3dc7e177e215b1e87a0ffdab713c6e09e6d61aeee6e8",
+        "artifacts/m8-apple-package-v1/target/aarch64-apple-ios-sim/release/libtoklet.a": "3da9f79c87f1fdad11da7a841553e8a231c69eba724439c46a123091bc680519",
+        "artifacts/m8-apple-package-v1/build.json": "00d3701912b3371a70485bf4cff7bd4d8217db0d99e53206274c17d47095bee5",
+        ".gitignore": "ba0833fd4f9e6822f1a3620eb070b2319ee76b20a299461197c8de9627226705",
+        "apple/Harness/HarnessApp.swift": "4cc314e35db6d0f6736e4f6e2358e9c444a2b7069faba6703e3ff8dc633a63e6",
+        "apple/Harness/Info.plist": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434",
+        "apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+        "apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+        "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+        "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+        "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+        "apple/Harness/NativeStateRun.swift": "82209540413ef2251840a402cbda590003df665ed3f47a3759cf3f0f386abc95",
+        "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+        "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+        "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+        "apple/Harness/NativeWorker.swift": "d86832de771cc1d8ee1774089468e749f05b8bfb074e20ee69fccc3b0c50fa37",
+        "apple/tests/swift/WorkerChecks.swift": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf",
+        "apple/TokletHarness.xcodeproj/project.pbxproj": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5",
+        "apple/TokletHarness.xcodeproj/xcshareddata/xcschemes/TokletHarness.xcscheme": "70134c00efd58bc8eb2d6d8d090babc448c06517d1d98fd056781df7d4503477",
+        "apple/TokletHarness.xcodeproj/project.xcworkspace/contents.xcworkspacedata": "14e75b34da352a734fd05df443ef597fe5c547284cfb8ecfccacfd21cb5c7f93",
+        "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+        "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+        "tools/experiments/test_m7_swift_harness_build.py": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037",
+        "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+        "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+        "apple/Generated/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+        "apple/Generated/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+      },
+      "library_link": {
+        "path": "apple/Binaries/Toklet.xcframework",
+        "target": "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/Toklet.xcframework",
+        "resolved_target": "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/Toklet.xcframework"
+      },
+      "commands": [
+        {
+          "command": [
+            "xcodebuild",
+            "-version"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26440,
+          "stdout": "artifacts/m8-mlx-linked-app-v1/logs/xcode-version.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-v1/logs/xcode-version.stderr"
+        },
+        {
+          "command": [
+            "xcodebuild",
+            "-project",
+            "/Users/coloner/work/rust/toklet/apple/TokletHarness.xcodeproj",
+            "-scheme",
+            "TokletHarness",
+            "-configuration",
+            "Release",
+            "-sdk",
+            "iphonesimulator",
+            "-destination",
+            "generic/platform=iOS Simulator",
+            "-derivedDataPath",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator",
+            "-disableAutomaticPackageResolution",
+            "CODE_SIGNING_ALLOWED=NO",
+            "ARCHS=arm64",
+            "SDK_STAT_CACHE_DIR=/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/SDKStatCaches",
+            "CLANG_MODULE_CACHE_PATH=/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/ModuleCache",
+            "COMPILER_INDEX_STORE_ENABLE=NO",
+            "build"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26442,
+          "stdout": "artifacts/m8-mlx-linked-app-v1/logs/iphonesimulator-build.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-v1/logs/iphonesimulator-build.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "lipo",
+            "-archs",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26587,
+          "stdout": "artifacts/m8-mlx-linked-app-v1/logs/iphonesimulator-arch.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-v1/logs/iphonesimulator-arch.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "otool",
+            "-l",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26596,
+          "stdout": "artifacts/m8-mlx-linked-app-v1/logs/iphonesimulator-load-commands.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-v1/logs/iphonesimulator-load-commands.stderr"
+        },
+        {
+          "command": [
+            "codesign",
+            "--force",
+            "--sign",
+            "-",
+            "--timestamp=none",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26607,
+          "stdout": "artifacts/m8-mlx-linked-app-v1/logs/simulator-sign.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-v1/logs/simulator-sign.stderr"
+        },
+        {
+          "command": [
+            "codesign",
+            "--verify",
+            "--strict",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26609,
+          "stdout": "artifacts/m8-mlx-linked-app-v1/logs/simulator-sign-verify.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-v1/logs/simulator-sign-verify.stderr"
+        },
+        {
+          "command": [
+            "xcodebuild",
+            "-project",
+            "/Users/coloner/work/rust/toklet/apple/TokletHarness.xcodeproj",
+            "-scheme",
+            "TokletHarness",
+            "-configuration",
+            "Release",
+            "-sdk",
+            "iphoneos",
+            "-destination",
+            "generic/platform=iOS",
+            "-derivedDataPath",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/derived-iphoneos",
+            "-disableAutomaticPackageResolution",
+            "CODE_SIGNING_ALLOWED=NO",
+            "ARCHS=arm64",
+            "SDK_STAT_CACHE_DIR=/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/SDKStatCaches",
+            "CLANG_MODULE_CACHE_PATH=/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/ModuleCache",
+            "COMPILER_INDEX_STORE_ENABLE=NO",
+            "build"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26610,
+          "stdout": "artifacts/m8-mlx-linked-app-v1/logs/iphoneos-build.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-v1/logs/iphoneos-build.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "lipo",
+            "-archs",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26739,
+          "stdout": "artifacts/m8-mlx-linked-app-v1/logs/iphoneos-arch.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-v1/logs/iphoneos-arch.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "otool",
+            "-l",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26740,
+          "stdout": "artifacts/m8-mlx-linked-app-v1/logs/iphoneos-load-commands.stdout",
+          "stderr": "artifacts/m8-mlx-linked-app-v1/logs/iphoneos-load-commands.stderr"
+        }
+      ],
+      "controlled_environment": {
+        "HOME": "/Users/coloner",
+        "PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/Users/coloner/.cargo/bin",
+        "CARGO_HOME": "/Users/coloner/.cargo",
+        "RUSTUP_HOME": "/Users/coloner/.rustup",
+        "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer",
+        "LANG": "en_US.UTF-8",
+        "TMPDIR": "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-linked-app-v1/tmp"
+      },
+      "apps": [
+        {
+          "platform": "iPhoneSimulator",
+          "app": "artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app",
+          "executable": "artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness",
+          "executable_sha256": "2a0d34e565fbd626287ae2c5f3b32dc9976ea98c1e87ff76938d8e417073afa0",
+          "signed": "ad-hoc"
+        },
+        {
+          "platform": "iPhoneOS",
+          "app": "artifacts/m8-mlx-linked-app-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app",
+          "executable": "artifacts/m8-mlx-linked-app-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness",
+          "executable_sha256": "41c1a8862c77bd0e80e823aa74e84a47951af7177d6fea790d1a98cbc02244e4",
+          "signed": false
+        }
+      ],
+      "bundle_pins": {
+        "artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": "2a0d34e565fbd626287ae2c5f3b32dc9976ea98c1e87ff76938d8e417073afa0",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/_CodeSignature/CodeResources": "46133bd10635d0899771f264622f54fa92c9b0bbb68eb12696a19a3836bf2d1e",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+        "artifacts/m8-mlx-linked-app-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": "41c1a8862c77bd0e80e823aa74e84a47951af7177d6fea790d1a98cbc02244e4"
+      },
+      "primary_error": null,
+      "endpoint_errors": [],
+      "physical_device_signed": false,
+      "physical_device_qualified": false,
+      "m7_complete": false
+    },
+    "mac": {
+      "passed": true,
+      "source_pins": {
+        "artifacts/m8-apple-package-v1/aarch64-apple-darwin-link-smoke": "1b19a8fbd6f8e173469e8fc636df3e7def0badbe159d2134f91fd87a2d148327",
+        "artifacts/m8-apple-package-v1/build.json": "00d3701912b3371a70485bf4cff7bd4d8217db0d99e53206274c17d47095bee5",
+        "apple/tests/native_smoke.c": "c5b0cf0a96bb4b2489275cabb02acf89a53deccfc977c1dc63e9ff9d6b7a9d61",
+        "artifacts/m8-mlx-package-mac-smoke-v1/checks.py": "dc799ca91f4bd76d7410a32724a4d7ebcfdb14614f36a0973e1b774a37333261",
+        "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+        "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+        "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+        "tests/fixtures/mlx-qwen-v1/model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+        "tests/fixtures/mlx-qwen-v1/model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+      },
+      "commands": [
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/aarch64-apple-darwin-link-smoke",
+            "artifacts/m7-native-tiny-v2"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26909,
+          "stdout": "artifacts/m8-mlx-package-mac-smoke-v1/cpu.stdout",
+          "stderr": "artifacts/m8-mlx-package-mac-smoke-v1/cpu.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/aarch64-apple-darwin-link-smoke",
+            "artifacts/m7-native-tiny-v2",
+            "metal"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26911,
+          "stdout": "artifacts/m8-mlx-package-mac-smoke-v1/metal.stdout",
+          "stderr": "artifacts/m8-mlx-package-mac-smoke-v1/metal.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/aarch64-apple-darwin-link-smoke",
+            "tests/fixtures/mlx-qwen-v1/model",
+            "mlx"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 26913,
+          "stdout": "artifacts/m8-mlx-package-mac-smoke-v1/mlx.stdout",
+          "stderr": "artifacts/m8-mlx-package-mac-smoke-v1/mlx.stderr"
+        }
+      ],
+      "primary_error": null,
+      "endpoint_errors": []
+    }
+  },
+  "focused_portable_tests": 11,
+  "native_commands": 21,
+  "linked_app_commands": 9,
+  "mac_execution_modes": [
+    "cpu",
+    "metal",
+    "mlx"
+  ],
+  "rust_shader_sources_unchanged": true,
+  "rust_suites_rerun": false,
+  "device_development_signed": false,
+  "physical_iphone_qualified": false,
+  "simulator_execution_qualified": false,
+  "real_checkpoint_quality_qualified": false,
+  "performance_qualified": false,
+  "m8_2_complete": false,
+  "m8_complete": false,
+  "raw_files": {
+    "path": "benchmarks/results/2026-10-22-native-mlx-apple-package-raw-v1.json",
+    "sha256": "ade1d360af8ba2b7cee139eda203b73d67a485dd0822b0b6eca27905e455eef3",
+    "files": 80
+  },
+  "documentation_pins": {
+    "apple/README.md": "b0e3d345e5b0f5288f84a7031a33e3f9d53882c7c4fbac69243ecead81b2aa01",
+    "docs/mlx-implementation-plan.md": "cbcca833a086361f636edcae20122ea54d59498297be0bb26fe9abd0ec6ea9e3",
+    "docs/mlx-apple-package.md": "0d993285a934e18cdbcfdc4746daf8525f00d0aa65ee833cdffdbf90974cceb0",
+    "docs/improvements.md": "5f973e2b9aac9dfcbcb79f7e84d886b6bb722fc8d80c9b731ff5717ee487d834"
+  },
+  "review": {
+    "reviewer": "Astra",
+    "source_accepted": true,
+    "native_package_admitted": true,
+    "completed_evidence_accepted": true
+  }
+}

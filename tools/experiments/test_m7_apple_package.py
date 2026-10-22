@@ -23,6 +23,15 @@ class PackageTests(unittest.TestCase):
     def run_command(self,command,timeout=1):
         return m.owned(command,self.root/'out',self.root/'err',dict(os.environ),timeout)
 
+    def test_numerical_source_inventory_includes_every_embedded_metal_library(self):
+        names = ['Cargo.toml','Cargo.lock','src/lib.rs','src/metal/mod.rs',
+                 'src/metal/kernels.metal','src/metal/mlx.metal','src/other/extra.metal']
+        for name in names:
+            path = self.root/name;path.parent.mkdir(parents=True,exist_ok=True)
+            path.write_text(name)
+        (self.root/'src/unrelated.bin').write_bytes(b'not compiled')
+        self.assertEqual({str(p.relative_to(self.root)) for p in m.numerical_sources()},set(names))
+
     def test_real_timeout_reaps_owned_child(self):
         row=self.run_command([sys.executable,'-c','import time;time.sleep(30)'],.05)
         self.assertIn('TimeoutExpired',row['primary_error'])

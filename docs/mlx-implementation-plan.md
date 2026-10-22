@@ -64,7 +64,9 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     session selection, Mac C/Rust lifetime/state checks and iOS Rust compilation.
   - [x] Explicit [Apple UI/worker selection](mlx-apple-worker.md), Mac worker
     state/replay/cleanup and strict iOS source compatibility checks.
-  - [ ] Real-checkpoint quality/memory/performance, linked app packaging and jobs.
+  - [x] [Fresh native package and linked apps](mlx-apple-package.md), complete
+    shader provenance, three platform slices and actual Mac C execution.
+  - [ ] Real-checkpoint quality/memory/performance and sealed Apple jobs.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,

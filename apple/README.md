@@ -24,10 +24,13 @@ Replace `REVIEWED_PACKAGE_SHA256` with the reviewed build receipt's digest.
 Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
-linked generated inputs. In this checkout the generated library link already
-selects the qualified `artifacts/m7-apple-package-v4` package; reuse that package
-when rebuilding the app. Its receipt digest is
-`1185314043649692b7e41aff9b90e37355201eef71852965c20ef69513e6f13c`.
+linked generated inputs. In this checkout the generated library link selects
+`artifacts/m8-apple-package-v1`; use this package for the current MLX-enabled app.
+Its reviewed build receipt digest is
+`00d3701912b3371a70485bf4cff7bd4d8217db0d99e53206274c17d47095bee5`.
+The [M8 package report](../docs/mlx-apple-package.md) records three native slices,
+linked apps and Mac checks; physical MLX qualification remains separate. Earlier
+M7 device results retain their original immutable packages and receipts.
 
 Open `apple/TokletHarness.xcodeproj` after generated inputs exist. The shared
 scheme selects arm64, iOS18 minimum, complete Swift concurrency checks and
@@ -41,7 +44,10 @@ Load, prompt IDs`1,7,13,3`, generate2 IDs, then Continue. The initial four outpu
 are`47,47,47,47`. Settings stay locked while a model is loaded. Unload before
 changing the artifact/backend/settings. Copy real local artifacts into the app's
 Documents/Model folder using device file sharing; packed Q4 v2 artifacts need
-Metal and their separate local packed-directory path. CPU keeps its existing
+Metal and their separate local packed-directory path. For a supported local
+MLX Qwen artifact, enable Metal and **MLX-format Qwen model**, with the separate
+Q4 folder empty. The bundled Tiny button clears MLX because that fixture is
+floating-point. CPU keeps its existing
 2,048-token cap; Metal limits follow the actual model and explicit admission.
 No mobile budget is inferred from the Mac's6GiB qualification.
 
@@ -58,6 +64,9 @@ suspension needs physical-device testing. Close is terminal for that worker.
 
 For an automated tiny check, launch with`--self-test` (CPU) or
 `--self-test --metal`. It prints one`TOKLET_SELFTEST_JSON=` record and exits.
+For the separately copied packed tiny fixture in Documents/MLXTiny, launch
+`--self-test --mlx`; the [worker report](../docs/mlx-apple-worker.md) specifies its
+scope. Do not point this fixed-ID self-test at a real checkpoint.
 This checks native ownership/state/replay/cancellation/release, not physical
 performance or supported limits. `physicalDeviceQualified` stays false.
 The simulator runner `tools/experiments/m7_swift_harness_run.py` additionally
