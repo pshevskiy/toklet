@@ -95,6 +95,9 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,
   positions, cache/state and real media processing separately. Each absent family
   remains visibly unsupported; registration in another runtime is insufficient.
+  - [x] [Pinned full Python source/reference inventory](mlx-architectures.md), 137 language/1,399 vision modules with static root exports and literal aliases; no new native architecture support.
+  - [ ] Dense family expansion, beginning with independently specified Llama/Mistral-style semantics.
+  - [ ] Expert routing, recurrent/hybrid state and actual multimodal/media execution, each with separate fixtures and target qualification.
 - [ ] **M8.4 Device-aware discovery/downloads.** After engine compatibility exists,
   expose Hugging Face model search, truthful support/fit labels and device-local
   memory/storage admission. Pin immutable revisions and exact file inventories;
