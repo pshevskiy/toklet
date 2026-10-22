@@ -9,7 +9,9 @@ precise acceptance policies.
 
 ## M8 native MLX update — 22 October 2026
 
-The M0–M7 closure below predates the active [native MLX expansion](mlx-implementation-plan.md). Toklet now loads and executes selected MLX affine Qwen artifacts directly in Rust/Metal. The public eight-bit Qwen0.5B snapshot passes full 10,000-target loss and 100-task preservation gates on Mac and iPhone 14 Pro (mean loss 2.884954; tasks 2/100 versus FP32 2/100). The public four-bit candidate remains rejected. Broader architectures, model discovery/downloads, selected MLX physical state/lifecycle and chat-template compatibility are still open.
+The M0–M7 closure below predates the active [native MLX expansion](mlx-implementation-plan.md). Toklet now loads and executes selected MLX affine Qwen artifacts directly in Rust/Metal. The public eight-bit Qwen0.5B snapshot passes full 10,000-target loss and 100-task preservation gates on Mac and iPhone 14 Pro (mean loss 2.884954; tasks 2/100 versus FP32 2/100). The public four-bit candidate remains rejected. Broader architectures, model discovery/downloads, selected MLX actual OS lifecycle and chat-template compatibility are still open.
+
+The [selected MLX phone state trial](mlx8-phone-state.md) passes all 33 diagnostic rows, including actual 128/384 committed/pending prefill cancellation and the full 1,152-position boundary. Actual MLX OS lifecycle remains open.
 
 The [new app performance report](mlx8-performance.md) records all 128/512/1024 primary/confirmation workloads and dedicated 600-native-second sustained runs. At 512/128, Mac primary/confirmation native TTFT medians are 3.1133/3.1134 seconds and decode 22.1772/22.2205 IDs/s; phone 13.3074/15.1906 seconds and 15.2318/13.6681 IDs/s. Maximum process peaks are 0.6392 GB Mac/0.6519 GB phone. Sustained phone decode falls 22.324% from first-five to last-five medians under changing thermals. These raw-ID timings do not establish an external speed lead, steady phone rate or text/UI latency. Earlier Half/Q4 lifecycle qualification below does not carry over automatically to MLX.
 

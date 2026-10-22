@@ -111,6 +111,28 @@ class Transport(unittest.TestCase):
         self.assertFalse(any(s.startswith('copy-') for s in self.labels));self.assertEqual(self.labels.count('measurement'),1)
         self.assertEqual(len(result['remote_cleanup']),2);self.assertTrue(all(r['absent'] and not r['errors'] for r in result['remote_cleanup']))
 
+    def test_state_route_uses_explicit_app_argument_and_state_validator(self):
+        # Isolate dispatch from artifact/state semantics, covered by the strict
+        # recipe and state fixtures. Existing real-copy tests still forbid bypass.
+        _,pin=self.staged();record,extra,payload,total=p.admitted_stage(self.stage,pin)
+        record=dict(record,mode='state')
+        with patch.object(p,'admitted_stage',return_value=(record,extra,payload,total)),patch.object(p.state,'validate_console',return_value={'state_witness':'checked'}) as validate:
+            result=p.run(self.stage,pin,self.root/'state-route')
+        self.assertTrue(result['passed']);validate.assert_called_once()
+        self.assertEqual(validate.call_args.args[1:],(self.config,self.signed))
+        self.assertEqual(result['checked']['state_witness'],'checked')
+        launch=next(row for row in result['commands'] if Path(row['stdout']).stem=='measurement')
+        self.assertEqual(launch['command'][-3],'--state')
+        self.assertNotIn('--measure',launch['command']);self.assertFalse(result['physical_device_qualified'])
+
+    def test_rejected_state_console_retains_failure_and_remote_cleanup(self):
+        _,pin=self.staged();record,extra,payload,total=p.admitted_stage(self.stage,pin)
+        record=dict(record,mode='state')
+        with patch.object(p,'admitted_stage',return_value=(record,extra,payload,total)),patch.object(p.state,'validate_console',side_effect=ValueError('state witness rejected')):
+            result=p.run(self.stage,pin,self.root/'state-rejection')
+        self.assertFalse(result['passed']);self.assertIn('state witness rejected',result['primary_error'])
+        self.assertIsNone(result['checked']);self.assertTrue(result['remote_cleanup'][-1]['absent'])
+
     def test_source_mutation_cannot_block_exact_owned_cleanup(self):
         _,pin=self.staged();self.mode='mutation'
         result=p.run(self.stage,pin,self.root/'mutation')

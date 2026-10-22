@@ -20,7 +20,7 @@ TASKS_SHA = 'b096b8eb40960f38ae0e9f3268484eed10bf2a6bebbc981a45a061ee461aab7c'
 TINY = {'config.json':'0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e',
         'model.safetensors':'ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be'}
 WORKLOADS = ['measurement-short','measurement-128','measurement-512','measurement-1024','measurement-sustained',
-             'quality-short','quality-full','tasks-short','tasks-full','state-component']
+             'quality-short','quality-full','tasks-short','tasks-full','state-component','state-512']
 
 
 def sha(path):
@@ -35,6 +35,16 @@ def captured(name, expected, maximum):
 
 def encoded(value):
     return (json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+
+
+def frozen_prompt(count,pins):
+    contract=json.loads(captured(CONTRACT,CONTRACT_SHA,256*1024));item=contract['arrays']['prompt_'+str(count)]
+    if item['count']!=count or item['dtype']!='u32le' or item['file']!='prompt_'+str(count)+'.u32le':
+        raise ValueError('Frozen prompt schema differs')
+    name='benchmarks/contract-v1/'+item['file'];raw=captured(name,item['sha256'],count*4)
+    if len(raw)!=count*4:raise ValueError('Exact prompt size differs')
+    pins.update({CONTRACT:CONTRACT_SHA,name:item['sha256']})
+    return list(struct.unpack('<'+str(count)+'I',raw))
 
 
 def job(model, workload):
@@ -60,12 +70,7 @@ def job(model, workload):
         mode='measurement';short=workload=='measurement-short'
         if not short:
             count=512 if workload=='measurement-sustained' else int(workload.rsplit('-',1)[1])
-            contract=json.loads(captured(CONTRACT,CONTRACT_SHA,256*1024));item=contract['arrays']['prompt_'+str(count)]
-            if item['count']!=count or item['dtype']!='u32le' or item['file']!='prompt_'+str(count)+'.u32le':
-                raise ValueError('Frozen prompt schema differs')
-            name='benchmarks/contract-v1/'+item['file'];raw=captured(name,item['sha256'],count*4)
-            if len(raw)!=count*4:raise ValueError('Exact prompt size differs')
-            prompt=list(struct.unpack('<'+str(count)+'I',raw));pins.update({CONTRACT:CONTRACT_SHA,name:item['sha256']})
+            prompt=frozen_prompt(count,pins)
         config.update(capacity=32 if short else 1152,chunk=3 if short else 128,prompt=prompt,maximum=4 if short else 128,
                       expectedPrefix=([47]*4 if model=='tiny' else reference['greedy']['fp64_tokens']) if short else [],
                       warmups=3,repetitions=10,minimumNativeSeconds=600 if workload=='measurement-sustained' else 0)
@@ -93,6 +98,9 @@ def job(model, workload):
         data=dict(version=1,vocabulary=64 if model=='tiny' else 151936,stops=[62,63] if model=='tiny' else [151645,151643],cases=cases)
         raw=encoded(data);digest=hashlib.sha256(raw).hexdigest();name='M8Tasks/'+digest+'/tasks.json';payloads[name]=raw
         config.update(capacity=32 if model=='tiny' else 562,chunk=3 if model=='tiny' else 128,tasksFile=name,tasksSHA256=digest,caseCount=len(cases))
+    elif workload=='state-512':
+        mode='state'
+        config.update(capacity=1152,chunk=128,prompt=frozen_prompt(512,pins),maximum=128,vocabulary=151936)
     else:
         mode='state-component'
         config.update(capacity=32,chunk=3,prompt=prompt,maximum=25,vocabulary=64 if model=='tiny' else 151936)

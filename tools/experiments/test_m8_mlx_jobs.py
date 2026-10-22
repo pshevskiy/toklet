@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import tempfile
 import shutil
+import struct
 import unittest
 from unittest import mock
 
@@ -39,6 +40,33 @@ class Jobs(unittest.TestCase):
             self.assertEqual(config['capacity'],1152);self.assertEqual(config['maximum'],128)
             self.assertEqual(config['minimumNativeSeconds'],600 if workload=='sustained' else 0)
             self.assertEqual(pins[jobs.CONTRACT],jobs.CONTRACT_SHA)
+
+    def test_state512_uses_original_prompt_and_exact_native_state_fields(self):
+        for model in ['qwen','qwen8']:
+            mode,c,host,pins,payloads=jobs.job(model,'state-512')
+            self.assertEqual(mode,'state');self.assertFalse(payloads)
+            raw=(jobs.ROOT/'benchmarks/contract-v1/prompt_512.u32le').read_bytes()
+            self.assertEqual(c['prompt'],list(struct.unpack('<512I',raw)))
+            self.assertEqual((c['capacity'],c['chunk'],c['maximum'],c['vocabulary']),(1152,128,128,151936))
+            self.assertEqual(set(c),{'version','mlx','modelFolder','packedFolder','files','metal','numericalBudget','processBudget','capacity','chunk','prompt','maximum','vocabulary'})
+            self.assertIs(c['mlx'],True);self.assertEqual(c['version'],2)
+            self.assertEqual(set(host),set(c['files']));self.assertEqual(pins[jobs.CONTRACT],jobs.CONTRACT_SHA)
+            measurement=jobs.job(model,'measurement-512')[1]
+            for key in c.keys()-{'vocabulary'}:self.assertEqual(c[key],measurement[key])
+        with self.assertRaises(ValueError):jobs.job('tiny','state-512')
+
+    def test_shared_prompt_capture_rejects_metadata_and_consumed_size_changes(self):
+        real=jobs.captured
+        for kind in ['metadata','size']:
+            def captured(name,pin,maximum):
+                raw=real(name,pin,maximum)
+                if name==jobs.CONTRACT and kind=='metadata':
+                    data=json.loads(raw);data['arrays']['prompt_512']['count']=511;return json.dumps(data).encode()
+                if name.endswith('prompt_512.u32le') and kind=='size':return raw[:-4]
+                return raw
+            with self.subTest(kind=kind),mock.patch.object(jobs,'captured',captured):
+                for workload in ['state-512','measurement-512']:
+                    with self.assertRaises(ValueError):jobs.job('qwen8',workload)
 
     def test_full_quality_scores_every_original_target_once(self):
         _,config,_,pins,payloads=jobs.job('qwen','quality-full')

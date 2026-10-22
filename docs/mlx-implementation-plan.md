@@ -87,7 +87,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Eight-bit full task quality](mlx8-full-task-quality.md) on Mac and iPhone: 2/100 each versus FP32 2/100, zero drop; one isolated40-program run, exact phone literal equivalence, six idle observations and verified VM restoration. The low baseline remains explicit.
   - [x] [Strict Mac measurement admission](mlx-mac-measurement.md), complete clocks/state/memory/duration checks and one128/128 app trial; full matrix/confirmation/sustained and phone performance remain open.
   - [x] [Eight-bit app performance observations](mlx8-performance.md), all 128/512/1024 primary/confirmation workloads and 600-native-second sustained runs on Mac/iPhone; phone thermal slowdown remains explicit, with no comparative speedup or steady-rate claim.
-  - [ ] Physical MLX state/lifecycle qualification.
+  - [x] [Eight-bit physical state witnesses](mlx8-phone-state.md) on iPhone 14 Pro: actual 128/384 committed/pending prefill cancellation, exact resume and full1152 boundary/overflow/recovery.
+  - [ ] Actual physical MLX OS lifecycle qualification.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,

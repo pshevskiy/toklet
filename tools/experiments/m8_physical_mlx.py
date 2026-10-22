@@ -16,6 +16,7 @@ import m7_physical_quality as quality
 import m7_physical_storage as storage
 import m7_physical_tasks as tasks
 import m8_mlx_jobs as jobs
+import m8_physical_state as state
 
 ROOT=package.ROOT
 NATIVE=ROOT/'artifacts/m8-apple-package-v1'
@@ -44,7 +45,7 @@ def admitted_stage(folder,expected):
     record=metadata(folder/'staged.json',expected)
     mode,config,host,pins,_=jobs.job(record['model'],record['workload'])
     if (record['format']!='toklet-m8-mlx-staged-job-v1' or record['passed'] is not True
-        or mode not in ['measurement','quality','tasks'] or record['mode']!=mode or jobs.encoded(record['config'])!=jobs.encoded(config) or record['host']!=host
+        or mode not in ['measurement','quality','tasks','state'] or record['mode']!=mode or jobs.encoded(record['config'])!=jobs.encoded(config) or record['host']!=host
         or any(record[key] is not False for key in ['full_quality_qualified','physical_device_qualified','performance_qualified'])):
         raise ValueError('Exact supported staged MLX job required')
     for name,pin in pins.items():
@@ -64,6 +65,7 @@ def admitted_stage(folder,expected):
 def checked_console(text,record,signed):
     config=record['config'];mode=record['mode']
     if mode=='measurement':return measurement.validate_console(text,config,signed)
+    if mode=='state':return state.validate_console(text,config,signed)
     base=ROOT/record['transfer_root']
     if mode=='quality':
         raw=jobs.captured(str((base/config['tokensFile']).relative_to(ROOT)),config['tokensSHA256'],40004)
@@ -233,7 +235,7 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
             transfer_verified=True
         if not prepare_only:
             job=record['job'];launch=logs/'launch.json';limit=7200 if record['mode']!='measurement' else 3600
-            args=[physical.DEVICECTL,'device','process','launch','--device',selected['device_identifier'],'--terminate-existing','--console','--timeout',str(limit),'--json-output',str(launch),physical.BUNDLE,'--',{'measurement':'--measure','quality':'--quality','tasks':'--tasks'}[record['mode']],job['relative_path'],job['sha256']]
+            args=[physical.DEVICECTL,'device','process','launch','--device',selected['device_identifier'],'--terminate-existing','--console','--timeout',str(limit),'--json-output',str(launch),physical.BUNDLE,'--',{'measurement':'--measure','quality':'--quality','tasks':'--tasks','state':'--state'}[record['mode']],job['relative_path'],job['sha256']]
             host_start=dict(wallUnixNanoseconds=time.time_ns(),monotonicNanoseconds=time.monotonic_ns())
             raw=physical.launch_verified(current,lambda:execute(args,'measurement',limit+30),remote,selected)
             with launch.open('rb') as stream:launch_raw=stream.read(16*1024**2+1)
