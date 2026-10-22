@@ -123,8 +123,11 @@ private struct Result: Encodable {
             signals.observe(.active,origin:.syntheticCheck,applicationState:0)
         }
         if kind == "unit" {
-            try expect(!diagnostic.passed && diagnostic.closed && diagnostic.released && diagnostic.filesBefore == config.files && diagnostic.filesAfter == config.files,
-                       "Failed diagnostic did not close/release/reproof")
+            try expect(!diagnostic.passed && diagnostic.closed && diagnostic.released && diagnostic.filesBefore == config.files && diagnostic.filesAfter == config.files
+                && diagnostic.cleanupErrors.isEmpty && diagnostic.endpointErrors.isEmpty
+                && diagnostic.trace?.error == nil && diagnostic.trace?.activeCommand == nil
+                && diagnostic.trace?.detachedAfterClose == true,
+                       "Failed diagnostic did not close/release/reproof/detach")
             try expect(["No demonstrably active generation window","Forced READY sink failure"].contains(diagnostic.error ?? ""),"Unexpected tiny diagnostic failure")
             cases.append("tiny-diagnostic-fails-closed")
         } else {

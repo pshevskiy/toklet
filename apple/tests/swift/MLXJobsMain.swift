@@ -120,6 +120,9 @@ private func emitMLX<T: Encodable>(_ name: String, _ value: T) throws {
         }
         try expectMLX(!interrupted.passed && interrupted.closed && interrupted.released && interrupted.backend == "metal-mlx"
             && interrupted.filesBefore == files && interrupted.filesAfter == files && interrupted.loadedAdmittedBytes > 0
+            && interrupted.cleanupErrors.isEmpty && interrupted.endpointErrors.isEmpty
+            && interrupted.trace?.error == nil && interrupted.trace?.activeCommand == nil
+            && interrupted.trace?.detachedAfterClose == true
             && ["No demonstrably active generation window","Forced READY sink failure"].contains(interrupted.error ?? ""),
             "MLX lifecycle failed to close on bounded tiny window")
         try emitMLX("MLX_JOB_LIFECYCLE_FAILURE=",interrupted)

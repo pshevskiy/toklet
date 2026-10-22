@@ -68,7 +68,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     shader provenance, three platform slices and actual Mac C execution.
   - [x] Explicit [authenticated MLX diagnostic jobs](mlx-apple-jobs.md), legacy
     schema preservation and tiny Mac routing checks.
-  - [ ] Repair observed lifecycle error-trace cleanup before physical trials.
+  - [x] [Lifecycle error-trace cleanup](mlx-lifecycle-cleanup.md), preserving
+    original errors and failed traces after verified owner shutdown.
   - [ ] Independent real-reference gates and real-checkpoint quality/memory/performance.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal

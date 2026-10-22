@@ -244,7 +244,14 @@ func runNativeLifecycle(_ config: NativeLifecycleConfig, root: URL, signals: Nat
     }
     signals.detach()
     if result.closed, let trace {
-        do { try trace.detach() } catch { result.cleanupErrors.append(String(error.localizedDescription.prefix(512))) }
+        do {
+            // Signals are detached and the worker has acknowledged full close.
+            // An external coordinator/sink failure may have skipped normal end;
+            // preserve that result error and any failed trace's original evidence.
+            let finalTrace = trace.report()
+            if finalTrace.error == nil, let active = finalTrace.activeCommand { try trace.end(active) }
+            try trace.detach()
+        } catch { result.cleanupErrors.append(String(error.localizedDescription.prefix(512))) }
     }
     owner = nil
     let releaseDeadline = Date(timeIntervalSinceNow:5)

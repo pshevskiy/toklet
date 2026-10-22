@@ -29,7 +29,9 @@ The negative lifecycle check actually reached READY, then deliberately threw
 reproof passed. The existing trace nevertheless reported `Lifecycle detach
 requires completed close and no active command` in cleanup errors. This is retained
 as an open trace-cleanup gap for a separate code task; it is not accepted as clean
-lifecycle completion or actual OS behavior. The check permits either the injected
+lifecycle completion or actual OS behavior. The gap is subsequently repaired in
+[the trace-cleanup task](mlx-lifecycle-cleanup.md); this earlier result remains unchanged.
+The check permits either the injected
 READY error or an absent tiny active window; this recorded run reached READY.
 
 Strict Mac Swift compilation/execution also passes the existing CPU/Half
