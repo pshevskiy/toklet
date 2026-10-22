@@ -85,13 +85,7 @@ def validate_task_listing(data,device,config):
 
 def check_console(text,config,signed,task_set,*,require_installation=True):
     if type(require_installation) is not bool:raise ValueError('Explicit installation-proof scope required')
-    if config.get('version')==2:
-        if config.get('mlx') is not True or config.get('metal') is not True or config.get('packedFolder')!='':
-            raise ValueError('Explicit MLX backend contract differs')
-        backend='metal-mlx'
-    else:
-        if config.get('version')!=1 or 'mlx' in config:raise ValueError('Legacy backend contract differs')
-        backend='metal' if config['metal'] else 'cpu'
+    backend=measurement.job_backend(config)
     uint=measurement.uint;number=measurement.nonnegative;cases=task_set['cases'];vocabulary=task_set['vocabulary'];stops=task_set['stops']
     if (not uint(config['caseCount'],32) or not 1<=config['caseCount']<=100 or len(cases)!=config['caseCount']
         or set(task_set)!={'version','vocabulary','stops','cases'} or not uint(task_set['version'],32) or task_set['version']!=1 or not uint(vocabulary,32) or vocabulary==0 or not 1<=len(stops)<=2

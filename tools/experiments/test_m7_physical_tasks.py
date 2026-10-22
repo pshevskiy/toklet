@@ -226,7 +226,7 @@ class MLXMacTaskChecks(unittest.TestCase):
         with self.assertRaises(ValueError):t.check_console(console(e),c,None,d,require_installation=False)
 
     def test_explicit_backend_and_mac_observation_scope_rejects(self):
-        for change in [lambda c,e:c.update(mlx=False),lambda c,e:c.update(metal=False),lambda c,e:c.update(packedFolder='Packed'),
+        for change in [lambda c,e:c.update(mlx=False),lambda c,e:c.update(metal=False),lambda c,e:c.update(packedFolder='Packed'),lambda c,e:c.update(version=2.0),lambda c,e:c.update(version=True),lambda c,e:c.update(metal=1),
                        lambda c,e:e[-1][1].update(backend='metal'),lambda c,e:e[0][1]['environment'].update(applicationState=0)]:
             c,_,d,e,_=self.make();change(c,e)
             with self.assertRaises(ValueError):t.check_console(console(e),c,None,d,require_installation=False)

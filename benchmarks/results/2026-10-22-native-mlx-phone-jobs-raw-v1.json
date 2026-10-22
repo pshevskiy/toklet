@@ -1,0 +1,509 @@
+{
+  "format": "toklet-m8-phone-mlx-raw-v1",
+  "files": {
+    "artifacts/m8-phone-mlx-driver-v1/driver.py": {
+      "bytes": 5728,
+      "sha256": "659f24d78346428b4557931af72dcc30f98450c3533a714553bace6cdd82e7c5"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/execution.json": {
+      "bytes": 71030,
+      "sha256": "42b74ace6502ac58be139c8a0f19a62a08033d4d5bab861b7bd04e1e38ab38a1"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-measurement-short-ready/measurement.json": {
+      "bytes": 44552,
+      "sha256": "8aa6bb5bfe4e8ba422eb3bc2e27dd024c23569bd374e989be1f96e3f7c7efd8a"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-measurement-short-ready.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-measurement-short-ready.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-measurement-short-run/measurement.json": {
+      "bytes": 49931,
+      "sha256": "797cae29e9b0da60136ff0c1d2f373573dba6a040cd07325026a271c9d7ab1b7"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-measurement-short-run.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-measurement-short-run.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-quality-short-ready/measurement.json": {
+      "bytes": 49914,
+      "sha256": "151db24a215a0c13e396b5617b5502896b9b60aa81f5a96c6e089bf198e15abc"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-quality-short-ready.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-quality-short-ready.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-quality-short-run/measurement.json": {
+      "bytes": 49905,
+      "sha256": "23885df5c80ecc0e129c631bf95fbf141d9112a72dd804e1af05697fd5dccdaa"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-quality-short-run.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-quality-short-run.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-tasks-short-ready/measurement.json": {
+      "bytes": 49638,
+      "sha256": "404449f6ccdd79f3ba618f65eef3dea0a409ea09593938214eddd1db562ade06"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-tasks-short-ready.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-tasks-short-ready.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-tasks-short-run/measurement.json": {
+      "bytes": 50265,
+      "sha256": "b6c3e89f17e73d2c8ae6f0ad3511b9db2e70a494806ae7761bd7fec7ba8fce39"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-tasks-short-run.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/qwen-tasks-short-run.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/stages/qwen-measurement-short/staged.json": {
+      "bytes": 3143,
+      "sha256": "5fae7b1377f55e0ab268aaec8a9614dcf0981f5f3dfefe589155c8512e3f119e"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/stages/qwen-quality-short/staged.json": {
+      "bytes": 3459,
+      "sha256": "ca921bb286104cbc26ec476dfa6f1c311488c5ffe9f50c2f8c894541570b3cba"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/stages/qwen-tasks-short/staged.json": {
+      "bytes": 3422,
+      "sha256": "2bf1a31793891ed9bbe33dc2936322d988c7f11ed490ee55bc666b657bcc693a"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/stages/tiny/staged.json": {
+      "bytes": 2490,
+      "sha256": "0ae7d86bc934898eaf5e0f8ff903345576d7e610efa8585867dadaced14b4d5e"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-proof-0/measurement.json": {
+      "bytes": 37495,
+      "sha256": "73af9d0d9985422bc9ac114f4664ac04c2b7d77023cec9d0ed88fc9eb4c94110"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-proof-0.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-proof-0.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-proof-1/measurement.json": {
+      "bytes": 37505,
+      "sha256": "8e76c88ed58a8df7055472960c7125bbf64172db8c5c8866ee38ad4edecb87fe"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-proof-1.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-proof-1.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-proof-2/measurement.json": {
+      "bytes": 37492,
+      "sha256": "fbaae5ff3bdc594b07d95abef2e72fa427d788375697344961106db15173021c"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-proof-2.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-proof-2.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-ready/measurement.json": {
+      "bytes": 34305,
+      "sha256": "398e86614e0c8d2bf33ab7f60a39902f01346c2d13edfbf5a54ea4aceacae881"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-ready.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-driver-v1/tiny-ready.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/checks.json": {
+      "bytes": 9508,
+      "sha256": "be49dcbf548bee081c5880bf59bacb21a180e5b866336b7391a8e8bec446a7dd"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/checks.py": {
+      "bytes": 2233,
+      "sha256": "707ab9bd19d16beb0327b557d299996769083b49a204355748b90d67663f8aff"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_integration.py.stderr": {
+      "bytes": 3063,
+      "sha256": "bfc646dca202ca12f19e52fb883d7796fcda225cfea2d86b5392828cf0989070"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_integration.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_measurement.py.stderr": {
+      "bytes": 3332,
+      "sha256": "d954e03e46ae362adccf003db76dd56c3f5959d6d92b5e6e5c413c59981f0f08"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_measurement.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_quality.py.stderr": {
+      "bytes": 2132,
+      "sha256": "80d3a287549c2e0c5ddbafc861d05d3fea9e5436a4251dc6ebfe8c0e64653ff3"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_quality.py.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_storage.py.stderr": {
+      "bytes": 1953,
+      "sha256": "d6b6b27b3b38697863e0c74a504fbfbc586adcccc5684f795c63684995c90a62"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_storage.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_tasks.py.stderr": {
+      "bytes": 2661,
+      "sha256": "a7c5b5e762b9248c9441456b4a50f6d81dc9304e2fd7793d75b42f0e5c717608"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m7_physical_tasks.py.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m8_mlx_jobs.py.stderr": {
+      "bytes": 1260,
+      "sha256": "8232aee64476d349891b38659eed82eedd59d9d22ba6c97b4ea837aebaf28d6e"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m8_mlx_jobs.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m8_physical_mlx.py.stderr": {
+      "bytes": 2071,
+      "sha256": "ecbd8dd7e61710e394e5d43984e5ffca0990844a71d3e8ffe936785bc5b62335"
+    },
+    "artifacts/m8-physical-mlx-checks-v1/test_m8_physical_mlx.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/record.py": {
+      "bytes": 3572,
+      "sha256": "8b295d7c1796d121c469ad294396fbd5028ee4d463d2042d011a7cda839dba2e"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/Cargo.lock": {
+      "bytes": 24261,
+      "sha256": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/Cargo.toml": {
+      "bytes": 2175,
+      "sha256": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/HarnessApp.swift": {
+      "bytes": 22298,
+      "sha256": "4cc314e35db6d0f6736e4f6e2358e9c444a2b7069faba6703e3ff8dc633a63e6"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/Info.plist": {
+      "bytes": 1193,
+      "sha256": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeLifecycle.swift": {
+      "bytes": 8084,
+      "sha256": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeLifecycleRun.swift": {
+      "bytes": 18822,
+      "sha256": "9170e354d07dc09e1f4eb9ea718b68ff5c6df16b68f85fc0dc44872de0f414a2"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeLifecycleSignals.swift": {
+      "bytes": 5283,
+      "sha256": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "bytes": 26271,
+      "sha256": "5dcd81db64963db10d2bd50a6e9bc8dee567951f1a344341dd0cd9dfecbf8a46"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeQuality.swift": {
+      "bytes": 11182,
+      "sha256": "e54783e1ed25035340f07c13f593cefdb616152fc296b17fc6508ba1e7e3972a"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeStateRun.swift": {
+      "bytes": 15138,
+      "sha256": "e0b8a0d12fd93db67fcab374da3f386d8b3331b1b20bd96413ebca1dfb290a99"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeTaskResponse.swift": {
+      "bytes": 5963,
+      "sha256": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeTasks.swift": {
+      "bytes": 13770,
+      "sha256": "d2df04cf9da12d5b648970e49c64f1bdbc28bf464ca3c05a6a65e4ee6b6ae4e9"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeTeacherForcing.swift": {
+      "bytes": 5326,
+      "sha256": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/apple/Harness/NativeWorker.swift": {
+      "bytes": 22444,
+      "sha256": "d86832de771cc1d8ee1774089468e749f05b8bfb074e20ee69fccc3b0c50fa37"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/benchmark.rs": {
+      "bytes": 3360,
+      "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/bin/cli/chat.rs": {
+      "bytes": 21958,
+      "sha256": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/bin/cli/mod.rs": {
+      "bytes": 35356,
+      "sha256": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/bin/toklet.rs": {
+      "bytes": 96,
+      "sha256": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/cpu/attention.rs": {
+      "bytes": 11201,
+      "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/cpu/mod.rs": {
+      "bytes": 9060,
+      "sha256": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/cpu/reductions.rs": {
+      "bytes": 7659,
+      "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/cpu/tiled.rs": {
+      "bytes": 6519,
+      "sha256": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/generation.rs": {
+      "bytes": 7870,
+      "sha256": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/lib.rs": {
+      "bytes": 563,
+      "sha256": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/capture.rs": {
+      "bytes": 2365,
+      "sha256": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/diagnostic.rs": {
+      "bytes": 7365,
+      "sha256": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/half_consistency.rs": {
+      "bytes": 25953,
+      "sha256": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/half_projection.rs": {
+      "bytes": 10662,
+      "sha256": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/kernels.metal": {
+      "bytes": 25012,
+      "sha256": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/memory.rs": {
+      "bytes": 17758,
+      "sha256": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/mlx.metal": {
+      "bytes": 5748,
+      "sha256": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/mlx.rs": {
+      "bytes": 37222,
+      "sha256": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/mod.rs": {
+      "bytes": 119299,
+      "sha256": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/online_attention.rs": {
+      "bytes": 21891,
+      "sha256": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/profile.rs": {
+      "bytes": 13762,
+      "sha256": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/metal/q4_v2_projection.rs": {
+      "bytes": 11730,
+      "sha256": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/mlx/affine.rs": {
+      "bytes": 10163,
+      "sha256": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/mlx/mod.rs": {
+      "bytes": 287,
+      "sha256": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/mlx/qwen.rs": {
+      "bytes": 17965,
+      "sha256": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/mlx/reference.rs": {
+      "bytes": 5929,
+      "sha256": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/model/cache.rs": {
+      "bytes": 3096,
+      "sha256": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/model/mod.rs": {
+      "bytes": 24014,
+      "sha256": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/model/trace.rs": {
+      "bytes": 2807,
+      "sha256": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/native/tests.rs": {
+      "bytes": 38382,
+      "sha256": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/native.rs": {
+      "bytes": 32174,
+      "sha256": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/q4/artifact.rs": {
+      "bytes": 10397,
+      "sha256": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/q4.rs": {
+      "bytes": 8842,
+      "sha256": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/sampling.rs": {
+      "bytes": 616,
+      "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/session.rs": {
+      "bytes": 16921,
+      "sha256": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/weights/half_tests.rs": {
+      "bytes": 3814,
+      "sha256": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/src/weights/mod.rs": {
+      "bytes": 32427,
+      "sha256": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/bench/prepare.py": {
+      "bytes": 15310,
+      "sha256": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/bench/task_cases.py": {
+      "bytes": 12391,
+      "sha256": "91b5f44840ba31b8f0aead2217b4638c0dbb7e2529389225ba58a6c4822f9e1d"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m7_apple_integration.py": {
+      "bytes": 7322,
+      "sha256": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m7_apple_package.py": {
+      "bytes": 12764,
+      "sha256": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m7_physical_integration.py": {
+      "bytes": 21859,
+      "sha256": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m7_physical_measurement.py": {
+      "bytes": 33710,
+      "sha256": "f357a13a6f5d9b714b2bb166bdf0f98c4017e11efebdd05b081d43e667800ec6"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m7_physical_quality.py": {
+      "bytes": 11454,
+      "sha256": "79d0dd119c421eb4d09530a32451c430e4f7b693d80d53987b55772490265aa8"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m7_physical_storage.py": {
+      "bytes": 8109,
+      "sha256": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m7_physical_tasks.py": {
+      "bytes": 16947,
+      "sha256": "ac4dcbea9002f9131caca06c226a55fba155c852148b1d561aaec389021d0d58"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m7_swift_harness_build.py": {
+      "bytes": 8793,
+      "sha256": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m8_mlx_jobs.py": {
+      "bytes": 8380,
+      "sha256": "f6fee10b0d7a370892b389873f33b2df754716ca809ee9e2af5864038b647570"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/m8_physical_mlx.py": {
+      "bytes": 23152,
+      "sha256": "19b382b2081206b94439919923eed2e479a318a4c8c36959476cf83c26cd26ef"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/test_m7_apple_package.py": {
+      "bytes": 6846,
+      "sha256": "efdd9835b9c8301cdb91f3e466b5b8791155d4eb5d663f56a267588dc700f162"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_integration.py": {
+      "bytes": 18910,
+      "sha256": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_measurement.py": {
+      "bytes": 30773,
+      "sha256": "5b22a991ea6f6b2afe2c1cd482d8eb9ae7a1e7ad6e0ea92b6cb33e0189418f31"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_quality.py": {
+      "bytes": 15574,
+      "sha256": "c5cca37842b43c049b45c5b94177ffb36267796394b5c4d571ffb2397101a7d6"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_storage.py": {
+      "bytes": 17591,
+      "sha256": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_tasks.py": {
+      "bytes": 20363,
+      "sha256": "526d2bfff5ac18b7c96995d7c26403820de0aec75f8e4a974131013954ddb312"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/test_m8_mlx_jobs.py": {
+      "bytes": 7468,
+      "sha256": "b74c38554777ab9b786442acc811c32024843820f3210c0fc7c8c5021aad3613"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/source-snapshot/tools/experiments/test_m8_physical_mlx.py": {
+      "bytes": 16042,
+      "sha256": "bb488e42c711bd35b890d41326f2116c545279e308de9ef2bac9c45993b1e7b3"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/initial-qualification.json": {
+      "bytes": 552370,
+      "sha256": "d00dce3cf9d14da628a1663b160d19c74e362bc2a332fa559e7e7b1beb0a0297"
+    },
+    "artifacts/m8-phone-mlx-evidence-v1/initial-raw.json": {
+      "bytes": 23907,
+      "sha256": "d9e4ce6f5ff9d20d3c2313f0f918bd585d52282eca7e32ddcf35b8065959c7cd"
+    }
+  }
+}

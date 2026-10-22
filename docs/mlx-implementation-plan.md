@@ -73,6 +73,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Independent real-reference gates](mlx-real-oracle.md), full selected public-checkpoint CPU arrays and external manifest admission before target trials.
   - [x] [Selected real-checkpoint Mac target parity](mlx-real-metal.md), complete stage/chunk/offset checks and cached/online/token-only session contracts.
   - [x] [Shared sealed jobs and real Mac app-runner integration](mlx-mac-jobs.md), selected short functional checks, observed process charge and signed iPhone preparation.
+  - [x] [Guarded physical MLX jobs](mlx-phone-jobs.md), actual selected public-checkpoint generation/scoring/tasks and native process peaks on iPhone 14 Pro.
   - [ ] Real-checkpoint full quality, representative app performance and physical MLX execution/memory.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal

@@ -86,7 +86,7 @@ def check_console(text,config,signed,tokens,vocabulary):
     result=results[0]
     if ([p['phase'] for p in proofs]!=['before','after'] or any(p['simulator'] is not False or p['files']!=signed for p in proofs)
         or result['passed'] is not True or result.get('error') is not None or result['cleanupErrors'] or result['endpointErrors']
-        or result['backend']!=('metal' if config['metal'] else 'cpu') or result['closed'] is not True or result['released'] is not True
+        or result['backend']!=measurement.job_backend(config) or result['closed'] is not True or result['released'] is not True
         or result['fullQualityQualified'] is not False or result['physicalDeviceQualified'] is not False or result['m7Complete'] is not False
         or not uint(result['interruptionCount']) or result['interruptionCount']!=0
         or not uint(result['samplesCompleted']) or result['samplesCompleted']!=n or not number(result['loadAndSessionSeconds'])

@@ -9,7 +9,7 @@ import m7_physical_measurement as m
 
 
 def fixture():
-    config=dict(metal=False,prompt=[1,7,13,3],maximum=2,expectedPrefix=[47,47],numericalBudget=512*1024,
+    config=dict(version=1,metal=False,prompt=[1,7,13,3],maximum=2,expectedPrefix=[47,47],numericalBudget=512*1024,
                 processBudget=1024*1024,minimumNativeSeconds=0,files={'Model/config.json':'a'*64})
     signed={'TokletHarness':'b'*64}
     def memory(peak):return dict(physicalBytes=100,lifetimePeakPhysicalBytes=peak,returnedNaturalCount=93)
@@ -369,5 +369,17 @@ class PhysicalMeasurementTests(unittest.TestCase):
         for model,workload in [('other','short'),('tiny-cpu','512'),('small','unknown')]:
             with self.subTest(model=model),self.assertRaises(ValueError):m.job(model,workload)
 
+
+
+
+class MLXMeasurementChecks(unittest.TestCase):
+    def test_explicit_mlx_backend_preserves_measurement_gates(self):
+        c,f,r,s,p=fixture();c.update(version=2,mlx=True,metal=True,packedFolder='');r['backend']='metal-mlx'
+        self.assertEqual(m.validate_console(console(r,s,p),c,f)['sample_count'],13)
+        for field,value in [('mlx',False),('mlx',None),('metal',False),('packedFolder','Packed'),('version',1),('version',True),('version',2.0),('version',3),('version',None),('metal',1)]:
+            changed=copy.deepcopy(c);changed[field]=value
+            with self.subTest(field=field,value=value),self.assertRaises(ValueError):m.validate_console(console(r,s,p),changed,f)
+        r['backend']='metal'
+        with self.assertRaises(ValueError):m.validate_console(console(r,s,p),c,f)
 
 if __name__=='__main__':unittest.main()

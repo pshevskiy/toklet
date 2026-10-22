@@ -120,6 +120,18 @@ def nonnegative(value):
     return type(value) in (int,float) and math.isfinite(value) and value>=0
 
 
+def job_backend(config):
+    version=config.get('version');metal=config.get('metal')
+    if type(version) is not int or version not in (1,2) or type(metal) is not bool:
+        raise ValueError('Typed versioned backend contract required')
+    if version==1:
+        if 'mlx' in config:raise ValueError('Legacy backend fields differ')
+        return 'metal' if metal else 'cpu'
+    if config.get('mlx') is not True or metal is not True or config.get('packedFolder')!='':
+        raise ValueError('Explicit MLX backend contract differs')
+    return 'metal-mlx'
+
+
 def validate_console(text,config,signed):
     def rows(prefix):return [json.loads(line[len(prefix):]) for line in text.splitlines() if line.startswith(prefix)]
     if any(line.startswith('TOKLET_MEASUREMENT_ERROR=') for line in text.splitlines()):raise ValueError('App reported measurement error')
@@ -145,7 +157,7 @@ def validate_console(text,config,signed):
         raise ValueError('Filesystem observation scope/window differs')
     if ([p['phase'] for p in proofs]!=['before','after'] or any(p['simulator'] is not False or p['files']!=signed for p in proofs)
         or result['passed'] is not True or result.get('error') is not None or result['cleanupErrors'] or result['endpointErrors']
-        or result['backend']!=('metal' if config['metal'] else 'cpu') or not uint(result['interruptionCount']) or result['interruptionCount']!=0
+        or result['backend']!=job_backend(config) or not uint(result['interruptionCount']) or result['interruptionCount']!=0
         or not nonnegative(result['loadAndSessionSeconds']) or not nonnegative(result['sumNativeLastEventSeconds'])
         or not uint(result['warmupsCompleted'],32) or not uint(result['measuredCompleted'],32)
         or result['closed'] is not True or result['released'] is not True or result['physicalDeviceQualified'] is not False or result['m7Complete'] is not False

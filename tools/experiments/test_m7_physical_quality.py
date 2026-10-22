@@ -156,4 +156,16 @@ class PhysicalQualityChecks(unittest.TestCase):
         with patch.object(m.integration,'metadata',return_value=r),self.assertRaises(ValueError):m.admit_ready(folder,'e'*64,c,{},prepared,'c'*64,r['signed_bundle'])
 
 
+
+
+class MLXQualityChecks(unittest.TestCase):
+    def test_explicit_mlx_backend_preserves_full_block_scoring_gates(self):
+        c,f,t,r,s,p=fixture(10000,1024);c.update(version=2,mlx=True,metal=True);r['backend']='metal-mlx'
+        self.assertEqual(q.check_console(console(r,s,p),c,f,t,64)['result']['samplesCompleted'],10000)
+        for field,value in [('mlx',False),('mlx',None),('metal',False),('packedFolder','Packed'),('version',1)]:
+            changed=copy.deepcopy(c);changed[field]=value
+            with self.subTest(field=field,value=value),self.assertRaises(ValueError):q.check_console(console(r,s,p),changed,f,t,64)
+        r['backend']='metal'
+        with self.assertRaises(ValueError):q.check_console(console(r,s,p),c,f,t,64)
+
 if __name__=='__main__':unittest.main()
