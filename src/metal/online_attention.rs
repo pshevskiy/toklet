@@ -365,40 +365,47 @@ fn high_position_rotary_matches_independent_math_envelope() {
         let gpu = Gpu::new().unwrap();
         let mut compared = 0;
         let mut maximum_error = 0f64;
-        for d in [64usize, 128] {
-            let (rows, heads) = (3usize, 2usize);
-            let n = rows * heads * d;
-            let mut input = Buffer::<u16>::new(&gpu, n + 7).unwrap();
-            input.with_mut(|b| {
-                b.fill(0x7e00);
-                for (i, v) in b[..n].iter_mut().enumerate() {
-                    *v = f16::from_f32(((i * 13) % 31) as f32 * 0.125 - 1.875).to_bits();
-                }
-            });
-            let before = input.with_slice(|b| b.to_vec());
-            let mut out = Buffer::<u16>::new(&gpu, n + 7).unwrap();
-            let mut status = Buffer::<u32>::new(&gpu, 8).unwrap();
-            for offset in [0usize, 2045, 4093, 8189, 16381, 32765] {
-                out.with_mut(|b| b.fill(0x7bff));
-                status.with_mut(|b| b.fill(0));
-                let raw = gpu.command().unwrap();
-                gpu.encode(
-                    &Command {
-                        raw: &raw,
-                        trace: None,
-                    },
-                    Kernel::Rotary,
-                    &[&input.raw, &out.raw],
-                    &[rows as u32, heads as u32, d as u32, offset as u32],
-                    n / 2,
-                    Some(&status),
-                )
-                .unwrap();
-                raw.commit();
-                raw.waitUntilCompleted();
-                assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
-                assert_eq!(status.with_slice(|b| b[0]), 0);
-                out.with_slice(|bits| {
+        for theta in [10000.0f32, 1000000.0] {
+            for d in [64usize, 128] {
+                let (rows, heads) = (3usize, 2usize);
+                let n = rows * heads * d;
+                let mut input = Buffer::<u16>::new(&gpu, n + 7).unwrap();
+                input.with_mut(|b| {
+                    b.fill(0x7e00);
+                    for (i, v) in b[..n].iter_mut().enumerate() {
+                        *v = f16::from_f32(((i * 13) % 31) as f32 * 0.125 - 1.875).to_bits();
+                    }
+                });
+                let before = input.with_slice(|b| b.to_vec());
+                let mut out = Buffer::<u16>::new(&gpu, n + 7).unwrap();
+                let mut status = Buffer::<u32>::new(&gpu, 8).unwrap();
+                for offset in [0usize, 2045, 4093, 8189, 16381, 32765] {
+                    out.with_mut(|b| b.fill(0x7bff));
+                    status.with_mut(|b| b.fill(0));
+                    let raw = gpu.command().unwrap();
+                    gpu.encode(
+                        &Command {
+                            raw: &raw,
+                            trace: None,
+                        },
+                        Kernel::Rotary,
+                        &[&input.raw, &out.raw],
+                        &[
+                            rows as u32,
+                            heads as u32,
+                            d as u32,
+                            offset as u32,
+                            theta.to_bits(),
+                        ],
+                        n / 2,
+                        Some(&status),
+                    )
+                    .unwrap();
+                    raw.commit();
+                    raw.waitUntilCompleted();
+                    assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+                    assert_eq!(status.with_slice(|b| b[0]), 0);
+                    out.with_slice(|bits| {
                     for row in 0..rows {
                         for head in 0..heads {
                             for f in 0..d / 2 {
@@ -406,7 +413,7 @@ fn high_position_rotary_matches_independent_math_envelope() {
                                 let b = a + d / 2;
                                 let av = f64::from(f16::from_bits(before[a]).to_f32());
                                 let bv = f64::from(f16::from_bits(before[b]).to_f32());
-                                let frequency = 1e6f64.powf(-2. * f as f64 / d as f64);
+                                let frequency = f64::from(theta).powf(-2. * f as f64 / d as f64);
                                 let angle = (offset + row) as f64 * frequency;
                                 let expected = [
                                     av * angle.cos() - bv * angle.sin(),
@@ -427,7 +434,7 @@ fn high_position_rotary_matches_independent_math_envelope() {
                                     maximum_error = maximum_error.max(delta);
                                     assert!(
                                         actual.is_finite() && delta <= bound,
-                                        "d{d}/pos{}/f{f}: {actual} vs {value}, bound{bound}",
+                                        "theta{theta}/d{d}/pos{}/f{f}: {actual} vs {value}, bound{bound}",
                                         offset + row
                                     );
                                     compared += 1;
@@ -437,7 +444,8 @@ fn high_position_rotary_matches_independent_math_envelope() {
                     }
                     assert!(bits[n..].iter().all(|b| *b == 0x7bff));
                 });
-                assert_eq!(input.with_slice(|b| b.to_vec()), before);
+                    assert_eq!(input.with_slice(|b| b.to_vec()), before);
+                }
             }
         }
         println!(

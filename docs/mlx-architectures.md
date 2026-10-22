@@ -30,3 +30,9 @@ The implementation queue remains ordered by mechanisms:
 M8.3 remains open. Discovery/download product behavior follows native engine compatibility under M8.4; wider downloaded-model/device qualification remains M8.5. This reference snapshot does not upgrade installed MLX packages, change the native backend, accept the rejected four-bit checkpoint, qualify chat templates, or establish model fit on either device.
 
 Astra accepted the code, reference inventory and documentation with no remaining blockers after independently checking all 5,691 bindings, two source copies, both reconstructed Git roots, 1,544 selected files, 1,403 owned transfers, 16 test results and 50 unchanged numerical/Swift/Cargo sources. Privacy, 270 local links and whitespace pass. Acceptance covers static reference coverage only; native architecture expansion and M8.3–M8.5 remain open.
+
+
+Subsequent M8.3 work adds an [independent Llama oracle](mlx-llama-oracle.md),
+[strict scalar loader](mlx-llama-scalar.md) and [resident tiny Reference-attention
+graph](mlx-llama-metal.md). These later tasks do not change this static inventory
+or qualify real Llama checkpoints, Online attention or phone execution.

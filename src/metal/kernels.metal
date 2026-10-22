@@ -78,12 +78,13 @@ kernel void store(device const float* x[[buffer(0)]],device half* out[[buffer(1)
     checked_half(out,(i/s.y)*s.w+i%s.y,x[(i/s.y)*s.z+i%s.y],status);
 }
 
+// [rows, heads, head_dim, absolute_offset, positive finite theta as FP32 bits].
 kernel void rotary(device const half* x[[buffer(0)]],device half* out[[buffer(1)]],constant uint* s[[buffer(2)]],device atomic_uint* status[[buffer(3)]],uint pair[[thread_position_in_grid]]) {
     uint half_dim=s[2]/2;
     if(pair>=s[0]*s[1]*half_dim)return;
     uint f=pair%half_dim,head=(pair/half_dim)%s[1],token=pair/(s[1]*half_dim);
     uint a=(token*s[1]+head)*s[2]+f,b=a+half_dim;
-    float inv=pow(1000000.0f,-2.0f*float(f)/float(s[2]));
+    float inv=pow(as_type<float>(s[4]),-2.0f*float(f)/float(s[2]));
     float angle=float(s[3]+token)*inv,c=cos(angle),v=sin(angle);
     float av=float(x[a]),bv=float(x[b]);
     checked_half(out,a,av*c-bv*v,status);

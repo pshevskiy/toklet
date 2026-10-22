@@ -451,9 +451,9 @@ fn projection_replay(
     let (weight, bias, predecessor, float_output) = if let Some(layer) = d.layer {
         let l = &model.layers[layer];
         let selected = match d.stage {
-            "q" => (&l.q, Some(&l.q_bias), "input_norm"),
-            "k" => (&l.k, Some(&l.k_bias), "input_norm"),
-            "v" => (&l.v, Some(&l.v_bias), "input_norm"),
+            "q" => (&l.q, l.q_bias.as_ref(), "input_norm"),
+            "k" => (&l.k, l.k_bias.as_ref(), "input_norm"),
+            "v" => (&l.v, l.v_bias.as_ref(), "input_norm"),
             "attention_projection" => (&l.o, None, "attention_context"),
             "gate" => (&l.gate, None, "post_attention_norm"),
             "up" => (&l.up, None, "post_attention_norm"),
@@ -464,7 +464,7 @@ fn projection_replay(
         };
         (selected.0, selected.1, selected.2, false)
     } else if d.stage == "logits" {
-        (&model.embedding, None, "final_norm", true)
+        (model.output_weights(), None, "final_norm", true)
     } else {
         return json!({"skipped":"First differing operation is not a projection","first":first});
     };

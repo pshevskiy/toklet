@@ -456,8 +456,9 @@ pub unsafe extern "C" fn toklet_model_load_metal(
         })
     }
 }
-/// Load a local native MLX Qwen artifact into resident Metal buffers. Sessions
-/// select MlxAffine/Compensated/Online/FP16 KV/FullLogits explicitly. No fallback.
+/// Load a local supported native MLX dense artifact into resident Metal buffers. Sessions
+/// select MlxAffine/Compensated/FP16 KV/FullLogits. Qwen uses Online attention;
+/// the qualified tiny Llama graph uses Reference attention. No fallback.
 /// # Safety
 /// Follow this module's foreign caller contract for all pointers and handles.
 #[unsafe(no_mangle)]
@@ -560,9 +561,7 @@ pub unsafe extern "C" fn toklet_session_create(
                     target_arch = "aarch64"
                 ))]
                 NativeModel::Metal(model) => {
-                    use crate::metal::{
-                        AttentionMode, NormalizationMode, ProjectionMode, ReadbackMode, Session,
-                    };
+                    use crate::metal::{NormalizationMode, ProjectionMode, ReadbackMode, Session};
                     let (projection, normalization) = if model.is_mlx() {
                         (ProjectionMode::MlxAffine, NormalizationMode::Compensated)
                     } else if model.q4_format().is_some() {
@@ -580,7 +579,7 @@ pub unsafe extern "C" fn toklet_session_create(
                             projection,
                             normalization,
                             ReadbackMode::FullLogits,
-                            AttentionMode::Online,
+                            model.native_attention_mode(),
                         )
                         .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
                     ))

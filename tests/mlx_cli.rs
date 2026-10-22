@@ -8,22 +8,27 @@ use std::{
 };
 
 fn command(attention: &str, chunk: &str) -> Command {
+    command_for(
+        &Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/mlx-qwen-v1/model"),
+        attention,
+        chunk,
+    )
+}
+fn command_for(model: &Path, attention: &str, chunk: &str) -> Command {
     let mut c = Command::new(env!("CARGO_BIN_EXE_toklet"));
-    c.arg("--model")
-        .arg(Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/mlx-qwen-v1/model"))
-        .args([
-            "--backend",
-            "metal",
-            "--metal-projection",
-            "mlx-affine",
-            "--metal-attention",
-            attention,
-            "--context-capacity",
-            "32",
-            "--prefill-chunk",
-            chunk,
-            "--json",
-        ]);
+    c.arg("--model").arg(model).args([
+        "--backend",
+        "metal",
+        "--metal-projection",
+        "mlx-affine",
+        "--metal-attention",
+        attention,
+        "--context-capacity",
+        "32",
+        "--prefill-chunk",
+        chunk,
+        "--json",
+    ]);
     c
 }
 fn records(out: &Output) -> Vec<Value> {
@@ -170,4 +175,57 @@ fn native_mlx_cli_runs_local_packed_model_with_truthful_metadata_and_state() {
         "MLX_CLI {}",
         json!({"single_shot_processes":8,"interactive_processes":2,"expected_token_id":47,"weights_bytes":18152,"real_checkpoint_quality_qualified":false,"performance_qualified":false,"iphone_qualified":false})
     );
+}
+
+#[test]
+#[ignore = "Explicit Apple GPU Llama CLI routing, tied/untied IDs, stop and memory metadata"]
+fn native_llama_cli_uses_the_independent_output_head() {
+    for (variant, expected) in [("tied", 47u64), ("untied", 3u64)] {
+        {
+            let attention = "reference";
+            let path = Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("tests/fixtures/mlx-llama-v1")
+                .join(variant);
+            let rejected = command_for(&path, "online", "3")
+                .args(["--tokens", "1,7,13,3", "--max-new-tokens", "1"])
+                .output()
+                .unwrap();
+            assert!(!rejected.status.success());
+            assert!(rejected.stdout.is_empty());
+            assert!(String::from_utf8_lossy(&rejected.stderr).contains("not qualified"));
+            for chunk in ["1", "3"] {
+                let out = command_for(&path, attention, chunk)
+                    .args(["--tokens", "1,7,13,3", "--max-new-tokens", "4"])
+                    .output()
+                    .unwrap();
+                let rows = records(&out);
+                let ids: Vec<_> = rows
+                    .iter()
+                    .filter(|v| v["event"] == "token")
+                    .map(|v| v["token_id"].as_u64().unwrap())
+                    .collect();
+                assert_eq!(ids, [expected; 4]);
+                let stats = &rows.last().unwrap()["statistics"];
+                execution(&stats["execution"], attention, chunk.parse().unwrap());
+                assert_eq!(stats["generation"]["evaluated_tokens"], 7);
+                assert_eq!(stats["generation"]["pending_tokens"], 1);
+                assert!(stats["logical_memory"]["weights_bytes"].as_u64().unwrap() > 0);
+            }
+            let out = command_for(&path, attention, "3")
+                .args([
+                    "--tokens",
+                    "1,7,13,3",
+                    "--max-new-tokens",
+                    "4",
+                    "--stop-token",
+                    &expected.to_string(),
+                ])
+                .output()
+                .unwrap();
+            let rows = records(&out);
+            assert_eq!(rows.len(), 1);
+            assert_eq!(rows[0]["statistics"]["generation"]["pending_tokens"], 1);
+            assert_eq!(rows[0]["statistics"]["generation"]["emitted_tokens"], 0);
+        }
+    }
 }

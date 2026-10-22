@@ -56,7 +56,8 @@ uint32_t toklet_model_load(const uint8_t *, size_t, const TokletOptions *, Tokle
    Sessions select Online/FP16 KV/FullLogits. Unavailable builds fail without fallback. */
 uint32_t toklet_model_load_metal(const uint8_t *, size_t, const uint8_t *, size_t,
     const TokletOptions *, TokletModel **, TokletError *);
-/* Explicit local native MLX Qwen: MlxAffine/Compensated/Online/FP16 KV/FullLogits.
+/* Explicit local supported native MLX dense model: MlxAffine/Compensated/FP16 KV/FullLogits.
+   Qwen uses Online attention; qualified tiny Llama uses Reference attention.
    Original packed tensors remain resident. Unsupported builds fail without fallback.
    Additive ABI v1 entrypoint; existing layouts and load functions are unchanged. */
 uint32_t toklet_model_load_mlx(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);

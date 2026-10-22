@@ -45,3 +45,8 @@ This task qualifies tiny scalar/reference execution. It does not enable Llama
 in Metal or qualify real checkpoints, model quality, performance, chat templates
 or iPhone execution. The [M8 plan](mlx-implementation-plan.md) keeps those tasks
 open.
+
+
+Subsequent [resident Metal integration](mlx-llama-metal.md) adds tiny Llama with
+Reference attention. The scalar-only status above describes this earlier task's
+revision; `Source::open` and `reference::load_qwen` remain Qwen-only.

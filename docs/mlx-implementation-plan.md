@@ -97,8 +97,9 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   remains visibly unsupported; registration in another runtime is insufficient.
   - [x] [Pinned full Python source/reference inventory](mlx-architectures.md), 137 language/1,399 vision modules with static root exports and literal aliases; no new native architecture support.
   - [x] [Independent tiny bias-free Llama tied/untied oracle](mlx-llama-oracle.md), actual upstream CPU/GPU and cached witnesses with gates frozen before target edits.
-  - [x] [Strict Llama artifact admission and scalar execution](mlx-llama-scalar.md), bias-free/tied/untied semantics and independent full-stage/cache/budget checks; existing entry points remain Qwen-only.
-  - [ ] Dense family expansion, beginning with independently specified Llama/Mistral-style semantics.
+  - [x] [Strict Llama artifact admission and scalar execution](mlx-llama-scalar.md), bias-free/tied/untied semantics and independent full-stage/cache/budget checks; `Source::open`/`reference::load_qwen` remain Qwen-only.
+  - [x] [Resident tiny Llama graph](mlx-llama-metal.md), tied/untied heads with Reference attention, explicit Online rejection, Mac CLI and Rust C-ABI caller checks. Real checkpoints/device scope remains separate.
+  - [ ] Widen dense model shapes and qualify real checkpoints; implement Mistral/sliding and other Llama rotary variants separately. Llama Online attention remains unqualified.
   - [ ] Expert routing, recurrent/hybrid state and actual multimodal/media execution, each with separate fixtures and target qualification.
 - [ ] **M8.4 Device-aware discovery/downloads.** After engine compatibility exists,
   expose Hugging Face model search, truthful support/fit labels and device-local

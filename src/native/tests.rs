@@ -1056,11 +1056,24 @@ fn native_mlx_boundary_rejects_invalid_input_and_clears_output_without_loading()
 #[test]
 #[ignore = "Explicit Apple GPU native MLX C boundary routing, retained ownership, score, state and cancellation"]
 fn native_mlx_boundary_matches_direct_sessions_and_retains_model() {
-    use crate::metal::{self, AttentionMode, NormalizationMode, ProjectionMode, ReadbackMode};
-    let path = format!(
-        "{}/tests/fixtures/mlx-qwen-v1/model",
-        env!("CARGO_MANIFEST_DIR")
-    );
+    use crate::metal::AttentionMode;
+    for (relative, id, attention) in [
+        ("mlx-qwen-v1/model", 47, AttentionMode::Online),
+        ("mlx-llama-v1/tied", 47, AttentionMode::Reference),
+        ("mlx-llama-v1/untied", 3, AttentionMode::Reference),
+    ] {
+        let path = format!("{}/tests/fixtures/{relative}", env!("CARGO_MANIFEST_DIR"));
+        check_native_mlx_boundary(&path, id, attention);
+    }
+}
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+fn check_native_mlx_boundary(
+    path: &str,
+    expected_token: u32,
+    attention: crate::metal::AttentionMode,
+) {
+    use crate::metal::{self, NormalizationMode, ProjectionMode, ReadbackMode};
+
     let mut m = ptr::null_mut();
     let mut s = ptr::null_mut();
     let mut c = ptr::null_mut();
@@ -1088,7 +1101,7 @@ fn native_mlx_boundary_matches_direct_sessions_and_retains_model() {
         ProjectionMode::MlxAffine,
         NormalizationMode::Compensated,
         ReadbackMode::FullLogits,
-        AttentionMode::Online,
+        attention,
     )
     .unwrap();
     direct.set_tokens(&[1, 7, 13, 3]).unwrap();
@@ -1101,12 +1114,15 @@ fn native_mlx_boundary_matches_direct_sessions_and_retains_model() {
     );
     let mut score = Score::default();
     assert_eq!(
-        unsafe { toklet_session_score(s, 47, &mut score, &mut error) },
+        unsafe { toklet_session_score(s, expected_token, &mut score, &mut error) },
         OK
     );
     let logits = direct.logits().unwrap();
-    assert_eq!(score.greedy_token, 47);
-    assert_eq!(score.target_logit, f64::from(logits[47]));
+    assert_eq!(score.greedy_token, expected_token);
+    assert_eq!(
+        score.target_logit,
+        f64::from(logits[expected_token as usize])
+    );
     let loss = logits
         .iter()
         .map(|&x| (f64::from(x) - score.target_logit).exp())
@@ -1136,9 +1152,9 @@ fn native_mlx_boundary_matches_direct_sessions_and_retains_model() {
             (history, evaluated, 1)
         );
     }
-    assert_eq!(ids, [47; 4]);
+    assert_eq!(ids, [expected_token; 4]);
     assert_eq!(
-        unsafe { toklet_session_score(s, 47, &mut score, &mut error) },
+        unsafe { toklet_session_score(s, expected_token, &mut score, &mut error) },
         INVALID
     );
     assert_eq!(unsafe { toklet_cancel_set(c, 1, &mut error) }, OK);
@@ -1186,6 +1202,6 @@ fn native_mlx_boundary_matches_direct_sessions_and_retains_model() {
     assert!(weak.upgrade().is_none());
     println!(
         "MLX_NATIVE {}",
-        serde_json::json!({"retained_model_released":true,"score_matches_direct":true,"ids":ids,"pending_state":[8,7,1],"cancellation_and_rejection_preserve_prefix":true,"physical_device_qualified":false,"performance_qualified":false})
+        serde_json::json!({"expected_token":expected_token,"retained_model_released":true,"score_matches_direct":true,"ids":ids,"pending_state":[8,7,1],"cancellation_and_rejection_preserve_prefix":true,"physical_device_qualified":false,"performance_qualified":false})
     );
 }

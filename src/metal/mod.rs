@@ -84,6 +84,35 @@ fn geometry(c: &model::Config) -> Result<()> {
     }
     Ok(())
 }
+/// Keep Llama geometry admission explicit and before GPU creation. Wider Llama
+/// shapes/rotary variants require their own numerical and resource qualification.
+fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture) -> Result<()> {
+    match architecture {
+        crate::mlx::dense::Architecture::Qwen2 => geometry(c),
+        crate::mlx::dense::Architecture::Llama => {
+            c.validate()
+                .map_err(|_| Error::Options("invalid Llama model configuration"))?;
+            if (
+                c.hidden_size,
+                c.intermediate_size,
+                c.query_heads,
+                c.kv_heads,
+                c.head_dim,
+                c.num_layers,
+                c.vocab_size,
+            ) != (32, 64, 4, 2, 8, 2, 64)
+                || c.rope_theta != 10000.0
+                || c.rms_norm_eps != 1e-6
+                || c.max_positions > 32
+            {
+                return Err(Error::Unsupported(
+                    "Metal Llama currently requires the qualified tiny geometry and ordinary RoPE",
+                ));
+            }
+            Ok(())
+        }
+    }
+}
 /// The planning source contributes shapes only. Reopen payload descriptors after
 /// artifact identity is established, then check metadata and endpoint identities.
 /// This prevents an atomic replacement before Artifact::open from leaving an
@@ -156,9 +185,9 @@ struct Layer {
     k: Tensor,
     v: Tensor,
     o: Tensor,
-    q_bias: Tensor,
-    k_bias: Tensor,
-    v_bias: Tensor,
+    q_bias: Option<Tensor>,
+    k_bias: Option<Tensor>,
+    v_bias: Option<Tensor>,
     gate: Tensor,
     up: Tensor,
     down: Tensor,
@@ -174,13 +203,17 @@ pub struct Model {
     config: model::Config,
     gpu: Gpu,
     embedding: Tensor,
+    output: Option<Tensor>,
     norm: Tensor,
     layers: Vec<Layer>,
     weight_bytes: usize,
-    mlx_artifact: bool,
+    mlx_architecture: Option<crate::mlx::dense::Architecture>,
     pub load_timing: LoadTiming,
 }
 impl Model {
+    fn output_weights(&self) -> &Tensor {
+        self.output.as_ref().unwrap_or(&self.embedding)
+    }
     pub fn config(&self) -> &model::Config {
         &self.config
     }
@@ -199,7 +232,18 @@ impl Model {
         ]
     }
     pub(crate) fn is_mlx(&self) -> bool {
-        self.mlx_artifact
+        self.mlx_architecture.is_some()
+    }
+    /// Explicit artifact graph identity; legacy Half/Q4 loaders return None.
+    pub fn mlx_architecture(&self) -> Option<crate::mlx::dense::Architecture> {
+        self.mlx_architecture
+    }
+    pub(crate) fn native_attention_mode(&self) -> AttentionMode {
+        if self.mlx_architecture == Some(crate::mlx::dense::Architecture::Llama) {
+            AttentionMode::Reference
+        } else {
+            AttentionMode::Online
+        }
     }
     pub fn q4_format(&self) -> Option<q4::Format> {
         match self.layers[0].q.storage {
@@ -243,9 +287,11 @@ impl Model {
     pub fn load_mlx(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
         autoreleasepool(|_| {
             let clock = Instant::now();
-            let mut source = crate::mlx::qwen::Source::open(directory, options)?;
+            let mut source = crate::mlx::qwen::Source::open_dense(directory, options)?;
             let config = source.config().clone();
-            geometry(&config)?;
+            let bias_free = source.architecture() == crate::mlx::dense::Architecture::Llama;
+            let untied_output = !source.tied_output();
+            mlx_geometry(&config, source.architecture())?;
             let compile_clock = Instant::now();
             let gpu = Gpu::new()?;
             let pipelines = mlx::compile(&gpu)?;
@@ -318,8 +364,9 @@ impl Model {
                 tensors.insert(name, tensor);
             }
             let conversion_seconds = conversion_clock.elapsed().as_secs_f64();
-            let mut model = Self::assemble(config, gpu, tensors, weight_bytes)?;
-            model.mlx_artifact = true;
+            let mut model =
+                Self::assemble(config, gpu, tensors, weight_bytes, bias_free, untied_output)?;
+            model.mlx_architecture = Some(source.architecture());
             model.load_timing = LoadTiming {
                 load_seconds: clock.elapsed().as_secs_f64(),
                 conversion_seconds,
@@ -438,7 +485,8 @@ impl Model {
                 artifact.verify_sources()?;
             }
             let conversion_seconds = source.conversion_seconds();
-            let mut model = Self::assemble(source.config, gpu, tensors, weight_bytes)?;
+            let mut model =
+                Self::assemble(source.config, gpu, tensors, weight_bytes, false, false)?;
             model.load_timing = LoadTiming {
                 load_seconds: load_clock.elapsed().as_secs_f64(),
                 conversion_seconds,
@@ -452,6 +500,8 @@ impl Model {
         gpu: Gpu,
         mut tensors: BTreeMap<String, Tensor>,
         weight_bytes: usize,
+        bias_free: bool,
+        untied_output: bool,
     ) -> Result<Self> {
         let mut take = |name: &str| {
             tensors
@@ -459,6 +509,11 @@ impl Model {
                 .ok_or(Error::Options("validated tensor absent"))
         };
         let embedding = take("model.embed_tokens.weight")?;
+        let output = if untied_output {
+            Some(take("lm_head.weight")?)
+        } else {
+            None
+        };
         let norm = take("model.norm.weight")?;
         let mut layers = Vec::with_capacity(config.num_layers);
         for i in 0..config.num_layers {
@@ -470,22 +525,38 @@ impl Model {
                 k: take(&format!("{p}.self_attn.k_proj.weight"))?,
                 v: take(&format!("{p}.self_attn.v_proj.weight"))?,
                 o: take(&format!("{p}.self_attn.o_proj.weight"))?,
-                q_bias: take(&format!("{p}.self_attn.q_proj.bias"))?,
-                k_bias: take(&format!("{p}.self_attn.k_proj.bias"))?,
-                v_bias: take(&format!("{p}.self_attn.v_proj.bias"))?,
+                q_bias: if bias_free {
+                    None
+                } else {
+                    Some(take(&format!("{p}.self_attn.q_proj.bias"))?)
+                },
+                k_bias: if bias_free {
+                    None
+                } else {
+                    Some(take(&format!("{p}.self_attn.k_proj.bias"))?)
+                },
+                v_bias: if bias_free {
+                    None
+                } else {
+                    Some(take(&format!("{p}.self_attn.v_proj.bias"))?)
+                },
                 gate: take(&format!("{p}.mlp.gate_proj.weight"))?,
                 up: take(&format!("{p}.mlp.up_proj.weight"))?,
                 down: take(&format!("{p}.mlp.down_proj.weight"))?,
             });
         }
+        if !tensors.is_empty() {
+            return Err(Error::Options("unconsumed validated tensor"));
+        }
         Ok(Self {
             config,
             gpu,
             embedding,
+            output,
             norm,
             layers,
             weight_bytes,
-            mlx_artifact: false,
+            mlx_architecture: None,
             load_timing: LoadTiming {
                 load_seconds: 0.,
                 conversion_seconds: 0.,
@@ -682,9 +753,16 @@ impl<'m> Session<'m> {
         attention_mode: AttentionMode,
     ) -> Result<Self> {
         autoreleasepool(|_| {
-            if model.mlx_artifact != (projection_mode == ProjectionMode::MlxAffine) {
+            if model.is_mlx() != (projection_mode == ProjectionMode::MlxAffine) {
                 return Err(Error::Options(
                     "MLX artifacts require the explicit MlxAffine projection mode",
+                ));
+            }
+            if attention_mode == AttentionMode::Online
+                && model.mlx_architecture == Some(crate::mlx::dense::Architecture::Llama)
+            {
+                return Err(Error::Unsupported(
+                    "Llama Online attention is not qualified; explicitly select Reference attention",
                 ));
             }
             if attention_mode == AttentionMode::Online {
@@ -1162,7 +1240,7 @@ impl<'m> Session<'m> {
                 g,
                 &command,
                 &layer.q,
-                &layer.q_bias.buffer,
+                layer.q_bias.as_ref().map_or(&s.zero, |bias| &bias.buffer),
                 &v.hh,
                 &v.norm,
                 &v.result_h,
@@ -1179,7 +1257,7 @@ impl<'m> Session<'m> {
                 g,
                 &command,
                 &layer.k,
-                &layer.k_bias.buffer,
+                layer.k_bias.as_ref().map_or(&s.zero, |bias| &bias.buffer),
                 &v.hk,
                 &v.norm,
                 &v.result_k,
@@ -1196,7 +1274,7 @@ impl<'m> Session<'m> {
                 g,
                 &command,
                 &layer.v,
-                &layer.v_bias.buffer,
+                layer.v_bias.as_ref().map_or(&s.zero, |bias| &bias.buffer),
                 &v.hk,
                 &v.norm,
                 &v.result_k,
@@ -1219,6 +1297,7 @@ impl<'m> Session<'m> {
                     c.query_heads as u32,
                     c.head_dim as u32,
                     position as u32,
+                    c.rope_theta.to_bits(),
                 ],
                 n * h / 2,
                 Some(&s.status),
@@ -1233,6 +1312,7 @@ impl<'m> Session<'m> {
                     c.kv_heads as u32,
                     c.head_dim as u32,
                     position as u32,
+                    c.rope_theta.to_bits(),
                 ],
                 n * kv / 2,
                 Some(&s.status),
@@ -1447,10 +1527,10 @@ impl<'m> Session<'m> {
         } else {
             (1, &v.last_norm, &self.views[0].result_v, &self.views[0].hv)
         };
-        if matches!(self.model.embedding.storage, TensorStorage::Mlx(_)) {
+        if matches!(self.model.output_weights().storage, TensorStorage::Mlx(_)) {
             mlx::product(
                 &command,
-                &self.model.embedding,
+                self.model.output_weights(),
                 &s.zero,
                 logit_input,
                 &s.floats.raw,
@@ -1466,7 +1546,7 @@ impl<'m> Session<'m> {
             encode_half_compensated(
                 g,
                 &command,
-                &self.model.embedding,
+                self.model.output_weights(),
                 &s.zero,
                 logit_input,
                 &s.floats.raw,
@@ -1479,7 +1559,7 @@ impl<'m> Session<'m> {
             encode_multiply(
                 g,
                 &command,
-                &self.model.embedding,
+                self.model.output_weights(),
                 &s.zero,
                 logit_kernel,
                 logit_input,
@@ -2009,9 +2089,21 @@ mod tests {
                 let layer = &model.layers[index];
                 let zero = Buffer::<u16>::new(&model.gpu, model.config.intermediate_size).unwrap();
                 for (name, weight, bias) in [
-                    ("self_attn.q_proj.weight", &layer.q, &layer.q_bias.buffer),
-                    ("self_attn.k_proj.weight", &layer.k, &layer.k_bias.buffer),
-                    ("self_attn.v_proj.weight", &layer.v, &layer.v_bias.buffer),
+                    (
+                        "self_attn.q_proj.weight",
+                        &layer.q,
+                        &layer.q_bias.as_ref().unwrap().buffer,
+                    ),
+                    (
+                        "self_attn.k_proj.weight",
+                        &layer.k,
+                        &layer.k_bias.as_ref().unwrap().buffer,
+                    ),
+                    (
+                        "self_attn.v_proj.weight",
+                        &layer.v,
+                        &layer.v_bias.as_ref().unwrap().buffer,
+                    ),
                     ("self_attn.o_proj.weight", &layer.o, &zero),
                     ("mlp.gate_proj.weight", &layer.gate, &zero),
                     ("mlp.up_proj.weight", &layer.up, &zero),
@@ -2981,4 +3073,34 @@ fn check_greedy_failure_attention(mode: ProjectionMode, attention: AttentionMode
     s.set_tokens(&[0]).unwrap();
     s.evaluate().unwrap();
     assert_eq!(s.greedy_token().unwrap().unwrap(), selected);
+}
+
+#[cfg(test)]
+mod llama_admission {
+    use super::*;
+    #[test]
+    fn unqualified_llama_geometry_rejects_without_a_device() {
+        let mut c = model::Config {
+            vocab_size: 64,
+            hidden_size: 32,
+            intermediate_size: 64,
+            num_layers: 2,
+            query_heads: 4,
+            kv_heads: 2,
+            head_dim: 8,
+            max_positions: 32,
+            rms_norm_eps: 1e-6,
+            rope_theta: 10000.0,
+        };
+        let architecture = crate::mlx::dense::Architecture::Llama;
+        assert!(mlx_geometry(&c, architecture).is_ok());
+        c.rope_theta = 1e6;
+        assert!(mlx_geometry(&c, architecture).is_err());
+        c.rope_theta = 10000.0;
+        c.num_layers = 3;
+        assert!(mlx_geometry(&c, architecture).is_err());
+        c.num_layers = 2;
+        c.max_positions = 33;
+        assert!(mlx_geometry(&c, architecture).is_err());
+    }
 }
