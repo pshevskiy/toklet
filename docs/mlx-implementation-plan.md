@@ -84,7 +84,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Repeated physical-grading idle hook](mlx-task-grading-window.md), mandatory local checks plus optional remote checks at all five existing boundaries, strict fresh outputs and 49 mocked portable methods. Actual native-app response admission/grading remains open.
   - [x] [Eight-bit full task response collection](mlx8-full-task-collection.md), all 100 original full-cap responses on Mac and iPhone with exact paired raw IDs/stops/state; decoding and isolated outcome grading remain open.
   - [x] [Post-exit native-app response admission](mlx-task-responses.md), original tokenizer/runtime binding, two read-only local/remote idle observations, explicit app-event derivatives and exact paired literal text. Isolated outcome grading remains open.
-  - [ ] Full task quality, representative/sustained app performance and physical MLX state/lifecycle qualification.
+  - [x] [Eight-bit full task quality](mlx8-full-task-quality.md) on Mac and iPhone: 2/100 each versus FP32 2/100, zero drop; one isolated40-program run, exact phone literal equivalence, six idle observations and verified VM restoration. The low baseline remains explicit.
+  - [ ] Representative/sustained app performance and physical MLX state/lifecycle qualification.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,
