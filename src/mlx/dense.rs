@@ -37,6 +37,14 @@ struct LlamaConfig {
     #[serde(default)]
     rope_traditional: bool,
     #[serde(default)]
+    rope_interleaved: bool,
+    #[serde(default)]
+    pretraining_tp: Option<usize>,
+    #[serde(default)]
+    is_llama_config: Option<bool>,
+    #[serde(default, rename = "transformers.js_config")]
+    transformers_js_config: Option<Value>,
+    #[serde(default)]
     rope_scaling: Option<Value>,
     #[serde(default)]
     use_sliding_window: bool,
@@ -72,6 +80,13 @@ pub(crate) fn config(
                 || c.mlp_bias
                 || c.attention_dropout != 0.0
                 || c.rope_traditional
+                || c.rope_interleaved
+                || c.pretraining_tp.is_some_and(|v| v != 1)
+                || c.is_llama_config.is_some_and(|v| !v)
+                || c.transformers_js_config.as_ref().is_some_and(|v| {
+                    // Export metadata only: the native session always owns Half KV.
+                    v != &serde_json::json!({"kv_cache_dtype":{"q4f16":"float16","fp16":"float16"}})
+                })
                 || c.rope_scaling.is_some()
                 || c.use_sliding_window
                 || c.sliding_window.is_some()

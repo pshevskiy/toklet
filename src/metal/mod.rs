@@ -92,7 +92,7 @@ fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture
         crate::mlx::dense::Architecture::Llama => {
             c.validate()
                 .map_err(|_| Error::Options("invalid Llama model configuration"))?;
-            if (
+            let supported = match (
                 c.hidden_size,
                 c.intermediate_size,
                 c.query_heads,
@@ -100,13 +100,18 @@ fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture
                 c.head_dim,
                 c.num_layers,
                 c.vocab_size,
-            ) != (32, 64, 4, 2, 8, 2, 64)
-                || c.rope_theta != 10000.0
-                || c.rms_norm_eps != 1e-6
-                || c.max_positions > 32
-            {
+            ) {
+                (32, 64, 4, 2, 8, 2, 64) => {
+                    c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6 && c.max_positions <= 32
+                }
+                (576, 1536, 9, 3, 64, 30, 49152) => {
+                    c.rope_theta == 100000.0 && c.rms_norm_eps == 1e-5 && c.max_positions <= 512
+                }
+                _ => false,
+            };
+            if !supported {
                 return Err(Error::Unsupported(
-                    "Metal Llama currently requires the qualified tiny geometry and ordinary RoPE",
+                    "Metal Llama requires the admitted tiny/SmolLM2 geometry, context and ordinary RoPE",
                 ));
             }
             Ok(())
@@ -3102,5 +3107,42 @@ mod llama_admission {
         c.num_layers = 2;
         c.max_positions = 33;
         assert!(mlx_geometry(&c, architecture).is_err());
+    }
+    #[test]
+    fn smollm_geometry_has_explicit_context_theta_and_norm_limits() {
+        let c = model::Config {
+            vocab_size: 49152,
+            hidden_size: 576,
+            intermediate_size: 1536,
+            num_layers: 30,
+            query_heads: 9,
+            kv_heads: 3,
+            head_dim: 64,
+            max_positions: 512,
+            rms_norm_eps: 1e-5,
+            rope_theta: 100000.0,
+        };
+        let architecture = crate::mlx::dense::Architecture::Llama;
+        assert!(mlx_geometry(&c, architecture).is_ok());
+        for other in [
+            model::Config {
+                max_positions: 513,
+                ..c.clone()
+            },
+            model::Config {
+                rope_theta: 10000.0,
+                ..c.clone()
+            },
+            model::Config {
+                rms_norm_eps: 1e-6,
+                ..c.clone()
+            },
+            model::Config {
+                num_layers: 29,
+                ..c.clone()
+            },
+        ] {
+            assert!(mlx_geometry(&other, architecture).is_err());
+        }
     }
 }

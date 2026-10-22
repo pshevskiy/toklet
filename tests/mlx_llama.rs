@@ -258,6 +258,31 @@ impl Drop for CopyArtifact {
     }
 }
 #[test]
+fn ordinary_smollm_export_metadata_preserves_bias_free_graph() {
+    let a = CopyArtifact::new("tied");
+    for (key, value) in [
+        ("rope_interleaved", json!(false)),
+        ("pretraining_tp", json!(1)),
+        ("is_llama_config", json!(true)),
+        (
+            "transformers.js_config",
+            json!({"kv_cache_dtype":{"q4f16":"float16","fp16":"float16"}}),
+        ),
+    ] {
+        a.config(key, value);
+    }
+    let source = Source::open_dense(&a.0, options()).unwrap();
+    assert_eq!(source.architecture(), Architecture::Llama);
+    assert!(source.tied_output());
+    assert!(source.tensors().keys().all(|k| !k.ends_with(".bias")));
+    // Even an additional otherwise plausible export field must be inspected first.
+    a.config(
+        "transformers.js_config",
+        json!({"kv_cache_dtype":{"q4f16":"float16","fp16":"float16"},"unknown":true}),
+    );
+    assert!(Source::open_dense(&a.0, options()).is_err());
+}
+#[test]
 fn unsupported_llama_graph_variants_geometry_and_head_mismatches_reject() {
     manifest();
     for (key, value) in [
@@ -268,6 +293,13 @@ fn unsupported_llama_graph_variants_geometry_and_head_mismatches_reject() {
         ("mlp_bias", json!(true)),
         ("attention_dropout", json!(0.1)),
         ("rope_traditional", json!(true)),
+        ("rope_interleaved", json!(true)),
+        ("pretraining_tp", json!(2)),
+        ("is_llama_config", json!(false)),
+        (
+            "transformers.js_config",
+            json!({"kv_cache_dtype":{"fp16":"int8"}}),
+        ),
         ("rope_scaling", json!({"factor":2})),
         ("use_sliding_window", json!(true)),
         ("sliding_window", json!(16)),
