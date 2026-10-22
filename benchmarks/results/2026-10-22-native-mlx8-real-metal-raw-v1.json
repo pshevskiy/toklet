@@ -1,0 +1,333 @@
+{
+  "format": "toklet-mlx8-real-metal-raw-v1",
+  "files": {
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/checks.json": {
+      "bytes": 9191,
+      "sha256": "4e84c3695d04573c34f89924b25126c89899118ad478055d5b2c416af2fd2ddd"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/checks.py": {
+      "bytes": 3481,
+      "sha256": "d05f1e292e7d70fc82d8e6c7feff76188f9ea35a9fd7245cf8a6643f2e88c41e"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/clippy-cpu.stderr": {
+      "bytes": 133,
+      "sha256": "db21d9b2181b36e21c112571df1e2f469417e28e3fc0c85e26ee30b233e15bb7"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/clippy-cpu.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/clippy-metal.stderr": {
+      "bytes": 133,
+      "sha256": "1da9ec8af37d0913da158a120783b8ccaa4fc773b75898a97a60ce60fafeb8e7"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/clippy-metal.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/fmt.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/fmt.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/release-build.stderr": {
+      "bytes": 123,
+      "sha256": "05091fba660592c867861e107abbe2e43fc03e605595bdcee8fdbe761473a7d5"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/release-build.stdout": {
+      "bytes": 108643,
+      "sha256": "fa9e1c6d627952d47dff3ea933399504dd50576fcb007ae754aed662f1a5d2a0"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/test-cpu.stderr": {
+      "bytes": 3385,
+      "sha256": "cf5f3914aaa5c58ba2f41177e7d757062be5523eb1f60a0402ff0c49bcaf7321"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/test-cpu.stdout": {
+      "bytes": 15252,
+      "sha256": "608c8e7340127ab6f14f5095d904c5d734a67d9f1188fd93272d2d05b26f9ba0"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/test-metal.stderr": {
+      "bytes": 3385,
+      "sha256": "f80290bce6a9bee76d48722e1314af1f09b50a6d3d83a56741f8ab70e6bbb1d9"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v1/test-metal.stdout": {
+      "bytes": 27218,
+      "sha256": "d7e3f0e9fa90e2226ca212d058a91ab3cd82005c3efdc4c0712c1eaa3e51d357"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/checks.json": {
+      "bytes": 9191,
+      "sha256": "a7c21ab454af9fe31a92290980009c721e470c801440f54fbd5206bc025f89a6"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/checks.py": {
+      "bytes": 3481,
+      "sha256": "d05f1e292e7d70fc82d8e6c7feff76188f9ea35a9fd7245cf8a6643f2e88c41e"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/clippy-cpu.stderr": {
+      "bytes": 133,
+      "sha256": "46f619a2d150e4fd55a19c8cd99a3a3eb6c1d166e5eeb304381135e2e31d4b59"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/clippy-cpu.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/clippy-metal.stderr": {
+      "bytes": 133,
+      "sha256": "2a88eb2553cafdf6690cbfff4cb3a38e30164ba19787242d82af9f4ca2a6aca4"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/clippy-metal.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/fmt.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/fmt.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/release-build.stderr": {
+      "bytes": 123,
+      "sha256": "70195ebc8e76e7483aeaaae8ea0c50bba29bbbb59ceb2e22970655627eb70aa3"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/release-build.stdout": {
+      "bytes": 108643,
+      "sha256": "d6eefa5d91c529bd82f6efb66501e9c538f9d35e338a19c4979ed5ff9b1af990"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/test-cpu.stderr": {
+      "bytes": 3385,
+      "sha256": "6272933ffc0d73cb760054acf9ae5379b09e1b8ff259f74fc0454a4335e61fdc"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/test-cpu.stdout": {
+      "bytes": 15252,
+      "sha256": "0997e900726d744b86b6001d575130b2fa81dba0efd11f680f1f914fc9104fa0"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/test-metal.stderr": {
+      "bytes": 3385,
+      "sha256": "aa04253ed88aadbc06d83dcc2b3435a7ca2dc8f03e34c291f8ef52f9fb06a7c9"
+    },
+    "artifacts/m8-mlx8-real-metal-ordinary-v2/test-metal.stdout": {
+      "bytes": 27218,
+      "sha256": "f19a37e6835a1bed181e22c61b9366f345900840c9b026b5f4e453753915f83b"
+    },
+    "artifacts/m8-mlx8-real-metal-gpu-v1/checks.json": {
+      "bytes": 8248,
+      "sha256": "1e3bbaab3849620d6e862333f5092621d512b38d93c486a145f18912272ee523"
+    },
+    "artifacts/m8-mlx8-real-metal-gpu-v1/checks.py": {
+      "bytes": 2979,
+      "sha256": "0e980dce20256790a14ace76038c9ea37c68d6bed3af1ade13d46af760e5bf34"
+    },
+    "artifacts/m8-mlx8-real-metal-gpu-v1/gpu.stderr": {
+      "bytes": 258,
+      "sha256": "75b9a811b562e9f090eb3edaca82027784b54281b28f1dd4a0bdfe3db70a36c3"
+    },
+    "artifacts/m8-mlx8-real-metal-gpu-v1/gpu.stdout": {
+      "bytes": 644,
+      "sha256": "75510343d2b8bf770014b88ad85430fc8b022ce0d9ecdef274c2f8667e5b76ac"
+    },
+    "artifacts/m8-mlx8-real-metal-gpu-v2/checks.json": {
+      "bytes": 8220,
+      "sha256": "36d7d2f4e07c920606d72621bf517dd9c77160dc0ef179b901ea9b2007bc79fb"
+    },
+    "artifacts/m8-mlx8-real-metal-gpu-v2/checks.py": {
+      "bytes": 2979,
+      "sha256": "5eb1b5cbd4369a0320ef6e5c7909fcf8e5b0410ce811987b409109e35a43ec35"
+    },
+    "artifacts/m8-mlx8-real-metal-gpu-v2/gpu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-real-metal-gpu-v2/gpu.stdout": {
+      "bytes": 908,
+      "sha256": "c65ee9740df76ff5a8e6872704cf50dbfcc26a823f4105ae577f5190bfb22a25"
+    },
+    "artifacts/m8-mlx8-real-metal-initial-source-v1/tests/mlx_real8_model_metal.rs": {
+      "bytes": 17586,
+      "sha256": "b26cea83bef1f24f9a60228cb5e06eb100c2b91ecb80ec0a2da29688d12a0638"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/record.py": {
+      "bytes": 5740,
+      "sha256": "7cd032ba27918c8318ecf9eaa20d3e309441105fa851cd73d70c847cefb61401"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/Cargo.lock": {
+      "bytes": 24261,
+      "sha256": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/Cargo.toml": {
+      "bytes": 2175,
+      "sha256": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/benchmark.rs": {
+      "bytes": 3360,
+      "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/bin/cli/chat.rs": {
+      "bytes": 21958,
+      "sha256": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/bin/cli/mod.rs": {
+      "bytes": 35356,
+      "sha256": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/bin/toklet.rs": {
+      "bytes": 96,
+      "sha256": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/cpu/attention.rs": {
+      "bytes": 11201,
+      "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/cpu/mod.rs": {
+      "bytes": 9060,
+      "sha256": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/cpu/reductions.rs": {
+      "bytes": 7659,
+      "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/cpu/tiled.rs": {
+      "bytes": 6519,
+      "sha256": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/generation.rs": {
+      "bytes": 7870,
+      "sha256": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/lib.rs": {
+      "bytes": 563,
+      "sha256": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/capture.rs": {
+      "bytes": 2365,
+      "sha256": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/diagnostic.rs": {
+      "bytes": 7365,
+      "sha256": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/half_consistency.rs": {
+      "bytes": 25953,
+      "sha256": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/half_projection.rs": {
+      "bytes": 10662,
+      "sha256": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/kernels.metal": {
+      "bytes": 25012,
+      "sha256": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/memory.rs": {
+      "bytes": 17758,
+      "sha256": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/mlx.metal": {
+      "bytes": 5748,
+      "sha256": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/mlx.rs": {
+      "bytes": 37222,
+      "sha256": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/mod.rs": {
+      "bytes": 119299,
+      "sha256": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/online_attention.rs": {
+      "bytes": 21891,
+      "sha256": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/profile.rs": {
+      "bytes": 13762,
+      "sha256": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/metal/q4_v2_projection.rs": {
+      "bytes": 11730,
+      "sha256": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/mlx/affine.rs": {
+      "bytes": 10163,
+      "sha256": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/mlx/mod.rs": {
+      "bytes": 287,
+      "sha256": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/mlx/qwen.rs": {
+      "bytes": 17965,
+      "sha256": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/mlx/reference.rs": {
+      "bytes": 5929,
+      "sha256": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/model/cache.rs": {
+      "bytes": 3096,
+      "sha256": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/model/mod.rs": {
+      "bytes": 24014,
+      "sha256": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/model/trace.rs": {
+      "bytes": 2807,
+      "sha256": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/native/tests.rs": {
+      "bytes": 38382,
+      "sha256": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/native.rs": {
+      "bytes": 32174,
+      "sha256": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/q4/artifact.rs": {
+      "bytes": 10397,
+      "sha256": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/q4.rs": {
+      "bytes": 8842,
+      "sha256": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/sampling.rs": {
+      "bytes": 616,
+      "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/session.rs": {
+      "bytes": 16921,
+      "sha256": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/weights/half_tests.rs": {
+      "bytes": 3814,
+      "sha256": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/src/weights/mod.rs": {
+      "bytes": 32427,
+      "sha256": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/tests/fixtures/mlx-qwen-real-v1/manifest.json": {
+      "bytes": 157540,
+      "sha256": "fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/tests/fixtures/mlx-qwen-real8-v1/manifest.json": {
+      "bytes": 157178,
+      "sha256": "1f98482bceba6c5627767d50cd2c4bda461d97174ee6e29346c5223215270531"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/tests/mlx_real8_model_metal.rs": {
+      "bytes": 17741,
+      "sha256": "ff996ef7cae574d3a4820ae5c0d6784414bcb2718a82175fc91f63457b49e719"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/tests/mlx_real_model_metal.rs": {
+      "bytes": 17580,
+      "sha256": "fbbe6234d2eeac2bad1852219e9adc389e477286aa0babf059676b2d31d1d256"
+    },
+    "artifacts/m8-mlx8-real-metal-evidence-v1/source-snapshot/tools/experiments/m7_apple_package.py": {
+      "bytes": 12764,
+      "sha256": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d"
+    }
+  }
+}

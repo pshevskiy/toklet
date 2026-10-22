@@ -1,0 +1,17 @@
+# Selected eight-bit MLX checkpoint on M1 Pro
+
+Native Rust/Metal passes the independently frozen [eight-bit public Qwen reference](mlx8-real-oracle.md) on Apple M1 Pro. This establishes selected-checkpoint numerical and session behavior; full held-out quality, representative performance, app integration and iPhone qualification remain open.
+
+The [explicit test](../tests/mlx_real8_model_metal.rs) authenticates the committed manifest, complete reference arrays and exact checkpoint inputs. Ordinary tests require only the committed manifest; the two model-dependent GPU tests are explicitly ignored in ordinary suites. Production kernels, loading, arithmetic, frozen envelopes and the four-bit reference/rejection remain unchanged.
+
+Graph comparisons pass all 816 snapshots / 13,771,520 values across six cases, one/three/full chunks, offsets zero/five and layers 0/1/23. Every exposed diagnostic stage must appear exactly once. Maximum absolute difference across stages is 0.6875, within the predeclared stage envelopes; this is not the logit error. Cached generation passes eight full vocabulary distributions and 16 exact selections of reference IDs `[4460,311,1855,264]` across Reference/Online attention and FullLogits/GreedyToken. Maximum logit difference is 0.02828359603881836. Invalid-token rejection, pending/committed state, changed-prefix equality, reset and reuse of a real three-token committed partial prefill pass.
+
+Resident logical weights are 524,978,590 bytes; maximum diagnostic session admission is 634,642,900 bytes under the unchanged 1.5 GiB numerical cap. These are engine allocation counts, not whole-process physical peaks. The 13.36-second completed correctness suite is not a representative performance benchmark.
+
+The first ordinary suite passed, then the first GPU run passed state checks but stopped before graph comparisons at a copied four-bit-specific 300 MiB weight assertion. Its exact source, receipts and raw failure remain retained. The correction asserts the independently derived exact eight-bit resident count: 524,976,896 artifact payload bytes plus seven Half guard elements on each of 121 floating tensors. No numerical tolerance changed. The old executable hash is retained in the receipt but its build output was replaced by the corrected executable; the evidence explicitly marks it superseded rather than claiming the old binary is retained.
+
+All six final formatting, strict CPU/Metal Clippy, ordinary CPU/Metal test and release-build commands pass, followed by both explicit GPU tests in one command. Source, model, oracle and protected historical binary endpoints are clean. Ordinary totals are 134 passing CPU tests (eight ignored) and 148 passing Metal-feature tests (74 ignored). Complete provenance is recorded in the [qualification](../benchmarks/results/2026-10-22-native-mlx8-real-metal-v1.json) and [raw inventory](../benchmarks/results/2026-10-22-native-mlx8-real-metal-raw-v1.json).
+
+Retain native eight-bit execution for app and full-quality trials. Raw-token checks do not qualify the downloaded chat template, identify exact prequantization source bytes, close broader architecture support, or implement model discovery/downloads in the product.
+
+Astra accepted the source and completed evidence after independently verifying 92 pins, all 82 raw files, 44 source copies, actual comparison counts and command outcomes. Privacy, 228 local links and whitespace checks pass.
