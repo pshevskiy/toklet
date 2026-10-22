@@ -1,0 +1,1202 @@
+{
+  "format": "toklet-native-mlx8-performance-raw-v1",
+  "files": {
+    "artifacts/m8-mlx8-performance-checks-v1/checks.json": {
+      "bytes": 8003,
+      "sha256": "4fcd6a9b95e607a4fe28b4def6206d552ad66eba2fabcf9e4b531e1cb36a7e00"
+    },
+    "artifacts/m8-mlx8-performance-checks-v1/checks.py": {
+      "bytes": 2118,
+      "sha256": "de2c643826f1fd92af86a88ddc85438b8c9033aef6624e3d60c1a2d54639fe26"
+    },
+    "artifacts/m8-mlx8-performance-checks-v1/tests.stderr": {
+      "bytes": 492,
+      "sha256": "39d5db9a254b4d6b12eda7045af880d5b1005d5c361562d2644279188dd7cf1d"
+    },
+    "artifacts/m8-mlx8-performance-checks-v1/tests.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/auditor.stderr": {
+      "bytes": 2512,
+      "sha256": "1b4524328b9b005afb2bf7321eb6c50edbd42189baca61eb20f559120e9cfa39"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/auditor.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/checks.json": {
+      "bytes": 10889,
+      "sha256": "ee61681d2c6e3788c63e9aae19553e7f155c0a0e3e2a3257f63e81abee43a2ef"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/checks.py": {
+      "bytes": 3753,
+      "sha256": "846d749ee84b26e26deb46e2b14c2d512d493248916d8ec65e6bf4924a2a6171"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/jobs.stderr": {
+      "bytes": 1389,
+      "sha256": "acb6d07516b2c28fdaf2b70869eb6d923e77b349b0d6299c1c21300ab8326f72"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/jobs.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/mac.stderr": {
+      "bytes": 1412,
+      "sha256": "8b5805634aae87e7d5321a90dd6d5288b4ff20fcd42ea9bc04a51ec6801f01dc"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/mac.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/physical.stderr": {
+      "bytes": 3332,
+      "sha256": "07c4e8bd272fa10e97c183a96e2633f94b3550c7aee2bbbc405cffed95bd474e"
+    },
+    "artifacts/m8-mlx8-performance-auditor-checks-v1/physical.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/chip.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/chip.stdout": {
+      "bytes": 13,
+      "sha256": "03aa187e519271eb6c231a27bd448c4dbc21e19a2a77f24bc2d0a47372ee96fc"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/driver.py": {
+      "bytes": 9542,
+      "sha256": "d31d22846d4bba01711cbcd3289f56be25ae681ca4c13e2b41298ae7f1b7a3b2"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/driver.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/driver.stdout": {
+      "bytes": 2623,
+      "sha256": "8c6b54ad965caa135f1c8fe47024e84137611b399ebd7d9d2bdb7952b3cd2554"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/execution.json": {
+      "bytes": 1162678,
+      "sha256": "95cca0c64550e195767c1456346a618c77df12bf5d84c9cdaca7b38be9b36233"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/hardware.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/hardware.stdout": {
+      "bytes": 15,
+      "sha256": "7d0a888e6e899f1019a3770e168607998f571f22432608a7f5e6b3fcbbd95f8c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/initial-driver-source.py": {
+      "bytes": 8567,
+      "sha256": "a6552c7e0144cd52ffed6942d4ce3a791fd58238337190dcc66f227a69a90ec8"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/launch.py": {
+      "bytes": 376,
+      "sha256": "196d05ad4878b0a1ed4c5d1722cd7e9d3c3a07bfd33d1873fb38542de7039ec1"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-after-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-after-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "b4b9e5870e2c561e97aa7ae7120fa221a7579677e088e6bcf22652b0b77be65f"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-after-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-after-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-after-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-after-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-after-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-after-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-before-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-before-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "fee094499690db2a67ba572b4eb3bf3b1ee7f237685078e09998ac836b871e67"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-before-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-before-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-before-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-before-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-before-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024-before-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-1024.stdout": {
+      "bytes": 171152,
+      "sha256": "25e9779d1f30e9262386a48f56361beb6c51e69a4e0bf485003f998ae3a45822"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-after-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-after-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "c930fc58b99da2fe2f64de13c1e18160ead50aa9dc246b21eaf82f13b673cf66"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-after-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-after-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-after-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-after-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-after-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-after-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-before-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-before-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "c930fc58b99da2fe2f64de13c1e18160ead50aa9dc246b21eaf82f13b673cf66"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-before-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-before-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-before-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-before-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-before-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128-before-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-128.stdout": {
+      "bytes": 170869,
+      "sha256": "9c93b55721b890ca8e5af340980953122e525f84f34d90e8dabcb40b95547647"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-after-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-after-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "fee094499690db2a67ba572b4eb3bf3b1ee7f237685078e09998ac836b871e67"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-after-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-after-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-after-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-after-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-after-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-after-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-before-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-before-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "c930fc58b99da2fe2f64de13c1e18160ead50aa9dc246b21eaf82f13b673cf66"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-before-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-before-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-before-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-before-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-before-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512-before-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-confirmation-512.stdout": {
+      "bytes": 170366,
+      "sha256": "077dce8319edb4262c0558bb4e0a078fbe4f49a004ceefeda5629a06e93d4306"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-after-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-after-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "c930fc58b99da2fe2f64de13c1e18160ead50aa9dc246b21eaf82f13b673cf66"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-after-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-after-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-after-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-after-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-after-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-after-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-before-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-before-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "b4b9e5870e2c561e97aa7ae7120fa221a7579677e088e6bcf22652b0b77be65f"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-before-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-before-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-before-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-before-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-before-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024-before-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-1024.stdout": {
+      "bytes": 171082,
+      "sha256": "5bbbfdb892ed59ed04d82cd909fb173ea0f8aae38313b54ae0e8905ec17ea9c5"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-after-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-after-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "b4b9e5870e2c561e97aa7ae7120fa221a7579677e088e6bcf22652b0b77be65f"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-after-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-after-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-after-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-after-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-after-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-after-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-before-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-before-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "fee094499690db2a67ba572b4eb3bf3b1ee7f237685078e09998ac836b871e67"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-before-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-before-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-before-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-before-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-before-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128-before-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-128.stdout": {
+      "bytes": 171049,
+      "sha256": "2dc35c0799f8e1f7d4299b141f20ee9efa58c1b4177a40230b5d5b8d431e8096"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-after-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-after-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "356032218e1931edd7fa03075f7d0437dae370443ce2024c296078f18d04c3a7"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-after-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-after-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-after-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-after-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-after-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-after-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-before-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-before-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "b4b9e5870e2c561e97aa7ae7120fa221a7579677e088e6bcf22652b0b77be65f"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-before-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-before-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-before-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-before-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-before-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512-before-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-primary-512.stdout": {
+      "bytes": 170499,
+      "sha256": "14e7196213fc62b9fdb8ac5a083fcd5f6720be0f0c4544afa6fa0240668481a3"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-after-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-after-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "b4b9e5870e2c561e97aa7ae7120fa221a7579677e088e6bcf22652b0b77be65f"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-after-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-after-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-after-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-after-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-after-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-after-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-before-memory_pressure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-before-memory_pressure.stdout": {
+      "bytes": 110,
+      "sha256": "356032218e1931edd7fa03075f7d0437dae370443ce2024c296078f18d04c3a7"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-before-policy.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-before-policy.stdout": {
+      "bytes": 712,
+      "sha256": "6831dfae0d622645ee582d307d7145918b3e7a105c4349a8b9176b9aabbf484c"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-before-power.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-before-power.stdout": {
+      "bytes": 107,
+      "sha256": "3735cee797f8c8be90cc47f67da1fb383787c9160203e6506ee2170bdb3bbb97"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-before-thermal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained-before-thermal.stdout": {
+      "bytes": 146,
+      "sha256": "96de6076213225f787270bff80efd2011e0ad142953c37697dc547f77d302892"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/mac-sustained.stdout": {
+      "bytes": 921516,
+      "sha256": "2cdee664685119e37aabcab29021e76cefdfc85d452e326a7e12ef5f19bddfcf"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/os.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/os.stdout": {
+      "bytes": 7,
+      "sha256": "3db9dd54f6160f2744d2428cda5edfb5b4bf1247b140a1673d82a65f456314ee"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/os_build.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/os_build.stdout": {
+      "bytes": 6,
+      "sha256": "4a43dfdca7171a0b39600b7972ced1e826e3695061e1c85aa9ae6de43bffcd23"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/phone-confirmation-1024/measurement.json": {
+      "bytes": 62639,
+      "sha256": "c09911858ddce4c4300a130aa3a694824d142d87e06a8e4510d5fed3624e301e"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/phone-confirmation-128/measurement.json": {
+      "bytes": 54954,
+      "sha256": "0c5171255a1979db8c0abe512f8ebac42b82593f5198a676a1ddea09cc56b323"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/phone-confirmation-512/measurement.json": {
+      "bytes": 56563,
+      "sha256": "09ca9a8521c1fd666cfae2eed0ed5297962fd63c312a092b3f7734ee48df66ff"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/phone-primary-1024/measurement.json": {
+      "bytes": 62392,
+      "sha256": "64fa2e34592e9287ea5bc00d5fccd3210381b682e8b280dd4c35dc10da5759c5"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/phone-primary-128/measurement.json": {
+      "bytes": 51787,
+      "sha256": "8539ec485e3b7eacca455f93de4ecfdecc3009e46b04b37773805a4fa418d417"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/phone-primary-512/measurement.json": {
+      "bytes": 56299,
+      "sha256": "da1c04a2bf189dadb73844f6dd3a4cd2e06e2c2c2c16bbbf5b893676245bba6b"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/phone-sustained/measurement.json": {
+      "bytes": 60566,
+      "sha256": "306e32eb6265525e0f4fc5db3565d63c38a65f4487131223e6164eac99038017"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/physical_memory_bytes.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/physical_memory_bytes.stdout": {
+      "bytes": 12,
+      "sha256": "c42316e609a7bc837c19fd213e9c8bb81b92613a194f5dab1f8cbc0efabb8f9b"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/ready-1024/measurement.json": {
+      "bytes": 56486,
+      "sha256": "b52866150259f56a4a6edd8158c4adef39650c15a191a7bcf4b6be70613f991b"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/ready-128/measurement.json": {
+      "bytes": 45912,
+      "sha256": "3f7493d70ebf49755359282add9a3c3b208c8a1d86e56086e529ed34b663067d"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/ready-512/measurement.json": {
+      "bytes": 50402,
+      "sha256": "cbacaa994015784435c379fea8c8521a29958dcec5f993fc7b8948c7037644e3"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/ready-sustained/measurement.json": {
+      "bytes": 51702,
+      "sha256": "96a44d9af58f01504dc426983556a00bd7489b5916396277420667d80e7b149d"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/run.sh": {
+      "bytes": 285,
+      "sha256": "6277f1fdef5ff75e240639de39b61ddf33eef5fa77ef1ec1b41100863151a96b"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/stages/qwen8-1024/staged.json": {
+      "bytes": 15258,
+      "sha256": "33f558c965678b209a673107f996bd96a8c99b274ce6c886a128dd6ca655c6eb"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/stages/qwen8-128/staged.json": {
+      "bytes": 4789,
+      "sha256": "ab33e2eb0530afe13a32bdca54f76427d2036f0bd1d3743f16a187ada6eb26fc"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/stages/qwen8-512/staged.json": {
+      "bytes": 9279,
+      "sha256": "7c04c116afec19166bb9502380c4c61d460ec6fb5a5e3ad2fdf4fefcafeefe8d"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/stages/qwen8-sustained/staged.json": {
+      "bytes": 9287,
+      "sha256": "ce61c46f9868bc2340f991d21256f4e6cb2edf8b86af6c4375455d2671383586"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/stages/tiny/staged.json": {
+      "bytes": 2490,
+      "sha256": "8b2d13e8d6ae578089c36dbcec0dc436dd313ff48af795f893a29c0e6eaec2b4"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/test_driver.py": {
+      "bytes": 5155,
+      "sha256": "d5a59cb81199c85636ab18dcced65a072829a093012c45df08344ba4ba913607"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/tiny-proof-1024/measurement.json": {
+      "bytes": 38370,
+      "sha256": "3ecd41b7c914e6d7ddb1c5a2189806d299d5e37702c1572e057778109ddb4e79"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/tiny-proof-128/measurement.json": {
+      "bytes": 38322,
+      "sha256": "d2494040edb97d13b874ea07faa7e80526a97ede8808ff6fe0596962a385542b"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/tiny-proof-512/measurement.json": {
+      "bytes": 38326,
+      "sha256": "cd3b85f8c2ad3b68aab52de4752602518403b120d2880463ebd77ef17c093431"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/tiny-proof-sustained/measurement.json": {
+      "bytes": 41535,
+      "sha256": "12508088bad712313063f74e96506928dab674c6d3f6066ba1527e8a4d4c72a7"
+    },
+    "artifacts/m8-mlx8-performance-driver-v1/tiny-ready/measurement.json": {
+      "bytes": 35064,
+      "sha256": "2bc30a82b4154e7847b409e4f799b732b81e12278ffea12675c9904cc69d4d02"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/analyze.py": {
+      "bytes": 4032,
+      "sha256": "3e708f6fe35efb37388adfe8d49025e21fa0555dd177c640dbc69428ec6ff95e"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/publisher.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/publisher.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/record.py": {
+      "bytes": 12741,
+      "sha256": "8f5f9aee64745d818e7aa0aeb83168231371cdb2ab6b458c322369d7ca3f9571"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/replay.py": {
+      "bytes": 14798,
+      "sha256": "a369cba57fa2bb4c4068eeb7405e22090c7b18e1e41258cdc26c7ba231617a37"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/Cargo.lock": {
+      "bytes": 24261,
+      "sha256": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/Cargo.toml": {
+      "bytes": 2175,
+      "sha256": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/HarnessApp.swift": {
+      "bytes": 22298,
+      "sha256": "4cc314e35db6d0f6736e4f6e2358e9c444a2b7069faba6703e3ff8dc633a63e6"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/Info.plist": {
+      "bytes": 1193,
+      "sha256": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeLifecycle.swift": {
+      "bytes": 8084,
+      "sha256": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeLifecycleRun.swift": {
+      "bytes": 18822,
+      "sha256": "9170e354d07dc09e1f4eb9ea718b68ff5c6df16b68f85fc0dc44872de0f414a2"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeLifecycleSignals.swift": {
+      "bytes": 5283,
+      "sha256": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "bytes": 26271,
+      "sha256": "5dcd81db64963db10d2bd50a6e9bc8dee567951f1a344341dd0cd9dfecbf8a46"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeQuality.swift": {
+      "bytes": 11182,
+      "sha256": "e54783e1ed25035340f07c13f593cefdb616152fc296b17fc6508ba1e7e3972a"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeStateRun.swift": {
+      "bytes": 15138,
+      "sha256": "e0b8a0d12fd93db67fcab374da3f386d8b3331b1b20bd96413ebca1dfb290a99"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeTaskResponse.swift": {
+      "bytes": 5963,
+      "sha256": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeTasks.swift": {
+      "bytes": 13770,
+      "sha256": "d2df04cf9da12d5b648970e49c64f1bdbc28bf464ca3c05a6a65e4ee6b6ae4e9"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeTeacherForcing.swift": {
+      "bytes": 5326,
+      "sha256": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/Harness/NativeWorker.swift": {
+      "bytes": 22444,
+      "sha256": "d86832de771cc1d8ee1774089468e749f05b8bfb074e20ee69fccc3b0c50fa37"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/include/module.modulemap": {
+      "bytes": 54,
+      "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/include/toklet.h": {
+      "bytes": 5419,
+      "sha256": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/tests/swift/MLXRealMain.swift": {
+      "bytes": 3492,
+      "sha256": "3cc5555cbacd8e43a0d0e9b0c65a6d3e2dace8be456a298e9ef57dc5757d0c18"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/apple/tests/swift/WorkerChecks.swift": {
+      "bytes": 8439,
+      "sha256": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/benchmark.rs": {
+      "bytes": 3360,
+      "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/bin/cli/chat.rs": {
+      "bytes": 21958,
+      "sha256": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/bin/cli/mod.rs": {
+      "bytes": 35356,
+      "sha256": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/bin/toklet.rs": {
+      "bytes": 96,
+      "sha256": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/cpu/attention.rs": {
+      "bytes": 11201,
+      "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/cpu/mod.rs": {
+      "bytes": 9060,
+      "sha256": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/cpu/reductions.rs": {
+      "bytes": 7659,
+      "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/cpu/tiled.rs": {
+      "bytes": 6519,
+      "sha256": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/generation.rs": {
+      "bytes": 7870,
+      "sha256": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/lib.rs": {
+      "bytes": 563,
+      "sha256": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/capture.rs": {
+      "bytes": 2365,
+      "sha256": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/diagnostic.rs": {
+      "bytes": 7365,
+      "sha256": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/half_consistency.rs": {
+      "bytes": 25953,
+      "sha256": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/half_projection.rs": {
+      "bytes": 10662,
+      "sha256": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/kernels.metal": {
+      "bytes": 25012,
+      "sha256": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/memory.rs": {
+      "bytes": 17758,
+      "sha256": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/mlx.metal": {
+      "bytes": 5748,
+      "sha256": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/mlx.rs": {
+      "bytes": 37222,
+      "sha256": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/mod.rs": {
+      "bytes": 119299,
+      "sha256": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/online_attention.rs": {
+      "bytes": 21891,
+      "sha256": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/profile.rs": {
+      "bytes": 13762,
+      "sha256": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/metal/q4_v2_projection.rs": {
+      "bytes": 11730,
+      "sha256": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/mlx/affine.rs": {
+      "bytes": 10163,
+      "sha256": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/mlx/mod.rs": {
+      "bytes": 287,
+      "sha256": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/mlx/qwen.rs": {
+      "bytes": 17965,
+      "sha256": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/mlx/reference.rs": {
+      "bytes": 5929,
+      "sha256": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/model/cache.rs": {
+      "bytes": 3096,
+      "sha256": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/model/mod.rs": {
+      "bytes": 24014,
+      "sha256": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/model/trace.rs": {
+      "bytes": 2807,
+      "sha256": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/native/tests.rs": {
+      "bytes": 38382,
+      "sha256": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/native.rs": {
+      "bytes": 32174,
+      "sha256": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/q4/artifact.rs": {
+      "bytes": 10397,
+      "sha256": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/q4.rs": {
+      "bytes": 8842,
+      "sha256": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/sampling.rs": {
+      "bytes": 616,
+      "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/session.rs": {
+      "bytes": 16921,
+      "sha256": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/weights/half_tests.rs": {
+      "bytes": 3814,
+      "sha256": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/src/weights/mod.rs": {
+      "bytes": 32427,
+      "sha256": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/code_isolation_child.py": {
+      "bytes": 8551,
+      "sha256": "b2cabbe299e9921b0ec1658c14bc7eb73150496d86249585099d7e3647430b0f"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/code_isolation_probe.py": {
+      "bytes": 16905,
+      "sha256": "18b3868f02f80198c06d77d3c2d1192217aa14c78e11b0f5a4f5b72b40d72386"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/cpu.py": {
+      "bytes": 20248,
+      "sha256": "887436019c6f634eff60ba8a6ba73e22452d4550bed1115f4a75a46fa483a21a"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/cpu_cli.py": {
+      "bytes": 6543,
+      "sha256": "6376e202aba99ead5a6a59db593b05770159cb54470330200b3f1867a14943d7"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/linux_code_isolation_child.py": {
+      "bytes": 10777,
+      "sha256": "3560442782ac4ffa404d3b86a964ccbc38d5d4bc7c43a1b301fa72eedace0d5f"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/linux_code_isolation_probe.py": {
+      "bytes": 38429,
+      "sha256": "4a1e01e3ac84e197b93440c694c7a3f4f8ab1258ec064d525507c7a3d9a76cbd"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/linux_task_child.py": {
+      "bytes": 7561,
+      "sha256": "e7189d1d22ee621c50a8afc922a77d5ae7bbd21674d08702279343ec64104c6e"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/linux_task_controller.py": {
+      "bytes": 9088,
+      "sha256": "47f17a6b2f4269d690206cca0c9223cd40a7cd7b623363674b9d596a91b3c12e"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/linux_task_evidence.py": {
+      "bytes": 10730,
+      "sha256": "657b21335683c3536533ce777906e843c93648fdb4dcc4e623eb29192d9a649b"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/linux_task_native_cases.py": {
+      "bytes": 9036,
+      "sha256": "fad60bee2fe19c7f0a4a728998985b8dc0d2fed0bce91e08b1cae912c23490ca"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/linux_task_native_check.py": {
+      "bytes": 4954,
+      "sha256": "f1b624438341c6eea58b9fc03e7cbc462f84fb21195d61333c59c65c31632962"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/linux_task_native_probe.py": {
+      "bytes": 3131,
+      "sha256": "f312493cede2fac0f2f5b9e68ba78a292eb420839054b9b67b8f8ca1632f56a9"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/linux_task_transport.py": {
+      "bytes": 5308,
+      "sha256": "0cc556e5867fa06bf2d559b0011c641eb773f2911603456cccd584e55eb2040f"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/mlx_baseline.py": {
+      "bytes": 13938,
+      "sha256": "911806d7254e905979217145b6e173ed1def09576ba3685b2c3c105176984b34"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/podman_machine_lifecycle.py": {
+      "bytes": 9349,
+      "sha256": "eea3987fdf869ac8b0735569650ef9b785bfa960c05f8315a073ff4192afc97f"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/prepare.py": {
+      "bytes": 15310,
+      "sha256": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/quality.py": {
+      "bytes": 20956,
+      "sha256": "7bd4b91700de7e6fa3c441117b0aacf5124f38ce5e22a0de14610fb254c8985d"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/task_cases.py": {
+      "bytes": 12391,
+      "sha256": "91b5f44840ba31b8f0aead2217b4638c0dbb7e2529389225ba58a6c4822f9e1d"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/bench/task_cases_probe.py": {
+      "bytes": 17490,
+      "sha256": "e73082850c0b0b9d634903088056032ab48a3f762da2017c3104bf5771d930ce"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/cpu_task_reference.py": {
+      "bytes": 13912,
+      "sha256": "fc21be426559355ad706259c6f01b6293bdf81c249c3ea7a545caa0098b47193"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m7_apple_integration.py": {
+      "bytes": 7322,
+      "sha256": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m7_apple_package.py": {
+      "bytes": 12764,
+      "sha256": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m7_physical_integration.py": {
+      "bytes": 21859,
+      "sha256": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m7_physical_measurement.py": {
+      "bytes": 33710,
+      "sha256": "f357a13a6f5d9b714b2bb166bdf0f98c4017e11efebdd05b081d43e667800ec6"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m7_physical_quality.py": {
+      "bytes": 12159,
+      "sha256": "bd6db9b17fddf9397d69dd5593ff5b16e186a17698d509261c0827830cf83ffa"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m7_physical_storage.py": {
+      "bytes": 8109,
+      "sha256": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m7_physical_tasks.py": {
+      "bytes": 16947,
+      "sha256": "ac4dcbea9002f9131caca06c226a55fba155c852148b1d561aaec389021d0d58"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m7_swift_harness_build.py": {
+      "bytes": 8793,
+      "sha256": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m8_mac_measurement.py": {
+      "bytes": 7989,
+      "sha256": "e39e69a5ac6834920a4828e271cc0f7cbc0aaa3667992b162701eb57d2f4b8dd"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m8_mlx_jobs.py": {
+      "bytes": 8745,
+      "sha256": "0d40c4bacad21c23cc130d5389b89a953e460e0371b758c4265bb0af203acaf8"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m8_physical_mlx.py": {
+      "bytes": 23152,
+      "sha256": "d169824b535bdd943d866e6ffa41fd6c3ad11d6b756c6db9b5afca2554106f1c"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m8_task_grading.py": {
+      "bytes": 12218,
+      "sha256": "33a1950c5ba6f0c82b493c029161ac00f04ab577a0987e2b2ddbeac209ecbe51"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/m8_task_responses.py": {
+      "bytes": 16236,
+      "sha256": "e43cd73db8a4bee35cde30da979c914d0b3ee9647790bb94b2a5fdb4fd22e744"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/metal_cli.py": {
+      "bytes": 15132,
+      "sha256": "f2e2af8eb16225d8e752726ff56c7ef0c17debca06570474203026e4f1909cd9"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/metal_continue.py": {
+      "bytes": 9786,
+      "sha256": "48487c955a81cafb4149caf033d397d0403068cd6f31913a8a2b90a75f03b622"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/metal_controlled.py": {
+      "bytes": 18259,
+      "sha256": "52a19a357e330a709c92e9cc78e1efd8edc2b9c4a8ba85565791b4e252e5a90e"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/metal_engine.py": {
+      "bytes": 10905,
+      "sha256": "1541afc73738d91e13dc6d71c32f72632e4b2eb20174781dc193126362b73d0c"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/metal_prefill.py": {
+      "bytes": 12663,
+      "sha256": "c2637cec2f0dacd4c010e668b20109813273debc0225c4771912001394dabe0a"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/metal_tasks.py": {
+      "bytes": 15550,
+      "sha256": "fb8e3d309c4d320a8b4ac0a2cf8ae8b2a932ff32ad15a9ae09a850473ef20bbd"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/native_usage.py": {
+      "bytes": 1700,
+      "sha256": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/task_grade_admission.py": {
+      "bytes": 11001,
+      "sha256": "0e8c225259677182ba17c1d795b246ca1aa827e0cb85de71a1e5e0a4e3b3c943"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/task_grading.py": {
+      "bytes": 6979,
+      "sha256": "f3fcb21a48707c2868c5b4db99098922dec4f7b20fb4b25d85c9eb2988f2abd9"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/task_grading_window.py": {
+      "bytes": 18283,
+      "sha256": "5129c5ffcd5ccd64cbbfc5860f3ccf53ef9dada5f05776d9b10f44dd9aee669c"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m7_apple_package.py": {
+      "bytes": 6846,
+      "sha256": "efdd9835b9c8301cdb91f3e466b5b8791155d4eb5d663f56a267588dc700f162"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_integration.py": {
+      "bytes": 18910,
+      "sha256": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_measurement.py": {
+      "bytes": 30773,
+      "sha256": "5b22a991ea6f6b2afe2c1cd482d8eb9ae7a1e7ad6e0ea92b6cb33e0189418f31"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_quality.py": {
+      "bytes": 18114,
+      "sha256": "666a8c566d0299fcc8325c61b6dad0658c1b479939e5cddd4651ebe66cf6b6a2"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_storage.py": {
+      "bytes": 17591,
+      "sha256": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_tasks.py": {
+      "bytes": 20363,
+      "sha256": "526d2bfff5ac18b7c96995d7c26403820de0aec75f8e4a974131013954ddb312"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m8_mac_measurement.py": {
+      "bytes": 7150,
+      "sha256": "bce5f2ee0ff6d18fa0fb9e4900612ee2f5a6d7bc487db3489400f410c63dd309"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m8_mlx_jobs.py": {
+      "bytes": 8641,
+      "sha256": "f61c50891d0394fd2d95f4c5689847ba075d25e3b272d9c8750f2f8594cc7c12"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m8_physical_mlx.py": {
+      "bytes": 17281,
+      "sha256": "577cb34d9bb19fbd394db01013e063734135d123b3808f10f472490b109b9714"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m8_task_grading.py": {
+      "bytes": 14236,
+      "sha256": "99c0fee3a281ed04f44200e8ade60fd88bd487ecd9197318288aae87f2f397ba"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m8_task_grading_lifetime.py": {
+      "bytes": 11353,
+      "sha256": "2d3591ab1174b9a40946c5ca6d28f563035d83ed5c9d7aa2288d6da1fbaaee5e"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_m8_task_responses.py": {
+      "bytes": 15341,
+      "sha256": "755c796dd9fbd852f9799f0832484e8758f00f747136a9efa5cff746ce8b72c4"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_task_grade_admission.py": {
+      "bytes": 11052,
+      "sha256": "8d6b106e232e9e0590d01312ecee95139cf2c0399e29fd88f8bb4e5c26826faa"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_task_grade_admission_v2.py": {
+      "bytes": 12214,
+      "sha256": "718192b05e12f3367886941b6d50c3d8eb9ebb0053fecfbe05b0115eb9ece784"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_task_grading.py": {
+      "bytes": 5676,
+      "sha256": "8931d34f8a868b16d50a6b65d69f121561c29814a1100acc16a790f344b558b3"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/source-snapshot/tools/experiments/test_task_grading_window.py": {
+      "bytes": 20150,
+      "sha256": "7a9869fb1415a67e323fdb624f5cd85fbac3d5dbda68b042a3691e2493a211ea"
+    },
+    "artifacts/m8-mlx8-performance-evidence-v1/test_replay.py": {
+      "bytes": 21092,
+      "sha256": "77504bb05c15af621ee954f336f3f585b6da6f95ad40c0bb1d9f2f98f771dc65"
+    }
+  },
+  "privacy": "Device, original command and failure ledgers remain local and hash-bound; transferred payloads are separately bound."
+}

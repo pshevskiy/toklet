@@ -86,7 +86,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Post-exit native-app response admission](mlx-task-responses.md), original tokenizer/runtime binding, two read-only local/remote idle observations, explicit app-event derivatives and exact paired literal text. Isolated outcome grading remains open.
   - [x] [Eight-bit full task quality](mlx8-full-task-quality.md) on Mac and iPhone: 2/100 each versus FP32 2/100, zero drop; one isolated40-program run, exact phone literal equivalence, six idle observations and verified VM restoration. The low baseline remains explicit.
   - [x] [Strict Mac measurement admission](mlx-mac-measurement.md), complete clocks/state/memory/duration checks and one128/128 app trial; full matrix/confirmation/sustained and phone performance remain open.
-  - [ ] Representative/sustained app performance and physical MLX state/lifecycle qualification.
+  - [x] [Eight-bit app performance observations](mlx8-performance.md), all 128/512/1024 primary/confirmation workloads and 600-native-second sustained runs on Mac/iPhone; phone thermal slowdown remains explicit, with no comparative speedup or steady-rate claim.
+  - [ ] Physical MLX state/lifecycle qualification.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,
