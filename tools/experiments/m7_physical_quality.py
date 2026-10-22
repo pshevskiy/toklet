@@ -65,7 +65,8 @@ def validate_corpus_listing(data,device,config):
         raise ValueError('Copied corpus inventory/size differs')
 
 
-def check_console(text,config,signed,tokens,vocabulary):
+def check_console(text,config,signed,tokens,vocabulary,*,require_installation=True):
+    if type(require_installation) is not bool:raise ValueError('Explicit installation-proof scope required')
     n=config['targets'];block=config['blockSize'];uint=measurement.uint;number=measurement.nonnegative
     if (not uint(n,32) or not 1<=n<=10000 or not uint(block,32) or not 1<=block<=1024
         or config['capacity']!=block+1 or config['chunk']!=1 or len(tokens)!=n+1 or not uint(vocabulary,32) or vocabulary==0):
@@ -81,11 +82,15 @@ def check_console(text,config,signed,tokens,vocabulary):
             if line.startswith(prefix):
                 matched=True;ordered.append(kind);value=json.loads(line[len(prefix):]);{'proof':proofs,'sample':samples,'result':results}[kind].append(value);break
         if line.startswith('TOKLET_') and not matched:raise ValueError('Unexpected diagnostic/error marker')
-    if ordered!=['proof']+['sample']*n+['proof','result'] or len(proofs)!=2 or len(results)!=1:
+    expected=['proof']+['sample']*n+['proof','result'] if require_installation else ['sample']*n+['result']
+    if ordered!=expected or len(proofs)!=(2 if require_installation else 0) or len(results)!=1:
         raise ValueError('Exact physical quality stream order required')
+    if require_installation:
+        if ([p['phase'] for p in proofs]!=['before','after'] or any(p['simulator'] is not False or p['files']!=signed for p in proofs)):
+            raise ValueError('Quality installed proofs differ')
+    elif signed is not None:raise ValueError('Unexpected Mac installation proof scope')
     result=results[0]
-    if ([p['phase'] for p in proofs]!=['before','after'] or any(p['simulator'] is not False or p['files']!=signed for p in proofs)
-        or result['passed'] is not True or result.get('error') is not None or result['cleanupErrors'] or result['endpointErrors']
+    if (result['passed'] is not True or result.get('error') is not None or result['cleanupErrors'] or result['endpointErrors']
         or result['backend']!=measurement.job_backend(config) or result['closed'] is not True or result['released'] is not True
         or result['fullQualityQualified'] is not False or result['physicalDeviceQualified'] is not False or result['m7Complete'] is not False
         or not uint(result['interruptionCount']) or result['interruptionCount']!=0
@@ -118,10 +123,14 @@ def check_console(text,config,signed,tokens,vocabulary):
         if score['greedyLogit']<score['targetLogit'] or not number(score['negativeLogLikelihood']):raise ValueError('Invalid quality loss')
         memory(sample['footprint']);memory_order.append(sample['footprint'])
         env=sample['environment']
-        if (not uint(env['applicationState'],32) or env['applicationState']!=0 or type(env['lowPowerMode']) is not bool
-            or not uint(env['thermalState'],32) or env['thermalState'] not in range(4)
-            or not uint(env['batteryState'],32) or env['batteryState'] not in range(1,4)
-            or not number(env['batteryLevel']) or env['batteryLevel']>1):raise ValueError('Foreground/power/thermal quality scope differs')
+        if type(env['lowPowerMode']) is not bool or not uint(env['thermalState'],32) or env['thermalState'] not in range(4):
+            raise ValueError('Power/thermal quality scope differs')
+        if require_installation:
+            if (not uint(env['applicationState'],32) or env['applicationState']!=0 or not uint(env['batteryState'],32)
+                or env['batteryState'] not in range(1,4) or not number(env['batteryLevel']) or env['batteryLevel']>1):
+                raise ValueError('Foreground/battery quality scope differs')
+        elif any(env.get(key) is not None for key in ['applicationState','batteryState','batteryLevel']):
+            raise ValueError('Unexpected Mac UIKit observation')
         losses.append(score['negativeLogLikelihood'])
         if position==block or index==n-1:memory_order.append(checkpoints[3+index//block]['footprint'])
     memory_order.extend(c['footprint'] for c in checkpoints[-3:])

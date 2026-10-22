@@ -74,6 +74,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Selected real-checkpoint Mac target parity](mlx-real-metal.md), complete stage/chunk/offset checks and cached/online/token-only session contracts.
   - [x] [Shared sealed jobs and real Mac app-runner integration](mlx-mac-jobs.md), selected short functional checks, observed process charge and signed iPhone preparation.
   - [x] [Guarded physical MLX jobs](mlx-phone-jobs.md), actual selected public-checkpoint generation/scoring/tasks and native process peaks on iPhone 14 Pro.
+  - [x] [Full frozen loss collection](mlx-full-loss.md) on Mac and iPhone: 10,000 targets each and exact cross-device scores. The public four-bit candidate fails the unchanged loss gate (+0.19920869 > 0.05) on both and is rejected for adoption; acceptance remains open.
   - [ ] Real-checkpoint full quality, representative app performance and physical MLX execution/memory.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal

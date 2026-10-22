@@ -168,4 +168,36 @@ class MLXQualityChecks(unittest.TestCase):
         r['backend']='metal'
         with self.assertRaises(ValueError):q.check_console(console(r,s,p),c,f,t,64)
 
+
+class MacQualityChecks(unittest.TestCase):
+    def fixture(self,targets=3,block=3):
+        c,_,t,r,s,_=fixture(targets,block);c.update(version=2,mlx=True,metal=True);r['backend']='metal-mlx'
+        for row in s:row['environment']=dict(lowPowerMode=False,thermalState=0)
+        return c,t,r,s
+    def text(self,result,samples):
+        return '\n'.join(['TOKLET_QUALITY_SAMPLE_JSON='+json.dumps(s) for s in samples]+['TOKLET_QUALITY_JSON='+json.dumps(result)])
+    def test_short_and_full_share_exact_scoring_and_block_gates(self):
+        for n,block in [(3,3),(10000,1024)]:
+            c,t,r,s=self.fixture(n,block)
+            out=q.check_console(self.text(r,s),c,None,t,64,require_installation=False)
+            self.assertEqual(out['sample_count'],n);self.assertEqual(out['computed_mean_nll'],1.0);self.assertEqual(out['installed_proofs'],[])
+    def test_mac_scope_is_explicit_and_cannot_claim_device_observations(self):
+        c,t,r,s=self.fixture();text=self.text(r,s)
+        with self.assertRaises(ValueError):q.check_console(text,c,None,t,64)
+        for flag in (0,1,None):
+            with self.subTest(flag=flag),self.assertRaises(ValueError):q.check_console(text,c,None,t,64,require_installation=flag)
+        with self.assertRaises(ValueError):q.check_console(text,c,{},t,64,require_installation=False)
+        proof='TOKLET_INSTALLATION_JSON='+json.dumps(dict(phase='before',simulator=False,files={}))
+        with self.assertRaises(ValueError):q.check_console(proof+'\n'+text,c,None,t,64,require_installation=False)
+        for field,value in [('applicationState',0),('batteryState',3),('batteryLevel',1.0),('lowPowerMode',0),('thermalState',True),('thermalState',4)]:
+            changed=copy.deepcopy(s);changed[0]['environment'][field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):q.check_console(self.text(r,changed),c,None,t,64,require_installation=False)
+    def test_mac_keeps_target_order_numerical_memory_and_aggregate_guards(self):
+        mutations=[lambda r,s:s[0]['target'].update(position=2),lambda r,s:s[0]['target']['score'].update(target=7),
+                   lambda r,s:s[0]['footprint'].update(lifetimePeakPhysicalBytes=193*1024**2),
+                   lambda r,s:r['summary'].update(meanNegativeLogLikelihood=1.1),lambda r,s:s.pop()]
+        for mutate in mutations:
+            c,t,r,s=self.fixture();mutate(r,s)
+            with self.subTest(mutate=mutate),self.assertRaises(ValueError):q.check_console(self.text(r,s),c,None,t,64,require_installation=False)
+
 if __name__=='__main__':unittest.main()
