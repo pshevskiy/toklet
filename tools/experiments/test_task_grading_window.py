@@ -64,7 +64,7 @@ class ContainerInventory(unittest.TestCase):
 
 
 class WindowRestoration(unittest.TestCase):
-    def invoke(self, foreign=False, initially_running=False, quality_completed=True, replaced=False, late_live=False, custom_hooks=False, admission_failure=False):
+    def invoke(self, foreign=False, initially_running=False, quality_completed=True, replaced=False, late_live=False, custom_hooks=False, admission_failure=False, remote_checker=None, existing_output=None):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve()
             (root / 'benchmarks/raw').mkdir(parents=True)
@@ -90,6 +90,8 @@ class WindowRestoration(unittest.TestCase):
                 'connection_binding': binding, 'image': image}))
             args = SimpleNamespace(prefix='2026-10-14-backend-task-restoration-authored',
                                    idle_proof=idle, collection=root / 'collection.json')
+            if existing_output is not None:
+                (root/'benchmarks/raw'/(args.prefix+existing_output)).symlink_to(root/'missing')
             owner = Mock()
             commands = []
             observations = 0
@@ -153,9 +155,10 @@ class WindowRestoration(unittest.TestCase):
                     injected=SimpleNamespace(validate_collection=validator)
                     result=window.run(args,collection_admission=injected,
                                       idle_admission=lambda *args: {'proof_sha256':'authored-sha','collections':[]},
+                                      idle_check=remote_checker,
                                       extra_source_paths=(producer,),extra_grading_modules=(injected,))
                 else:
-                    result = window.run(args)
+                    result = window.run(args,idle_check=remote_checker)
                 record = json.loads((root / 'benchmarks/raw' / (args.prefix + '-window.json')).read_text())
             return result, record, commands, owner, start, await_owner, grade
 
@@ -212,6 +215,38 @@ class WindowRestoration(unittest.TestCase):
         self.assertTrue(any('inspect' in c for c in commands))
         start.assert_not_called();grade.assert_not_called();owner.finish.assert_not_called()
         self.assertFalse(record['started_by_this_task'])
+
+    def test_remote_check_repeats_at_all_five_idle_boundaries(self):
+        check=Mock()
+        result,record,_,_,_,_,grade=self.invoke(remote_checker=check,custom_hooks=True)
+        self.assertEqual(result,0);self.assertTrue(record['restored_stopped'])
+        self.assertEqual(check.call_count,5);grade.assert_called_once()
+        self.assertTrue(all(call.args[0]['proof_sha256']=='authored-sha' for call in check.call_args_list))
+
+    def test_remote_reappearance_before_start_prevents_vm_start(self):
+        check=Mock(side_effect=[None,ValueError('Phone inference became live')])
+        result,record,_,owner,start,_,grade=self.invoke(remote_checker=check)
+        self.assertEqual(result,1);self.assertIn('became live',record['failure']['message'])
+        start.assert_not_called();grade.assert_not_called();owner.finish.assert_not_called()
+        self.assertEqual(check.call_count,2)
+
+    def test_remote_failure_after_start_preserves_owned_restoration(self):
+        check=Mock(side_effect=[None,None,ValueError('Phone identity changed')])
+        result,record,_,owner,start,_,grade=self.invoke(remote_checker=check)
+        self.assertEqual(result,1);self.assertIn('identity changed',record['failure']['message'])
+        start.assert_called_once();grade.assert_not_called();owner.finish.assert_called_once()
+        self.assertTrue(record['restored_stopped']);self.assertTrue(record['pipe_lifetime_finished'])
+
+    def test_local_idle_failure_cannot_be_bypassed_by_remote_check(self):
+        check=Mock()
+        result,record,_,_,start,_,grade=self.invoke(remote_checker=check,late_live=True)
+        self.assertEqual(result,1);self.assertIn('became live',record['failure']['message'])
+        self.assertEqual(check.call_count,1);start.assert_not_called();grade.assert_not_called()
+
+    def test_dangling_output_rejects_before_any_window_work(self):
+        for suffix in ['-window.json','-restoration.json','-probe.json']:
+            with self.subTest(suffix=suffix),self.assertRaisesRegex(ValueError,'Fresh authored literal'):
+                self.invoke(existing_output=suffix)
 
 class MatchedIdle(unittest.TestCase):
     def fixture(self, directory):

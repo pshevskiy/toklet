@@ -10,13 +10,14 @@ import test_metal_tasks as metal_fixtures
 import test_cpu_task_reference as reference_fixtures
 
 def current_inventory_fixture(record):
- # Historical records predate later Rust modules. Add synthetic identities only
- # for current Rust sources in this mocked fixture, preserving every recorded
- # identity. Missing non-Rust inputs must still fail the exact inventory check.
+ # Historical records predate later Rust modules and shaders. Add synthetic
+ # identities only for current numerical sources in this mocked fixture,
+ # preserving every recorded identity. Other missing inputs must still fail.
  # This never re-admits historical native evidence against current sources.
  ids=dict(record['identities'])
- for source in (admission.ROOT/'src').rglob('*.rs'):
-  ids.setdefault(str(source),'a'*64)
+ patterns=('*.rs','*.metal') if record['format']=='toklet-metal-task-collection-v1' else ('*.rs',)
+ for pattern in patterns:
+  for source in (admission.ROOT/'src').rglob(pattern):ids.setdefault(str(source),'a'*64)
  return ids
 
 class GradingAdmission(unittest.TestCase):
@@ -27,7 +28,7 @@ class GradingAdmission(unittest.TestCase):
   self.assertNotIn(missing,ids)
   self.assertEqual(record['identities'],{k:v for k,v in original['identities'].items() if k!=missing})
   self.assertTrue(all(ids[k]==v for k,v in record['identities'].items()))
-  self.assertEqual(set(ids)-set(record['identities']),{str(p) for p in (admission.ROOT/'src').rglob('*.rs')}-set(record['identities']))
+  self.assertEqual(set(ids)-set(record['identities']),{str(p) for pattern in ('*.rs','*.metal') for p in (admission.ROOT/'src').rglob(pattern)}-set(record['identities']))
   manifest=admission.frozen_manifest();binary=admission.ROOT/'artifacts/m5-cli-half-native-binary-v1/toklet';source=admission.ROOT/'models'/admission.controlled.MODELS['small'][0]
   with self.assertRaisesRegex(ValueError,'Complete backend'):admission.validate_inventory(ids,'toklet-metal-task-collection-v1',binary,ids[str(binary)],source,manifest,'small')
  def reference_fixture(self):

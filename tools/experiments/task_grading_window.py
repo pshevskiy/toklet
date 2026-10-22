@@ -5,6 +5,7 @@ Preserve failed attempts; never resume the original held orchestration.
 """
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -92,7 +93,7 @@ def running_containers(api, record):
     raise ValueError('Running container inventory unavailable; machine retained')
 
 
-def run(args,*,collection_admission=None,idle_admission=None,extra_source_paths=(),extra_grading_modules=()):
+def run(args,*,collection_admission=None,idle_admission=None,idle_check=None,extra_source_paths=(),extra_grading_modules=()):
     global PREFIX, IDLE
     collection_validator=(collection_admission or admission).validate_collection
     idle_validator=idle_admission or admit_idle
@@ -103,7 +104,7 @@ def run(args,*,collection_admission=None,idle_admission=None,extra_source_paths=
     attempt = ROOT / 'benchmarks/raw' / (PREFIX + '-window.json')
     recovery = ROOT / 'benchmarks/raw' / (PREFIX + '-restoration.json')
     output = ROOT / 'benchmarks/raw' / (PREFIX + '-probe.json')
-    if any(path.exists() for path in (attempt, recovery, output)):
+    if any(os.path.lexists(path) for path in (attempt, recovery, output)):
         raise ValueError('Fresh authored literal window paths are required')
     record = {'format': 'toklet-backend-task-native-window-v1', 'completed': False,
               'started_utc': datetime.now(timezone.utc).isoformat(),
@@ -134,6 +135,10 @@ def run(args,*,collection_admission=None,idle_admission=None,extra_source_paths=
             idle_binding = idle_validator(IDLE, args.collection)
             record['idle_collections'] = idle_binding['collections']
         check_idle(idle_binding)
+        # A physical producer also needs fresh remote app identity/absence.
+        # Keep local process/group and input checks mandatory for every caller.
+        if idle_check is not None:
+            idle_check(idle_binding)
         return idle_binding['proof_sha256']
 
     def observe():
