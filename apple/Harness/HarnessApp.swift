@@ -91,6 +91,7 @@ private struct HarnessView: View {
     @State private var directory = Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""
     @State private var packed = ""
     @State private var metal = false
+    @State private var mlx = false
     @State private var capacity = "32"
     @State private var chunk = "3"
     @State private var budgetMiB = "128"
@@ -125,7 +126,7 @@ private struct HarnessView: View {
             guard !bytes.overflow else { throw validation("Budget overflow") }
             guard metal || packed.isEmpty else { throw validation("Packed weights require Metal") }
             var settings = NativeSettings(directory:directory)
-            settings.packedDirectory = packed; settings.metal = metal
+            settings.packedDirectory = packed; settings.metal = metal; settings.mlx = mlx
             settings.capacity = cap; settings.chunk = size; settings.numericalBudget = bytes.partialValue
             store.submit(.load(settings))
         } catch { store.inputError = error.localizedDescription }
@@ -145,16 +146,18 @@ private struct HarnessView: View {
                     Text("Raw token diagnostic harness").font(.headline)
                     VStack(alignment:.leading) { Text("Model folder").font(.caption); TextField("Local path",text:bounded($directory,16384)).textInputAutocapitalization(.never).autocorrectionDisabled() }
                     HStack {
-                        Button("Tiny fixture") { directory = Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""; packed = "" }
+                        Button("Tiny fixture") { directory = Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""; packed = ""; mlx = false }
                         Button("Documents/Model") { directory = documents.appendingPathComponent("Model").path }
                     }.disabled(!idle || store.state.hasModel)
                     VStack(alignment:.leading) { Text("Packed folder (Metal Q4 v2 only)").font(.caption); TextField("Optional local path",text:bounded($packed,16384)).textInputAutocapitalization(.never).autocorrectionDisabled() }
                     Toggle("Metal",isOn:$metal)
+                    Toggle("MLX-format Qwen model",isOn:$mlx)
+                    if mlx { Text("Requires Metal. Leave the separate Q4 folder empty.") }
                     HStack { Text("Capacity (tokens)"); TextField("Tokens",text:bounded($capacity,10)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
                     HStack { Text("Prefill chunk"); TextField("Tokens",text:bounded($chunk,10)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
                     HStack { Text("Numerical cap (MiB)"); TextField("MiB",text:bounded($budgetMiB,20)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
                     Button("Load") { load() }.disabled(!idle || store.state.hasModel)
-                    Text("Model files use the existing local artifact format. Copy full artifacts to this app’s Documents/Model folder. The bundled fixture is for integration checks.")
+                    Text("Select MLX-format Qwen for supported MLX artifacts, or use the existing floating/Q4 formats. Copy full artifacts to this app’s Documents/Model folder. The bundled fixture is for integration checks.")
                 }.disabled(!idle || store.state.hasModel)
                 Section("Raw token generation") {
                     VStack(alignment:.leading) { Text("Prompt or append IDs").font(.caption); TextField("IDs",text:bounded($prompt,262144),axis:.vertical).textInputAutocapitalization(.never).autocorrectionDisabled() }
@@ -323,12 +326,15 @@ struct TokletHarnessApp: App {
             }
         } else if arguments.contains("--self-test") {
             UIApplication.shared.isIdleTimerDisabled = true
-            let directory = Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""
-            let metal = ProcessInfo.processInfo.arguments.contains("--metal")
+            let mlx = arguments.contains("--mlx")
+            let directory = mlx
+                ? FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("MLXTiny").path
+                : Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""
+            let metal = arguments.contains("--metal") || mlx
             DispatchQueue.global(qos:.userInitiated).async {
                 do {
                     try installedBundleProof("before")
-                    let result = try runWorkerChecks(directory:directory,metal:metal)
+                    let result = try runWorkerChecks(directory:directory,metal:metal,mlx:mlx)
                     try installedBundleProof("after")
                     let data = try JSONEncoder().encode(result)
                     try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_SELFTEST_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))

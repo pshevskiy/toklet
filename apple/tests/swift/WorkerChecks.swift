@@ -48,7 +48,7 @@ private func settled(_ worker: NativeWorker) throws -> NativeSnapshot {
 
 // Shared by the Mac executable and the simulator app's explicit self-test mode.
 // These checks do not perform physical-device/performance qualification.
-func runWorkerChecks(directory: String, metal: Bool) throws -> WorkerCheckResult {
+func runWorkerChecks(directory: String, metal: Bool, mlx: Bool = false) throws -> WorkerCheckResult {
     var owner: NativeWorker? = try NativeWorker()
     weak let weakOwner = owner
     var states: [WorkerCheckState] = []
@@ -76,8 +76,24 @@ func runWorkerChecks(directory: String, metal: Bool) throws -> WorkerCheckResult
                                            pending:state.pending,saved:state.savedHistory,reason:state.reason))
             return state
         }
+        if mlx {
+            for (useMetal,useMLX,packed) in [(false,true,""),(true,true,"not-opened"),(false,false,"not-opened")] {
+                var rejected = NativeSettings(directory:"not-opened")
+                rejected.metal = useMetal;rejected.mlx = useMLX;rejected.packedDirectory = packed
+                try expect(worker.submit(.load(rejected)),"Backend rejection command not admitted")
+                let invalid = try settled(worker)
+                try expect(invalid.status == 1 && !invalid.hasModel && !invalid.hasSession
+                           && invalid.admittedBytes == 0,"Conflicting backend was loaded")
+            }
+            var missing = NativeSettings(directory:"/toklet-test-nonexistent-mlx-directory")
+            missing.metal = true;missing.mlx = true
+            try expect(worker.submit(.load(missing)),"Missing-artifact command not admitted")
+            let failed = try settled(worker)
+            try expect(failed.status == 2 && !failed.hasModel && !failed.hasSession
+                       && failed.admittedBytes == 0,"Failed MLX load retained native owners")
+        }
         var settings = NativeSettings(directory: directory)
-        settings.metal = metal
+        settings.metal = metal;settings.mlx = mlx
         var state = try perform(.load(settings),"load")
         try expect(state.hasModel && state.hasSession,"Missing loaded native owners")
         try expect(state.tokenTimings.isEmpty,"Load retained previous timing events")
@@ -117,6 +133,6 @@ func runWorkerChecks(directory: String, metal: Bool) throws -> WorkerCheckResult
     let releaseDeadline = Date(timeIntervalSinceNow: 5)
     while weakOwner != nil && Date() < releaseDeadline { Thread.sleep(forTimeInterval:0.002) }
     try expect(weakOwner == nil,"Worker/thread retain cycle after close")
-    return WorkerCheckResult(passed:true,backend:metal ? "metal" : "cpu",states:states,timingChecks:timingChecks,tokens:ids,
+    return WorkerCheckResult(passed:true,backend:mlx ? "metal-mlx" : (metal ? "metal" : "cpu"),states:states,timingChecks:timingChecks,tokens:ids,
                              closed:true,released:true,physicalDeviceQualified:false)
 }

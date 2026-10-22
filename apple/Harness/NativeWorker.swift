@@ -5,6 +5,7 @@ struct NativeSettings: Sendable {
     var directory: String
     var packedDirectory = ""
     var metal = false
+    var mlx = false
     var capacity: UInt32 = 32
     var chunk: UInt32 = 3
     var numericalBudget: UInt64 = 128 * 1024 * 1024
@@ -404,6 +405,10 @@ private final class Engine {
 
         case .load(let requested):
             guard model == nil else { throw invalid("Unload the current model first") }
+            guard requested.packedDirectory.isEmpty || requested.metal,
+                  !requested.mlx || (requested.metal && requested.packedDirectory.isEmpty) else {
+                throw invalid("MLX requires Metal and no separate Q4 folder; packed Q4 requires Metal")
+            }
             guard (1...32768).contains(requested.capacity), requested.chunk > 0 else { throw invalid("Invalid capacity/chunk") }
             guard requested.directory.utf8.count <= 16384, requested.packedDirectory.utf8.count <= 16384 else {
                 throw invalid("Artifact path exceeds 16 KiB")
@@ -414,7 +419,8 @@ private final class Engine {
             var options = requested.options(); var error = TokletError()
             let code = path.withUnsafeBufferPointer { path in
                 packed.withUnsafeBufferPointer { packed in
-                    requested.metal ? toklet_model_load_metal(path.baseAddress,path.count,packed.baseAddress,packed.count,&options,&model,&error)
+                    requested.mlx ? toklet_model_load_mlx(path.baseAddress,path.count,&options,&model,&error)
+                    : requested.metal ? toklet_model_load_metal(path.baseAddress,path.count,packed.baseAddress,packed.count,&options,&model,&error)
                                     : toklet_model_load(path.baseAddress,path.count,&options,&model,&error)
                 }
             }

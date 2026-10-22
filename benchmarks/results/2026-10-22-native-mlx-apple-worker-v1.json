@@ -1,0 +1,1825 @@
+{
+  "format": "toklet-native-mlx-apple-worker-qualification-v1",
+  "passed": true,
+  "base_revision": "6dcaad2",
+  "scope": "Explicit Apple MLX UI/worker selection; Mac CPU/Half/MLX worker state and iOS18 source typechecking.",
+  "mac_worker_execution_qualified": true,
+  "ios_source_typecheck_passed": true,
+  "linked_app_build_passed": false,
+  "real_checkpoint_quality_qualified": false,
+  "performance_qualified": false,
+  "iphone_qualified": false,
+  "m8_2_complete": false,
+  "m8_complete": false,
+  "rust_shader_sources_unchanged": true,
+  "rust_suites_rerun": false,
+  "checks": [
+    {
+      "format": "toklet-native-mlx-app-worker-checks-v1",
+      "passed": true,
+      "source_pins": {
+        "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+        "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+        "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+        "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+        "src/bin/cli/mod.rs": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24",
+        "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+        "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+        "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+        "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+        "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+        "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+        "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+        "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+        "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+        "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+        "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+        "src/metal/memory.rs": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6",
+        "src/metal/mlx.rs": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177",
+        "src/metal/mod.rs": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65",
+        "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+        "src/metal/profile.rs": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3",
+        "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+        "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+        "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+        "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+        "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+        "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+        "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+        "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+        "src/native/tests.rs": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856",
+        "src/native.rs": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc",
+        "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+        "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+        "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+        "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+        "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+        "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+        "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+        "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+        "apple/Harness/HarnessApp.swift": "383611b0f1f1b2912b8220770004e5c238aca931ed185ddea85e945f37cd8fe6",
+        "apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+        "apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+        "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+        "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+        "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+        "apple/Harness/NativeStateRun.swift": "82209540413ef2251840a402cbda590003df665ed3f47a3759cf3f0f386abc95",
+        "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+        "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+        "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+        "apple/Harness/NativeWorker.swift": "d86832de771cc1d8ee1774089468e749f05b8bfb074e20ee69fccc3b0c50fa37",
+        "apple/tests/swift/WorkerChecks.swift": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf",
+        "apple/tests/swift/main.swift": "6339980080ec06d0d04e777ed8fbbfe37f0a9f20385d319c467e7c4f20176c03",
+        "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "apple/include/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "apple/TokletHarness.xcodeproj/project.pbxproj": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5",
+        "tests/fixtures/mlx-qwen-v1/arrays.bin": "0a7a4d33b78a1b9ada37e30fa35726ebb1788680866b2c0e01b61d2c03c5ec56",
+        "tests/fixtures/mlx-qwen-v1/manifest.json": "fdd390667091a78d69b2f09086a3919eb7499ee1f065c7944801f65a5e1953cd",
+        "tests/fixtures/mlx-qwen-v1/model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+        "tests/fixtures/mlx-qwen-v1/model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+        "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+        "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+        "artifacts/m8-mlx-app-worker-checks-v1/checks.py": "baf48420e7f223c5bf94c3a3e1526fa9e276d6d9858ffcf4dc5233d958152607",
+        "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae"
+      },
+      "protected_binary_pins": {
+        "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+        "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+      },
+      "binary_pins": {
+        "artifacts/m8-rust-target/release/libtoklet.a": "d7b4e9c15c942a1be952a67f4706885ca5e6f7b09d0634faad1c53839d904d51",
+        "artifacts/m8-mlx-app-worker-checks-v1/worker": "368a5bdea4907650b5348846655e6a80118676d7fe459eef0715631477947f2e"
+      },
+      "commands": [
+        {
+          "command": [
+            "cargo",
+            "+1.90",
+            "build",
+            "--release",
+            "--locked",
+            "--offline",
+            "--features",
+            "metal",
+            "--lib"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24544,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v1/native-lib.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v1/native-lib.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "macosx",
+            "--show-sdk-path"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24549,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v1/mac-sdk.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v1/mac-sdk.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "iphoneos",
+            "--show-sdk-path"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24556,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v1/ios-sdk.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v1/ios-sdk.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "macosx",
+            "swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v1/ModuleCache",
+            "-swift-version",
+            "5",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-I",
+            "/Users/coloner/work/rust/toklet/apple/include",
+            "-target",
+            "arm64-apple-macos15.0",
+            "-O",
+            "apple/Harness/NativeWorker.swift",
+            "apple/tests/swift/WorkerChecks.swift",
+            "apple/tests/swift/main.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-rust-target/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Foundation",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v1/worker"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24564,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v1/worker-compile.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v1/worker-compile.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v1/worker",
+            "artifacts/m7-native-tiny-v2"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24595,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v1/worker-cpu.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v1/worker-cpu.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v1/worker",
+            "artifacts/m7-native-tiny-v2",
+            "metal"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24597,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v1/worker-metal.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v1/worker-metal.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v1/worker",
+            "tests/fixtures/mlx-qwen-v1/model",
+            "mlx"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24599,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v1/worker-mlx.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v1/worker-mlx.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "iphoneos",
+            "swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v1/ModuleCache",
+            "-swift-version",
+            "5",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-I",
+            "/Users/coloner/work/rust/toklet/apple/include",
+            "-target",
+            "arm64-apple-ios18.0",
+            "-parse-as-library",
+            "-typecheck",
+            "apple/Harness/HarnessApp.swift",
+            "apple/Harness/NativeLifecycle.swift",
+            "apple/Harness/NativeLifecycleRun.swift",
+            "apple/Harness/NativeLifecycleSignals.swift",
+            "apple/Harness/NativeMeasurement.swift",
+            "apple/Harness/NativeQuality.swift",
+            "apple/Harness/NativeStateRun.swift",
+            "apple/Harness/NativeTaskResponse.swift",
+            "apple/Harness/NativeTasks.swift",
+            "apple/Harness/NativeTeacherForcing.swift",
+            "apple/Harness/NativeWorker.swift",
+            "apple/tests/swift/WorkerChecks.swift"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24601,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v1/ios-typecheck.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v1/ios-typecheck.stderr"
+        }
+      ],
+      "worker_results": {
+        "cpu": {
+          "timingChecks": [
+            {
+              "events": [],
+              "completedUptimeNanoseconds": 1957468636119125,
+              "name": "load",
+              "submittedUptimeNanoseconds": 1957468634238833,
+              "tokens": []
+            },
+            {
+              "events": [
+                {
+                  "nativeElapsedSeconds": 7.7708e-05,
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957468636234833
+                },
+                {
+                  "nativeElapsedSeconds": 9.9208e-05,
+                  "index": 1,
+                  "callbackUptimeNanoseconds": 1957468636256041
+                }
+              ],
+              "completedUptimeNanoseconds": 1957468636260791,
+              "name": "prompt",
+              "submittedUptimeNanoseconds": 1957468636138083,
+              "tokens": [
+                47,
+                47
+              ]
+            },
+            {
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957468636286458,
+                  "index": 0,
+                  "nativeElapsedSeconds": 2.1042e-05
+                },
+                {
+                  "callbackUptimeNanoseconds": 1957468636307333,
+                  "index": 1,
+                  "nativeElapsedSeconds": 4.1917e-05
+                }
+              ],
+              "completedUptimeNanoseconds": 1957468636310208,
+              "name": "continue",
+              "submittedUptimeNanoseconds": 1957468636261958,
+              "tokens": [
+                47,
+                47
+              ]
+            },
+            {
+              "events": [],
+              "completedUptimeNanoseconds": 1957468636317583,
+              "name": "suspend",
+              "submittedUptimeNanoseconds": 1957468636310791,
+              "tokens": []
+            },
+            {
+              "events": [],
+              "completedUptimeNanoseconds": 1957468636447166,
+              "name": "replay",
+              "submittedUptimeNanoseconds": 1957468636329541,
+              "tokens": []
+            },
+            {
+              "events": [
+                {
+                  "nativeElapsedSeconds": 3.75e-07,
+                  "callbackUptimeNanoseconds": 1957468636451125,
+                  "index": 0
+                }
+              ],
+              "completedUptimeNanoseconds": 1957468636453750,
+              "name": "after-replay",
+              "submittedUptimeNanoseconds": 1957468636447833,
+              "tokens": [
+                47
+              ]
+            },
+            {
+              "events": [],
+              "completedUptimeNanoseconds": 1957468636459208,
+              "name": "reset",
+              "submittedUptimeNanoseconds": 1957468636453875,
+              "tokens": []
+            },
+            {
+              "events": [
+                {
+                  "nativeElapsedSeconds": 5.6916e-05,
+                  "callbackUptimeNanoseconds": 1957468636519125,
+                  "index": 0
+                }
+              ],
+              "completedUptimeNanoseconds": 1957468636523875,
+              "name": "cancel",
+              "submittedUptimeNanoseconds": 1957468636459375,
+              "tokens": [
+                47
+              ]
+            },
+            {
+              "events": [
+                {
+                  "nativeElapsedSeconds": 2.075e-05,
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957468636547916
+                }
+              ],
+              "completedUptimeNanoseconds": 1957468636551125,
+              "name": "resume",
+              "submittedUptimeNanoseconds": 1957468636524291,
+              "tokens": [
+                47
+              ]
+            }
+          ],
+          "physicalDeviceQualified": false,
+          "backend": "cpu",
+          "states": [
+            {
+              "name": "load",
+              "evaluated": 0,
+              "pending": 0,
+              "saved": 0,
+              "reason": 0,
+              "history": 0
+            },
+            {
+              "name": "prompt",
+              "evaluated": 5,
+              "pending": 1,
+              "saved": 6,
+              "reason": 1,
+              "history": 6
+            },
+            {
+              "name": "continue",
+              "evaluated": 7,
+              "pending": 1,
+              "saved": 8,
+              "reason": 1,
+              "history": 8
+            },
+            {
+              "history": 0,
+              "reason": 0,
+              "saved": 8,
+              "name": "suspend",
+              "evaluated": 0,
+              "pending": 0
+            },
+            {
+              "history": 0,
+              "reason": 3,
+              "saved": 8,
+              "name": "replay-cancelled",
+              "evaluated": 0,
+              "pending": 0
+            },
+            {
+              "history": 8,
+              "reason": 1,
+              "saved": 8,
+              "name": "replay",
+              "evaluated": 8,
+              "pending": 0
+            },
+            {
+              "history": 9,
+              "reason": 1,
+              "saved": 9,
+              "name": "after-replay",
+              "evaluated": 8,
+              "pending": 1
+            },
+            {
+              "history": 0,
+              "reason": 0,
+              "saved": 0,
+              "name": "reset",
+              "evaluated": 0,
+              "pending": 0
+            },
+            {
+              "history": 5,
+              "reason": 3,
+              "saved": 5,
+              "name": "cancel",
+              "evaluated": 4,
+              "pending": 1
+            },
+            {
+              "history": 6,
+              "reason": 1,
+              "saved": 6,
+              "name": "resume",
+              "evaluated": 5,
+              "pending": 1
+            }
+          ],
+          "released": true,
+          "passed": true,
+          "closed": true,
+          "tokens": [
+            47,
+            47,
+            47,
+            47
+          ]
+        },
+        "metal": {
+          "backend": "metal",
+          "passed": true,
+          "timingChecks": [
+            {
+              "events": [],
+              "submittedUptimeNanoseconds": 1957468686820125,
+              "name": "load",
+              "completedUptimeNanoseconds": 1957468750704333,
+              "tokens": []
+            },
+            {
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957468755469208,
+                  "nativeElapsedSeconds": 0.004709875,
+                  "index": 0
+                },
+                {
+                  "callbackUptimeNanoseconds": 1957468756190083,
+                  "nativeElapsedSeconds": 0.00543275,
+                  "index": 1
+                }
+              ],
+              "submittedUptimeNanoseconds": 1957468750741750,
+              "name": "prompt",
+              "completedUptimeNanoseconds": 1957468756199458,
+              "tokens": [
+                47,
+                47
+              ]
+            },
+            {
+              "events": [
+                {
+                  "nativeElapsedSeconds": 0.000708417,
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957468756921208
+                },
+                {
+                  "nativeElapsedSeconds": 0.001419792,
+                  "index": 1,
+                  "callbackUptimeNanoseconds": 1957468757632791
+                }
+              ],
+              "submittedUptimeNanoseconds": 1957468756202583,
+              "name": "continue",
+              "completedUptimeNanoseconds": 1957468757637708,
+              "tokens": [
+                47,
+                47
+              ]
+            },
+            {
+              "events": [],
+              "submittedUptimeNanoseconds": 1957468757639208,
+              "name": "suspend",
+              "completedUptimeNanoseconds": 1957468757702208,
+              "tokens": []
+            },
+            {
+              "events": [],
+              "submittedUptimeNanoseconds": 1957468757818375,
+              "name": "replay",
+              "completedUptimeNanoseconds": 1957468760262583,
+              "tokens": []
+            },
+            {
+              "events": [
+                {
+                  "nativeElapsedSeconds": 5.83e-07,
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957468760271750
+                }
+              ],
+              "submittedUptimeNanoseconds": 1957468760264708,
+              "name": "after-replay",
+              "completedUptimeNanoseconds": 1957468760274875,
+              "tokens": [
+                47
+              ]
+            },
+            {
+              "events": [],
+              "submittedUptimeNanoseconds": 1957468760275083,
+              "name": "reset",
+              "completedUptimeNanoseconds": 1957468760282458,
+              "tokens": []
+            },
+            {
+              "events": [
+                {
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957468761726666,
+                  "nativeElapsedSeconds": 0.001438
+                }
+              ],
+              "submittedUptimeNanoseconds": 1957468760282875,
+              "name": "cancel",
+              "completedUptimeNanoseconds": 1957468761732333,
+              "tokens": [
+                47
+              ]
+            },
+            {
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957468762426541,
+                  "nativeElapsedSeconds": 0.0006885,
+                  "index": 0
+                }
+              ],
+              "submittedUptimeNanoseconds": 1957468761733666,
+              "name": "resume",
+              "completedUptimeNanoseconds": 1957468762431500,
+              "tokens": [
+                47
+              ]
+            }
+          ],
+          "closed": true,
+          "tokens": [
+            47,
+            47,
+            47,
+            47
+          ],
+          "states": [
+            {
+              "evaluated": 0,
+              "pending": 0,
+              "history": 0,
+              "name": "load",
+              "saved": 0,
+              "reason": 0
+            },
+            {
+              "pending": 1,
+              "evaluated": 5,
+              "history": 6,
+              "saved": 6,
+              "reason": 1,
+              "name": "prompt"
+            },
+            {
+              "reason": 1,
+              "evaluated": 7,
+              "name": "continue",
+              "history": 8,
+              "pending": 1,
+              "saved": 8
+            },
+            {
+              "history": 0,
+              "reason": 0,
+              "evaluated": 0,
+              "pending": 0,
+              "saved": 8,
+              "name": "suspend"
+            },
+            {
+              "history": 0,
+              "reason": 3,
+              "evaluated": 0,
+              "pending": 0,
+              "saved": 8,
+              "name": "replay-cancelled"
+            },
+            {
+              "history": 8,
+              "reason": 1,
+              "evaluated": 8,
+              "pending": 0,
+              "saved": 8,
+              "name": "replay"
+            },
+            {
+              "history": 9,
+              "reason": 1,
+              "evaluated": 8,
+              "pending": 1,
+              "saved": 9,
+              "name": "after-replay"
+            },
+            {
+              "history": 0,
+              "reason": 0,
+              "evaluated": 0,
+              "pending": 0,
+              "saved": 0,
+              "name": "reset"
+            },
+            {
+              "history": 5,
+              "reason": 3,
+              "evaluated": 4,
+              "pending": 1,
+              "saved": 5,
+              "name": "cancel"
+            },
+            {
+              "history": 6,
+              "reason": 1,
+              "evaluated": 5,
+              "pending": 1,
+              "saved": 6,
+              "name": "resume"
+            }
+          ],
+          "released": true,
+          "physicalDeviceQualified": false
+        },
+        "mlx": {
+          "passed": true,
+          "released": true,
+          "states": [
+            {
+              "history": 0,
+              "evaluated": 0,
+              "name": "load",
+              "saved": 0,
+              "reason": 0,
+              "pending": 0
+            },
+            {
+              "history": 6,
+              "evaluated": 5,
+              "name": "prompt",
+              "saved": 6,
+              "reason": 1,
+              "pending": 1
+            },
+            {
+              "history": 8,
+              "evaluated": 7,
+              "name": "continue",
+              "saved": 8,
+              "reason": 1,
+              "pending": 1
+            },
+            {
+              "history": 0,
+              "evaluated": 0,
+              "name": "suspend",
+              "saved": 8,
+              "reason": 0,
+              "pending": 0
+            },
+            {
+              "history": 0,
+              "evaluated": 0,
+              "name": "replay-cancelled",
+              "saved": 8,
+              "reason": 3,
+              "pending": 0
+            },
+            {
+              "history": 8,
+              "evaluated": 8,
+              "name": "replay",
+              "saved": 8,
+              "reason": 1,
+              "pending": 0
+            },
+            {
+              "history": 9,
+              "evaluated": 8,
+              "name": "after-replay",
+              "saved": 9,
+              "reason": 1,
+              "pending": 1
+            },
+            {
+              "history": 0,
+              "evaluated": 0,
+              "name": "reset",
+              "saved": 0,
+              "reason": 0,
+              "pending": 0
+            },
+            {
+              "history": 5,
+              "evaluated": 4,
+              "name": "cancel",
+              "saved": 5,
+              "reason": 3,
+              "pending": 1
+            },
+            {
+              "history": 6,
+              "evaluated": 5,
+              "name": "resume",
+              "saved": 6,
+              "reason": 1,
+              "pending": 1
+            }
+          ],
+          "backend": "metal-mlx",
+          "timingChecks": [
+            {
+              "completedUptimeNanoseconds": 1957468863519416,
+              "tokens": [],
+              "name": "load",
+              "submittedUptimeNanoseconds": 1957468818278958,
+              "events": []
+            },
+            {
+              "completedUptimeNanoseconds": 1957468867531958,
+              "tokens": [
+                47,
+                47
+              ],
+              "name": "prompt",
+              "submittedUptimeNanoseconds": 1957468863537458,
+              "events": [
+                {
+                  "index": 0,
+                  "nativeElapsedSeconds": 0.0033775,
+                  "callbackUptimeNanoseconds": 1957468866930333
+                },
+                {
+                  "index": 1,
+                  "nativeElapsedSeconds": 0.003967125,
+                  "callbackUptimeNanoseconds": 1957468867520875
+                }
+              ]
+            },
+            {
+              "completedUptimeNanoseconds": 1957468868708583,
+              "tokens": [
+                47,
+                47
+              ],
+              "name": "continue",
+              "submittedUptimeNanoseconds": 1957468867539083,
+              "events": [
+                {
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957468868148916,
+                  "nativeElapsedSeconds": 0.00059775
+                },
+                {
+                  "index": 1,
+                  "callbackUptimeNanoseconds": 1957468868699916,
+                  "nativeElapsedSeconds": 0.001148208
+                }
+              ]
+            },
+            {
+              "completedUptimeNanoseconds": 1957468868772041,
+              "tokens": [],
+              "name": "suspend",
+              "submittedUptimeNanoseconds": 1957468868710083,
+              "events": []
+            },
+            {
+              "completedUptimeNanoseconds": 1957468870691291,
+              "tokens": [],
+              "name": "replay",
+              "submittedUptimeNanoseconds": 1957468868881083,
+              "events": []
+            },
+            {
+              "completedUptimeNanoseconds": 1957468870700833,
+              "tokens": [
+                47
+              ],
+              "name": "after-replay",
+              "submittedUptimeNanoseconds": 1957468870692958,
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957468870697875,
+                  "index": 0,
+                  "nativeElapsedSeconds": 4.59e-07
+                }
+              ]
+            },
+            {
+              "completedUptimeNanoseconds": 1957468870710083,
+              "tokens": [],
+              "name": "reset",
+              "submittedUptimeNanoseconds": 1957468870701000,
+              "events": []
+            },
+            {
+              "completedUptimeNanoseconds": 1957468871783500,
+              "tokens": [
+                47
+              ],
+              "name": "cancel",
+              "submittedUptimeNanoseconds": 1957468870710250,
+              "events": [
+                {
+                  "nativeElapsedSeconds": 0.001065792,
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957468871779458
+                }
+              ]
+            },
+            {
+              "completedUptimeNanoseconds": 1957468872290000,
+              "tokens": [
+                47
+              ],
+              "name": "resume",
+              "submittedUptimeNanoseconds": 1957468871784583,
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957468872284000,
+                  "nativeElapsedSeconds": 0.000495334,
+                  "index": 0
+                }
+              ]
+            }
+          ],
+          "physicalDeviceQualified": false,
+          "closed": true,
+          "tokens": [
+            47,
+            47,
+            47,
+            47
+          ]
+        }
+      },
+      "primary_error": null,
+      "endpoint_errors": []
+    },
+    {
+      "format": "toklet-native-mlx-app-worker-checks-v1",
+      "passed": true,
+      "source_pins": {
+        "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+        "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+        "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+        "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+        "src/bin/cli/mod.rs": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24",
+        "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+        "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+        "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+        "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+        "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+        "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+        "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+        "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+        "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+        "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+        "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+        "src/metal/memory.rs": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6",
+        "src/metal/mlx.rs": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177",
+        "src/metal/mod.rs": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65",
+        "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+        "src/metal/profile.rs": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3",
+        "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+        "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+        "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+        "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+        "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+        "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+        "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+        "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+        "src/native/tests.rs": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856",
+        "src/native.rs": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc",
+        "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+        "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+        "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+        "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+        "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+        "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+        "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+        "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+        "apple/Harness/HarnessApp.swift": "4cc314e35db6d0f6736e4f6e2358e9c444a2b7069faba6703e3ff8dc633a63e6",
+        "apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+        "apple/Harness/NativeLifecycleRun.swift": "e79de827a8f61b8061898efbc44d3df9b089397a61fe9b4ed4a8ef1b66310495",
+        "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+        "apple/Harness/NativeMeasurement.swift": "2a148c9fb8c9316898bd0d813ce2fb0520bcabe3b65f70c0a74ae399ed11410b",
+        "apple/Harness/NativeQuality.swift": "f2ff5f5956612db51e55f29b28100ac7e4e19c2fd4d595fb4f9ce1e4f3e71084",
+        "apple/Harness/NativeStateRun.swift": "82209540413ef2251840a402cbda590003df665ed3f47a3759cf3f0f386abc95",
+        "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+        "apple/Harness/NativeTasks.swift": "1aca5e07c03a6b10d36bdcf84bb94d8cd70ff2e7f0d7aa15b9fac3175f21da73",
+        "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+        "apple/Harness/NativeWorker.swift": "d86832de771cc1d8ee1774089468e749f05b8bfb074e20ee69fccc3b0c50fa37",
+        "apple/tests/swift/WorkerChecks.swift": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf",
+        "apple/tests/swift/main.swift": "6339980080ec06d0d04e777ed8fbbfe37f0a9f20385d319c467e7c4f20176c03",
+        "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "apple/include/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+        "apple/TokletHarness.xcodeproj/project.pbxproj": "4761a6067ffabb1df9b702e387b12c431853efad3110a6d3221973c8fe7551c5",
+        "tests/fixtures/mlx-qwen-v1/arrays.bin": "0a7a4d33b78a1b9ada37e30fa35726ebb1788680866b2c0e01b61d2c03c5ec56",
+        "tests/fixtures/mlx-qwen-v1/manifest.json": "fdd390667091a78d69b2f09086a3919eb7499ee1f065c7944801f65a5e1953cd",
+        "tests/fixtures/mlx-qwen-v1/model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+        "tests/fixtures/mlx-qwen-v1/model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+        "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+        "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+        "artifacts/m8-mlx-app-worker-checks-v2/checks.py": "baf48420e7f223c5bf94c3a3e1526fa9e276d6d9858ffcf4dc5233d958152607",
+        "tools/experiments/m7_apple_package.py": "3be3b1e535ee7b13d72877eaea58318bcac5bbf499d621ab00758b384bac28ae"
+      },
+      "protected_binary_pins": {
+        "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+        "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+      },
+      "binary_pins": {
+        "artifacts/m8-rust-target/release/libtoklet.a": "d7b4e9c15c942a1be952a67f4706885ca5e6f7b09d0634faad1c53839d904d51",
+        "artifacts/m8-mlx-app-worker-checks-v2/worker": "368a5bdea4907650b5348846655e6a80118676d7fe459eef0715631477947f2e"
+      },
+      "commands": [
+        {
+          "command": [
+            "cargo",
+            "+1.90",
+            "build",
+            "--release",
+            "--locked",
+            "--offline",
+            "--features",
+            "metal",
+            "--lib"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24678,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v2/native-lib.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v2/native-lib.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "macosx",
+            "--show-sdk-path"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24681,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v2/mac-sdk.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v2/mac-sdk.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "iphoneos",
+            "--show-sdk-path"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24682,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v2/ios-sdk.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v2/ios-sdk.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "macosx",
+            "swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v2/ModuleCache",
+            "-swift-version",
+            "5",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-I",
+            "/Users/coloner/work/rust/toklet/apple/include",
+            "-target",
+            "arm64-apple-macos15.0",
+            "-O",
+            "apple/Harness/NativeWorker.swift",
+            "apple/tests/swift/WorkerChecks.swift",
+            "apple/tests/swift/main.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-rust-target/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Foundation",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v2/worker"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24683,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v2/worker-compile.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v2/worker-compile.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v2/worker",
+            "artifacts/m7-native-tiny-v2"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24706,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v2/worker-cpu.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v2/worker-cpu.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v2/worker",
+            "artifacts/m7-native-tiny-v2",
+            "metal"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24708,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v2/worker-metal.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v2/worker-metal.stderr"
+        },
+        {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v2/worker",
+            "tests/fixtures/mlx-qwen-v1/model",
+            "mlx"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24710,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v2/worker-mlx.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v2/worker-mlx.stderr"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "iphoneos",
+            "swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-mlx-app-worker-checks-v2/ModuleCache",
+            "-swift-version",
+            "5",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-I",
+            "/Users/coloner/work/rust/toklet/apple/include",
+            "-target",
+            "arm64-apple-ios18.0",
+            "-parse-as-library",
+            "-typecheck",
+            "apple/Harness/HarnessApp.swift",
+            "apple/Harness/NativeLifecycle.swift",
+            "apple/Harness/NativeLifecycleRun.swift",
+            "apple/Harness/NativeLifecycleSignals.swift",
+            "apple/Harness/NativeMeasurement.swift",
+            "apple/Harness/NativeQuality.swift",
+            "apple/Harness/NativeStateRun.swift",
+            "apple/Harness/NativeTaskResponse.swift",
+            "apple/Harness/NativeTasks.swift",
+            "apple/Harness/NativeTeacherForcing.swift",
+            "apple/Harness/NativeWorker.swift",
+            "apple/tests/swift/WorkerChecks.swift"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 24712,
+          "stdout": "artifacts/m8-mlx-app-worker-checks-v2/ios-typecheck.stdout",
+          "stderr": "artifacts/m8-mlx-app-worker-checks-v2/ios-typecheck.stderr"
+        }
+      ],
+      "worker_results": {
+        "cpu": {
+          "states": [
+            {
+              "reason": 0,
+              "history": 0,
+              "pending": 0,
+              "saved": 0,
+              "name": "load",
+              "evaluated": 0
+            },
+            {
+              "reason": 1,
+              "history": 6,
+              "pending": 1,
+              "saved": 6,
+              "name": "prompt",
+              "evaluated": 5
+            },
+            {
+              "reason": 1,
+              "history": 8,
+              "pending": 1,
+              "saved": 8,
+              "name": "continue",
+              "evaluated": 7
+            },
+            {
+              "reason": 0,
+              "pending": 0,
+              "name": "suspend",
+              "saved": 8,
+              "evaluated": 0,
+              "history": 0
+            },
+            {
+              "reason": 3,
+              "pending": 0,
+              "name": "replay-cancelled",
+              "saved": 8,
+              "evaluated": 0,
+              "history": 0
+            },
+            {
+              "reason": 1,
+              "pending": 0,
+              "name": "replay",
+              "saved": 8,
+              "evaluated": 8,
+              "history": 8
+            },
+            {
+              "reason": 1,
+              "pending": 1,
+              "name": "after-replay",
+              "saved": 9,
+              "evaluated": 8,
+              "history": 9
+            },
+            {
+              "reason": 0,
+              "pending": 0,
+              "name": "reset",
+              "saved": 0,
+              "evaluated": 0,
+              "history": 0
+            },
+            {
+              "reason": 3,
+              "pending": 1,
+              "name": "cancel",
+              "saved": 5,
+              "evaluated": 4,
+              "history": 5
+            },
+            {
+              "reason": 1,
+              "pending": 1,
+              "name": "resume",
+              "saved": 6,
+              "evaluated": 5,
+              "history": 6
+            }
+          ],
+          "closed": true,
+          "physicalDeviceQualified": false,
+          "backend": "cpu",
+          "released": true,
+          "tokens": [
+            47,
+            47,
+            47,
+            47
+          ],
+          "timingChecks": [
+            {
+              "completedUptimeNanoseconds": 1957505883841041,
+              "name": "load",
+              "submittedUptimeNanoseconds": 1957505882568250,
+              "events": [],
+              "tokens": []
+            },
+            {
+              "completedUptimeNanoseconds": 1957505883989166,
+              "name": "prompt",
+              "submittedUptimeNanoseconds": 1957505883853000,
+              "events": [
+                {
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957505883957541,
+                  "nativeElapsedSeconds": 9.3667e-05
+                },
+                {
+                  "index": 1,
+                  "callbackUptimeNanoseconds": 1957505883983708,
+                  "nativeElapsedSeconds": 0.000120042
+                }
+              ],
+              "tokens": [
+                47,
+                47
+              ]
+            },
+            {
+              "completedUptimeNanoseconds": 1957505884061250,
+              "name": "continue",
+              "submittedUptimeNanoseconds": 1957505883990333,
+              "events": [
+                {
+                  "index": 0,
+                  "nativeElapsedSeconds": 2.9791e-05,
+                  "callbackUptimeNanoseconds": 1957505884028000
+                },
+                {
+                  "index": 1,
+                  "nativeElapsedSeconds": 5.675e-05,
+                  "callbackUptimeNanoseconds": 1957505884054750
+                }
+              ],
+              "tokens": [
+                47,
+                47
+              ]
+            },
+            {
+              "completedUptimeNanoseconds": 1957505884073916,
+              "name": "suspend",
+              "submittedUptimeNanoseconds": 1957505884062416,
+              "events": [],
+              "tokens": []
+            },
+            {
+              "completedUptimeNanoseconds": 1957505884374625,
+              "name": "replay",
+              "submittedUptimeNanoseconds": 1957505884089791,
+              "events": [],
+              "tokens": []
+            },
+            {
+              "completedUptimeNanoseconds": 1957505884403541,
+              "name": "after-replay",
+              "submittedUptimeNanoseconds": 1957505884376958,
+              "events": [
+                {
+                  "nativeElapsedSeconds": 1.167e-06,
+                  "callbackUptimeNanoseconds": 1957505884393625,
+                  "index": 0
+                }
+              ],
+              "tokens": [
+                47
+              ]
+            },
+            {
+              "completedUptimeNanoseconds": 1957505884425791,
+              "name": "reset",
+              "submittedUptimeNanoseconds": 1957505884404291,
+              "events": [],
+              "tokens": []
+            },
+            {
+              "completedUptimeNanoseconds": 1957505884620500,
+              "name": "cancel",
+              "submittedUptimeNanoseconds": 1957505884426875,
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957505884610500,
+                  "nativeElapsedSeconds": 0.000168125,
+                  "index": 0
+                }
+              ],
+              "tokens": [
+                47
+              ]
+            },
+            {
+              "completedUptimeNanoseconds": 1957505884708291,
+              "name": "resume",
+              "submittedUptimeNanoseconds": 1957505884622291,
+              "events": [
+                {
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957505884698500,
+                  "nativeElapsedSeconds": 5.9875e-05
+                }
+              ],
+              "tokens": [
+                47
+              ]
+            }
+          ],
+          "passed": true
+        },
+        "metal": {
+          "physicalDeviceQualified": false,
+          "passed": true,
+          "closed": true,
+          "backend": "metal",
+          "states": [
+            {
+              "reason": 0,
+              "history": 0,
+              "evaluated": 0,
+              "name": "load",
+              "pending": 0,
+              "saved": 0
+            },
+            {
+              "reason": 1,
+              "history": 6,
+              "evaluated": 5,
+              "name": "prompt",
+              "pending": 1,
+              "saved": 6
+            },
+            {
+              "reason": 1,
+              "history": 8,
+              "evaluated": 7,
+              "name": "continue",
+              "pending": 1,
+              "saved": 8
+            },
+            {
+              "name": "suspend",
+              "saved": 8,
+              "history": 0,
+              "evaluated": 0,
+              "pending": 0,
+              "reason": 0
+            },
+            {
+              "name": "replay-cancelled",
+              "saved": 8,
+              "history": 0,
+              "evaluated": 0,
+              "pending": 0,
+              "reason": 3
+            },
+            {
+              "name": "replay",
+              "saved": 8,
+              "history": 8,
+              "evaluated": 8,
+              "pending": 0,
+              "reason": 1
+            },
+            {
+              "name": "after-replay",
+              "saved": 9,
+              "history": 9,
+              "evaluated": 8,
+              "pending": 1,
+              "reason": 1
+            },
+            {
+              "name": "reset",
+              "saved": 0,
+              "history": 0,
+              "evaluated": 0,
+              "pending": 0,
+              "reason": 0
+            },
+            {
+              "name": "cancel",
+              "saved": 5,
+              "history": 5,
+              "evaluated": 4,
+              "pending": 1,
+              "reason": 3
+            },
+            {
+              "name": "resume",
+              "saved": 6,
+              "history": 6,
+              "evaluated": 5,
+              "pending": 1,
+              "reason": 1
+            }
+          ],
+          "released": true,
+          "timingChecks": [
+            {
+              "name": "load",
+              "completedUptimeNanoseconds": 1957505977888958,
+              "submittedUptimeNanoseconds": 1957505921093083,
+              "events": [],
+              "tokens": []
+            },
+            {
+              "name": "prompt",
+              "completedUptimeNanoseconds": 1957505981877291,
+              "submittedUptimeNanoseconds": 1957505977913375,
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957505981168791,
+                  "index": 0,
+                  "nativeElapsedSeconds": 0.003241875
+                },
+                {
+                  "callbackUptimeNanoseconds": 1957505981870916,
+                  "index": 1,
+                  "nativeElapsedSeconds": 0.003944459
+                }
+              ],
+              "tokens": [
+                47,
+                47
+              ]
+            },
+            {
+              "name": "continue",
+              "completedUptimeNanoseconds": 1957505983312708,
+              "submittedUptimeNanoseconds": 1957505981879041,
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957505982591541,
+                  "nativeElapsedSeconds": 0.000704667,
+                  "index": 0
+                },
+                {
+                  "callbackUptimeNanoseconds": 1957505983307125,
+                  "nativeElapsedSeconds": 0.00142025,
+                  "index": 1
+                }
+              ],
+              "tokens": [
+                47,
+                47
+              ]
+            },
+            {
+              "name": "suspend",
+              "completedUptimeNanoseconds": 1957505983367375,
+              "submittedUptimeNanoseconds": 1957505983314000,
+              "events": [],
+              "tokens": []
+            },
+            {
+              "name": "replay",
+              "completedUptimeNanoseconds": 1957505985785000,
+              "submittedUptimeNanoseconds": 1957505983472166,
+              "events": [],
+              "tokens": []
+            },
+            {
+              "name": "after-replay",
+              "completedUptimeNanoseconds": 1957505985796708,
+              "submittedUptimeNanoseconds": 1957505985786000,
+              "events": [
+                {
+                  "index": 0,
+                  "nativeElapsedSeconds": 5.42e-07,
+                  "callbackUptimeNanoseconds": 1957505985792458
+                }
+              ],
+              "tokens": [
+                47
+              ]
+            },
+            {
+              "name": "reset",
+              "completedUptimeNanoseconds": 1957505985806333,
+              "submittedUptimeNanoseconds": 1957505985796833,
+              "events": [],
+              "tokens": []
+            },
+            {
+              "name": "cancel",
+              "completedUptimeNanoseconds": 1957505987273875,
+              "submittedUptimeNanoseconds": 1957505985806625,
+              "events": [
+                {
+                  "index": 0,
+                  "nativeElapsedSeconds": 0.001458625,
+                  "callbackUptimeNanoseconds": 1957505987269166
+                }
+              ],
+              "tokens": [
+                47
+              ]
+            },
+            {
+              "name": "resume",
+              "completedUptimeNanoseconds": 1957505988008875,
+              "submittedUptimeNanoseconds": 1957505987274875,
+              "events": [
+                {
+                  "index": 0,
+                  "nativeElapsedSeconds": 0.000720791,
+                  "callbackUptimeNanoseconds": 1957505988004625
+                }
+              ],
+              "tokens": [
+                47
+              ]
+            }
+          ],
+          "tokens": [
+            47,
+            47,
+            47,
+            47
+          ]
+        },
+        "mlx": {
+          "passed": true,
+          "closed": true,
+          "backend": "metal-mlx",
+          "physicalDeviceQualified": false,
+          "tokens": [
+            47,
+            47,
+            47,
+            47
+          ],
+          "timingChecks": [
+            {
+              "submittedUptimeNanoseconds": 1957506045137291,
+              "completedUptimeNanoseconds": 1957506087415833,
+              "tokens": [],
+              "name": "load",
+              "events": []
+            },
+            {
+              "submittedUptimeNanoseconds": 1957506087428708,
+              "completedUptimeNanoseconds": 1957506091462583,
+              "tokens": [
+                47,
+                47
+              ],
+              "name": "prompt",
+              "events": [
+                {
+                  "index": 0,
+                  "nativeElapsedSeconds": 0.0032845,
+                  "callbackUptimeNanoseconds": 1957506090727541
+                },
+                {
+                  "index": 1,
+                  "nativeElapsedSeconds": 0.004012417,
+                  "callbackUptimeNanoseconds": 1957506091454791
+                }
+              ]
+            },
+            {
+              "submittedUptimeNanoseconds": 1957506091465333,
+              "completedUptimeNanoseconds": 1957506092959000,
+              "tokens": [
+                47,
+                47
+              ],
+              "name": "continue",
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957506092222625,
+                  "nativeElapsedSeconds": 0.00075125,
+                  "index": 0
+                },
+                {
+                  "callbackUptimeNanoseconds": 1957506092955416,
+                  "nativeElapsedSeconds": 0.001484084,
+                  "index": 1
+                }
+              ]
+            },
+            {
+              "submittedUptimeNanoseconds": 1957506092960458,
+              "completedUptimeNanoseconds": 1957506093014083,
+              "tokens": [],
+              "name": "suspend",
+              "events": []
+            },
+            {
+              "submittedUptimeNanoseconds": 1957506093112750,
+              "completedUptimeNanoseconds": 1957506095562208,
+              "tokens": [],
+              "name": "replay",
+              "events": []
+            },
+            {
+              "submittedUptimeNanoseconds": 1957506095563833,
+              "completedUptimeNanoseconds": 1957506095573416,
+              "tokens": [
+                47
+              ],
+              "name": "after-replay",
+              "events": [
+                {
+                  "nativeElapsedSeconds": 5e-07,
+                  "index": 0,
+                  "callbackUptimeNanoseconds": 1957506095569375
+                }
+              ]
+            },
+            {
+              "submittedUptimeNanoseconds": 1957506095573583,
+              "completedUptimeNanoseconds": 1957506095581333,
+              "tokens": [],
+              "name": "reset",
+              "events": []
+            },
+            {
+              "submittedUptimeNanoseconds": 1957506095581500,
+              "completedUptimeNanoseconds": 1957506097084000,
+              "tokens": [
+                47
+              ],
+              "name": "cancel",
+              "events": [
+                {
+                  "index": 0,
+                  "nativeElapsedSeconds": 0.001495167,
+                  "callbackUptimeNanoseconds": 1957506097080041
+                }
+              ]
+            },
+            {
+              "submittedUptimeNanoseconds": 1957506097085208,
+              "completedUptimeNanoseconds": 1957506097838958,
+              "tokens": [
+                47
+              ],
+              "name": "resume",
+              "events": [
+                {
+                  "callbackUptimeNanoseconds": 1957506097835875,
+                  "index": 0,
+                  "nativeElapsedSeconds": 0.000746959
+                }
+              ]
+            }
+          ],
+          "released": true,
+          "states": [
+            {
+              "history": 0,
+              "saved": 0,
+              "reason": 0,
+              "evaluated": 0,
+              "pending": 0,
+              "name": "load"
+            },
+            {
+              "history": 6,
+              "saved": 6,
+              "reason": 1,
+              "evaluated": 5,
+              "pending": 1,
+              "name": "prompt"
+            },
+            {
+              "history": 8,
+              "saved": 8,
+              "reason": 1,
+              "evaluated": 7,
+              "pending": 1,
+              "name": "continue"
+            },
+            {
+              "history": 0,
+              "saved": 8,
+              "reason": 0,
+              "evaluated": 0,
+              "pending": 0,
+              "name": "suspend"
+            },
+            {
+              "history": 0,
+              "saved": 8,
+              "reason": 3,
+              "evaluated": 0,
+              "pending": 0,
+              "name": "replay-cancelled"
+            },
+            {
+              "history": 8,
+              "saved": 8,
+              "reason": 1,
+              "evaluated": 8,
+              "pending": 0,
+              "name": "replay"
+            },
+            {
+              "history": 9,
+              "saved": 9,
+              "reason": 1,
+              "evaluated": 8,
+              "pending": 1,
+              "name": "after-replay"
+            },
+            {
+              "history": 0,
+              "saved": 0,
+              "reason": 0,
+              "evaluated": 0,
+              "pending": 0,
+              "name": "reset"
+            },
+            {
+              "history": 5,
+              "saved": 5,
+              "reason": 3,
+              "evaluated": 4,
+              "pending": 1,
+              "name": "cancel"
+            },
+            {
+              "history": 6,
+              "saved": 6,
+              "reason": 1,
+              "evaluated": 5,
+              "pending": 1,
+              "name": "resume"
+            }
+          ]
+        }
+      },
+      "primary_error": null,
+      "endpoint_errors": []
+    }
+  ],
+  "backend_results": [
+    "cpu",
+    "metal",
+    "metal-mlx"
+  ],
+  "states_per_backend": 10,
+  "expected_ids": [
+    47,
+    47,
+    47,
+    47
+  ],
+  "mlx_backend_rejections": 3,
+  "mlx_missing_artifact_recovery": true,
+  "raw_files": {
+    "path": "benchmarks/results/2026-10-22-native-mlx-apple-worker-raw-v1.json",
+    "sha256": "f271fc2fa37875fcc34b8855923afe28bc090b9365fa8daa28fbce384a2920ee",
+    "files": 37
+  },
+  "documentation_pins": {
+    "docs/mlx-implementation-plan.md": "101c6676f88ce6e6086d19455e1c7b00bedbaa91b6722fc6d1cd49491bc1737b",
+    "docs/mlx-apple-worker.md": "62321e27b5035ec04c9bcd0effc5d07f03ee431351aaefba544efc775ed92d2d",
+    "docs/improvements.md": "2d5a01c249f8921d22e97b05a3ef1ffb5a6b69a37a1c46b366f4297e02170814"
+  },
+  "review": {
+    "reviewer": "Astra",
+    "source_accepted": true,
+    "completed_evidence_accepted": true
+  }
+}

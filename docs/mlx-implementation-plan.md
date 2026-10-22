@@ -62,7 +62,9 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     and local subprocess generation/state/stop checks.
   - [x] Additive [native C bridge entry point](mlx-native-bridge.md), explicit
     session selection, Mac C/Rust lifetime/state checks and iOS Rust compilation.
-  - [ ] Real-checkpoint quality/memory/performance and native Apple app wiring.
+  - [x] Explicit [Apple UI/worker selection](mlx-apple-worker.md), Mac worker
+    state/replay/cleanup and strict iOS source compatibility checks.
+  - [ ] Real-checkpoint quality/memory/performance, linked app packaging and jobs.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,
