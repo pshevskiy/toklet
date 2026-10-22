@@ -43,7 +43,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   allocation. Preserve a scalar reconstruction/matvec oracle, handpacked cases,
   pinned upstream references and malformed-input/overflow checks. Floating-point
   quantization modes remain explicitly unsupported until separately implemented.
-- [ ] **M8.2 Local Qwen execution.** Add validated safetensors/index/config loading,
+- [x] **M8.2 Local Qwen execution.** Add validated safetensors/index/config loading,
   per-tensor quantization resolution, resident packed projections/embedding/tied
   output, independent tiny/reference parity, session/failure/memory checks and
   explicit CLI/native app selection. Start with supported Qwen semantics; do not
@@ -88,7 +88,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Strict Mac measurement admission](mlx-mac-measurement.md), complete clocks/state/memory/duration checks and one128/128 app trial; full matrix/confirmation/sustained and phone performance remain open.
   - [x] [Eight-bit app performance observations](mlx8-performance.md), all 128/512/1024 primary/confirmation workloads and 600-native-second sustained runs on Mac/iPhone; phone thermal slowdown remains explicit, with no comparative speedup or steady-rate claim.
   - [x] [Eight-bit physical state witnesses](mlx8-phone-state.md) on iPhone 14 Pro: actual 128/384 committed/pending prefill cancellation, exact resume and full1152 boundary/overflow/recovery.
-  - [ ] Actual physical MLX OS lifecycle qualification.
+  - [x] [Eight-bit actual physical MLX OS lifecycle](mlx8-phone-lifecycle.md), same live process across Settings/return, exact retained-prefix replay/reference, synthetic warning and natural close.
+  - M8.2 closes selected local Qwen execution only: the eight-bit snapshot passes the frozen numerical/quality/state/performance/lifecycle trials; the public four-bit snapshot remains rejected. Raw-ID diagnostics do not qualify downloaded chat templates, every Qwen configuration or wider M8 architecture/discovery/device scope.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,

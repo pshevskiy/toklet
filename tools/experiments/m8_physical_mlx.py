@@ -7,6 +7,7 @@ import plistlib
 import signal
 import sys
 import time
+import types
 
 import m7_apple_package as package
 import m7_apple_integration as integration
@@ -29,6 +30,23 @@ FORMAT='toklet-m8-physical-mlx-v1'
 READY_FORMAT='toklet-m8-physical-mlx-ready-v1'
 
 
+def shared_helper_bindings():
+    """Deterministic dependency closure rooted at this preparation module.
+
+    Caller-imported diagnostic owners stay in their own full source guards, but
+    do not become mandatory dependencies of a generic transfer/storage proof.
+    """
+    pending=[sys.modules[__name__]];found={}
+    while pending:
+        module=pending.pop();name=getattr(module,'__file__',None)
+        if not name or not name.endswith('.py'):continue
+        path=Path(name).resolve()
+        if not path.is_relative_to(ROOT/'tools') or path in found:continue
+        found[path]=package.sha(path)
+        pending.extend(value for value in vars(module).values() if isinstance(value,types.ModuleType))
+    return {str(path.relative_to(ROOT)):found[path] for path in sorted(found)}
+
+
 def capture(path,pin,maximum=16*1024**2):
     with path.open('rb') as stream:raw=stream.read(maximum+1)
     if len(raw)>maximum or package.hashlib.sha256(raw).hexdigest()!=pin:raise ValueError('Consumed metadata differs: '+str(path))
@@ -45,7 +63,7 @@ def admitted_stage(folder,expected):
     record=metadata(folder/'staged.json',expected)
     mode,config,host,pins,_=jobs.job(record['model'],record['workload'])
     if (record['format']!='toklet-m8-mlx-staged-job-v1' or record['passed'] is not True
-        or mode not in ['measurement','quality','tasks','state'] or record['mode']!=mode or jobs.encoded(record['config'])!=jobs.encoded(config) or record['host']!=host
+        or mode not in ['measurement','quality','tasks','state','lifecycle'] or record['mode']!=mode or jobs.encoded(record['config'])!=jobs.encoded(config) or record['host']!=host
         or any(record[key] is not False for key in ['full_quality_qualified','physical_device_qualified','performance_qualified'])):
         raise ValueError('Exact supported staged MLX job required')
     for name,pin in pins.items():
@@ -66,6 +84,7 @@ def checked_console(text,record,signed):
     config=record['config'];mode=record['mode']
     if mode=='measurement':return measurement.validate_console(text,config,signed)
     if mode=='state':return state.validate_console(text,config,signed)
+    if mode=='lifecycle':raise ValueError('Lifecycle console requires the same-process round-trip controller')
     base=ROOT/record['transfer_root']
     if mode=='quality':
         raw=jobs.captured(str((base/config['tokensFile']).relative_to(ROOT)),config['tokensSHA256'],40004)
@@ -173,12 +192,14 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
             profile_buffers.append(capture(path,pin))
             merge({str(path.relative_to(ROOT)):pin})
         profile=physical.admit_profile(plistlib.loads(profile_buffers[0]),plistlib.loads(profile_buffers[1]),profile_buffers[2].decode(),selected)
+        merge(shared_helper_bindings());common=dict(pins)
         helpers={Path(module.__file__).resolve() for module in list(sys.modules.values()) if getattr(module,'__file__',None)
                  and str(module.__file__).endswith('.py') and Path(module.__file__).resolve().is_relative_to(ROOT/'tools')}
         helpers.add(Path(__file__).resolve());merge({str(path.relative_to(ROOT)):package.sha(path) for path in helpers})
-        common=dict(pins)
         record,extra,payload,total=admitted_stage(staged,staged_sha);merge(extra);config=record['config']
         record=dict(record,transfer_root=str((staged/'transfer').relative_to(ROOT)))
+        if record['mode']=='lifecycle' and not prepare_only:
+            raise ValueError('Lifecycle execution requires the same-process round-trip controller')
         context=dict(prepared_receipt=dict(path=str((PREPARED/'integration.json').relative_to(ROOT)),sha256=PREPARED_SHA),signed_bundle=signed,required_bindings=common,remote=remote,selected=selected)
         if record['model']!='tiny' and not ready and not proof:raise ValueError('Real copy requires fresh same-app storage proof')
         if record['model']=='tiny' and proof:raise ValueError('Tiny transfer needs no real-model storage proof')

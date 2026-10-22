@@ -29,6 +29,13 @@ class Checks(unittest.TestCase):
  def test_actual_os_direct_and_inactive_return(self):
   for returned in (False,True):
    c,r=fixture(returned);self.assertIs(p.validate_result(r,c),r);self.assertEqual(p.validate_console(text(r),c,{})['result'],r)
+ def test_backend_selection_is_explicit_and_legacy_default_stays_strict(self):
+  c,r=fixture();r['backend']='metal-mlx'
+  with self.assertRaises(ValueError):p.validate_result(r,c)
+  self.assertIs(p.validate_result(r,c,backend='metal-mlx'),r)
+  self.assertEqual(p.validate_console(text(r),c,{},backend='metal-mlx')['result'],r)
+  for backend in ('cpu','unknown',False):
+   with self.assertRaises(ValueError):p.validate_result(r,c,backend=backend)
  def test_system_provenance_cannot_be_synthetic(self):
   def change(c,r):
    r['trace']['events'][2]['origin']='syntheticCheck';r['roundTrip']['inactive']=copy.deepcopy(r['trace']['events'][2])

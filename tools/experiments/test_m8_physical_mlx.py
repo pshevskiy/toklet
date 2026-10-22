@@ -133,6 +133,17 @@ class Transport(unittest.TestCase):
         self.assertFalse(result['passed']);self.assertIn('state witness rejected',result['primary_error'])
         self.assertIsNone(result['checked']);self.assertTrue(result['remote_cleanup'][-1]['absent'])
 
+    def test_lifecycle_is_transfer_only_in_the_synchronous_runner(self):
+        _,pin=self.staged();record,extra,payload,total=p.admitted_stage(self.stage,pin)
+        record=dict(record,mode='lifecycle')
+        with patch.object(p,'admitted_stage',return_value=(record,extra,payload,total)):
+            result=p.run(self.stage,pin,self.root/'blocked-lifecycle')
+            self.assertFalse(result['passed']);self.assertIn('same-process round-trip',result['primary_error'])
+            self.assertEqual(self.labels,[])
+            prepared=p.run(self.stage,pin,self.root/'lifecycle-ready',prepare_only=True)
+        self.assertTrue(prepared['passed']);self.assertIsNone(prepared['checked']);self.assertNotIn('measurement',self.labels)
+        with self.assertRaisesRegex(ValueError,'same-process round-trip'):p.checked_console('',record,self.signed)
+
     def test_source_mutation_cannot_block_exact_owned_cleanup(self):
         _,pin=self.staged();self.mode='mutation'
         result=p.run(self.stage,pin,self.root/'mutation')

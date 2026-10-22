@@ -1,0 +1,32 @@
+# Native MLX scene interruption on iPhone 14 Pro
+
+22 October 2026; base revision `f30445d`. The selected public eight-bit Qwen0.5B checkpoint completes an actual Settings-and-return round trip on the wired iPhone 14 Pro (`iPhone15,2`), iOS 27.0.1, using the existing signed app and native Rust/Metal package. The test interrupts active generation, retains the exact valid token prefix, and resumes through replay after the app returns to the foreground.
+
+The [explicit lifecycle recipe](../tools/experiments/m8_mlx_jobs.py) uses the original frozen 512-token prompt, capacity 1152, chunk 128, maximum 128 and vocabulary 151936. The generic [phone runner](../tools/experiments/m8_physical_mlx.py) prepares this job without launching it. The [separate lifecycle owner](../tools/experiments/m8_physical_lifecycle.py) requires a fresh same-app storage proof and transfer receipt, verifies the installed app, and refuses a preexisting app process. It never uses `--terminate-existing`. The legacy validator retains its original `metal` default and requires explicit selection to admit `metal-mlx` evidence.
+
+The mandatory proof dependency set follows the generic preparation module's actual dependencies, independently of which diagnostic owner the caller imports. Every invocation still guards its full imported source closure. A composed regression produces tiny READY, tiny proof and lifecycle READY without the lifecycle owner present, then admits the actual saved storage/transfer evidence after importing that owner.
+
+| Physical witness | Observed result |
+| --- | --- |
+| Active work | A live request reaches the active-generation READY boundary before OS activation. |
+| Actual scene transition | Settings activation produces actual inactive/background callbacks; returning activates the original harness process. Raw process queries and activation results retain the same PID. |
+| Retained prefix | Ten sampled IDs extend the original 512-token prompt to an exact 522-token interrupted prefix. |
+| Recovery | Replayed continuation agrees exactly with fresh reference IDs. Saved-prefix and worker ownership checks pass throughout the 19-event trace. |
+| Warning handling | An explicit synthetic warning exercises cleanup/reload. Actual UIKit warning delivery is not claimed. |
+| Completion | Close is acknowledged, resources are released, and both initial and final process observations prove natural absence without signals. |
+
+Native whole-process lifetime peak is **663,799,936 bytes**, with nominal thermal endpoints and Low Power Mode off. This diagnostic peak is separate from the prior performance measurements and is not a permanent iOS memory guarantee. No Rust, shader, Swift, native archive, signed app, numerical gate or backend default changes in this task.
+
+The host owner drains and reaps its original launcher before remote cleanup, preserving original command, capture and cleanup causes. It records the exact serialized private ledger bytes, keeps the originally consumed log hashes, runs a final closure guard, and records late causes in a separate immutable journal. A forced late-log replacement regression must fail without rebinding that log or rewriting the original ledger.
+
+All **137 related Python methods** pass across ten suites. The current four-method driver regression run and 16 saved-data auditor methods pass, totaling 157 current portable methods. Two earlier four-method driver packets remain retained separately. Rust **1.90.0** formatting, strict all-target Metal Clippy and ordinary Metal-feature tests pass: **148 passed, 74 explicitly ignored**. Ordinary tests do not substitute for the collected physical lifecycle trace.
+
+The first collection attempt stopped at the host boot-session query because the sandbox denied `kern.bootsessionuuid`. It issued no device command. That failed receipt and original logs remain retained. A fresh second attempt completes all four stages. Astra then finds that device-details responses need an explicit successful outcome and exact command type before admission. The actual responses had both fields, but that successful run remains superseded under exact frozen copies of its collector and test. The strengthened guard rejects failed/wrong-kind details at either endpoint; a fresh third run, with new passing checks, supplies the qualified evidence. This final run has 44 clean transport commands (40 device operations/four boot queries), eight natural absences and no signals. No acceptance gate changes.
+
+Two early mock-only failures were visible in tool output but their original pre-fix source and logs were not captured as files. The fixture incorrectly made host-launcher waiting erase a separately late-launched remote process. It was corrected before passing checks; unavailable originals are disclosed rather than reconstructed. The superseded pre-hardening auditor receipt likewise receives no current-evidence credit.
+
+The [qualification](../benchmarks/results/2026-10-22-native-mlx8-physical-lifecycle-v1.json) and [raw inventory](../benchmarks/results/2026-10-22-native-mlx8-physical-lifecycle-raw-v1.json) retain 1,849 bindings, 259 raw files and 132 current source copies. They independently bind the canonical jobs, exact payload inventories, prepared/signed identity, storage freshness, transfer lineage, actual command arguments and process/activation results. Replay checks the full scene trace, exact token-prefix/reference behavior, strict host-phase clocks, natural completion and original/late private failure ledgers. Private device/team/installed-path identifiers and original command logs remain local and hash-bound.
+
+Retain this selected checkpoint's physical scene observation. Real memory-warning delivery, jetsam recovery, OS-suspended cleanup, energy, chat-template compatibility, broader native architectures and discovery/downloads remain unqualified. The rejected public four-bit candidate and prior M0–M7 scopes remain unchanged.
+
+Astra accepted the code, completed evidence and documentation with no remaining blockers. Independent verification covers all 1,849 bindings, 259 raw entries, 132 source copies, 51 unchanged numerical/Swift/Cargo sources, exact historical mappings and both strict streams. All transport/storage/process/activation/launch/ledger replays, 157 current portable methods, Rust totals, privacy across 265 public files against nine actual identity/signing/path tokens, 269 local links and whitespace pass. M8.2 closes only the stated selected local-Qwen scope; M8.3–M8.5 remain open.

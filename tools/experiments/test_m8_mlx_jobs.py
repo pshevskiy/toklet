@@ -68,6 +68,14 @@ class Jobs(unittest.TestCase):
                 for workload in ['state-512','measurement-512']:
                     with self.assertRaises(ValueError):jobs.job('qwen8',workload)
 
+    def test_lifecycle_uses_the_same_native_schema_with_explicit_operation(self):
+        for model in ['qwen','qwen8']:
+            mode,c,host,pins,payloads=jobs.job(model,'lifecycle-512')
+            _,state,state_host,state_pins,state_payloads=jobs.job(model,'state-512')
+            self.assertEqual(mode,'lifecycle');self.assertEqual(jobs.encoded(c),jobs.encoded(state))
+            self.assertEqual((host,pins,payloads),(state_host,state_pins,state_payloads))
+        with self.assertRaises(ValueError):jobs.job('tiny','lifecycle-512')
+
     def test_full_quality_scores_every_original_target_once(self):
         _,config,_,pins,payloads=jobs.job('qwen','quality-full')
         self.assertEqual(config['targets'],10000);self.assertEqual(config['blockSize'],1024)

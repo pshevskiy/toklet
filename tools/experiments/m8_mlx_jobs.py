@@ -20,7 +20,7 @@ TASKS_SHA = 'b096b8eb40960f38ae0e9f3268484eed10bf2a6bebbc981a45a061ee461aab7c'
 TINY = {'config.json':'0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e',
         'model.safetensors':'ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be'}
 WORKLOADS = ['measurement-short','measurement-128','measurement-512','measurement-1024','measurement-sustained',
-             'quality-short','quality-full','tasks-short','tasks-full','state-component','state-512']
+             'quality-short','quality-full','tasks-short','tasks-full','state-component','state-512','lifecycle-512']
 
 
 def sha(path):
@@ -98,8 +98,8 @@ def job(model, workload):
         data=dict(version=1,vocabulary=64 if model=='tiny' else 151936,stops=[62,63] if model=='tiny' else [151645,151643],cases=cases)
         raw=encoded(data);digest=hashlib.sha256(raw).hexdigest();name='M8Tasks/'+digest+'/tasks.json';payloads[name]=raw
         config.update(capacity=32 if model=='tiny' else 562,chunk=3 if model=='tiny' else 128,tasksFile=name,tasksSHA256=digest,caseCount=len(cases))
-    elif workload=='state-512':
-        mode='state'
+    elif workload in ['state-512','lifecycle-512']:
+        mode='state' if workload=='state-512' else 'lifecycle'
         config.update(capacity=1152,chunk=128,prompt=frozen_prompt(512,pins),maximum=128,vocabulary=151936)
     else:
         mode='state-component'

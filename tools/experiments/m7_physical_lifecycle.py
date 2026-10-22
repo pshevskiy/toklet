@@ -23,7 +23,7 @@ def stage(config,host,output,model,workload):
  if config!=expected:raise ValueError('Frozen lifecycle config differs')
  return m.stage(config,host,output)
 
-def validate_console(text,config,signed):
+def validate_console(text,config,signed,*,backend='metal'):
  markers={'TOKLET_INSTALLATION_JSON=':'proof','TOKLET_LIFECYCLE_READY_JSON=':'ready','TOKLET_LIFECYCLE_JSON=':'result'};rows=[]
  for line in text.splitlines():
   for prefix,kind in markers.items():
@@ -33,14 +33,15 @@ def validate_console(text,config,signed):
  if [k for k,_ in rows]!=['proof','ready','proof','result']:raise ValueError('Exact installed/READY/lifecycle stream required')
  proofs=[rows[0][1],rows[2][1]];result=rows[3][1];ready=rows[1][1]
  if any(p['simulator'] is not False or p['files']!=signed for p in proofs) or [p['phase'] for p in proofs]!=['before','after']:raise ValueError('Installed lifecycle bundle proof differs')
- validate_result(result,config)
+ validate_result(result,config,backend=backend)
  if ready!=result['ready']:raise ValueError('Consumed READY differs from final result')
  return dict(result=result,ready=ready,installed_proofs=proofs)
 
-def validate_result(r,c):
+def validate_result(r,c,*,backend='metal'):
+ if backend not in ('metal','metal-mlx'):raise ValueError('Explicit physical Metal backend required')
  if (r['passed'] is not True or r.get('error') is not None or r['cleanupErrors'] or r['endpointErrors']
      or r['closed'] is not True or r['released'] is not True or any(r[k] is not False for k in ('actualOSLifecycleQualified','physicalDeviceQualified','m7Complete'))
-     or r['backend']!='metal' or r['filesBefore']!=c['files'] or r['filesAfter']!=c['files']
+     or r['backend']!=backend or r['filesBefore']!=c['files'] or r['filesAfter']!=c['files']
      or type(r['loadedAdmittedBytes']) is not int or not 0<r['loadedAdmittedBytes']<=c['numericalBudget']):raise ValueError('Complete closed lifecycle outcome required')
  for environment in (r['environmentBefore'],r['environmentAfter']):
   if not m.uint(environment['applicationState'],32) or environment['applicationState']!=0 or type(environment['lowPowerMode']) is not bool or not m.uint(environment['thermalState'],32) or environment['thermalState']>3:raise ValueError('Foreground lifecycle endpoints required')
