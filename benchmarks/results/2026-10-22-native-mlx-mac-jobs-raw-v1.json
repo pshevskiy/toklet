@@ -1,0 +1,421 @@
+{
+  "format": "toklet-m8-mac-job-transport-raw-v1",
+  "files": {
+    "artifacts/m8-mac-job-source-checks-v1/checks.json": {
+      "bytes": 6582,
+      "sha256": "f42a247230edacb038e173fb47cd5c302d336d8c579b279906216fdea5b2ea52"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/checks.py": {
+      "bytes": 1861,
+      "sha256": "a8eeea0fc8204a4cf0b4e0b21448303b3d0420b7888652890c5f2e3610b08265"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/iphoneos-sdk.stderr": {
+      "bytes": 908,
+      "sha256": "79c8084395c06735161219753ee438de1db2a64d8a8f555b64a6d2644435cc9e"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/iphoneos-sdk.stdout": {
+      "bytes": 103,
+      "sha256": "b2591e080c0bf70d321e9b24dce762b470ead1f9e54887c13737c1565c183bd2"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/iphoneos-typecheck.stderr": {
+      "bytes": 108,
+      "sha256": "af744cece3f0d3b02084d976964ff010bf6cdc451aae366d0b2afbd477be0688"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/iphoneos-typecheck.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/macosx-sdk.stderr": {
+      "bytes": 108,
+      "sha256": "af744cece3f0d3b02084d976964ff010bf6cdc451aae366d0b2afbd477be0688"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/macosx-sdk.stdout": {
+      "bytes": 99,
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/macosx-typecheck.stderr": {
+      "bytes": 108,
+      "sha256": "af744cece3f0d3b02084d976964ff010bf6cdc451aae366d0b2afbd477be0688"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/macosx-typecheck.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/portable.stderr": {
+      "bytes": 1260,
+      "sha256": "9e93619cf39705736cc06e8619813cb29ac1f919ec36babe6c703e3c56f8d5e3"
+    },
+    "artifacts/m8-mac-job-source-checks-v1/portable.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/checks.json": {
+      "bytes": 133203,
+      "sha256": "7371a05b340fe55986090c8c65dafd77111ef9d139ec95f2a9c1f88293c8ce56"
+    },
+    "artifacts/m8-mac-job-transport-v1/checks.py": {
+      "bytes": 10575,
+      "sha256": "496d8d581e0ef8db007e52b5f0993f180b16dc86ae60490290eef2ff44ebcd2f"
+    },
+    "artifacts/m8-mac-job-transport-v1/compile.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/compile.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/ios-sdk.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/ios-sdk.stdout": {
+      "bytes": 103,
+      "sha256": "b2591e080c0bf70d321e9b24dce762b470ead1f9e54887c13737c1565c183bd2"
+    },
+    "artifacts/m8-mac-job-transport-v1/ios-typecheck.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/ios-typecheck.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/mac-sdk.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/mac-sdk.stdout": {
+      "bytes": 99,
+      "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+    },
+    "artifacts/m8-mac-job-transport-v1/mlx-real": {
+      "bytes": 4440824,
+      "sha256": "189530c8a6b4af1b9efb6c47a6c1ae2fba843fa74b5762fa857ae77702c38579"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/staged.json": {
+      "bytes": 3143,
+      "sha256": "5fae7b1377f55e0ab268aaec8a9614dcf0981f5f3dfefe589155c8512e3f119e"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/transfer/M7Jobs/7c25baf35e8b77b83376b831c4afee906071d59f2bca87b6dd6b344af53fa4b1.json": {
+      "bytes": 640,
+      "sha256": "7c25baf35e8b77b83376b831c4afee906071d59f2bca87b6dd6b344af53fa4b1"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/transfer/M8Inputs/qwen/Model/config.json": {
+      "bytes": 783,
+      "sha256": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/transfer/M8Inputs/qwen/Model/model.safetensors": {
+      "bytes": 278064920,
+      "sha256": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/transfer/M8Inputs/qwen/Model/model.safetensors.index.json": {
+      "bytes": 44209,
+      "sha256": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-measurement-short.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-measurement-short.stdout": {
+      "bytes": 12537,
+      "sha256": "709d31e3ecb9ef6543c0ab2fda0e7957de2e350cf2cb2075d19d12fb5f4963ef"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-quality-short/staged.json": {
+      "bytes": 3459,
+      "sha256": "ca921bb286104cbc26ec476dfa6f1c311488c5ffe9f50c2f8c894541570b3cba"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M7Jobs/4f2ad056e4672c6c930867b66e05eb3680c44fccb8fa81e9ce934e8e35a24da4.json": {
+      "bytes": 718,
+      "sha256": "4f2ad056e4672c6c930867b66e05eb3680c44fccb8fa81e9ce934e8e35a24da4"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M8Corpora/fc6b7587685a5d482c96a7bdfb7fe5117be2bd02663d2774917a2c7c374da009/tokens.u32le": {
+      "bytes": 16,
+      "sha256": "fc6b7587685a5d482c96a7bdfb7fe5117be2bd02663d2774917a2c7c374da009"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M8Inputs/qwen/Model/config.json": {
+      "bytes": 783,
+      "sha256": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M8Inputs/qwen/Model/model.safetensors": {
+      "bytes": 278064920,
+      "sha256": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M8Inputs/qwen/Model/model.safetensors.index.json": {
+      "bytes": 44209,
+      "sha256": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-quality-short.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-quality-short.stdout": {
+      "bytes": 3624,
+      "sha256": "784c74bb64cba1d4a8cd0b8f61b5f62e3c245df0879ffdc75974fc1b3a8a394d"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-state-component/staged.json": {
+      "bytes": 3023,
+      "sha256": "3b6be470f9e27db28225b2cafdb778178a6243e32bdae6a9e08c85fa36a0a8e2"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-state-component/transfer/M7Jobs/d4ad3975630f5e5464c8091bea3faad2a62a692b928fdd7d7f5dcf44ebae68ad.json": {
+      "bytes": 569,
+      "sha256": "d4ad3975630f5e5464c8091bea3faad2a62a692b928fdd7d7f5dcf44ebae68ad"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-state-component/transfer/M8Inputs/qwen/Model/config.json": {
+      "bytes": 783,
+      "sha256": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-state-component/transfer/M8Inputs/qwen/Model/model.safetensors": {
+      "bytes": 278064920,
+      "sha256": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-state-component/transfer/M8Inputs/qwen/Model/model.safetensors.index.json": {
+      "bytes": 44209,
+      "sha256": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-state-component.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-state-component.stdout": {
+      "bytes": 17193,
+      "sha256": "66efe94d04f9eb0ac262205e1b6b3f0ce901961024847f012be4db06ab4025ad"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/staged.json": {
+      "bytes": 3422,
+      "sha256": "2bf1a31793891ed9bbe33dc2936322d988c7f11ed490ee55bc666b657bcc693a"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M7Jobs/81c257a494733ed8972fb3f3cc241dd5b09b3c45065fed9dfaa416a22300f2b1.json": {
+      "bytes": 704,
+      "sha256": "81c257a494733ed8972fb3f3cc241dd5b09b3c45065fed9dfaa416a22300f2b1"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M8Inputs/qwen/Model/config.json": {
+      "bytes": 783,
+      "sha256": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M8Inputs/qwen/Model/model.safetensors": {
+      "bytes": 278064920,
+      "sha256": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M8Inputs/qwen/Model/model.safetensors.index.json": {
+      "bytes": 44209,
+      "sha256": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M8Tasks/f9a797bd638f9eac47a5c0696db08d2068a852b3e95bb7aca4c327eff9d7570f/tasks.json": {
+      "bytes": 851,
+      "sha256": "f9a797bd638f9eac47a5c0696db08d2068a852b3e95bb7aca4c327eff9d7570f"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-tasks-short.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/qwen-tasks-short.stdout": {
+      "bytes": 3799,
+      "sha256": "e032b94118be498f909fe4faa23fe3018fcc5108d9bfddcde28666ef65f7b27c"
+    },
+    "artifacts/m8-mac-job-transport-v1/reject-arguments.stderr": {
+      "bytes": 190,
+      "sha256": "898185d666033c7d0fa877de7d9bc526bf651bafbd22213fbdbbfbd1dba21d78"
+    },
+    "artifacts/m8-mac-job-transport-v1/reject-arguments.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/reject-job-sha.stderr": {
+      "bytes": 157,
+      "sha256": "667f2786a7e99ce5527eca4cfd611337a0ffa660bdee7eabbb71c186e42dfeba"
+    },
+    "artifacts/m8-mac-job-transport-v1/reject-job-sha.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/reject-legacy-job.stderr": {
+      "bytes": 170,
+      "sha256": "b7155657189a15c1cb9f0ca5494cd7931e927e8bcf68a89fb8f63553f0bd52ec"
+    },
+    "artifacts/m8-mac-job-transport-v1/reject-legacy-job.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/reject-mode.stderr": {
+      "bytes": 150,
+      "sha256": "7ba648bf0bea91dd7fd4180da5074cd801abe1432b1bdb33d372ed8105bd14e6"
+    },
+    "artifacts/m8-mac-job-transport-v1/reject-mode.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/source/apple/tests/swift/MLXRealMain.swift": {
+      "bytes": 3492,
+      "sha256": "3cc5555cbacd8e43a0d0e9b0c65a6d3e2dace8be456a298e9ef57dc5757d0c18"
+    },
+    "artifacts/m8-mac-job-transport-v1/source/tools/experiments/m7_physical_tasks.py": {
+      "bytes": 17316,
+      "sha256": "08e5b27659b54587c042c517d52d102b3bbebc1231c2f2a1bd5fdfa2d4003ef0"
+    },
+    "artifacts/m8-mac-job-transport-v1/source/tools/experiments/m8_mlx_jobs.py": {
+      "bytes": 8380,
+      "sha256": "f6fee10b0d7a370892b389873f33b2df754716ca809ee9e2af5864038b647570"
+    },
+    "artifacts/m8-mac-job-transport-v1/source/tools/experiments/test_m7_physical_tasks.py": {
+      "bytes": 20267,
+      "sha256": "b27234a33407c45b8ff03a37c557e69a6c1ebe99c523c9024a24b8fd20531e18"
+    },
+    "artifacts/m8-mac-job-transport-v1/source/tools/experiments/test_m8_mlx_jobs.py": {
+      "bytes": 7468,
+      "sha256": "b74c38554777ab9b786442acc811c32024843820f3210c0fc7c8c5021aad3613"
+    },
+    "artifacts/m8-mac-job-transport-v1/test_m7_native_state_check.py.stderr": {
+      "bytes": 1718,
+      "sha256": "b75bb64d6b809f9dc1e06ade54dfdc788236f0e96d7c3c314a3b21f7f668cfea"
+    },
+    "artifacts/m8-mac-job-transport-v1/test_m7_native_state_check.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/test_m7_physical_tasks.py.stderr": {
+      "bytes": 2661,
+      "sha256": "7cd585ee02a44e7dab7301a5cf5180483d074959dc42f9987d75a526c18332bc"
+    },
+    "artifacts/m8-mac-job-transport-v1/test_m7_physical_tasks.py.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-mac-job-transport-v1/test_m8_mlx_jobs.py.stderr": {
+      "bytes": 1260,
+      "sha256": "79e194be9fffdb128390490953cc3177cfa805325c2418eb47a9813b1092e78c"
+    },
+    "artifacts/m8-mac-job-transport-v1/test_m8_mlx_jobs.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/staged.json": {
+      "bytes": 2490,
+      "sha256": "0ae7d86bc934898eaf5e0f8ff903345576d7e610efa8585867dadaced14b4d5e"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer/M7Jobs/5492f3583852d4a80f89df10359f04a1a5722e49e43a2c23eac34f389651da06.json": {
+      "bytes": 505,
+      "sha256": "5492f3583852d4a80f89df10359f04a1a5722e49e43a2c23eac34f389651da06"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer/M7Jobs/a166bde87dda0529771880af251628d73e0662a8bdeeb383a307d5e06931372a.json": {
+      "bytes": 494,
+      "sha256": "a166bde87dda0529771880af251628d73e0662a8bdeeb383a307d5e06931372a"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer/M8Inputs/tiny/Model/config.json": {
+      "bytes": 587,
+      "sha256": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer/M8Inputs/tiny/Model/model.safetensors": {
+      "bytes": 25873,
+      "sha256": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-measurement-short.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-measurement-short.stdout": {
+      "bytes": 12134,
+      "sha256": "ca1446c947784e3c975982e0c3413db6a1dd7b565713019aaa20cb6636367389"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-quality-short/staged.json": {
+      "bytes": 2703,
+      "sha256": "54d3aa0bbdb9011d80f0813b2a24564cfd58bdf78a8538549d36056820a9ec22"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-quality-short/transfer/M7Jobs/99f9502376d1a228aeead96f55818e830bc5cbb4831c31b05f6e7aaa28fe53ab.json": {
+      "bytes": 598,
+      "sha256": "99f9502376d1a228aeead96f55818e830bc5cbb4831c31b05f6e7aaa28fe53ab"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-quality-short/transfer/M8Corpora/6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298/tokens.u32le": {
+      "bytes": 16,
+      "sha256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-quality-short/transfer/M8Inputs/tiny/Model/config.json": {
+      "bytes": 587,
+      "sha256": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-quality-short/transfer/M8Inputs/tiny/Model/model.safetensors": {
+      "bytes": 25873,
+      "sha256": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-quality-short.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-quality-short.stdout": {
+      "bytes": 3330,
+      "sha256": "485e8d423beb7045b8879da6b0840636371fcd45168155eec6dfa4d9c7a8db64"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-state-component/staged.json": {
+      "bytes": 2373,
+      "sha256": "c2bdf6d0d0653e0341c57d4e2a25697a67d5bc6841a8e4933ef3f3013e134993"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-state-component/transfer/M7Jobs/89da7a896386cf060c34c2ef7ae15b5136f29f4e1642c171ea4cae42e7564df0.json": {
+      "bytes": 437,
+      "sha256": "89da7a896386cf060c34c2ef7ae15b5136f29f4e1642c171ea4cae42e7564df0"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-state-component/transfer/M8Inputs/tiny/Model/config.json": {
+      "bytes": 587,
+      "sha256": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-state-component/transfer/M8Inputs/tiny/Model/model.safetensors": {
+      "bytes": 25873,
+      "sha256": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-state-component.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-state-component.stdout": {
+      "bytes": 15960,
+      "sha256": "b6a76aa351b0a39408d6022fadb4cf841d521b06d4c8836f24c28d766039d467"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/staged.json": {
+      "bytes": 2673,
+      "sha256": "e2f14bd9d2fb5bc9563dbf85ebc3fd6ac824f5384eac7f0f6628b2b25c0b237d"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/transfer/M7Jobs/fe823d1f874407c659a4d1ecff0c5edd3c49d2b8bc875a959426ac4bcf22a274.json": {
+      "bytes": 581,
+      "sha256": "fe823d1f874407c659a4d1ecff0c5edd3c49d2b8bc875a959426ac4bcf22a274"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/transfer/M8Inputs/tiny/Model/config.json": {
+      "bytes": 587,
+      "sha256": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/transfer/M8Inputs/tiny/Model/model.safetensors": {
+      "bytes": 25873,
+      "sha256": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/transfer/M8Tasks/76a55518e1b794ed663b3072e2c5c960fd4105213a9bf5ef5e7f69056608960e/tasks.json": {
+      "bytes": 161,
+      "sha256": "76a55518e1b794ed663b3072e2c5c960fd4105213a9bf5ef5e7f69056608960e"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-tasks-short.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mac-job-transport-v1/tiny-tasks-short.stdout": {
+      "bytes": 4105,
+      "sha256": "347e9356e92ff1c1463b4612ae5fa46b62d7cdca8dc1430fff5f563e0bb923ac"
+    },
+    "artifacts/m8-phone-existing-reset-v1/preflight.json": {
+      "bytes": 754,
+      "sha256": "482b19d992778a02cd50b0b6f27e84782e3e127b16f007043bc2841aee8a0a37"
+    },
+    "artifacts/m8-phone-existing-reset-v1/reset.json": {
+      "bytes": 5721,
+      "sha256": "8e8cbebfb328f88d129eee35da3c06f252d7856c2c7af92f261d1e7865eab6ab"
+    },
+    "artifacts/m8-phone-existing-reset-v1/reset.py": {
+      "bytes": 3087,
+      "sha256": "42d2cd9858e4f1e1943d5c4760fb02c002408bfad2dd1745c5eee5043d577359"
+    },
+    "artifacts/m8-phone-prepared-v1/integration.json": {
+      "bytes": 13672,
+      "sha256": "07bac7a7c900c272a5b5273c650cd79ac7a35e94b636a5f4036440a49c99316d"
+    },
+    "artifacts/m8-phone-prepared-v2/integration.json": {
+      "bytes": 23647,
+      "sha256": "30a0db2db2f12edfd335424b9b7c58694bd486494b3a1e3d1d64099a4bbb0c88"
+    }
+  }
+}

@@ -83,7 +83,15 @@ def validate_task_listing(data,device,config):
         or measurement.package.hashlib.sha256(raw).hexdigest()!=config['tasksSHA256']):raise ValueError('Copied task inventory/bytes differ')
 
 
-def check_console(text,config,signed,task_set):
+def check_console(text,config,signed,task_set,*,require_installation=True):
+    if type(require_installation) is not bool:raise ValueError('Explicit installation-proof scope required')
+    if config.get('version')==2:
+        if config.get('mlx') is not True or config.get('metal') is not True or config.get('packedFolder')!='':
+            raise ValueError('Explicit MLX backend contract differs')
+        backend='metal-mlx'
+    else:
+        if config.get('version')!=1 or 'mlx' in config:raise ValueError('Legacy backend contract differs')
+        backend='metal' if config['metal'] else 'cpu'
     uint=measurement.uint;number=measurement.nonnegative;cases=task_set['cases'];vocabulary=task_set['vocabulary'];stops=task_set['stops']
     if (not uint(config['caseCount'],32) or not 1<=config['caseCount']<=100 or len(cases)!=config['caseCount']
         or set(task_set)!={'version','vocabulary','stops','cases'} or not uint(task_set['version'],32) or task_set['version']!=1 or not uint(vocabulary,32) or vocabulary==0 or not 1<=len(stops)<=2
@@ -106,11 +114,20 @@ def check_console(text,config,signed,task_set):
         for prefix,kind in prefixes.items():
             if line.startswith(prefix):events.append((kind,json.loads(line[len(prefix):])));matched=True;break
         if line.startswith('TOKLET_') and not matched:raise ValueError('Unexpected task/error marker')
-    if len(events)<4 or events[0][0]!='proof' or [e[0] for e in events[-2:]]!=['proof','result']:raise ValueError('Incomplete task collection')
-    proofs=[events[0][1],events[-2][1]];result=events[-1][1]
-    if ([p['phase'] for p in proofs]!=['before','after'] or any(p['simulator'] is not False or p['files']!=signed for p in proofs)
-        or result['passed'] is not True or result.get('error') is not None or result['cleanupErrors'] or result['endpointErrors']
-        or result['backend']!=('metal' if config['metal'] else 'cpu') or result['closed'] is not True or result['released'] is not True
+    if require_installation:
+        if len(events)<4 or events[0][0]!='proof' or [e[0] for e in events[-2:]]!=['proof','result']:raise ValueError('Incomplete task collection')
+        proofs=[events[0][1],events[-2][1]];cursor=1;limit=len(events)-2
+        if ([p['phase'] for p in proofs]!=['before','after'] or any(p['simulator'] is not False or p['files']!=signed for p in proofs)):
+            raise ValueError('Task installed proofs differ')
+    else:
+        # Mac command-line callers have a separately admitted linked binary,
+        # no signed iOS bundle and no UIKit foreground/battery observations.
+        if signed is not None or len(events)<3 or any(kind=='proof' for kind,_ in events) or events[-1][0]!='result':
+            raise ValueError('Unexpected Mac installation proof scope')
+        proofs=[];cursor=0;limit=len(events)-1
+    result=events[-1][1]
+    if (result['passed'] is not True or result.get('error') is not None or result['cleanupErrors'] or result['endpointErrors']
+        or result['backend']!=backend or result['closed'] is not True or result['released'] is not True
         or result['fullQualityQualified'] is not False or result['physicalDeviceQualified'] is not False or result['m7Complete'] is not False
         or not uint(result['interruptionCount']) or result['interruptionCount']!=0 or not number(result['loadAndSessionSeconds'])
         or not uint(result['casesCompleted'],32) or result['casesCompleted']!=len(cases) or not uint(result['chunksCompleted'],32)
@@ -119,19 +136,24 @@ def check_console(text,config,signed,task_set):
         or result.get('tasksBeforeSHA256')!=config['tasksSHA256'] or result.get('tasksAfterSHA256')!=config['tasksSHA256']):raise ValueError('Task result/proofs/admission differ')
     checkpoints=result['checkpoints'];phases=['before-artifact-proof','after-artifact-proof','loaded']+['case-'+str(i) for i in range(len(cases))]+['unloaded','closed','after-final-artifact-proof']
     if [c['phase'] for c in checkpoints]!=phases:raise ValueError('Task memory phases differ')
-    ordered=[c['footprint'] for c in checkpoints[:3]];cursor=1;chunks=0;responses=[];previous_completed=0
+    ordered=[c['footprint'] for c in checkpoints[:3]];chunks=0;responses=[];previous_completed=0
     def observation(sample,index,case):
         if (not uint(sample['caseIndex'],32) or sample['caseIndex']!=index or sample['caseID']!=case['id']
             or not uint(sample['admittedBytes']) or sample['admittedBytes']!=result['loadedAdmittedBytes']):raise ValueError('Task sample identity/admission differs')
         env=sample['environment']
-        if (not uint(env['applicationState'],32) or env['applicationState']!=0 or type(env['lowPowerMode']) is not bool
-            or not uint(env['thermalState'],32) or env['thermalState'] not in range(4) or not uint(env['batteryState'],32) or env['batteryState'] not in range(1,4)
-            or not number(env['batteryLevel']) or env['batteryLevel']>1):raise ValueError('Task foreground/power/thermal scope differs')
+        if type(env['lowPowerMode']) is not bool or not uint(env['thermalState'],32) or env['thermalState'] not in range(4):
+            raise ValueError('Task power/thermal scope differs')
+        if require_installation:
+            if (not uint(env['applicationState'],32) or env['applicationState']!=0 or not uint(env['batteryState'],32)
+                or env['batteryState'] not in range(1,4) or not number(env['batteryLevel']) or env['batteryLevel']>1):
+                raise ValueError('Task foreground/battery scope differs')
+        elif any(env.get(key) is not None for key in ['applicationState','batteryState','batteryLevel']):
+            raise ValueError('Unexpected Mac UIKit observation')
         ordered.append(sample['footprint'])
     for index,case in enumerate(cases):
         ids=[];sampled=0;chunk_index=0;reason=None;hidden=None;history=None;evaluated=None
         while sampled<case['maximum']:
-            if cursor>=len(events)-2 or events[cursor][0]!='chunk':raise ValueError('Task chunk missing or reordered')
+            if cursor>=limit or events[cursor][0]!='chunk':raise ValueError('Task chunk missing or reordered')
             sample=events[cursor][1];cursor+=1;observation(sample,index,case);row=sample['chunk'];requested=min(128,case['maximum']-sampled)
             if (not uint(row['index'],32) or row['index']!=chunk_index or not uint(row['requested'],32) or row['requested']!=requested
                 or not uint(row['reason'],32) or row['reason'] not in (1,2) or len(row['ids'])>requested or len(row['ids'])!=len(row['tokenTimings'])
@@ -152,7 +174,7 @@ def check_console(text,config,signed,task_set):
                 elapsed=value;callback=stamp
             previous_completed=end;chunk_index+=1;chunks+=1
             if hidden is not None:break
-        if cursor>=len(events)-2 or events[cursor][0]!='case':raise ValueError('Reset-acknowledged task response missing')
+        if cursor>=limit or events[cursor][0]!='case':raise ValueError('Reset-acknowledged task response missing')
         sample=events[cursor][1];cursor+=1;observation(sample,index,case);response=sample['response']
         if (response['ids']!=ids or any(not uint(t,32) for t in response['ids'])
             or not all(uint(response[k],32) for k in ('sampled','reason','history','evaluated','pending','chunks'))
@@ -160,7 +182,7 @@ def check_console(text,config,signed,task_set):
             or response.get('stopToken')!=hidden or hidden is not None and not uint(response['stopToken'],32)
             or not all(uint(sample[k],32) and sample[k]==0 for k in ('resetHistory','resetEvaluated','resetPending'))):raise ValueError('Exact task response/reset differs')
         responses.append(sample);ordered.append(checkpoints[3+index]['footprint'])
-    if cursor!=len(events)-2 or chunks!=result['chunksCompleted']:raise ValueError('Task stream has extra/incomplete chunks')
+    if cursor!=limit or chunks!=result['chunksCompleted']:raise ValueError('Task stream has extra/incomplete chunks')
     ordered.extend(c['footprint'] for c in checkpoints[-3:]);last_peak=0
     for value in ordered:
         if (not uint(value['physicalBytes']) or not uint(value['lifetimePeakPhysicalBytes']) or not 0<value['physicalBytes']<=value['lifetimePeakPhysicalBytes']<=config['processBudget']

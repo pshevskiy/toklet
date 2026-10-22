@@ -1,0 +1,3891 @@
+{
+  "format": "toklet-native-mlx-mac-jobs-qualification-v1",
+  "passed": true,
+  "base_revision": "88c87ee",
+  "scope": "Shared explicit MLX raw-ID job staging and Mac app-runner transport; selected tiny/public short functional checks and measured native process charge. Signed iPhone preparation only, no physical inference.",
+  "checks": {
+    "format": "toklet-m8-mac-job-transport-checks-v1",
+    "passed": true,
+    "source_pins": {
+      "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+      "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+      "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+      "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+      "src/bin/cli/mod.rs": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24",
+      "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+      "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+      "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+      "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+      "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+      "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+      "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+      "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+      "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+      "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+      "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+      "src/metal/memory.rs": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6",
+      "src/metal/mlx.rs": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177",
+      "src/metal/mod.rs": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65",
+      "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+      "src/metal/profile.rs": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3",
+      "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+      "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+      "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+      "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+      "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+      "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+      "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+      "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+      "src/native/tests.rs": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856",
+      "src/native.rs": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc",
+      "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+      "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+      "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+      "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+      "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+      "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+      "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+      "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+      "apple/Harness/HarnessApp.swift": "4cc314e35db6d0f6736e4f6e2358e9c444a2b7069faba6703e3ff8dc633a63e6",
+      "apple/Harness/NativeLifecycle.swift": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac",
+      "apple/Harness/NativeLifecycleRun.swift": "9170e354d07dc09e1f4eb9ea718b68ff5c6df16b68f85fc0dc44872de0f414a2",
+      "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+      "apple/Harness/NativeMeasurement.swift": "5dcd81db64963db10d2bd50a6e9bc8dee567951f1a344341dd0cd9dfecbf8a46",
+      "apple/Harness/NativeQuality.swift": "e54783e1ed25035340f07c13f593cefdb616152fc296b17fc6508ba1e7e3972a",
+      "apple/Harness/NativeStateRun.swift": "e0b8a0d12fd93db67fcab374da3f386d8b3331b1b20bd96413ebca1dfb290a99",
+      "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+      "apple/Harness/NativeTasks.swift": "d2df04cf9da12d5b648970e49c64f1bdbc28bf464ca3c05a6a65e4ee6b6ae4e9",
+      "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+      "apple/Harness/NativeWorker.swift": "d86832de771cc1d8ee1774089468e749f05b8bfb074e20ee69fccc3b0c50fa37",
+      "apple/tests/swift/MLXRealMain.swift": "3cc5555cbacd8e43a0d0e9b0c65a6d3e2dace8be456a298e9ef57dc5757d0c18",
+      "tools/experiments/m8_mlx_jobs.py": "f6fee10b0d7a370892b389873f33b2df754716ca809ee9e2af5864038b647570",
+      "tools/experiments/test_m8_mlx_jobs.py": "b74c38554777ab9b786442acc811c32024843820f3210c0fc7c8c5021aad3613",
+      "artifacts/m8-mac-job-transport-v1/checks.py": "496d8d581e0ef8db007e52b5f0993f180b16dc86ae60490290eef2ff44ebcd2f",
+      "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+      "artifacts/m8-apple-package-v1/build.json": "00d3701912b3371a70485bf4cff7bd4d8217db0d99e53206274c17d47095bee5",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/libtoklet.a": "5761519e94764026bcce21d5e60b21a50d16ed651038f148bd76a5207663746b",
+      "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+      "tools/bench/task_cases.py": "91b5f44840ba31b8f0aead2217b4638c0dbb7e2529389225ba58a6c4822f9e1d",
+      "tools/experiments/m7_apple_integration.py": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952",
+      "tools/experiments/m7_native_lifecycle_app_check.py": "77e2d876928203c6fcd901ad4a8ef0d646affd0f88fcb40783982b3c49a10bdd",
+      "tools/experiments/m7_native_lifecycle_check.py": "c22913ce29f450c2b63a05af4889015e281b5e1342dbfb7cf07500660029e4f8",
+      "tools/experiments/m7_native_measurement_check.py": "2bf3a8dbc27c9cc6a0e60b97d14a0e08ed35048fe010d3b346a85f77a7af2055",
+      "tools/experiments/m7_native_prefix_check.py": "4071c413f9c9b86ebec3ba52e81ac36782813c887edd2540844dce23deb4dc87",
+      "tools/experiments/m7_native_quality_check.py": "ce5ded50c7df2573a2066b2b799879f1ec36b85eb58ed6c2c09a4713bf8a8c68",
+      "tools/experiments/m7_native_state_check.py": "2f67354ec297098205373f50447e04092b034e46d8541014e4736594160a6dbc",
+      "tools/experiments/m7_native_task_check.py": "e56e815c87278079cef1a8f9e55d60d83b617e5509b7806fed7850249296fb07",
+      "tools/experiments/m7_native_tasks_check.py": "a869a158cb728c4e13cc74791462a200246feff6d9ffb8b2886517523d2056c1",
+      "tools/experiments/m7_native_teacher_check.py": "e7bd2e078ab6483e013693da3b2214e072d5b80f8444c228d117929194fcecfa",
+      "tools/experiments/m7_physical_integration.py": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c",
+      "tools/experiments/m7_physical_measurement.py": "19106d82c8447c537201a96a9992433b0b01ae3406c438ea4ad810dd4cc4b048",
+      "tools/experiments/m7_physical_storage.py": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5",
+      "tools/experiments/m7_physical_tasks.py": "08e5b27659b54587c042c517d52d102b3bbebc1231c2f2a1bd5fdfa2d4003ef0",
+      "tools/experiments/m7_swift_harness_build.py": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7",
+      "apple/include/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+      "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "apple/tests/native_smoke.c": "c5b0cf0a96bb4b2489275cabb02acf89a53deccfc977c1dc63e9ff9d6b7a9d61",
+      "tools/experiments/test_m7_apple_package.py": "efdd9835b9c8301cdb91f3e466b5b8791155d4eb5d663f56a267588dc700f162",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/Info.plist": "92cff745c9ca18676c24497dd08ea06ce054aff86d8c223f1e15257fd9d867ba",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64/Headers/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64/libtoklet.a": "b4a9a1349c39c5db779b56b41d43bc87df778026ee3d00491ed63844c4efa407",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "3da9f79c87f1fdad11da7a841553e8a231c69eba724439c46a123091bc680519",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/Headers/toklet.h": "6ec78aff6f0d8f3073fd915838a63ecea2db569754304a39657f63f8b3e93da6",
+      "artifacts/m8-mac-job-transport-v1/test_m8_mlx_jobs.py.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/test_m8_mlx_jobs.py.stderr": "79e194be9fffdb128390490953cc3177cfa805325c2418eb47a9813b1092e78c",
+      "tools/experiments/test_m7_physical_tasks.py": "b27234a33407c45b8ff03a37c557e69a6c1ebe99c523c9024a24b8fd20531e18",
+      "artifacts/m8-mac-job-transport-v1/test_m7_physical_tasks.py.stdout": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58",
+      "artifacts/m8-mac-job-transport-v1/test_m7_physical_tasks.py.stderr": "7cd585ee02a44e7dab7301a5cf5180483d074959dc42f9987d75a526c18332bc",
+      "tools/experiments/test_m7_native_state_check.py": "84a447c53d761f0a5442ed79bb4469c041eb0f581626de0185dc38a43bf6d631",
+      "artifacts/m8-mac-job-transport-v1/test_m7_native_state_check.py.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/test_m7_native_state_check.py.stderr": "b75bb64d6b809f9dc1e06ade54dfdc788236f0e96d7c3c314a3b21f7f668cfea",
+      "artifacts/m8-mac-job-transport-v1/mac-sdk.stdout": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1",
+      "artifacts/m8-mac-job-transport-v1/mac-sdk.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/ios-sdk.stdout": "b2591e080c0bf70d321e9b24dce762b470ead1f9e54887c13737c1565c183bd2",
+      "artifacts/m8-mac-job-transport-v1/ios-sdk.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/ios-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/ios-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/reject-arguments.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/reject-arguments.stderr": "898185d666033c7d0fa877de7d9bc526bf651bafbd22213fbdbbfbd1dba21d78",
+      "artifacts/m8-mac-job-transport-v1/reject-mode.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/reject-mode.stderr": "7ba648bf0bea91dd7fd4180da5074cd801abe1432b1bdb33d372ed8105bd14e6",
+      "tests/fixtures/mlx-qwen-real-v1/manifest.json": "fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b",
+      "tests/fixtures/mlx-qwen-v1/model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+      "tests/fixtures/mlx-qwen-v1/model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+      "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/staged.json": "0ae7d86bc934898eaf5e0f8ff903345576d7e610efa8585867dadaced14b4d5e",
+      "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer/M7Jobs/5492f3583852d4a80f89df10359f04a1a5722e49e43a2c23eac34f389651da06.json": "5492f3583852d4a80f89df10359f04a1a5722e49e43a2c23eac34f389651da06",
+      "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer/M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+      "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer/M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+      "artifacts/m8-mac-job-transport-v1/reject-job-sha.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/reject-job-sha.stderr": "667f2786a7e99ce5527eca4cfd611337a0ffa660bdee7eabbb71c186e42dfeba",
+      "artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer/M7Jobs/a166bde87dda0529771880af251628d73e0662a8bdeeb383a307d5e06931372a.json": "a166bde87dda0529771880af251628d73e0662a8bdeeb383a307d5e06931372a",
+      "artifacts/m8-mac-job-transport-v1/reject-legacy-job.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/reject-legacy-job.stderr": "b7155657189a15c1cb9f0ca5494cd7931e927e8bcf68a89fb8f63553f0bd52ec",
+      "artifacts/m8-mac-job-transport-v1/tiny-measurement-short.stdout": "ca1446c947784e3c975982e0c3413db6a1dd7b565713019aaa20cb6636367389",
+      "artifacts/m8-mac-job-transport-v1/tiny-measurement-short.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/tiny-quality-short/staged.json": "54d3aa0bbdb9011d80f0813b2a24564cfd58bdf78a8538549d36056820a9ec22",
+      "artifacts/m8-mac-job-transport-v1/tiny-quality-short/transfer/M7Jobs/99f9502376d1a228aeead96f55818e830bc5cbb4831c31b05f6e7aaa28fe53ab.json": "99f9502376d1a228aeead96f55818e830bc5cbb4831c31b05f6e7aaa28fe53ab",
+      "artifacts/m8-mac-job-transport-v1/tiny-quality-short/transfer/M8Corpora/6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298/tokens.u32le": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+      "artifacts/m8-mac-job-transport-v1/tiny-quality-short/transfer/M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+      "artifacts/m8-mac-job-transport-v1/tiny-quality-short/transfer/M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+      "artifacts/m8-mac-job-transport-v1/tiny-quality-short.stdout": "485e8d423beb7045b8879da6b0840636371fcd45168155eec6dfa4d9c7a8db64",
+      "artifacts/m8-mac-job-transport-v1/tiny-quality-short.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/staged.json": "e2f14bd9d2fb5bc9563dbf85ebc3fd6ac824f5384eac7f0f6628b2b25c0b237d",
+      "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/transfer/M7Jobs/fe823d1f874407c659a4d1ecff0c5edd3c49d2b8bc875a959426ac4bcf22a274.json": "fe823d1f874407c659a4d1ecff0c5edd3c49d2b8bc875a959426ac4bcf22a274",
+      "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/transfer/M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+      "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/transfer/M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+      "artifacts/m8-mac-job-transport-v1/tiny-tasks-short/transfer/M8Tasks/76a55518e1b794ed663b3072e2c5c960fd4105213a9bf5ef5e7f69056608960e/tasks.json": "76a55518e1b794ed663b3072e2c5c960fd4105213a9bf5ef5e7f69056608960e",
+      "artifacts/m8-mac-job-transport-v1/tiny-tasks-short.stdout": "347e9356e92ff1c1463b4612ae5fa46b62d7cdca8dc1430fff5f563e0bb923ac",
+      "artifacts/m8-mac-job-transport-v1/tiny-tasks-short.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/tiny-state-component/staged.json": "c2bdf6d0d0653e0341c57d4e2a25697a67d5bc6841a8e4933ef3f3013e134993",
+      "artifacts/m8-mac-job-transport-v1/tiny-state-component/transfer/M7Jobs/89da7a896386cf060c34c2ef7ae15b5136f29f4e1642c171ea4cae42e7564df0.json": "89da7a896386cf060c34c2ef7ae15b5136f29f4e1642c171ea4cae42e7564df0",
+      "artifacts/m8-mac-job-transport-v1/tiny-state-component/transfer/M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+      "artifacts/m8-mac-job-transport-v1/tiny-state-component/transfer/M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+      "artifacts/m8-mac-job-transport-v1/tiny-state-component.stdout": "b6a76aa351b0a39408d6022fadb4cf841d521b06d4c8836f24c28d766039d467",
+      "artifacts/m8-mac-job-transport-v1/tiny-state-component.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "models/MLX-Qwen2.5-0.5B-Instruct-4bit-a5339a4/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+      "models/MLX-Qwen2.5-0.5B-Instruct-4bit-a5339a4/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+      "models/MLX-Qwen2.5-0.5B-Instruct-4bit-a5339a4/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+      "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/staged.json": "5fae7b1377f55e0ab268aaec8a9614dcf0981f5f3dfefe589155c8512e3f119e",
+      "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/transfer/M7Jobs/7c25baf35e8b77b83376b831c4afee906071d59f2bca87b6dd6b344af53fa4b1.json": "7c25baf35e8b77b83376b831c4afee906071d59f2bca87b6dd6b344af53fa4b1",
+      "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/transfer/M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+      "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/transfer/M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+      "artifacts/m8-mac-job-transport-v1/qwen-measurement-short/transfer/M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+      "artifacts/m8-mac-job-transport-v1/qwen-measurement-short.stdout": "709d31e3ecb9ef6543c0ab2fda0e7957de2e350cf2cb2075d19d12fb5f4963ef",
+      "artifacts/m8-mac-job-transport-v1/qwen-measurement-short.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "benchmarks/contract-v1/held_out_loss.u32le": "f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb",
+      "artifacts/m8-mac-job-transport-v1/qwen-quality-short/staged.json": "ca921bb286104cbc26ec476dfa6f1c311488c5ffe9f50c2f8c894541570b3cba",
+      "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M7Jobs/4f2ad056e4672c6c930867b66e05eb3680c44fccb8fa81e9ce934e8e35a24da4.json": "4f2ad056e4672c6c930867b66e05eb3680c44fccb8fa81e9ce934e8e35a24da4",
+      "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M8Corpora/fc6b7587685a5d482c96a7bdfb7fe5117be2bd02663d2774917a2c7c374da009/tokens.u32le": "fc6b7587685a5d482c96a7bdfb7fe5117be2bd02663d2774917a2c7c374da009",
+      "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+      "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+      "artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer/M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+      "artifacts/m8-mac-job-transport-v1/qwen-quality-short.stdout": "784c74bb64cba1d4a8cd0b8f61b5f62e3c245df0879ffdc75974fc1b3a8a394d",
+      "artifacts/m8-mac-job-transport-v1/qwen-quality-short.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/quality-v1/tasks.jsonl": "b096b8eb40960f38ae0e9f3268484eed10bf2a6bebbc981a45a061ee461aab7c",
+      "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/staged.json": "2bf1a31793891ed9bbe33dc2936322d988c7f11ed490ee55bc666b657bcc693a",
+      "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M7Jobs/81c257a494733ed8972fb3f3cc241dd5b09b3c45065fed9dfaa416a22300f2b1.json": "81c257a494733ed8972fb3f3cc241dd5b09b3c45065fed9dfaa416a22300f2b1",
+      "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+      "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+      "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+      "artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer/M8Tasks/f9a797bd638f9eac47a5c0696db08d2068a852b3e95bb7aca4c327eff9d7570f/tasks.json": "f9a797bd638f9eac47a5c0696db08d2068a852b3e95bb7aca4c327eff9d7570f",
+      "artifacts/m8-mac-job-transport-v1/qwen-tasks-short.stdout": "e032b94118be498f909fe4faa23fe3018fcc5108d9bfddcde28666ef65f7b27c",
+      "artifacts/m8-mac-job-transport-v1/qwen-tasks-short.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "artifacts/m8-mac-job-transport-v1/qwen-state-component/staged.json": "3b6be470f9e27db28225b2cafdb778178a6243e32bdae6a9e08c85fa36a0a8e2",
+      "artifacts/m8-mac-job-transport-v1/qwen-state-component/transfer/M7Jobs/d4ad3975630f5e5464c8091bea3faad2a62a692b928fdd7d7f5dcf44ebae68ad.json": "d4ad3975630f5e5464c8091bea3faad2a62a692b928fdd7d7f5dcf44ebae68ad",
+      "artifacts/m8-mac-job-transport-v1/qwen-state-component/transfer/M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+      "artifacts/m8-mac-job-transport-v1/qwen-state-component/transfer/M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+      "artifacts/m8-mac-job-transport-v1/qwen-state-component/transfer/M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+      "artifacts/m8-mac-job-transport-v1/qwen-state-component.stdout": "66efe94d04f9eb0ac262205e1b6b3f0ce901961024847f012be4db06ab4025ad",
+      "artifacts/m8-mac-job-transport-v1/qwen-state-component.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "protected_binary_pins": {
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+    },
+    "binary_pins": {
+      "artifacts/m8-mac-job-transport-v1/mlx-real": "189530c8a6b4af1b9efb6c47a6c1ae2fba843fa74b5762fa857ae77702c38579"
+    },
+    "commands": [
+      {
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/experiments",
+          "-p",
+          "test_m8_mlx_jobs.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33181,
+        "stdout": "artifacts/m8-mac-job-transport-v1/test_m8_mlx_jobs.py.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/test_m8_mlx_jobs.py.stderr"
+      },
+      {
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/experiments",
+          "-p",
+          "test_m7_physical_tasks.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33187,
+        "stdout": "artifacts/m8-mac-job-transport-v1/test_m7_physical_tasks.py.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/test_m7_physical_tasks.py.stderr"
+      },
+      {
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/experiments",
+          "-p",
+          "test_m7_native_state_check.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33190,
+        "stdout": "artifacts/m8-mac-job-transport-v1/test_m7_native_state_check.py.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/test_m7_native_state_check.py.stderr"
+      },
+      {
+        "command": [
+          "xcrun",
+          "--sdk",
+          "macosx",
+          "--show-sdk-path"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33202,
+        "stdout": "artifacts/m8-mac-job-transport-v1/mac-sdk.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/mac-sdk.stderr"
+      },
+      {
+        "command": [
+          "xcrun",
+          "--sdk",
+          "iphoneos",
+          "--show-sdk-path"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33204,
+        "stdout": "artifacts/m8-mac-job-transport-v1/ios-sdk.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/ios-sdk.stderr"
+      },
+      {
+        "command": [
+          "xcrun",
+          "--sdk",
+          "macosx",
+          "swiftc",
+          "-sdk",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+          "-module-cache-path",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/ModuleCache",
+          "-swift-version",
+          "5",
+          "-strict-concurrency=complete",
+          "-warnings-as-errors",
+          "-I",
+          "/Users/coloner/work/rust/toklet/apple/include",
+          "-target",
+          "arm64-apple-macos15.0",
+          "-parse-as-library",
+          "-O",
+          "apple/Harness/NativeLifecycle.swift",
+          "apple/Harness/NativeLifecycleRun.swift",
+          "apple/Harness/NativeLifecycleSignals.swift",
+          "apple/Harness/NativeMeasurement.swift",
+          "apple/Harness/NativeQuality.swift",
+          "apple/Harness/NativeStateRun.swift",
+          "apple/Harness/NativeTaskResponse.swift",
+          "apple/Harness/NativeTasks.swift",
+          "apple/Harness/NativeTeacherForcing.swift",
+          "apple/Harness/NativeWorker.swift",
+          "apple/tests/swift/MLXRealMain.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-apple-package-v1/Toklet.xcframework/macos-arm64/libtoklet.a",
+          "-framework",
+          "Metal",
+          "-framework",
+          "MetalPerformanceShaders",
+          "-framework",
+          "Foundation",
+          "-framework",
+          "Security",
+          "-lobjc",
+          "-liconv",
+          "-lresolv",
+          "-lc++",
+          "-o",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33205,
+        "stdout": "artifacts/m8-mac-job-transport-v1/compile.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/compile.stderr"
+      },
+      {
+        "command": [
+          "xcrun",
+          "--sdk",
+          "iphoneos",
+          "swiftc",
+          "-sdk",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+          "-module-cache-path",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/ModuleCache",
+          "-swift-version",
+          "5",
+          "-strict-concurrency=complete",
+          "-warnings-as-errors",
+          "-I",
+          "/Users/coloner/work/rust/toklet/apple/include",
+          "-target",
+          "arm64-apple-ios18.0",
+          "-parse-as-library",
+          "-typecheck",
+          "apple/Harness/NativeLifecycle.swift",
+          "apple/Harness/NativeLifecycleRun.swift",
+          "apple/Harness/NativeLifecycleSignals.swift",
+          "apple/Harness/NativeMeasurement.swift",
+          "apple/Harness/NativeQuality.swift",
+          "apple/Harness/NativeStateRun.swift",
+          "apple/Harness/NativeTaskResponse.swift",
+          "apple/Harness/NativeTasks.swift",
+          "apple/Harness/NativeTeacherForcing.swift",
+          "apple/Harness/NativeWorker.swift",
+          "apple/tests/swift/MLXRealMain.swift"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33250,
+        "stdout": "artifacts/m8-mac-job-transport-v1/ios-typecheck.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/ios-typecheck.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real"
+        ],
+        "exit_code": 1,
+        "primary_error": "tool exit 1",
+        "cleanup_errors": [],
+        "pid": 33291,
+        "stdout": "artifacts/m8-mac-job-transport-v1/reject-arguments.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/reject-arguments.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "unsupported",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1",
+          "job.json",
+          "0000000000000000000000000000000000000000000000000000000000000000"
+        ],
+        "exit_code": 1,
+        "primary_error": "tool exit 1",
+        "cleanup_errors": [],
+        "pid": 33298,
+        "stdout": "artifacts/m8-mac-job-transport-v1/reject-mode.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/reject-mode.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "measurement",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer",
+          "M7Jobs/5492f3583852d4a80f89df10359f04a1a5722e49e43a2c23eac34f389651da06.json",
+          "0000000000000000000000000000000000000000000000000000000000000000"
+        ],
+        "exit_code": 1,
+        "primary_error": "tool exit 1",
+        "cleanup_errors": [],
+        "pid": 33300,
+        "stdout": "artifacts/m8-mac-job-transport-v1/reject-job-sha.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/reject-job-sha.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "measurement",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer",
+          "M7Jobs/a166bde87dda0529771880af251628d73e0662a8bdeeb383a307d5e06931372a.json",
+          "a166bde87dda0529771880af251628d73e0662a8bdeeb383a307d5e06931372a"
+        ],
+        "exit_code": 1,
+        "primary_error": "tool exit 1",
+        "cleanup_errors": [],
+        "pid": 33301,
+        "stdout": "artifacts/m8-mac-job-transport-v1/reject-legacy-job.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/reject-legacy-job.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "measurement",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/tiny-measurement-short/transfer",
+          "M7Jobs/5492f3583852d4a80f89df10359f04a1a5722e49e43a2c23eac34f389651da06.json",
+          "5492f3583852d4a80f89df10359f04a1a5722e49e43a2c23eac34f389651da06"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33303,
+        "stdout": "artifacts/m8-mac-job-transport-v1/tiny-measurement-short.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/tiny-measurement-short.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "quality",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/tiny-quality-short/transfer",
+          "M7Jobs/99f9502376d1a228aeead96f55818e830bc5cbb4831c31b05f6e7aaa28fe53ab.json",
+          "99f9502376d1a228aeead96f55818e830bc5cbb4831c31b05f6e7aaa28fe53ab"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33306,
+        "stdout": "artifacts/m8-mac-job-transport-v1/tiny-quality-short.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/tiny-quality-short.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "tasks",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/tiny-tasks-short/transfer",
+          "M7Jobs/fe823d1f874407c659a4d1ecff0c5edd3c49d2b8bc875a959426ac4bcf22a274.json",
+          "fe823d1f874407c659a4d1ecff0c5edd3c49d2b8bc875a959426ac4bcf22a274"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33308,
+        "stdout": "artifacts/m8-mac-job-transport-v1/tiny-tasks-short.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/tiny-tasks-short.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "state-component",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/tiny-state-component/transfer",
+          "M7Jobs/89da7a896386cf060c34c2ef7ae15b5136f29f4e1642c171ea4cae42e7564df0.json",
+          "89da7a896386cf060c34c2ef7ae15b5136f29f4e1642c171ea4cae42e7564df0"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33311,
+        "stdout": "artifacts/m8-mac-job-transport-v1/tiny-state-component.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/tiny-state-component.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "measurement",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/qwen-measurement-short/transfer",
+          "M7Jobs/7c25baf35e8b77b83376b831c4afee906071d59f2bca87b6dd6b344af53fa4b1.json",
+          "7c25baf35e8b77b83376b831c4afee906071d59f2bca87b6dd6b344af53fa4b1"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33320,
+        "stdout": "artifacts/m8-mac-job-transport-v1/qwen-measurement-short.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/qwen-measurement-short.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "quality",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/qwen-quality-short/transfer",
+          "M7Jobs/4f2ad056e4672c6c930867b66e05eb3680c44fccb8fa81e9ce934e8e35a24da4.json",
+          "4f2ad056e4672c6c930867b66e05eb3680c44fccb8fa81e9ce934e8e35a24da4"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33332,
+        "stdout": "artifacts/m8-mac-job-transport-v1/qwen-quality-short.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/qwen-quality-short.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "tasks",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/qwen-tasks-short/transfer",
+          "M7Jobs/81c257a494733ed8972fb3f3cc241dd5b09b3c45065fed9dfaa416a22300f2b1.json",
+          "81c257a494733ed8972fb3f3cc241dd5b09b3c45065fed9dfaa416a22300f2b1"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33338,
+        "stdout": "artifacts/m8-mac-job-transport-v1/qwen-tasks-short.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/qwen-tasks-short.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/mlx-real",
+          "state-component",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-mac-job-transport-v1/qwen-state-component/transfer",
+          "M7Jobs/d4ad3975630f5e5464c8091bea3faad2a62a692b928fdd7d7f5dcf44ebae68ad.json",
+          "d4ad3975630f5e5464c8091bea3faad2a62a692b928fdd7d7f5dcf44ebae68ad"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 33344,
+        "stdout": "artifacts/m8-mac-job-transport-v1/qwen-state-component.stdout",
+        "stderr": "artifacts/m8-mac-job-transport-v1/qwen-state-component.stderr"
+      }
+    ],
+    "staged_receipts": {
+      "artifacts/m8-mac-job-transport-v1/tiny-measurement-short": "0ae7d86bc934898eaf5e0f8ff903345576d7e610efa8585867dadaced14b4d5e",
+      "artifacts/m8-mac-job-transport-v1/tiny-quality-short": "54d3aa0bbdb9011d80f0813b2a24564cfd58bdf78a8538549d36056820a9ec22",
+      "artifacts/m8-mac-job-transport-v1/tiny-tasks-short": "e2f14bd9d2fb5bc9563dbf85ebc3fd6ac824f5384eac7f0f6628b2b25c0b237d",
+      "artifacts/m8-mac-job-transport-v1/tiny-state-component": "c2bdf6d0d0653e0341c57d4e2a25697a67d5bc6841a8e4933ef3f3013e134993",
+      "artifacts/m8-mac-job-transport-v1/qwen-measurement-short": "5fae7b1377f55e0ab268aaec8a9614dcf0981f5f3dfefe589155c8512e3f119e",
+      "artifacts/m8-mac-job-transport-v1/qwen-quality-short": "ca921bb286104cbc26ec476dfa6f1c311488c5ffe9f50c2f8c894541570b3cba",
+      "artifacts/m8-mac-job-transport-v1/qwen-tasks-short": "2bf1a31793891ed9bbe33dc2936322d988c7f11ed490ee55bc666b657bcc693a",
+      "artifacts/m8-mac-job-transport-v1/qwen-state-component": "3b6be470f9e27db28225b2cafdb778178a6243e32bdae6a9e08c85fa36a0a8e2"
+    },
+    "checked": {
+      "tiny-measurement-short": {
+        "result": {
+          "measuredCompleted": 10,
+          "m7Complete": false,
+          "backend": "metal-mlx",
+          "filesystemBefore": {
+            "freeBytes": 282642763776,
+            "readStartedUptimeNanoseconds": 1961824170248583,
+            "readCompletedUptimeNanoseconds": 1961824170345791,
+            "instrument": "Foundation.FileManager.attributesOfFileSystem.systemFreeSize",
+            "scope": "trusted-root-filesystem"
+          },
+          "interruptionCount": 0,
+          "warmupsCompleted": 3,
+          "released": true,
+          "physicalDeviceQualified": false,
+          "loadAndSessionSeconds": 0.066026958,
+          "sumNativeLastEventSeconds": 0.039562457999999995,
+          "endpointErrors": [],
+          "passed": true,
+          "cleanupErrors": [],
+          "filesAfter": {
+            "M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+            "M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+          },
+          "filesBefore": {
+            "M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+            "M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+          },
+          "closed": true,
+          "checkpoints": [
+            {
+              "footprint": {
+                "physicalBytes": 2261400,
+                "lifetimePeakPhysicalBytes": 2261400,
+                "returnedNaturalCount": 93
+              },
+              "phase": "before-artifact-proof"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 2507160,
+                "lifetimePeakPhysicalBytes": 2507160,
+                "returnedNaturalCount": 93
+              },
+              "phase": "after-artifact-proof"
+            },
+            {
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "physicalBytes": 6799936,
+                "lifetimePeakPhysicalBytes": 6799936
+              },
+              "phase": "loaded"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7881304,
+                "lifetimePeakPhysicalBytes": 7930456,
+                "returnedNaturalCount": 93
+              },
+              "phase": "unloaded"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7881304,
+                "lifetimePeakPhysicalBytes": 7930456,
+                "returnedNaturalCount": 93
+              },
+              "phase": "closed"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7864920,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "phase": "after-final-artifact-proof"
+            }
+          ]
+        },
+        "marker_counts": {
+          "TOKLET_MEASUREMENT_SAMPLE_JSON=": 13,
+          "TOKLET_MEASUREMENT_JSON=": 1
+        },
+        "peak_physical_bytes": 7930456
+      },
+      "tiny-quality-short": {
+        "result": {
+          "filesAfter": {
+            "M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+            "M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e"
+          },
+          "closed": true,
+          "fullQualityQualified": false,
+          "interruptionCount": 0,
+          "endpointErrors": [],
+          "summary": {
+            "blockSize": 3,
+            "meanNegativeLogLikelihood": 5.082288280523886,
+            "policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once",
+            "targets": 3,
+            "blocks": 1,
+            "negativeLogLikelihoodSum": 15.246864841571659
+          },
+          "filesBefore": {
+            "M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be",
+            "M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e"
+          },
+          "m7Complete": false,
+          "passed": true,
+          "loadAndSessionSeconds": 0.04087375,
+          "backend": "metal-mlx",
+          "released": true,
+          "physicalDeviceQualified": false,
+          "tokensBeforeSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+          "samplesCompleted": 3,
+          "cleanupErrors": [],
+          "tokensAfterSHA256": "6c011a90068dc0853505f0cb3de1f86db4f52e297a419ebc56f203d855f9b298",
+          "checkpoints": [
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 2228632,
+                "physicalBytes": 2228632,
+                "returnedNaturalCount": 93
+              },
+              "phase": "before-artifact-proof"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 2507160,
+                "physicalBytes": 2507160,
+                "returnedNaturalCount": 93
+              },
+              "phase": "after-artifact-proof"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 6931032,
+                "physicalBytes": 6931032,
+                "returnedNaturalCount": 93
+              },
+              "phase": "loaded"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7897712,
+                "physicalBytes": 7897712,
+                "returnedNaturalCount": 93
+              },
+              "phase": "block-0"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7930480,
+                "physicalBytes": 7881328,
+                "returnedNaturalCount": 93
+              },
+              "phase": "unloaded"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7930480,
+                "physicalBytes": 7881328,
+                "returnedNaturalCount": 93
+              },
+              "phase": "closed"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 7930480,
+                "physicalBytes": 7914096,
+                "returnedNaturalCount": 93
+              },
+              "phase": "after-final-artifact-proof"
+            }
+          ]
+        },
+        "marker_counts": {
+          "TOKLET_QUALITY_SAMPLE_JSON=": 3,
+          "TOKLET_QUALITY_JSON=": 1
+        },
+        "peak_physical_bytes": 7930480
+      },
+      "tiny-tasks-short": {
+        "result": {
+          "loadedAdmittedBytes": 67140512,
+          "checkpoints": [
+            {
+              "phase": "before-artifact-proof",
+              "footprint": {
+                "physicalBytes": 2228632,
+                "lifetimePeakPhysicalBytes": 2228632,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "after-artifact-proof",
+              "footprint": {
+                "physicalBytes": 2539928,
+                "lifetimePeakPhysicalBytes": 2539928,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "loaded",
+              "footprint": {
+                "physicalBytes": 6881856,
+                "lifetimePeakPhysicalBytes": 6881856,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "case-0",
+              "footprint": {
+                "physicalBytes": 7914072,
+                "lifetimePeakPhysicalBytes": 7914072,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "case-1",
+              "footprint": {
+                "physicalBytes": 7963224,
+                "lifetimePeakPhysicalBytes": 7963224,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "unloaded",
+              "footprint": {
+                "physicalBytes": 7914072,
+                "lifetimePeakPhysicalBytes": 7963224,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "closed",
+              "footprint": {
+                "physicalBytes": 7914072,
+                "lifetimePeakPhysicalBytes": 7963224,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "after-final-artifact-proof",
+              "footprint": {
+                "physicalBytes": 7914072,
+                "lifetimePeakPhysicalBytes": 7963224,
+                "returnedNaturalCount": 93
+              }
+            }
+          ],
+          "released": true,
+          "endpointErrors": [],
+          "tasksBeforeSHA256": "76a55518e1b794ed663b3072e2c5c960fd4105213a9bf5ef5e7f69056608960e",
+          "physicalDeviceQualified": false,
+          "filesBefore": {
+            "M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+            "M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+          },
+          "casesCompleted": 2,
+          "fullQualityQualified": false,
+          "m7Complete": false,
+          "filesAfter": {
+            "M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+            "M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+          },
+          "closed": true,
+          "interruptionCount": 0,
+          "loadAndSessionSeconds": 0.041645375,
+          "backend": "metal-mlx",
+          "tasksAfterSHA256": "76a55518e1b794ed663b3072e2c5c960fd4105213a9bf5ef5e7f69056608960e",
+          "cleanupErrors": [],
+          "chunksCompleted": 2,
+          "passed": true
+        },
+        "marker_counts": {
+          "TOKLET_TASK_CHUNK_JSON=": 2,
+          "TOKLET_TASK_CASE_JSON=": 2,
+          "TOKLET_TASKS_JSON=": 1
+        },
+        "peak_physical_bytes": 7963224
+      },
+      "tiny-state-component": {
+        "result": {
+          "checkpoints": [
+            {
+              "footprint": {
+                "physicalBytes": 2212272,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 2212272
+              },
+              "phase": "before-artifact-proof"
+            },
+            {
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 2474416,
+                "physicalBytes": 2474416,
+                "returnedNaturalCount": 93
+              },
+              "phase": "after-artifact-proof"
+            },
+            {
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "physicalBytes": 6914624,
+                "lifetimePeakPhysicalBytes": 6914624
+              },
+              "phase": "loaded"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7914072,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7963224
+              },
+              "phase": "closed"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7897688,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7963224
+              },
+              "phase": "after-final-artifact-proof"
+            }
+          ],
+          "rows": [
+            {
+              "footprint": {
+                "physicalBytes": 6898240,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 6898240
+              },
+              "completedUptimeNanoseconds": 1961824768475166,
+              "admittedBytes": 67140512,
+              "name": "loaded",
+              "state": {
+                "status": 0,
+                "closed": false,
+                "evaluated": 0,
+                "savedPrefix": [],
+                "hasModel": true,
+                "busy": false,
+                "history": 0,
+                "reason": 0,
+                "ids": [],
+                "pending": 0,
+                "savedHistory": 0,
+                "workerFinished": false,
+                "hasSession": true
+              },
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7848536,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7848536
+              },
+              "completedUptimeNanoseconds": 1961824771333791,
+              "admittedBytes": 67140512,
+              "name": "primer",
+              "state": {
+                "status": 0,
+                "closed": false,
+                "evaluated": 4,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "hasModel": true,
+                "busy": false,
+                "history": 4,
+                "reason": 1,
+                "ids": [],
+                "pending": 0,
+                "savedHistory": 4,
+                "workerFinished": false,
+                "hasSession": true
+              },
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "footprint": {
+                "physicalBytes": 7848536,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7848536
+              },
+              "completedUptimeNanoseconds": 1961824771348875,
+              "admittedBytes": 67140512,
+              "name": "primer-score",
+              "state": {
+                "status": 0,
+                "closed": false,
+                "evaluated": 4,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "hasModel": true,
+                "busy": false,
+                "history": 4,
+                "reason": 1,
+                "ids": [],
+                "pending": 0,
+                "savedHistory": 4,
+                "workerFinished": false,
+                "hasSession": true
+              },
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "scalarScore": {
+                "evaluated": 4,
+                "vocabulary": 64,
+                "target": 3,
+                "negativeLogLikelihood": 2.7895581909746108,
+                "greedyLogit": 3.438020944595337,
+                "targetLogit": 2.2371325492858887,
+                "greedy": 47
+              },
+              "callbackCount": 0
+            },
+            {
+              "completedUptimeNanoseconds": 1961824771360750,
+              "state": {
+                "hasSession": true,
+                "history": 4,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 4,
+                "savedHistory": 4
+              },
+              "footprint": {
+                "physicalBytes": 7864920,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7864920
+              },
+              "callbackCount": 0,
+              "name": "fully-cached",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824771367541,
+              "scalarScore": {
+                "evaluated": 4,
+                "greedyLogit": 3.438020944595337,
+                "vocabulary": 64,
+                "greedy": 47,
+                "negativeLogLikelihood": 2.7895581909746108,
+                "target": 3,
+                "targetLogit": 2.2371325492858887
+              },
+              "state": {
+                "hasSession": true,
+                "history": 4,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 4,
+                "savedHistory": 4
+              },
+              "callbackCount": 0,
+              "footprint": {
+                "physicalBytes": 7864920,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7864920
+              },
+              "name": "cached-score",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824773120500,
+              "state": {
+                "hasSession": true,
+                "history": 7,
+                "status": 0,
+                "busy": false,
+                "ids": [
+                  47,
+                  47,
+                  47
+                ],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 1,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  47,
+                  47,
+                  47
+                ],
+                "evaluated": 6,
+                "savedHistory": 7
+              },
+              "footprint": {
+                "physicalBytes": 7881304,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7881304
+              },
+              "callbackCount": 3,
+              "name": "pending-primer",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824775338000,
+              "state": {
+                "hasSession": true,
+                "history": 11,
+                "status": 0,
+                "busy": false,
+                "ids": [
+                  7,
+                  7
+                ],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 1,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  47,
+                  47,
+                  47,
+                  1,
+                  7,
+                  7,
+                  7
+                ],
+                "evaluated": 10,
+                "savedHistory": 11
+              },
+              "footprint": {
+                "physicalBytes": 7881304,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7881304
+              },
+              "callbackCount": 2,
+              "name": "append-pending",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824775351416,
+              "state": {
+                "hasSession": true,
+                "history": 0,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [],
+                "evaluated": 0,
+                "savedHistory": 0
+              },
+              "footprint": {
+                "physicalBytes": 7897688,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7897688
+              },
+              "callbackCount": 0,
+              "name": "append-reference-reset",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824778569083,
+              "state": {
+                "hasSession": true,
+                "history": 11,
+                "status": 0,
+                "busy": false,
+                "ids": [
+                  7,
+                  7
+                ],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 1,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  47,
+                  47,
+                  47,
+                  1,
+                  7,
+                  7,
+                  7
+                ],
+                "evaluated": 10,
+                "savedHistory": 11
+              },
+              "footprint": {
+                "physicalBytes": 7914072,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7914072
+              },
+              "callbackCount": 2,
+              "name": "append-reference",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824782183000,
+              "state": {
+                "hasSession": true,
+                "history": 7,
+                "status": 0,
+                "busy": false,
+                "ids": [
+                  47,
+                  47,
+                  47
+                ],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 1,
+                "savedPrefix": [
+                  0,
+                  7,
+                  13,
+                  3,
+                  47,
+                  47,
+                  47
+                ],
+                "evaluated": 6,
+                "savedHistory": 7
+              },
+              "footprint": {
+                "physicalBytes": 7914072,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7914072
+              },
+              "callbackCount": 3,
+              "name": "changed-prefix",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824782194875,
+              "state": {
+                "hasSession": true,
+                "history": 0,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [],
+                "evaluated": 0,
+                "savedHistory": 0
+              },
+              "footprint": {
+                "physicalBytes": 7914072,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7914072
+              },
+              "callbackCount": 0,
+              "name": "changed-reference-reset",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824785314583,
+              "state": {
+                "hasSession": true,
+                "history": 7,
+                "status": 0,
+                "busy": false,
+                "ids": [
+                  47,
+                  47,
+                  47
+                ],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 1,
+                "savedPrefix": [
+                  0,
+                  7,
+                  13,
+                  3,
+                  47,
+                  47,
+                  47
+                ],
+                "evaluated": 6,
+                "savedHistory": 7
+              },
+              "footprint": {
+                "physicalBytes": 7914072,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7914072
+              },
+              "callbackCount": 3,
+              "name": "changed-reference",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824785322291,
+              "state": {
+                "hasSession": true,
+                "history": 0,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [],
+                "evaluated": 0,
+                "savedHistory": 0
+              },
+              "footprint": {
+                "physicalBytes": 7914072,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7914072
+              },
+              "callbackCount": 0,
+              "name": "capacity-reset",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795623291,
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "footprint": {
+                "physicalBytes": 7914072,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7914072
+              },
+              "callbackCount": 0,
+              "name": "capacity-committed",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795685333,
+              "scalarScore": {
+                "evaluated": 32,
+                "greedyLogit": 2.7081682682037354,
+                "vocabulary": 64,
+                "greedy": 47,
+                "negativeLogLikelihood": 2.89455484718676,
+                "target": 3,
+                "targetLogit": 1.948235273361206
+              },
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "callbackCount": 0,
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "name": "overflow-continue-before-score",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795790583,
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 1,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "callbackCount": 0,
+              "name": "overflow-continue",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795800375,
+              "scalarScore": {
+                "evaluated": 32,
+                "greedyLogit": 2.7081682682037354,
+                "vocabulary": 64,
+                "greedy": 47,
+                "negativeLogLikelihood": 2.89455484718676,
+                "target": 3,
+                "targetLogit": 1.948235273361206
+              },
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "callbackCount": 0,
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "name": "overflow-continue-after-score",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795811916,
+              "scalarScore": {
+                "evaluated": 32,
+                "greedyLogit": 2.7081682682037354,
+                "vocabulary": 64,
+                "greedy": 47,
+                "negativeLogLikelihood": 2.89455484718676,
+                "target": 3,
+                "targetLogit": 1.948235273361206
+              },
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "callbackCount": 0,
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "name": "overflow-append-before-score",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795835833,
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 1,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "callbackCount": 0,
+              "name": "overflow-append",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795859875,
+              "scalarScore": {
+                "evaluated": 32,
+                "greedyLogit": 2.7081682682037354,
+                "vocabulary": 64,
+                "greedy": 47,
+                "negativeLogLikelihood": 2.89455484718676,
+                "target": 3,
+                "targetLogit": 1.948235273361206
+              },
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "callbackCount": 0,
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "name": "overflow-append-after-score",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795873416,
+              "scalarScore": {
+                "evaluated": 32,
+                "greedyLogit": 2.7081682682037354,
+                "vocabulary": 64,
+                "greedy": 47,
+                "negativeLogLikelihood": 2.89455484718676,
+                "target": 3,
+                "targetLogit": 1.948235273361206
+              },
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "callbackCount": 0,
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "name": "overflow-prompt-before-score",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795908916,
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 1,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "callbackCount": 0,
+              "name": "overflow-prompt",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795928916,
+              "scalarScore": {
+                "evaluated": 32,
+                "greedyLogit": 2.7081682682037354,
+                "vocabulary": 64,
+                "greedy": 47,
+                "negativeLogLikelihood": 2.89455484718676,
+                "target": 3,
+                "targetLogit": 1.948235273361206
+              },
+              "state": {
+                "hasSession": true,
+                "history": 32,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3,
+                  1,
+                  7,
+                  13,
+                  3
+                ],
+                "evaluated": 32,
+                "savedHistory": 32
+              },
+              "callbackCount": 0,
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "name": "overflow-prompt-after-score",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824795947583,
+              "state": {
+                "hasSession": true,
+                "history": 0,
+                "status": 0,
+                "busy": false,
+                "ids": [],
+                "reason": 0,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 0,
+                "savedPrefix": [],
+                "evaluated": 0,
+                "savedHistory": 0
+              },
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "callbackCount": 0,
+              "name": "usable-reset",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824799398041,
+              "state": {
+                "hasSession": true,
+                "history": 7,
+                "status": 0,
+                "busy": false,
+                "ids": [
+                  47,
+                  47,
+                  47
+                ],
+                "reason": 1,
+                "workerFinished": false,
+                "hasModel": true,
+                "closed": false,
+                "pending": 1,
+                "savedPrefix": [
+                  0,
+                  7,
+                  13,
+                  3,
+                  47,
+                  47,
+                  47
+                ],
+                "evaluated": 6,
+                "savedHistory": 7
+              },
+              "footprint": {
+                "physicalBytes": 7930456,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7930456
+              },
+              "callbackCount": 3,
+              "name": "usable-fresh-reference",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 67140512
+            },
+            {
+              "completedUptimeNanoseconds": 1961824800022833,
+              "state": {
+                "evaluated": 0,
+                "closed": true,
+                "status": 0,
+                "pending": 0,
+                "savedHistory": 0,
+                "workerFinished": true,
+                "hasSession": false,
+                "history": 0,
+                "reason": 0,
+                "hasModel": false,
+                "busy": false,
+                "ids": []
+              },
+              "footprint": {
+                "physicalBytes": 7914072,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 7963224
+              },
+              "callbackCount": 0,
+              "name": "closed",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "admittedBytes": 0
+            }
+          ],
+          "released": true,
+          "physicalDeviceQualified": false,
+          "filesBefore": {
+            "M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+            "M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+          },
+          "filesAfter": {
+            "M8Inputs/tiny/Model/config.json": "0c60668f247d6584a76f06c8a536cf3e8c4be0ff17c352e58c7d122f1c18ce5e",
+            "M8Inputs/tiny/Model/model.safetensors": "ff728944657c95bc20f31e929663b4a728e13a056312e072962bb2867c6fb4be"
+          },
+          "backend": "metal-mlx",
+          "closed": true,
+          "endpointErrors": [],
+          "passed": true,
+          "trace": {
+            "events": [],
+            "detachedAfterClose": true
+          },
+          "cleanupErrors": [],
+          "prefillWitness": false,
+          "m7Complete": false,
+          "prefillWitnessRequired": false
+        },
+        "marker_counts": {
+          "TOKLET_STATE_JSON=": 1
+        },
+        "peak_physical_bytes": 7963224
+      },
+      "qwen-measurement-short": {
+        "result": {
+          "warmupsCompleted": 3,
+          "closed": true,
+          "backend": "metal-mlx",
+          "endpointErrors": [],
+          "m7Complete": false,
+          "filesAfter": {
+            "M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+            "M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+            "M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153"
+          },
+          "measuredCompleted": 10,
+          "cleanupErrors": [],
+          "loadAndSessionSeconds": 0.217534833,
+          "interruptionCount": 0,
+          "checkpoints": [
+            {
+              "phase": "before-artifact-proof",
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 2245016,
+                "returnedNaturalCount": 93,
+                "physicalBytes": 2245016
+              }
+            },
+            {
+              "phase": "after-artifact-proof",
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 3129776,
+                "physicalBytes": 3129776
+              }
+            },
+            {
+              "phase": "loaded",
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 293110528,
+                "returnedNaturalCount": 93,
+                "physicalBytes": 293110528
+              }
+            },
+            {
+              "phase": "unloaded",
+              "footprint": {
+                "physicalBytes": 201704216,
+                "lifetimePeakPhysicalBytes": 295387952,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "closed",
+              "footprint": {
+                "physicalBytes": 201704216,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295387952
+              }
+            },
+            {
+              "phase": "after-final-artifact-proof",
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 295387952,
+                "returnedNaturalCount": 93,
+                "physicalBytes": 16040632
+              }
+            }
+          ],
+          "sumNativeLastEventSeconds": 1.3951664179999999,
+          "physicalDeviceQualified": false,
+          "filesystemBefore": {
+            "readCompletedUptimeNanoseconds": 1961825780103958,
+            "readStartedUptimeNanoseconds": 1961825780039666,
+            "scope": "trusted-root-filesystem",
+            "instrument": "Foundation.FileManager.attributesOfFileSystem.systemFreeSize",
+            "freeBytes": 282642219008
+          },
+          "released": true,
+          "passed": true,
+          "filesBefore": {
+            "M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+            "M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+            "M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153"
+          }
+        },
+        "marker_counts": {
+          "TOKLET_MEASUREMENT_SAMPLE_JSON=": 13,
+          "TOKLET_MEASUREMENT_JSON=": 1
+        },
+        "peak_physical_bytes": 295387952
+      },
+      "qwen-quality-short": {
+        "result": {
+          "cleanupErrors": [],
+          "fullQualityQualified": false,
+          "filesBefore": {
+            "M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+            "M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+            "M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4"
+          },
+          "samplesCompleted": 3,
+          "released": true,
+          "closed": true,
+          "loadAndSessionSeconds": 0.190550083,
+          "m7Complete": false,
+          "backend": "metal-mlx",
+          "tokensBeforeSHA256": "fc6b7587685a5d482c96a7bdfb7fe5117be2bd02663d2774917a2c7c374da009",
+          "physicalDeviceQualified": false,
+          "passed": true,
+          "summary": {
+            "blockSize": 3,
+            "negativeLogLikelihoodSum": 22.851820320969203,
+            "targets": 3,
+            "blocks": 1,
+            "meanNegativeLogLikelihood": 7.617273440323068,
+            "policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once"
+          },
+          "endpointErrors": [],
+          "tokensAfterSHA256": "fc6b7587685a5d482c96a7bdfb7fe5117be2bd02663d2774917a2c7c374da009",
+          "filesAfter": {
+            "M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+            "M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+            "M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870"
+          },
+          "checkpoints": [
+            {
+              "phase": "before-artifact-proof",
+              "footprint": {
+                "physicalBytes": 2245016,
+                "lifetimePeakPhysicalBytes": 2245016,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "after-artifact-proof",
+              "footprint": {
+                "physicalBytes": 3146160,
+                "lifetimePeakPhysicalBytes": 3146160,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "loaded",
+              "footprint": {
+                "physicalBytes": 291324696,
+                "lifetimePeakPhysicalBytes": 291324696,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "block-0",
+              "footprint": {
+                "physicalBytes": 293356336,
+                "lifetimePeakPhysicalBytes": 293356336,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "unloaded",
+              "footprint": {
+                "physicalBytes": 213123864,
+                "lifetimePeakPhysicalBytes": 293356336,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "closed",
+              "footprint": {
+                "physicalBytes": 213123864,
+                "lifetimePeakPhysicalBytes": 293356336,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "after-final-artifact-proof",
+              "footprint": {
+                "physicalBytes": 10617480,
+                "lifetimePeakPhysicalBytes": 293356336,
+                "returnedNaturalCount": 93
+              }
+            }
+          ],
+          "interruptionCount": 0
+        },
+        "marker_counts": {
+          "TOKLET_QUALITY_SAMPLE_JSON=": 3,
+          "TOKLET_QUALITY_JSON=": 1
+        },
+        "peak_physical_bytes": 293356336
+      },
+      "qwen-tasks-short": {
+        "result": {
+          "endpointErrors": [],
+          "filesBefore": {
+            "M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+            "M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+            "M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4"
+          },
+          "tasksBeforeSHA256": "f9a797bd638f9eac47a5c0696db08d2068a852b3e95bb7aca4c327eff9d7570f",
+          "cleanupErrors": [],
+          "casesCompleted": 1,
+          "passed": true,
+          "physicalDeviceQualified": false,
+          "chunksCompleted": 1,
+          "checkpoints": [
+            {
+              "footprint": {
+                "physicalBytes": 2245016,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 2245016
+              },
+              "phase": "before-artifact-proof"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 3244464,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 3244464
+              },
+              "phase": "after-artifact-proof"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 382731080,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 382731080
+              },
+              "phase": "loaded"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 384779104,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 384779104
+              },
+              "phase": "case-0"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 295551816,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 384779104
+              },
+              "phase": "unloaded"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 295551816,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 384779104
+              },
+              "phase": "closed"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 11272840,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 384779104
+              },
+              "phase": "after-final-artifact-proof"
+            }
+          ],
+          "released": true,
+          "fullQualityQualified": false,
+          "interruptionCount": 0,
+          "loadAndSessionSeconds": 0.207372416,
+          "loadedAdmittedBytes": 437800546,
+          "m7Complete": false,
+          "filesAfter": {
+            "M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+            "M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870",
+            "M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4"
+          },
+          "tasksAfterSHA256": "f9a797bd638f9eac47a5c0696db08d2068a852b3e95bb7aca4c327eff9d7570f",
+          "backend": "metal-mlx",
+          "closed": true
+        },
+        "marker_counts": {
+          "TOKLET_TASK_CHUNK_JSON=": 1,
+          "TOKLET_TASK_CASE_JSON=": 1,
+          "TOKLET_TASKS_JSON=": 1
+        },
+        "peak_physical_bytes": 384779104
+      },
+      "qwen-state-component": {
+        "result": {
+          "prefillWitness": false,
+          "physicalDeviceQualified": false,
+          "m7Complete": false,
+          "filesBefore": {
+            "M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+            "M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+            "M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870"
+          },
+          "closed": true,
+          "rows": [
+            {
+              "name": "loaded",
+              "footprint": {
+                "physicalBytes": 293061376,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 293061376
+              },
+              "admittedBytes": 349000286,
+              "callbackCount": 0,
+              "state": {
+                "status": 0,
+                "hasModel": true,
+                "pending": 0,
+                "savedHistory": 0,
+                "busy": false,
+                "savedPrefix": [],
+                "history": 0,
+                "closed": false,
+                "reason": 0,
+                "ids": [],
+                "evaluated": 0,
+                "hasSession": true,
+                "workerFinished": false
+              },
+              "completedUptimeNanoseconds": 1961835846289208,
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              }
+            },
+            {
+              "name": "primer",
+              "completedUptimeNanoseconds": 1961835927347750,
+              "state": {
+                "busy": false,
+                "hasModel": true,
+                "hasSession": true,
+                "ids": [],
+                "evaluated": 4,
+                "workerFinished": false,
+                "reason": 1,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "status": 0,
+                "closed": false,
+                "pending": 0,
+                "history": 4,
+                "savedHistory": 4
+              },
+              "footprint": {
+                "physicalBytes": 294961944,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294961944
+              },
+              "admittedBytes": 349000286,
+              "callbackCount": 0,
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              }
+            },
+            {
+              "scalarScore": {
+                "greedyLogit": 13.851107597351074,
+                "greedy": 264,
+                "vocabulary": 151936,
+                "target": 2776,
+                "evaluated": 4,
+                "negativeLogLikelihood": 14.085656734441091,
+                "targetLogit": 1.2935501337051392
+              },
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 4,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 4,
+                "evaluated": 4,
+                "workerFinished": false,
+                "hasModel": true
+              },
+              "footprint": {
+                "physicalBytes": 294961944,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294961944
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961835928578458,
+              "name": "primer-score",
+              "environment": {
+                "lowPowerMode": false,
+                "thermalState": 0
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 4,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 4,
+                "evaluated": 4,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294961944,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294961944
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961835928597166,
+              "name": "fully-cached",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "scalarScore": {
+                "targetLogit": 1.2935501337051392,
+                "greedy": 264,
+                "greedyLogit": 13.851107597351074,
+                "target": 2776,
+                "vocabulary": 151936,
+                "evaluated": 4,
+                "negativeLogLikelihood": 14.085656734441091
+              },
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 4,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 4,
+                "evaluated": 4,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294961944,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294961944
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961835929837416,
+              "name": "cached-score",
+              "environment": {
+                "lowPowerMode": false,
+                "thermalState": 0
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [
+                  264,
+                  5458,
+                  315
+                ],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 7,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  264,
+                  5458,
+                  315
+                ],
+                "pending": 1,
+                "history": 7,
+                "evaluated": 6,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294961944,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294961944
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961835981574208,
+              "name": "pending-primer",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 3
+            },
+            {
+              "state": {
+                "ids": [
+                  358,
+                  2776
+                ],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 11,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  264,
+                  5458,
+                  315,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 1,
+                "history": 11,
+                "evaluated": 10,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294961944,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294961944
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836046714916,
+              "name": "append-pending",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 2
+            },
+            {
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 0,
+                "savedPrefix": [],
+                "pending": 0,
+                "history": 0,
+                "evaluated": 0,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294978328,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294978328
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836046744291,
+              "name": "append-reference-reset",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [
+                  358,
+                  2776
+                ],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 11,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  264,
+                  5458,
+                  315,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 1,
+                "history": 11,
+                "evaluated": 10,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294994712
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836186557375,
+              "name": "append-reference",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 2
+            },
+            {
+              "state": {
+                "ids": [
+                  14589,
+                  11,
+                  358
+                ],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 7,
+                "savedPrefix": [
+                  0,
+                  11,
+                  358,
+                  2776,
+                  14589,
+                  11,
+                  358
+                ],
+                "pending": 1,
+                "history": 7,
+                "evaluated": 6,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294994712
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836300426208,
+              "name": "changed-prefix",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 3
+            },
+            {
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 0,
+                "savedPrefix": [],
+                "pending": 0,
+                "history": 0,
+                "evaluated": 0,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294994712
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836300442208,
+              "name": "changed-reference-reset",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [
+                  14589,
+                  11,
+                  358
+                ],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 7,
+                "savedPrefix": [
+                  0,
+                  11,
+                  358,
+                  2776,
+                  14589,
+                  11,
+                  358
+                ],
+                "pending": 1,
+                "history": 7,
+                "evaluated": 6,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294994712
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836414005791,
+              "name": "changed-reference",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 3
+            },
+            {
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 0,
+                "savedPrefix": [],
+                "pending": 0,
+                "history": 0,
+                "evaluated": 0,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 294994712
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836414020750,
+              "name": "capacity-reset",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836831104875,
+              "name": "capacity-committed",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "scalarScore": {
+                "targetLogit": 6.87332010269165,
+                "greedy": 9707,
+                "greedyLogit": 20.45378875732422,
+                "target": 2776,
+                "vocabulary": 151936,
+                "evaluated": 32,
+                "negativeLogLikelihood": 13.633683246058306
+              },
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836832365625,
+              "name": "overflow-continue-before-score",
+              "environment": {
+                "lowPowerMode": false,
+                "thermalState": 0
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [],
+                "status": 1,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836832454041,
+              "name": "overflow-continue",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "scalarScore": {
+                "targetLogit": 6.87332010269165,
+                "greedy": 9707,
+                "greedyLogit": 20.45378875732422,
+                "target": 2776,
+                "vocabulary": 151936,
+                "evaluated": 32,
+                "negativeLogLikelihood": 13.633683246058306
+              },
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836833701583,
+              "name": "overflow-continue-after-score",
+              "environment": {
+                "lowPowerMode": false,
+                "thermalState": 0
+              },
+              "callbackCount": 0
+            },
+            {
+              "scalarScore": {
+                "targetLogit": 6.87332010269165,
+                "greedy": 9707,
+                "greedyLogit": 20.45378875732422,
+                "target": 2776,
+                "vocabulary": 151936,
+                "evaluated": 32,
+                "negativeLogLikelihood": 13.633683246058306
+              },
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836834882166,
+              "name": "overflow-append-before-score",
+              "environment": {
+                "lowPowerMode": false,
+                "thermalState": 0
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [],
+                "status": 1,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836834904833,
+              "name": "overflow-append",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "scalarScore": {
+                "targetLogit": 6.87332010269165,
+                "greedy": 9707,
+                "greedyLogit": 20.45378875732422,
+                "target": 2776,
+                "vocabulary": 151936,
+                "evaluated": 32,
+                "negativeLogLikelihood": 13.633683246058306
+              },
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836836078333,
+              "name": "overflow-append-after-score",
+              "environment": {
+                "lowPowerMode": false,
+                "thermalState": 0
+              },
+              "callbackCount": 0
+            },
+            {
+              "scalarScore": {
+                "targetLogit": 6.87332010269165,
+                "greedy": 9707,
+                "greedyLogit": 20.45378875732422,
+                "target": 2776,
+                "vocabulary": 151936,
+                "evaluated": 32,
+                "negativeLogLikelihood": 13.633683246058306
+              },
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836837377666,
+              "name": "overflow-prompt-before-score",
+              "environment": {
+                "lowPowerMode": false,
+                "thermalState": 0
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [],
+                "status": 1,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836837419125,
+              "name": "overflow-prompt",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "scalarScore": {
+                "targetLogit": 6.87332010269165,
+                "greedy": 9707,
+                "greedyLogit": 20.45378875732422,
+                "target": 2776,
+                "vocabulary": 151936,
+                "evaluated": 32,
+                "negativeLogLikelihood": 13.633683246058306
+              },
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 32,
+                "savedPrefix": [
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776,
+                  9707,
+                  11,
+                  358,
+                  2776
+                ],
+                "pending": 0,
+                "history": 32,
+                "evaluated": 32,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 294994712,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836838649458,
+              "name": "overflow-prompt-after-score",
+              "environment": {
+                "lowPowerMode": false,
+                "thermalState": 0
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [],
+                "status": 0,
+                "reason": 0,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 0,
+                "savedPrefix": [],
+                "pending": 0,
+                "history": 0,
+                "evaluated": 0,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 295011096,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836838679250,
+              "name": "usable-reset",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            },
+            {
+              "state": {
+                "ids": [
+                  14589,
+                  11,
+                  358
+                ],
+                "status": 0,
+                "reason": 1,
+                "closed": false,
+                "hasSession": true,
+                "busy": false,
+                "savedHistory": 7,
+                "savedPrefix": [
+                  0,
+                  11,
+                  358,
+                  2776,
+                  14589,
+                  11,
+                  358
+                ],
+                "pending": 1,
+                "history": 7,
+                "evaluated": 6,
+                "hasModel": true,
+                "workerFinished": false
+              },
+              "footprint": {
+                "physicalBytes": 295011096,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 349000286,
+              "completedUptimeNanoseconds": 1961836953229125,
+              "name": "usable-fresh-reference",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 3
+            },
+            {
+              "state": {
+                "history": 0,
+                "ids": [],
+                "hasModel": false,
+                "busy": false,
+                "status": 0,
+                "workerFinished": true,
+                "closed": true,
+                "hasSession": false,
+                "reason": 0,
+                "savedHistory": 0,
+                "evaluated": 0,
+                "pending": 0
+              },
+              "footprint": {
+                "physicalBytes": 213172992,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "admittedBytes": 0,
+              "completedUptimeNanoseconds": 1961836959012208,
+              "name": "closed",
+              "environment": {
+                "thermalState": 0,
+                "lowPowerMode": false
+              },
+              "callbackCount": 0
+            }
+          ],
+          "endpointErrors": [],
+          "trace": {
+            "events": [],
+            "detachedAfterClose": true
+          },
+          "cleanupErrors": [],
+          "passed": true,
+          "checkpoints": [
+            {
+              "phase": "before-artifact-proof",
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 2195864,
+                "physicalBytes": 2195864
+              }
+            },
+            {
+              "phase": "after-artifact-proof",
+              "footprint": {
+                "lifetimePeakPhysicalBytes": 3113392,
+                "physicalBytes": 3113392,
+                "returnedNaturalCount": 93
+              }
+            },
+            {
+              "phase": "loaded",
+              "footprint": {
+                "returnedNaturalCount": 93,
+                "physicalBytes": 293077760,
+                "lifetimePeakPhysicalBytes": 293077760
+              }
+            },
+            {
+              "footprint": {
+                "physicalBytes": 213172992,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "phase": "closed"
+            },
+            {
+              "footprint": {
+                "physicalBytes": 10699400,
+                "returnedNaturalCount": 93,
+                "lifetimePeakPhysicalBytes": 295011096
+              },
+              "phase": "after-final-artifact-proof"
+            }
+          ],
+          "filesAfter": {
+            "M8Inputs/qwen/Model/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+            "M8Inputs/qwen/Model/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+            "M8Inputs/qwen/Model/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870"
+          },
+          "released": true,
+          "backend": "metal-mlx",
+          "prefillWitnessRequired": false
+        },
+        "marker_counts": {
+          "TOKLET_STATE_JSON=": 1
+        },
+        "peak_physical_bytes": 295011096
+      }
+    },
+    "primary_error": null,
+    "endpoint_errors": [],
+    "full_quality_qualified": false,
+    "performance_qualified": false,
+    "physical_device_qualified": false
+  },
+  "source_checks": {
+    "path": "artifacts/m8-mac-job-source-checks-v1/checks.json",
+    "sha256": "f42a247230edacb038e173fb47cd5c302d336d8c579b279906216fdea5b2ea52"
+  },
+  "portable_methods": {
+    "staging": 8,
+    "tasks": 17,
+    "state": 15
+  },
+  "phone_operations": {
+    "reset": {
+      "path": "artifacts/m8-phone-existing-reset-v1/reset.json",
+      "sha256": "8e8cbebfb328f88d129eee35da3c06f252d7856c2c7af92f261d1e7865eab6ab",
+      "passed": true,
+      "primary_error": null,
+      "commands": 5
+    },
+    "prepared": {
+      "path": "artifacts/m8-phone-prepared-v2/integration.json",
+      "sha256": "30a0db2db2f12edfd335424b9b7c58694bd486494b3a1e3d1d64099a4bbb0c88",
+      "passed": true,
+      "primary_error": null,
+      "commands": 13
+    },
+    "refused_initial": {
+      "path": "artifacts/m8-phone-prepared-v1/integration.json",
+      "sha256": "07bac7a7c900c272a5b5273c650cd79ac7a35e94b636a5f4036440a49c99316d",
+      "passed": false,
+      "primary_error": "ValueError: Existing harness process is not owned by this run",
+      "commands": 3
+    }
+  },
+  "peak_physical_bytes": {
+    "tiny-measurement-short": 7930456,
+    "tiny-quality-short": 7930480,
+    "tiny-tasks-short": 7963224,
+    "tiny-state-component": 7963224,
+    "qwen-measurement-short": 295387952,
+    "qwen-quality-short": 293356336,
+    "qwen-tasks-short": 384779104,
+    "qwen-state-component": 295011096
+  },
+  "raw_inventory": {
+    "path": "benchmarks/results/2026-10-22-native-mlx-mac-jobs-raw-v1.json",
+    "sha256": "beab682a921a25fbcf3410f4aa4665ef41b67c4e89fe256775b196194dfb7edb"
+  },
+  "full_quality_qualified": false,
+  "performance_qualified": false,
+  "physical_device_qualified": false
+}

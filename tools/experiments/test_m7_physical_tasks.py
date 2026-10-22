@@ -187,4 +187,51 @@ class PhysicalTasksChecks(unittest.TestCase):
             owned.assert_not_called()
 
 
+
+
+class MLXMacTaskChecks(unittest.TestCase):
+    def make(self,stop=None):
+        config,signed,data,events=fixture(1,stop)
+        config.update(version=2,mlx=True,metal=True)
+        events[-1][1]['backend']='metal-mlx'
+        physical=copy.deepcopy(events)
+        events=[(marker,value) for marker,value in events if marker!='TOKLET_INSTALLATION_JSON=']
+        for _,value in events:
+            if 'environment' in value:
+                value['environment']={k:v for k,v in value['environment'].items() if k not in ['applicationState','batteryState','batteryLevel']}
+        return config,signed,data,events,physical
+
+    def test_mac_and_physical_mlx_keep_exact_chunk_and_stop_contracts(self):
+        for stop in [None,1,128,129,256]:
+            c,s,d,e,physical=self.make(stop)
+            out=t.check_console(console(e),c,None,d,require_installation=False)
+            self.assertEqual(out['installed_proofs'],[])
+            self.assertEqual(out['responses'][0]['response']['sampled'],256 if stop is None else stop)
+            self.assertEqual(t.check_console(console(physical),c,s,d)['installed_proofs'][0]['files'],s)
+
+    def test_mac_chunk_and_case_mismatches_reject(self):
+        for change in [lambda e:e[0][1].update(caseID='different'),lambda e:e[0][1]['chunk']['ids'].__setitem__(0,48),
+                       lambda e:e[0][1]['chunk'].update(index=True),lambda e:e[0][1]['chunk']['tokenTimings'][0].update(callbackUptimeNanoseconds=0)]:
+            c,_,d,e,_=self.make();change(e)
+            with self.assertRaises(ValueError):t.check_console(console(e),c,None,d,require_installation=False)
+
+    def test_self_consistent_invalid_stops_and_sample_counts_reject(self):
+        c,_,d,e,_=self.make(129)
+        e[1][1]['chunk']['stopToken']=61;e[2][1]['response']['stopToken']=61
+        with self.assertRaises(ValueError):t.check_console(console(e),c,None,d,require_installation=False)
+        c,_,d,e,_=self.make()
+        last=e[1][1]['chunk'];response=e[2][1]['response']
+        last['ids'].pop();last['tokenTimings'].pop();last['history']-=1;last['evaluated']-=1
+        response['ids'].pop();response['sampled']-=1;response['history']-=1;response['evaluated']-=1
+        with self.assertRaises(ValueError):t.check_console(console(e),c,None,d,require_installation=False)
+
+    def test_explicit_backend_and_mac_observation_scope_rejects(self):
+        for change in [lambda c,e:c.update(mlx=False),lambda c,e:c.update(metal=False),lambda c,e:c.update(packedFolder='Packed'),
+                       lambda c,e:e[-1][1].update(backend='metal'),lambda c,e:e[0][1]['environment'].update(applicationState=0)]:
+            c,_,d,e,_=self.make();change(c,e)
+            with self.assertRaises(ValueError):t.check_console(console(e),c,None,d,require_installation=False)
+        c,s,d,e,physical=self.make()
+        with self.assertRaises(ValueError):t.check_console(console(e),c,s,d,require_installation=False)
+        with self.assertRaises(ValueError):t.check_console(console(physical),c,None,d,require_installation=False)
+
 if __name__=='__main__':unittest.main()
