@@ -1,9 +1,12 @@
-//! Validated local MLX Qwen2 artifact source, without full-model expansion.
+//! Validated local MLX Qwen2/Llama artifact source, without full-model expansion.
 //!
 //! Opening validates config, index and tensor metadata. Payload reads check
 //! floating values/affine metadata; no GPU allocation or model execution occurs.
 
-use super::affine::{Layout, Matrix, MetadataDtype};
+use super::{
+    affine::{Layout, Matrix, MetadataDtype},
+    dense::{self, Architecture},
+};
 use crate::{
     model::Config,
     weights::{self, Error, LoadOptions},
@@ -136,6 +139,8 @@ impl QuantizationPlan {
 /// loading only; execution should retain resolved concrete buffers/operations.
 pub struct Source {
     config: Config,
+    architecture: Architecture,
+    tied_output: bool,
     tensors: BTreeMap<String, TensorSpec>,
     source: weights::Source,
     tensor_payload_bytes: usize,
@@ -148,6 +153,16 @@ impl Source {
     /// A redundant tied head must be representation- and byte-identical; it is
     /// streamed for verification but omitted from owned tensor payload totals.
     pub fn open(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
+        Self::open_impl(directory, options, false)
+    }
+
+    /// Additive dense admission. The original `open` remains Qwen-only so
+    /// existing consumers cannot accidentally opt into another graph.
+    pub fn open_dense(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
+        Self::open_impl(directory, options, true)
+    }
+
+    fn open_impl(directory: &Path, options: LoadOptions, allow_llama: bool) -> Result<Self, Error> {
         if options.memory_limit_bytes == 0
             || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
         {
@@ -171,7 +186,15 @@ impl Source {
             }
         };
         let plan = QuantizationPlan::parse(quantization)?;
-        let config = weights::qwen_config(document, options)?;
+        let (config, architecture, tied_output) = if allow_llama {
+            dense::config(document, options)?
+        } else {
+            (
+                weights::qwen_config(document, options)?,
+                Architecture::Qwen2,
+                true,
+            )
+        };
         // Bound name-map construction before looping over declared layers.
         let count = config
             .num_layers
@@ -180,13 +203,16 @@ impl Source {
             .ok_or_else(|| invalid("MLX tensor count overflow"))?;
         if count > 8192 {
             return Err(invalid(
-                "MLX Qwen loader supports at most 8192 logical tensors",
+                "MLX dense loader supports at most 8192 logical tensors",
             ));
         }
         let mut expected = weights::expected(&config)?;
+        if architecture == Architecture::Llama {
+            expected.retain(|name, _| !name.ends_with(".bias"));
+        }
         let source = weights::Source::open(directory)?;
         let has_head = source.info("lm_head.weight").is_some();
-        if has_head {
+        if has_head || !tied_output {
             expected.insert(
                 "lm_head.weight".into(),
                 vec![config.vocab_size, config.hidden_size],
@@ -258,7 +284,7 @@ impl Source {
                 Storage::Affine(layout) => layout.total_bytes(),
                 Storage::Float(_) => info.data_offsets.1 - info.data_offsets.0,
             };
-            if name != "lm_head.weight" {
+            if name != "lm_head.weight" || !tied_output {
                 tensor_payload_bytes = add(tensor_payload_bytes, payload_bytes)?;
             }
             tensors.insert(
@@ -271,7 +297,7 @@ impl Source {
             );
         }
         if source.names().any(|name| !physical.contains(name)) {
-            return Err(invalid("unexpected tensor in MLX Qwen artifact"));
+            return Err(invalid("unexpected tensor in MLX dense artifact"));
         }
         let admitted_load_bytes =
             add(add(tensor_payload_bytes, METADATA_ALLOWANCE)?, STREAM_BYTES)?;
@@ -283,12 +309,14 @@ impl Source {
         }
         let mut result = Self {
             config,
+            architecture,
+            tied_output,
             tensors,
             source,
             tensor_payload_bytes,
             admitted_load_bytes,
         };
-        if has_head {
+        if has_head && tied_output {
             result.check_tied_output()?;
             result.tensors.remove("lm_head.weight");
         }
@@ -296,6 +324,12 @@ impl Source {
     }
     pub fn config(&self) -> &Config {
         &self.config
+    }
+    pub fn architecture(&self) -> Architecture {
+        self.architecture
+    }
+    pub fn tied_output(&self) -> bool {
+        self.tied_output
     }
     pub fn tensors(&self) -> &BTreeMap<String, TensorSpec> {
         &self.tensors

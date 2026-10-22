@@ -1,10 +1,11 @@
-//! Explicit diagnostic-only FP32 expansion of a local MLX Qwen artifact.
+//! Explicit diagnostic-only FP32 expansion of a supported local MLX dense artifact.
 //!
 //! Preserves the scalar engine as an independent full-graph reference before
 //! composing resident GPU operations. Never selected by a performance backend.
 
 use super::{
     affine::Matrix,
+    dense::Architecture,
     qwen::{Source, Storage},
 };
 use crate::{
@@ -89,7 +90,20 @@ fn read(source: &mut Source, name: &str) -> Result<Vec<f32>, Error> {
 /// model, retaining no source packed model copy. Admission precedes expansion;
 /// a redundant output head stays tied to the single embedding allocation.
 pub fn load_qwen(directory: &Path, options: LoadOptions) -> Result<Loaded, Error> {
-    let mut source = Source::open(directory, options)?;
+    let source = Source::open(directory, options)?;
+    if source.architecture() != Architecture::Qwen2 {
+        return Err(invalid("load_qwen requires Qwen2"));
+    }
+    load_source(source, options)
+}
+
+/// Explicit diagnostic expansion of a validated native MLX Qwen2/Llama graph.
+pub fn load_dense(directory: &Path, options: LoadOptions) -> Result<Loaded, Error> {
+    load_source(Source::open_dense(directory, options)?, options)
+}
+
+fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error> {
+    let bias_free = source.architecture() == Architecture::Llama;
     let config = source.config().clone();
     let mut fp32_weights_bytes = 0;
     let mut temporary_packed_bytes = 0;
@@ -114,6 +128,11 @@ pub fn load_qwen(directory: &Path, options: LoadOptions) -> Result<Loaded, Error
         });
     }
     let embedding = read(&mut source, "model.embed_tokens.weight")?;
+    let output = if source.tied_output() {
+        None
+    } else {
+        Some(read(&mut source, "lm_head.weight")?)
+    };
     let final_norm = read(&mut source, "model.norm.weight")?;
     let mut layers = Vec::new();
     layers
@@ -124,7 +143,11 @@ pub fn load_qwen(directory: &Path, options: LoadOptions) -> Result<Loaded, Error
         let mut projection = |name| -> Result<Projection, Error> {
             Ok(Projection {
                 weight: read(&mut source, &format!("{p}.self_attn.{name}_proj.weight"))?,
-                bias: read(&mut source, &format!("{p}.self_attn.{name}_proj.bias"))?,
+                bias: if bias_free {
+                    Vec::new()
+                } else {
+                    read(&mut source, &format!("{p}.self_attn.{name}_proj.bias"))?
+                },
             })
         };
         let q = projection("q")?;
@@ -145,14 +168,16 @@ pub fn load_qwen(directory: &Path, options: LoadOptions) -> Result<Loaded, Error
             down: read(&mut source, &format!("{p}.mlp.down_proj.weight"))?,
         });
     }
-    let model = Model::new(
-        config,
-        Weights {
-            embedding,
-            layers,
-            final_norm,
-        },
-    )?;
+    let weights = Weights {
+        embedding,
+        layers,
+        final_norm,
+    };
+    let model = if bias_free {
+        Model::new_bias_free(config, weights, output)?
+    } else {
+        Model::new(config, weights)?
+    };
     Ok(Loaded {
         model,
         fp32_weights_bytes,

@@ -77,7 +77,7 @@ impl Config {
     }
 }
 
-/// Q/K/V row-major projection with required Qwen bias.
+/// Q/K/V row-major projection. Bias-free models require an empty bias vector.
 pub struct Projection {
     pub weight: Vec<f32>,
     pub bias: Vec<f32>,
@@ -187,11 +187,31 @@ pub struct Model {
     pub(crate) config: Config,
     pub(crate) weights: Weights,
     projection_kernel: cpu::ProjectionKernel,
+    output: Option<Vec<f32>>,
 }
 
 impl Model {
     /// Validate and take ownership of weights once, without copying them.
     pub fn new(config: Config, weights: Weights) -> Result<Self, Error> {
+        Self::build(config, weights, None, false)
+    }
+
+    /// Bias-free dense graph. An absent output table ties the embedding without
+    /// a second allocation; an explicit row-major [vocab, hidden] head is owned.
+    pub fn new_bias_free(
+        config: Config,
+        weights: Weights,
+        output: Option<Vec<f32>>,
+    ) -> Result<Self, Error> {
+        Self::build(config, weights, output, true)
+    }
+
+    fn build(
+        config: Config,
+        weights: Weights,
+        output: Option<Vec<f32>>,
+        bias_free: bool,
+    ) -> Result<Self, Error> {
         config.validate()?;
         if weights.layers.len() != config.num_layers {
             return Err(Error::LayerCount {
@@ -211,13 +231,20 @@ impl Model {
             &weights.embedding,
             product(config.vocab_size, h)?,
         )?;
+        if let Some(head) = &output {
+            check("output", head, product(config.vocab_size, h)?)?;
+        }
         check("final norm", &weights.final_norm, h)?;
         for layer in &weights.layers {
             check("input norm", &layer.input_norm, h)?;
             check("post attention norm", &layer.post_attention_norm, h)?;
             for (projection, rows) in [(&layer.q, h), (&layer.k, kv), (&layer.v, kv)] {
                 check("QKV weight", &projection.weight, product(rows, h)?)?;
-                check("QKV bias", &projection.bias, rows)?;
+                check(
+                    "QKV bias",
+                    &projection.bias,
+                    if bias_free { 0 } else { rows },
+                )?;
             }
             check("o weight", &layer.o, product(h, h)?)?;
             for values in [&layer.gate, &layer.up, &layer.down] {
@@ -228,7 +255,12 @@ impl Model {
             config,
             weights,
             projection_kernel: cpu::ProjectionKernel::Scalar,
+            output,
         })
+    }
+
+    fn output_weights(&self) -> &[f32] {
+        self.output.as_deref().unwrap_or(&self.weights.embedding)
     }
 
     /// Select a CPU projection candidate without copying weights or buffers.
@@ -253,6 +285,7 @@ impl Model {
         let mut bytes = total_bytes(&[
             self.weights.embedding.capacity(),
             self.weights.final_norm.capacity(),
+            self.output.as_ref().map_or(0, Vec::capacity),
         ])?;
         for layer in &self.weights.layers {
             bytes = bytes
@@ -306,7 +339,7 @@ impl Model {
         let start = (tokens.len() - 1) * self.config.hidden_size;
         self.projection_kernel.project(
             &scratch.norm[start..start + self.config.hidden_size],
-            &self.weights.embedding,
+            self.output_weights(),
             None,
             logits,
             [1, self.config.hidden_size, self.config.vocab_size],
@@ -326,7 +359,7 @@ impl Model {
         self.run(tokens, offset, scratch, Some(&mut trace), None, 0)?;
         self.projection_kernel.project(
             &scratch.norm[..tokens.len() * self.config.hidden_size],
-            &self.weights.embedding,
+            self.output_weights(),
             None,
             &mut trace.logits,
             [
@@ -383,7 +416,7 @@ impl Model {
         let start = (tokens.len() - rows) * self.config.hidden_size;
         self.projection_kernel.project(
             &scratch.norm[start..start + rows * self.config.hidden_size],
-            &self.weights.embedding,
+            self.output_weights(),
             None,
             logits,
             [rows, self.config.hidden_size, self.config.vocab_size],
@@ -480,21 +513,21 @@ impl Model {
             self.projection_kernel.project(
                 norm,
                 &layer.q.weight,
-                Some(&layer.q.bias),
+                (!layer.q.bias.is_empty()).then_some(layer.q.bias.as_slice()),
                 q,
                 [n, c.hidden_size, c.hidden_size],
             )?;
             self.projection_kernel.project(
                 norm,
                 &layer.k.weight,
-                Some(&layer.k.bias),
+                (!layer.k.bias.is_empty()).then_some(layer.k.bias.as_slice()),
                 k,
                 [n, c.hidden_size, c.kv_heads * c.head_dim],
             )?;
             self.projection_kernel.project(
                 norm,
                 &layer.v.weight,
-                Some(&layer.v.bias),
+                (!layer.v.bias.is_empty()).then_some(layer.v.bias.as_slice()),
                 v,
                 [n, c.hidden_size, c.kv_heads * c.head_dim],
             )?;
