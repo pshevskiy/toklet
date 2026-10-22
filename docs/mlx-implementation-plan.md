@@ -79,6 +79,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Immutable public eight-bit candidate acquisition](mlx8-checkpoint.md), exact files and raw-ID metadata inspection; reference/target/quality statuses are tracked separately below.
   - [x] [Independent eight-bit numerical reference](mlx8-real-oracle.md), 346 arrays and unchanged policy frozen before target trials; candidate execution/quality remains unqualified.
   - [x] [Eight-bit native Mac numerical/session parity](mlx8-real-metal.md), all frozen stage gates, eight full distributions and 16 exact selections; app/device/quality/performance remain separate.
+  - [x] [Eight-bit shared app jobs and physical short checks](mlx8-app-jobs.md), explicit immutable recipe, real-model storage admission, four Mac jobs and ten signed-phone stages; full quality/performance/state/lifecycle remain open.
   - [ ] A loss-qualified candidate, full task quality, representative/sustained app performance and physical MLX state/lifecycle qualification.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal

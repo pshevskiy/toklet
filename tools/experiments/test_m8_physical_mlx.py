@@ -152,10 +152,25 @@ class Transport(unittest.TestCase):
         self.assertFalse(result['passed']);self.assertFalse(any(label.startswith('copy-') or label=='measurement' for label in self.labels))
 
     def test_real_copy_missing_proof_rejects_before_any_child(self):
-        _,pin=self.staged();record,extra,payload,total=p.admitted_stage(self.stage,pin);record['model']='qwen';self.labels=[]
-        with patch.object(p,'admitted_stage',return_value=(record,extra,payload,total)):
-            result=p.run(self.stage,pin,self.root/'no-proof',prepare_only=True)
-        self.assertFalse(result['passed']);self.assertIn('fresh same-app storage proof',result['primary_error']);self.assertEqual(self.labels,[])
+        _,pin=self.staged();record,extra,payload,total=p.admitted_stage(self.stage,pin)
+        for model in ['qwen','qwen8']:
+            record['model']=model;self.labels=[]
+            with patch.object(p,'admitted_stage',return_value=(record,extra,payload,total)):
+                result=p.run(self.stage,pin,self.root/('no-proof-'+model),prepare_only=True)
+            self.assertFalse(result['passed']);self.assertIn('fresh same-app storage proof',result['primary_error']);self.assertEqual(self.labels,[])
+
+    def test_real_ready_cannot_bypass_storage_replay(self):
+        _,pin=self.staged();ready=self.root/'ready'
+        prepared=p.run(self.stage,pin,ready,prepare_only=True);self.assertTrue(prepared['passed'])
+        record,extra,payload,total=p.admitted_stage(self.stage,pin)
+        for model in ['qwen','qwen8']:
+            record['model']=model;prepared['model']=model
+            prepared['storage_admission']=dict(proof=dict(path=str((self.root/'proof/measurement.json').relative_to(p.ROOT)),sha256='a'*64))
+            path=ready/'measurement.json';path.write_text(json.dumps(prepared));self.labels=[]
+            with patch.object(p,'admitted_stage',return_value=(record,extra,payload,total)),patch.object(p,'admit_storage',side_effect=ValueError('storage replay sentinel')) as admission:
+                result=p.run(self.stage,pin,self.root/('ready-'+model),ready=ready,ready_sha=p.package.sha(path))
+            self.assertFalse(result['passed']);self.assertIn('storage replay sentinel',result['primary_error']);admission.assert_called_once()
+            self.assertFalse(any(label.startswith('copy-') or label=='measurement' for label in self.labels))
 
     def test_staged_inventory_and_recipe_reject_replacements(self):
         _,pin=self.staged();p.admitted_stage(self.stage,pin)

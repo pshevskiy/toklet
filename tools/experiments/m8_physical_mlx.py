@@ -178,7 +178,7 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
         record,extra,payload,total=admitted_stage(staged,staged_sha);merge(extra);config=record['config']
         record=dict(record,transfer_root=str((staged/'transfer').relative_to(ROOT)))
         context=dict(prepared_receipt=dict(path=str((PREPARED/'integration.json').relative_to(ROOT)),sha256=PREPARED_SHA),signed_bundle=signed,required_bindings=common,remote=remote,selected=selected)
-        if record['model']=='qwen' and not ready and not proof:raise ValueError('Real copy requires fresh same-app storage proof')
+        if record['model']!='tiny' and not ready and not proof:raise ValueError('Real copy requires fresh same-app storage proof')
         if record['model']=='tiny' and proof:raise ValueError('Tiny transfer needs no real-model storage proof')
         host_boot=storage.boot_token(consume(execute(['/usr/sbin/sysctl','-n','kern.bootsessionuuid'],'host-boot')))
         device=physical.admit_device(json.loads(consume(command(['info','details'],'device-before'))),selected)
@@ -198,7 +198,7 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
                 if saved['bindings'].get(name)!=pin:raise ValueError('Ready context binding differs')
             measurement.verify_inputs(saved['bindings']);measurement.verify_inputs(saved['private_evidence_pins'])
             merge(saved['bindings']);merge(saved['private_evidence_pins']);merge({str((ready/'measurement.json').relative_to(ROOT)):ready_sha})
-            if record['model']=='qwen':
+            if record['model']!='tiny':
                 previous_admission=saved['storage_admission'];reference=previous_admission['proof'];path=(ROOT/reference['path']).resolve()
                 observed,extra=admit_storage(path.parent,reference['sha256'],context);merge(extra)
                 if observed['device']!=device:raise ValueError('Ready storage device differs')

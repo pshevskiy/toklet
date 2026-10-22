@@ -17,14 +17,17 @@ class Jobs(unittest.TestCase):
         (jobs.ROOT/'artifacts').mkdir(exist_ok=True)
 
     def test_explicit_backend_and_immutable_selected_identity(self):
-        for model in ['tiny','qwen']:
+        for model in ['tiny','qwen','qwen8']:
             mode,config,host,pins,payloads=jobs.job(model,'measurement-short')
             self.assertEqual(mode,'measurement');self.assertEqual(config['version'],2)
             self.assertIs(config['mlx'],True);self.assertIs(config['metal'],True)
             self.assertEqual(config['packedFolder'],'');self.assertEqual(config['warmups'],3);self.assertEqual(config['repetitions'],10)
             self.assertEqual(set(host),set(config['files']));self.assertFalse(payloads)
             self.assertEqual(len(host),2 if model=='tiny' else 3)
-            self.assertEqual(config['expectedPrefix'],[47]*4 if model=='tiny' else [264,5458,315,17407])
+            self.assertEqual(config['expectedPrefix'],{'tiny':[47]*4,'qwen':[264,5458,315,17407],'qwen8':[4460,311,1855,264]}[model])
+            reference,reference_sha=(jobs.REFERENCE8,jobs.REFERENCE8_SHA) if model=='qwen8' else (jobs.REFERENCE,jobs.REFERENCE_SHA)
+            self.assertEqual(pins[reference],reference_sha)
+            if model=='qwen8':self.assertTrue(all('8bit-6474d4c' in source for source in host.values()))
             for target,source in host.items():self.assertEqual(pins[source],config['files'][target])
             self.assertLess(config['numericalBudget'],config['processBudget'])
             self.assertLessEqual(config['processBudget'],4*1024**3)
@@ -59,6 +62,18 @@ class Jobs(unittest.TestCase):
                 for actual,source in zip(cases,original):
                     self.assertEqual(actual,dict(id=source['id'],promptTokens=source['prompt_tokens'],maximum=min(8,source['max_output_tokens']) if workload=='tasks-short' else source['max_output_tokens']))
                 self.assertEqual(pins[jobs.TASKS],jobs.TASKS_SHA)
+
+    def test_eight_bit_preserves_full_workload_contracts(self):
+        for workload in jobs.WORKLOADS:
+            mode4,config4,_,pins4,payload4=jobs.job('qwen',workload)
+            mode8,config8,_,pins8,payload8=jobs.job('qwen8',workload)
+            self.assertEqual(mode8,mode4);self.assertEqual(payload8,payload4)
+            for key in config4.keys()-{'files','modelFolder','expectedPrefix'}:self.assertEqual(config8[key],config4[key])
+            self.assertEqual(config8['modelFolder'],'M8Inputs/qwen8/Model')
+            self.assertIn(jobs.REFERENCE8,pins8);self.assertNotIn(jobs.REFERENCE,pins8)
+            for name in [jobs.CONTRACT,jobs.CORPUS,jobs.TASKS]:
+                if name in pins4:self.assertEqual(pins8[name],pins4[name])
+        with self.assertRaises(ValueError):jobs.captured(jobs.REFERENCE8,'0'*64,256*1024)
 
     def test_rejects_unsupported_and_changed_captured_input(self):
         for model,workload in [('unknown','measurement-short'),('tiny','quality-full'),('tiny','tasks-full'),('qwen','unknown')]:

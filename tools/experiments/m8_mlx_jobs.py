@@ -9,6 +9,8 @@ import struct
 ROOT = Path(__file__).resolve().parents[2]
 REFERENCE = 'tests/fixtures/mlx-qwen-real-v1/manifest.json'
 REFERENCE_SHA = 'fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b'
+REFERENCE8 = 'tests/fixtures/mlx-qwen-real8-v1/manifest.json'
+REFERENCE8_SHA = '1f98482bceba6c5627767d50cd2c4bda461d97174ee6e29346c5223215270531'
 CONTRACT = 'benchmarks/contract-v1/manifest.json'
 CONTRACT_SHA = '3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66'
 CORPUS = 'benchmarks/contract-v1/held_out_loss.u32le'
@@ -36,11 +38,14 @@ def encoded(value):
 
 
 def job(model, workload):
-    if model not in ['tiny','qwen'] or workload not in WORKLOADS:raise ValueError('Unsupported explicit MLX job')
+    if model not in ['tiny','qwen','qwen8'] or workload not in WORKLOADS:raise ValueError('Unsupported explicit MLX job')
     if model == 'tiny' and workload not in ['measurement-short','quality-short','tasks-short','state-component']:
         raise ValueError('Tiny is component scope only')
-    reference=json.loads(captured(REFERENCE,REFERENCE_SHA,256*1024));pins={REFERENCE:REFERENCE_SHA}
-    source='tests/fixtures/mlx-qwen-v1/model' if model=='tiny' else 'models/MLX-Qwen2.5-0.5B-Instruct-4bit-a5339a4'
+    reference_name,reference_sha=(REFERENCE8,REFERENCE8_SHA) if model=='qwen8' else (REFERENCE,REFERENCE_SHA)
+    reference=json.loads(captured(reference_name,reference_sha,256*1024));pins={reference_name:reference_sha}
+    source={'tiny':'tests/fixtures/mlx-qwen-v1/model',
+            'qwen':'models/MLX-Qwen2.5-0.5B-Instruct-4bit-a5339a4',
+            'qwen8':'models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c'}[model]
     identity=TINY if model=='tiny' else reference['model']['file_pins']
     folder='M8Inputs/'+model+'/Model'
     host={folder+'/'+name:source+'/'+name for name in identity}
@@ -125,7 +130,7 @@ def stage(model, workload, output):
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--model',choices=['tiny','qwen'],required=True)
+    parser=argparse.ArgumentParser();parser.add_argument('--model',choices=['tiny','qwen','qwen8'],required=True)
     parser.add_argument('--workload',choices=WORKLOADS,required=True);parser.add_argument('--output',type=Path,required=True)
     args=parser.parse_args();record=stage(args.model,args.workload,args.output)
     print(json.dumps(dict(passed=record['passed'],mode=record['mode'],job=record['job'])))
