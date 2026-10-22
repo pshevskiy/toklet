@@ -102,7 +102,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Immutable real Llama-family candidate](mlx-smollm-checkpoint.md), selected SmolLM2-135M eight-bit snapshot and exact tensor inventory; reference/target/device status remains separate.
   - [x] [Independent real SmolLM2 reference](mlx-smollm-oracle.md), 349 arrays including full decode/scoring distributions, exact tokenizer probes and gates frozen before target changes.
   - [x] [Selected real SmolLM2 Mac execution](mlx-smollm-metal.md), frozen stage/decode/scoring gates and separate512-capacity state witness with Reference attention; app/device/quality remain separate.
-  - [ ] Widen dense model shapes and qualify real checkpoints; implement Mistral/sliding and other Llama rotary variants separately. Llama Online attention remains unqualified.
+  - [x] [Real SmolLM2 app/device integration](mlx-smollm-app-device.md), fresh native package/signed iPhone app, exact paired raw-ID/scoring/state probes and repeated short observations on Mac/iPhone14Pro. Full quality/context/lifecycle remain separate.
+  - [ ] Widen additional dense model shapes and qualify further real checkpoints; implement Mistral/sliding and other Llama rotary variants separately. Llama Online attention remains unqualified.
   - [ ] Expert routing, recurrent/hybrid state and actual multimodal/media execution, each with separate fixtures and target qualification.
 - [ ] **M8.4 Device-aware discovery/downloads.** After engine compatibility exists,
   expose Hugging Face model search, truthful support/fit labels and device-local

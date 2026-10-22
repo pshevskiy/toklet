@@ -63,9 +63,11 @@ def admitted_stage(folder,expected):
     record=metadata(folder/'staged.json',expected)
     mode,config,host,pins,_=jobs.job(record['model'],record['workload'])
     if (record['format']!='toklet-m8-mlx-staged-job-v1' or record['passed'] is not True
-        or mode not in ['measurement','quality','tasks','state','lifecycle'] or record['mode']!=mode or jobs.encoded(record['config'])!=jobs.encoded(config) or record['host']!=host
+        or mode not in ['measurement','quality','tasks','state','state-component','lifecycle'] or record['mode']!=mode or jobs.encoded(record['config'])!=jobs.encoded(config) or record['host']!=host
         or any(record[key] is not False for key in ['full_quality_qualified','physical_device_qualified','performance_qualified'])):
         raise ValueError('Exact supported staged MLX job required')
+    if record['model']=='smollm' and record.get('execution')!=jobs.SMOLLM_EXECUTION:
+        raise ValueError('SmolLM Reference execution identity differs')
     for name,pin in pins.items():
         if record['bindings'].get(name)!=pin:raise ValueError('Staged recipe binding differs')
     measurement.verify_inputs(record['bindings'])
@@ -84,13 +86,14 @@ def checked_console(text,record,signed):
     config=record['config'];mode=record['mode']
     if mode=='measurement':return measurement.validate_console(text,config,signed)
     if mode=='state':return state.validate_console(text,config,signed)
+    if mode=='state-component':return state.validate_console(text,config,signed,component=True)
     if mode=='lifecycle':raise ValueError('Lifecycle console requires the same-process round-trip controller')
     base=ROOT/record['transfer_root']
     if mode=='quality':
         raw=jobs.captured(str((base/config['tokensFile']).relative_to(ROOT)),config['tokensSHA256'],40004)
         import struct
         tokens=list(struct.unpack('<'+str(len(raw)//4)+'I',raw))
-        return quality.check_console(text,config,signed,tokens,64 if record['model']=='tiny' else 151936)
+        return quality.check_console(text,config,signed,tokens,{'tiny':64,'smollm':49152,'qwen':151936,'qwen8':151936}[record['model']])
     data=metadata(base/config['tasksFile'],config['tasksSHA256'],512*1024)
     return tasks.check_console(text,config,signed,data)
 
@@ -101,7 +104,7 @@ def admit_storage(folder,expected,context):
     proof=metadata(folder/'measurement.json',expected)
     if (proof['format']!=FORMAT or proof['passed'] is not True or proof['model']!='tiny' or proof['workload']!='measurement-short'
         or proof['mode']!='measurement' or proof['prepared_receipt']!=context['prepared_receipt'] or proof['signed_bundle']!=context['signed_bundle']
-        or proof['native_package_sha256']!=NATIVE_SHA or proof['bindings'].get(str(SELECTION.relative_to(ROOT)))!=SELECTION_SHA
+        or proof['native_package_sha256']!=context.get('native_package_sha256',NATIVE_SHA) or proof['bindings'].get(str(SELECTION.relative_to(ROOT)))!=SELECTION_SHA
         or proof['primary_error'] or proof['endpoint_errors'] or proof['cleanup_errors'] or len(proof['remote_cleanup'])!=2
         or any(not row['absent'] or row['errors'] for row in proof['remote_cleanup']) or proof['physical_device_qualified'] is not False):
         raise ValueError('Same-device successful tiny MLX observation required')
@@ -142,7 +145,16 @@ def validate_payload_listing(data,selected,name,size,*,allow_others=False):
         raise ValueError('Auxiliary payload inventory/size differs')
 
 
-def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,proof=None,proof_sha=None):
+def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,proof=None,proof_sha=None,native=None,native_sha=None,prepared=None,prepared_sha=None):
+    explicit=[native,native_sha,prepared,prepared_sha]
+    if any(v is not None for v in explicit) and not all(v is not None for v in explicit):
+        raise ValueError('Complete explicit native/prepared context required')
+    native=NATIVE if native is None else Path(native).resolve()
+    native_sha=NATIVE_SHA if native_sha is None else native_sha
+    prepared=PREPARED if prepared is None else Path(prepared).resolve()
+    prepared_sha=PREPARED_SHA if prepared_sha is None else prepared_sha
+    if any(not p.resolve().is_relative_to(ROOT/'artifacts') for p in [native,prepared]) or not all(storage.digest(v) for v in [native_sha,prepared_sha]):
+        raise ValueError('Repository package context with exact SHA required')
     if os.path.lexists(output):raise FileExistsError('Never overwrite an existing physical trial')
     staged=staged.resolve();output=output.resolve()
     if not output.is_relative_to(ROOT/'artifacts'):raise ValueError('Repository output required')
@@ -181,14 +193,14 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
         if not row['absent']:cleanup_errors.append('Owned remote absence unavailable')
     try:
         selected=physical.selection(SELECTION,SELECTION_SHA);merge({str(SELECTION.relative_to(ROOT)):SELECTION_SHA})
-        merge(integration.admit_build(NATIVE,NATIVE_SHA))
-        app,extra,remote,signed=physical.admit_reuse(PREPARED,PREPARED_SHA,selected,NATIVE_SHA);merge(extra)
-        prepared=metadata(PREPARED/'integration.json',PREPARED_SHA)
+        merge(integration.admit_build(native,native_sha))
+        app,extra,remote,signed=physical.admit_reuse(prepared,prepared_sha,selected,native_sha);merge(extra)
+        prepared_record=metadata(prepared/'integration.json',prepared_sha)
         # The cached profile/signature are exact receipt-bound bytes; recheck expiry now.
-        profile_paths=[PREPARED/'private-logs'/n for n in ['provisioning.stdout','entitlements.stdout','signature-details.stderr']]
+        profile_paths=[prepared/'private-logs'/n for n in ['provisioning.stdout','entitlements.stdout','signature-details.stderr']]
         profile_buffers=[]
         for path in profile_paths:
-            pin=prepared['private_evidence_pins'][str(path.relative_to(ROOT))]
+            pin=prepared_record['private_evidence_pins'][str(path.relative_to(ROOT))]
             profile_buffers.append(capture(path,pin))
             merge({str(path.relative_to(ROOT)):pin})
         profile=physical.admit_profile(plistlib.loads(profile_buffers[0]),plistlib.loads(profile_buffers[1]),profile_buffers[2].decode(),selected)
@@ -200,7 +212,7 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
         record=dict(record,transfer_root=str((staged/'transfer').relative_to(ROOT)))
         if record['mode']=='lifecycle' and not prepare_only:
             raise ValueError('Lifecycle execution requires the same-process round-trip controller')
-        context=dict(prepared_receipt=dict(path=str((PREPARED/'integration.json').relative_to(ROOT)),sha256=PREPARED_SHA),signed_bundle=signed,required_bindings=common,remote=remote,selected=selected)
+        context=dict(native_package_sha256=native_sha,prepared_receipt=dict(path=str((prepared/'integration.json').relative_to(ROOT)),sha256=prepared_sha),signed_bundle=signed,required_bindings=common,remote=remote,selected=selected)
         if record['model']!='tiny' and not ready and not proof:raise ValueError('Real copy requires fresh same-app storage proof')
         if record['model']=='tiny' and proof:raise ValueError('Tiny transfer needs no real-model storage proof')
         host_boot=storage.boot_token(consume(execute(['/usr/sbin/sysctl','-n','kern.bootsessionuuid'],'host-boot')))
@@ -211,7 +223,7 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
             ready=ready.resolve()
             if not ready.is_relative_to(ROOT/'artifacts'):raise ValueError('Repository ready receipt required')
             saved=metadata(ready/'measurement.json',ready_sha)
-            if (saved['format']!=READY_FORMAT or saved['passed'] is not True or saved['native_package_sha256']!=NATIVE_SHA
+            if (saved['format']!=READY_FORMAT or saved['passed'] is not True or saved['native_package_sha256']!=native_sha
                 or saved['model']!=record['model'] or saved['workload']!=record['workload'] or saved['mode']!=record['mode'] or jobs.encoded(saved['config'])!=jobs.encoded(config) or saved['staged_receipt']!=dict(path=str((staged/'staged.json').relative_to(ROOT)),sha256=staged_sha)
                 or saved['signed_bundle']!=signed or saved['prepared_receipt']!=context['prepared_receipt'] or saved['checked'] is not None
                 or saved['primary_error'] or saved['endpoint_errors'] or saved['cleanup_errors'] or len(saved['remote_cleanup'])!=2
@@ -256,7 +268,7 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
             transfer_verified=True
         if not prepare_only:
             job=record['job'];launch=logs/'launch.json';limit=7200 if record['mode']!='measurement' else 3600
-            args=[physical.DEVICECTL,'device','process','launch','--device',selected['device_identifier'],'--terminate-existing','--console','--timeout',str(limit),'--json-output',str(launch),physical.BUNDLE,'--',{'measurement':'--measure','quality':'--quality','tasks':'--tasks','state':'--state'}[record['mode']],job['relative_path'],job['sha256']]
+            args=[physical.DEVICECTL,'device','process','launch','--device',selected['device_identifier'],'--terminate-existing','--console','--timeout',str(limit),'--json-output',str(launch),physical.BUNDLE,'--',{'measurement':'--measure','quality':'--quality','tasks':'--tasks','state':'--state','state-component':'--state-component'}[record['mode']],job['relative_path'],job['sha256']]
             host_start=dict(wallUnixNanoseconds=time.time_ns(),monotonicNanoseconds=time.monotonic_ns())
             raw=physical.launch_verified(current,lambda:execute(args,'measurement',limit+30),remote,selected)
             with launch.open('rb') as stream:launch_raw=stream.read(16*1024**2+1)
@@ -288,7 +300,7 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
     private_pins={str(path.relative_to(ROOT)):package.sha(path) for path in [private,*logs.iterdir()] if path.is_file()}
     passed=primary is None and not endpoints and not cleanup_errors and transfer_verified and len(cleanup)==2 and (checked is None if prepare_only else checked is not None)
     result=dict(format=READY_FORMAT if prepare_only else FORMAT,passed=passed,model=record.get('model'),workload=record.get('workload'),mode=record.get('mode'),config=config,
-                native_package_sha256=NATIVE_SHA,prepared_receipt=dict(path=str((PREPARED/'integration.json').relative_to(ROOT)),sha256=PREPARED_SHA),
+                native_package_sha256=native_sha,prepared_receipt=dict(path=str((prepared/'integration.json').relative_to(ROOT)),sha256=prepared_sha),
                 staged_receipt=dict(path=str((staged/'staged.json').relative_to(ROOT)),sha256=staged_sha),signed_bundle=signed,device=device,signing=profile,bindings=pins,
                 private_evidence_pins=private_pins,commands=commands,remote_cleanup=cleanup,storage_admission=storage_admission,host_boot_token=host_boot,measurement_host_start=host_start,
                 checked=checked,primary_error=primary,endpoint_errors=endpoints,cleanup_errors=cleanup_errors,full_quality_qualified=False,physical_device_qualified=False,performance_qualified=False)
@@ -301,6 +313,7 @@ def run(staged,staged_sha,output,*,prepare_only=False,ready=None,ready_sha=None,
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--staged',type=Path,required=True);parser.add_argument('--staged-sha',required=True)
     parser.add_argument('--output',type=Path,required=True);parser.add_argument('--prepare-only',action='store_true')
+    parser.add_argument('--native',type=Path);parser.add_argument('--native-sha');parser.add_argument('--prepared',type=Path);parser.add_argument('--prepared-sha')
     parser.add_argument('--ready',type=Path);parser.add_argument('--ready-sha');parser.add_argument('--proof',type=Path);parser.add_argument('--proof-sha');args=parser.parse_args()
-    result=run(args.staged,args.staged_sha,args.output,prepare_only=args.prepare_only,ready=args.ready,ready_sha=args.ready_sha,proof=args.proof,proof_sha=args.proof_sha)
+    result=run(args.staged,args.staged_sha,args.output,prepare_only=args.prepare_only,ready=args.ready,ready_sha=args.ready_sha,proof=args.proof,proof_sha=args.proof_sha,native=args.native,native_sha=args.native_sha,prepared=args.prepared,prepared_sha=args.prepared_sha)
     sys.exit(0 if result['passed'] else 1)

@@ -15,6 +15,12 @@ The [selected MLX phone state trial](mlx8-phone-state.md) passes all 33 diagnost
 
 The [new app performance report](mlx8-performance.md) records all 128/512/1024 primary/confirmation workloads and dedicated 600-native-second sustained runs. At 512/128, Mac primary/confirmation native TTFT medians are 3.1133/3.1134 seconds and decode 22.1772/22.2205 IDs/s; phone 13.3074/15.1906 seconds and 15.2318/13.6681 IDs/s. Maximum process peaks are 0.6392 GB Mac/0.6519 GB phone. Sustained phone decode falls 22.324% from first-five to last-five medians under changing thermals. These raw-ID timings do not establish an external speed lead, steady phone rate or text/UI latency. Earlier Half/Q4 lifecycle qualification below does not carry over automatically to MLX.
 
+## Real Llama-family update — 23 October 2026
+
+The [selected SmolLM2-135M eight-bit checkpoint](mlx-smollm-app-device.md) now executes natively through the Rust/Metal engine and app coordinator on both M1 Pro and iPhone14Pro. It uses the bias-free LlamaForCausalLM graph, nine-query/three-KV GQA, ordinary rotary and Reference attention. Frozen numerical gates pass on Mac; both devices match generation, three scalar scoring probes, two authored task probes and26 state rows exactly. This is a Llama-family SmolLM2 checkpoint, not qualification of Meta-branded Llama releases.
+
+For the short four-input/four-output raw-ID workload, two runs each have three warmups and ten measured requests. Native first-token medians are39.471/39.950ms Mac and63.240/63.359ms phone; mean decode-interval medians are18.986/19.201ms and27.102/27.615ms. Observed component process peaks are156.730MB/169.855MB (decimal). These short observations exclude loading/tokenization/UI and do not establish sustained or comparative performance. Full SmolLM quality, chat, Online attention and wider architectures remain open. Admission is bounded to512 positions, tested for state/capacity on Mac; current phone probes exercise32. Earlier Qwen quality and long-context results do not carry over.
+
 ## What is implemented
 
 | Area | Delivered behavior |

@@ -6,8 +6,8 @@ import unittest
 import m8_physical_state as p
 
 
-def fixture(model='qwen8'):
-    c=p.jobs.job(model,'state-512')[1];prompt=c['prompt'];primer=prompt[:16];target=primer[-1]
+def fixture(model='qwen8',component=False):
+    c=p.jobs.job(model,'state-component' if component else 'state-512')[1];prompt=c['prompt'];primer=prompt[:16];target=primer[-1]
     pending=[47]*3;append=primer+pending+prompt[:2];changed=primer.copy();changed[0]=1 if changed[0]==0 else 0
     full=[prompt[i%len(prompt)] for i in range(c['capacity'])];rows=[]
     memory=dict(physicalBytes=100,lifetimePeakPhysicalBytes=200,returnedNaturalCount=93)
@@ -15,7 +15,7 @@ def fixture(model='qwen8'):
         return dict(busy=False,closed=False,workerFinished=False,hasModel=True,hasSession=True,status=0,
             history=len(tokens),evaluated=len(tokens)-tail,pending=tail,reason=reason,savedHistory=len(tokens),
             savedPrefix=list(tokens),ids=[] if ids is None else list(ids))
-    for i,name in enumerate(p.state.names(True)):
+    for i,name in enumerate(p.state.names(not component)):
         if name=='loaded' or name.endswith('-reset'):s=state([],reason=0)
         elif name in ['primer','primer-score','fully-cached','cached-score']:s=state(primer)
         elif name=='pending-primer':s=state(primer+pending,1,pending)
@@ -32,7 +32,7 @@ def fixture(model='qwen8'):
         rows.append(dict(name=name,state=s,scalarScore=score,callbackCount=len(s['ids']),admittedBytes=0 if name=='closed' else 1000000,
             completedUptimeNanoseconds=i+1,footprint=copy.deepcopy(memory),
             environment=dict(applicationState=0,lowPowerMode=False,thermalState=0,batteryState=2,batteryLevel=1.)))
-    result=dict(passed=True,backend='metal-mlx',prefillWitnessRequired=True,prefillWitness=True,cleanupErrors=[],endpointErrors=[],closed=True,released=True,
+    result=dict(passed=True,backend='metal-mlx',prefillWitnessRequired=not component,prefillWitness=not component,cleanupErrors=[],endpointErrors=[],closed=True,released=True,
         physicalDeviceQualified=False,m7Complete=False,filesBefore=copy.deepcopy(c['files']),filesAfter=copy.deepcopy(c['files']),rows=rows,
         trace=dict(events=[],detachedAfterClose=True),checkpoints=[dict(phase=n,footprint=copy.deepcopy(memory)) for n in ['before-artifact-proof','after-artifact-proof','loaded','closed','after-final-artifact-proof']])
     signed={'TokletHarness':'b'*64}
@@ -57,6 +57,15 @@ class State(unittest.TestCase):
             c,s,r,proofs=fixture(model);self.assertEqual(p.admit_config(c),model)
             self.assertEqual(p.validate_console(console(r,proofs),c,s),dict(result=r,installed_proofs=proofs))
             self.assertEqual(len(r['rows']),33)
+
+    def test_smollm_component_is_bounded_and_cannot_claim_prefill_cancellation(self):
+        c,s,r,proofs=fixture('smollm',component=True)
+        self.assertEqual(p.admit_config(c,True),'smollm')
+        self.assertEqual(len(r['rows']),26)
+        self.assertEqual(p.validate_console(console(r,proofs),c,s,component=True),dict(result=r,installed_proofs=proofs))
+        with self.assertRaises(ValueError):p.validate_console(console(r,proofs),c,s)
+        r['prefillWitness']=True
+        with self.assertRaises(ValueError):p.validate_console(console(r,proofs),c,s,component=True)
 
     def test_canonical_config_rejects_semantic_shape_and_type_substitutions(self):
         for field,value in [('version',2.),('mlx',1),('metal',1),('capacity',1153),('chunk',64),('maximum',127),('vocabulary',64),('packedFolder','Packed'),('modelFolder','Other'),('prompt',[1]*512),('extra',1)]:

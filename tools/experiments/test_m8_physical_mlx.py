@@ -111,6 +111,65 @@ class Transport(unittest.TestCase):
         self.assertFalse(any(s.startswith('copy-') for s in self.labels));self.assertEqual(self.labels.count('measurement'),1)
         self.assertEqual(len(result['remote_cleanup']),2);self.assertTrue(all(r['absent'] and not r['errors'] for r in result['remote_cleanup']))
 
+    def test_explicit_package_context_is_complete_and_propagates_to_receipts(self):
+        _,pin=self.staged()
+        with self.assertRaises(ValueError):p.run(self.stage,pin,self.root/'incomplete',native=self.root)
+        native=self.root/'native';native.mkdir();native_sha='c'*64
+        with patch.object(p.integration,'admit_build',return_value={}) as admit:
+            result=p.run(self.stage,pin,self.root/'explicit',prepare_only=True,
+                         native=native,native_sha=native_sha,prepared=self.prepared,prepared_sha=self.prepared_sha)
+        self.assertTrue(result['passed']);admit.assert_called_once_with(native,native_sha)
+        self.assertEqual(result['native_package_sha256'],native_sha)
+        self.assertEqual(result['prepared_receipt']['sha256'],self.prepared_sha)
+
+    def test_nondefault_context_composes_storage_proof_real_prepare_and_no_copy_reuse(self):
+        # Small authored payloads replace the real model only; actual storage,
+        # clock, proof, ready and no-copy admission code is composed unmocked.
+        _,pin=self.staged();tiny=self.stage;tiny_config=copy.deepcopy(self.config)
+        native=self.root/'new-native';native.mkdir();context=dict(native=native,native_sha='d'*64,
+            prepared=self.prepared,prepared_sha=self.prepared_sha)
+        ready=self.root/'tiny-ready'
+        self.assertTrue(p.run(tiny,pin,ready,prepare_only=True,**context)['passed'])
+        proof=self.root/'tiny-proof'
+        observed=p.run(tiny,pin,proof,ready=ready,ready_sha=p.package.sha(ready/'measurement.json'),**context)
+        self.assertTrue(observed['passed'])
+        original=p.jobs.job
+        def recipe(model,workload):
+            if model!='smollm':return original(model,workload)
+            mode,c,host,pins,payloads=original('tiny',workload)
+            c=copy.deepcopy(c);c['modelFolder']='M8Inputs/smollm/Model'
+            c['files']={name.replace('M8Inputs/tiny/','M8Inputs/smollm/'):digest for name,digest in c['files'].items()}
+            host={name.replace('M8Inputs/tiny/','M8Inputs/smollm/'):source for name,source in host.items()}
+            return mode,c,host,pins,payloads
+        with patch.object(p.jobs,'job',side_effect=recipe):
+            real=self.root/'real';record=p.jobs.stage('smollm','measurement-short',real)
+            self.stage=real;self.config=record['config'];real_sha=p.package.sha(real/'staged.json')
+            transferred=self.root/'real-ready'
+            accepted=p.run(real,real_sha,transferred,prepare_only=True,proof=proof,
+                proof_sha=p.package.sha(proof/'measurement.json'),**context)
+            self.assertTrue(accepted['passed'],accepted['primary_error'])
+            self.assertIsNotNone(accepted['storage_admission'])
+            self.labels=[]
+            result=p.run(real,real_sha,self.root/'real-run',ready=transferred,
+                ready_sha=p.package.sha(transferred/'measurement.json'),**context)
+            self.assertTrue(result['passed'],result['primary_error'])
+            self.assertFalse(any(label.startswith('copy-') for label in self.labels))
+            for name,value in [('native_sha','e'*64),('prepared_sha','f'*64)]:
+                wrong=dict(context,**{name:value})
+                rejected=p.run(real,real_sha,self.root/('wrong-'+name),ready=transferred,
+                    ready_sha=p.package.sha(transferred/'measurement.json'),**wrong)
+                self.assertFalse(rejected['passed']);self.assertIsNone(rejected['checked'])
+        self.config=tiny_config
+
+    def test_component_route_uses_distinct_explicit_app_flag(self):
+        _,pin=self.staged();record,extra,payload,total=p.admitted_stage(self.stage,pin)
+        record=dict(record,mode='state-component')
+        with patch.object(p,'admitted_stage',return_value=(record,extra,payload,total)),patch.object(p.state,'validate_console',return_value={'component':'checked'}) as validate:
+            result=p.run(self.stage,pin,self.root/'component-route')
+        self.assertTrue(result['passed']);self.assertEqual(validate.call_args.kwargs,{'component':True})
+        launch=next(row for row in result['commands'] if Path(row['stdout']).stem=='measurement')
+        self.assertEqual(launch['command'][-3],'--state-component')
+
     def test_state_route_uses_explicit_app_argument_and_state_validator(self):
         # Isolate dispatch from artifact/state semantics, covered by the strict
         # recipe and state fixtures. Existing real-copy tests still forbid bypass.

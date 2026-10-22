@@ -33,6 +33,28 @@ class Jobs(unittest.TestCase):
             self.assertLess(config['numericalBudget'],config['processBudget'])
             self.assertLessEqual(config['processBudget'],4*1024**3)
 
+    def test_smollm_has_own_tokenizer_probes_and_bounded_reference_context(self):
+        for workload in ['measurement-short','quality-short','tasks-short','state-component']:
+            mode,c,host,pins,payloads=jobs.job('smollm',workload)
+            self.assertEqual(c['modelFolder'],'M8Inputs/smollm/Model')
+            self.assertEqual(len(host),6);self.assertEqual(set(host),set(c['files']))
+            self.assertEqual(pins[jobs.SMOLLM_REFERENCE],jobs.SMOLLM_REFERENCE_SHA)
+            self.assertLessEqual(c['capacity'],512)
+            self.assertEqual((c['numericalBudget'],c['processBudget']),(512*1024**2,1024*1024**2))
+            self.assertFalse(any(name in pins for name in [jobs.CORPUS,jobs.TASKS,jobs.CONTRACT,jobs.REFERENCE,jobs.REFERENCE8]))
+            if mode=='measurement':
+                self.assertEqual(c['prompt'],[19556,28,905,17]);self.assertEqual(c['expectedPrefix'],[339,3543,719,1891])
+                self.assertEqual((c['warmups'],c['repetitions']),(3,10))
+            elif mode=='quality':self.assertEqual(payloads[c['tokensFile']],struct.pack('<4I',19556,28,905,17))
+            elif mode=='tasks':
+                data=json.loads(payloads[c['tasksFile']]);self.assertEqual(data['vocabulary'],49152);self.assertEqual(data['stops'],[2])
+                self.assertEqual([case['maximum'] for case in data['cases']],[4,2])
+            else:self.assertEqual(c['vocabulary'],49152)
+        for workload in jobs.WORKLOADS:
+            if workload not in ['measurement-short','quality-short','tasks-short','state-component']:
+                with self.assertRaises(ValueError):jobs.job('smollm',workload)
+        with self.assertRaises(ValueError):jobs.captured(jobs.SMOLLM_REFERENCE,'0'*64,256*1024)
+
     def test_contract_prompts_and_completed_work_policy_are_unchanged(self):
         for workload,count in [('128',128),('512',512),('1024',1024),('sustained',512)]:
             _,config,_,pins,_=jobs.job('qwen','measurement-'+workload)

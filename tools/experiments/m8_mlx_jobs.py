@@ -11,6 +11,9 @@ REFERENCE = 'tests/fixtures/mlx-qwen-real-v1/manifest.json'
 REFERENCE_SHA = 'fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b'
 REFERENCE8 = 'tests/fixtures/mlx-qwen-real8-v1/manifest.json'
 REFERENCE8_SHA = '1f98482bceba6c5627767d50cd2c4bda461d97174ee6e29346c5223215270531'
+SMOLLM_REFERENCE = 'tests/fixtures/mlx-smollm-real-v1/manifest.json'
+SMOLLM_REFERENCE_SHA = '3cd3af44e0d4d57cc7cf23c8dd7cc7b60ccf0968e48bfae90adba35517e039bd'
+SMOLLM_EXECUTION = dict(architecture='llama',attention='reference',contextCeiling=512)
 CONTRACT = 'benchmarks/contract-v1/manifest.json'
 CONTRACT_SHA = '3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66'
 CORPUS = 'benchmarks/contract-v1/held_out_loss.u32le'
@@ -48,6 +51,7 @@ def frozen_prompt(count,pins):
 
 
 def job(model, workload):
+    if model == 'smollm':return smollm_job(workload)
     if model not in ['tiny','qwen','qwen8'] or workload not in WORKLOADS:raise ValueError('Unsupported explicit MLX job')
     if model == 'tiny' and workload not in ['measurement-short','quality-short','tasks-short','state-component']:
         raise ValueError('Tiny is component scope only')
@@ -107,6 +111,37 @@ def job(model, workload):
     return mode,config,host,pins,payloads
 
 
+def smollm_job(workload):
+    """Selected raw-ID probes; never borrow Qwen's tokenizer/quality corpus."""
+    if workload not in ['measurement-short','quality-short','tasks-short','state-component']:
+        raise ValueError('SmolLM currently supports bounded component probes only')
+    reference=json.loads(captured(SMOLLM_REFERENCE,SMOLLM_REFERENCE_SHA,256*1024))
+    source='models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8';folder='M8Inputs/smollm/Model'
+    identity=reference['model']['file_pins'];prompt=reference['greedy']['prompt']
+    host={folder+'/'+name:source+'/'+name for name in identity}
+    files={folder+'/'+name:pin for name,pin in identity.items()}
+    pins={SMOLLM_REFERENCE:SMOLLM_REFERENCE_SHA,**{host[name]:pin for name,pin in files.items()}}
+    config=dict(version=2,mlx=True,modelFolder=folder,packedFolder='',files=files,metal=True,
+                numericalBudget=512*1024**2,processBudget=1024*1024**2,capacity=32,chunk=3)
+    payloads={}
+    if workload=='measurement-short':
+        mode='measurement';config.update(prompt=prompt,maximum=4,expectedPrefix=reference['greedy']['fp64_tokens'],
+                                        warmups=3,repetitions=10,minimumNativeSeconds=0)
+    elif workload=='quality-short':
+        mode='quality';raw=struct.pack('<4I',*prompt);digest=hashlib.sha256(raw).hexdigest()
+        name='M8Corpora/'+digest+'/tokens.u32le';payloads[name]=raw
+        config.update(capacity=4,chunk=1,tokensFile=name,tokensSHA256=digest,targets=3,blockSize=3)
+    elif workload=='tasks-short':
+        mode='tasks';data=dict(version=1,vocabulary=49152,stops=[2],cases=[
+            dict(id='raw-hello-four',promptTokens=prompt,maximum=4),
+            dict(id='raw-hello-two',promptTokens=prompt,maximum=2)])
+        raw=encoded(data);digest=hashlib.sha256(raw).hexdigest();name='M8Tasks/'+digest+'/tasks.json';payloads[name]=raw
+        config.update(tasksFile=name,tasksSHA256=digest,caseCount=2)
+    else:
+        mode='state-component';config.update(prompt=prompt,maximum=25,vocabulary=49152)
+    return mode,config,host,pins,payloads
+
+
 def stage(model, workload, output):
     output=Path(output).absolute()
     if os.path.lexists(output):raise FileExistsError('Never overwrite an existing trial')
@@ -133,12 +168,13 @@ def stage(model, workload, output):
                 bindings=pins,host=host,job=dict(relative_path=name,sha256=digest),
                 staged_files={str(p.relative_to(base)):dict(bytes=p.stat().st_size,sha256=sha(p)) for p in sorted(base.rglob('*')) if p.is_file()},
                 full_quality_qualified=False,physical_device_qualified=False,performance_qualified=False)
+    if model=='smollm':record['execution']=dict(SMOLLM_EXECUTION)
     with (output/'staged.json').open('x') as stream:json.dump(record,stream,indent=2);stream.write('\n')
     return record
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--model',choices=['tiny','qwen','qwen8'],required=True)
+    parser=argparse.ArgumentParser();parser.add_argument('--model',choices=['tiny','qwen','qwen8','smollm'],required=True)
     parser.add_argument('--workload',choices=WORKLOADS,required=True);parser.add_argument('--output',type=Path,required=True)
     args=parser.parse_args();record=stage(args.model,args.workload,args.output)
     print(json.dumps(dict(passed=record['passed'],mode=record['mode'],job=record['job'])))

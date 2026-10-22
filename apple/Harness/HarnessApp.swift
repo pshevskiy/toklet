@@ -151,13 +151,13 @@ private struct HarnessView: View {
                     }.disabled(!idle || store.state.hasModel)
                     VStack(alignment:.leading) { Text("Packed folder (Metal Q4 v2 only)").font(.caption); TextField("Optional local path",text:bounded($packed,16384)).textInputAutocapitalization(.never).autocorrectionDisabled() }
                     Toggle("Metal",isOn:$metal)
-                    Toggle("MLX-format Qwen model",isOn:$mlx)
+                    Toggle("MLX-format model",isOn:$mlx)
                     if mlx { Text("Requires Metal. Leave the separate Q4 folder empty.") }
                     HStack { Text("Capacity (tokens)"); TextField("Tokens",text:bounded($capacity,10)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
                     HStack { Text("Prefill chunk"); TextField("Tokens",text:bounded($chunk,10)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
                     HStack { Text("Numerical cap (MiB)"); TextField("MiB",text:bounded($budgetMiB,20)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
                     Button("Load") { load() }.disabled(!idle || store.state.hasModel)
-                    Text("Select MLX-format Qwen for supported MLX artifacts, or use the existing floating/Q4 formats. Copy full artifacts to this app’s Documents/Model folder. The bundled fixture is for integration checks.")
+                    Text("Select MLX-format for supported Qwen2 and Llama-family artifacts, or use the existing floating/Q4 formats. Copy full artifacts to this app’s Documents/Model folder. The bundled fixture is for integration checks.")
                 }.disabled(!idle || store.state.hasModel)
                 Section("Raw token generation") {
                     VStack(alignment:.leading) { Text("Prompt or append IDs").font(.caption); TextField("IDs",text:bounded($prompt,262144),axis:.vertical).textInputAutocapitalization(.never).autocorrectionDisabled() }
@@ -203,10 +203,10 @@ struct TokletHarnessApp: App {
 
     init() {
         let arguments = ProcessInfo.processInfo.arguments
-        let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle","--state"]
-        let state = HarnessStore(enabled:!diagnostics.contains(where:arguments.contains),lifecycleEnabled:arguments.contains("--lifecycle") || arguments.contains("--state"))
+        let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle","--state","--state-component"]
+        let state = HarnessStore(enabled:!diagnostics.contains(where:arguments.contains),lifecycleEnabled:arguments.contains("--lifecycle") || arguments.contains("--state") || arguments.contains("--state-component"))
         _store = StateObject(wrappedValue:state)
-        if let position = arguments.firstIndex(of:"--state") {
+        if let position = arguments.firstIndex(of:"--state") ?? arguments.firstIndex(of:"--state-component") {
             UIApplication.shared.isIdleTimerDisabled = true
             UIDevice.current.isBatteryMonitoringEnabled = true
             let root = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
@@ -217,7 +217,7 @@ struct TokletHarnessApp: App {
                     try awaitNativeMeasurementForeground()
                     let config = try admitLifecycleConfig(root:root,name:arguments[position+1],sha256:arguments[position+2])
                     try installedBundleProof("before")
-                    let result = runNativeState(config,root:root,signals:signals)
+                    let result = runNativeState(config,root:root,signals:signals,requirePrefillWitness:arguments[position] == "--state")
                     try installedBundleProof("after")
                     let data = try JSONEncoder().encode(result)
                     try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_STATE_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
