@@ -76,6 +76,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Guarded physical MLX jobs](mlx-phone-jobs.md), actual selected public-checkpoint generation/scoring/tasks and native process peaks on iPhone 14 Pro.
   - [x] [Full frozen loss collection](mlx-full-loss.md) on Mac and iPhone: 10,000 targets each and exact cross-device scores. The public four-bit candidate fails the unchanged loss gate (+0.19920869 > 0.05) on both and is rejected for adoption; acceptance remains open.
   - [x] [Upstream same-artifact loss diagnosis](mlx-upstream-loss.md): full MLX-LM mean 3.08305608 also fails the frozen gate, with descriptive precision differences retained. No native backend replacement or acceptance waiver.
+  - [x] [Immutable public eight-bit candidate acquisition](mlx8-checkpoint.md), exact files and raw-ID metadata inspection only; independent reference, target execution and quality remain unqualified.
   - [ ] Real-checkpoint full quality, representative app performance and physical MLX execution/memory.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
