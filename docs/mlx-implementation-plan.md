@@ -82,6 +82,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Eight-bit shared app jobs and physical short checks](mlx8-app-jobs.md), explicit immutable recipe, real-model storage admission, four Mac jobs and ten signed-phone stages; full quality/performance/state/lifecycle remain open.
   - [x] [Eight-bit full loss acceptance](mlx8-full-loss.md) on Mac and iPhone: 10,000 targets each, exact paired scores and +0.00122855 mean loss against the unchanged 0.05 gate.
   - [x] [Repeated physical-grading idle hook](mlx-task-grading-window.md), mandatory local checks plus optional remote checks at all five existing boundaries, strict fresh outputs and 49 mocked portable methods. Actual native-app response admission/grading remains open.
+  - [x] [Eight-bit full task response collection](mlx8-full-task-collection.md), all 100 original full-cap responses on Mac and iPhone with exact paired raw IDs/stops/state; decoding and isolated outcome grading remain open.
   - [ ] Full task quality, representative/sustained app performance and physical MLX state/lifecycle qualification.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
