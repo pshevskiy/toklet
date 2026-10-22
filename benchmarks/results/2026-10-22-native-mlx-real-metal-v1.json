@@ -1,0 +1,288 @@
+{
+  "format": "toklet-native-mlx-real-metal-qualification-v1",
+  "passed": true,
+  "base_revision": "21fbc11",
+  "scope": "Selected immutable public four-bit Qwen0.5B native Rust/Metal Mac numerical and session parity; no full quality or performance/physical qualification.",
+  "ordinary": {
+    "format": "toklet-native-mlx-real-metal-ordinary-v1",
+    "passed": true,
+    "source_pins": {
+      "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+      "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+      "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+      "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+      "src/bin/cli/mod.rs": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24",
+      "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+      "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+      "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+      "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+      "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+      "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+      "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+      "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+      "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+      "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+      "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+      "src/metal/memory.rs": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6",
+      "src/metal/mlx.rs": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177",
+      "src/metal/mod.rs": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65",
+      "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+      "src/metal/profile.rs": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3",
+      "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+      "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+      "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+      "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+      "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+      "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+      "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+      "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+      "src/native/tests.rs": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856",
+      "src/native.rs": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc",
+      "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+      "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+      "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+      "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+      "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+      "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+      "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+      "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+      "tests/mlx_real_model_metal.rs": "fbbe6234d2eeac2bad1852219e9adc389e477286aa0babf059676b2d31d1d256",
+      "tests/fixtures/mlx-qwen-real-v1/manifest.json": "fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b",
+      "artifacts/m8-real-metal-ordinary-v2/checks.py": "719ec4ee0c19576c312317d4e093484bb1863ef8a7b3f494df9cdb3305a4b811",
+      "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d"
+    },
+    "protected_binary_pins": {
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+    },
+    "commands": [
+      {
+        "command": [
+          "/Users/coloner/.cargo/bin/cargo",
+          "+1.90",
+          "fmt",
+          "--check"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 31153,
+        "stdout": "artifacts/m8-real-metal-ordinary-v2/fmt.stdout",
+        "stderr": "artifacts/m8-real-metal-ordinary-v2/fmt.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/.cargo/bin/cargo",
+          "+1.90",
+          "clippy",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 31161,
+        "stdout": "artifacts/m8-real-metal-ordinary-v2/clippy-cpu.stdout",
+        "stderr": "artifacts/m8-real-metal-ordinary-v2/clippy-cpu.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/.cargo/bin/cargo",
+          "+1.90",
+          "clippy",
+          "--all-targets",
+          "--features",
+          "metal",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 31172,
+        "stdout": "artifacts/m8-real-metal-ordinary-v2/clippy-metal.stdout",
+        "stderr": "artifacts/m8-real-metal-ordinary-v2/clippy-metal.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/.cargo/bin/cargo",
+          "+1.90",
+          "test"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 31178,
+        "stdout": "artifacts/m8-real-metal-ordinary-v2/test-cpu.stdout",
+        "stderr": "artifacts/m8-real-metal-ordinary-v2/test-cpu.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/.cargo/bin/cargo",
+          "+1.90",
+          "test",
+          "--features",
+          "metal"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 31312,
+        "stdout": "artifacts/m8-real-metal-ordinary-v2/test-metal.stdout",
+        "stderr": "artifacts/m8-real-metal-ordinary-v2/test-metal.stderr"
+      },
+      {
+        "command": [
+          "/Users/coloner/.cargo/bin/cargo",
+          "+1.90",
+          "test",
+          "--release",
+          "--features",
+          "metal",
+          "--test",
+          "mlx_real_model_metal",
+          "--no-run"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 31408,
+        "stdout": "artifacts/m8-real-metal-ordinary-v2/release-build.stdout",
+        "stderr": "artifacts/m8-real-metal-ordinary-v2/release-build.stderr"
+      }
+    ],
+    "primary_error": null,
+    "endpoint_errors": []
+  },
+  "gpu": {
+    "format": "toklet-native-mlx-real-metal-gpu-v1",
+    "passed": true,
+    "source_pins": {
+      "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+      "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+      "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+      "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+      "src/bin/cli/mod.rs": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24",
+      "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+      "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+      "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+      "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+      "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+      "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+      "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+      "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+      "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+      "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+      "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+      "src/metal/memory.rs": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6",
+      "src/metal/mlx.rs": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177",
+      "src/metal/mod.rs": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65",
+      "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+      "src/metal/profile.rs": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3",
+      "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+      "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+      "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+      "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+      "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+      "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+      "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+      "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+      "src/native/tests.rs": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856",
+      "src/native.rs": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc",
+      "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+      "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+      "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+      "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+      "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+      "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+      "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+      "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+      "tests/mlx_real_model_metal.rs": "fbbe6234d2eeac2bad1852219e9adc389e477286aa0babf059676b2d31d1d256",
+      "tests/fixtures/mlx-qwen-real-v1/manifest.json": "fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b",
+      "artifacts/m8-real-metal-ordinary-v2/checks.py": "719ec4ee0c19576c312317d4e093484bb1863ef8a7b3f494df9cdb3305a4b811",
+      "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+      "artifacts/m8-real-metal-ordinary-v2/checks.json": "37002d0fbae5b80e16adb6851353aca57085808b8e9dfd19ed055189a5988a6f",
+      "artifacts/m8-rust-target/release/deps/mlx_real_model_metal-7fc2a9144665a201": "407fee57b4d5402a109200732071c135222ee0acac3e2d8573181c755b1619c3",
+      "artifacts/m8-real-metal-gpu-v1/checks.py": "b812880f7f1f7c88565d5295d5ad9b3b56ef182c9e177f2d1720c8beca834bde",
+      "artifacts/m8-qwen-mlx-reference-v1/arrays.bin": "71576c9804cb439d0a0d2eacd5e154a4db2c766356cd87886ab25db03d6dfe5b",
+      "artifacts/m8-qwen-mlx-reference-v1/manifest.json": "fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b",
+      "models/MLX-Qwen2.5-0.5B-Instruct-4bit-a5339a4/config.json": "b045e57ea90b8f1b35f89f954b176a5c1faa02bd0af2c89bcec191239d66cef4",
+      "models/MLX-Qwen2.5-0.5B-Instruct-4bit-a5339a4/model.safetensors": "ddffab9cbc7bf6dde941c6724841eeca8981fcfa81ca20ff8efff1396326d153",
+      "models/MLX-Qwen2.5-0.5B-Instruct-4bit-a5339a4/model.safetensors.index.json": "54001cb4c11197119c206dde28e7be08e5872aab6c6d271aed339ec77e84f870"
+    },
+    "commands": [
+      {
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/m8-rust-target/release/deps/mlx_real_model_metal-7fc2a9144665a201",
+          "--ignored",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 31457,
+        "stdout": "artifacts/m8-real-metal-gpu-v1/gpu.stdout",
+        "stderr": "artifacts/m8-real-metal-gpu-v1/gpu.stderr"
+      }
+    ],
+    "primary_error": null,
+    "endpoint_errors": [],
+    "full_quality_qualified": false,
+    "performance_qualified": false,
+    "physical_device_qualified": false
+  },
+  "observations": {
+    "graph": {
+      "device": "Apple M1 Pro",
+      "manifest_sha256": "fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b",
+      "snapshots": 816,
+      "compared_values": 13771520,
+      "max_absolute_error": 1.5,
+      "weights_bytes": 277997982,
+      "max_logical_session_admitted_bytes": 387662292,
+      "full_quality_qualified": false,
+      "performance_qualified": false,
+      "iphone_qualified": false
+    },
+    "state": {
+      "device": "Apple M1 Pro",
+      "selected_ids": 16,
+      "full_distributions": 8,
+      "max_logit_absolute_error": 0.02888929843902588,
+      "pending_rejection_reset_changed_prefix_passed": true,
+      "partial_prefill_committed": 3,
+      "full_quality_qualified": false,
+      "performance_qualified": false,
+      "iphone_qualified": false
+    },
+    "ordinary_totals": {
+      "cpu": {
+        "passed": 133,
+        "ignored": 8
+      },
+      "metal": {
+        "passed": 147,
+        "ignored": 72
+      }
+    }
+  },
+  "raw_inventory": {
+    "path": "benchmarks/results/2026-10-22-native-mlx-real-metal-raw-v1.json",
+    "sha256": "b60a6178c89b8d55d30ac6afc99ee22ff76ade035164e0c2b407df9d041eb3ce"
+  },
+  "retained_initial": {
+    "path": "artifacts/m8-real-metal-ordinary-v1/checks.json",
+    "sha256": "d57616718ac749e46b8779c09bb39c1a0d3787c547997c6e2888fed3afe886cb",
+    "source": "artifacts/m8-real-metal-initial-source-v1/tests/mlx_real_model_metal.rs",
+    "reason": "Passing initial ordinary suite retained before Astra required nonoptional full-logit contracts and exact distribution count."
+  },
+  "full_quality_qualified": false,
+  "performance_qualified": false,
+  "physical_device_qualified": false
+}

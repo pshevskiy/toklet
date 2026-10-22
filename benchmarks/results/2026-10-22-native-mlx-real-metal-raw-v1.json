@@ -1,0 +1,141 @@
+{
+  "format": "toklet-native-mlx-real-metal-raw-v1",
+  "files": {
+    "artifacts/m8-real-metal-final-source-v1/tests/mlx_real_model_metal.rs": {
+      "bytes": 17580,
+      "sha256": "fbbe6234d2eeac2bad1852219e9adc389e477286aa0babf059676b2d31d1d256"
+    },
+    "artifacts/m8-real-metal-gpu-v1/checks.json": {
+      "bytes": 6118,
+      "sha256": "0fcb77a55116ba3df578e730edd51a0888cdeaf1a74eb2ebb769a4b12fe710e2"
+    },
+    "artifacts/m8-real-metal-gpu-v1/checks.py": {
+      "bytes": 1996,
+      "sha256": "b812880f7f1f7c88565d5295d5ad9b3b56ef182c9e177f2d1720c8beca834bde"
+    },
+    "artifacts/m8-real-metal-gpu-v1/gpu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-gpu-v1/gpu.stdout": {
+      "bytes": 900,
+      "sha256": "603f4803e5c8491a583c22603c8c45fb90b198f7114085f0e6696b1a204e1200"
+    },
+    "artifacts/m8-real-metal-initial-source-v1/tests/mlx_real_model_metal.rs": {
+      "bytes": 16617,
+      "sha256": "39af4d3f09216f43ae6fcdda34a6329f46608b022b3a2421a2b78be5b759d5c5"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/checks.json": {
+      "bytes": 7069,
+      "sha256": "d57616718ac749e46b8779c09bb39c1a0d3787c547997c6e2888fed3afe886cb"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/checks.py": {
+      "bytes": 2243,
+      "sha256": "719ec4ee0c19576c312317d4e093484bb1863ef8a7b3f494df9cdb3305a4b811"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/clippy-cpu.stderr": {
+      "bytes": 133,
+      "sha256": "1062ca54d7542f7de4db054541cd2eab53182b70be2088832dce879eae459fa6"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/clippy-cpu.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/clippy-metal.stderr": {
+      "bytes": 133,
+      "sha256": "6600d20d89359e86ba9825795ee892da5981f20d444a21863ea78a9793d94267"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/clippy-metal.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/fmt.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/fmt.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/release-build.stderr": {
+      "bytes": 244,
+      "sha256": "93d50fc7b3c0bff359047605de79e0bb08e1bd7375cd3f55ca19173182a92922"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/release-build.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/test-cpu.stderr": {
+      "bytes": 3264,
+      "sha256": "9a1278faa461ec92a5e75d5dd1116ba53030db45eb4a2033de0ff094a853ede5"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/test-cpu.stdout": {
+      "bytes": 15063,
+      "sha256": "dc115a960de0fb5f6bacb20b5362701bbd027230b85ded122b0521df3ac986e3"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/test-metal.stderr": {
+      "bytes": 3264,
+      "sha256": "8909241cbad2e39f51ba379339540a3f1ebcfb3a5343c1b60098a14728be5e21"
+    },
+    "artifacts/m8-real-metal-ordinary-v1/test-metal.stdout": {
+      "bytes": 26689,
+      "sha256": "e81c738a93c096e97a9ad7132ce59106071f46ccc92152a41cbcf9edd6e16e69"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/checks.json": {
+      "bytes": 7069,
+      "sha256": "37002d0fbae5b80e16adb6851353aca57085808b8e9dfd19ed055189a5988a6f"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/checks.py": {
+      "bytes": 2243,
+      "sha256": "719ec4ee0c19576c312317d4e093484bb1863ef8a7b3f494df9cdb3305a4b811"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/clippy-cpu.stderr": {
+      "bytes": 133,
+      "sha256": "5e10782aa680dd8e0842a3a72863f59c445d304129066228562d88594983e0c7"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/clippy-cpu.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/clippy-metal.stderr": {
+      "bytes": 133,
+      "sha256": "5e10782aa680dd8e0842a3a72863f59c445d304129066228562d88594983e0c7"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/clippy-metal.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/fmt.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/fmt.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/release-build.stderr": {
+      "bytes": 244,
+      "sha256": "3fd831d4fb6f215d5e01a84bd1d79555691153b8521de347d165b7b851a8e328"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/release-build.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/test-cpu.stderr": {
+      "bytes": 3264,
+      "sha256": "3332f27e9a64a10932ccc265e50a7de0e2e4824484accbce12fd8fa6efc0f5a3"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/test-cpu.stdout": {
+      "bytes": 15063,
+      "sha256": "da15ff8dcceb61f1727e85bd1469b9b2a936b702bf19d080186e02f3ab61ba24"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/test-metal.stderr": {
+      "bytes": 3264,
+      "sha256": "ab15604a49260f97bc313a2f1ad3dff18e6a6f6ac3429cd91a2c730a60c6eecc"
+    },
+    "artifacts/m8-real-metal-ordinary-v2/test-metal.stdout": {
+      "bytes": 26689,
+      "sha256": "1518ac517f7b90e84782402dcfdfe8eaa17c759a83744a7d1e6f6e2ae8cb54ec"
+    }
+  }
+}
