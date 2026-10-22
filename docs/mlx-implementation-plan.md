@@ -70,7 +70,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     schema preservation and tiny Mac routing checks.
   - [x] [Lifecycle error-trace cleanup](mlx-lifecycle-cleanup.md), preserving
     original errors and failed traces after verified owner shutdown.
-  - [ ] Independent real-reference gates and real-checkpoint quality/memory/performance.
+  - [x] [Independent real-reference gates](mlx-real-oracle.md), full selected public-checkpoint CPU arrays and external manifest admission before target trials.
+  - [ ] Real-checkpoint target parity, quality/memory/performance and physical MLX execution.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,

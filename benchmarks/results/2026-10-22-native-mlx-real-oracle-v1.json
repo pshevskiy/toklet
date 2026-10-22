@@ -1,0 +1,206 @@
+{
+  "format": "toklet-native-mlx-real-oracle-qualification-v1",
+  "passed": true,
+  "base_revision": "d1699b4",
+  "scope": "Independent CPU-only selected public Qwen0.5B MLX graph references; no target numerical or quality/device/performance qualification.",
+  "checks": {
+    "format": "toklet-native-mlx-real-oracle-checks-v1",
+    "passed": true,
+    "source_pins": {
+      "Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+      "Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+      "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+      "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+      "src/bin/cli/mod.rs": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24",
+      "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+      "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+      "src/cpu/mod.rs": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265",
+      "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+      "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+      "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+      "src/lib.rs": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c",
+      "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+      "src/metal/diagnostic.rs": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8",
+      "src/metal/half_consistency.rs": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e",
+      "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+      "src/metal/memory.rs": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6",
+      "src/metal/mlx.rs": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177",
+      "src/metal/mod.rs": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65",
+      "src/metal/online_attention.rs": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04",
+      "src/metal/profile.rs": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3",
+      "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+      "src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+      "src/mlx/mod.rs": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79",
+      "src/mlx/qwen.rs": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a",
+      "src/mlx/reference.rs": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2",
+      "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+      "src/model/mod.rs": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94",
+      "src/model/trace.rs": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1",
+      "src/native/tests.rs": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856",
+      "src/native.rs": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc",
+      "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+      "src/q4.rs": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2",
+      "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+      "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+      "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+      "src/weights/mod.rs": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647",
+      "src/metal/kernels.metal": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0",
+      "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+      "tools/reference/mlx_qwen_real.py": "cf093145f11094bb224fa8f1f3e4d4dca69386b61b17cda827027077f90b56fd",
+      "tools/reference/test_mlx_qwen_real.py": "f4efa212f639401c1ceb4b26bff1910106c88884c5624395ba6ef3efb6b49706",
+      "tools/reference/qwen_fp16.py": "c16994767d257ebc4d6bee38d5b1a20d9fcfd9e134b598eead54e25b8553b789",
+      "tools/reference/qwen.py": "1fc77e3772c484f39c4c5df6a2ccc6c0aa3760ef74842fdc9d7cdb46df68e38b",
+      "tools/bench/prepare.py": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13",
+      "tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc",
+      "tools/reference/mlx_half.py": "41131ae2f5eb732537bb44311878d198da5fbc982f71efe823d66ad830dc3aa3",
+      "tools/reference/test_mlx_half.py": "f005d485d5bd52f9fe92cafc2ecbb3f162b9ba90e523bc6d3fe936842f0f9b49",
+      "artifacts/m8-real-oracle-checks-v1/checks.py": "aefef103b9a47b787844cace74f89f24c9ff37b478cd761d15e35de6c6612cf7",
+      "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d"
+    },
+    "protected_binary_pins": {
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+    },
+    "output_pins": {
+      "artifacts/m8-qwen-mlx-reference-v1/arrays.bin": "71576c9804cb439d0a0d2eacd5e154a4db2c766356cd87886ab25db03d6dfe5b",
+      "artifacts/m8-qwen-mlx-reference-v1/manifest.json": "fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b"
+    },
+    "commands": [
+      {
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/reference",
+          "-p",
+          "test_mlx_qwen_real.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 30080,
+        "stdout": "artifacts/m8-real-oracle-checks-v1/test_mlx_qwen_real.py.stdout",
+        "stderr": "artifacts/m8-real-oracle-checks-v1/test_mlx_qwen_real.py.stderr"
+      },
+      {
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/reference",
+          "-p",
+          "test_mlx_half.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 30084,
+        "stdout": "artifacts/m8-real-oracle-checks-v1/test_mlx_half.py.stdout",
+        "stderr": "artifacts/m8-real-oracle-checks-v1/test_mlx_half.py.stderr"
+      },
+      {
+        "command": [
+          ".venv/bin/python",
+          "tools/reference/mlx_qwen_real.py",
+          "--export",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-qwen-mlx-reference-v1"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 30089,
+        "stdout": "artifacts/m8-real-oracle-checks-v1/export.stdout",
+        "stderr": "artifacts/m8-real-oracle-checks-v1/export.stderr"
+      },
+      {
+        "command": [
+          ".venv/bin/python",
+          "-S",
+          "tools/reference/mlx_qwen_real.py",
+          "--check",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-qwen-mlx-reference-v1",
+          "--manifest-sha256",
+          "fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 30149,
+        "stdout": "artifacts/m8-real-oracle-checks-v1/stdlib-check.stdout",
+        "stderr": "artifacts/m8-real-oracle-checks-v1/stdlib-check.stderr"
+      }
+    ],
+    "primary_error": null,
+    "endpoint_errors": [],
+    "target_gpu_executed": false,
+    "physical_device_executed": false
+  },
+  "reference_manifest_sha256": "fe4fbeeb2866e99ac3b19d838491879a70b016ffcad071c0ff093db38d025d9b",
+  "reference_array_sha256": "71576c9804cb439d0a0d2eacd5e154a4db2c766356cd87886ab25db03d6dfe5b",
+  "arrays": 346,
+  "array_bytes": 38461888,
+  "greedy": {
+    "prompt": [
+      9707,
+      11,
+      358,
+      2776
+    ],
+    "teacher_forcing": "Independent FP64-accumulation greedy history",
+    "fp32_tokens": [
+      264,
+      5458,
+      315,
+      17407
+    ],
+    "fp64_tokens": [
+      264,
+      5458,
+      315,
+      17407
+    ],
+    "fp64_logit_margins": [
+      1.3230533599853516,
+      0.22060680389404297,
+      0.3564281463623047,
+      0.31511688232421875
+    ]
+  },
+  "admission": {
+    "tied_fp32_bytes": 544538624,
+    "source_mapping_bytes": 278064920,
+    "current_matrix_and_blas_bytes": 134217728,
+    "retained_trace_bytes": 268435456,
+    "framework_metadata_allowance_bytes": 536870912,
+    "admitted_bytes": 1762127640
+  },
+  "completed_native_usage": {
+    "phase": "completed-before-publication",
+    "usage": {
+      "resident_size": 384172032,
+      "phys_footprint": 146129880,
+      "lifetime_max_phys_footprint": 661095984
+    }
+  },
+  "raw_inventory": {
+    "path": "benchmarks/results/2026-10-22-native-mlx-real-oracle-raw-v1.json",
+    "sha256": "d2dcd313fdd8991c2a7de6002e1e1b6b715e3194fe1e7e53fd5744d4a6a98eb3"
+  },
+  "notes": [
+    "Selected exporter/helper/NumPy binary provenance does not claim a complete Python runtime inventory.",
+    "Admission is logical allowances plus an observed lifetime charge; it is not an allocator-enforced peak ceiling.",
+    "Largest frozen absolute stage allowance is 3.0 at layer23 attention residual from independent arithmetic/causal-prefix envelopes. It is not a quality acceptance gate.",
+    "Full arrays remain in ignored immutable artifacts; the exact manifest is committed before target GPU execution.",
+    "Phone prepare-only failed before build/install/launch because an existing Harness process was not owned by that run."
+  ],
+  "target_gpu_executed": false,
+  "held_out_quality_qualified": false,
+  "physical_device_qualified": false,
+  "performance_qualified": false
+}
