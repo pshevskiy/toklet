@@ -99,6 +99,23 @@ struct NativeEnvironment: Codable, Sendable {
     }
 }
 
+// Version 1 keeps its exact legacy fields. Version 2 explicitly selects MLX;
+// absent/false MLX or mixed CPU/separate-Q4 requests cannot silently fall back.
+func validateNativeJobBackend(version: Int, metal: Bool, packedFolder: String, mlx: Bool?) throws {
+    guard (version == 1 && mlx == nil)
+        || (version == 2 && mlx == true && metal && packedFolder.isEmpty) else {
+        throw measurementError("Invalid versioned native MLX backend selection")
+    }
+}
+func nativeJobBackendName(metal: Bool, mlx: Bool?) -> String {
+    mlx == true ? "metal-mlx" : (metal ? "metal" : "cpu")
+}
+func nativeJobFieldsMatch(_ data: Data, fields: Set<String>) throws -> Bool {
+    guard let object = try JSONSerialization.jsonObject(with:data) as? [String:Any],
+          let version = object["version"] as? Int, version == 1 || version == 2 else { return false }
+    return Set(object.keys) == (version == 2 ? fields.union(["mlx"]) : fields)
+}
+
 struct NativeMeasurementConfig: Codable, Sendable {
     let version: Int
     let modelFolder: String
@@ -115,9 +132,11 @@ struct NativeMeasurementConfig: Codable, Sendable {
     let warmups: Int
     let repetitions: Int
     let minimumNativeSeconds: Double
+    var mlx: Bool? = nil
 
     func validate() throws {
-        guard version == 1, (1...32768).contains(capacity), chunk > 0, chunk <= capacity,
+        try validateNativeJobBackend(version:version,metal:metal,packedFolder:packedFolder,mlx:mlx)
+        guard (1...32768).contains(capacity), chunk > 0, chunk <= capacity,
               maximum > 0, maximum <= 128, !prompt.isEmpty,
               maximum <= capacity, prompt.count <= Int(capacity - maximum),
               expectedPrefix.count <= Int(maximum), warmups == 3, repetitions == 10,
@@ -206,7 +225,7 @@ func admitMeasurementConfig(root: URL, name: String, sha256: String) throws -> N
     }
     let fields: Set<String> = ["version","modelFolder","packedFolder","files","metal","capacity","chunk",
         "numericalBudget","processBudget","prompt","maximum","expectedPrefix","warmups","repetitions","minimumNativeSeconds"]
-    guard let object = try JSONSerialization.jsonObject(with:data) as? [String:Any], Set(object.keys) == fields else {
+    guard try nativeJobFieldsMatch(data,fields:fields) else {
         throw measurementError("Exact measurement config fields required")
     }
     let config = try JSONDecoder().decode(NativeMeasurementConfig.self,from:data)
@@ -376,7 +395,7 @@ func awaitNativeMeasurementForeground(timeoutNanoseconds: UInt64 = 30_000_000_00
 func runNativeMeasurement(_ config: NativeMeasurementConfig, root: URL,
                           onSample: (NativeMeasurementRequest) throws -> Void) -> NativeMeasurementResult {
     precondition(!Thread.isMainThread)
-    var result = NativeMeasurementResult(backend:config.metal ? "metal" : "cpu")
+    var result = NativeMeasurementResult(backend:nativeJobBackendName(metal:config.metal,mlx:config.mlx))
     let interruptions = NativeDiagnosticInterruptions()
     defer { interruptions.stop() }
     var owner: NativeWorker?
@@ -412,7 +431,7 @@ func runNativeMeasurement(_ config: NativeMeasurementConfig, root: URL,
         owner = try NativeWorker(); weakOwner = owner; interruptions.attach(owner)
         var settings = NativeSettings(directory:try localURL(root,config.modelFolder).path)
         settings.packedDirectory = config.packedFolder.isEmpty ? "" : try localURL(root,config.packedFolder).path
-        settings.metal = config.metal; settings.capacity = config.capacity; settings.chunk = config.chunk
+        settings.metal = config.metal;settings.mlx = config.mlx == true; settings.capacity = config.capacity; settings.chunk = config.chunk
         settings.numericalBudget = config.numericalBudget
         let loadStart = DispatchTime.now().uptimeNanoseconds
         let loaded = try perform(.load(settings))

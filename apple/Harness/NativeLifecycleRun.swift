@@ -16,8 +16,10 @@ struct NativeLifecycleConfig: Codable, Sendable {
     let prompt: [UInt32]
     let maximum: UInt32
     let vocabulary: UInt32
+    var mlx: Bool? = nil
     func validate() throws {
-        guard version == 1, (1...1152).contains(capacity), chunk > 0, chunk <= min(128,capacity),
+        try validateNativeJobBackend(version:version,metal:metal,packedFolder:packedFolder,mlx:mlx)
+        guard (1...1152).contains(capacity), chunk > 0, chunk <= min(128,capacity),
               (2...128).contains(maximum), (1...1024).contains(prompt.count), vocabulary > 0,
               prompt.allSatisfy({ $0 < vocabulary }), prompt.count + Int(maximum) + 3 <= Int(capacity),
               numericalBudget > 4096, numericalBudget < processBudget, processBudget <= 4 * 1024 * 1024 * 1024 else {
@@ -38,7 +40,7 @@ func admitLifecycleConfig(root: URL, name: String, sha256: String) throws -> Nat
         throw lifecycleRunError("Lifecycle config consumed bytes differ")
     }
     let fields: Set<String> = ["version","modelFolder","packedFolder","files","metal","capacity","chunk","numericalBudget","processBudget","prompt","maximum","vocabulary"]
-    guard let object = try JSONSerialization.jsonObject(with:data) as? [String:Any], Set(object.keys) == fields else {
+    guard try nativeJobFieldsMatch(data,fields:fields) else {
         throw lifecycleRunError("Exact lifecycle fields required")
     }
     let config = try JSONDecoder().decode(NativeLifecycleConfig.self,from:data);try config.validate();return config
@@ -110,7 +112,7 @@ func runNativeLifecycle(_ config: NativeLifecycleConfig, root: URL, signals: Nat
                         requireSystem: Bool = true,
                         onReady: (NativeLifecycleReady) throws -> Void) -> NativeLifecycleResult {
     precondition(!Thread.isMainThread)
-    var result = NativeLifecycleResult(backend:config.metal ? "metal":"cpu")
+    var result = NativeLifecycleResult(backend:nativeJobBackendName(metal:config.metal,mlx:config.mlx))
     var owner: NativeWorker?;weak var weakOwner: NativeWorker?
     var trace: NativeLifecycleTrace?
     var artifactsAdmitted = false
@@ -165,7 +167,7 @@ func runNativeLifecycle(_ config: NativeLifecycleConfig, root: URL, signals: Nat
         trace = try NativeLifecycleTrace(worker:owner!,maximumPrefix:Int(config.capacity));try signals.attach(owner!,trace:trace!)
         var settings = NativeSettings(directory:try localURL(root,config.modelFolder).path)
         settings.packedDirectory = config.packedFolder.isEmpty ? "":try localURL(root,config.packedFolder).path
-        settings.metal = config.metal;settings.capacity = config.capacity;settings.chunk = config.chunk;settings.numericalBudget = config.numericalBudget
+        settings.metal = config.metal;settings.mlx = config.mlx == true;settings.capacity = config.capacity;settings.chunk = config.chunk;settings.numericalBudget = config.numericalBudget
         let loaded = try perform(.load(settings),"loaded")
         guard loaded.hasModel, loaded.hasSession, loaded.savedPrefix == [] else { throw lifecycleRunError("Lifecycle load owners differ") }
         result.loadedAdmittedBytes = loaded.admittedBytes

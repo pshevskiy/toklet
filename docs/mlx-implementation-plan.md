@@ -66,7 +66,10 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     state/replay/cleanup and strict iOS source compatibility checks.
   - [x] [Fresh native package and linked apps](mlx-apple-package.md), complete
     shader provenance, three platform slices and actual Mac C execution.
-  - [ ] Real-checkpoint quality/memory/performance and sealed Apple jobs.
+  - [x] Explicit [authenticated MLX diagnostic jobs](mlx-apple-jobs.md), legacy
+    schema preservation and tiny Mac routing checks.
+  - [ ] Repair observed lifecycle error-trace cleanup before physical trials.
+  - [ ] Independent real-reference gates and real-checkpoint quality/memory/performance.
 - [ ] **M8.3 Architecture expansion.** Record the full language/vision reference
   inventory and implement compatible dense, MoE, recurrent/hybrid and multimodal
   graph families in reviewed tasks. Qualify weight names, bias/tied conventions,

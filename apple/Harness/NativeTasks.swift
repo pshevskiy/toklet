@@ -17,9 +17,11 @@ struct NativeTasksConfig: Codable, Sendable {
     let tasksFile: String
     let tasksSHA256: String
     let caseCount: Int
+    var mlx: Bool? = nil
 
     func validate() throws {
-        guard version == 1, (1...100).contains(caseCount), (1...562).contains(capacity),
+        try validateNativeJobBackend(version:version,metal:metal,packedFolder:packedFolder,mlx:mlx)
+        guard (1...100).contains(caseCount), (1...562).contains(capacity),
               chunk > 0, chunk <= 128, chunk <= capacity,
               numericalBudget > 4096, numericalBudget < processBudget,
               processBudget <= 4 * 1024 * 1024 * 1024,
@@ -81,7 +83,7 @@ func admitTasksConfig(root: URL, name: String, sha256: String) throws -> NativeT
     let data = try admittedTaskJSON(root:root,name:name,sha256:sha256)
     let fields: Set<String> = ["version","modelFolder","packedFolder","files","metal","capacity","chunk",
         "numericalBudget","processBudget","tasksFile","tasksSHA256","caseCount"]
-    guard let object = try JSONSerialization.jsonObject(with:data) as? [String:Any], Set(object.keys) == fields else {
+    guard try nativeJobFieldsMatch(data,fields:fields) else {
         throw tasksError("Exact task config fields required")
     }
     let config = try JSONDecoder().decode(NativeTasksConfig.self,from:data)
@@ -149,7 +151,7 @@ func runNativeTasks(_ config: NativeTasksConfig, root: URL,
     onChunk: (NativeTaskChunkSample) throws -> Void,
     onCase: (NativeTaskCaseSample) throws -> Void) -> NativeTasksResult {
     precondition(!Thread.isMainThread)
-    var result = NativeTasksResult(backend:config.metal ? "metal":"cpu")
+    var result = NativeTasksResult(backend:nativeJobBackendName(metal:config.metal,mlx:config.mlx))
     let interruptions = NativeDiagnosticInterruptions();defer { interruptions.stop() }
     var owner: NativeWorker?;weak var weakOwner: NativeWorker?
     var submitted: UInt64 = 0;var completed: UInt64 = 0;var admitted: UInt64 = 0
@@ -197,7 +199,7 @@ func runNativeTasks(_ config: NativeTasksConfig, root: URL,
         owner = try NativeWorker();weakOwner = owner;interruptions.attach(owner)
         var settings = NativeSettings(directory:try localURL(root,config.modelFolder).path)
         settings.packedDirectory = config.packedFolder.isEmpty ? "":try localURL(root,config.packedFolder).path
-        settings.metal = config.metal;settings.capacity = config.capacity;settings.chunk = config.chunk
+        settings.metal = config.metal;settings.mlx = config.mlx == true;settings.capacity = config.capacity;settings.chunk = config.chunk
         settings.numericalBudget = config.numericalBudget
         let start = DispatchTime.now().uptimeNanoseconds
         let loaded = try perform(.load(settings))

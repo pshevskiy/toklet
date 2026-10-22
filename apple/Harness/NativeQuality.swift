@@ -18,9 +18,11 @@ struct NativeQualityConfig: Codable, Sendable {
     let tokensSHA256: String
     let targets: Int
     let blockSize: Int
+    var mlx: Bool? = nil
 
     func validate() throws {
-        guard version == 1, (1...10000).contains(targets), (1...1024).contains(blockSize),
+        try validateNativeJobBackend(version:version,metal:metal,packedFolder:packedFolder,mlx:mlx)
+        guard (1...10000).contains(targets), (1...1024).contains(blockSize),
               capacity == UInt32(blockSize+1), chunk == 1,
               numericalBudget > 4096, numericalBudget < processBudget,
               processBudget <= 4 * 1024 * 1024 * 1024,
@@ -47,7 +49,7 @@ func admitQualityConfig(root: URL, name: String, sha256: String) throws -> Nativ
     }
     let fields: Set<String> = ["version","modelFolder","packedFolder","files","metal","capacity","chunk",
         "numericalBudget","processBudget","tokensFile","tokensSHA256","targets","blockSize"]
-    guard let object = try JSONSerialization.jsonObject(with:data) as? [String:Any], Set(object.keys) == fields else {
+    guard try nativeJobFieldsMatch(data,fields:fields) else {
         throw qualityError("Exact quality config fields required")
     }
     let config = try JSONDecoder().decode(NativeQualityConfig.self,from:data)
@@ -108,7 +110,7 @@ struct NativeQualityResult: Encodable, Sendable {
 func runNativeQuality(_ config: NativeQualityConfig, root: URL,
                       onSample: (NativeQualitySample) throws -> Void) -> NativeQualityResult {
     precondition(!Thread.isMainThread)
-    var result = NativeQualityResult(backend:config.metal ? "metal":"cpu")
+    var result = NativeQualityResult(backend:nativeJobBackendName(metal:config.metal,mlx:config.mlx))
     let interruptions = NativeDiagnosticInterruptions();defer { interruptions.stop() }
     var owner: NativeWorker?;weak var weakOwner: NativeWorker?
     var expectedBlocks = 0
@@ -155,7 +157,7 @@ func runNativeQuality(_ config: NativeQualityConfig, root: URL,
         owner = try NativeWorker();weakOwner = owner;interruptions.attach(owner)
         var settings = NativeSettings(directory:try localURL(root,config.modelFolder).path)
         settings.packedDirectory = config.packedFolder.isEmpty ? "":try localURL(root,config.packedFolder).path
-        settings.metal = config.metal;settings.capacity = config.capacity;settings.chunk = config.chunk
+        settings.metal = config.metal;settings.mlx = config.mlx == true;settings.capacity = config.capacity;settings.chunk = config.chunk
         settings.numericalBudget = config.numericalBudget
         let start = DispatchTime.now().uptimeNanoseconds
         let loaded = try perform(.load(settings))

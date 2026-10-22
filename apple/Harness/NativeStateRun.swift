@@ -38,7 +38,7 @@ struct NativeStateResult: Encodable, Sendable {
 func runNativeState(_ config: NativeLifecycleConfig, root: URL, signals: NativeLifecycleSignals,
                     requirePrefillWitness: Bool = true) -> NativeStateResult {
     precondition(!Thread.isMainThread)
-    var result = NativeStateResult(backend:config.metal ? "metal":"cpu",prefillWitnessRequired:requirePrefillWitness)
+    var result = NativeStateResult(backend:nativeJobBackendName(metal:config.metal,mlx:config.mlx),prefillWitnessRequired:requirePrefillWitness)
     var owner: NativeWorker?;weak var weakOwner: NativeWorker?
     var trace: NativeLifecycleTrace?;var admitted = false
     func require(_ value: Bool, _ message: String) throws {
@@ -101,7 +101,7 @@ func runNativeState(_ config: NativeLifecycleConfig, root: URL, signals: NativeL
         trace = try NativeLifecycleTrace(worker:owner!,maximumPrefix:Int(config.capacity));try signals.attach(owner!,trace:trace!)
         var settings = NativeSettings(directory:try localURL(root,config.modelFolder).path)
         settings.packedDirectory = config.packedFolder.isEmpty ? "":try localURL(root,config.packedFolder).path
-        settings.metal = config.metal;settings.capacity = config.capacity;settings.chunk = config.chunk;settings.numericalBudget = config.numericalBudget
+        settings.metal = config.metal;settings.mlx = config.mlx == true;settings.capacity = config.capacity;settings.chunk = config.chunk;settings.numericalBudget = config.numericalBudget
         let loaded = try perform(.load(settings),"loaded");try prefix(loaded,[],pending:0,ids:[]);try memory("loaded")
         let primer = Array(config.prompt.prefix(16));let target = primer.last!
         let initial = try perform(.generate(operation:0,tokens:primer,maximum:0,stops:[]),"primer")
