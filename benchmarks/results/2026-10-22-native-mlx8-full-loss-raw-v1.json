@@ -1,0 +1,437 @@
+{
+  "format": "toklet-m8-mlx8-full-loss-raw-v1",
+  "files": {
+    "artifacts/m8-mlx8-full-loss-driver-v1/driver.py": {
+      "bytes": 8144,
+      "sha256": "fec3b1c86e56586d140f9c8c4820c8645559c527d82722bdb297e4050bea17a1"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/execution.json": {
+      "bytes": 235108,
+      "sha256": "107400d931d40ad892e34b77424a8aa76f14d74c14e1af9db9e5f7a33dbf0e80"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/mac-quality-full.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/mac-quality-full.stdout": {
+      "bytes": 4462528,
+      "sha256": "75968fa2c69d54aea070a504f87c3ae68a241e351aa2d62ee14ad84f450f4499"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/qwen8-quality-full-ready/measurement.json": {
+      "bytes": 50899,
+      "sha256": "a288871e4b204992a6d28faf22fe9cd67b6c712ade457c38f3a73f2bb4e86429"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/qwen8-quality-full-ready.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/qwen8-quality-full-ready.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/qwen8-quality-full-run/measurement.json": {
+      "bytes": 52830,
+      "sha256": "21d4a14f66d59b998208f09437c924de867068bc8600c8254f969af375cf9d91"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/qwen8-quality-full-run.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/qwen8-quality-full-run.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/stages/qwen8-quality-full/staged.json": {
+      "bytes": 3483,
+      "sha256": "00688f7aea18821765e548e830edd12d40261055ca0bf8c74c3669ddb9d78833"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/stages/tiny-measurement-short/staged.json": {
+      "bytes": 2490,
+      "sha256": "8b2d13e8d6ae578089c36dbcec0dc436dd313ff48af795f893a29c0e6eaec2b4"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/tiny-proof/measurement.json": {
+      "bytes": 37907,
+      "sha256": "bdc205ee186b5d45d18ab6517583712284ff60abb9a5b7f051afa9eb2e1c63f1"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/tiny-proof.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/tiny-proof.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/tiny-ready/measurement.json": {
+      "bytes": 34891,
+      "sha256": "970d7826aaaa39cea9c418e35026dfad78c4d87635014455d3e7b7060c915111"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/tiny-ready.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-full-loss-driver-v1/tiny-ready.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/checks.json": {
+      "bytes": 13305,
+      "sha256": "ffa6c92f03cde83ef1625e040bb45966bb3f2664c1539facf54378518a772103"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/checks.py": {
+      "bytes": 2493,
+      "sha256": "501c55bb39db0ed354272a961a5f6bc71c76160dded8a9df934d6bd1052310e4"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_integration.py.stderr": {
+      "bytes": 3063,
+      "sha256": "54f54324b9190ec20d9cd4d9be2d02886c28bf26bbb97479d16f7330fe0d4b10"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_integration.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_measurement.py.stderr": {
+      "bytes": 3332,
+      "sha256": "661f142fe8a9346dc975e1171b3f3f70f86b09f95a4f75b4e3613e5af3f8003c"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_measurement.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_quality.py.stderr": {
+      "bytes": 2657,
+      "sha256": "6bf068be8c230f1b10264927b386feeeaad5fce680aea0ec808383c0d91656fb"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_quality.py.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_storage.py.stderr": {
+      "bytes": 1953,
+      "sha256": "e220caefc6a76f2be14b93428c31c0d953780d04349e42e404c2c3dae86d31bc"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_storage.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_tasks.py.stderr": {
+      "bytes": 2661,
+      "sha256": "a2905051fd5da6f054909392fd98805d811c1fcf724b3dde0d500fed05921c19"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m7_physical_tasks.py.stdout": {
+      "bytes": 85,
+      "sha256": "d0447ab471b4463220f4141731729d52408b2c09eedd7a6b99b2be44e5f66d58"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m8_mlx_jobs.py.stderr": {
+      "bytes": 1389,
+      "sha256": "768742fd1ea17dfb78b8f8ceb4df7f7af39f57b835d0bc29e77303219ac7cd05"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m8_mlx_jobs.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m8_physical_mlx.py.stderr": {
+      "bytes": 2201,
+      "sha256": "8e0c3801201c9969c9fa73b033f44a227805fd0f0acefccb02f04c11b756b607"
+    },
+    "artifacts/m8-mlx8-app-checks-v1/test_m8_physical_mlx.py.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/record.py": {
+      "bytes": 9939,
+      "sha256": "fa9238240557029fdb4bdfb5c06cadcc905c564db66557dffa408040fcc53517"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/Cargo.lock": {
+      "bytes": 24261,
+      "sha256": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/Cargo.toml": {
+      "bytes": 2175,
+      "sha256": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/HarnessApp.swift": {
+      "bytes": 22298,
+      "sha256": "4cc314e35db6d0f6736e4f6e2358e9c444a2b7069faba6703e3ff8dc633a63e6"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/Info.plist": {
+      "bytes": 1193,
+      "sha256": "c9f917298bd3096d92abaf6d0c8eaba27abdddc9c428ce4db95d476d904cb434"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeLifecycle.swift": {
+      "bytes": 8084,
+      "sha256": "4596446c1c2c0943b791cf7e8e47502fa5efda27c07ca69d03401bf06a8cc7ac"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeLifecycleRun.swift": {
+      "bytes": 18822,
+      "sha256": "9170e354d07dc09e1f4eb9ea718b68ff5c6df16b68f85fc0dc44872de0f414a2"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeLifecycleSignals.swift": {
+      "bytes": 5283,
+      "sha256": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeMeasurement.swift": {
+      "bytes": 26271,
+      "sha256": "5dcd81db64963db10d2bd50a6e9bc8dee567951f1a344341dd0cd9dfecbf8a46"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeQuality.swift": {
+      "bytes": 11182,
+      "sha256": "e54783e1ed25035340f07c13f593cefdb616152fc296b17fc6508ba1e7e3972a"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeStateRun.swift": {
+      "bytes": 15138,
+      "sha256": "e0b8a0d12fd93db67fcab374da3f386d8b3331b1b20bd96413ebca1dfb290a99"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeTaskResponse.swift": {
+      "bytes": 5963,
+      "sha256": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeTasks.swift": {
+      "bytes": 13770,
+      "sha256": "d2df04cf9da12d5b648970e49c64f1bdbc28bf464ca3c05a6a65e4ee6b6ae4e9"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeTeacherForcing.swift": {
+      "bytes": 5326,
+      "sha256": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/Harness/NativeWorker.swift": {
+      "bytes": 22444,
+      "sha256": "d86832de771cc1d8ee1774089468e749f05b8bfb074e20ee69fccc3b0c50fa37"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/tests/swift/MLXRealMain.swift": {
+      "bytes": 3492,
+      "sha256": "3cc5555cbacd8e43a0d0e9b0c65a6d3e2dace8be456a298e9ef57dc5757d0c18"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/apple/tests/swift/WorkerChecks.swift": {
+      "bytes": 8439,
+      "sha256": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/benchmark.rs": {
+      "bytes": 3360,
+      "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/bin/cli/chat.rs": {
+      "bytes": 21958,
+      "sha256": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/bin/cli/mod.rs": {
+      "bytes": 35356,
+      "sha256": "236d061e7694838f590abc45ab124f670a3bf65bab54da93ce5e022260969c24"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/bin/toklet.rs": {
+      "bytes": 96,
+      "sha256": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/cpu/attention.rs": {
+      "bytes": 11201,
+      "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/cpu/mod.rs": {
+      "bytes": 9060,
+      "sha256": "7e2232f4870cc6410f6c74ae538930005ef18258ec4e6c1821d8fde489328265"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/cpu/reductions.rs": {
+      "bytes": 7659,
+      "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/cpu/tiled.rs": {
+      "bytes": 6519,
+      "sha256": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/generation.rs": {
+      "bytes": 7870,
+      "sha256": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/lib.rs": {
+      "bytes": 563,
+      "sha256": "3b33fdf9e65da6277b90567e461cb20b4ee132ec4a060afcce87e8b551e38a3c"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/capture.rs": {
+      "bytes": 2365,
+      "sha256": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/diagnostic.rs": {
+      "bytes": 7365,
+      "sha256": "b2aef469576ec802f0be999402ffe045f19588b034006b326b7b097f8c7b4ee8"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/half_consistency.rs": {
+      "bytes": 25953,
+      "sha256": "c3e2f8f32be7ffa7f5351758495d46990af92fa5235ab2ed3919295824ccc37e"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/half_projection.rs": {
+      "bytes": 10662,
+      "sha256": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/kernels.metal": {
+      "bytes": 25012,
+      "sha256": "04c3899d4690da329733fcd8bc44f76567020062b21d3596c4069a6d5d5affb0"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/memory.rs": {
+      "bytes": 17758,
+      "sha256": "9774a156420523aee0553c742986b591ae26f48d6bee41ffd91dfffd3d644bf6"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/mlx.metal": {
+      "bytes": 5748,
+      "sha256": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/mlx.rs": {
+      "bytes": 37222,
+      "sha256": "f5394b0debf4382c36feb3187dd538c6f90621536540bac5d330b2f26099b177"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/mod.rs": {
+      "bytes": 119299,
+      "sha256": "640046cbeba07ac364ff084f6005d4da060e801d4046470753c69084ffccdd65"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/online_attention.rs": {
+      "bytes": 21891,
+      "sha256": "b3f346d266d9356952f298521c7ec2626bfd1f836112a9e388a2e8a312e02d04"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/profile.rs": {
+      "bytes": 13762,
+      "sha256": "ee0451a6127ad2dee228d078cef8633f7da691d8c4409eaf04eee434ee1ee9c3"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/metal/q4_v2_projection.rs": {
+      "bytes": 11730,
+      "sha256": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/mlx/affine.rs": {
+      "bytes": 10163,
+      "sha256": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/mlx/mod.rs": {
+      "bytes": 287,
+      "sha256": "1b2bf4b0a057834d254bb70ac10665dfe2f2bae02239f9edc651a9e7f5da7b79"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/mlx/qwen.rs": {
+      "bytes": 17965,
+      "sha256": "74a65a91d3943b48df0f911f73396a929037d9401e7d683ca617668a4e08466a"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/mlx/reference.rs": {
+      "bytes": 5929,
+      "sha256": "5bff7ac5231c598aa06a9f03212920de147f675b19980aa2d87638172583acc2"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/model/cache.rs": {
+      "bytes": 3096,
+      "sha256": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/model/mod.rs": {
+      "bytes": 24014,
+      "sha256": "4179ef56f4e7f95bcf90be79102b99ddf4cf9fa78b399503a78b88d01c8d0a94"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/model/trace.rs": {
+      "bytes": 2807,
+      "sha256": "6408d3ccc4952f268872bf01bbe1ce8e417ea39a736f6a5e8f4b62d12f6ec2c1"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/native/tests.rs": {
+      "bytes": 38382,
+      "sha256": "144b68753a80483c85f2247f91bc2702b0b01da035a3d83e424c4083700cf856"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/native.rs": {
+      "bytes": 32174,
+      "sha256": "df43165d214957dcce89ed781409f399cab70afe9956458fb7740ca2f676fcbc"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/q4/artifact.rs": {
+      "bytes": 10397,
+      "sha256": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/q4.rs": {
+      "bytes": 8842,
+      "sha256": "94a98e87699aa282f1f42bfcfba90d14500696fed71f8cf93caf950ad08405c2"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/sampling.rs": {
+      "bytes": 616,
+      "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/session.rs": {
+      "bytes": 16921,
+      "sha256": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/weights/half_tests.rs": {
+      "bytes": 3814,
+      "sha256": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/src/weights/mod.rs": {
+      "bytes": 32427,
+      "sha256": "ce8a83c227caf6fd412b02a3a48619670b4a9053822846e2c79b17456a0c4647"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/bench/prepare.py": {
+      "bytes": 15310,
+      "sha256": "83973dacffb8db61e8aea9a82cbbcc96d19a5bf40324d0e85cec1cfea6891c13"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/bench/task_cases.py": {
+      "bytes": 12391,
+      "sha256": "91b5f44840ba31b8f0aead2217b4638c0dbb7e2529389225ba58a6c4822f9e1d"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m7_apple_integration.py": {
+      "bytes": 7322,
+      "sha256": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m7_apple_package.py": {
+      "bytes": 12764,
+      "sha256": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m7_physical_integration.py": {
+      "bytes": 21859,
+      "sha256": "c5aa930323a8c13084bb12c8c42a71d3f9ac5a7a98d35352cfdb2c0f4fcbab2c"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m7_physical_measurement.py": {
+      "bytes": 33710,
+      "sha256": "f357a13a6f5d9b714b2bb166bdf0f98c4017e11efebdd05b081d43e667800ec6"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m7_physical_quality.py": {
+      "bytes": 12159,
+      "sha256": "bd6db9b17fddf9397d69dd5593ff5b16e186a17698d509261c0827830cf83ffa"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m7_physical_storage.py": {
+      "bytes": 8109,
+      "sha256": "cb159470ecfce303ea3ef202d690764a839b5d50785b0dfb4694dc4220d102e5"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m7_physical_tasks.py": {
+      "bytes": 16947,
+      "sha256": "ac4dcbea9002f9131caca06c226a55fba155c852148b1d561aaec389021d0d58"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m7_swift_harness_build.py": {
+      "bytes": 8793,
+      "sha256": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m8_mlx_jobs.py": {
+      "bytes": 8745,
+      "sha256": "0d40c4bacad21c23cc130d5389b89a953e460e0371b758c4265bb0af203acaf8"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/m8_physical_mlx.py": {
+      "bytes": 23152,
+      "sha256": "d169824b535bdd943d866e6ffa41fd6c3ad11d6b756c6db9b5afca2554106f1c"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/test_m7_apple_package.py": {
+      "bytes": 6846,
+      "sha256": "efdd9835b9c8301cdb91f3e466b5b8791155d4eb5d663f56a267588dc700f162"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_integration.py": {
+      "bytes": 18910,
+      "sha256": "54564d09635dbe4708134b1ea1f9bd8a7a35a8e23c3c54aed00798c75b5419a3"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_measurement.py": {
+      "bytes": 30773,
+      "sha256": "5b22a991ea6f6b2afe2c1cd482d8eb9ae7a1e7ad6e0ea92b6cb33e0189418f31"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_quality.py": {
+      "bytes": 18114,
+      "sha256": "666a8c566d0299fcc8325c61b6dad0658c1b479939e5cddd4651ebe66cf6b6a2"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_storage.py": {
+      "bytes": 17591,
+      "sha256": "cff3ee69c8c3a7f8a2691e26611fb3e6f4ec3b1950fe35630c010ed9f8a2f619"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/test_m7_physical_tasks.py": {
+      "bytes": 20363,
+      "sha256": "526d2bfff5ac18b7c96995d7c26403820de0aec75f8e4a974131013954ddb312"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/test_m8_mlx_jobs.py": {
+      "bytes": 8641,
+      "sha256": "f61c50891d0394fd2d95f4c5689847ba075d25e3b272d9c8750f2f8594cc7c12"
+    },
+    "artifacts/m8-mlx8-full-loss-evidence-v1/source-snapshot/tools/experiments/test_m8_physical_mlx.py": {
+      "bytes": 17281,
+      "sha256": "577cb34d9bb19fbd394db01013e063734135d123b3808f10f472490b109b9714"
+    }
+  }
+}
