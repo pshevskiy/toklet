@@ -56,8 +56,10 @@ historical sources remain in the [app receipt](../benchmarks/results/2026-10-23-
 
 ## Remaining limits
 
-The actual fresh multi-GB range transfer is a separate trial. Its predecessor
-lost the network connection and safely discarded incomplete staging. The
+The first actual fresh multi-GB range trial also failed, with timeout code
+-1001 and an empty final model directory. Its saved diagnostic does not identify
+the failed file/range or final byte count. The earlier full-body trial lost the
+connection. Both safely discarded incomplete staging. The
 [bounded range mechanism](model-hub.md#bounded-large-file-transport--23-october-2026)
 has deterministic acceptance; a complete real transfer requires its own full
 SHA and publication evidence. This app task makes no fresh Mistral network

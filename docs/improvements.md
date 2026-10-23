@@ -1704,3 +1704,26 @@ concurrent public range download is an explicit confounder, and the single AC
 query is a pre-run observation only. The
 [receipt](../benchmarks/results/2026-10-23-mistral-mac-observations-v1.json) makes
 no full performance, text/UI, held-out quality or phone qualification claim.
+
+### Retry metadata and smaller downloads safely — 23 October 2026
+
+The actual ranged Mistral trial failed with timeout code -1001; incomplete
+staging was discarded and no final snapshot remained. Its old diagnostic does
+not identify the failed file/range or final byte count. Inspection exposed a
+separate asymmetry: metadata/smaller files had one attempt versus three for
+ranges. The [whole-file retry change](model-hub.md#whole-file-retries-and-safe-failure-context--23-october-2026)
+adds three transient-only attempts under one deadline, closed exclusive sink
+replacement, fatal cleanup errors and joined interruption. Network diagnostics
+now exclude URL-bearing NSError metadata while retaining code, attempt, range,
+actual delivered byte count and monotonic elapsed time. Chunk tuning and
+cross-launch persistence are unchanged.
+
+Astra caught a false-pass path in a new nontransient test and requested a real
+URL-bearing injected error for privacy coverage; both were fixed. Two diagnostic
+fixture trials assumed two queued bytes must reach the delegate before immediate
+failure; URLSession reported zero. The test now admits exactly zero or two,
+without altering production size/hash gates. Final strict Swift fixture checks
+and SDK type checking pass; the earlier sandbox storage failure and all fixture
+trials remain in the [receipt](../benchmarks/results/2026-10-23-model-hub-whole-retries-v1.json).
+No numerical kernels changed. Fresh Mistral network completion remains separate;
+physical phone work stays paused.

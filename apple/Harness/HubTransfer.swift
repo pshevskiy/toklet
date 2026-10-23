@@ -8,6 +8,14 @@ private struct HubCleanupFailure: LocalizedError {
     var errorDescription: String? { "Download cleanup failed: " + causes.joined(separator:"; ") }
 }
 
+// Keep diagnostics independent of NSError userInfo, which may contain signed
+// redirect URLs. Retain the code for transient-only retry classification.
+private struct HubNetworkFailure: LocalizedError {
+    let code: URLError.Code
+    let detail: String
+    var errorDescription: String? { detail }
+}
+
 // One ephemeral URLSession and serial delegate queue per transfer. Delegate-owned
 // fields are initialized before resume(), then accessed only on that queue.
 // The cancellation lock protects only the cross-thread session/cancelled handoff.
@@ -25,6 +33,8 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
     private let total: Int64?
     private let maximum: Int64
     private let progress: @Sendable (Int64) -> Void
+    private let attempt: Int
+    private let started = ContinuousClock.now
     private var received: Int64 = 0
     private var accepted = false
     private var failure: Error?
@@ -32,8 +42,8 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
     private var lastSpaceCheck: Int64 = 0
     private var lastProgress: Int64 = 0
 
-    init(destination: URL,maximum: Int64,progress: @escaping @Sendable (Int64) -> Void,range: Range<Int64>? = nil,total: Int64? = nil,closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() }) {
-        self.destination = destination; self.maximum = maximum; self.progress = progress; self.range = range; self.total = total; self.closeHandle = closeHandle
+    init(destination: URL,maximum: Int64,progress: @escaping @Sendable (Int64) -> Void,range: Range<Int64>? = nil,total: Int64? = nil,attempt: Int = 1,closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() }) {
+        self.attempt = attempt; self.destination = destination; self.maximum = maximum; self.progress = progress; self.range = range; self.total = total; self.closeHandle = closeHandle
     }
     static func allowed(_ url: URL) -> Bool {
         guard url.scheme == "https", url.user == nil, url.password == nil,
@@ -45,19 +55,19 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
         if maximum >= 1024 * 1024 * 1024 {
             try await ranged(url,destination,maximum,progress)
         } else {
-            try await run(url,destination,maximum,progress,configuration:.ephemeral)
+            try await whole(url,destination,maximum,progress)
         }
     }
     static func run(_ url: URL,_ destination: URL,_ maximum: Int64,
                     _ progress: @escaping @Sendable (Int64) -> Void,configuration: URLSessionConfiguration,
-                    range: Range<Int64>? = nil,total: Int64? = nil,
+                    range: Range<Int64>? = nil,total: Int64? = nil,attempt: Int = 1,
                     closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() }) async throws {
-        guard allowed(url), maximum > 0, maximum <= HubProfile.maximumFileBytes else { throw HubFailure("Invalid transfer request.") }
+        guard allowed(url), maximum > 0, maximum <= HubProfile.maximumFileBytes, (1...3).contains(attempt) else { throw HubFailure("Invalid transfer request.") }
         if let range {
             guard let total, total > 0, total <= HubProfile.maximumFileBytes, range.lowerBound >= 0, range.upperBound <= total,
                   range.upperBound - range.lowerBound == maximum else { throw HubFailure("Invalid range request.") }
         } else if total != nil { throw HubFailure("Missing range request.") }
-        let transfer = HubTransfer(destination:destination,maximum:maximum,progress:progress,range:range,total:total,closeHandle:closeHandle)
+        let transfer = HubTransfer(destination:destination,maximum:maximum,progress:progress,range:range,total:total,attempt:attempt,closeHandle:closeHandle)
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 transfer.start(url,configuration:configuration,continuation:continuation)
@@ -149,6 +159,10 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
     }
     func urlSession(_ session: URLSession,task: URLSessionTask,didCompleteWithError error: Error?) {
         var result = failure ?? error
+        if let network = result as? URLError {
+            let span = range.map { "bytes \($0.lowerBound)-\($0.upperBound - 1)/\(total!)" } ?? "whole file"
+            result = HubNetworkFailure(code:network.code,detail:"Network transfer failed (NSURLErrorDomain \(network.code.rawValue); attempt \(attempt); \(span); received \(received)/\(maximum) bytes; elapsed \(started.duration(to:.now))).")
+        }
         if result == nil && !accepted { result = HubFailure("Missing download response.") }
         if result == nil && range != nil && received != maximum { result = HubFailure("Download range was incomplete.") }
         do { if let handle { try closeHandle(handle) } }
@@ -202,15 +216,55 @@ extension HubTransfer {
                        configuration: URLSessionConfiguration = .ephemeral,
                        closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() },
                        resourceTimeout: Duration = .seconds(7200)) async throws {
-        guard resourceTimeout > .zero, resourceTimeout <= .seconds(7200) else { throw HubFailure("Invalid range deadline.") }
         let options = SessionOptions(value:configuration.copy() as! URLSessionConfiguration)
-        try await withThrowingTaskGroup(of:Void.self) { group in
-            group.addTask {
-                try await assembleRanges(url,destination,total,progress,chunkBytes:chunkBytes,parallelism:parallelism,
-                                         configuration:options.value,closeHandle:closeHandle)
+        try await withDeadline(resourceTimeout) {
+            try await assembleRanges(url,destination,total,progress,chunkBytes:chunkBytes,parallelism:parallelism,
+                                     configuration:options.value,closeHandle:closeHandle)
+        }
+    }
+
+    // Metadata and smaller files need the same transient-only attempt bound as
+    // ranges. A retry starts a new exclusive sink only after the previous
+    // continuation has joined URLSession completion and closed its owned sink.
+    static func whole(_ url: URL,_ destination: URL,_ maximum: Int64,
+                      _ progress: @escaping @Sendable (Int64) -> Void,
+                      configuration: URLSessionConfiguration = .ephemeral,
+                      closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() },
+                      resourceTimeout: Duration = .seconds(7200)) async throws {
+        let options = SessionOptions(value:configuration.copy() as! URLSessionConfiguration)
+        try await withDeadline(resourceTimeout) {
+            for attempt in 0..<3 {
+                try Task.checkCancellation()
+                do {
+                    try await run(url,destination,maximum,progress,configuration:options.value.copy() as! URLSessionConfiguration,attempt:attempt + 1,closeHandle:closeHandle)
+                    return
+                } catch {
+                    if error is HubCleanupFailure { throw error }
+                    try Task.checkCancellation()
+                    guard attempt < 2, transient(error) else { throw error }
+                    // A transient network failure comes from the session, after this
+                    // call created the sink. Startup/collision errors never retry
+                    // or remove an existing destination.
+                    let original = error
+                    do { try FileManager.default.removeItem(at:destination) }
+                    catch { throw cleanupFailure(original,"retry sink removal: " + error.localizedDescription) }
+                    try await Task.sleep(for:.milliseconds(250 * (attempt + 1)))
+                }
             }
+        }
+    }
+
+    private static func transient(_ error: Error) -> Bool {
+        let code = (error as? HubNetworkFailure)?.code ?? (error as? URLError)?.code
+        guard let code else { return false }
+        return [.timedOut,.networkConnectionLost,.cannotConnectToHost,.cannotFindHost,.dnsLookupFailed,.notConnectedToInternet].contains(code)
+    }
+    private static func withDeadline(_ duration: Duration,_ operation: @escaping @Sendable () async throws -> Void) async throws {
+        guard duration > .zero, duration <= .seconds(7200) else { throw HubFailure("Invalid transfer deadline.") }
+        try await withThrowingTaskGroup(of:Void.self) { group in
+            group.addTask { try await operation() }
             group.addTask {
-                try await Task.sleep(for:resourceTimeout)
+                try await Task.sleep(for:duration)
                 throw HubFailure("Download exceeded the two-hour resource deadline.")
             }
             var primary: Error?
@@ -259,7 +313,7 @@ extension HubTransfer {
                                 let path = directory.appendingPathComponent("part-\(lower)-\(attempt)")
                                 do {
                                     try await run(url,path,upper - lower,{ _ in },configuration:options.value.copy() as! URLSessionConfiguration,
-                                                  range:lower..<upper,total:total,closeHandle:closeHandle)
+                                                  range:lower..<upper,total:total,attempt:attempt + 1,closeHandle:closeHandle)
                                     return (lower,path)
                                 } catch {
                                     var cause = error
@@ -267,8 +321,7 @@ extension HubTransfer {
                                     catch { cause = cleanupFailure(cause,"chunk removal: " + error.localizedDescription) }
                                     if cause is HubCleanupFailure { throw cause }
                                     try Task.checkCancellation()
-                                    guard attempt < 2, let network = cause as? URLError,
-                                          [.timedOut,.networkConnectionLost,.cannotConnectToHost,.cannotFindHost,.dnsLookupFailed,.notConnectedToInternet].contains(network.code) else { throw cause }
+                                    guard attempt < 2, transient(cause) else { throw cause }
                                     try await Task.sleep(for:.milliseconds(250 * (attempt + 1)))
                                 }
                             }

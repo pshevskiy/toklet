@@ -230,3 +230,27 @@ Swift/core/SDK checks pass; the [receipt](../benchmarks/results/2026-10-23-model
 retains the first test's obsolete catch-type failure and the intermediate pass.
 This improves failure reporting; completed range bytes and numerical execution
 are unchanged. The ongoing real transfer retains its immutable earlier source.
+
+## Whole-file retries and safe failure context — 23 October 2026
+
+Metadata and files below 1 GiB now use the same three-attempt transient-error
+policy as weight ranges. Each retry waits for URLSession completion and sink
+closure, removes only that attempt's owned partial sink, and creates a fresh
+exclusive sink. HTTP/schema/length, storage, startup collision and cleanup errors
+do not retry. One two-hour deadline spans all attempts and backoff; cancellation
+and deadlines join children before returning. Range size and concurrency remain
+16 MiB and four. Final inventory/size/SHA and exclusive-publication gates are
+unchanged, and there is no cross-launch resume.
+
+Terminal network diagnostics retain domain/code, attempt, requested byte range
+(or whole-file marker), delegate-delivered bytes and monotonic elapsed time.
+They do not copy URL-bearing `NSError.userInfo` or its localized description.
+The regression suite injects a signed-URL marker into both fields.
+
+The first real ranged Mistral trial ended with `NSURLErrorDomain -1001` and an
+empty final model directory. Its saved diagnostic does not identify the failed
+file/range or terminal byte count. The retry asymmetry is independently observed;
+it is not established as the cause of that failure. The
+[retry receipt](../benchmarks/results/2026-10-23-model-hub-whole-retries-v1.json)
+retains that failed trial, earlier fixture failures and the passing final checks.
+This change alone does not qualify a successful fresh Mistral transfer.

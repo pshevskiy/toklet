@@ -42,6 +42,7 @@ private final class SlowHubProtocol: URLProtocol, @unchecked Sendable {
     final class State: @unchecked Sendable {
         private let lock = NSLock(); private var stopped = false
         func stop() { lock.lock(); stopped = true; lock.unlock() }
+        func reset() { lock.lock(); stopped = false; lock.unlock() }
         func isStopped() -> Bool { lock.lock(); defer { lock.unlock() }; return stopped }
     }
     static let state = State()
@@ -58,6 +59,33 @@ private final class SlowHubProtocol: URLProtocol, @unchecked Sendable {
         }
     }
     override func stopLoading() { Self.state.stop() }
+}
+
+// Whole-file retries use real delegate/sink completion with injected transport
+// failures, without depending on a public server or downloading model weights.
+private final class RetryHubProtocol: URLProtocol, @unchecked Sendable {
+    final class Plan: @unchecked Sendable {
+        private let lock = NSLock(); private var mode = "good"; private var attempts = 0
+        func set(_ mode: String) { lock.lock(); self.mode = mode; attempts = 0; lock.unlock() }
+        func next() -> (String,Int) { lock.lock(); defer { lock.unlock() }; attempts += 1; return (mode,attempts) }
+        func count() -> Int { lock.lock(); defer { lock.unlock() }; return attempts }
+    }
+    static let plan = Plan()
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        let (mode,attempt) = Self.plan.next()
+        let response = HTTPURLResponse(url:request.url!,statusCode:mode == "denied" ? 403 : 200,httpVersion:"HTTP/1.1",headerFields:["Content-Length":mode == "wrong-length" ? "999" : "4"])!
+        client?.urlProtocol(self,didReceive:response,cacheStoragePolicy:.notAllowed)
+        if mode.contains("loss") || mode.contains("timeout") {
+            if attempt == 1 || mode.hasPrefix("always") {
+                client?.urlProtocol(self,didLoad:Data("ba".utf8))
+                client?.urlProtocol(self,didFailWithError:URLError(mode.contains("timeout") ? .timedOut : .networkConnectionLost)); return
+            }
+        }
+        client?.urlProtocol(self,didLoad:Data("test".utf8)); client?.urlProtocolDidFinishLoading(self)
+    }
+    override func stopLoading() {}
 }
 
 // Tiny deterministic range server; no network or multi-GB allocation.
@@ -115,7 +143,7 @@ private final class RangeHubProtocol: URLProtocol, @unchecked Sendable {
         client?.urlProtocol(self,didReceive:response,cacheStoragePolicy:.notAllowed)
         if fail {
             client?.urlProtocol(self,didLoad:data.prefix(2))
-            client?.urlProtocol(self,didFailWithError:URLError(.networkConnectionLost)); return
+            client?.urlProtocol(self,didFailWithError:URLError(.networkConnectionLost,userInfo:[NSURLErrorFailingURLErrorKey:request.url!,NSLocalizedDescriptionKey:"signed-url private-marker"])); return
         }
         if slow {
             client?.urlProtocol(self,didLoad:data.prefix(2)); Self.plan.started()
@@ -287,6 +315,7 @@ struct HubMain {
         try await largeInventoryChecks(root)
         try await transportChecks(root)
         try await rangeChecks(root)
+        try await wholeRetryChecks(root)
     }
     static func largeInventoryChecks(_ root: URL) async throws {
         let hash = String(repeating:"0",count:64)
@@ -329,6 +358,7 @@ struct HubMain {
                 try require(count <= 4,"response sink size bound")
             }
         }
+        SlowHubProtocol.state.reset()
         let activeConfiguration = URLSessionConfiguration.ephemeral; activeConfiguration.protocolClasses = [SlowHubProtocol.self]
         let wrote = Started(); let activePath = root.appendingPathComponent("active-cancel")
         let active = Task {
@@ -348,6 +378,72 @@ struct HubMain {
         }
         cancelled.cancel(); try await rejects("early task cancellation") { try await cancelled.value }
     }
+    static func wholeRetryChecks(_ root: URL) async throws {
+        let directory = root.appendingPathComponent("whole-retries")
+        try FileManager.default.createDirectory(at:directory,withIntermediateDirectories:false)
+        let configuration = URLSessionConfiguration.ephemeral; configuration.protocolClasses = [RetryHubProtocol.self]
+        let url = URL(string:"https://huggingface.co/test")!
+        for mode in ["good","one-loss","one-timeout"] {
+            RetryHubProtocol.plan.set(mode)
+            let destination = directory.appendingPathComponent(mode)
+            try await HubTransfer.whole(url,destination,4,{ _ in },configuration:configuration)
+            try require(try Data(contentsOf:destination) == Data("test".utf8),"retry replaces partial sink rather than appending " + mode)
+            try require(RetryHubProtocol.plan.count() == (mode == "good" ? 1 : 2),"whole-file attempt count " + mode)
+        }
+        // URLSession may discard the queued tiny body when URLProtocol reports
+        // failure immediately. Both zero and two delegate-delivered bytes are
+        // valid; the diagnostic must report its actual bounded sink count.
+        for mode in ["always-loss","always-timeout","denied","wrong-length"] {
+            RetryHubProtocol.plan.set(mode)
+            var rejected = false
+            do {
+                try await HubTransfer.whole(url,directory.appendingPathComponent(mode),4,{ _ in },configuration:configuration)
+            } catch {
+                rejected = true
+                if mode.hasPrefix("always") {
+                    let detail = error.localizedDescription
+                    try require(detail.contains("NSURLErrorDomain") && detail.contains("attempt 3") && (detail.contains("received 0/4 bytes") || detail.contains("received 2/4 bytes")) && detail.contains("elapsed") && !detail.contains("https://"),"bounded safe terminal network context")
+                }
+            }
+            try require(rejected,"whole-file error expected " + mode)
+            try require(RetryHubProtocol.plan.count() == (mode.hasPrefix("always") ? 3 : 1),"whole-file transient-only bound " + mode)
+        }
+        RetryHubProtocol.plan.set("good")
+        let existing = directory.appendingPathComponent("existing"); try Data("keep".utf8).write(to:existing)
+        try await rejects("whole-file collision") { try await HubTransfer.whole(url,existing,4,{ _ in },configuration:configuration) }
+        try require(try Data(contentsOf:existing) == Data("keep".utf8),"existing sink is never removed")
+        try require(RetryHubProtocol.plan.count() == 0,"collision rejected before any request")
+        RetryHubProtocol.plan.set("one-loss")
+        do {
+            try await HubTransfer.whole(url,directory.appendingPathComponent("close-error"),4,{ _ in },configuration:configuration,
+                closeHandle:{ handle in try handle.close(); throw HubFailure("Injected whole close error") })
+            throw HubFailure("Whole cleanup error accepted")
+        } catch {
+            try require(error.localizedDescription.contains("Injected whole close error") && error.localizedDescription.contains("original:"),"whole transport and close causes retained")
+        }
+        try require(RetryHubProtocol.plan.count() == 1,"whole close failure prevents retries")
+        RetryHubProtocol.plan.set("always-timeout")
+        do {
+            try await HubTransfer.whole(url,directory.appendingPathComponent("backoff-deadline"),4,{ _ in },configuration:configuration,resourceTimeout:.milliseconds(50))
+            throw HubFailure("Whole deadline accepted")
+        } catch let failure as HubFailure { try require(failure.message.contains("resource deadline"),"one deadline spans attempts and backoff") }
+        try await Task.sleep(for:.milliseconds(300))
+        try require(RetryHubProtocol.plan.count() == 1,"deadline joins before a retry can start")
+        SlowHubProtocol.state.reset()
+        let activeConfiguration = URLSessionConfiguration.ephemeral; activeConfiguration.protocolClasses = [SlowHubProtocol.self]
+        let started = Started(); let destination = directory.appendingPathComponent("cancelled")
+        let task = Task {
+            try await HubTransfer.whole(url,destination,2 * 1024 * 1024,{ count in
+                if count > 0 { Task { await started.signal() } }
+            },configuration:activeConfiguration)
+        }
+        await started.wait(); task.cancel()
+        try await rejects("whole active cancellation") { try await task.value }
+        let size = try destination.resourceValues(forKeys:[.fileSizeKey]).fileSize
+        try await Task.sleep(for:.milliseconds(350))
+        try require(try destination.resourceValues(forKeys:[.fileSizeKey]).fileSize == size,"whole cancellation joins before returning")
+    }
+
     static func rangeChecks(_ root: URL) async throws {
         let directory = root.appendingPathComponent("range-tests")
         try FileManager.default.createDirectory(at:directory,withIntermediateDirectories:false)
@@ -371,6 +467,14 @@ struct HubMain {
             }
             let attempts = RangeHubProtocol.plan.counts()[0] ?? 0
             try require(attempts == (mode == "always-loss" ? 3 : 1),"bounded retry only for transport error " + mode)
+        }
+        RangeHubProtocol.plan.set("always-loss",bytes)
+        do {
+            try await HubTransfer.ranged(URL(string:"https://huggingface.co/test?signature=private-marker")!,directory.appendingPathComponent("safe-range-error"),Int64(bytes.count),{ _ in },chunkBytes:5,parallelism:1,configuration:configuration)
+            throw HubFailure("Range failure accepted")
+        } catch {
+            let detail = error.localizedDescription
+            try require(detail.contains("attempt 3") && detail.contains("bytes 0-4/23") && (detail.contains("received 0/5 bytes") || detail.contains("received 2/5 bytes")) && detail.contains("elapsed") && !detail.contains("private-marker") && !detail.contains("https://"),"safe terminal range context: " + detail)
         }
         RangeHubProtocol.plan.set("one-loss",bytes)
         do {

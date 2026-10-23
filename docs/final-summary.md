@@ -52,7 +52,10 @@ A verified local checkpoint passes multi-turn/state/cancel/replay checks and a
 single completed functional process has an observed charged lifetime peak of
 4.2268 GB. This is separate from logical allocation accounting, sustained
 behavior and any speed claim. The actual fresh Mistral range transfer is a
-separate trial; local seeding does not qualify a new network weight download.
+separate trial: its first attempt failed with timeout -1001 and left no published
+snapshot. The [retry follow-up](model-hub.md#whole-file-retries-and-safe-failure-context--23-october-2026)
+adds bounded small-file retries and safe diagnostics; local seeding and fixture
+checks do not qualify a new network weight download.
 
 Two subsequent [raw-ID observation processes](mlx-mistral-mac-observations.md)
 each complete three warmups, 82 measured requests and over 600 native seconds.
