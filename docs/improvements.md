@@ -1618,3 +1618,19 @@ performance and long-context numerical qualification remain open. The
 [receipt](../benchmarks/results/2026-10-23-mistral-metal-v1.json) retains the
 pre-fix baseline and final source evidence. Chat/catalog integration continues
 separately. Phone operations remain paused at the user's request.
+
+### Native Mistral instruction text on Mac — 23 October 2026
+
+The [Mistral text profile](app-chat-profile.md#mistral-text-profile--23-october-2026)
+adds the exact pinned default instruction template and EOS-only stopping to the
+native bridge. Its bounded tokenizer configuration and separate 64 MiB text
+reservation preserve the numerical boundary. All 771 tokenizer control literals
+are rejected after JSON decoding. SmolLM2 and Qwen semantics remain unchanged.
+
+All six baseline/tokenizer/reference commands pass. A retained sandboxed trial
+fails GPU model loading; the unchanged code passes all four real/native text
+checks with Mac GPU access, including Mistral greeting, Qwen's unchanged token-0
+reply, ownership and hidden stops. Independent Python decoding agrees. The
+[receipt](../benchmarks/results/2026-10-23-mistral-app-chat-profile-v1.json) keeps
+those scopes distinct. App catalog/package integration continues next; phone
+operations stay paused and no new speed or physical-memory claim is made.

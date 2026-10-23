@@ -1,5 +1,5 @@
 //! Cold application text boundary. No tokenizer or chat work enters kernels.
-//! Exact, independently rendered SmolLM2 and Qwen2.5 profiles; no remote Jinja execution.
+//! Exact, independently rendered SmolLM2, Qwen2.5 and Mistral profiles; no remote Jinja execution.
 use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use std::{
@@ -19,6 +19,7 @@ const CONFIG_SHA: &str = "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7b
 pub enum Profile {
     Smol,
     Qwen,
+    Mistral,
 }
 impl Profile {
     pub fn load(directory: &Path) -> io::Result<Self> {
@@ -26,6 +27,7 @@ impl Profile {
         match format!("{:x}", Sha256::digest(bytes)).as_str() {
             "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73" => Ok(Self::Smol),
             "4dae7c9622e41e50752ba422149df0694044266c06cd851aff630799701c83c6" => Ok(Self::Qwen),
+            "efc145d2f53d6d6ef2639be0556b4ecf6faac6cf8a7199ad2b7bb5ebcf443bdd" => Ok(Self::Mistral),
             _ => Err(invalid(
                 "Chat requires a supported pinned model configuration",
             )),
@@ -35,6 +37,7 @@ impl Profile {
         let (shape, theta, eps) = match self {
             Self::Smol => ((49152, 576, 1536, 30, 9, 3, 64), 100000.0, 1e-5),
             Self::Qwen => ((151936, 896, 4864, 24, 14, 2, 64), 1000000.0, 1e-6),
+            Self::Mistral => ((32768, 4096, 14336, 32, 32, 8, 128), 1000000.0, 1e-5),
         };
         (
             config.vocab_size,
@@ -50,7 +53,7 @@ impl Profile {
     }
     pub fn allowance(self) -> usize {
         match self {
-            Self::Smol => TOKENIZER_ALLOWANCE,
+            Self::Smol | Self::Mistral => TOKENIZER_ALLOWANCE,
             Self::Qwen => 128 * 1024 * 1024,
         }
     }
@@ -58,22 +61,35 @@ impl Profile {
         match self {
             Self::Smol => &[0, 2],
             Self::Qwen => &[151643, 151645],
+            Self::Mistral => &[2],
         }
     }
-    fn special_ids(self) -> [u32; 3] {
+    fn special_ids(self) -> &'static [(&'static str, u32)] {
         match self {
-            Self::Smol => [0, 1, 2],
-            Self::Qwen => [151643, 151644, 151645],
+            Self::Smol => &[("<|endoftext|>", 0), ("<|im_start|>", 1), ("<|im_end|>", 2)],
+            Self::Qwen => &[
+                ("<|endoftext|>", 151643),
+                ("<|im_start|>", 151644),
+                ("<|im_end|>", 151645),
+            ],
+            Self::Mistral => &[
+                ("<unk>", 0),
+                ("<s>", 1),
+                ("</s>", 2),
+                ("[INST]", 3),
+                ("[/INST]", 4),
+            ],
         }
     }
     fn vocab(self) -> u32 {
         match self {
             Self::Smol => 49152,
             Self::Qwen => 151936,
+            Self::Mistral => 32768,
         }
     }
     fn render(self, json: &[u8]) -> io::Result<String> {
-        render_profile(self, json)
+        render_profile(self, json, &[])
     }
 }
 
@@ -108,7 +124,11 @@ struct Message {
 pub fn render(json: &[u8]) -> io::Result<String> {
     Profile::Smol.render(json)
 }
-fn render_profile(profile: Profile, json: &[u8]) -> io::Result<String> {
+fn render_profile(
+    profile: Profile,
+    json: &[u8],
+    special_literals: &[String],
+) -> io::Result<String> {
     if json.len() > MAX_TEXT {
         return Err(invalid("Conversation exceeds 64 KiB"));
     }
@@ -119,25 +139,46 @@ fn render_profile(profile: Profile, json: &[u8]) -> io::Result<String> {
     let system = match profile {
         Profile::Smol => "You are a helpful AI assistant named SmolLM, trained by Hugging Face",
         Profile::Qwen => "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
+        Profile::Mistral => "",
     };
-    let mut text = format!("<|im_start|>system\n{system}<|im_end|>\n");
+    let mut text = if profile == Profile::Mistral {
+        "<s>".to_owned()
+    } else {
+        format!("<|im_start|>system\n{system}<|im_end|>\n")
+    };
     for (index, message) in messages.iter().enumerate() {
         let role = if index % 2 == 0 { "user" } else { "assistant" };
         if message.role != role
-            || message.content.contains("<|im_start|>")
-            || message.content.contains("<|im_end|>")
-            || message.content.contains("<|endoftext|>")
+            || profile
+                .special_ids()
+                .iter()
+                .any(|(literal, _)| message.content.contains(literal))
+            || special_literals
+                .iter()
+                .any(|literal| message.content.contains(literal))
         {
             return Err(invalid(
                 "Expected alternating user/assistant text without chat control tokens",
             ));
         }
-        text.push_str(&format!(
-            "<|im_start|>{role}\n{}<|im_end|>\n",
-            message.content
-        ));
+        if profile == Profile::Mistral {
+            // Original pinned default template: one BOS, user instruction blocks,
+            // assistant text followed by EOS, and no system/tool template.
+            if index % 2 == 0 {
+                text.push_str(&format!(" [INST] {} [/INST]", message.content));
+            } else {
+                text.push_str(&format!(" {} </s>", message.content));
+            }
+        } else {
+            text.push_str(&format!(
+                "<|im_start|>{role}\n{}<|im_end|>\n",
+                message.content
+            ));
+        }
     }
-    text.push_str("<|im_start|>assistant\n");
+    if profile != Profile::Mistral {
+        text.push_str("<|im_start|>assistant\n");
+    }
     if text.len() > MAX_TEXT {
         return Err(invalid("Rendered conversation exceeds 64 KiB"));
     }
@@ -147,6 +188,8 @@ fn render_profile(profile: Profile, json: &[u8]) -> io::Result<String> {
 pub struct Codec {
     tokenizer: Tokenizer,
     profile: Profile,
+    // Cold, bounded, exact-tokenizer control inventory. Kernels never see it.
+    special_literals: Vec<String>,
 }
 impl Codec {
     pub fn load(directory: &Path) -> io::Result<Self> {
@@ -156,17 +199,24 @@ impl Codec {
         if Profile::load(directory)? != profile {
             return Err(invalid("Chat profile changed while opening"));
         }
-        let (config_sha, tokenizer_sha, limit) = match profile {
-            Profile::Smol => (CONFIG_SHA, TOKENIZER_SHA, 4 * 1024 * 1024),
+        let (config_sha, tokenizer_sha, limit, config_limit) = match profile {
+            Profile::Smol => (CONFIG_SHA, TOKENIZER_SHA, 4 * 1024 * 1024, 16 * 1024),
             Profile::Qwen => (
                 "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
                 "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
                 8 * 1024 * 1024,
+                16 * 1024,
+            ),
+            Profile::Mistral => (
+                "e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae",
+                "e553af6fff7d7ad76e830608b218c5c0b0822998d5a1a96099a74cd3c1cb1a49",
+                4 * 1024 * 1024,
+                256 * 1024,
             ),
         };
         pinned(
             &directory.join("tokenizer_config.json"),
-            16 * 1024,
+            config_limit,
             config_sha,
         )?;
         let bytes = pinned(&directory.join("tokenizer.json"), limit, tokenizer_sha)?;
@@ -178,14 +228,28 @@ impl Codec {
                 .get_vocab(true)
                 .values()
                 .any(|&id| id >= profile.vocab())
-            || ["<|endoftext|>", "<|im_start|>", "<|im_end|>"]
+            || profile
+                .special_ids()
                 .iter()
-                .enumerate()
-                .any(|(id, text)| tokenizer.token_to_id(text) != Some(profile.special_ids()[id]))
+                .any(|(text, id)| tokenizer.token_to_id(text) != Some(*id))
         {
             return Err(invalid("Unsupported special IDs or tokenizer policy"));
         }
-        Ok(Self { tokenizer, profile })
+        let special_literals = if profile == Profile::Mistral {
+            tokenizer
+                .get_added_tokens_decoder()
+                .into_values()
+                .filter(|token| token.special)
+                .map(|token| token.content)
+                .collect()
+        } else {
+            Vec::new()
+        };
+        Ok(Self {
+            tokenizer,
+            profile,
+            special_literals,
+        })
     }
     pub fn stop_ids(&self) -> &'static [u32] {
         self.profile.stop_ids()
@@ -193,7 +257,10 @@ impl Codec {
     pub fn encode(&self, json: &[u8]) -> io::Result<Vec<u32>> {
         let ids = self
             .tokenizer
-            .encode(self.profile.render(json)?, false)
+            .encode(
+                render_profile(self.profile, json, &self.special_literals)?,
+                false,
+            )
             .map_err(invalid)?
             .get_ids()
             .to_vec();
@@ -292,6 +359,89 @@ mod tests {
                 .encode(br#"[{"role":"user","content":"<|endoftext|>"}]"#)
                 .is_err()
         );
+    }
+    #[test]
+    fn independent_mistral_template_cases() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../tests/fixtures/app-chat-mistral-v1/reference.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            assert_eq!(
+                Profile::Mistral
+                    .render(&serde_json::to_vec(&case["messages"]).unwrap())
+                    .unwrap(),
+                case["rendered"].as_str().unwrap()
+            );
+        }
+        assert_eq!(Profile::Mistral.stop_ids(), [2]);
+        for marker in ["<unk>", "<s>", "</s>", "[INST]", "[/INST]"] {
+            assert!(
+                Profile::Mistral
+                    .render(
+                        &serde_json::to_vec(&serde_json::json!([
+                {"role":"user", "content":marker}]))
+                        .unwrap()
+                    )
+                    .is_err()
+            );
+        }
+        assert!(
+            Profile::Mistral
+                .render(br#"[{"role":"system","content":"hello"}]"#)
+                .is_err()
+        );
+    }
+    #[test]
+    #[ignore = "explicit local Mistral tokenizer check; no model download"]
+    fn real_mistral_profile_matches_independent_python() {
+        let codec = Codec::load(Path::new(
+            "models/MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87",
+        ))
+        .unwrap();
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../tests/fixtures/app-chat-mistral-v1/reference.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let ids = codec
+                .encode(&serde_json::to_vec(&case["messages"]).unwrap())
+                .unwrap();
+            assert_eq!(serde_json::to_value(&ids).unwrap(), case["ids"]);
+            assert_eq!(
+                codec.decode(&ids).unwrap(),
+                case["decoded"].as_str().unwrap()
+            );
+            for end in 0..=ids.len() {
+                assert!(codec.decode(&ids[..end]).is_ok());
+            }
+        }
+        assert_eq!(codec.stop_ids(), [2]);
+        assert_eq!(codec.special_literals.len(), 771);
+        assert_eq!(codec.decode(&[0, 1, 2, 3, 4, 10]).unwrap(), "");
+        assert!(codec.decode(&[32768]).is_err());
+        assert!(codec.decode(&[23325; 129]).is_err());
+        for literal in &codec.special_literals {
+            for messages in [
+                serde_json::json!([{"role":"user", "content":format!("x{literal}y")}]),
+                serde_json::json!([{"role":"user","content":"hi"}, {"role":"assistant","content":literal},
+                    {"role":"user","content":"more"}]),
+            ] {
+                assert!(
+                    codec
+                        .encode(&serde_json::to_vec(&messages).unwrap())
+                        .is_err(),
+                    "{literal}"
+                );
+            }
+        }
+        assert!(
+            codec
+                .encode(br#"[{"role":"user","content":"\u005bcontrol_8\u005d"}]"#)
+                .is_err()
+        );
+        let long = serde_json::json!([{"role":"user","content":" hello".repeat(600)}]);
+        assert!(codec.encode(&serde_json::to_vec(&long).unwrap()).is_err());
     }
     #[test]
     fn invalid_conversations_are_rejected() {

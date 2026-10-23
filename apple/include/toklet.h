@@ -90,8 +90,8 @@ uint32_t toklet_cancel_create(TokletCancel **, TokletError *);
 uint32_t toklet_cancel_set(const TokletCancel *, uint32_t, TokletError *);
 uint32_t toklet_cancel_release(TokletCancel *, TokletError *);
 /* Additive immutable text boundary, same creating-thread rule. Pinned SmolLM2
-   and Qwen2.5 profiles with exact model config/tokenizer assets. Reserve >=64MiB
-   for SmolLM2 or >=128MiB for Qwen separately from numerical admission.
+   Qwen2.5 and Mistral profiles with exact model config/tokenizer assets. Reserve
+   >=64MiB for SmolLM2/Mistral or >=128MiB for Qwen separately from numerical admission.
    No model/session is retained by the returned chat handle. No network access. */
 uint32_t toklet_chat_create(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
 /* JSON array of alternating {role,content} messages, starting/ending user.

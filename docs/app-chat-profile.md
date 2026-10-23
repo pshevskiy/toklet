@@ -79,3 +79,34 @@ The [Qwen text receipt](../benchmarks/results/2026-10-23-qwen-app-chat-profile-v
 retains final Rust formatting/strict Clippy, ordinary CPU/Metal suites, explicit
 local codecs/C bridge generation and independent Python replay. Earlier exports
 and check versions remain bound through exact source snapshots.
+
+## Mistral text profile — 23 October 2026
+
+The selected [Mistral snapshot](mlx-mistral-checkpoint.md) now has a native text
+profile. Its exact model configuration, tokenizer and tokenizer configuration
+are pinned independently of the numerical graph. The larger configuration has a
+256 KiB input bound; the tokenizer has a 4 MiB bound. The separate logical text
+allowance is 64 MiB. This reservation is not a measured physical peak.
+
+The original `default` template renders one BOS, user instruction blocks and
+assistant text followed by EOS. It adds no system message or trailing assistant
+marker. The [independent fixture](../tests/fixtures/app-chat-mistral-v1/reference.json)
+checks greeting and Unicode multi-turn rendering, complete IDs and decoding.
+All 771 added-special literals from the exact tokenizer are rejected in message
+content after JSON decoding, including tool/control markers and escaped forms.
+The only generation stop ID is **2**. No downloaded template is executed.
+
+Formatting, strict Clippy, CPU/Metal baselines, all three local tokenizer profiles
+and independent Python template replay pass. The first sandboxed native trial
+returned model-load errors for all three GPU models; its failed receipt and logs
+are retained. The unchanged source passes all four native text tests with Mac
+GPU access. Mistral returns `[23325,29576,2370,1309,1083,2084,1136,3922]`, independently
+decoded as **“Hello! How can I help you today”**. Qwen retains token 0 and its
+previous exact greeting. Allowance rejection, ownership after model release,
+full-prefix decoding and hidden forced stops pass.
+
+The [text receipt](../benchmarks/results/2026-10-23-mistral-app-chat-profile-v1.json)
+binds final sources, successful and failed diagnostics, independent decoding and
+unchanged protected binaries. This task changes no numerical kernel or ABI
+layout. App catalog/package integration follows separately. Performance,
+held-out quality, physical text peaks and phone Chat remain unqualified.

@@ -35,7 +35,7 @@ unsafe fn copy_output<T: Copy>(
 }
 
 /// Load the pinned chat assets from the loaded model's own directory.
-/// The caller reserves 64MiB (SmolLM2) or 128MiB (Qwen) beyond its numerical budget.
+/// The caller reserves 64MiB (SmolLM2/Mistral) or 128MiB (Qwen) beyond its numerical budget.
 /// # Safety
 /// Follow the parent module's foreign pointer/thread contract.
 #[unsafe(no_mangle)]
@@ -59,7 +59,7 @@ pub unsafe extern "C" fn toklet_chat_create(
             {
                 return Err(fail(
                     INVALID,
-                    "reserve the profile text allowance separately: SmolLM2 64MiB, Qwen 128MiB",
+                    "reserve the profile text allowance separately: SmolLM2/Mistral 64MiB, Qwen 128MiB",
                 ));
             }
             let config = match model.model.as_ref() {
@@ -199,6 +199,7 @@ pub unsafe extern "C" fn toklet_chat_release(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     use crate::app_chat::TOKENIZER_ALLOWANCE;
     #[test]
     fn model_directory_freezes_relative_origin() {
@@ -409,18 +410,37 @@ mod tests {
     #[test]
     #[ignore = "explicit real local Qwen GPU text check"]
     fn public_qwen_chat_generation_and_stop_query() {
+        public_chat_case(
+            b"models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c",
+            Profile::Qwen,
+            1024 * 1024 * 1024,
+        );
+    }
+
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    #[ignore = "explicit real local Mistral GPU text check"]
+    fn public_mistral_chat_generation_and_stop_query() {
+        public_chat_case(
+            b"models/MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87",
+            Profile::Mistral,
+            5 * 1024 * 1024 * 1024,
+        );
+    }
+
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    fn public_chat_case(path: &[u8], profile: Profile, memory_limit_bytes: u64) {
         unsafe extern "C" fn collect(ctx: *mut c_void, event: TokenEvent) -> u32 {
             // SAFETY: this synchronous test lends its unique Vec for the callback.
             unsafe { (&mut *ctx.cast::<Vec<u32>>()).push(event.token_id) };
             0
         }
-        let path = b"models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c";
         let opts = Options {
             abi_version: ABI_VERSION,
             struct_size: size_of::<Options>() as u32,
             capacity: 128,
             chunk: 32,
-            memory_limit_bytes: 1024 * 1024 * 1024,
+            memory_limit_bytes,
         };
         unsafe {
             let mut model = ptr::null_mut();
@@ -438,7 +458,7 @@ mod tests {
             assert_eq!(
                 toklet_chat_create(
                     model,
-                    TOKENIZER_ALLOWANCE as u64,
+                    (profile.allowance() - 1) as u64,
                     &mut chat,
                     ptr::null_mut()
                 ),
@@ -448,20 +468,26 @@ mod tests {
             assert_eq!(
                 toklet_chat_create(
                     model,
-                    Profile::Qwen.allowance() as u64,
+                    profile.allowance() as u64,
                     &mut chat,
                     ptr::null_mut()
                 ),
                 OK
             );
-            let mut stops = [0; 2];
+            let mut stops = vec![0; profile.stop_ids().len()];
             let mut count = 0;
             assert_eq!(
-                toklet_chat_stop_ids(chat, stops.as_mut_ptr(), 2, &mut count, ptr::null_mut()),
+                toklet_chat_stop_ids(
+                    chat,
+                    stops.as_mut_ptr(),
+                    stops.len(),
+                    &mut count,
+                    ptr::null_mut()
+                ),
                 OK
             );
-            assert_eq!(stops, [151643, 151645]);
-            assert_eq!(count, 2);
+            assert_eq!(stops, profile.stop_ids());
+            assert_eq!(count, stops.len());
             let mut session = ptr::null_mut();
             let mut cancel = ptr::null_mut();
             assert_eq!(
@@ -522,8 +548,8 @@ mod tests {
             let decoded = std::str::from_utf8(&text[..bytes]).unwrap();
             assert!(!decoded.is_empty());
             println!(
-                "QWEN_CHAT_JSON={}",
-                serde_json::json!({"ids": ids, "text": decoded, "reason": report.reason})
+                "NATIVE_CHAT_JSON={}",
+                serde_json::json!({"profile": format!("{profile:?}"), "ids": ids, "text": decoded, "reason": report.reason})
             );
             // A stop on the known first token is hidden and leaves no visible event.
             let forced = [ids[0]];
