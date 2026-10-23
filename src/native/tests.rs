@@ -65,6 +65,7 @@ fn handles() -> (*mut ModelHandle, *mut SessionHandle, *mut CancelHandle) {
     let m = Box::into_raw(Box::new(ModelHandle {
         owner: thread::current().id(),
         model: Rc::new(NativeModel::Cpu(Box::new(model()))),
+        directory: std::path::PathBuf::new(),
     }));
     let mut s = ptr::null_mut();
     let mut c = ptr::null_mut();
@@ -437,6 +438,7 @@ fn bridge_reservation_covers_owned_handle_and_wrapper_allocations() {
         session_bytes = session_bytes.max(size_of::<crate::metal::Session<'static>>());
     }
     let required = size_of::<ModelHandle>()
+        + 16384 // Maximum frozen model-directory allocation.
         + size_of::<NativeModel>()
         + 2 * size_of::<usize>()
         + size_of::<SessionHandle>()

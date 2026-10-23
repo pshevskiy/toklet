@@ -12,6 +12,7 @@
 //! recreate it afterwards. OOM abort and foreign exceptions are not contained.
 
 use crate::{generation, model, session, weights};
+mod text;
 use std::{
     cell::{Cell, RefCell},
     ffi::c_void,
@@ -24,6 +25,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
     thread::{self, ThreadId},
 };
+pub use text::*;
 
 pub const ABI_VERSION: u32 = 1;
 pub const OK: u32 = 0;
@@ -36,7 +38,8 @@ pub const PANIC: u32 = 6;
 pub const POISONED: u32 = 7;
 pub const CALLBACK_ERROR: u32 = 8;
 pub const UNSUPPORTED: u32 = 9;
-const BRIDGE_BYTES: usize = 4096;
+// Original 4KiB owners plus the bounded absolute model-directory allocation.
+const BRIDGE_BYTES: usize = 20 * 1024;
 
 #[repr(C)]
 pub struct NativeError {
@@ -199,6 +202,7 @@ impl NativeSession {
 pub struct ModelHandle {
     owner: ThreadId,
     model: Rc<NativeModel>,
+    directory: std::path::PathBuf,
 }
 // The borrow never escapes this private wrapper. Rc's allocation remains stable,
 // immutable, and owned for the entire session lifetime. Field order drops the
@@ -262,7 +266,7 @@ unsafe fn options(p: *const Options) -> Result<session::Options> {
         .ok()
         .and_then(|n| n.checked_sub(BRIDGE_BYTES))
         .filter(|n| *n > 0 && *n <= weights::INITIAL_MEMORY_LIMIT_BYTES - BRIDGE_BYTES)
-        .ok_or_else(|| fail(INVALID, "explicit memory budget must be >4096 and <=6GiB"))?;
+        .ok_or_else(|| fail(INVALID, "explicit memory budget must be >20KiB and <=6GiB"))?;
     Ok(session::Options {
         capacity: o.capacity as usize,
         prefill_chunk_size: o.chunk as usize,
@@ -348,6 +352,15 @@ unsafe fn local_path<'a>(p: *const u8, len: usize) -> Result<&'a Path> {
     Ok(Path::new(text))
 }
 
+fn origin_path(path: &Path) -> Result<std::path::PathBuf> {
+    let path = std::path::absolute(path).map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
+    if path.as_os_str().len() > 16384 {
+        return Err(fail(INVALID, "absolute model path exceeds 16KiB"));
+    }
+    // Exact owned bytes avoid retaining excess PathBuf growth capacity.
+    Ok(path.into_boxed_path().into_path_buf())
+}
+
 #[unsafe(no_mangle)]
 pub extern "C" fn toklet_abi_version() -> u32 {
     ABI_VERSION
@@ -375,8 +388,9 @@ pub unsafe extern "C" fn toklet_model_load(
             if path.is_empty() || path.contains('\0') {
                 return Err(fail(INVALID, "empty or NUL-containing path"));
             }
+            let path = origin_path(Path::new(path))?;
             let loaded = weights::load_qwen(
-                Path::new(path),
+                &path,
                 weights::LoadOptions {
                     context_limit: o.capacity,
                     memory_limit_bytes: o.memory_limit_bytes,
@@ -386,6 +400,7 @@ pub unsafe extern "C" fn toklet_model_load(
             out.write(Box::into_raw(Box::new(ModelHandle {
                 owner: thread::current().id(),
                 model: Rc::new(NativeModel::Cpu(Box::new(loaded.model))),
+                directory: path,
             })));
             Ok(())
         })
@@ -411,7 +426,7 @@ pub unsafe extern "C" fn toklet_model_load_metal(
             pointer(out)?;
             out.write(ptr::null_mut());
             let options = options(opts)?;
-            let path = local_path(path, len)?;
+            let path = origin_path(local_path(path, len)?)?;
             let packed = if packed_len == 0 {
                 None
             } else {
@@ -428,8 +443,8 @@ pub unsafe extern "C" fn toklet_model_load_metal(
                     memory_limit_bytes: options.memory_limit_bytes,
                 };
                 let model = match packed {
-                    None => crate::metal::Model::load(path, options),
-                    Some(packed) => crate::metal::Model::load_q4(path, packed, options),
+                    None => crate::metal::Model::load(&path, options),
+                    Some(packed) => crate::metal::Model::load_q4(&path, packed, options),
                 }
                 .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
                 if packed.is_some() && model.q4_format() != Some(crate::q4::Format::V2) {
@@ -438,6 +453,7 @@ pub unsafe extern "C" fn toklet_model_load_metal(
                 out.write(Box::into_raw(Box::new(ModelHandle {
                     owner: thread::current().id(),
                     model: Rc::new(NativeModel::Metal(Box::new(model))),
+                    directory: path,
                 })));
                 Ok(())
             }
@@ -474,7 +490,7 @@ pub unsafe extern "C" fn toklet_model_load_mlx(
             pointer(out)?;
             out.write(ptr::null_mut());
             let options = options(opts)?;
-            let path = local_path(path, len)?;
+            let path = origin_path(local_path(path, len)?)?;
             #[cfg(all(
                 feature = "metal",
                 any(target_os = "macos", target_os = "ios"),
@@ -482,7 +498,7 @@ pub unsafe extern "C" fn toklet_model_load_mlx(
             ))]
             {
                 let model = crate::metal::Model::load_mlx(
-                    path,
+                    &path,
                     weights::LoadOptions {
                         context_limit: options.capacity,
                         memory_limit_bytes: options.memory_limit_bytes,
@@ -492,6 +508,7 @@ pub unsafe extern "C" fn toklet_model_load_mlx(
                 out.write(Box::into_raw(Box::new(ModelHandle {
                     owner: thread::current().id(),
                     model: Rc::new(NativeModel::Metal(Box::new(model))),
+                    directory: path,
                 })));
                 Ok(())
             }

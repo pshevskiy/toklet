@@ -111,6 +111,10 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   stream and hash downloads, cancel safely and publish complete snapshots
   atomically. Ordinary inference then works offline. Test corrupt/truncated data,
   traversal, interruptions, stale budgets and unavailable network/authentication.
+  - User-requested app consolidation: use Toklet Harness with the friendly
+    InferencePhone-style interface, keeping current diagnostics in Expert mode.
+    [The bounded text profile](app-chat-profile.md) precedes the shared worker/UI;
+    no second runtime or unimplemented download workflow is implied.
 - [ ] **M8.5 Mac and iPhone qualification.** Test downloaded compatible models on
   the M1 Pro and iPhone 14 Pro, including different implemented architectures and
   actual image input for vision claims. Record identities, deterministic outputs,

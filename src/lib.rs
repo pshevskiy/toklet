@@ -4,6 +4,7 @@
 //! buffers. Bounded sessions support generation; the CLI owns tokenization,
 //! chat formatting and streamed text output.
 
+pub mod app_chat;
 pub mod benchmark;
 pub mod cpu;
 pub mod generation;

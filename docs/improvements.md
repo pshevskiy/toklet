@@ -1253,3 +1253,30 @@ Short4/4 raw-ID native TTFT medians are39.471/39.950ms Mac and63.240/63.359ms ph
 
 
 Astra accepted the completed code, physical evidence and documentation with no remaining blockers. Independent verification covers all4,790 bindings/298 source copies, exact command/storage/signing/console replay, both separate resets, paired outputs/state/scores,232 portable and14 saved-data methods. Privacy across16 changed/new public files against seven actual identity/path/container tokens,285 local links and whitespace pass. Acceptance remains bounded to this selected SmolLM2 raw-ID app scope.
+
+
+### Exact text profile for one Toklet app — 23 October 2026
+
+The user requested the friendly InferencePhone interface inside Toklet Harness,
+with its current controls retained in Expert mode. The neighboring app belongs
+to a separate earlier runtime; it is a visual reference for this consolidation.
+The first [text boundary](app-chat-profile.md) validates the selected SmolLM2
+tokenizer/config identities and implements its exact bounded user/assistant
+template outside numerical kernels. Independent Python Jinja/tokenizers cases
+freeze32/68-token Unicode/multi-turn rendering, IDs and decoding. An additive
+immutable C handle provides caller-owned query/encode/decode buffers with explicit
+thread ownership, a separate64MiB text allowance and no model lifetime borrow.
+
+Astra's review identifies empty null-buffer validation and relative-directory
+drift. Both are fixed; absolute origin uses the actual load path and moves into
+one exact-capacity allocation, with native bridge allowance raised4→20KiB.
+Full-prefix decoding replaces displayed text rather than concatenating isolated
+token strings. Rust1.90 fmt, strict all-target Metal Clippy,147 CPU/163 Metal
+ordinary passes, two explicit local tokenizer/C-handle methods, independent
+Python replay and one actual Mac GPU public C lifecycle test pass. The
+[receipt](../benchmarks/results/2026-10-23-app-chat-profile-v1.json) binds103 files
+including source copies; protected CPU binaries stay unchanged. A preliminary
+wrapper path exception is observed in tool output; only preliminary fmt logs
+are retained, with no test credit. Astra accepts this bounded task after the
+final source/evidence audit. Retain the exact text
+profile; shared-worker/UI and phone text integration follow separately.

@@ -29,6 +29,7 @@ extern "C" {
 typedef struct TokletModel TokletModel;
 typedef struct TokletSession TokletSession;
 typedef struct TokletCancel TokletCancel;
+typedef struct TokletChat TokletChat;
 typedef struct { uint32_t code; uint8_t message[256]; } TokletError;
 typedef struct {
     uint32_t abi_version, struct_size, capacity, chunk;
@@ -88,6 +89,21 @@ uint32_t toklet_session_generate(const TokletSession *, uint32_t, const uint32_t
 uint32_t toklet_cancel_create(TokletCancel **, TokletError *);
 uint32_t toklet_cancel_set(const TokletCancel *, uint32_t, TokletError *);
 uint32_t toklet_cancel_release(TokletCancel *, TokletError *);
+/* Additive immutable text boundary, same creating-thread rule. SmolLM2-135M
+   only, with exact pinned tokenizer/config assets from the loaded model folder.
+   Reserve >=64MiB allowance separately from the numerical model/session budget.
+   No model/session is retained by the returned chat handle. No network access. */
+uint32_t toklet_chat_create(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
+/* JSON array of alternating {role,content} messages, starting/ending user.
+   Max63 messages/64KiB UTF-8, no template control tokens; output max512 IDs.
+   NULL+0 queries required count. Small output returns INVALID, sets required
+   count, and leaves elements untouched. Outputs/count/inputs must be disjoint. */
+uint32_t toklet_chat_encode(const TokletChat *, const uint8_t *, size_t, uint32_t *, size_t, size_t *, TokletError *);
+/* Entire visible prefix, <=128 IDs. Replaces displayed text, never concatenate
+   per-token decodes. Special IDs hidden. UTF-8 byte output, no NUL, <=64KiB.
+   Query and small-buffer semantics as above. A later prefix repairs split UTF-8. */
+uint32_t toklet_chat_decode(const TokletChat *, const uint32_t *, size_t, uint8_t *, size_t, size_t *, TokletError *);
+uint32_t toklet_chat_release(TokletChat *, TokletError *);
 #ifdef __cplusplus
 }
 #endif
