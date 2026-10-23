@@ -42,8 +42,9 @@ is deliberately unsigned until a signing team is configured.
 
 ## Use
 
-For ordinary text, follow the [Chat guide](../docs/app-interface.md). In-app
-search/downloads are not available yet. For diagnostics open the conversations
+For ordinary text, follow the [Chat guide](../docs/app-interface.md). Models
+supports [Hugging Face search and verified downloads](../docs/model-hub.md) for
+the selected SmolLM2 profile, with offline opening. For diagnostics open the conversations
 icon → Settings → Expert mode.
 
 Start with Tiny fixture, CPU, capacity32, chunk3 and numerical cap128MiB.

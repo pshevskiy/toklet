@@ -9,9 +9,11 @@ merge or install the neighboring runtime.
 ## Use on the iPhone
 
 1. Open **Toklet Harness**, then **Choose a model**.
-2. Select **Open local model folder → Saved test model folder** when the copied
-   SmolLM2 test snapshot is present. Alternatively choose its complete folder in
-   Files. Wait for loading to finish, then close Models.
+2. Search Hugging Face or choose the tested SmolLM2 card, then **Download model**
+   and **Open downloaded model**. You can also open a copied local model folder
+   or choose its complete folder in Files. Wait for loading to finish, then close
+   Models. See the [download guide](model-hub.md) for progress/cancellation and
+   offline opening.
 3. Type a message and press Send. **Writing…** remains visible until the reply
    completes; Stop requests cancellation and preserves text decoded from the
    completed prefix. Replies are currently displayed at completion.
@@ -35,8 +37,11 @@ identities in the [text profile](app-chat-profile.md); it does not authenticate
 the weight payload against that snapshot’s SHA.
 Other qualified numerical models remain available through Expert mode. A model
 architecture being implemented does not establish tokenizer/template support for
-every checkpoint. In-app Hugging Face search and downloads remain unfinished in
-[M8.4](mlx-implementation-plan.md); Models says this explicitly.
+every checkpoint. Hugging Face search and verified downloads are available for that qualified
+profile through [Models](model-hub.md). Other search results explain their
+unsupported status. Wider downloadable/text profiles remain open in
+[M8.4](mlx-implementation-plan.md). Downloaded snapshots additionally authenticate
+the six required file hashes, including weights, before publication and opening.
 
 The chat configuration admits 512 total token positions, chunk32, a 512MiB
 numerical allowance and a separate64MiB text allowance. Prompt plus requested
@@ -73,12 +78,18 @@ recreation. The original physical raw CPU/Metal checks pass. These are functiona
 checks; this interface task adds no latency, sustained rate, memory-limit or
 broader M8.5 qualification claim.
 
-Visible Simulator checks cover Chat/Models/history/settings, opening and cancelling
+The earlier interface task’s visible Simulator checks cover
+Chat/Models/history/settings, opening and cancelling
 Files, Expert raw generation (`47,47`), terminal Close, Back to Chat and draft
 entry. The physical default screen was inspected in dark appearance. The
 Simulator correctly rejects this MLX model without a unified-memory MPS device.
-Physical GUI Send/Stop, successful Files folder selection, the on-screen keyboard
+The new search/download tap flow, physical GUI Send/Stop, successful Files folder
+selection, the on-screen keyboard
 and largest accessibility text layouts have not been visually qualified; native
 and controller tests are separate evidence. The
 [interface receipt](../benchmarks/results/2026-10-23-app-interface-v1.json) preserves
 exact executed-source identities, including the earlier physical smoke build.
+
+The [Models integration receipt](../benchmarks/results/2026-10-23-model-hub-app-v1.json)
+adds a fresh signed iPhone 14 Pro download and full offline-controller generation
+with identical Mac token IDs/text, while preserving the visual limits above.

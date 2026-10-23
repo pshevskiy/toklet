@@ -57,7 +57,7 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
             configuration.urlCache = nil; configuration.httpCookieStorage = nil
             configuration.httpShouldSetCookies = false; configuration.urlCredentialStorage = nil
             configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
-            configuration.timeoutIntervalForRequest = 60; configuration.timeoutIntervalForResource = 1800
+            configuration.timeoutIntervalForRequest = 60; configuration.timeoutIntervalForResource = 7200
             let queue = OperationQueue(); queue.maxConcurrentOperationCount = 1
             let session = URLSession(configuration:configuration,delegate:self,delegateQueue:queue)
             self.session = session

@@ -188,10 +188,31 @@ struct TokletHarnessApp: App {
 
     init() {
         let arguments = ProcessInfo.processInfo.arguments
-        let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle","--state","--state-component","--chat-self-test"]
+        let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle","--state","--state-component","--chat-self-test","--hub-self-test","--hub-download-self-test"]
         let state = HarnessStore(enabled:!diagnostics.contains(where:arguments.contains),lifecycleEnabled:arguments.contains("--lifecycle") || arguments.contains("--state") || arguments.contains("--state-component"))
         _store = StateObject(wrappedValue:state)
-        if arguments.contains("--chat-self-test") {
+        if arguments.contains("--hub-self-test") || arguments.contains("--hub-download-self-test") {
+            UIApplication.shared.isIdleTimerDisabled = true
+            let fresh = arguments.contains("--hub-download-self-test")
+            let root = HubStore.modelRoot
+            Task.detached(priority:.userInitiated) {
+                do {
+                    guard arguments == [arguments[0],fresh ? "--hub-download-self-test" : "--hub-self-test"] else { throw HubFailure("Invalid hub test arguments.") }
+                    try awaitNativeMeasurementForeground()
+                    try installedBundleProof("before")
+                    let result: HubSelfTestResult
+                    if fresh { result = try await runFreshHubSelfTest() }
+                    else { result = try await runHubSelfTest(root:root) }
+                    try installedBundleProof("after")
+                    let data = try JSONEncoder().encode(result)
+                    try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_HUB_CHECK_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+                    exit(0)
+                } catch {
+                    try? FileHandle.standardError.write(contentsOf:Data("TOKLET_HUB_CHECK_ERROR=\(error)\n".utf8))
+                    exit(1)
+                }
+            }
+        } else if arguments.contains("--chat-self-test") {
             UIApplication.shared.isIdleTimerDisabled = true
             let directory = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
                 .appendingPathComponent("M8Inputs/smollm/Model").path

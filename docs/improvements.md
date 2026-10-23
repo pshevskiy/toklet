@@ -1374,3 +1374,77 @@ retains exact source and result identities. Retain the bounded download core.
 Astra accepts Task1 for commit with no remaining blockers after independently
 verifying all67 bindings, three current source copies and the actual network
 result. Links and staged-file whitespace checks pass.
+
+
+### Hugging Face Models screen and offline Chat opening — 23 October 2026
+
+The [Models screen](model-hub.md) now offers public MLX search, an explicitly
+qualified pinned SmolLM2 download, byte progress, Cancel and offline opening.
+Other search results explain that engine/text qualification is missing. Runtime
+admission reads current iOS process memory allowance and unified-GPU capability;
+Mac checks use the plan’s configured allowance minus current process footprint,
+not free RAM. Downloading and verification stay off the UI/native worker. Saved
+models are rehashed before the existing Chat worker is asked to load them.
+
+Astra identified a late-open race: an awaited verification could override a
+newer model selection or Expert transition. Model-changing actions now invalidate
+the operation and cancel it; competing controls are disabled while busy, and
+completion checks the operation identity and current mode. Delayed-verification
+regressions prove the normal callback runs once and that Expert/new-model/unload
+choices prevent the late callback. Other controller checks cover failed/duplicate
+requests, late progress, missing snapshots, device rejection and cancellation.
+
+All seven final strict Mac commands pass, including controller tests, ordinary
+workspace tests, real chat and original raw CPU/Metal checks. Both SDK builds
+and final signing/install pass. Real Mac execution revalidates the previously
+transferred snapshot, then passes native text checks and actual HubStore →
+FriendlyChatStore → worker generation using a temporary history and a network
+handler that refuses every request. The 32-ID controller reply retains the exact
+native eight-ID prefix and releases all model resources. No new quality or
+performance claim follows.
+
+Retained setup attempts include an existing-app preflight refusal, exact-app
+resets and a cached phone run whose native/controller checks succeed but whose
+fresh-transfer requirement correctly fails. The saved model is preserved. A
+separate explicit fresh-download diagnostic uses an exclusively created UUID
+temporary tree, rejects reuse and removes only its own data before success.
+The one-off phone verification wrapper was tightened before execution to check
+selected device/outcome/command, exact query/signal ownership, exclusive outputs,
+both diagnostic streams and same-buffer hash/parse correspondence. Earlier
+uncleared wrapper drafts were never executed and receive no test credit.
+
+The first isolated phone transfer was still progressing when its 1,400-second
+remote test bound expired. The strict wrapper retained the failed trial and
+confirmed the exact test process absent after its scoped SIGTERM. It receives no
+fresh-download credit. The observed file growth does not establish the cause of
+the slow transfer. A read-only Mac capacity-query probe was fast and did not
+justify changing storage checks. The resource timeout is now a bounded two hours;
+the 60-second request timeout, cancellation, storage and integrity checks stay
+unchanged. Astra accepted the narrow adjustment, and final-source checks repeat
+before a new isolated trial with longer, still bounded test deadlines. A killed
+trial can leave its temporary files until the OS purges them; process-kill
+recovery remains unqualified.
+
+The final fresh iPhone 14 Pro trial passes public search, a new six-file transfer,
+all snapshot hashes, native text checks and the actual offline Chat controller
+path. It explicitly reports `reusedSnapshot=false`; native and full 32-ID
+controller outputs match the Mac, and the app exits naturally after releasing
+resources and removing its owned temporary tree. The normal model cache and
+owner conversations remain separate. A preceding retry refused a missing exact
+test-helper source copy before any device command or app launch; that retained
+preflight failure was resolved by restoring the hash-matching copy.
+
+Final-source core checks pass all three commands, controller/chat/raw checks pass
+all seven commands, both SDK builds pass and the signed final app is installed.
+The [app receipt](../benchmarks/results/2026-10-23-model-hub-app-v1.json) binds
+the final source, historical inputs, native package, signed installation and
+retained failures. These are functional checks; the new search/download tap flow
+and keyboard/accessibility layouts remain visually unqualified. No throughput,
+answer-quality or broader M8.5 qualification follows.
+
+Astra accepted this task for commit after independently verifying all 584
+bindings, 81 current source copies and 16 historical mappings, final builds and
+signed phone proofs, fresh-transfer result, native/full-controller Mac equality,
+natural exit and retained failures. All 318 local links, staged whitespace and
+task-file privacy checks pass. The decision is to retain this bounded feature;
+wider downloadable/text profiles remain open.

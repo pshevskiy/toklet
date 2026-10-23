@@ -111,12 +111,17 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   stream and hash downloads, cancel safely and publish complete snapshots
   atomically. Ordinary inference then works offline. Test corrupt/truncated data,
   traversal, interruptions, stale budgets and unavailable network/authentication.
+  - [x] [Public search and immutable six-file download core](model-hub.md),
+    qualified SmolLM2 profile only; other search results do not grant support.
+  - [x] Models integration adds progress/cancel, saved-snapshot revalidation and
+    offline controller opening; the [app receipt](../benchmarks/results/2026-10-23-model-hub-app-v1.json)
+    records final Mac and fresh iPhone 14 Pro functional checks.
   - User-requested app consolidation: use Toklet Harness with the friendly
     InferencePhone-style interface, keeping current diagnostics in Expert mode.
     [The bounded text profile](app-chat-profile.md) and
     [shared-worker Chat/Expert interface](app-interface.md) are implemented for
-    the selected SmolLM2 snapshot. Search/downloads and wider text-profile
-    compatibility remain open; this does not complete M8.4.
+    the selected SmolLM2 snapshot. Search/downloads cover that pinned profile;
+    wider text-profile/download compatibility remains open.
 - [ ] **M8.5 Mac and iPhone qualification.** Test downloaded compatible models on
   the M1 Pro and iPhone 14 Pro, including different implemented architectures and
   actual image input for vision claims. Record identities, deterministic outputs,

@@ -27,8 +27,9 @@ For the short four-input/four-output raw-ID workload, two runs each have three w
 selection, saved conversations/drafts and settings. Its original diagnostic form
 is retained in Expert mode, using the same Rust engine and serial worker. The
 exact selected SmolLM2 tokenizer/template supports bounded real text chat;
-functional native text checks match on Mac and iPhone14Pro. Broader text profiles,
-in-app search/downloads, streaming reply display and physical GUI Send/Stop
+functional native text checks match on Mac and iPhone14Pro. The [Models screen](model-hub.md) adds public Hugging Face search and verified
+download/offline opening for this pinned profile. Broader text profiles,
+streaming reply display and physical GUI Send/Stop
 qualification remain open. Earlier raw-ID performance measurements do not measure
 this new text/interface path.
 

@@ -12,6 +12,7 @@ private enum ChatSheet: String, Identifiable {
 @MainActor
 struct FriendlyHarnessView: View {
     @ObservedObject var store: HarnessStore
+    @StateObject private var hub = HubStore()
     @StateObject private var chat: FriendlyChatStore
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.scenePhase) private var phase
@@ -33,7 +34,11 @@ struct FriendlyHarnessView: View {
         }
         .tint(.indigo)
         .onReceive(store.$state) { chat.observe($0) }
-        .onChange(of:phase) { _, value in if value != .active { chat.save() } }
+        .onChange(of:store.expert) { _,value in if value { hub.cancel() } }
+        .onChange(of:phase) { _, value in
+            if value != .active { chat.save() }
+            if value == .background { hub.cancel() }
+        }
         .sheet(item:$sheet) { destination in
             NavigationStack {
                 Group {
@@ -132,31 +137,80 @@ struct FriendlyHarnessView: View {
         List {
             Section("Text chat") {
                 Text("SmolLM2-135M · 8-bit").font(.headline)
-                Text("Open the model folder containing its original weights and tokenizer. Other model formats remain available in Expert mode.").font(.callout).foregroundStyle(.secondary)
+                Text("Download a tested model below, or open a folder already on this device. Other model formats remain available in Expert mode.").font(.callout).foregroundStyle(.secondary)
                 if store.state.chatEnabled {
                     Label("Model loaded",systemImage:"checkmark.circle.fill").foregroundStyle(.indigo)
-                    Button("Unload model") { chat.unload() }.disabled(!unlocked)
+                    Button("Unload model") { hub.modelChoiceChanged(); chat.unload() }.disabled(!unlocked || hub.busy)
                 }
             }
-            Section("On this iPhone") {
+            Section("Hugging Face") {
+                HStack {
+                    TextField("Search MLX models",text:$hub.query).textInputAutocapitalization(.never).autocorrectionDisabled()
+                        .submitLabel(.search).onSubmit { hub.search() }.accessibilityIdentifier("hub-search-query")
+                    Button("Search") { hub.search() }.disabled(hub.busy || hub.query.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
+                        .accessibilityIdentifier("hub-search")
+                }
+                Text("Search is public. Only qualified text profiles can be downloaded here.")
+                    .font(.footnote).foregroundStyle(.secondary)
+                ForEach(hub.results) { model in
+                    VStack(alignment:.leading,spacing:5) {
+                        Text(model.id).font(.callout).textSelection(.enabled)
+                        Text(model.profile == nil ? "Not supported for chat: this checkpoint’s engine and text profile are not qualified." : "Supported pinned profile · shown below")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+            }
+            Section("Available for chat") {
+                VStack(alignment:.leading,spacing:6) {
+                    Text("SmolLM2-135M · 8-bit").font(.headline)
+                    Text(HubProfile.smol.repository).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
+                    Text("146.6 MB · tested revision 0f0d9b8 · Apache-2.0").font(.caption).foregroundStyle(.secondary)
+                    Text(hub.deviceMessage).font(.footnote).foregroundStyle(.secondary)
+                }
+                if hub.localURL != nil {
+                    Button("Open downloaded model",systemImage:"bubble.left.and.bubble.right") {
+                        hub.open { folder in
+                            guard unlocked, !store.expert, !store.state.closed else { return }
+                            chat.open(folder)
+                        }
+                    }.disabled(!unlocked || hub.busy || !hub.deviceAllowed || store.state.closed)
+                        .accessibilityIdentifier("hub-open")
+                } else {
+                    Button("Download model",systemImage:"arrow.down.circle") { hub.download() }
+                        .disabled(!unlocked || hub.busy || !hub.deviceAllowed)
+                        .accessibilityIdentifier("hub-download")
+                }
+                if hub.busy {
+                    if hub.downloading {
+                        ProgressView(value:Double(hub.completed),total:Double(max(1,hub.total)))
+                        Text(ByteCountFormatter.string(fromByteCount:hub.completed,countStyle:.file) + " of " + ByteCountFormatter.string(fromByteCount:hub.total,countStyle:.file))
+                            .font(.caption).monospacedDigit()
+                    } else { ProgressView() }
+                    Text(hub.phase).font(.callout)
+                    Button("Cancel",role:.cancel) { hub.cancel() }.accessibilityIdentifier("hub-cancel")
+                }
+                if !hub.message.isEmpty { Text(hub.message).font(.callout).textSelection(.enabled) }
+                Button("Check saved model and device again",systemImage:"arrow.clockwise") { hub.refresh() }.disabled(hub.busy)
+                Text("Downloads run while the app is open. A verified download works offline. Damaged model folders can be removed in Files → Toklet Harness → TokletModels, then downloaded again.")
+                    .font(.footnote).foregroundStyle(.secondary)
+            }
+            Section("Other local folders") {
                 ForEach(chat.folders,id:\.self) { folder in
-                    Button { chat.open(folder) } label: {
+                    Button { hub.modelChoiceChanged(); chat.open(folder) } label: {
                         VStack(alignment:.leading,spacing:4) {
                             Text("Open local model folder")
                             Text(folder.path.contains("M8Inputs") ? "Saved test model folder" : "Documents model folder").font(.caption).foregroundStyle(.secondary)
                         }
-                    }.disabled(!unlocked || store.state.closed)
+                    }.disabled(!unlocked || hub.busy || store.state.closed)
                 }
-                Button("Choose folder in Files",systemImage:"folder") { importing = true }.disabled(!unlocked || store.state.closed)
-                Text("In-app search and downloads are not available yet. You can use a complete model folder already on your device.")
-                    .font(.footnote).foregroundStyle(.secondary)
+                Button("Choose folder in Files",systemImage:"folder") { importing = true }.disabled(!unlocked || hub.busy || store.state.closed)
             }
             if store.state.busy { Section { ProgressView("Opening or releasing model…") } }
             if !store.state.message.isEmpty { Section { Text(store.state.message) } }
-        }.navigationTitle("Models").onAppear { chat.refreshFolders() }
+        }.navigationTitle("Models").onAppear { chat.refreshFolders(); hub.refresh() }
             .fileImporter(isPresented:$importing,allowedContentTypes:[.folder]) { result in
                 switch result {
-                case .success(let url): chat.open(url)
+                case .success(let url): hub.modelChoiceChanged(); chat.open(url)
                 case .failure(let error): chat.notice = error.localizedDescription
                 }
             }
@@ -189,7 +243,7 @@ struct FriendlyHarnessView: View {
                 Text("Long conversations may need a new chat before another response can fit.").font(.footnote).foregroundStyle(.secondary)
             }
             Section("Expert") {
-                Button("Expert mode",systemImage:"slider.horizontal.3") { sheet = nil; chat.enterExpert() }
+                Button("Expert mode",systemImage:"slider.horizontal.3") { hub.modelChoiceChanged(); sheet = nil; chat.enterExpert() }
                     .accessibilityIdentifier("expert-mode")
                 Text("Raw token generation, model paths, backend settings and engine diagnostics. Switching modes unloads the active model.")
                     .font(.footnote).foregroundStyle(.secondary)
