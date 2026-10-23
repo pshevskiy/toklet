@@ -10,6 +10,9 @@ Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session 
 
 This plan translates the [Apple LLM performance proposal](apple_llm_performance_plan.md) into repository work. The proposal supplies design context; its references to an existing linear layer and earlier plan do not establish completed work in this checkout.
 
+The [engine coverage and Hugging Face implementation queue](docs/engine-expansion-plan.md)
+orders the remaining M8 work requested on 23 October, beginning with Qwen3 dense.
+
 ## Historical starting point
 
 Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0 establishes the package, frozen independent fixtures, workloads, quality gates, and the first native MLX baseline. M1 implements the complete scalar tiny decoder and greedy trace. M2.1 loads the pinned Qwen checkpoint into validated FP32 weights; M2.2 qualifies its full-prefix forward pass on short independent numerical probes. M2.3 adds bounded KV sessions and exact continuation; M2.4 adds bounded CLI generation; engine profiling remains next.

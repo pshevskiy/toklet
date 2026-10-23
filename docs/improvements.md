@@ -1803,3 +1803,21 @@ Files cancellation and visible History confirmation. After action-time approval,
 only the new interrupted synthetic chat was deleted. The detailed checklist
 retains unexecuted controls; the full sweep remains open after another Mac lock.
 Existing owner chats and model caches were neither deleted nor exported.
+
+### Plan modular engine expansion and freeze Qwen3 reference — 23 October 2026
+
+The [active queue](engine-expansion-plan.md) orders graph mechanisms, measured
+optimizations and general Hugging Face admission/download/chat. Architecture
+modules own their config, weight mapping and graph rules; shared operators remain
+separate from tokenizer/UI/download code. Capability, device fit and physical
+qualification remain distinct. Existing pinned profiles stay supported while
+compatibility grows; the complete architecture program remains open.
+
+The [first Qwen3 task](mlx-qwen3-oracle.md) freezes an independent tiny graph with
+hidden32/query64/KV32 and per-head Q/K RMSNorm before RoPE. Both tied/untied outputs,
+mixed packed/floating weights, offset/causal/capacity cases, actual upstream
+CPU/GPU/cached logits and wrong-norm witnesses pass. The fixture contains 891
+arrays; all 15 portable tests pass. Native Rust/Metal Qwen3 execution, real models,
+chat/thinking semantics, quality/performance and iPhone testing remain pending.
+Numerical target sources and protected release binaries are unchanged. Astra
+reviews the code and completed evidence before commit.
