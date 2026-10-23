@@ -1634,3 +1634,19 @@ reply, ownership and hidden stops. Independent Python decoding agrees. The
 [receipt](../benchmarks/results/2026-10-23-mistral-app-chat-profile-v1.json) keeps
 those scopes distinct. App catalog/package integration continues next; phone
 operations stay paused and no new speed or physical-memory claim is made.
+
+### Bounded retries for large Mac downloads — 23 October 2026
+
+A real near-complete Mistral full-body transfer failed on a lost connection;
+its incomplete staging was removed and no snapshot was published. The
+[range transport](model-hub.md#bounded-large-file-transport--23-october-2026)
+now bounds large streams to four 16 MiB chunks with strict response identities,
+three transient-only attempts, joined cancellation and a two-hour operation
+deadline. Small-file behavior and final whole-file SHA admission remain intact.
+
+Astra requested fatal close-error composition and canonical length validation;
+both now have deterministic regressions. Final strict Swift/core/SDK checks pass.
+The [receipt](../benchmarks/results/2026-10-23-model-hub-ranges-v1.json) preserves
+the failed full-body and sandboxed trials plus intermediate source snapshots.
+The fresh actual range transfer is separate, as are numerical fit and app Chat.
+Phone operations remain paused.

@@ -162,3 +162,37 @@ signed sizes, a4GiB request reaching its owned sink before a mocked HTTP failure
 and an oversized request rejecting before creating a file. These use small
 payloads and establish admission only. They do not qualify an actual multi-GB
 URLSession transfer, new model support, physical memory fit or performance.
+
+## Bounded large-file transport — 23 October 2026
+
+An actual Mistral full-body trial lost its connection near the end
+(`NSURLErrorDomain -1005`). The download actor removed the incomplete staging
+tree and published no snapshot. Its failed receipt and diagnostics are retained;
+it receives no successful transfer or model-fit credit.
+
+Files of at least 1 GiB now use four concurrent streams of at most 16 MiB each.
+Every response must be HTTP 206 with exact canonical `Content-Range`,
+`Content-Length` and identity encoding. Allowed redirects preserve range and
+encoding headers. A transient network failure retries only its chunk, at most
+three attempts. Header, storage and close/cleanup errors are fatal. A close error
+preserves an earlier network cause and prevents a retry. The whole operation
+keeps a two-hour deadline and joins cancelled child tasks before cleanup.
+
+Chunks belong to an exclusive private directory and are assembled in order
+through a 64 KiB buffer. Temporary chunk data is bounded to one batch, and the
+existing two-snapshot storage reservation covers assembly. The final complete
+file size and SHA256 remain publication gates. SmolLM2, Qwen and metadata keep
+the existing smaller-file transport. Cancellation discards current staging;
+this is bounded retry within an operation, not resume across app restarts.
+
+Tiny URLProtocol fixtures cover ordered assembly, a partial connection loss,
+retry exhaustion, incorrect/duplicate/conflicting range or length, encoding,
+short/overlong data, ignored ranges, authorization failure, destination collision,
+invalid total, simultaneous network/close failure, active cancellation, redirect
+headers and the whole-operation deadline. Final strict Swift compilation, core
+checks and iOS SDK type checking pass. The first sandboxed core run hit its
+storage guard; that failed run and the intermediate passing source are retained.
+The [transport receipt](../benchmarks/results/2026-10-23-model-hub-ranges-v1.json)
+records the final source separately. Actual multi-GB range transfer, app catalog,
+model admission and Chat qualification remain separate pending evidence. No
+physical phone is contacted.

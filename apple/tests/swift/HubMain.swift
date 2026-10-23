@@ -60,6 +60,77 @@ private final class SlowHubProtocol: URLProtocol, @unchecked Sendable {
     override func stopLoading() { Self.state.stop() }
 }
 
+// Tiny deterministic range server; no network or multi-GB allocation.
+private final class RangeHubProtocol: URLProtocol, @unchecked Sendable {
+    final class Plan: @unchecked Sendable {
+        let lock = NSLock()
+        private var mode = "good"
+        private var payload = Data()
+        private var attempts: [Int:Int] = [:]
+        private var invalidHeader = false
+        private var signal: (@Sendable () -> Void)?
+        private var redirected: URLRequest?
+        func set(_ mode: String,_ payload: Data,signal: (@Sendable () -> Void)? = nil) {
+            lock.lock(); defer { lock.unlock() }
+            self.mode = mode; self.payload = payload; attempts = [:]; invalidHeader = false; self.signal = signal
+        }
+        func response(_ request: URLRequest) -> (Int,[String:String],Data,Bool,Bool) {
+            lock.lock(); defer { lock.unlock() }
+            let fields = (request.value(forHTTPHeaderField:"Range") ?? "").replacingOccurrences(of:"bytes=",with:"").split(separator:"-")
+            guard fields.count == 2, let lower = Int(fields[0]), let upper = Int(fields[1]), lower >= 0, upper >= lower, upper < payload.count else {
+                invalidHeader = true; return (400,[:],Data(),false,false)
+            }
+            if request.value(forHTTPHeaderField:"Accept-Encoding") != "identity" { invalidHeader = true }
+            attempts[lower,default:0] += 1
+            let attempt = attempts[lower]!
+            var headers = ["Content-Length":String(upper - lower + 1),"Content-Range":"bytes \(lower)-\(upper)/\(payload.count)"]
+            var body = payload.subdata(in:lower..<(upper + 1)); var code = 206
+            if mode == "wrong-start" { headers["Content-Range"] = "bytes \(lower + 1)-\(upper)/\(payload.count)" }
+            if mode == "wrong-total" { headers["Content-Range"] = "bytes \(lower)-\(upper)/\(payload.count + 1)" }
+            if mode == "conflict" { headers["Content-Range"]! += ", bytes \(lower)-\(upper)/\(payload.count)" }
+            if mode == "encoding" { headers["Content-Encoding"] = "gzip" }
+            if mode == "wrong-length" { headers["Content-Length"] = String(body.count + 1) }
+            if mode == "duplicate-length" { headers["Content-Length"] = "\(body.count), \(body.count)" }
+            if mode == "conflicting-length" { headers["Content-Length"] = "\(body.count), \(body.count + 1)" }
+            if mode == "truncated" { body = body.prefix(max(0,body.count - 1)) }
+            if mode == "overlong" { body.append(0) }
+            if mode == "ignored" { code = 200 }
+            if mode == "denied" { code = 403 }
+            return (code,headers,body,mode == "always-loss" || (mode == "one-loss" && lower == 0 && attempt == 1),mode == "slow")
+        }
+        func started() { lock.lock(); let signal = signal; lock.unlock(); signal?() }
+        func valid() -> Bool { lock.lock(); defer { lock.unlock() }; return !invalidHeader }
+        func counts() -> [Int:Int] { lock.lock(); defer { lock.unlock() }; return attempts }
+        func redirect(_ request: URLRequest?) { lock.lock(); redirected = request; lock.unlock() }
+        func redirectValue() -> URLRequest? { lock.lock(); defer { lock.unlock() }; return redirected }
+    }
+    static let plan = Plan()
+    private let lock = NSLock()
+    private var stopped = false
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        let (code,headers,data,fail,slow) = Self.plan.response(request)
+        let response = HTTPURLResponse(url:request.url!,statusCode:code,httpVersion:"HTTP/1.1",headerFields:headers)!
+        client?.urlProtocol(self,didReceive:response,cacheStoragePolicy:.notAllowed)
+        if fail {
+            client?.urlProtocol(self,didLoad:data.prefix(2))
+            client?.urlProtocol(self,didFailWithError:URLError(.networkConnectionLost)); return
+        }
+        if slow {
+            client?.urlProtocol(self,didLoad:data.prefix(2)); Self.plan.started()
+            DispatchQueue.global().asyncAfter(deadline:.now() + 0.25) { [self] in
+                lock.lock(); let active = !stopped; lock.unlock()
+                guard active else { return }
+                client?.urlProtocol(self,didLoad:data.dropFirst(2)); client?.urlProtocolDidFinishLoading(self)
+            }
+        } else {
+            client?.urlProtocol(self,didLoad:data); client?.urlProtocolDidFinishLoading(self)
+        }
+    }
+    override func stopLoading() { lock.lock(); stopped = true; lock.unlock() }
+}
+
 @main
 struct HubMain {
     static func main() async throws {
@@ -215,6 +286,7 @@ struct HubMain {
         try ModelHub.verify(afterFolder,profile:profile)
         try await largeInventoryChecks(root)
         try await transportChecks(root)
+        try await rangeChecks(root)
     }
     static func largeInventoryChecks(_ root: URL) async throws {
         let hash = String(repeating:"0",count:64)
@@ -276,4 +348,74 @@ struct HubMain {
         }
         cancelled.cancel(); try await rejects("early task cancellation") { try await cancelled.value }
     }
+    static func rangeChecks(_ root: URL) async throws {
+        let directory = root.appendingPathComponent("range-tests")
+        try FileManager.default.createDirectory(at:directory,withIntermediateDirectories:false)
+        let bytes = Data((0..<23).map(UInt8.init))
+        let url = URL(string:"https://huggingface.co/test")!
+        let configuration = URLSessionConfiguration.ephemeral; configuration.protocolClasses = [RangeHubProtocol.self]
+        for mode in ["good","one-loss"] {
+            RangeHubProtocol.plan.set(mode,bytes)
+            let destination = directory.appendingPathComponent(mode)
+            try await HubTransfer.ranged(url,destination,Int64(bytes.count),{ _ in },chunkBytes:5,parallelism:4,configuration:configuration)
+            try require(try Data(contentsOf:destination) == bytes,"ordered range assembly after " + mode)
+            try require(RangeHubProtocol.plan.valid(),"identity and exact request ranges")
+            let counts = RangeHubProtocol.plan.counts()
+            try require(counts.count == 5 && counts[0] == (mode == "good" ? 1 : 2) && counts.values.reduce(0,+) == (mode == "good" ? 5 : 6),"only lost chunk retried")
+        }
+        for mode in ["wrong-start","wrong-total","conflict","encoding","wrong-length","duplicate-length","conflicting-length","truncated","overlong","ignored","denied","always-loss"] {
+            RangeHubProtocol.plan.set(mode,bytes)
+            let destination = directory.appendingPathComponent(mode)
+            try await rejects("range " + mode) {
+                try await HubTransfer.ranged(url,destination,Int64(bytes.count),{ _ in },chunkBytes:5,parallelism:1,configuration:configuration)
+            }
+            let attempts = RangeHubProtocol.plan.counts()[0] ?? 0
+            try require(attempts == (mode == "always-loss" ? 3 : 1),"bounded retry only for transport error " + mode)
+        }
+        RangeHubProtocol.plan.set("one-loss",bytes)
+        do {
+            try await HubTransfer.ranged(url,directory.appendingPathComponent("close-error"),Int64(bytes.count),{ _ in },chunkBytes:5,parallelism:1,configuration:configuration,
+                closeHandle:{ handle in try handle.close(); throw HubFailure("Injected close error") })
+            throw HubFailure("Close error unexpectedly accepted")
+        } catch let error as HubFailure {
+            try require(error.message.contains("Injected close error") && error.message.contains("original:"),"simultaneous network/close errors preserved")
+        }
+        try require(RangeHubProtocol.plan.counts()[0] == 1,"close failure prevents network retry")
+        let existing = directory.appendingPathComponent("collision")
+        try bytes.write(to:existing)
+        try await rejects("range sink collision") {
+            try await HubTransfer.ranged(url,existing,Int64(bytes.count),{ _ in },chunkBytes:5,configuration:configuration)
+        }
+        try require(try Data(contentsOf:existing) == bytes,"range collision preserves data")
+        for total in [Int64(0),Int64.max] {
+            let rejected = directory.appendingPathComponent("invalid-\(total)")
+            try await rejects("invalid range total") { try await HubTransfer.ranged(url,rejected,total,{ _ in },configuration:configuration) }
+            try require(!FileManager.default.fileExists(atPath:rejected.path),"range rejection precedes sink")
+        }
+        let started = Started()
+        RangeHubProtocol.plan.set("slow",bytes,signal:{ Task { await started.signal() } })
+        let destination = directory.appendingPathComponent("cancelled")
+        let task = Task { try await HubTransfer.ranged(url,destination,Int64(bytes.count),{ _ in },chunkBytes:5,parallelism:4,configuration:configuration) }
+        await started.wait(); task.cancel()
+        try await rejects("active range cancellation") { try await task.value }
+        let size = try destination.resourceValues(forKeys:[.fileSizeKey]).fileSize
+        try await Task.sleep(for:.milliseconds(350))
+        try require(try destination.resourceValues(forKeys:[.fileSizeKey]).fileSize == size,"no range writes after joined cancellation")
+        try require(try FileManager.default.contentsOfDirectory(atPath:directory.path).allSatisfy { !$0.hasPrefix(".ranges-") },"all chunk directories cleaned")
+        RangeHubProtocol.plan.set("slow",bytes)
+        do {
+            try await HubTransfer.ranged(url,directory.appendingPathComponent("deadline"),Int64(bytes.count),{ _ in },chunkBytes:5,parallelism:4,configuration:configuration,resourceTimeout:.milliseconds(20))
+            throw HubFailure("Range deadline unexpectedly accepted")
+        } catch let error as HubFailure { try require(error.message.contains("resource deadline"),"whole-operation deadline preserved") }
+        try require(try FileManager.default.contentsOfDirectory(atPath:directory.path).allSatisfy { !$0.hasPrefix(".ranges-") },"deadline joins and cleans chunks")
+        let transfer = HubTransfer(destination:directory.appendingPathComponent("redirect"),maximum:5,progress:{ _ in },range:5..<10,total:23)
+        let session = URLSession(configuration:.ephemeral)
+        let request = URLRequest(url:URL(string:"https://cdn.hf.co/test")!)
+        let response = HTTPURLResponse(url:url,statusCode:302,httpVersion:"HTTP/1.1",headerFields:[:])!
+        let pending = session.dataTask(with:url)
+        transfer.urlSession(session,task:pending,willPerformHTTPRedirection:response,newRequest:request,completionHandler:{ RangeHubProtocol.plan.redirect($0) })
+        try require(RangeHubProtocol.plan.redirectValue()?.value(forHTTPHeaderField:"Range") == "bytes=5-9" && RangeHubProtocol.plan.redirectValue()?.value(forHTTPHeaderField:"Accept-Encoding") == "identity","range headers survive redirect")
+        session.invalidateAndCancel()
+    }
+
 }
