@@ -28,9 +28,9 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. In this checkout the generated library link selects
-`artifacts/m8-chat-apple-package-v1`, with the additive native text interface.
+`artifacts/m8-qwen-chat-apple-package-v1`, with the additive SmolLM2/Qwen text interface.
 Its reviewed build receipt digest is
-`a8e5d5604ffa8192e6f22348c692617f37d15791822530a65719401c4c6b566e`.
+`a0030f589949301374077bfaf77c291b00eadb62b6f739d62605c77e7b888508`.
 The [text profile](../docs/app-chat-profile.md) and
 [interface guide](../docs/app-interface.md) describe this selected scope. Earlier
 package/device results retain their original immutable packages and receipts.

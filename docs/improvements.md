@@ -1,12 +1,13 @@
 # Toklet improvement record
 
-Updated 19 October 2026. This records implemented capabilities, measured benefits,
+Updated 23 October 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
 Q4 v2 configurations with full quality, repeated workload/application, sustained
 and memory evidence. M6 adds explicit Online attention, qualified4K/8K/16K/32K
-context cases and final FP16 KV retention; M7 remains pending. CPU/scalar and the existing GPU/readback/
+context cases and final FP16 KV retention. M7 is complete for the amended
+iPhone14Pro target and selected trials. CPU/scalar and the existing GPU/readback/
 chunk defaults stay unchanged. Speedups below apply to the named workload and
 comparison, and cannot be added together. See the [M5 release decision](experiments/2026-10-15-m5-release.md).
 
@@ -1562,3 +1563,21 @@ complete core checks and iOS SDK type checking pass without contacting the
 phone. The [limit receipt](../benchmarks/results/2026-10-23-model-hub-large-limits-v1.json)
 distinguishes large-size request admission from an actual large payload transfer;
 that qualification and Mistral engine/chat support remain pending.
+
+### Complete immutable Mistral acquisition — 23 October 2026
+
+The [pinned Mistral checkpoint](mlx-mistral-checkpoint.md) is now admitted as data:
+all 244 disjoint ranges reconstruct the exact 4,077,480,215-byte weight hash, all
+eight files match the immutable inventory, 252 owned commands finish cleanly and
+all 252 process groups are observed absent. Astra independently verifies the
+complete file/diagnostic/range closure before CPU-reference admission. The
+[receipt](../benchmarks/results/2026-10-23-mistral-checkpoint-v1.json) preserves the
+incomplete serial acquisition and ignored inspection collision; neither receives
+qualification credit.
+
+The CPU reference export has started with the accepted acquisition SHA and
+unchanged reviewed numerical policy. The separate app-core URLSession transfer
+is still running. No Mistral native execution, app catalog support, physical fit,
+performance or quality is claimed by acquisition alone. The record's heading
+now reflects M7's completed amended iPhone14Pro scope, and the Apple guide names
+the current Qwen-capable native package. Phone work stays paused.
