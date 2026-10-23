@@ -29,7 +29,11 @@ class Checks(unittest.TestCase):
    self.assertEqual(captured['stderr']['sha256'],hashlib.sha256(b'original child failure').hexdigest())
    self.assertEqual(captured['stdout']['sha256'],hashlib.sha256(b'200').hexdigest());self.assertTrue(m.STOP.is_set())
    output=root/'failed-main';output.mkdir()
-   with patch.object(m,'OUT',output),patch.object(m,'transfer',return_value=result),patch.object(m,'space'),patch.object(m,'publish') as publication,contextlib.redirect_stdout(io.StringIO()):
+   # The real immutable cache may already exist when this suite runs again.
+   # Keep main's destination and source-pin preflight entirely in the fixture.
+   (root/'models').mkdir();fake_source=root/'downloader.py';fake_owner=root/'owner.py'
+   fake_source.write_bytes(b'synthetic downloader identity');fake_owner.write_bytes(b'synthetic owner identity')
+   with patch.object(m,'ROOT',root),patch.object(m,'__file__',str(fake_source)),patch.object(m.package,'__file__',str(fake_owner)),patch.object(m,'OUT',output),patch.object(m,'transfer',return_value=result),patch.object(m,'space'),patch.object(m,'publish') as publication,contextlib.redirect_stdout(io.StringIO()):
     self.assertEqual(m.main(),1);publication.assert_not_called()
    m.STOP.clear()
 

@@ -1887,3 +1887,31 @@ checks are inherited on identical numerical/Swift sources. Retain the acquired
 data for a separately frozen real numerical reference. Native real-model
 geometry, tokenizer/thinking/chat, device fit, quality/performance, Mac/iPhone
 trials and broader Hugging Face product admission remain open.
+
+### Freeze the independent real Qwen3 reference — 24 October 2026
+
+The [real-model CPU oracle](mlx-qwen3-real-oracle.md) reconstructs eight-bit
+packed weights with exact BF16 metadata bits, preserving an original FP32 tied
+output table separately from Half gathers, norms and activations. A separate
+Qwen3 graph composes existing primitives with independent query width and
+per-head Q/K normalization before RoPE. Its unequal-width portable graph matches
+the ordered independent implementation. Bounded owned stripes fix Astra's
+mapped-view failure-path finding; a malformed-reader regression retains the
+original error and proves cleanup.
+
+All 50 portable methods, actual export and external-SHA stdlib verification
+pass. Six cases, selected layers 0/1/27, four greedy and three scoring distributions
+freeze 385 arrays/41,115,648 bytes before any target change. Both arithmetic paths
+select `[1096,374,264,3491]` on the declared FP64 teacher history. Unchanged
+pre-target policy yields maximum stage allowance 2.0 and logits allowance
+0.07747364044189453. Logical reference admission 2,597,950,130 bytes and observed
+completed-process lifetime physical peak 866,552,040 bytes stay below 6 GiB.
+
+One initial portable run fails because an existing test assumes no real cache;
+the isolated test fixture fixes that assumption while preserving production
+collision rejection. Failed logs and original bytes remain retained. Twelve
+new methods, seven producer sources and 445 package files are bound. The one raw
+text tokenization witness does not qualify templates or thinking/chat. Numerical
+engine/Swift sources and protected binaries are unchanged. Native real Qwen3,
+quality/performance, app/device fit and wider architecture/discovery work remain
+open.

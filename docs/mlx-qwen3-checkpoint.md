@@ -49,8 +49,9 @@ descriptor-identity and independent failure-diagnostic fixes before execution.
 Rust, Metal, Swift and protected release binaries are unchanged. Their previous
 exact-source checks remain inherited; no new engine or hardware check is claimed.
 The [tiny resident Qwen3 geometry](mlx-qwen3-metal.md) remains the only GPU Qwen3
-admission. Next, freeze an independent real-model numerical reference that
-handles this checkpoint's BF16 affine metadata explicitly, before widening target
-geometry. Quality, memory/device fit, throughput, Mac/iPhone execution, app
+admission. An [independent real-model numerical reference](mlx-qwen3-real-oracle.md)
+that handles this checkpoint's BF16 affine metadata is now frozen. Target
+geometry widening and its qualification come next.
+Quality, memory/device fit, throughput, Mac/iPhone execution, app
 integration and general Hugging Face admission remain open in the
 [active plan](engine-expansion-plan.md).
