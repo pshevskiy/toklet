@@ -6,6 +6,9 @@ pub struct LayerTrace {
     pub q_projection: Vec<f32>,
     pub k_projection: Vec<f32>,
     pub v_projection: Vec<f32>,
+    /// Empty for graphs without per-head Q/K normalization.
+    pub q_norm: Vec<f32>,
+    pub k_norm: Vec<f32>,
     pub q_rotary: Vec<f32>,
     pub k_rotary: Vec<f32>,
     pub attention_scores: Vec<f32>,
@@ -30,14 +33,18 @@ pub struct Trace {
 }
 
 impl Trace {
-    pub(super) fn new(c: &Config, tokens: usize) -> Result<Self, Error> {
+    pub(super) fn new(c: &Config, tokens: usize, qk_norms: bool) -> Result<Self, Error> {
         let nh = product(tokens, c.hidden_size)?;
+        let nq = product(product(tokens, c.query_heads)?, c.head_dim)?;
         let nkv = product(product(tokens, c.kv_heads)?, c.head_dim)?;
         let nm = product(tokens, c.intermediate_size)?;
         let ns = product(product(c.query_heads, tokens)?, tokens)?;
         let logits = product(tokens, c.vocab_size)?;
+        let norm_q = if qk_norms { nq } else { 0 };
+        let norm_k = if qk_norms { nkv } else { 0 };
         let layer_bytes = total_bytes(&[
-            nh, nh, nkv, nkv, nh, nkv, ns, ns, nh, nh, nh, nh, nm, nm, nm, nm, nh, nh,
+            nh, nq, nkv, nkv, norm_q, norm_k, nq, nkv, ns, ns, nq, nh, nh, nh, nm, nm, nm, nm, nh,
+            nh,
         ])?;
         let base_bytes = total_bytes(&[nh, nh, logits])?;
         product(layer_bytes, c.num_layers)?
@@ -50,14 +57,16 @@ impl Trace {
         for _ in 0..c.num_layers {
             layers.push(LayerTrace {
                 input_norm: zeros(nh)?,
-                q_projection: zeros(nh)?,
+                q_projection: zeros(nq)?,
                 k_projection: zeros(nkv)?,
                 v_projection: zeros(nkv)?,
-                q_rotary: zeros(nh)?,
+                q_norm: zeros(norm_q)?,
+                k_norm: zeros(norm_k)?,
+                q_rotary: zeros(nq)?,
                 k_rotary: zeros(nkv)?,
                 attention_scores: zeros(ns)?,
                 attention_probabilities: zeros(ns)?,
-                attention_context: zeros(nh)?,
+                attention_context: zeros(nq)?,
                 attention_projection: zeros(nh)?,
                 attention_residual: zeros(nh)?,
                 post_attention_norm: zeros(nh)?,

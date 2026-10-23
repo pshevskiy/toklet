@@ -9,7 +9,7 @@ use super::{
     qwen::{Source, Storage},
 };
 use crate::{
-    model::{self, LayerWeights, Model, Projection, Weights},
+    model::{self, LayerWeights, Model, Projection, QkNormWeights, Weights},
     weights::{Error, LoadOptions},
 };
 use std::path::Path;
@@ -97,13 +97,14 @@ pub fn load_qwen(directory: &Path, options: LoadOptions) -> Result<Loaded, Error
     load_source(source, options)
 }
 
-/// Explicit diagnostic expansion of a validated native MLX Qwen2/Llama/Mistral graph.
+/// Explicit diagnostic expansion of a validated native MLX dense graph.
 pub fn load_dense(directory: &Path, options: LoadOptions) -> Result<Loaded, Error> {
     load_source(Source::open_dense(directory, options)?, options)
 }
 
 fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error> {
     let bias_free = !source.architecture().has_projection_bias();
+    let qk_normalized = source.architecture() == Architecture::Qwen3;
     let config = source.config().clone();
     let mut fp32_weights_bytes = 0;
     let mut temporary_packed_bytes = 0;
@@ -138,8 +139,20 @@ fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error
     layers
         .try_reserve_exact(config.num_layers)
         .map_err(|_| Error::Allocation)?;
+    let mut qk_norms = Vec::new();
+    if qk_normalized {
+        qk_norms
+            .try_reserve_exact(config.num_layers)
+            .map_err(|_| Error::Allocation)?;
+    }
     for i in 0..config.num_layers {
         let p = format!("model.layers.{i}");
+        if qk_normalized {
+            qk_norms.push(QkNormWeights {
+                q: read(&mut source, &format!("{p}.self_attn.q_norm.weight"))?,
+                k: read(&mut source, &format!("{p}.self_attn.k_norm.weight"))?,
+            });
+        }
         let mut projection = |name| -> Result<Projection, Error> {
             Ok(Projection {
                 weight: read(&mut source, &format!("{p}.self_attn.{name}_proj.weight"))?,
@@ -173,7 +186,9 @@ fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error
         layers,
         final_norm,
     };
-    let model = if bias_free {
+    let model = if qk_normalized {
+        Model::new_qk_normalized(config, weights, output, qk_norms)?
+    } else if bias_free {
         Model::new_bias_free(config, weights, output)?
     } else {
         Model::new(config, weights)?

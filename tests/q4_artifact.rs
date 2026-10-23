@@ -11,7 +11,7 @@ use toklet::{q4, weights};
 static NEXT: AtomicUsize = AtomicUsize::new(0);
 
 #[test]
-fn matrix_inventory_rejects_unbounded_layers_before_allocating() {
+fn matrix_inventory_rejects_unbounded_layers_and_unqualified_query_widths() {
     let mut config = toklet::model::Config {
         vocab_size: 64,
         hidden_size: 32,
@@ -32,6 +32,11 @@ fn matrix_inventory_rejects_unbounded_layers_before_allocating() {
     assert_eq!(shapes.len(), 14);
     assert_eq!(shapes["model.layers.0.self_attn.k_proj.weight"], [16, 32]);
     assert_eq!(shapes["model.layers.1.mlp.down_proj.weight"], [32, 64]);
+    for heads in [2, 8] {
+        config.query_heads = heads;
+        assert!(config.validate().is_ok());
+        assert!(q4::matrix_shapes(&config).is_err());
+    }
 }
 struct Fixture {
     root: PathBuf,

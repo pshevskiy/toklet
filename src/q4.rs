@@ -45,6 +45,13 @@ pub fn matrix_shapes(
     config: &crate::model::Config,
 ) -> Result<std::collections::BTreeMap<String, Vec<usize>>, crate::model::Error> {
     config.validate()?;
+    // This legacy packed format qualifies Qwen geometry only. Independent
+    // query widths belong to MLX dense admission and need separate Q4 support.
+    if config.query_heads * config.head_dim != config.hidden_size {
+        return Err(crate::model::Error::InvalidConfig(
+            "Toklet Q4 requires query width equal to hidden size",
+        ));
+    }
     if config.num_layers > 1024 {
         return Err(crate::model::Error::InvalidConfig(
             "Q4 layer count exceeds bounded artifact inventory",

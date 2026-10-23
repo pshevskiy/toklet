@@ -88,6 +88,9 @@ fn geometry(c: &model::Config) -> Result<()> {
 /// shapes/rotary variants require their own numerical and resource qualification.
 fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture) -> Result<()> {
     match architecture {
+        crate::mlx::dense::Architecture::Qwen3 => Err(Error::Unsupported(
+            "Qwen3 Metal execution is not yet qualified; use the explicit scalar reference",
+        )),
         crate::mlx::dense::Architecture::Qwen2 => geometry(c),
         crate::mlx::dense::Architecture::Llama => {
             c.validate()

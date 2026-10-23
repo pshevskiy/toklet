@@ -1821,3 +1821,24 @@ arrays; all 15 portable tests pass. Native Rust/Metal Qwen3 execution, real mode
 chat/thinking semantics, quality/performance and iPhone testing remain pending.
 Numerical target sources and protected release binaries are unchanged. Astra
 reviews the code and completed evidence before commit.
+
+### Add modular Qwen3 dense scalar execution — 24 October 2026
+
+The [native scalar task](mlx-qwen3-scalar.md) adds a separate Qwen3 config module
+and reuses the checked dense graph with explicit per-head Q/K normalization.
+Query width can differ from hidden width; projections, scratch, traces and O
+weights use the correct dimensions. Norm weights are immutable, allocated
+capacities are counted, and normalization reuses rotary scratch. No numerical
+inner-loop architecture dispatch or new steady-state allocation is introduced.
+Legacy Qwen entrypoints and Toklet Q4 geometry stay constrained; Qwen3 Metal
+rejects explicitly until independently implemented and qualified.
+
+All 430 frozen stage comparisons pass. Nine targeted Metal-feature tests cover
+malformed configs/tensors, exact admission, over-reserved norm storage, zero
+allocation decode, cache offsets/reuse/reset/overflow and pending/edit/cancel
+recovery. Rust1.90 formatting, strict Clippy in both feature configurations,
+161 CPU/179 Metal-feature ordinary tests and five explicit existing Qwen/Llama
+GPU regressions pass. Protected release binaries, shaders, Swift and installed
+apps are unchanged. Astra reviews the completed source/evidence before commit.
+Real Qwen3 models, resident Metal, thinking/chat, quality/performance and phone
+qualification remain open in the active queue.

@@ -41,13 +41,8 @@ impl Config {
         ] {
             nonzero(value, name)?;
         }
-        if self.hidden_size != product(self.query_heads, self.head_dim)?
-            || !self.query_heads.is_multiple_of(self.kv_heads)
-            || !self.head_dim.is_multiple_of(2)
-        {
-            return Err(Error::InvalidConfig(
-                "hidden/head dimensions or GQA mapping",
-            ));
+        if !self.query_heads.is_multiple_of(self.kv_heads) || !self.head_dim.is_multiple_of(2) {
+            return Err(Error::InvalidConfig("head dimensions or GQA mapping"));
         }
         if !self.rms_norm_eps.is_finite()
             || self.rms_norm_eps <= 0.0
@@ -64,10 +59,11 @@ impl Config {
             ));
         }
         let h = self.hidden_size;
+        let q = product(self.query_heads, self.head_dim)?;
         let kv = product(self.kv_heads, self.head_dim)?;
         for count in [
             product(self.vocab_size, h)?,
-            product(h, h)?,
+            product(q, h)?,
             product(kv, h)?,
             product(self.intermediate_size, h)?,
         ] {
@@ -93,6 +89,13 @@ pub struct LayerWeights {
     pub gate: Vec<f32>,
     pub up: Vec<f32>,
     pub down: Vec<f32>,
+}
+
+/// Learned RMSNorm vectors shared across Q or K heads, each `[head_dim]`.
+/// These immutable weights are separate from session-owned scratch and KV.
+pub struct QkNormWeights {
+    pub q: Vec<f32>,
+    pub k: Vec<f32>,
 }
 
 /// The embedding table is also the output projection; no duplicate is retained.
@@ -188,12 +191,13 @@ pub struct Model {
     pub(crate) weights: Weights,
     projection_kernel: cpu::ProjectionKernel,
     output: Option<Vec<f32>>,
+    qk_norms: Option<Vec<QkNormWeights>>,
 }
 
 impl Model {
     /// Validate and take ownership of weights once, without copying them.
     pub fn new(config: Config, weights: Weights) -> Result<Self, Error> {
-        Self::build(config, weights, None, false)
+        Self::build(config, weights, None, false, None)
     }
 
     /// Bias-free dense graph. An absent output table ties the embedding without
@@ -203,7 +207,19 @@ impl Model {
         weights: Weights,
         output: Option<Vec<f32>>,
     ) -> Result<Self, Error> {
-        Self::build(config, weights, output, true)
+        Self::build(config, weights, output, true, None)
+    }
+
+    /// Bias-free dense graph with per-head Q/K RMSNorm before rotary positions.
+    /// Projection widths are query_heads*head_dim and kv_heads*head_dim,
+    /// independently of hidden_size; all buffers are checked before execution.
+    pub fn new_qk_normalized(
+        config: Config,
+        weights: Weights,
+        output: Option<Vec<f32>>,
+        norms: Vec<QkNormWeights>,
+    ) -> Result<Self, Error> {
+        Self::build(config, weights, output, true, Some(norms))
     }
 
     fn build(
@@ -211,6 +227,7 @@ impl Model {
         weights: Weights,
         output: Option<Vec<f32>>,
         bias_free: bool,
+        qk_norms: Option<Vec<QkNormWeights>>,
     ) -> Result<Self, Error> {
         config.validate()?;
         if weights.layers.len() != config.num_layers {
@@ -225,7 +242,20 @@ impl Model {
             Ok(())
         };
         let h = config.hidden_size;
+        let q = product(config.query_heads, config.head_dim)?;
         let kv = product(config.kv_heads, config.head_dim)?;
+        if let Some(norms) = &qk_norms {
+            if norms.len() != config.num_layers {
+                return Err(Error::LayerCount {
+                    expected: config.num_layers,
+                    actual: norms.len(),
+                });
+            }
+            for norms in norms {
+                check("Q norm", &norms.q, config.head_dim)?;
+                check("K norm", &norms.k, config.head_dim)?;
+            }
+        }
         check(
             "embedding",
             &weights.embedding,
@@ -238,7 +268,7 @@ impl Model {
         for layer in &weights.layers {
             check("input norm", &layer.input_norm, h)?;
             check("post attention norm", &layer.post_attention_norm, h)?;
-            for (projection, rows) in [(&layer.q, h), (&layer.k, kv), (&layer.v, kv)] {
+            for (projection, rows) in [(&layer.q, q), (&layer.k, kv), (&layer.v, kv)] {
                 check("QKV weight", &projection.weight, product(rows, h)?)?;
                 check(
                     "QKV bias",
@@ -246,7 +276,7 @@ impl Model {
                     if bias_free { 0 } else { rows },
                 )?;
             }
-            check("o weight", &layer.o, product(h, h)?)?;
+            check("o weight", &layer.o, product(h, q)?)?;
             for values in [&layer.gate, &layer.up, &layer.down] {
                 check("MLP weight", values, product(config.intermediate_size, h)?)?;
             }
@@ -256,6 +286,7 @@ impl Model {
             weights,
             projection_kernel: cpu::ProjectionKernel::Scalar,
             output,
+            qk_norms,
         })
     }
 
@@ -305,15 +336,28 @@ impl Model {
                 ])?)
                 .ok_or(cpu::Error::SizeOverflow)?;
         }
+        if let Some(norms) = &self.qk_norms {
+            for layer in norms {
+                bytes = bytes
+                    .checked_add(total_bytes(&[layer.q.capacity(), layer.k.capacity()])?)
+                    .ok_or(cpu::Error::SizeOverflow)?;
+            }
+        }
         Ok(bytes)
     }
 
     pub(crate) fn allocated_metadata_bytes(&self) -> Result<usize, Error> {
-        product(
+        let layers = product(
             self.weights.layers.capacity(),
             std::mem::size_of::<LayerWeights>(),
-        )
-        .map_err(Into::into)
+        )?;
+        let norms = product(
+            self.qk_norms.as_ref().map_or(0, Vec::capacity),
+            std::mem::size_of::<QkNormWeights>(),
+        )?;
+        layers
+            .checked_add(norms)
+            .ok_or(cpu::Error::SizeOverflow.into())
     }
 
     pub fn scratch(&self, capacity: usize) -> Result<Scratch, Error> {
@@ -355,7 +399,7 @@ impl Model {
         scratch: &mut Scratch,
     ) -> Result<Trace, Error> {
         self.admit(tokens, offset, scratch)?;
-        let mut trace = Trace::new(&self.config, tokens.len())?;
+        let mut trace = Trace::new(&self.config, tokens.len(), self.qk_norms.is_some())?;
         self.run(tokens, offset, scratch, Some(&mut trace), None, 0)?;
         self.projection_kernel.project(
             &scratch.norm[..tokens.len() * self.config.hidden_size],
@@ -470,6 +514,7 @@ impl Model {
         let c = &self.config;
         let n = tokens.len();
         let nh = n * c.hidden_size;
+        let nq = n * c.query_heads * c.head_dim;
         let nkv = n * c.kv_heads * c.head_dim;
         let nm = n * c.intermediate_size;
         let ns = match &cache {
@@ -478,12 +523,12 @@ impl Model {
         };
         let activation = &mut s.activation[..nh];
         let norm = &mut s.norm[..nh];
-        let q = &mut s.q[..nh];
+        let q = &mut s.q[..nq];
         let k = &mut s.k[..nkv];
         let v = &mut s.v[..nkv];
-        let q_rot = &mut s.q_rot[..nh];
+        let q_rot = &mut s.q_rot[..nq];
         let k_rot = &mut s.k_rot[..nkv];
-        let context = &mut s.context[..nh];
+        let context = &mut s.context[..nq];
         let projection = &mut s.projection[..nh];
         let gate = &mut s.gate[..nm];
         let up = &mut s.up[..nm];
@@ -515,7 +560,7 @@ impl Model {
                 &layer.q.weight,
                 (!layer.q.bias.is_empty()).then_some(layer.q.bias.as_slice()),
                 q,
-                [n, c.hidden_size, c.hidden_size],
+                [n, c.hidden_size, c.query_heads * c.head_dim],
             )?;
             self.projection_kernel.project(
                 norm,
@@ -531,14 +576,49 @@ impl Model {
                 v,
                 [n, c.hidden_size, c.kv_heads * c.head_dim],
             )?;
-            cpu::rotary(q, q_rot, n, c.query_heads, c.head_dim, offset, c.rope_theta)?;
-            cpu::rotary(k, k_rot, n, c.kv_heads, c.head_dim, offset, c.rope_theta)?;
+            if let Some(t) = t.as_deref_mut() {
+                t.q_projection.copy_from_slice(q);
+                t.k_projection.copy_from_slice(k);
+            }
+            // Reuse rotary scratch for normalized heads. In this graph the
+            // rotary result goes back into Q/K, preserving raw projections in
+            // the explicit trace without another steady-state allocation.
+            let (rotary_q, rotary_k): (&[f32], &[f32]) = if let Some(norms) = &self.qk_norms {
+                let norms = &norms[index];
+                cpu::rmsnorm(
+                    q,
+                    &norms.q,
+                    q_rot,
+                    n * c.query_heads,
+                    c.head_dim,
+                    c.rms_norm_eps,
+                )?;
+                cpu::rmsnorm(
+                    k,
+                    &norms.k,
+                    k_rot,
+                    n * c.kv_heads,
+                    c.head_dim,
+                    c.rms_norm_eps,
+                )?;
+                if let Some(t) = t.as_deref_mut() {
+                    t.q_norm.copy_from_slice(q_rot);
+                    t.k_norm.copy_from_slice(k_rot);
+                }
+                cpu::rotary(q_rot, q, n, c.query_heads, c.head_dim, offset, c.rope_theta)?;
+                cpu::rotary(k_rot, k, n, c.kv_heads, c.head_dim, offset, c.rope_theta)?;
+                (q, k)
+            } else {
+                cpu::rotary(q, q_rot, n, c.query_heads, c.head_dim, offset, c.rope_theta)?;
+                cpu::rotary(k, k_rot, n, c.kv_heads, c.head_dim, offset, c.rope_theta)?;
+                (q_rot, k_rot)
+            };
             if let Some(cache) = cache.as_deref_mut() {
                 let capacity = cache.capacity;
                 let kv = &mut cache.layers[index];
-                kv.append(k_rot, v, c, capacity, cached_len);
+                kv.append(rotary_k, v, c, capacity, cached_len);
                 kv.attend(
-                    q_rot,
+                    rotary_q,
                     context,
                     scores,
                     probabilities,
@@ -553,8 +633,8 @@ impl Model {
                 )?;
             } else {
                 cpu::attention(
-                    q_rot,
-                    k_rot,
+                    rotary_q,
+                    rotary_k,
                     v,
                     context,
                     scores,
@@ -572,15 +652,13 @@ impl Model {
                 &layer.o,
                 None,
                 projection,
-                [n, c.hidden_size, c.hidden_size],
+                [n, c.query_heads * c.head_dim, c.hidden_size],
             )?;
             if let Some(t) = t.as_deref_mut() {
                 t.input_norm.copy_from_slice(norm);
-                t.q_projection.copy_from_slice(q);
-                t.k_projection.copy_from_slice(k);
                 t.v_projection.copy_from_slice(v);
-                t.q_rotary.copy_from_slice(q_rot);
-                t.k_rotary.copy_from_slice(k_rot);
+                t.q_rotary.copy_from_slice(rotary_q);
+                t.k_rotary.copy_from_slice(rotary_k);
                 t.attention_scores.copy_from_slice(scores);
                 t.attention_probabilities.copy_from_slice(probabilities);
                 t.attention_context.copy_from_slice(context);
@@ -686,10 +764,11 @@ impl Scratch {
         scores: usize,
     ) -> Result<usize, Error> {
         let nh = product(capacity, c.hidden_size)?;
+        let nq = product(product(capacity, c.query_heads)?, c.head_dim)?;
         let nkv = product(product(capacity, c.kv_heads)?, c.head_dim)?;
         let nm = product(capacity, c.intermediate_size)?;
         total_bytes(&[
-            nh, nh, nh, nkv, nkv, nh, nkv, nh, nh, nm, nm, nm, scores, scores,
+            nh, nh, nq, nkv, nkv, nq, nkv, nq, nh, nm, nm, nm, scores, scores,
         ])
     }
 
@@ -703,6 +782,7 @@ impl Scratch {
             });
         }
         let nh = product(capacity, c.hidden_size)?;
+        let nq = product(product(capacity, c.query_heads)?, c.head_dim)?;
         let nkv = product(product(capacity, c.kv_heads)?, c.head_dim)?;
         let nm = product(capacity, c.intermediate_size)?;
         Self::planned_bytes(c, capacity, ns)?;
@@ -712,12 +792,12 @@ impl Scratch {
             allocated_bytes: 0,
             activation: zeros(nh)?,
             norm: zeros(nh)?,
-            q: zeros(nh)?,
+            q: zeros(nq)?,
             k: zeros(nkv)?,
             v: zeros(nkv)?,
-            q_rot: zeros(nh)?,
+            q_rot: zeros(nq)?,
             k_rot: zeros(nkv)?,
-            context: zeros(nh)?,
+            context: zeros(nq)?,
             projection: zeros(nh)?,
             gate: zeros(nm)?,
             up: zeros(nm)?,

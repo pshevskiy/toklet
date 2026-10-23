@@ -210,6 +210,16 @@ impl Source {
         if !architecture.has_projection_bias() {
             expected.retain(|name, _| !name.ends_with(".bias"));
         }
+        if architecture == Architecture::Qwen3 {
+            for layer in 0..config.num_layers {
+                for name in ["q_norm", "k_norm"] {
+                    expected.insert(
+                        format!("model.layers.{layer}.self_attn.{name}.weight"),
+                        vec![config.head_dim],
+                    );
+                }
+            }
+        }
         let source = weights::Source::open(directory)?;
         let has_head = source.info("lm_head.weight").is_some();
         if has_head || !tied_output {

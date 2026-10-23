@@ -10,6 +10,7 @@ use std::collections::BTreeMap;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Architecture {
     Qwen2,
+    Qwen3,
     Llama,
     Mistral,
 }
@@ -72,6 +73,10 @@ pub(crate) fn config(
     options: LoadOptions,
 ) -> Result<(Config, Architecture, bool), Error> {
     match value.get("model_type").and_then(Value::as_str) {
+        Some("qwen3") => {
+            let (config, tied) = super::qwen3::config(value, options)?;
+            Ok((config, Architecture::Qwen3, tied))
+        }
         Some("qwen2") => Ok((
             weights::qwen_config(value, options)?,
             Architecture::Qwen2,

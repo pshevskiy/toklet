@@ -6,4 +6,5 @@
 pub mod affine;
 pub mod dense;
 pub mod qwen;
+mod qwen3;
 pub mod reference;

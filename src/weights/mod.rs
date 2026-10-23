@@ -616,6 +616,7 @@ impl Source {
 
 pub(crate) fn expected(c: &Config) -> Result<BTreeMap<String, Vec<usize>>, Error> {
     let h = c.hidden_size;
+    let q = cpu::product(c.query_heads, c.head_dim)?;
     let kv = cpu::product(c.kv_heads, c.head_dim)?;
     let mut tensors = BTreeMap::from([
         ("model.embed_tokens.weight".into(), vec![c.vocab_size, h]),
@@ -626,14 +627,14 @@ pub(crate) fn expected(c: &Config) -> Result<BTreeMap<String, Vec<usize>>, Error
         for name in ["input_layernorm", "post_attention_layernorm"] {
             tensors.insert(format!("{prefix}.{name}.weight"), vec![h]);
         }
-        for (name, rows) in [("q", h), ("k", kv), ("v", kv)] {
+        for (name, rows) in [("q", q), ("k", kv), ("v", kv)] {
             tensors.insert(
                 format!("{prefix}.self_attn.{name}_proj.weight"),
                 vec![rows, h],
             );
             tensors.insert(format!("{prefix}.self_attn.{name}_proj.bias"), vec![rows]);
         }
-        tensors.insert(format!("{prefix}.self_attn.o_proj.weight"), vec![h, h]);
+        tensors.insert(format!("{prefix}.self_attn.o_proj.weight"), vec![h, q]);
         for name in ["gate", "up"] {
             tensors.insert(
                 format!("{prefix}.mlp.{name}_proj.weight"),
