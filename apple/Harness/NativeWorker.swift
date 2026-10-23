@@ -80,6 +80,9 @@ struct NativeChatResult: Sendable {
     let text: String
     let reason: UInt32
     let error: String
+    // Only known-unstarted turns (validation/setup rejection or queued lifecycle
+    // cancellation) roll back. Once generation starts, keep its prefix.
+    var rejected = false
 }
 
 private func nativeError(_ code: UInt32, _ error: inout TokletError) -> NSError {
@@ -212,7 +215,7 @@ final class NativeWorker: @unchecked Sendable {
     // response, even when lifecycle cleanup supersedes it before dequeue.
     private func cancelQueuedChat() {
         if case .chat(let id,_,_)? = queued {
-            view.chatResult = NativeChatResult(id:id,text:"",reason:3,error:"")
+            view.chatResult = NativeChatResult(id:id,text:"",reason:3,error:"Response stopped before generation.",rejected:true)
         }
     }
 
@@ -369,6 +372,7 @@ private final class Engine {
     func generateChat(_ id: UUID, _ conversation: Data, _ maximum: UInt32,
                       _ flag: OpaquePointer, _ worker: NativeWorker) throws {
         chatResult = nil
+        var generationStarted = false
         do {
             guard let chat, let settings, conversation.count <= 64 * 1024,
                   (1...128).contains(maximum) else { throw invalid("Choose a chat model and a valid response limit") }
@@ -387,6 +391,7 @@ private final class Engine {
             }
             if session == nil { try createSession() } // Explicit Send, never foreground auto-resume.
             var generationError: Error?
+            generationStarted = true
             do { try generate(3,Array(ids.prefix(count)),maximum,chatStops,0,flag,worker) }
             catch { generationError = error }
             let text = try decodeChat(worker.snapshot().ids)
@@ -394,7 +399,7 @@ private final class Engine {
                 error:generationError?.localizedDescription ?? "")
             if let generationError { throw generationError }
         } catch {
-            if chatResult == nil { chatResult = NativeChatResult(id:id,text:"",reason:0,error:error.localizedDescription) }
+            if chatResult == nil { chatResult = NativeChatResult(id:id,text:"",reason:0,error:error.localizedDescription,rejected:!generationStarted) }
             throw error
         }
     }

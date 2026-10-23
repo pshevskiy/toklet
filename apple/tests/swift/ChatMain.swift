@@ -73,13 +73,18 @@ struct ChatMain {
             guard harness.worker?.waitUntilIdle(seconds:120) != nil else { throw chatInputError("Expert cancellation timed out") }
             harness.poll(); chat.observe(harness.state)
             guard harness.expert, !chat.running, !harness.state.hasModel,
-                  chat.workspace.current.messages.last?.writing == false else { throw chatInputError("Send to Expert lost completion or model cleanup") }
+                  chat.workspace.current.messages.last?.writing == false ||
+                    (chat.workspace.current.messages.isEmpty && chat.workspace.current.draft == "Hello!") else { throw chatInputError("Send to Expert lost completion or model cleanup") }
             harness.setExpert(false)
             guard !harness.expert else { throw chatInputError("Back to Chat failed") }
             chat.open(URL(fileURLWithPath:directory))
             guard harness.worker?.waitUntilIdle(seconds:120) != nil else { throw chatInputError("Reload timed out") }
             harness.poll(); chat.observe(harness.state)
             guard let active = harness.worker else { throw chatInputError("Missing worker") }
+            chat.edit("Hello!"); chat.sendOrStop()
+            guard active.waitUntilIdle(seconds:120) != nil else { throw chatInputError("Warning history generation timed out") }
+            harness.poll(); chat.observe(harness.state)
+            guard chat.workspace.current.messages.last?.writing == false else { throw chatInputError("Warning test needs a completed turn") }
             requestNativeLifecycle(.memoryWarning,worker:active)
             guard active.waitUntilIdle(seconds:30) != nil else { throw chatInputError("Warning unload timed out") }
             harness.poll(); chat.observe(harness.state)
@@ -87,12 +92,12 @@ struct ChatMain {
             chat.open(URL(fileURLWithPath:directory))
             guard active.waitUntilIdle(seconds:120) != nil else { throw chatInputError("Identity test load timed out") }
             harness.poll(); chat.observe(harness.state)
-            // @Published emits before assignment; a stale UI snapshot must never
-            // allow a rejected second load to relabel the already loaded model.
+            // Reject an unrelated folder without disturbing the loaded model,
+            // even when a UI snapshot has not caught up with the worker.
             harness.state = NativeSnapshot()
             chat.open(folder.appendingPathComponent("not-a-model"))
             harness.poll(); chat.observe(harness.state)
-            guard !chat.hasChatModel else { throw chatInputError("Rejected load mislabeled the live model") }
+            guard chat.hasChatModel, !chat.notice.isEmpty else { throw chatInputError("Invalid folder did not preserve the live model identity") }
         }
     }
     static func main() throws {

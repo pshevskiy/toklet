@@ -10,6 +10,8 @@ final class FriendlyChatStore: ObservableObject {
     @Published var folders: [URL] = []
     private weak var harness: HarnessStore?
     private var request: UUID?
+    private var draftEdit = UUID()
+    private var requestDraftEdit: UUID?
     private var pendingFolder: URL?
     private var scopedFolder: URL?
     private var loadedKey = ""
@@ -70,6 +72,7 @@ final class FriendlyChatStore: ObservableObject {
     func edit(_ text: String) {
         guard !storageBlocked else { return }
         guard text.utf8.count <= 16384 else { notice = "A message can contain up to 16 KiB of text."; return }
+        draftEdit = UUID()
         workspace.edit(text)
         saving?.cancel()
         saving = Task { [weak self] in
@@ -79,7 +82,7 @@ final class FriendlyChatStore: ObservableObject {
     }
     func newChat() {
         guard !storageBlocked, !running, harness?.state.busy == false else { return }
-        do { try workspace.newChat(); notice = ""; save() }
+        do { try workspace.newChat(modelKey:activeModelKey); notice = ""; save() }
         catch { notice = error.localizedDescription }
     }
     func select(_ id: UUID) {
@@ -88,7 +91,14 @@ final class FriendlyChatStore: ObservableObject {
     }
     func remove(_ id: UUID) {
         guard !storageBlocked, !running, harness?.state.busy == false else { return }
-        workspace.remove(id); save()
+        let last = workspace.conversations.count == 1 && workspace.current.id == id
+        workspace.remove(id)
+        if last, let activeModelKey { workspace.conversations[workspace.selectedIndex].modelKey = activeModelKey }
+        save()
+    }
+    private var activeModelKey: String? {
+        guard let harness, harness.state.hasModel, harness.state.chatEnabled, !loadedKey.isEmpty else { return nil }
+        return loadedKey
     }
     func sendOrStop() {
         guard let harness else { return }
@@ -101,16 +111,18 @@ final class FriendlyChatStore: ObservableObject {
                 workspace = previous; notice = "The engine is busy. Your draft is kept; please try again."
                 save(); return
             }
-            request = pending.0; notice = ""; save(); harness.poll()
+            request = pending.0; requestDraftEdit = draftEdit; notice = ""; save(); harness.poll()
         } catch { notice = error.localizedDescription }
     }
     func observe(_ state: NativeSnapshot) {
         if let result = state.chatResult, result.id == request {
-            workspace.finish(result); request = nil; save()
+            workspace.finish(result,restoreRejectedDraft:requestDraftEdit == draftEdit)
+            if result.rejected { notice = result.error }
+            request = nil; requestDraftEdit = nil; save()
         }
         if state.closed, let id = request {
             workspace.finish(NativeChatResult(id:id,text:"",reason:3,error:"Response stopped. Reload a model to continue."))
-            request = nil; save()
+            request = nil; requestDraftEdit = nil; save()
         }
         if !state.busy && !state.hasModel {
             scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""
@@ -120,10 +132,26 @@ final class FriendlyChatStore: ObservableObject {
             }
         }
     }
+    // Delayed Hub verification is scoped to the chat which requested it.
+    func open(_ folder: URL,ifSelected conversation: UUID) {
+        guard workspace.selected == conversation else { return }
+        open(folder)
+    }
     func open(_ folder: URL) {
         guard !storageBlocked, !running, let harness, !harness.state.busy, !harness.state.closed else { return }
         notice = ""
         do {
+            guard let actual = harness.worker?.snapshot(), !actual.busy, !actual.closed,
+                  actual.hasModel == harness.state.hasModel else {
+                harness.poll()
+                throw HubFailure("The engine state changed. Wait for it to finish and choose the model again.")
+            }
+            // Validate the selected folder's bounded pinned configuration before
+            // changing history or unloading a working model. Full tensor/text
+            // admission still runs at the native load boundary.
+            let scoped = folder.startAccessingSecurityScopedResource()
+            defer { if scoped { folder.stopAccessingSecurityScopedResource() } }
+            _ = try HubProfile.identify(folder)
             if workspace.current.modelKey != key(folder), !workspace.current.messages.isEmpty { try workspace.newChat(modelKey:key(folder)) }
             workspace.conversations[workspace.selectedIndex].modelKey = key(folder)
             save()

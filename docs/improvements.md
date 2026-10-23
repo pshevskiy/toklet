@@ -1765,3 +1765,20 @@ paused; no new engine-performance or wider compatibility claim is made.
 A staged whitespace check then exposed one extra EOF blank line in the new Expert
 file. A formatting-only follow-up removes it; the Mac receipt maps the original
 executed source to its immutable build copy. Numerical and UI behavior are unchanged.
+
+### Recover rejected Chat turns and preserve model identity — 23 October 2026
+
+The [controller recovery fixes](app-recovery.md) restore drafts after validation
+or known-unstarted lifecycle cancellation, without overwriting later edits even
+when intentionally cleared. Partial generation remains a terminal history turn.
+New/delete-last keeps a live model usable, unrelated folders are rejected before
+unloading, and delayed verified Open cannot target another conversation. Actual
+worker admission precedes selection changes. No numerical kernel, context gate,
+model identity gate or persisted history schema changed.
+
+A real-model baseline reproduced the forbidden-literal failure. Exact-source
+regressions cover correction/retry, context failure, six gated lifecycle cases,
+actual partial cancellation, history/model identity and stale verification.
+Strict existing controller suites and iOS SDK builds pass; Astra reviews the
+code and evidence before commit. Physical button/layout fixes and the final
+phone audit are recorded separately when completed.

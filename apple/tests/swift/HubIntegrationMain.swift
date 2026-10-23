@@ -119,6 +119,26 @@ struct HubIntegrationMain {
                 try require(loads == 0 && selected == choice && delayed.message.contains("cancelled"),"no late load after " + choice)
             }
         }
+        for choice in ["new-chat","select-chat","delete-chat"] {
+            let harness = HarnessStore(enabled:true)
+            defer { harness.worker?.close(); _ = harness.worker?.waitUntilClosed(seconds:30) }
+            let chat = FriendlyChatStore(harness:harness,fileURL:root.appendingPathComponent(choice + "/history.json"))
+            let first = chat.workspace.selected
+            chat.newChat()
+            let requested = chat.workspace.selected
+            let gate = VerificationGate()
+            let delayed = HubStore(hub:hub,admission:admission,verify:{ _ in await gate.verify() })
+            delayed.open { folder in chat.open(folder,ifSelected:requested) }
+            await gate.wait()
+            switch choice {
+            case "new-chat": chat.newChat()
+            case "select-chat": chat.select(first)
+            default: chat.remove(requested)
+            }
+            let selected = chat.workspace.selected; let count = chat.workspace.conversations.count
+            await gate.finish(); await delayed.waitForIdle()
+            try require(chat.workspace.selected == selected && chat.workspace.conversations.count == count && chat.notice.isEmpty && harness.worker?.snapshot().hasModel == false,"late verified open cannot change " + choice)
+        }
         let started = Started()
         let slow = ModelHub(root:root.appendingPathComponent("cancel"),fetch:{ _,_,_,_ in
             await started.signal(); try await Task.sleep(for:.seconds(60))

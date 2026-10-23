@@ -62,9 +62,17 @@ struct ChatWorkspace: Codable {
         return (response.id,json)
     }
     @discardableResult
-    mutating func finish(_ result: NativeChatResult) -> Bool {
+    mutating func finish(_ result: NativeChatResult,restoreRejectedDraft: Bool = true) -> Bool {
         for index in conversations.indices {
             if let message = conversations[index].messages.firstIndex(where: { $0.id == result.id && $0.writing }) {
+                if result.rejected {
+                    guard message > 0, message == conversations[index].messages.count - 1,
+                          conversations[index].messages[message - 1].role == "user" else { return false }
+                    let input = conversations[index].messages[message - 1].text
+                    conversations[index].messages.removeLast(2)
+                    if restoreRejectedDraft { conversations[index].draft = input }
+                    return true
+                }
                 conversations[index].messages[message].text = result.text
                 conversations[index].messages[message].writing = false
                 conversations[index].messages[message].interrupted = result.reason == 3 || !result.error.isEmpty

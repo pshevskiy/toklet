@@ -201,9 +201,10 @@ struct FriendlyHarnessView: View {
                 }
                 if hub.localURL != nil {
                     Button("Open downloaded model",systemImage:"bubble.left.and.bubble.right") {
+                        let conversation = chat.workspace.selected
                         hub.open { folder in
                             guard unlocked, !store.expert, !store.state.closed else { return }
-                            chat.open(folder)
+                            chat.open(folder,ifSelected:conversation)
                         }
                     }.disabled(!unlocked || hub.busy || !hub.deviceAllowed || store.state.closed)
                         .accessibilityIdentifier("hub-open")

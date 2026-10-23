@@ -52,7 +52,7 @@ func checkQueuedChatCancellation() throws {
         if action == 2 { worker.close() } else { worker.interrupt(unload:action == 1) }
         proceed.signal()
         guard let state = worker.waitUntilIdle(seconds:30), let result = state.chatResult,
-              result.id == id, result.reason == 3, result.text.isEmpty else { throw chatInputError("Queued chat cancellation lost its result") }
+              result.id == id, result.reason == 3, result.text.isEmpty, result.rejected else { throw chatInputError("Queued chat cancellation lost its result") }
         worker.close()
         guard worker.waitUntilClosed(seconds:30), worker.snapshot().chatResult?.id == id else { throw chatInputError("Queued completion lost during close") }
     }
