@@ -1581,3 +1581,22 @@ is still running. No Mistral native execution, app catalog support, physical fit
 performance or quality is claimed by acquisition alone. The record's heading
 now reflects M7's completed amended iPhone14Pro scope, and the Apple guide names
 the current Qwen-capable native package. Phone work stays paused.
+
+### Frozen independent Mistral numerical reference — 23 October 2026
+
+The streamed CPU exporter completes all **349 arrays / 35,025,920 bytes**, with
+matching four-step FP32/FP64 selections and full vocabulary distributions for
+decode and scoring. The [oracle report](mlx-mistral-oracle.md) records the
+externally frozen manifest/array hashes before native Mistral target edits.
+The unchanged arithmetic/prefix policy yields maximum absolute allowance 0.5
+and logits allowance 0.08046722412109375, plus relative 1e-3. These measured
+envelopes grant no held-out quality waiver.
+
+Both owned export/stdlib verification commands pass with unchanged source,
+package and data endpoints and clean process completion. Logical admission is
+5,486,766,359 bytes, counting the complete clean source mapping; lifetime
+charged physical peak is 293,752,696 bytes. The charged counter can omit clean
+file pages, so it does not replace the logical budget or qualify mobile fit.
+The [receipt](../benchmarks/results/2026-10-23-mistral-real-oracle-v1.json) binds
+this evidence. Native decoder, Chat/catalog integration and actual app transfer
+qualification remain separate. Phone work remains paused.
