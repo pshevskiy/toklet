@@ -18,6 +18,9 @@ struct HubProfile: Codable, Equatable, Sendable {
     let repository: String
     let revision: String
     let files: [HubFile]
+    // Bounded 64-bit inventory admission for the selected multi-GB Mac candidate.
+    static let maximumFileBytes: Int64 = 4 * 1024 * 1024 * 1024
+    static let maximumTotalBytes: Int64 = 6 * 1024 * 1024 * 1024
     var totalBytes: Int64 { files.reduce(0) { $0 + $1.bytes } }
     var folder: String { repository.replacingOccurrences(of:"/",with:"--") + "--" + revision }
     static let smol = HubProfile(repository:"mlx-community/SmolLM2-135M-Instruct-8bit",
@@ -61,10 +64,10 @@ struct HubProfile: Codable, Equatable, Sendable {
               !files.isEmpty, files.count <= 16, Set(files.map(\.name)).count == files.count else { throw HubFailure("Invalid download profile.") }
         var total: Int64 = 0
         for file in files {
-            guard HubAPI.safeComponent(file.name), file.name != "snapshot.json", file.bytes > 0, file.bytes <= 1024 * 1024 * 1024,
+            guard HubAPI.safeComponent(file.name), file.name != "snapshot.json", file.bytes > 0, file.bytes <= Self.maximumFileBytes,
                   file.sha256.count == 64, file.sha256.allSatisfy({ $0.isHexDigit && $0.isASCII }) else { throw HubFailure("Invalid file inventory.") }
             let sum = total.addingReportingOverflow(file.bytes)
-            guard !sum.overflow, sum.partialValue <= 2 * 1024 * 1024 * 1024 else { throw HubFailure("Download inventory is too large.") }
+            guard !sum.overflow, sum.partialValue <= Self.maximumTotalBytes else { throw HubFailure("Download inventory is too large.") }
             total = sum.partialValue
         }
     }

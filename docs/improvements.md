@@ -1548,3 +1548,17 @@ The evidence retains an ignored inspection-directory collision, an incomplete
 serial acquisition and subsequent exact owned-process absence checks. No partial
 checkpoint was published. The new range acquisition has its own directory,
 validated HTTP ranges and complete weight-hash admission before publication.
+
+### Bounded multi-gigabyte download prerequisite — 23 October 2026
+
+Shared explicit64-bit admission limits now allow at most4GiB per file and6GiB
+per snapshot, preparing the existing streaming core for the selected Mac
+candidate. Catalog support and numerical budgets are unchanged. The two-snapshot
+storage reserve and per-stream byte bounds remain checked, along with existing
+hash, ownership, cancellation and publication rules.
+
+Astra cleared the arithmetic and boundary tests. Strict Swift compilation, the
+complete core checks and iOS SDK type checking pass without contacting the
+phone. The [limit receipt](../benchmarks/results/2026-10-23-model-hub-large-limits-v1.json)
+distinguishes large-size request admission from an actual large payload transfer;
+that qualification and Mistral engine/chat support remain pending.

@@ -36,7 +36,7 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
     }
     static func run(_ url: URL,_ destination: URL,_ maximum: Int64,
                     _ progress: @escaping @Sendable (Int64) -> Void,configuration: URLSessionConfiguration) async throws {
-        guard allowed(url), maximum > 0, maximum <= 1024 * 1024 * 1024 else { throw HubFailure("Invalid transfer request.") }
+        guard allowed(url), maximum > 0, maximum <= HubProfile.maximumFileBytes else { throw HubFailure("Invalid transfer request.") }
         let transfer = HubTransfer(destination:destination,maximum:maximum,progress:progress)
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in

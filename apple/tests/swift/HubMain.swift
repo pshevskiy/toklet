@@ -213,7 +213,35 @@ struct HubMain {
         let afterTask = Task { try await after.download(profile,admission:admission,progress:{ _,_ in withUnsafeCurrentTask { $0?.cancel() } }) }
         let afterFolder = try await afterTask.value
         try ModelHub.verify(afterFolder,profile:profile)
+        try await largeInventoryChecks(root)
         try await transportChecks(root)
+    }
+    static func largeInventoryChecks(_ root: URL) async throws {
+        let hash = String(repeating:"0",count:64)
+        func profile(_ sizes: [Int64]) -> HubProfile {
+            HubProfile(repository:"fixture/large",revision:String(repeating:"a",count:40),
+                files:sizes.enumerated().map { HubFile(name:"part-\($0.offset).safetensors",bytes:$0.element,sha256:hash) })
+        }
+        // No multi-GB payload is allocated: test exact 64-bit admission edges.
+        try profile([HubProfile.maximumFileBytes]).validate()
+        try profile([HubProfile.maximumFileBytes,2 * 1024 * 1024 * 1024]).validate()
+        try await rejects("file above four GiB") { try profile([HubProfile.maximumFileBytes + 1]).validate() }
+        try await rejects("inventory above six GiB") { try profile([HubProfile.maximumFileBytes,2 * 1024 * 1024 * 1024 + 1]).validate() }
+        try await rejects("extreme signed file size") { try profile([Int64.max]).validate() }
+        let destination = root.appendingPathComponent("large-transfer-admission")
+        let configuration = URLSessionConfiguration.ephemeral; configuration.protocolClasses = [HubProtocol.self]
+        HubProtocol.plan.set(403,["Content-Length":"0"],Data())
+        // Reaching the owned sink proves the 64-bit maximum passes request
+        // admission; the remote failure still propagates. No large-transfer claim.
+        try await rejects("large admitted request remote failure") {
+            try await HubTransfer.run(URL(string:"https://huggingface.co/test")!,destination,HubProfile.maximumFileBytes,{ _ in },configuration:configuration)
+        }
+        try require(FileManager.default.fileExists(atPath:destination.path),"large maximum admitted before HTTP failure")
+        let rejected = root.appendingPathComponent("oversize-transfer")
+        try await rejects("oversize rejected before creating sink") {
+            try await HubTransfer.run(URL(string:"https://huggingface.co/test")!,rejected,HubProfile.maximumFileBytes + 1,{ _ in },configuration:configuration)
+        }
+        try require(!FileManager.default.fileExists(atPath:rejected.path),"oversize request creates no file")
     }
     static func transportChecks(_ root: URL) async throws {
         let configuration = URLSessionConfiguration.ephemeral; configuration.protocolClasses = [HubProtocol.self]

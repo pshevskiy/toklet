@@ -145,3 +145,20 @@ committed native check, including visible token 0; all replies independently
 decode with the pinned Python tokenizer. The same new package re-opens the old
 Smol snapshot and passes native/controller checks. Qwen phone Chat remains
 pending: installation refused an existing app session and did not stop it.
+
+## Bounded larger-file admission — 23 October 2026
+
+The download core now admits at most4GiB per file and6GiB per validated snapshot,
+using shared explicit64-bit limits. This is a prerequisite for the selected
+multi-gigabyte Mac candidate; the supported catalog is unchanged. Storage still
+reserves two complete snapshot sizes plus headroom, and streaming still rejects
+excess bytes before writing. Profile memory checks and all integrity, redirect,
+cancellation and exclusive-publication gates remain in force.
+
+The [limit receipt](../benchmarks/results/2026-10-23-model-hub-large-limits-v1.json)
+records strict Swift compilation, the complete deterministic core suite and SDK
+type checking. Added checks cover exact4GiB/6GiB boundaries, excess and extreme
+signed sizes, a4GiB request reaching its owned sink before a mocked HTTP failure,
+and an oversized request rejecting before creating a file. These use small
+payloads and establish admission only. They do not qualify an actual multi-GB
+URLSession transfer, new model support, physical memory fit or performance.
