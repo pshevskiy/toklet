@@ -1280,3 +1280,59 @@ wrapper path exception is observed in tool output; only preliminary fmt logs
 are retained, with no test credit. Astra accepts this bounded task after the
 final source/evidence audit. Retain the exact text
 profile; shared-worker/UI and phone text integration follow separately.
+
+
+### Friendly Chat and preserved Expert mode in one app — 23 October 2026
+
+The [interface consolidation](app-interface.md) addresses the confusing split
+between the earlier InferencePhone UI and Toklet's diagnostic app. Toklet Harness
+now opens friendly Chat, with local model selection, bounded saved history/drafts
+and settings; the original raw-token form remains under Expert mode. Both use
+one Toklet worker and the existing Rust/Metal engine. The selected SmolLM2 text
+profile supplies formatting/decoding; no second numerical runtime or implemented
+Hugging Face download flow is implied.
+
+Astra review found a queued-chat cancellation race before dequeue: cleanup could
+replace an accepted command without returning a terminal result. The worker now
+publishes cancellation for that request ID and retains terminal results through
+cleanup/Close. Deterministic suspend/unload/close checks cover the race. Review
+also tightened failed-read recovery, pending folder cancellation, security-scope
+release, result routing across conversations, terminal worker recreation and
+rejected-load identity. The final stale-published-state regression verifies that
+a rejected load cannot label an already loaded model as another selection.
+
+The final strict Swift6 Mac runner passes all six commands: SDK query, compile,
+workspace/controller regressions, real SmolLM2 text and original raw CPU/Metal
+checks. Both SDK app builds pass; final development signing/install passes on
+iPhone14Pro. An earlier exact-source physical smoke matches Mac text/token IDs
+for first/second turns and explicit session recreation, with native cancellation,
+context rejection, release, signed correspondence and natural process absence.
+Original physical CPU/Metal worker checks pass. Historical source differences
+are retained as exact-SHA-verified copies; the final store-only fix is covered
+by the fresh Mac regression and app builds/install. Numerical Rust/shaders stay
+unchanged from the reviewed text-profile task, so its Rust checks are inherited.
+
+Visible checks cover Simulator navigation, Files opening/cancel, original Expert
+generation, terminal Close/Back and draft entry; physical dark appearance was
+inspected. The final Simulator capture preserves the draft after reinstall.
+Physical GUI Send/Stop, successful folder selection and large-text/keyboard
+layouts remain unqualified. No performance improvement or broader quality claim
+is made. The tiny model's arithmetic reply is incorrect; this is functional text
+support only. A proposed new collector was rejected in review and never executed;
+existing reviewed physical helpers and a bounded manual smoke provide the device
+evidence. The [receipt](../benchmarks/results/2026-10-23-app-interface-v1.json)
+records checks, scope, historical correspondence and remaining limitations.
+Retain the one-app interface; M8.4 search/downloads and wider chat profiles remain
+open.
+
+Astra accepts the final interface task for commit with no remaining blockers:
+412 audited evidence bindings/75 exact source copies, six final Mac commands, both SDK
+builds, final signing/install, historical physical correspondence and all304
+documentation links independently pass. Protected binaries remain unchanged.
+
+The final staged-file whitespace check additionally catches one blank line at
+EOF in the new chat store. Removing that newline changes no Swift tokens; the
+receipt retains the exact executed source and maps the final whitespace-only
+version explicitly. Functional checks are inherited unchanged.
+Astra clears this amendment after verifying all413 bindings,75 current source
+copies and the exact one-newline correspondence.

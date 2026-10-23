@@ -6,6 +6,7 @@ struct NativeSettings: Sendable {
     var packedDirectory = ""
     var metal = false
     var mlx = false
+    var chat = false
     var capacity: UInt32 = 32
     var chunk: UInt32 = 3
     var numericalBudget: UInt64 = 128 * 1024 * 1024
@@ -19,6 +20,7 @@ struct NativeSettings: Sendable {
 
 enum NativeCommand: Sendable {
     case load(NativeSettings)
+    case chat(id: UUID, conversation: Data, maximum: UInt32)
     // Raw IDs only. autoCancelAfter is a deterministic diagnostic interruption.
     case generate(operation: UInt32, tokens: [UInt32], maximum: UInt32,
                   stops: [UInt32], autoCancelAfter: Int = 0)
@@ -67,6 +69,16 @@ struct NativeSnapshot: Sendable {
     var admittedBytes: UInt64 = 0
     var score: NativeDistributionScore?
     var workerFinished = false
+    var chatEnabled = false
+    // Retained across queued lifecycle cleanup until the next text request.
+    var chatResult: NativeChatResult?
+}
+
+struct NativeChatResult: Sendable {
+    let id: UUID
+    let text: String
+    let reason: UInt32
+    let error: String
 }
 
 private func nativeError(_ code: UInt32, _ error: inout TokletError) -> NSError {
@@ -102,12 +114,16 @@ final class NativeWorker: @unchecked Sendable {
     private let captureSavedPrefix: Bool
     private let beforeScorePublication: (@Sendable () -> Void)?
     private let afterScorePublication: (@Sendable (Bool) -> Void)?
+    // Cold diagnostic gate, outside the condition lock; ordinary callers nil.
+    private let beforeCommandDequeue: (@Sendable (NativeCommand) -> Void)?
 
     init(captureSavedPrefix: Bool = false, beforeScorePublication: (@Sendable () -> Void)? = nil,
-         afterScorePublication: (@Sendable (Bool) -> Void)? = nil) throws {
+         afterScorePublication: (@Sendable (Bool) -> Void)? = nil,
+         beforeCommandDequeue: (@Sendable (NativeCommand) -> Void)? = nil) throws {
         self.captureSavedPrefix = captureSavedPrefix
         self.beforeScorePublication = beforeScorePublication
         self.afterScorePublication = afterScorePublication
+        self.beforeCommandDequeue = beforeCommandDequeue
         var error = TokletError()
         try requireOK(toklet_cancel_create(&cancelFlag, &error), &error)
         view.ids.reserveCapacity(128)
@@ -131,6 +147,7 @@ final class NativeWorker: @unchecked Sendable {
         // arriving after this point survives until the request observes it.
         _ = toklet_cancel_set(flag, initiallyCancelled ? 1 : 0, nil)
         queued = command
+        if case .chat = command { view.chatResult = nil }
         view.busy = true
         view.phase = "Queued"
         view.score = nil
@@ -166,6 +183,7 @@ final class NativeWorker: @unchecked Sendable {
         condition.lock(); defer { condition.unlock() }
         guard !closing, !view.closed else { return }
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
+        cancelQueuedChat()
         // Once a full unload is queued, a later background event cannot weaken it.
         if case .unload? = queued {} else { queued = unload ? .unload : .suspend }
         view.busy = true
@@ -179,6 +197,7 @@ final class NativeWorker: @unchecked Sendable {
     func close() {
         condition.lock(); defer { condition.unlock() }
         guard !view.closed else { return }
+        cancelQueuedChat()
         closing = true; queued = nil
         view.score = nil
         view.savedPrefix = nil
@@ -186,6 +205,14 @@ final class NativeWorker: @unchecked Sendable {
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
         view.busy = true
         condition.signal()
+    }
+
+    // Caller holds condition. An accepted request always receives a terminal
+    // response, even when lifecycle cleanup supersedes it before dequeue.
+    private func cancelQueuedChat() {
+        if case .chat(let id,_,_)? = queued {
+            view.chatResult = NativeChatResult(id:id,text:"",reason:3,error:"")
+        }
     }
 
     func waitUntilClosed(seconds: TimeInterval) -> Bool {
@@ -220,6 +247,10 @@ final class NativeWorker: @unchecked Sendable {
             condition.lock()
             while queued == nil && !closing { condition.wait() }
             if closing { condition.unlock(); break }
+            if let beforeCommandDequeue, let pending = queued {
+                condition.unlock(); beforeCommandDequeue(pending); condition.lock()
+                if closing { condition.unlock(); break }
+            }
             let command = queued!
             queued = nil
             let flag = cancelFlag!
@@ -232,6 +263,8 @@ final class NativeWorker: @unchecked Sendable {
             condition.lock()
             view.hasModel = engine.model != nil
             view.hasSession = engine.session != nil
+            view.chatEnabled = engine.chat != nil
+            if case .chat = command { view.chatResult = engine.chatResult }
             view.savedHistory = engine.savedCount
             // Only this owning thread reads the engine prefix. The copy is
             // bounded by admitted capacity and absent from ordinary callers.
@@ -265,6 +298,7 @@ final class NativeWorker: @unchecked Sendable {
             cancelFlag = nil
         }
         view.hasModel = false; view.hasSession = false
+        view.chatEnabled = false
         // Closed means there is no active numerical prefix. Do not retain the
         // last command's counts when close supersedes an in-flight operation.
         view.history = 0; view.evaluated = 0; view.pending = 0; view.reason = 0
@@ -311,6 +345,57 @@ private final class Engine {
     var report = TokletReport()
     var phase = "Idle"
     var score: NativeDistributionScore?
+    var chat: OpaquePointer?
+    var chatResult: NativeChatResult?
+
+    func decodeChat(_ ids: [UInt32]) throws -> String {
+        guard let chat else { throw invalid("Choose a chat model first") }
+        var bytes = [UInt8](repeating:0,count:64 * 1024)
+        var count = 0; var error = TokletError()
+        let code = ids.withUnsafeBufferPointer { ids in
+            bytes.withUnsafeMutableBufferPointer { output in
+                toklet_chat_decode(chat,ids.baseAddress,ids.count,output.baseAddress,output.count,&count,&error)
+            }
+        }
+        try requireOK(code,&error)
+        guard count <= bytes.count, let text = String(bytes:bytes.prefix(count),encoding:.utf8) else {
+            throw invalid("Invalid text response")
+        }
+        return text
+    }
+
+    func generateChat(_ id: UUID, _ conversation: Data, _ maximum: UInt32,
+                      _ flag: OpaquePointer, _ worker: NativeWorker) throws {
+        chatResult = nil
+        do {
+            guard let chat, let settings, conversation.count <= 64 * 1024,
+                  (1...128).contains(maximum) else { throw invalid("Choose a chat model and a valid response limit") }
+            var ids = [UInt32](repeating:0,count:512)
+            var count = 0; var error = TokletError()
+            let code = conversation.withUnsafeBytes { input in
+                ids.withUnsafeMutableBufferPointer { output in
+                    toklet_chat_encode(chat,input.bindMemory(to:UInt8.self).baseAddress,input.count,
+                        output.baseAddress,output.count,&count,&error)
+                }
+            }
+            try requireOK(code,&error)
+            // Admit the WHOLE turn before reset+prompt changes numerical state.
+            guard count <= ids.count, count + Int(maximum) <= Int(settings.capacity) else {
+                throw invalid("This conversation is full. Start a new chat or choose a shorter response limit.")
+            }
+            if session == nil { try createSession() } // Explicit Send, never foreground auto-resume.
+            var generationError: Error?
+            do { try generate(3,Array(ids.prefix(count)),maximum,[0,2],0,flag,worker) }
+            catch { generationError = error }
+            let text = try decodeChat(worker.snapshot().ids)
+            chatResult = NativeChatResult(id:id,text:text,reason:report.reason,
+                error:generationError?.localizedDescription ?? "")
+            if let generationError { throw generationError }
+        } catch {
+            if chatResult == nil { chatResult = NativeChatResult(id:id,text:"",reason:0,error:error.localizedDescription) }
+            throw error
+        }
+    }
 
     func releaseSession() throws {
         score = nil
@@ -323,6 +408,11 @@ private final class Engine {
     }
     func unload() throws {
         try releaseSession()
+        if let value = chat {
+            chat = nil
+            var error = TokletError()
+            try requireOK(toklet_chat_release(value,&error),&error)
+        }
         if let value = model {
             model = nil
             var error = TokletError()
@@ -382,6 +472,8 @@ private final class Engine {
     func perform(_ command: NativeCommand, flag: OpaquePointer, worker: NativeWorker) throws {
         score = nil
         switch command {
+        case .chat(let id,let conversation,let maximum):
+            try generateChat(id,conversation,maximum,flag,worker)
         case .score(let target):
             guard let session else { throw invalid("Load or replay a session first") }
             var error = TokletError(); var value = TokletScore()
@@ -427,7 +519,12 @@ private final class Engine {
             try requireOK(code, &error)
             settings = requested
             saved = Array(repeating: 0, count: Int(requested.capacity)); savedCount = 0
-            do { try createSession() } catch { try? unload(); throw error }
+            do {
+                try createSession()
+                if requested.chat {
+                    try requireOK(toklet_chat_create(model,64 * 1024 * 1024,&chat,&error),&error)
+                }
+            } catch { try? unload(); throw error }
             try requireOK(toklet_session_state(session,&report,&error),&error)
             phase = "Ready"
         case .generate(let operation,let tokens,let maximum,let stops,let autoCancel):

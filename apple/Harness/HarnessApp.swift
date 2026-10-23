@@ -45,23 +45,7 @@ private func installedBundleProof(_ phase: String) throws {
 }
 
 @MainActor
-private final class HarnessStore: ObservableObject {
-    let worker: NativeWorker?
-    let lifecycleSignals: NativeLifecycleSignals?
-    @Published var state = NativeSnapshot()
-    @Published var inputError = ""
-
-    init(enabled: Bool, lifecycleEnabled: Bool = false) {
-        lifecycleSignals = lifecycleEnabled ? NativeLifecycleSignals():nil
-        do { worker = enabled ? try NativeWorker() : nil }
-        catch { worker = nil; inputError = error.localizedDescription }
-    }
-    func poll() { if let worker { state = worker.snapshot() } }
-    func submit(_ command: NativeCommand) {
-        inputError = ""
-        if worker?.submit(command) != true { inputError = "Worker is busy or closed" }
-        poll()
-    }
+extension HarnessStore {
     func lifecycle(_ phase: ScenePhase) {
         let observed = DispatchTime.now().uptimeNanoseconds
         let action: NativeLifecycleAction
@@ -86,7 +70,7 @@ private final class HarnessStore: ObservableObject {
 }
 
 @MainActor
-private struct HarnessView: View {
+struct HarnessView: View {
     @ObservedObject var store: HarnessStore
     @State private var directory = Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""
     @State private var packed = ""
@@ -190,7 +174,8 @@ private struct HarnessView: View {
                     if !store.state.message.isEmpty { Text("Status \(store.state.status): \(store.state.message)").foregroundStyle(.red) }
                     if !store.inputError.isEmpty { Text(store.inputError).foregroundStyle(.red) }
                 }
-            }.navigationTitle("Toklet Harness")
+            }.navigationTitle("Expert mode")
+                .toolbar { if !store.diagnosticsOnly { Button("Back to Chat") { store.setExpert(false) } } }
         }
     }
 }
@@ -203,10 +188,29 @@ struct TokletHarnessApp: App {
 
     init() {
         let arguments = ProcessInfo.processInfo.arguments
-        let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle","--state","--state-component"]
+        let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle","--state","--state-component","--chat-self-test"]
         let state = HarnessStore(enabled:!diagnostics.contains(where:arguments.contains),lifecycleEnabled:arguments.contains("--lifecycle") || arguments.contains("--state") || arguments.contains("--state-component"))
         _store = StateObject(wrappedValue:state)
-        if let position = arguments.firstIndex(of:"--state") ?? arguments.firstIndex(of:"--state-component") {
+        if arguments.contains("--chat-self-test") {
+            UIApplication.shared.isIdleTimerDisabled = true
+            let directory = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
+                .appendingPathComponent("M8Inputs/smollm/Model").path
+            DispatchQueue.global(qos:.userInitiated).async {
+                do {
+                    guard arguments == [arguments[0],"--chat-self-test"] else { throw chatInputError("Invalid chat test arguments") }
+                    try awaitNativeMeasurementForeground()
+                    try installedBundleProof("before")
+                    let result = try runNativeChatCheck(directory:directory)
+                    try installedBundleProof("after")
+                    let data = try JSONEncoder().encode(result)
+                    try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_CHAT_CHECK_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))
+                    exit(0)
+                } catch {
+                    try? FileHandle.standardError.write(contentsOf:Data("TOKLET_CHAT_CHECK_ERROR=\(error)\n".utf8))
+                    exit(1)
+                }
+            }
+        } else if let position = arguments.firstIndex(of:"--state") ?? arguments.firstIndex(of:"--state-component") {
             UIApplication.shared.isIdleTimerDisabled = true
             UIDevice.current.isBatteryMonitoringEnabled = true
             let root = FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
@@ -348,7 +352,10 @@ struct TokletHarnessApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            HarnessView(store:store)
+            Group {
+                if store.diagnosticsOnly { HarnessView(store:store) }
+                else { FriendlyHarnessView(store:store) }
+            }
                 .onReceive(timer) { _ in store.poll() }
                 .onChange(of:phase) { _,new in store.lifecycle(new) }
                 .onReceive(NotificationCenter.default.publisher(for:UIApplication.didReceiveMemoryWarningNotification)) { _ in

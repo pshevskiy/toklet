@@ -1,10 +1,13 @@
 # Toklet native harness
 
-This is a raw-token diagnostic app over the same Rust engine and local model
-format. It does not duplicate tokenization or chat formatting in Swift. The
-bundled independent tiny fixture makes integration checks reproducible without
-model downloads. The current package supports arm64 Mac15+, iOS18+ and arm64
-simulator build targets. Physical model/context limits are not yet qualified.
+Toklet Harness is one app over the Rust engine. It opens a friendly local Chat
+screen with model selection, saved conversations and settings. The original
+raw-token diagnostic form is available under **Settings → Expert mode**.
+See the [interface guide](../docs/app-interface.md) for supported text models,
+loading and current limitations. Tokenization/chat formatting remain in Rust,
+outside numerical kernels. The bundled independent tiny fixture keeps Expert
+checks reproducible without downloads. Targets are arm64 Mac15+, iOS18+ and
+arm64 simulator; device qualification remains specific to each recorded trial.
 
 ## Build
 
@@ -25,12 +28,12 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. In this checkout the generated library link selects
-`artifacts/m8-apple-package-v1`; use this package for the current MLX-enabled app.
+`artifacts/m8-chat-apple-package-v1`, with the additive native text interface.
 Its reviewed build receipt digest is
-`00d3701912b3371a70485bf4cff7bd4d8217db0d99e53206274c17d47095bee5`.
-The [M8 package report](../docs/mlx-apple-package.md) records three native slices,
-linked apps and Mac checks; physical MLX qualification remains separate. Earlier
-M7 device results retain their original immutable packages and receipts.
+`a8e5d5604ffa8192e6f22348c692617f37d15791822530a65719401c4c6b566e`.
+The [text profile](../docs/app-chat-profile.md) and
+[interface guide](../docs/app-interface.md) describe this selected scope. Earlier
+package/device results retain their original immutable packages and receipts.
 
 Open `apple/TokletHarness.xcodeproj` after generated inputs exist. The shared
 scheme selects arm64, iOS18 minimum, complete Swift concurrency checks and
@@ -38,6 +41,10 @@ warnings as errors. Simulator builds use an ad-hoc signature; the device build
 is deliberately unsigned until a signing team is configured.
 
 ## Use
+
+For ordinary text, follow the [Chat guide](../docs/app-interface.md). In-app
+search/downloads are not available yet. For diagnostics open the conversations
+icon → Settings → Expert mode.
 
 Start with Tiny fixture, CPU, capacity32, chunk3 and numerical cap128MiB.
 Load, prompt IDs`1,7,13,3`, generate2 IDs, then Continue. The initial four outputs

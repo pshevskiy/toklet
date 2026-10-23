@@ -19,7 +19,18 @@ The [new app performance report](mlx8-performance.md) records all 128/512/1024 p
 
 The [selected SmolLM2-135M eight-bit checkpoint](mlx-smollm-app-device.md) now executes natively through the Rust/Metal engine and app coordinator on both M1 Pro and iPhone14Pro. It uses the bias-free LlamaForCausalLM graph, nine-query/three-KV GQA, ordinary rotary and Reference attention. Frozen numerical gates pass on Mac; both devices match generation, three scalar scoring probes, two authored task probes and26 state rows exactly. This is a Llama-family SmolLM2 checkpoint, not qualification of Meta-branded Llama releases.
 
-For the short four-input/four-output raw-ID workload, two runs each have three warmups and ten measured requests. Native first-token medians are39.471/39.950ms Mac and63.240/63.359ms phone; mean decode-interval medians are18.986/19.201ms and27.102/27.615ms. Observed component process peaks are156.730MB/169.855MB (decimal). These short observations exclude loading/tokenization/UI and do not establish sustained or comparative performance. Full SmolLM quality, chat, Online attention and wider architectures remain open. Admission is bounded to512 positions, tested for state/capacity on Mac; current phone probes exercise32. Earlier Qwen quality and long-context results do not carry over.
+For the short four-input/four-output raw-ID workload, two runs each have three warmups and ten measured requests. Native first-token medians are39.471/39.950ms Mac and63.240/63.359ms phone; mean decode-interval medians are18.986/19.201ms and27.102/27.615ms. Observed component process peaks are156.730MB/169.855MB (decimal). These short observations exclude loading/tokenization/UI and do not establish sustained or comparative performance. Full SmolLM quality, wider chat profiles, Online attention and wider architectures remain open. Admission is bounded to512 positions, tested for state/capacity on Mac; current phone probes exercise32. Earlier Qwen quality and long-context results do not carry over.
+
+## One-app interface update — 23 October 2026
+
+[Toklet Harness](app-interface.md) now opens friendly Chat with local model
+selection, saved conversations/drafts and settings. Its original diagnostic form
+is retained in Expert mode, using the same Rust engine and serial worker. The
+exact selected SmolLM2 tokenizer/template supports bounded real text chat;
+functional native text checks match on Mac and iPhone14Pro. Broader text profiles,
+in-app search/downloads, streaming reply display and physical GUI Send/Stop
+qualification remain open. Earlier raw-ID performance measurements do not measure
+this new text/interface path.
 
 ## What is implemented
 
