@@ -46,9 +46,12 @@ The engine owns compatibility facts so app and download code need not repeat
 architecture interpretation. Refactor an existing module only when a concrete
 second use establishes the shared mechanism, with existing fixtures preserved.
 
-## Starting coverage
+## Coverage before E1
 
-| Area | Implemented now | Remaining work |
+This table records the plan's starting point. Completed Qwen3 work is tracked in
+the status below; its tiny fixtures do not qualify real checkpoints.
+
+| Area | Implemented at plan start | Work identified at plan start |
 | --- | --- | --- |
 | Dense graphs | Qwen2; selected bias-free Llama and full-attention Mistral | Qwen3, independent attention width, Q/K normalization, rotary/window variants, other normalization and activation graphs |
 | Representation | Validated MLX affine U32 packing, selected four/eight-bit artifacts and mixed floating exclusions; existing Toklet Half/Q4 paths | Additional formats and schemes need their own reconstruction oracle, quality and kernel gates |
@@ -84,8 +87,10 @@ the engine grows.
 The first Qwen3 target is justified by an observable missing mechanism, rather
 than an alias: the official [0.6B config](https://huggingface.co/Qwen/Qwen3-0.6B/blob/main/config.json)
 declares hidden width 1024, 16 query heads and head width 128. The query projection
-therefore has width 2048. The current native invariant equates query width with
-hidden width. Its separate normalization graph also needs independent checking
+therefore has width 2048. At plan start, the native invariant equated query width
+with hidden width. E1's scalar and tiny Metal tasks now support independent
+widths and per-head Q/K normalization. Their real-checkpoint qualification still
+needs independent checking
 against the [Qwen3 implementation](https://github.com/ml-explore/mlx-lm/blob/0d4d3d04f8ab7ce4a51e7209e8615755a48ba94d/mlx_lm/models/qwen3.py).
 These are graph requirements, not measured performance claims.
 
@@ -126,6 +131,6 @@ obtain Astra's code/evidence acceptance and commit. Existing immutable receipts
 continue to describe their original snapshots. No full-family, quality,
 performance or physical-device claim follows from a tiny fixture alone.
 
-Status: E1 has an [independent tiny Qwen3 oracle](mlx-qwen3-oracle.md); [native scalar execution](mlx-qwen3-scalar.md) now passes its tiny gates. [Resident tiny Metal execution](mlx-qwen3-metal.md) also passes its frozen gates. Immutable real-checkpoint and chat qualification are next. E1–E6 and
+Status: E1 has an [independent tiny Qwen3 oracle](mlx-qwen3-oracle.md); [native scalar execution](mlx-qwen3-scalar.md) now passes its tiny gates. [Resident tiny Metal execution](mlx-qwen3-metal.md) also passes its frozen gates. An [immutable real Qwen3 candidate](mlx-qwen3-checkpoint.md) is acquired and structurally inspected; independent real numerical references, target execution and chat qualification are next. E1–E6 and
 H1–H4 remain open until their stated evidence exists. No reliable whole-program
 ETA is assigned to an open-ended architecture inventory.

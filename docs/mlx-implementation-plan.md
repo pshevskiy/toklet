@@ -38,6 +38,8 @@ numerical kernels and follow engine support, as requested.
 The [23 October engine coverage and Hugging Face plan](engine-expansion-plan.md)
 sets the active implementation order for the remaining M8.3–M8.5 work, starting
 with a Qwen3 dense oracle and native execution before broader model admission.
+Tiny scalar/Metal gates now pass. The [real Qwen3 candidate](mlx-qwen3-checkpoint.md)
+is acquired as data; real numerical, target, chat and device qualification remain open.
 
 Astra reviews each code task; commit only after its checks pass and before starting
 the next code task. Keep [the improvement record](improvements.md) updated.

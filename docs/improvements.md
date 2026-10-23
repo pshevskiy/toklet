@@ -1867,3 +1867,23 @@ claiming a traced root cause or weakening the assertion. Astra reviews the final
 code and evidence before commit. Protected binaries, Swift and installed apps
 are unchanged. Real Qwen3 models, thinking/chat, quality/performance, iPhone and
 general Hugging Face admission remain open.
+
+### Acquire and inspect the real Qwen3 candidate — 24 October 2026
+
+The [pinned eight-bit checkpoint](mlx-qwen3-checkpoint.md) contains ten files,
+649,377,414 bytes at revision `11de96878523501bcaa86104e3c186de07ff9068`. All 48
+bounded owned transfers pass immutable identities and exclusive publication.
+Data-only inspection validates 704 tensors/197 packed matrices/113 norm vectors,
+contiguous exact payload coverage and index equality. Unlike earlier selected
+checkpoints, all 507 floating tensors use BF16. The graph has independent
+hidden1024/query2048 widths and 56 per-head Q/K norm vectors of width128.
+
+Nine acquisition and five inspector portable methods pass. Astra's review
+required retaining all diagnostic streams when descriptor cleanup also fails,
+and authenticating the same weight descriptor consumed by the header reader;
+both have deterministic regressions. No repository code or template executes.
+Numerical sources, old receipts and protected CPU binaries stay unchanged; prior engine
+checks are inherited on identical numerical/Swift sources. Retain the acquired
+data for a separately frozen real numerical reference. Native real-model
+geometry, tokenizer/thinking/chat, device fit, quality/performance, Mac/iPhone
+trials and broader Hugging Face product admission remain open.
