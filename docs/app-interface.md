@@ -9,7 +9,7 @@ merge or install the neighboring runtime.
 ## Use on the iPhone
 
 1. Open **Toklet Harness**, then **Choose a model**.
-2. Search Hugging Face or choose the tested SmolLM2 card, then **Download model**
+2. Search Hugging Face or select the pinned SmolLM2 or Qwen card, then **Download model**
    and **Open downloaded model**. You can also open a copied local model folder
    or choose its complete folder in Files. Wait for loading to finish, then close
    Models. See the [download guide](model-hub.md) for progress/cancellation and
@@ -31,10 +31,13 @@ prompt automatically.
 
 ## Current support and limits
 
-Text chat is qualified for the selected **SmolLM2-135M-Instruct eight-bit**
-snapshot. Admission checks supported model geometry and exact tokenizer/template
-identities in the [text profile](app-chat-profile.md); it does not authenticate
-the weight payload against that snapshot’s SHA.
+Text chat supports the selected **SmolLM2-135M-Instruct eight-bit** (Llama family)
+and **Qwen2.5-0.5B-Instruct eight-bit** snapshots. Admission checks exact model
+configuration, supported loaded geometry and pinned tokenizer/template identities
+in the [text profile](app-chat-profile.md); local text admission does not
+authenticate every weight payload. Downloaded snapshots additionally hash weights.
+SmolLM2 has physical phone functional evidence; the new Qwen Chat path currently
+has Mac evidence, with its phone trial waiting for the existing app to be closed.
 Other qualified numerical models remain available through Expert mode. A model
 architecture being implemented does not establish tokenizer/template support for
 every checkpoint. Hugging Face search and verified downloads are available for that qualified
@@ -43,8 +46,9 @@ unsupported status. Wider downloadable/text profiles remain open in
 [M8.4](mlx-implementation-plan.md). Downloaded snapshots additionally authenticate
 the six required file hashes, including weights, before publication and opening.
 
-The chat configuration admits 512 total token positions, chunk32, a 512MiB
-numerical allowance and a separate64MiB text allowance. Prompt plus requested
+Both chat profiles admit 512 total token positions and chunk32. SmolLM2 reserves
+512 MiB numerical plus 64 MiB text; Qwen reserves 1 GiB numerical plus 128 MiB
+text, with profile-specific current-process admission before loading. Prompt plus requested
 output must fit before generation resets KV; there is no silent truncation.
 Output limits are32,64 or128 tokens. Text formatting accepts up to63 alternating
 messages, at most64KiB combined UTF-8 input. Long saved conversations can exceed

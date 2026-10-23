@@ -138,9 +138,18 @@ final class FriendlyChatStore: ObservableObject {
         }
         scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil
         if folder.startAccessingSecurityScopedResource() { scopedFolder = folder }
+        let profile: HubProfile
+        do {
+            profile = try HubProfile.identify(folder)
+            try HubDeviceSnapshot.current().admission.check(profile)
+        } catch {
+            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil
+            notice = error.localizedDescription; return
+        }
         var settings = NativeSettings(directory:folder.path)
         settings.metal = true; settings.mlx = true; settings.chat = true
-        settings.capacity = 512; settings.chunk = 32; settings.numericalBudget = 512 * 1024 * 1024
+        settings.capacity = 512; settings.chunk = 32
+        settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
             loadedKey = key(folder)
             harness.poll()

@@ -197,12 +197,13 @@ struct TokletHarnessApp: App {
             let root = HubStore.modelRoot
             Task.detached(priority:.userInitiated) {
                 do {
-                    guard arguments == [arguments[0],fresh ? "--hub-download-self-test" : "--hub-self-test"] else { throw HubFailure("Invalid hub test arguments.") }
+                    guard (2...3).contains(arguments.count), arguments[1] == (fresh ? "--hub-download-self-test" : "--hub-self-test"),
+                          let profile = HubProfile.named(arguments.count == 3 ? arguments[2] : "smol") else { throw HubFailure("Invalid hub test arguments.") }
                     try awaitNativeMeasurementForeground()
                     try installedBundleProof("before")
                     let result: HubSelfTestResult
-                    if fresh { result = try await runFreshHubSelfTest() }
-                    else { result = try await runHubSelfTest(root:root) }
+                    if fresh { result = try await runFreshHubSelfTest(profile:profile) }
+                    else { result = try await runHubSelfTest(root:root,profile:profile) }
                     try installedBundleProof("after")
                     let data = try JSONEncoder().encode(result)
                     try FileHandle.standardOutput.write(contentsOf:Data(("TOKLET_HUB_CHECK_JSON=" + String(decoding:data,as:UTF8.self) + "\n").utf8))

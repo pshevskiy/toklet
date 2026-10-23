@@ -60,7 +60,7 @@ func checkQueuedChatCancellation() throws {
 
 // Explicit opt-in diagnostic: no owner's prompts, history, model folders or UI
 // preferences are read/written. App argv routing disables its ordinary worker.
-func runNativeChatCheck(directory: String) throws -> NativeChatCheck {
+func runNativeChatCheck(directory: String,profile: HubProfile = .smol) throws -> NativeChatCheck {
     try checkChatWorkspace()
     try checkQueuedChatCancellation()
     let worker = try NativeWorker()
@@ -79,7 +79,7 @@ func runNativeChatCheck(directory: String) throws -> NativeChatCheck {
     }
     var settings = NativeSettings(directory:directory)
     settings.metal = true; settings.mlx = true; settings.chat = true
-    settings.capacity = 512; settings.chunk = 32; settings.numericalBudget = 512 * 1024 * 1024
+    settings.capacity = 512; settings.chunk = 32; settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
     let loaded = try execute(.load(settings))
     guard loaded.chatEnabled, loaded.hasSession else { throw chatInputError("Text model was not admitted") }
     let firstID = UUID()

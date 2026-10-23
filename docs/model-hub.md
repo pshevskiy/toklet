@@ -113,3 +113,35 @@ releasing resources and removing its test tree. The [app receipt](../benchmarks/
 preserves exact source/build identities and failed attempts. GUI taps and
 keyboard/accessibility layouts are separate, unqualified boundaries; this adds
 no performance or answer-quality claim.
+
+## Qwen catalog extension — 23 October 2026
+
+Models now selects between **SmolLM2-135M eight-bit (Llama family)** and
+**Qwen2.5-0.5B eight-bit**. A supported search result can select its card; other
+checkpoints remain visibly unsupported. Qwen is pinned to
+`6474d4c1a05bd7bd634a9c993560e4e7272eda3d`; its six app files total 532,130,488
+bytes, with exact identities taken from the previously qualified local snapshot.
+The rejected Qwen four-bit candidate is not enabled.
+
+Qwen checks a current 1.5 GiB process allowance and reserves 1 GiB for numerical
+loading plus 128 MiB for text. SmolLM2 retains its 768 MiB admission, 512 MiB
+numerical budget and 64 MiB text reservation. These are explicit conservative
+admission policies; physical peaks and wider device fit are separate. Local
+folder opening identifies a pinned configuration after acquiring Files access,
+checks current memory again, and uses the same per-profile settings. The worker
+queries the native stop set once when loading: Qwen’s token 0 remains ordinary
+visible text, and its stops are 151643/151645.
+
+Choosing another profile while idle refreshes that profile’s saved snapshot.
+Selection stays disabled while an operation runs; Cancel remains available.
+Old SmolLM2 snapshot receipts keep exactly the same serialized schema and remain
+usable. Diagnostic commands optionally take the fixed key `qwen` or `smol`;
+arbitrary repositories cannot enter that route.
+
+The [Qwen app receipt](../benchmarks/results/2026-10-23-qwen-model-hub-app-v1.json)
+records a genuinely fresh Mac transfer, full re-verification, native multi-turn
+checks and offline-controller generation. Its first eight IDs exactly match the
+committed native check, including visible token 0; all replies independently
+decode with the pinned Python tokenizer. The same new package re-opens the old
+Smol snapshot and passes native/controller checks. Qwen phone Chat remains
+pending: installation refused an existing app session and did not stop it.

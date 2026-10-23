@@ -112,15 +112,18 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   atomically. Ordinary inference then works offline. Test corrupt/truncated data,
   traversal, interruptions, stale budgets and unavailable network/authentication.
   - [x] [Public search and immutable six-file download core](model-hub.md),
-    qualified SmolLM2 profile only; other search results do not grant support.
+    qualified pinned profiles only; other search results do not grant support.
   - [x] Models integration adds progress/cancel, saved-snapshot revalidation and
     offline controller opening; the [app receipt](../benchmarks/results/2026-10-23-model-hub-app-v1.json)
     records final Mac and fresh iPhone 14 Pro functional checks.
+  - [x] [Qwen native text](app-chat-profile.md) and Models routing, per-profile
+    admission, first real Mac download and offline Chat. The [Qwen app receipt](../benchmarks/results/2026-10-23-qwen-model-hub-app-v1.json)
+    keeps physical Qwen Chat pending until the existing phone app is closed.
   - User-requested app consolidation: use Toklet Harness with the friendly
     InferencePhone-style interface, keeping current diagnostics in Expert mode.
     [The bounded text profile](app-chat-profile.md) and
     [shared-worker Chat/Expert interface](app-interface.md) are implemented for
-    the selected SmolLM2 snapshot. Search/downloads cover that pinned profile;
+    the selected SmolLM2 and Qwen snapshots. Search/downloads cover those profiles;
     wider text-profile/download compatibility remains open.
 - [ ] **M8.5 Mac and iPhone qualification.** Test downloaded compatible models on
   the M1 Pro and iPhone 14 Pro, including different implemented architectures and

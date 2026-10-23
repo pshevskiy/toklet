@@ -1481,3 +1481,47 @@ receipts and the metadata-only correction. Final logs contain 148 CPU passes
 (11 ignored), 164 Metal-feature passes (85 ignored), two explicit codec checks
 and three native text checks. Whitespace, 237 local links and public-task privacy
 checks pass. The decision is to retain the bounded native extension.
+
+### Qwen Models integration and per-profile admission — 23 October 2026
+
+The native profile commit `7fd8c4c` enables Qwen’s bounded text boundary. Models
+now exposes the pinned Qwen2.5-0.5B eight-bit and existing Llama-family SmolLM2
+profiles separately, including exact download identities, supported-result
+selection, per-profile memory admission and offline opening. It does not enable
+the rejected Qwen four-bit candidate. Qwen’s numerical/text budgets are 1 GiB and
+128 MiB, with a conservative current 1.5 GiB process allowance; Smol’s existing
+policy remains. These reservations are not physical memory measurements.
+
+The worker queries native stops once at load, retains them across suspension and
+clears them on unload. This prevents Qwen token 0 from being hidden as a SmolLM2
+stop. Local Files configuration identification is bounded and follows security
+scope acquisition, then fresh memory admission. Unknown/changed configurations
+reject before worker loading. Profile selection cannot change during an operation;
+refresh and open retain the intended profile, and earlier cancellation guards
+remain intact. Old Smol receipts preserve their exact schema and file identities.
+
+Strict integration/core checks, both SDK builds and added profile regressions
+pass. The regressions cover old receipt compatibility, exact/changed/linked local
+configs and selected Qwen refresh/open followed by Smol refresh. Astra cleared
+the runtime source for actual trials and requested explicit Qwen token-0 parity
+and a Smol re-open with the new package. A phone preparation attempt correctly
+refused an existing app session it did not own; the user was asked to close it
+while independent Mac work continued. No owner process was terminated.
+
+The fresh real Mac Qwen transfer passes complete pinned-file verification,
+native multi-turn/state checks and the actual offline controller. The first
+eight IDs match the committed C bridge exactly, including Qwen token 0, and all
+native/controller text independently decodes with the pinned Python tokenizer.
+Smol’s old saved snapshot verifies and passes native/controller generation with
+the new package. The [Qwen app receipt](../benchmarks/results/2026-10-23-qwen-model-hub-app-v1.json)
+binds these sources/builds/checks and the retained phone refusal. Phone Chat,
+physical text-memory peaks, GUI taps and performance/quality remain unqualified
+by this task. Mistral is separate work.
+
+Astra accepted the Mac-functional app task after independently verifying all 311
+bindings, 84 current copies and nested package/build/check closures: 21 package,
+nine SDK, seven integration, three core, two profile and two real Mac commands.
+Independent byte-level decoding matches every Qwen and Smol native/controller
+reply. The phone refusal contains three read commands and no install, launch or
+signal. Whitespace, 323 local links and 19 public-task privacy checks pass.
+Retain the feature; actual physical Qwen Chat remains pending.

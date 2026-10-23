@@ -136,7 +136,7 @@ struct FriendlyHarnessView: View {
     private var models: some View {
         List {
             Section("Text chat") {
-                Text("SmolLM2-135M · 8-bit").font(.headline)
+                Text("Local text chat").font(.headline)
                 Text("Download a tested model below, or open a folder already on this device. Other model formats remain available in Expert mode.").font(.callout).foregroundStyle(.secondary)
                 if store.state.chatEnabled {
                     Label("Model loaded",systemImage:"checkmark.circle.fill").foregroundStyle(.indigo)
@@ -157,14 +157,22 @@ struct FriendlyHarnessView: View {
                         Text(model.id).font(.callout).textSelection(.enabled)
                         Text(model.profile == nil ? "Not supported for chat: this checkpoint’s engine and text profile are not qualified." : "Supported pinned profile · shown below")
                             .font(.caption).foregroundStyle(.secondary)
+                        if let profile = model.profile {
+                            Button("Select for chat") { hub.select(profile) }.disabled(hub.busy)
+                        }
                     }
                 }
             }
             Section("Available for chat") {
+                Picker("Model",selection:Binding(get:{ hub.profile.repository },set:{ id in
+                    if let profile = HubProfile.catalog.first(where:{ $0.repository == id }) { hub.select(profile) }
+                })) {
+                    ForEach(HubProfile.catalog,id:\.repository) { profile in Text(profile.name).tag(profile.repository) }
+                }.disabled(hub.busy).accessibilityIdentifier("hub-profile")
                 VStack(alignment:.leading,spacing:6) {
-                    Text("SmolLM2-135M · 8-bit").font(.headline)
-                    Text(HubProfile.smol.repository).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
-                    Text("146.6 MB · tested revision 0f0d9b8 · Apache-2.0").font(.caption).foregroundStyle(.secondary)
+                    Text(hub.profile.name).font(.headline)
+                    Text(hub.profile.repository).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
+                    Text(ByteCountFormatter.string(fromByteCount:hub.profile.totalBytes,countStyle:.file) + " · tested revision " + hub.profile.revision.prefix(7) + " · Apache-2.0").font(.caption).foregroundStyle(.secondary)
                     Text(hub.deviceMessage).font(.footnote).foregroundStyle(.secondary)
                 }
                 if hub.localURL != nil {

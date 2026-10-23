@@ -4,8 +4,9 @@ import Foundation
 @main
 struct HubIntegrationMain {
     static func main() async throws {
-        if CommandLine.arguments.count == 3 && CommandLine.arguments[1] == "--network" {
-            let result = try await runHubSelfTest(root:URL(fileURLWithPath:CommandLine.arguments[2]))
+        if (3...4).contains(CommandLine.arguments.count) && CommandLine.arguments[1] == "--network" {
+            guard let profile = HubProfile.named(CommandLine.arguments.count == 4 ? CommandLine.arguments[3] : "smol") else { throw HubFailure("Unknown test profile") }
+            let result = try await runHubSelfTest(root:URL(fileURLWithPath:CommandLine.arguments[2]),profile:profile)
             print("TOKLET_HUB_CHECK_JSON=" + String(decoding:try JSONEncoder().encode(result),as:UTF8.self))
             return
         }
@@ -16,6 +17,12 @@ struct HubIntegrationMain {
         guard condition() else { throw HubFailure("Controller check failed: " + label) }
     }
     static func controllerChecks() async throws {
+        let budget = HubAdmission(unifiedGPU:true,physicalMemory:6 * 1024 * 1024 * 1024,availableMemory:1024 * 1024 * 1024)
+        try budget.check(.smol)
+        do { try budget.check(.qwen); throw HubFailure("Qwen admitted with Smol-only allowance") }
+        catch let error as HubFailure where error.message.contains("Not enough memory") { }
+        try require(HubModel(id:HubProfile.qwen.repository).profile == .qwen && HubModel(id:"mlx-community/Qwen2.5-0.5B-Instruct-4bit").profile == nil,"Qwen eight-bit only")
+        for profile in HubProfile.catalog { try profile.validate() }
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("TokletHubController-" + UUID().uuidString)
         defer { try? FileManager.default.removeItem(at:root) }
         let model = HubProfile.smol
@@ -34,6 +41,9 @@ struct HubIntegrationMain {
             else { progress.set(callback); callback(42); throw HubFailure("Injected interrupted file") }
         },freeBytes:{ _ in Int64.max / 2 })
         let store = HubStore(hub:hub,admission:admission)
+        store.select(.qwen); store.select(.smol); await store.waitForIdle()
+        try require(store.profile == .qwen && !store.deviceAllowed,"busy profile selection ignored and per-profile admission")
+        store.select(.smol); await store.waitForIdle()
         store.refresh(); await store.waitForIdle()
         try require(!store.busy && store.localURL == nil && store.deviceAllowed,"refresh absence and device")
         store.query = "SmolLM2"; store.search(); await store.waitForIdle()
@@ -69,7 +79,7 @@ struct HubIntegrationMain {
         }
         for choice in ["expert","another-model","unloaded","unchanged"] {
             let gate = VerificationGate()
-            let delayed = HubStore(hub:hub,admission:admission,verify:{ await gate.verify() })
+            let delayed = HubStore(hub:hub,admission:admission,verify:{ _ in await gate.verify() })
             var loads = 0; var selected = "original"
             delayed.open { _ in loads += 1; selected = "downloaded-model" }
             await gate.wait()

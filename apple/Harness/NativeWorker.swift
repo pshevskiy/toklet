@@ -7,6 +7,7 @@ struct NativeSettings: Sendable {
     var metal = false
     var mlx = false
     var chat = false
+    var textBudget: UInt64 = 64 * 1024 * 1024
     var capacity: UInt32 = 32
     var chunk: UInt32 = 3
     var numericalBudget: UInt64 = 128 * 1024 * 1024
@@ -346,6 +347,7 @@ private final class Engine {
     var phase = "Idle"
     var score: NativeDistributionScore?
     var chat: OpaquePointer?
+    var chatStops: [UInt32] = []
     var chatResult: NativeChatResult?
 
     func decodeChat(_ ids: [UInt32]) throws -> String {
@@ -385,7 +387,7 @@ private final class Engine {
             }
             if session == nil { try createSession() } // Explicit Send, never foreground auto-resume.
             var generationError: Error?
-            do { try generate(3,Array(ids.prefix(count)),maximum,[0,2],0,flag,worker) }
+            do { try generate(3,Array(ids.prefix(count)),maximum,chatStops,0,flag,worker) }
             catch { generationError = error }
             let text = try decodeChat(worker.snapshot().ids)
             chatResult = NativeChatResult(id:id,text:text,reason:report.reason,
@@ -409,7 +411,7 @@ private final class Engine {
     func unload() throws {
         try releaseSession()
         if let value = chat {
-            chat = nil
+            chat = nil; chatStops = []
             var error = TokletError()
             try requireOK(toklet_chat_release(value,&error),&error)
         }
@@ -522,7 +524,14 @@ private final class Engine {
             do {
                 try createSession()
                 if requested.chat {
-                    try requireOK(toklet_chat_create(model,64 * 1024 * 1024,&chat,&error),&error)
+                    try requireOK(toklet_chat_create(model,requested.textBudget,&chat,&error),&error)
+                    var stops = [UInt32](repeating:0,count:8); var count = 0
+                    let code = stops.withUnsafeMutableBufferPointer { buffer in
+                        toklet_chat_stop_ids(chat,buffer.baseAddress,buffer.count,&count,&error)
+                    }
+                    try requireOK(code,&error)
+                    guard (1...stops.count).contains(count), Set(stops.prefix(count)).count == count else { throw invalid("Invalid chat stop set") }
+                    chatStops = Array(stops.prefix(count))
                 }
             } catch { try? unload(); throw error }
             try requireOK(toklet_session_state(session,&report,&error),&error)

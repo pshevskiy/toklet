@@ -31,6 +31,7 @@ struct HubDeviceSnapshot: Codable, Sendable {
 @MainActor
 final class HubStore: ObservableObject {
     @Published var query = ""
+    @Published private(set) var profile: HubProfile
     @Published private(set) var results: [HubModel] = []
     @Published private(set) var phase = ""
     @Published private(set) var message = ""
@@ -41,7 +42,7 @@ final class HubStore: ObservableObject {
     @Published private(set) var deviceAllowed = false
     private let hub: ModelHub
     private let admission: @Sendable () throws -> HubAdmission
-    private let verify: @Sendable () async throws -> URL?
+    private let verify: @Sendable (HubProfile) async throws -> URL?
     private var task: Task<Void,Never>?
     private var operation = UUID()
     var busy: Bool { task != nil }
@@ -49,13 +50,17 @@ final class HubStore: ObservableObject {
     static var modelRoot: URL {
         FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0].appendingPathComponent("TokletModels",isDirectory:true)
     }
-    init(hub: ModelHub? = nil,admission: @escaping @Sendable () throws -> HubAdmission = { try HubDeviceSnapshot.current().admission },
-         verify: (@Sendable () async throws -> URL?)? = nil) {
+    init(profile: HubProfile = .smol,hub: ModelHub? = nil,admission: @escaping @Sendable () throws -> HubAdmission = { try HubDeviceSnapshot.current().admission },
+         verify: (@Sendable (HubProfile) async throws -> URL?)? = nil) {
         let service = hub ?? ModelHub(root:Self.modelRoot)
-        self.hub = service; self.admission = admission
-        self.verify = verify ?? { try await service.verified(.smol) }
+        self.profile = profile; self.hub = service; self.admission = admission
+        self.verify = verify ?? { try await service.verified($0) }
     }
     private enum Action { case refresh, search(String), download, open }
+    func select(_ selected: HubProfile) {
+        guard !busy, HubProfile.catalog.contains(selected) else { return }
+        profile = selected; localURL = nil; deviceAllowed = false; refresh()
+    }
     func refresh() { start(.refresh) }
     func search() { start(.search(query)) }
     func download() { start(.download) }
@@ -68,7 +73,7 @@ final class HubStore: ObservableObject {
     func waitForIdle() async { await task?.value }
     private func checkDevice() throws -> HubAdmission {
         let value = try admission()
-        do { try value.check(); deviceAllowed = true; deviceMessage = "Estimated fit on this device. Opening checks memory again." }
+        do { try value.check(profile); deviceAllowed = true; deviceMessage = "Estimated fit on this device. Opening checks memory again." }
         catch { deviceAllowed = false; deviceMessage = error.localizedDescription; throw error }
         return value
     }
@@ -79,9 +84,10 @@ final class HubStore: ObservableObject {
         switch action {
         case .refresh: phase = "Checking saved model…"
         case .search: phase = "Searching Hugging Face…"
-        case .download: phase = "Downloading model…"; total = HubProfile.smol.totalBytes
+        case .download: phase = "Downloading model…"; total = profile.totalBytes
         case .open: phase = "Verifying model…"
         }
+        let selected = profile
         task = Task { [self] in
             defer { task = nil; phase = "" }
             do {
@@ -89,7 +95,7 @@ final class HubStore: ObservableObject {
                 switch action {
                 case .refresh:
                     _ = try? checkDevice()
-                    let folder = try await verify()
+                    let folder = try await verify(selected)
                     try Task.checkCancellation(); localURL = folder
                 case .search(let query):
                     let rows = try await hub.search(query)
@@ -97,7 +103,7 @@ final class HubStore: ObservableObject {
                     if rows.isEmpty { message = "No public MLX models found. Try a different name." }
                 case .download:
                     let device = try checkDevice()
-                    let folder = try await hub.download(.smol,admission:device,progress:{ [weak self] current,total in
+                    let folder = try await hub.download(selected,admission:device,progress:{ [weak self] current,total in
                         Task { @MainActor [weak self] in
                             guard let self, self.operation == id, self.task != nil else { return }
                             self.completed = current; self.total = total
@@ -107,7 +113,7 @@ final class HubStore: ObservableObject {
                     message = "Download verified. Open the model to start chatting."
                 case .open:
                     _ = try checkDevice()
-                    guard let folder = try await verify() else { throw HubFailure("Download this model first.") }
+                    guard let folder = try await verify(selected) else { throw HubFailure("Download this model first.") }
                     try Task.checkCancellation(); _ = try checkDevice()
                     guard operation == id else { throw CancellationError() }
                     localURL = folder; opened?(folder)
@@ -136,20 +142,20 @@ struct HubSelfTestResult: Codable {
     let chat: NativeChatCheck
 }
 
-func runHubSelfTest(root: URL) async throws -> HubSelfTestResult {
+func runHubSelfTest(root: URL,profile: HubProfile = .smol) async throws -> HubSelfTestResult {
     let hub = ModelHub(root:root)
-    let rows = try await hub.search("SmolLM2-135M")
-    guard rows.contains(where:{ $0.id == HubProfile.smol.repository }) else { throw HubFailure("Search did not return the qualified profile.") }
-    let existing = try await hub.verified(.smol)
+    let rows = try await hub.search(profile.key == "qwen" ? "Qwen2.5-0.5B" : "SmolLM2-135M")
+    guard rows.contains(where:{ $0.id == profile.repository }) else { throw HubFailure("Search did not return the qualified profile.") }
+    let existing = try await hub.verified(profile)
     let device = try HubDeviceSnapshot.current()
-    let folder = try await hub.download(.smol,admission:device.admission,progress:{ _,_ in })
-    guard let verified = try await hub.verified(.smol), verified.path == folder.path else { throw HubFailure("Downloaded model failed offline validation.") }
+    let folder = try await hub.download(profile,admission:device.admission,progress:{ _,_ in })
+    guard let verified = try await hub.verified(profile), verified.path == folder.path else { throw HubFailure("Downloaded model failed offline validation.") }
     try Task.checkCancellation()
-    try HubDeviceSnapshot.current().admission.check()
-    let chat = try runNativeChatCheck(directory:folder.path)
-    let controller = try await checkDownloadedHubController(root:root,expected:chat.replies[0])
-    return HubSelfTestResult(passed:true,repository:HubProfile.smol.repository,revision:HubProfile.smol.revision,
-        snapshotBytes:HubProfile.smol.totalBytes,reusedSnapshot:existing != nil,offlineController:controller,
+    try HubDeviceSnapshot.current().admission.check(profile)
+    let chat = try runNativeChatCheck(directory:folder.path,profile:profile)
+    let controller = try await checkDownloadedHubController(root:root,expected:chat.replies[0],profile:profile)
+    return HubSelfTestResult(passed:true,repository:profile.repository,revision:profile.revision,
+        snapshotBytes:profile.totalBytes,reusedSnapshot:existing != nil,offlineController:controller,
         searchFoundProfile:true,savedSnapshotVerified:true,device:device,chat:chat)
 }
 
@@ -163,10 +169,10 @@ struct HubControllerCheck: Codable, Sendable {
 // Explicit diagnostic only. Uses a fresh temporary history and refuses all
 // network calls while exercising the actual downloaded-model UI controllers.
 @MainActor
-func checkDownloadedHubController(root: URL,expected: ChatCheckReply) async throws -> HubControllerCheck {
+func checkDownloadedHubController(root: URL,expected: ChatCheckReply,profile: HubProfile = .smol) async throws -> HubControllerCheck {
     let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("TokletHubChat-" + UUID().uuidString)
     defer { try? FileManager.default.removeItem(at:temporary) }
-    let hub = HubStore(hub:ModelHub(root:root,fetch:{ _,_,_,_ in throw HubFailure("Offline controller attempted network access.") }))
+    let hub = HubStore(profile:profile,hub:ModelHub(root:root,fetch:{ _,_,_,_ in throw HubFailure("Offline controller attempted network access.") }))
     let harness = HarnessStore(enabled:true)
     guard let worker = harness.worker else { throw HubFailure("Missing controller worker.") }
     defer { worker.close(); _ = worker.waitUntilClosed(seconds:30) }
@@ -192,11 +198,11 @@ func checkDownloadedHubController(root: URL,expected: ChatCheckReply) async thro
 
 // A fresh-transfer witness owns only this newly created temporary tree. It
 // never renames, removes or replaces the normal downloaded-model directory.
-func runFreshHubSelfTest() async throws -> HubSelfTestResult {
+func runFreshHubSelfTest(profile: HubProfile = .smol) async throws -> HubSelfTestResult {
     let root = FileManager.default.temporaryDirectory.appendingPathComponent("TokletHubDownload-" + UUID().uuidString,isDirectory:true)
     guard Darwin.mkdir(root.path,0o700) == 0 else { throw HubFailure("Could not create exclusive download-test directory.") }
     do {
-        let result = try await runHubSelfTest(root:root)
+        let result = try await runHubSelfTest(root:root,profile:profile)
         guard !result.reusedSnapshot else { throw HubFailure("Fresh download test unexpectedly reused a snapshot.") }
         try FileManager.default.removeItem(at:root)
         return result

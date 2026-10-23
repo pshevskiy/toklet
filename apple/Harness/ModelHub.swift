@@ -28,6 +28,34 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer.json",bytes:3522656,sha256:"7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7"),
             HubFile(name:"tokenizer_config.json",bytes:3764,sha256:"a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee"),
             HubFile(name:"special_tokens_map.json",bytes:655,sha256:"2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52")])
+    static let qwen = HubProfile(repository:"mlx-community/Qwen2.5-0.5B-Instruct-8bit",
+        revision:"6474d4c1a05bd7bd634a9c993560e4e7272eda3d",files:[
+            HubFile(name:"config.json",bytes:783,sha256:"4dae7c9622e41e50752ba422149df0694044266c06cd851aff630799701c83c6"),
+            HubFile(name:"model.safetensors",bytes:525045902,sha256:"3dd0b6c2983ac5fe35f60ba260b1c7c35e4c38f17f3d5139d0bb477924e7aef4"),
+            HubFile(name:"model.safetensors.index.json",bytes:44209,sha256:"e48752ffebac15ee35d1d86e96c9b87f2efd7783b19ebf82a26955dbd43e0476"),
+            HubFile(name:"tokenizer.json",bytes:7031673,sha256:"a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"),
+            HubFile(name:"tokenizer_config.json",bytes:7308,sha256:"f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"),
+            HubFile(name:"special_tokens_map.json",bytes:613,sha256:"76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd")])
+    static let catalog: [HubProfile] = [.smol,.qwen]
+    var name: String { repository == Self.qwen.repository ? "Qwen2.5-0.5B · 8-bit" : "SmolLM2-135M · 8-bit (Llama family)" }
+    var numericalBudget: UInt64 { repository == Self.qwen.repository ? 1024 * 1024 * 1024 : 512 * 1024 * 1024 }
+    var textBudget: UInt64 { repository == Self.qwen.repository ? 128 * 1024 * 1024 : 64 * 1024 * 1024 }
+    var processAllowance: UInt64 { repository == Self.qwen.repository ? 1536 * 1024 * 1024 : 768 * 1024 * 1024 }
+    var vocabulary: UInt32 { repository == Self.qwen.repository ? 151936 : 49152 }
+    var key: String { repository == Self.qwen.repository ? "qwen" : "smol" }
+    static func named(_ key: String) -> HubProfile? { catalog.first { $0.key == key } }
+    static func identify(_ directory: URL) throws -> HubProfile {
+        let bytes = try ModelHub.withRegular(directory.appendingPathComponent("config.json"),maximum:16 * 1024) { handle,size in
+            let data = try handle.read(upToCount:16 * 1024 + 1) ?? Data()
+            guard data.count == size else { throw HubFailure("Model configuration changed while opening.") }
+            return data
+        }
+        let hash = SHA256.hash(data:bytes).map { String(format:"%02x",$0) }.joined()
+        guard let profile = catalog.first(where:{ $0.files.first(where:{ $0.name == "config.json" })?.sha256 == hash }) else {
+            throw HubFailure("This folder does not contain a supported pinned chat model configuration.")
+        }
+        return profile
+    }
     func validate() throws {
         guard HubAPI.validRepository(repository), revision.count == 40, revision.allSatisfy({ $0.isHexDigit && $0.isASCII }),
               !files.isEmpty, files.count <= 16, Set(files.map(\.name)).count == files.count else { throw HubFailure("Invalid download profile.") }
@@ -44,7 +72,7 @@ struct HubProfile: Codable, Equatable, Sendable {
 
 struct HubModel: Decodable, Identifiable, Sendable {
     let id: String
-    var profile: HubProfile? { id == HubProfile.smol.repository ? .smol : nil }
+    var profile: HubProfile? { HubProfile.catalog.first { $0.repository == id } }
 }
 
 enum HubAPI {
@@ -101,9 +129,9 @@ struct HubAdmission: Sendable {
     let unifiedGPU: Bool
     let physicalMemory: UInt64
     let availableMemory: UInt64
-    func check() throws {
+    func check(_ profile: HubProfile = .smol) throws {
         guard unifiedGPU else { throw HubFailure("This device cannot run Toklet’s MLX Metal model.") }
-        guard physicalMemory >= 2 * 1024 * 1024 * 1024, availableMemory >= 768 * 1024 * 1024 else {
+        guard physicalMemory >= 2 * 1024 * 1024 * 1024, availableMemory >= profile.processAllowance else {
             throw HubFailure("Not enough memory available. Unload the current model or close other apps, then retry.")
         }
     }
@@ -229,7 +257,7 @@ actor ModelHub {
                   progress: @escaping @Sendable (Int64,Int64) -> Void) async throws -> URL {
         guard !busy else { throw HubFailure("A model operation is already running.") }
         busy = true; defer { busy = false }
-        try admission.check(); try profile.validate(); try prepareRoot()
+        try admission.check(profile); try profile.validate(); try prepareRoot()
         let destination = root.appendingPathComponent(profile.folder,isDirectory:true)
         if FileManager.default.fileExists(atPath:destination.path) { try Self.verify(destination,profile:profile); return destination }
         // Includes one staging copy and a conservative additional full-copy allowance.
