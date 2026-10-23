@@ -70,6 +70,18 @@ Physical phone work stays paused. Mistral held-out quality, long-context
 numerical qualification and full performance/device matrices remain open.
 M8 remains incomplete beyond these explicitly selected scopes.
 
+## Native Mac window add-on — 23 October 2026
+
+The optional [native Mac app](mac-app.md) now provides Chat, Models, saved
+conversations/settings and the original Expert controls through a separate Mac
+entry point. The visible M1 Pro flow passes public search, fresh verified Smol
+download, all three selected-model greetings, Mistral Stop, Expert Tiny generation,
+and draft-preserving close/reopen/quit. Strict coordinator/build tests and local
+iOS SDK builds pass; numerical kernels are unchanged. Earlier GUI trial failures
+and warnings are retained in the linked evidence. This adds functional desktop
+coverage without new UI performance or broader model/device claims. iPhone work
+remains paused.
+
 ## What is implemented
 
 | Area | Delivered behavior |

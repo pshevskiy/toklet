@@ -6,6 +6,10 @@ app/runtime; this change consolidates the requested interface in Toklet, using
 Toklet's existing Rust/Metal engine and one serial native worker. It does not
 merge or install the neighboring runtime.
 
+The optional [native Mac window add-on](mac-app.md) now shares these views and
+adds Mac folder access and joined window/quit lifecycle. Its visible functional
+checks are separate from the earlier iPhone/Simulator evidence below.
+
 ## Use on the iPhone
 
 1. Open **Toklet Harness**, then **Choose a model**.
@@ -31,24 +35,27 @@ prompt automatically.
 
 ## Current support and limits
 
-Text chat supports the selected **SmolLM2-135M-Instruct eight-bit** (Llama family)
-and **Qwen2.5-0.5B-Instruct eight-bit** snapshots. Admission checks exact model
+Text chat supports the selected **SmolLM2-135M-Instruct eight-bit** (Llama family),
+**Qwen2.5-0.5B-Instruct eight-bit**, and the selected **Mistral-7B-Instruct-v0.3
+four-bit** snapshot. Admission checks exact model
 configuration, supported loaded geometry and pinned tokenizer/template identities
 in the [text profile](app-chat-profile.md); local text admission does not
 authenticate every weight payload. Downloaded snapshots additionally hash weights.
 SmolLM2 has physical phone functional evidence; the new Qwen Chat path currently
-has Mac evidence, with its phone trial waiting for the existing app to be closed.
+has Mac evidence, with physical Qwen and Mistral phone Chat paused at the user’s request.
 Other qualified numerical models remain available through Expert mode. A model
 architecture being implemented does not establish tokenizer/template support for
-every checkpoint. Hugging Face search and verified downloads are available for that qualified
-profile through [Models](model-hub.md). Other search results explain their
+every checkpoint. Hugging Face search and verified downloads are available for these qualified
+profiles through [Models](model-hub.md). Other search results explain their
 unsupported status. Wider downloadable/text profiles remain open in
 [M8.4](mlx-implementation-plan.md). Downloaded snapshots additionally authenticate
 the six required file hashes, including weights, before publication and opening.
 
-Both chat profiles admit 512 total token positions and chunk32. SmolLM2 reserves
+All three selected chat profiles admit 512 total token positions and chunk32. SmolLM2 reserves
 512 MiB numerical plus 64 MiB text; Qwen reserves 1 GiB numerical plus 128 MiB
-text, with profile-specific current-process admission before loading. Prompt plus requested
+text. Mistral reserves 5 GiB numerical plus 64 MiB text, with a separate
+5.5 GiB current-process admission threshold; see [Mistral integration](mlx-mistral-app.md).
+Profiles check current-process admission before loading. Prompt plus requested
 output must fit before generation resets KV; there is no silent truncation.
 Output limits are32,64 or128 tokens. Text formatting accepts up to63 alternating
 messages, at most64KiB combined UTF-8 input. Long saved conversations can exceed
@@ -87,7 +94,7 @@ Chat/Models/history/settings, opening and cancelling
 Files, Expert raw generation (`47,47`), terminal Close, Back to Chat and draft
 entry. The physical default screen was inspected in dark appearance. The
 Simulator correctly rejects this MLX model without a unified-memory MPS device.
-The new search/download tap flow, physical GUI Send/Stop, successful Files folder
+The new physical iPhone search/download tap flow, physical GUI Send/Stop, successful Files folder
 selection, the on-screen keyboard
 and largest accessibility text layouts have not been visually qualified; native
 and controller tests are separate evidence. The

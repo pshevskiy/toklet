@@ -6,6 +6,9 @@ See the [implementation plan](PLAN.md) for milestones, dependencies, and accepta
 The [final implementation and performance summary](docs/final-summary.md) covers
 what is implemented, measured Mac/iPhone 14 Pro results and remaining limitations.
 
+The optional [native Mac Chat and Models app](docs/mac-app.md) adds a desktop
+window with the same Rust engine and an Expert mode for the original controls.
+
 The [improvement record](docs/improvements.md) collects implemented capabilities,
 measured speedups, memory/scheduling changes, numerical fixes and rejected
 experiments, with links to their qualification evidence.

@@ -1,7 +1,10 @@
-#if os(iOS)
 import SwiftUI
 import UniformTypeIdentifiers
+#if os(iOS)
 import UIKit
+#else
+import AppKit
+#endif
 
 
 private enum ChatSheet: String, Identifiable {
@@ -9,22 +12,48 @@ private enum ChatSheet: String, Identifiable {
     var id: String { rawValue }
 }
 
+// Native grouped forms expose individual controls on Mac; the phone retains
+// its existing list presentation.
+private struct ModelList<Content: View>: View {
+    let content: Content
+    init(@ViewBuilder content: () -> Content) { self.content = content() }
+    @ViewBuilder var body: some View {
+        #if os(macOS)
+        Form { content }.formStyle(.grouped)
+        #else
+        List { content }
+        #endif
+    }
+}
+
 @MainActor
 struct FriendlyHarnessView: View {
     @ObservedObject var store: HarnessStore
-    @StateObject private var hub = HubStore()
+    @StateObject private var hub: HubStore
     @StateObject private var chat: FriendlyChatStore
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.scenePhase) private var phase
     @State private var sheet: ChatSheet?
     @State private var importing = false
     @State private var deleting: UUID?
-    init(store: HarnessStore) {
+    init(store: HarnessStore,chat: FriendlyChatStore? = nil,hub: HubStore? = nil) {
         self.store = store
-        _chat = StateObject(wrappedValue:FriendlyChatStore(harness:store))
+        _chat = StateObject(wrappedValue:chat ?? FriendlyChatStore(harness:store))
+        _hub = StateObject(wrappedValue:hub ?? HubStore())
     }
+    #if os(iOS)
     private var canvas: Color { Color(uiColor:.systemGroupedBackground) }
     private var surface: Color { Color(uiColor:.secondarySystemGroupedBackground) }
+    private var leadingPlacement: ToolbarItemPlacement { .topBarLeading }
+    private var trailingPlacement: ToolbarItemPlacement { .topBarTrailing }
+    private var folderHelp: String { "Downloads run while the app is open. A verified download works offline. Damaged model folders can be removed in Files → Toklet Harness → TokletModels, then downloaded again." }
+    #else
+    private var canvas: Color { Color(nsColor:.windowBackgroundColor) }
+    private var surface: Color { Color(nsColor:.controlBackgroundColor) }
+    private var leadingPlacement: ToolbarItemPlacement { .navigation }
+    private var trailingPlacement: ToolbarItemPlacement { .primaryAction }
+    private var folderHelp: String { "Downloads run while the app is open. A verified download works offline. Use Show models in Finder to remove a damaged model folder before downloading again." }
+    #endif
     private var unlocked: Bool { !store.state.busy && !chat.running && chat.storageAvailable }
 
     var body: some View {
@@ -37,7 +66,9 @@ struct FriendlyHarnessView: View {
         .onChange(of:store.expert) { _,value in if value { hub.cancel() } }
         .onChange(of:phase) { _, value in
             if value != .active { chat.save() }
+            #if os(iOS)
             if value == .background { hub.cancel() }
+            #endif
         }
         .sheet(item:$sheet) { destination in
             NavigationStack {
@@ -49,7 +80,7 @@ struct FriendlyHarnessView: View {
                     }
                 }
                 .toolbar { ToolbarItem(placement:.confirmationAction) { Button("Close") { sheet = nil } } }
-            }.tint(.indigo)
+            }.tint(.indigo).harnessSheetSize()
         }
         .confirmationDialog("Delete this conversation?",isPresented:Binding(get:{ deleting != nil },set:{ if !$0 { deleting = nil } }),titleVisibility:.visible) {
             Button("Delete conversation",role:.destructive) { if let id = deleting { chat.remove(id) }; deleting = nil }
@@ -90,9 +121,9 @@ struct FriendlyHarnessView: View {
         .scrollDismissesKeyboard(.interactively)
         .background(canvas)
         .safeAreaInset(edge:.bottom,spacing:0) { composer }
-        .navigationBarTitleDisplayMode(.inline)
+        .harnessNavigationStyle()
         .toolbar {
-            ToolbarItem(placement:.topBarLeading) {
+            ToolbarItem(placement:leadingPlacement) {
                 Button("Conversations",systemImage:"sidebar.left") { sheet = .history }.labelStyle(.iconOnly).frame(minWidth:44,minHeight:44)
             }
             ToolbarItem(placement:.principal) {
@@ -103,7 +134,7 @@ struct FriendlyHarnessView: View {
                     }
                 }.buttonStyle(.plain).frame(minHeight:44).accessibilityLabel("Choose model").accessibilityIdentifier("chat-model-picker")
             }
-            ToolbarItem(placement:.topBarTrailing) {
+            ToolbarItem(placement:trailingPlacement) {
                 Button("New chat",systemImage:"square.and.pencil") { chat.newChat() }.labelStyle(.iconOnly).frame(minWidth:44,minHeight:44).disabled(!unlocked)
             }
         }
@@ -125,7 +156,7 @@ struct FriendlyHarnessView: View {
                     Image(systemName:chat.running ? "stop.fill" : "arrow.up").font(.system(size:18,weight:.semibold))
                         .frame(width:44,height:44).foregroundStyle(chat.canSend || chat.running ? Color.white : Color.secondary)
                         .background(chat.canSend || chat.running ? Color.indigo : Color.secondary.opacity(0.12),in:Circle())
-                }.buttonStyle(.plain).padding(5).disabled(!chat.canSend && !chat.running)
+                }.buttonStyle(.plain).keyboardShortcut(.return,modifiers:.command).padding(5).disabled(!chat.canSend && !chat.running)
                     .accessibilityLabel(chat.running ? "Stop reply" : "Send message").accessibilityIdentifier("chat-send")
             }
             .background(surface,in:RoundedRectangle(cornerRadius:28))
@@ -134,7 +165,7 @@ struct FriendlyHarnessView: View {
         }.frame(maxWidth:570).frame(maxWidth:.infinity).padding(.horizontal,16).padding(.top,10).padding(.bottom,12).background(canvas)
     }
     private var models: some View {
-        List {
+        ModelList {
             Section("Text chat") {
                 Text("Local text chat").font(.headline)
                 Text("Download a tested model below, or open a folder already on this device. Other model formats remain available in Expert mode.").font(.callout).foregroundStyle(.secondary)
@@ -145,23 +176,16 @@ struct FriendlyHarnessView: View {
             }
             Section("Hugging Face") {
                 HStack {
-                    TextField("Search MLX models",text:$hub.query).textInputAutocapitalization(.never).autocorrectionDisabled()
+                    TextField("Search MLX models",text:$hub.query).harnessLiteralInput()
                         .submitLabel(.search).onSubmit { hub.search() }.accessibilityIdentifier("hub-search-query")
                     Button("Search") { hub.search() }.disabled(hub.busy || hub.query.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
                         .accessibilityIdentifier("hub-search")
                 }
                 Text("Search is public. Only qualified text profiles can be downloaded here.")
                     .font(.footnote).foregroundStyle(.secondary)
-                ForEach(hub.results) { model in
-                    VStack(alignment:.leading,spacing:5) {
-                        Text(model.id).font(.callout).textSelection(.enabled)
-                        Text(model.profile == nil ? "Not supported for chat: this checkpoint’s engine and text profile are not qualified." : "Supported pinned profile · shown below")
-                            .font(.caption).foregroundStyle(.secondary)
-                        if let profile = model.profile {
-                            Button("Select for chat") { hub.select(profile) }.disabled(hub.busy)
-                        }
-                    }
-                }
+                #if os(iOS)
+                searchResults
+                #endif
             }
             Section("Available for chat") {
                 Picker("Model",selection:Binding(get:{ hub.profile.repository },set:{ id in
@@ -199,9 +223,15 @@ struct FriendlyHarnessView: View {
                 }
                 if !hub.message.isEmpty { Text(hub.message).font(.callout).textSelection(.enabled) }
                 Button("Check saved model and device again",systemImage:"arrow.clockwise") { hub.refresh() }.disabled(hub.busy)
-                Text("Downloads run while the app is open. A verified download works offline. Damaged model folders can be removed in Files → Toklet Harness → TokletModels, then downloaded again.")
+                #if os(macOS)
+                Button("Show models in Finder",systemImage:"folder") { NSWorkspace.shared.open(hub.modelsRoot) }
+                #endif
+                Text(folderHelp)
                     .font(.footnote).foregroundStyle(.secondary)
             }
+            #if os(macOS)
+            if !hub.results.isEmpty { Section("Search results") { searchResults } }
+            #endif
             Section("Other local folders") {
                 ForEach(chat.folders,id:\.self) { folder in
                     Button { hub.modelChoiceChanged(); chat.open(folder) } label: {
@@ -211,7 +241,7 @@ struct FriendlyHarnessView: View {
                         }
                     }.disabled(!unlocked || hub.busy || store.state.closed)
                 }
-                Button("Choose folder in Files",systemImage:"folder") { importing = true }.disabled(!unlocked || hub.busy || store.state.closed)
+                Button("Choose local folder",systemImage:"folder") { importing = true }.disabled(!unlocked || hub.busy || store.state.closed)
             }
             if store.state.busy { Section { ProgressView("Opening or releasing model…") } }
             if !store.state.message.isEmpty { Section { Text(store.state.message) } }
@@ -222,6 +252,18 @@ struct FriendlyHarnessView: View {
                 case .failure(let error): chat.notice = error.localizedDescription
                 }
             }
+    }
+    private var searchResults: some View {
+                ForEach(hub.results) { model in
+                    VStack(alignment:.leading,spacing:5) {
+                        Text(model.id).font(.callout).textSelection(.enabled)
+                        Text(model.profile == nil ? "Not supported for chat: this checkpoint’s engine and text profile are not qualified." : "Supported pinned profile · choose it in Available for chat")
+                            .font(.caption).foregroundStyle(.secondary)
+                        if let profile = model.profile {
+                            Button("Select for chat") { hub.select(profile) }.disabled(hub.busy)
+                        }
+                    }
+                }
     }
     private var history: some View {
         List {
@@ -238,6 +280,7 @@ struct FriendlyHarnessView: View {
                     }
                 }.disabled(!unlocked)
                     .swipeActions { Button("Delete",role:.destructive) { deleting = item.id }.disabled(!unlocked) }
+                    .contextMenu { Button("Delete conversation",role:.destructive) { deleting = item.id }.disabled(!unlocked) }
             }
             Section { Button("Settings",systemImage:"gearshape") { sheet = .settings } }
         }.navigationTitle("Conversations")
@@ -259,4 +302,3 @@ struct FriendlyHarnessView: View {
         }.navigationTitle("Settings")
     }
 }
-#endif

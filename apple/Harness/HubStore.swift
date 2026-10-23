@@ -41,6 +41,7 @@ final class HubStore: ObservableObject {
     @Published private(set) var deviceMessage = ""
     @Published private(set) var deviceAllowed = false
     private let hub: ModelHub
+    let modelsRoot: URL
     private let admission: @Sendable () throws -> HubAdmission
     private let verify: @Sendable (HubProfile) async throws -> URL?
     private var task: Task<Void,Never>?
@@ -54,6 +55,7 @@ final class HubStore: ObservableObject {
          verify: (@Sendable (HubProfile) async throws -> URL?)? = nil) {
         let service = hub ?? ModelHub(root:Self.modelRoot)
         self.profile = profile; self.hub = service; self.admission = admission
+        modelsRoot = hub == nil ? Self.modelRoot : service.root
         self.verify = verify ?? { try await service.verified($0) }
     }
     private enum Action { case refresh, search(String), download, open }

@@ -121,6 +121,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     admission, first real Mac download and offline Chat. The [Qwen app receipt](../benchmarks/results/2026-10-23-qwen-model-hub-app-v1.json)
     keeps physical Qwen Chat pending; the user has paused phone work and requested Mac focus.
   - [x] [Mistral catalog and Mac offline Chat](mlx-mistral-app.md), verified local-checkpoint publication, exact text/native/controller checks and smaller-profile regressions. The separate [fresh Mac multi-GB transfer and reopening](mlx-mistral-hub-download.md) now passes.
+  - [x] Optional [native Mac window add-on](mac-app.md): real-model Chat, public Models search/download, original Expert controls, joined close/quit and draft recovery. Visible Mac flow passes for the three selected profiles; physical phone work remains paused.
   - User-requested app consolidation: use Toklet Harness with the friendly
     InferencePhone-style interface, keeping current diagnostics in Expert mode.
     [The bounded text profile](app-chat-profile.md) and

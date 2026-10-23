@@ -259,3 +259,12 @@ The later [fresh Mistral Mac download and reopening](mlx-mistral-hub-download.md
 passes all six independent file identities and native/offline-controller Chat.
 That separate real trial supplies the completion evidence; the earlier timeout
 and fixture scope above remain unchanged.
+
+## Native Mac window add-on — 23 October 2026
+
+The [desktop add-on](mac-app.md) exposes this same catalog/search/download service
+in a native Mac Models sheet, with local folder selection and Show models in
+Finder. Its visible check performs a fresh Smol download, safe cancellation and
+real Chat, then imports pinned existing Qwen/Mistral caches for visible replies.
+The separate fresh Mistral transfer report above remains the network evidence for
+that multi-gigabyte model. No phone was contacted during the desktop task.

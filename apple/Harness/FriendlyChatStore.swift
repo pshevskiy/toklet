@@ -50,9 +50,10 @@ final class FriendlyChatStore: ObservableObject {
             storageBlocked = false; storageError = ""
         } catch { storageBlocked = true; storageError = "Could not open saved chats: " + error.localizedDescription }
     }
-    func save() {
+    @discardableResult
+    func save() -> Bool {
         saving?.cancel()
-        guard !storageBlocked else { return }
+        guard !storageBlocked else { return false }
         do {
             let bytes = try JSONEncoder().encode(workspace)
             guard bytes.count <= ChatWorkspace.maximumBytes else { throw chatInputError("Chat history is full") }
@@ -62,8 +63,8 @@ final class FriendlyChatStore: ObservableObject {
             #else
             try bytes.write(to:file,options:.atomic)
             #endif
-            storageError = ""
-        } catch { storageError = "Could not save chats: " + error.localizedDescription }
+            storageError = ""; return true
+        } catch { storageError = "Could not save chats: " + error.localizedDescription; return false }
     }
     func retryStorage() { if storageBlocked { restore() } else { save() } }
     func edit(_ text: String) {
@@ -112,7 +113,8 @@ final class FriendlyChatStore: ObservableObject {
             request = nil; save()
         }
         if !state.busy && !state.hasModel {
-            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""; modelName = "Toklet"
+            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""
+            if modelName != "Toklet" { modelName = "Toklet" }
             if let folder = pendingFolder, harness?.expert == false {
                 pendingFolder = nil; beginLoad(folder)
             }

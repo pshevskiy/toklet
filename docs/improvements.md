@@ -1742,3 +1742,22 @@ remain retained failures, without inferring their cause from a later success.
 The frozen app source predates the separate Mac window add-on. Physical phone,
 visible GUI, wider checkpoint, quality and full performance scopes remain
 separate.
+
+### Add native Mac Chat and Models — 23 October 2026
+
+The [Mac add-on](mac-app.md) provides a separate native app entry point while
+sharing Chat, Models and the original Expert form with the iPhone target. It
+adds native folder/Finder access, Command-Return Send/Stop, stable local storage,
+and joined close/quit with draft recovery and safe worker recreation. Review
+fixes cover close/reopen races, save failures, bounded build diagnostics and
+receipt/header admission. The numerical kernels and native package are unchanged.
+
+Final strict coordinator/real-model checks, six builder negative tests and both
+local iOS SDK app builds pass. The visible Mac trial passes fresh Smol download,
+independent hashes, all three real-model greetings, Mistral Stop, Expert Tiny
+`47,47`, and draft-preserving close/reopen/quit. Its stderr is empty. Earlier
+watchdog/automation and SwiftUI-warning trials remain recorded without attributing
+the warning reduction to one change. Astra reviewed the code and evidence.
+The [receipt](../benchmarks/results/2026-10-23-macos-window-v1.json) separates
+visible observations, saved-state proofs and automated checks. Phone work stays
+paused; no new engine-performance or wider compatibility claim is made.
