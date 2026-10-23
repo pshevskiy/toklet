@@ -1688,3 +1688,19 @@ removal errors and a bounded deadline fixture; both are included. The
 [receipt](../benchmarks/results/2026-10-23-model-hub-cleanup-errors-v1.json) records
 historical failed/intermediate inputs. Completed transfer and numerical paths
 are unchanged, and no new phone or performance qualification is claimed.
+
+### Bounded Mistral raw-ID observations on M1 Pro — 23 October 2026
+
+Two fresh processes complete the unchanged Mac observation protocol: three
+warmups each, 82 measured requests each, and 602.477/602.576 measured native
+seconds. The [fixed four-input/32-output probe](mlx-mistral-mac-observations.md)
+observes first-token medians 536.028/535.985 ms and decode medians 4.551/4.549 IDs/s.
+Charged lifetime peaks are 4,119,186,864/4,119,039,408 bytes under the existing
+4 GiB trial gate. Frozen four-ID oracles, full-sequence repeatability, clocks,
+state, ownership, source endpoints and complete artifact proofs pass.
+
+This adds measured Mac data without changing a kernel or admission gate. A
+concurrent public range download is an explicit confounder, and the single AC
+query is a pre-run observation only. The
+[receipt](../benchmarks/results/2026-10-23-mistral-mac-observations-v1.json) makes
+no full performance, text/UI, held-out quality or phone qualification claim.

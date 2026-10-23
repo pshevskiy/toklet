@@ -9,7 +9,7 @@ precise acceptance policies.
 
 ## M8 native MLX update — 22 October 2026
 
-The M0–M7 closure below predates the active [native MLX expansion](mlx-implementation-plan.md). Toklet now loads and executes selected MLX affine Qwen artifacts directly in Rust/Metal. The public eight-bit Qwen0.5B snapshot passes full 10,000-target loss and 100-task preservation gates on Mac and iPhone 14 Pro (mean loss 2.884954; tasks 2/100 versus FP32 2/100). The public four-bit candidate remains rejected. M8.2 local Qwen execution is complete in this selected scope. The [pinned architecture inventory](mlx-architectures.md) now records the language/vision reference source trees and static exports; it adds no native decoder. Broader architecture implementation, model discovery/downloads and chat-template compatibility remain open.
+The M0–M7 closure below predates the active [native MLX expansion](mlx-implementation-plan.md). Toklet now loads and executes selected MLX affine Qwen artifacts directly in Rust/Metal. The public eight-bit Qwen0.5B snapshot passes full 10,000-target loss and 100-task preservation gates on Mac and iPhone 14 Pro (mean loss 2.884954; tasks 2/100 versus FP32 2/100). The public four-bit candidate remains rejected. M8.2 local Qwen execution is complete in this selected scope. The [pinned architecture inventory](mlx-architectures.md) now records the language/vision reference source trees and static exports; it adds no native decoder. Further architecture and text/download coverage remains open; subsequent updates below describe the selected added profiles.
 
 The [selected MLX phone state trial](mlx8-phone-state.md) passes all 33 diagnostic rows, including actual 128/384 committed/pending prefill cancellation and the full 1,152-position boundary. The [actual MLX scene trial](mlx8-phone-lifecycle.md) also passes: the same app process survives Settings/return, retains ten sampled IDs and replays the exact 522-token prefix, with matching fresh-reference continuation and natural close. Its observed process peak is 0.6638 GB. Real UIKit warning delivery and jetsam remain unqualified.
 
@@ -28,12 +28,43 @@ selection, saved conversations/drafts and settings. Its original diagnostic form
 is retained in Expert mode, using the same Rust engine and serial worker. The
 exact selected SmolLM2 tokenizer/template supports bounded real text chat;
 functional native text checks match on Mac and iPhone14Pro. The [Models screen](model-hub.md) adds public Hugging Face search and verified
-download/offline opening for pinned SmolLM2 and Qwen eight-bit profiles. The new
-Qwen Chat/download path passes Mac checks; phone qualification is pending while
-the existing app session remains open. Broader text profiles,
+download/offline opening for pinned SmolLM2 and Qwen eight-bit profiles and the
+selected Mistral four-bit profile. All three pass native/offline-controller Mac
+Chat checks. The user has temporarily powered off the phone: Qwen phone Chat
+remains pending and Mistral phone qualification is open. Broader text profiles,
 streaming reply display and physical GUI Send/Stop
 qualification remain open. Earlier raw-ID performance measurements do not measure
 this new text/interface path.
+
+## Selected Mistral Mac update — 23 October 2026
+
+The [native decoder](mlx-mistral-metal.md) now executes the immutable
+Mistral-7B-Instruct-v0.3 four-bit/group64 full-attention checkpoint in Rust/Metal.
+Its independent CPU reference is frozen before target edits. Real M1 Pro tests
+pass 816 exposed snapshots / 19,302,400 values, full decode/scoring distributions
+and separate 512-capacity state checks with unchanged gates. Sliding/Online
+Mistral attention and other configurations remain unsupported.
+
+The [Mac app integration](mlx-mistral-app.md) adds exact six-file catalog routing,
+per-profile admission, the original pinned instruction format and offline Chat.
+A verified local checkpoint passes multi-turn/state/cancel/replay checks and a
+32-token friendly-controller reply; Qwen and Smol regressions also pass. Its
+single completed functional process has an observed charged lifetime peak of
+4.2268 GB. This is separate from logical allocation accounting, sustained
+behavior and any speed claim. The actual fresh Mistral range transfer is a
+separate trial; local seeding does not qualify a new network weight download.
+
+Two subsequent [raw-ID observation processes](mlx-mistral-mac-observations.md)
+each complete three warmups, 82 measured requests and over 600 native seconds.
+For four raw input IDs and 32 outputs at capacity 128/chunk 32, first-token
+medians are 536.028/535.985 ms, decode medians 4.551/4.549 IDs/s and charged process
+peaks 4.1192/4.1190 GB. A concurrent download is recorded as a confounder; these
+figures do not measure Chat UI, provide a comparison or close the full
+performance matrix.
+
+Physical phone work stays paused. Mistral held-out quality, long-context
+numerical qualification and full performance/device matrices remain open.
+M8 remains incomplete beyond these explicitly selected scopes.
 
 ## What is implemented
 
@@ -236,8 +267,9 @@ handling is tested; actual UIKit warning delivery and jetsam recovery are not.
   trace; no attributable joules/watts/battery-life result is available.
 - **Mobile lifecycle:** actual scene interruption/replay passes; real system
   memory-warning delivery, jetsam recovery and cleanup while OS-suspended remain
-  unqualified. The app is a raw-token harness; tokenization/chat rendering,
-  downloads and tool execution stay outside the kernels.
+  unqualified. M7 measured the raw-token harness; M8 adds friendly text Chat and
+  verified downloads with separately recorded device scope. Tokenization, chat
+  rendering, downloads and tool execution stay outside the numerical kernels.
 - **Rejected/experimental paths:** Q4 v1 and small Q4 v2 miss frozen quality gates.
   Non-beneficial fusion prototypes were removed. GPU greedy is explicit and was
   0.289% slower in its measured comparison. Chunk 128 stays after larger chunks
@@ -246,9 +278,11 @@ handling is tested; actual UIKit warning delivery and jetsam recovery are not.
   backend is adopted because actual acceleration was unobserved in the bounded
   public-runtime experiment.
 - **Product scope:** stochastic sampling, speculative decoding, paged KV,
-  multi-session serving, model discovery/downloads, GGUF import, broader model
-  families and polished application UI are deferred or conditional work.
-- **Verification scope:** the final audit passed 887 Python tests across 127
+  multi-session serving, GGUF import and broader model families remain deferred
+  or conditional work. Discovery/downloads and friendly Chat support the selected
+  pinned profiles; other repositories and physical GUI Send/Stop remain outside
+  that qualification.
+- **Verification scope:** the M0–M7 audit passed 887 Python tests across 127
   modules, 111 CPU tests and 123 Metal-feature tests, formatting and strict
   all-target Clippy. Rust ignored counts are 8 CPU / 59 Metal-feature; hardware
   and real-model suites are explicit, separately collected evidence. Configured
