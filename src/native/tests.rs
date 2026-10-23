@@ -1059,20 +1059,26 @@ fn native_mlx_boundary_rejects_invalid_input_and_clears_output_without_loading()
 #[ignore = "Explicit Apple GPU native MLX C boundary routing, retained ownership, score, state and cancellation"]
 fn native_mlx_boundary_matches_direct_sessions_and_retains_model() {
     use crate::metal::AttentionMode;
-    for (relative, id, attention) in [
-        ("mlx-qwen-v1/model", 47, AttentionMode::Online),
-        ("mlx-llama-v1/tied", 47, AttentionMode::Reference),
-        ("mlx-llama-v1/untied", 3, AttentionMode::Reference),
-        ("mlx-mistral-v1/untied", 3, AttentionMode::Reference),
+    for (relative, ids, attention) in [
+        ("mlx-qwen-v1/model", [47; 4], AttentionMode::Online),
+        ("mlx-llama-v1/tied", [47; 4], AttentionMode::Reference),
+        ("mlx-llama-v1/untied", [3; 4], AttentionMode::Reference),
+        ("mlx-mistral-v1/untied", [3; 4], AttentionMode::Reference),
+        ("mlx-qwen3-v1/tied", [3; 4], AttentionMode::Reference),
+        (
+            "mlx-qwen3-v1/untied",
+            [24, 36, 11, 51],
+            AttentionMode::Reference,
+        ),
     ] {
         let path = format!("{}/tests/fixtures/{relative}", env!("CARGO_MANIFEST_DIR"));
-        check_native_mlx_boundary(&path, id, attention);
+        check_native_mlx_boundary(&path, ids, attention);
     }
 }
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 fn check_native_mlx_boundary(
     path: &str,
-    expected_token: u32,
+    expected_ids: [u32; 4],
     attention: crate::metal::AttentionMode,
 ) {
     use crate::metal::{self, NormalizationMode, ProjectionMode, ReadbackMode};
@@ -1080,6 +1086,7 @@ fn check_native_mlx_boundary(
     let mut m = ptr::null_mut();
     let mut s = ptr::null_mut();
     let mut c = ptr::null_mut();
+    let expected_token = expected_ids[0];
     let mut error = NativeError {
         code: 0,
         message: [0; 256],
@@ -1155,7 +1162,7 @@ fn check_native_mlx_boundary(
             (history, evaluated, 1)
         );
     }
-    assert_eq!(ids, [expected_token; 4]);
+    assert_eq!(ids, expected_ids);
     assert_eq!(
         unsafe { toklet_session_score(s, expected_token, &mut score, &mut error) },
         INVALID

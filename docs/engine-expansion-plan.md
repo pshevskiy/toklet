@@ -126,6 +126,6 @@ obtain Astra's code/evidence acceptance and commit. Existing immutable receipts
 continue to describe their original snapshots. No full-family, quality,
 performance or physical-device claim follows from a tiny fixture alone.
 
-Status: E1 has an [independent tiny Qwen3 oracle](mlx-qwen3-oracle.md); [native scalar execution](mlx-qwen3-scalar.md) now passes its tiny gates. Resident Metal execution is next. E1–E6 and
+Status: E1 has an [independent tiny Qwen3 oracle](mlx-qwen3-oracle.md); [native scalar execution](mlx-qwen3-scalar.md) now passes its tiny gates. [Resident tiny Metal execution](mlx-qwen3-metal.md) also passes its frozen gates. Immutable real-checkpoint and chat qualification are next. E1–E6 and
 H1–H4 remain open until their stated evidence exists. No reliable whole-program
 ETA is assigned to an open-ended architecture inventory.

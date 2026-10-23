@@ -1842,3 +1842,28 @@ GPU regressions pass. Protected release binaries, shaders, Swift and installed
 apps are unchanged. Astra reviews the completed source/evidence before commit.
 Real Qwen3 models, resident Metal, thinking/chat, quality/performance and phone
 qualification remain open in the active queue.
+
+### Run resident tiny Qwen3 on Metal — 24 October 2026
+
+The [resident task](mlx-qwen3-metal.md) composes existing Metal operators with
+independent hidden/query layouts and immutable per-head Q/K norm vectors shared
+across the respective head types. It reuses rotary scratch and submits one
+completed command per chunk. Reference attention is explicit; profiling admits
+the additional norm encoders. Source review caught and fixed profile capacity.
+No shader or numerical-policy change was needed.
+
+The Mac passes 1,170 stage snapshots/204,288 values, eight full distributions,
+sixteen exact selections, four profiled executions and exact session/diagnostic
+budget boundaries. Both Qwen3 output variants pass raw CLI/native bridge routing,
+stops, scoring, retained ownership and cancel/pending state. The three GPU tests
+also pass in release. Rust1.90 formatting, both strict Clippy configurations,
+161 CPU/179 Metal-feature passes and five existing Qwen/Llama GPU regressions
+pass. Legacy Half/Q4 release allocation gates pass unchanged.
+
+The extra legacy Half debug allocation check fails identically on the parent
+and current source (6,320/20steps); zero-allocation release checks pass. This
+baseline result and an initial incomplete baseline snapshot are retained, without
+claiming a traced root cause or weakening the assertion. Astra reviews the final
+code and evidence before commit. Protected binaries, Swift and installed apps
+are unchanged. Real Qwen3 models, thinking/chat, quality/performance, iPhone and
+general Hugging Face admission remain open.

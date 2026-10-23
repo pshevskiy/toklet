@@ -526,8 +526,10 @@ fn qk_norm_constructor_checks_ownership_shapes_finiteness_and_independent_widths
 
 #[cfg(feature = "metal")]
 #[test]
-fn unqualified_qwen3_metal_rejects_before_device_creation() {
-    let result = toklet::metal::Model::load_mlx(&root().join("tied"), options());
+fn unqualified_qwen3_geometry_rejects_before_device_creation() {
+    let a = CopyArtifact::new("tied");
+    a.config("rope_theta", json!(1e6));
+    let result = toklet::metal::Model::load_mlx(&a.0, options());
     assert!(
         matches!(result,Err(toklet::metal::Error::Unsupported(reason)) if reason.contains("Qwen3"))
     );

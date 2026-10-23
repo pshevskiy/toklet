@@ -88,9 +88,28 @@ fn geometry(c: &model::Config) -> Result<()> {
 /// shapes/rotary variants require their own numerical and resource qualification.
 fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture) -> Result<()> {
     match architecture {
-        crate::mlx::dense::Architecture::Qwen3 => Err(Error::Unsupported(
-            "Qwen3 Metal execution is not yet qualified; use the explicit scalar reference",
-        )),
+        crate::mlx::dense::Architecture::Qwen3 => {
+            c.validate()
+                .map_err(|_| Error::Options("invalid Qwen3 configuration"))?;
+            if (
+                c.hidden_size,
+                c.intermediate_size,
+                c.query_heads,
+                c.kv_heads,
+                c.head_dim,
+                c.num_layers,
+                c.vocab_size,
+            ) != (32, 64, 4, 2, 16, 2, 64)
+                || c.max_positions > 32
+                || c.rope_theta != 10000.0
+                || c.rms_norm_eps != 1e-6
+            {
+                return Err(Error::Unsupported(
+                    "Metal Qwen3 requires the admitted tiny geometry and ordinary RoPE",
+                ));
+            }
+            Ok(())
+        }
         crate::mlx::dense::Architecture::Qwen2 => geometry(c),
         crate::mlx::dense::Architecture::Llama => {
             c.validate()
@@ -224,6 +243,7 @@ struct Layer {
     q_bias: Option<Tensor>,
     k_bias: Option<Tensor>,
     v_bias: Option<Tensor>,
+    qk_norms: Option<(Tensor, Tensor)>,
     gate: Tensor,
     up: Tensor,
     down: Tensor,
@@ -277,7 +297,11 @@ impl Model {
     pub(crate) fn native_attention_mode(&self) -> AttentionMode {
         if matches!(
             self.mlx_architecture,
-            Some(crate::mlx::dense::Architecture::Llama | crate::mlx::dense::Architecture::Mistral)
+            Some(
+                crate::mlx::dense::Architecture::Llama
+                    | crate::mlx::dense::Architecture::Mistral
+                    | crate::mlx::dense::Architecture::Qwen3
+            )
         ) {
             AttentionMode::Reference
         } else {
@@ -403,8 +427,15 @@ impl Model {
                 tensors.insert(name, tensor);
             }
             let conversion_seconds = conversion_clock.elapsed().as_secs_f64();
-            let mut model =
-                Self::assemble(config, gpu, tensors, weight_bytes, bias_free, untied_output)?;
+            let mut model = Self::assemble(
+                config,
+                gpu,
+                tensors,
+                weight_bytes,
+                bias_free,
+                untied_output,
+                source.architecture() == crate::mlx::dense::Architecture::Qwen3,
+            )?;
             model.mlx_architecture = Some(source.architecture());
             model.load_timing = LoadTiming {
                 load_seconds: clock.elapsed().as_secs_f64(),
@@ -524,8 +555,15 @@ impl Model {
                 artifact.verify_sources()?;
             }
             let conversion_seconds = source.conversion_seconds();
-            let mut model =
-                Self::assemble(source.config, gpu, tensors, weight_bytes, false, false)?;
+            let mut model = Self::assemble(
+                source.config,
+                gpu,
+                tensors,
+                weight_bytes,
+                false,
+                false,
+                false,
+            )?;
             model.load_timing = LoadTiming {
                 load_seconds: load_clock.elapsed().as_secs_f64(),
                 conversion_seconds,
@@ -541,6 +579,7 @@ impl Model {
         weight_bytes: usize,
         bias_free: bool,
         untied_output: bool,
+        qk_normalized: bool,
     ) -> Result<Self> {
         let mut take = |name: &str| {
             tensors
@@ -578,6 +617,14 @@ impl Model {
                     None
                 } else {
                     Some(take(&format!("{p}.self_attn.v_proj.bias"))?)
+                },
+                qk_norms: if qk_normalized {
+                    Some((
+                        take(&format!("{p}.self_attn.q_norm.weight"))?,
+                        take(&format!("{p}.self_attn.k_norm.weight"))?,
+                    ))
+                } else {
+                    None
                 },
                 gate: take(&format!("{p}.mlp.gate_proj.weight"))?,
                 up: take(&format!("{p}.mlp.up_proj.weight"))?,
@@ -636,10 +683,12 @@ struct Views {
     context: Retained<MPSMatrix>,
     gated: Retained<MPSMatrix>,
     result_h: Retained<MPSMatrix>,
+    result_q: Retained<MPSMatrix>,
     result_k: Retained<MPSMatrix>,
     result_m: Retained<MPSMatrix>,
     result_v: Retained<MPSMatrix>,
-    hh: Retained<MPSMatrixMultiplication>,
+    hq: Retained<MPSMatrixMultiplication>,
+    qh: Retained<MPSMatrixMultiplication>,
     hk: Retained<MPSMatrixMultiplication>,
     hm: Retained<MPSMatrixMultiplication>,
     mh: Retained<MPSMatrixMultiplication>,
@@ -728,6 +777,7 @@ pub struct Session<'m> {
     selected: u32,
     staged_selected: u32,
     h: Layout,
+    q: Layout,
     k: Layout,
     m: Layout,
     f: Layout,
@@ -803,11 +853,12 @@ impl<'m> Session<'m> {
                     Some(
                         crate::mlx::dense::Architecture::Llama
                             | crate::mlx::dense::Architecture::Mistral
+                            | crate::mlx::dense::Architecture::Qwen3
                     )
                 )
             {
                 return Err(Error::Unsupported(
-                    "Llama/Mistral Online attention is not qualified; explicitly select Reference attention",
+                    "Llama/Mistral/Qwen3 Online attention is not qualified; explicitly select Reference attention",
                 ));
             }
             if attention_mode == AttentionMode::Online {
@@ -869,10 +920,19 @@ impl<'m> Session<'m> {
                 ));
             }
             let h = Layout::new(chunk, c.hidden_size, true)?;
+            let query_width = c.query_heads * c.head_dim;
+            let q = Layout::new(chunk, query_width, true)?;
             let k = Layout::new(chunk, c.kv_heads * c.head_dim, true)?;
             let m = Layout::new(chunk, c.intermediate_size, true)?;
-            let f = Layout::new(chunk, c.vocab_size.max(c.intermediate_size), false)?;
+            let widest = c
+                .vocab_size
+                .max(c.intermediate_size)
+                .max(c.hidden_size)
+                .max(query_width)
+                .max(c.kv_heads * c.head_dim);
+            let f = Layout::new(chunk, widest, false)?;
             if h.stride != c.hidden_size
+                || q.stride != query_width
                 || k.stride != c.kv_heads * c.head_dim
                 || m.stride != c.intermediate_size
             {
@@ -895,17 +955,20 @@ impl<'m> Session<'m> {
                     .and_then(|n| n.checked_add(7))
                     .ok_or(Error::Options("score size overflow"))?
             };
-            let zero_count = c
-                .vocab_size
-                .max(c.intermediate_size)
+            let zero_count = widest
                 .checked_add(7)
                 .ok_or(Error::Options("zero bias overflow"))?;
             let scratch_bytes = add(
                 add(
                     add(
-                        h.bytes(2)?
-                            .checked_mul(6)
-                            .ok_or(Error::Options("scratch overflow"))?,
+                        add(
+                            h.bytes(2)?
+                                .checked_mul(3)
+                                .ok_or(Error::Options("scratch overflow"))?,
+                            q.bytes(2)?
+                                .checked_mul(3)
+                                .ok_or(Error::Options("scratch overflow"))?,
+                        )?,
                         k.bytes(2)?
                             .checked_mul(3)
                             .ok_or(Error::Options("scratch overflow"))?,
@@ -965,17 +1028,18 @@ impl<'m> Session<'m> {
             }
             let g = &model.gpu;
             let hb = || Buffer::new(g, h.elements);
+            let qb = || Buffer::new(g, q.elements);
             let kb = || Buffer::new(g, k.elements);
             let mb = || Buffer::new(g, m.elements);
             let scratch = Scratch {
                 x: hb()?,
                 norm: hb()?,
-                q: hb()?,
-                qr: hb()?,
+                q: qb()?,
+                qr: qb()?,
                 k: kb()?,
                 kr: kb()?,
                 v: kb()?,
-                context: hb()?,
+                context: qb()?,
                 delta: hb()?,
                 gate: mb()?,
                 silu: mb()?,
@@ -1002,6 +1066,18 @@ impl<'m> Session<'m> {
             }
             let mut views = Vec::with_capacity(chunk);
             for n in 1..=chunk {
+                let result_h = matrix(&scratch.floats, f.view(n, c.hidden_size)?, false)?;
+                let result_q = if query_width == c.hidden_size {
+                    result_h.clone()
+                } else {
+                    matrix(&scratch.floats, f.view(n, query_width)?, false)?
+                };
+                let hq = multiply(g, n, c.hidden_size, query_width);
+                let qh = if query_width == c.hidden_size {
+                    hq.clone()
+                } else {
+                    multiply(g, n, query_width, c.hidden_size)
+                };
                 views.push(Views {
                     norm: matrix(&scratch.norm, h.view(n, c.hidden_size)?, true)?,
                     last_norm: matrix_offset(
@@ -1010,13 +1086,15 @@ impl<'m> Session<'m> {
                         true,
                         (n - 1) * h.stride,
                     )?,
-                    context: matrix(&scratch.context, h.view(n, c.hidden_size)?, true)?,
+                    context: matrix(&scratch.context, q.view(n, query_width)?, true)?,
                     gated: matrix(&scratch.gated, m.view(n, c.intermediate_size)?, true)?,
-                    result_h: matrix(&scratch.floats, f.view(n, c.hidden_size)?, false)?,
+                    result_h,
+                    result_q,
                     result_k: matrix(&scratch.floats, f.view(n, c.kv_heads * c.head_dim)?, false)?,
                     result_m: matrix(&scratch.floats, f.view(n, c.intermediate_size)?, false)?,
                     result_v: matrix(&scratch.floats, f.view(n, c.vocab_size)?, false)?,
-                    hh: multiply(g, n, c.hidden_size, c.hidden_size),
+                    hq,
+                    qh,
                     hk: multiply(g, n, c.hidden_size, c.kv_heads * c.head_dim),
                     hm: multiply(g, n, c.hidden_size, c.intermediate_size),
                     mh: multiply(g, n, c.intermediate_size, c.hidden_size),
@@ -1067,6 +1145,7 @@ impl<'m> Session<'m> {
                 selected: 0,
                 staged_selected: 0,
                 h,
+                q,
                 k,
                 m,
                 f,
@@ -1244,6 +1323,7 @@ impl<'m> Session<'m> {
         };
         let clock = Instant::now();
         let h = c.hidden_size;
+        let query_width = c.query_heads * c.head_dim;
         let kv = c.kv_heads * c.head_dim;
         let m = c.intermediate_size;
         if matches!(self.model.embedding.storage, TensorStorage::Mlx(_)) {
@@ -1286,13 +1366,13 @@ impl<'m> Session<'m> {
                 &command,
                 &layer.q,
                 layer.q_bias.as_ref().map_or(&s.zero, |bias| &bias.buffer),
-                &v.hh,
+                &v.hq,
                 &v.norm,
-                &v.result_h,
+                &v.result_q,
                 &s.floats,
                 &s.q,
                 self.f,
-                self.h,
+                self.q,
                 n,
                 self.projection_mode,
                 &s.status,
@@ -1332,11 +1412,46 @@ impl<'m> Session<'m> {
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "v", &s.v.raw)?;
+            // Per-head Q/K normalization reuses rotary scratch. Tracked
+            // resource dependencies order normalization -> RoPE -> attention
+            // inside the same command; no host wait or transient buffer.
+            let (q_input, q_rotary, k_input, k_rotary) =
+                if let Some((q_norm, k_norm)) = &layer.qk_norms {
+                    rms(
+                        g,
+                        &command,
+                        &s.q,
+                        &q_norm.buffer,
+                        &s.qr,
+                        n * c.query_heads,
+                        c.head_dim,
+                        c.rms_norm_eps,
+                        self.normalization_mode,
+                        &s.status,
+                    )?;
+                    rms(
+                        g,
+                        &command,
+                        &s.k,
+                        &k_norm.buffer,
+                        &s.kr,
+                        n * c.kv_heads,
+                        c.head_dim,
+                        c.rms_norm_eps,
+                        self.normalization_mode,
+                        &s.status,
+                    )?;
+                    self.snapshot(&command, Some(layer_index), "q_norm", &s.qr.raw)?;
+                    self.snapshot(&command, Some(layer_index), "k_norm", &s.kr.raw)?;
+                    (&s.qr, &s.q, &s.kr, &s.k)
+                } else {
+                    (&s.q, &s.qr, &s.k, &s.kr)
+                };
             let position = self.options.position_offset + start;
             g.encode(
                 &command,
                 Kernel::Rotary,
-                &[&s.q.raw, &s.qr.raw],
+                &[&q_input.raw, &q_rotary.raw],
                 &[
                     n as u32,
                     c.query_heads as u32,
@@ -1344,14 +1459,14 @@ impl<'m> Session<'m> {
                     position as u32,
                     c.rope_theta.to_bits(),
                 ],
-                n * h / 2,
+                n * query_width / 2,
                 Some(&s.status),
             )?;
-            self.snapshot(&command, Some(layer_index), "q_rotary", &s.qr.raw)?;
+            self.snapshot(&command, Some(layer_index), "q_rotary", &q_rotary.raw)?;
             g.encode(
                 &command,
                 Kernel::Rotary,
-                &[&s.k.raw, &s.kr.raw],
+                &[&k_input.raw, &k_rotary.raw],
                 &[
                     n as u32,
                     c.kv_heads as u32,
@@ -1362,11 +1477,11 @@ impl<'m> Session<'m> {
                 n * kv / 2,
                 Some(&s.status),
             )?;
-            self.snapshot(&command, Some(layer_index), "k_rotary", &s.kr.raw)?;
+            self.snapshot(&command, Some(layer_index), "k_rotary", &k_rotary.raw)?;
             g.encode(
                 &command,
                 Kernel::Cache,
-                &[&s.kr.raw, &s.v.raw, &cache.k.raw, &cache.v.raw],
+                &[&k_rotary.raw, &s.v.raw, &cache.k.raw, &cache.v.raw],
                 &[
                     n as u32,
                     c.kv_heads as u32,
@@ -1392,7 +1507,7 @@ impl<'m> Session<'m> {
                     &command,
                     Kernel::Attention,
                     &[
-                        &s.qr.raw,
+                        &q_rotary.raw,
                         &cache.k.raw,
                         &cache.v.raw,
                         &s.scores.raw,
@@ -1410,7 +1525,7 @@ impl<'m> Session<'m> {
                     } else {
                         Kernel::AttentionPrefill
                     },
-                    &[&s.qr.raw, &cache.k.raw, &cache.v.raw, &s.context.raw],
+                    &[&q_rotary.raw, &cache.k.raw, &cache.v.raw, &s.context.raw],
                     &attention_shape,
                     n.div_ceil(if n == 1 { 1 } else { 2 }) * c.query_heads,
                     Some(&s.status),
@@ -1427,7 +1542,7 @@ impl<'m> Session<'m> {
                 &command,
                 &layer.o,
                 &s.zero,
-                &v.hh,
+                &v.qh,
                 &v.context,
                 &v.result_h,
                 &s.floats,

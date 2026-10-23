@@ -43,12 +43,16 @@ impl Session<'_> {
         for &layer in layers {
             for (stage, columns, stride) in [
                 ("input_norm", c.hidden_size, self.h.stride),
-                ("q", c.hidden_size, self.h.stride),
+                ("q", c.query_heads * c.head_dim, self.q.stride),
                 ("k", c.kv_heads * c.head_dim, self.k.stride),
                 ("v", c.kv_heads * c.head_dim, self.k.stride),
-                ("q_rotary", c.hidden_size, self.h.stride),
+                ("q_rotary", c.query_heads * c.head_dim, self.q.stride),
                 ("k_rotary", c.kv_heads * c.head_dim, self.k.stride),
-                ("attention_context", c.hidden_size, self.h.stride),
+                (
+                    "attention_context",
+                    c.query_heads * c.head_dim,
+                    self.q.stride,
+                ),
                 ("attention_projection", c.hidden_size, self.h.stride),
                 ("attention_residual", c.hidden_size, self.h.stride),
                 ("post_attention_norm", c.hidden_size, self.h.stride),
@@ -60,6 +64,22 @@ impl Session<'_> {
                 ("output", c.hidden_size, self.h.stride),
             ] {
                 plans.push((Some(layer), stage, columns, stride, true));
+            }
+            if self.model.layers[layer].qk_norms.is_some() {
+                plans.push((
+                    Some(layer),
+                    "q_norm",
+                    c.query_heads * c.head_dim,
+                    self.q.stride,
+                    true,
+                ));
+                plans.push((
+                    Some(layer),
+                    "k_norm",
+                    c.kv_heads * c.head_dim,
+                    self.k.stride,
+                    true,
+                ));
             }
         }
         let chunk = self.options.prefill_chunk_size;

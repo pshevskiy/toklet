@@ -58,7 +58,7 @@ uint32_t toklet_model_load(const uint8_t *, size_t, const TokletOptions *, Tokle
 uint32_t toklet_model_load_metal(const uint8_t *, size_t, const uint8_t *, size_t,
     const TokletOptions *, TokletModel **, TokletError *);
 /* Explicit local supported native MLX dense model: MlxAffine/Compensated/FP16 KV/FullLogits.
-   Qwen uses Online attention; explicitly admitted Llama/Mistral graphs use Reference attention.
+   Qwen2 uses Online attention; explicitly admitted Qwen3/Llama/Mistral graphs use Reference attention.
    Original packed tensors remain resident. Unsupported builds fail without fallback.
    Additive ABI v1 entrypoint; existing layouts and load functions are unchanged. */
 uint32_t toklet_model_load_mlx(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);

@@ -229,3 +229,56 @@ fn native_llama_cli_uses_the_independent_output_head() {
         }
     }
 }
+
+#[test]
+#[ignore = "Explicit Apple GPU Qwen3 CLI routing, tied/untied IDs, stop and memory metadata"]
+fn native_qwen3_cli_uses_the_independent_output_head() {
+    for (variant, expected) in [("tied", [3u64; 4]), ("untied", [24, 36, 11, 51])] {
+        {
+            let attention = "reference";
+            let path = Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("tests/fixtures/mlx-qwen3-v1")
+                .join(variant);
+            let rejected = command_for(&path, "online", "3")
+                .args(["--tokens", "1,7,13,3", "--max-new-tokens", "1"])
+                .output()
+                .unwrap();
+            assert!(!rejected.status.success());
+            assert!(rejected.stdout.is_empty());
+            assert!(String::from_utf8_lossy(&rejected.stderr).contains("not qualified"));
+            for chunk in ["1", "3"] {
+                let out = command_for(&path, attention, chunk)
+                    .args(["--tokens", "1,7,13,3", "--max-new-tokens", "4"])
+                    .output()
+                    .unwrap();
+                let rows = records(&out);
+                let ids: Vec<_> = rows
+                    .iter()
+                    .filter(|v| v["event"] == "token")
+                    .map(|v| v["token_id"].as_u64().unwrap())
+                    .collect();
+                assert_eq!(ids, expected);
+                let stats = &rows.last().unwrap()["statistics"];
+                execution(&stats["execution"], attention, chunk.parse().unwrap());
+                assert_eq!(stats["generation"]["evaluated_tokens"], 7);
+                assert_eq!(stats["generation"]["pending_tokens"], 1);
+                assert!(stats["logical_memory"]["weights_bytes"].as_u64().unwrap() > 0);
+            }
+            let out = command_for(&path, attention, "3")
+                .args([
+                    "--tokens",
+                    "1,7,13,3",
+                    "--max-new-tokens",
+                    "4",
+                    "--stop-token",
+                    &expected[0].to_string(),
+                ])
+                .output()
+                .unwrap();
+            let rows = records(&out);
+            assert_eq!(rows.len(), 1);
+            assert_eq!(rows[0]["statistics"]["generation"]["pending_tokens"], 1);
+            assert_eq!(rows[0]["statistics"]["generation"]["emitted_tokens"], 0);
+        }
+    }
+}

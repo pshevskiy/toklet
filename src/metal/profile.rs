@@ -301,6 +301,12 @@ impl Session<'_> {
         // Reserve one spare slot because diagnostics may be enabled later and
         // must validate every logit row in addition to selecting the final row.
         let events = per_layer * self.model.config.num_layers
+            + 2 * self
+                .model
+                .layers
+                .iter()
+                .filter(|layer| layer.qk_norms.is_some())
+                .count()
             + if half_compensated { 4 } else { 6 }
             + usize::from(self.readback_mode == super::ReadbackMode::GreedyToken);
         if events > MAX_EVENTS {
