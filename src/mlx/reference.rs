@@ -97,13 +97,13 @@ pub fn load_qwen(directory: &Path, options: LoadOptions) -> Result<Loaded, Error
     load_source(source, options)
 }
 
-/// Explicit diagnostic expansion of a validated native MLX Qwen2/Llama graph.
+/// Explicit diagnostic expansion of a validated native MLX Qwen2/Llama/Mistral graph.
 pub fn load_dense(directory: &Path, options: LoadOptions) -> Result<Loaded, Error> {
     load_source(Source::open_dense(directory, options)?, options)
 }
 
 fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error> {
-    let bias_free = source.architecture() == Architecture::Llama;
+    let bias_free = !source.architecture().has_projection_bias();
     let config = source.config().clone();
     let mut fp32_weights_bytes = 0;
     let mut temporary_packed_bytes = 0;

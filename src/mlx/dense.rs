@@ -11,10 +11,16 @@ use std::collections::BTreeMap;
 pub enum Architecture {
     Qwen2,
     Llama,
+    Mistral,
+}
+impl Architecture {
+    pub(crate) const fn has_projection_bias(self) -> bool {
+        matches!(self, Self::Qwen2)
+    }
 }
 
 #[derive(Deserialize)]
-struct LlamaConfig {
+struct BiasFreeConfig {
     model_type: String,
     architectures: Vec<String>,
     hidden_act: String,
@@ -71,10 +77,30 @@ pub(crate) fn config(
             Architecture::Qwen2,
             true,
         )),
-        Some("llama") => {
-            let c: LlamaConfig = serde_json::from_value(value)?;
-            if c.model_type != "llama"
-                || c.architectures != ["LlamaForCausalLM"]
+        Some("llama" | "mistral") => {
+            // Mistral defaults can imply sliding attention when the field is
+            // absent. Only an explicit null opts into this full-attention graph.
+            if value.get("model_type").and_then(Value::as_str) == Some("mistral")
+                && (value.get("sliding_window") != Some(&Value::Null)
+                    || [
+                        "is_llama_config",
+                        "transformers.js_config",
+                        "pretraining_tp",
+                    ]
+                    .iter()
+                    .any(|name| value.get(*name).is_some()))
+            {
+                return Err(invalid(
+                    "Mistral requires explicit sliding_window:null and no Llama-only export metadata",
+                ));
+            }
+            let c: BiasFreeConfig = serde_json::from_value(value)?;
+            let (architecture, class) = if c.model_type == "llama" {
+                (Architecture::Llama, "LlamaForCausalLM")
+            } else {
+                (Architecture::Mistral, "MistralForCausalLM")
+            };
+            if c.architectures != [class]
                 || c.hidden_act != "silu"
                 || c.attention_bias
                 || c.mlp_bias
@@ -92,7 +118,7 @@ pub(crate) fn config(
                 || c.sliding_window.is_some()
             {
                 return Err(invalid(
-                    "only bias-free Llama with SiLU, ordinary split-half RoPE and full causal attention is supported",
+                    "only bias-free Llama/Mistral with SiLU, ordinary split-half RoPE and full causal attention is supported",
                 ));
             }
             if c.torch_dtype
@@ -113,18 +139,20 @@ pub(crate) fn config(
                 ]
                 .contains(&name.as_str())
                 {
-                    return Err(invalid(format!("unsupported Llama config field: {name}")));
+                    return Err(invalid(format!(
+                        "unsupported bias-free decoder config field: {name}"
+                    )));
                 }
             }
             if c.num_attention_heads == 0 || !c.hidden_size.is_multiple_of(c.num_attention_heads) {
                 return Err(invalid(
-                    "Llama hidden_size must be divisible by nonzero num_attention_heads",
+                    "bias-free decoder hidden_size must be divisible by nonzero num_attention_heads",
                 ));
             }
             let head_dim = c.hidden_size / c.num_attention_heads;
             if c.head_dim.is_some_and(|v| v != head_dim) {
                 return Err(invalid(
-                    "Llama head_dim disagrees with hidden_size/num_attention_heads",
+                    "bias-free decoder head_dim disagrees with hidden_size/num_attention_heads",
                 ));
             }
             if options.context_limit == 0
@@ -132,7 +160,7 @@ pub(crate) fn config(
                 || options.context_limit > c.max_position_embeddings
             {
                 return Err(invalid(
-                    "Llama context limit must fit model positions and 32768-token ceiling",
+                    "bias-free decoder context limit must fit model positions and 32768-token ceiling",
                 ));
             }
             let config = Config {
@@ -148,7 +176,7 @@ pub(crate) fn config(
                 rope_theta: c.rope_theta,
             };
             config.validate()?;
-            Ok((config, Architecture::Llama, c.tie_word_embeddings))
+            Ok((config, architecture, c.tie_word_embeddings))
         }
         _ => Err(invalid("unsupported native MLX decoder architecture")),
     }

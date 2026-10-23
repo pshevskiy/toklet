@@ -162,7 +162,7 @@ impl Source {
         Self::open_impl(directory, options, true)
     }
 
-    fn open_impl(directory: &Path, options: LoadOptions, allow_llama: bool) -> Result<Self, Error> {
+    fn open_impl(directory: &Path, options: LoadOptions, allow_dense: bool) -> Result<Self, Error> {
         if options.memory_limit_bytes == 0
             || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
         {
@@ -186,7 +186,7 @@ impl Source {
             }
         };
         let plan = QuantizationPlan::parse(quantization)?;
-        let (config, architecture, tied_output) = if allow_llama {
+        let (config, architecture, tied_output) = if allow_dense {
             dense::config(document, options)?
         } else {
             (
@@ -207,7 +207,7 @@ impl Source {
             ));
         }
         let mut expected = weights::expected(&config)?;
-        if architecture == Architecture::Llama {
+        if !architecture.has_projection_bias() {
             expected.retain(|name, _| !name.ends_with(".bias"));
         }
         let source = weights::Source::open(directory)?;

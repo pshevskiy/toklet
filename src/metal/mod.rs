@@ -84,7 +84,7 @@ fn geometry(c: &model::Config) -> Result<()> {
     }
     Ok(())
 }
-/// Keep Llama geometry admission explicit and before GPU creation. Wider Llama
+/// Keep bias-free geometry admission explicit and before GPU creation. Wider dense
 /// shapes/rotary variants require their own numerical and resource qualification.
 fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture) -> Result<()> {
     match architecture {
@@ -112,6 +112,34 @@ fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture
             if !supported {
                 return Err(Error::Unsupported(
                     "Metal Llama requires the admitted tiny/SmolLM2 geometry, context and ordinary RoPE",
+                ));
+            }
+            Ok(())
+        }
+        crate::mlx::dense::Architecture::Mistral => {
+            c.validate()
+                .map_err(|_| Error::Options("invalid Mistral model configuration"))?;
+            let shape = (
+                c.hidden_size,
+                c.intermediate_size,
+                c.query_heads,
+                c.kv_heads,
+                c.head_dim,
+                c.num_layers,
+                c.vocab_size,
+            );
+            let supported = match shape {
+                (32, 64, 4, 2, 8, 2, 64) => {
+                    c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6 && c.max_positions <= 32
+                }
+                (4096, 14336, 32, 8, 128, 32, 32768) => {
+                    c.rope_theta == 1e6 && c.rms_norm_eps == 1e-5 && c.max_positions <= 512
+                }
+                _ => false,
+            };
+            if !supported {
+                return Err(Error::Unsupported(
+                    "Metal requires qualified full-attention Mistral geometry and at most 512 positions",
                 ));
             }
             Ok(())
@@ -244,7 +272,10 @@ impl Model {
         self.mlx_architecture
     }
     pub(crate) fn native_attention_mode(&self) -> AttentionMode {
-        if self.mlx_architecture == Some(crate::mlx::dense::Architecture::Llama) {
+        if matches!(
+            self.mlx_architecture,
+            Some(crate::mlx::dense::Architecture::Llama | crate::mlx::dense::Architecture::Mistral)
+        ) {
             AttentionMode::Reference
         } else {
             AttentionMode::Online
@@ -294,7 +325,7 @@ impl Model {
             let clock = Instant::now();
             let mut source = crate::mlx::qwen::Source::open_dense(directory, options)?;
             let config = source.config().clone();
-            let bias_free = source.architecture() == crate::mlx::dense::Architecture::Llama;
+            let bias_free = !source.architecture().has_projection_bias();
             let untied_output = !source.tied_output();
             mlx_geometry(&config, source.architecture())?;
             let compile_clock = Instant::now();
@@ -764,10 +795,16 @@ impl<'m> Session<'m> {
                 ));
             }
             if attention_mode == AttentionMode::Online
-                && model.mlx_architecture == Some(crate::mlx::dense::Architecture::Llama)
+                && matches!(
+                    model.mlx_architecture,
+                    Some(
+                        crate::mlx::dense::Architecture::Llama
+                            | crate::mlx::dense::Architecture::Mistral
+                    )
+                )
             {
                 return Err(Error::Unsupported(
-                    "Llama Online attention is not qualified; explicitly select Reference attention",
+                    "Llama/Mistral Online attention is not qualified; explicitly select Reference attention",
                 ));
             }
             if attention_mode == AttentionMode::Online {
@@ -1990,6 +2027,31 @@ impl session::InferenceSession for Session<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn mistral_geometry_is_bounded_before_gpu_creation() {
+        let mut config = crate::model::Config {
+            vocab_size: 32768,
+            hidden_size: 4096,
+            intermediate_size: 14336,
+            num_layers: 32,
+            query_heads: 32,
+            kv_heads: 8,
+            head_dim: 128,
+            max_positions: 512,
+            rms_norm_eps: 1e-5,
+            rope_theta: 1e6,
+        };
+        let architecture = crate::mlx::dense::Architecture::Mistral;
+        assert!(mlx_geometry(&config, architecture).is_ok());
+        config.max_positions = 513;
+        assert!(mlx_geometry(&config, architecture).is_err());
+        config.max_positions = 512;
+        config.rope_theta = 10000.;
+        assert!(mlx_geometry(&config, architecture).is_err());
+        config.rope_theta = 1e6;
+        config.num_layers = 31;
+        assert!(mlx_geometry(&config, architecture).is_err());
+    }
     #[test]
     fn q4_binding_reopens_exclusions_after_atomic_source_replacement_without_gpu() {
         use serde_json::json;

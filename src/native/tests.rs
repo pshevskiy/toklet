@@ -1063,6 +1063,7 @@ fn native_mlx_boundary_matches_direct_sessions_and_retains_model() {
         ("mlx-qwen-v1/model", 47, AttentionMode::Online),
         ("mlx-llama-v1/tied", 47, AttentionMode::Reference),
         ("mlx-llama-v1/untied", 3, AttentionMode::Reference),
+        ("mlx-mistral-v1/untied", 3, AttentionMode::Reference),
     ] {
         let path = format!("{}/tests/fixtures/{relative}", env!("CARGO_MANIFEST_DIR"));
         check_native_mlx_boundary(&path, id, attention);

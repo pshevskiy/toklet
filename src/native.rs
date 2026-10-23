@@ -474,7 +474,7 @@ pub unsafe extern "C" fn toklet_model_load_metal(
 }
 /// Load a local supported native MLX dense artifact into resident Metal buffers. Sessions
 /// select MlxAffine/Compensated/FP16 KV/FullLogits. Qwen uses Online attention;
-/// the qualified tiny Llama graph uses Reference attention. No fallback.
+/// explicitly admitted Llama/Mistral graphs use Reference attention. No fallback.
 /// # Safety
 /// Follow this module's foreign caller contract for all pointers and handles.
 #[unsafe(no_mangle)]

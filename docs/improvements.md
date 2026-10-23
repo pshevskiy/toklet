@@ -1600,3 +1600,21 @@ file pages, so it does not replace the logical budget or qualify mobile fit.
 The [receipt](../benchmarks/results/2026-10-23-mistral-real-oracle-v1.json) binds
 this evidence. Native decoder, Chat/catalog integration and actual app transfer
 qualification remain separate. Phone work remains paused.
+
+### Selected native Mistral decoder on Mac — 23 October 2026
+
+The [strict Rust/Metal decoder](mlx-mistral-metal.md) now executes the pinned
+Mistral 7B four-bit full-attention snapshot. Shared static bias-free dispatch
+preserves resident packed weights, separate KV state and existing Qwen-only API
+contracts. Explicit null sliding-window admission rejects omitted windows and
+Llama-only metadata. Reference attention is qualified; Online remains rejected.
+
+Final formatting, strict Clippy, CPU/Metal baselines, release budget and native C
+checks pass. Real M1 Pro GPU checks pass 816 exposed snapshots / 19,302,400 values,
+four complete greedy distributions, three scoring prefixes, eight selections
+and a separate 512-capacity state test. Frozen gates are unchanged. Maximum
+logical session admission is 4,267,272,802 bytes; physical peak, held-out quality,
+performance and long-context numerical qualification remain open. The
+[receipt](../benchmarks/results/2026-10-23-mistral-metal-v1.json) retains the
+pre-fix baseline and final source evidence. Chat/catalog integration continues
+separately. Phone operations remain paused at the user's request.
