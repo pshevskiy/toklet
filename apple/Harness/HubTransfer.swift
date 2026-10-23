@@ -1,6 +1,13 @@
 import Foundation
 import Darwin
 
+// Cleanup failures stay distinct from ordinary cancellation so every owning
+// task group can join siblings and retain their failures before returning.
+private struct HubCleanupFailure: LocalizedError {
+    let causes: [String]
+    var errorDescription: String? { "Download cleanup failed: " + causes.joined(separator:"; ") }
+}
+
 // One ephemeral URLSession and serial delegate queue per transfer. Delegate-owned
 // fields are initialized before resume(), then accessed only on that queue.
 // The cancellation lock protects only the cross-thread session/cancelled handoff.
@@ -84,7 +91,7 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
             var startupError = error
             self.continuation = nil
             do { if let handle { try closeHandle(handle) } }
-            catch { startupError = HubFailure("Download sink close failed: " + error.localizedDescription + "; original: " + startupError.localizedDescription) }
+            catch { startupError = Self.cleanupFailure(startupError,"sink close: " + error.localizedDescription) }
             handle = nil
             lock.unlock(); continuation.resume(throwing:startupError)
         }
@@ -145,12 +152,15 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
         if result == nil && !accepted { result = HubFailure("Missing download response.") }
         if result == nil && range != nil && received != maximum { result = HubFailure("Download range was incomplete.") }
         do { if let handle { try closeHandle(handle) } }
-        catch { result = HubFailure("Download sink close failed: " + error.localizedDescription + (result.map { "; original: " + $0.localizedDescription } ?? "")) }
+        catch { result = Self.cleanupFailure(result,"sink close: " + error.localizedDescription) }
         handle = nil
         lock.lock(); let wasCancelled = cancelled; self.session = nil; lock.unlock()
         session.finishTasksAndInvalidate()
         let continuation = continuation; self.continuation = nil
-        if wasCancelled { continuation?.resume(throwing:CancellationError()) }
+        if let cleanup = result as? HubCleanupFailure {
+            let failure = wasCancelled ? Self.combineCleanup(HubFailure("Download cancelled."),cleanup) : cleanup
+            continuation?.resume(throwing:failure)
+        } else if wasCancelled { continuation?.resume(throwing:CancellationError()) }
         else if let result { continuation?.resume(throwing:result) }
         else { progress(received); continuation?.resume() }
     }
@@ -158,6 +168,27 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
 
 
 extension HubTransfer {
+    private static func cleanupFailure(_ primary: Error?,_ cause: String) -> HubCleanupFailure {
+        let previous = (primary as? HubCleanupFailure)?.causes ?? primary.map { ["original: " + $0.localizedDescription] } ?? []
+        return HubCleanupFailure(causes:previous + [cause])
+    }
+    private static func combineCleanup(_ primary: Error?,_ cleanup: HubCleanupFailure) -> HubCleanupFailure {
+        let previous = (primary as? HubCleanupFailure)?.causes ?? primary.map { ["original: " + $0.localizedDescription] } ?? []
+        return HubCleanupFailure(causes:previous + cleanup.causes)
+    }
+    // Both range batches and the deadline race must observe later sibling
+    // cleanup errors after cancellation. Ordinary sibling cancellation is expected.
+    private static func finishGroup<T: Sendable>(_ group: inout ThrowingTaskGroup<T,any Error>,primary: Error?) async throws {
+        group.cancelAll()
+        var result = primary
+        while true {
+            do { if try await group.next() == nil { break } }
+            catch let cleanup as HubCleanupFailure { result = combineCleanup(result,cleanup) }
+            catch { /* The first operation/deadline error remains authoritative. */ }
+        }
+        if let result { throw result }
+    }
+
     // Each child owns one configuration copy. It is never read or mutated by
     // another child; the wrapper crosses only this coarse structured-task boundary.
     private struct SessionOptions: @unchecked Sendable { let value: URLSessionConfiguration }
@@ -182,8 +213,9 @@ extension HubTransfer {
                 try await Task.sleep(for:resourceTimeout)
                 throw HubFailure("Download exceeded the two-hour resource deadline.")
             }
-            defer { group.cancelAll() }
-            _ = try await group.next()
+            var primary: Error?
+            do { _ = try await group.next() } catch { primary = error }
+            try await finishGroup(&group,primary:primary)
         }
     }
 
@@ -202,7 +234,11 @@ extension HubTransfer {
         let sink = FileHandle(fileDescriptor:descriptor,closeOnDealloc:true)
         defer { try? sink.close() }
         let directory = destination.deletingLastPathComponent().appendingPathComponent(".ranges-" + UUID().uuidString,isDirectory:true)
-        guard Darwin.mkdir(directory.path,0o700) == 0 else { throw HubFailure("Could not create exclusive range directory.") }
+        guard Darwin.mkdir(directory.path,0o700) == 0 else {
+            let primary = HubFailure("Could not create exclusive range directory.")
+            do { try sink.close() } catch { throw cleanupFailure(primary,"assembly sink close: " + error.localizedDescription) }
+            throw primary
+        }
         // The unique directory is owned by this call. Structured task groups join
         // every child (including cancelled transfers) before cleanup reaches here.
         var primary: Error?
@@ -226,10 +262,13 @@ extension HubTransfer {
                                                   range:lower..<upper,total:total,closeHandle:closeHandle)
                                     return (lower,path)
                                 } catch {
-                                    if FileManager.default.fileExists(atPath:path.path) { try FileManager.default.removeItem(at:path) }
+                                    var cause = error
+                                    do { if FileManager.default.fileExists(atPath:path.path) { try FileManager.default.removeItem(at:path) } }
+                                    catch { cause = cleanupFailure(cause,"chunk removal: " + error.localizedDescription) }
+                                    if cause is HubCleanupFailure { throw cause }
                                     try Task.checkCancellation()
-                                    guard attempt < 2, let network = error as? URLError,
-                                          [.timedOut,.networkConnectionLost,.cannotConnectToHost,.cannotFindHost,.dnsLookupFailed,.notConnectedToInternet].contains(network.code) else { throw error }
+                                    guard attempt < 2, let network = cause as? URLError,
+                                          [.timedOut,.networkConnectionLost,.cannotConnectToHost,.cannotFindHost,.dnsLookupFailed,.notConnectedToInternet].contains(network.code) else { throw cause }
                                     try await Task.sleep(for:.milliseconds(250 * (attempt + 1)))
                                 }
                             }
@@ -238,7 +277,7 @@ extension HubTransfer {
                     }
                     var pieces: [(Int64,URL)] = []
                     do { for try await piece in group { pieces.append(piece) } }
-                    catch { group.cancelAll(); throw error }
+                    catch { try await finishGroup(&group,primary:error) }
                     return pieces.sorted { $0.0 < $1.0 }
                 }
                 for (lower,path) in pieces {
@@ -248,23 +287,26 @@ extension HubTransfer {
                         throw HubFailure("Storage became full during range assembly. Free space and retry.")
                     }
                     let input = try FileHandle(forReadingFrom:path)
+                    var pieceError: Error?
                     do {
                         while let data = try input.read(upToCount:64 * 1024), !data.isEmpty {
                             try Task.checkCancellation()
                             guard Int64(data.count) <= total - committed else { throw HubFailure("Range assembly exceeded file limit.") }
                             try sink.write(contentsOf:data); committed += Int64(data.count)
                         }
-                        try input.close()
-                    } catch { try? input.close(); throw error }
-                    try FileManager.default.removeItem(at:path)
+                    } catch { pieceError = error }
+                    do { try input.close() } catch { pieceError = cleanupFailure(pieceError,"assembly input close: " + error.localizedDescription) }
+                    if let pieceError { throw pieceError }
+                    do { try FileManager.default.removeItem(at:path) }
+                    catch { throw cleanupFailure(nil,"assembled chunk removal: " + error.localizedDescription) }
                     progress(committed)
                 }
             }
             try Task.checkCancellation()
         } catch { primary = error }
-        do { try sink.close() } catch { if primary == nil { primary = error } }
+        do { try sink.close() } catch { primary = cleanupFailure(primary,"assembly sink close: " + error.localizedDescription) }
         do { try FileManager.default.removeItem(at:directory) }
-        catch { throw HubFailure("Range staging cleanup failed: " + error.localizedDescription) }
+        catch { primary = cleanupFailure(primary,"range staging removal: " + error.localizedDescription) }
         if let primary { throw primary }
     }
 }

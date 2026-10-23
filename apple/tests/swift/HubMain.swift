@@ -377,8 +377,8 @@ struct HubMain {
             try await HubTransfer.ranged(url,directory.appendingPathComponent("close-error"),Int64(bytes.count),{ _ in },chunkBytes:5,parallelism:1,configuration:configuration,
                 closeHandle:{ handle in try handle.close(); throw HubFailure("Injected close error") })
             throw HubFailure("Close error unexpectedly accepted")
-        } catch let error as HubFailure {
-            try require(error.message.contains("Injected close error") && error.message.contains("original:"),"simultaneous network/close errors preserved")
+        } catch {
+            try require(error.localizedDescription.contains("Injected close error") && error.localizedDescription.contains("original:"),"simultaneous network/close errors preserved")
         }
         try require(RangeHubProtocol.plan.counts()[0] == 1,"close failure prevents network retry")
         let existing = directory.appendingPathComponent("collision")
@@ -408,6 +408,27 @@ struct HubMain {
             throw HubFailure("Range deadline unexpectedly accepted")
         } catch let error as HubFailure { try require(error.message.contains("resource deadline"),"whole-operation deadline preserved") }
         try require(try FileManager.default.contentsOfDirectory(atPath:directory.path).allSatisfy { !$0.hasPrefix(".ranges-") },"deadline joins and cleans chunks")
+        for deadline in [false,true] {
+            let opened = Started()
+            RangeHubProtocol.plan.set("slow",bytes,signal:{ Task { await opened.signal() } })
+            let destination = directory.appendingPathComponent(deadline ? "deadline-close-error" : "cancel-close-error")
+            let task = Task {
+                try await HubTransfer.ranged(url,destination,Int64(bytes.count),{ _ in },chunkBytes:5,parallelism:4,configuration:configuration,
+                    closeHandle:{ handle in try handle.close(); throw HubFailure("Injected cancellation close error") },
+                    resourceTimeout:deadline ? .milliseconds(100) : .seconds(7200))
+            }
+            if !deadline { await opened.wait(); task.cancel() }
+            do { try await task.value; throw HubFailure("Cleanup error unexpectedly accepted") }
+            catch {
+                let message = error.localizedDescription
+                try require(message.contains("Injected cancellation close error") && message.contains(deadline ? "resource deadline" : "cancelled"),"cleanup cause and interruption context retained")
+            }
+            try require(RangeHubProtocol.plan.counts().values.allSatisfy { $0 == 1 },"interrupted close failure never retried")
+            let size = try destination.resourceValues(forKeys:[.fileSizeKey]).fileSize
+            try await Task.sleep(for:.milliseconds(350))
+            try require(try destination.resourceValues(forKeys:[.fileSizeKey]).fileSize == size,"no writes after cleanup-error completion")
+            try require(try FileManager.default.contentsOfDirectory(atPath:directory.path).allSatisfy { !$0.hasPrefix(".ranges-") },"cleanup-error children joined and chunk directory removed")
+        }
         let transfer = HubTransfer(destination:directory.appendingPathComponent("redirect"),maximum:5,progress:{ _ in },range:5..<10,total:23)
         let session = URLSession(configuration:.ephemeral)
         let request = URLRequest(url:URL(string:"https://cdn.hf.co/test")!)

@@ -1,0 +1,89 @@
+{
+  "format": "toklet-model-hub-cleanup-errors-v1",
+  "base_commit": "85ca33d",
+  "passed": true,
+  "scope": "Preserve bounded range cleanup causes across cancellation/deadline and drain every sibling before returning",
+  "bindings": {
+    "artifacts/m8-range-cleanup-core-v1/checks.json": "99dcc5d13bfff0562f1c1a649c9480b6f313acc586ac9669e394d1c74cb04f5f",
+    "apple/Harness/ModelHub.swift": "33c55cf61bbab92c38e00d3b040694832fd575c1299e65bf8b27d551cd40e630",
+    "artifacts/m8-range-cleanup-publication-v1/source-snapshot/apple/Harness/ModelHub.swift": "33c55cf61bbab92c38e00d3b040694832fd575c1299e65bf8b27d551cd40e630",
+    "artifacts/m8-range-cleanup-core-v1/source-snapshot/apple/Harness/HubTransfer.swift": "275f8f230027d0b6aa62ba795bf9fef1e6876a3e1b366c1fc5a4323e18c89737",
+    "artifacts/m8-range-cleanup-core-v1/source-snapshot/apple/tests/swift/HubMain.swift": "573622ae877c9bb4a832227b323a05d98bbdda9dac33dff03df5560c950a87a3",
+    "artifacts/m8-range-cleanup-core-v1/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v1/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v1/checks.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v1/checks.stderr": "8cf2774eb96a282a31b2e7c52d22497a0bd793ace9488ba61be9527e02acbf52",
+    "artifacts/m8-range-cleanup-core-v1/ios-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v1/ios-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v2/checks.json": "d12eae82b35bbaaa715e2be07fa42f2e075dbe953c4a9b99b3e367470b82a27c",
+    "artifacts/m8-range-cleanup-core-v2/source-snapshot/apple/Harness/HubTransfer.swift": "275f8f230027d0b6aa62ba795bf9fef1e6876a3e1b366c1fc5a4323e18c89737",
+    "artifacts/m8-range-cleanup-core-v2/source-snapshot/apple/tests/swift/HubMain.swift": "f58250b8b4b5b9c9658f51f7c5ec766ac373c0397f273354891fb6d1755f3152",
+    "artifacts/m8-range-cleanup-core-v2/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v2/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v2/checks.stdout": "7bfd7d0a323c96e1906ecab02be3d3c1592e39cdde5366c2e16cc15677e54fd2",
+    "artifacts/m8-range-cleanup-core-v2/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v2/ios-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v2/ios-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v3/checks.json": "50afa0dd9820595a67d916f20bb9989a5028a0d8e531263dbd1a2eedfdc4a5ce",
+    "apple/Harness/HubTransfer.swift": "287832d73367af8cab57b8d66bdde5c4f9d18482c3f41f631552d1e76557531d",
+    "artifacts/m8-range-cleanup-publication-v1/source-snapshot/apple/Harness/HubTransfer.swift": "287832d73367af8cab57b8d66bdde5c4f9d18482c3f41f631552d1e76557531d",
+    "apple/tests/swift/HubMain.swift": "c5459dfa181ea15cebcfe698cfb2f911442dd904decd56050db80fb70bf960ed",
+    "artifacts/m8-range-cleanup-publication-v1/source-snapshot/apple/tests/swift/HubMain.swift": "c5459dfa181ea15cebcfe698cfb2f911442dd904decd56050db80fb70bf960ed",
+    "artifacts/m8-range-cleanup-core-v3/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v3/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v3/checks.stdout": "7bfd7d0a323c96e1906ecab02be3d3c1592e39cdde5366c2e16cc15677e54fd2",
+    "artifacts/m8-range-cleanup-core-v3/checks.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v3/ios-typecheck.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-range-cleanup-core-v3/ios-typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/model-hub.md": "f8e84b25a94e142c6d8822c8f9dfab4f0da9bc7c7f2483b3f9e3a77f10c2653a",
+    "artifacts/m8-range-cleanup-publication-v1/source-snapshot/docs/model-hub.md": "f8e84b25a94e142c6d8822c8f9dfab4f0da9bc7c7f2483b3f9e3a77f10c2653a",
+    "docs/improvements.md": "d6fb68a6bb4166e1fd8624ff40e1b75fc4e558cb06f2c9b33abedc0ac19e4d7c",
+    "artifacts/m8-range-cleanup-publication-v1/source-snapshot/docs/improvements.md": "d6fb68a6bb4166e1fd8624ff40e1b75fc4e558cb06f2c9b33abedc0ac19e4d7c",
+    "artifacts/m8-range-cleanup-publication-v1/publication-driver.py": "a9b37a36458862c1f96c856ff346de8df2df35a4e71b6f8dfbdd9c25e7334353"
+  },
+  "current_source_copies": {
+    "apple/Harness/ModelHub.swift": "artifacts/m8-range-cleanup-publication-v1/source-snapshot/apple/Harness/ModelHub.swift",
+    "apple/Harness/HubTransfer.swift": "artifacts/m8-range-cleanup-publication-v1/source-snapshot/apple/Harness/HubTransfer.swift",
+    "apple/tests/swift/HubMain.swift": "artifacts/m8-range-cleanup-publication-v1/source-snapshot/apple/tests/swift/HubMain.swift",
+    "docs/model-hub.md": "artifacts/m8-range-cleanup-publication-v1/source-snapshot/docs/model-hub.md",
+    "docs/improvements.md": "artifacts/m8-range-cleanup-publication-v1/source-snapshot/docs/improvements.md"
+  },
+  "historical_input_mappings": [
+    {
+      "receipt": "artifacts/m8-range-cleanup-core-v1/checks.json",
+      "input": "apple/Harness/HubTransfer.swift",
+      "sha256": "275f8f230027d0b6aa62ba795bf9fef1e6876a3e1b366c1fc5a4323e18c89737",
+      "copy": "artifacts/m8-range-cleanup-core-v1/source-snapshot/apple/Harness/HubTransfer.swift"
+    },
+    {
+      "receipt": "artifacts/m8-range-cleanup-core-v1/checks.json",
+      "input": "apple/tests/swift/HubMain.swift",
+      "sha256": "573622ae877c9bb4a832227b323a05d98bbdda9dac33dff03df5560c950a87a3",
+      "copy": "artifacts/m8-range-cleanup-core-v1/source-snapshot/apple/tests/swift/HubMain.swift"
+    },
+    {
+      "receipt": "artifacts/m8-range-cleanup-core-v2/checks.json",
+      "input": "apple/Harness/HubTransfer.swift",
+      "sha256": "275f8f230027d0b6aa62ba795bf9fef1e6876a3e1b366c1fc5a4323e18c89737",
+      "copy": "artifacts/m8-range-cleanup-core-v2/source-snapshot/apple/Harness/HubTransfer.swift"
+    },
+    {
+      "receipt": "artifacts/m8-range-cleanup-core-v2/checks.json",
+      "input": "apple/tests/swift/HubMain.swift",
+      "sha256": "f58250b8b4b5b9c9658f51f7c5ec766ac373c0397f273354891fb6d1755f3152",
+      "copy": "artifacts/m8-range-cleanup-core-v2/source-snapshot/apple/tests/swift/HubMain.swift"
+    }
+  ],
+  "final_checks": "artifacts/m8-range-cleanup-core-v3/checks.json",
+  "cancel_and_close_regression": true,
+  "deadline_and_close_regression": true,
+  "no_retry_after_cleanup_failure": true,
+  "no_writes_after_joined_completion": true,
+  "success_byte_path_unchanged": true,
+  "numerical_kernels_unchanged": true,
+  "actual_transfer_uses_separate_frozen_source": true,
+  "iphone_contacted": false,
+  "performance_qualified": false,
+  "decision": "retain interruption cleanup diagnostics",
+  "astra_review": "Accepted for commit: verified all 36 bindings, five current copies, four historical mappings, final checks, 256 links, privacy and whitespace; deterministic reporting scope only"
+}

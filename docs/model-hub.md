@@ -211,3 +211,22 @@ all three profiles' replies independently decode. This functional test does not
 claim a fresh Mistral network transfer. The separate actual range trial and its
 full-file publication evidence remain required. Physical iPhone tests stay
 paused, and other search results remain unsupported.
+
+## Preserve cleanup errors during interruption — 23 October 2026
+
+Range cancellation and the deadline race now preserve simultaneous close or
+removal failures. A distinct cleanup error carries the original interruption
+and every observed cleanup cause. Both task groups explicitly drain cancelled
+siblings before returning, so a later sibling close failure is retained.
+Assembly combines input/sink close and chunk-directory removal errors with the
+primary cause. No cleanup failure reaches transient retry.
+
+Slow URLProtocol regressions inject close errors during active cancellation and
+a resource deadline. They require the cleanup cause plus interruption context,
+no retry, joined children, removed chunks and no later writes. The deadline
+fixture has no unbounded wait for a stream to start. Existing normal cancellation,
+deadline, network-error, header and full-hash gates remain unchanged. Final strict
+Swift/core/SDK checks pass; the [receipt](../benchmarks/results/2026-10-23-model-hub-cleanup-errors-v1.json)
+retains the first test's obsolete catch-type failure and the intermediate pass.
+This improves failure reporting; completed range bytes and numerical execution
+are unchanged. The ongoing real transfer retains its immutable earlier source.

@@ -1672,3 +1672,19 @@ failure, with tests in both memory directions. Budgets stay unchanged. The
 [receipt](../benchmarks/results/2026-10-23-mistral-model-hub-app-v1.json) distinguishes
 these failures and local seed from fresh network transfer. Actual range-download
 qualification continues separately. All physical phone work remains paused.
+
+### Preserve range cleanup failures during cancellation — 23 October 2026
+
+A final review found that cancellation or a deadline could hide a simultaneous
+close/removal failure even though tasks were joined and publication was already
+blocked. The [narrow fix](model-hub.md#preserve-cleanup-errors-during-interruption--23-october-2026)
+retains those causes through URLSession completion, chunk retry, both task groups
+and assembly cleanup. Every cancelled sibling is drained explicitly.
+
+New slow-protocol cases pass active cancellation plus close failure and deadline
+plus close failure, preserving interruption context without retry or later
+writes. Final strict Swift/core/SDK checks pass. Astra also requested typed
+removal errors and a bounded deadline fixture; both are included. The
+[receipt](../benchmarks/results/2026-10-23-model-hub-cleanup-errors-v1.json) records
+historical failed/intermediate inputs. Completed transfer and numerical paths
+are unchanged, and no new phone or performance qualification is claimed.
