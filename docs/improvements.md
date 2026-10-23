@@ -1336,3 +1336,41 @@ receipt retains the exact executed source and maps the final whitespace-only
 version explicitly. Functional checks are inherited unchanged.
 Astra clears this amendment after verifying all413 bindings,75 current source
 copies and the exact one-newline correspondence.
+
+
+### Immutable public-model search/download core — 23 October 2026
+
+The [model hub core](model-hub.md) separates searchable public MLX repositories
+from the single currently qualified SmolLM2 chat download. The hypothesis is that
+a pinned, verified app-owned snapshot can replace manual model copying without
+claiming arbitrary search results are compatible. A cold Swift actor admits the
+immutable revision and six trusted file sizes/SHA-256 hashes, streams sequentially,
+reserves storage and publishes an authenticated local receipt only after full
+verification. Existing snapshots are preserved. Networking/hashing stay outside
+the numerical worker; Rust, shaders, native package and protected CPU binaries
+remain unchanged.
+
+Astra found path-based prechecks before open and a missing active-URLSession
+cancellation witness. Verification now uses no-follow/nonblocking descriptors,
+`fstat` admission, bounded reads and the same opened inode for parsing/hashing;
+openat binds children to an opened directory. Ancestor symlinks reject before
+mkdir. A live delayed URLProtocol sends1MiB through the actual sink, then
+cancellation stops the transfer before its continuation returns and prevents
+later writes. Exact cancellation/publication boundaries, storage changes,
+corruption, FIFO/link/path/revision/receipt errors, duplicate requests and
+exclusive publication collisions have deterministic regressions.
+
+The final v6 strict Swift6 compile, deterministic suite and iOS type-check pass.
+Retained earlier failures include test-autoclosure compilation, URL directory
+identity and explicit Apple `/tmp`/`/var` alias handling; no acceptance gate was
+loosened. Models-screen integration is the next separately reviewed task.
+
+The actual Mac URLSession search/download succeeds for all146,607,552 required
+bytes, followed by full saved-snapshot verification. Independent Python hashes
+match all six files against the previously qualified local source. This task
+establishes transport/integrity behavior only; UI, numerical loading and physical
+use remain separate. The [core receipt](../benchmarks/results/2026-10-23-model-hub-core-v1.json)
+retains exact source and result identities. Retain the bounded download core.
+Astra accepts Task1 for commit with no remaining blockers after independently
+verifying all67 bindings, three current source copies and the actual network
+result. Links and staged-file whitespace checks pass.
