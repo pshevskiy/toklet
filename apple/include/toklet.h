@@ -89,9 +89,9 @@ uint32_t toklet_session_generate(const TokletSession *, uint32_t, const uint32_t
 uint32_t toklet_cancel_create(TokletCancel **, TokletError *);
 uint32_t toklet_cancel_set(const TokletCancel *, uint32_t, TokletError *);
 uint32_t toklet_cancel_release(TokletCancel *, TokletError *);
-/* Additive immutable text boundary, same creating-thread rule. SmolLM2-135M
-   only, with exact pinned tokenizer/config assets from the loaded model folder.
-   Reserve >=64MiB allowance separately from the numerical model/session budget.
+/* Additive immutable text boundary, same creating-thread rule. Pinned SmolLM2
+   and Qwen2.5 profiles with exact model config/tokenizer assets. Reserve >=64MiB
+   for SmolLM2 or >=128MiB for Qwen separately from numerical admission.
    No model/session is retained by the returned chat handle. No network access. */
 uint32_t toklet_chat_create(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
 /* JSON array of alternating {role,content} messages, starting/ending user.
@@ -103,6 +103,9 @@ uint32_t toklet_chat_encode(const TokletChat *, const uint8_t *, size_t, uint32_
    per-token decodes. Special IDs hidden. UTF-8 byte output, no NUL, <=64KiB.
    Query and small-buffer semantics as above. A later prefix repairs split UTF-8. */
 uint32_t toklet_chat_decode(const TokletChat *, const uint32_t *, size_t, uint8_t *, size_t, size_t *, TokletError *);
+/* Profile stop IDs; use for generation. Capacity <=8. Same query, disjoint
+   output/count and creating-thread rules as the other text queries. */
+uint32_t toklet_chat_stop_ids(const TokletChat *, uint32_t *, size_t, size_t *, TokletError *);
 uint32_t toklet_chat_release(TokletChat *, TokletError *);
 #ifdef __cplusplus
 }

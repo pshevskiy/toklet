@@ -1448,3 +1448,36 @@ signed phone proofs, fresh-transfer result, native/full-controller Mac equality,
 natural exit and retained failures. All 318 local links, staged whitespace and
 task-file privacy checks pass. The decision is to retain this bounded feature;
 wider downloadable/text profiles remain open.
+
+### Qwen native text profile and profile-specific stop IDs — 23 October 2026
+
+The existing Qwen2.5-0.5B eight-bit numerical checkpoint needs its own text assets,
+system message, stop IDs and memory admission before the friendly app can use it.
+The independent Python/Jinja export was frozen before target edits. Exact model
+configuration and tokenizer hashes now select one of two bounded text profiles,
+then validate the loaded geometry. The numerical kernels and raw-ID APIs remain
+unchanged. Qwen uses 128 MiB of separate logical text allowance; SmolLM2 retains
+64 MiB. A coarse immutable C query supplies the complete profile stop set before
+generation, avoiding SmolLM2’s stop IDs being reused for Qwen.
+
+Astra found a repository-label typo in the initial Qwen reference export. The
+original producer/fixture and executed checks are retained. The correction changes
+only that metadata label to the pinned Qwen2.5-0.5B repository; all rendered text,
+IDs, decoding and other metadata compare exactly. It grants no numerical or
+quality waiver. Astra also requested explicit stop-query bounds and thread/pointer
+coverage before final evidence acceptance. The bounded real C bridge check loads
+Qwen, rejects insufficient text allowance, generates/decode text and proves a
+forced stop produces no visible token. Native model release does not invalidate
+the immutable text handle or session. Swift/catalog integration follows separately.
+
+All seven final commands pass: Rust 1.90 formatting, strict all-target Metal
+Clippy, ordinary CPU and Metal suites, both pinned local codecs, native real GPU
+text/stop checks and independent Python replay. The [Qwen text receipt](../benchmarks/results/2026-10-23-qwen-app-chat-profile-v1.json)
+retains source copies and earlier checks. Protected CPU binaries remain unchanged.
+
+Astra accepted this native task after independently verifying all 157 bindings,
+47 current source copies and six historical mappings, all three seven-command
+receipts and the metadata-only correction. Final logs contain 148 CPU passes
+(11 ignored), 164 Metal-feature passes (85 ignored), two explicit codec checks
+and three native text checks. Whitespace, 237 local links and public-task privacy
+checks pass. The decision is to retain the bounded native extension.

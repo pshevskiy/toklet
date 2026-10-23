@@ -1,6 +1,6 @@
 //! Additive, immutable text handle. Numerical handles remain raw-token APIs.
 use super::*;
-use crate::app_chat::{Codec, MAX_TEXT, MAX_TOKENS, TOKENIZER_ALLOWANCE};
+use crate::app_chat::{Codec, MAX_TEXT, MAX_TOKENS, Profile};
 
 pub struct ChatHandle {
     owner: ThreadId,
@@ -34,8 +34,8 @@ unsafe fn copy_output<T: Copy>(
     Ok(())
 }
 
-/// Load the exact SmolLM2 chat assets from the loaded model's own directory.
-/// The caller reserves 64MiB in ADDITION to its numerical budget.
+/// Load the pinned chat assets from the loaded model's own directory.
+/// The caller reserves 64MiB (SmolLM2) or 128MiB (Qwen) beyond its numerical budget.
 /// # Safety
 /// Follow the parent module's foreign pointer/thread contract.
 #[unsafe(no_mangle)]
@@ -52,12 +52,14 @@ pub unsafe extern "C" fn toklet_chat_create(
             pointer(model)?;
             let model = &*model;
             owner(model.owner)?;
-            if allowance < TOKENIZER_ALLOWANCE as u64
+            let profile =
+                Profile::load(&model.directory).map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
+            if allowance < profile.allowance() as u64
                 || allowance > weights::INITIAL_MEMORY_LIMIT_BYTES as u64
             {
                 return Err(fail(
                     INVALID,
-                    "reserve at least 64MiB separately for text assets and buffers",
+                    "reserve the profile text allowance separately: SmolLM2 64MiB, Qwen 128MiB",
                 ));
             }
             let config = match model.model.as_ref() {
@@ -69,25 +71,14 @@ pub unsafe extern "C" fn toklet_chat_create(
                 ))]
                 NativeModel::Metal(model) => model.config(),
             };
-            if (
-                config.vocab_size,
-                config.hidden_size,
-                config.intermediate_size,
-                config.num_layers,
-                config.query_heads,
-                config.kv_heads,
-                config.head_dim,
-            ) != (49152, 576, 1536, 30, 9, 3, 64)
-                || config.rope_theta != 100000.0
-                || config.rms_norm_eps != 1e-5
-            {
+            if !profile.supports(config) {
                 return Err(fail(
                     UNSUPPORTED,
-                    "text chat currently supports the selected SmolLM2-135M profile",
+                    "loaded model geometry does not match its pinned text profile",
                 ));
             }
-            let codec =
-                Codec::load(&model.directory).map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
+            let codec = Codec::load_profile(&model.directory, profile)
+                .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
             out.write(Box::into_raw(Box::new(ChatHandle {
                 owner: thread::current().id(),
                 codec,
@@ -160,6 +151,31 @@ pub unsafe extern "C" fn toklet_chat_decode(
     }
 }
 
+/// Query the pinned profile's complete stop-ID set. No implicit EOS is added.
+/// NULL+0 and undersized-buffer behavior matches the other text queries.
+/// # Safety
+/// Follow the parent module's pointer/thread/disjoint-output contract.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_chat_stop_ids(
+    chat: *const ChatHandle,
+    output: *mut u32,
+    capacity: usize,
+    count: *mut usize,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(chat)?;
+            let chat = &*chat;
+            owner(chat.owner)?;
+            if capacity > 8 {
+                return Err(fail(INVALID, "stop-ID capacity exceeds eight"));
+            }
+            copy_output(chat.codec.stop_ids(), output, capacity, count)
+        })
+    }
+}
+
 /// Release an immutable text handle. NULL is a no-op; no model lifetime retained.
 /// # Safety
 /// Follow the parent module's foreign pointer/thread contract.
@@ -183,6 +199,7 @@ pub unsafe extern "C" fn toklet_chat_release(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::app_chat::TOKENIZER_ALLOWANCE;
     #[test]
     fn model_directory_freezes_relative_origin() {
         let path = origin_path(Path::new("models/local")).unwrap();
@@ -388,6 +405,155 @@ mod tests {
         }
     }
 
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    #[ignore = "explicit real local Qwen GPU text check"]
+    fn public_qwen_chat_generation_and_stop_query() {
+        unsafe extern "C" fn collect(ctx: *mut c_void, event: TokenEvent) -> u32 {
+            // SAFETY: this synchronous test lends its unique Vec for the callback.
+            unsafe { (&mut *ctx.cast::<Vec<u32>>()).push(event.token_id) };
+            0
+        }
+        let path = b"models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c";
+        let opts = Options {
+            abi_version: ABI_VERSION,
+            struct_size: size_of::<Options>() as u32,
+            capacity: 128,
+            chunk: 32,
+            memory_limit_bytes: 1024 * 1024 * 1024,
+        };
+        unsafe {
+            let mut model = ptr::null_mut();
+            let mut chat = ptr::null_mut();
+            assert_eq!(
+                toklet_model_load_mlx(
+                    path.as_ptr(),
+                    path.len(),
+                    &opts,
+                    &mut model,
+                    ptr::null_mut()
+                ),
+                OK
+            );
+            assert_eq!(
+                toklet_chat_create(
+                    model,
+                    TOKENIZER_ALLOWANCE as u64,
+                    &mut chat,
+                    ptr::null_mut()
+                ),
+                INVALID
+            );
+            assert!(chat.is_null());
+            assert_eq!(
+                toklet_chat_create(
+                    model,
+                    Profile::Qwen.allowance() as u64,
+                    &mut chat,
+                    ptr::null_mut()
+                ),
+                OK
+            );
+            let mut stops = [0; 2];
+            let mut count = 0;
+            assert_eq!(
+                toklet_chat_stop_ids(chat, stops.as_mut_ptr(), 2, &mut count, ptr::null_mut()),
+                OK
+            );
+            assert_eq!(stops, [151643, 151645]);
+            assert_eq!(count, 2);
+            let mut session = ptr::null_mut();
+            let mut cancel = ptr::null_mut();
+            assert_eq!(
+                toklet_session_create(model, &opts, &mut session, ptr::null_mut()),
+                OK
+            );
+            assert_eq!(toklet_cancel_create(&mut cancel, ptr::null_mut()), OK);
+            assert_eq!(toklet_model_release(model, ptr::null_mut()), OK);
+            let input = br#"[{"role":"user","content":"Hello!"}]"#;
+            let mut prompt = [0; 512];
+            assert_eq!(
+                toklet_chat_encode(
+                    chat,
+                    input.as_ptr(),
+                    input.len(),
+                    prompt.as_mut_ptr(),
+                    prompt.len(),
+                    &mut count,
+                    ptr::null_mut()
+                ),
+                OK
+            );
+            let mut ids = Vec::<u32>::new();
+            let mut report = Report::default();
+            assert_eq!(
+                toklet_session_generate(
+                    session,
+                    3,
+                    prompt.as_ptr(),
+                    count,
+                    8,
+                    stops.as_ptr(),
+                    stops.len(),
+                    cancel,
+                    Some(collect),
+                    (&mut ids as *mut Vec<u32>).cast(),
+                    &mut report,
+                    ptr::null_mut()
+                ),
+                OK
+            );
+            assert!(!ids.is_empty());
+            assert!(ids.iter().all(|id| !stops.contains(id)));
+            let mut text = [0u8; MAX_TEXT];
+            let mut bytes = 0;
+            assert_eq!(
+                toklet_chat_decode(
+                    chat,
+                    ids.as_ptr(),
+                    ids.len(),
+                    text.as_mut_ptr(),
+                    text.len(),
+                    &mut bytes,
+                    ptr::null_mut()
+                ),
+                OK
+            );
+            let decoded = std::str::from_utf8(&text[..bytes]).unwrap();
+            assert!(!decoded.is_empty());
+            println!(
+                "QWEN_CHAT_JSON={}",
+                serde_json::json!({"ids": ids, "text": decoded, "reason": report.reason})
+            );
+            // A stop on the known first token is hidden and leaves no visible event.
+            let forced = [ids[0]];
+            ids.clear();
+            assert_eq!(
+                toklet_session_generate(
+                    session,
+                    3,
+                    prompt.as_ptr(),
+                    count,
+                    8,
+                    forced.as_ptr(),
+                    1,
+                    cancel,
+                    Some(collect),
+                    (&mut ids as *mut Vec<u32>).cast(),
+                    &mut report,
+                    ptr::null_mut()
+                ),
+                OK
+            );
+            assert_eq!(report.reason, 2);
+            assert_eq!(report.stop_token, forced[0]);
+            assert!(ids.is_empty());
+            assert_eq!(toklet_session_release(session, ptr::null_mut()), OK);
+            assert_eq!(toklet_cancel_release(cancel, ptr::null_mut()), OK);
+            assert_eq!(toklet_chat_release(chat, ptr::null_mut()), OK);
+        }
+    }
+
     #[test]
     #[ignore = "explicit local tokenizer bridge check; no model download"]
     fn real_text_handle_bounds_thread_and_utf8() {
@@ -481,9 +647,51 @@ mod tests {
                 INVALID
             );
         }
+        unsafe {
+            assert_eq!(
+                toklet_chat_stop_ids(chat, ptr::null_mut(), 1, &mut count, ptr::null_mut()),
+                INVALID
+            );
+            assert_eq!(
+                toklet_chat_stop_ids(chat, ptr::null_mut(), 0, ptr::null_mut(), ptr::null_mut()),
+                INVALID
+            );
+            let mut stops = [99u32; 2];
+            assert_eq!(
+                toklet_chat_stop_ids(chat, ptr::null_mut(), 0, &mut count, ptr::null_mut()),
+                OK
+            );
+            assert_eq!(count, 2);
+            assert_eq!(
+                toklet_chat_stop_ids(chat, stops.as_mut_ptr(), 1, &mut count, ptr::null_mut()),
+                INVALID
+            );
+            assert_eq!(stops, [99, 99]);
+            assert_eq!(
+                toklet_chat_stop_ids(chat, stops.as_mut_ptr(), 2, &mut count, ptr::null_mut()),
+                OK
+            );
+            assert_eq!(stops, [0, 2]);
+            assert_eq!(
+                toklet_chat_stop_ids(chat, stops.as_mut_ptr(), 9, &mut count, ptr::null_mut()),
+                INVALID
+            );
+        }
         let address = chat as usize;
         assert_eq!(
             thread::spawn(move || unsafe {
+                let mut count = 0;
+                assert_eq!(
+                    toklet_chat_stop_ids(
+                        address as *mut ChatHandle,
+                        ptr::null_mut(),
+                        0,
+                        &mut count,
+                        ptr::null_mut()
+                    ),
+                    WRONG_THREAD
+                );
+
                 toklet_chat_release(address as *mut ChatHandle, ptr::null_mut())
             })
             .join()

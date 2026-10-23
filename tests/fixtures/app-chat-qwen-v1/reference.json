@@ -1,0 +1,141 @@
+{
+  "format": "toklet-qwen-chat-reference-v1",
+  "repo": "mlx-community/Qwen2.5-0.5B-Instruct-8bit",
+  "revision": "6474d4c1a05bd7bd634a9c993560e4e7272eda3d",
+  "tokenizer_sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+  "config_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+  "template_sha256": "d5495a1e5db0611132a97e46a65dbb64a642a499421228b9c8b93229097fa9a4",
+  "runtime": {
+    "jinja2": "3.1.6",
+    "tokenizers": "0.22.2"
+  },
+  "cases": [
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello!"
+        }
+      ],
+      "rendered": "<|im_start|>system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\n<|im_start|>user\nHello!<|im_end|>\n<|im_start|>assistant\n",
+      "ids": [
+        151644,
+        8948,
+        198,
+        2610,
+        525,
+        1207,
+        16948,
+        11,
+        3465,
+        553,
+        54364,
+        14817,
+        13,
+        1446,
+        525,
+        264,
+        10950,
+        17847,
+        13,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        9707,
+        0,
+        151645,
+        198,
+        151644,
+        77091,
+        198
+      ],
+      "decoded": "system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.\nuser\nHello!\nassistant\n"
+    },
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello, 🌍! Привет."
+        },
+        {
+          "role": "assistant",
+          "content": "Hello! How can I help?"
+        },
+        {
+          "role": "user",
+          "content": "What is 2 + 2?"
+        }
+      ],
+      "rendered": "<|im_start|>system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\n<|im_start|>user\nHello, 🌍! Привет.<|im_end|>\n<|im_start|>assistant\nHello! How can I help?<|im_end|>\n<|im_start|>user\nWhat is 2 + 2?<|im_end|>\n<|im_start|>assistant\n",
+      "ids": [
+        151644,
+        8948,
+        198,
+        2610,
+        525,
+        1207,
+        16948,
+        11,
+        3465,
+        553,
+        54364,
+        14817,
+        13,
+        1446,
+        525,
+        264,
+        10950,
+        17847,
+        13,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        9707,
+        11,
+        11162,
+        234,
+        235,
+        0,
+        79484,
+        26991,
+        8178,
+        13,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        9707,
+        0,
+        2585,
+        646,
+        358,
+        1492,
+        30,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        3838,
+        374,
+        220,
+        17,
+        488,
+        220,
+        17,
+        30,
+        151645,
+        198,
+        151644,
+        77091,
+        198
+      ],
+      "decoded": "system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.\nuser\nHello, 🌍! Привет.\nassistant\nHello! How can I help?\nuser\nWhat is 2 + 2?\nassistant\n"
+    }
+  ]
+}

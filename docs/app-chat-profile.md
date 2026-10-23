@@ -52,3 +52,30 @@ binaries remain unchanged. A preliminary log-wrapper path error is observed in
 tool output; only its formatting logs are retained, with no preliminary test
 credit. Subsequent complete runs are retained separately. Astra accepts this
 bounded text-profile task after source and evidence review.
+
+## Qwen text profile extension — 23 October 2026
+
+The native text boundary additionally supports the already qualified
+[Qwen2.5-0.5B eight-bit snapshot](mlx8-checkpoint.md). A separate independent
+[Python/Jinja export](../tools/reference/app_chat_qwen.py) freezes the original
+plain conversation branch, including Qwen’s default system message, complete
+IDs and decoded Unicode text. The app never executes downloaded Jinja or enables
+tools. Alternating text-only user/assistant messages retain the existing bounds.
+
+Text creation now checks the exact model configuration SHA as well as its loaded
+geometry and exact tokenizer/config identities. Qwen reserves a separate 128 MiB
+logical text allowance; SmolLM2 retains 64 MiB. These are conservative admission
+reservations, not measured physical peaks. A new immutable C stop-ID query returns
+`151643,151645` for Qwen and `0,2` for SmolLM2, so the app can select stops outside
+numerical generation. Existing raw-ID APIs keep explicit caller stop semantics.
+Control-token strings in user/assistant content reject before encoding.
+
+This native task does not enable Qwen in the Swift Models screen by itself. That
+integration, updated native package and actual phone Chat checks follow in a
+separate reviewed task. Broader Mistral execution and text support also remain
+separate. No new answer-quality or latency claim follows from this extension.
+
+The [Qwen text receipt](../benchmarks/results/2026-10-23-qwen-app-chat-profile-v1.json)
+retains final Rust formatting/strict Clippy, ordinary CPU/Metal suites, explicit
+local codecs/C bridge generation and independent Python replay. Earlier exports
+and check versions remain bound through exact source snapshots.
