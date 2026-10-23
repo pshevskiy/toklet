@@ -1727,3 +1727,18 @@ and SDK type checking pass; the earlier sandbox storage failure and all fixture
 trials remain in the [receipt](../benchmarks/results/2026-10-23-model-hub-whole-retries-v1.json).
 No numerical kernels changed. Fresh Mistral network completion remains separate;
 physical phone work stays paused.
+
+### Fresh Mistral network snapshot and reopening on Mac — 23 October 2026
+
+The [actual new Mac download](mlx-mistral-hub-download.md) now passes public
+search, pinned catalog admission, all six files and independent full-file SHA256
+checks, totaling 4,079,633,318 bytes. The download reports no reuse; ordinary
+reopening of that actual cache reports reuse and passes native multi-turn/state,
+cancellation/suspension/release and offline friendly-controller Chat. All four
+reply ID/text sequences match the previously independently decoded local test.
+The weight transfer observes 3,667.422 seconds on this link; it is not an engine
+performance result or promised ETA. The first full-body loss and ranged timeout
+remain retained failures, without inferring their cause from a later success.
+The frozen app source predates the separate Mac window add-on. Physical phone,
+visible GUI, wider checkpoint, quality and full performance scopes remain
+separate.

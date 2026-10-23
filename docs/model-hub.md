@@ -254,3 +254,8 @@ it is not established as the cause of that failure. The
 [retry receipt](../benchmarks/results/2026-10-23-model-hub-whole-retries-v1.json)
 retains that failed trial, earlier fixture failures and the passing final checks.
 This change alone does not qualify a successful fresh Mistral transfer.
+
+The later [fresh Mistral Mac download and reopening](mlx-mistral-hub-download.md)
+passes all six independent file identities and native/offline-controller Chat.
+That separate real trial supplies the completion evidence; the earlier timeout
+and fixture scope above remain unchanged.

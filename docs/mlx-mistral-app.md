@@ -56,14 +56,12 @@ historical sources remain in the [app receipt](../benchmarks/results/2026-10-23-
 
 ## Remaining limits
 
-The first actual fresh multi-GB range trial also failed, with timeout code
--1001 and an empty final model directory. Its saved diagnostic does not identify
-the failed file/range or final byte count. The earlier full-body trial lost the
-connection. Both safely discarded incomplete staging. The
-[bounded range mechanism](model-hub.md#bounded-large-file-transport--23-october-2026)
-has deterministic acceptance; a complete real transfer requires its own full
-SHA and publication evidence. This app task makes no fresh Mistral network
-weight-transfer claim.
+The separate [fresh Mac transfer and reopening](mlx-mistral-hub-download.md)
+now passes: all six files are downloaded into a new root, independently hashed,
+and the actual downloaded copy passes native and offline-controller Chat.
+The earlier full-body connection loss and first ranged timeout remain retained
+failures. That first ranged diagnostic does not identify its failed file/range
+or terminal byte count. The successful later retry does not prove their cause.
 
 Physical iPhone work stays paused at the user's request. Qwen's pending phone
 Chat and all Mistral phone checks remain open. Wider architectures/checkpoints,
