@@ -32,6 +32,20 @@ extension View {
     }
 }
 
+// Explicit button styling prevents a Form row from firing every button in it.
+// Accessibility text sizes use one action per line.
+private struct HarnessActions<Content: View>: View {
+    @Environment(\.dynamicTypeSize) private var typeSize
+    let content: Content
+    init(@ViewBuilder content: () -> Content) { self.content = content() }
+    var body: some View {
+        Group {
+            if typeSize.isAccessibilitySize { VStack(alignment:.leading,spacing:12) { content } }
+            else { HStack { content } }
+        }.buttonStyle(.bordered)
+    }
+}
+
 @MainActor
 struct HarnessView: View {
     @ObservedObject var store: HarnessStore
@@ -99,7 +113,7 @@ struct HarnessView: View {
                 Section("Local artifacts") {
                     Text("Raw token diagnostic harness").font(.headline)
                     VStack(alignment:.leading) { Text("Model folder").font(.caption); TextField("Local path",text:bounded($directory,16384)).harnessLiteralInput() }
-                    HStack {
+                    HarnessActions {
                         Button("Tiny fixture") { directory = Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""; packed = ""; mlx = false }
                         Button("Documents/Model") { directory = documents.appendingPathComponent("Model").path }
                     }.disabled(!idle || store.state.hasModel)
@@ -117,12 +131,12 @@ struct HarnessView: View {
                     VStack(alignment:.leading) { Text("Prompt or append IDs").font(.caption); TextField("IDs",text:bounded($prompt,262144),axis:.vertical).harnessLiteralInput() }
                     VStack(alignment:.leading) { Text("Hidden stop IDs (optional)").font(.caption); TextField("IDs",text:bounded($stops,262144)).harnessLiteralInput() }
                     HStack { Text("Maximum new IDs"); TextField("0–128",text:bounded($outputCount,10)).harnessNumberInput().multilineTextAlignment(.trailing) }
-                    HStack {
+                    HarnessActions {
                         Button("Prompt") { generate(0) }
                         Button("Append") { generate(1) }
                         Button("Continue") { generate(2) }
                     }.disabled(!idle || !store.state.hasSession)
-                    HStack {
+                    HarnessActions {
                         Button("Reset") { store.submit(.reset) }.disabled(!idle || !store.state.hasSession)
                         Button("Cancel") { store.worker?.cancel() }.disabled(store.state.closed)
                     }
@@ -144,7 +158,7 @@ struct HarnessView: View {
                     if !store.state.message.isEmpty { Text("Status \(store.state.status): \(store.state.message)").foregroundStyle(.red) }
                     if !store.inputError.isEmpty { Text(store.inputError).foregroundStyle(.red) }
                 }
-            }.navigationTitle("Expert mode")
+            }.scrollDismissesKeyboard(.interactively).navigationTitle("Expert mode")
                 .toolbar { if !store.diagnosticsOnly { Button("Back to Chat") { store.setExpert(false) } } }
         }
     }

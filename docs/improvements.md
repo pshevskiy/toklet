@@ -1782,3 +1782,24 @@ actual partial cancellation, history/model identity and stale verification.
 Strict existing controller suites and iOS SDK builds pass; Astra reviews the
 code and evidence before commit. Physical button/layout fixes and the final
 phone audit are recorded separately when completed.
+
+### Isolate Expert buttons and repair app presentation — 23 October 2026
+
+The ongoing [iPhone function/button audit](iphone-app-audit.md) reproduced a Form
+row bug: Tiny fixture also fired Documents/Model. Explicit per-action styling now
+isolates all three multi-button Expert rows, with vertical accessibility layout.
+The friendly view keeps qualified model controls above search results, exposes
+folder errors, treats Files cancellation normally, owns deletion confirmation in
+the visible History sheet, and follows latest chat activity while respecting
+manual scroll-back/gestures. Initial restored scroll position and full accessible
+model headings are handled explicitly. Numerical code is unchanged.
+
+SDK and Mac build checks and Astra review are recorded in the
+[UI receipt](../benchmarks/results/2026-10-23-iphone-ui-controls-v1.json).
+The corrected signed app was installed in place. Physical checks confirm isolated
+Expert actions and lifecycle transitions, public search, Qwen download/load/chat,
+active Stop with partial text, long-response follow/scroll-back, Settings choices,
+Files cancellation and visible History confirmation. After action-time approval,
+only the new interrupted synthetic chat was deleted. The detailed checklist
+retains unexecuted controls; the full sweep remains open after another Mac lock.
+Existing owner chats and model caches were neither deleted nor exported.

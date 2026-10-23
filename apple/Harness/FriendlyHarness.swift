@@ -36,6 +36,10 @@ struct FriendlyHarnessView: View {
     @State private var sheet: ChatSheet?
     @State private var importing = false
     @State private var deleting: UUID?
+    @State private var followsLatest = true
+    @State private var userScrolling = false
+    @State private var atBottom = true
+    @FocusState private var modelSearchFocused: Bool
     init(store: HarnessStore,chat: FriendlyChatStore? = nil,hub: HubStore? = nil) {
         self.store = store
         _chat = StateObject(wrappedValue:chat ?? FriendlyChatStore(harness:store))
@@ -82,40 +86,64 @@ struct FriendlyHarnessView: View {
                 .toolbar { ToolbarItem(placement:.confirmationAction) { Button("Close") { sheet = nil } } }
             }.tint(.indigo).harnessSheetSize()
         }
-        .confirmationDialog("Delete this conversation?",isPresented:Binding(get:{ deleting != nil },set:{ if !$0 { deleting = nil } }),titleVisibility:.visible) {
-            Button("Delete conversation",role:.destructive) { if let id = deleting { chat.remove(id) }; deleting = nil }
-            Button("Cancel",role:.cancel) { deleting = nil }
-        }
     }
     private var conversation: some View {
-        ScrollView {
-            if chat.workspace.current.messages.isEmpty {
-                VStack(spacing:18) {
-                    Image(systemName:"bubble.left.and.bubble.right").font(.largeTitle).foregroundStyle(.indigo)
-                        .frame(width:72,height:72).background(surface,in:RoundedRectangle(cornerRadius:22)).accessibilityHidden(true)
-                    Text("What’s on your mind?").font(.title2.weight(.semibold))
-                    Text(chat.ready ? "Your conversation stays on this device." : "Choose a local model to start chatting.")
-                        .foregroundStyle(.secondary)
-                    if !chat.ready { Button("Choose a model",systemImage:"plus") { sheet = .models }.buttonStyle(.borderedProminent).controlSize(.large) }
-                }.multilineTextAlignment(.center).frame(maxWidth:360).padding(28).padding(.top,64).frame(maxWidth:.infinity)
-            } else {
-                LazyVStack(alignment:.leading,spacing:24) {
-                    ForEach(chat.workspace.current.messages) { message in
-                        VStack(alignment:.leading,spacing:8) {
-                            Text(message.role == "user" ? "You" : "Toklet").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
-                            if message.writing { HStack { ProgressView(); Text("Writing…").foregroundStyle(.secondary) } }
-                            else {
-                                Text(message.text.isEmpty ? (message.interrupted ? "Response stopped." : "No text returned.") : message.text)
-                                    .textSelection(.enabled)
-                                if message.interrupted && !message.text.isEmpty { Text("Stopped").font(.caption).foregroundStyle(.secondary) }
-                                if !message.notice.isEmpty { Text(message.notice).font(.callout).foregroundStyle(.secondary) }
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(spacing:0) {
+                    if chat.workspace.current.messages.isEmpty {
+                        VStack(spacing:18) {
+                            Image(systemName:"bubble.left.and.bubble.right").font(.largeTitle).foregroundStyle(.indigo)
+                                .frame(width:72,height:72).background(surface,in:RoundedRectangle(cornerRadius:22)).accessibilityHidden(true)
+                            Text("What’s on your mind?").font(.title2.weight(.semibold))
+                            Text(chat.ready ? "Your conversation stays on this device." : "Choose a local model to start chatting.")
+                                .foregroundStyle(.secondary)
+                            if !chat.ready { Button("Choose a model",systemImage:"plus") { sheet = .models }.buttonStyle(.borderedProminent).controlSize(.large) }
+                        }.multilineTextAlignment(.center).frame(maxWidth:360).padding(28).padding(.top,64).frame(maxWidth:.infinity)
+                    } else {
+                        LazyVStack(alignment:.leading,spacing:24) {
+                            ForEach(chat.workspace.current.messages) { message in
+                                VStack(alignment:.leading,spacing:8) {
+                                    Text(message.role == "user" ? "You" : "Toklet").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                                    if message.writing { HStack { ProgressView(); Text("Writing…").foregroundStyle(.secondary) } }
+                                    else {
+                                        Text(message.text.isEmpty ? (message.interrupted ? "Response stopped." : "No text returned.") : message.text)
+                                            .textSelection(.enabled)
+                                        if message.interrupted && !message.text.isEmpty { Text("Stopped").font(.caption).foregroundStyle(.secondary) }
+                                        if !message.notice.isEmpty { Text(message.notice).font(.callout).foregroundStyle(.secondary) }
+                                    }
+                                }
+                                .padding(message.role == "user" ? 16 : 0)
+                                .frame(maxWidth:.infinity,alignment:.leading)
+                                .background(message.role == "user" ? Color.indigo.opacity(0.07) : Color.clear,in:RoundedRectangle(cornerRadius:20))
                             }
-                        }
-                        .padding(message.role == "user" ? 16 : 0)
-                        .frame(maxWidth:.infinity,alignment:.leading)
-                        .background(message.role == "user" ? Color.indigo.opacity(0.07) : Color.clear,in:RoundedRectangle(cornerRadius:20))
+                        }.frame(maxWidth:570).frame(maxWidth:.infinity).padding(24)
                     }
-                }.frame(maxWidth:570).frame(maxWidth:.infinity).padding(24)
+                }.id("chat-bottom")
+            }
+            .defaultScrollAnchor(.bottom,for:.initialOffset)
+            .onScrollGeometryChange(for:Bool.self) { geometry in
+                geometry.contentSize.height + geometry.contentInsets.bottom - geometry.contentOffset.y - geometry.containerSize.height <= 64
+            } action: { _,value in
+                atBottom = value
+                if userScrolling { followsLatest = value }
+            }
+            .onScrollPhaseChange { _,phase in
+                let interacting = phase == .tracking || phase == .interacting || phase == .decelerating
+                if !interacting && userScrolling { followsLatest = atBottom }
+                userScrolling = interacting
+            }
+            .onChange(of:chat.workspace.selected) { _,_ in
+                followsLatest = true; proxy.scrollTo("chat-bottom",anchor:.bottom)
+            }
+            .onChange(of:chat.workspace.current.messages.count) { old,new in
+                if new > old { followsLatest = true; proxy.scrollTo("chat-bottom",anchor:.bottom) }
+            }
+            .onChange(of:chat.workspace.current.messages.last?.text) { _,_ in
+                if followsLatest && !userScrolling { proxy.scrollTo("chat-bottom",anchor:.bottom) }
+            }
+            .onScrollGeometryChange(for:CGSize.self) { $0.containerSize } action: { _,_ in
+                if followsLatest && !userScrolling { proxy.scrollTo("chat-bottom",anchor:.bottom) }
             }
         }
         .scrollDismissesKeyboard(.interactively)
@@ -129,10 +157,10 @@ struct FriendlyHarnessView: View {
             ToolbarItem(placement:.principal) {
                 Button { sheet = .models } label: {
                     VStack(spacing:2) {
-                        Text(chat.hasChatModel ? chat.modelName : "Toklet").font(.headline)
+                        Text(chat.hasChatModel ? chat.modelName : "Toklet").font(.headline).lineLimit(1).truncationMode(.middle)
                         Text(chat.hasChatModel ? "On device" : "Choose a model").font(.caption).foregroundStyle(.secondary)
                     }
-                }.buttonStyle(.plain).frame(minHeight:44).accessibilityLabel("Choose model").accessibilityIdentifier("chat-model-picker")
+                }.buttonStyle(.plain).frame(minHeight:44).accessibilityLabel(chat.hasChatModel ? "Choose model. " + chat.modelName + ". On device." : "Choose model").accessibilityIdentifier("chat-model-picker")
             }
             ToolbarItem(placement:trailingPlacement) {
                 Button("New chat",systemImage:"square.and.pencil") { chat.newChat() }.labelStyle(.iconOnly).frame(minWidth:44,minHeight:44).disabled(!unlocked)
@@ -177,15 +205,13 @@ struct FriendlyHarnessView: View {
             Section("Hugging Face") {
                 HStack {
                     TextField("Search MLX models",text:$hub.query).harnessLiteralInput()
-                        .submitLabel(.search).onSubmit { hub.search() }.accessibilityIdentifier("hub-search-query")
-                    Button("Search") { hub.search() }.disabled(hub.busy || hub.query.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
+                        .focused($modelSearchFocused).submitLabel(.search)
+                        .onSubmit { modelSearchFocused = false; hub.search() }.accessibilityIdentifier("hub-search-query")
+                    Button("Search") { modelSearchFocused = false; hub.search() }.disabled(hub.busy || hub.query.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
                         .accessibilityIdentifier("hub-search")
                 }
                 Text("Search is public. Only qualified text profiles can be downloaded here.")
                     .font(.footnote).foregroundStyle(.secondary)
-                #if os(iOS)
-                searchResults
-                #endif
             }
             Section("Available for chat") {
                 Picker("Model",selection:Binding(get:{ hub.profile.repository },set:{ id in
@@ -230,9 +256,7 @@ struct FriendlyHarnessView: View {
                 Text(folderHelp)
                     .font(.footnote).foregroundStyle(.secondary)
             }
-            #if os(macOS)
             if !hub.results.isEmpty { Section("Search results") { searchResults } }
-            #endif
             Section("Other local folders") {
                 ForEach(chat.folders,id:\.self) { folder in
                     Button { hub.modelChoiceChanged(); chat.open(folder) } label: {
@@ -245,30 +269,33 @@ struct FriendlyHarnessView: View {
                 Button("Choose local folder",systemImage:"folder") { importing = true }.disabled(!unlocked || hub.busy || store.state.closed)
             }
             if store.state.busy { Section { ProgressView("Opening or releasing model…") } }
+            if !chat.notice.isEmpty { Section { Text(chat.notice).foregroundStyle(.secondary) } }
             if !store.state.message.isEmpty { Section { Text(store.state.message) } }
-        }.navigationTitle("Models").onAppear { chat.refreshFolders(); hub.refresh() }
+        }.scrollDismissesKeyboard(.interactively).navigationTitle("Models").onAppear { chat.refreshFolders(); hub.refresh() }
             .fileImporter(isPresented:$importing,allowedContentTypes:[.folder]) { result in
                 switch result {
                 case .success(let url): hub.modelChoiceChanged(); chat.open(url)
-                case .failure(let error): chat.notice = error.localizedDescription
+                case .failure(let error):
+                    let value = error as NSError
+                    if value.domain != NSCocoaErrorDomain || value.code != NSUserCancelledError { chat.notice = error.localizedDescription }
                 }
             }
     }
     private var searchResults: some View {
-                ForEach(hub.results) { model in
-                    VStack(alignment:.leading,spacing:5) {
-                        Text(model.id).font(.callout).textSelection(.enabled)
-                        Text(model.profile == nil ? "Not supported for chat: this checkpoint’s engine and text profile are not qualified." : "Supported pinned profile · choose it in Available for chat")
-                            .font(.caption).foregroundStyle(.secondary)
-                        if let profile = model.profile {
-                            Button("Select for chat") { hub.select(profile) }.disabled(hub.busy)
-                        }
-                    }
+        ForEach(hub.results) { model in
+            VStack(alignment:.leading,spacing:5) {
+                Text(model.id).font(.callout).textSelection(.enabled)
+                Text(model.profile == nil ? "Not supported for chat: this checkpoint’s engine and text profile are not qualified." : "Supported pinned profile · choose it in Available for chat")
+                    .font(.caption).foregroundStyle(.secondary)
+                if let profile = model.profile {
+                    Button("Select for chat") { hub.select(profile) }.disabled(hub.busy)
                 }
+            }
+        }
     }
     private var history: some View {
         List {
-            Button("New chat",systemImage:"square.and.pencil") { chat.newChat(); sheet = nil }.disabled(!unlocked)
+            Button("New chat",systemImage:"square.and.pencil") { chat.newChat(); sheet = nil }.buttonStyle(.borderless).frame(minHeight:44).disabled(!unlocked)
             ForEach(chat.workspace.conversations.reversed()) { item in
                 Button { chat.select(item.id); sheet = nil } label: {
                     HStack {
@@ -283,8 +310,12 @@ struct FriendlyHarnessView: View {
                     .swipeActions { Button("Delete",role:.destructive) { deleting = item.id }.disabled(!unlocked) }
                     .contextMenu { Button("Delete conversation",role:.destructive) { deleting = item.id }.disabled(!unlocked) }
             }
-            Section { Button("Settings",systemImage:"gearshape") { sheet = .settings } }
+            Section { Button("Settings",systemImage:"gearshape") { sheet = .settings }.buttonStyle(.borderless).frame(minHeight:44) }
         }.navigationTitle("Conversations")
+        .confirmationDialog("Delete this conversation?",isPresented:Binding(get:{ deleting != nil },set:{ if !$0 { deleting = nil } }),titleVisibility:.visible) {
+            Button("Delete conversation",role:.destructive) { if let id = deleting { chat.remove(id) }; deleting = nil }
+            Button("Cancel",role:.cancel) { deleting = nil }
+        }
     }
     private var settings: some View {
         Form {
