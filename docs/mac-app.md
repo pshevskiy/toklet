@@ -53,7 +53,9 @@ The [receipt](../benchmarks/results/2026-10-23-macos-window-v1.json) binds the f
 Mac build, strict Swift coordinator/real-model checks, six Python build-failure
 checks, local simulator/unsigned-device SDK builds, and the owned visible app
 process. Rust numerical kernels and the admitted native library are unchanged.
-Astra reviewed the code and evidence before commit.
+Astra reviewed the code and evidence before commit. A subsequent formatting-only
+follow-up removes one blank line at the end of `ExpertHarness.swift`; the receipt
+retains its exact executed source copy and records this sole source difference.
 
 The final visible M1 Pro trial used isolated synthetic data. Public search,
 partial-download cancellation and a fresh 146,607,552-byte SmolLM2 download passed;

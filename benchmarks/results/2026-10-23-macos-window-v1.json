@@ -6,7 +6,7 @@
   "bindings": {
     "artifacts/m8-mac-window-build-v7/build.json": "b7ff4cb9cb89bb8b177dc72bd996604f9b1f23e57d934c4ab03eb58eb7566441",
     "apple/Harness/ChatWorkspace.swift": "b1a586a16bad8f3775923ad67f1c14f5fb2343ec3fcbf367bf5d586fbe4fca84",
-    "apple/Harness/ExpertHarness.swift": "5386c82a95c12236ba4eade6c4cfaa9effb19e1716cd3acec2933f4be904fa50",
+    "apple/Harness/ExpertHarness.swift": "9617dd3e9f1a7ac8211e9a89cc813123d83f1251db79356a54dc6be5fb8dd618",
     "apple/Harness/FriendlyChatStore.swift": "65fe2f2c20956cd8ccfeb6842d39cdab33845eb1abed5e8d98c5fd0da59d21cd",
     "apple/Harness/FriendlyHarness.swift": "13e4367a877e978b84258657b78b8312f7cd2f83fc75b84baf33379c2923f84d",
     "apple/Harness/HarnessStore.swift": "92c9051cb42d22de85be753608a1dd0b75ae1ca3d28c379683959a48edf7f880",
@@ -434,8 +434,8 @@
     "artifacts/m8-mac-window-ui-v4/Data/Models/mlx-community--SmolLM2-135M-Instruct-8bit--0f0d9b8218915bc34d401e1a340b8c049d300d5e/snapshot.json": "afe91103b3924df480d0d6e56b25ea86225afabc469388c72c0e712b9f1486b0",
     "README.md": "37f04be602f0a8f44dcd37010e6d1a4aabe5d03549edd3b043ff73d5631fff26",
     "artifacts/m8-mac-window-publication-v1/source-snapshot/README.md": "37f04be602f0a8f44dcd37010e6d1a4aabe5d03549edd3b043ff73d5631fff26",
-    "docs/mac-app.md": "6f91ba5319cf621cf5d9ff8e51228f6c31f0916bb4e95594ecaea11187935a01",
-    "artifacts/m8-mac-window-publication-v1/source-snapshot/docs/mac-app.md": "6f91ba5319cf621cf5d9ff8e51228f6c31f0916bb4e95594ecaea11187935a01",
+    "docs/mac-app.md": "7f688ceebed8e9061bf0e40733e8352e86a4b03d09e422ddd0eeb170e2e258fd",
+    "artifacts/m8-mac-window-publication-v1/source-snapshot/docs/mac-app.md": "7f688ceebed8e9061bf0e40733e8352e86a4b03d09e422ddd0eeb170e2e258fd",
     "docs/app-interface.md": "16359e157a480a9391c938cc6c8b869f975a9ddb9f0209af06273439a7925269",
     "artifacts/m8-mac-window-publication-v1/source-snapshot/docs/app-interface.md": "16359e157a480a9391c938cc6c8b869f975a9ddb9f0209af06273439a7925269",
     "docs/model-hub.md": "d76d64a5488526ba6fdb4a48d912bb10340fed39df6dbce65d2a247f1ed8c591",
@@ -444,8 +444,8 @@
     "artifacts/m8-mac-window-publication-v1/source-snapshot/docs/final-summary.md": "67c9ac188e3550dc1f92d47d887dacab99aef2900e01b28b856b5e4d7fe88248",
     "docs/mlx-implementation-plan.md": "ca5ed5ce2a58b22c964ab97ec6f0a5bf7ffb67239b02a670f835dd9ee35abc29",
     "artifacts/m8-mac-window-publication-v1/source-snapshot/docs/mlx-implementation-plan.md": "ca5ed5ce2a58b22c964ab97ec6f0a5bf7ffb67239b02a670f835dd9ee35abc29",
-    "docs/improvements.md": "3d2edf41c5a8a900c7ea215079006b19379c8d579bd4d013848d674f068e2cdd",
-    "artifacts/m8-mac-window-publication-v1/source-snapshot/docs/improvements.md": "3d2edf41c5a8a900c7ea215079006b19379c8d579bd4d013848d674f068e2cdd",
+    "docs/improvements.md": "b2572b018713b9b2b447718a2a36b4d4e20401d36bcdbfc85f231be3b94da4fb",
+    "artifacts/m8-mac-window-publication-v1/source-snapshot/docs/improvements.md": "b2572b018713b9b2b447718a2a36b4d4e20401d36bcdbfc85f231be3b94da4fb",
     "artifacts/m8-mac-window-publication-v1/publication-driver.py": "df545fcf2e5361e3a23b0c68408f6c28f98578679d9367cd74931316b9102abc"
   },
   "document_and_observation_copies": {
@@ -639,5 +639,14 @@
   "physical_device_qualified": false,
   "performance_qualified": false,
   "full_accessibility_qualified": false,
-  "astra_review": "Accepted after independent final code and evidence/docs audit: 443 bindings,11 document/observation copies,13 historical trials with zero unresolved pins,441 local links, nested final-receipt closure, terminal history/cache/trace corroboration. Scope excludes phone, performance, full accessibility and active-generation GUI Quit qualification."
+  "astra_review": "Accepted after independent final code and evidence/docs audit: 443 bindings,11 document/observation copies,13 historical trials with zero unresolved pins,441 local links, nested final-receipt closure, terminal history/cache/trace corroboration. Scope excludes phone, performance, full accessibility and active-generation GUI Quit qualification.",
+  "post_check_formatting": {
+    "scope": "One EOF blank line removed; no semantic source change or rebuild. Functional results belong to the exact archived compiled source.",
+    "current_source": "apple/Harness/ExpertHarness.swift",
+    "current_sha256": "9617dd3e9f1a7ac8211e9a89cc813123d83f1251db79356a54dc6be5fb8dd618",
+    "executed_sha256": "5386c82a95c12236ba4eade6c4cfaa9effb19e1716cd3acec2933f4be904fa50",
+    "executed_source_copy": "artifacts/m8-mac-window-build-v7/source-snapshot/apple/Harness/ExpertHarness.swift",
+    "applicable_to": "Every nested/historical receipt whose original ExpertHarness.swift pin equals executed_sha256; resolve that original path against executed_source_copy.",
+    "validation": "Passed: current source plus exactly one EOF newline equals executed source; git diff --check clean. Astra independently accepted five updated bindings and14 nested mapping uses; no functional retesting needed."
+  }
 }

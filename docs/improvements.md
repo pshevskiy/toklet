@@ -1761,3 +1761,7 @@ the warning reduction to one change. Astra reviewed the code and evidence.
 The [receipt](../benchmarks/results/2026-10-23-macos-window-v1.json) separates
 visible observations, saved-state proofs and automated checks. Phone work stays
 paused; no new engine-performance or wider compatibility claim is made.
+
+A staged whitespace check then exposed one extra EOF blank line in the new Expert
+file. A formatting-only follow-up removes it; the Mac receipt maps the original
+executed source to its immutable build copy. Numerical and UI behavior are unchanged.
