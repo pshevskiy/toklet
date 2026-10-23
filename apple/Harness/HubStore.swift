@@ -72,11 +72,14 @@ final class HubStore: ObservableObject {
     func modelChoiceChanged() { cancel() }
     func waitForIdle() async { await task?.value }
     private func checkDevice() throws -> HubAdmission {
-        let value = try admission()
-        do { try value.check(profile); deviceAllowed = true; deviceMessage = "Estimated fit on this device. Opening checks memory again." }
-        catch { deviceAllowed = false; deviceMessage = error.localizedDescription; throw error }
-        return value
+        do {
+            let value = try admission()
+            try value.check(profile)
+            deviceAllowed = true; deviceMessage = "Estimated fit on this device. Opening checks memory again."
+            return value
+        } catch { deviceAllowed = false; deviceMessage = error.localizedDescription; throw error }
     }
+
     private func start(_ action: Action,opened: (@MainActor (URL) -> Void)? = nil) {
         guard task == nil else { return }
         operation = UUID(); let id = operation
@@ -94,9 +97,11 @@ final class HubStore: ObservableObject {
                 try Task.checkCancellation()
                 switch action {
                 case .refresh:
-                    _ = try? checkDevice()
                     let folder = try await verify(selected)
                     try Task.checkCancellation(); localURL = folder
+                    // Verification can outlast unloading a previous GPU model.
+                    // Display current admission after the await, just as open does.
+                    _ = try? checkDevice()
                 case .search(let query):
                     let rows = try await hub.search(query)
                     try Task.checkCancellation(); results = rows
@@ -144,7 +149,7 @@ struct HubSelfTestResult: Codable {
 
 func runHubSelfTest(root: URL,profile: HubProfile = .smol) async throws -> HubSelfTestResult {
     let hub = ModelHub(root:root)
-    let rows = try await hub.search(profile.key == "qwen" ? "Qwen2.5-0.5B" : "SmolLM2-135M")
+    let rows = try await hub.search(profile.searchQuery)
     guard rows.contains(where:{ $0.id == profile.repository }) else { throw HubFailure("Search did not return the qualified profile.") }
     let existing = try await hub.verified(profile)
     let device = try HubDeviceSnapshot.current()
@@ -178,11 +183,11 @@ func checkDownloadedHubController(root: URL,expected: ChatCheckReply,profile: Hu
     defer { worker.close(); _ = worker.waitUntilClosed(seconds:30) }
     let chat = FriendlyChatStore(harness:harness,fileURL:temporary.appendingPathComponent("history.json"))
     hub.refresh(); await hub.waitForIdle()
-    guard hub.localURL != nil, hub.deviceAllowed else { throw HubFailure("Downloaded folder or device not admitted by controller: " + hub.message) }
+    guard hub.localURL != nil, hub.deviceAllowed else { throw HubFailure("Downloaded folder or device not admitted by controller: " + hub.message + "; " + hub.deviceMessage) }
     hub.open { folder in chat.open(folder) }; await hub.waitForIdle()
     guard worker.waitUntilIdle(seconds:120) != nil else { throw HubFailure("Downloaded model load timed out.") }
     harness.poll(); chat.observe(harness.state)
-    guard chat.ready else { throw HubFailure("Downloaded model did not load through controller: " + harness.state.message) }
+    guard chat.ready && chat.modelName == profile.name else { throw HubFailure("Downloaded model did not load through controller: " + harness.state.message) }
     chat.workspace.outputLimit = 32; chat.edit("Hello!"); chat.sendOrStop()
     guard worker.waitUntilIdle(seconds:120) != nil else { throw HubFailure("Controller reply timed out.") }
     harness.poll(); chat.observe(harness.state)

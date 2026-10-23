@@ -41,17 +41,21 @@ struct HubProfileMain {
         }
         let seen = Seen()
         let store = HubStore(profile:.qwen,hub:ModelHub(root:root),admission:{
-            HubAdmission(unifiedGPU:true,physicalMemory:6 * 1024 * 1024 * 1024,availableMemory:2 * 1024 * 1024 * 1024)
+            HubAdmission(unifiedGPU:true,physicalMemory:6 * 1024 * 1024 * 1024,availableMemory:6 * 1024 * 1024 * 1024)
         },verify:{ await seen.verify($0) })
         store.refresh(); await store.waitForIdle()
         try require(store.localURL?.path == "/verified-qwen" && store.deviceAllowed,"selected Qwen refresh")
         var opened: URL?
         store.open { opened = $0 }; await store.waitForIdle()
         try require(opened?.path == "/verified-qwen","selected Qwen open")
+        store.select(.mistral); await store.waitForIdle()
+        try require(store.localURL?.path == "/verified-mistral" && store.deviceAllowed,"selected Mistral refresh")
+        store.open { opened = $0 }; await store.waitForIdle()
+        try require(opened?.path == "/verified-mistral","selected Mistral open")
         store.select(.smol); await store.waitForIdle()
         try require(store.localURL?.path == "/verified-smol","profile change refresh")
         let values = await seen.values()
-        try require(values == [.qwen,.qwen,.smol],"verification captured correct profiles")
+        try require(values == [.qwen,.qwen,.mistral,.mistral,.smol],"verification captured correct profiles")
         print("TOKLET_HUB_PROFILE_PASS")
     }
 }

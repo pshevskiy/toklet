@@ -4,6 +4,7 @@ import Combine
 @MainActor
 final class FriendlyChatStore: ObservableObject {
     @Published var workspace = ChatWorkspace()
+    @Published private(set) var modelName = "Toklet"
     @Published var notice = ""
     @Published var storageError = ""
     @Published var folders: [URL] = []
@@ -111,7 +112,7 @@ final class FriendlyChatStore: ObservableObject {
             request = nil; save()
         }
         if !state.busy && !state.hasModel {
-            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""
+            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""; modelName = "Toklet"
             if let folder = pendingFolder, harness?.expert == false {
                 pendingFolder = nil; beginLoad(folder)
             }
@@ -151,7 +152,7 @@ final class FriendlyChatStore: ObservableObject {
         settings.capacity = 512; settings.chunk = 32
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
-            loadedKey = key(folder)
+            loadedKey = key(folder); modelName = profile.name
             harness.poll()
         } else {
             scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil

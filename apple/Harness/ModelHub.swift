@@ -39,13 +39,58 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer.json",bytes:7031673,sha256:"a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"),
             HubFile(name:"tokenizer_config.json",bytes:7308,sha256:"f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"),
             HubFile(name:"special_tokens_map.json",bytes:613,sha256:"76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd")])
-    static let catalog: [HubProfile] = [.smol,.qwen]
-    var name: String { repository == Self.qwen.repository ? "Qwen2.5-0.5B · 8-bit" : "SmolLM2-135M · 8-bit (Llama family)" }
-    var numericalBudget: UInt64 { repository == Self.qwen.repository ? 1024 * 1024 * 1024 : 512 * 1024 * 1024 }
+    static let mistral = HubProfile(repository:"mlx-community/Mistral-7B-Instruct-v0.3-4bit",
+        revision:"a4b8f870474b0eb527f466a03fbc187830d271f5",files:[
+            HubFile(name:"config.json",bytes:721,sha256:"efc145d2f53d6d6ef2639be0556b4ecf6faac6cf8a7199ad2b7bb5ebcf443bdd"),
+            HubFile(name:"model.safetensors",bytes:4077480215,sha256:"d7182d886f93a9efa73d6d556ee33ffe839a4e09e15965eeef46f295ab5b503d"),
+            HubFile(name:"model.safetensors.index.json",bytes:52381,sha256:"525940738b16d210fdfd692a24752d050c15a50cbe208dd82b06204d640d687b"),
+            HubFile(name:"tokenizer.json",bytes:1961548,sha256:"e553af6fff7d7ad76e830608b218c5c0b0822998d5a1a96099a74cd3c1cb1a49"),
+            HubFile(name:"tokenizer_config.json",bytes:138039,sha256:"e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae"),
+            HubFile(name:"special_tokens_map.json",bytes:414,sha256:"6fa06efa2785e450051989a6f8fb4416b10149ded485ddd3f127a40734f5cfd0")])
+    static let catalog: [HubProfile] = [.smol,.qwen,.mistral]
+    var name: String {
+        switch repository {
+        case Self.qwen.repository: "Qwen2.5-0.5B · 8-bit"
+        case Self.mistral.repository: "Mistral-7B-Instruct-v0.3 · 4-bit"
+        default: "SmolLM2-135M · 8-bit (Llama family)"
+        }
+    }
+    var numericalBudget: UInt64 {
+        switch repository {
+        case Self.qwen.repository: 1024 * 1024 * 1024
+        case Self.mistral.repository: 5 * 1024 * 1024 * 1024
+        default: 512 * 1024 * 1024
+        }
+    }
     var textBudget: UInt64 { repository == Self.qwen.repository ? 128 * 1024 * 1024 : 64 * 1024 * 1024 }
-    var processAllowance: UInt64 { repository == Self.qwen.repository ? 1536 * 1024 * 1024 : 768 * 1024 * 1024 }
-    var vocabulary: UInt32 { repository == Self.qwen.repository ? 151936 : 49152 }
-    var key: String { repository == Self.qwen.repository ? "qwen" : "smol" }
+    var processAllowance: UInt64 {
+        switch repository {
+        case Self.qwen.repository: 1536 * 1024 * 1024
+        case Self.mistral.repository: 5632 * 1024 * 1024
+        default: 768 * 1024 * 1024
+        }
+    }
+    var vocabulary: UInt32 {
+        switch repository {
+        case Self.qwen.repository: 151936
+        case Self.mistral.repository: 32768
+        default: 49152
+        }
+    }
+    var key: String {
+        switch repository {
+        case Self.qwen.repository: "qwen"
+        case Self.mistral.repository: "mistral"
+        default: "smol"
+        }
+    }
+    var searchQuery: String {
+        switch repository {
+        case Self.qwen.repository: "Qwen2.5-0.5B"
+        case Self.mistral.repository: "Mistral-7B-Instruct-v0.3-4bit"
+        default: "SmolLM2-135M"
+        }
+    }
     static func named(_ key: String) -> HubProfile? { catalog.first { $0.key == key } }
     static func identify(_ directory: URL) throws -> HubProfile {
         let bytes = try ModelHub.withRegular(directory.appendingPathComponent("config.json"),maximum:16 * 1024) { handle,size in

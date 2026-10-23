@@ -103,7 +103,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Independent real SmolLM2 reference](mlx-smollm-oracle.md), 349 arrays including full decode/scoring distributions, exact tokenizer probes and gates frozen before target changes.
   - [x] [Selected real SmolLM2 Mac execution](mlx-smollm-metal.md), frozen stage/decode/scoring gates and separate512-capacity state witness with Reference attention; app/device/quality remain separate.
   - [x] [Real SmolLM2 app/device integration](mlx-smollm-app-device.md), fresh native package/signed iPhone app, exact paired raw-ID/scoring/state probes and repeated short observations on Mac/iPhone14Pro. Full quality/context/lifecycle remain separate.
-  - [x] [Mistral reference tools](mlx-mistral-oracle.md), bounded four-bit reconstruction, untied-head graph and original instruction-template fixture; [immutable candidate](mlx-mistral-checkpoint.md) and completed independent 349-array CPU export; selected [native Mac decoder](mlx-mistral-metal.md) passes the frozen stage/decode/scoring gates and separate 512-capacity state checks. Chat integration, performance and quality remain separate.
+  - [x] [Mistral reference tools](mlx-mistral-oracle.md), bounded four-bit reconstruction, untied-head graph and original instruction-template fixture; [immutable candidate](mlx-mistral-checkpoint.md) and completed independent 349-array CPU export; selected [native Mac decoder](mlx-mistral-metal.md) passes the frozen stage/decode/scoring gates and separate 512-capacity state checks. [Mac Models/Chat integration](mlx-mistral-app.md) also passes; fresh network-transfer, phone, performance and quality qualification remain separate.
   - [ ] Widen additional dense model shapes and qualify further real checkpoints; implement sliding attention and other Llama rotary variants separately. Llama Online attention remains unqualified.
   - [ ] Expert routing, recurrent/hybrid state and actual multimodal/media execution, each with separate fixtures and target qualification.
 - [ ] **M8.4 Device-aware discovery/downloads.** After engine compatibility exists,
@@ -120,11 +120,12 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Qwen native text](app-chat-profile.md) and Models routing, per-profile
     admission, first real Mac download and offline Chat. The [Qwen app receipt](../benchmarks/results/2026-10-23-qwen-model-hub-app-v1.json)
     keeps physical Qwen Chat pending; the user has paused phone work and requested Mac focus.
+  - [x] [Mistral catalog and Mac offline Chat](mlx-mistral-app.md), verified local-checkpoint publication, exact text/native/controller checks and smaller-profile regressions. The actual fresh multi-GB range trial remains separate.
   - User-requested app consolidation: use Toklet Harness with the friendly
     InferencePhone-style interface, keeping current diagnostics in Expert mode.
     [The bounded text profile](app-chat-profile.md) and
     [shared-worker Chat/Expert interface](app-interface.md) are implemented for
-    the selected SmolLM2 and Qwen snapshots. Search/downloads cover those profiles;
+    the selected SmolLM2, Qwen and Mistral snapshots. Search/downloads select those pinned profiles;
     wider text-profile/download compatibility remains open.
 - [ ] **M8.5 Mac and iPhone qualification.** Test downloaded compatible models on
   the M1 Pro and iPhone 14 Pro, including different implemented architectures and

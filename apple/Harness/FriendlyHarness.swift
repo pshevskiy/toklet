@@ -98,7 +98,7 @@ struct FriendlyHarnessView: View {
             ToolbarItem(placement:.principal) {
                 Button { sheet = .models } label: {
                     VStack(spacing:2) {
-                        Text(chat.hasChatModel || !chat.workspace.current.messages.isEmpty ? "SmolLM2" : "Toklet").font(.headline)
+                        Text(chat.hasChatModel ? chat.modelName : "Toklet").font(.headline)
                         Text(chat.hasChatModel ? "On device" : "Choose a model").font(.caption).foregroundStyle(.secondary)
                     }
                 }.buttonStyle(.plain).frame(minHeight:44).accessibilityLabel("Choose model").accessibilityIdentifier("chat-model-picker")

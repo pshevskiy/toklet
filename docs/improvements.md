@@ -1650,3 +1650,25 @@ The [receipt](../benchmarks/results/2026-10-23-model-hub-ranges-v1.json) preserv
 the failed full-body and sandboxed trials plus intermediate source snapshots.
 The fresh actual range transfer is separate, as are numerical fit and app Chat.
 Phone operations remain paused.
+
+### Mistral Models and offline Chat on Mac — 23 October 2026
+
+The [app catalog](mlx-mistral-app.md) adds exact pinned Mistral downloads/search
+selection, vocabulary and separate numerical/text/process admission. The chat
+header now names the loaded model. Older saved profiles and Smol/Qwen behavior
+remain compatible. A fresh three-slice package and final shared SDK, integration,
+core and profile checks pass without contacting the phone.
+
+Real local-checkpoint execution passes multi-turn text, context rejection,
+cancellation, suspend/replay and the friendly offline controller. Qwen and Smol
+saved-cache regressions pass with the new package. Guarded independent Python
+decoding agrees with every reply. The single completed Mistral process observes
+a 4,226,780,712-byte charged lifetime peak; logical accounting, clean mappings,
+sustained behavior and performance remain separate.
+
+Two retained trials exposed stale admission before a long verification await.
+Refresh now samples afterward and clears stale allowed state on observation
+failure, with tests in both memory directions. Budgets stay unchanged. The
+[receipt](../benchmarks/results/2026-10-23-mistral-model-hub-app-v1.json) distinguishes
+these failures and local seed from fresh network transfer. Actual range-download
+qualification continues separately. All physical phone work remains paused.

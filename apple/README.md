@@ -28,9 +28,9 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. In this checkout the generated library link selects
-`artifacts/m8-qwen-chat-apple-package-v1`, with the additive SmolLM2/Qwen text interface.
+`artifacts/m8-mistral-chat-apple-package-v1`, with the additive SmolLM2/Qwen/Mistral text interface.
 Its reviewed build receipt digest is
-`a0030f589949301374077bfaf77c291b00eadb62b6f739d62605c77e7b888508`.
+`37f255ca04d4c839f51ece740bda1d8d2fa0bd026b505a1a551cf50975e3eb04`.
 The [text profile](../docs/app-chat-profile.md) and
 [interface guide](../docs/app-interface.md) describe this selected scope. Earlier
 package/device results retain their original immutable packages and receipts.
@@ -44,7 +44,9 @@ is deliberately unsigned until a signing team is configured.
 
 For ordinary text, follow the [Chat guide](../docs/app-interface.md). Models
 supports [Hugging Face search and verified downloads](../docs/model-hub.md) for
-the selected SmolLM2 and Qwen eight-bit profiles, with offline opening. For diagnostics open the conversations
+the selected SmolLM2 and Qwen eight-bit profiles and the pinned Mistral four-bit
+profile, with offline opening. The [Mistral Mac report](../docs/mlx-mistral-app.md)
+separates functional Chat from actual network-transfer qualification. For diagnostics open the conversations
 icon → Settings → Expert mode.
 
 Start with Tiny fixture, CPU, capacity32, chunk3 and numerical cap128MiB.
@@ -53,7 +55,7 @@ are`47,47,47,47`. Settings stay locked while a model is loaded. Unload before
 changing the artifact/backend/settings. Copy real local artifacts into the app's
 Documents/Model folder using device file sharing; packed Q4 v2 artifacts need
 Metal and their separate local packed-directory path. For a supported local
-MLX Qwen artifact, enable Metal and **MLX-format Qwen model**, with the separate
+MLX artifact, enable Metal and **MLX-format model**, with the separate
 Q4 folder empty. The bundled Tiny button clears MLX because that fixture is
 floating-point. CPU keeps its existing
 2,048-token cap; Metal limits follow the actual model and explicit admission.

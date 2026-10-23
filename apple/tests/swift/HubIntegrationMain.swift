@@ -22,9 +22,38 @@ struct HubIntegrationMain {
         do { try budget.check(.qwen); throw HubFailure("Qwen admitted with Smol-only allowance") }
         catch let error as HubFailure where error.message.contains("Not enough memory") { }
         try require(HubModel(id:HubProfile.qwen.repository).profile == .qwen && HubModel(id:"mlx-community/Qwen2.5-0.5B-Instruct-4bit").profile == nil,"Qwen eight-bit only")
+        try require(HubModel(id:HubProfile.mistral.repository).profile == .mistral && HubModel(id:"mlx-community/Mistral-7B-Instruct-v0.2-4bit").profile == nil,"only pinned Mistral supported")
+        try require(HubProfile.mistral.totalBytes == 4079633318 && HubProfile.mistral.vocabulary == 32768,"Mistral inventory and vocabulary")
+        try require(HubProfile.mistral.numericalBudget + HubProfile.mistral.textBudget <= HubProfile.mistral.processAllowance && HubProfile.mistral.processAllowance < 6 * 1024 * 1024 * 1024,"separate bounded Mac numerical/text/process allowances")
+        for available in [HubProfile.mistral.processAllowance - 1, HubProfile.mistral.processAllowance] {
+            let candidate = HubAdmission(unifiedGPU:true,physicalMemory:16 * 1024 * 1024 * 1024,availableMemory:available)
+            var admitted = false
+            do { try candidate.check(.mistral); admitted = true } catch { }
+            try require(admitted == (available == HubProfile.mistral.processAllowance),"Mistral exact current-memory boundary")
+        }
         for profile in HubProfile.catalog { try profile.validate() }
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("TokletHubController-" + UUID().uuidString)
         defer { try? FileManager.default.removeItem(at:root) }
+        final class RefreshMemory: @unchecked Sendable {
+            private let lock = NSLock(); private var verified = false; private var failed = false
+            func finish() { lock.lock(); verified = true; lock.unlock() }
+            func fail() { lock.lock(); failed = true; lock.unlock() }
+            func read(initial: UInt64,final: UInt64) throws -> HubAdmission {
+                lock.lock(); defer { lock.unlock() }
+                if failed { throw HubFailure("Injected memory observation failure") }
+                return HubAdmission(unifiedGPU:true,physicalMemory:16 * 1024 * 1024 * 1024,availableMemory:verified ? final : initial)
+            }
+        }
+        for initiallyAllowed in [false,true] {
+            let state = RefreshMemory(); let high = HubProfile.mistral.processAllowance
+            let refreshed = HubStore(profile:.mistral,hub:ModelHub(root:root),admission:{
+                try state.read(initial:initiallyAllowed ? high : 0,final:initiallyAllowed ? 0 : high)
+            },verify:{ _ in state.finish(); return URL(fileURLWithPath:"/verified-after-admission-change") })
+            refreshed.refresh(); await refreshed.waitForIdle()
+            try require(refreshed.deviceAllowed == !initiallyAllowed,"refresh reports memory after verification")
+            state.fail(); refreshed.refresh(); await refreshed.waitForIdle()
+            try require(!refreshed.deviceAllowed && refreshed.deviceMessage == "Injected memory observation failure","failed fresh observation clears old admission")
+        }
         let model = HubProfile.smol
         let inventory = try JSONSerialization.data(withJSONObject:["sha":model.revision,"siblings":model.files.map { ["rfilename":$0.name,"size":$0.bytes] as [String:Any] }])
         let rows = Data("[{\"id\":\"\(model.repository)\"},{\"id\":\"other/unsupported\"}]".utf8)

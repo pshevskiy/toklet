@@ -141,7 +141,7 @@ struct HarnessView: View {
                     HStack { Text("Prefill chunk"); TextField("Tokens",text:bounded($chunk,10)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
                     HStack { Text("Numerical cap (MiB)"); TextField("MiB",text:bounded($budgetMiB,20)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
                     Button("Load") { load() }.disabled(!idle || store.state.hasModel)
-                    Text("Select MLX-format for supported Qwen2 and Llama-family artifacts, or use the existing floating/Q4 formats. Copy full artifacts to this app’s Documents/Model folder. The bundled fixture is for integration checks.")
+                    Text("Select MLX-format for supported Qwen2, Llama-family and full-attention Mistral artifacts, or use the existing floating/Q4 formats. Copy full artifacts to this app’s Documents/Model folder. The bundled fixture is for integration checks.")
                 }.disabled(!idle || store.state.hasModel)
                 Section("Raw token generation") {
                     VStack(alignment:.leading) { Text("Prompt or append IDs").font(.caption); TextField("IDs",text:bounded($prompt,262144),axis:.vertical).textInputAutocapitalization(.never).autocorrectionDisabled() }

@@ -196,3 +196,18 @@ The [transport receipt](../benchmarks/results/2026-10-23-model-hub-ranges-v1.jso
 records the final source separately. Actual multi-GB range transfer, app catalog,
 model admission and Chat qualification remain separate pending evidence. No
 physical phone is contacted.
+
+## Mistral catalog and Mac Chat — 23 October 2026
+
+Models now includes the exact four-bit Mistral-7B-Instruct-v0.3 profile alongside
+SmolLM2-135M and Qwen2.5-0.5B eight-bit. The
+[Mac app report](mlx-mistral-app.md) records its six-file identity, separate
+5 GiB numerical/64 MiB text reservations and 5.5 GiB current admission. Saved
+profile schemas remain compatible. Refresh updates the fit estimate after
+verification and clears stale permission if the memory observation fails.
+
+A verified local checkpoint passes the complete native/offline-controller path;
+all three profiles' replies independently decode. This functional test does not
+claim a fresh Mistral network transfer. The separate actual range trial and its
+full-file publication evidence remain required. Physical iPhone tests stay
+paused, and other search results remain unsupported.
