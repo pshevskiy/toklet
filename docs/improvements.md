@@ -1525,3 +1525,26 @@ Independent byte-level decoding matches every Qwen and Smol native/controller
 reply. The phone refusal contains three read commands and no install, launch or
 signal. Whitespace, 323 local links and 19 public-task privacy checks pass.
 Retain the feature; actual physical Qwen Chat remains pending.
+
+### Mistral reference tools and Mac focus — 23 October 2026
+
+The user temporarily turned off the iPhone and requested Mac focus. All further
+phone operations are paused. The selected next candidate is the public pinned
+Mistral-7B-Instruct-v0.3 four-bit full-attention snapshot; other Mistral variants
+and sliding attention remain unsupported. The [reference preparation](mlx-mistral-oracle.md)
+adds bounded independent reconstruction, an untied-head graph and original
+instruction-template fixtures before native target work.
+
+Astra requested actual Matrix/projection composition across the1,024-row
+boundary and adapted reference-verifier mutation coverage. All nine portable
+tests now pass, with the numerical policy unchanged. The exporter observes and
+checks its lifetime footprint after each case and generation/scoring pair; this
+is an acceptance check, not an OS allocation limit. Chat-template replay,
+syntax and whitespace checks also pass. The [tools receipt](../benchmarks/results/2026-10-23-mistral-reference-tools-v1.json)
+records exact tested inputs. Full numerical export, target support, app routing,
+real download/chat and performance remain separate work.
+
+The evidence retains an ignored inspection-directory collision, an incomplete
+serial acquisition and subsequent exact owned-process absence checks. No partial
+checkpoint was published. The new range acquisition has its own directory,
+validated HTTP ranges and complete weight-hash admission before publication.

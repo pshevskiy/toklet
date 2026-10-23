@@ -1,0 +1,87 @@
+{
+  "format": "toklet-mistral-chat-reference-v1",
+  "repo": "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
+  "revision": "a4b8f870474b0eb527f466a03fbc187830d271f5",
+  "tokenizer_sha256": "e553af6fff7d7ad76e830608b218c5c0b0822998d5a1a96099a74cd3c1cb1a49",
+  "config_sha256": "e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae",
+  "template_sha256": "a6fc0e6bc936bd3aecf4b1e4c1208778b2f916f7e55e01bccd3b232f976b9216",
+  "runtime": {
+    "jinja2": "3.1.6",
+    "tokenizers": "0.22.2"
+  },
+  "cases": [
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello!"
+        }
+      ],
+      "rendered": "<s> [INST] Hello! [/INST]",
+      "ids": [
+        1,
+        29473,
+        3,
+        23325,
+        29576,
+        29473,
+        4
+      ],
+      "decoded": " Hello! "
+    },
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello, 🌍! Привет."
+        },
+        {
+          "role": "assistant",
+          "content": "Hello! How can I help?"
+        },
+        {
+          "role": "user",
+          "content": "What is 2 + 2?"
+        }
+      ],
+      "rendered": "<s> [INST] Hello, 🌍! Привет. [/INST] Hello! How can I help? </s> [INST] What is 2 + 2? [/INST]",
+      "ids": [
+        1,
+        29473,
+        3,
+        23325,
+        29493,
+        29473,
+        31825,
+        29576,
+        12592,
+        9264,
+        29491,
+        29473,
+        4,
+        23325,
+        29576,
+        2370,
+        1309,
+        1083,
+        2084,
+        29572,
+        29473,
+        2,
+        29473,
+        3,
+        2592,
+        1117,
+        29473,
+        29518,
+        1416,
+        29473,
+        29518,
+        29572,
+        29473,
+        4
+      ],
+      "decoded": " Hello, 🌍! Привет.  Hello! How can I help?   What is 2 + 2? "
+    }
+  ]
+}

@@ -103,6 +103,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Independent real SmolLM2 reference](mlx-smollm-oracle.md), 349 arrays including full decode/scoring distributions, exact tokenizer probes and gates frozen before target changes.
   - [x] [Selected real SmolLM2 Mac execution](mlx-smollm-metal.md), frozen stage/decode/scoring gates and separate512-capacity state witness with Reference attention; app/device/quality remain separate.
   - [x] [Real SmolLM2 app/device integration](mlx-smollm-app-device.md), fresh native package/signed iPhone app, exact paired raw-ID/scoring/state probes and repeated short observations on Mac/iPhone14Pro. Full quality/context/lifecycle remain separate.
+  - [x] [Mistral reference tools](mlx-mistral-oracle.md), bounded four-bit reconstruction, untied-head graph and original instruction-template fixture; real numerical export and native target remain pending.
   - [ ] Widen additional dense model shapes and qualify further real checkpoints; implement Mistral/sliding and other Llama rotary variants separately. Llama Online attention remains unqualified.
   - [ ] Expert routing, recurrent/hybrid state and actual multimodal/media execution, each with separate fixtures and target qualification.
 - [ ] **M8.4 Device-aware discovery/downloads.** After engine compatibility exists,
@@ -118,7 +119,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     records final Mac and fresh iPhone 14 Pro functional checks.
   - [x] [Qwen native text](app-chat-profile.md) and Models routing, per-profile
     admission, first real Mac download and offline Chat. The [Qwen app receipt](../benchmarks/results/2026-10-23-qwen-model-hub-app-v1.json)
-    keeps physical Qwen Chat pending until the existing phone app is closed.
+    keeps physical Qwen Chat pending; the user has paused phone work and requested Mac focus.
   - User-requested app consolidation: use Toklet Harness with the friendly
     InferencePhone-style interface, keeping current diagnostics in Expert mode.
     [The bounded text profile](app-chat-profile.md) and
