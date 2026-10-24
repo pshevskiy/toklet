@@ -2680,3 +2680,46 @@ Native shared-frame/stale-input checks, numerical/full-layer/Gemma graph,
 rotary parity, whole-model rollback, quality/performance/memory/device gates
 remain open. Engine/shader sources, ABI, app limits, protected binaries and
 installed phone package remain unchanged.
+
+## 24 October2026 — task-based mobile model ranking and search controls
+
+The reviewed mobile commit `f739fabe` adds Balanced/Coding/Fast ranking and
+readable score explanations after Toklet compatibility/memory filtering. Scores
+are estimated preferences, not measured quality/speed or a grant of support.
+Fresh load admission remains authoritative. A Search button dismisses the
+keyboard so results remain usable; disclosure labels and picker waits were
+corrected after two retained failed phone suites.
+
+Eight local checks, signed build/signatures and the final five physical iPhone14
+Pro methods pass, including Fast→Smol, Coding→Qwen, real Qwen reply, unsupported
+Gemma search, model switching,256 selection and Expert controls. Dialog data
+remains byte-exact; failed suites include verified rollback and normal launch.
+Astra accepted the exact nine-file packet before commit. See
+[the mobile record](mobile-model-ranking.md) and
+[receipt](../benchmarks/results/2026-10-24-mobile-model-ranking-v1.json).
+Native `2d7d35b0` and Chat/Expert/context limits remain unchanged; this is selected
+functional evidence, not Gemma4 or131072-output qualification.
+
+## 24 October2026 — native shared-KV routing and ordered publication
+
+An immutable concrete routing plan creates only producer caches and resolves
+shared layers to same-kind owners with matching geometry. Consumer views borrow
+the actual producer spans/new input; no private cache, copy or append occurs.
+Every committed owner's mode/window/capacity/position/geometry and offset/
+generation is checked, including unpublished owners. Ordered prefix publication
+allows earlier attention before later producers exist; future proposed lengths
+are checked when published. Final commit requires the complete valid batch
+before writes. Model/session/token-history provenance stays caller-owned.
+
+Eight methods compare226 frozen layer views/108 producer updates and exercise
+geometry, last-owner state/token mismatch, missing/reordered/duplicate/foreign/
+stale publication, sequential availability, partial commit, discard/retry,
+moved identity and exact memory accounting without duplicated owner metadata.
+Formatting, strict default/Metal Clippy,237 CPU/259 Metal-feature tests and both
+iOS cross-checks pass. Astra reviews final source/evidence before commit. See
+[the contract](shared-kv-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-shared-kv-scalar-v1.json).
+
+Ring-aware numerical attention, full Gemma/session/Metal, rotary parity,
+quality/performance/device fit and capability gates remain open. No ABI, app
+limits, protected binaries or installed package changes follow from this task.

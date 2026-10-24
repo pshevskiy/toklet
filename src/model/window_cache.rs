@@ -118,6 +118,23 @@ impl WindowKvCache {
         })
     }
 
+    pub(super) fn matches_geometry(
+        &self,
+        heads: usize,
+        dims: usize,
+        capacity: usize,
+        max_positions: usize,
+        window: Option<usize>,
+    ) -> bool {
+        (
+            self.heads,
+            self.dims,
+            self.capacity,
+            self.max_positions,
+            self.window,
+        ) == (heads, dims, capacity, max_positions, window)
+    }
+
     pub fn offset(&self) -> usize {
         self.offset
     }

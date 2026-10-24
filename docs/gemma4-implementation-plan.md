@@ -7,8 +7,9 @@ below ahead of unrelated architecture expansion. The remaining
 [engine/Hugging Face plan](engine-expansion-plan.md) remains open. Astra reviews
 each code task and it is committed after its checks pass.
 
-The installed iPhone baseline remains the reviewed `abe661e` UI with native
-`2d7d35b0`; its [four physical checks](mobile-gemma4-testing.md) do not add Gemma4.
+The installed iPhone baseline is the reviewed `f739fabe` UI with native
+`2d7d35b0`; its [five physical ranking/UI checks](mobile-model-ranking.md) and
+the earlier [four Gemma checks](mobile-gemma4-testing.md) do not add Gemma4.
 Official and MLX Gemma4 E2B config-only probes reject unknown architecture and
 create no native model handle. No Gemma weights or phone memory fit are admitted.
 
@@ -79,7 +80,9 @@ passes the required checks. The [KV staging/ring witness](gemma-kv-reference.md)
 now freezes normal cache state and chunk visibility. Its
 [standalone cache owner](window-cache-scalar.md) passes batch commit/discard
 checks. The [shared-KV routing witness](gemma-shared-kv-reference.md) now freezes
-current-step producer identity and source forwarding; native shared ownership
-and ring-aware attention are next. All other
+current-step producer identity and source forwarding. The
+[native routing/publication plan](shared-kv-scalar.md) now passes ordered-prefix
+availability and complete cache-batch checks. Ring-aware numerical attention
+and remaining G2 mechanisms are next. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.

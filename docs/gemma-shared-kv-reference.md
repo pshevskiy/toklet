@@ -48,8 +48,10 @@ binds exact source, interpreter/imported files, tests, captures and replay.
 Astra reviews final evidence before commit; engine/shader sources and protected
 binaries remain unchanged.
 
-This establishes selected-source routing/identity only. It does not establish
-native stale/missing-frame rejection, numerical attention or rotary parity,
+This establishes selected-source routing/identity only. The later
+[native routing/publication plan](shared-kv-scalar.md) now checks stale/missing
+frames and complete cache batches. This reference alone does not establish
+numerical attention or rotary parity,
 full DecoderLayer/Gemma execution, native shared cache integration, model
 rollback, quality, memory fit, performance or phone qualification. Those remain
 open in the [Gemma4 plan](gemma4-implementation-plan.md). No capability, ABI,

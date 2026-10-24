@@ -65,7 +65,10 @@ the [checked scalar target](window-attention-scalar.md). The
 state and pinned upstream CPU/GPU checks. Its [cache owner](window-cache-scalar.md)
 now passes batch commit/discard checks; full model transactions and shared
 producer ownership remain open. The [shared routing witness](gemma-shared-kv-reference.md)
-qualifies selected-source forwarding/identity only. Qwen3 completion and the
+qualifies selected-source forwarding/identity only. The
+[native routing/publication plan](shared-kv-scalar.md) now passes ordered-prefix
+and cache-batch checks; numerical graph/session integration remains open.
+Qwen3 completion and the
 broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
 streaming, engine-owned capabilities and a qualified long-context graph within
