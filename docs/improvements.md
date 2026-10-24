@@ -2213,3 +2213,45 @@ characters were corrected before freezing, without changing expected decoder
 semantics. Retain the oracle; no numerical generation or128K app/device claim.
 See [the contract](chat-stream-oracle.md) and
 [receipt](../benchmarks/results/2026-10-24-chat-stream-oracle-v1.json).
+
+## 24 October2026 — physical model-switching fix
+
+The parallel mobile task committed8a5ecff after Astra review and checks. Models
+now offers direct Use model/Download and use actions with an explicit Active
+label. Unchanged snapshots no longer publish at every poll: a separate worker
+revision counter avoids retaining old snapshot arrays while preserving callback
+and cleanup updates. Presence-only inventory avoids automatic full-model hashing;
+Use still verifies every file. Replacement admission checks fresh available memory
+after old-owner release, with initial-load/download gates preserved. Mac Finder
+recovery remains reachable.
+
+Strict Swift6/controller/callback/revision, real Smol→Qwen→Smol post-release
+admission and both SDK/Release builds pass. Physical iPhone14Pro checks repeat
+Smol↔Qwen with actual replies and no earlier60-second animation-idle wait, select
+256-token Chat replies, inspect highlighted code/visible Copy controls, run
+Expert47,47 and return to Chat. Copy visibility/enabled state was checked; no
+clipboard-content claim. Owner history bytes stayed unchanged. The checked app
+is installed with immutable native policy package2d7; later decoder Rust is not
+compiled into it. No broader model,128K, quality, throughput or process-memory
+claim follows. See [the mobile report](mobile-model-switching.md) and
+[receipt](../benchmarks/results/2026-10-24-mobile-model-switch-v1.json).
+
+## 24 October2026 — bounded Rust response decoding
+
+The [L2 decoder](chat-stream-decoder.md) is checked against frozen witnesses. It emits
+new bounded chunks, preserves ByteLevel UTF-8 and whole-token behavior, and holds
+Mistral fallback runs until exact text is stable. It never reconstructs a whole
+response prefix per token; token lookup still allocates temporary strings.
+Failures poison the decoder and preserve counters for successfully returned text.
+Current native/app generation and input limits are unchanged.
+
+At the requested stop, formatting/strict Clippy,191 CPU/213 Metal-feature
+tests, release checks against all233,585 IDs of the three real tokenizers and the
+iOS cross-check passed. The simulator cross-check was stopped safely; raw results
+and cleanup records are preserved. After explicit testing resumption, the
+unchanged source passed that check in a fresh capture, with all original
+source/input/log identities authenticated before inheritance. Astra reviews the
+code and evidence before commit. See the
+[receipt](../benchmarks/results/2026-10-24-chat-stream-decoder-v1.json).
+This does not implement128K numerical/app support. Native event ownership and
+integration remain separate tasks. The architecture/Hugging Face plan stays open.

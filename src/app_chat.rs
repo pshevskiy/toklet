@@ -9,6 +9,8 @@ use std::{
 };
 use tokenizers::Tokenizer;
 
+pub mod stream;
+
 pub const MAX_TEXT: usize = 64 * 1024;
 pub const MAX_TOKENS: usize = 512;
 /// Maximum visible output prefix, separate from the whole conversation limit.
