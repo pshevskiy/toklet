@@ -34,6 +34,148 @@ fn all_code_pattern(bits: u8) -> Vec<u8> {
 }
 
 #[test]
+fn copy_row_matches_all_affine_oracles_and_real_stride_reordered_gathers() {
+    fn array<'a>(raw: &'a [u8], entry: &serde_json::Value) -> &'a [u8] {
+        let start = entry["offset"].as_u64().unwrap() as usize;
+        let size = entry["bytes"].as_u64().unwrap() as usize;
+        let bytes = &raw[start..start + size];
+        assert_eq!(format!("{:x}", Sha256::digest(bytes)), entry["sha256"]);
+        bytes
+    }
+    let raw = include_bytes!("fixtures/mlx-affine-v1/arrays.bin");
+    let manifest: serde_json::Value =
+        serde_json::from_str(include_str!("fixtures/mlx-affine-v1/manifest.json")).unwrap();
+    assert_eq!(format!("{:x}", Sha256::digest(raw)), manifest["sha256"]);
+    for case in manifest["cases"].as_array().unwrap() {
+        let dtype = match case["metadata_dtype"].as_str().unwrap() {
+            "F16" => MetadataDtype::F16,
+            "BF16" => MetadataDtype::BF16,
+            "F32" => MetadataDtype::F32,
+            _ => panic!("frozen metadata dtype"),
+        };
+        let layout = Layout::new(
+            2,
+            256,
+            case["bits"].as_u64().unwrap() as u8,
+            case["group_size"].as_u64().unwrap() as usize,
+            dtype,
+        )
+        .unwrap();
+        let arrays = &case["arrays"];
+        let matrix = Matrix::from_le_bytes(
+            layout,
+            array(raw, &arrays["weight"]),
+            array(raw, &arrays["scales"]),
+            array(raw, &arrays["biases"]),
+        )
+        .unwrap();
+        let expected = array(raw, &arrays["reconstructed_f32"]);
+        let mut output = [99.; 256];
+        for row in [1, 0, 1] {
+            matrix.copy_row(row, &mut output).unwrap();
+            for (column, value) in output.iter().enumerate() {
+                let start = (row * 256 + column) * 4;
+                assert_eq!(value.to_le_bytes(), expected[start..start + 4]);
+            }
+        }
+    }
+
+    let raw = include_bytes!("fixtures/gemma-packed-v1/math.bin");
+    let manifest_raw = include_bytes!("fixtures/gemma-packed-v1/math.json");
+    assert_eq!(
+        format!("{:x}", Sha256::digest(manifest_raw)),
+        "609266c140f20ec92ba0b91087107ce979e4c8155abd192c197272db6aa78122"
+    );
+    let manifest: serde_json::Value = serde_json::from_slice(manifest_raw).unwrap();
+    assert_eq!(
+        format!("{:x}", Sha256::digest(raw)),
+        manifest["binary"]["sha256"]
+    );
+    assert_eq!(manifest["cases"].as_array().unwrap().len(), 4);
+    for case in manifest["cases"].as_array().unwrap() {
+        let width = case["width"].as_u64().unwrap() as usize;
+        let arrays = &case["arrays"];
+        let matrix = Matrix::from_le_bytes(
+            Layout::new(3, width, 4, 64, MetadataDtype::BF16).unwrap(),
+            array(raw, &arrays["weight"]),
+            array(raw, &arrays["scales"]),
+            array(raw, &arrays["biases"]),
+        )
+        .unwrap();
+        let mut output = vec![99.; width];
+        let storage = output.as_ptr();
+        let expected = array(raw, &arrays["gather_f32"]);
+        for (index, row) in [2, 0, 2, 1].into_iter().enumerate() {
+            matrix.copy_row(row, &mut output).unwrap();
+            assert_eq!(output.as_ptr(), storage);
+            for (column, value) in output.iter().enumerate() {
+                let start = (index * width + column) * 4;
+                assert_eq!(value.to_le_bytes(), expected[start..start + 4]);
+            }
+        }
+        let input: Vec<f32> = array(raw, &arrays["input_f32"])
+            .chunks_exact(4)
+            .map(|bytes| f32::from_le_bytes(bytes.try_into().unwrap()))
+            .collect();
+        let expected = array(raw, &arrays["projection_ordered_f32"]);
+        for (token, x) in input.chunks_exact(width).enumerate() {
+            let mut projection = [99.; 3];
+            matrix.matvec(x, &mut projection).unwrap();
+            for (row, value) in projection.iter().enumerate() {
+                let start = (token * 3 + row) * 4;
+                assert_eq!(value.to_le_bytes(), expected[start..start + 4]);
+            }
+        }
+    }
+}
+
+#[test]
+fn copy_row_rejects_atomically_and_supports_unaligned_signed_zero_storage() {
+    for dtype in [MetadataDtype::F16, MetadataDtype::BF16, MetadataDtype::F32] {
+        for bits in [2, 3, 4, 5, 6, 8] {
+            let layout = Layout::new(2, 64, bits, 32, dtype).unwrap();
+            let mut weights = vec![0x5a];
+            weights.extend(vec![0xff; layout.weight_bytes()]);
+            let mut scales = vec![0x5a];
+            scales.extend(metadata(dtype, &[-0.; 4]));
+            let biases = scales.clone();
+            let matrix =
+                Matrix::from_le_bytes(layout, &weights[1..], &scales[1..], &biases[1..]).unwrap();
+            let mut output = [99.; 64];
+            let untouched = output.map(f32::to_bits);
+            assert!(matrix.copy_row(2, &mut output).is_err());
+            assert_eq!(output.map(f32::to_bits), untouched);
+            assert!(matrix.copy_row(0, &mut output[..63]).is_err());
+            assert_eq!(output.map(f32::to_bits), untouched);
+            assert!(matrix.copy_row(0, &mut []).is_err());
+            matrix.copy_row(1, &mut output).unwrap();
+            assert!(output.iter().all(|v| v.to_bits() == (-0.0f32).to_bits()));
+            let storage = output.as_ptr();
+            matrix.copy_row(0, &mut output).unwrap();
+            assert_eq!(output.as_ptr(), storage);
+            assert!(output.iter().all(|v| v.to_bits() == (-0.0f32).to_bits()));
+        }
+    }
+    for dtype in [MetadataDtype::BF16, MetadataDtype::F32] {
+        let layout = Layout::new(1, 128, 4, 64, dtype).unwrap();
+        let weights = all_code_pattern(4).repeat(8);
+        let scale = if dtype == MetadataDtype::BF16 {
+            bf16::MAX.to_f32()
+        } else {
+            f32::MAX / 8.
+        };
+        let scales = metadata(dtype, &[0.125, scale]);
+        let biases = metadata(dtype, &[0., 0.]);
+        let matrix = Matrix::from_le_bytes(layout, &weights, &scales, &biases).unwrap();
+        assert!(matrix.value(0, 63).unwrap().is_finite());
+        assert!(matrix.value(0, 127).is_err());
+        let mut output = [99.; 128];
+        assert!(matrix.copy_row(0, &mut output).is_err());
+        assert_eq!(output, [99.; 128]);
+    }
+}
+
+#[test]
 fn every_unsigned_code_crosses_bytes_words_groups_and_rows() {
     for bits in [2u8, 3, 4, 5, 6, 8] {
         let pattern = all_code_pattern(bits);

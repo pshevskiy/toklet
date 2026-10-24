@@ -232,6 +232,66 @@ impl<'a> Matrix<'a> {
             _ => unreachable!("validated MLX bit width"),
         }
     }
+
+    /// Reconstruct one row into caller-owned FP32 storage, without expanding
+    /// the rest of a packed table. This uses `value`'s scalar precision contract,
+    /// not MLX's native BF16 gather arithmetic. Dtype/bits dispatch occurs once.
+    /// Shape/index or reconstruction overflow leaves the destination untouched.
+    pub fn copy_row(&self, row: usize, output: &mut [f32]) -> Result<(), Error> {
+        if row >= self.layout.rows || output.len() != self.layout.columns {
+            return Err(Error("MLX affine row destination or index mismatch"));
+        }
+        match self.layout.dtype {
+            MetadataDtype::F16 => self.copy_row_bits::<Half>(row, output),
+            MetadataDtype::BF16 => self.copy_row_bits::<BFloat>(row, output),
+            MetadataDtype::F32 => self.copy_row_bits::<Float>(row, output),
+        }
+    }
+
+    fn copy_row_bits<M: Metadata>(&self, row: usize, output: &mut [f32]) -> Result<(), Error> {
+        match self.layout.bits {
+            2 => self.copy_row_typed::<M, 2>(row, output),
+            3 => self.copy_row_typed::<M, 3>(row, output),
+            4 => self.copy_row_typed::<M, 4>(row, output),
+            5 => self.copy_row_typed::<M, 5>(row, output),
+            6 => self.copy_row_typed::<M, 6>(row, output),
+            8 => self.copy_row_typed::<M, 8>(row, output),
+            _ => unreachable!("validated MLX bit width"),
+        }
+    }
+
+    fn copy_row_typed<M: Metadata, const B: u8>(
+        &self,
+        row: usize,
+        output: &mut [f32],
+    ) -> Result<(), Error> {
+        let groups = self.layout.columns / self.layout.group_size;
+        // Preflight the complete selected row before publishing any scalar.
+        // This reference deliberately repeats reconstruction, like matvec,
+        // rather than allocating a temporary row for failure atomicity.
+        for group in 0..groups {
+            let offset = (row * groups + group) * M::BYTES;
+            let scale = M::read(&self.scales[offset..]);
+            let bias = M::read(&self.biases[offset..]);
+            for lane in 0..self.layout.group_size {
+                let column = group * self.layout.group_size + lane;
+                if !reconstruct(scale, bias, self.code::<B>(row, column)).is_finite() {
+                    return Err(Error("MLX affine row reconstruction overflow"));
+                }
+            }
+        }
+        for (group, values) in output.chunks_exact_mut(self.layout.group_size).enumerate() {
+            let offset = (row * groups + group) * M::BYTES;
+            let scale = M::read(&self.scales[offset..]);
+            let bias = M::read(&self.biases[offset..]);
+            for (lane, value) in values.iter_mut().enumerate() {
+                let column = group * self.layout.group_size + lane;
+                *value = reconstruct(scale, bias, self.code::<B>(row, column));
+            }
+        }
+        Ok(())
+    }
+
     /// Reference only: FP64 products/feature-order accumulation, FP32 output.
     /// Caller output is untouched on shape, nonfinite-input or overflow failure.
     pub fn matvec(&self, input: &[f32], output: &mut [f32]) -> Result<(), Error> {

@@ -5,6 +5,10 @@ passes required FP32/tied CPU/GPU comparisons while retaining BF16 backend
 differences and rejected projection diagnostics. It grants no new artifact,
 download/Chat or device capability.
 
+The [native affine row fetch](mlx-affine.md#native-row-fetch) now supplies a
+bounded FP32 packed-table primitive for later graph composition, with unchanged
+artifact/app eligibility.
+
 Requested 23 October 2026. This is the active ordering for the remaining
 [M8 work](mlx-implementation-plan.md), following [PLAN.md](../PLAN.md)'s
 correctness, quality, measurement and memory policies. Earlier qualification

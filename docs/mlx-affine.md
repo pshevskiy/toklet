@@ -121,3 +121,30 @@ The ignored hardware/model suites remain separate. Both protected historical CPU
 release executables retain their hashes. The
 [task receipt](../benchmarks/results/2026-10-21-native-mlx-affine-v1.json) binds
 source/check/raw identity, retained attempts, producer identity and final review.
+
+## Native row fetch
+
+`Matrix::copy_row(row, output)` reconstructs a selected packed row directly into
+an exact-length caller-owned FP32 slice. It uses the existing `value` contract:
+metadata promoted to FP32, FP64 affine multiply/add and one FP32 result. Dtype
+and bit width are selected once at the operation boundary; group metadata is
+read once per group. No whole table or temporary row is allocated. All selected
+values are checked finite before any destination write. Like the scalar matvec,
+this reference deliberately reconstructs twice to preserve failure atomicity.
+The immutable borrowed byte tensors need no pointer alignment assumption.
+
+Two additional tests cover every existing54 affine case, exact
+[Gemma packed witness](gemma-packed-reference.md) gathers at widths64/128/1536/8960,
+repeated/reordered rows and reused caller storage. Existing matvec passes the
+new ordered-FP64/FP32 projection bytes. All18 metadata-dtype/bit-width combinations
+check unaligned LE storage and signed-zero bits; invalid row/shape/empty output
+and reconstruction overflow in a later group leave all sentinels unchanged.
+
+The [row-fetch receipt](../benchmarks/results/2026-10-25-mlx-affine-row-fetch-v1.json)
+binds the exact source, fixture acceptance and required checks. Formatting,
+strict default/Metal Clippy,281 CPU/303 Metal-feature tests and both iOS compile
+targets pass. This adds a
+primitive for packed native graph composition. It qualifies FP32 reconstruction,
+with no BF16 gather equivalence, model payload/graph, performance or device-fit
+claim. General Gemma execution and all existing upstream precision gates remain
+open.

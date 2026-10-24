@@ -131,3 +131,9 @@ and actual embedding widths. All required FP32/tied comparisons pass on source
 CPU/GPU. BF16 gathers differ between backends and BF16 projection diagnostics
 reject under unchanged gates; their raw evidence remains visible. Native packed
 graph composition and BF16/checkpoint/device qualification remain open.
+
+A [native packed row fetch](mlx-affine.md#native-row-fetch) now fills caller-owned
+FP32 storage with one dtype/bit dispatch and complete-row failure preflight.
+It matches the frozen gather contracts and preserves signed zero/storage on
+boundary or late-group overflow. This is a G3 primitive, with real graph/session,
+payload and BF16 qualification still open.

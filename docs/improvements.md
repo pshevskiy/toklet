@@ -3101,3 +3101,29 @@ See [contracts and observed differences](gemma-packed-reference.md) and the
 Rust/shader/header inputs remain unchanged. Payload admission, native packed
 composition, quality, performance, Mac/phone fit and app integration remain open;
 the existing15 short-GPU and8 long-rotary discrepancies are not waived.
+
+## 25 October2026 — native packed row fetch
+
+Add `Matrix::copy_row` to fill caller-owned FP32 storage without expanding a
+quantized table. Dtype/bit dispatch occurs once, group metadata is hoisted, and
+all selected reconstruction values are preflighted before any output write.
+The second reconstruction pass preserves failure atomicity without a temporary
+row. Existing scalar value/matvec precision and behavior remain unchanged.
+
+Two focused tests pass all54 prior affine layouts and the newly frozen Gemma
+gather/projection bytes at small and actual embedding widths. They check
+repeated/reordered rows and output storage reuse,18 unaligned metadata/bit
+combinations and signed-zero bits, and unchanged outputs on bad row/length or
+reconstruction overflow in a later metadata group. The first preliminary
+two-test pass and its source are retained; final required checks include the
+strengthened later-group overflow case.
+
+Formatting, strict default/Metal Clippy,281 CPU/303 Metal-feature tests and both
+iOS compile targets pass in an isolated package-cleaned target. Astra reviews
+the exact final source/evidence before commit.
+
+See [API and scope](mlx-affine.md#native-row-fetch) and the
+[receipt](../benchmarks/results/2026-10-25-mlx-affine-row-fetch-v1.json).
+This is a reference primitive for G3, with no BF16, payload/graph, quality,
+performance, device or app-capability qualification. All existing upstream
+precision gaps remain open.
