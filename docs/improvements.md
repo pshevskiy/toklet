@@ -2746,3 +2746,28 @@ Actual head widths and full window transitions are separate bounded cases;
 maximum-usize arithmetic checks do not grant model/context support. Full Gemma
 layer/session/weights/Metal/rotary/quality/performance/device gates remain open.
 No ABI, app limit, protected binary or installed phone package changes.
+
+## 24 October2026 — per-layer token lookup and projection witness
+
+Independent ideal FP64 and staged FP32 contracts now freeze raw main embedding
+scale, lookup scale, projection/reshape/per-P learned RMS, addition and final
+combination scale. Rounding boundaries stay explicit; a portable test detects
+illegal algebraic scale cancellation. Hand literals distinguish the norm axis,
+direct unequal learned weights and lookup sqrt(P). Seven cases include batches,
+projected-only helper, empty policy and separately bounded H1536/L35-P256 shapes.
+
+The173 arrays contain253823 values. Seven portable, three ownership and three
+runtime-admission methods and all six owned commands pass. Separately evaluated
+real FP32 operator probes and unchanged source helper outputs retain71 raw
+arrays per CPU/GPU, each passing142 comparisons against both contracts. Maximum
+error/policy ratios are about0.02092/0.02354 CPU and0.04990/0.05188 GPU. Independent
+scalar replay verifies all arrays; staged FP32 matches exactly. Astra reviews
+final exact source/evidence before commit. See
+[the contract](gemma-per-layer-reference.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-per-layer-reference-v1.json).
+
+Probes are separate executions, not helper-internal/fusion qualification.
+Harness ID rejection, projected-only helper and empty policy have explicit
+limits; BF16/quantized checkpoint, nearest-token fallback, native composition,
+full Gemma/session/rotary/quality/performance/device gates remain open. No ABI,
+capability, app limit, protected binary or installed package changes.

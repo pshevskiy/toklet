@@ -83,9 +83,10 @@ checks. The [shared-KV routing witness](gemma-shared-kv-reference.md) now freeze
 current-step producer identity and source forwarding. The
 [native routing/publication plan](shared-kv-scalar.md) now passes ordered-prefix
 availability and complete cache-batch checks. [Borrowed-span scalar attention](span-attention-scalar.md)
-now passes frozen numerical/ring-view checks without linearizing KV. Remaining
-G2 work includes per-layer embedding/projection scales and gates, exact
-norm/residual/scalar order, embedding/logit scales and capping, plus the open
-upstream rotary precision gate. All other
+now passes frozen numerical/ring-view checks without linearizing KV.
+G2 now also has a [per-layer lookup/projection witness](gemma-per-layer-reference.md)
+with separate FP64 and staged FP32 contracts. Its native composition and the
+per-layer gate, exact norm/residual/scalar order, embedding/logit scales and
+capping remain open, along with the upstream rotary precision gate. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.
