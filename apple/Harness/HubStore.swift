@@ -41,6 +41,8 @@ final class HubStore: ObservableObject {
     @Published private(set) var deviceMessage = ""
     @Published private(set) var deviceAllowed = false
     @Published private(set) var blocksSelection = false
+    @Published private(set) var opening = false
+    @Published private(set) var savedProfiles: Set<String> = []
     private let hub: ModelHub
     let modelsRoot: URL
     private let admission: @Sendable () throws -> HubAdmission
@@ -60,12 +62,23 @@ final class HubStore: ObservableObject {
         modelsRoot = hub == nil ? Self.modelRoot : service.root
         self.verify = verify ?? { try await service.verified($0) }
     }
-    private enum Action { case refresh, search(String), download, open }
+    private enum Action { case inventory, refresh, search(String), download, open, use(replacing: Bool) }
     func select(_ selected: HubProfile) {
         guard !blocksSelection, HubProfile.catalog.contains(selected) else { return }
         profile = selected; localURL = nil; deviceAllowed = false; refresh()
     }
     func refresh() { start(.refresh) }
+    func inventory() { start(.inventory) }
+    func use(_ selected: HubProfile,replacingLoadedModel: Bool = false,opened: @escaping @MainActor (URL) -> Void) {
+        guard !blocksSelection, HubProfile.catalog.contains(selected) else { return }
+        profile = selected; localURL = nil; deviceAllowed = false
+        start(.use(replacing:replacingLoadedModel),opened:opened)
+    }
+    func downloadAndUse(_ selected: HubProfile,opened: @escaping @MainActor (URL) -> Void) {
+        guard !blocksSelection, HubProfile.catalog.contains(selected) else { return }
+        profile = selected; localURL = nil; deviceAllowed = false
+        start(.download,opened:opened)
+    }
     func search() { start(.search(query)) }
     func download() { start(.download) }
     func open(_ completion: @escaping @MainActor (URL) -> Void) { start(.open,opened:completion) }
@@ -94,22 +107,30 @@ final class HubStore: ObservableObject {
         operation = UUID(); let id = operation
         cancelling = false
         completed = 0; total = 0; message = ""
+        switch action { case .open, .use: opening = true; default: opening = false }
         switch action {
+        case .inventory: phase = "Checking saved models…"
         case .refresh: phase = "Checking saved model…"
         case .search(let query):
             phase = "Searching Hugging Face…"
             results = HubProfile.matching(query).map { HubModel(id:$0.repository) }
         case .download: phase = "Downloading model…"; total = profile.totalBytes; blocksSelection = true
         case .open: phase = "Verifying model…"; blocksSelection = true
+        case .use: phase = "Opening " + profile.name + "…"
         }
         let selected = profile
         task = Task { [self] in
-            defer { if operation == id { task = nil; phase = ""; blocksSelection = false } }
+            defer { if operation == id { task = nil; phase = ""; blocksSelection = false; opening = false } }
             await previous?.value
             do {
                 try Task.checkCancellation()
                 guard operation == id else { throw CancellationError() }
                 switch action {
+                case .inventory:
+                    let saved = try await hub.savedProfiles()
+                    try Task.checkCancellation()
+                    guard operation == id else { throw CancellationError() }
+                    savedProfiles = saved
                 case .refresh:
                     let folder = try await verify(selected)
                     try Task.checkCancellation()
@@ -135,14 +156,22 @@ final class HubStore: ObservableObject {
                         }
                     })
                     try Task.checkCancellation(); localURL = folder
-                    message = "Download verified. Open the model to start chatting."
-                case .open:
-                    _ = try checkDevice()
+                    savedProfiles.insert(selected.repository)
+                    if let opened { opened(folder); message = "" }
+                    else { message = "Download verified. Open the model to start chatting." }
+                case .open, .use:
+                    let replacing: Bool
+                    if case .use(let value) = action { replacing = value } else { replacing = false }
+                    // A replacement releases its old numerical owner before
+                    // beginLoad checks fresh memory. Remaining memory while
+                    // that owner is resident is not the replacement budget.
+                    if !replacing { _ = try checkDevice() }
                     guard let folder = try await verify(selected) else { throw HubFailure("Download this model first.") }
-                    try Task.checkCancellation(); _ = try checkDevice()
+                    try Task.checkCancellation()
+                    if !replacing { _ = try checkDevice() }
                     guard operation == id else { throw CancellationError() }
-                    localURL = folder; opened?(folder)
-                    message = "Model verified."
+                    localURL = folder; savedProfiles.insert(selected.repository); opened?(folder)
+                    message = ""
                 }
             } catch is CancellationError {
                 // cancel() also invalidates callbacks, but keeps ownership until

@@ -28,11 +28,12 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. In this checkout the generated library link selects
-`artifacts/m8-chat-output-v1/package`, with the SmolLM2/Qwen/Mistral text interface
-and bounded 256-token Chat replies. See the [mobile follow-up](../docs/mobile-interface-fixes.md)
-for interface changes and current validation boundaries.
+`artifacts/m8-native-policy-v1/package`, with shared runtime resource planning,
+the SmolLM2/Qwen/Mistral text interface and bounded 256-token Chat replies.
+See the [physical model-switching follow-up](../docs/mobile-model-switching.md)
+for the current installed UI and its validation boundaries.
 Its reviewed build receipt digest is
-`37f255ca04d4c839f51ece740bda1d8d2fa0bd026b505a1a551cf50975e3eb04`.
+`2d7d35b02d5c35a343d29b657cbf254f722171846d0df49f57bb15f92ba2194d`.
 The [text profile](../docs/app-chat-profile.md) and
 [interface guide](../docs/app-interface.md) describe this selected scope. Earlier
 package/device results retain their original immutable packages and receipts.

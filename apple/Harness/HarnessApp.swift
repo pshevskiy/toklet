@@ -72,6 +72,7 @@ extension HarnessStore {
 @main @MainActor
 struct TokletHarnessApp: App {
     @StateObject private var store: HarnessStore
+    private let uiTestChat: FriendlyChatStore?
     @Environment(\.scenePhase) private var phase
     private let timer = Timer.publish(every:0.1,on:.main,in:.common).autoconnect()
 
@@ -80,6 +81,13 @@ struct TokletHarnessApp: App {
         let diagnostics = ["--self-test","--measure","--quality","--tasks","--lifecycle","--state","--state-component","--chat-self-test","--hub-self-test","--hub-download-self-test"]
         let state = HarnessStore(enabled:!diagnostics.contains(where:arguments.contains),lifecycleEnabled:arguments.contains("--lifecycle") || arguments.contains("--state") || arguments.contains("--state-component"))
         _store = StateObject(wrappedValue:state)
+        // UI automation exercises the production screens without reading or
+        // modifying the owner's conversations. No caller-supplied file path.
+        if arguments.contains("--ui-test-history") {
+            UIApplication.shared.isIdleTimerDisabled = true
+            uiTestChat = FriendlyChatStore(harness:state,fileURL:FileManager.default.temporaryDirectory
+                .appendingPathComponent("TokletUITest-" + UUID().uuidString + ".json"))
+        } else { uiTestChat = nil }
         if arguments.contains("--hub-self-test") || arguments.contains("--hub-download-self-test") {
             UIApplication.shared.isIdleTimerDisabled = true
             let fresh = arguments.contains("--hub-download-self-test")
@@ -265,7 +273,7 @@ struct TokletHarnessApp: App {
         WindowGroup {
             Group {
                 if store.diagnosticsOnly { HarnessView(store:store) }
-                else { FriendlyHarnessView(store:store) }
+                else { FriendlyHarnessView(store:store,chat:uiTestChat) }
             }
                 .onReceive(timer) { _ in store.poll() }
                 .onChange(of:phase) { _,new in store.lifecycle(new) }

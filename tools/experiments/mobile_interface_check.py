@@ -23,6 +23,8 @@ def main():
     parser.add_argument("archive", type=Path, help="Mac arm64 libtoklet.a with the current ABI")
     parser.add_argument("output", type=Path, help="fresh output folder")
     parser.add_argument("--model", type=Path, help="optional local supported model for GPU/controller checks")
+    parser.add_argument("--fixture", type=Path, help="optional local native tiny fixture for CPU worker/polling checks")
+    parser.add_argument("--switch-model", type=Path, help="optional second local model (Qwen) for post-release memory admission checks")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     archive = args.archive.resolve(strict=True)
@@ -68,9 +70,22 @@ def main():
         run("compile", ["xcrun", "swiftc", "-sdk", sdk, "-target", "arm64-apple-macos15.0", *flags,
                         *mac_sources, str(archive), *links, "-o", str(output / "mobile-check")])
         run("regressions", [str(output / "mobile-check")])
+        if args.fixture:
+            fixture = output / "tiny-fixture"
+            fixture.mkdir()
+            for name in ("config.json", "model.safetensors"):
+                source = args.fixture.resolve(strict=True) / name
+                data = source.read_bytes()
+                if len(data) > 1024 * 1024:
+                    raise RuntimeError("Native tiny fixture exceeds its size bound")
+                (fixture / name).write_bytes(data)
+                pins[str(source.relative_to(root))] = hashlib.sha256(data).hexdigest()
+            run("worker-revision", [str(output / "mobile-check"), "--polling", str(fixture)])
         run("render", [str(output / "mobile-check"), "--render", str(output / "previews")])
         if args.model:
             run("local-model", [str(output / "mobile-check"), "--model", str(args.model.resolve(strict=True))])
+            if args.switch_model:
+                run("replacement-admission", [str(output / "mobile-check"), "--switching", str(args.model.resolve(strict=True)), str(args.switch_model.resolve(strict=True))])
         for platform, target in [("iphoneos", "arm64-apple-ios18.0"), ("iphonesimulator", "arm64-apple-ios18.0-simulator")]:
             sdk = subprocess.check_output(["xcrun", "--sdk", platform, "--show-sdk-path"], env=environment, text=True).strip()
             run(platform, ["xcrun", "swiftc", "-sdk", sdk, "-target", target, *flags, "-emit-module",

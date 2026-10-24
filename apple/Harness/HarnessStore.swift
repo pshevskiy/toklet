@@ -18,7 +18,9 @@ final class HarnessStore: ObservableObject {
         catch { worker = nil; inputError = error.localizedDescription }
     }
     func poll() {
-        if let worker { state = worker.snapshot() }
+        if let snapshot = worker?.snapshot(), snapshot.revision != state.revision {
+            state = snapshot
+        }
         if let mode = pendingMode, !state.busy, (!state.hasModel || state.closed) {
             pendingMode = nil
             setExpert(mode)

@@ -1,0 +1,237 @@
+{
+  "format": "toklet-mobile-model-switch-fix-v1",
+  "date": "2026-10-24",
+  "status": "installed_and_live_ui_verified",
+  "requested_model_switching_checks_complete": true,
+  "prior_chat_and_expert_ui_checks_complete": true,
+  "physical_device": "iPhone 14 Pro",
+  "owner_history_preserved": true,
+  "installed_app": {
+    "path": "artifacts/mobile-model-switch-2026-10-24-v1/UITestDerived/Build/Products/Release-iphoneos/TokletHarness.app",
+    "bundle_identifier": "dev.toklet.harness",
+    "normal_launch": true,
+    "signature_verified": true,
+    "signed_file_sha256": {
+      "Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+      "PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+      "Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+      "Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+      "TokletHarness": "ba2e62a371b95a6c9d58ce10797affaa416f543383c8ec89c48d810a9fa5e58c",
+      "_CodeSignature/CodeResources": "f7a2be8763bdd7253ef302cd61ee0d9496a66bb954e33176b6eb23f81714a9db",
+      "embedded.mobileprovision": "f205de44fba20484b45c00e44df01ad8183177b2427ba9b488679afb22697220"
+    }
+  },
+  "native_package": {
+    "path": "artifacts/m8-native-policy-v1/package/build.json",
+    "sha256": "2d7d35b02d5c35a343d29b657cbf254f722171846d0df49f57bb15f92ba2194d"
+  },
+  "source_pins": {
+    "apple/Harness/FriendlyChatStore.swift": "56561ae5410d471402e48659c7e5e1af0603f9668ce2f4597adce3b389ef2507",
+    "apple/Harness/FriendlyHarness.swift": "446fc3b28fe371282f597c77458d135a33a43da95623a51649c9e6314db6b2d2",
+    "apple/Harness/HarnessApp.swift": "72b77cd9f9ae46601bd654515abf48bea1e9237f8e9547b4a450554339f6d81f",
+    "apple/Harness/HarnessStore.swift": "b1a38ac590ecca347788cfeb58e249648b9c5350cde78e39a843a0f8e004dd3b",
+    "apple/Harness/HubStore.swift": "97a39aae9143321014b890003750d09462981f1d3a37770bc2b034a5ccd96c40",
+    "apple/Harness/ModelHub.swift": "4dfbf6d254321954fb21c9c4738532f211ae5c4365ddd9d266486358cc1313fe",
+    "apple/Harness/NativeWorker.swift": "e382517f6fd140bfa75c78ae95967f5c7b08fd79bae64b03c7018b828e533c98",
+    "apple/tests/swift/MobileMain.swift": "065bdfa5fb9e50d717367bbfc161e5e0670f2b8c7e8e24dfa4425de9a2026c6c",
+    "tools/experiments/mobile_interface_check.py": "983e2af44d86c9fa5db252db6e9404256b29179d72e64dd3a91bd1cc95753670",
+    "docs/mobile-model-switching.md": "17ed3495d2aedce7e3ebb3f4b4e3f94f8338c109a90d522212af2fb36d8283f5",
+    "docs/app-interface.md": "f8bd6324b68920a5b20e5dd9911f38184dc31b889c26848f1180eef45b8f38d5",
+    "apple/README.md": "89a9c00af7fac29bf7e26be3ac59b2085de5687fa17dd60adacb0e080ab51c19",
+    "apple/tests/ui/ModelSwitchUITests.swift": "79c279983eced34c603914257c64ca44e31439fbb7df66498199a40acf6d822c"
+  },
+  "verification": {
+    "strict_swift6_and_controllers": {
+      "path": "artifacts/mobile-model-switch-2026-10-24-v1/check-v4/check.json",
+      "sha256": "419ba84e1d22556d88d20e535b5d74f73b8d74add4849f39ca80de5de1ecb092"
+    },
+    "full_release_apps": {
+      "path": "artifacts/mobile-model-switch-2026-10-24-v1/apps-v3/build.json",
+      "sha256": "5eb57b49176de150edb4d9c115251bd7313b947dc1ab422ec4391e4d735c5036"
+    },
+    "controller_commands": [
+      {
+        "label": "compile",
+        "exit_code": 0
+      },
+      {
+        "label": "regressions",
+        "exit_code": 0
+      },
+      {
+        "label": "worker-revision",
+        "exit_code": 0
+      },
+      {
+        "label": "render",
+        "exit_code": 0
+      },
+      {
+        "label": "local-model",
+        "exit_code": 0
+      },
+      {
+        "label": "replacement-admission",
+        "exit_code": 0
+      },
+      {
+        "label": "iphoneos",
+        "exit_code": 0
+      },
+      {
+        "label": "iphonesimulator",
+        "exit_code": 0
+      }
+    ],
+    "physical_runs": [
+      {
+        "method": "testModelSwitching",
+        "test_source": {
+          "path": "artifacts/mobile-model-switch-2026-10-24-v1/model-switch-v2-test-source.swift",
+          "sha256": "4087fcc8c152023f5cd182e0370230ebf54f2ac96c5f7e19083268aa74278b59"
+        },
+        "passed": true,
+        "xcresult_path": "artifacts/mobile-model-switch-2026-10-24-v1/model-switch-live-v2.xcresult",
+        "summary": {
+          "path": "artifacts/mobile-model-switch-2026-10-24-v1/phone-summary-v2.json",
+          "sha256": "25d347e6d58c3e9cc4b8a9c5973bd4e10d5e91e05a526bfcd505d7c9abb6160d"
+        },
+        "stdout": {
+          "path": "artifacts/mobile-model-switch-2026-10-24-v1/private-logs/model-switch-live-v2.stdout",
+          "sha256": "96052b323997b8538a5bd9c7737c141ea628553fee0746b28014a7d07586f306"
+        },
+        "stderr": {
+          "path": "artifacts/mobile-model-switch-2026-10-24-v1/private-logs/model-switch-live-v2.stderr",
+          "sha256": "03bf27b1e88c885430420393f962a6fbac8513001f17e62cd29eddd8afed2f93"
+        },
+        "screenshots": [
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/0D7E6E13-1E99-4E3C-B31E-536298F4B5EE.png",
+            "sha256": "fc5f9efa7046226bf653ba488d7e8b24453d68038c667969fad577fe67bf7cb1"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/12EC6E41-370A-415A-A38B-FEBB09E89475.png",
+            "sha256": "1d465fc3c24af065c00fb1a5e17e3ce77b36b7f66df635195bdad0fdebc8da8d"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/18F5C557-DB5E-4C00-A1EA-6EC6F64ED6AC.png",
+            "sha256": "c000fe6cee2a72fba5cc0c125785870ce2ad52c3ab79c4ac1627ded5b3ff9252"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/28A2355F-8D2A-41C6-98F0-DC7B80D03512.png",
+            "sha256": "a938ea697f03cdb8152222f3029e3230cebe7efbd54be1378eba01bc8081e71a"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/30984EB2-28E5-4089-99B3-FF2CF2A1368E.png",
+            "sha256": "f3f4a0ce94fc7245d0f2e197487c4cce5c303e18072af983e2abe1cd25dffcb7"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/4418E927-1591-4551-955E-1B91FF3473D8.png",
+            "sha256": "9b090282bf0094bdbb0d288f0c28732cd4fa305b6087da06a7a56f8a6b923483"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/517BBB04-A470-4CCA-92CD-6037FD67901A.png",
+            "sha256": "0d8ac2fe69ed2068d81d7d63ddcf24f17dfb1ec3f1bab81eb4d6c0aaf33d25e8"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/5541FD49-B36B-4A74-85B7-2BB527677E11.png",
+            "sha256": "6dfe38aa7b9b943634f5c479288a2401f63567f08da6310f871938e0c0245e28"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/614EDABD-294D-49BF-9342-DB9843CBA4FE.png",
+            "sha256": "234dee8a242631e7dd6eb4edcf0ead60e383079d1ebfe51c5064bd8cbf76e100"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/651EDB03-9C8B-4C67-9A68-33AF649C447A.png",
+            "sha256": "76728b61523dbed9af6c530d37129f17a8c7b07a02b317a117623c0def32ca87"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/7C19B55D-5B81-461B-BAE0-69795C2EF603.png",
+            "sha256": "372fbaddeb69f408b87087eb62b0dd0a2ce33389677421b573db49a5e684c53f"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/AD1DA01C-B6C4-45F7-A5F4-89B497302FDC.png",
+            "sha256": "3ccee4b1a6769bf1216ecc6d654def6c5600e1b4677ea2dfdad2bbed9546f790"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-live-v2/B8D74091-A5CB-4758-91CF-B3AF37A47580.png",
+            "sha256": "0d8ac2fe69ed2068d81d7d63ddcf24f17dfb1ec3f1bab81eb4d6c0aaf33d25e8"
+          }
+        ],
+        "animation_idle_timeout_observed": false,
+        "duration_seconds": 90.733,
+        "owner_history_bytes_unchanged": true
+      },
+      {
+        "method": "testReplyLimitAndExpert",
+        "test_source": {
+          "path": "apple/tests/ui/ModelSwitchUITests.swift",
+          "sha256": "79c279983eced34c603914257c64ca44e31439fbb7df66498199a40acf6d822c"
+        },
+        "passed": true,
+        "xcresult_path": "artifacts/mobile-model-switch-2026-10-24-v1/reply-expert-live-v1.xcresult",
+        "summary": {
+          "path": "artifacts/mobile-model-switch-2026-10-24-v1/phone-summary-expert.json",
+          "sha256": "066b785fc8ff868bf602b5ff4c276d5624782c7de30f2033780ebcc6bd7b2517"
+        },
+        "stdout": {
+          "path": "artifacts/mobile-model-switch-2026-10-24-v1/private-logs/reply-expert-live-v1.stdout",
+          "sha256": "f9fc41690ae88ac9dd37f73134cc1252df7460975260b9e4d8e29bfe39cd5d5e"
+        },
+        "stderr": {
+          "path": "artifacts/mobile-model-switch-2026-10-24-v1/private-logs/reply-expert-live-v1.stderr",
+          "sha256": "e778e125b39629be632d5c1629b984a10171c34649e318848fb6d6b010c3b705"
+        },
+        "screenshots": [
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-expert-v1/5CED3C78-B3F2-4816-89D6-3A813CC95F73.png",
+            "sha256": "f71ac79cf69bfe94734c1e524a527d45aa3542a2a0237fdc9691a3ba80f17ae6"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-expert-v1/AE793038-D508-4168-B351-6275BAAC3DCB.png",
+            "sha256": "5306e3596020042376b60028c1eabe232fb9a6e48c82de38ca7c570ad707d5a4"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-expert-v1/C2400F57-78B9-494D-A749-E8191E298C93.png",
+            "sha256": "84251b3797e2bc78ad346ac64f0dd13c0c8353c09cac1431a467c2ea25b7844c"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-expert-v1/E767F636-F995-4BA5-AD12-E9EA9B92DF5B.png",
+            "sha256": "ef6cf1da90f8cc28d17e3300e3c0792895527823eb3ee2a68eafe49ee236d174"
+          },
+          {
+            "path": "artifacts/mobile-model-switch-2026-10-24-v1/passed-expert-v1/F10ECF6C-DC08-4E49-B07A-20E8F1A40F1C.png",
+            "sha256": "d431485619c5ba7c5c6c2dee5f25a3ec941164776fd3a5db2d020540ee9097ca"
+          }
+        ],
+        "animation_idle_timeout_observed": false,
+        "duration_seconds": 60.15,
+        "owner_history_bytes_unchanged": true
+      }
+    ],
+    "original_picker_reproduction": {
+      "xcresult_path": "artifacts/mobile-phone-2026-10-24-v1/model-switch-inspect-v1.xcresult",
+      "animation_idle_wait_seconds": 60,
+      "meaning": "XCUITest animation-idle wait observation, not generation latency"
+    },
+    "preserved_failed_live_run": {
+      "xcresult_path": "artifacts/mobile-model-switch-2026-10-24-v1/model-switch-live-v1.xcresult",
+      "cause": "Test selected the first offscreen Copy code control while another code block was visible; both model loads/replies had passed.",
+      "stdout": {
+        "path": "artifacts/mobile-model-switch-2026-10-24-v1/private-logs/model-switch-live-v1.stdout",
+        "sha256": "bbc4e6310879ceff447295fb9aa3ad00ba3fc02ff768cd8819d3ea958534d6e7"
+      }
+    }
+  },
+  "current_limits": {
+    "chat_output_tokens": 256,
+    "expert_raw_output_tokens": 128,
+    "chat_context_positions": 512
+  },
+  "limits": [
+    "Selected SmolLM2/Qwen on the named phone only; not every model or memory-pressure state.",
+    "No128K output support, new numerical quality, throughput, thermal or process-memory qualification.",
+    "Phone tests used isolated temporary histories; normal owner launch followed both passing runs.",
+    "Signed app sources match the final snapshot; later root Rust/header work is not compiled into immutable native package2d7."
+  ]
+}

@@ -185,7 +185,7 @@ struct FriendlyHarnessView: View {
             if !chat.outputLimitAvailable {
                 Text("The saved reply limit is unavailable in this version. Choose a reply limit in Settings.").font(.callout)
             }
-            if chat.loadingModel { ProgressView("Opening " + chat.modelName + "…").font(.callout) }
+            if chat.loadingModel { ProgressView("Opening " + chat.loadingName + "…").font(.callout) }
             if store.state.hasModel && !chat.hasChatModel && !chat.loadingModel {
                 Text("Choose this conversation’s model, or start a new chat with " + chat.modelName + ".").font(.callout).foregroundStyle(.secondary)
             }
@@ -210,12 +210,29 @@ struct FriendlyHarnessView: View {
     private var models: some View {
         ModelList {
             Section("Text chat") {
-                Text("Local text chat").font(.headline)
-                Text("Download a tested model below, or open a folder already on this device. Other model formats remain available in Expert mode.").font(.callout).foregroundStyle(.secondary)
+                Text("Choose a saved model to switch immediately, or download another model.").font(.callout).foregroundStyle(.secondary)
                 if store.state.chatEnabled {
-                    Label("Model loaded",systemImage:"checkmark.circle.fill").foregroundStyle(.indigo)
+                    Label("Active: " + chat.modelName,systemImage:"checkmark.circle.fill").foregroundStyle(.indigo)
                     Button("Unload model") { hub.modelChoiceChanged(); chat.unload() }.disabled(!unlocked || hub.busy)
                 }
+            }
+            Section("Chat models") {
+                ForEach(HubProfile.catalog,id:\.repository) { profile in modelRow(profile) }
+                if chat.loadingModel { ProgressView("Loading " + chat.loadingName + "…") }
+                else if hub.busy {
+                    if hub.downloading {
+                        ProgressView(value:Double(hub.completed),total:Double(max(1,hub.total)))
+                        Text(ByteCountFormatter.string(fromByteCount:hub.completed,countStyle:.file) + " of " + ByteCountFormatter.string(fromByteCount:hub.total,countStyle:.file))
+                            .font(.caption).monospacedDigit()
+                    } else { ProgressView(hub.phase) }
+                    Button("Cancel",role:.cancel) { hub.cancel() }.accessibilityIdentifier("hub-cancel")
+                }
+                if !hub.message.isEmpty { Text(hub.message).font(.callout).textSelection(.enabled) }
+                Button("Check saved models",systemImage:"arrow.clockwise") { hub.inventory() }.disabled(hub.busy)
+                #if os(macOS)
+                Button("Show models in Finder",systemImage:"folder") { NSWorkspace.shared.open(hub.modelsRoot) }
+                #endif
+                Text(folderHelp).font(.footnote).foregroundStyle(.secondary)
             }
             Section("Hugging Face") {
                 HStack {
@@ -225,53 +242,10 @@ struct FriendlyHarnessView: View {
                     Button("Search") { modelSearchFocused = false; hub.search() }.disabled(hub.blocksSelection || hub.query.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
                         .accessibilityIdentifier("hub-search")
                 }
-                Text("Search is public. Results marked Available for chat can be selected below. Other results need engine and tokenizer support before they can run.")
+                Text("Search is public. Supported results have a Use model or Download and use button. Other results need engine and tokenizer support before they can run.")
                     .font(.footnote).foregroundStyle(.secondary)
             }
             if !hub.results.isEmpty { Section("Search results") { searchResults } }
-            Section("Available for chat") {
-                Picker("Model",selection:Binding(get:{ hub.profile.repository },set:{ id in
-                    if let profile = HubProfile.catalog.first(where:{ $0.repository == id }) { hub.select(profile) }
-                })) {
-                    ForEach(HubProfile.catalog,id:\.repository) { profile in Text(profile.name).tag(profile.repository) }
-                }.disabled(hub.blocksSelection).accessibilityIdentifier("hub-profile")
-                VStack(alignment:.leading,spacing:6) {
-                    Text(hub.profile.name).font(.headline)
-                    Text(hub.profile.repository).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
-                    Text(ByteCountFormatter.string(fromByteCount:hub.profile.totalBytes,countStyle:.file) + " · tested revision " + hub.profile.revision.prefix(7) + " · Apache-2.0").font(.caption).foregroundStyle(.secondary)
-                    Text(hub.deviceMessage).font(.footnote).foregroundStyle(.secondary)
-                }
-                if hub.localURL != nil {
-                    Button("Open downloaded model",systemImage:"bubble.left.and.bubble.right") {
-                        let conversation = chat.workspace.selected
-                        hub.open { folder in
-                            guard unlocked, !store.expert, !store.state.closed else { return }
-                            chat.open(folder,ifSelected:conversation)
-                        }
-                    }.disabled(!unlocked || hub.busy || !hub.deviceAllowed || store.state.closed)
-                        .accessibilityIdentifier("hub-open")
-                } else {
-                    Button("Download model",systemImage:"arrow.down.circle") { hub.download() }
-                        .disabled(!unlocked || hub.busy || !hub.deviceAllowed)
-                        .accessibilityIdentifier("hub-download")
-                }
-                if hub.busy {
-                    if hub.downloading {
-                        ProgressView(value:Double(hub.completed),total:Double(max(1,hub.total)))
-                        Text(ByteCountFormatter.string(fromByteCount:hub.completed,countStyle:.file) + " of " + ByteCountFormatter.string(fromByteCount:hub.total,countStyle:.file))
-                            .font(.caption).monospacedDigit()
-                    } else { ProgressView() }
-                    Text(hub.phase).font(.callout)
-                    Button("Cancel",role:.cancel) { hub.cancel() }.accessibilityIdentifier("hub-cancel")
-                }
-                if !hub.message.isEmpty { Text(hub.message).font(.callout).textSelection(.enabled) }
-                Button("Check saved model and device again",systemImage:"arrow.clockwise") { hub.refresh() }.disabled(hub.busy)
-                #if os(macOS)
-                Button("Show models in Finder",systemImage:"folder") { NSWorkspace.shared.open(hub.modelsRoot) }
-                #endif
-                Text(folderHelp)
-                    .font(.footnote).foregroundStyle(.secondary)
-            }
             Section("Other local folders") {
                 ForEach(chat.folders,id:\.self) { folder in
                     Button { hub.modelChoiceChanged(); chat.open(folder) } label: {
@@ -286,7 +260,7 @@ struct FriendlyHarnessView: View {
             if store.state.busy { Section { ProgressView("Opening or releasing model…") } }
             if !chat.notice.isEmpty { Section { Text(chat.notice).foregroundStyle(.secondary) } }
             if !store.state.message.isEmpty { Section { Text(store.state.message) } }
-        }.scrollDismissesKeyboard(.interactively).navigationTitle("Models").onAppear { chat.refreshFolders(); hub.refresh() }
+        }.scrollDismissesKeyboard(.interactively).navigationTitle("Models").onAppear { chat.refreshFolders(); hub.inventory() }
             .fileImporter(isPresented:$importing,allowedContentTypes:[.folder]) { result in
                 switch result {
                 case .success(let url): hub.modelChoiceChanged(); chat.open(url)
@@ -296,15 +270,50 @@ struct FriendlyHarnessView: View {
                 }
             }
     }
+    private func useModel(_ profile: HubProfile,download: Bool) {
+        modelSearchFocused = false
+        let conversation = chat.workspace.selected
+        let opened: @MainActor (URL) -> Void = { folder in
+            guard unlocked, !store.expert, !store.state.closed else { return }
+            chat.open(folder,ifSelected:conversation)
+        }
+        if download { hub.downloadAndUse(profile,opened:opened) }
+        else { hub.use(profile,replacingLoadedModel:store.state.hasModel,opened:opened) }
+    }
+    private func modelRow(_ profile: HubProfile) -> some View {
+        let active = chat.hasChatModel && chat.modelName == profile.name
+        let saved = active || hub.savedProfiles.contains(profile.repository)
+        let checking = hub.opening && hub.profile == profile
+        let loading = chat.loadingModel && chat.loadingName == profile.name
+        return VStack(alignment:.leading,spacing:8) {
+            HStack {
+                Text(profile.name).font(.headline)
+                if active { Label("Active",systemImage:"checkmark.circle.fill").font(.caption).foregroundStyle(.indigo) }
+            }
+            Text(saved ? "Saved on this device" : ByteCountFormatter.string(fromByteCount:profile.totalBytes,countStyle:.file) + " download")
+                .font(.caption).foregroundStyle(.secondary)
+            Button(active ? "Return to chat" : (saved ? "Use model" : "Download and use"),systemImage:active ? "bubble.left.and.bubble.right" : "arrow.right.circle") {
+                if active { hub.cancel(); sheet = nil }
+                else { useModel(profile,download:!saved) }
+            }.buttonStyle(.borderedProminent).frame(minHeight:44)
+                .disabled(!unlocked || hub.blocksSelection || checking || store.state.closed)
+                .accessibilityIdentifier("hub-use-" + profile.key)
+            if checking || loading { ProgressView(loading ? "Loading model…" : hub.phase).font(.callout) }
+            if hub.profile == profile, !hub.message.isEmpty { Text(hub.message).font(.callout) }
+            DisclosureGroup("Model details") {
+                Text(profile.repository).font(.caption).textSelection(.enabled)
+                Text("Revision " + profile.revision.prefix(7) + " · Apache-2.0").font(.caption).foregroundStyle(.secondary)
+            }.font(.caption)
+        }.padding(.vertical,4)
+    }
     private var searchResults: some View {
         ForEach(hub.results) { model in
-            VStack(alignment:.leading,spacing:5) {
-                Text(model.id).font(.callout).textSelection(.enabled)
-                Text(model.profile == nil ? "Unavailable for chat: this checkpoint needs engine and tokenizer support." : "Available for chat · " + (model.profile == hub.profile ? "selected below" : "select to download or open"))
-                    .font(.caption).foregroundStyle(.secondary)
-                if let profile = model.profile {
-                    Button(model.profile == hub.profile ? "Selected for chat" : "Select for chat",systemImage:model.profile == hub.profile ? "checkmark.circle.fill" : "arrow.down.circle") { hub.select(profile) }
-                        .disabled(hub.blocksSelection)
+            if let profile = model.profile { modelRow(profile) }
+            else {
+                VStack(alignment:.leading,spacing:5) {
+                    Text(model.id).font(.callout).textSelection(.enabled)
+                    Text("Unavailable for chat: this checkpoint needs engine and tokenizer support.")
+                        .font(.caption).foregroundStyle(.secondary)
                 }
             }
         }

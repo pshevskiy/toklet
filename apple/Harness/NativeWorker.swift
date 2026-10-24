@@ -50,6 +50,7 @@ struct NativeDistributionScore: Codable, Equatable, Sendable {
 }
 
 struct NativeSnapshot: Sendable {
+    var revision: UInt64 = 0
     var busy = false
     var closed = false
     var hasModel = false
@@ -115,7 +116,13 @@ final class NativeWorker: @unchecked Sendable {
     private let condition = NSCondition()
     private var queued: NativeCommand?
     private var closing = false
-    private var view = NativeSnapshot()
+    private var snapshotRevision: UInt64 = 0
+    // All view mutations hold condition. Avoid retaining oldValue here: it
+    // would force callback arrays to copy on every append. Observer self-writes
+    // do not recurse; value-type member mutations invoke the observer too.
+    private var view = NativeSnapshot() {
+        didSet { snapshotRevision &+= 1; view.revision = snapshotRevision }
+    }
     private var cancelFlag: OpaquePointer?
     private var thread: Thread?
     // Cold diagnostic completion observer for deterministic non-UI checks.

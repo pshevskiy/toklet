@@ -254,6 +254,15 @@ actor ModelHub {
         try Self.verify(folder,profile:profile)
         return folder
     }
+    // Presence only, for button labels. Full SHA/type/receipt validation still
+    // runs once when the user chooses Use; opening this screen must not hash GBs.
+    func savedProfiles() throws -> Set<String> {
+        try prepareRoot()
+        return Set(HubProfile.catalog.filter { profile in
+            FileManager.default.fileExists(atPath:root.appendingPathComponent(profile.folder)
+                .appendingPathComponent("snapshot.json").path)
+        }.map(\.repository))
+    }
     static func verify(_ folder: URL,profile: HubProfile) throws {
         try profile.validate(); try Task.checkCancellation()
         let directory = Darwin.open(folder.path,O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_NONBLOCK)

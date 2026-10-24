@@ -13,10 +13,11 @@ checks are separate from the earlier iPhone/Simulator evidence below.
 ## Use on the iPhone
 
 1. Open **Toklet Harness**, then **Choose a model**.
-2. Search Hugging Face or select the pinned SmolLM2 or Qwen card, then **Download model**
-   and **Open downloaded model**. You can also open a copied local model folder
-   or choose its complete folder in Files. Wait for loading to finish, then close
-   Models. See the [download guide](model-hub.md) for progress/cancellation and
+2. Tap **Use model** beside a saved SmolLM2 or Qwen model, or **Download and use**
+   for a new download. **Active** identifies the loaded model. Models closes
+   automatically after loading. Search results have the same direct actions.
+   You can also open a copied local model folder or choose its complete folder
+   in Files. See the [download guide](model-hub.md) for progress/cancellation and
    offline opening.
 3. Type a message and press Send. **Writing…** remains visible until the reply
    completes; Stop requests cancellation and preserves text decoded from the
@@ -41,17 +42,18 @@ four-bit** snapshot. Admission checks exact model
 configuration, supported loaded geometry and pinned tokenizer/template identities
 in the [text profile](app-chat-profile.md); local text admission does not
 authenticate every weight payload. Downloaded snapshots additionally hash weights.
-SmolLM2 has physical phone functional evidence; the new Qwen Chat path currently
-has Mac evidence, with physical Qwen and Mistral phone Chat paused at the user’s request.
+SmolLM2 and Qwen have physical iPhone14Pro controller and live UI evidence in
+the [model-switching follow-up](mobile-model-switching.md). Mistral phone Chat
+remains outside the admitted phone budget.
 Other qualified numerical models remain available through Expert mode. A model
 architecture being implemented does not establish tokenizer/template support for
 every checkpoint. Hugging Face search and verified downloads are available for these qualified
 profiles through [Models](model-hub.md). Other search results explain their
-unsupported status. Supported results appear first and update the selected profile
-when tapped. Search and profile changes can cancel an automatic saved-model
-verification; stale verification results cannot overwrite the latest selection.
-Downloads and explicit opening keep their model selection fixed until completion
-or cancellation. Opening the already active model preserves its session. The
+unsupported status. Supported results use the same Use model action as the
+saved-model list. Opening Models reads a lightweight presence inventory; Use
+checks full snapshot integrity. A newer Use can replace pending verification;
+stale results cannot open the previous selection. Downloads keep their model
+selection fixed until completion or cancellation. Opening the already active model preserves its session. The
 Models sheet closes after a successful load and remains open on failure. Wider downloadable/text profiles remain open in
 [M8.4](mlx-implementation-plan.md). Downloaded snapshots additionally authenticate
 the six required file hashes, including weights, before publication and opening.
@@ -71,7 +73,9 @@ messages, at most64KiB combined UTF-8 input. Long saved conversations can exceed
 the model's context and require a new chat.
 
 Local history is bounded to20 conversations,64 messages per conversation and a
-2MiB file, with16KiB drafts and64KiB message text. Malformed/oversized history
+64MiB file, with16KiB drafts and8MiB stored message text. The
+[long-reply preparation](long-reply-mobile.md) describes storage reservations;
+these bounds do not increase the current generation or conversation limits. Malformed/oversized history
 blocks editing until a successful retry, avoiding accidental replacement. Failed
 writes keep the in-memory draft. Interrupted placeholders restore as stopped;
 restoring history does not run inference. External Files folder access is held
@@ -103,10 +107,12 @@ Chat/Models/history/settings, opening and cancelling
 Files, Expert raw generation (`47,47`), terminal Close, Back to Chat and draft
 entry. The physical default screen was inspected in dark appearance. The
 Simulator correctly rejects this MLX model without a unified-memory MPS device.
-The new physical iPhone search/download tap flow, physical GUI Send/Stop, successful Files folder
-selection, the on-screen keyboard
-and largest accessibility text layouts have not been visually qualified; native
-and controller tests are separate evidence. The
+The original record did not qualify physical GUI Send or model switching. The
+[24 October follow-up](mobile-model-switching.md) now records repeated physical
+SmolLM2/Qwen switching, real GUI Send, the 256-token setting/limit notice, Chat
+code and Expert output. Search/download taps, GUI Stop, successful Files folder
+selection and largest accessibility text layouts remain outside that new run;
+native and controller tests retain their separate scope. The
 [interface receipt](../benchmarks/results/2026-10-23-app-interface-v1.json) preserves
 exact executed-source identities, including the earlier physical smoke build.
 

@@ -6,6 +6,7 @@ final class FriendlyChatStore: ObservableObject {
     @Published var workspace = ChatWorkspace()
     @Published private(set) var modelName = "Toklet"
     @Published private(set) var loadingModel = false
+    @Published private(set) var loadingName = ""
     @Published var notice = ""
     @Published var storageError = ""
     @Published var folders: [URL] = []
@@ -19,9 +20,11 @@ final class FriendlyChatStore: ObservableObject {
     private var saving: Task<Void,Never>?
     private var storageBlocked = false
     private let file: URL
+    private let admission: () throws -> HubAdmission
 
-    init(harness: HarnessStore, fileURL: URL? = nil) {
+    init(harness: HarnessStore, fileURL: URL? = nil, admission: @escaping () throws -> HubAdmission = { try HubDeviceSnapshot.current().admission }) {
         self.harness = harness
+        self.admission = admission
         file = fileURL ?? FileManager.default.urls(for:.applicationSupportDirectory,in:.userDomainMask)[0]
             .appendingPathComponent("Toklet/chat-v1.json")
         restore()
@@ -160,13 +163,13 @@ final class FriendlyChatStore: ObservableObject {
             // admission still runs at the native load boundary.
             let scoped = folder.startAccessingSecurityScopedResource()
             defer { if scoped { folder.stopAccessingSecurityScopedResource() } }
-            _ = try HubProfile.identify(folder)
+            let profile = try HubProfile.identify(folder)
             if hasChatModel && loadedKey == key(folder) { notice = "This model is already open."; return }
             if workspace.current.modelKey != key(folder), !workspace.current.messages.isEmpty { try workspace.newChat(modelKey:key(folder)) }
             workspace.conversations[workspace.selectedIndex].modelKey = key(folder)
             save()
             if harness.state.hasModel {
-                loadingModel = true; pendingFolder = folder; harness.worker?.interrupt(unload:true); harness.poll()
+                loadingName = profile.name; loadingModel = true; pendingFolder = folder; harness.worker?.interrupt(unload:true); harness.poll()
             } else { beginLoad(folder) }
         } catch { notice = error.localizedDescription }
     }
@@ -183,7 +186,7 @@ final class FriendlyChatStore: ObservableObject {
         let profile: HubProfile
         do {
             profile = try HubProfile.identify(folder)
-            try HubDeviceSnapshot.current().admission.check(profile)
+            try admission().check(profile)
         } catch {
             loadingModel = false
             scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil
@@ -194,7 +197,7 @@ final class FriendlyChatStore: ObservableObject {
         settings.capacity = 512; settings.chunk = 32
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
-            loadingModel = true; loadedKey = key(folder); modelName = profile.name
+            loadingName = profile.name; loadingModel = true; loadedKey = key(folder); modelName = profile.name
             harness.poll()
         } else {
             loadingModel = false
