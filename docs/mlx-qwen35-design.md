@@ -59,7 +59,8 @@ Introduce each module when its concrete implementation exists:
    The [normalized scalar recurrence](gated-delta-scalar.md) is checked against
    the frozen unmasked witness. The separate
    [raw Q/K normalizer](gated-delta-normalization.md) also passes its frozen and
-   composed-state gates. Gate construction and causal convolution remain pending;
+   composed-state gates. [Scalar gate construction](gated-delta-gates.md) also
+   passes the full raw-input pipeline; causal convolution remains pending;
    no hybrid session is implied.
 3. Partial rotary and the attention-gate layout as separate dense mechanisms.
    Preserve existing full-rotary Qwen2/Llama/Mistral/Qwen3 fixtures. The text

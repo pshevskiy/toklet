@@ -20,7 +20,7 @@ key-coordinate order. The caller must supply normalized Q including the one
 readout scale, and preconstructed gates in `[0,1]`. Raw normalization and gate
 construction are separate mechanisms, not silently inherited from RMSNorm.
 The separate [raw Q/K normalizer](gated-delta-normalization.md) is now checked;
-gate construction remains pending.
+the [scalar gate constructor](gated-delta-gates.md) is checked separately too.
 Masks, vector gates and negative-eigenvalue updates are excluded.
 
 All dimensions, checked products, slice lengths, finite inputs and gate ranges

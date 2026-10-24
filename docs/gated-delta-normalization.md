@@ -42,7 +42,8 @@ separate copy-on-write target directory; the accepted previous target and
 protected release executables remain independent. No build-time or runtime
 performance claim follows from that cache reuse.
 
-Gate construction and convolution still need native operators. Hybrid layer
+The separate [scalar gate constructor](gated-delta-gates.md) is now checked.
+Convolution still needs its native operator. Hybrid layer
 mapping, state/session commit, resident Metal execution, model admission,
 long-context quality and Mac/iPhone app qualification remain open. Existing
 native/app output and context limits are unchanged.

@@ -65,6 +65,65 @@ pub fn gated_delta_normalize(
     Ok(())
 }
 
+/// Construct scalar decay/update gates from FP32 raw vectors `[value_heads]`.
+///
+/// Decay is `exp(-exp(a_log)*softplus(a+dt_bias))`; beta is sigmoid(b).
+/// Stable softplus/sigmoid and other intermediate arithmetic use FP64, then
+/// outputs round once to FP32. Gates remain in `[0,1]`. An overflowing FP64
+/// rate/exponent rejects rather than silently replacing its intermediate.
+/// All lengths and finite inputs are checked before writes. Arithmetic failure
+/// may leave partial output vectors; discard both. No state or storage is owned.
+pub fn gated_delta_gates(
+    a: &[f32],
+    b: &[f32],
+    a_log: &[f32],
+    dt_bias: &[f32],
+    decay: &mut [f32],
+    beta: &mut [f32],
+) -> Result<(), Error> {
+    let heads = a.len();
+    nonzero(heads, "value_heads")?;
+    for (name, actual) in [
+        ("delta raw beta", b.len()),
+        ("delta log rate", a_log.len()),
+        ("delta dt bias", dt_bias.len()),
+        ("delta decay", decay.len()),
+        ("delta beta", beta.len()),
+    ] {
+        length(name, actual, heads)?;
+    }
+    for (name, values) in [
+        ("delta raw decay", a),
+        ("delta raw beta", b),
+        ("delta log rate", a_log),
+        ("delta dt bias", dt_bias),
+    ] {
+        finite(name, values)?;
+    }
+    for head in 0..heads {
+        let x = f64::from(a[head]) + f64::from(dt_bias[head]);
+        let softplus = x.max(0.0) + (-x.abs()).exp().ln_1p();
+        let alpha = f64::from(a_log[head]).exp();
+        let rate = alpha * softplus;
+        if !alpha.is_finite() || !rate.is_finite() {
+            return Err(Error::NonFinite {
+                tensor: "delta decay exponent",
+                index: head,
+            });
+        }
+        let b = f64::from(b[head]);
+        let exp_negative_abs = (-b.abs()).exp();
+        let update = if b >= 0.0 {
+            1.0 / (1.0 + exp_negative_abs)
+        } else {
+            exp_negative_abs / (1.0 + exp_negative_abs)
+        };
+        decay[head] = (-rate).exp() as f32;
+        beta[head] = update as f32;
+    }
+    Ok(())
+}
+
 /// Update a separate candidate state and read it through normalized Q.
 ///
 /// Q/K are `[key_heads,key_dim]`, V/output `[value_heads,value_dim]`, gates

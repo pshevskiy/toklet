@@ -2322,3 +2322,24 @@ See [the contract](gated-delta-normalization.md) and
 The previous recurrent update body is unchanged. Gate construction, convolution,
 hybrid model/session execution, GPU state and real-model/long-context/device
 qualification remain open. No app capabilities or numerical capacity were raised.
+
+## 24 October2026 — scalar recurrent gate construction
+
+The native gate constructor uses stable FP64 softplus/sigmoid and exponential
+decay with one FP32 output rounding. Shape/finiteness admission precedes writes;
+nonfinite intermediate rates reject and partial outputs must be discarded. No
+storage or numerical state is owned by the operator.
+
+Three new regressions cover frozen gates and the complete raw
+normalization→gates→recurrence state/output path, hand values/bias/saturation,
+tiny nonzero beta, invalid input classes and intermediate overflow. The accepted
+reference and numerical policy are unchanged. Formatting, strict default/Metal
+Clippy, 203 CPU/225 Metal-feature tests and both iOS cross-checks pass. Earlier
+normalization and update bodies are byte-identical. See
+[the contract](gated-delta-gates.md) and
+[receipt](../benchmarks/results/2026-10-24-gated-delta-gates-v1.json).
+
+This completes a scalar operator chain, not the hybrid graph. Convolution, gated
+output normalization, config/weight mapping, model/session state commit, GPU
+execution and real-model/long-context/app qualification remain open. Current
+native/app limits and eligibility are unchanged.

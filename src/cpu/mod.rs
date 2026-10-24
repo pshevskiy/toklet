@@ -14,7 +14,9 @@ mod reductions;
 mod tiled;
 
 pub use attention::{AttentionShape, CachedAttentionShape, attention, attention_cached, rotary};
-pub use gated_delta::{GatedDeltaShape, gated_delta_normalize, gated_delta_step};
+pub use gated_delta::{
+    GatedDeltaShape, gated_delta_gates, gated_delta_normalize, gated_delta_step,
+};
 pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
 pub use tiled::{ProjectionKernel, matmul_f64_tiled};
 

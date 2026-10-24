@@ -462,3 +462,143 @@ fn invalid_normalization_never_writes_outputs() {
     assert_eq!(q, [91.; 2]);
     assert_eq!(k, [92.]);
 }
+
+#[test]
+fn raw_gates_and_full_scalar_pipeline_match_frozen_witnesses() {
+    let manifest = fixture();
+    for row in manifest["cases"].as_array().unwrap() {
+        let g = &row["geometry"];
+        let n = |key: &str| g[key].as_u64().unwrap() as usize;
+        let shape = GatedDeltaShape {
+            key_heads: n("key_heads"),
+            value_heads: n("value_heads"),
+            key_dim: n("key_dim"),
+            value_dim: n("value_dim"),
+        };
+        let input = |name| {
+            values(row, name)
+                .into_iter()
+                .map(|x| x as f32)
+                .collect::<Vec<_>>()
+        };
+        let q = input("raw_q");
+        let k = input("raw_k");
+        let v = input("v");
+        let a = input("a");
+        let b = input("b");
+        let a_log = input("a_log");
+        let bias = input("dt_bias");
+        let expected_decay = values(row, "decay");
+        let expected_beta = values(row, "beta");
+        let expected_state = values(row, "states");
+        let expected_output = values(row, "output");
+        let qs = shape.key_heads * shape.key_dim;
+        let vs = shape.value_heads * shape.value_dim;
+        let hv = shape.value_heads;
+        let mut normalized_q = vec![f32::NAN; qs];
+        let mut normalized_k = vec![f32::NAN; qs];
+        let mut decay = vec![f32::NAN; hv];
+        let mut beta = vec![f32::NAN; hv];
+        let mut state = input("initial_state");
+        let mut candidate = vec![f32::NAN; state.len()];
+        let mut output = vec![f32::NAN; vs];
+        for t in 0..n("tokens") {
+            gated_delta_gates(
+                &a[t * hv..(t + 1) * hv],
+                &b[t * hv..(t + 1) * hv],
+                &a_log,
+                &bias,
+                &mut decay,
+                &mut beta,
+            )
+            .unwrap();
+            close(&decay, &expected_decay[t * hv..(t + 1) * hv]);
+            close(&beta, &expected_beta[t * hv..(t + 1) * hv]);
+            gated_delta_normalize(
+                &q[t * qs..(t + 1) * qs],
+                &k[t * qs..(t + 1) * qs],
+                &mut normalized_q,
+                &mut normalized_k,
+                shape.key_heads,
+                shape.key_dim,
+                g["epsilon"].as_f64().unwrap(),
+            )
+            .unwrap();
+            gated_delta_step(
+                &normalized_q,
+                &normalized_k,
+                &v[t * vs..(t + 1) * vs],
+                &decay,
+                &beta,
+                &state,
+                &mut candidate,
+                &mut output,
+                &shape,
+            )
+            .unwrap();
+            close(
+                &candidate,
+                &expected_state[t * state.len()..(t + 1) * state.len()],
+            );
+            close(&output, &expected_output[t * vs..(t + 1) * vs]);
+            std::mem::swap(&mut state, &mut candidate);
+        }
+        close(&state, &values(row, "final_state"));
+    }
+}
+
+#[test]
+fn gate_hand_values_and_saturated_inputs_are_bounded() {
+    let mut decay = [0.];
+    let mut beta = [0.];
+    gated_delta_gates(&[0.], &[0.], &[0.], &[0.], &mut decay, &mut beta).unwrap();
+    assert_eq!(decay, [0.5]);
+    assert_eq!(beta, [0.5]);
+    gated_delta_gates(&[-0.5], &[0.], &[2_f32.ln()], &[0.5], &mut decay, &mut beta).unwrap();
+    close(&decay, &[0.25]);
+    assert_eq!(beta, [0.5]);
+    for (a, b, g, u) in [(1000., f32::MAX, 0., 1.), (-1000., -f32::MAX, 1., 0.)] {
+        gated_delta_gates(&[a], &[b], &[0.], &[0.], &mut decay, &mut beta).unwrap();
+        assert_eq!(decay, [g]);
+        assert_eq!(beta, [u]);
+    }
+    gated_delta_gates(&[-24.], &[-24.], &[0.], &[0.], &mut decay, &mut beta).unwrap();
+    let expected = (-24_f64).exp() / (1.0 + (-24_f64).exp());
+    assert!(beta[0] > 0.0 && (f64::from(beta[0]) - expected).abs() <= expected * 1e-6);
+}
+
+#[test]
+fn gate_admission_preserves_outputs_and_intermediate_overflow_rejects() {
+    for slot in 0..4 {
+        for invalid in [f32::NAN, f32::INFINITY] {
+            let mut values = [0.; 4];
+            values[slot] = invalid;
+            let mut decay = [91.];
+            let mut beta = [92.];
+            assert!(
+                gated_delta_gates(
+                    &values[..1],
+                    &values[1..2],
+                    &values[2..3],
+                    &values[3..],
+                    &mut decay,
+                    &mut beta
+                )
+                .is_err()
+            );
+            assert_eq!(decay, [91.]);
+            assert_eq!(beta, [92.]);
+        }
+    }
+    let mut decay = [91.];
+    let mut beta = [92.];
+    assert!(gated_delta_gates(&[0.], &[], &[0.], &[0.], &mut decay, &mut beta).is_err());
+    assert_eq!(decay, [91.]);
+    assert_eq!(beta, [92.]);
+    for (a, log) in [(0., 1000.), (f32::MAX, 700.)] {
+        assert!(matches!(
+            gated_delta_gates(&[a], &[0.], &[log], &[0.], &mut decay, &mut beta),
+            Err(Error::NonFinite { .. })
+        ));
+    }
+}
