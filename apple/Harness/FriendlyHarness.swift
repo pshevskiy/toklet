@@ -8,7 +8,7 @@ import AppKit
 
 
 private enum ChatSheet: String, Identifiable {
-    case models, history, settings
+    case models, history, settings, benchmark
     var id: String { rawValue }
 }
 
@@ -26,6 +26,53 @@ private struct ModelList<Content: View>: View {
     }
 }
 
+// Process footprint and live OS allowance are separate from engine allocations.
+@MainActor
+struct RuntimeMonitorView: View {
+    @ObservedObject var store: HarnessStore
+    private var metrics: GenerationMetrics { GenerationMetrics(store.state) }
+    static func bytes(_ value: UInt64) -> String {
+        ByteCountFormatter.string(fromByteCount:Int64(clamping:value),countStyle:.memory)
+    }
+    static func latency(_ value: Double?) -> String {
+        value.map { $0 < 1 ? String(format:"%.0f ms",$0 * 1000) : String(format:"%.2f s",$0) } ?? "—"
+    }
+    static func rate(_ value: Double?) -> String { value.map { String(format:"%.1f",$0) } ?? "—" }
+    private var memoryText: String {
+        store.memory.map { Self.bytes($0.usedBytes) + " / " + Self.bytes($0.allowedBytes) } ?? "Unavailable"
+    }
+    private var memoryHelp: String {
+        #if os(iOS)
+        "RAM is this app’s physical footprint / current OS process allowance. The allowance can change."
+        #else
+        "RAM is this app’s physical footprint / configured cap (half of physical RAM, up to 6 GiB). The cap is not an OS memory limit."
+        #endif
+    }
+    var body: some View {
+        VStack(alignment:.leading,spacing:6) {
+            ViewThatFits(in:.horizontal) {
+                HStack(alignment:.top,spacing:18) { values }
+                VStack(alignment:.leading,spacing:8) { values }
+            }
+            DisclosureGroup("About these measurements") {
+                Text(memoryHelp + " Refreshed each second. First token includes queueing and prompt preparation after Send or a generation action; tok/s measures intervals after the first output token. Model loading is excluded. Values describe the current or last generation; — means no measurement yet.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }.font(.caption)
+        }.font(.caption).monospacedDigit()
+    }
+    @ViewBuilder private var values: some View {
+        metric("RAM used / allowed",memoryText,id:"monitor-memory")
+        metric("First token",Self.latency(metrics.firstTokenSeconds),id:"monitor-ttft")
+        metric("tok/s · decode",Self.rate(metrics.decodeTokensPerSecond),id:"monitor-rate")
+    }
+    private func metric(_ title: String,_ value: String,id: String) -> some View {
+        VStack(alignment:.leading,spacing:2) {
+            Text(title).foregroundStyle(.secondary)
+            Text(value).fontWeight(.semibold)
+        }.accessibilityElement(children:.combine).accessibilityIdentifier(id)
+    }
+}
+
 @MainActor
 struct FriendlyHarnessView: View {
     @ObservedObject var store: HarnessStore
@@ -36,6 +83,7 @@ struct FriendlyHarnessView: View {
     @State private var sheet: ChatSheet?
     @State private var importing = false
     @State private var deleting: UUID?
+    @State private var deletingAll = false
     @State private var followsLatest = true
     @State private var userScrolling = false
     @State private var atBottom = true
@@ -74,6 +122,7 @@ struct FriendlyHarnessView: View {
         .onChange(of:phase) { _, value in
             if value != .active { chat.save() }
             #if os(iOS)
+            if value != .active { chat.stopBenchmark() }
             if value == .background { hub.cancel() }
             #endif
         }
@@ -84,6 +133,7 @@ struct FriendlyHarnessView: View {
                     case .models: models
                     case .history: history
                     case .settings: settings
+                    case .benchmark: benchmark
                     }
                 }
                 .toolbar { ToolbarItem(placement:.confirmationAction) { Button("Close") { sheet = nil } } }
@@ -153,6 +203,7 @@ struct FriendlyHarnessView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .background(canvas)
+        .safeAreaInset(edge:.top,spacing:0) { dashboard }
         .safeAreaInset(edge:.bottom,spacing:0) { composer }
         .harnessNavigationStyle()
         .toolbar {
@@ -174,6 +225,24 @@ struct FriendlyHarnessView: View {
                 Button("Settings",systemImage:"gearshape") { sheet = .settings }.labelStyle(.iconOnly).frame(minWidth:44,minHeight:44)
             }
         }
+    }
+    private var activeHubProfile: HubProfile? {
+        store.state.chatEnabled ? HubProfile.catalog.first { $0.name == chat.modelName } : nil
+    }
+    private var dashboard: some View {
+        VStack(alignment:.leading,spacing:10) {
+            RuntimeMonitorView(store:store)
+            ViewThatFits(in:.horizontal) {
+                HStack { dashboardActions }
+                VStack(alignment:.leading) { dashboardActions }
+            }.buttonStyle(.bordered)
+        }.frame(maxWidth:570).frame(maxWidth:.infinity).padding(.horizontal,20).padding(.vertical,10).background(canvas)
+    }
+    @ViewBuilder private var dashboardActions: some View {
+        Button("Find best model",systemImage:"sparkle.magnifyingglass") {
+            hub.findBest(active:activeHubProfile); sheet = .models
+        }.accessibilityIdentifier("find-best-model")
+        Button("Benchmark",systemImage:"speedometer") { sheet = .benchmark }.accessibilityIdentifier("local-benchmark")
     }
     private var composer: some View {
         VStack(alignment:.leading,spacing:8) {
@@ -217,7 +286,17 @@ struct FriendlyHarnessView: View {
                 }
             }
             Section("Chat models") {
-                ForEach(HubProfile.catalog,id:\.repository) { profile in modelRow(profile) }
+                Button("Find best model for this device",systemImage:"sparkle.magnifyingglass") { hub.findBest(active:activeHubProfile) }
+                    .accessibilityIdentifier("hub-find-best")
+                if !hub.recommendationMessage.isEmpty {
+                    Text(hub.recommendationMessage).font(.callout).foregroundStyle(.secondary)
+                    ForEach(Array(hub.recommendations.enumerated()),id:\.element.repository) { index,profile in
+                        Text("\(index + 1). " + profile.name).font(.caption.weight(.semibold))
+                        modelRow(profile)
+                    }
+                    if !hub.recommendations.isEmpty { Text("All supported models").font(.headline).padding(.top,8) }
+                }
+                ForEach(HubProfile.catalog.filter { !hub.recommendations.contains($0) },id:\.repository) { profile in modelRow(profile) }
                 if chat.loadingModel { ProgressView("Loading " + chat.loadingName + "…") }
                 else if hub.busy {
                     if hub.downloading {
@@ -292,6 +371,8 @@ struct FriendlyHarnessView: View {
             }
             Text(saved ? "Saved on this device" : ByteCountFormatter.string(fromByteCount:profile.totalBytes,countStyle:.file) + " download")
                 .font(.caption).foregroundStyle(.secondary)
+            Text("Memory allowance needed to open: " + RuntimeMonitorView.bytes(profile.processAllowance))
+                .font(.caption).foregroundStyle(.secondary)
             Button(active ? "Return to chat" : (saved ? "Use model" : "Download and use"),systemImage:active ? "bubble.left.and.bubble.right" : "arrow.right.circle") {
                 if active { hub.cancel(); sheet = nil }
                 else { useModel(profile,download:!saved) }
@@ -321,26 +402,76 @@ struct FriendlyHarnessView: View {
     private var history: some View {
         List {
             Button("New chat",systemImage:"square.and.pencil") { chat.newChat(); sheet = nil }.buttonStyle(.borderless).frame(minHeight:44).disabled(!unlocked)
+            if !chat.storageError.isEmpty {
+                Section("Storage") {
+                    Text(chat.storageError).foregroundStyle(.red).textSelection(.enabled)
+                    if !chat.notice.isEmpty { Text(chat.notice).font(.callout) }
+                    Button("Retry saving or opening chats") { chat.retryStorage() }
+                }
+            }
             ForEach(chat.workspace.conversations.reversed()) { item in
-                Button { chat.select(item.id); sheet = nil } label: {
-                    HStack {
+                HStack {
+                    Button { chat.select(item.id); sheet = nil } label: {
                         VStack(alignment:.leading,spacing:4) {
                             Text(item.title).foregroundStyle(.primary).lineLimit(2)
                             if !item.draft.isEmpty { Text(item.draft).font(.caption).foregroundStyle(.secondary).lineLimit(1) }
-                        }
-                        Spacer()
-                        if item.id == chat.workspace.selected { Image(systemName:"checkmark.circle.fill") }
-                    }
+                        }.frame(maxWidth:.infinity,alignment:.leading).contentShape(Rectangle())
+                    }.buttonStyle(.borderless).accessibilityIdentifier("history-select-" + item.id.uuidString)
+                    if item.id == chat.workspace.selected { Image(systemName:"checkmark.circle.fill").accessibilityLabel("Selected") }
+                    Button("Delete conversation",systemImage:"trash",role:.destructive) { deleting = item.id }
+                        .labelStyle(.iconOnly).buttonStyle(.borderless).frame(minWidth:44,minHeight:44)
+                        .accessibilityIdentifier("history-delete-" + item.id.uuidString)
                 }.disabled(!unlocked)
                     .swipeActions { Button("Delete",role:.destructive) { deleting = item.id }.disabled(!unlocked) }
                     .contextMenu { Button("Delete conversation",role:.destructive) { deleting = item.id }.disabled(!unlocked) }
             }
+            Section {
+                Button("Delete all conversations",systemImage:"trash",role:.destructive) { deletingAll = true }
+                    .disabled(!unlocked).accessibilityIdentifier("history-delete-all")
+            }
             Section { Button("Settings",systemImage:"gearshape") { sheet = .settings }.buttonStyle(.borderless).frame(minHeight:44) }
         }.navigationTitle("Conversations")
-        .confirmationDialog("Delete this conversation?",isPresented:Binding(get:{ deleting != nil },set:{ if !$0 { deleting = nil } }),titleVisibility:.visible) {
-            Button("Delete conversation",role:.destructive) { if let id = deleting { chat.remove(id) }; deleting = nil }
+        .confirmationDialog("Delete this conversation?",isPresented:Binding(get:{ deleting != nil },set:{ if !$0 { deleting = nil } }),titleVisibility:.visible,presenting:deleting) { id in
+            // Capture the presented ID: dismissal may clear the binding before
+            // this action runs.
+            Button("Delete conversation",role:.destructive) { chat.remove(id); deleting = nil }
             Button("Cancel",role:.cancel) { deleting = nil }
         }
+        .confirmationDialog("Delete all conversations and drafts?",isPresented:$deletingAll,titleVisibility:.visible) {
+            Button("Delete all conversations",role:.destructive) { chat.removeAll() }
+            Button("Cancel",role:.cancel) {}
+        } message: { Text("This permanently deletes saved dialogs on this device. Downloaded models are kept.") }
+    }
+    private var benchmark: some View {
+        List {
+            Section("Local generation benchmark") {
+                Text("Runs the loaded chat model offline: 1 warm-up, then 3 measured runs, up to 64 output tokens each. Early model stops are allowed. No downloads, dialog edits or quality score.")
+                    .font(.callout).foregroundStyle(.secondary)
+                DisclosureGroup("Workload") { Text(FriendlyChatStore.benchmarkPrompt).font(.callout).textSelection(.enabled) }
+                if chat.benchmarkRunning {
+                    ProgressView(chat.benchmarkStatus)
+                    Button("Stop benchmark",role:.cancel) { chat.stopBenchmark() }.accessibilityIdentifier("benchmark-stop")
+                } else {
+                    Button("Run benchmark",systemImage:"play.fill") { chat.startBenchmark() }
+                        .disabled(!chat.ready || hub.busy).accessibilityIdentifier("benchmark-run")
+                    if !chat.ready { Text("Choose and load a chat model first.").font(.callout).foregroundStyle(.secondary) }
+                    if !chat.benchmarkStatus.isEmpty { Text(chat.benchmarkStatus).accessibilityIdentifier("benchmark-status") }
+                }
+                Text("Keep the app open. Results depend on the prompt, output length, power and temperature; this short check measures this session’s speed.")
+                    .font(.footnote).foregroundStyle(.secondary)
+            }
+            if !chat.benchmarkSamples.isEmpty {
+                Section(chat.benchmarkModel) {
+                    ForEach(chat.benchmarkSamples) { sample in
+                        VStack(alignment:.leading,spacing:5) {
+                            Text("Run \(sample.id) · \(sample.metrics.tokens) tokens · " + (sample.stopReason == 2 ? "model stop" : "token limit")).font(.headline)
+                            Text("First token " + RuntimeMonitorView.latency(sample.metrics.firstTokenSeconds) + " · " + RuntimeMonitorView.rate(sample.metrics.decodeTokensPerSecond) + " tok/s")
+                            Text("Total " + RuntimeMonitorView.latency(sample.metrics.totalSeconds)).foregroundStyle(.secondary)
+                        }.font(.callout).monospacedDigit()
+                    }
+                }
+            }
+        }.navigationTitle("Benchmark")
     }
     private var settings: some View {
         Form {

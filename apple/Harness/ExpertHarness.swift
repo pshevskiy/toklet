@@ -118,6 +118,7 @@ struct HarnessView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section("Live monitoring") { RuntimeMonitorView(store:store) }
                 Section("Local artifacts") {
                     Text("Raw token diagnostic harness").font(.headline)
                     Text("Inspect a model and control its token session directly. Token IDs are numbers from the model’s vocabulary. Use Chat for written replies and formatted code.").font(.callout).foregroundStyle(.secondary)

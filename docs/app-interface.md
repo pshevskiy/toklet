@@ -36,6 +36,12 @@ prompt automatically.
 
 ## Current support and limits
 
+The [mobile dashboard](mobile-dashboard.md) adds RAM used/allowed, first-token
+time and decode rate, a supported-model fit shortlist, an offline timing
+benchmark and explicit single/all conversation deletion. These changes have
+their own local verification scope; they do not imply a new iPhone installation
+or an increased output limit.
+
 Text chat supports the selected **SmolLM2-135M-Instruct eight-bit** (Llama family),
 **Qwen2.5-0.5B-Instruct eight-bit**, and the selected **Mistral-7B-Instruct-v0.3
 four-bit** snapshot. Admission checks exact model

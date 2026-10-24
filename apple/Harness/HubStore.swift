@@ -28,6 +28,20 @@ struct HubDeviceSnapshot: Codable, Sendable {
     }
 }
 
+enum HubRecommendations {
+    // This is a capacity shortlist, not a measured quality or speed ranking.
+    // A model already resident need not fit a second time beside itself.
+    static func ranked(_ admission: HubAdmission,active: HubProfile? = nil) -> [HubProfile] {
+        guard admission.unifiedGPU, admission.physicalMemory >= 2 * 1024 * 1024 * 1024 else { return [] }
+        return Array(HubProfile.catalog.filter { profile in
+            profile == active || (try? admission.check(profile)) != nil
+        }.sorted {
+            if $0.totalBytes != $1.totalBytes { return $0.totalBytes > $1.totalBytes }
+            return $0.repository < $1.repository
+        }.prefix(5))
+    }
+}
+
 @MainActor
 final class HubStore: ObservableObject {
     @Published var query = ""
@@ -43,6 +57,8 @@ final class HubStore: ObservableObject {
     @Published private(set) var blocksSelection = false
     @Published private(set) var opening = false
     @Published private(set) var savedProfiles: Set<String> = []
+    @Published private(set) var recommendations: [HubProfile] = []
+    @Published private(set) var recommendationMessage = ""
     private let hub: ModelHub
     let modelsRoot: URL
     private let admission: @Sendable () throws -> HubAdmission
@@ -69,6 +85,18 @@ final class HubStore: ObservableObject {
     }
     func refresh() { start(.refresh) }
     func inventory() { start(.inventory) }
+    func findBest(active: HubProfile? = nil) {
+        do {
+            recommendations = HubRecommendations.ranked(try admission(),active:active)
+            recommendationMessage = recommendations.isEmpty
+                ? "No supported models fit the current memory allowance. Unload a model or close other apps, then try again."
+                : "\(recommendations.count) supported model(s) fit now. Ranked by model size within the current memory allowance; quality and speed vary. Up to 5 results."
+            if active != nil { recommendationMessage += " The active model is included. Unload it to assess more replacements." }
+            if HubProfile.catalog.count < 5 { recommendationMessage += " Toklet currently supports \(HubProfile.catalog.count) downloadable chat models." }
+        } catch {
+            recommendations = []; recommendationMessage = "Could not check this device: " + error.localizedDescription
+        }
+    }
     func use(_ selected: HubProfile,replacingLoadedModel: Bool = false,opened: @escaping @MainActor (URL) -> Void) {
         guard !blocksSelection, HubProfile.catalog.contains(selected) else { return }
         profile = selected; localURL = nil; deviceAllowed = false

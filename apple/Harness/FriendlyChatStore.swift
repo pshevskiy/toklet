@@ -1,6 +1,12 @@
 import Foundation
 import Combine
 
+struct LocalBenchmarkSample: Identifiable, Sendable {
+    let id: Int
+    let metrics: GenerationMetrics
+    let stopReason: UInt32
+}
+
 @MainActor
 final class FriendlyChatStore: ObservableObject {
     @Published var workspace = ChatWorkspace()
@@ -10,6 +16,16 @@ final class FriendlyChatStore: ObservableObject {
     @Published var notice = ""
     @Published var storageError = ""
     @Published var folders: [URL] = []
+    @Published private(set) var benchmarkRunning = false
+    @Published private(set) var benchmarkStatus = ""
+    @Published private(set) var benchmarkModel = ""
+    @Published private(set) var benchmarkSamples: [LocalBenchmarkSample] = []
+    private var benchmarkRequest: UUID?
+    private var benchmarkStep = 0
+    private var benchmarkStopping = false
+    // A fixed offline workload, independent of all owner history and drafts.
+    static let benchmarkPrompt = "Write a detailed paragraph about the seasons of the year. Describe spring, summer, autumn and winter."
+    static let benchmarkMaximum: UInt32 = 64
     private weak var harness: HarnessStore?
     private var request: UUID?
     private var draftEdit = UUID()
@@ -21,16 +37,25 @@ final class FriendlyChatStore: ObservableObject {
     private var storageBlocked = false
     private let file: URL
     private let admission: () throws -> HubAdmission
+    private let persist: (Data,URL) throws -> Void
 
-    init(harness: HarnessStore, fileURL: URL? = nil, admission: @escaping () throws -> HubAdmission = { try HubDeviceSnapshot.current().admission }) {
+    init(harness: HarnessStore, fileURL: URL? = nil, admission: @escaping () throws -> HubAdmission = { try HubDeviceSnapshot.current().admission },
+         persist: ((Data,URL) throws -> Void)? = nil) {
         self.harness = harness
         self.admission = admission
+        self.persist = persist ?? { bytes,file in
+            #if os(iOS)
+            try bytes.write(to:file,options:[.atomic,.completeFileProtectionUntilFirstUserAuthentication])
+            #else
+            try bytes.write(to:file,options:.atomic)
+            #endif
+        }
         file = fileURL ?? FileManager.default.urls(for:.applicationSupportDirectory,in:.userDomainMask)[0]
             .appendingPathComponent("Toklet/chat-v1.json")
         restore()
         refreshFolders()
     }
-    var running: Bool { request != nil }
+    var running: Bool { request != nil || benchmarkRunning }
     var storageAvailable: Bool { !storageBlocked }
     var hasChatModel: Bool {
         guard let harness else { return false }
@@ -68,11 +93,7 @@ final class FriendlyChatStore: ObservableObject {
             let bytes = try JSONEncoder().encode(workspace)
             guard bytes.count <= ChatWorkspace.maximumBytes else { throw chatInputError("Chat history is full") }
             try FileManager.default.createDirectory(at:file.deletingLastPathComponent(),withIntermediateDirectories:true)
-            #if os(iOS)
-            try bytes.write(to:file,options:[.atomic,.completeFileProtectionUntilFirstUserAuthentication])
-            #else
-            try bytes.write(to:file,options:.atomic)
-            #endif
+            try persist(bytes,file)
             storageError = ""; return true
         } catch { storageError = "Could not save chats: " + error.localizedDescription; return false }
     }
@@ -99,10 +120,72 @@ final class FriendlyChatStore: ObservableObject {
     }
     func remove(_ id: UUID) {
         guard !storageBlocked, !running, !loadingModel, harness?.state.busy == false else { return }
+        let previous = workspace
         let last = workspace.conversations.count == 1 && workspace.current.id == id
         workspace.remove(id)
         if last, let activeModelKey { workspace.conversations[workspace.selectedIndex].modelKey = activeModelKey }
-        save()
+        finishDeletion(previous)
+    }
+    func removeAll() {
+        guard !storageBlocked, !running, !loadingModel, harness?.state.busy == false else { return }
+        let previous = workspace
+        workspace.removeAll(modelKey:activeModelKey); finishDeletion(previous)
+    }
+    private func finishDeletion(_ previous: ChatWorkspace) {
+        if save() { notice = "" }
+        else {
+            workspace = previous
+            notice = "Your conversations were kept because saving failed. Please try deleting again."
+        }
+    }
+    func startBenchmark() {
+        guard ready, let harness else { return }
+        benchmarkSamples = []; benchmarkModel = modelName
+        benchmarkStep = 0; benchmarkStopping = false; benchmarkRunning = true
+        submitBenchmark(harness)
+    }
+    func stopBenchmark() {
+        guard benchmarkRunning else { return }
+        benchmarkStopping = true; benchmarkStatus = "Stopping benchmark…"
+        harness?.worker?.cancel()
+    }
+    private func submitBenchmark(_ harness: HarnessStore) {
+        do {
+            let bytes = try JSONSerialization.data(withJSONObject:[["role":"user","content":Self.benchmarkPrompt]],options:[.sortedKeys])
+            let id = UUID()
+            guard harness.worker?.submit(.chat(id:id,conversation:bytes,maximum:Self.benchmarkMaximum)) == true else {
+                throw HubFailure("The engine is busy. Try the benchmark again when it is ready.")
+            }
+            benchmarkRequest = id
+            benchmarkStatus = benchmarkStep == 0 ? "Warming up…" : "Running sample \(benchmarkStep) of 3…"
+            harness.poll()
+        } catch { finishBenchmark(error.localizedDescription) }
+    }
+    private func finishBenchmark(_ message: String) {
+        benchmarkRequest = nil; benchmarkRunning = false; benchmarkStatus = message
+    }
+    private func observeBenchmark(_ state: NativeSnapshot) {
+        guard benchmarkRunning, !state.busy else { return }
+        guard !state.closed, state.chatEnabled, state.hasSession, harness?.expert == false else {
+            finishBenchmark("Benchmark stopped because the chat model was released."); return
+        }
+        guard let result = state.chatResult, result.id == benchmarkRequest else {
+            if state.closed || !state.chatEnabled { finishBenchmark("Benchmark stopped because the model was released.") }
+            return
+        }
+        if benchmarkStopping || result.reason == 3 { finishBenchmark("Benchmark stopped. Incomplete runs are excluded."); return }
+        guard result.error.isEmpty, !result.rejected, state.status == 0 else {
+            finishBenchmark("Benchmark failed: " + (result.error.isEmpty ? state.message : result.error)); return
+        }
+        let metrics = GenerationMetrics(state)
+        guard metrics.tokens > 0, metrics.tokens == Int(state.emitted), metrics.firstTokenSeconds != nil,
+              metrics.totalSeconds != nil, (1...2).contains(result.reason) else {
+            finishBenchmark("Benchmark returned no valid timed output. Try again with another model."); return
+        }
+        if benchmarkStep > 0 { benchmarkSamples.append(LocalBenchmarkSample(id:benchmarkStep,metrics:metrics,stopReason:result.reason)) }
+        benchmarkStep += 1
+        if benchmarkStep == 4 { finishBenchmark("Complete. 3 measured runs; warm-up excluded.") }
+        else if let harness { submitBenchmark(harness) }
     }
     private var activeModelKey: String? {
         guard let harness, harness.state.hasModel, harness.state.chatEnabled, !loadedKey.isEmpty else { return nil }
@@ -110,6 +193,7 @@ final class FriendlyChatStore: ObservableObject {
     }
     func sendOrStop() {
         guard let harness else { return }
+        if benchmarkRunning { stopBenchmark(); return }
         if running { harness.worker?.cancel(); return }
         guard canSend else { return }
         do {
@@ -123,6 +207,7 @@ final class FriendlyChatStore: ObservableObject {
         } catch { notice = error.localizedDescription }
     }
     func observe(_ state: NativeSnapshot) {
+        observeBenchmark(state)
         if loadingModel && !state.busy && pendingFolder == nil {
             loadingModel = false
             if !state.chatEnabled { notice = state.message.isEmpty ? "The model could not be opened. Choose a model to try again." : state.message }

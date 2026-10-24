@@ -122,6 +122,69 @@ struct MobileMain {
         chat.workspace.outputLimit = 128
         try require(chat.outputLimitAvailable,"existing reply preference stays available")
     }
+    static func dashboard() throws {
+        var state = NativeSnapshot()
+        try require(GenerationMetrics(state).firstTokenSeconds == nil && GenerationMetrics(state).decodeTokensPerSecond == nil,"idle has no fabricated speed")
+        state.requestStartedUptimeNanoseconds = 1_000_000_000
+        state.tokenTimings = [NativeTokenTiming(index:0,nativeElapsedSeconds:0.1,callbackUptimeNanoseconds:1_250_000_000)]
+        try require(GenerationMetrics(state).firstTokenSeconds == 0.25 && GenerationMetrics(state).decodeTokensPerSecond == nil,"TTFT includes queue/preparation; one token has no decode rate")
+        state.tokenTimings.append(NativeTokenTiming(index:1,nativeElapsedSeconds:0.15,callbackUptimeNanoseconds:1_300_000_000))
+        state.tokenTimings.append(NativeTokenTiming(index:2,nativeElapsedSeconds:0.2,callbackUptimeNanoseconds:1_350_000_000))
+        state.requestCompletedUptimeNanoseconds = 1_400_000_000
+        let metrics = GenerationMetrics(state)
+        try require(metrics.tokens == 3 && metrics.decodeTokensPerSecond == 20 && metrics.totalSeconds == 0.4,"decode rate counts intervals after first callback and total ends at completion")
+        state.requestStartedUptimeNanoseconds = 2_000_000_000
+        try require(GenerationMetrics(state).firstTokenSeconds == nil && GenerationMetrics(state).totalSeconds == nil,"reversed clock observations never underflow")
+        let generous = HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:6 << 30)
+        try require(HubRecommendations.ranked(generous) == [.mistral,.qwen,.smol],"fits ranked by model capacity, not invented quality")
+        let phone = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:2 << 30)
+        try require(HubRecommendations.ranked(phone) == [.qwen,.smol],"phone allowance excludes over-budget Mistral")
+        let low = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:0)
+        try require(HubRecommendations.ranked(low).isEmpty && HubRecommendations.ranked(low,active:.qwen) == [.qwen],"resident model need not fit twice; unknown replacements are excluded")
+        try require(HubRecommendations.ranked(HubAdmission(unifiedGPU:false,physicalMemory:8 << 30,availableMemory:6 << 30)).isEmpty,"unsupported GPU gets no recommendation")
+        let hub = HubStore(admission:{ phone }); hub.findBest()
+        try require(hub.recommendations == [.qwen,.smol] && hub.recommendationMessage.contains("3 downloadable"),"shortlist explains why fewer than five are available")
+        var workspace = ChatWorkspace(); workspace.outputLimit = 256
+        workspace.edit("delete this draft"); let pending = try workspace.begin()
+        let original = workspace.selected
+        try workspace.newChat(modelKey:"other-model"); let second = workspace.selected
+        workspace.remove(original)
+        try require(workspace.selected == second && workspace.conversations.count == 1,"deleting a different dialog preserves selection")
+        workspace.removeAll(modelKey:"loaded-model")
+        try require(workspace.conversations.count == 1 && workspace.current.messages.isEmpty && workspace.current.draft.isEmpty && workspace.current.modelKey == "loaded-model" && workspace.outputLimit == 256,"delete all resets messages/drafts but keeps active model and reply preference")
+        try require(!workspace.finish(NativeChatResult(id:pending.0,text:"late",reason:1,error:"")),"late reply cannot resurrect a deleted dialog")
+        _ = try ChatWorkspace.restore(JSONEncoder().encode(workspace))
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("TokletDelete-" + UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at:directory) }
+        let file = directory.appendingPathComponent("history.json")
+        let harness = HarnessStore(enabled:false)
+        let chat = FriendlyChatStore(harness:harness,fileURL:file)
+        chat.edit("private draft"); chat.newChat(); chat.edit("another draft"); chat.workspace.outputLimit = 256
+        harness.state.busy = true; chat.removeAll()
+        try require(chat.workspace.conversations.count == 2,"delete all is blocked during active work")
+        harness.state.busy = false; chat.removeAll()
+        let reopened = try ChatWorkspace.restore(Data(contentsOf:file))
+        try require(reopened.conversations.count == 1 && reopened.current.draft.isEmpty && reopened.outputLimit == 256,"delete all persists without a stale draft-save restoring content")
+        chat.startBenchmark(); try require(!chat.benchmarkRunning,"benchmark requires an admitted chat model")
+        let failureFile = directory.appendingPathComponent("failure-history.json")
+        var failWrites = false
+        let failure = FriendlyChatStore(harness:harness,fileURL:failureFile,persist:{ data,url in
+            if failWrites { throw HubFailure("Injected full-disk failure") }
+            try data.write(to:url,options:.atomic)
+        })
+        failure.edit("first draft"); failure.newChat(); failure.edit("second draft"); try require(failure.save(),"write-failure fixture saved")
+        let saved = try Data(contentsOf:failureFile)
+        let selected = failure.workspace.selected
+        failWrites = true; failure.remove(selected)
+        try require(failure.workspace.conversations.count == 2 && failure.workspace.selected == selected && !failure.storageError.isEmpty,"failed single deletion restores selection and dialogs with visible error")
+        let afterSingleFailure = try Data(contentsOf:failureFile)
+        try require(afterSingleFailure == saved,"failed deletion leaves the old saved file intact")
+        failure.removeAll()
+        try require(failure.workspace.conversations.count == 2 && failure.workspace.current.draft == "second draft" && failure.notice.contains("were kept"),"failed delete-all restores all drafts and dialogs")
+        failWrites = false; failure.removeAll()
+        let afterRetry = try ChatWorkspace.restore(Data(contentsOf:failureFile))
+        try require(afterRetry.conversations.count == 1 && afterRetry.current.draft.isEmpty && failure.storageError.isEmpty,"delete-all retry persists after storage recovers")
+    }
     static func hub() async throws {
         let gate = VerificationGate()
         let store = HubStore(admission:{ HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:6 << 30) },verify:{ profile in
@@ -194,6 +257,30 @@ struct MobileMain {
         try require(worker.snapshot().history == history && chat.workspace.selected == conversation,"same model open preserves token prefix and conversation")
         chat.open(file.deletingLastPathComponent().appendingPathComponent("not-a-model-" + UUID().uuidString))
         try require(chat.ready && !chat.notice.isEmpty && worker.snapshot().history == history,"invalid model preserves current session")
+        let encoder = JSONEncoder(); encoder.outputFormatting = [.sortedKeys]
+        let ownerHistory = try encoder.encode(chat.workspace)
+        chat.startBenchmark()
+        try require(chat.benchmarkRunning && !chat.ready,"benchmark owns serial worker and blocks Chat controls")
+        for _ in 0..<4 {
+            guard worker.waitUntilIdle(seconds:120) != nil else { throw HubFailure("Local benchmark timed out") }
+            harness.poll(); chat.observe(harness.state)
+        }
+        try require(!chat.benchmarkRunning && chat.benchmarkSamples.count == 3 && chat.benchmarkStatus.hasPrefix("Complete"),"warm-up plus three real runs complete")
+        try require(chat.benchmarkSamples.allSatisfy { $0.metrics.tokens > 0 && $0.metrics.firstTokenSeconds != nil && $0.metrics.totalSeconds != nil },"real benchmark reports actual timing and token counts")
+        let afterBenchmark = try encoder.encode(chat.workspace)
+        try require(afterBenchmark == ownerHistory,"benchmark never modifies owner conversations/drafts/preferences")
+        chat.startBenchmark(); chat.stopBenchmark()
+        guard worker.waitUntilIdle(seconds:120) != nil else { throw HubFailure("Benchmark stop timed out") }
+        harness.poll(); chat.observe(harness.state)
+        try require(!chat.benchmarkRunning && chat.benchmarkSamples.isEmpty && chat.benchmarkStatus.contains("stopped"),"cancelled warm-up cannot publish a benchmark sample")
+        let afterStop = try encoder.encode(chat.workspace)
+        try require(afterStop == ownerHistory,"stopping a benchmark preserves dialog bytes")
+        chat.startBenchmark()
+        guard worker.waitUntilIdle(seconds:120) != nil else { throw HubFailure("Benchmark warm-up timed out") }
+        worker.interrupt(unload:false)
+        guard worker.waitUntilIdle(seconds:30) != nil else { throw HubFailure("Benchmark lifecycle cleanup timed out") }
+        harness.poll(); chat.observe(harness.state)
+        try require(!chat.benchmarkRunning && chat.benchmarkSamples.isEmpty && !worker.snapshot().busy && !worker.snapshot().hasSession,"background cleanup between runs cannot automatically restart the benchmark")
         print("TOKLET_MOBILE_LOCAL_MODEL_PASS")
     }
     static func switching(_ first: String,_ second: String) async throws {
@@ -249,11 +336,26 @@ struct MobileMain {
             guard let image = renderer.nsImage, let tiff = image.tiffRepresentation,
                   let bytes = NSBitmapImageRep(data:tiff)?.representation(using:.png,properties:[:]) else { throw HubFailure("Could not render code preview") }
             try bytes.write(to:folder.appendingPathComponent(name + ".png"))
+            let store = HarnessStore(enabled:false); store.poll()
+            store.state.requestStartedUptimeNanoseconds = 1_000_000_000
+            store.state.tokenTimings = [
+                NativeTokenTiming(index:0,nativeElapsedSeconds:0.1,callbackUptimeNanoseconds:1_250_000_000),
+                NativeTokenTiming(index:1,nativeElapsedSeconds:0.15,callbackUptimeNanoseconds:1_300_000_000)]
+            let monitor = VStack(alignment:.leading,spacing:12) {
+                Text("Monitoring preview · Mac RAM sample").font(.headline)
+                Text("Illustrative generation timing").font(.caption).foregroundStyle(.secondary)
+                RuntimeMonitorView(store:store)
+            }.padding(20).frame(width:393).background(scheme == .light ? Color.white : Color.black)
+                .environment(\.colorScheme,scheme)
+            let monitorRenderer = ImageRenderer(content:monitor); monitorRenderer.scale = 2
+            guard let monitorImage = monitorRenderer.nsImage, let monitorTIFF = monitorImage.tiffRepresentation,
+                  let monitorBytes = NSBitmapImageRep(data:monitorTIFF)?.representation(using:.png,properties:[:]) else { throw HubFailure("Could not render monitor preview") }
+            try monitorBytes.write(to:folder.appendingPathComponent("monitor-" + name + ".png"))
         }
         print("TOKLET_MOBILE_HIGHLIGHT_PREVIEW_EXPORTED")
     }
     static func main() async throws {
-        try content(); try workspace(); try await hub()
+        try content(); try workspace(); try dashboard(); try await hub()
         if CommandLine.arguments.count == 4 && CommandLine.arguments[1] == "--switching" { try await switching(CommandLine.arguments[2],CommandLine.arguments[3]) }
         else if CommandLine.arguments.count == 3 && CommandLine.arguments[1] == "--polling" { try polling(CommandLine.arguments[2]) }
         else if CommandLine.arguments.count == 3 && CommandLine.arguments[1] == "--model" { try loading(CommandLine.arguments[2]) }

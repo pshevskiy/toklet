@@ -1,0 +1,272 @@
+{
+  "format": "toklet-mobile-dashboard-v1",
+  "date": "2026-10-24",
+  "status": "implemented-local-checks-passed-iphone-installation-pending-engine",
+  "source_pins": {
+    "apple/Harness/ChatContent.swift": "7843fe31181c5465e80b15702a1e481bb25b1a90f4e351272076d276839acb97",
+    "apple/Harness/ChatWorkspace.swift": "3efb491b1a5bbbb5647fece57346bb3d82389fd798c7024cb4b0b81cef26c54b",
+    "apple/Harness/ExpertHarness.swift": "cf2f74c57c9fa9008fafdf209ec15d4d56673d455a65550ba0ec5c7d1ed7a839",
+    "apple/Harness/FriendlyChatStore.swift": "766efeb002dd80db58a25a9eacd8b9187e721e2bdee7d52bb06cb81af055f53d",
+    "apple/Harness/FriendlyHarness.swift": "c1912dbb3026e3a49dd0102d5c3cc06642bf932bc5baf9012931df19855a1036",
+    "apple/Harness/HarnessApp.swift": "72b77cd9f9ae46601bd654515abf48bea1e9237f8e9547b4a450554339f6d81f",
+    "apple/Harness/HarnessStore.swift": "07d150e9b83d7164e786560bc5e4aa9b88dc34fb7ce89e2fe100a96da0c20893",
+    "apple/Harness/HubStore.swift": "0d6189ffc22a6a72bcb081a23cb9ff4cc883d647ed81564600928285584c37ca",
+    "apple/Harness/HubTransfer.swift": "b2f4cf80235ee063b18ff92438c1c5d9143665f0cf5ba5b27a44394061e37826",
+    "apple/Harness/ModelHub.swift": "4dfbf6d254321954fb21c9c4738532f211ae5c4365ddd9d266486358cc1313fe",
+    "apple/Harness/NativeChatCheck.swift": "12444fb572e9b4c2a1c5397d33d49b4b7474f57fa2ffccd33084d2022a79c88c",
+    "apple/Harness/NativeCompatibility.swift": "fc5b0cc5eef791df9d15675fffe11da0ba7ec4d10b59fe5b3b7bea1601f81b4f",
+    "apple/Harness/NativeLifecycle.swift": "4a49b4899715dbc8eca0c750253ba49d0ac55d1ee433c77a82b877f28d1b0d00",
+    "apple/Harness/NativeLifecycleRun.swift": "9170e354d07dc09e1f4eb9ea718b68ff5c6df16b68f85fc0dc44872de0f414a2",
+    "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "apple/Harness/NativeMeasurement.swift": "5dcd81db64963db10d2bd50a6e9bc8dee567951f1a344341dd0cd9dfecbf8a46",
+    "apple/Harness/NativeQuality.swift": "e54783e1ed25035340f07c13f593cefdb616152fc296b17fc6508ba1e7e3972a",
+    "apple/Harness/NativeResourcePlan.swift": "c174cd3d51d802619bc780c0cadcc53ecc69da3d54f65fa54deb7dca2a0f0df5",
+    "apple/Harness/NativeStateRun.swift": "e0b8a0d12fd93db67fcab374da3f386d8b3331b1b20bd96413ebca1dfb290a99",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "d2df04cf9da12d5b648970e49c64f1bdbc28bf464ca3c05a6a65e4ee6b6ae4e9",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/Harness/NativeWorker.swift": "dfa07e013535fd9b6a71a7ea17b8ced2e2ebdd5f58709f3bd130a2546ab495a0",
+    "apple/tests/swift/WorkerChecks.swift": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf",
+    "apple/tests/swift/MobileMain.swift": "8814f1da3212c0fe4b693470a69c9a2fde139f66a15579476b6b38695279b914",
+    "apple/include/toklet.h": "2bcbe2b2503b37e43a30fc015ef9c46f3c9a6b4a60be4bedca51c5543042cce3",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/tests/ui/ModelSwitchUITests.swift": "319a0ee2d9c33d0e604bfe53692452b930d0ea2c521d00adb259b79d01926116",
+    "docs/mobile-dashboard.md": "05497f88751365649d43b09be3eed2d03276c212fc1cfe3ca223404e0fafa191",
+    "docs/app-interface.md": "e1e4538c8086f0980b742cf93a86bd84a90c163fd2d78756d864640852d766fe",
+    "tools/experiments/mobile_interface_check.py": "983e2af44d86c9fa5db252db6e9404256b29179d72e64dd3a91bd1cc95753670",
+    "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+    "artifacts/mobile-dashboard-2026-10-24-v1/collect.py": "4094cd1b7fdc0a5fb3588f4ef742d99bb40af8eb2dbf56fb9b6824bfd16f7253",
+    "artifacts/mobile-dashboard-2026-10-24-v1/build_apps_v3.py": "dc0464a6ae694b4d7d6e1287fb403c2eb66583342525212bf1fa02a9f15fcb2b",
+    "artifacts/mobile-dashboard-2026-10-24-v1/run_simulator_v4.py": "029e775c9e5198b525fcdadd9255909c33e99a65ea4c6f828dd448b7cfad9d09"
+  },
+  "native_package": {
+    "path": "artifacts/m8-native-policy-v1/package/build.json",
+    "sha256": "2d7d35b02d5c35a343d29b657cbf254f722171846d0df49f57bb15f92ba2194d"
+  },
+  "check": {
+    "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/check.json",
+    "sha256": "1fb1c3b3a8df0f8636e72a429ca6173fd62ad3aa80e465bd82beecdbb6940e8b"
+  },
+  "build": {
+    "path": "artifacts/mobile-dashboard-2026-10-24-v1/apps-v3/build.json",
+    "sha256": "b27239da6cc9a620fde98a5d54cc1987305eb158cf33408d85646c1edb8335d9"
+  },
+  "simulator_ui": {
+    "path": "artifacts/mobile-dashboard-2026-10-24-v1/simulator-ui-v4.json",
+    "sha256": "95a349bfc3700e33258b0790ad6f4041fac02489d3717ece666d48a8e95820fa"
+  },
+  "simulator_summary": {
+    "path": "artifacts/mobile-dashboard-2026-10-24-v1/simulator-summary-v4.json",
+    "sha256": "dc99a6df01b35219af902d6c7562dcf08d4b8d13c3f5388bc3999e614e3c48d3"
+  },
+  "simulator": {
+    "model": "iPhone 17",
+    "result": "Passed",
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "result_path": "artifacts/mobile-dashboard-2026-10-24-v1/dashboard-ui-v4.xcresult",
+    "result_tree_sha256": "d328ba782b221f20ec1f4e1959b0a3bb173e606d761afef8295abf5dfc0b7f85",
+    "result_file_count": 62
+  },
+  "screenshots": [
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/1EE4CACD-EEE5-403B-801B-0F057F63ADF2.png",
+      "sha256": "1603081d78489ee2eb3d74ebc7bd7a58de5f6477d7d4279eacfe46e509cca29e"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/4342FD30-27FF-4534-BB05-C8A9D3F873EE.png",
+      "sha256": "decd4f948abcf9d1c93bc5175783e18898dfdcddaf8dc8bcf6b16338af35574d"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/49578452-951B-4433-985C-F652761CC4C2.png",
+      "sha256": "e63cbd149bc3ea893230d015e4e5dacf5ac9be47ad3870e043804fd797b01852"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/4A9B8F71-F552-47EE-8DFD-74AAA825433D.png",
+      "sha256": "5ea0ae0fe03c4cbe08b468768cfcf869fa6b589138e453a89150063e71b90ece"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/ACDABCB5-DF2C-46C1-AA19-1F9579E03FC8.png",
+      "sha256": "0e9595c880b54f95a1178b0f38e7a8509c5d73d28bb02dea1737faca7738f3a0"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/B5E9C526-94D3-4046-9EB9-AA55D18E2F01.png",
+      "sha256": "cd3667cccd3fe84400c817218bafb5afb92069089042adf7c7fd3fda93ca3441"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/E175EF3F-02C2-48F9-92D2-CFE4958F8847.png",
+      "sha256": "42fdac08e8f7fd9e9e744061c50bf87484b4bbffcabda67be8eb14b40b604429"
+    }
+  ],
+  "accessibility_trees": [
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/2564993C-FA03-42CF-A548-F3CCB77BED07.txt",
+      "sha256": "c7d9291ed5e855888f819322568c1e4a7e1c1cab39eededd3ecca4671c65458d"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/586B8650-5715-4A5A-8650-4AD913998F2D.txt",
+      "sha256": "8c9f1cac9f27e3e96a235f2c9641c553c9281ecb9a4ec061d9dd016cedb75c62"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/5A4986CC-84A6-4C34-B87B-1FAD888290A8.txt",
+      "sha256": "b877368be10500e566faae27e8281bb4b62809de7df5d0d95949e91576990fc6"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/A7C9AEA1-72C7-430D-8FEE-933893AE0CD9.txt",
+      "sha256": "78e9e37590b939e8787a658af305c1e9256fd66bf4a9c73e54cf3d7f09848c1b"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/BCCC3A3D-BED4-49F8-B86E-FE107C0C09FF.txt",
+      "sha256": "3ce2583f24902f5da99a9f31f36d36108f1679d2619d62d0bc0f69b1a205c7d4"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/D677BE48-C343-4EC6-9455-17976C38A4FA.txt",
+      "sha256": "0129b7eb7a5ea398a7be585643d53cf4d42b3e4382af7e20c029040a77f7a170"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/sim-v4-attachments/D6DDFBFA-C1FD-4451-B6FC-99B9A5FCA4F8.txt",
+      "sha256": "2132bf019c25d691c2f370a080aba04e975803a569d7e2ddea811374d6406b5f"
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/iphoneos.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/iphoneos.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/iphonesimulator.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/iphonesimulator.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/local-model.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/local-model.stdout",
+      "sha256": "84ec288fab1bfd9e4297e9b9e00083922d869ae642bb06b39f7dd364f7743607"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/regressions.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/regressions.stdout",
+      "sha256": "baf5e1ba8a14f14b61c14fb25d2b6b033e476fe0d0d078e17860efb23aefbfe5"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/render.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/render.stdout",
+      "sha256": "754ce0d874426b063f7f167ac5dcb6713a84f0b00e12bfb39eb19bbab70ce237"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/replacement-admission.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/replacement-admission.stdout",
+      "sha256": "7ae9137d6d1f1fc79ff6b1c7eae238c0061c14db3aa190511d24da8386888586"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/worker-revision.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/check-v5/worker-revision.stdout",
+      "sha256": "baf5e1ba8a14f14b61c14fb25d2b6b033e476fe0d0d078e17860efb23aefbfe5"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/apps-v3/iphoneos.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/apps-v3/iphoneos.stdout",
+      "sha256": "015cb526c3f426223b38756fc2984e827880806e3731305532f01c9372ff40ff"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/apps-v3/iphonesimulator.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/apps-v3/iphonesimulator.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/simulator-logs-v4/boot-ready.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/simulator-logs-v4/boot-ready.stdout",
+      "sha256": "fe98c423e45d1f26e19fac963c93e30cc0f0966597208f674eb6a8a0c023f7b7"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/simulator-logs-v4/dashboard-ui.stderr",
+      "sha256": "cb45a16d82e0d9d93f426fceb20452918d0141c2e2e64d3db8678545f80f9ecc"
+    },
+    {
+      "path": "artifacts/mobile-dashboard-2026-10-24-v1/simulator-logs-v4/dashboard-ui.stdout",
+      "sha256": "ce02226abb69cbe6a49dab9365943dcbe88666970e08e41410c21aaa8b2b5be3"
+    }
+  ],
+  "measurements": {
+    "memory": "process TASK_VM_INFO physical footprint; OS current allowance on iOS; configured min(RAM/2,6GiB) on Mac",
+    "ttft": "accepted submission uptime to first emitted callback; model load excluded",
+    "decode_rate": "N-1 intervals from first to last emitted callback",
+    "benchmark": "loaded SmolLM2 on Mac; fixed offline prompt, 1warmup+3measured runs, up to64tokens; functional timing check"
+  },
+  "regression_scope": [
+    "empty/one/many callback timing arithmetic",
+    "supported fit ranking and resident-profile handling",
+    "single/all deletion, persistence, stale-result isolation and injected write-failure rollback/retry",
+    "real benchmark completion, cancellation, lifecycle stop and unchanged dialog bytes",
+    "real SmolLM2/Qwen/SmolLM2 replacement memory admission",
+    "CPU worker revision/lifecycle checks",
+    "Simulator visible metrics, shortlist and benchmark readiness, single/all delete and cancel, Expert monitoring and return to Chat"
+  ],
+  "current_limits": {
+    "chat_output_tokens": 256,
+    "raw_expert_output_tokens": 128,
+    "total_chat_positions": 512
+  },
+  "superseded_attempts": [
+    "check-v1",
+    "check-v2",
+    "check-v3",
+    "check-v4",
+    "apps-v1",
+    "apps-v2",
+    "dashboard-ui-v1.xcresult",
+    "dashboard-ui-v2.xcresult",
+    "dashboard-ui-v3.xcresult"
+  ],
+  "physical_device_tested": false,
+  "physical_device_actions": [],
+  "native_caps_changed": false,
+  "quality_or_performance_qualification": false,
+  "limitations": [
+    "No iPhone installation or new phone metric/UI qualification in this task; waiting for qualified engine candidate",
+    "Current pinned catalog has3profiles, so shortlist can return fewer than5; capacity heuristic is not measured quality/speed",
+    "No131072-token numerical generation capability, quality or device-memory qualification"
+  ]
+}

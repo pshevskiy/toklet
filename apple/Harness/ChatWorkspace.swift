@@ -49,6 +49,10 @@ struct ChatWorkspace: Codable {
         if conversations.isEmpty { let first = LocalConversation(); conversations = [first] }
         if !conversations.contains(where: { $0.id == selected }) { selected = conversations[0].id }
     }
+    mutating func removeAll(modelKey: String? = nil) {
+        var first = LocalConversation(); first.modelKey = modelKey ?? current.modelKey
+        conversations = [first]; selected = first.id
+    }
     mutating func begin() throws -> (UUID, Data) {
         let input = current.draft
         guard !input.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty else { throw chatInputError("Write a message first") }

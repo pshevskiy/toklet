@@ -60,6 +60,9 @@ struct NativeSnapshot: Sendable {
     var message = ""
     var ids: [UInt32] = [] // At most maximumChatOutputTokens; raw diagnostics stay <=128.
     var tokenTimings: [NativeTokenTiming] = [] // Same bounded emitted-token order.
+    // Submit-to-callback latency includes queueing and Chat tokenization.
+    var requestStartedUptimeNanoseconds: UInt64?
+    var requestCompletedUptimeNanoseconds: UInt64?
     var reason: UInt32 = 0
     // Authoritative C report count for this command, zero if generation never ran.
     var emitted: UInt32 = 0
@@ -169,6 +172,11 @@ final class NativeWorker: @unchecked Sendable {
         // arriving after this point survives until the request observes it.
         _ = toklet_cancel_set(flag, initiallyCancelled ? 1 : 0, nil)
         queued = command
+        switch command {
+        case .chat, .generate: view.requestStartedUptimeNanoseconds = DispatchTime.now().uptimeNanoseconds
+        default: view.requestStartedUptimeNanoseconds = nil
+        }
+        view.requestCompletedUptimeNanoseconds = nil
         if case .chat = command { view.chatResult = nil }
         if case .load = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
         if case .unload = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
@@ -295,6 +303,11 @@ final class NativeWorker: @unchecked Sendable {
             catch { failure = error as NSError }
             if case .score = command { beforeScorePublication?() }
             condition.lock()
+            switch command {
+            case .chat, .generate:
+                view.requestCompletedUptimeNanoseconds = DispatchTime.now().uptimeNanoseconds
+            default: break
+            }
             view.hasModel = engine.model != nil
             view.hasSession = engine.session != nil
             view.chatEnabled = engine.chat != nil

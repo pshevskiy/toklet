@@ -1,5 +1,6 @@
 import XCTest
 
+@MainActor
 final class PhoneUITests: XCTestCase {
     func capture(_ name: String, app: XCUIApplication) {
         let image = XCTAttachment(screenshot:app.screenshot()); image.name = name; image.lifetime = .keepAlways; add(image)
@@ -34,6 +35,22 @@ final class PhoneUITests: XCTestCase {
         let done = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label == %@","Send message"),object:send)
         XCTAssertEqual(XCTWaiter.wait(for:[done],timeout:180),.completed)
     }
+    func expectCount(_ query: XCUIElementQuery,_ value: Int) {
+        let changed = XCTNSPredicateExpectation(predicate:NSPredicate(format:"count == %d",value),object:query)
+        XCTAssertEqual(XCTWaiter.wait(for:[changed],timeout:10),.completed)
+    }
+    func cancelConfirmation(app: XCUIApplication) {
+        let cancel = app.sheets.buttons["Cancel"]
+        if cancel.exists { cancel.tap(); return }
+        // iOS can present a popover without a Cancel row. Dismiss it by
+        // tapping an observed point outside its actual frame.
+        let panel = app.sheets.matching(NSPredicate(format:"label BEGINSWITH %@","Delete")).firstMatch
+        XCTAssertTrue(panel.exists)
+        let window = app.windows.firstMatch
+        let outside = CGPoint(x:window.frame.minX + 10,y:window.frame.midY)
+        XCTAssertFalse(panel.frame.contains(outside))
+        window.coordinate(withNormalizedOffset:CGVector(dx:0,dy:0.5)).withOffset(CGVector(dx:10,dy:0)).tap()
+    }
     func testModelSwitching() throws {
         continueAfterFailure = false; executionTimeAllowance = 600
         let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")
@@ -57,6 +74,46 @@ final class PhoneUITests: XCTestCase {
 }
 
 extension PhoneUITests {
+    func testDashboardControls() throws {
+        continueAfterFailure = false; executionTimeAllowance = 240
+        let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")
+        app.launchArguments = ["--ui-test-history"]; app.launch()
+        capture("Dashboard-initial",app:app)
+        XCTAssertTrue(app.descendants(matching:.any)["monitor-memory"].firstMatch.waitForExistence(timeout:10))
+        XCTAssertTrue(app.descendants(matching:.any)["monitor-ttft"].firstMatch.exists)
+        XCTAssertTrue(app.descendants(matching:.any)["monitor-rate"].firstMatch.exists)
+        capture("Dashboard",app:app)
+        app.buttons["find-best-model"].tap()
+        XCTAssertTrue(app.navigationBars["Models"].waitForExistence(timeout:10))
+        let explanation = app.staticTexts.matching(NSPredicate(format:"label CONTAINS %@","Toklet currently supports 3 downloadable chat models")).firstMatch
+        XCTAssertTrue(explanation.waitForExistence(timeout:10))
+        capture("Device-fit-shortlist",app:app); app.buttons["Close"].tap()
+        app.buttons["local-benchmark"].tap()
+        XCTAssertTrue(app.navigationBars["Benchmark"].waitForExistence(timeout:10))
+        XCTAssertTrue(app.buttons["benchmark-run"].exists && !app.buttons["benchmark-run"].isEnabled)
+        capture("Benchmark-needs-model",app:app); app.buttons["Close"].tap()
+        app.buttons["New chat"].tap(); app.buttons["New chat"].tap()
+        app.buttons["Conversations"].tap()
+        let rows = app.buttons.matching(NSPredicate(format:"identifier BEGINSWITH %@","history-select-"))
+        let trash = app.buttons.matching(NSPredicate(format:"identifier BEGINSWITH %@ AND identifier != %@","history-delete-","history-delete-all"))
+        XCTAssertEqual(rows.count,3); XCTAssertEqual(trash.count,3)
+        trash.firstMatch.tap(); cancelConfirmation(app:app); expectCount(rows,3)
+        trash.firstMatch.tap()
+        XCTAssertTrue(app.sheets.buttons["Delete conversation"].waitForExistence(timeout:5)); app.sheets.buttons["Delete conversation"].tap()
+        expectCount(rows,2); capture("Single-dialog-deleted",app:app)
+        let all = app.buttons["history-delete-all"]; visible(all,app:app); all.tap()
+        cancelConfirmation(app:app); expectCount(rows,2)
+        all.tap(); app.sheets.buttons["Delete all conversations"].tap()
+        expectCount(rows,1)
+        capture("Dialogs-deleted",app:app)
+        app.buttons["Close"].tap(); app.buttons["Settings"].tap(); app.buttons["expert-mode"].tap()
+        XCTAssertTrue(app.navigationBars["Expert mode"].waitForExistence(timeout:10))
+        XCTAssertTrue(app.descendants(matching:.any)["monitor-memory"].firstMatch.waitForExistence(timeout:10))
+        capture("Expert-monitoring",app:app)
+        app.buttons["Back to Chat"].tap()
+        XCTAssertTrue(app.buttons["chat-model-picker"].waitForExistence(timeout:10))
+        app.terminate()
+    }
     func testReplyLimitAndExpert() throws {
         continueAfterFailure = false; executionTimeAllowance = 600
         let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")
