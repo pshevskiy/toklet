@@ -2505,3 +2505,22 @@ This is a correctness operator, with no performance or full-model claim. G2
 continues with proportional rotary; remaining Gemma4 graph/session/Metal,
 real-model/Chat/device and131072-output gates stay open. The installed phone
 baseline and all output/context/byte caps remain unchanged.
+
+## 24 October2026 — Gemma4 rotary precision gap made explicit
+
+A bounded source/operator diagnostic on this M1 Pro captures nine positions on
+separate cold-admitted MLX CPU/GPU processes before implementing proportional
+rotary. It verifies the width512 denominator and pair distance256 for128 rotated
+dimensions. All observations complete; independent stdlib replay authenticates
+every raw array and all eighteen numerical comparisons. At sampled positions
+0,1,7,31,127 both backends meet the existing FP64 policy. Both fail at511,1023,
+8191,131071; the largest error/policy ratios at131071 are642.26 CPU/314.82 GPU.
+
+Saved-frequency reconstructions help isolate FP32 frequency/phase effects but
+cannot admit an independent oracle; GPU cause remains incompletely explained.
+Astra strengthened ownership/capture/collision handling before execution.
+See [the full diagnostic](gemma-rotary-precision.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-rotary-precision-v1.json).
+The tolerance is unchanged, failing comparisons stay recorded, and no native
+rotary, context/model/phone/performance qualification is claimed. G2 continues
+with an explicit independent frequency/phase contract and broader witnesses.

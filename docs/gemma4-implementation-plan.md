@@ -65,6 +65,9 @@ coordination remains explicit.
 
 The [tanh-GELU/GeGLU witness](gemma-gelu-reference.md) was frozen before its native
 functions. The [standalone scalar target](gemma-gelu-scalar.md) now passes its
-offline fixtures and required Rust/iOS checks. Proportional rotary is the next
-independent witness. All other listed G2 mechanisms, whole graph/session and
-later real-model/app/device stages remain open.
+offline fixtures and required Rust/iOS checks. The
+[proportional rotary diagnostic](gemma-rotary-precision.md) exposes short/long
+position precision differences under the unchanged tolerance. Its independent
+frequency/phase contract and broader witnesses are next; rotary qualification
+remains open. All other listed G2 mechanisms, whole graph/session and later
+real-model/app/device stages remain open.

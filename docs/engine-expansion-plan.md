@@ -55,8 +55,9 @@ architecture expansion. The first [Gemma4 E2B inspection](gemma4-e2b-inspection.
 maps source/config/headers and names missing mechanisms. The
 [tanh-GELU/GeGLU witness](gemma-gelu-reference.md) is frozen; its standalone
 [scalar target](gemma-gelu-scalar.md) passes offline and Rust/iOS checks. G2
-continues with proportional rotary. Qwen3 completion and the broader inventory
-remain open. The
+continues with [proportional rotary precision](gemma-rotary-precision.md), whose
+long-position diagnostic disagreements remain open. Qwen3 completion and the
+broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
 streaming, engine-owned capabilities and a qualified long-context graph within
 E2/E4/H1/H3/H4. It does not close E1–E6 or broaden current runnable limits. The
