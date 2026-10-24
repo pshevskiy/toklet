@@ -51,7 +51,9 @@ Introduce each module when its concrete implementation exists:
    Freeze each fixture before its target. The
    [unmasked gated-delta reference](gated-delta-oracle-preparation.md) is now
    frozen with independent FP64 math and passing pinned upstream CPU/GPU
-   comparisons. Convolution, masked outputs and graph-level witnesses remain open.
+   comparisons. The independent [causal convolution reference](causal-conv-reference.md)
+   also passes its unmasked CPU/GPU operator checks. Masked outputs, gated output
+   normalization and graph-level witnesses remain open.
 2. Ordinary scalar slice functions for the recurrence and convolution. Explicitly
    document contiguous layouts: activations[tokens,heads,dim], convolution
    history[kernel-1,channels], matrix state[value_heads,value_dim,key_dim].
@@ -60,8 +62,9 @@ Introduce each module when its concrete implementation exists:
    the frozen unmasked witness. The separate
    [raw Q/K normalizer](gated-delta-normalization.md) also passes its frozen and
    composed-state gates. [Scalar gate construction](gated-delta-gates.md) also
-   passes the full raw-input pipeline; causal convolution remains pending;
-   no hybrid session is implied.
+   passes the full raw-input pipeline. The separate
+   [scalar causal convolution](causal-conv-scalar.md) passes frozen output/SiLU
+   and exact history checks. No hybrid session is implied.
 3. Partial rotary and the attention-gate layout as separate dense mechanisms.
    Preserve existing full-rotary Qwen2/Llama/Mistral/Qwen3 fixtures. The text
    position oracle must establish rotary convention/offset behavior, including
@@ -126,5 +129,6 @@ The named missing mechanisms above are mapped for implementation. The unmasked
 gated-delta reference is checked and frozen before its native target. The
 [causal convolution reference](causal-conv-reference.md) is also checked before its
 [checked scalar target](causal-conv-scalar.md). Remaining operator/graph oracles,
-hybrid scalar/Metal execution, real artifact selection, text integration and every long-context/device gate remain open. An unavailable
-required check cannot grant completion.
+hybrid scalar/Metal execution, real artifact selection, text integration and every
+long-context/device gate remain open. An unavailable required check cannot grant
+completion.

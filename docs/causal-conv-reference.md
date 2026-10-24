@@ -55,7 +55,8 @@ runtime helper differs from its executed snapshot only by removal of one extra
 EOF blank line; the receipt binds both exact versions without a numerical rerun. Frozen arrays are at
 [the fixture manifest](../tests/fixtures/causal-conv-v1/manifest.json).
 
-Native convolution and gated output normalization, hybrid weight/config mapping,
-state/session commit, resident Metal execution, real checkpoints, chat,
+The subsequent [scalar convolution](causal-conv-scalar.md) is checked separately.
+Gated output normalization, hybrid weight/config mapping, state/session commit,
+resident Metal execution, real checkpoints, chat,
 long-context, quality and iPhone qualification remain open. Current app/native
 model eligibility and execution limits are unchanged.

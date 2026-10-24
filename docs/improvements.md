@@ -2401,3 +2401,25 @@ This is an operator foundation. Gated output normalization, hybrid model/session
 state commit, Metal execution and real-model/chat/long-context/device quality
 and performance gates remain open. No model eligibility or execution limit was
 raised.
+
+## 24 October2026 — physical mobile dashboard and Gemma 4 rejection checks
+
+Commit `e4dcefb` records four passing physical iPhone 14 Pro UI tests on the
+reviewed `abe661e` app and unchanged native `2d7d35b0` package. Monitoring,
+device-fit explanations, supported-model switching/generation, code Copy,
+256-token notice, Expert fixture, dialog deletion and public Gemma 4 unavailable
+labels pass. The owner's history is preserved and normal app launch succeeds.
+
+The SmolLM2 local benchmark completes one warm-up and three 64-token trials;
+rounded UI samples show 17.8–18.0 decode tokens/s and 361–364 ms to first token.
+These session observations do not establish controlled performance, quality or
+long-context capability. Config-only official/MLX Gemma 4 probes safely reject
+unknown architecture without creating a model handle. No Gemma weights,
+generation or memory-fit claim follows. The official candidate's 131072 context
+positions also do not establish 131072 output tokens plus a prompt.
+
+Astra accepted the exact source and
+[receipt](../benchmarks/results/2026-10-24-mobile-gemma4-phone-v1.json). See
+[device coverage and limitations](mobile-gemma4-testing.md). The initial
+certificate-trust failure and fresh successful run remain distinct. The full
+engine/Hugging Face and long-reply plans stay open.
