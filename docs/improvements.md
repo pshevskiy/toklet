@@ -2130,3 +2130,33 @@ resources, fit flags reserve nothing, and loading must revalidate. No physical
 phone, task-quality or timing result follows. Swift/app integration and exact
 qualification receipts remain open. See [consumer contracts](metal-resource-consumers.md)
 and the [receipt](../benchmarks/results/2026-10-24-metal-resource-consumers-v1.json).
+
+## 24 October 2026 — native factory resource policy
+
+App preflight no longer needs to reconstruct the engine's attention choice:
+explicit runtime attention2 selects the native factory policy after graph and
+geometry admission. The actual factory and inspector share one exhaustive helper;
+Qwen2/non-MLX Online and selected Llama/Mistral/Qwen3 Reference behavior is
+unchanged. Explicit modes0/1 and runtime report schema keep their behavior.
+New graph enums require an explicit policy decision.
+
+The existing20,480-byte native model/session-owner allowance is now a shared
+Rust/header constant. Checked subtraction still rejects whole budgets at/below
+that value; allowance+1 yields one numerical byte. Runtime inspection takes exact
+numerical budgets, so callers can plan the actual factory budget without a
+second hidden deduction. This is logical accounting, not a memory reservation.
+
+Formatting, strict Clippy,185 CPU/207 Metal-feature tests pass (14/106 ignored).
+Five explicit release GPU tests pass: four-family plan/factory comparisons with
+frozen parent memory and exact/minus-one load/session admission, existing20
+explicit native reports,42 frozen plans/budget tests and4 CLI direct reports.
+The fresh three-slice package retains24 exports. C callers link all SDKs and run
+four families on Mac, verifying plan+allowance equals actual session admission.
+Existing Swift6/importer and metadata21-mutation/three-cleanup checks pass; both
+complete real Qwen3 CLI reports remain equal to the preceding receipt.
+
+Retain the shared policy and allowance. No kernel, numerical memory formula,
+text profile, qualification label or phone behavior changes. Swift worker runtime
+preflight and qualification-receipt evaluation remain open. See
+[native resource policy](native-resource-policy.md) and the
+[receipt](../benchmarks/results/2026-10-24-native-resource-policy-v1.json).

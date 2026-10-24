@@ -73,6 +73,16 @@ fn admit(required: usize, limit: usize) -> Result<()> {
         Ok(())
     }
 }
+/// Coarse factory policy; exhaustive matching makes new families opt in explicitly.
+pub(super) fn native_attention_mode(architecture: Option<Architecture>) -> AttentionMode {
+    match architecture {
+        None | Some(Architecture::Qwen2) => AttentionMode::Online,
+        Some(Architecture::Llama | Architecture::Mistral | Architecture::Qwen3) => {
+            AttentionMode::Reference
+        }
+    }
+}
+
 pub(super) fn validate_attention(
     architecture: Option<Architecture>,
     mode: AttentionMode,
@@ -340,6 +350,48 @@ pub fn inspect_mlx(
     readback: ReadbackMode,
     attention: AttentionMode,
 ) -> Result<MlxReport> {
+    inspect_with_policy(
+        directory,
+        load,
+        options,
+        normalization,
+        readback,
+        AttentionPolicy::Explicit(attention),
+    )
+}
+
+/// Same planning with the actual native model factory's attention choice.
+/// All other modes remain explicit. The report contains the resolved attention;
+/// new graph families must declare a factory policy before this code compiles.
+pub fn inspect_mlx_with_native_attention(
+    directory: &Path,
+    load: weights::LoadOptions,
+    options: session::Options,
+    normalization: NormalizationMode,
+    readback: ReadbackMode,
+) -> Result<MlxReport> {
+    inspect_with_policy(
+        directory,
+        load,
+        options,
+        normalization,
+        readback,
+        AttentionPolicy::NativeModel,
+    )
+}
+
+enum AttentionPolicy {
+    Explicit(AttentionMode),
+    NativeModel,
+}
+fn inspect_with_policy(
+    directory: &Path,
+    load: weights::LoadOptions,
+    options: session::Options,
+    normalization: NormalizationMode,
+    readback: ReadbackMode,
+    policy: AttentionPolicy,
+) -> Result<MlxReport> {
     autoreleasepool(|_| {
         if load.memory_limit_bytes == 0
             || load.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
@@ -356,6 +408,10 @@ pub fn inspect_mlx(
             },
         )?;
         super::mlx_geometry(source.config(), source.architecture())?;
+        let attention = match policy {
+            AttentionPolicy::Explicit(mode) => mode,
+            AttentionPolicy::NativeModel => native_attention_mode(Some(source.architecture())),
+        };
         validate_attention(Some(source.architecture()), attention)?;
         let weights = MlxWeights::new(&source)?;
         let session = SessionPlan::new(
@@ -505,6 +561,18 @@ mod tests {
             .unwrap();
         assert!(weights.validate_buffers(largest).is_ok());
         assert!(weights.validate_buffers(largest - 1).is_err());
+    }
+    #[test]
+    fn native_attention_policy_is_exhaustive_for_current_factory_graphs() {
+        for (architecture, expected) in [
+            (None, AttentionMode::Online),
+            (Some(Architecture::Qwen2), AttentionMode::Online),
+            (Some(Architecture::Llama), AttentionMode::Reference),
+            (Some(Architecture::Mistral), AttentionMode::Reference),
+            (Some(Architecture::Qwen3), AttentionMode::Reference),
+        ] {
+            assert_eq!(native_attention_mode(architecture), expected);
+        }
     }
     #[test]
     fn unqualified_online_architectures_reject_before_device() {

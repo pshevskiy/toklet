@@ -21,7 +21,9 @@ runtime initialization. Context, capacity, chunk and offset must satisfy the
 engine bounds. Load budget is positive; a zero session budget yields fit=false.
 Budgets are passed unchanged, without the ordinary20KiB model/session bridge
 deduction. Normalization values0/1 select Original/Compensated, readback0/1
-FullLogits/GreedyToken and attention0/1 Reference/Online. Unsupported family/mode
+FullLogits/GreedyToken and attention0/1 Reference/Online. The later
+[native factory policy](native-resource-policy.md) adds explicit attention2 and
+exports the existing model/session bridge allowance. Unsupported family/mode
 combinations reject explicitly.
 
 The function returns the existing immutable `TokletCompatibility` owner with the

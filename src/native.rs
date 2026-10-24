@@ -43,7 +43,9 @@ pub const POISONED: u32 = 7;
 pub const CALLBACK_ERROR: u32 = 8;
 pub const UNSUPPORTED: u32 = 9;
 // Original 4KiB owners plus the bounded absolute model-directory allocation.
-const BRIDGE_BYTES: usize = 20 * 1024;
+/// Fixed logical native model/session-owner allowance, not a reservation or peak.
+pub const MODEL_SESSION_BRIDGE_BYTES: usize = 20 * 1024;
+const BRIDGE_BYTES: usize = MODEL_SESSION_BRIDGE_BYTES;
 
 #[repr(C)]
 pub struct NativeError {

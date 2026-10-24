@@ -159,3 +159,7 @@ actual loader/session layouts and admission totals. The
 [CLI/native runtime consumers](metal-resource-consumers.md) expose immutable
 plans. The app consumer and qualification-receipt evaluation remain open; this
 does not qualify another device.
+
+The [native factory resource policy](native-resource-policy.md) now shares the
+actual attention choice and fixed owner allowance with runtime inspection. The
+Swift worker runtime preflight remains the next H1 integration task.

@@ -14,7 +14,8 @@ pub struct RuntimePlanningOptions {
     pub normalization: u32,
     /// 0 FullLogits, 1 GreedyToken.
     pub readback: u32,
-    /// 0 Reference, 1 Online; unqualified family/mode combinations reject.
+    /// 0 Reference, 1 Online, 2 native model factory policy. Reports resolve2.
+    /// Unqualified explicit family/mode combinations reject.
     pub attention: u32,
     pub reserved: u32,
     /// Exact numerical budgets, without the ordinary bridge deduction.
@@ -28,7 +29,7 @@ impl RuntimePlanningOptions {
             || self.reserved != 0
             || self.normalization > 1
             || self.readback > 1
-            || self.attention > 1
+            || self.attention > 2
             || self.context_limit == 0
             || self.context_limit as usize > weights::MAX_CONTEXT_LIMIT
             || self.capacity == 0
@@ -95,26 +96,38 @@ pub unsafe extern "C" fn toklet_mlx_plan_create(
             ))]
             {
                 use crate::metal::{self, AttentionMode, NormalizationMode, ReadbackMode};
-                let report = metal::planning::inspect_mlx(
-                    path,
-                    load,
-                    options,
-                    if raw.normalization == 0 {
-                        NormalizationMode::Original
-                    } else {
-                        NormalizationMode::Compensated
-                    },
-                    if raw.readback == 0 {
-                        ReadbackMode::FullLogits
-                    } else {
-                        ReadbackMode::GreedyToken
-                    },
-                    if raw.attention == 0 {
-                        AttentionMode::Reference
-                    } else {
-                        AttentionMode::Online
-                    },
-                )
+                let normalization = if raw.normalization == 0 {
+                    NormalizationMode::Original
+                } else {
+                    NormalizationMode::Compensated
+                };
+                let readback = if raw.readback == 0 {
+                    ReadbackMode::FullLogits
+                } else {
+                    ReadbackMode::GreedyToken
+                };
+                let report = if raw.attention == 2 {
+                    metal::planning::inspect_mlx_with_native_attention(
+                        path,
+                        load,
+                        options,
+                        normalization,
+                        readback,
+                    )
+                } else {
+                    metal::planning::inspect_mlx(
+                        path,
+                        load,
+                        options,
+                        normalization,
+                        readback,
+                        if raw.attention == 0 {
+                            AttentionMode::Reference
+                        } else {
+                            AttentionMode::Online
+                        },
+                    )
+                }
                 .map_err(|error| {
                     fail(
                         match error {
@@ -207,7 +220,7 @@ mod tests {
                 ..valid
             },
             RuntimePlanningOptions {
-                attention: 2,
+                attention: 3,
                 ..valid
             },
             RuntimePlanningOptions {
@@ -288,6 +301,50 @@ mod tests {
                 toklet_mlx_plan_create(b"x".as_ptr(), 1, &valid, ptr::null_mut(), ptr::null_mut())
             },
             INVALID
+        );
+    }
+    #[test]
+    fn native_model_allowance_subtraction_is_checked_at_boundaries() {
+        assert_eq!(MODEL_SESSION_BRIDGE_BYTES, 20480);
+        for budget in [MODEL_SESSION_BRIDGE_BYTES - 1, MODEL_SESSION_BRIDGE_BYTES] {
+            let raw = Options {
+                abi_version: ABI_VERSION,
+                struct_size: size_of::<Options>() as u32,
+                capacity: 32,
+                chunk: 3,
+                memory_limit_bytes: budget as u64,
+            };
+            assert!(matches!(
+                unsafe { super::super::options(&raw) },
+                Err(Failure(INVALID, _))
+            ));
+            let mut out = ptr::dangling_mut::<ModelHandle>();
+            assert_eq!(
+                unsafe { toklet_model_load_mlx(b"x".as_ptr(), 1, &raw, &mut out, ptr::null_mut()) },
+                INVALID
+            );
+            assert!(out.is_null());
+        }
+        let raw = Options {
+            abi_version: ABI_VERSION,
+            struct_size: size_of::<Options>() as u32,
+            capacity: 32,
+            chunk: 3,
+            memory_limit_bytes: (MODEL_SESSION_BRIDGE_BYTES + 1) as u64,
+        };
+        assert_eq!(
+            unsafe { super::super::options(&raw) }
+                .unwrap()
+                .memory_limit_bytes,
+            1
+        );
+        assert!(
+            RuntimePlanningOptions {
+                attention: 2,
+                ..options()
+            }
+            .validate()
+            .is_ok()
         );
     }
     #[test]
@@ -382,6 +439,146 @@ mod tests {
             assert_eq!(bytes[length], 0xa5);
             bytes.truncate(length);
             bytes
+        }
+        #[test]
+        #[ignore = "Explicit Apple GPU native-policy plans match actual model/session factory budgets"]
+        fn native_policy_matches_factory_and_frozen_parent_memory() {
+            let frozen: Value = serde_json::from_slice(include_bytes!(
+                "../../tests/fixtures/metal-resource-v1/baseline.json"
+            ))
+            .unwrap();
+            let mut cases = 0;
+            for (directory, attention) in [
+                ("mlx-qwen-v1/model", "Online"),
+                ("mlx-llama-v1/tied", "Reference"),
+                ("mlx-mistral-v1/untied", "Reference"),
+                ("mlx-qwen3-v1/tied", "Reference"),
+            ] {
+                let p = path(directory);
+                let raw_path = p.to_str().unwrap().as_bytes();
+                let request = RuntimePlanningOptions {
+                    capacity: 32,
+                    position_offset: 0,
+                    attention: 2,
+                    load_memory_limit_bytes: 256 * 1024 * 1024 - MODEL_SESSION_BRIDGE_BYTES as u64,
+                    session_memory_limit_bytes: 256 * 1024 * 1024
+                        - MODEL_SESSION_BRIDGE_BYTES as u64,
+                    ..options()
+                };
+                let handle = create(&p, request);
+                let report: Value = serde_json::from_slice(&bytes(handle)).unwrap();
+                assert_eq!(report["attention"], attention);
+                let baseline = frozen["cases"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .find(|row| {
+                        row["directory"] == directory
+                            && row["chunk"] == 3
+                            && row["readback"] == "FullLogits"
+                            && row["attention"] == attention
+                    })
+                    .unwrap();
+                assert_eq!(report["session_memory"], baseline["memory"]);
+                let load_minimum = report["source_admitted_load_bytes"]
+                    .as_u64()
+                    .unwrap()
+                    .max(report["resident_admitted_load_bytes"].as_u64().unwrap());
+                let session_minimum = report["session_memory"]["admitted_bytes"].as_u64().unwrap();
+                let mut load_options = Options {
+                    abi_version: ABI_VERSION,
+                    struct_size: size_of::<Options>() as u32,
+                    capacity: 32,
+                    chunk: 3,
+                    memory_limit_bytes: load_minimum + MODEL_SESSION_BRIDGE_BYTES as u64 - 1,
+                };
+                let mut model = ptr::dangling_mut::<ModelHandle>();
+                assert_eq!(
+                    unsafe {
+                        toklet_model_load_mlx(
+                            raw_path.as_ptr(),
+                            raw_path.len(),
+                            &load_options,
+                            &mut model,
+                            ptr::null_mut(),
+                        )
+                    },
+                    LOAD_ERROR
+                );
+                assert!(model.is_null());
+                load_options.memory_limit_bytes += 1;
+                assert_eq!(
+                    unsafe {
+                        toklet_model_load_mlx(
+                            raw_path.as_ptr(),
+                            raw_path.len(),
+                            &load_options,
+                            &mut model,
+                            ptr::null_mut(),
+                        )
+                    },
+                    OK
+                );
+                assert!(!model.is_null());
+                let weights = match unsafe { &*model }.model.as_ref() {
+                    NativeModel::Metal(m) => m.weights_bytes(),
+                    NativeModel::Cpu(_) => panic!("Expected explicit Metal model"),
+                };
+                assert_eq!(report["resident_weights_bytes"], weights);
+                let mut session_options = Options {
+                    memory_limit_bytes: session_minimum + MODEL_SESSION_BRIDGE_BYTES as u64 - 1,
+                    ..load_options
+                };
+                let mut session = ptr::dangling_mut::<SessionHandle>();
+                assert_eq!(
+                    unsafe {
+                        toklet_session_create(
+                            model,
+                            &session_options,
+                            &mut session,
+                            ptr::null_mut(),
+                        )
+                    },
+                    ENGINE_ERROR
+                );
+                assert!(session.is_null());
+                session_options.memory_limit_bytes += 1;
+                assert_eq!(
+                    unsafe {
+                        toklet_session_create(
+                            model,
+                            &session_options,
+                            &mut session,
+                            ptr::null_mut(),
+                        )
+                    },
+                    OK
+                );
+                assert!(!session.is_null());
+                let mut state = Report::default();
+                assert_eq!(
+                    unsafe { toklet_session_state(session, &mut state, ptr::null_mut()) },
+                    OK
+                );
+                assert_eq!(
+                    state.admitted_bytes,
+                    session_minimum + MODEL_SESSION_BRIDGE_BYTES as u64
+                );
+                assert_eq!(
+                    unsafe { toklet_session_release(session, ptr::null_mut()) },
+                    OK
+                );
+                assert_eq!(unsafe { toklet_model_release(model, ptr::null_mut()) }, OK);
+                assert_eq!(
+                    unsafe { toklet_mlx_inspect_release(handle, ptr::null_mut()) },
+                    OK
+                );
+                cases += 1;
+            }
+            println!(
+                "NATIVE_FACTORY_POLICY {}",
+                serde_json::json!({"cases":cases,"frozen_parent_memory_equal":true,"exact_and_below_load_and_session_budgets":true,"passed":true})
+            );
         }
         #[test]
         #[ignore = "Explicit Apple GPU runtime C/direct equality, budgets and owner contract"]

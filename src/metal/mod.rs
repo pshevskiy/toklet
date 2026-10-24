@@ -201,19 +201,9 @@ impl Model {
         self.mlx_architecture
     }
     pub(crate) fn native_attention_mode(&self) -> AttentionMode {
-        if matches!(
-            self.mlx_architecture,
-            Some(
-                crate::mlx::dense::Architecture::Llama
-                    | crate::mlx::dense::Architecture::Mistral
-                    | crate::mlx::dense::Architecture::Qwen3
-            )
-        ) {
-            AttentionMode::Reference
-        } else {
-            AttentionMode::Online
-        }
+        planning::native_attention_mode(self.mlx_architecture)
     }
+
     pub fn q4_format(&self) -> Option<q4::Format> {
         match self.layers[0].q.storage {
             TensorStorage::Half(_) => None,

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+_Static_assert(TOKLET_MODEL_SESSION_BRIDGE_BYTES==20u*1024u,"native bridge allowance");
 _Static_assert(sizeof(TokletRuntimePlanningOptions)==56,"runtime options ABI");
 _Static_assert(offsetof(TokletRuntimePlanningOptions,load_memory_limit_bytes)==40,"load budget offset");
 _Static_assert(offsetof(TokletRuntimePlanningOptions,session_memory_limit_bytes)==48,"session budget offset");

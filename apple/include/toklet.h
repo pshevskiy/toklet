@@ -16,6 +16,9 @@ extern "C" {
 #define TOKLET_POISONED 7u
 #define TOKLET_CALLBACK_ERROR 8u
 #define TOKLET_UNSUPPORTED 9u
+/* Ordinary TokletOptions budgets include this fixed logical owner allowance.
+   Actual load/session admission subtracts it; no reservation or peak is implied. */
+#define TOKLET_MODEL_SESSION_BRIDGE_BYTES 20480u
 /* All records use native C alignment. All nonnull pointers must refer to live,
    initialized storage for their full stated extent. Inputs and outputs/error
    records must not overlap. Counts are element counts; null+zero is permitted
@@ -45,7 +48,9 @@ typedef struct {
 } TokletCompatibilityOptions;
 /* Explicit runtime planning, native C alignment/56 bytes. Normalization:
    0 Original, 1 Compensated; readback: 0 FullLogits, 1 GreedyToken;
-   attention: 0 Reference, 1 Online. Projection is always MlxAffine.
+   attention: 0 Reference, 1 Online, 2 native model factory policy.
+   Value2 resolves after graph admission and reports actual Reference/Online.
+   Normalization/readback remain explicit. Projection is always MlxAffine.
    reserved must be zero. Budgets are exact, without bridge deduction;
    load budget must be positive, session budget may be zero (fit=false).
    capacity+offset must fit context_limit; chunk is1..min(1024,capacity). */
