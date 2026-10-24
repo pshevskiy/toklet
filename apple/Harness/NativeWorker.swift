@@ -69,6 +69,9 @@ struct NativeSnapshot: Sendable {
     var savedPrefix: [UInt32]?
     var admittedBytes: UInt64 = 0
     var score: NativeDistributionScore?
+    // Last attempted MLX artifact, never a runtime/text qualification label.
+    var compatibility: NativeCompatibility?
+    var compatibilityDirectory = ""
     var workerFinished = false
     var chatEnabled = false
     // Retained across queued lifecycle cleanup until the next text request.
@@ -152,6 +155,9 @@ final class NativeWorker: @unchecked Sendable {
         _ = toklet_cancel_set(flag, initiallyCancelled ? 1 : 0, nil)
         queued = command
         if case .chat = command { view.chatResult = nil }
+        if case .load = command { view.compatibility = nil; view.compatibilityDirectory = "" }
+        if case .unload = command { view.compatibility = nil; view.compatibilityDirectory = "" }
+        if case .suspend = command { view.compatibility = nil; view.compatibilityDirectory = "" }
         view.busy = true
         view.phase = "Queued"
         view.score = nil
@@ -188,6 +194,7 @@ final class NativeWorker: @unchecked Sendable {
         guard !closing, !view.closed else { return }
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
         cancelQueuedChat()
+        view.compatibility = nil; view.compatibilityDirectory = ""
         // Once a full unload is queued, a later background event cannot weaken it.
         if case .unload? = queued {} else { queued = unload ? .unload : .suspend }
         view.busy = true
@@ -203,6 +210,7 @@ final class NativeWorker: @unchecked Sendable {
         guard !view.closed else { return }
         cancelQueuedChat()
         closing = true; queued = nil
+        view.compatibility = nil; view.compatibilityDirectory = ""
         view.score = nil
         view.savedPrefix = nil
         view.stopToken = .max
@@ -281,6 +289,8 @@ final class NativeWorker: @unchecked Sendable {
             view.stopToken = failure == nil && !closing && queued == nil && engine.report.reason == 2
                 ? engine.report.stop_token : .max
             view.admittedBytes = engine.admissionUpperBound
+            view.compatibility = !closing && queued == nil ? engine.compatibility : nil
+            view.compatibilityDirectory = view.compatibility == nil ? "" : engine.compatibilityDirectory
             view.score = failure == nil && !closing && queued == nil ? engine.score : nil
             view.status = UInt32(clamping: failure?.code ?? 0)
             view.message = String((failure?.localizedDescription ?? "").prefix(512))
@@ -303,6 +313,7 @@ final class NativeWorker: @unchecked Sendable {
         }
         view.hasModel = false; view.hasSession = false
         view.chatEnabled = false
+        view.compatibility = nil; view.compatibilityDirectory = ""
         // Closed means there is no active numerical prefix. Do not retain the
         // last command's counts when close supersedes an in-flight operation.
         view.history = 0; view.evaluated = 0; view.pending = 0; view.reason = 0
@@ -352,6 +363,8 @@ private final class Engine {
     var chat: OpaquePointer?
     var chatStops: [UInt32] = []
     var chatResult: NativeChatResult?
+    var compatibility: NativeCompatibility?
+    var compatibilityDirectory = ""
 
     func decodeChat(_ ids: [UInt32]) throws -> String {
         guard let chat else { throw invalid("Choose a chat model first") }
@@ -425,6 +438,7 @@ private final class Engine {
             var error = TokletError()
             try requireOK(toklet_model_release(value, &error), &error)
         }
+        compatibility = nil; compatibilityDirectory = ""
         saved = []; savedCount = 0; admissionUpperBound = 0; settings = nil; phase = "Unloaded; fresh prompt required"
     }
     func createSession() throws {
@@ -503,6 +517,7 @@ private final class Engine {
             phase = "Ready"
 
         case .load(let requested):
+            compatibility = nil; compatibilityDirectory = ""
             guard model == nil else { throw invalid("Unload the current model first") }
             guard requested.packedDirectory.isEmpty || requested.metal,
                   !requested.mlx || (requested.metal && requested.packedDirectory.isEmpty) else {
@@ -515,6 +530,15 @@ private final class Engine {
             let path = Array(requested.directory.utf8); let packed = Array(requested.packedDirectory.utf8)
             guard !path.isEmpty, path.count <= 16384, packed.count <= 16384,
                   !path.contains(0), !packed.contains(0) else { throw invalid("Invalid artifact path") }
+            if requested.mlx {
+                let metadata = try NativeCompatibility.inspect(directory:requested.directory,context:requested.capacity,budget:requested.numericalBudget)
+                compatibility = metadata; compatibilityDirectory = requested.directory
+                guard metadata.mayAttemptLoad else {
+                    throw NSError(domain:"TokletCompatibility",code:Int(metadata.rejectionCode),userInfo:[NSLocalizedDescriptionKey:metadata.summary])
+                }
+            }
+            // The real loader reopens and validates all payload/device/session
+            // requirements; captured metadata is never authority to skip them.
             var options = requested.options(); var error = TokletError()
             let code = path.withUnsafeBufferPointer { path in
                 packed.withUnsafeBufferPointer { packed in
@@ -551,6 +575,8 @@ private final class Engine {
             try requireOK(toklet_session_state(session,&report,&error),&error)
             phase = "Ready"
         case .suspend:
+            // Also invalidates a queued load that lifecycle cleanup superseded.
+            compatibility = nil; compatibilityDirectory = ""
             try releaseSession()
             phase = model == nil ? "Unloaded" : "Session released; replay required"
         case .replay:

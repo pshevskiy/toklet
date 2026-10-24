@@ -2000,3 +2000,27 @@ real Qwen3 CLI metadata is correct. The initial environment-only C link failure
 and successful explicit-temporary-directory retry remain captured. Retain these
 consumers. Swift app integration, actual runtime memory planning, qualification
 receipts, general Hub/Chat and the remaining engine inventory stay open.
+
+### Integrate compatibility on the app worker — 24 October 2026
+
+The [Swift adapter](mlx-compatibility-swift.md) inspects MLX metadata on the
+existing inference thread before actual loading. It captures an immutable report,
+checks the exact request/schema and reason/admission/backend tuple, and releases
+native report ownership before numerical work. Actual payload/device/session
+loading and independent pinned text profiles remain authoritative. No numerical
+source or token/context limit changes. The extra application allowance is stated
+as a requirement, separately from numerical admission.
+
+Astra found contradictory-wire acceptance and a queued load→Suspend stale-summary
+race. Exact tuple checks and clearing on Suspend fix them. Independent mutations
+and dequeue-gated idle-state assertions before Close cover both regressions.
+The strict Swift wrapper, C boundary, portable checker and existing worker checks
+pass: 89 portable methods, strict default/Metal Swift wrappers, existing CPU/
+Half-Metal/MLX workers, C caller and strict iOS/simulator modules. Three real Mac
+Chat profiles also pass short cancellation/replay/context/owner regressions from
+immutable snapshots. The fresh native package builds/links on all three Apple
+targets. The
+initial old-system-Python failure and explicit-interpreter retry are retained.
+Retain this adapter; runtime planning, qualification receipts, general Hub/Chat
+and the remaining engine inventory stay open. Parallel mobile UI work owns its
+presentation changes and evidence separately.

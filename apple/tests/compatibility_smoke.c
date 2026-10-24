@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+_Static_assert(TOKLET_COMPATIBILITY_JSON_ALLOWANCE_BYTES==2u*TOKLET_MAX_COMPATIBILITY_JSON_BYTES+256u, "JSON allowance");
 _Static_assert(sizeof(TokletCompatibilityOptions)==24, "compatibility options ABI");
 _Static_assert(offsetof(TokletCompatibilityOptions,memory_limit_bytes)==16, "budget ABI");
 int main(int argc, char **argv) {

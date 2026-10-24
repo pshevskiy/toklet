@@ -67,9 +67,13 @@ directory and passes without a production code change. Failed captures remain
 alongside the successful retry in the
 [consumer receipt](../benchmarks/results/2026-10-24-mlx-compatibility-consumers-v1.json).
 
+The later [shared Swift worker adapter](mlx-compatibility-swift.md) adds bounded
+metadata preflight and safe summary invalidation; it still grants no runtime or
+text qualification.
+
 Retain the CLI/native consumers. No numerical behavior changed, so the existing
 GPU execution results remain scoped to their earlier checked sources; this task
-does not rerun or requalify GPU execution. Swift app consumption, actual Metal
+does not rerun or requalify GPU execution. Actual Metal
 resource planning, exact qualification receipts and H2–H4 general Hub/Chat flows
 remain open. No new architecture, quality, performance or phone qualification
 is claimed.

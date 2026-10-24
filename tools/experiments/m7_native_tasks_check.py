@@ -152,7 +152,7 @@ def main(native,expected,output):
  try:
   env,_=package.build_environment();env['TMPDIR']=str(output/'tmp')
   merge(integration.admit_build(native,expected));merge(integration.FIXTURE);merge(task.ORACLE)
-  sources=[ROOT/'apple/Harness'/name for name in ['NativeWorker.swift','NativeMeasurement.swift','NativeTaskResponse.swift','NativeTasks.swift']]
+  sources=[ROOT/'apple/Harness'/name for name in ['NativeWorker.swift','NativeCompatibility.swift','NativeMeasurement.swift','NativeTaskResponse.swift','NativeTasks.swift']]
   sources.append(ROOT/'apple/tests/swift/TasksMain.swift')
   helpers=[Path(m.__file__).resolve() for m in (package,integration,task,quality,measurement,builder)]
   helpers += [Path(__file__).resolve(),Path(__file__).with_name('test_m7_native_tasks_check.py'),ROOT/'apple/Harness/HarnessApp.swift',ROOT/'apple/TokletHarness.xcodeproj/project.pbxproj']

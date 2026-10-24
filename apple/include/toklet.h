@@ -44,7 +44,8 @@ typedef struct {
     uint64_t memory_limit_bytes;
 } TokletCompatibilityOptions;
 #define TOKLET_MAX_COMPATIBILITY_JSON_BYTES 65536u
-#define TOKLET_COMPATIBILITY_JSON_ALLOWANCE_BYTES (2u*TOKLET_MAX_COMPATIBILITY_JSON_BYTES+256u)
+/* Literal for the Swift importer; checked against 2*maximum+256 by C smoke. */
+#define TOKLET_COMPATIBILITY_JSON_ALLOWANCE_BYTES 131328u
 /* Reserve this separate logical JSON allowance (two maximum buffers plus the
    handle). Allocator overhead is excluded; temporary
    metadata uses the existing bounded artifact parser. No weights are expanded,

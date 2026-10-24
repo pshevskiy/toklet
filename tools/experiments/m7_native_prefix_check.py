@@ -48,7 +48,7 @@ def main(native,expected,output):
   guard();return ROOT/row['stdout']
  try:
   env,_=package.build_environment();env['TMPDIR']=str(temporary);merge(integration.admit_build(native,expected));merge(integration.FIXTURE)
-  sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/tests/swift/PrefixMain.swift']
+  sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/Harness/NativeCompatibility.swift',ROOT/'apple/tests/swift/PrefixMain.swift']
   helpers=[Path(v.__file__).resolve() for v in (tasks,package,integration)]+[Path(__file__).resolve(),Path(__file__).with_name('test_m7_native_prefix_check.py')]
   merge({str(p.relative_to(ROOT)):package.sha(p) for p in sources+helpers})
   execute(['xcodebuild','-version'],'xcode-version')
