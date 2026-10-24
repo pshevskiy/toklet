@@ -2443,3 +2443,27 @@ tokenizer mapping and real memory/context feasibility. Gemma4 E2B's declared
 The installed passing phone baseline remains preserved until a committed,
 qualified native/app candidate and full handoff evidence exist. The rest of the
 architecture/Hugging Face plan stays open.
+
+## 24 October2026 — Gemma4 E2B source and artifact mapping
+
+The first pinned candidate inspection maps all540 logical text tensors to1096
+physical tensors in the actual2511-entry header/index. It checks BF16/U32 shapes,
+per-matrix affine metadata, spans and component coverage without downloading any
+tensor payload. Nine final bounded owned HTTPS commands capture metadata and
+header ranges; the initial redirect/framing/cancelled/order-correction attempts
+remain separately retained. No full-shard integrity or native execution is claimed.
+
+The text weights occupy2603981382 stored bytes, including1321205760 bytes for
+per-layer embeddings. Proposed FP16 shared/local KV at131072 total positions
+adds811597824 bytes; their sum is already about3.181GiB before other owners.
+This is a lower-bound derivation, not phone admission. The tokenizer's decoder
+has no leading-space Strip, and official/converted/nested stops differ; template
+and text execution need independent fixtures. Exact graph order, shared-cache
+producers, GELU, proportional rotary and per-layer paths are mapped in
+[the inspection](gemma4-e2b-inspection.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma4-inspection-v1.json).
+
+G1 mapping is complete; G2 starts with independent tanh-GELU/GeGLU witnesses.
+Real weights, graph/session/Metal/Chat, quality and device fit remain open. The
+unchanged131072 total-context configuration cannot meet131072 output tokens plus
+a prompt, so no capability was raised and no new phone package was supplied.
