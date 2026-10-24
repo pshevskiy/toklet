@@ -2279,3 +2279,26 @@ parent cleanup deadline; hard-kill loss remains explicit. Masks/vector gates and
 the upstream masked-readout discrepancy stay outside this first oracle. No native
 recurrence, Qwen3.5 graph, real checkpoint, 128K generation, quality, performance
 or mobile qualification is claimed. E1–E6/H1–H4 remain open.
+
+## 24 October2026 — checked scalar recurrent update
+
+The first native gated-delta step consumes normalized Q/K and scalar gates,
+preserves contiguous grouped-head mapping and updates a separate caller-owned
+candidate matrix with FP32 reductions. Inputs and the previous state are checked
+before output writes. Arithmetic failure leaves the previous state intact;
+candidate/output must be discarded. No numerical allocation or session commit
+occurs in this standalone operator.
+
+The literal accepted reference receipt is authenticated before its fixture
+hashes. Six offline regressions cover all frozen step states/outputs, grouping,
+every nonfinite input class, invalid gates, malformed/overflow dimensions,
+pre-write preservation and correction/candidate/readout failure/replay. The first
+check run was stopped to apply Astra's fixture-binding correction; raw snapshots
+and interruption are retained. Final corrected checks pass formatting, strict
+default/Metal Clippy, 197 CPU/219 Metal-feature tests and both iOS cross-checks.
+See [the contract](gated-delta-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-gated-delta-scalar-v1.json).
+
+This is an operator foundation, not Qwen3.5 or long-context generation. Raw Q/K
+normalization, gate construction, convolution, hybrid/session commit, GPU state,
+model admission, quality, performance and app/device qualification remain open.

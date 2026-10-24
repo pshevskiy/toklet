@@ -1,0 +1,327 @@
+use super::*;
+use serde_json::Value;
+use sha2::{Digest, Sha256};
+
+const BINARY: &[u8] = include_bytes!("../../../tests/fixtures/gated-delta-v1/arrays.bin");
+const MANIFEST: &str = include_str!("../../../tests/fixtures/gated-delta-v1/manifest.json");
+
+fn scalar() -> GatedDeltaShape {
+    GatedDeltaShape {
+        key_heads: 1,
+        value_heads: 1,
+        key_dim: 1,
+        value_dim: 1,
+    }
+}
+
+fn values(row: &Value, name: &str) -> Vec<f64> {
+    let d = &row["arrays"][name];
+    let offset = d["offset"].as_u64().unwrap() as usize;
+    let bytes = d["bytes"].as_u64().unwrap() as usize;
+    let raw = &BINARY[offset..offset + bytes];
+    assert_eq!(
+        format!("{:x}", Sha256::digest(raw)),
+        d["sha256"].as_str().unwrap()
+    );
+    match d["dtype"].as_str().unwrap() {
+        "<f4" => raw
+            .chunks_exact(4)
+            .map(|x| f64::from(f32::from_le_bytes(x.try_into().unwrap())))
+            .collect(),
+        "<f8" => raw
+            .chunks_exact(8)
+            .map(|x| f64::from_le_bytes(x.try_into().unwrap()))
+            .collect(),
+        _ => panic!("unexpected frozen dtype"),
+    }
+}
+
+fn close(actual: &[f32], expected: &[f64]) {
+    assert_eq!(actual.len(), expected.len());
+    for (a, e) in actual.iter().zip(expected) {
+        assert!(
+            a.is_finite() && (f64::from(*a) - e).abs() <= 1e-5 + 1e-4 * e.abs(),
+            "{a} differs from {e}"
+        );
+    }
+}
+
+#[test]
+fn frozen_normalized_recurrence_matches_each_state_and_output() {
+    let receipt_raw =
+        include_str!("../../../benchmarks/results/2026-10-24-gated-delta-oracle-v1.json");
+    assert_eq!(
+        format!("{:x}", Sha256::digest(receipt_raw.as_bytes())),
+        "69299394de716f79d02c6465c51a1104b3a5078e3f5d78ce352bd7135c995ef7"
+    );
+    let receipt: Value = serde_json::from_str(receipt_raw).unwrap();
+    assert_eq!(
+        format!("{:x}", Sha256::digest(MANIFEST.as_bytes())),
+        receipt["fixture_manifest_sha256"].as_str().unwrap()
+    );
+    assert_eq!(
+        format!("{:x}", Sha256::digest(BINARY)),
+        receipt["fixture_binary_sha256"].as_str().unwrap()
+    );
+    let manifest: Value = serde_json::from_str(MANIFEST).unwrap();
+    for row in manifest["cases"].as_array().unwrap() {
+        let g = &row["geometry"];
+        let n = |key: &str| g[key].as_u64().unwrap() as usize;
+        let shape = GatedDeltaShape {
+            key_heads: n("key_heads"),
+            value_heads: n("value_heads"),
+            key_dim: n("key_dim"),
+            value_dim: n("value_dim"),
+        };
+        let tokens = n("tokens");
+        let qs = shape.key_heads * shape.key_dim;
+        let vs = shape.value_heads * shape.value_dim;
+        let input = |name| {
+            values(row, name)
+                .into_iter()
+                .map(|x| x as f32)
+                .collect::<Vec<_>>()
+        };
+        let q = input("normalized_q");
+        let k = input("normalized_k");
+        let v = input("v");
+        let decay = input("decay");
+        let beta = input("beta");
+        let initial = input("initial_state");
+        let mut state = initial.clone();
+        let mut candidate = vec![f32::NAN; state.len()];
+        let mut output = vec![f32::NAN; vs];
+        let expected_state = values(row, "states");
+        let expected_output = values(row, "output");
+        for t in 0..tokens {
+            let before = state.clone();
+            gated_delta_step(
+                &q[t * qs..(t + 1) * qs],
+                &k[t * qs..(t + 1) * qs],
+                &v[t * vs..(t + 1) * vs],
+                &decay[t * shape.value_heads..(t + 1) * shape.value_heads],
+                &beta[t * shape.value_heads..(t + 1) * shape.value_heads],
+                &state,
+                &mut candidate,
+                &mut output,
+                &shape,
+            )
+            .unwrap();
+            assert_eq!(state, before);
+            close(
+                &candidate,
+                &expected_state[t * state.len()..(t + 1) * state.len()],
+            );
+            close(&output, &expected_output[t * vs..(t + 1) * vs]);
+            std::mem::swap(&mut state, &mut candidate);
+        }
+        close(&state, &values(row, "final_state"));
+        assert_eq!(initial, input("initial_state"));
+    }
+}
+
+#[test]
+fn hand_computed_decay_correction_and_group_mapping() {
+    let mut candidate = [0.];
+    let mut out = [0.];
+    gated_delta_step(
+        &[1.],
+        &[1.],
+        &[3.],
+        &[0.5],
+        &[0.5],
+        &[4.],
+        &mut candidate,
+        &mut out,
+        &scalar(),
+    )
+    .unwrap();
+    assert_eq!(candidate, [2.5]);
+    assert_eq!(out, [2.5]);
+    let shape = GatedDeltaShape {
+        key_heads: 2,
+        value_heads: 4,
+        key_dim: 1,
+        value_dim: 1,
+    };
+    let mut candidate = [0.; 4];
+    let mut out = [0.; 4];
+    gated_delta_step(
+        &[1., 2.],
+        &[1., 1.],
+        &[1., 2., 3., 4.],
+        &[1.; 4],
+        &[1.; 4],
+        &[0.; 4],
+        &mut candidate,
+        &mut out,
+        &shape,
+    )
+    .unwrap();
+    assert_eq!(out, [1., 2., 6., 8.]);
+}
+
+#[test]
+fn invalid_admission_preserves_both_outputs_and_input_state() {
+    let state = [2.];
+    for (q, gate, shape) in [
+        (f32::NAN, 1., scalar()),
+        (1., -0.01, scalar()),
+        (1., 1.01, scalar()),
+        (
+            1.,
+            1.,
+            GatedDeltaShape {
+                key_dim: 0,
+                ..scalar()
+            },
+        ),
+        (
+            1.,
+            1.,
+            GatedDeltaShape {
+                key_heads: 2,
+                value_heads: 3,
+                ..scalar()
+            },
+        ),
+        (
+            1.,
+            1.,
+            GatedDeltaShape {
+                key_dim: usize::MAX,
+                value_dim: 2,
+                ..scalar()
+            },
+        ),
+    ] {
+        let mut candidate = [91.];
+        let mut out = [92.];
+        assert!(
+            gated_delta_step(
+                &[q],
+                &[1.],
+                &[1.],
+                &[gate],
+                &[1.],
+                &state,
+                &mut candidate,
+                &mut out,
+                &shape
+            )
+            .is_err()
+        );
+        assert_eq!(candidate, [91.]);
+        assert_eq!(out, [92.]);
+        assert_eq!(state, [2.]);
+    }
+    let mut candidate = [91.];
+    let mut out = [92.];
+    assert!(
+        gated_delta_step(
+            &[],
+            &[1.],
+            &[1.],
+            &[1.],
+            &[1.],
+            &state,
+            &mut candidate,
+            &mut out,
+            &scalar()
+        )
+        .is_err()
+    );
+    assert_eq!(candidate, [91.]);
+    assert_eq!(out, [92.]);
+}
+
+#[test]
+fn arithmetic_failure_keeps_old_state_available_for_replay() {
+    let state = [f32::MAX];
+    let mut candidate = [0.];
+    let mut out = [0.];
+    assert!(matches!(
+        gated_delta_step(
+            &[1.],
+            &[2.],
+            &[0.],
+            &[1.],
+            &[1.],
+            &state,
+            &mut candidate,
+            &mut out,
+            &scalar()
+        ),
+        Err(Error::NonFinite { .. })
+    ));
+    assert_eq!(state, [f32::MAX]);
+    gated_delta_step(
+        &[1.],
+        &[1.],
+        &[0.],
+        &[0.],
+        &[1.],
+        &state,
+        &mut candidate,
+        &mut out,
+        &scalar(),
+    )
+    .unwrap();
+    assert_eq!(candidate, [0.]);
+    assert_eq!(out, [0.]);
+}
+
+#[test]
+fn every_nonfinite_input_and_invalid_beta_reject_before_writes() {
+    let mut cases = Vec::new();
+    for index in 0..6 {
+        for invalid in [f32::NAN, f32::INFINITY] {
+            let mut inputs = [1_f32; 6];
+            inputs[index] = invalid;
+            cases.push(inputs);
+        }
+    }
+    for invalid in [-0.01, 1.01] {
+        let mut inputs = [1_f32; 6];
+        inputs[4] = invalid;
+        cases.push(inputs);
+    }
+    for [q, k, v, decay, beta, state] in cases {
+        let mut candidate = [91.];
+        let mut out = [92.];
+        assert!(
+            gated_delta_step(
+                &[q],
+                &[k],
+                &[v],
+                &[decay],
+                &[beta],
+                &[state],
+                &mut candidate,
+                &mut out,
+                &scalar()
+            )
+            .is_err()
+        );
+        assert_eq!(candidate, [91.]);
+        assert_eq!(out, [92.]);
+    }
+}
+
+#[test]
+fn correction_candidate_and_readout_overflow_preserve_old_state() {
+    for (q, k, v, previous, tensor) in [
+        (1., 1., f32::MAX, -f32::MAX, "delta correction"),
+        (1., 2., f32::MAX, 0., "delta candidate"),
+        (2., 1., f32::MAX, 0., "delta output"),
+    ] {
+        let state = [previous];
+        let mut candidate = [0.];
+        let mut out = [0.];
+        assert!(
+            matches!(gated_delta_step(&[q], &[k], &[v], &[1.], &[1.], &state,
+            &mut candidate, &mut out, &scalar()), Err(Error::NonFinite {tensor: actual, ..}) if actual == tensor)
+        );
+        assert_eq!(state, [previous]);
+    }
+}

@@ -56,6 +56,9 @@ Introduce each module when its concrete implementation exists:
    document contiguous layouts: activations[tokens,heads,dim], convolution
    history[kernel-1,channels], matrix state[value_heads,value_dim,key_dim].
    Keep immutable weights separate from mutable state/scratch.
+   The [normalized scalar recurrence](gated-delta-scalar.md) is checked against
+   the frozen unmasked witness. Raw normalization, gate construction and causal
+   convolution remain separate pending operators; no hybrid session is implied.
 3. Partial rotary and the attention-gate layout as separate dense mechanisms.
    Preserve existing full-rotary Qwen2/Llama/Mistral/Qwen3 fixtures. The text
    position oracle must establish rotary convention/offset behavior, including
