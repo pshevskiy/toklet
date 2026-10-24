@@ -2524,3 +2524,19 @@ See [the full diagnostic](gemma-rotary-precision.md) and
 The tolerance is unchanged, failing comparisons stay recorded, and no native
 rotary, context/model/phone/performance qualification is claimed. G2 continues
 with an explicit independent frequency/phase contract and broader witnesses.
+
+## 24 October2026 — independent proportional rotary math frozen
+
+A pure standard-library producer constructs frequencies/angles with Decimal80
+from exact FP32 inputs and uses FP64 trig/pair output. Eight cases freeze empty,
+zero-position, half-pair, full/zero rotation, non-unit factor, actual D512/R128
+geometry and positions ending at131071. Six offline methods pass hand literals,
+signed-zero copying, chunk offsets, multiple heads, norm preservation and invalid
+geometry/position/precision/external-format checks. Independent90-digit replay
+uses logarithm/exponential construction to validate the saved arrays.
+
+See [the mathematical contract](gemma-rotary-math.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-rotary-math-v1.json).
+This is frozen before its scalar target; the previous eight upstream numerical
+failures remain explicit and unwaived. No graph, Metal execution, quality,
+performance, model/context/phone qualification or capability change follows.

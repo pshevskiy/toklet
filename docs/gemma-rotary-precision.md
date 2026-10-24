@@ -65,9 +65,10 @@ their success means observations completed, not numerical acceptance. The
 exact diagnostic scripts, runtime/source, raw arrays, replay and environment.
 Protected CPU binaries and all tracked engine code remain unchanged.
 
-Next: resolve the precision contract with independently generated frequencies,
-explicit phase arithmetic and broader shape/chunk/offset fixtures, retaining the
-FP64 oracle and these disagreements. Then qualify a native scalar operation and
+The [independent mathematical contract](gemma-rotary-math.md) now freezes
+high-precision frequency/angle construction and broader shape/chunk/offset
+witnesses. It retains these upstream disagreements without claiming parity.
+Next qualify a standalone native scalar correctness reference and
 its Metal counterpart without silently adopting one backend's errors. No Gemma
 model eligibility, output/context capability, phone package or131072-output
 qualification follows from this diagnostic.

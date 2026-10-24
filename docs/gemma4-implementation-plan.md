@@ -67,7 +67,8 @@ The [tanh-GELU/GeGLU witness](gemma-gelu-reference.md) was frozen before its nat
 functions. The [standalone scalar target](gemma-gelu-scalar.md) now passes its
 offline fixtures and required Rust/iOS checks. The
 [proportional rotary diagnostic](gemma-rotary-precision.md) exposes short/long
-position precision differences under the unchanged tolerance. Its independent
-frequency/phase contract and broader witnesses are next; rotary qualification
-remains open. All other listed G2 mechanisms, whole graph/session and later
+position precision differences under the unchanged tolerance. The
+[independent mathematical contract](gemma-rotary-math.md) now freezes broad
+shape/chunk/offset witnesses before a standalone scalar target. Upstream rotary
+qualification remains open. All other listed G2 mechanisms, whole graph/session and later
 real-model/app/device stages remain open.
