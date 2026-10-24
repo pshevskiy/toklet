@@ -2565,3 +2565,22 @@ parameter/boundary tests establish finiteness/admission, not extra numerical or
 model quality. No graph/session/Metal integration, context or output cap, phone
 package, real-model/performance qualification follows. G2 continues with
 local/sliding attention and shared-KV ownership witnesses.
+
+## 24 October2026 — causal/sliding GQA witness and512-window boundary
+
+Independent FP64 scores, stable masked softmax and context fix the causal/local
+window predicate, contiguous grouped-head mapping and explicit Gemma4 scale1.
+Eleven cases freeze77 arrays and14640 output scalars, including actual head
+geometry and a separate small-width512-window boundary. Seven portable,
+three ownership and three runtime-admission methods pass. Pinned upstream CPU
+and GPU each match20 raw observations; masks are exact and maximum context
+error/policy ratios are about0.00810/0.00487 under unchanged tolerance.
+
+Astra reviewed the added512 boundary after the initial small-window capture;
+the preliminary result remains separate from the complete fresh capture.
+Independent replay validates all saved arrays and comparisons. See
+[the contract](gemma-local-attention-reference.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-local-attention-reference-v1.json).
+The numerical engine remains unchanged. Scalar local attention, physical
+ring/shared-KV ownership and failure recovery, whole graph, rotary parity,
+quality/performance and app/device/capability gates remain open.
