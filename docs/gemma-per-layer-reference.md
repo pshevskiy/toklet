@@ -54,7 +54,8 @@ binds exact source/runtime, fixtures, commands, observations and replay. Astra
 reviews final evidence before commit; engine/shader sources and protected
 binaries remain unchanged.
 
-Native composition, per-layer gate/residual/scalar order, whole Gemma/session,
+The [native FP32 composition](per-layer-scalar.md) now passes the frozen cases.
+Quantized backend integration, per-layer gate/residual/scalar order, whole Gemma/session,
 BF16/quantized checkpoint execution, nearest-token fallback, rotary parity,
 quality/performance and real-model/device fit remain open in the
 [Gemma4 plan](gemma4-implementation-plan.md). No ABI, app capability, limit or

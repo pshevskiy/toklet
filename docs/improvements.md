@@ -2771,3 +2771,44 @@ Harness ID rejection, projected-only helper and empty policy have explicit
 limits; BF16/quantized checkpoint, nearest-token fallback, native composition,
 full Gemma/session/rotary/quality/performance/device gates remain open. No ABI,
 capability, app limit, protected binary or installed package changes.
+
+## 24 October2026 — one-tap live Hugging Face discovery
+
+The reviewed mobile commit `17fbc4f` gives Find best model one44pt tap target
+and bounded live public Hugging Face discovery, while pinned Chat compatibility
+and fresh memory admission remain authoritative. Inventory refresh/preference
+changes no longer cancel or restart discovery. Four bounded metadata tasks
+retain partial network errors but drain every child and preserve fatal close/
+removal cleanup causes through cancellation. Focused regressions cover those
+paths; an interrupted phone attempt is retained without passing credit.
+
+Eight local checks, transport checks, real68-model discovery, signed build and
+strict signatures pass. The final six physical iPhone14Pro tests pass, including
+ordinary/edge/repeated taps, live links/results, resident Qwen and keyboard/draft
+preservation plus prior controls. Owner chat bytes remain exact; the updated
+app normally launches and a verified rollback is saved. Astra accepted the
+exact nine-file packet before commit. See [the mobile record](mobile-model-ranking.md)
+and [receipt](../benchmarks/results/2026-10-24-mobile-hf-discovery-v1.json).
+This grants no new engine eligibility, speed/quality or131072-output support.
+
+## 24 October2026 — native per-layer input composition
+
+Two plain CPU functions now prepare scaled main embeddings and finish raw
+backend projections with per-P direct RMS and optional selected lookup rows.
+Projection/table ownership stays outside the mechanism, allowing later
+quantized backends without an expanded FP32 model copy. All FP32 scale/add
+boundaries stay explicit; optional lookup dispatch is outside element loops.
+Caller scratch/output are reused, with complete prewrite admission and
+discard/replay semantics for arithmetic overflow.
+
+Six methods compare full scalar paths/stages against both frozen contracts,
+exact scaled-main bits/selected-row order, hand normalization, late validation,
+intermediate overflow, replay/immutable inputs, exact chunks, buffer reuse and
+empty/signed-zero/size boundaries. Formatting, strict default/Metal Clippy,251
+CPU/273 Metal-feature tests and both iOS cross-checks pass. Astra reviews final
+source/evidence before commit; see [the contract](per-layer-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-per-layer-scalar-v1.json).
+
+Quantized/BF16 execution, per-layer gate/residual/scalar order, full Gemma/session/
+Metal/rotary/quality/performance/device fit remain open. No ABI, app limit,
+protected binary or installed package changes follow from this numerical task.

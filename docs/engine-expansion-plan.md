@@ -70,7 +70,8 @@ qualifies selected-source forwarding/identity only. The
 and cache-batch checks. [Borrowed-span scalar attention](span-attention-scalar.md)
 now qualifies numerical ring views. The
 [per-layer lookup/projection witness](gemma-per-layer-reference.md) freezes
-scales and normalization axes; native composition and full graph/session
+scales and normalization axes. Its [native FP32 composition](per-layer-scalar.md)
+now passes the frozen contracts; quantized backend and full graph/session
 integration remain open.
 Qwen3 completion and the
 broader inventory remain open. The

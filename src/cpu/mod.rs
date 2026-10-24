@@ -12,6 +12,7 @@ mod attention;
 mod causal_conv;
 mod gated_delta;
 mod gelu;
+mod per_layer;
 mod proportional_rotary;
 mod reductions;
 mod span_attention;
@@ -24,6 +25,9 @@ pub use gated_delta::{
     GatedDeltaShape, gated_delta_gates, gated_delta_normalize, gated_delta_step,
 };
 pub use gelu::{gated_gelu_tanh, gelu_tanh};
+pub use per_layer::{
+    PerLayerInputShape, finish_per_layer_inputs, prepare_per_layer_projection_input,
+};
 pub use proportional_rotary::{ProportionalRotaryShape, proportional_rotary};
 pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
 pub use span_attention::{AttentionKvSegment, SpanAttentionShape, span_attention};

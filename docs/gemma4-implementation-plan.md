@@ -7,8 +7,8 @@ below ahead of unrelated architecture expansion. The remaining
 [engine/Hugging Face plan](engine-expansion-plan.md) remains open. Astra reviews
 each code task and it is committed after its checks pass.
 
-The installed iPhone baseline is the reviewed `f739fabe` UI with native
-`2d7d35b0`; its [five physical ranking/UI checks](mobile-model-ranking.md) and
+The installed iPhone baseline is the reviewed `17fbc4f` UI with native
+`2d7d35b0`; its [six physical discovery/UI checks](mobile-model-ranking.md) and
 the earlier [four Gemma checks](mobile-gemma4-testing.md) do not add Gemma4.
 Official and MLX Gemma4 E2B config-only probes reject unknown architecture and
 create no native model handle. No Gemma weights or phone memory fit are admitted.
@@ -85,8 +85,9 @@ current-step producer identity and source forwarding. The
 availability and complete cache-batch checks. [Borrowed-span scalar attention](span-attention-scalar.md)
 now passes frozen numerical/ring-view checks without linearizing KV.
 G2 now also has a [per-layer lookup/projection witness](gemma-per-layer-reference.md)
-with separate FP64 and staged FP32 contracts. Its native composition and the
-per-layer gate, exact norm/residual/scalar order, embedding/logit scales and
-capping remain open, along with the upstream rotary precision gate. All other
+with separate FP64 and staged FP32 contracts. The
+[native FP32 composition](per-layer-scalar.md) now passes both frozen contracts.
+Quantized projection/fetch integration, the per-layer gate, exact norm/residual/
+scalar order, embedding/logit scales and capping remain open, along with the upstream rotary precision gate. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.
