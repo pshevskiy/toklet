@@ -3045,3 +3045,29 @@ This is a32-position synthetic G3 foundation. Actual checkpoint/config/quantized
 integration, remaining generation/session semantics, Metal, real quality/fit/
 performance and app/device work stay open. Neither upstream GPU discrepancy is
 waived. No ABI, installed package or app generation-limit change is included.
+
+## 25 October2026 — named Gemma4 E2B config/layout adapter
+
+A separate cold module now validates the audited E2B wrapper/text semantics and
+derives540 logical tensors/1096 physical MLX descriptors, using the existing
+four-bit/group64 affine layout and BF16 metadata. Explicit text-only policy
+separates known modality components; unknown text options, private consumer KV,
+tensor names/layouts, index mismatches and invalid/gapped/overlapping spans reject.
+Bounded duplicate-free JSON and checked arithmetic precede metadata planning.
+The existing executable dense-family/compatibility registry is unchanged.
+
+Seven offline methods authenticate original G1 config/index/header bytes and
+exercise graph/representation/shape/index/offset/overflow/duplicate/buffer-limit
+mutations. An initial parser comparison mistook equivalent JSON exponent spelling
+for a semantic difference, and one negative test used the wrong excluded name;
+both failed source/log records are retained. Finite float semantics are corrected
+without changing fixture bytes or any numerical tolerance.
+
+Formatting, strict default/Metal Clippy,279 CPU/301 Metal-feature tests and both
+iOS compile targets pass. Astra reviews final code/evidence before commit.
+See [scope and mapping](gemma4-config-layout.md) and
+[receipt](../benchmarks/results/2026-10-25-gemma4-config-layout-v1.json).
+The2,603,981,382-byte text count is a header-derived layout, not a payload-value,
+allocation/fit or performance result. Real payload/graph/tokenizer/Metal/quality,
+device and app gates remain open, with no new eligibility, ABI, output limit or
+upstream GPU waiver.

@@ -7,6 +7,7 @@ pub mod affine;
 pub mod compatibility;
 pub mod dense;
 pub(crate) mod execution;
+pub mod gemma4;
 pub mod qwen;
 mod qwen3;
 pub mod reference;

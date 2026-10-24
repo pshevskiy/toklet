@@ -540,6 +540,15 @@ pub(crate) fn read_config(path: &Path) -> Result<Value, Error> {
     if data.len() > MAX_CONFIG_BYTES {
         return Err(invalid("MLX config exceeds 1 MiB"));
     }
-    serde_json::from_slice::<Unique>(&data)?;
-    Ok(serde_json::from_slice(&data)?)
+    parse_json(&data)
+}
+
+/// Shared cold metadata boundary: one bounded, duplicate-free JSON buffer.
+/// Used for configs and the Gemma preparation adapter's index/header snapshots.
+pub(crate) fn parse_json(data: &[u8]) -> Result<Value, Error> {
+    if data.len() > MAX_CONFIG_BYTES {
+        return Err(invalid("MLX metadata exceeds 1 MiB"));
+    }
+    serde_json::from_slice::<Unique>(data)?;
+    Ok(serde_json::from_slice(data)?)
 }

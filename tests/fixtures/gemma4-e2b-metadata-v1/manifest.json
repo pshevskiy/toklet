@@ -1,0 +1,36 @@
+{
+  "format": "toklet-gemma4-e2b-metadata-fixture-v1",
+  "repository": "mlx-community/gemma-4-e2b-it-4bit",
+  "revision": "238767527555cb75a05732a84dff5d6ba0dd6809",
+  "g1_acceptance_sha256": "da0c1d667ee3d0df803307a3efc9ee19cda1de6ad57499f56b2549f9b718a47e",
+  "files": {
+    "config.json": {
+      "bytes": 6395,
+      "sha256": "6397cb6eca41b911d1dcab74e17941351057bd759284052a2331918ff6f9246c",
+      "source": "artifacts/m8-gemma4-inspection-v4/metadata/config.json"
+    },
+    "index.json": {
+      "bytes": 218323,
+      "sha256": "edb157dbf495e23f37377af4a628a9ad13c4ee7937f93ccb36ec9e9a19940f16",
+      "source": "artifacts/m8-gemma4-inspection-v4/metadata/model.safetensors.index.json"
+    },
+    "header.json": {
+      "bytes": 318220,
+      "sha256": "4d1819ededded19812059691c0f77cfec0fe10c9c89c720950f919bfc26544a7",
+      "source": "artifacts/m8-gemma4-inspection-v4/headers/model.safetensors.json"
+    }
+  },
+  "container_bytes": 3550670554,
+  "payload_bytes": 3550352326,
+  "payload_downloaded": false,
+  "payload_integrity_verified": false,
+  "numerical_execution_qualified": false,
+  "expected": {
+    "logical_text_tensors": 540,
+    "physical_text_tensors": 1096,
+    "packed_matrices": 278,
+    "bf16_vectors": 262,
+    "text_payload_bytes": 2603981382,
+    "excluded_payload_bytes": 946370944
+  }
+}

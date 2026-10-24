@@ -118,3 +118,9 @@ and selected states from every layer pass both frozen contracts; failure/reset
 and allocation checks pass. This is a32-position synthetic G3 foundation.
 The actual artifact/config adapter, general generation/session semantics and
 real-checkpoint/Metal/app/device stages remain open, as do both upstream GPU gaps.
+
+A [cold E2B config/layout adapter](gemma4-config-layout.md) now describes the
+audited real text graph and checks540 logical/1096 physical tensor descriptors
+against the original header/index. It requires explicit modality exclusion and
+does not join the executable dense registry. Actual payload/value loading,
+real-geometry numerical execution and all subsequent qualification remain open.

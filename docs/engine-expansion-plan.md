@@ -215,3 +215,9 @@ now executes that exact synthetic geometry, with borrowed immutable FP32 weights
 shared/rotating KV and atomic publication after final logits. It is a G3
 foundation with32 total positions, without checkpoint admission, quantized
 fallback, new catalog eligibility or a GPU/long-context gate waiver.
+
+The separate [Gemma4 E2B config/layout adapter](gemma4-config-layout.md) now
+validates the inspected real text graph and exact MLX physical tensor mapping.
+It handles bounded metadata only, requires explicit known-modality exclusion,
+and leaves executable-family and compatibility eligibility unchanged. Payload
+integrity/values, real numerical graph, resources and device/app gates remain.
