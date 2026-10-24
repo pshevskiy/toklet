@@ -38,10 +38,12 @@ Maximum ideal/staged error-policy ratios are0.00106586/0.00104450 CPU and
 [acceptance receipt](../benchmarks/results/2026-10-24-gemma-v-norm-reference-v1.json)
 binds all source/runtime/fixture/raw evidence and final checks.
 
-A later scalar mapping can reuse `rmsnorm` with a persistent immutable exact-one
+The [scalar recipe](gemma-v-norm-scalar.md) now passes the accepted fixture.
+It reuses `rmsnorm` with a persistent immutable exact-one
 `[D]` vector, normalized over flattened B×T×Hkv rows. Its adapter must establish
 that invariant and include the small shared vector in allocation accounting;
-this witness does not implement or qualify the mapping. Extreme finite-FP32
+the test qualifies that numerical recipe, while adapter ownership/integration
+remain open. Extreme finite-FP32
 robustness belongs to the native/math path unless the upstream fast reduction
 also passes the unchanged numerical gate.
 

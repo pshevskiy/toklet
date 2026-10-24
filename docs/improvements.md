@@ -1,6 +1,6 @@
 # Toklet improvement record
 
-Updated 23 October 2026. This records implemented capabilities, measured benefits,
+Updated 25 October 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
@@ -2885,3 +2885,31 @@ constructor/config, BF16/quantized checkpoint, fit, quality, performance and lon
 replies remain open. Future scalar mapping can reuse RMS with a persistent exact-
 one D vector, counted once and owned by the adapter. No numerical source, ABI,
 capability, protected executable or installed package changes in this task.
+
+## 25 October2026 — scalar unlearned V-norm recipe
+
+The existing RMS kernel now passes the accepted V fixture with persistent
+immutable unit weights. Three methods authenticate the reference receipt/fixture,
+compare seven nonempty cases against both contracts and exact staged FP32 bits,
+then qualify independent head-row chunks, reused pointers and immutable input/
+scale data. Native-only finite extremes/subnormals/signed zero and prewrite
+invalid-input/size/epsilon cases remain separate from upstream fast RMS scope.
+
+Formatting, strict default/Metal Clippy,260 CPU/282 Metal-feature tests and both
+iOS compile targets pass. Astra reviews exact final evidence before commit.
+See [the recipe](gemma-v-norm-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-v-norm-scalar-v1.json).
+
+The initial copied-cache suite is retained as failed: a reused CLI test still
+embedded the previous target's executable path. Its actual binaries and failure
+logs are preserved. Cleaning only copied Toklet package artifacts and checking
+all fresh CLI-spawning binary paths fixes qualification provenance without
+changing code or tolerances. A second failed collection expected a binary path
+in a cfg-disabled empty harness; owned zero-test listing closes that evidence
+gap. Only its four successful checks are inherited before completing the other
+three with unchanged source guards; both failed attempts remain unaccepted. Future copied-cache trials must prevent this absolute-path reuse.
+
+No production numerical/shader code changes. A future Gemma adapter must own and
+account for its shared exact-one vector; V projection/storage, graph/cache/
+session/Metal integration, device fit, quality, performance and long replies
+remain open. No installed package, app cap, protected binary or ABI changes.
