@@ -63,6 +63,8 @@ coordination remains explicit.
 
 ## G2 progress
 
-The [tanh-GELU/GeGLU witness](gemma-gelu-reference.md) is frozen before its native
-functions. Scalar target implementation is next. All other listed G2 mechanisms,
-whole graph/session and later real-model/app/device stages remain open.
+The [tanh-GELU/GeGLU witness](gemma-gelu-reference.md) was frozen before its native
+functions. The [standalone scalar target](gemma-gelu-scalar.md) now passes its
+offline fixtures and required Rust/iOS checks. Proportional rotary is the next
+independent witness. All other listed G2 mechanisms, whole graph/session and
+later real-model/app/device stages remain open.

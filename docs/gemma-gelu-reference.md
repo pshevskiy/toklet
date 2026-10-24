@@ -37,7 +37,8 @@ proposal remains distinct from the passing capture. The
 [receipt](../benchmarks/results/2026-10-24-gemma-gelu-reference-v1.json) binds exact
 source, raw observations, checks and independent stdlib replay.
 
-The scalar GELU/GeGLU target is next. Proportional RoPE, local/shared KV, value
+The [scalar GELU/GeGLU target](gemma-gelu-scalar.md) now passes its offline tests
+and required Rust/iOS checks. Proportional RoPE, local/shared KV, value
 normalization, per-layer paths, decoder order, logit capping, artifact/session/
 Metal execution and real-model/tokenizer/quality/device gates remain open. Current
 native eligibility and output/context capabilities are unchanged. This witness

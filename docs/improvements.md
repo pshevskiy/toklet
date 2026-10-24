@@ -2483,3 +2483,25 @@ replay are bound by [the receipt](../benchmarks/results/2026-10-24-gemma-gelu-re
 and [contract](gemma-gelu-reference.md). No native function, whole graph, quality,
 performance or phone fit follows. The scalar activation target is next; remaining
 Gemma4 and131072-output requirements stay open and current caps are unchanged.
+
+## 24 October2026 — native scalar tanh-GELU and GeGLU
+
+Two allocation-free CPU functions add the activation needed by Gemma4. FP64
+tanh-GELU rounds to FP32; GeGLU then multiplies by FP32 up, preserving separate
+activation/product rounding. All admission checks precede writes. A gated
+product overflow rejects with partial output to discard; immutable inputs allow
+replay. Existing kernels, graphs and capabilities remain unchanged.
+
+Four tests authenticate the independent receipt before fixture parsing, compare
+all nonempty frozen arrays, enforce exact composed rounding, distinguish tanh
+from erf/SiLU, exercise tiny/extreme values and invalid inputs, and check
+overflow/replay. Astra's review strengthened wrong-length output preservation
+assertions before the checked source freeze. Formatting, strict default/Metal
+Clippy, 211 CPU/233 Metal-feature tests and both iOS cross-checks pass. See
+[the contract](gemma-gelu-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-gelu-scalar-v1.json).
+
+This is a correctness operator, with no performance or full-model claim. G2
+continues with proportional rotary; remaining Gemma4 graph/session/Metal,
+real-model/Chat/device and131072-output gates stay open. The installed phone
+baseline and all output/context/byte caps remain unchanged.
