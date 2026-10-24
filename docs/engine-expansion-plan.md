@@ -71,7 +71,9 @@ and cache-batch checks. [Borrowed-span scalar attention](span-attention-scalar.m
 now qualifies numerical ring views. The
 [per-layer lookup/projection witness](gemma-per-layer-reference.md) freezes
 scales and normalization axes. Its [native FP32 composition](per-layer-scalar.md)
-now passes the frozen contracts; quantized backend and full graph/session
+now passes the frozen contracts. The [dense decoder-order witness](gemma-decoder-order-reference.md)
+freezes norm/residual/PLE/scalar order with an explicit external attention
+boundary; native composition, quantized backend and full graph/session
 integration remain open.
 Qwen3 completion and the
 broader inventory remain open. The

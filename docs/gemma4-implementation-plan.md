@@ -87,7 +87,10 @@ now passes frozen numerical/ring-view checks without linearizing KV.
 G2 now also has a [per-layer lookup/projection witness](gemma-per-layer-reference.md)
 with separate FP64 and staged FP32 contracts. The
 [native FP32 composition](per-layer-scalar.md) now passes both frozen contracts.
-Quantized projection/fetch integration, the per-layer gate, exact norm/residual/
-scalar order, embedding/logit scales and capping remain open, along with the upstream rotary precision gate. All other
+The [dense decoder-order witness](gemma-decoder-order-reference.md) now freezes
+the per-layer gate and exact norm/residual/scalar order at an explicit external
+attention boundary. Native layer composition, quantized projection/fetch
+integration, embedding/logit scales and capping remain open, along with the
+upstream rotary precision gate. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.

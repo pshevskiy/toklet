@@ -2812,3 +2812,28 @@ source/evidence before commit; see [the contract](per-layer-scalar.md) and
 Quantized/BF16 execution, per-layer gate/residual/scalar order, full Gemma/session/
 Metal/rotary/quality/performance/device fit remain open. No ABI, app limit,
 protected binary or installed package changes follow from this numerical task.
+
+## 24 October2026 — independent dense decoder order
+
+The new Gemma witness freezes exact direct-RMS/residual/FFN/PLE/scalar order
+before native composition. Authenticated unchanged DecoderLayer and MLP calls
+retain the compiled GeGLU helper and use real FP32 MLX modules. An explicit
+external attention result isolates this task; normalized input and all incoming/
+returned state identities are checked. Every PLE guard term, disabled modules,
+small distinct FFN widths and synthetic scalar absence are separately covered.
+
+Twelve cases contain540 arrays and75,720 values. An independent stdlib replay
+verifies all values, with exact staged FP32 agreement. Eight portable, three
+owner and three runtime-admission methods and all six owned commands pass.
+Each CPU/GPU source comparison retains201 raw arrays and passes402 ideal/staged
+comparisons. Maximum error/policy ratios are0.04864/0.05881 CPU and0.01746/0.02760
+GPU under unchanged gates. Astra reviews the final source/evidence before commit.
+See [the contract](gemma-decoder-order-reference.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-decoder-order-reference-v1.json).
+
+Separately evaluated probes do not claim internal helper-stage/fusion coverage.
+Constructor/config/double-wide selection, attention/KV/rotary, MoE, BF16/quantized
+weights, native layer/session, full model/device fit, quality, performance and
+long replies remain unqualified. The eight long rotary discrepancies remain
+unwaived. Existing numerical sources, ABI, app limits, protected binaries and
+installed native package remain unchanged.
