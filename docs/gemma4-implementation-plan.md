@@ -137,3 +137,10 @@ FP32 storage with one dtype/bit dispatch and complete-row failure preflight.
 It matches the frozen gather contracts and preserves signed zero/storage on
 boundary or late-group overflow. This is a G3 primitive, with real graph/session,
 payload and BF16 qualification still open.
+
+The [complete tiny packed graph witness](gemma-packed-graph-reference.md) now
+freezes group64-compatible embedding/PLE/attention/MLP/head matrices, with original
+BF16 coefficient bits and explicit promoted-FP32 source execution. All7,462 CPU
+comparisons pass;15 GPU intermediate comparisons reject unchanged gates while
+all final logits pass. This is the checked reference for native packed model/
+session composition, with real E2B and original-BF16 qualification still open.

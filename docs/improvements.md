@@ -3127,3 +3127,34 @@ See [API and scope](mlx-affine.md#native-row-fetch) and the
 This is a reference primitive for G3, with no BF16, payload/graph, quality,
 performance, device or app-capability qualification. All existing upstream
 precision gaps remain open.
+
+## 25 October2026 — complete tiny packed Gemma graph reference
+
+Freeze a group64-compatible four-layer packed graph with tied embedding/head,
+PLE64, local64/global128 attention, two shared K/V producers, MLP64/128,
+direct norms, residual/scalar ordering and softcap. Literal packed patterns and
+separate semantic equations retain original BF16 coefficient bits, explicitly
+promoted-FP32 source parameters and independent ideal/staged graph contracts.
+The earlier dense witness stays frozen.
+
+Actual original class bodies, compiled helpers and MLX quantized modules execute
+all32 positions in three schedules, both pristine and traced. Each backend
+captures3,731 arrays/852,768 values. CPU passes all7,462 comparisons; GPU completes
+but rejects15 intermediate comparisons under unchanged gates. All164 final-logit
+comparisons per backend pass, without waiving the rejected states. This execution
+uses promoted-FP32 coefficient values and activations; original-BF16 graph parity
+remains unqualified.
+
+Independent standard-library replay verifies253,188 expanded weights,41,238
+physical values and180 mathematical arrays/567,424 values. Staged FP32 is exact;
+ideal maximum difference is1.3322676295501878e-14. Ten portable, three owner and
+three runtime-admission tests, export and both source captures pass as six owned
+commands. Numerical rejection stays separate from capture completion. Source,
+runtime, raw output, routing/cache identity and immutable parameter checks bind
+the evidence.
+
+See [scope and comparisons](gemma-packed-graph-reference.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma-packed-graph-reference-v1.json).
+Next is native borrowed packed model/session composition. Real payload/value,
+generation/tokenizer, Metal, quality, performance, Mac/phone fit and app gates
+remain open; the prior15 dense-GPU and8 long-rotary failures remain unwaived.

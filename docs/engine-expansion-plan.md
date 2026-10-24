@@ -9,6 +9,10 @@ The [native affine row fetch](mlx-affine.md#native-row-fetch) now supplies a
 bounded FP32 packed-table primitive for later graph composition, with unchanged
 artifact/app eligibility.
 
+A [complete tiny packed Gemma graph](gemma-packed-graph-reference.md) now supplies
+the independent reference for packed scalar model/session composition. Its source
+CPU passes all comparisons, with15 new GPU intermediate discrepancies retained.
+
 Requested 23 October 2026. This is the active ordering for the remaining
 [M8 work](mlx-implementation-plan.md), following [PLAN.md](../PLAN.md)'s
 correctness, quality, measurement and memory policies. Earlier qualification
