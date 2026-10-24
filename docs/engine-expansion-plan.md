@@ -60,7 +60,8 @@ long-position diagnostic disagreements remain open. The
 [standalone scalar math reference](gemma-rotary-scalar.md) passes its frozen
 witnesses and required checks. The
 [local-attention witness](gemma-local-attention-reference.md) is frozen before
-its target; shared-KV ownership is still open. Qwen3 completion and the
+the [checked scalar target](window-attention-scalar.md); physical ring/shared-KV
+ownership is still open. Qwen3 completion and the
 broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
 streaming, engine-owned capabilities and a qualified long-context graph within

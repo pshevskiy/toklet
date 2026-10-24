@@ -15,6 +15,7 @@ mod gelu;
 mod proportional_rotary;
 mod reductions;
 mod tiled;
+mod window_attention;
 
 pub use attention::{AttentionShape, CachedAttentionShape, attention, attention_cached, rotary};
 pub use causal_conv::causal_depthwise_conv_step;
@@ -25,6 +26,7 @@ pub use gelu::{gated_gelu_tanh, gelu_tanh};
 pub use proportional_rotary::{ProportionalRotaryShape, proportional_rotary};
 pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
 pub use tiled::{ProjectionKernel, matmul_f64_tiled};
+pub use window_attention::{WindowAttentionShape, window_attention};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Error {

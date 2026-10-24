@@ -2584,3 +2584,29 @@ Independent replay validates all saved arrays and comparisons. See
 The numerical engine remains unchanged. Scalar local attention, physical
 ring/shared-KV ownership and failure recovery, whole graph, rotary parity,
 quality/performance and app/device/capability gates remain open.
+
+## 24 October2026 — scalar causal/sliding-window GQA
+
+The new allocation-free CPU operation consumes token-major queries and
+head-major KV capacity with an explicit valid prefix and logical origins. It
+preserves contiguous head grouping, explicit scale, causal/window boundaries
+and exact masked zero probabilities. Unused capacity is never read; callers
+still provide initialized Rust slices. All geometry, length, position, finite
+input and fully masked query checks precede output writes.
+
+FP64 dot/scaling stores FP32 scores, stable FP64 softmax stores FP32 probabilities,
+and context accumulates those probabilities times V in FP64 before FP32 output.
+All valid-key scores, including masked ones, remain diagnostic and may reject
+overflow. Failed arithmetic leaves discardable outputs and unchanged inputs for
+replay. The initial formatting error in test literals was fixed before capture
+and its proposal retained. Six tests compare every frozen nonempty array plus
+capacity padding, mask zeros, invalid/prewrite paths, overflow/replay and exact
+multi-head chunks. Formatting, strict default/Metal Clippy, 223 CPU/245
+Metal-feature tests and both iOS cross-checks pass. Astra reviews final evidence
+before commit; see [the contract](window-attention-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-window-attention-scalar-v1.json).
+
+The numerical core owns no cache/session and the existing engine paths remain
+unchanged. Physical ring mapping, shared-KV ownership/commit/rollback, other G2
+mechanisms, full graph/Metal/quality and device/capability gates remain open.
+No native ABI, output/context/byte limit or phone package changes.

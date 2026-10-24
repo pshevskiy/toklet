@@ -74,6 +74,8 @@ shape/chunk/offset witnesses before the
 required checks. Upstream rotary qualification remains open. Independent
 local/sliding attention now has a
 [frozen numerical witness](gemma-local-attention-reference.md), including the512
-window boundary. Its scalar target and shared-KV ownership witnesses are next. All other
+window boundary. Its [standalone scalar target](window-attention-scalar.md)
+passes the required checks; physical ring/shared-KV ownership witnesses are
+next. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.

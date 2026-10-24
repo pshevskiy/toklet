@@ -55,5 +55,6 @@ before commit.
 This is not physical ring-order, cache mutation/commit/rollback, shared-KV
 ownership, normalized/projected full graph, quantized KV, quality, performance
 or phone qualification. It does not resolve the separate upstream rotary
-precision gap. A standalone scalar local-attention target and cache ownership
-witnesses are next in the [Gemma4 plan](gemma4-implementation-plan.md).
+precision gap. The [standalone scalar target](window-attention-scalar.md) now
+passes its frozen cases and required checks; cache ownership witnesses are
+next in the [Gemma4 plan](gemma4-implementation-plan.md).
