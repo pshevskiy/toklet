@@ -124,3 +124,10 @@ audited real text graph and checks540 logical/1096 physical tensor descriptors
 against the original header/index. It requires explicit modality exclusion and
 does not join the executable dense registry. Actual payload/value loading,
 real-geometry numerical execution and all subsequent qualification remain open.
+
+The [packed table/projection witness](gemma-packed-reference.md) now freezes
+independent FP32 reconstruction and separate BF16 rounding contracts at small
+and actual embedding widths. All required FP32/tied comparisons pass on source
+CPU/GPU. BF16 gathers differ between backends and BF16 projection diagnostics
+reject under unchanged gates; their raw evidence remains visible. Native packed
+graph composition and BF16/checkpoint/device qualification remain open.

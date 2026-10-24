@@ -1,0 +1,559 @@
+{
+  "format": "toklet-gemma-packed-math-v1",
+  "producer_sha256": "b57eb10fc34e77711264e921c54fdd41071f1dbc1a6e55d29995fb07d9504966",
+  "bits": 4,
+  "group_size": 64,
+  "rows": 3,
+  "ids": [
+    2,
+    0,
+    2,
+    1
+  ],
+  "cases": [
+    {
+      "width": 64,
+      "arrays": {
+        "weight": {
+          "dtype": "U32",
+          "shape": [
+            3,
+            8
+          ],
+          "offset": 0,
+          "bytes": 96,
+          "sha256": "881e971fdec60f923f5b4fcae649d1baa83744209e978534f5ecda1e16983996"
+        },
+        "scales": {
+          "dtype": "BF16",
+          "shape": [
+            3,
+            1
+          ],
+          "offset": 96,
+          "bytes": 6,
+          "sha256": "78267d1efc1347865e4a2ff85bd1a75663f95f097f62fb9734bd55c0ff719b9f"
+        },
+        "biases": {
+          "dtype": "BF16",
+          "shape": [
+            3,
+            1
+          ],
+          "offset": 102,
+          "bytes": 6,
+          "sha256": "384a68722bd6a5300d983057592b69e863ac4982954e2cc13fa5012a667d1f20"
+        },
+        "input_f32": {
+          "dtype": "F32",
+          "shape": [
+            2,
+            64
+          ],
+          "offset": 108,
+          "bytes": 512,
+          "sha256": "efe87f1b62c0431cdea046c58239a0cc46078182087d6a5d7ab24b8f36326a03"
+        },
+        "input_bf16": {
+          "dtype": "BF16",
+          "shape": [
+            2,
+            64
+          ],
+          "offset": 620,
+          "bytes": 256,
+          "sha256": "1d5b9ce7a1b4efb4eab43a5fb9f98eac297b8f950ed2b63677e34c971adf6877"
+        },
+        "ids": {
+          "dtype": "I32",
+          "shape": [
+            4
+          ],
+          "offset": 876,
+          "bytes": 16,
+          "sha256": "90bb68ec5276c74ed64006f0ca390a43da3b46981b19defaddaaa246771d58d4"
+        },
+        "reconstructed_f32": {
+          "dtype": "F32",
+          "shape": [
+            3,
+            64
+          ],
+          "offset": 892,
+          "bytes": 768,
+          "sha256": "0bee6e94556e3058c0eb0845c9ceef92bfa8205ba60301d5596775d667566b3f"
+        },
+        "gather_f32": {
+          "dtype": "F32",
+          "shape": [
+            4,
+            64
+          ],
+          "offset": 1660,
+          "bytes": 1024,
+          "sha256": "81da5f947b8b606a4b807a9cf0559f7f21465ca61e7abd12f844ef4f85a03931"
+        },
+        "gather_bf16_once": {
+          "dtype": "BF16",
+          "shape": [
+            4,
+            64
+          ],
+          "offset": 2684,
+          "bytes": 512,
+          "sha256": "2c3dc13837bae7e2b537c73dfa90bec92f865482917189577bc0afd88bbe18c6"
+        },
+        "gather_bf16_separate": {
+          "dtype": "BF16",
+          "shape": [
+            4,
+            64
+          ],
+          "offset": 3196,
+          "bytes": 512,
+          "sha256": "b028ccb3b3fc1dcf6865ceafb1cfc0377402c785af6f8b162b07a15e342b20f5"
+        },
+        "projection_ideal": {
+          "dtype": "F64",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 3708,
+          "bytes": 48,
+          "sha256": "e0970ab0a8077636a41798ac37423ab25d0bd83ee89f969467f9b66d73e6c1dd"
+        },
+        "projection_ordered_f32": {
+          "dtype": "F32",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 3756,
+          "bytes": 24,
+          "sha256": "2bf0d1cf5a758d0e41a515e8c71d4fbffcc5a7815b9201a2557451f8e1cbe69b"
+        },
+        "projection_bf16_rounded_weights": {
+          "dtype": "BF16",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 3780,
+          "bytes": 12,
+          "sha256": "1fe1847b0caa92233a804b9c03c01902bbebe788b0e5d2a08197494e92ff4ddb"
+        }
+      }
+    },
+    {
+      "width": 128,
+      "arrays": {
+        "weight": {
+          "dtype": "U32",
+          "shape": [
+            3,
+            16
+          ],
+          "offset": 3792,
+          "bytes": 192,
+          "sha256": "74943b74d231fd8fbc1a6ad207e0a157a418e62f20013c5b7b3621f1bfc7ee1b"
+        },
+        "scales": {
+          "dtype": "BF16",
+          "shape": [
+            3,
+            2
+          ],
+          "offset": 3984,
+          "bytes": 12,
+          "sha256": "84498831e36f46613a2bb2cf55467282fbfc86a63f54d1049dbfb858f9082e8f"
+        },
+        "biases": {
+          "dtype": "BF16",
+          "shape": [
+            3,
+            2
+          ],
+          "offset": 3996,
+          "bytes": 12,
+          "sha256": "16274a169365c4345a8a658232314203b03e15406b8a5848efd36923b1d3a6a8"
+        },
+        "input_f32": {
+          "dtype": "F32",
+          "shape": [
+            2,
+            128
+          ],
+          "offset": 4008,
+          "bytes": 1024,
+          "sha256": "a945011f8a2cc0c63f1786856995bab58e5010552404acf08c6e1335eae26afd"
+        },
+        "input_bf16": {
+          "dtype": "BF16",
+          "shape": [
+            2,
+            128
+          ],
+          "offset": 5032,
+          "bytes": 512,
+          "sha256": "fd9d021afc8136f4988f900fb3ae4f7be55febb189be6f62a8714cc27349fd2a"
+        },
+        "ids": {
+          "dtype": "I32",
+          "shape": [
+            4
+          ],
+          "offset": 5544,
+          "bytes": 16,
+          "sha256": "90bb68ec5276c74ed64006f0ca390a43da3b46981b19defaddaaa246771d58d4"
+        },
+        "reconstructed_f32": {
+          "dtype": "F32",
+          "shape": [
+            3,
+            128
+          ],
+          "offset": 5560,
+          "bytes": 1536,
+          "sha256": "2914dd720a55815f0f82cb5c19c1f1c0fa7f5ff4cb7d1a4c909f2a11a4c20212"
+        },
+        "gather_f32": {
+          "dtype": "F32",
+          "shape": [
+            4,
+            128
+          ],
+          "offset": 7096,
+          "bytes": 2048,
+          "sha256": "412bfe4f7d602559941d0c96cb3004b17017a6ef9d4cc1800e2f88d1def10b23"
+        },
+        "gather_bf16_once": {
+          "dtype": "BF16",
+          "shape": [
+            4,
+            128
+          ],
+          "offset": 9144,
+          "bytes": 1024,
+          "sha256": "eed9d94ef2491a73361acd21727fb875f7e5bff4c4f6a6d2f2c2490436c994fa"
+        },
+        "gather_bf16_separate": {
+          "dtype": "BF16",
+          "shape": [
+            4,
+            128
+          ],
+          "offset": 10168,
+          "bytes": 1024,
+          "sha256": "5208122cdb45faadd964035e3e2c3585a12c8ce8caa36878937b649e0b9672a5"
+        },
+        "projection_ideal": {
+          "dtype": "F64",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 11192,
+          "bytes": 48,
+          "sha256": "733124f9be5f658428ddc56ad264fb9900e63d2dd4f0f9ec3cfb6ed59ee3eaf3"
+        },
+        "projection_ordered_f32": {
+          "dtype": "F32",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 11240,
+          "bytes": 24,
+          "sha256": "b769092d0981ae4b5df72d22767f61bac6da293244c36ba85841da90d23171bf"
+        },
+        "projection_bf16_rounded_weights": {
+          "dtype": "BF16",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 11264,
+          "bytes": 12,
+          "sha256": "b9f86747c0766d7c14f9e2220364d466010be4f368c9798dc52263d5d02c6937"
+        }
+      }
+    },
+    {
+      "width": 1536,
+      "arrays": {
+        "weight": {
+          "dtype": "U32",
+          "shape": [
+            3,
+            192
+          ],
+          "offset": 11276,
+          "bytes": 2304,
+          "sha256": "2ac0a3c3213c443840ca9e22f6e34bd5db71010454180744a88becb77f3e53e4"
+        },
+        "scales": {
+          "dtype": "BF16",
+          "shape": [
+            3,
+            24
+          ],
+          "offset": 13580,
+          "bytes": 144,
+          "sha256": "cb56070677c3c836afe0eff32e0fe2e49832e04199b9ccf12a7195816d3d7101"
+        },
+        "biases": {
+          "dtype": "BF16",
+          "shape": [
+            3,
+            24
+          ],
+          "offset": 13724,
+          "bytes": 144,
+          "sha256": "e5d79c0246013e075119141a476187611fd96020edabffdf7ab3ab065a1a4f72"
+        },
+        "input_f32": {
+          "dtype": "F32",
+          "shape": [
+            2,
+            1536
+          ],
+          "offset": 13868,
+          "bytes": 12288,
+          "sha256": "3225bc1a656b5b7d09996e5be0cbd3b308614a8b6e326e97c737cdb630256bd3"
+        },
+        "input_bf16": {
+          "dtype": "BF16",
+          "shape": [
+            2,
+            1536
+          ],
+          "offset": 26156,
+          "bytes": 6144,
+          "sha256": "dc82eb11e92f7b9601ca7129f2e230cf96be85fe2dba8d8f0cb6f0b9808c1daf"
+        },
+        "ids": {
+          "dtype": "I32",
+          "shape": [
+            4
+          ],
+          "offset": 32300,
+          "bytes": 16,
+          "sha256": "90bb68ec5276c74ed64006f0ca390a43da3b46981b19defaddaaa246771d58d4"
+        },
+        "reconstructed_f32": {
+          "dtype": "F32",
+          "shape": [
+            3,
+            1536
+          ],
+          "offset": 32316,
+          "bytes": 18432,
+          "sha256": "3d7b8783f72514fb01825f119b85d1865b93575a777afb8068a26698314978ce"
+        },
+        "gather_f32": {
+          "dtype": "F32",
+          "shape": [
+            4,
+            1536
+          ],
+          "offset": 50748,
+          "bytes": 24576,
+          "sha256": "0b47acc0610a44f9c2a9a626814a925b1fba6e50f08d4dfd7ccc5aea586cd82b"
+        },
+        "gather_bf16_once": {
+          "dtype": "BF16",
+          "shape": [
+            4,
+            1536
+          ],
+          "offset": 75324,
+          "bytes": 12288,
+          "sha256": "b4d490bd8b759b1d854e3ea93772948789eb39fa8b3b40b42bd76d67f2783e3f"
+        },
+        "gather_bf16_separate": {
+          "dtype": "BF16",
+          "shape": [
+            4,
+            1536
+          ],
+          "offset": 87612,
+          "bytes": 12288,
+          "sha256": "c8dae1eabc06a494980976f95849b67d4450911a4ee998232c69c8843ad6934b"
+        },
+        "projection_ideal": {
+          "dtype": "F64",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 99900,
+          "bytes": 48,
+          "sha256": "5633f2c520afc00f547eed1483d8683a328115e7048c2abf4fd13c9d9f46a26c"
+        },
+        "projection_ordered_f32": {
+          "dtype": "F32",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 99948,
+          "bytes": 24,
+          "sha256": "f44d46985eeaae2e59fd7fcddc4cb8ca0b8485672cb42fe2a746b8b06d9fc43b"
+        },
+        "projection_bf16_rounded_weights": {
+          "dtype": "BF16",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 99972,
+          "bytes": 12,
+          "sha256": "329827096c5ba4594221bda941939c95570a4f5ba3ed3542a618e409210ec570"
+        }
+      }
+    },
+    {
+      "width": 8960,
+      "arrays": {
+        "weight": {
+          "dtype": "U32",
+          "shape": [
+            3,
+            1120
+          ],
+          "offset": 99984,
+          "bytes": 13440,
+          "sha256": "e30c84cae921fcf7a08a16f578fb2eaf91920f6ab5ebaee4eb40edb015745687"
+        },
+        "scales": {
+          "dtype": "BF16",
+          "shape": [
+            3,
+            140
+          ],
+          "offset": 113424,
+          "bytes": 840,
+          "sha256": "69f0502ccd7a4a71e69585e5345ed5f3e7e61e7a9666c1b92b6878dc7aa8789b"
+        },
+        "biases": {
+          "dtype": "BF16",
+          "shape": [
+            3,
+            140
+          ],
+          "offset": 114264,
+          "bytes": 840,
+          "sha256": "9f080e1aefcdd1a15148f9c8e6683d39f22aa25611b6ad69af1ac555d6ebd9ce"
+        },
+        "input_f32": {
+          "dtype": "F32",
+          "shape": [
+            2,
+            8960
+          ],
+          "offset": 115104,
+          "bytes": 71680,
+          "sha256": "c0e7c03e688bb6b3ba0e3b35594a35bce1357de46db085e3cd186a6492f3bdf6"
+        },
+        "input_bf16": {
+          "dtype": "BF16",
+          "shape": [
+            2,
+            8960
+          ],
+          "offset": 186784,
+          "bytes": 35840,
+          "sha256": "49e64a90403b199061112c5eccd315c78edb6bbb31c0922ac54ed325254752ae"
+        },
+        "ids": {
+          "dtype": "I32",
+          "shape": [
+            4
+          ],
+          "offset": 222624,
+          "bytes": 16,
+          "sha256": "90bb68ec5276c74ed64006f0ca390a43da3b46981b19defaddaaa246771d58d4"
+        },
+        "reconstructed_f32": {
+          "dtype": "F32",
+          "shape": [
+            3,
+            8960
+          ],
+          "offset": 222640,
+          "bytes": 107520,
+          "sha256": "5db2c9e4704f01e85e7496b7f54bc559f3ee01a2749cd5a0a8faf0aaef99e5ce"
+        },
+        "gather_f32": {
+          "dtype": "F32",
+          "shape": [
+            4,
+            8960
+          ],
+          "offset": 330160,
+          "bytes": 143360,
+          "sha256": "32271e770024cc836b82f5a5564d8d1e6f06b9567c65f393df570dfccab8bb8a"
+        },
+        "gather_bf16_once": {
+          "dtype": "BF16",
+          "shape": [
+            4,
+            8960
+          ],
+          "offset": 473520,
+          "bytes": 71680,
+          "sha256": "a66d92d6b1e5db994df9686997b8f73771b94228206e46beac8a63013c0e1565"
+        },
+        "gather_bf16_separate": {
+          "dtype": "BF16",
+          "shape": [
+            4,
+            8960
+          ],
+          "offset": 545200,
+          "bytes": 71680,
+          "sha256": "3d782c85d07f3b3654d8bfda96883c337d883f71f82ba31df674efb91f1aade4"
+        },
+        "projection_ideal": {
+          "dtype": "F64",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 616880,
+          "bytes": 48,
+          "sha256": "0a4fef7ef6abaae02d60843c824bca679c11b447cb12ee45d4f5b08bb3aaaf8f"
+        },
+        "projection_ordered_f32": {
+          "dtype": "F32",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 616928,
+          "bytes": 24,
+          "sha256": "0e515d47a6c3ab7865ccc3227bf3b537c38f2d5b7408f6b3c3145f44ddae4db2"
+        },
+        "projection_bf16_rounded_weights": {
+          "dtype": "BF16",
+          "shape": [
+            2,
+            3
+          ],
+          "offset": 616952,
+          "bytes": 12,
+          "sha256": "77d9b498a3199183ed9c74ddb6707a8e2ed71aa5f33e3587d11b0104701a8eac"
+        }
+      }
+    }
+  ],
+  "binary": {
+    "path": "math.bin",
+    "bytes": 616964,
+    "sha256": "0aaf1de545814995b7f99db3fd5de2834996cdcedbe75ef6e2f7af14f7947eb5"
+  },
+  "native_composition_implemented": false,
+  "bf16_checkpoint_qualified": false,
+  "device_qualified": false
+}

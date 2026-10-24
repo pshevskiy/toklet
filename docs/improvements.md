@@ -3071,3 +3071,33 @@ The2,603,981,382-byte text count is a header-derived layout, not a payload-value
 allocation/fit or performance result. Real payload/graph/tokenizer/Metal/quality,
 device and app gates remain open, with no new eligibility, ABI, output limit or
 upstream GPU waiver.
+
+## 25 October2026 — independent packed table/projection precision
+
+Before native packed Gemma graph composition, freeze three-row four-bit/group64
+tables with BF16 coefficients at widths64,128,1536 and8960. Literal packed codes,
+unequal group/row coefficients and repeated/reordered lookup IDs distinguish
+FP32 reconstruction from BF16 once-rounded and separate-rounded alternatives.
+Non-BF16-exact FP32 inputs exercise the input-rounding boundary. Independent
+ideal/ordered-FP64 contracts and exact raw ledgers precede any new native target.
+
+Actual MLX embedding/linear/tied-head calls complete on both Mac CPU and GPU.
+All28 required FP32/tied comparisons per backend pass. Each captures24 arrays /
+85,600 values; BF16 diagnostics remain separate: CPU gathers match separate
+product/add rounding, GPU gathers match once-rounded reconstruction, while28
+diagnostic comparisons per backend reject unchanged gates. No BF16 checkpoint,
+CPU/GPU equivalence or complete graph/device qualification is granted.
+
+Seven portable, three owner and three runtime-admission tests plus export and
+both backend captures pass as six owned commands. Sequential observation capture
+preserves completed raw bytes before dtype/shape/finiteness rejection and on
+later failure/interruption. Source copies and actual imported module origins
+are bound to admitted runtime identities. The initial insufficient width64
+rounding witness and pre-correction source snapshots remain unaccepted;
+non-dyadic seeds are corrected before any fixture freeze, without a gate change.
+
+See [contracts and observed differences](gemma-packed-reference.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma-packed-reference-v1.json).
+Rust/shader/header inputs remain unchanged. Payload admission, native packed
+composition, quality, performance, Mac/phone fit and app integration remain open;
+the existing15 short-GPU and8 long-rotary discrepancies are not waived.

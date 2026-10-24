@@ -1,5 +1,10 @@
 # Engine coverage and Hugging Face implementation plan
 
+Latest Gemma precision work: the [packed table/projection witness](gemma-packed-reference.md)
+passes required FP32/tied CPU/GPU comparisons while retaining BF16 backend
+differences and rejected projection diagnostics. It grants no new artifact,
+download/Chat or device capability.
+
 Requested 23 October 2026. This is the active ordering for the remaining
 [M8 work](mlx-implementation-plan.md), following [PLAN.md](../PLAN.md)'s
 correctness, quality, measurement and memory policies. Earlier qualification
