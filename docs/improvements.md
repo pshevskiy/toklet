@@ -2379,3 +2379,25 @@ Empty input is a mathematical no-op; kernel-one source cache behavior, masks and
 length-dependent caches remain excluded. Native convolution, gated output norm,
 hybrid graph/session/Metal execution and real-model/app/device/long-context
 qualification remain open. No capability or execution limit was raised.
+
+## 24 October2026 — checked scalar causal convolution
+
+The scalar step consumes one raw token with oldest-to-current per-channel taps,
+accumulates FP64 products/sums and rounds once to FP32. It validates geometry,
+lengths and finite inputs before writes. Previous history stays immutable; only
+a fully successful output prepares the separate candidate by shifting history
+and appending raw input. No buffers or session state are allocated/owned.
+
+Four regressions authenticate the frozen reference receipt and check every
+convolution/SiLU output and exact copied history, hand tap/channel order,
+kernel-one/empty policy, intermediate cancellation, all invalid input classes,
+output overflow and replay. The previous recurrent kernels remain unchanged. Formatting, strict default/Metal
+Clippy, 207 CPU/229 Metal-feature tests and both iOS cross-checks pass.
+Astra reviews code and evidence before commit. See
+[the contract](causal-conv-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-causal-conv-scalar-v1.json).
+
+This is an operator foundation. Gated output normalization, hybrid model/session
+state commit, Metal execution and real-model/chat/long-context/device quality
+and performance gates remain open. No model eligibility or execution limit was
+raised.

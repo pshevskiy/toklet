@@ -9,11 +9,13 @@
 use std::fmt;
 
 mod attention;
+mod causal_conv;
 mod gated_delta;
 mod reductions;
 mod tiled;
 
 pub use attention::{AttentionShape, CachedAttentionShape, attention, attention_cached, rotary};
+pub use causal_conv::causal_depthwise_conv_step;
 pub use gated_delta::{
     GatedDeltaShape, gated_delta_gates, gated_delta_normalize, gated_delta_step,
 };
