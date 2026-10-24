@@ -298,6 +298,23 @@ pub fn commit_batch(caches: &mut [WindowKvCache], frames: &[PreparedKv<'_>]) -> 
     Ok(())
 }
 
+/// Invalidate a complete cache collection without reallocating its buffers.
+/// Check every generation before mutation so exhaustion leaves the old prefix.
+/// Existing borrowed proposals become stale, even if their old offset was zero.
+pub fn reset_batch(caches: &mut [WindowKvCache]) -> Result<(), Error> {
+    for cache in caches.iter() {
+        cache
+            .generation
+            .checked_add(1)
+            .ok_or(Error::InvalidConfig("KV reset generation exhausted"))?;
+    }
+    for cache in caches {
+        cache.offset = 0;
+        cache.generation += 1;
+    }
+    Ok(())
+}
+
 impl KvView<'_, '_> {
     /// Borrow all heads as two old-ring intervals and a differently strided new
     /// chunk. Empty intervals have empty slices; no old KV is linearized/copied.

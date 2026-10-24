@@ -3015,3 +3015,33 @@ This freezes a short synthetic CPU reference, not a Gemma checkpoint or complete
 G2. Native graph/session, GPU intermediate parity, original long-position rotary,
 quantized storage, real quality/fit/performance and app/device work remain open.
 No Rust/shader, ABI, app cap, protected executable or installed package changes.
+
+## 25 October2026 — bounded native Gemma scalar graph/session
+
+A named reference module now composes the exact hidden8/vocabulary17/four-layer
+Gemma fixture using existing statically dispatched scalar operations. Immutable
+FP32 weights stay separate from model-bound sessions, producer K/V staging,
+shared/rotating caches and reusable scratch. Both producer frames remain alive
+through the shared consumers and final norm/head/softcap. Only then do all caches,
+committed token history and public logits advance. Earlier failure preserves
+their exact previous state; reset reuses buffers and invalidates old proposals.
+
+Five graph methods check all three schedules against both frozen contracts,
+including selected intermediate states of every layer, producer staging/physical
+KV positions, final logits, immutable weights, pointer reuse and reset/replay.
+Five injected late boundaries and a real finite scalar overflow qualify failure
+atomicity. A separate reset method covers stale frames and generation exhaustion.
+The scoped allocator test records zero Rust allocations across96 warmed decode
+steps, three resets/accounting and a rejected memory admission. Logical reference
+memory is build-specific and does not qualify a process or phone budget.
+
+Formatting, strict default/Metal Clippy,272 CPU/294 Metal-feature tests and both
+iOS compile targets pass. Complete source/test/fixture/helper guards, raw logs,
+fresh CLI-spawning executable identities and protected binaries are retained.
+Astra reviews final code/evidence before commit. See [behavior and limits](gemma-text-graph-scalar.md)
+and [receipt](../benchmarks/results/2026-10-25-gemma-text-graph-scalar-v1.json).
+
+This is a32-position synthetic G3 foundation. Actual checkpoint/config/quantized
+integration, remaining generation/session semantics, Metal, real quality/fit/
+performance and app/device work stay open. Neither upstream GPU discrepancy is
+waived. No ABI, installed package or app generation-limit change is included.

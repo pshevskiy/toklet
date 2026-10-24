@@ -209,3 +209,9 @@ independent math and passing source CPU comparisons. The original GPU comparison
 retains15 failed intermediate checks; final logits alone do not grant a pass.
 This is partial G2 evidence, with G2/long rotary, native graph/session, Metal,
 checkpoint, app and device stages still open.
+
+The corresponding [bounded scalar graph/session](gemma-text-graph-scalar.md)
+now executes that exact synthetic geometry, with borrowed immutable FP32 weights,
+shared/rotating KV and atomic publication after final logits. It is a G3
+foundation with32 total positions, without checkpoint admission, quantized
+fallback, new catalog eligibility or a GPU/long-context gate waiver.

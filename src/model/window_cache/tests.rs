@@ -6,6 +6,51 @@ type Snapshot = (Vec<u32>, Vec<u32>, usize, u64, Vec<Option<usize>>);
 
 fn discard(_frame: PreparedKv<'_>) {}
 
+#[test]
+fn reset_batch_reuses_storage_invalidates_frames_and_preflights_every_generation() {
+    let mut caches = [
+        WindowKvCache::new(1, 2, 3, 8, Some(3)).unwrap(),
+        WindowKvCache::new(1, 2, 8, 8, None).unwrap(),
+    ];
+    let k = [1., 2., 3., 4.];
+    let v = [5., 6., 7., 8.];
+    let frames = [
+        caches[0].prepare(&k, &v, 2).unwrap(),
+        caches[1].prepare(&k, &v, 2).unwrap(),
+    ];
+    commit_batch(&mut caches, &frames).unwrap();
+    let stale = [
+        caches[0].prepare(&k, &v, 2).unwrap(),
+        caches[1].prepare(&k, &v, 2).unwrap(),
+    ];
+    let pointers = caches
+        .each_ref()
+        .map(|c| (c.k.as_ptr(), c.v.as_ptr(), c.allocated_bytes()));
+    let stored = caches.each_ref().map(snapshot);
+    reset_batch(&mut caches).unwrap();
+    for (cache, old) in caches.iter().zip(&stale) {
+        assert_eq!(cache.offset(), 0);
+        assert!(cache.view(old).is_err());
+        assert!((0..cache.capacity).all(|slot| cache.position_in_slot(slot).is_none()));
+    }
+    for (cache, previous) in caches.iter().zip(stored) {
+        let current = snapshot(cache);
+        assert_eq!(current.0, previous.0);
+        assert_eq!(current.1, previous.1);
+    }
+    assert_eq!(
+        caches
+            .each_ref()
+            .map(|c| (c.k.as_ptr(), c.v.as_ptr(), c.allocated_bytes())),
+        pointers
+    );
+    caches[1].generation = u64::MAX;
+    let before = caches.each_ref().map(snapshot);
+    assert!(reset_batch(&mut caches).is_err());
+    assert_eq!(caches.each_ref().map(snapshot), before);
+    reset_batch(&mut []).unwrap();
+}
+
 fn snapshot(cache: &WindowKvCache) -> Snapshot {
     let (k, v) = cache.committed();
     (

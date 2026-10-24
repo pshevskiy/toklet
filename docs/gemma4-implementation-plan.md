@@ -110,3 +110,11 @@ This freezes an independent synthetic short CPU reference for bounded scalar
 work, not G2 completion, checkpoint admission or GPU/device qualification.
 Whole native graph/session integration and the original long-rotary gate remain
 open; the GPU discrepancy does not identify a specific kernel root cause.
+
+The [bounded native scalar reference graph](gemma-text-graph-scalar.md) now
+composes the exact four-layer fixture, with model-bound sessions, persistent
+producer staging and atomic KV/history/logit publication. All three schedules
+and selected states from every layer pass both frozen contracts; failure/reset
+and allocation checks pass. This is a32-position synthetic G3 foundation.
+The actual artifact/config adapter, general generation/session semantics and
+real-checkpoint/Metal/app/device stages remain open, as do both upstream GPU gaps.

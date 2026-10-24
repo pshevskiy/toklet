@@ -9,6 +9,7 @@ use crate::cpu::{self, AttentionShape, finite, length, nonzero, product};
 use std::fmt;
 
 mod cache;
+pub mod gemma_reference;
 pub mod shared_kv;
 mod trace;
 pub mod window_cache;
