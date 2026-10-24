@@ -1915,3 +1915,30 @@ text tokenization witness does not qualify templates or thinking/chat. Numerical
 engine/Swift sources and protected binaries are unchanged. Native real Qwen3,
 quality/performance, app/device fit and wider architecture/discovery work remain
 open.
+
+### Qualify real Qwen3 Reference execution on Mac — 24 October 2026
+
+The [selected real-model task](mlx-qwen3-real-metal.md) widens exact Qwen3
+geometry admission while reusing the existing graph, kernels and BF16 affine
+support. Immutable packed weights/QK norms and tied ownership remain resident;
+sessions own KV and scratch. No shader, numerical-policy or default routing
+change is needed. Unqualified geometry and Online attention reject explicitly.
+
+On M1 Pro, all 912 exposed snapshots/14,276,352 values pass the unchanged
+reference gates. Four greedy and three scoring distributions pass, with eight
+exact full/token-only selections and maximum logit error 0.03388547897338867.
+A separate actual 512-capacity/chunk128 witness discards/resumes its pending
+input tail and matches a fresh full distribution exactly. This is not generation
+cancellation or an independent long-context numerical oracle. Exact session and
+diagnostic limit-minus-one checks pass on fresh sessions for both readbacks.
+Resident weights total 633,366,062 bytes; maximum short diagnostic and 512-state
+logical admissions are 747,182,964 and 853,205,778 bytes, without a process-peak
+or phone-fit claim.
+
+Rust 1.90 formatting, both strict all-target Clippy configurations, 162 CPU and
+181 Metal-feature passes, and all 18 optimized explicit GPU tests pass. The
+regressions include tiny Qwen3, Qwen/Llama, legacy Half/Q4 allocation checks,
+shared native bridge and CLI. Protected binaries, Swift and shaders are unchanged.
+Retain selected real Qwen3 Mac Reference execution. Quality/performance, actual
+generation cancellation, tokenizer/thinking/chat, app integration, iPhone and
+broader architecture/Hugging Face qualification remain open.

@@ -40,7 +40,8 @@ sets the active implementation order for the remaining M8.3–M8.5 work, startin
 with a Qwen3 dense oracle and native execution before broader model admission.
 Tiny scalar/Metal gates now pass. The [real Qwen3 candidate](mlx-qwen3-checkpoint.md)
 is acquired as data, with an [independent real numerical reference](mlx-qwen3-real-oracle.md).
-Real target, quality, chat and device qualification remain open.
+[Real Mac numerical/session checks](mlx-qwen3-real-metal.md) now pass.
+Quality, chat and physical iPhone qualification remain open.
 
 Astra reviews each code task; commit only after its checks pass and before starting
 the next code task. Keep [the improvement record](improvements.md) updated.
@@ -114,6 +115,8 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Independent tiny Qwen3 dense oracle](mlx-qwen3-oracle.md), unequal query/hidden widths and per-head Q/K RMSNorm, tied/untied graphs and actual upstream CPU/GPU/cache witnesses. Native execution and real-checkpoint/device qualification remain open.
   - [x] [Modular Qwen3 dense admission and scalar execution](mlx-qwen3-scalar.md), independent query width and Q/K RMSNorm with frozen full-stage/cache/cancellation/memory checks. Metal/real-checkpoint/chat/device qualification remains open.
   - [x] [Resident tiny Qwen3 Metal](mlx-qwen3-metal.md), unequal-width resident projections and Q/K normalization with frozen graph/state/profile/admission checks, raw CLI and native bridge routing. Real-checkpoint/chat/quality/performance/phone qualification remains open.
+  - [x] [Immutable real Qwen3 candidate](mlx-qwen3-checkpoint.md) and [independent CPU reference](mlx-qwen3-real-oracle.md), with exact BF16 metadata and gates frozen before target changes.
+  - [x] [Selected real Qwen3 Mac execution](mlx-qwen3-real-metal.md), frozen exposed-stage/decode/scoring gates, exact budget boundaries and separate 512-capacity discard/resume witness. Chat, quality/performance and iPhone qualification remain open.
   - [ ] Widen additional dense model shapes and qualify further real checkpoints; implement sliding attention and other Llama rotary variants separately. Llama Online attention remains unqualified.
   - [ ] Expert routing, recurrent/hybrid state and actual multimodal/media execution, each with separate fixtures and target qualification.
 - [ ] **M8.4 Device-aware discovery/downloads.** After engine compatibility exists,

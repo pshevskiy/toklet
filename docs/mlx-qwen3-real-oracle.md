@@ -77,7 +77,7 @@ preflight to its temporary fixture. Production collision rejection and the
 no-publication assertion remain intact. The failed 50-test attempt, original
 test bytes and logs are retained; the successful fresh retry passes all 50.
 
-Retain this oracle for the next separately reviewed target trial. Real native
-Qwen3 admission/execution, quality, performance, app Chat, thinking semantics and
-physical iPhone qualification remain open in the
+Retain this oracle for [selected native Mac qualification](mlx-qwen3-real-metal.md),
+which now passes against this unchanged reference. Quality, performance, app
+Chat, thinking semantics and physical iPhone qualification remain open in the
 [active plan](engine-expansion-plan.md).

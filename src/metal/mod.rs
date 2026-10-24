@@ -91,7 +91,7 @@ fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture
         crate::mlx::dense::Architecture::Qwen3 => {
             c.validate()
                 .map_err(|_| Error::Options("invalid Qwen3 configuration"))?;
-            if (
+            let supported = match (
                 c.hidden_size,
                 c.intermediate_size,
                 c.query_heads,
@@ -99,13 +99,18 @@ fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture
                 c.head_dim,
                 c.num_layers,
                 c.vocab_size,
-            ) != (32, 64, 4, 2, 16, 2, 64)
-                || c.max_positions > 32
-                || c.rope_theta != 10000.0
-                || c.rms_norm_eps != 1e-6
-            {
+            ) {
+                (32, 64, 4, 2, 16, 2, 64) => {
+                    c.max_positions <= 32 && c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6
+                }
+                (1024, 3072, 16, 8, 128, 28, 151936) => {
+                    c.max_positions <= 512 && c.rope_theta == 1e6 && c.rms_norm_eps == 1e-6
+                }
+                _ => false,
+            };
+            if !supported {
                 return Err(Error::Unsupported(
-                    "Metal Qwen3 requires the admitted tiny geometry and ordinary RoPE",
+                    "Metal Qwen3 requires the admitted tiny/0.6B geometry, context and ordinary RoPE",
                 ));
             }
             Ok(())
@@ -3258,6 +3263,74 @@ fn check_greedy_failure_attention(mode: ProjectionMode, attention: AttentionMode
     s.set_tokens(&[0]).unwrap();
     s.evaluate().unwrap();
     assert_eq!(s.greedy_token().unwrap().unwrap(), selected);
+}
+
+#[cfg(test)]
+mod qwen3_admission {
+    use super::*;
+
+    #[test]
+    fn qwen3_real_geometry_has_explicit_width_context_and_rotary_limits() {
+        let c = model::Config {
+            vocab_size: 151936,
+            hidden_size: 1024,
+            intermediate_size: 3072,
+            num_layers: 28,
+            query_heads: 16,
+            kv_heads: 8,
+            head_dim: 128,
+            max_positions: 512,
+            rms_norm_eps: 1e-6,
+            rope_theta: 1e6,
+        };
+        let architecture = crate::mlx::dense::Architecture::Qwen3;
+        assert_eq!(c.query_heads * c.head_dim, 2 * c.hidden_size);
+        assert!(mlx_geometry(&c, architecture).is_ok());
+        for other in [
+            model::Config {
+                max_positions: 513,
+                ..c.clone()
+            },
+            model::Config {
+                rope_theta: 10000.0,
+                ..c.clone()
+            },
+            model::Config {
+                rms_norm_eps: 1e-5,
+                ..c.clone()
+            },
+            model::Config {
+                query_heads: 8,
+                ..c.clone()
+            },
+            model::Config {
+                kv_heads: 4,
+                ..c.clone()
+            },
+            model::Config {
+                hidden_size: 2048,
+                ..c.clone()
+            },
+            model::Config {
+                intermediate_size: 4096,
+                ..c.clone()
+            },
+            model::Config {
+                head_dim: 64,
+                ..c.clone()
+            },
+            model::Config {
+                num_layers: 27,
+                ..c.clone()
+            },
+            model::Config {
+                vocab_size: 151935,
+                ..c.clone()
+            },
+        ] {
+            assert!(mlx_geometry(&other, architecture).is_err());
+        }
+    }
 }
 
 #[cfg(test)]
