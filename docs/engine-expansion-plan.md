@@ -46,6 +46,14 @@ The engine owns compatibility facts so app and download code need not repeat
 architecture interpretation. Refactor an existing module only when a concrete
 second use establishes the shared mechanism, with existing fixtures preserved.
 
+## Current user priority: single-reply128K
+
+The user clarified131,072 tokens in one reply, for Chat and Expert. The
+[long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
+streaming, engine-owned capabilities and a qualified long-context graph within
+E2/E4/H1/H3/H4. It does not close E1–E6 or broaden current runnable limits. The
+[mobile preparation](long-reply-mobile.md) remains a separately scoped UI task.
+
 ## Coverage before E1
 
 This table records the plan's starting point. Completed Qwen3 work is tracked in

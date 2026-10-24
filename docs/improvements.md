@@ -2192,3 +2192,24 @@ Retain the preflight. No larger output/context, new model eligibility, numerical
 quality, timing or physical-phone claim follows. Qualification-receipt evaluation
 and broader acquisition/chat remain open. See [the contract](swift-runtime-preflight.md)
 and [bound receipt](../benchmarks/results/2026-10-24-swift-runtime-preflight-v1.json).
+
+## 24 October2026 — single-reply128K plan and decoding witnesses
+
+The user clarified131,072 output tokens in one Chat/Expert reply, with prompt
+positions additional. The [engine plan](long-reply-engine-plan.md) now separates
+independent text fixtures, bounded streaming, native capabilities, a concrete
+long-context graph, integration and device qualification. Existing E1–E6/H1–H4
+requirements remain open. Current executable limits are unchanged.
+
+Before target streaming code,33 complete-prefix text cases and eight exact
+131,072-ID synthetic cases are frozen from three pinned original tokenizers.
+Compact decode-only fixtures preserve every checked result. Mistral's invalid
+fallback byte can rewrite an entire preceding ASCII byte run; split Unicode and
+literal replacement characters also require explicit state/terminal behavior.
+The independent Python producer imports no Toklet implementation. Export/verify
+reproduction and eight reference checks pass with all source/runtime identities
+recorded. Exploratory assumptions about0xFF availability and single-ID replacement
+characters were corrected before freezing, without changing expected decoder
+semantics. Retain the oracle; no numerical generation or128K app/device claim.
+See [the contract](chat-stream-oracle.md) and
+[receipt](../benchmarks/results/2026-10-24-chat-stream-oracle-v1.json).

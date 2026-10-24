@@ -1,0 +1,93 @@
+{
+  "version": "1.0",
+  "truncation": null,
+  "padding": null,
+  "added_tokens": [
+    {
+      "id": 151643,
+      "content": "<|endoftext|>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 151644,
+      "content": "<|im_start|>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 151645,
+      "content": "<|im_end|>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    }
+  ],
+  "normalizer": null,
+  "pre_tokenizer": null,
+  "post_processor": null,
+  "decoder": {
+    "type": "ByteLevel",
+    "add_prefix_space": false,
+    "trim_offsets": false,
+    "use_regex": false
+  },
+  "model": {
+    "type": "BPE",
+    "dropout": null,
+    "unk_token": null,
+    "continuing_subword_prefix": "",
+    "end_of_word_suffix": "",
+    "fuse_unk": false,
+    "byte_fallback": false,
+    "ignore_merges": false,
+    "vocab": {
+      "!": 0,
+      ",": 11,
+      ".": 13,
+      "A": 32,
+      "B": 33,
+      "â": 158,
+      "ð": 172,
+      "Ċ": 198,
+      "Ġ": 220,
+      "Ģ": 222,
+      "Ĥ": 224,
+      "Į": 234,
+      "į": 235,
+      "Ł": 253,
+      "ĠĠ": 256,
+      "ĊĊ": 271,
+      "Ġ=": 284,
+      "Ġ\"": 330,
+      "ĠA": 362,
+      "Ġx": 856,
+      "\";Ċ": 876,
+      "let": 1149,
+      "ĠÃ©": 3958,
+      "`Ċ": 3989,
+      "ï¿½": 5691,
+      "ÐµÑĤ": 8178,
+      "Hello": 9707,
+      "ĠðŁ": 11162,
+      "ĉB": 12791,
+      "``": 13874,
+      "æĸĩ": 16744,
+      "Ð¸Ð²": 26991,
+      "rust": 35788,
+      "Ġä¸Ń": 72858,
+      "```": 73594,
+      "ĠÐŁÑĢ": 79484,
+      "ðŁĮį": 145691
+    },
+    "merges": []
+  }
+}

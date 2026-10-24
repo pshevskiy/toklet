@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "truncation": null,
+  "padding": null,
+  "added_tokens": [
+    {
+      "id": 0,
+      "content": "<unk>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 1,
+      "content": "<s>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 2,
+      "content": "</s>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    }
+  ],
+  "normalizer": null,
+  "pre_tokenizer": null,
+  "post_processor": null,
+  "decoder": {
+    "type": "Sequence",
+    "decoders": [
+      {
+        "type": "Replace",
+        "pattern": {
+          "String": "▁"
+        },
+        "content": " "
+      },
+      {
+        "type": "ByteFallback"
+      },
+      {
+        "type": "Fuse"
+      },
+      {
+        "type": "Strip",
+        "content": " ",
+        "start": 1,
+        "stop": 0
+      }
+    ]
+  },
+  "model": {
+    "type": "BPE",
+    "dropout": null,
+    "unk_token": "<unk>",
+    "continuing_subword_prefix": null,
+    "end_of_word_suffix": null,
+    "fuse_unk": true,
+    "byte_fallback": true,
+    "ignore_merges": false,
+    "vocab": {
+      "<unk>": 0,
+      "<s>": 1,
+      "</s>": 2,
+      "<0x09>": 780,
+      "<0x0A>": 781,
+      "<0x41>": 836,
+      "<0x42>": 837,
+      "<0x80>": 899,
+      "<0x82>": 901,
+      "<0x8C>": 911,
+      "<0x8D>": 912,
+      "<0x9F>": 930,
+      "<0xE2>": 997,
+      "<0xF0>": 1011,
+      "▁▁": 1027,
+      "▁e": 1085,
+      "▁=": 1095,
+      "▁A": 1098,
+      "▁\"": 1113,
+      "let": 1663,
+      "▁x": 2086,
+      "\";": 2367,
+      "вет": 9264,
+      "▁```": 9557,
+      "▁При": 12592,
+      "``": 14708,
+      "rust": 20610,
+      "▁Hello": 23325,
+      "▁": 29473,
+      ".": 29491,
+      ",": 29493,
+      "B": 29528,
+      "!": 29576,
+      "`": 29600,
+      "́": 29717,
+      "中": 29759,
+      "文": 29787,
+      "�": 29905,
+      "🌍": 31825
+    },
+    "merges": []
+  }
+}
