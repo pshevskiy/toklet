@@ -2948,3 +2948,26 @@ constructor/disabled-cap routing, device fit, quality, performance and long repl
 remain open. Upstream signed-zero bit parity is unqualified; mathematical/native
 zero semantics are checked separately. No numerical source, ABI, app cap,
 protected executable or installed package changes.
+
+## 25 October2026 — native in-place logit softcap
+
+A plain FP32-slice transform now applies tanh logit capping without a second
+vocabulary-sized array. Full prewrite admission preserves invalid-input bits;
+FP64 division/tanh/product gives finite bounded output for every positive finite
+FP32 cap and finite logit, including domains where staged FP32 division overflows.
+Signed zero remains explicit. No allocation, dynamic numerical dispatch or unsafe
+code is added.
+
+Four methods compare five frozen nonempty cases against both contracts, then
+cover late invalid values/caps, storage reuse, native-only extreme/subnormal
+caps, odd/monotone/bounded properties, exact zero signs and chunk equivalence.
+Formatting, strict default/Metal Clippy,264 CPU/286 Metal-feature tests and both
+iOS compile targets pass. Package-only cleanup in the private copied target and
+all CLI-spawning executable paths are verified, with a separate zero-test proof
+for the disabled harness. Astra reviews final source/evidence before commit.
+See [the contract](gemma-softcap-scalar.md) and
+[receipt](../benchmarks/results/2026-10-25-softcap-scalar-v1.json).
+
+Model integration, quantized/BF16 checkpoint, Metal, fit, quality, performance,
+phone and long replies remain open; upstream rotary discrepancies stay unwaived.
+No ABI, app capability/limit, protected executable or installed package changes.

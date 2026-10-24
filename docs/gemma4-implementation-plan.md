@@ -91,11 +91,12 @@ The [dense decoder-order witness](gemma-decoder-order-reference.md) now freezes
 the per-layer gate and exact norm/residual/scalar order at an explicit external
 attention boundary. Its [native FP32 finish](dense-decoder-scalar.md) now
 passes the frozen contracts. Quantized projection/fetch and whole-layer graph
-integration, embedding/logit scales and capping remain open, along with the
+integration and whole-graph embedding/output-head scaling remain open, along with the
 upstream rotary precision gate. A new [unlearned V-norm witness](gemma-v-norm-reference.md)
 freezes per-head mean-square RMS. The [existing scalar RMS recipe](gemma-v-norm-scalar.md)
 now passes that fixture; adapter/storage integration remains open. The
 [final-logit softcap witness](gemma-softcap-reference.md) now freezes ideal and
-staged FP32 contracts before the native transform. All other
+staged FP32 contracts. Its [native in-place transform](gemma-softcap-scalar.md)
+now passes them; full-vocabulary graph integration remains open. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.

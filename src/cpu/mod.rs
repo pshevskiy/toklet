@@ -16,6 +16,7 @@ mod gelu;
 mod per_layer;
 mod proportional_rotary;
 mod reductions;
+mod softcap;
 mod span_attention;
 mod tiled;
 mod window_attention;
@@ -35,6 +36,7 @@ pub use per_layer::{
 };
 pub use proportional_rotary::{ProportionalRotaryShape, proportional_rotary};
 pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
+pub use softcap::logit_softcap;
 pub use span_attention::{AttentionKvSegment, SpanAttentionShape, span_attention};
 pub use tiled::{ProjectionKernel, matmul_f64_tiled};
 pub use window_attention::{WindowAttentionShape, window_attention};

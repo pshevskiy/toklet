@@ -49,7 +49,8 @@ owned commands pass. The [producer](../tools/reference/gemma_softcap.py),
 exclusive outputs, source/protected guards, earlier outputs after later failure,
 independent failure-log capture and joined owned process cleanup.
 
-Native implementation, disabled-cap model routing, constructor/config selection,
+The [native in-place transform](gemma-softcap-scalar.md) now passes this fixture.
+Disabled-cap model routing, constructor/config selection,
 complete-vocabulary graph, BF16/quantized checkpoint, device fit, quality,
 performance and long replies remain open. The eight
 [upstream rotary discrepancies](gemma-rotary-precision.md) remain unwaived.
