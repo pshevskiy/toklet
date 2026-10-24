@@ -465,6 +465,328 @@ mod gpu {
         );
     }
     #[test]
+    #[ignore = "Explicit Apple GPU real Qwen3 public generation cancellation, output failure and hidden stops"]
+    fn native_mlx_qwen3_real_generation_callbacks_preserve_pending_state() {
+        use std::sync::atomic::{AtomicBool, Ordering};
+        use toklet::generation::{self, Input, Request, StopReason};
+        let reference = Reference::open();
+        let model = model(&reference);
+        let prompt = tokens(&reference.manifest["greedy"]["prompt"]);
+        let expected = tokens(&reference.manifest["greedy"]["fp64_tokens"]);
+        let changed = tokens(&reference.manifest["cases"]["future_changed"]["tokens"]);
+        for readback in [ReadbackMode::FullLogits, ReadbackMode::GreedyToken] {
+            let create = || make_session(&model, 3, 0, readback, AttentionMode::Reference);
+            let mut session = create();
+            let cancel = AtomicBool::new(false);
+            let mut emitted = Vec::new();
+            let request = |input, max_new_tokens| Request {
+                input,
+                max_new_tokens,
+                stop_tokens: &[],
+            };
+            let stopped = generation::generate(
+                &mut session,
+                request(Input::Prompt(&prompt), 4),
+                &cancel,
+                |event| {
+                    assert_eq!(event.index, 0);
+                    emitted.push(event.token_id);
+                    cancel.store(true, Ordering::Relaxed);
+                    Ok(())
+                },
+            )
+            .unwrap();
+            assert_eq!(stopped.reason, StopReason::Cancelled);
+            assert_eq!((stopped.sampled_tokens, stopped.emitted_tokens), (1, 1));
+            assert_eq!(
+                (
+                    stopped.evaluated_tokens,
+                    stopped.pending_tokens,
+                    stopped.history_tokens
+                ),
+                (4, 1, 5)
+            );
+            assert_eq!(
+                session.history(),
+                [prompt.as_slice(), &expected[..1]].concat()
+            );
+            let before = (
+                session.history().to_vec(),
+                session.evaluated_len(),
+                session.pending_len(),
+                session.logits().map(<[f32]>::to_vec),
+                session.greedy_token(),
+            );
+            let precancelled = generation::generate(
+                &mut session,
+                request(Input::Reset(&changed), 1),
+                &cancel,
+                |_| panic!("Pre-cancelled reset must not emit"),
+            )
+            .unwrap();
+            assert_eq!(precancelled.reason, StopReason::Cancelled);
+            assert_eq!(
+                (
+                    precancelled.sampled_tokens,
+                    precancelled.emitted_tokens,
+                    precancelled.prefill_tokens
+                ),
+                (0, 0, 0)
+            );
+            assert_eq!(
+                (
+                    session.history().to_vec(),
+                    session.evaluated_len(),
+                    session.pending_len(),
+                    session.logits().map(<[f32]>::to_vec),
+                    session.greedy_token()
+                ),
+                before
+            );
+            cancel.store(false, Ordering::Relaxed);
+            let resumed = generation::generate(
+                &mut session,
+                request(Input::Continue, 3),
+                &cancel,
+                |event| {
+                    emitted.push(event.token_id);
+                    Ok(())
+                },
+            )
+            .unwrap();
+            assert_eq!(resumed.reason, StopReason::OutputLimit);
+            assert_eq!(
+                (
+                    resumed.reused_tokens,
+                    resumed.prefill_tokens,
+                    resumed.sampled_tokens,
+                    resumed.emitted_tokens
+                ),
+                (4, 1, 3, 3)
+            );
+            assert_eq!(
+                (
+                    resumed.evaluated_tokens,
+                    resumed.pending_tokens,
+                    resumed.history_tokens
+                ),
+                (7, 1, 8)
+            );
+            assert_eq!(emitted, expected);
+            let mut uninterrupted = create();
+            let mut fresh_ids = Vec::new();
+            let fresh = generation::generate(
+                &mut uninterrupted,
+                request(Input::Prompt(&prompt), 4),
+                &cancel,
+                |event| {
+                    fresh_ids.push(event.token_id);
+                    Ok(())
+                },
+            )
+            .unwrap();
+            assert_eq!(fresh.reason, StopReason::OutputLimit);
+            assert_eq!(fresh_ids, emitted);
+            assert_eq!(session.history(), uninterrupted.history());
+            assert_eq!(
+                (session.evaluated_len(), session.pending_len()),
+                (uninterrupted.evaluated_len(), uninterrupted.pending_len())
+            );
+            assert!(session.logits().is_none() && uninterrupted.logits().is_none());
+            assert!(session.greedy_token().is_none() && uninterrupted.greedy_token().is_none());
+            session.discard_pending();
+            uninterrupted.discard_pending();
+            assert_eq!(session.history(), uninterrupted.history());
+            assert_eq!(session.greedy_token(), uninterrupted.greedy_token());
+            assert_eq!(session.greedy_token().unwrap().unwrap(), expected[3]);
+            match readback {
+                ReadbackMode::FullLogits => {
+                    let actual = session.logits().expect("Resumed full distribution");
+                    assert_eq!(
+                        actual,
+                        uninterrupted
+                            .logits()
+                            .expect("Uninterrupted full distribution")
+                    );
+                    reference.qualify("greedy.step_3.logits", actual, 0);
+                }
+                ReadbackMode::GreedyToken => {
+                    assert!(session.logits().is_none() && uninterrupted.logits().is_none())
+                }
+            }
+
+            // A failed sink also leaves the sampled ID pending, but returns an
+            // output error rather than a successful cancellation report.
+            let mut failed_ids = Vec::new();
+            let error = generation::generate(
+                &mut session,
+                request(Input::Reset(&prompt), 4),
+                &cancel,
+                |event| {
+                    failed_ids.push(event.token_id);
+                    Err(std::io::Error::other("synthetic Qwen3 sink failure"))
+                },
+            )
+            .unwrap_err();
+            match error {
+                generation::Error::Output(error) => {
+                    assert_eq!(error.to_string(), "synthetic Qwen3 sink failure")
+                }
+                other => panic!("Expected output error, got {other}"),
+            }
+            assert_eq!(failed_ids, expected[..1]);
+            assert_eq!((session.evaluated_len(), session.pending_len()), (4, 1));
+            assert_eq!(
+                session.history(),
+                [prompt.as_slice(), &expected[..1]].concat()
+            );
+            assert!(session.logits().is_none() && session.greedy_token().is_none());
+            let after_error = generation::generate(
+                &mut session,
+                request(Input::Continue, 1),
+                &cancel,
+                |event| {
+                    assert_eq!(event.token_id, expected[1]);
+                    Ok(())
+                },
+            )
+            .unwrap();
+            assert_eq!(after_error.reason, StopReason::OutputLimit);
+            assert_eq!(
+                (
+                    after_error.reused_tokens,
+                    after_error.prefill_tokens,
+                    after_error.sampled_tokens,
+                    after_error.emitted_tokens
+                ),
+                (4, 1, 1, 1)
+            );
+            generation::generate(
+                &mut uninterrupted,
+                request(Input::Reset(&prompt), 2),
+                &cancel,
+                |_| Ok(()),
+            )
+            .unwrap();
+            assert_eq!(session.history(), uninterrupted.history());
+            assert_eq!((session.evaluated_len(), session.pending_len()), (5, 1));
+            session.discard_pending();
+            uninterrupted.discard_pending();
+            assert_eq!(session.greedy_token(), uninterrupted.greedy_token());
+            assert_eq!(session.greedy_token().unwrap().unwrap(), expected[1]);
+            match readback {
+                ReadbackMode::FullLogits => {
+                    let actual = session.logits().expect("Output-error resumed distribution");
+                    assert_eq!(
+                        actual,
+                        uninterrupted.logits().expect("Fresh two-step distribution")
+                    );
+                    reference.qualify("greedy.step_1.logits", actual, 0);
+                }
+                ReadbackMode::GreedyToken => {
+                    assert!(session.logits().is_none() && uninterrupted.logits().is_none())
+                }
+            }
+
+            let hidden = generation::generate(
+                &mut session,
+                Request {
+                    input: Input::Reset(&prompt),
+                    max_new_tokens: 4,
+                    stop_tokens: &expected[..1],
+                },
+                &cancel,
+                |_| panic!("Hidden stop must not emit"),
+            )
+            .unwrap();
+            assert_eq!(
+                hidden.reason,
+                StopReason::StopToken {
+                    token_id: expected[0]
+                }
+            );
+            assert_eq!(
+                (
+                    hidden.sampled_tokens,
+                    hidden.emitted_tokens,
+                    hidden.evaluated_tokens,
+                    hidden.pending_tokens,
+                    hidden.history_tokens
+                ),
+                (1, 0, 4, 1, 5)
+            );
+            assert_eq!(
+                session.history(),
+                [prompt.as_slice(), &expected[..1]].concat()
+            );
+            let continued = generation::generate(
+                &mut session,
+                request(Input::Continue, 1),
+                &cancel,
+                |event| {
+                    assert_eq!(event.token_id, expected[1]);
+                    Ok(())
+                },
+            )
+            .unwrap();
+            assert_eq!(
+                (
+                    continued.reused_tokens,
+                    continued.prefill_tokens,
+                    continued.sampled_tokens,
+                    continued.emitted_tokens
+                ),
+                (4, 1, 1, 1)
+            );
+            assert_eq!(
+                session.history(),
+                [prompt.as_slice(), &expected[..2]].concat()
+            );
+            assert_eq!((session.evaluated_len(), session.pending_len()), (5, 1));
+            session.discard_pending();
+            assert_eq!(session.greedy_token().unwrap().unwrap(), expected[1]);
+            let before = (
+                session.history().to_vec(),
+                session.evaluated_len(),
+                session.pending_len(),
+                session.logits().map(<[f32]>::to_vec),
+                session.greedy_token(),
+            );
+            for invalid in [
+                request(Input::Reset(&[151936]), 1),
+                request(Input::Continue, usize::MAX),
+                Request {
+                    input: Input::Continue,
+                    max_new_tokens: 1,
+                    stop_tokens: &[151936],
+                },
+            ] {
+                assert!(matches!(
+                    generation::generate(&mut session, invalid, &cancel, |_| panic!(
+                        "Invalid request must not emit"
+                    )),
+                    Err(generation::Error::InvalidRequest(_))
+                ));
+                assert_eq!(
+                    (
+                        session.history().to_vec(),
+                        session.evaluated_len(),
+                        session.pending_len(),
+                        session.logits().map(<[f32]>::to_vec),
+                        session.greedy_token()
+                    ),
+                    before
+                );
+            }
+            println!(
+                "MLX_QWEN3_REAL_GENERATION {}",
+                json!({"readback":format!("{readback:?}"),"callback_cancelled_after_emitted_tokens":1,"cancelled_evaluated_tokens":4,"cancelled_pending_tokens":1,"exact_uninterrupted_replay":true,"output_failure_and_hidden_stop_resume":true,"precancelled_reset_and_invalid_requests_preserve_state":true,"mid_gpu_or_prefill_cancellation_qualified":false,"iphone_qualified":false})
+            );
+        }
+        reference.checkpoint();
+    }
+
+    #[test]
     #[ignore = "Explicit Apple GPU real Qwen3 exact session and diagnostic budget boundaries"]
     fn native_mlx_qwen3_real_memory_boundaries_preserve_admitted_state() {
         let reference = Reference::open();

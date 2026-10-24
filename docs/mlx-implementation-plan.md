@@ -117,6 +117,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   - [x] [Resident tiny Qwen3 Metal](mlx-qwen3-metal.md), unequal-width resident projections and Q/K normalization with frozen graph/state/profile/admission checks, raw CLI and native bridge routing. Real-checkpoint/chat/quality/performance/phone qualification remains open.
   - [x] [Immutable real Qwen3 candidate](mlx-qwen3-checkpoint.md) and [independent CPU reference](mlx-qwen3-real-oracle.md), with exact BF16 metadata and gates frozen before target changes.
   - [x] [Selected real Qwen3 Mac execution](mlx-qwen3-real-metal.md), frozen exposed-stage/decode/scoring gates, exact budget boundaries and separate 512-capacity discard/resume witness. Chat, quality/performance and iPhone qualification remain open.
+  - [x] [Real Qwen3 generation callback recovery](mlx-qwen3-real-generation.md), deterministic callback cancellation, output failure, hidden stops and safe continuation on both readbacks. Prefill/physical cancellation remains separate.
   - [ ] Widen additional dense model shapes and qualify further real checkpoints; implement sliding attention and other Llama rotary variants separately. Llama Online attention remains unqualified.
   - [ ] Expert routing, recurrent/hybrid state and actual multimodal/media execution, each with separate fixtures and target qualification.
 - [ ] **M8.4 Device-aware discovery/downloads.** After engine compatibility exists,

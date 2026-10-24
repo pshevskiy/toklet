@@ -72,8 +72,10 @@ Protected release binaries, shaders and Swift remain unchanged. The native/CLI
 regressions here use existing tiny fixtures; real app/text integration remains
 separate. Astra reviewed source and the bounded trial owner before execution.
 
-Retain selected real Qwen3 Reference execution on Mac. Held-out quality,
-representative/sustained performance, actual generation cancellation, broader
+Retain selected real Qwen3 Reference execution on Mac. A subsequent
+[callback cancellation/recovery witness](mlx-qwen3-real-generation.md) now passes
+without changing this numerical implementation. Held-out quality,
+representative/sustained performance, prefill/physical cancellation, broader
 context numerical qualification, tokenizer/thinking/chat semantics, app catalog
 integration and iPhone trials remain open in the
 [active plan](engine-expansion-plan.md).

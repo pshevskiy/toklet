@@ -1942,3 +1942,22 @@ shared native bridge and CLI. Protected binaries, Swift and shaders are unchange
 Retain selected real Qwen3 Mac Reference execution. Quality/performance, actual
 generation cancellation, tokenizer/thinking/chat, app integration, iPhone and
 broader architecture/Hugging Face qualification remain open.
+
+### Verify real Qwen3 generation callback recovery — 24 October 2026
+
+The [tests-only follow-up](mlx-qwen3-real-generation.md) exercises the public
+generation API with the actual selected checkpoint. Both readbacks preserve
+sampled-versus-committed state after callback cancellation and output failure,
+resume exactly like uninterrupted same-recipe generation, hide stop IDs from
+callbacks and preserve evaluated output after invalid requests. Full-logit
+recovery distributions match exactly and pass the unchanged frozen gates;
+token-only requires an available correct selection and no full logits.
+
+The optimized GPU witness, formatting, both strict Clippy configurations,
+162 CPU and 181 Metal-feature tests pass. Astra tightened two optional-token
+comparisons to require a real selected ID; initial checks and intermediate bytes
+remain retained alongside final checks. Production sources and existing real
+GPU test bodies are unchanged, so prior numerical/session evidence is inherited.
+Retain callback cancellation and recovery for selected real Qwen3 on Mac.
+Prefill/mid-GPU and physical cancellation, quality/performance, app/thinking/chat,
+iPhone and wider architecture/Hugging Face work remain open.
