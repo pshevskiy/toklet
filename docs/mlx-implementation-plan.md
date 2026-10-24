@@ -126,6 +126,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
   stream and hash downloads, cancel safely and publish complete snapshots
   atomically. Ordinary inference then works offline. Test corrupt/truncated data,
   traversal, interruptions, stale budgets and unavailable network/authentication.
+  - [x] [Local compatibility report foundation](mlx-compatibility.md), shared config/tensor admission, representation groups, scalar estimates and Metal geometry policy. Runtime device/session planning, qualification receipts and CLI/native/app consumption remain open.
   - [x] [Public search and immutable six-file download core](model-hub.md),
     qualified pinned profiles only; other search results do not grant support.
   - [x] Models integration adds progress/cancel, saved-snapshot revalidation and

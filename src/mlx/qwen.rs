@@ -163,12 +163,37 @@ impl Source {
     }
 
     fn open_impl(directory: &Path, options: LoadOptions, allow_dense: bool) -> Result<Self, Error> {
+        Self::validate_budget(options)?;
+        let document = read_config(&directory.join("config.json"))?;
+        Self::open_document(directory, options, allow_dense, document)
+    }
+
+    fn validate_budget(options: LoadOptions) -> Result<(), Error> {
         if options.memory_limit_bytes == 0
             || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
         {
             return Err(invalid("MLX loading budget must be within 6 GiB"));
         }
-        let mut document = read_config(&directory.join("config.json"))?;
+        Ok(())
+    }
+
+    /// The inspection path supplies the same bounded, duplicate-checked document
+    /// it classified. Reopening config here could otherwise report two versions.
+    pub(crate) fn from_inspected_config(
+        directory: &Path,
+        options: LoadOptions,
+        document: Value,
+    ) -> Result<Self, Error> {
+        Self::open_document(directory, options, true, document)
+    }
+
+    fn open_document(
+        directory: &Path,
+        options: LoadOptions,
+        allow_dense: bool,
+        mut document: Value,
+    ) -> Result<Self, Error> {
+        Self::validate_budget(options)?;
         let object = document
             .as_object_mut()
             .ok_or_else(|| invalid("MLX config must be an object"))?;
@@ -498,7 +523,7 @@ impl<'de> Deserialize<'de> for Unique {
         d.deserialize_any(Check)
     }
 }
-fn read_config(path: &Path) -> Result<Value, Error> {
+pub(crate) fn read_config(path: &Path) -> Result<Value, Error> {
     let io = |source| Error::Io {
         path: path.to_owned(),
         source,

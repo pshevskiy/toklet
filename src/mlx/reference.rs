@@ -102,10 +102,14 @@ pub fn load_dense(directory: &Path, options: LoadOptions) -> Result<Loaded, Erro
     load_source(Source::open_dense(directory, options)?, options)
 }
 
-fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error> {
-    let bias_free = !source.architecture().has_projection_bias();
-    let qk_normalized = source.architecture() == Architecture::Qwen3;
-    let config = source.config().clone();
+/// Exact scalar loader estimate, without expanding weights or allocating KV.
+pub(crate) struct LoadPlan {
+    pub fp32_weights_bytes: usize,
+    pub temporary_packed_bytes: usize,
+    pub admitted_load_bytes: usize,
+}
+
+pub(crate) fn load_plan(source: &Source) -> Result<LoadPlan, Error> {
     let mut fp32_weights_bytes = 0;
     let mut temporary_packed_bytes = 0;
     for spec in source.tensors().values() {
@@ -122,6 +126,22 @@ fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error
         add(add(fp32_weights_bytes, temporary_packed_bytes)?, 64 * 1024)?,
         64 * 1024 * 1024,
     )?;
+    Ok(LoadPlan {
+        fp32_weights_bytes,
+        temporary_packed_bytes,
+        admitted_load_bytes,
+    })
+}
+
+fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error> {
+    let bias_free = !source.architecture().has_projection_bias();
+    let qk_normalized = source.architecture() == Architecture::Qwen3;
+    let config = source.config().clone();
+    let LoadPlan {
+        fp32_weights_bytes,
+        temporary_packed_bytes,
+        admitted_load_bytes,
+    } = load_plan(&source)?;
     if admitted_load_bytes > options.memory_limit_bytes {
         return Err(Error::Budget {
             required: admitted_load_bytes,

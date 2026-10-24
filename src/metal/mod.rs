@@ -64,114 +64,14 @@ fn add(a: usize, b: usize) -> Result<usize> {
         .ok_or(Error::Options("memory arithmetic overflow"))
 }
 fn geometry(c: &model::Config) -> Result<()> {
-    c.validate()
-        .map_err(|_| Error::Options("invalid model configuration"))?;
-    let supported = match (
-        c.hidden_size,
-        c.intermediate_size,
-        c.query_heads,
-        c.kv_heads,
-        c.head_dim,
-    ) {
-        (32, 64, 4, 2, 8) | (896, 4864, 14, 2, 64) => c.num_layers <= 24,
-        (1536, 8960, 12, 2, 128) => c.num_layers == 28,
-        _ => false,
-    };
-    if !supported || c.vocab_size > 151936 || c.rope_theta != 1e6 || c.rms_norm_eps != 1e-6 {
-        return Err(Error::Unsupported(
-            "Metal requires supported tiny/Qwen geometry and theta/epsilon",
-        ));
-    }
-    Ok(())
+    mlx_geometry(c, crate::mlx::dense::Architecture::Qwen2)
 }
-/// Keep bias-free geometry admission explicit and before GPU creation. Wider dense
-/// shapes/rotary variants require their own numerical and resource qualification.
 fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture) -> Result<()> {
-    match architecture {
-        crate::mlx::dense::Architecture::Qwen3 => {
-            c.validate()
-                .map_err(|_| Error::Options("invalid Qwen3 configuration"))?;
-            let supported = match (
-                c.hidden_size,
-                c.intermediate_size,
-                c.query_heads,
-                c.kv_heads,
-                c.head_dim,
-                c.num_layers,
-                c.vocab_size,
-            ) {
-                (32, 64, 4, 2, 16, 2, 64) => {
-                    c.max_positions <= 32 && c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6
-                }
-                (1024, 3072, 16, 8, 128, 28, 151936) => {
-                    c.max_positions <= 512 && c.rope_theta == 1e6 && c.rms_norm_eps == 1e-6
-                }
-                _ => false,
-            };
-            if !supported {
-                return Err(Error::Unsupported(
-                    "Metal Qwen3 requires the admitted tiny/0.6B geometry, context and ordinary RoPE",
-                ));
-            }
-            Ok(())
-        }
-        crate::mlx::dense::Architecture::Qwen2 => geometry(c),
-        crate::mlx::dense::Architecture::Llama => {
-            c.validate()
-                .map_err(|_| Error::Options("invalid Llama model configuration"))?;
-            let supported = match (
-                c.hidden_size,
-                c.intermediate_size,
-                c.query_heads,
-                c.kv_heads,
-                c.head_dim,
-                c.num_layers,
-                c.vocab_size,
-            ) {
-                (32, 64, 4, 2, 8, 2, 64) => {
-                    c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6 && c.max_positions <= 32
-                }
-                (576, 1536, 9, 3, 64, 30, 49152) => {
-                    c.rope_theta == 100000.0 && c.rms_norm_eps == 1e-5 && c.max_positions <= 512
-                }
-                _ => false,
-            };
-            if !supported {
-                return Err(Error::Unsupported(
-                    "Metal Llama requires the admitted tiny/SmolLM2 geometry, context and ordinary RoPE",
-                ));
-            }
-            Ok(())
-        }
-        crate::mlx::dense::Architecture::Mistral => {
-            c.validate()
-                .map_err(|_| Error::Options("invalid Mistral model configuration"))?;
-            let shape = (
-                c.hidden_size,
-                c.intermediate_size,
-                c.query_heads,
-                c.kv_heads,
-                c.head_dim,
-                c.num_layers,
-                c.vocab_size,
-            );
-            let supported = match shape {
-                (32, 64, 4, 2, 8, 2, 64) => {
-                    c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6 && c.max_positions <= 32
-                }
-                (4096, 14336, 32, 8, 128, 32, 32768) => {
-                    c.rope_theta == 1e6 && c.rms_norm_eps == 1e-5 && c.max_positions <= 512
-                }
-                _ => false,
-            };
-            if !supported {
-                return Err(Error::Unsupported(
-                    "Metal requires qualified full-attention Mistral geometry and at most 512 positions",
-                ));
-            }
-            Ok(())
-        }
-    }
+    use crate::mlx::execution::GeometryError;
+    crate::mlx::execution::metal_geometry(c, architecture).map_err(|error| match error {
+        GeometryError::Invalid(message) => Error::Options(message),
+        GeometryError::Unsupported(message) => Error::Unsupported(message),
+    })
 }
 /// The planning source contributes shapes only. Reopen payload descriptors after
 /// artifact identity is established, then check metadata and endpoint identities.

@@ -4,7 +4,9 @@
 //! tensor layout does not imply model-architecture or device qualification.
 
 pub mod affine;
+pub mod compatibility;
 pub mod dense;
+pub(crate) mod execution;
 pub mod qwen;
 mod qwen3;
 pub mod reference;

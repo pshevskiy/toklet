@@ -1961,3 +1961,24 @@ GPU test bodies are unchanged, so prior numerical/session evidence is inherited.
 Retain callback cancellation and recovery for selected real Qwen3 on Mac.
 Prefill/mid-GPU and physical cancellation, quality/performance, app/thinking/chat,
 iPhone and wider architecture/Hugging Face work remain open.
+
+### Share local MLX compatibility reporting — 24 October 2026
+
+The [H1 foundation](mlx-compatibility.md) provides an engine-owned metadata report
+for implemented Qwen2, Qwen3, Llama and Mistral graphs. The same captured bounded
+configuration, tensor admission, scalar expansion estimate and exact Metal
+geometry rules drive inspection and loading. No second architecture parser or
+numerical-loop abstraction is added. Compatible metadata, load admission,
+backend availability and pending payload/device/session/text/qualification
+checks stay separate. Affine metadata dtype is explicit; packed words remain U32.
+
+Astra required private geometry construction after validation and an overflow
+regression; both are included. Offline family/budget/malformed/nonfinite probes
+and the real Qwen3 metadata witness verify report boundaries. Final captured
+checks pass: formatting, both strict Clippy configurations, 171 CPU tests,
+191 Metal-feature tests, 19 optimized GPU regressions and one real metadata
+probe. The task receipt binds raw evidence and prior changed source versions.
+Retain this shared foundation. CLI/native/app consumers, actual Metal resource
+planning and receipt-based qualification remain open, alongside general Hub
+downloads/Chat and the remaining graph inventory. No new architecture, app,
+quality, performance or phone claim follows from inspection.
