@@ -2610,3 +2610,27 @@ The numerical core owns no cache/session and the existing engine paths remain
 unchanged. Physical ring mapping, shared-KV ownership/commit/rollback, other G2
 mechanisms, full graph/Metal/quality and device/capability gates remain open.
 No native ABI, output/context/byte limit or phone package changes.
+
+## 24 October2026 — independent KV staging and ring-state witness
+
+The required attention union, each query's visible keys and the final committed
+ring now have separate frozen expectations. Seven cases cover thirty updates
+through single-token and multi-token wraps, window1, global cache and the512
+boundary. At most two old physical spans plus immutable new tokens preserve
+keys needed by early chunk queries. The314 arrays contain23306 values; logical
+FP64 context is independent of the source's physical ring phase.
+
+Seven portable, three owned-process and three runtime-admission methods pass.
+Pinned upstream CPU/GPU each retain101 raw arrays and pass30 context comparisons;
+K/V and masks are exact, with maximum context error/policy ratios about0.00193
+and0.00230. Independent replay verifies the saved state and observations. The
+initial wrong-interpreter preflight is retained separately with no child run.
+Astra reviews exact final code/evidence before commit. See
+[the contract](gemma-kv-reference.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-kv-reference-v1.json).
+
+Abort/retry remains a required native policy, not tested native/upstream
+rollback. Shared producer reuse, native cache/session and ring-aware attention,
+full graph/Metal, rotary parity, quality/performance and device/capability gates
+remain open. Existing numerical engine, native ABI, app limits and phone package
+are unchanged.
