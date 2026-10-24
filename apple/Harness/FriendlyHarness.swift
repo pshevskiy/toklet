@@ -110,7 +110,7 @@ struct FriendlyHarnessView: View {
                                     Text(message.role == "user" ? "You" : "Toklet").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                                     if message.writing { HStack { ProgressView(); Text("Writing…").foregroundStyle(.secondary) } }
                                     else {
-                                        if message.role == "assistant", !message.text.isEmpty { ChatContent(text:message.text) }
+                                        if message.role == "assistant", !message.text.isEmpty { ChatContent(text:message.text).equatable() }
                                         else {
                                             Text(message.text.isEmpty ? (message.interrupted ? "Response stopped." : "No text returned.") : message.text).textSelection(.enabled)
                                         }
@@ -182,6 +182,9 @@ struct FriendlyHarnessView: View {
                 Button("Retry saving or opening chats") { chat.retryStorage() }
             }
             if !chat.notice.isEmpty { Text(chat.notice).font(.callout) }
+            if !chat.outputLimitAvailable {
+                Text("The saved reply limit is unavailable in this version. Choose a reply limit in Settings.").font(.callout)
+            }
             if chat.loadingModel { ProgressView("Opening " + chat.modelName + "…").font(.callout) }
             if store.state.hasModel && !chat.hasChatModel && !chat.loadingModel {
                 Text("Choose this conversation’s model, or start a new chat with " + chat.modelName + ".").font(.callout).foregroundStyle(.secondary)
@@ -334,7 +337,12 @@ struct FriendlyHarnessView: View {
         Form {
             Section("Responses") {
                 Picker("Response limit",selection:$chat.workspace.outputLimit) {
-                    Text("32 tokens").tag(UInt32(32)); Text("64 tokens").tag(UInt32(64)); Text("128 tokens").tag(UInt32(128)); Text("256 tokens").tag(UInt32(256))
+                    ForEach(chat.availableOutputLimits,id:\.self) { limit in
+                        Text("\(limit.formatted()) tokens").tag(limit)
+                    }
+                    if !chat.outputLimitAvailable {
+                        Text("\(chat.workspace.outputLimit.formatted()) tokens (unavailable)").tag(chat.workspace.outputLimit)
+                    }
                 }.disabled(!unlocked).onChange(of:chat.workspace.outputLimit) { _,_ in chat.save() }
                 Text("Tokens are pieces of words. This sets the maximum reply length; a model can finish earlier. Prompt, chat history and reply share 512 tokens. Choose a shorter limit or start a new chat when they do not fit.").font(.footnote).foregroundStyle(.secondary)
             }

@@ -38,6 +38,14 @@ struct MobileMain {
         try require(spans.contains { $0.text == "let" && $0.kind == .keyword },"keyword highlight")
         try require(spans.contains { $0.text == "42" && $0.kind == .number },"number highlight")
         try require(spans.contains { $0.text == "// note" && $0.kind == .comment },"comment highlight")
+        for text in ["",String(repeating:"🌍👨‍👩‍👧‍👦e\u{301}",count:6000),String(repeating:"let value = 42 // code\n",count:32768),String(repeating:"x",count:32769)] {
+            let pages = ChatPages.split(text)
+            try require(pages.joined() == text,"long text pages preserve exact Unicode and newlines")
+            try require(pages.allSatisfy { $0.count <= ChatPages.maximumCharacters },"individual layout/highlighting work is bounded")
+            for page in pages {
+                try require(CodeHighlight.spans(page,language:"swift").map(\.text).joined() == page,"long code pages preserve exact text")
+            }
+        }
     }
     static func workspace() throws {
         try checkChatWorkspace()
@@ -47,11 +55,34 @@ struct MobileMain {
         let pending = try value.begin()
         value.finish(NativeChatResult(id:pending.0,text:"An incomplete explanation",reason:1,error:""))
         try require(value.current.messages.last?.notice.contains("Response limit reached") == true,"length stop is visible")
-        for limit: UInt32 in [32,64,128,256] {
+        for limit in ChatWorkspace.outputLimits {
             value.outputLimit = limit
             let restored = try ChatWorkspace.restore(JSONEncoder().encode(value))
             try require(restored.outputLimit == limit,"old saved setting preserved")
         }
+        var large = ChatWorkspace()
+        large.edit("Write a long explanation")
+        let largeRequest = try large.begin()
+        // Text storage/rendering probe only: no model or token-count claim.
+        let longReply = String(repeating:"word ",count:131072)
+        large.finish(NativeChatResult(id:largeRequest.0,text:longReply,reason:1,error:""))
+        let restored = try ChatWorkspace.restore(JSONEncoder().encode(large))
+        try require(restored.current.messages.last?.text == longReply,"long reply saves without truncation")
+        let escapedReply = String(repeating:"\u{0000}",count:ChatWorkspace.maximumMessageBytes)
+        var escaped = ChatWorkspace(); escaped.edit("Test escaped storage")
+        let escapedRequest = try escaped.begin()
+        escaped.finish(NativeChatResult(id:escapedRequest.0,text:escapedReply,reason:1,error:""))
+        let escapedBytes = try JSONEncoder().encode(escaped)
+        try require(escapedBytes.count <= ChatWorkspace.maximumBytes,"completion reservation includes worst-case JSON escaping")
+        let harness = HarnessStore(enabled:false)
+        let file = FileManager.default.temporaryDirectory.appendingPathComponent("TokletReplyLimit-" + UUID().uuidString + ".json")
+        let chat = FriendlyChatStore(harness:harness,fileURL:file)
+        chat.workspace.outputLimit = 131072
+        try require(chat.availableOutputLimits.allSatisfy { $0 <= NativeSettings.maximumChatOutputTokens },"settings only offers runnable native output limits")
+        try require(chat.outputLimitAvailable == (NativeSettings.maximumChatOutputTokens >= 131072),"large saved preference follows native capability")
+        try require(chat.workspace.outputLimit == 131072,"unsupported saved preference is not silently shortened")
+        chat.workspace.outputLimit = 128
+        try require(chat.outputLimitAvailable,"existing reply preference stays available")
     }
     static func hub() async throws {
         let gate = VerificationGate()

@@ -43,6 +43,29 @@ enum ChatBlock: Equatable {
     }
 }
 
+// Bound individual text-layout/highlighting work without changing saved text.
+// Slices end on Character boundaries, including multi-scalar emoji.
+enum ChatPages {
+    static let maximumCharacters = 8192
+    static func split(_ text: String) -> [String] {
+        guard !text.isEmpty else { return [""] }
+        var pages: [String] = []
+        var start = text.startIndex
+        while start < text.endIndex {
+            var end = text.index(start,offsetBy:maximumCharacters,limitedBy:text.endIndex) ?? text.endIndex
+            if end < text.endIndex,
+               let newline = text[start..<end].lastIndex(of:"\n") {
+                // Keep ordinary code lines/paragraphs together. Very long lines
+                // still split at the character bound and remain fully copyable.
+                let next = text.index(after:newline)
+                if text.distance(from:start,to:next) >= maximumCharacters / 2 { end = next }
+            }
+            pages.append(String(text[start..<end])); start = end
+        }
+        return pages
+    }
+}
+
 enum CodeHighlight {
     enum Kind { case plain, comment, string, number, keyword }
     struct Span { let text: String; let kind: Kind }
@@ -85,14 +108,16 @@ enum CodeHighlight {
     }
 }
 
-struct ChatContent: View {
+struct ChatContent: View, Equatable {
     let text: String
     var body: some View {
-        VStack(alignment:.leading,spacing:12) {
+        LazyVStack(alignment:.leading,spacing:12) {
             ForEach(Array(ChatBlock.parse(text).enumerated()),id:\.offset) { _,block in
                 switch block {
                 case .prose(let prose):
-                    Text(markdown(prose)).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.leading)
+                    ForEach(Array(ChatPages.split(prose).enumerated()),id:\.offset) { _,page in
+                        Text(markdown(page)).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.leading)
+                    }
                 case .code(let language,let code): CodeSnippet(code:code,language:language)
                 }
             }
@@ -112,7 +137,10 @@ struct CodeSnippet: View {
     let code: String
     var language = ""
     @State private var copied = false
+    @State private var page = 0
     var body: some View {
+        let pages = ChatPages.split(code)
+        let selected = min(page,pages.count - 1)
         VStack(alignment:.leading,spacing:0) {
             HStack {
                 Text(language.isEmpty ? "Code" : language).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
@@ -128,12 +156,26 @@ struct CodeSnippet: View {
             }.padding(.horizontal,12)
             Divider()
             ScrollView(.horizontal) {
-                Text(CodeHighlight.attributed(code,language:language))
+                Text(CodeHighlight.attributed(pages[selected],language:language))
                     .font(.system(.callout,design:.monospaced)).textSelection(.enabled)
                     .fixedSize(horizontal:true,vertical:false).padding(12)
             }
+            if pages.count > 1 {
+                Divider()
+                HStack {
+                    Button("Previous",systemImage:"chevron.left") { page = selected - 1 }
+                        .disabled(selected == 0)
+                    Spacer()
+                    Text("Part \(selected + 1) of \(pages.count)").font(.caption).foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Next",systemImage:"chevron.right") { page = selected + 1 }
+                        .disabled(selected == pages.count - 1)
+                }.font(.caption).buttonStyle(.borderless).frame(minHeight:44).padding(.horizontal,12)
+                Text("Copy includes the entire code block.").font(.caption).foregroundStyle(.secondary)
+                    .padding(.horizontal,12).padding(.bottom,8)
+            }
         }.background(.quaternary.opacity(0.4),in:RoundedRectangle(cornerRadius:12))
             .overlay(RoundedRectangle(cornerRadius:12).stroke(.quaternary,lineWidth:1))
-            .onChange(of:code) { _,_ in copied = false }
+            .onChange(of:code) { _,_ in copied = false; page = 0 }
     }
 }

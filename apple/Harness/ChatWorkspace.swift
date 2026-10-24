@@ -19,7 +19,12 @@ struct LocalConversation: Codable, Identifiable {
 
 // Bounded UI history is independent of numerical KV and worker handles.
 struct ChatWorkspace: Codable {
-    static let maximumBytes = 2 * 1024 * 1024
+    static let maximumMessageBytes = 8 * 1024 * 1024
+    static let maximumBytes = 64 * 1024 * 1024
+    static let outputLimits: [UInt32] = [32,64,128,256,512,1024,2048,4096,8192,16384,32768,65536,131072]
+    // JSON can escape one input byte as six bytes. Reserve a whole bounded
+    // completion plus metadata before beginning; no response is silently cut.
+    static let completionReserve = maximumMessageBytes * 6 + 16 * 1024
     var version = 1
     var conversations: [LocalConversation]
     var selected: UUID
@@ -52,7 +57,7 @@ struct ChatWorkspace: Codable {
         messages.append(["role":"user","content":input])
         let json = try JSONSerialization.data(withJSONObject:messages,options:[.sortedKeys])
         guard json.count <= 64 * 1024,
-              try JSONEncoder().encode(self).count < Self.maximumBytes - 512 * 1024 else {
+              try JSONEncoder().encode(self).count <= Self.maximumBytes - Self.completionReserve else {
             throw chatInputError("This history is full. Start a new chat or delete an older chat.")
         }
         let response = ChatMessage(role:"assistant",text:"",writing:true)
@@ -90,7 +95,7 @@ struct ChatWorkspace: Codable {
         guard value.version == 1, (1...20).contains(value.conversations.count),
               Set(value.conversations.map(\.id)).count == value.conversations.count,
               value.conversations.contains(where: { $0.id == value.selected }),
-              [32,64,128,256].contains(value.outputLimit) else { throw chatInputError("Invalid saved chat history") }
+              Self.outputLimits.contains(value.outputLimit) else { throw chatInputError("Invalid saved chat history") }
         var ids = Set<UUID>()
         for index in value.conversations.indices {
             let chat = value.conversations[index]
@@ -99,7 +104,7 @@ struct ChatWorkspace: Codable {
             for message in chat.messages.indices {
                 let item = chat.messages[message]
                 guard ids.insert(item.id).inserted, item.role == (message.isMultiple(of:2) ? "user" : "assistant"),
-                      item.text.utf8.count <= 65536, item.notice.utf8.count <= 2048 else { throw chatInputError("Invalid saved message") }
+                      item.text.utf8.count <= Self.maximumMessageBytes, item.notice.utf8.count <= 2048 else { throw chatInputError("Invalid saved message") }
                 if item.writing {
                     value.conversations[index].messages[message].writing = false
                     value.conversations[index].messages[message].interrupted = true

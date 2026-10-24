@@ -37,7 +37,11 @@ final class FriendlyChatStore: ObservableObject {
         guard let harness else { return false }
         return hasChatModel && !loadingModel && !harness.state.closed && !harness.state.busy && !running
     }
-    var canSend: Bool { ready && !workspace.current.draft.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && !storageBlocked }
+    var availableOutputLimits: [UInt32] {
+        ChatWorkspace.outputLimits.filter { $0 <= NativeSettings.maximumChatOutputTokens }
+    }
+    var outputLimitAvailable: Bool { availableOutputLimits.contains(workspace.outputLimit) }
+    var canSend: Bool { ready && outputLimitAvailable && !workspace.current.draft.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && !storageBlocked }
     private var documents: URL { FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0] }
     private func key(_ url: URL) -> String {
         let prefix = documents.path + "/"

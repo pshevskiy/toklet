@@ -1,0 +1,159 @@
+{
+  "format": "toklet-mobile-long-reply-preparation-v1",
+  "status": "mobile_preparation_checked_engine_generation_pending",
+  "requested_output_tokens": 131072,
+  "requested_checks_complete": false,
+  "generation_at_requested_limit_implemented": false,
+  "physical_device_tested": false,
+  "installed_phone_app_changed": false,
+  "current_runnable_contract": {
+    "chat_output_tokens": 256,
+    "expert_raw_output_tokens": 128,
+    "chat_context_positions": 512,
+    "conversation_json_bytes": 65536,
+    "default_chat_output_tokens": 128
+  },
+  "prepared_ui_bounds": {
+    "message_utf8_bytes": 8388608,
+    "history_json_bytes": 67108864,
+    "completion_reserve_bytes": 50348032,
+    "text_part_characters": 8192,
+    "stored_output_preferences": [
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024,
+      2048,
+      4096,
+      8192,
+      16384,
+      32768,
+      65536,
+      131072
+    ],
+    "picker_filtered_by_native_maximum": true,
+    "unsupported_preference_silently_clamped": false,
+    "copy_uses_entire_code_block": true
+  },
+  "source_pins": {
+    "apple/Harness/ChatContent.swift": "7843fe31181c5465e80b15702a1e481bb25b1a90f4e351272076d276839acb97",
+    "apple/Harness/ChatWorkspace.swift": "071e2fda34ba976e3320571c071090461cfba650797e0f6dc2bd02ce850955c3",
+    "apple/Harness/FriendlyChatStore.swift": "d3e5dc65f8dc81a189c47b948fea8bb10b400a71ff5fcc0048c61d2fcdb06ed5",
+    "apple/Harness/FriendlyHarness.swift": "35ebce4a1b9929323b82c41f766705b61af8713b943eae0a9ce855708a4a9fea",
+    "apple/tests/swift/MobileMain.swift": "c6bc1b4b138496639a2164b0560b9b5fbb10c27357529ffe6b5b2c9bd158ba79",
+    "tools/experiments/mobile_interface_check.py": "3b809e6d86b32c95fcca745b003458becba01ce4b2b9c8ad55f3b2a1e3dfdeb6",
+    "docs/long-reply-mobile.md": "ba3fd33e71dc65b0a4e2a1ea95a417306aafd574aea040339559860df3b706db"
+  },
+  "verification": {
+    "strict_swift6_and_controller_report": {
+      "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/check.json",
+      "sha256": "b57ba095eb54bd470c0ae6b327ad14b8a51f6e391ccfc5c593f12a222cdc5fd3"
+    },
+    "full_release_build_report": {
+      "path": "artifacts/mobile-long-replies-2026-10-24/apps-v1/build.json",
+      "sha256": "4f42af08459fb156f660caa999b02066c9535bab6c79975928bce47a5a780561"
+    },
+    "native_package": {
+      "path": "artifacts/m8-native-policy-v1/package/build.json",
+      "sha256": "2d7d35b02d5c35a343d29b657cbf254f722171846d0df49f57bb15f92ba2194d"
+    },
+    "commands": [
+      {
+        "label": "compile",
+        "exit_code": 0
+      },
+      {
+        "label": "regressions",
+        "exit_code": 0
+      },
+      {
+        "label": "render",
+        "exit_code": 0
+      },
+      {
+        "label": "iphoneos",
+        "exit_code": 0
+      },
+      {
+        "label": "iphonesimulator",
+        "exit_code": 0
+      }
+    ],
+    "release_platforms": [
+      "iphonesimulator",
+      "iphoneos"
+    ],
+    "logs": [
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/compile.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/iphoneos.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/iphonesimulator.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/regressions.stdout",
+        "sha256": "baf5e1ba8a14f14b61c14fb25d2b6b033e476fe0d0d078e17860efb23aefbfe5"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/render.stdout",
+        "sha256": "754ce0d874426b063f7f167ac5dcb6713a84f0b00e12bfb39eb19bbab70ce237"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/compile.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/iphoneos.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/iphonesimulator.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/regressions.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/check-v4/render.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/apps-v1/iphoneos.stdout",
+        "sha256": "015cb526c3f426223b38756fc2984e827880806e3731305532f01c9372ff40ff"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/apps-v1/iphonesimulator.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/apps-v1/iphoneos.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "artifacts/mobile-long-replies-2026-10-24/apps-v1/iphonesimulator.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "preserved_failed_sandbox_attempt": {
+      "path": "artifacts/mobile-long-replies-2026-10-24/check-v1/check.json",
+      "sha256": "c6c6ed973d75f54aac033ec0c3b195ce35a462289e1abe2809c95d7c8bb0015c"
+    }
+  },
+  "limitations": [
+    "No128K model generation, quality, cancellation, throughput or iPhone memory qualification.",
+    "Stored long-text probes do not establish an actual model token count.",
+    "Native conversation byte/context limits and Expert raw limit are unchanged.",
+    "The snapshots include in-flight engine resource preflight; their full source identities are retained in the reports.",
+    "Text parsing/splitting still visits the complete bounded document; lexical highlighting does not carry language state across code parts.",
+    "The installed phone production app and pending UI automation prerequisite retain their earlier recorded scope."
+  ]
+}
