@@ -3,6 +3,7 @@ import CToklet
 
 struct NativeSettings: Sendable {
     static let maximumChatOutputTokens: UInt32 = TOKLET_MAX_CHAT_OUTPUT_TOKENS
+    static let chatContextPositions: UInt32 = 512
     var directory: String
     var packedDirectory = ""
     var metal = false

@@ -29,8 +29,10 @@ performance qualification. UI polling is not the measurement clock.
 
 Find best model filters only the existing pinned, downloadable Chat catalog
 through the current device admission policy, then shows up to five results
-ordered by model artifact size, largest first. This capacity heuristic does not
-claim measured answer quality or speed. The presently resident Chat profile can
+ordered by the selected task's capacity, estimated speed and memory headroom
+scores. [Task-based ranking](mobile-model-ranking.md) documents the weights and
+assumptions; these estimates do not claim measured answer quality or speed.
+The presently resident Chat profile can
 remain listed without requiring space for a second copy. Other profiles must fit
 the allowance remaining now; unload the active model to evaluate replacements
 with more headroom. The screen explains the basis and why fewer than five can

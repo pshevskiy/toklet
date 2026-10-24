@@ -1,0 +1,686 @@
+{
+  "format": "toklet-mobile-model-ranking-v1",
+  "date": "2026-10-24",
+  "status": "installed_and_physical_ui_verified",
+  "mobile_source_base_revision": "00bdae1",
+  "physical_device": {
+    "model": "iPhone 14 Pro",
+    "os": "iOS 27.0.1"
+  },
+  "source_pins": {
+    "apple/Harness/ChatContent.swift": "7843fe31181c5465e80b15702a1e481bb25b1a90f4e351272076d276839acb97",
+    "apple/Harness/ChatWorkspace.swift": "3efb491b1a5bbbb5647fece57346bb3d82389fd798c7024cb4b0b81cef26c54b",
+    "apple/Harness/ExpertHarness.swift": "cf2f74c57c9fa9008fafdf209ec15d4d56673d455a65550ba0ec5c7d1ed7a839",
+    "apple/Harness/FriendlyChatStore.swift": "2ed323d6fea23406d176561858cb961da2d251f1ce93ffd22614f2c9c2f87ab2",
+    "apple/Harness/FriendlyHarness.swift": "04b7354b000fa0540049e4666c0973d56ab42661628d60ac55bb23b762af6ecc",
+    "apple/Harness/HarnessApp.swift": "72b77cd9f9ae46601bd654515abf48bea1e9237f8e9547b4a450554339f6d81f",
+    "apple/Harness/HarnessStore.swift": "07d150e9b83d7164e786560bc5e4aa9b88dc34fb7ce89e2fe100a96da0c20893",
+    "apple/Harness/HubStore.swift": "dc302994113b37049a86fda7842c89598b33c0a72184a6c6678e07786d1fc382",
+    "apple/Harness/HubTransfer.swift": "b2f4cf80235ee063b18ff92438c1c5d9143665f0cf5ba5b27a44394061e37826",
+    "apple/Harness/ModelHub.swift": "4dfbf6d254321954fb21c9c4738532f211ae5c4365ddd9d266486358cc1313fe",
+    "apple/Harness/NativeChatCheck.swift": "12444fb572e9b4c2a1c5397d33d49b4b7474f57fa2ffccd33084d2022a79c88c",
+    "apple/Harness/NativeCompatibility.swift": "fc5b0cc5eef791df9d15675fffe11da0ba7ec4d10b59fe5b3b7bea1601f81b4f",
+    "apple/Harness/NativeLifecycle.swift": "4a49b4899715dbc8eca0c750253ba49d0ac55d1ee433c77a82b877f28d1b0d00",
+    "apple/Harness/NativeLifecycleRun.swift": "9170e354d07dc09e1f4eb9ea718b68ff5c6df16b68f85fc0dc44872de0f414a2",
+    "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "apple/Harness/NativeMeasurement.swift": "5dcd81db64963db10d2bd50a6e9bc8dee567951f1a344341dd0cd9dfecbf8a46",
+    "apple/Harness/NativeQuality.swift": "e54783e1ed25035340f07c13f593cefdb616152fc296b17fc6508ba1e7e3972a",
+    "apple/Harness/NativeResourcePlan.swift": "c174cd3d51d802619bc780c0cadcc53ecc69da3d54f65fa54deb7dca2a0f0df5",
+    "apple/Harness/NativeStateRun.swift": "e0b8a0d12fd93db67fcab374da3f386d8b3331b1b20bd96413ebca1dfb290a99",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "d2df04cf9da12d5b648970e49c64f1bdbc28bf464ca3c05a6a65e4ee6b6ae4e9",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/Harness/NativeWorker.swift": "6b747ab1b84063c29daa214aa0035fe0618a57c714fca03bdfba688074a8cd07",
+    "apple/tests/swift/WorkerChecks.swift": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf",
+    "apple/tests/swift/MobileMain.swift": "45254321e60f1fdd7748bb458a8620a797422b23c0f9f91b6ecdc88454f6faac",
+    "apple/include/toklet.h": "2bcbe2b2503b37e43a30fc015ef9c46f3c9a6b4a60be4bedca51c5543042cce3",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/tests/ui/ModelSwitchUITests.swift": "944eca8986fe1cafa6eabb72d06d1ce8ef92906bc9d06d3f2dbc360d7b3f9e32",
+    "docs/mobile-model-ranking.md": "0c24c1e136d15b570cef0b7b05beea136478d707a76644356b03f110bcf5192d",
+    "docs/mobile-dashboard.md": "b1b9aa9253a8bccfc2b52142176757988b57af0b5fe8c5e368d3b37e4c59c7f5"
+  },
+  "native_package": {
+    "path": "artifacts/m8-native-policy-v1/package/build.json",
+    "sha256": "2d7d35b02d5c35a343d29b657cbf254f722171846d0df49f57bb15f92ba2194d"
+  },
+  "native_package_file_count": 10,
+  "installed_app": {
+    "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/UITestDerived/Build/Products/Release-iphoneos/TokletHarness.app",
+    "bundle_identifier": "dev.toklet.harness",
+    "signature_verified": true,
+    "signed_file_sha256": {
+      "TokletHarness": "0ba2848cd549ff08d8a52063b23cd98bf960bc9962bab43d8e9950f52a2a8a6e",
+      "embedded.mobileprovision": "f205de44fba20484b45c00e44df01ad8183177b2427ba9b488679afb22697220",
+      "Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+      "PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+      "_CodeSignature/CodeResources": "f7a2be8763bdd7253ef302cd61ee0d9496a66bb954e33176b6eb23f81714a9db",
+      "Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+      "Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+    },
+    "normal_launch": true
+  },
+  "ranking": {
+    "tasks": [
+      "Balanced",
+      "Coding",
+      "Fast replies"
+    ],
+    "components": [
+      "relative stored-model capacity",
+      "estimated weight-reading speed",
+      "current allowance headroom"
+    ],
+    "confidence": "estimated",
+    "maximum_results": 5,
+    "supported_catalog_size": 3,
+    "new_model_profiles_added": 0,
+    "new_dependencies_added": 0
+  },
+  "verification": {
+    "local_check": {
+      "path": "artifacts/mobile-ranking-2026-10-24-v1/check-v3/check.json",
+      "sha256": "33990981f175748056cb0cd73c89c996aea4e0ff7d6d3e5643b5e2bc606b02e7"
+    },
+    "local_commands": [
+      {
+        "label": "compile",
+        "exit_code": 0
+      },
+      {
+        "label": "regressions",
+        "exit_code": 0
+      },
+      {
+        "label": "worker-revision",
+        "exit_code": 0
+      },
+      {
+        "label": "render",
+        "exit_code": 0
+      },
+      {
+        "label": "local-model",
+        "exit_code": 0
+      },
+      {
+        "label": "replacement-admission",
+        "exit_code": 0
+      },
+      {
+        "label": "iphoneos",
+        "exit_code": 0
+      },
+      {
+        "label": "iphonesimulator",
+        "exit_code": 0
+      }
+    ],
+    "signed_build": {
+      "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/build.json",
+      "sha256": "364ca8ce04de212767b7974ecdff175ac88bcfe329998fa19aa28a81e13a6304"
+    },
+    "physical_suite": {
+      "passed": true,
+      "passed_tests": 5,
+      "failed_tests": 0,
+      "skipped_tests": 0,
+      "duration_seconds": 270.33,
+      "tests": [
+        {
+          "name": "testBenchmarkAndGemma4Search()",
+          "result": "Passed",
+          "durationInSeconds": 48.667847990989685
+        },
+        {
+          "name": "testDashboardControls()",
+          "result": "Passed",
+          "durationInSeconds": 35.24743604660034
+        },
+        {
+          "name": "testModelSwitching()",
+          "result": "Passed",
+          "durationInSeconds": 96.25542199611664
+        },
+        {
+          "name": "testRankedRecommendations()",
+          "result": "Passed",
+          "durationInSeconds": 25.688596963882446
+        },
+        {
+          "name": "testReplyLimitAndExpert()",
+          "result": "Passed",
+          "durationInSeconds": 58.89719998836517
+        }
+      ],
+      "summary": {
+        "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/phone-summary.json",
+        "sha256": "309498ff6dff3854b8fb24cd5f8a3c41c7f9f67ecfa3e9b1e3f6843a5336b548"
+      },
+      "xcresult_path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/phone-ui-v3.xcresult",
+      "raw_summary": {
+        "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/xcresult-summary.json",
+        "sha256": "6cb37ea836e922e66e8804eaa79bf62d5950f3649a069587de61f70d89721e02"
+      },
+      "raw_tests": {
+        "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/xcresult-tests.json",
+        "sha256": "fda30227575c766534ea378938653f35e01df145bf7e6a8d0e44d52b8314e587"
+      },
+      "stdout": {
+        "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/private-logs/phone-ui.stdout",
+        "sha256": "08f36f6504f2d42b927ecb410a2373dd874e3e99f63075f2f5a1b93325c83fe6"
+      },
+      "stderr": {
+        "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/private-logs/phone-ui.stderr",
+        "sha256": "ce3a558fea33cfea4138eea056d0f93e8a5cd7e0fe56ca469e1b917b7fe4ffc8"
+      },
+      "attachments": [
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Gemma4-search-unsupported tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/FAC61BD3-8A4C-49BF-815E-474179D4CE58.txt",
+          "sha256": "ea25bf6a9415f21118b1d4b8696b1ae42b9d500921593ff71b031c93fd862f9c"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Gemma4-search-unsupported",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/BD002F63-FE66-4523-8142-7D9FCBB329F8.png",
+          "sha256": "8b38cd300d107c47760b84f4750e61440b0fde0e4bb144bcf1121b63320f63c7"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Gemma4-search-state tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/1407F3E9-13B3-437D-B15D-EF7064EFEBA3.txt",
+          "sha256": "1b945b51e7a8df1b52fe7e1993e73e683d6e485b9725cf403c39631def98d710"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Gemma4-search-state",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/0F617274-0382-4D75-80F8-D34676079CAC.png",
+          "sha256": "8b38cd300d107c47760b84f4750e61440b0fde0e4bb144bcf1121b63320f63c7"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Measured-phone-dashboard tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/B160113E-97EF-4AD4-9631-FDEF76F0BA13.txt",
+          "sha256": "1860e00840cb2b218b73bb2eb1468c4efffabf331dd2725ea50a2376718461c7"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Measured-phone-dashboard",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/B61AAEAE-D553-40A4-A6D2-CFBF029715E4.png",
+          "sha256": "c79f6ee36a17084408741942d32a7fefefb2ecb9888ff860e1baa3712f5259aa"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-3 tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/7FDA1796-BF86-48C0-B8C7-C6CF1D854016.txt",
+          "sha256": "9dba3a62d4375d85d8cbb935c58c47df7168af6fc591c710c5169b8e04e9d108"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-3",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/9DE790EB-EF04-4667-AB41-9771D7437F99.png",
+          "sha256": "c103f39ca0e8db1042fa0fc3dc1cb524f0df78e05c5251a351e2d6491bcde785"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-2 tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/D43DC26D-A530-4ABC-B609-62C824A13A0F.txt",
+          "sha256": "ce8b33daa72ee6a765e5496d7fc5b20171cfb4c359944c9f479bc7638f1a92a0"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-2",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/34EB3522-8421-4976-8CE7-254EEBABDCF0.png",
+          "sha256": "c103f39ca0e8db1042fa0fc3dc1cb524f0df78e05c5251a351e2d6491bcde785"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-1 tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/A9375C93-FB58-42E7-9953-7F583D8EE163.txt",
+          "sha256": "45c906ebc5ff5e2ca4bce514eceb9d5daa5e1f36c2fb2e03d7d7716290bed9b5"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-1",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/CF395D92-7F06-45FE-8BBB-D7F3BE26A3A7.png",
+          "sha256": "018c14ecf5c062f310396eaea16a22f94c82145bd5fa599949e64b986d84c962"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/6B4737FC-87EC-4E63-94F1-D9018EA93517.txt",
+          "sha256": "6076ace26f22619e29e0a1961da980571699ecb445aa1fb5b76e4637e2c098f5"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/6F031A9F-7B6E-4F74-B6B4-000B38571F6B.png",
+          "sha256": "3590e03f0a93ad0d580e26fb0c0203e806c9a5c399e9371b805a277dd5f592b1"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/48A1AFC3-8D78-48E9-861E-495F478EA7DE.txt",
+          "sha256": "fd01b3979c84f8511f842d6d97051c7ee8cb370b39ed36c9e7fff5092db76434"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/09EBA3EC-312F-479F-B8D3-E852C32617E9.png",
+          "sha256": "57c8174a9f612da067558b6238d2a4b60f9c0d429ac8000a8893c1873232a0d1"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Expert-monitoring tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/8C83B8BA-8F21-4612-B569-4962F155053D.txt",
+          "sha256": "60f4a9a0de715567205e7aad0ff204c6af3fbe53ad9ef0f10c669ee534d91d1a"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Expert-monitoring",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/90E06F20-594F-4534-8285-6966986E03BF.png",
+          "sha256": "58bd7bc0d505c9df78ca78bfe22cd3cb98f5fcc1f86dd1d00c32ca0555f9a200"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dialogs-deleted tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/06BE4FAC-8217-4B77-BCA8-334F026A1709.txt",
+          "sha256": "2e8c0b4a2ac97a09fbf7a48b092f7ebd799ff11a00c32973d9c046201359eea0"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dialogs-deleted",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/73F69C35-0F03-4517-A1D1-C80FAD63EC20.png",
+          "sha256": "8b465278ab28332bfff7f59f50f3cd7cc3dc1671454956417153b48bc0197cf5"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Single-dialog-deleted tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/158F9372-9E09-4C92-86E2-5478E940C92D.txt",
+          "sha256": "6476f48e7836b4ac7f5d35cc579442ebe4f93bcaf9814776c068a3cf0e449e99"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Single-dialog-deleted",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/D55CC26E-A0A2-422B-801D-5F5588707D5B.png",
+          "sha256": "3d2164c8b58009b69c1773dfb3854fd26f798e56b51a347a076bbbe8635b86af"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Benchmark-needs-model tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/E58EE27A-1C87-4116-B8FE-5FA8524716C8.txt",
+          "sha256": "9d31c22a6d7f72cece08e060c16d4c5cfa6df9de7f869cf0791ed13e994b14ef"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Benchmark-needs-model",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/0E878BC4-E7E9-4635-9D42-52CEE6AAE2CA.png",
+          "sha256": "7dac6f1cba457a782864dd8f4e475b5eccbdf89cb096e44f04d728436f22175d"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Device-fit-shortlist tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/9B4B708A-9E17-469F-823D-1B9CD715F7FE.txt",
+          "sha256": "22c56ac174857f9f4177046c1d7ee2a906b29fe004354b09b2ab895d0b41c2c6"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Device-fit-shortlist",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/990EE024-5E98-493D-B415-5BD66110CC51.png",
+          "sha256": "d9cee77dc979e67bdd33c0670bab99d6a456cdbfa2671a18c2cca3f6f89a34b8"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dashboard tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/D3E8A09B-32EC-483D-A0AC-1F04C7A00D9C.txt",
+          "sha256": "6b6e6f9c7775c5908b0c7bc5bcb280dfdfee9d4c80e2927c461fd0ed353a7b8d"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dashboard",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/F01C3645-B124-4BDD-B036-FECDB1F6F601.png",
+          "sha256": "947d98240dbcad3268752d4e298a2ede2557cfad5db43e3798dab0fca6acc550"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dashboard-initial tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/60A60694-B35E-4F46-A72E-21C1FB6B5897.txt",
+          "sha256": "b4c24e106a5ef5685ab5ffe19a4dd6c294933d3db9575b0aa4d4938b87142293"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dashboard-initial",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/6DFB88D9-93A2-4B06-9E20-B6DDF779F56F.png",
+          "sha256": "3fa27926ffc52b9be2c9e3807f82dd12689d6c8f9a25ef729f9ec02083239066"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/710B6F8B-33CF-42EA-A49E-2E5497DF739A.txt",
+          "sha256": "378a7a6898f0df49ae3bfc1df2a021c7ac89bf51a599f019fe0b5c0a0154612e"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/1C1A7D33-8CD2-4961-BF9C-E6B555379948.png",
+          "sha256": "b50f6aad64246bafa3adcabcc6c1a94ad2142adb174509aed5b202882fd145a0"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/CFCE4985-59D8-4C57-8A2C-45D522838FE5.txt",
+          "sha256": "1927140401bd29bcf87cd487272659c1c9ad6ab4a84d2fdc26affb849e8f976e"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/EDEA8583-A9E5-4368-940B-B211A40A090E.png",
+          "sha256": "428a26ab977f9b0906da858ce6e09bc2e4a3be130a27f31a4d89a5dfe29f4fdf"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/B54E0B8A-F048-479D-B905-9C5CA6DEF9B8.txt",
+          "sha256": "717810501c668e8fcbf684d74558d3c2aa9e14f61c90b8210e0414b136c8e6c5"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/886A65F9-062E-4A43-BD67-40E2B1D05C7D.png",
+          "sha256": "91af3d4f0fe90a4d3c258e716b7a9f55f94360625590f71384e2935b3bd7f54b"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/26DB4DA8-F1BC-45D6-9D3A-42D0822655EF.txt",
+          "sha256": "6bb4a72d22d5ffca5d187a93771a446699481c850a4cab55e401c838f85ea554"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/C5D8B201-C247-4B44-8A8D-17E7E44A796E.png",
+          "sha256": "53cb48e21159f8abeb42447cd36600a1c7ccb37abec7e2d108f72be7df5b4ebf"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-qwen tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/D37376AB-15C9-4046-9EC5-AA6807272383.txt",
+          "sha256": "3cf2be54ed36c463446eec58fbd34f9acff772509eabd140d46281f1323db19f"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-qwen",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/E28C312F-0F6F-49D5-B599-5E5E3B6C56C2.png",
+          "sha256": "37f51dfe81c291cdc1c2b420e8d8cfe55083569fe13a334a8574a04c29e0a0ca"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-qwen tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/1FFF3E59-E504-4A51-9B1F-7948898575E0.txt",
+          "sha256": "6c59636a11be0745f34f1c61a14d8223782a4805027d1d21eabf08446d576a3f"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-qwen",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/FECCCB74-A56A-4E54-83A3-8A98B081EDCB.png",
+          "sha256": "7c2ee7b3890a09dea7ee015be14d594b77ad7b182c0062af8269eaf88b2caf4f"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/3254CD69-1BA4-4620-89D6-760090AA4368.txt",
+          "sha256": "99a7a602ddd159adbf614667b669eff18b13311c077cb359fb2b615bc99e4b19"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/C2FE1BA1-4316-4C2E-A0E7-C159D4C720A0.png",
+          "sha256": "8583689080b60f7f178a0eaa7062d9504c3d4428bda307ec2d42297191e4cca5"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/476F1256-D0C9-4CB1-B013-B05E38AADF76.txt",
+          "sha256": "abe6088557154b5bcba3d542dce2970f9a4655e4e08a429af1f11cdba6387871"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/3C53E86C-A906-4DE7-BAAA-A3A126C51345.png",
+          "sha256": "9ed55c905354851b1f12314cf82207d50676ca0351ea59bb11bb3b1669642384"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Qwen-code tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/A1BDD949-E023-40B0-89CC-1EFB7BCE86AA.txt",
+          "sha256": "5810b24457b3fd88527b041197a1651678a09bb39063f98a4cca748937ae0dc4"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Qwen-code",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/620FED06-C67D-4949-81C5-0C5D0303B3FC.png",
+          "sha256": "ee6d46b578b8a458b8459fdde9e4087a9f228d673c3178aa8ba5f3da2c9bc4a8"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-qwen tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/D83A65FC-ADBB-4940-A9F9-582C3D320A99.txt",
+          "sha256": "85a9b888123bc3e6a9bb6107ab16f5608fb7e1bd3e97c1e39106e403bec6479f"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-qwen",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/EE562E6D-BC48-48FB-9369-0D57FB4565DD.png",
+          "sha256": "2208af0eff8776402d41b5c372e6f6d49f7d8775a9a0032beba4c407fa0a0652"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-qwen tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/5057F141-2DAB-41B6-A0F6-7ABE5B0ACD7C.txt",
+          "sha256": "481bacc6d7b0fa52f7002093003ed9420f17467ee5095a7090ae544e60f812b0"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-qwen",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/50141A81-DEDF-4586-9B0E-C24F1D092AB2.png",
+          "sha256": "796aa32f18beb0622dbab02e7da1bb08bca94c8b3fcb776878127066aa921fa1"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/14C434FB-D710-4E77-83E5-A35AD12F5824.txt",
+          "sha256": "5366e401c0a05d7860871201e58868eb04f6f8e65eca293ada7a44347bb27e67"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/A82F390A-40FC-4EB7-A065-DABE9FADC255.png",
+          "sha256": "e104e367b104fa79984cd97b520fa2bd87d752ac187fef4e3548d609964b358e"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/79F3D88D-EAEC-4CE8-A55B-666F42A3E076.txt",
+          "sha256": "a8041ad9321f42bbc8b502f2881af4c7008c861ba4c54e0f0b45b9792d66ed5d"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/BB70EA87-B07C-48F1-A4CD-065796ABC3B6.png",
+          "sha256": "99e227b0473160640d97426b0d08d8990ce40b05f71323dbf94162fb5188a5ba"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-model-used tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/B6BC4A62-347A-4D5D-B914-9A6F6D3A7E50.txt",
+          "sha256": "30dd7e1e6fd070dcc71db8199e590e013f250e00b758f9f5c6eb6070177836bd"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-model-used",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/56394C76-9960-406A-B163-33C7EC591EF5.png",
+          "sha256": "fc2ada2478f0c41a55d3b81ddd626e3cc653d44686fbd5a1cbdcef2183553d32"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-coding tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/0271BE15-BA3D-461F-A355-F8B3240789A7.txt",
+          "sha256": "c3e455e80b9e03be003def04dd107880a9fcfa2ee39734cbf713f4cc785db832"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-coding",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/516D6E95-6DDE-4207-B942-E9C02392FB37.png",
+          "sha256": "ffe8f24476637ac04a6993be5a8d8be65c098434487915e121e8bcecd7c8e24a"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-fast-replies tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/6F643A2F-09A9-4E00-8C7E-208848FD4A5F.txt",
+          "sha256": "4c947a7c71382a1c4a23e1b0539bfe61b91f88f5826e8169ebac1464c75fc869"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-fast-replies",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/C3F494F5-8ABF-4DCA-AD0F-ADBA2E8AA4FD.png",
+          "sha256": "6af882e28b8e70754ad82d31e40c2bd4b64049220030935f0bcf60b23aed269c"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Expert-highlighted-output tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/C870D7B0-E46C-43CF-B8DD-26A402E5F537.txt",
+          "sha256": "feb5a4a016c0a5711fc32107051548697a7d05fde7ec5274d990f4b78b52c2d2"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Expert-highlighted-output",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/929D492A-1332-44AA-8CA5-384F261DE1EF.png",
+          "sha256": "ab02b5783cff4bd2ea95ae22fc1797756303e82bd2807e6fcc184fb8fba4648a"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Long-reply-limit tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/29A48D9D-8A72-4DD6-8A75-3AB2DAE07E07.txt",
+          "sha256": "f5a6c20477f737179d4d15bb3e137d9f1cbd934575b759a992f5282a8c303aca"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Long-reply-limit",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/B78952D8-F404-4C72-9F8A-E8BD64FDFEF4.png",
+          "sha256": "589875613f9b2e0ef6846d23c99ba6bae421213b934ab18c2b9403e5213238b8"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Active-qwen tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/5A3BA9C5-86C7-4B25-95BF-E7E75A6B19B0.txt",
+          "sha256": "0fc94914d3ef7154fa47e23e41e171dd95b4c1cf55194f5450ca74d4be67a882"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Active-qwen",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/448BFB08-3F84-4B59-AFF3-F25A40CB1268.png",
+          "sha256": "90863eec055afb74a51988ecbda28bc5431d983f1f229136867619f5396b3207"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Choose-qwen tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/E02E563F-86F9-4634-9165-A06632DC8DA9.txt",
+          "sha256": "1b0f5a1dc166ae9e9087a332f2742901187ee9e082c1fe07951295c9f01e32b2"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Choose-qwen",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/0456BFE2-7CFF-4F28-B1AF-2296DAFC0229.png",
+          "sha256": "a8f23a614c9ed146f41ca2e2a07932a01383dae079dc752701bb4d32aaf2d7a5"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Reply-limit-256 tree",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/CBA9CF54-25CE-42D4-9F4C-6D210EF6EDAA.txt",
+          "sha256": "8f3005e1d9af0860a93ac4283c5a9aa4ce50d419be32edafcb88cdc71619acab"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Reply-limit-256",
+          "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v3/attempt3/attachments/07397C64-4CFD-4795-9DC3-8689BECD2564.png",
+          "sha256": "9bc9e2de96404278ff1054b668cf524bcf61727ae47a1a0e68f5463b9bdc8109"
+        }
+      ]
+    }
+  },
+  "history": {
+    "isolated_ui_test_workspace": true,
+    "owner_history_bytes_unchanged": true,
+    "normal_owner_launch_after_tests": true
+  },
+  "retained_first_attempt": {
+    "summary": {
+      "path": "artifacts/mobile-ranking-2026-10-24-v1/attempt1/phone-summary.json",
+      "sha256": "82924bc439b2794b2f5eebe42bead43a5d575e05accaf3a804d48e20c7386d13"
+    },
+    "raw_summary": {
+      "path": "artifacts/mobile-ranking-2026-10-24-v1/attempt1/xcresult-summary.json",
+      "sha256": "03b79f6b16994d13f49015ad3ed9593db8d300379e66e586d0cbb03daf25d629"
+    },
+    "raw_tests": {
+      "path": "artifacts/mobile-ranking-2026-10-24-v1/attempt1/xcresult-tests.json",
+      "sha256": "014ddd6d5b2e2b2c4a389899af1776c0709d642a1abfd50229b2c83208b6a7af"
+    },
+    "xcresult_path": "artifacts/mobile-ranking-2026-10-24-v1/attempt1/phone-ui-v1.xcresult",
+    "passed_tests": 3,
+    "failed_tests": 2,
+    "owner_history_bytes_unchanged": true,
+    "passing_app_restored": true,
+    "normal_launch": true,
+    "findings": [
+      "DisclosureGroup container identifier masked child score identifiers; removed parent identifier.",
+      "Search visibility query used firstMatch without waiting for completion; now waits and inspects any visible unavailable row."
+    ]
+  },
+  "retained_second_attempt": {
+    "summary": {
+      "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v2/attempt2/phone-summary.json",
+      "sha256": "5c78059a1cada9895a5317de51dd89460a7f3a617bc711f31ce566a5a906379d"
+    },
+    "raw_summary": {
+      "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v2/attempt2/xcresult-summary.json",
+      "sha256": "ea71d60600386a6ebae1b804ccdc3d14d27ad3f34f9f989b8a30e43d7d6279b7"
+    },
+    "raw_tests": {
+      "path": "artifacts/mobile-ranking-2026-10-24-v1/build-v2/attempt2/xcresult-tests.json",
+      "sha256": "d5fc13cab22ed008ee4486c875bc03b16521405bb15bd83c454250ed01361005"
+    },
+    "xcresult_path": "artifacts/mobile-ranking-2026-10-24-v1/build-v2/attempt2/phone-ui-v2.xcresult",
+    "passed_tests": 3,
+    "failed_tests": 2,
+    "ranking_test_passed": true,
+    "owner_history_bytes_unchanged": true,
+    "passing_app_restored": true,
+    "normal_launch": true,
+    "findings": [
+      "Search results existed but keyboard obscured them; Search now explicitly resigns the responder and has an independent44pt button.",
+      "Reply-limit test advanced while native menu selection was uncommitted; it now confirms the selected value and Settings dismissal."
+    ]
+  },
+  "current_limits": {
+    "chat_output_tokens": 256,
+    "expert_raw_output_tokens": 128,
+    "chat_context_positions": 512,
+    "requested_single_reply_output_tokens": 131072,
+    "requested_single_reply_qualified": false
+  },
+  "engine_priorities": [
+    "Gemma4 implementation and qualification remain active in the parallel engine chat.",
+    "Single-reply131072-output capability remains a separate open engine gate."
+  ],
+  "limits": [
+    "Scores are heuristics, not measured quality or predicted tok/s/TTFT.",
+    "Current3 supported pinned profiles only; ranking does not broaden architecture, tokenizer, quantization or context support.",
+    "Fresh device admission, exact native planning, payload validation and loader checks still determine whether opening succeeds.",
+    "Named phone/selected SmolLM2 and Qwen paths only; no fresh model download, new numerical quality, controlled speed, thermal or peak-memory qualification.",
+    "Later root engine changes are not compiled into immutable native package2d7."
+  ]
+}

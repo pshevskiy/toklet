@@ -28,16 +28,64 @@ struct HubDeviceSnapshot: Codable, Sendable {
     }
 }
 
+enum HubRankingTask: String, CaseIterable, Hashable, Sendable {
+    case balanced = "Balanced", coding = "Coding", fast = "Fast replies"
+    var explanation: String {
+        switch self {
+        case .balanced: "Balances model capacity, estimated speed and memory headroom."
+        case .coding: "Favors model capacity. Coding quality is not measured by this score."
+        case .fast: "Favors smaller models for faster replies, with memory headroom."
+        }
+    }
+    // Capacity / speed / memory. These express preferences, not measured quality.
+    var weights: (Double,Double,Double) {
+        switch self {
+        case .balanced: (0.65,0.15,0.20)
+        case .coding: (0.80,0.05,0.15)
+        case .fast: (0.15,0.65,0.20)
+        }
+    }
+}
+
+struct HubRecommendation: Identifiable, Equatable, Sendable {
+    let profile: HubProfile
+    let capacity, speed, headroom, score: Double
+    let active: Bool
+    var id: String { profile.repository }
+    var displayScore: Int { Int(score.rounded()) }
+    var breakdown: String {
+        "Capacity \(Int(capacity.rounded())) · Speed \(Int(speed.rounded())) · Headroom \(Int(headroom.rounded()))"
+    }
+}
+
 enum HubRecommendations {
-    // This is a capacity shortlist, not a measured quality or speed ranking.
-    // A model already resident need not fit a second time beside itself.
-    static func ranked(_ admission: HubAdmission,active: HubProfile? = nil) -> [HubProfile] {
+    // Rank only the pinned Chat catalog admitted by the existing device policy.
+    // Native compatibility, exact allocation planning and loading remain final.
+    // A resident model is included without demanding space for a second copy.
+    static func ranked(_ admission: HubAdmission,task: HubRankingTask = .balanced,active: HubProfile? = nil) -> [HubRecommendation] {
         guard admission.unifiedGPU, admission.physicalMemory >= 2 * 1024 * 1024 * 1024 else { return [] }
+        let smallest = Double(HubProfile.catalog.map(\.totalBytes).min() ?? 1)
+        let largest = Double(HubProfile.catalog.map(\.totalBytes).max() ?? 1)
+        let range = log(max(largest / smallest,1))
+        let weights = task.weights
         return Array(HubProfile.catalog.filter { profile in
             profile == active || (try? admission.check(profile)) != nil
+        }.map { profile in
+            let bytes = Double(profile.totalBytes)
+            // Relative stored-weight size is a capacity proxy, not answer quality.
+            let capacity = range > 0 ? 35 + 65 * log(bytes / smallest) / range : 50
+            // Relative bandwidth pressure only; no fabricated tok/s or TTFT.
+            let speed = 100 * sqrt(smallest / bytes)
+            let available = Double(admission.availableMemory)
+            let required = Double(profile.processAllowance)
+            // Conservative even for a resident profile: low free allowance is
+            // never shown as perfect headroom because loading is skipped.
+            let headroom = available > 0 ? 100 * max(0,available - required) / available : 0
+            let score = capacity * weights.0 + speed * weights.1 + headroom * weights.2
+            return HubRecommendation(profile:profile,capacity:capacity,speed:speed,headroom:headroom,score:score,active:profile == active)
         }.sorted {
-            if $0.totalBytes != $1.totalBytes { return $0.totalBytes > $1.totalBytes }
-            return $0.repository < $1.repository
+            if $0.score != $1.score { return $0.score > $1.score }
+            return $0.id < $1.id
         }.prefix(5))
     }
 }
@@ -57,7 +105,8 @@ final class HubStore: ObservableObject {
     @Published private(set) var blocksSelection = false
     @Published private(set) var opening = false
     @Published private(set) var savedProfiles: Set<String> = []
-    @Published private(set) var recommendations: [HubProfile] = []
+    @Published private(set) var recommendations: [HubRecommendation] = []
+    @Published private(set) var recommendationTask: HubRankingTask = .balanced
     @Published private(set) var recommendationMessage = ""
     private let hub: ModelHub
     let modelsRoot: URL
@@ -85,12 +134,13 @@ final class HubStore: ObservableObject {
     }
     func refresh() { start(.refresh) }
     func inventory() { start(.inventory) }
-    func findBest(active: HubProfile? = nil) {
+    func findBest(task: HubRankingTask? = nil,active: HubProfile? = nil) {
+        if let task { recommendationTask = task }
         do {
-            recommendations = HubRecommendations.ranked(try admission(),active:active)
+            recommendations = HubRecommendations.ranked(try admission(),task:recommendationTask,active:active)
             recommendationMessage = recommendations.isEmpty
                 ? "No supported models fit the current memory allowance. Unload a model or close other apps, then try again."
-                : "\(recommendations.count) supported model(s) fit now. Ranked by model size within the current memory allowance; quality and speed vary. Up to 5 results."
+                : "\(recommendations.count) supported model(s) available. \(recommendationTask.explanation) Up to 5 results."
             if active != nil { recommendationMessage += " The active model is included. Unload it to assess more replacements." }
             if HubProfile.catalog.count < 5 { recommendationMessage += " Toklet currently supports \(HubProfile.catalog.count) downloadable chat models." }
         } catch {

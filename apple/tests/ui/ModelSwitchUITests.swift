@@ -74,6 +74,36 @@ final class PhoneUITests: XCTestCase {
 }
 
 extension PhoneUITests {
+    func testRankedRecommendations() throws {
+        continueAfterFailure = false; executionTimeAllowance = 240
+        let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")
+        app.launchArguments = ["--ui-test-history"]; app.launch()
+        app.buttons["find-best-model"].tap()
+        XCTAssertTrue(app.navigationBars["Models"].waitForExistence(timeout:10))
+        let first = app.staticTexts["hub-rank-1"]
+        XCTAssertTrue(first.waitForExistence(timeout:10))
+        let confidence = app.staticTexts["hub-ranking-confidence"]
+        XCTAssertTrue(confidence.label.contains("not quality tests or measured speed"))
+        let context = app.staticTexts["hub-ranking-context"]
+        XCTAssertTrue(context.label.contains("512 total tokens") && context.label.contains("256 reply tokens"))
+        app.buttons["Fast replies"].firstMatch.tap()
+        let fast = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label CONTAINS %@","SmolLM2"),object:first)
+        XCTAssertEqual(XCTWaiter.wait(for:[fast],timeout:10),.completed)
+        let details = app.buttons["Why this rank?"].firstMatch; visible(details,app:app); details.tap()
+        XCTAssertTrue(app.staticTexts["hub-rank-breakdown-smol"].waitForExistence(timeout:10))
+        capture("Ranking-fast-replies",app:app)
+        app.swipeDown()
+        app.buttons["Coding"].firstMatch.tap()
+        let coding = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label CONTAINS %@","Qwen2.5"),object:first)
+        XCTAssertEqual(XCTWaiter.wait(for:[coding],timeout:10),.completed)
+        capture("Ranking-coding",app:app)
+        let use = app.buttons["hub-use-qwen"].firstMatch; visible(use,app:app); use.tap()
+        let loaded = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label CONTAINS %@","Qwen2.5"),object:app.buttons["chat-model-picker"])
+        XCTAssertEqual(XCTWaiter.wait(for:[loaded],timeout:120),.completed)
+        reply("Hello. Reply in one sentence.",app:app)
+        capture("Ranking-model-used",app:app)
+        app.terminate()
+    }
     func testBenchmarkAndGemma4Search() throws {
         continueAfterFailure = false; executionTimeAllowance = 600
         let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")
@@ -83,7 +113,8 @@ extension PhoneUITests {
         XCTAssertTrue(app.buttons["benchmark-run"].waitForExistence(timeout:10))
         XCTAssertTrue(app.buttons["benchmark-run"].isEnabled); app.buttons["benchmark-run"].tap()
         let complete = app.staticTexts["benchmark-status"]
-        XCTAssertTrue(complete.waitForExistence(timeout:180)); XCTAssertTrue(complete.label.hasPrefix("Complete."))
+        let finished = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label BEGINSWITH %@","Complete."),object:complete)
+        XCTAssertEqual(XCTWaiter.wait(for:[finished],timeout:180),.completed)
         for index in 1...3 {
             let row = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@","Run \(index) · ")).firstMatch
             visible(row,app:app); XCTAssertTrue(row.label.contains("tokens"))
@@ -99,12 +130,15 @@ extension PhoneUITests {
         app.buttons["chat-model-picker"].tap()
         let query = app.textFields["hub-search-query"]; visible(query,app:app); query.tap(); query.typeText("gemma-4")
         app.buttons["hub-search"].tap()
-        let unsupported = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@","Unavailable for chat:")).firstMatch
-        for _ in 0..<12 {
-            if unsupported.exists && unsupported.isHittable { break }
-            app.swipeUp()
+        let searched = XCTNSPredicateExpectation(predicate:NSPredicate(format:"exists == false"),object:app.buttons["hub-cancel"])
+        XCTAssertEqual(XCTWaiter.wait(for:[searched],timeout:45),.completed)
+        let unsupported = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@","Unavailable for chat:"))
+        for _ in 0..<16 {
+            if unsupported.allElementsBoundByIndex.contains(where:{ $0.isHittable }) { break }
+            app.collectionViews.firstMatch.swipeUp()
         }
-        XCTAssertTrue(unsupported.exists && unsupported.isHittable,"Gemma 4 search must show its unsupported status")
+        capture("Gemma4-search-state",app:app)
+        XCTAssertTrue(unsupported.allElementsBoundByIndex.contains(where:{ $0.isHittable }),"Gemma 4 search must show its unsupported status")
         let gemma = app.staticTexts.matching(NSPredicate(format:"label CONTAINS[c] %@","gemma-4")).firstMatch
         XCTAssertTrue(gemma.exists)
         capture("Gemma4-search-unsupported",app:app)
@@ -157,10 +191,21 @@ extension PhoneUITests {
         let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")
         app.launchArguments = ["--ui-test-history"]; app.launch()
         app.buttons["Settings"].tap()
-        let limit = app.descendants(matching:.any).matching(NSPredicate(format:"label BEGINSWITH %@","Response limit")).firstMatch
-        XCTAssertTrue(limit.waitForExistence(timeout:10)); limit.tap()
-        XCTAssertTrue(app.buttons["256 tokens"].waitForExistence(timeout:10)); app.buttons["256 tokens"].tap()
+        let limit = app.buttons.matching(NSPredicate(format:"label BEGINSWITH %@","Response limit")).firstMatch
+        XCTAssertTrue(limit.waitForExistence(timeout:10))
+        for _ in 0..<2 {
+            if limit.label.contains("256 tokens") { break }
+            let choice = app.buttons["256 tokens"]
+            if !choice.exists { limit.tap() }
+            let tappable = XCTNSPredicateExpectation(predicate:NSPredicate(format:"hittable == true"),object:choice)
+            XCTAssertEqual(XCTWaiter.wait(for:[tappable],timeout:10),.completed); choice.tap()
+            let selected = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label CONTAINS %@","256 tokens"),object:limit)
+            if XCTWaiter.wait(for:[selected],timeout:3) == .completed { break }
+        }
+        XCTAssertTrue(limit.label.contains("256 tokens"),"Reply preference is committed before closing Settings")
         capture("Reply-limit-256",app:app); app.buttons["Close"].tap()
+        let settingsClosed = XCTNSPredicateExpectation(predicate:NSPredicate(format:"exists == false"),object:app.navigationBars["Settings"])
+        XCTAssertEqual(XCTWaiter.wait(for:[settingsClosed],timeout:10),.completed)
         choose("qwen",name:"Qwen2.5",app:app)
         reply("Write a long adventure story about a cat exploring an old city. Include many scenes, detailed descriptions, and dialogue. Continue the story for at least 2000 words.",app:app)
         let notice = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@","Response limit reached.")).firstMatch

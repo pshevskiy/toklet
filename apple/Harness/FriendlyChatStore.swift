@@ -279,7 +279,7 @@ final class FriendlyChatStore: ObservableObject {
         }
         var settings = NativeSettings(directory:folder.path)
         settings.metal = true; settings.mlx = true; settings.chat = true
-        settings.capacity = 512; settings.chunk = 32
+        settings.capacity = NativeSettings.chatContextPositions; settings.chunk = 32
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
             loadingName = profile.name; loadingModel = true; loadedKey = key(folder); modelName = profile.name

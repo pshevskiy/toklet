@@ -136,14 +136,40 @@ struct MobileMain {
         state.requestStartedUptimeNanoseconds = 2_000_000_000
         try require(GenerationMetrics(state).firstTokenSeconds == nil && GenerationMetrics(state).totalSeconds == nil,"reversed clock observations never underflow")
         let generous = HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:6 << 30)
-        try require(HubRecommendations.ranked(generous) == [.mistral,.qwen,.smol],"fits ranked by model capacity, not invented quality")
+        try require(HubRecommendations.ranked(generous).map(\.profile) == [.mistral,.qwen,.smol],"balanced ranking favors capacity when memory allows")
         let phone = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:2 << 30)
-        try require(HubRecommendations.ranked(phone) == [.qwen,.smol],"phone allowance excludes over-budget Mistral")
+        try require(HubRecommendations.ranked(phone).map(\.profile) == [.qwen,.smol],"phone allowance excludes over-budget Mistral")
+        try require(HubRecommendations.ranked(phone,task:.fast).map(\.profile) == [.smol,.qwen],"fast-reply preference changes ordering among admitted models")
+        try require(HubRecommendations.ranked(phone,task:.coding).first?.profile == .qwen,"coding preference favors capacity without admitting an over-budget model")
         let low = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:0)
-        try require(HubRecommendations.ranked(low).isEmpty && HubRecommendations.ranked(low,active:.qwen) == [.qwen],"resident model need not fit twice; unknown replacements are excluded")
+        let resident = HubRecommendations.ranked(low,active:.qwen)
+        try require(HubRecommendations.ranked(low).isEmpty && resident.map(\.profile) == [.qwen],"resident model need not fit twice; unknown replacements are excluded")
+        try require(resident.first?.active == true && resident.first?.headroom == 0,"resident exemption cannot fabricate free memory")
+        for task in HubRankingTask.allCases {
+            for allowance: HubAdmission in [low,phone,generous,HubAdmission(unifiedGPU:true,physicalMemory:UInt64.max,availableMemory:UInt64.max)] {
+                let rows = HubRecommendations.ranked(allowance,task:task)
+                try require(rows == HubRecommendations.ranked(allowance,task:task),"ranking is deterministic")
+                for row in rows {
+                    try require(HubProfile.catalog.contains(row.profile),"ranking only contains supported pinned profiles")
+                    for value in [row.capacity,row.speed,row.headroom,row.score] {
+                        try require(value.isFinite && (0...100).contains(value),"all score components are bounded and finite")
+                    }
+                }
+            }
+        }
+        let moreRoom = HubRecommendations.ranked(generous).first(where:{ $0.profile == .qwen })!
+        let lessRoom = HubRecommendations.ranked(phone).first(where:{ $0.profile == .qwen })!
+        try require(moreRoom.headroom > lessRoom.headroom,"fresh memory allowance affects the score")
         try require(HubRecommendations.ranked(HubAdmission(unifiedGPU:false,physicalMemory:8 << 30,availableMemory:6 << 30)).isEmpty,"unsupported GPU gets no recommendation")
         let hub = HubStore(admission:{ phone }); hub.findBest()
-        try require(hub.recommendations == [.qwen,.smol] && hub.recommendationMessage.contains("3 downloadable"),"shortlist explains why fewer than five are available")
+        try require(hub.recommendations.map(\.profile) == [.qwen,.smol] && hub.recommendationMessage.contains("3 downloadable"),"shortlist explains why fewer than five are available")
+        hub.findBest(task:.fast)
+        try require(hub.recommendations.first?.profile == .smol && hub.recommendationTask == .fast,"controller publishes the selected preference and reranks")
+        hub.findBest()
+        try require(hub.recommendationTask == .fast,"refresh preserves task preference")
+        let unavailable = HubStore(admission:{ throw HubFailure("Memory reading failed") }); unavailable.findBest(task:.coding)
+        try require(unavailable.recommendations.isEmpty && unavailable.recommendationMessage.contains("Memory reading failed"),"missing memory cannot produce recommendations")
+        try require(NativeSettings.chatContextPositions == 512,"ranking displays the actual current Chat capacity")
         var workspace = ChatWorkspace(); workspace.outputLimit = 256
         workspace.edit("delete this draft"); let pending = try workspace.begin()
         let original = workspace.selected

@@ -286,17 +286,35 @@ struct FriendlyHarnessView: View {
                 }
             }
             Section("Chat models") {
+                Picker("Optimize for",selection:Binding(get:{ hub.recommendationTask },set:{ hub.findBest(task:$0,active:activeHubProfile) })) {
+                    ForEach(HubRankingTask.allCases,id:\.self) { task in Text(task.rawValue).tag(task) }
+                }.pickerStyle(.segmented).accessibilityIdentifier("hub-ranking-task")
                 Button("Find best model for this device",systemImage:"sparkle.magnifyingglass") { hub.findBest(active:activeHubProfile) }
                     .accessibilityIdentifier("hub-find-best")
                 if !hub.recommendationMessage.isEmpty {
                     Text(hub.recommendationMessage).font(.callout).foregroundStyle(.secondary)
-                    ForEach(Array(hub.recommendations.enumerated()),id:\.element.repository) { index,profile in
-                        Text("\(index + 1). " + profile.name).font(.caption.weight(.semibold))
-                        modelRow(profile)
+                    Text("Estimated scores, not quality tests or measured speed. Loading checks compatibility and memory again.")
+                        .font(.caption).foregroundStyle(.secondary).accessibilityIdentifier("hub-ranking-confidence")
+                    Text("Current chat limits: \(NativeSettings.chatContextPositions) total tokens · up to \(NativeSettings.maximumChatOutputTokens) reply tokens.")
+                        .font(.caption).foregroundStyle(.secondary).accessibilityIdentifier("hub-ranking-context")
+                    ForEach(Array(hub.recommendations.enumerated()),id:\.element.id) { index,recommendation in
+                        VStack(alignment:.leading,spacing:6) {
+                            Text("\(index + 1). " + recommendation.profile.name).font(.caption.weight(.semibold))
+                                .accessibilityIdentifier("hub-rank-\(index + 1)")
+                            Text("Recommendation \(recommendation.displayScore)/100 · Estimated").font(.caption)
+                            DisclosureGroup("Why this rank?") {
+                                Text(recommendation.breakdown).font(.caption).monospacedDigit()
+                                    .accessibilityIdentifier("hub-rank-breakdown-" + recommendation.profile.key)
+                                Text("Capacity uses relative stored model size. Speed estimates weight-reading pressure. Headroom uses the current memory allowance. All scores are relative to Toklet’s supported catalog.")
+                                    .font(.caption).foregroundStyle(.secondary)
+                                if recommendation.active { Text("Already loaded; no second copy is required.").font(.caption) }
+                            }.font(.caption)
+                            modelRow(recommendation.profile)
+                        }
                     }
                     if !hub.recommendations.isEmpty { Text("All supported models").font(.headline).padding(.top,8) }
                 }
-                ForEach(HubProfile.catalog.filter { !hub.recommendations.contains($0) },id:\.repository) { profile in modelRow(profile) }
+                ForEach(HubProfile.catalog.filter { profile in !hub.recommendations.contains(where:{ $0.profile == profile }) },id:\.repository) { profile in modelRow(profile) }
                 if chat.loadingModel { ProgressView("Loading " + chat.loadingName + "…") }
                 else if hub.busy {
                     if hub.downloading {
@@ -317,8 +335,9 @@ struct FriendlyHarnessView: View {
                 HStack {
                     TextField("Search MLX models",text:$hub.query).harnessLiteralInput()
                         .focused($modelSearchFocused).submitLabel(.search)
-                        .onSubmit { modelSearchFocused = false; hub.search() }.accessibilityIdentifier("hub-search-query")
-                    Button("Search") { modelSearchFocused = false; hub.search() }.disabled(hub.blocksSelection || hub.query.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
+                        .onSubmit { searchModels() }.accessibilityIdentifier("hub-search-query")
+                    Button("Search") { searchModels() }.buttonStyle(.bordered).frame(minHeight:44)
+                        .disabled(hub.blocksSelection || hub.query.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
                         .accessibilityIdentifier("hub-search")
                 }
                 Text("Search is public. Supported results have a Use model or Download and use button. Other results need engine and tokenizer support before they can run.")
@@ -348,6 +367,15 @@ struct FriendlyHarnessView: View {
                     if value.domain != NSCocoaErrorDomain || value.code != NSUserCancelledError { chat.notice = error.localizedDescription }
                 }
             }
+    }
+    private func searchModels() {
+        modelSearchFocused = false
+        #if os(iOS)
+        // The search lives in a presented Form. Resign the actual responder as
+        // well as its SwiftUI focus binding so the results are not obscured.
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),to:nil,from:nil,for:nil)
+        #endif
+        hub.search()
     }
     private func useModel(_ profile: HubProfile,download: Bool) {
         modelSearchFocused = false
