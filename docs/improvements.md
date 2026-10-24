@@ -2024,3 +2024,22 @@ initial old-system-Python failure and explicit-interpreter retry are retained.
 Retain this adapter; runtime planning, qualification receipts, general Hub/Chat
 and the remaining engine inventory stay open. Parallel mobile UI work owns its
 presentation changes and evidence separately.
+
+### Extend bounded Chat output to 256 tokens — 24 October 2026
+
+The [Chat output extension](chat-output-limit.md) widens codec/native/worker
+visible output to256 while retaining the 512-token total context, 64 KiB text
+bound, existing templates/stops and Swift raw/Expert128-token command limit.
+Output/timing storage is bounded and separate from numerical admission. The
+worker publishes the actual C emitted count and clears it for unstarted requests.
+
+Astra required full-prefix preservation checks rather than count-only witnesses.
+The real Qwen run consumes the independently frozen65-ID prompt and emits256,
+with321 history/320 committed/one pending. Cancellation at128/129, exact fresh
+replay and rejection without changing saved history all pass. Portable256/257
+decode/buffer tests, formatting, both strict Clippy configurations,180 CPU and
+200 Metal-feature tests pass. The explicit Swift/C/worker/platform checks pass;
+fresh Mac/iOS/simulator libraries retain the same23 exports. All three short
+profile regressions match the previous replies and flags exactly. Retain this
+bounded extension. UI options/persistence belong to the parallel UI task; phone
+qualification at256, larger context and wider engine/Hub scope remain open.

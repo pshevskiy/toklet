@@ -43,6 +43,7 @@ typedef struct {
     uint32_t abi_version, struct_size, backend, context_limit;
     uint64_t memory_limit_bytes;
 } TokletCompatibilityOptions;
+#define TOKLET_MAX_CHAT_OUTPUT_TOKENS 256u
 #define TOKLET_MAX_COMPATIBILITY_JSON_BYTES 65536u
 /* Literal for the Swift importer; checked against 2*maximum+256 by C smoke. */
 #define TOKLET_COMPATIBILITY_JSON_ALLOWANCE_BYTES 131328u
@@ -128,7 +129,7 @@ uint32_t toklet_chat_create(const TokletModel *, uint64_t allowance, TokletChat 
    NULL+0 queries required count. Small output returns INVALID, sets required
    count, and leaves elements untouched. Outputs/count/inputs must be disjoint. */
 uint32_t toklet_chat_encode(const TokletChat *, const uint8_t *, size_t, uint32_t *, size_t, size_t *, TokletError *);
-/* Entire visible prefix, <=128 IDs. Replaces displayed text, never concatenate
+/* Entire visible prefix, <=TOKLET_MAX_CHAT_OUTPUT_TOKENS IDs. Replaces displayed text, never concatenate
    per-token decodes. Special IDs hidden. UTF-8 byte output, no NUL, <=64KiB.
    Query and small-buffer semantics as above. A later prefix repairs split UTF-8. */
 uint32_t toklet_chat_decode(const TokletChat *, const uint32_t *, size_t, uint8_t *, size_t, size_t *, TokletError *);

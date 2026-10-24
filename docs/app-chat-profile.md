@@ -27,7 +27,9 @@ formatting behavior. The additive C text handle is immutable and thread-affine.
 It loads from the model's frozen absolute originating directory, owns no model
 borrow and can outlive model release. Query calls return required counts;
 undersized buffers copy no elements. JSON is limited to64KiB/63 alternating
-user/assistant messages, encoded input to512 IDs, and visible output to128 IDs.
+user/assistant messages and encoded input to512 IDs. The later
+[bounded output extension](chat-output-limit.md) raises visible Chat output
+from128 to256 IDs; the original receipt below retains its original128-ID scope.
 Chat control delimiters in message content reject instead of creating roles.
 Decoding always replaces the complete visible prefix, avoiding concatenation
 of separately decoded byte fragments. Swift must independently reserve output

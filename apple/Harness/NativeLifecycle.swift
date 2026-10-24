@@ -136,7 +136,7 @@ final class NativeLifecycleTrace: @unchecked Sendable {
         do { footprint = try NativeFootprint.read() }
         catch { throw failed("Lifecycle process footprint unavailable") }
         for value in [before,state] {
-            guard value.ids.count <= 128, value.savedHistory >= 0, value.savedHistory <= maximumPrefix,
+            guard value.ids.count <= Int(NativeSettings.maximumChatOutputTokens), value.savedHistory >= 0, value.savedHistory <= maximumPrefix,
                   value.savedPrefix == nil || value.savedPrefix!.count <= maximumPrefix,
                   value.savedPrefix == nil || value.savedPrefix!.count == value.savedHistory else {
                 throw failed("Lifecycle prefix exceeds admitted trace capacity")

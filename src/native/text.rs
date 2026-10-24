@@ -1,6 +1,6 @@
 //! Additive, immutable text handle. Numerical handles remain raw-token APIs.
 use super::*;
-use crate::app_chat::{Codec, MAX_TEXT, MAX_TOKENS, Profile};
+use crate::app_chat::{Codec, MAX_RESPONSE_TOKENS, MAX_TEXT, MAX_TOKENS, Profile};
 
 pub struct ChatHandle {
     owner: ThreadId,
@@ -117,7 +117,7 @@ pub unsafe extern "C" fn toklet_chat_decode(
             }
             let text = chat
                 .codec
-                .decode(slice(ids, len, 128)?)
+                .decode(slice(ids, len, MAX_RESPONSE_TOKENS)?)
                 .map_err(|e| fail(INVALID, e.to_string()))?;
             copy_output(text.as_bytes(), output, capacity, count)
         })
@@ -174,6 +174,74 @@ mod tests {
     use super::*;
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     use crate::app_chat::TOKENIZER_ALLOWANCE;
+    #[test]
+    fn visible_decode_boundary_has_exact_query_copy_and_257_rejection() {
+        let chat = Box::into_raw(Box::new(ChatHandle {
+            owner: thread::current().id(),
+            codec: crate::app_chat::decode_fixture(),
+        }));
+        let ids = [32; 257];
+        let mut count = 0;
+        let mut output = [0xa5; 257];
+        unsafe {
+            assert_eq!(
+                toklet_chat_decode(
+                    chat,
+                    ids.as_ptr(),
+                    256,
+                    ptr::null_mut(),
+                    0,
+                    &mut count,
+                    ptr::null_mut()
+                ),
+                OK
+            );
+            assert_eq!(count, 256);
+            assert_eq!(
+                toklet_chat_decode(
+                    chat,
+                    ids.as_ptr(),
+                    256,
+                    output.as_mut_ptr(),
+                    255,
+                    &mut count,
+                    ptr::null_mut()
+                ),
+                INVALID
+            );
+            assert_eq!(count, 256);
+            assert_eq!(output, [0xa5; 257]);
+            assert_eq!(
+                toklet_chat_decode(
+                    chat,
+                    ids.as_ptr(),
+                    256,
+                    output.as_mut_ptr(),
+                    256,
+                    &mut count,
+                    ptr::null_mut()
+                ),
+                OK
+            );
+            assert_eq!(&output[..256], &[b'A'; 256]);
+            assert_eq!(output[256], 0xa5);
+            output.fill(0xa5);
+            assert_eq!(
+                toklet_chat_decode(
+                    chat,
+                    ids.as_ptr(),
+                    257,
+                    output.as_mut_ptr(),
+                    output.len(),
+                    &mut count,
+                    ptr::null_mut()
+                ),
+                INVALID
+            );
+            assert_eq!(output, [0xa5; 257]);
+            assert_eq!(toklet_chat_release(chat, ptr::null_mut()), OK);
+        }
+    }
     #[test]
     fn model_directory_freezes_relative_origin() {
         let path = origin_path(Path::new("models/local")).unwrap();

@@ -11,6 +11,8 @@ use tokenizers::Tokenizer;
 
 pub const MAX_TEXT: usize = 64 * 1024;
 pub const MAX_TOKENS: usize = 512;
+/// Maximum visible output prefix, separate from the whole conversation limit.
+pub const MAX_RESPONSE_TOKENS: usize = 256;
 pub const TOKENIZER_ALLOWANCE: usize = 64 * 1024 * 1024;
 const TOKENIZER_SHA: &str = "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7";
 const CONFIG_SHA: &str = "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee";
@@ -273,7 +275,7 @@ impl Codec {
     // response; they never concatenate independently decoded token strings.
     // A split UTF-8 sequence is repaired when its subsequent IDs arrive.
     pub fn decode(&self, ids: &[u32]) -> io::Result<String> {
-        if ids.len() > 128 || ids.iter().any(|&id| id >= self.profile.vocab()) {
+        if ids.len() > MAX_RESPONSE_TOKENS || ids.iter().any(|&id| id >= self.profile.vocab()) {
             return Err(invalid("Response exceeds supported token bounds"));
         }
         let text = self.tokenizer.decode(ids, true).map_err(invalid)?;
@@ -284,9 +286,33 @@ impl Codec {
     }
 }
 
+// Decode-only portable fixture; production construction always validates pinned
+// profile assets. Shared by codec and foreign-buffer tests, never model loading.
+#[cfg(test)]
+pub(crate) fn decode_fixture() -> Codec {
+    Codec {
+        tokenizer: Tokenizer::from_bytes(include_bytes!(
+            "../tests/fixtures/chat-v1/tokenizer.json"
+        ))
+        .unwrap(),
+        profile: Profile::Qwen,
+        special_literals: Vec::new(),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn visible_response_bounds_preserve_exact_output_and_reject_overflow() {
+        let codec = decode_fixture();
+        for count in [0, 128, 129, 256] {
+            assert_eq!(codec.decode(&vec![32; count]).unwrap(), "A".repeat(count));
+        }
+        assert!(codec.decode(&vec![32; 257]).is_err());
+        assert!(codec.decode(&[151936]).is_err());
+        assert_eq!(codec.decode(&[151645; 256]).unwrap(), "");
+    }
     #[test]
     fn pinned_assets_reject_modified_or_oversized_bytes() {
         let path = std::env::temp_dir().join(format!("toklet-chat-pin-{}", std::process::id()));

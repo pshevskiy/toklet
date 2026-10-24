@@ -142,7 +142,7 @@ the next code task. Keep [the improvement record](improvements.md) updated.
     [The bounded text profile](app-chat-profile.md) and
     [shared-worker Chat/Expert interface](app-interface.md) are implemented for
     the selected SmolLM2, Qwen and Mistral snapshots. Search/downloads select those pinned profiles;
-    wider text-profile/download compatibility remains open.
+    wider text-profile/download compatibility remains open. The later [bounded Chat output extension](chat-output-limit.md) supports up to256 output IDs within the unchanged512-token total context; raw Expert commands retain128.
 - [ ] **M8.5 Mac and iPhone qualification.** Test downloaded compatible models on
   the M1 Pro and iPhone 14 Pro, including different implemented architectures and
   actual image input for vision claims. Record identities, deterministic outputs,
