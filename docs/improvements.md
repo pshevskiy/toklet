@@ -2343,3 +2343,39 @@ This completes a scalar operator chain, not the hybrid graph. Convolution, gated
 output normalization, config/weight mapping, model/session state commit, GPU
 execution and real-model/long-context/app qualification remain open. Current
 native/app limits and eligibility are unchanged.
+
+## 24 October2026 — mobile monitoring and dialog controls
+
+Commit `abe661e` adds measured process memory/allowance, response timing and
+throughput, device-fit recommendations, a local repeated benchmark and confirmed
+single/all dialog deletion. Fit recommendations describe supported capacity,
+not model quality. Failed dialog saves restore the previous workspace and expose
+recovery; injected full-disk failures exercise retained history. Simulator checks
+cover cancellation and confirmed deletion, navigation and visible metrics.
+
+Astra accepted the exact final source and
+[receipt](../benchmarks/results/2026-10-24-mobile-dashboard-v1.json), including
+strict Swift checks, Release iOS/Simulator builds, a passing Simulator UI test and
+separate real Mac benchmark/controller checks. This does not qualify a physical
+iPhone benchmark or new model/128K capability. The installed phone remains on its
+previous app source/native package until a separately admitted update is tested.
+
+## 24 October2026 — independent causal convolution witnesses
+
+The new mathematical convolution/SiLU reference fixes oldest-to-current tap
+order, per-channel weights and oldest-to-newest raw-input history. It uses FP64
+NumPy math over FP32 inputs with no Toklet arithmetic. Exact bounded artifact
+admission and a separately authenticated runtime precede numerical comparison.
+Selected pinned upstream assignments invoke actual MLX Conv1d/SiLU with the
+explicit converted weight layout; no whole model execution is implied.
+
+Three orchestration, nine mathematical/format/source-selection and three runtime
+admission tests pass. CPU and GPU each pass 154 comparisons and retain 154 raw
+arrays for full, prefix and chunked calls under the unchanged numerical policy.
+Astra reviews source/evidence before commit. See
+[the contract](causal-conv-reference.md) and
+[receipt](../benchmarks/results/2026-10-24-causal-conv-reference-v1.json).
+Empty input is a mathematical no-op; kernel-one source cache behavior, masks and
+length-dependent caches remain excluded. Native convolution, gated output norm,
+hybrid graph/session/Metal execution and real-model/app/device/long-context
+qualification remain open. No capability or execution limit was raised.

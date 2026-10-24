@@ -123,7 +123,8 @@ plans/owners and measured memory separately on each device. Retain the existing
 Mac budget and qualify a mobile limit independently.
 
 The named missing mechanisms above are mapped for implementation. The unmasked
-gated-delta reference is checked and frozen before its native target. The other
-operator/graph oracles, scalar/Metal execution, real artifact selection, text
-integration and every long-context/device gate remain open. An unavailable
+gated-delta reference is checked and frozen before its native target. The
+[causal convolution reference](causal-conv-reference.md) is also checked before its
+native target. Remaining operator/graph oracles, scalar/Metal execution, real
+artifact selection, text integration and every long-context/device gate remain open. An unavailable
 required check cannot grant completion.
