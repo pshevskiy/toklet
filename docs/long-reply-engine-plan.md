@@ -37,7 +37,9 @@ The immutable official [Qwen3.5-0.8B configuration](https://huggingface.co/Qwen/
 declares262144 positions and a hybrid linear/full-attention text graph. Its
 [upstream text implementation](https://github.com/ml-explore/mlx-lm/blob/0d4d3d04f8ab7ce4a51e7209e8615755a48ba94d/mlx_lm/models/qwen3_5.py)
 uses causal convolution and gated-delta state alongside attention. This makes it
-a candidate for L4, not an admitted or device-qualified model. Its partial rotary,
+a candidate for L4, not an admitted or device-qualified model. The
+[mechanism investigation](mlx-qwen35-design.md) maps the concrete missing pieces
+and state/memory requirements without adding an executable graph. Its partial rotary,
 attention gate, normalization/weight-conversion conventions and recurrent state
 need their own explicit fixtures. Text-only support must neither imply vision
 support nor inherit Qwen3/Qwen2 tokenizer or chat semantics. Inspect immutable

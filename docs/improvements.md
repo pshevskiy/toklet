@@ -2255,3 +2255,27 @@ code and evidence before commit. See the
 [receipt](../benchmarks/results/2026-10-24-chat-stream-decoder-v1.json).
 This does not implement128K numerical/app support. Native event ownership and
 integration remain separate tasks. The architecture/Hugging Face plan stays open.
+
+## 24 October2026 — independent recurrent-attention witnesses
+
+The first gated-delta mathematical reference is frozen before its native target:
+FP32 inputs, independent FP64 NumPy normalization/gates/recurrence/readout,
+explicit grouped-head mapping and immutable initial state. Five tiny geometries
+include zero/epsilon-dominated normalization, saturated gates and 128-wide state.
+The bounded stdlib format reader requires external manifest/binary identities.
+
+Twenty-three portable and four orchestration tests pass. Fresh export and
+verification pass; pinned upstream CPU and GPU each pass all 36 comparisons at
+the unchanged source policy. Raw prefix/chunk states, outputs, runtime/source
+identities and process ownership are retained. The initial sandbox Metal import
+failure and earlier draft-source captures remain separate from the final pass.
+Astra reviews the source/evidence before commit. See
+[the contract](gated-delta-oracle-preparation.md) and
+[receipt](../benchmarks/results/2026-10-24-gated-delta-oracle-v1.json).
+
+Source review corrected overflow, publication/import ownership and failure
+retention defects before acceptance. Cooperative interruption has a bounded
+parent cleanup deadline; hard-kill loss remains explicit. Masks/vector gates and
+the upstream masked-readout discrepancy stay outside this first oracle. No native
+recurrence, Qwen3.5 graph, real checkpoint, 128K generation, quality, performance
+or mobile qualification is claimed. E1–E6/H1–H4 remain open.

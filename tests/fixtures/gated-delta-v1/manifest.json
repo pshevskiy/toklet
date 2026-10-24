@@ -1,0 +1,882 @@
+{
+  "format": "toklet-gated-delta-math-reference-v1",
+  "status": "mathematical reference; upstream numerical parity and fixture acceptance required",
+  "producer_sha256": "bc5fb436004eb89bc9ddecb41210d78d582385c00444e03c1dc72162cb9c2289",
+  "runtime": {
+    "numpy": "2.3.2"
+  },
+  "upstream_revision": "0d4d3d04f8ab7ce4a51e7209e8615755a48ba94d",
+  "upstream_source_sha256": "f69e837ea68641dbb06fdb5dcc024a9a7e1d9353f08ae58c05275253a0c39428",
+  "upstream_source_executed": false,
+  "upstream_numerical_parity_checked": false,
+  "masked_outputs_supported": false,
+  "precision": "FP32 stored inputs, FP64 normalization/gates/recurrence/output/state",
+  "normalization": "sum-of-squares epsilon; Dk**-0.5 folded into Q exactly once",
+  "head_mapping": "key_head = value_head // (value_heads // key_heads)",
+  "state_layout": "[value_heads,value_dim,key_dim] contiguous key_dim",
+  "binary": {
+    "path": "arrays.bin",
+    "bytes": 2429168,
+    "sha256": "d08b95a0695cbfed54ed7c0bf6195e5c56c2ca2dbc69b706785a6b2a8349f2fd",
+    "alignment": 8
+  },
+  "cases": [
+    {
+      "name": "empty",
+      "geometry": {
+        "tokens": 0,
+        "key_heads": 1,
+        "value_heads": 1,
+        "key_dim": 8,
+        "value_dim": 3,
+        "epsilon": 1e-06
+      },
+      "arrays": {
+        "raw_q": {
+          "offset": 0,
+          "bytes": 0,
+          "dtype": "<f4",
+          "shape": [
+            0,
+            1,
+            8
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "raw_k": {
+          "offset": 0,
+          "bytes": 0,
+          "dtype": "<f4",
+          "shape": [
+            0,
+            1,
+            8
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "v": {
+          "offset": 0,
+          "bytes": 0,
+          "dtype": "<f4",
+          "shape": [
+            0,
+            1,
+            3
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "a": {
+          "offset": 0,
+          "bytes": 0,
+          "dtype": "<f4",
+          "shape": [
+            0,
+            1
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "b": {
+          "offset": 0,
+          "bytes": 0,
+          "dtype": "<f4",
+          "shape": [
+            0,
+            1
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "a_log": {
+          "offset": 0,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1
+          ],
+          "sha256": "6de990ade6af24bec3b69375e0eb3f559c4fce91f47fa09da7abee46fd20a563"
+        },
+        "dt_bias": {
+          "offset": 8,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1
+          ],
+          "sha256": "8b5b83959ef43d276462d9577a01e58fea571d97acd41b53e7603a6d0f9bd063"
+        },
+        "initial_state": {
+          "offset": 16,
+          "bytes": 96,
+          "dtype": "<f4",
+          "shape": [
+            1,
+            3,
+            8
+          ],
+          "sha256": "bbb9025f155c5d6d5c5673e18f6d550471f7a77de4803514463aa1d3e62caeca"
+        },
+        "normalized_q": {
+          "offset": 112,
+          "bytes": 0,
+          "dtype": "<f8",
+          "shape": [
+            0,
+            1,
+            8
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "normalized_k": {
+          "offset": 112,
+          "bytes": 0,
+          "dtype": "<f8",
+          "shape": [
+            0,
+            1,
+            8
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "decay": {
+          "offset": 112,
+          "bytes": 0,
+          "dtype": "<f8",
+          "shape": [
+            0,
+            1
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "beta": {
+          "offset": 112,
+          "bytes": 0,
+          "dtype": "<f8",
+          "shape": [
+            0,
+            1
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "output": {
+          "offset": 112,
+          "bytes": 0,
+          "dtype": "<f8",
+          "shape": [
+            0,
+            1,
+            3
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "states": {
+          "offset": 112,
+          "bytes": 0,
+          "dtype": "<f8",
+          "shape": [
+            0,
+            1,
+            3,
+            8
+          ],
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "final_state": {
+          "offset": 112,
+          "bytes": 192,
+          "dtype": "<f8",
+          "shape": [
+            1,
+            3,
+            8
+          ],
+          "sha256": "635dc590dc2ed708ee3da601ae3841255b0cd7c6183c390528d80c9f276a1890"
+        }
+      }
+    },
+    {
+      "name": "single",
+      "geometry": {
+        "tokens": 1,
+        "key_heads": 1,
+        "value_heads": 1,
+        "key_dim": 1,
+        "value_dim": 1,
+        "epsilon": 1e-06
+      },
+      "arrays": {
+        "raw_q": {
+          "offset": 304,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1,
+            1,
+            1
+          ],
+          "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+        },
+        "raw_k": {
+          "offset": 312,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1,
+            1,
+            1
+          ],
+          "sha256": "b2c6a8c83803ff33154c42757d93d1a39e827f2745b79e92eb09bd4db3aa8e7a"
+        },
+        "v": {
+          "offset": 320,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1,
+            1,
+            1
+          ],
+          "sha256": "8806b1c5d65ee211c8ec11f6459f7d9ebedf1da82c32834622be55ab2dc16ac7"
+        },
+        "a": {
+          "offset": 328,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1,
+            1
+          ],
+          "sha256": "c82479374a30cf8b6e27b58e9410e719173933a1dec529136065dadcdab3fdc1"
+        },
+        "b": {
+          "offset": 336,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1,
+            1
+          ],
+          "sha256": "f5f9ddc37d9d4bd436e2292667542851f94944c3266113957e9887cf5ce08092"
+        },
+        "a_log": {
+          "offset": 344,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1
+          ],
+          "sha256": "6de990ade6af24bec3b69375e0eb3f559c4fce91f47fa09da7abee46fd20a563"
+        },
+        "dt_bias": {
+          "offset": 352,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1
+          ],
+          "sha256": "8b5b83959ef43d276462d9577a01e58fea571d97acd41b53e7603a6d0f9bd063"
+        },
+        "initial_state": {
+          "offset": 360,
+          "bytes": 4,
+          "dtype": "<f4",
+          "shape": [
+            1,
+            1,
+            1
+          ],
+          "sha256": "a11d13e0f39282462d4a18457b68172e152d7b854b263a2427c4a5eb1db4291f"
+        },
+        "normalized_q": {
+          "offset": 368,
+          "bytes": 8,
+          "dtype": "<f8",
+          "shape": [
+            1,
+            1,
+            1
+          ],
+          "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+        },
+        "normalized_k": {
+          "offset": 376,
+          "bytes": 8,
+          "dtype": "<f8",
+          "shape": [
+            1,
+            1,
+            1
+          ],
+          "sha256": "1b579bbae9a6226698839c3cb533651f0c7cb4767d0a1e0b87a58476b51e8d82"
+        },
+        "decay": {
+          "offset": 384,
+          "bytes": 8,
+          "dtype": "<f8",
+          "shape": [
+            1,
+            1
+          ],
+          "sha256": "cd3c7d042f51856045a0b5d49352669dcbe8ad558cdbfcfd1146b3b24c2ee09d"
+        },
+        "beta": {
+          "offset": 392,
+          "bytes": 8,
+          "dtype": "<f8",
+          "shape": [
+            1,
+            1
+          ],
+          "sha256": "d938592ad4ac078450b211de92b6b3933800e3f660f6cdcd08266ecaae114b19"
+        },
+        "output": {
+          "offset": 400,
+          "bytes": 8,
+          "dtype": "<f8",
+          "shape": [
+            1,
+            1,
+            1
+          ],
+          "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+        },
+        "states": {
+          "offset": 408,
+          "bytes": 8,
+          "dtype": "<f8",
+          "shape": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "sha256": "ec5f5da40db7af0ce7a8409362f0198aba2df61380e9e742a6b34f19784e78d2"
+        },
+        "final_state": {
+          "offset": 416,
+          "bytes": 8,
+          "dtype": "<f8",
+          "shape": [
+            1,
+            1,
+            1
+          ],
+          "sha256": "ec5f5da40db7af0ce7a8409362f0198aba2df61380e9e742a6b34f19784e78d2"
+        }
+      }
+    },
+    {
+      "name": "grouped",
+      "geometry": {
+        "tokens": 7,
+        "key_heads": 2,
+        "value_heads": 4,
+        "key_dim": 8,
+        "value_dim": 3,
+        "epsilon": 1e-06
+      },
+      "arrays": {
+        "raw_q": {
+          "offset": 424,
+          "bytes": 448,
+          "dtype": "<f4",
+          "shape": [
+            7,
+            2,
+            8
+          ],
+          "sha256": "d37df43919154297bafb4eb7f806ba956c1353d67e192b3347f3daed0eb919b8"
+        },
+        "raw_k": {
+          "offset": 872,
+          "bytes": 448,
+          "dtype": "<f4",
+          "shape": [
+            7,
+            2,
+            8
+          ],
+          "sha256": "aa37a4b411ab2da3509c7095664c5ee6af8df75e92287f26a5d5fc0951221897"
+        },
+        "v": {
+          "offset": 1320,
+          "bytes": 336,
+          "dtype": "<f4",
+          "shape": [
+            7,
+            4,
+            3
+          ],
+          "sha256": "f6ba6cb0d1b44d68fc4a8db09b827cad2c08844bd23a9dca21c3c32e8bf957a6"
+        },
+        "a": {
+          "offset": 1656,
+          "bytes": 112,
+          "dtype": "<f4",
+          "shape": [
+            7,
+            4
+          ],
+          "sha256": "fb0686c4155601e85feaa3d4d8cdec93da9db8fe7a52870e4b7c738a4bcb5e20"
+        },
+        "b": {
+          "offset": 1768,
+          "bytes": 112,
+          "dtype": "<f4",
+          "shape": [
+            7,
+            4
+          ],
+          "sha256": "a8e94a384def5ced5360bff3f3fbcbbca0655d448af7add8e7df576db8ac435e"
+        },
+        "a_log": {
+          "offset": 1880,
+          "bytes": 16,
+          "dtype": "<f4",
+          "shape": [
+            4
+          ],
+          "sha256": "6033426fd58cff3e5ddef864789dcbcfb321890d3f0e8a924cf5b73244fcf09c"
+        },
+        "dt_bias": {
+          "offset": 1896,
+          "bytes": 16,
+          "dtype": "<f4",
+          "shape": [
+            4
+          ],
+          "sha256": "16ff822dd95e7aa9362bdd081195b38822bc26d6594d1239880dca1e33db1426"
+        },
+        "initial_state": {
+          "offset": 1912,
+          "bytes": 384,
+          "dtype": "<f4",
+          "shape": [
+            4,
+            3,
+            8
+          ],
+          "sha256": "49b08815943947893d9e9f001d242565f700b61126512a6122d9bf06a1d3b66e"
+        },
+        "normalized_q": {
+          "offset": 2296,
+          "bytes": 896,
+          "dtype": "<f8",
+          "shape": [
+            7,
+            2,
+            8
+          ],
+          "sha256": "48cffb0dbec86fa3258f4ef63ad88ae633a547259ee91f8aac18c3bc1e7bba1d"
+        },
+        "normalized_k": {
+          "offset": 3192,
+          "bytes": 896,
+          "dtype": "<f8",
+          "shape": [
+            7,
+            2,
+            8
+          ],
+          "sha256": "a97a9a5317471fdf0d7ff282f68dcf1611775a6ad9f151d9f209d7d3f4b1fa89"
+        },
+        "decay": {
+          "offset": 4088,
+          "bytes": 224,
+          "dtype": "<f8",
+          "shape": [
+            7,
+            4
+          ],
+          "sha256": "c4451dc12b43d3c15c7fd3a1015f1124e612d215b222f99bfa419654ac1fe80f"
+        },
+        "beta": {
+          "offset": 4312,
+          "bytes": 224,
+          "dtype": "<f8",
+          "shape": [
+            7,
+            4
+          ],
+          "sha256": "73f3f3c42c4ccffaa41142d0137eb17f1eb572c38ac439492b40fc4879a66306"
+        },
+        "output": {
+          "offset": 4536,
+          "bytes": 672,
+          "dtype": "<f8",
+          "shape": [
+            7,
+            4,
+            3
+          ],
+          "sha256": "655a40c3b039fc6a963f15057c912e845e7c211e975071a2842e1fffd308ac48"
+        },
+        "states": {
+          "offset": 5208,
+          "bytes": 5376,
+          "dtype": "<f8",
+          "shape": [
+            7,
+            4,
+            3,
+            8
+          ],
+          "sha256": "d5223e52930b2d9817f1394fda028e53db2051275c5ed5013595ebd7f29ab411"
+        },
+        "final_state": {
+          "offset": 10584,
+          "bytes": 768,
+          "dtype": "<f8",
+          "shape": [
+            4,
+            3,
+            8
+          ],
+          "sha256": "1a6af47f4cf0aa8a88c75ad4d4c76e8d5a876db37b34de4cdeb0907b89ce21e6"
+        }
+      }
+    },
+    {
+      "name": "kernel-width32",
+      "geometry": {
+        "tokens": 5,
+        "key_heads": 1,
+        "value_heads": 2,
+        "key_dim": 32,
+        "value_dim": 5,
+        "epsilon": 1e-06
+      },
+      "arrays": {
+        "raw_q": {
+          "offset": 11352,
+          "bytes": 640,
+          "dtype": "<f4",
+          "shape": [
+            5,
+            1,
+            32
+          ],
+          "sha256": "2c8025dea4419218677e7f49c7be3a1f1dd22fe9a25bc3b423fbb5f11a229191"
+        },
+        "raw_k": {
+          "offset": 11992,
+          "bytes": 640,
+          "dtype": "<f4",
+          "shape": [
+            5,
+            1,
+            32
+          ],
+          "sha256": "3d3a7f3d6dd008ea50871fa3ebfe95fa3f582f35ffa29c90b077764947292f07"
+        },
+        "v": {
+          "offset": 12632,
+          "bytes": 200,
+          "dtype": "<f4",
+          "shape": [
+            5,
+            2,
+            5
+          ],
+          "sha256": "fc7697da9a174f3ccaa4da7078a7ba4bd1e81a3f385d539dde70fce42cf3d0b5"
+        },
+        "a": {
+          "offset": 12832,
+          "bytes": 40,
+          "dtype": "<f4",
+          "shape": [
+            5,
+            2
+          ],
+          "sha256": "2065bb94d3746351a418397a6f9a2f1b016f856ade89b01986589fe0619b1f69"
+        },
+        "b": {
+          "offset": 12872,
+          "bytes": 40,
+          "dtype": "<f4",
+          "shape": [
+            5,
+            2
+          ],
+          "sha256": "f5a55dc22b66b5678a043a202b59bdbda7da92aabc20a9d2fd6a7bd72b1f57f8"
+        },
+        "a_log": {
+          "offset": 12912,
+          "bytes": 8,
+          "dtype": "<f4",
+          "shape": [
+            2
+          ],
+          "sha256": "93be14fcbc76ecf9cd07ddeb0afeae1697e37a962eab1092ff0648f47a78a50c"
+        },
+        "dt_bias": {
+          "offset": 12920,
+          "bytes": 8,
+          "dtype": "<f4",
+          "shape": [
+            2
+          ],
+          "sha256": "93b037370cd08f2ef8da00867c3267c37ee06c17738c626e9da2b863146cd67f"
+        },
+        "initial_state": {
+          "offset": 12928,
+          "bytes": 1280,
+          "dtype": "<f4",
+          "shape": [
+            2,
+            5,
+            32
+          ],
+          "sha256": "5bffb4991058e535c263de3392adfdfc2d09874368fcbb606ba3ba6bb54fdb38"
+        },
+        "normalized_q": {
+          "offset": 14208,
+          "bytes": 1280,
+          "dtype": "<f8",
+          "shape": [
+            5,
+            1,
+            32
+          ],
+          "sha256": "02e136459f197897f66216ca8f9d1be1d13e34946db8a651f33f74e3bdbef8ac"
+        },
+        "normalized_k": {
+          "offset": 15488,
+          "bytes": 1280,
+          "dtype": "<f8",
+          "shape": [
+            5,
+            1,
+            32
+          ],
+          "sha256": "b746dd35c469fae0462091ca385d93159609dc96ecd22c25692e2a0a327767a5"
+        },
+        "decay": {
+          "offset": 16768,
+          "bytes": 80,
+          "dtype": "<f8",
+          "shape": [
+            5,
+            2
+          ],
+          "sha256": "2ef1b900fc040c91a7aeed628be0785e91ebf7fd45d0c5466fc411f72e9bf949"
+        },
+        "beta": {
+          "offset": 16848,
+          "bytes": 80,
+          "dtype": "<f8",
+          "shape": [
+            5,
+            2
+          ],
+          "sha256": "3b75ef5049d8d0e041b874aff46cd0c53b8cbc799bb66f8eeaac8fbfb282fdac"
+        },
+        "output": {
+          "offset": 16928,
+          "bytes": 400,
+          "dtype": "<f8",
+          "shape": [
+            5,
+            2,
+            5
+          ],
+          "sha256": "6e9b37a91d7c9025988eb7ca73f234e68d3b8cdd2f94d870895a21b7159a957a"
+        },
+        "states": {
+          "offset": 17328,
+          "bytes": 12800,
+          "dtype": "<f8",
+          "shape": [
+            5,
+            2,
+            5,
+            32
+          ],
+          "sha256": "6a7967d32d7e65e43d5e4c83d4730b61e38107d29b52259f261294c55d2ce26f"
+        },
+        "final_state": {
+          "offset": 30128,
+          "bytes": 2560,
+          "dtype": "<f8",
+          "shape": [
+            2,
+            5,
+            32
+          ],
+          "sha256": "2184d175eb2383e48c5982b0547ad3906bf5b07a8d325743430211fba998303c"
+        }
+      }
+    },
+    {
+      "name": "state-width128",
+      "geometry": {
+        "tokens": 3,
+        "key_heads": 2,
+        "value_heads": 4,
+        "key_dim": 128,
+        "value_dim": 128,
+        "epsilon": 1e-06
+      },
+      "arrays": {
+        "raw_q": {
+          "offset": 32688,
+          "bytes": 3072,
+          "dtype": "<f4",
+          "shape": [
+            3,
+            2,
+            128
+          ],
+          "sha256": "0f069c2a62518a4de6a7ec322881446eb98a5a43c7ca5b7f0d7fa0d3470e1e67"
+        },
+        "raw_k": {
+          "offset": 35760,
+          "bytes": 3072,
+          "dtype": "<f4",
+          "shape": [
+            3,
+            2,
+            128
+          ],
+          "sha256": "46c95b28e205bbd48eae28c35f5fff3c053702dd2002bd48a47f94b315e25bb0"
+        },
+        "v": {
+          "offset": 38832,
+          "bytes": 6144,
+          "dtype": "<f4",
+          "shape": [
+            3,
+            4,
+            128
+          ],
+          "sha256": "6e7bc8a341bd74333ac97dfc3b5f200c60a3926d847b7d45c05943575df34ed0"
+        },
+        "a": {
+          "offset": 44976,
+          "bytes": 48,
+          "dtype": "<f4",
+          "shape": [
+            3,
+            4
+          ],
+          "sha256": "635e13128d453d41a980035ab3e2fc1ec948c184b30a66eea8acaff2f309268d"
+        },
+        "b": {
+          "offset": 45024,
+          "bytes": 48,
+          "dtype": "<f4",
+          "shape": [
+            3,
+            4
+          ],
+          "sha256": "8f49262de59db6a12b87363cf151d3d486b240a0af367d4d4f9e008da575f276"
+        },
+        "a_log": {
+          "offset": 45072,
+          "bytes": 16,
+          "dtype": "<f4",
+          "shape": [
+            4
+          ],
+          "sha256": "6033426fd58cff3e5ddef864789dcbcfb321890d3f0e8a924cf5b73244fcf09c"
+        },
+        "dt_bias": {
+          "offset": 45088,
+          "bytes": 16,
+          "dtype": "<f4",
+          "shape": [
+            4
+          ],
+          "sha256": "16ff822dd95e7aa9362bdd081195b38822bc26d6594d1239880dca1e33db1426"
+        },
+        "initial_state": {
+          "offset": 45104,
+          "bytes": 262144,
+          "dtype": "<f4",
+          "shape": [
+            4,
+            128,
+            128
+          ],
+          "sha256": "85918f4edbc4ae7707eeb22d18c3f86c035071e22518506943068ff094f3dc18"
+        },
+        "normalized_q": {
+          "offset": 307248,
+          "bytes": 6144,
+          "dtype": "<f8",
+          "shape": [
+            3,
+            2,
+            128
+          ],
+          "sha256": "274e5d6c64259066a53f592da9ac376e443c6471743e615c0369ea80b199ccca"
+        },
+        "normalized_k": {
+          "offset": 313392,
+          "bytes": 6144,
+          "dtype": "<f8",
+          "shape": [
+            3,
+            2,
+            128
+          ],
+          "sha256": "e12df9bcdc656ff516f8ca450932bf1812ad14d63f6f2e301034944c23c0842a"
+        },
+        "decay": {
+          "offset": 319536,
+          "bytes": 96,
+          "dtype": "<f8",
+          "shape": [
+            3,
+            4
+          ],
+          "sha256": "213bc52968c4b4cb4e8de142c84e9ccd08c16dabbc8d5421ebac2bb786a6c5f6"
+        },
+        "beta": {
+          "offset": 319632,
+          "bytes": 96,
+          "dtype": "<f8",
+          "shape": [
+            3,
+            4
+          ],
+          "sha256": "ba906eb7ac6118ebc750a293c4fabdfc608f1dc3cdb69edb0788b562822fa124"
+        },
+        "output": {
+          "offset": 319728,
+          "bytes": 12288,
+          "dtype": "<f8",
+          "shape": [
+            3,
+            4,
+            128
+          ],
+          "sha256": "8b77de0325930fe81e0cb26f146e0c30d953867b69ab51b43875d1acdb0ccc77"
+        },
+        "states": {
+          "offset": 332016,
+          "bytes": 1572864,
+          "dtype": "<f8",
+          "shape": [
+            3,
+            4,
+            128,
+            128
+          ],
+          "sha256": "a99bf67a8ac798d58106b65a139273418bcafac8936641a654510cfb52368435"
+        },
+        "final_state": {
+          "offset": 1904880,
+          "bytes": 524288,
+          "dtype": "<f8",
+          "shape": [
+            4,
+            128,
+            128
+          ],
+          "sha256": "bcfb846d3d9b686b7d137095bea8614e296ee507ce5d891c6bf4d0a237cff3f0"
+        }
+      }
+    }
+  ],
+  "native_graph_implemented": false,
+  "numerical_device_qualified": false
+}
