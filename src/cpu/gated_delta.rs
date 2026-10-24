@@ -9,6 +9,62 @@ pub struct GatedDeltaShape {
     pub value_dim: usize,
 }
 
+/// L2-normalize raw Q/K `[heads,key_dim]`, folding one readout scale into Q.
+///
+/// Epsilon is added to sum(x²), not its mean. Squares, increasing-coordinate
+/// sums and normalization use FP64; outputs are rounded once to FP32. Q also
+/// receives `key_dim**-0.5`. There are no weights or heap allocations. All
+/// dimensions, lengths, finite inputs and epsilon are checked before writes.
+/// This is distinct from the transformer's per-head RMSNorm operation.
+pub fn gated_delta_normalize(
+    q: &[f32],
+    k: &[f32],
+    q_output: &mut [f32],
+    k_output: &mut [f32],
+    heads: usize,
+    key_dim: usize,
+    epsilon: f64,
+) -> Result<(), Error> {
+    nonzero(heads, "heads")?;
+    nonzero(key_dim, "key_dim")?;
+    let elements = product(heads, key_dim)?;
+    for (name, actual) in [
+        ("delta raw Q", q.len()),
+        ("delta raw K", k.len()),
+        ("delta normalized Q", q_output.len()),
+        ("delta normalized K", k_output.len()),
+    ] {
+        length(name, actual, elements)?;
+    }
+    finite("delta raw Q", q)?;
+    finite("delta raw K", k)?;
+    if !epsilon.is_finite() || epsilon <= 0.0 {
+        return Err(Error::InvalidParameter("delta L2 epsilon"));
+    }
+    let readout_scale = (key_dim as f64).sqrt().recip();
+    for head in 0..heads {
+        let base = head * key_dim;
+        let mut q_squared = 0.0_f64;
+        let mut k_squared = 0.0_f64;
+        for dim in 0..key_dim {
+            let q = f64::from(q[base + dim]);
+            let k = f64::from(k[base + dim]);
+            q_squared += q * q;
+            k_squared += k * k;
+        }
+        // Finite FP32 squares/sums fit FP64 even at the maximum usize count.
+        // Positive finite epsilon leaves nonzero finite denominators. Each
+        // normalized coordinate is bounded by one, so output casts stay finite.
+        let q_norm = (q_squared + epsilon).sqrt();
+        let k_norm = (k_squared + epsilon).sqrt();
+        for dim in 0..key_dim {
+            q_output[base + dim] = ((f64::from(q[base + dim]) / q_norm) * readout_scale) as f32;
+            k_output[base + dim] = (f64::from(k[base + dim]) / k_norm) as f32;
+        }
+    }
+    Ok(())
+}
+
 /// Update a separate candidate state and read it through normalized Q.
 ///
 /// Q/K are `[key_heads,key_dim]`, V/output `[value_heads,value_dim]`, gates

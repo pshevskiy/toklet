@@ -157,7 +157,8 @@ diagnostic commands stay capped at 128.
 E4/L4 foundation: the independent [unmasked gated-delta reference](gated-delta-oracle-preparation.md)
 is frozen before its [normalized scalar recurrence](gated-delta-scalar.md).
 The operator writes a separate candidate state and preserves its immutable input
-on failure. Raw normalization/gates, convolution, masked policy, hybrid graph and
+on failure. Its separate [raw Q/K normalization](gated-delta-normalization.md)
+also passes. Gate construction, convolution, masked policy, hybrid graph and
 session, Metal state, real-checkpoint and long-context/device gates remain open.
 
 Status: E1 has an [independent tiny Qwen3 oracle](mlx-qwen3-oracle.md); [native scalar execution](mlx-qwen3-scalar.md) now passes its tiny gates. [Resident tiny Metal execution](mlx-qwen3-metal.md) also passes its frozen gates. An [immutable real Qwen3 candidate](mlx-qwen3-checkpoint.md) is acquired and structurally inspected. Its [independent real numerical reference](mlx-qwen3-real-oracle.md) is frozen, and [selected real Mac execution](mlx-qwen3-real-metal.md) passes the frozen numerical/session gates. [Public generation callback recovery](mlx-qwen3-real-generation.md) also passes. Quality, chat/app integration and iPhone qualification remain next. E1–E6 and

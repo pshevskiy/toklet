@@ -46,8 +46,7 @@ fn close(actual: &[f32], expected: &[f64]) {
     }
 }
 
-#[test]
-fn frozen_normalized_recurrence_matches_each_state_and_output() {
+fn fixture() -> Value {
     let receipt_raw =
         include_str!("../../../benchmarks/results/2026-10-24-gated-delta-oracle-v1.json");
     assert_eq!(
@@ -63,7 +62,12 @@ fn frozen_normalized_recurrence_matches_each_state_and_output() {
         format!("{:x}", Sha256::digest(BINARY)),
         receipt["fixture_binary_sha256"].as_str().unwrap()
     );
-    let manifest: Value = serde_json::from_str(MANIFEST).unwrap();
+    serde_json::from_str(MANIFEST).unwrap()
+}
+
+#[test]
+fn frozen_normalized_recurrence_matches_each_state_and_output() {
+    let manifest = fixture();
     for row in manifest["cases"].as_array().unwrap() {
         let g = &row["geometry"];
         let n = |key: &str| g[key].as_u64().unwrap() as usize;
@@ -324,4 +328,137 @@ fn correction_candidate_and_readout_overflow_preserve_old_state() {
         );
         assert_eq!(state, [previous]);
     }
+}
+
+#[test]
+fn raw_normalization_matches_frozen_math_and_composed_recurrence() {
+    let manifest = fixture();
+    for row in manifest["cases"].as_array().unwrap() {
+        let g = &row["geometry"];
+        let n = |key: &str| g[key].as_u64().unwrap() as usize;
+        let shape = GatedDeltaShape {
+            key_heads: n("key_heads"),
+            value_heads: n("value_heads"),
+            key_dim: n("key_dim"),
+            value_dim: n("value_dim"),
+        };
+        let input = |name| {
+            values(row, name)
+                .into_iter()
+                .map(|x| x as f32)
+                .collect::<Vec<_>>()
+        };
+        let q = input("raw_q");
+        let k = input("raw_k");
+        let v = input("v");
+        let decay = input("decay");
+        let beta = input("beta");
+        let expected_q = values(row, "normalized_q");
+        let expected_k = values(row, "normalized_k");
+        let expected_state = values(row, "states");
+        let expected_output = values(row, "output");
+        let qs = shape.key_heads * shape.key_dim;
+        let vs = shape.value_heads * shape.value_dim;
+        let mut normalized_q = vec![f32::NAN; qs];
+        let mut normalized_k = vec![f32::NAN; qs];
+        let mut state = input("initial_state");
+        let mut candidate = vec![f32::NAN; state.len()];
+        let mut output = vec![f32::NAN; vs];
+        for token in 0..n("tokens") {
+            gated_delta_normalize(
+                &q[token * qs..(token + 1) * qs],
+                &k[token * qs..(token + 1) * qs],
+                &mut normalized_q,
+                &mut normalized_k,
+                shape.key_heads,
+                shape.key_dim,
+                g["epsilon"].as_f64().unwrap(),
+            )
+            .unwrap();
+            close(&normalized_q, &expected_q[token * qs..(token + 1) * qs]);
+            close(&normalized_k, &expected_k[token * qs..(token + 1) * qs]);
+            gated_delta_step(
+                &normalized_q,
+                &normalized_k,
+                &v[token * vs..(token + 1) * vs],
+                &decay[token * shape.value_heads..(token + 1) * shape.value_heads],
+                &beta[token * shape.value_heads..(token + 1) * shape.value_heads],
+                &state,
+                &mut candidate,
+                &mut output,
+                &shape,
+            )
+            .unwrap();
+            close(
+                &candidate,
+                &expected_state[token * state.len()..(token + 1) * state.len()],
+            );
+            close(&output, &expected_output[token * vs..(token + 1) * vs]);
+            std::mem::swap(&mut state, &mut candidate);
+        }
+        close(&state, &values(row, "final_state"));
+    }
+}
+
+#[test]
+fn l2_sum_epsilon_and_single_query_scale_are_not_rmsnorm() {
+    let mut q = [0.; 2];
+    let mut k = [0.; 2];
+    gated_delta_normalize(&[3., 4.], &[3., 4.], &mut q, &mut k, 1, 2, 1.).unwrap();
+    close(
+        &q,
+        &[
+            3. / 26_f64.sqrt() / 2_f64.sqrt(),
+            4. / 26_f64.sqrt() / 2_f64.sqrt(),
+        ],
+    );
+    close(&k, &[3. / 26_f64.sqrt(), 4. / 26_f64.sqrt()]);
+    gated_delta_normalize(&[0., 0.], &[1e-4, 1e-4], &mut q, &mut k, 1, 2, 1e-6).unwrap();
+    assert_eq!(q, [0., 0.]);
+    // Epsilon dominates the sum; a zero result must still fail the policy.
+    close(&k, &[1e-4 / (2e-8 + 1e-6_f64).sqrt(); 2]);
+    gated_delta_normalize(
+        &[f32::MAX, -f32::MAX],
+        &[f32::MAX; 2],
+        &mut q,
+        &mut k,
+        1,
+        2,
+        1e-6,
+    )
+    .unwrap();
+    close(&q, &[0.5, -0.5]);
+    close(&k, &[2_f64.sqrt().recip(); 2]);
+}
+
+#[test]
+fn invalid_normalization_never_writes_outputs() {
+    for epsilon in [0., -1., f64::NAN, f64::INFINITY] {
+        let mut q = [91.];
+        let mut k = [92.];
+        assert!(gated_delta_normalize(&[1.], &[1.], &mut q, &mut k, 1, 1, epsilon).is_err());
+        assert_eq!(q, [91.]);
+        assert_eq!(k, [92.]);
+    }
+    for (input, heads, dim) in [
+        (f32::NAN, 1, 1),
+        (1., 0, 1),
+        (1., 2, usize::MAX),
+        (1., 1, 2),
+    ] {
+        let mut q = [91.];
+        let mut k = [92.];
+        assert!(gated_delta_normalize(&[input], &[1.], &mut q, &mut k, heads, dim, 1e-6).is_err());
+        assert_eq!(q, [91.]);
+        assert_eq!(k, [92.]);
+    }
+    let mut q = [91.];
+    let mut k = [92.];
+    assert!(gated_delta_normalize(&[1.], &[f32::NAN], &mut q, &mut k, 1, 1, 1e-6).is_err());
+    assert_eq!(q, [91.]);
+    assert_eq!(k, [92.]);
+    let mut q = [91.; 2];
+    assert!(gated_delta_normalize(&[1.], &[1.], &mut q, &mut k, 1, 1, 1e-6).is_err());
+    assert_eq!(q, [91.; 2]);
+    assert_eq!(k, [92.]);
 }

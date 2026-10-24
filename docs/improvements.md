@@ -2302,3 +2302,23 @@ See [the contract](gated-delta-scalar.md) and
 This is an operator foundation, not Qwen3.5 or long-context generation. Raw Q/K
 normalization, gate construction, convolution, hybrid/session commit, GPU state,
 model admission, quality, performance and app/device qualification remain open.
+
+## 24 October2026 — recurrent raw Q/K normalization
+
+The separate raw normalizer uses sum-of-squares epsilon and folds one readout
+scale into Q. FP64 intermediate squares/sums avoid FP32 overflow, with one FP32
+output rounding. Checked dimensions, lengths, finite inputs and epsilon precede
+all writes; the operator allocates no buffers and changes no session state.
+
+Three regressions authenticate the frozen receipt and compare raw normalization
+and composed recurrent states/output. Hand cases distinguish sum/mean epsilon,
+one Q scale, zero/epsilon-dominated heads and maximum finite FP32 input. Astra
+strengthened the analytic epsilon witness so an erroneous zero cannot pass the
+unchanged tolerance. Invalid inputs preserve both outputs. Formatting, strict
+default/Metal Clippy, 200 CPU/222 Metal-feature tests and both iOS cross-checks pass.
+See [the contract](gated-delta-normalization.md) and
+[receipt](../benchmarks/results/2026-10-24-gated-delta-normalization-v1.json).
+
+The previous recurrent update body is unchanged. Gate construction, convolution,
+hybrid model/session execution, GPU state and real-model/long-context/device
+qualification remain open. No app capabilities or numerical capacity were raised.
