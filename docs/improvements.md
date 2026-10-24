@@ -2043,3 +2043,29 @@ fresh Mac/iOS/simulator libraries retain the same23 exports. All three short
 profile regressions match the previous replies and flags exactly. Retain this
 bounded extension. UI options/persistence belong to the parallel UI task; phone
 qualification at256, larger context and wider engine/Hub scope remain open.
+
+## 24 October 2026 — mobile interface stability and presentation
+
+The UI task investigated model/search controls blocked by automatic full-file
+verification, the 64-token initial reply cap, and missing Expert help/code
+formatting. Background checks are now replaceable and cancellation joins them
+without publishing stale choices. Model loading is explicit; reopening a live
+model preserves native and UI history. Supported search matches are actionable.
+
+The parallel engine commit `0b8945b` supplies the bounded 256-token text bridge.
+Chat offers 32/64/128/256 with a 128-token initial default, preserved saved
+settings, visible limit stops and the existing 512-position context preflight.
+Expert keeps its raw 128-ID bound. Inline Markdown, fenced code, lexical
+highlighting/Copy, action descriptions, examples and readable stop states add
+presentation without changing tokenizer input or numerical kernels.
+
+Strict Swift 6/concurrency/platform checks, stale/cancelled verification/Open
+regressions and real SmolLM2 load/Send/idempotent Open/invalid-folder checks pass.
+Full Release iOS and simulator apps pass against the matching package; ordinary
+Rust formatting/Clippy/CPU checks also passed, with final engine checks recorded
+separately. Light/dark highlighted-text samples were inspected; ImageRenderer
+cannot verify native scroll/button surfaces. Live Device Hub inspection stalled,
+so full tap-through and physical-iPhone behavior remain unqualified. No latency,
+quality or memory-limit improvement is claimed. Retain the functional fixes.
+See the [interface report](mobile-interface-fixes.md) and
+[bound receipt](../benchmarks/results/2026-10-24-mobile-interface-v1.json).

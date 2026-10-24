@@ -68,6 +68,14 @@ struct HarnessView: View {
         #endif
     }
     private var documents: URL { FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0] }
+    private var stopDescription: String {
+        switch store.state.reason {
+        case 1: "Response limit reached"
+        case 2: "Model stop token reached (hidden from output)"
+        case 3: "Cancelled; completed prefix retained"
+        default: "No completed generation"
+        }
+    }
 
     private func bounded(_ value: Binding<String>, _ maximum: Int) -> Binding<String> {
         Binding(get: { value.wrappedValue }, set: { text in
@@ -112,6 +120,7 @@ struct HarnessView: View {
             Form {
                 Section("Local artifacts") {
                     Text("Raw token diagnostic harness").font(.headline)
+                    Text("Inspect a model and control its token session directly. Token IDs are numbers from the model’s vocabulary. Use Chat for written replies and formatted code.").font(.callout).foregroundStyle(.secondary)
                     VStack(alignment:.leading) { Text("Model folder").font(.caption); TextField("Local path",text:bounded($directory,16384)).harnessLiteralInput() }
                     HarnessActions {
                         Button("Tiny fixture") { directory = Bundle.main.url(forResource:"Tiny",withExtension:nil)?.path ?? ""; packed = ""; mlx = false }
@@ -120,34 +129,61 @@ struct HarnessView: View {
                     VStack(alignment:.leading) { Text("Packed folder (Metal Q4 v2 only)").font(.caption); TextField("Optional local path",text:bounded($packed,16384)).harnessLiteralInput() }
                     Toggle("Metal",isOn:$metal)
                     Toggle("MLX-format model",isOn:$mlx)
+                    Text("Metal runs numerical work on the GPU. MLX-format selects the model file format and requires Metal.").font(.caption).foregroundStyle(.secondary)
                     if mlx { Text("Requires Metal. Leave the separate Q4 folder empty.") }
                     HStack { Text("Capacity (tokens)"); TextField("Tokens",text:bounded($capacity,10)).harnessNumberInput().multilineTextAlignment(.trailing) }
                     HStack { Text("Prefill chunk"); TextField("Tokens",text:bounded($chunk,10)).harnessNumberInput().multilineTextAlignment(.trailing) }
                     HStack { Text("Numerical cap (MiB)"); TextField("MiB",text:bounded($budgetMiB,20)).harnessNumberInput().multilineTextAlignment(.trailing) }
+                    Text("Capacity reserves positions for prompt and output together. Prefill chunk sets how many prompt tokens run at once. The numerical cap bounds admitted engine allocations; app and framework memory are additional.").font(.caption).foregroundStyle(.secondary)
                     Button("Load") { load() }.disabled(!idle || store.state.hasModel)
-                    Text("Select MLX-format for supported Qwen2, Llama-family and full-attention Mistral artifacts, or use the existing floating/Q4 formats. Choose a complete local artifact folder. The bundled fixture is for integration checks.")
+                    Text("Select MLX-format for supported Qwen2/Qwen3, Llama-family and full-attention Mistral artifacts, or use the existing floating/Q4 formats. Choose a complete local artifact folder. The bundled fixture is for integration checks.")
                 }.disabled(!idle || store.state.hasModel)
                 Section("Raw token generation") {
                     VStack(alignment:.leading) { Text("Prompt or append IDs").font(.caption); TextField("IDs",text:bounded($prompt,262144),axis:.vertical).harnessLiteralInput() }
                     VStack(alignment:.leading) { Text("Hidden stop IDs (optional)").font(.caption); TextField("IDs",text:bounded($stops,262144)).harnessLiteralInput() }
+                    Text("Separate IDs with commas or spaces. A hidden stop ends generation without adding that ID to the visible output. Maximum new IDs limits this request’s output.").font(.caption).foregroundStyle(.secondary)
                     HStack { Text("Maximum new IDs"); TextField("0–128",text:bounded($outputCount,10)).harnessNumberInput().multilineTextAlignment(.trailing) }
                     HarnessActions {
                         Button("Prompt") { generate(0) }
                         Button("Append") { generate(1) }
                         Button("Continue") { generate(2) }
                     }.disabled(!idle || !store.state.hasSession)
+                    VStack(alignment:.leading,spacing:6) {
+                        Text("**Prompt** starts from these IDs and replaces the session’s current prefix.")
+                        Text("**Append** adds these IDs to the current prefix, then generates.")
+                        Text("**Continue** generates from the existing prefix without adding input.")
+                    }.font(.caption).foregroundStyle(.secondary)
                     HarnessActions {
                         Button("Reset") { store.submit(.reset) }.disabled(!idle || !store.state.hasSession)
                         Button("Cancel") { store.worker?.cancel() }.disabled(store.state.closed)
                     }
-                    Text(store.state.ids.map(String.init).joined(separator:", ")).font(.system(.body,design:.monospaced)).textSelection(.enabled)
+                    Text("Reset clears the session’s token history while keeping the model loaded. Cancel stops the current request and retains its completed prefix.").font(.caption).foregroundStyle(.secondary)
+                    DisclosureGroup("Tiny fixture example") {
+                        Text("Choose Tiny fixture, Load, then Prompt with these IDs and a maximum of 2. The fixture emits 47, 47; it is an integration example, not a text model.").font(.caption)
+                        CodeSnippet(code:"1, 7, 13, 3",language:"Token IDs")
+                    }
+                    if store.state.ids.isEmpty { Text("Generated token IDs appear here.").font(.callout).foregroundStyle(.secondary) }
+                    else { CodeSnippet(code:store.state.ids.map(String.init).joined(separator:", "),language:"Token IDs") }
+                    Text(stopDescription).font(.caption).foregroundStyle(.secondary)
                 }
                 Section("Lifecycle") {
                     Button("Suspend session") { store.worker?.interrupt(unload:false) }.disabled(store.state.closed)
                     Button("Replay saved prefix") { store.submit(.replay) }.disabled(!idle || !store.state.hasModel || store.state.hasSession)
                     Button("Unload model") { store.worker?.interrupt(unload:true) }.disabled(store.state.closed)
                     Button("Close worker") { store.worker?.close() }.disabled(store.state.closed)
+                    Text("Suspend frees session buffers. Replay rebuilds the saved prefix. Unload frees weights and session buffers. Close ends this worker; Back to Chat creates a new one.").font(.caption).foregroundStyle(.secondary)
                     Text(lifecycleHelp)
+                }
+                if let metadata = store.state.compatibility {
+                    Section("Last MLX metadata inspection") {
+                        Text(metadata.summary)
+                        Text(store.state.compatibilityDirectory).font(.caption).textSelection(.enabled)
+                        if let geometry = metadata.geometry {
+                            Text("Hidden/query/KV widths: \(geometry.hiddenSize)/\(geometry.queryWidth)/\(geometry.kvWidth)")
+                        }
+                        Text("Payload, device, session and text checks are separate. This metadata report does not grant qualification.")
+                        Text("Additional metadata helper allowance required: \(NativeCompatibility.requiredApplicationAllowance) logical bytes; excluded from numerical admission.").font(.caption)
+                    }
                 }
                 Section("State") {
                     Text(store.state.phase)

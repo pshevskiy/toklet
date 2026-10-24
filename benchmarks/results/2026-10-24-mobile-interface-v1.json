@@ -1,0 +1,112 @@
+{
+  "format": "toklet-mobile-interface-v1",
+  "passed": true,
+  "date": "2026-10-24",
+  "scope": "UI controller, content rendering and native app builds; separate coordinated engine output extension",
+  "source_pins": {
+    "apple/Harness/ChatContent.swift": "29766d8aa771d1018909d1434e3d8b77b0643bd9b4e7561c0fe1a748e3761357",
+    "apple/Harness/ChatWorkspace.swift": "b9a6ec20148fb35c946317afe06d9d56e45a62989876b6a681bf2048f3ad91e1",
+    "apple/Harness/ExpertHarness.swift": "9ceda3d8d404c2fce395f5f32d2a1c337ee78134a1908441015647d642ba0602",
+    "apple/Harness/FriendlyChatStore.swift": "ab4111b87a11ce9ced5296733889862881a8ad62c84c262519680392b9106342",
+    "apple/Harness/FriendlyHarness.swift": "ee2966f29648776c40e4978861ac294837e8c610867387f91f68627d209c9f6f",
+    "apple/Harness/HubStore.swift": "b014d9bf30733f81732979288bcafa16a8c0df2cebc22a74ad0c96be76b04007",
+    "apple/Harness/ModelHub.swift": "bf8a1c1a63b98e818e16849dc582b37370ea652b9b32c2d89ba6a5c79c8fa8c5",
+    "apple/TokletHarness.xcodeproj/project.pbxproj": "8ae89ba14b4e46ac56b5ae5523c087b45d399b54a109c23c0aaf0a6b04d3d212",
+    "apple/tests/swift/MobileMain.swift": "19cd39ed0e6721f58b7b6e2636a109eb85f89e6ec3aa61a97ee03eaf6fd3e50f",
+    "tools/experiments/mobile_interface_check.py": "3b809e6d86b32c95fcca745b003458becba01ce4b2b9c8ad55f3b2a1e3dfdeb6",
+    "docs/mobile-interface-fixes.md": "2e098317d4349fc7ae91db35f2ebcc0cb1fb093aeaa05b57182c2fd6a2b17d4a",
+    "docs/app-interface.md": "1a2b78556a22ffcb85bf4ee015180687699d4b0292a83ca9f001c7d2de549528",
+    "apple/README.md": "d8bc420927075ff5c647c160065dbdd28630f12068707ad92b9413e848920c52"
+  },
+  "evidence_pins": {
+    "artifacts/mobile-interface-2026-10-24/check-v6/check.json": "eac9af526833a2da5d8a3e4e902480a57be9650b747af24e3ba9e61df94c64f4",
+    "artifacts/mobile-interface-2026-10-24/apps-v5/build.json": "9b6fddaade7d7336bfb8c46be8e706b5267eda6f85ea9b41d92db6e0d8f33b32",
+    "artifacts/m8-chat-output-v1/package/build.json": "c2d9c5ca73e6f81ec9ff5dbe1c223ed56462ed6c9ee58c6637530a40a1f47652",
+    "artifacts/mobile-interface-2026-10-24/root-build/build.json": "87381ad2cc388f746551d4372b0411198458a4ca87b3f14ad0108f2ed5550064",
+    "artifacts/mobile-interface-2026-10-24/root-library-update.json": "36280796b634dc1726939220d2214cd7ce8446ef1d052f969442266aea45ec63",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphoneos-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphoneos-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphoneos-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphoneos-build.stdout": "f60cc77f3b91feaaa03fde2eb06cfded00c53d558c737ddc04beaee8644a27f9",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphoneos-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphoneos-load-commands.stdout": "d7ae9e70d3ab569e7e73186f966adc015c897b52666c5cf6dd0b9d7f49beac85",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphonesimulator-arch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphonesimulator-arch.stdout": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphonesimulator-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphonesimulator-build.stdout": "646f575248ea5b71e6c241fffeb1542fcb772e5e786a5d3fd4f1288b66839324",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphonesimulator-load-commands.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/iphonesimulator-load-commands.stdout": "f7a514a222bdfa4102c54200835024e2dbb554733006c4c1ecfdc84363a3c2a3",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/simulator-sign-verify.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/simulator-sign-verify.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/simulator-sign.stderr": "a756c0ad2e75f2f1c0707cb93ea87a81fc8f97efec925fcde2a15416f7c99350",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/simulator-sign.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/xcode-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/root-build/logs/xcode-version.stdout": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+    "benchmarks/results/2026-10-24-chat-output-v1.json": "a45b85462215bea94a848d76a691f0752d512b7de3849c26402112eee4817fca",
+    "artifacts/mobile-interface-2026-10-24/build_apps.py": "23bb3a23367fc0ee2917d8972167fb543cb24a8c4a5bf4a0a62d1f98ed2119df",
+    "artifacts/mobile-interface-2026-10-24/collect.py": "cf2b9ae5f806c718a21723f3de800ae94c9badbb6add6d41b7b65195e9ebcbdd",
+    "artifacts/mobile-interface-2026-10-24/check-v6/compile.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/check-v6/iphoneos.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/check-v6/iphonesimulator.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/check-v6/local-model.stdout": "84ec288fab1bfd9e4297e9b9e00083922d869ae642bb06b39f7dd364f7743607",
+    "artifacts/mobile-interface-2026-10-24/check-v6/regressions.stdout": "baf5e1ba8a14f14b61c14fb25d2b6b033e476fe0d0d078e17860efb23aefbfe5",
+    "artifacts/mobile-interface-2026-10-24/check-v6/render.stdout": "754ce0d874426b063f7f167ac5dcb6713a84f0b00e12bfb39eb19bbab70ce237",
+    "artifacts/mobile-interface-2026-10-24/check-v6/compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/check-v6/iphoneos.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/check-v6/iphonesimulator.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/check-v6/local-model.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/check-v6/regressions.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/check-v6/render.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/check-v6/previews/dark.png": "3a89eb93572a5bf842fd93aa33bf43c0e247ad145d17e9c7aa10f41829e8261c",
+    "artifacts/mobile-interface-2026-10-24/check-v6/previews/light.png": "6005afa1fbb70a63d743f731ee8e26b00fbafd6b18af0ca324ef815065cd7f0a",
+    "artifacts/mobile-interface-2026-10-24/apps-v5/iphoneos.stdout": "015cb526c3f426223b38756fc2984e827880806e3731305532f01c9372ff40ff",
+    "artifacts/mobile-interface-2026-10-24/apps-v5/iphonesimulator.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/apps-v5/iphoneos.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-interface-2026-10-24/apps-v5/iphonesimulator.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "checks": [
+    "compile",
+    "regressions",
+    "render",
+    "local-model",
+    "iphoneos",
+    "iphonesimulator"
+  ],
+  "apps": [
+    {
+      "sdk": "iphonesimulator",
+      "path": "artifacts/mobile-interface-2026-10-24/apps-v5/DerivedData/Build/Products/Release-iphonesimulator/TokletHarness.app"
+    },
+    {
+      "sdk": "iphoneos",
+      "path": "artifacts/mobile-interface-2026-10-24/apps-v5/DerivedData/Build/Products/Release-iphoneos/TokletHarness.app"
+    }
+  ],
+  "engine_output_commit": "0b8945b",
+  "normal_root_build_passed": true,
+  "policy": {
+    "default_reply_limit": 128,
+    "reply_options": [
+      32,
+      64,
+      128,
+      256
+    ],
+    "total_context": 512,
+    "raw_expert_limit": 128
+  },
+  "validation_limits": {
+    "physical_device_tested": false,
+    "live_tap_through_completed": false,
+    "highlight_text_previews_inspected": true,
+    "previews_are_full_app_screenshots": false,
+    "quality_or_performance_claim": false
+  },
+  "partial_attempts": [
+    "check-v1: Command Line Tools compiler crash",
+    "check-v2: sandbox blocked SwiftUI macro process",
+    "simulator-build/build-v2: Swift5/new SDK keypath and function-reference errors; corrected",
+    "check-v5/previews: ImageRenderer omitted native scroll/button surfaces; superseded by text-only exports",
+    "Device Hub live inspection stalled; isolated simulator shut down"
+  ]
+}

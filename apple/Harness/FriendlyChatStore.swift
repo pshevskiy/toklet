@@ -5,6 +5,7 @@ import Combine
 final class FriendlyChatStore: ObservableObject {
     @Published var workspace = ChatWorkspace()
     @Published private(set) var modelName = "Toklet"
+    @Published private(set) var loadingModel = false
     @Published var notice = ""
     @Published var storageError = ""
     @Published var folders: [URL] = []
@@ -34,7 +35,7 @@ final class FriendlyChatStore: ObservableObject {
     }
     var ready: Bool {
         guard let harness else { return false }
-        return hasChatModel && !harness.state.closed && !harness.state.busy && !running
+        return hasChatModel && !loadingModel && !harness.state.closed && !harness.state.busy && !running
     }
     var canSend: Bool { ready && !workspace.current.draft.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && !storageBlocked }
     private var documents: URL { FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0] }
@@ -81,16 +82,16 @@ final class FriendlyChatStore: ObservableObject {
         }
     }
     func newChat() {
-        guard !storageBlocked, !running, harness?.state.busy == false else { return }
+        guard !storageBlocked, !running, !loadingModel, harness?.state.busy == false else { return }
         do { try workspace.newChat(modelKey:activeModelKey); notice = ""; save() }
         catch { notice = error.localizedDescription }
     }
     func select(_ id: UUID) {
-        guard !storageBlocked, !running, harness?.state.busy == false, workspace.conversations.contains(where: { $0.id == id }) else { return }
+        guard !storageBlocked, !running, !loadingModel, harness?.state.busy == false, workspace.conversations.contains(where: { $0.id == id }) else { return }
         workspace.selected = id; notice = ""; save()
     }
     func remove(_ id: UUID) {
-        guard !storageBlocked, !running, harness?.state.busy == false else { return }
+        guard !storageBlocked, !running, !loadingModel, harness?.state.busy == false else { return }
         let last = workspace.conversations.count == 1 && workspace.current.id == id
         workspace.remove(id)
         if last, let activeModelKey { workspace.conversations[workspace.selectedIndex].modelKey = activeModelKey }
@@ -115,6 +116,10 @@ final class FriendlyChatStore: ObservableObject {
         } catch { notice = error.localizedDescription }
     }
     func observe(_ state: NativeSnapshot) {
+        if loadingModel && !state.busy && pendingFolder == nil {
+            loadingModel = false
+            if !state.chatEnabled { notice = state.message.isEmpty ? "The model could not be opened. Choose a model to try again." : state.message }
+        }
         if let result = state.chatResult, result.id == request {
             workspace.finish(result,restoreRejectedDraft:requestDraftEdit == draftEdit)
             if result.rejected { notice = result.error }
@@ -138,7 +143,7 @@ final class FriendlyChatStore: ObservableObject {
         open(folder)
     }
     func open(_ folder: URL) {
-        guard !storageBlocked, !running, let harness, !harness.state.busy, !harness.state.closed else { return }
+        guard !storageBlocked, !running, !loadingModel, let harness, !harness.state.busy, !harness.state.closed else { return }
         notice = ""
         do {
             guard let actual = harness.worker?.snapshot(), !actual.busy, !actual.closed,
@@ -152,11 +157,12 @@ final class FriendlyChatStore: ObservableObject {
             let scoped = folder.startAccessingSecurityScopedResource()
             defer { if scoped { folder.stopAccessingSecurityScopedResource() } }
             _ = try HubProfile.identify(folder)
+            if hasChatModel && loadedKey == key(folder) { notice = "This model is already open."; return }
             if workspace.current.modelKey != key(folder), !workspace.current.messages.isEmpty { try workspace.newChat(modelKey:key(folder)) }
             workspace.conversations[workspace.selectedIndex].modelKey = key(folder)
             save()
             if harness.state.hasModel {
-                pendingFolder = folder; harness.worker?.interrupt(unload:true); harness.poll()
+                loadingModel = true; pendingFolder = folder; harness.worker?.interrupt(unload:true); harness.poll()
             } else { beginLoad(folder) }
         } catch { notice = error.localizedDescription }
     }
@@ -164,6 +170,7 @@ final class FriendlyChatStore: ObservableObject {
         guard let harness, let worker = harness.worker else { return }
         let actual = worker.snapshot()
         guard !actual.busy, !actual.closed, !actual.hasModel else {
+            loadingModel = false
             notice = "The engine is busy. Wait for it to finish before opening another model."
             return
         }
@@ -174,6 +181,7 @@ final class FriendlyChatStore: ObservableObject {
             profile = try HubProfile.identify(folder)
             try HubDeviceSnapshot.current().admission.check(profile)
         } catch {
+            loadingModel = false
             scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil
             notice = error.localizedDescription; return
         }
@@ -182,15 +190,16 @@ final class FriendlyChatStore: ObservableObject {
         settings.capacity = 512; settings.chunk = 32
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
-            loadedKey = key(folder); modelName = profile.name
+            loadingModel = true; loadedKey = key(folder); modelName = profile.name
             harness.poll()
         } else {
+            loadingModel = false
             scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil
             notice = "The engine is busy. Your model selection was not loaded."
         }
     }
-    func unload() { pendingFolder = nil; harness?.worker?.interrupt(unload:true); harness?.poll() }
-    func enterExpert() { pendingFolder = nil; save(); harness?.setExpert(true) }
+    func unload() { pendingFolder = nil; loadingModel = false; harness?.worker?.interrupt(unload:true); harness?.poll() }
+    func enterExpert() { pendingFolder = nil; loadingModel = false; save(); harness?.setExpert(true) }
     func refreshFolders() {
         let candidates = [documents.appendingPathComponent("M8Inputs/smollm/Model"),documents.appendingPathComponent("Model")]
         folders = candidates.filter { FileManager.default.fileExists(atPath:$0.appendingPathComponent("config.json").path) }

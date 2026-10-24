@@ -20,10 +20,10 @@ checks are separate from the earlier iPhone/Simulator evidence below.
    offline opening.
 3. Type a message and press Send. **Writing…** remains visible until the reply
    completes; Stop requests cancellation and preserves text decoded from the
-   completed prefix. Replies are currently displayed at completion.
+   completed prefix. Replies are currently displayed at completion. Inline Markdown, fenced code blocks, syntax highlighting and Copy are available in replies, including code fences cut short by a stopped reply.
 4. Open the conversations icon for saved chats and **Settings**. Choose
    **Expert mode** to use the original raw-token controls; **Back to Chat**
-   returns to the friendly interface.
+   returns to the friendly interface. The gear icon also opens Settings directly. Expert mode explains each generation and lifecycle action and includes a copyable tiny-fixture example; its output is raw token IDs.
 
 History, drafts and the response limit are saved locally. Changing modes releases
 the current numerical model/session before switching. Closing the Expert worker
@@ -47,7 +47,12 @@ Other qualified numerical models remain available through Expert mode. A model
 architecture being implemented does not establish tokenizer/template support for
 every checkpoint. Hugging Face search and verified downloads are available for these qualified
 profiles through [Models](model-hub.md). Other search results explain their
-unsupported status. Wider downloadable/text profiles remain open in
+unsupported status. Supported results appear first and update the selected profile
+when tapped. Search and profile changes can cancel an automatic saved-model
+verification; stale verification results cannot overwrite the latest selection.
+Downloads and explicit opening keep their model selection fixed until completion
+or cancellation. Opening the already active model preserves its session. The
+Models sheet closes after a successful load and remains open on failure. Wider downloadable/text profiles remain open in
 [M8.4](mlx-implementation-plan.md). Downloaded snapshots additionally authenticate
 the six required file hashes, including weights, before publication and opening.
 
@@ -57,7 +62,11 @@ text. Mistral reserves 5 GiB numerical plus 64 MiB text, with a separate
 5.5 GiB current-process admission threshold; see [Mistral integration](mlx-mistral-app.md).
 Profiles check current-process admission before loading. Prompt plus requested
 output must fit before generation resets KV; there is no silent truncation.
-Output limits are32,64 or128 tokens. Text formatting accepts up to63 alternating
+New workspaces default to a 128-token reply limit. Settings offers 32, 64, 128
+and 256-token choices, and older saved limits are preserved. The native text
+bridge supports up to 256 output tokens; Expert raw-ID generation remains capped
+at 128. A reply that reaches its limit is labelled explicitly; a model may also
+finish earlier. Text formatting accepts up to63 alternating
 messages, at most64KiB combined UTF-8 input. Long saved conversations can exceed
 the model's context and require a new chat.
 
@@ -104,3 +113,7 @@ exact executed-source identities, including the earlier physical smoke build.
 The [Models integration receipt](../benchmarks/results/2026-10-23-model-hub-app-v1.json)
 adds a fresh signed iPhone 14 Pro download and full offline-controller generation
 with identical Mac token IDs/text, while preserving the visual limits above.
+
+The [24 October mobile-interface follow-up](mobile-interface-fixes.md) records
+responsive model selection, longer replies, Expert help and code rendering,
+with separate build, controller and visual-validation boundaries.

@@ -28,7 +28,9 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. In this checkout the generated library link selects
-`artifacts/m8-mistral-chat-apple-package-v1`, with the additive SmolLM2/Qwen/Mistral text interface.
+`artifacts/m8-chat-output-v1/package`, with the SmolLM2/Qwen/Mistral text interface
+and bounded 256-token Chat replies. See the [mobile follow-up](../docs/mobile-interface-fixes.md)
+for interface changes and current validation boundaries.
 Its reviewed build receipt digest is
 `37f255ca04d4c839f51ece740bda1d8d2fa0bd026b505a1a551cf50975e3eb04`.
 The [text profile](../docs/app-chat-profile.md) and

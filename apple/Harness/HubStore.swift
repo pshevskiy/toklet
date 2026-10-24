@@ -40,12 +40,14 @@ final class HubStore: ObservableObject {
     @Published private(set) var localURL: URL?
     @Published private(set) var deviceMessage = ""
     @Published private(set) var deviceAllowed = false
+    @Published private(set) var blocksSelection = false
     private let hub: ModelHub
     let modelsRoot: URL
     private let admission: @Sendable () throws -> HubAdmission
     private let verify: @Sendable (HubProfile) async throws -> URL?
     private var task: Task<Void,Never>?
     private var operation = UUID()
+    private var cancelling = false
     var busy: Bool { task != nil }
     var downloading: Bool { total > 0 && busy }
     static var modelRoot: URL {
@@ -60,7 +62,7 @@ final class HubStore: ObservableObject {
     }
     private enum Action { case refresh, search(String), download, open }
     func select(_ selected: HubProfile) {
-        guard !busy, HubProfile.catalog.contains(selected) else { return }
+        guard !blocksSelection, HubProfile.catalog.contains(selected) else { return }
         profile = selected; localURL = nil; deviceAllowed = false; refresh()
     }
     func refresh() { start(.refresh) }
@@ -69,7 +71,7 @@ final class HubStore: ObservableObject {
     func open(_ completion: @escaping @MainActor (URL) -> Void) { start(.open,opened:completion) }
     func cancel() {
         guard let task else { return }
-        operation = UUID(); phase = "Stopping…"; task.cancel()
+        cancelling = true; phase = "Stopping…"; task.cancel()
     }
     func modelChoiceChanged() { cancel() }
     func waitForIdle() async { await task?.value }
@@ -83,36 +85,52 @@ final class HubStore: ObservableObject {
     }
 
     private func start(_ action: Action,opened: (@MainActor (URL) -> Void)? = nil) {
-        guard task == nil else { return }
+        guard !blocksSelection else { return }
+        // A slow automatic hash check must not lock search or model selection.
+        // Join the cancelled operation before using the service again, and only
+        // publish results for the latest choice. Downloads/opens stay exclusive.
+        let previous = task
+        previous?.cancel()
         operation = UUID(); let id = operation
+        cancelling = false
         completed = 0; total = 0; message = ""
         switch action {
         case .refresh: phase = "Checking saved model…"
-        case .search: phase = "Searching Hugging Face…"
-        case .download: phase = "Downloading model…"; total = profile.totalBytes
-        case .open: phase = "Verifying model…"
+        case .search(let query):
+            phase = "Searching Hugging Face…"
+            results = HubProfile.matching(query).map { HubModel(id:$0.repository) }
+        case .download: phase = "Downloading model…"; total = profile.totalBytes; blocksSelection = true
+        case .open: phase = "Verifying model…"; blocksSelection = true
         }
         let selected = profile
         task = Task { [self] in
-            defer { task = nil; phase = "" }
+            defer { if operation == id { task = nil; phase = ""; blocksSelection = false } }
+            await previous?.value
             do {
                 try Task.checkCancellation()
+                guard operation == id else { throw CancellationError() }
                 switch action {
                 case .refresh:
                     let folder = try await verify(selected)
-                    try Task.checkCancellation(); localURL = folder
+                    try Task.checkCancellation()
+                    guard operation == id else { throw CancellationError() }
+                    localURL = folder
                     // Verification can outlast unloading a previous GPU model.
                     // Display current admission after the await, just as open does.
                     _ = try? checkDevice()
                 case .search(let query):
                     let rows = try await hub.search(query)
-                    try Task.checkCancellation(); results = rows
-                    if rows.isEmpty { message = "No public MLX models found. Try a different name." }
+                    try Task.checkCancellation()
+                    guard operation == id else { throw CancellationError() }
+                    let supported = HubProfile.matching(query).map { HubModel(id:$0.repository) }
+                    let pinned = Set(supported.map(\.id))
+                    results = supported + rows.filter { !pinned.contains($0.id) }
+                    if results.isEmpty { message = "No public MLX models found. Try a different name." }
                 case .download:
                     let device = try checkDevice()
                     let folder = try await hub.download(selected,admission:device,progress:{ [weak self] current,total in
                         Task { @MainActor [weak self] in
-                            guard let self, self.operation == id, self.task != nil else { return }
+                            guard let self, self.operation == id, self.task != nil, !self.cancelling else { return }
                             self.completed = current; self.total = total
                         }
                     })
@@ -126,8 +144,13 @@ final class HubStore: ObservableObject {
                     localURL = folder; opened?(folder)
                     message = "Model verified."
                 }
-            } catch is CancellationError { message = "Operation cancelled. Any complete saved model is kept." }
+            } catch is CancellationError {
+                // cancel() also invalidates callbacks, but keeps ownership until
+                // the task joins. Replaced tasks cannot clear the latest state.
+                if operation == id { message = "Operation cancelled. Any complete saved model is kept." }
+            }
             catch {
+                guard operation == id else { return }
                 if case .refresh = action { localURL = nil }
                 if case .open = action { localURL = nil }
                 message = error.localizedDescription

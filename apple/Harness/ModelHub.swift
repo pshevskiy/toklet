@@ -48,6 +48,12 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer_config.json",bytes:138039,sha256:"e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae"),
             HubFile(name:"special_tokens_map.json",bytes:414,sha256:"6fa06efa2785e450051989a6f8fb4416b10149ded485ddd3f127a40734f5cfd0")])
     static let catalog: [HubProfile] = [.smol,.qwen,.mistral]
+    static func matching(_ query: String) -> [HubProfile] {
+        let words = query.split(whereSeparator:{ $0.isWhitespace }).map(String.init)
+        return catalog.filter { profile in
+            words.allSatisfy { (profile.repository + " " + profile.name).localizedCaseInsensitiveContains($0) }
+        }
+    }
     var name: String {
         switch repository {
         case Self.qwen.repository: "Qwen2.5-0.5B · 8-bit"
@@ -200,8 +206,8 @@ actor ModelHub {
     private let freeBytes: @Sendable (URL) throws -> Int64
     private var busy = false
     static let reserve: Int64 = 64 * 1024 * 1024
-    init(root: URL,fetch: @escaping HubFetch = HubTransfer.fetch,
-         freeBytes: @escaping @Sendable (URL) throws -> Int64 = ModelHub.diskSpace) {
+    init(root: URL,fetch: @escaping HubFetch = { try await HubTransfer.fetch($0,$1,$2,$3) },
+         freeBytes: @escaping @Sendable (URL) throws -> Int64 = { try ModelHub.diskSpace($0) }) {
         self.root = root; self.fetch = fetch; self.freeBytes = freeBytes
     }
     static func diskSpace(_ directory: URL) throws -> Int64 {

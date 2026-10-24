@@ -58,7 +58,7 @@ struct FriendlyHarnessView: View {
     private var trailingPlacement: ToolbarItemPlacement { .primaryAction }
     private var folderHelp: String { "Downloads run while the app is open. A verified download works offline. Use Show models in Finder to remove a damaged model folder before downloading again." }
     #endif
-    private var unlocked: Bool { !store.state.busy && !chat.running && chat.storageAvailable }
+    private var unlocked: Bool { !store.state.busy && !chat.running && !chat.loadingModel && chat.storageAvailable }
 
     var body: some View {
         Group {
@@ -67,6 +67,9 @@ struct FriendlyHarnessView: View {
         }
         .tint(.indigo)
         .onReceive(store.$state) { chat.observe($0) }
+        .onChange(of:chat.loadingModel) { _,loading in
+            if !loading && chat.ready && sheet == .models { sheet = nil }
+        }
         .onChange(of:store.expert) { _,value in if value { hub.cancel() } }
         .onChange(of:phase) { _, value in
             if value != .active { chat.save() }
@@ -107,8 +110,10 @@ struct FriendlyHarnessView: View {
                                     Text(message.role == "user" ? "You" : "Toklet").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                                     if message.writing { HStack { ProgressView(); Text("Writing…").foregroundStyle(.secondary) } }
                                     else {
-                                        Text(message.text.isEmpty ? (message.interrupted ? "Response stopped." : "No text returned.") : message.text)
-                                            .textSelection(.enabled)
+                                        if message.role == "assistant", !message.text.isEmpty { ChatContent(text:message.text) }
+                                        else {
+                                            Text(message.text.isEmpty ? (message.interrupted ? "Response stopped." : "No text returned.") : message.text).textSelection(.enabled)
+                                        }
                                         if message.interrupted && !message.text.isEmpty { Text("Stopped").font(.caption).foregroundStyle(.secondary) }
                                         if !message.notice.isEmpty { Text(message.notice).font(.callout).foregroundStyle(.secondary) }
                                     }
@@ -158,12 +163,15 @@ struct FriendlyHarnessView: View {
                 Button { sheet = .models } label: {
                     VStack(spacing:2) {
                         Text(chat.hasChatModel ? chat.modelName : "Toklet").font(.headline).lineLimit(1).truncationMode(.middle)
-                        Text(chat.hasChatModel ? "On device" : "Choose a model").font(.caption).foregroundStyle(.secondary)
+                        Text(chat.loadingModel ? "Opening model…" : (chat.hasChatModel ? "On device" : "Choose a model")).font(.caption).foregroundStyle(.secondary)
                     }
                 }.buttonStyle(.plain).frame(minHeight:44).accessibilityLabel(chat.hasChatModel ? "Choose model. " + chat.modelName + ". On device." : "Choose model").accessibilityIdentifier("chat-model-picker")
             }
             ToolbarItem(placement:trailingPlacement) {
                 Button("New chat",systemImage:"square.and.pencil") { chat.newChat() }.labelStyle(.iconOnly).frame(minWidth:44,minHeight:44).disabled(!unlocked)
+            }
+            ToolbarItem(placement:trailingPlacement) {
+                Button("Settings",systemImage:"gearshape") { sheet = .settings }.labelStyle(.iconOnly).frame(minWidth:44,minHeight:44)
             }
         }
     }
@@ -174,9 +182,13 @@ struct FriendlyHarnessView: View {
                 Button("Retry saving or opening chats") { chat.retryStorage() }
             }
             if !chat.notice.isEmpty { Text(chat.notice).font(.callout) }
+            if chat.loadingModel { ProgressView("Opening " + chat.modelName + "…").font(.callout) }
+            if store.state.hasModel && !chat.hasChatModel && !chat.loadingModel {
+                Text("Choose this conversation’s model, or start a new chat with " + chat.modelName + ".").font(.callout).foregroundStyle(.secondary)
+            }
             if !store.state.message.isEmpty { Text(store.state.message).font(.callout) }
             HStack(alignment:.bottom,spacing:8) {
-                TextField("Message…",text:Binding(get:{ chat.workspace.current.draft },set:chat.edit),axis:.vertical)
+                TextField("Message…",text:Binding(get:{ chat.workspace.current.draft },set:{ chat.edit($0) }),axis:.vertical)
                     .lineLimit(1...(typeSize.isAccessibilitySize ? 2 : 6)).padding(.vertical,15).padding(.leading,18)
                     .disabled(!chat.storageAvailable)
                     .accessibilityLabel("Message").accessibilityIdentifier("chat-draft")
@@ -207,18 +219,19 @@ struct FriendlyHarnessView: View {
                     TextField("Search MLX models",text:$hub.query).harnessLiteralInput()
                         .focused($modelSearchFocused).submitLabel(.search)
                         .onSubmit { modelSearchFocused = false; hub.search() }.accessibilityIdentifier("hub-search-query")
-                    Button("Search") { modelSearchFocused = false; hub.search() }.disabled(hub.busy || hub.query.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
+                    Button("Search") { modelSearchFocused = false; hub.search() }.disabled(hub.blocksSelection || hub.query.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
                         .accessibilityIdentifier("hub-search")
                 }
-                Text("Search is public. Only qualified text profiles can be downloaded here.")
+                Text("Search is public. Results marked Available for chat can be selected below. Other results need engine and tokenizer support before they can run.")
                     .font(.footnote).foregroundStyle(.secondary)
             }
+            if !hub.results.isEmpty { Section("Search results") { searchResults } }
             Section("Available for chat") {
                 Picker("Model",selection:Binding(get:{ hub.profile.repository },set:{ id in
                     if let profile = HubProfile.catalog.first(where:{ $0.repository == id }) { hub.select(profile) }
                 })) {
                     ForEach(HubProfile.catalog,id:\.repository) { profile in Text(profile.name).tag(profile.repository) }
-                }.disabled(hub.busy).accessibilityIdentifier("hub-profile")
+                }.disabled(hub.blocksSelection).accessibilityIdentifier("hub-profile")
                 VStack(alignment:.leading,spacing:6) {
                     Text(hub.profile.name).font(.headline)
                     Text(hub.profile.repository).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
@@ -256,7 +269,6 @@ struct FriendlyHarnessView: View {
                 Text(folderHelp)
                     .font(.footnote).foregroundStyle(.secondary)
             }
-            if !hub.results.isEmpty { Section("Search results") { searchResults } }
             Section("Other local folders") {
                 ForEach(chat.folders,id:\.self) { folder in
                     Button { hub.modelChoiceChanged(); chat.open(folder) } label: {
@@ -285,10 +297,11 @@ struct FriendlyHarnessView: View {
         ForEach(hub.results) { model in
             VStack(alignment:.leading,spacing:5) {
                 Text(model.id).font(.callout).textSelection(.enabled)
-                Text(model.profile == nil ? "Not supported for chat: this checkpoint’s engine and text profile are not qualified." : "Supported pinned profile · choose it in Available for chat")
+                Text(model.profile == nil ? "Unavailable for chat: this checkpoint needs engine and tokenizer support." : "Available for chat · " + (model.profile == hub.profile ? "selected below" : "select to download or open"))
                     .font(.caption).foregroundStyle(.secondary)
                 if let profile = model.profile {
-                    Button("Select for chat") { hub.select(profile) }.disabled(hub.busy)
+                    Button(model.profile == hub.profile ? "Selected for chat" : "Select for chat",systemImage:model.profile == hub.profile ? "checkmark.circle.fill" : "arrow.down.circle") { hub.select(profile) }
+                        .disabled(hub.blocksSelection)
                 }
             }
         }
@@ -321,9 +334,9 @@ struct FriendlyHarnessView: View {
         Form {
             Section("Responses") {
                 Picker("Response limit",selection:$chat.workspace.outputLimit) {
-                    Text("32 tokens").tag(UInt32(32)); Text("64 tokens").tag(UInt32(64)); Text("128 tokens").tag(UInt32(128))
+                    Text("32 tokens").tag(UInt32(32)); Text("64 tokens").tag(UInt32(64)); Text("128 tokens").tag(UInt32(128)); Text("256 tokens").tag(UInt32(256))
                 }.disabled(!unlocked).onChange(of:chat.workspace.outputLimit) { _,_ in chat.save() }
-                Text("Long conversations may need a new chat before another response can fit.").font(.footnote).foregroundStyle(.secondary)
+                Text("Tokens are pieces of words. This sets the maximum reply length; a model can finish earlier. Prompt, chat history and reply share 512 tokens. Choose a shorter limit or start a new chat when they do not fit.").font(.footnote).foregroundStyle(.secondary)
             }
             Section("Expert") {
                 Button("Expert mode",systemImage:"slider.horizontal.3") { hub.modelChoiceChanged(); sheet = nil; chat.enterExpert() }

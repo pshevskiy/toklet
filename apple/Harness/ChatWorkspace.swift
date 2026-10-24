@@ -23,7 +23,7 @@ struct ChatWorkspace: Codable {
     var version = 1
     var conversations: [LocalConversation]
     var selected: UUID
-    var outputLimit: UInt32 = 64
+    var outputLimit: UInt32 = 128
 
     init() {
         let first = LocalConversation()
@@ -76,7 +76,9 @@ struct ChatWorkspace: Codable {
                 conversations[index].messages[message].text = result.text
                 conversations[index].messages[message].writing = false
                 conversations[index].messages[message].interrupted = result.reason == 3 || !result.error.isEmpty
-                conversations[index].messages[message].notice = result.error
+                conversations[index].messages[message].notice = result.error.isEmpty && result.reason == 1
+                    ? "Response limit reached. Reply limits are available in Settings; you can also ask the model to continue."
+                    : result.error
                 return true
             }
         }
@@ -88,7 +90,7 @@ struct ChatWorkspace: Codable {
         guard value.version == 1, (1...20).contains(value.conversations.count),
               Set(value.conversations.map(\.id)).count == value.conversations.count,
               value.conversations.contains(where: { $0.id == value.selected }),
-              [32,64,128].contains(value.outputLimit) else { throw chatInputError("Invalid saved chat history") }
+              [32,64,128,256].contains(value.outputLimit) else { throw chatInputError("Invalid saved chat history") }
         var ids = Set<UUID>()
         for index in value.conversations.indices {
             let chat = value.conversations[index]
