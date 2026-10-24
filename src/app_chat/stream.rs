@@ -1,4 +1,4 @@
-//! Bounded, append-only text chunks for the three exact admitted decoders.
+//! Bounded, append-only text chunks for the exact admitted tokenizer profiles.
 //!
 //! This text-only API grants no numerical context or app output capability.
 //! ByteLevel retains at most three incomplete UTF-8 bytes. Mistral must retain
@@ -60,7 +60,7 @@ impl Codec {
     pub fn response_stream(&self, limits: ResponseLimits) -> ResponseStream<'_> {
         // Selection and token inventory are cold. Numerical kernels see neither.
         let decoder = match self.profile {
-            Profile::Smol | Profile::Qwen => Decoder::ByteLevel,
+            Profile::Smol | Profile::Qwen | Profile::Qwen3 => Decoder::ByteLevel,
             Profile::Mistral => Decoder::Mistral,
         };
         let mut special_ids: Vec<_> = self

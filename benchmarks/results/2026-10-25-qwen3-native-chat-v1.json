@@ -1,0 +1,823 @@
+{
+  "schema_version": 1,
+  "status": "native_profile_checked_not_app_enabled",
+  "isolated_source_base": "4ed8d4b6094c9d944139f548aacd6a853fd844aa",
+  "reference_commit": "6edb7772a54743f3e6d66c1024e8bb1e4e5e80a2",
+  "reference_receipt": {
+    "path": "benchmarks/results/2026-10-25-qwen3-chat-reference-v1.json",
+    "sha256": "c02924b0126a88d4bd621a13885180540bc5cc8cdb810c81766ee0aa9aa7ead2"
+  },
+  "source_pins": {
+    "src/app_chat.rs": "efc7afac092f3ff170037da9e97d6ceb9f6875a81d416037c28a73a7f80bb963",
+    "src/app_chat/stream.rs": "b314e61a87b49af2ce7c2ebefa9aee6589a55b72c9589480745fde74834ab14a",
+    "src/native/text.rs": "f0802b721aa3826c8f2d591d8761872f4f90e0b7a4c19c53446e0c57cedda094",
+    "apple/include/toklet.h": "41a438718df36469928fea6be53d26b913713fe76ec1355b19c1a616246fed0a"
+  },
+  "checks": {
+    "native-check-v2": {
+      "path": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/checks.json",
+      "sha256": "e2b780b59712de163a876bfa1b86eeb5dc7f135b3f8e1218c7b66cb569d5311c",
+      "commands": [
+        {
+          "label": "compiler",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "rustc",
+              "-vV"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 75187,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/compiler.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/compiler.stderr"
+          }
+        },
+        {
+          "label": "fmt",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "fmt",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--check"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 75192,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/fmt.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/fmt.stderr"
+          }
+        },
+        {
+          "label": "clippy-default",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "clippy",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--all-targets",
+              "--",
+              "-D",
+              "warnings"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 75201,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/clippy-default.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/clippy-default.stderr"
+          }
+        },
+        {
+          "label": "clippy-metal",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "clippy",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--all-targets",
+              "--features",
+              "metal",
+              "--",
+              "-D",
+              "warnings"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 75274,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/clippy-metal.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/clippy-metal.stderr"
+          }
+        },
+        {
+          "label": "test-default",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "test",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 75385,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/test-default.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/test-default.stderr"
+          }
+        },
+        {
+          "label": "test-metal",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "test",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--features",
+              "metal"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 75836,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/test-metal.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/test-metal.stderr"
+          }
+        },
+        {
+          "label": "ios",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "check",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--features",
+              "metal",
+              "--target",
+              "aarch64-apple-ios"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 76312,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/ios.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/ios.stderr"
+          }
+        },
+        {
+          "label": "ios-simulator",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "check",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--features",
+              "metal",
+              "--target",
+              "aarch64-apple-ios-sim"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 76323,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/ios-simulator.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/ios-simulator.stderr"
+          }
+        },
+        {
+          "label": "local-codec",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "test",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--lib",
+              "app_chat::tests::real_qwen3_profile_matches_independent_python",
+              "--",
+              "--ignored",
+              "--exact",
+              "--nocapture",
+              "--test-threads=1"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 76332,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/local-codec.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/local-codec.stderr"
+          }
+        }
+      ],
+      "capture_pins": {
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/compiler.stdout": {
+          "bytes": 192,
+          "sha256": "69369fec0fad824e6cb2d5b8d1fb0e42094942bbe950f1cb28a6f03ad5495225"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/compiler.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/fmt.stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/fmt.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/clippy-default.stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/clippy-default.stderr": {
+          "bytes": 187,
+          "sha256": "8e9e40c81df60f23e4c3402f41cfa17d93701e9310a374232ec31decb76aaf9d"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/clippy-metal.stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/clippy-metal.stderr": {
+          "bytes": 187,
+          "sha256": "1602230ce0e71931a957e9a0f20ca8b8a0c8638b52acb64486ddb9248465329f"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/test-default.stdout": {
+          "bytes": 29326,
+          "sha256": "3b1ad48546d640f9335b4278fd4e742acb4720e2e0f05916b50b64a1fa62c630"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/test-default.stderr": {
+          "bytes": 6303,
+          "sha256": "4739ad687b1efd0132904586008861a0738ec5364492447df757833ce0f9a64a"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/test-metal.stdout": {
+          "bytes": 46342,
+          "sha256": "e2c963cead00e23f396e20ae8f2ab6c1898d0071b3d961bc3e3929fd814157d5"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/test-metal.stderr": {
+          "bytes": 6303,
+          "sha256": "b1f24d2226af3835f30dd6b58349de6198b1aaafe494865601255b8bef71b2ea"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/ios.stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/ios.stderr": {
+          "bytes": 187,
+          "sha256": "92f8a966eaf623f55b8388c88c9e6e3f67e9fe028623dab894ccda4e713d3f2d"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/ios-simulator.stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/ios-simulator.stderr": {
+          "bytes": 187,
+          "sha256": "4bae85b1d56055f523e51d6805de9ecd18180c172199708ec8d0a8348c1a6882"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/local-codec.stdout": {
+          "bytes": 189,
+          "sha256": "b24aad534ac4906a48d35806246def2bc68c717d81704ca1131b812df06c64b6"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-check-v2/logs/local-codec.stderr": {
+          "bytes": 204,
+          "sha256": "51a9b836c3c8e84326521ff354d3c3b1c02fff41918e43e4cdb40eb8c3259292"
+        }
+      },
+      "input_pins": {
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/app_chat/stream.rs": "b314e61a87b49af2ce7c2ebefa9aee6589a55b72c9589480745fde74834ab14a",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/app_chat.rs": "efc7afac092f3ff170037da9e97d6ceb9f6875a81d416037c28a73a7f80bb963",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/cli/inspect.rs": "4cbbd66cfd7fed4ccadd90e1ec9d23132df0be8f19b7810325b4bd8d51f34461",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/cli/mod.rs": "0f35386f986d90c86d4dc8e941a4a97f2e848d987b77c39dff9aec8715b9650d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/cli/plan.rs": "119cd9ad3f69e0ef91d1856d7fe0f8bb76c7d00832f632f2f772a9830be44046",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/causal_conv/tests.rs": "19982f2b19dce919a6ee5fd887557c9ba4542c3e2627337e4155de5e61caf967",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/causal_conv.rs": "81634447ded8fc9e40f783c3225acc44c3079188f5e7484339f074c43a1614b2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/dense_decoder/tests.rs": "558f016de15740132466baa5a38386f6878019def878038d55b08175c18affd9",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/dense_decoder.rs": "e30e0694acf8228c22e1d286833495474ba45a3cad9ca8c7a02bc6e99d5e1a43",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/gated_delta/tests.rs": "4ee3e58a03a65edb6ad2a509f70f1d6b006fcb07615962dbccebf0ea05ae626e",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/gated_delta.rs": "9eb5c8f89935fcb0c32db145fb3a007ab66e9932dd44600c6503dcf07a5aa6ff",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/gelu/tests.rs": "fee0562dab34b3facec9b8bf06e4aa44e0dcb0d3b97192306262e006bfe608a6",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/gelu.rs": "f3d5a9b1f374217f554afe946af7f35e1ce5685bcc723d45c41d8b5552a74e20",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/mod.rs": "4df5da9450c9b66a3e931249c2f3c695987d19acd881dcf3c9697678d4a8db62",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/per_layer/tests.rs": "420a075249e8da7fe2cdf3a71e3795ed8373ec6719bfdebab59e96e7938e2917",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/per_layer.rs": "9c5f0deb16a63e9b8655b513644ec1583e4e170b362cf031f91dfa792ff046d8",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/proportional_rotary/tests.rs": "2a176cf2ccd2ed997613fe40f62f8d751c1686de7a50ec41835aa1fbf55fb0a9",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/proportional_rotary.rs": "e1140c87e198c340359925b4c50da227ab3a30f6d425574479745dd90c4dbaf3",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/span_attention/tests.rs": "446e9623e15d7333fb9a329d03cb187f5dbcfdc989f88add0054a88ba3b7ebe7",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/span_attention.rs": "fec2627d50fbddb00858bf1093d12bfdc0c9fb1a99b6f6cd6c8a0eb48b2ed383",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/window_attention/tests.rs": "b399fe01dbaef0cad27974905fcbdfacd56ebcad744b78107595c200d598b678",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/window_attention.rs": "9a0c76ed651b0593a0c6170111c5034bc06e295ec921fd935bb73d74011cf9e0",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/lib.rs": "8503e6280e9a7354fad08a39550c9075b4a2d59fe112c210c23ff4f8593a0f26",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/diagnostic.rs": "2621b069c41d0622a969b78b4379e859d626d2472a907ff56efebac8e7f11275",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/half_consistency.rs": "e9ee1e50fba0e49f177ccc6e86b0d5357293c3119a2065ce62b481a4a1e1e460",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/memory.rs": "35f1ff6d12bac8e726c75749e66975a515c2dcc7676c2775dd0f96d97d5fef9d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/mlx.rs": "c64e4a21d335687d8b58b43d580a809276bf0c19bb9fd0a777be87922d7d8700",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/mod.rs": "0ef80ac0725af26bcb58a8f4c6c83b290cb2f0753197f57d0af60bb7fae0c5ae",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/online_attention.rs": "e4e6c1f554220174d684396eb6688c86e2e670ef2ad094563fbbffb56219862c",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/planning.rs": "7e3516f929f20cd5fc19a3374b0ddd5dd8f4fa8f8fb6dde43a690236882fe11d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/profile.rs": "1df0c21acb54dcda54bcccc66b02417f343a448a4b0ae0a06538ce0fc3fa614f",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/compatibility.rs": "05c0f3b3734fa567a113495ba5fb484ae20fc044dba28a8da02711fce78bfba3",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/dense.rs": "cd5803d9406e1dff6ac6a65353d1d7c9caf01e5a4e122281b80bead7b52b5d0d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/execution.rs": "138ad46f8ee2f4722a617e2d0a7afa480d9b34c751a85d07fb17db36d552680f",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/mod.rs": "a6f95c239df1f430f5a9bd1aa4655e7eaef180a79fde4c9bdc203ea17e16eb7c",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/qwen.rs": "6c6fdf58dabeb8735b243a4b07d8a225ea792535c367d3c95824ae4856183721",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/qwen3.rs": "43fd005573eeedbb60e489dfb220e2b8e1ec6b8d2f03c9547bd4a91bf36abef4",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/reference.rs": "86c002e4a23d519fe5a3c66736511d6ffd65803855a6880442a2058c64be3d3d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/mod.rs": "e193fdb0714de211bc95778352261c524efda71380c8c692e100ca2d4f6cc988",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/shared_kv/tests.rs": "89fa202ab45ab43a20dd8adaf0c1a0815d63ee356e28c14ef7a07da02f685c0f",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/shared_kv.rs": "fbe2f68965ddebf267cb0b0b1dae50869a133d838c8cdd321296093cbfe2bed2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/trace.rs": "6fd516def586350f6f425f6e16eb8c8df7a8a97619aef14f8a4a511a059ca91e",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/window_cache/tests.rs": "85bfee7c47849583e823204ee8250a1e35228f9334eb5a21ffff76f6343399e2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/window_cache.rs": "8236fd8e900af74757fbbc49dbd5979d6c17e675600d0d6d09fd6441bd6adf8b",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native/compatibility.rs": "8e7119eed2cc13516f611b20367c7b691a4af570ca154f3a3e929aadb03d3da6",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native/runtime_planning.rs": "b1537c3b26a2671d59d46c1995c96eff03abddc8a840aa9a5ac4375ed4fb2bbe",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native/tests.rs": "4ad81567d1dcc8679b236dee0550a98dfb2433910daedc98a9281d5aba37f677",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native/text.rs": "f0802b721aa3826c8f2d591d8761872f4f90e0b7a4c19c53446e0c57cedda094",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native.rs": "188a2fe5e0aeedc238ce42738cf6f0c3263ab0005328a2c598d45963be92f174",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/q4.rs": "14277bd171d08d60fea9ad8bc871f62584ed6a84e2ac0ad3f42ecd232a1fcaac",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/weights/mod.rs": "76dd548a08afb1eed5858b555b1fb4a786b40dc5903a896392da8b74e2282258",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/kernels.metal": "26f893f318f65500b86d702f0fcae65424702b0dd7079fc01db197b5ab985b68",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/tests/fixtures/app-chat-qwen3-v1/reference.json": "767665d4ff123653c2158d40de7371f20166dcdca8e94884c1c3092ed97db661",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/check_native_profile_v2.py": "846876b97b0933139ac021b4e794cd2975563f65b4a281e441f053334bd099fb",
+        "/Users/coloner/work/rust/toklet/tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+        "/Users/coloner/work/rust/toklet/tools/experiments/qwen3_chat_reference.py": "a95dc1b986b0a2109cff21d420b6739e9284a24d351d136dfca56487d1366527",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/apple/include/toklet.h": "41a438718df36469928fea6be53d26b913713fe76ec1355b19c1a616246fed0a",
+        "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-25-qwen3-chat-reference-v1.json": "c02924b0126a88d4bd621a13885180540bc5cc8cdb810c81766ee0aa9aa7ead2",
+        "/Users/coloner/work/rust/toklet/target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+        "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+        "/Users/coloner/work/rust/toklet/src/app_chat.rs": "30ba42266db12fa13760355ee7278ba8e1fd0fc20a0fc1e09bbf1443ccf0230e",
+        "/Users/coloner/work/rust/toklet/src/app_chat/stream.rs": "b8f1206be6bc091cb8b24e3935ab9c935a4883f783492ecb73725072b534ed29",
+        "/Users/coloner/work/rust/toklet/src/native/text.rs": "9ff1a3cd183b8cc8b2e102cb3d2511fd1ba1488b48f9734e26ced74972a7fbd3"
+      }
+    },
+    "native-gpu-v2": {
+      "path": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/checks.json",
+      "sha256": "ddd0effe2429ed3aaa94d43b4e7185617603980da67194a4fcc14c7619a2eeea",
+      "commands": [
+        {
+          "label": "real-codecs",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "test",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--release",
+              "--features",
+              "metal",
+              "--lib",
+              "app_chat::tests::real_",
+              "--",
+              "--ignored",
+              "--nocapture",
+              "--test-threads=1"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 76516,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/real-codecs.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/real-codecs.stderr"
+          }
+        },
+        {
+          "label": "native-chat-smol",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "test",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--release",
+              "--features",
+              "metal",
+              "--lib",
+              "native::text::tests::public_chat_create_and_release_independence",
+              "--",
+              "--ignored",
+              "--exact",
+              "--nocapture",
+              "--test-threads=1"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 76588,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-smol.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-smol.stderr"
+          }
+        },
+        {
+          "label": "native-chat-qwen",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "test",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--release",
+              "--features",
+              "metal",
+              "--lib",
+              "native::text::tests::public_qwen_chat_generation_and_stop_query",
+              "--",
+              "--ignored",
+              "--exact",
+              "--nocapture",
+              "--test-threads=1"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 76617,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-qwen.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-qwen.stderr"
+          }
+        },
+        {
+          "label": "native-chat-qwen3",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "test",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--release",
+              "--features",
+              "metal",
+              "--lib",
+              "native::text::tests::public_qwen3_chat_generation_and_stop_query",
+              "--",
+              "--ignored",
+              "--exact",
+              "--nocapture",
+              "--test-threads=1"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 76645,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-qwen3.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-qwen3.stderr"
+          }
+        },
+        {
+          "label": "native-chat-mistral",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "test",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--release",
+              "--features",
+              "metal",
+              "--lib",
+              "native::text::tests::public_mistral_chat_generation_and_stop_query",
+              "--",
+              "--ignored",
+              "--exact",
+              "--nocapture",
+              "--test-threads=1"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 76660,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-mistral.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-mistral.stderr"
+          }
+        },
+        {
+          "label": "qwen3-frozen-gpu",
+          "result": {
+            "command": [
+              "/Users/coloner/.cargo/bin/rustup",
+              "run",
+              "1.90",
+              "cargo",
+              "test",
+              "--manifest-path",
+              "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml",
+              "--locked",
+              "--offline",
+              "--release",
+              "--features",
+              "metal",
+              "--test",
+              "mlx_qwen3_real_model_metal",
+              "native_mlx_qwen3_real_",
+              "--",
+              "--ignored",
+              "--nocapture",
+              "--test-threads=1"
+            ],
+            "exit_code": 0,
+            "primary_error": null,
+            "cleanup_errors": [],
+            "pid": 76686,
+            "stdout": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/qwen3-frozen-gpu.stdout",
+            "stderr": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/qwen3-frozen-gpu.stderr"
+          }
+        }
+      ],
+      "capture_pins": {
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/real-codecs.stdout": {
+          "bytes": 410,
+          "sha256": "4ca860807455b19844bfd964c625c377ade270c324b0b3a2a0462d2ba1469e6c"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/real-codecs.stderr": {
+          "bytes": 310,
+          "sha256": "a580916cf727be3cf520923a2b0f790e647a65deba9d6ae5a178106e5c2fe034"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-smol.stdout": {
+          "bytes": 191,
+          "sha256": "aa7e2b7720f35b484c7589bbe428f95c753ed0c8fc9937877967aa2afd48ddc0"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-smol.stderr": {
+          "bytes": 195,
+          "sha256": "d6189a8c25a4cc92cc5a0761ce8f03510fca608c67ab5f78a3a63f908acda37a"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-qwen.stdout": {
+          "bytes": 322,
+          "sha256": "97ea40e066e556472daeaa2f6d1d1bb72cba1dde2ecbc02d6a8a096164416202"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-qwen.stderr": {
+          "bytes": 195,
+          "sha256": "f1342332f6147a2d6164b7b2f00b72c07c9c13824ca37c800f43103011e49b9b"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-qwen3.stdout": {
+          "bytes": 324,
+          "sha256": "72dbb53da889fdf29cd200050fb2e398d887fb085b80fbc64f17de07b2d477b2"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-qwen3.stderr": {
+          "bytes": 195,
+          "sha256": "d6189a8c25a4cc92cc5a0761ce8f03510fca608c67ab5f78a3a63f908acda37a"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-mistral.stdout": {
+          "bytes": 334,
+          "sha256": "64cb7b228252cc7305d1c9afeba9fd5a0087a43cb2ed435fbc9f5c4e35fe0d29"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/native-chat-mistral.stderr": {
+          "bytes": 195,
+          "sha256": "d6189a8c25a4cc92cc5a0761ce8f03510fca608c67ab5f78a3a63f908acda37a"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/qwen3-frozen-gpu.stdout": {
+          "bytes": 4482,
+          "sha256": "50d474ce6d0a925856c63713f03ac2b98b4ad4f9505f28594d4c8c7fb5ad6cea"
+        },
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v2/logs/qwen3-frozen-gpu.stderr": {
+          "bytes": 345,
+          "sha256": "73bd2a1727b174be4248545394e0e6e7def8415be656475627a241ecdcffe8a2"
+        }
+      },
+      "input_pins": {
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.toml": "17927d07ebbdfceafcfd58aab9380a0fcdca9b93984f2edf68553ace14a8d3c2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/Cargo.lock": "5a25a23228a8f92374f7d28387f40b70a5bc0ffe102f1ab7846d21372f4226e9",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/app_chat/stream.rs": "b314e61a87b49af2ce7c2ebefa9aee6589a55b72c9589480745fde74834ab14a",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/app_chat.rs": "efc7afac092f3ff170037da9e97d6ceb9f6875a81d416037c28a73a7f80bb963",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/cli/inspect.rs": "4cbbd66cfd7fed4ccadd90e1ec9d23132df0be8f19b7810325b4bd8d51f34461",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/cli/mod.rs": "0f35386f986d90c86d4dc8e941a4a97f2e848d987b77c39dff9aec8715b9650d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/cli/plan.rs": "119cd9ad3f69e0ef91d1856d7fe0f8bb76c7d00832f632f2f772a9830be44046",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/causal_conv/tests.rs": "19982f2b19dce919a6ee5fd887557c9ba4542c3e2627337e4155de5e61caf967",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/causal_conv.rs": "81634447ded8fc9e40f783c3225acc44c3079188f5e7484339f074c43a1614b2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/dense_decoder/tests.rs": "558f016de15740132466baa5a38386f6878019def878038d55b08175c18affd9",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/dense_decoder.rs": "e30e0694acf8228c22e1d286833495474ba45a3cad9ca8c7a02bc6e99d5e1a43",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/gated_delta/tests.rs": "4ee3e58a03a65edb6ad2a509f70f1d6b006fcb07615962dbccebf0ea05ae626e",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/gated_delta.rs": "9eb5c8f89935fcb0c32db145fb3a007ab66e9932dd44600c6503dcf07a5aa6ff",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/gelu/tests.rs": "fee0562dab34b3facec9b8bf06e4aa44e0dcb0d3b97192306262e006bfe608a6",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/gelu.rs": "f3d5a9b1f374217f554afe946af7f35e1ce5685bcc723d45c41d8b5552a74e20",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/mod.rs": "4df5da9450c9b66a3e931249c2f3c695987d19acd881dcf3c9697678d4a8db62",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/per_layer/tests.rs": "420a075249e8da7fe2cdf3a71e3795ed8373ec6719bfdebab59e96e7938e2917",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/per_layer.rs": "9c5f0deb16a63e9b8655b513644ec1583e4e170b362cf031f91dfa792ff046d8",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/proportional_rotary/tests.rs": "2a176cf2ccd2ed997613fe40f62f8d751c1686de7a50ec41835aa1fbf55fb0a9",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/proportional_rotary.rs": "e1140c87e198c340359925b4c50da227ab3a30f6d425574479745dd90c4dbaf3",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/span_attention/tests.rs": "446e9623e15d7333fb9a329d03cb187f5dbcfdc989f88add0054a88ba3b7ebe7",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/span_attention.rs": "fec2627d50fbddb00858bf1093d12bfdc0c9fb1a99b6f6cd6c8a0eb48b2ed383",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/window_attention/tests.rs": "b399fe01dbaef0cad27974905fcbdfacd56ebcad744b78107595c200d598b678",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/cpu/window_attention.rs": "9a0c76ed651b0593a0c6170111c5034bc06e295ec921fd935bb73d74011cf9e0",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/lib.rs": "8503e6280e9a7354fad08a39550c9075b4a2d59fe112c210c23ff4f8593a0f26",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/diagnostic.rs": "2621b069c41d0622a969b78b4379e859d626d2472a907ff56efebac8e7f11275",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/half_consistency.rs": "e9ee1e50fba0e49f177ccc6e86b0d5357293c3119a2065ce62b481a4a1e1e460",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/memory.rs": "35f1ff6d12bac8e726c75749e66975a515c2dcc7676c2775dd0f96d97d5fef9d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/mlx.rs": "c64e4a21d335687d8b58b43d580a809276bf0c19bb9fd0a777be87922d7d8700",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/mod.rs": "0ef80ac0725af26bcb58a8f4c6c83b290cb2f0753197f57d0af60bb7fae0c5ae",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/online_attention.rs": "e4e6c1f554220174d684396eb6688c86e2e670ef2ad094563fbbffb56219862c",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/planning.rs": "7e3516f929f20cd5fc19a3374b0ddd5dd8f4fa8f8fb6dde43a690236882fe11d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/profile.rs": "1df0c21acb54dcda54bcccc66b02417f343a448a4b0ae0a06538ce0fc3fa614f",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/affine.rs": "5c7f5831cdee12b7fac9c80b071480c6d59dc06c77731e28b8d240030c1ba4da",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/compatibility.rs": "05c0f3b3734fa567a113495ba5fb484ae20fc044dba28a8da02711fce78bfba3",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/dense.rs": "cd5803d9406e1dff6ac6a65353d1d7c9caf01e5a4e122281b80bead7b52b5d0d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/execution.rs": "138ad46f8ee2f4722a617e2d0a7afa480d9b34c751a85d07fb17db36d552680f",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/mod.rs": "a6f95c239df1f430f5a9bd1aa4655e7eaef180a79fde4c9bdc203ea17e16eb7c",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/qwen.rs": "6c6fdf58dabeb8735b243a4b07d8a225ea792535c367d3c95824ae4856183721",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/qwen3.rs": "43fd005573eeedbb60e489dfb220e2b8e1ec6b8d2f03c9547bd4a91bf36abef4",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/mlx/reference.rs": "86c002e4a23d519fe5a3c66736511d6ffd65803855a6880442a2058c64be3d3d",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/mod.rs": "e193fdb0714de211bc95778352261c524efda71380c8c692e100ca2d4f6cc988",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/shared_kv/tests.rs": "89fa202ab45ab43a20dd8adaf0c1a0815d63ee356e28c14ef7a07da02f685c0f",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/shared_kv.rs": "fbe2f68965ddebf267cb0b0b1dae50869a133d838c8cdd321296093cbfe2bed2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/trace.rs": "6fd516def586350f6f425f6e16eb8c8df7a8a97619aef14f8a4a511a059ca91e",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/window_cache/tests.rs": "85bfee7c47849583e823204ee8250a1e35228f9334eb5a21ffff76f6343399e2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/model/window_cache.rs": "8236fd8e900af74757fbbc49dbd5979d6c17e675600d0d6d09fd6441bd6adf8b",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native/compatibility.rs": "8e7119eed2cc13516f611b20367c7b691a4af570ca154f3a3e929aadb03d3da6",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native/runtime_planning.rs": "b1537c3b26a2671d59d46c1995c96eff03abddc8a840aa9a5ac4375ed4fb2bbe",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native/tests.rs": "4ad81567d1dcc8679b236dee0550a98dfb2433910daedc98a9281d5aba37f677",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native/text.rs": "f0802b721aa3826c8f2d591d8761872f4f90e0b7a4c19c53446e0c57cedda094",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/native.rs": "188a2fe5e0aeedc238ce42738cf6f0c3263ab0005328a2c598d45963be92f174",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/q4.rs": "14277bd171d08d60fea9ad8bc871f62584ed6a84e2ac0ad3f42ecd232a1fcaac",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/weights/mod.rs": "76dd548a08afb1eed5858b555b1fb4a786b40dc5903a896392da8b74e2282258",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/kernels.metal": "26f893f318f65500b86d702f0fcae65424702b0dd7079fc01db197b5ab985b68",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/tests/fixtures/app-chat-qwen3-v1/reference.json": "767665d4ff123653c2158d40de7371f20166dcdca8e94884c1c3092ed97db661",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/check_native_gpu_v2.py": "65472ecd73cd75e419f520981809bec707989f29b9ad8f07b47e58dcbb8ce7c7",
+        "/Users/coloner/work/rust/toklet/tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+        "/Users/coloner/work/rust/toklet/tools/experiments/qwen3_chat_reference.py": "a95dc1b986b0a2109cff21d420b6739e9284a24d351d136dfca56487d1366527",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/apple/include/toklet.h": "41a438718df36469928fea6be53d26b913713fe76ec1355b19c1a616246fed0a",
+        "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-25-qwen3-chat-reference-v1.json": "c02924b0126a88d4bd621a13885180540bc5cc8cdb810c81766ee0aa9aa7ead2",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/tests/fixtures/mlx-smollm-real-v1/manifest.json": "3cd3af44e0d4d57cc7cf23c8dd7cc7b60ccf0968e48bfae90adba35517e039bd",
+        "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/config.json": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73",
+        "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/model.safetensors": "ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c",
+        "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/model.safetensors.index.json": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44",
+        "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/tokenizer.json": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7",
+        "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/tokenizer_config.json": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee",
+        "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/special_tokens_map.json": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/tests/fixtures/mlx-qwen-real8-v1/manifest.json": "1f98482bceba6c5627767d50cd2c4bda461d97174ee6e29346c5223215270531",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c/config.json": "4dae7c9622e41e50752ba422149df0694044266c06cd851aff630799701c83c6",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c/model.safetensors": "3dd0b6c2983ac5fe35f60ba260b1c7c35e4c38f17f3d5139d0bb477924e7aef4",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c/model.safetensors.index.json": "e48752ffebac15ee35d1d86e96c9b87f2efd7783b19ebf82a26955dbd43e0476",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c/tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c/tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c/special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/tests/fixtures/mlx-qwen3-real-v1/manifest.json": "4594118378d2c583c80c8f0987e06d3bbca0fa77188d4869e670252070b23fc7",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968/config.json": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968/model.safetensors": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968/model.safetensors.index.json": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968/tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968/tokenizer_config.json": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968/special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "/Users/coloner/work/rust/toklet/artifacts/mobile-expanded-models-2026-10-24-v1/source/tests/fixtures/mlx-mistral-real-v1/manifest.json": "b6b59b1b763aea83d8f75da33c40989162b842020493a0526790167fc6e71e1d",
+        "/Users/coloner/work/rust/toklet/models/MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87/config.json": "efc145d2f53d6d6ef2639be0556b4ecf6faac6cf8a7199ad2b7bb5ebcf443bdd",
+        "/Users/coloner/work/rust/toklet/models/MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87/model.safetensors": "d7182d886f93a9efa73d6d556ee33ffe839a4e09e15965eeef46f295ab5b503d",
+        "/Users/coloner/work/rust/toklet/models/MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87/model.safetensors.index.json": "525940738b16d210fdfd692a24752d050c15a50cbe208dd82b06204d640d687b",
+        "/Users/coloner/work/rust/toklet/models/MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87/tokenizer.json": "e553af6fff7d7ad76e830608b218c5c0b0822998d5a1a96099a74cd3c1cb1a49",
+        "/Users/coloner/work/rust/toklet/models/MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87/tokenizer_config.json": "e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae",
+        "/Users/coloner/work/rust/toklet/models/MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87/special_tokens_map.json": "6fa06efa2785e450051989a6f8fb4416b10149ded485ddd3f127a40734f5cfd0",
+        "/Users/coloner/work/rust/toklet/target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+        "/Users/coloner/work/rust/toklet/target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+        "/Users/coloner/work/rust/toklet/src/app_chat.rs": "30ba42266db12fa13760355ee7278ba8e1fd0fc20a0fc1e09bbf1443ccf0230e",
+        "/Users/coloner/work/rust/toklet/src/app_chat/stream.rs": "b8f1206be6bc091cb8b24e3935ab9c935a4883f783492ecb73725072b534ed29",
+        "/Users/coloner/work/rust/toklet/src/native/text.rs": "9ff1a3cd183b8cc8b2e102cb3d2511fd1ba1488b48f9734e26ced74972a7fbd3"
+      }
+    }
+  },
+  "ordinary_test_counts": {
+    "default": {
+      "passed": 259,
+      "failed": 0,
+      "ignored": 16
+    },
+    "metal": {
+      "passed": 281,
+      "failed": 0,
+      "ignored": 109
+    }
+  },
+  "real_codec_tests": 4,
+  "native_chat_tests": 4,
+  "frozen_qwen3_gpu_tests": 5,
+  "qwen3_generation": {
+    "profile": "Qwen3",
+    "ids": [
+      9707,
+      0,
+      2585,
+      646,
+      358,
+      7789,
+      498,
+      3351
+    ],
+    "text": "Hello! How can I assist you today",
+    "reason": 1
+  },
+  "limits": {
+    "chat_output_tokens": 256,
+    "expert_raw_output_tokens": 128,
+    "numerical_context_positions": 512,
+    "native_chat_test_context": 128,
+    "qwen3_text_allowance_bytes": 268435456
+  },
+  "semantics": {
+    "template": "exact pinned enable_thinking=false; no invented system",
+    "eos": [
+      151645
+    ],
+    "reserved_input_literals": 26,
+    "non_special_added_tokens_preserved": 12,
+    "numerical_attention": "Reference"
+  },
+  "prior_failed_attempt": {
+    "path": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v1/checks.json",
+    "sha256": "23f1934bbf2b6ee5dd518a3dbb6ed7bb60b18edec470f9f472b61483c17293b3",
+    "cause": "stale Mistral ignored-test129 boundary; runtime cap already256; corrected test asserts256accepted/257rejected",
+    "source_snapshot": "artifacts/mobile-expanded-models-2026-10-24-v1/native-gpu-v1/source-snapshot"
+  },
+  "not_qualified": [
+    "whole-app memory",
+    "immutable updated Apple package",
+    "iPhone download/generation",
+    "Gemma4 graph",
+    "131072 output",
+    "full Qwen3 held-out quality or performance"
+  ]
+}

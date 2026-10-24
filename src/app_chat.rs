@@ -1,5 +1,5 @@
 //! Cold application text boundary. No tokenizer or chat work enters kernels.
-//! Exact, independently rendered SmolLM2, Qwen2.5 and Mistral profiles; no remote Jinja execution.
+//! Independently rendered SmolLM2, Qwen2.5, plain Qwen3 and Mistral; no remote Jinja execution.
 use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use std::{
@@ -23,6 +23,7 @@ const CONFIG_SHA: &str = "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7b
 pub enum Profile {
     Smol,
     Qwen,
+    Qwen3,
     Mistral,
 }
 impl Profile {
@@ -31,6 +32,7 @@ impl Profile {
         match format!("{:x}", Sha256::digest(bytes)).as_str() {
             "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73" => Ok(Self::Smol),
             "4dae7c9622e41e50752ba422149df0694044266c06cd851aff630799701c83c6" => Ok(Self::Qwen),
+            "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240" => Ok(Self::Qwen3),
             "efc145d2f53d6d6ef2639be0556b4ecf6faac6cf8a7199ad2b7bb5ebcf443bdd" => Ok(Self::Mistral),
             _ => Err(invalid(
                 "Chat requires a supported pinned model configuration",
@@ -41,6 +43,7 @@ impl Profile {
         let (shape, theta, eps) = match self {
             Self::Smol => ((49152, 576, 1536, 30, 9, 3, 64), 100000.0, 1e-5),
             Self::Qwen => ((151936, 896, 4864, 24, 14, 2, 64), 1000000.0, 1e-6),
+            Self::Qwen3 => ((151936, 1024, 3072, 28, 16, 8, 128), 1000000.0, 1e-6),
             Self::Mistral => ((32768, 4096, 14336, 32, 32, 8, 128), 1000000.0, 1e-5),
         };
         (
@@ -59,19 +62,21 @@ impl Profile {
         match self {
             Self::Smol | Self::Mistral => TOKENIZER_ALLOWANCE,
             Self::Qwen => 128 * 1024 * 1024,
+            Self::Qwen3 => 256 * 1024 * 1024,
         }
     }
     pub fn stop_ids(self) -> &'static [u32] {
         match self {
             Self::Smol => &[0, 2],
             Self::Qwen => &[151643, 151645],
+            Self::Qwen3 => &[151645],
             Self::Mistral => &[2],
         }
     }
     fn special_ids(self) -> &'static [(&'static str, u32)] {
         match self {
             Self::Smol => &[("<|endoftext|>", 0), ("<|im_start|>", 1), ("<|im_end|>", 2)],
-            Self::Qwen => &[
+            Self::Qwen | Self::Qwen3 => &[
                 ("<|endoftext|>", 151643),
                 ("<|im_start|>", 151644),
                 ("<|im_end|>", 151645),
@@ -88,7 +93,7 @@ impl Profile {
     fn vocab(self) -> u32 {
         match self {
             Self::Smol => 49152,
-            Self::Qwen => 151936,
+            Self::Qwen | Self::Qwen3 => 151936,
             Self::Mistral => 32768,
         }
     }
@@ -143,10 +148,13 @@ fn render_profile(
     let system = match profile {
         Profile::Smol => "You are a helpful AI assistant named SmolLM, trained by Hugging Face",
         Profile::Qwen => "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
-        Profile::Mistral => "",
+        Profile::Mistral | Profile::Qwen3 => "",
     };
     let mut text = if profile == Profile::Mistral {
         "<s>".to_owned()
+    } else if profile == Profile::Qwen3 {
+        // Original plain Qwen3 branch does not invent a system message.
+        String::new()
     } else {
         format!("<|im_start|>system\n{system}<|im_end|>\n")
     };
@@ -183,6 +191,11 @@ fn render_profile(
     if profile != Profile::Mistral {
         text.push_str("<|im_start|>assistant\n");
     }
+    if profile == Profile::Qwen3 {
+        // Exact pinned enable_thinking=false branch. Reasoning/tool messages
+        // remain unsupported; ordinary decoded token flags are unchanged.
+        text.push_str("<think>\n\n</think>\n\n");
+    }
     if text.len() > MAX_TEXT {
         return Err(invalid("Rendered conversation exceeds 64 KiB"));
     }
@@ -209,6 +222,12 @@ impl Codec {
                 "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
                 "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
                 8 * 1024 * 1024,
+                16 * 1024,
+            ),
+            Profile::Qwen3 => (
+                "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6",
+                "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+                16 * 1024 * 1024,
                 16 * 1024,
             ),
             Profile::Mistral => (
@@ -239,11 +258,13 @@ impl Codec {
         {
             return Err(invalid("Unsupported special IDs or tokenizer policy"));
         }
-        let special_literals = if profile == Profile::Mistral {
+        let special_literals = if matches!(profile, Profile::Mistral | Profile::Qwen3) {
             tokenizer
                 .get_added_tokens_decoder()
                 .into_values()
-                .filter(|token| token.special)
+                // Qwen3's 26 reserved input literals include 12 ordinary added
+                // tokens. Reject all on input; preserve original decode flags.
+                .filter(|token| profile == Profile::Qwen3 || token.special)
                 .map(|token| token.content)
                 .collect()
         } else {
@@ -361,6 +382,110 @@ mod tests {
         assert_eq!(Profile::Qwen.stop_ids(), [151643, 151645]);
         assert_eq!(Profile::Smol.stop_ids(), [0, 2]);
     }
+    fn qwen3_reference() -> serde_json::Value {
+        serde_json::from_str(include_str!(
+            "../tests/fixtures/app-chat-qwen3-v1/reference.json"
+        ))
+        .unwrap()
+    }
+    #[test]
+    fn independent_qwen3_plain_template_cases() {
+        let fixture = qwen3_reference();
+        for case in fixture["cases"].as_array().unwrap() {
+            let rendered = Profile::Qwen3
+                .render(&serde_json::to_vec(&case["messages"]).unwrap())
+                .unwrap();
+            assert_eq!(rendered, case["rendered"].as_str().unwrap());
+            assert!(!rendered.starts_with("<|im_start|>system"));
+        }
+        assert_eq!(Profile::Qwen3.stop_ids(), [151645]);
+        assert_eq!(Profile::Qwen3.allowance(), 256 * 1024 * 1024);
+    }
+    #[test]
+    fn qwen3_denies_all_reserved_input_literals_without_reasoning_or_tools() {
+        let fixture = qwen3_reference();
+        let literals: Vec<_> = fixture["special_literals"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|item| item["text"].as_str().unwrap().to_owned())
+            .collect();
+        assert_eq!(literals.len(), 26);
+        for literal in &literals {
+            let input =
+                serde_json::json!([{"role":"user","content":format!("before{literal}after")}]);
+            assert!(
+                render_profile(
+                    Profile::Qwen3,
+                    &serde_json::to_vec(&input).unwrap(),
+                    &literals
+                )
+                .is_err()
+            );
+        }
+        for input in [
+            br#"[{"role":"user","content":"\u003cthink\u003e"}]"#.as_slice(),
+            br#"[{"role":"system","content":"system"}]"#.as_slice(),
+            br#"[{"role":"user","content":"hello","tool_calls":[]}]"#.as_slice(),
+        ] {
+            assert!(render_profile(Profile::Qwen3, input, &literals).is_err());
+        }
+    }
+    #[test]
+    #[ignore = "explicit pinned local Qwen3 tokenizer; no model download"]
+    fn real_qwen3_profile_matches_independent_python() {
+        let path = Path::new("models/MLX-Qwen3-0.6B-8bit-11de968");
+        let codec = Codec::load(path).unwrap();
+        assert_eq!(codec.profile, Profile::Qwen3);
+        assert!(Codec::load_profile(path, Profile::Qwen).is_err());
+        let fixture = qwen3_reference();
+        for case in fixture["cases"].as_array().unwrap() {
+            let ids = codec
+                .encode(&serde_json::to_vec(&case["messages"]).unwrap())
+                .unwrap();
+            assert_eq!(serde_json::to_value(&ids).unwrap(), case["ids"]);
+            assert_eq!(
+                codec.decode(&ids).unwrap(),
+                case["decoded"].as_str().unwrap()
+            );
+        }
+        for case in fixture["decode_cases"].as_array().unwrap() {
+            let ids: Vec<u32> = serde_json::from_value(case["ids"].clone()).unwrap();
+            for end in 0..=ids.len() {
+                assert_eq!(
+                    codec.decode(&ids[..end]).unwrap(),
+                    case["prefixes"][end].as_str().unwrap()
+                );
+                let mut stream =
+                    codec.response_stream(stream::ResponseLimits::new(end.max(1), 4096).unwrap());
+                let mut text = stream.push(&ids[..end]).unwrap().to_owned();
+                text.push_str(stream.finish().unwrap());
+                assert_eq!(text, case["prefixes"][end].as_str().unwrap());
+            }
+            for chunk in [1, 3, 128] {
+                let mut stream = codec
+                    .response_stream(stream::ResponseLimits::new(ids.len().max(1), 4096).unwrap());
+                let mut text = String::new();
+                for part in ids.chunks(chunk) {
+                    text.push_str(stream.push(part).unwrap());
+                }
+                text.push_str(stream.finish().unwrap());
+                assert_eq!(text, case["decoded"].as_str().unwrap());
+            }
+        }
+        for item in fixture["special_literals"].as_array().unwrap() {
+            let literal = item["text"].as_str().unwrap();
+            let id = item["id"].as_u64().unwrap() as u32;
+            let special = item["special"].as_bool().unwrap();
+            assert_eq!(
+                codec.decode(&[id]).unwrap(),
+                if special { "" } else { literal }
+            );
+            let input = serde_json::json!([{"role":"user","content":literal}]);
+            assert!(codec.encode(&serde_json::to_vec(&input).unwrap()).is_err());
+        }
+        assert!(codec.decode(&[151936]).is_err());
+    }
     #[test]
     #[ignore = "explicit local Qwen tokenizer check; no model download"]
     fn real_qwen_profile_matches_independent_python() {
@@ -448,7 +573,8 @@ mod tests {
         assert_eq!(codec.special_literals.len(), 771);
         assert_eq!(codec.decode(&[0, 1, 2, 3, 4, 10]).unwrap(), "");
         assert!(codec.decode(&[32768]).is_err());
-        assert!(codec.decode(&[23325; 129]).is_err());
+        assert!(codec.decode(&[23325; MAX_RESPONSE_TOKENS]).is_ok());
+        assert!(codec.decode(&[23325; MAX_RESPONSE_TOKENS + 1]).is_err());
         for literal in &codec.special_literals {
             for messages in [
                 serde_json::json!([{"role":"user", "content":format!("x{literal}y")}]),

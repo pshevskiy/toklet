@@ -8,7 +8,7 @@ pub struct ChatHandle {
 }
 
 /// Load the pinned chat assets from the loaded model's own directory.
-/// The caller reserves 64MiB (SmolLM2/Mistral) or 128MiB (Qwen) beyond its numerical budget.
+/// Reserve 64MiB (SmolLM2/Mistral), 128MiB (Qwen), or 256MiB (Qwen3) beyond numerical memory.
 /// # Safety
 /// Follow the parent module's foreign pointer/thread contract.
 #[unsafe(no_mangle)]
@@ -32,7 +32,7 @@ pub unsafe extern "C" fn toklet_chat_create(
             {
                 return Err(fail(
                     INVALID,
-                    "reserve the profile text allowance separately: SmolLM2/Mistral 64MiB, Qwen 128MiB",
+                    "reserve text memory separately: SmolLM2/Mistral 64MiB, Qwen 128MiB, Qwen3 256MiB",
                 ));
             }
             let config = match model.model.as_ref() {
@@ -455,6 +455,17 @@ mod tests {
             b"models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c",
             Profile::Qwen,
             1024 * 1024 * 1024,
+        );
+    }
+
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    #[ignore = "explicit real local Qwen3 GPU text check"]
+    fn public_qwen3_chat_generation_and_stop_query() {
+        public_chat_case(
+            b"models/MLX-Qwen3-0.6B-8bit-11de968",
+            Profile::Qwen3,
+            1536 * 1024 * 1024,
         );
     }
 
