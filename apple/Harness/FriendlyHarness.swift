@@ -232,17 +232,26 @@ struct FriendlyHarnessView: View {
     private var dashboard: some View {
         VStack(alignment:.leading,spacing:10) {
             RuntimeMonitorView(store:store)
-            ViewThatFits(in:.horizontal) {
-                HStack { dashboardActions }
+            if typeSize.isAccessibilitySize {
                 VStack(alignment:.leading) { dashboardActions }
-            }.buttonStyle(.bordered)
+            } else {
+                HStack { dashboardActions }
+            }
         }.frame(maxWidth:570).frame(maxWidth:.infinity).padding(.horizontal,20).padding(.vertical,10).background(canvas)
     }
     @ViewBuilder private var dashboardActions: some View {
-        Button("Find best model",systemImage:"sparkle.magnifyingglass") {
-            hub.findBest(active:activeHubProfile); sheet = .models
-        }.accessibilityIdentifier("find-best-model")
-        Button("Benchmark",systemImage:"speedometer") { sheet = .benchmark }.accessibilityIdentifier("local-benchmark")
+        Button {
+            dismissModelKeyboard()
+            sheet = .models
+            hub.findBest(active:activeHubProfile)
+        } label: {
+            Label("Find best model",systemImage:"sparkle.magnifyingglass")
+                .frame(maxWidth:.infinity,minHeight:44).contentShape(Rectangle())
+        }.buttonStyle(.bordered).accessibilityIdentifier("find-best-model")
+        Button { sheet = .benchmark } label: {
+            Label("Benchmark",systemImage:"speedometer")
+                .frame(maxWidth:.infinity,minHeight:44).contentShape(Rectangle())
+        }.buttonStyle(.bordered).accessibilityIdentifier("local-benchmark")
     }
     private var composer: some View {
         VStack(alignment:.leading,spacing:8) {
@@ -289,8 +298,19 @@ struct FriendlyHarnessView: View {
                 Picker("Optimize for",selection:Binding(get:{ hub.recommendationTask },set:{ hub.findBest(task:$0,active:activeHubProfile) })) {
                     ForEach(HubRankingTask.allCases,id:\.self) { task in Text(task.rawValue).tag(task) }
                 }.pickerStyle(.segmented).accessibilityIdentifier("hub-ranking-task")
-                Button("Find best model for this device",systemImage:"sparkle.magnifyingglass") { hub.findBest(active:activeHubProfile) }
-                    .accessibilityIdentifier("hub-find-best")
+                Button {
+                    dismissModelKeyboard(); hub.findBest(active:activeHubProfile)
+                } label: {
+                    Label("Find best model on Hugging Face",systemImage:"sparkle.magnifyingglass")
+                        .frame(maxWidth:.infinity,minHeight:44,alignment:.leading).contentShape(Rectangle())
+                }.buttonStyle(.bordered).disabled(hub.blocksSelection).accessibilityIdentifier("hub-find-best")
+                if !hub.discoveryMessage.isEmpty {
+                    Text(hub.discoveryMessage).font(.callout).accessibilityIdentifier("hub-discovery-status")
+                    if hub.findingBest {
+                        ProgressView("Searching Hugging Face…")
+                        Button("Stop search") { hub.cancel() }.buttonStyle(.borderless).accessibilityIdentifier("hub-discovery-stop")
+                    }
+                }
                 if !hub.recommendationMessage.isEmpty {
                     Text(hub.recommendationMessage).font(.callout).foregroundStyle(.secondary)
                     Text("Estimated scores, not quality tests or measured speed. Loading checks compatibility and memory again.")
@@ -312,7 +332,21 @@ struct FriendlyHarnessView: View {
                             modelRow(recommendation.profile)
                         }
                     }
-                    if !hub.recommendations.isEmpty { Text("All supported models").font(.headline).padding(.top,8) }
+                    if !hub.discoveredModels.isEmpty {
+                        DisclosureGroup("More models on Hugging Face (\(hub.discoveredModels.count))") {
+                            Text("Only models supported by Toklet can be downloaded for Chat. Other listings are available to view on Hugging Face.")
+                                .font(.caption).foregroundStyle(.secondary)
+                            ForEach(hub.discoveredModels) { model in
+                                VStack(alignment:.leading,spacing:6) {
+                                    Text(model.id).font(.caption).textSelection(.enabled)
+                                    Text(model.profile == nil ? "Unavailable for chat: engine and tokenizer support is required." : "Supported by Toklet. See the model above or below for memory requirements and download.")
+                                        .font(.caption).foregroundStyle(.secondary)
+                                    Link("View on Hugging Face",destination:model.url).font(.caption)
+                                }.padding(.vertical,4)
+                            }
+                        }.accessibilityIdentifier("hub-discovery-models")
+                    }
+                    Text("All supported models").font(.headline).padding(.top,8)
                 }
                 ForEach(HubProfile.catalog.filter { profile in !hub.recommendations.contains(where:{ $0.profile == profile }) },id:\.repository) { profile in modelRow(profile) }
                 if chat.loadingModel { ProgressView("Loading " + chat.loadingName + "…") }
@@ -369,13 +403,16 @@ struct FriendlyHarnessView: View {
             }
     }
     private func searchModels() {
+        dismissModelKeyboard()
+        hub.search()
+    }
+    private func dismissModelKeyboard() {
         modelSearchFocused = false
         #if os(iOS)
         // The search lives in a presented Form. Resign the actual responder as
         // well as its SwiftUI focus binding so the results are not obscured.
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),to:nil,from:nil,for:nil)
         #endif
-        hub.search()
     }
     private func useModel(_ profile: HubProfile,download: Bool) {
         modelSearchFocused = false
@@ -401,6 +438,9 @@ struct FriendlyHarnessView: View {
                 .font(.caption).foregroundStyle(.secondary)
             Text("Memory allowance needed to open: " + RuntimeMonitorView.bytes(profile.processAllowance))
                 .font(.caption).foregroundStyle(.secondary)
+            if hub.discoveredModels.contains(where:{ $0.id == profile.repository }) {
+                Text("Found on Hugging Face").font(.caption).foregroundStyle(.secondary)
+            }
             Button(active ? "Return to chat" : (saved ? "Use model" : "Download and use"),systemImage:active ? "bubble.left.and.bubble.right" : "arrow.right.circle") {
                 if active { hub.cancel(); sheet = nil }
                 else { useModel(profile,download:!saved) }
@@ -412,6 +452,7 @@ struct FriendlyHarnessView: View {
             DisclosureGroup("Model details") {
                 Text(profile.repository).font(.caption).textSelection(.enabled)
                 Text("Revision " + profile.revision.prefix(7) + " · Apache-2.0").font(.caption).foregroundStyle(.secondary)
+                Link("View on Hugging Face",destination:HubModel(id:profile.repository).url)
             }.font(.caption)
         }.padding(.vertical,4)
     }

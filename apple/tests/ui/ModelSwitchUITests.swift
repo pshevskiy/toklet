@@ -74,6 +74,49 @@ final class PhoneUITests: XCTestCase {
 }
 
 extension PhoneUITests {
+    func testFindBestSingleTapAndHuggingFace() throws {
+        continueAfterFailure = false; executionTimeAllowance = 300
+        let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")
+        app.launchArguments = ["--ui-test-history"]; app.launch()
+        // Exercise ordinary taps, including the expanded label's lower edge.
+        for index in 0..<3 {
+            let find = app.buttons["find-best-model"]
+            XCTAssertTrue(find.waitForExistence(timeout:10) && find.isHittable)
+            XCTAssertGreaterThanOrEqual(find.frame.height,44)
+            if index == 1 { find.coordinate(withNormalizedOffset:CGVector(dx:0.5,dy:0.85)).tap() }
+            else { find.tap() }
+            XCTAssertTrue(app.navigationBars["Models"].waitForExistence(timeout:5),"A single tap must open Models")
+            let source = app.staticTexts["hub-discovery-status"]
+            XCTAssertTrue(source.waitForExistence(timeout:5))
+            let found = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label BEGINSWITH %@","Hugging Face:"),object:source)
+            XCTAssertEqual(XCTWaiter.wait(for:[found],timeout:90),.completed,"Find best must complete a real Hugging Face search")
+            XCTAssertTrue(source.label.contains("public MLX models found"))
+            capture("HuggingFace-single-tap-\(index)",app:app)
+            if index == 0 {
+                let more = app.descendants(matching:.any)["hub-discovery-models"].firstMatch
+                visible(more,app:app); more.tap()
+                let link = app.links["View on Hugging Face"].firstMatch
+                visible(link,app:app); XCTAssertTrue(link.exists)
+                capture("HuggingFace-discovered-models",app:app)
+            }
+            app.buttons["Close"].tap()
+        }
+        // Discovery also works while a model is resident and the keyboard is up.
+        choose("qwen",name:"Qwen2.5",app:app)
+        let draft = app.descendants(matching:.any)["chat-draft"].firstMatch
+        draft.tap(); draft.typeText("draft preserved")
+        app.buttons["find-best-model"].tap()
+        XCTAssertTrue(app.navigationBars["Models"].waitForExistence(timeout:5))
+        XCTAssertFalse(app.keyboards.firstMatch.exists)
+        let source = app.staticTexts["hub-discovery-status"]
+        let found = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label BEGINSWITH %@","Hugging Face:"),object:source)
+        XCTAssertEqual(XCTWaiter.wait(for:[found],timeout:90),.completed)
+        capture("HuggingFace-loaded-model",app:app)
+        app.buttons["Close"].tap()
+        XCTAssertTrue(app.buttons["chat-model-picker"].label.contains("Qwen2.5"))
+        XCTAssertEqual(draft.value as? String,"draft preserved")
+        app.terminate()
+    }
     func testRankedRecommendations() throws {
         continueAfterFailure = false; executionTimeAllowance = 240
         let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")

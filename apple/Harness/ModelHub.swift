@@ -127,6 +127,12 @@ struct HubProfile: Codable, Equatable, Sendable {
 struct HubModel: Decodable, Identifiable, Sendable {
     let id: String
     var profile: HubProfile? { HubProfile.catalog.first { $0.repository == id } }
+    var url: URL { URL(string:"https://huggingface.co/" + id)! }
+}
+
+struct HubDiscovery: Sendable {
+    let models: [HubModel]
+    let failedRequests: Int
 }
 
 enum HubAPI {
@@ -145,6 +151,14 @@ enum HubAPI {
         var url = URLComponents(string:"https://huggingface.co/api/models")!
         url.queryItems = [URLQueryItem(name:"search",value:query),URLQueryItem(name:"filter",value:"mlx"),URLQueryItem(name:"limit",value:"20")]
         return url.url!
+    }
+    // One popular MLX listing plus the supported families. A popular listing
+    // alone can omit small checkpoints that are the best fit for an iPhone.
+    static var discoveryURLs: [URL] {
+        var popular = URLComponents(string:"https://huggingface.co/api/models")!
+        popular.queryItems = [URLQueryItem(name:"filter",value:"mlx"),URLQueryItem(name:"pipeline_tag",value:"text-generation"),
+            URLQueryItem(name:"sort",value:"downloads"),URLQueryItem(name:"direction",value:"-1"),URLQueryItem(name:"limit",value:"20")]
+        return [popular.url!] + HubProfile.catalog.map { try! searchURL($0.searchQuery) }
     }
     static func searchResults(_ data: Data) throws -> [HubModel] {
         guard data.count <= metadataLimit else { throw HubFailure("Search response is too large.") }
@@ -204,11 +218,15 @@ actor ModelHub {
     let root: URL
     private let fetch: HubFetch
     private let freeBytes: @Sendable (URL) throws -> Int64
+    private let removeMetadata: @Sendable (URL) throws -> Void
     private var busy = false
     static let reserve: Int64 = 64 * 1024 * 1024
     init(root: URL,fetch: @escaping HubFetch = { try await HubTransfer.fetch($0,$1,$2,$3) },
-         freeBytes: @escaping @Sendable (URL) throws -> Int64 = { try ModelHub.diskSpace($0) }) {
-        self.root = root; self.fetch = fetch; self.freeBytes = freeBytes
+         freeBytes: @escaping @Sendable (URL) throws -> Int64 = { try ModelHub.diskSpace($0) },
+         removeMetadata: @escaping @Sendable (URL) throws -> Void = {
+             if FileManager.default.fileExists(atPath:$0.path) { try FileManager.default.removeItem(at:$0) }
+         }) {
+        self.root = root; self.fetch = fetch; self.freeBytes = freeBytes; self.removeMetadata = removeMetadata
     }
     static func diskSpace(_ directory: URL) throws -> Int64 {
         let values = try directory.resourceValues(forKeys:[.volumeAvailableCapacityForImportantUsageKey])
@@ -245,6 +263,59 @@ actor ModelHub {
         try await fetch(url,temporary,HubAPI.metadataLimit,{ _ in })
         try Task.checkCancellation()
         return try HubAPI.searchResults(Data(contentsOf:temporary))
+    }
+    func discover() async throws -> HubDiscovery {
+        guard !busy else { throw HubFailure("A model operation is already running.") }
+        busy = true; defer { busy = false }
+        let urls = HubAPI.discoveryURLs, fetch = self.fetch, root = self.root, remove = self.removeMetadata
+        try prepareRoot(); try space(HubAPI.metadataLimit * Int64(urls.count))
+        // Four bounded metadata requests run concurrently; no model payload is
+        // fetched. Task-group scope joins cancelled URLSessions before cleanup.
+        let pages = await withTaskGroup(of:(Int,Result<[HubModel],any Error>).self) { group in
+            for (index,url) in urls.enumerated() {
+                group.addTask {
+                    let temporary = root.appendingPathComponent(".discover-" + UUID().uuidString)
+                    var result: Result<[HubModel],any Error>
+                    do {
+                        try await fetch(url,temporary,HubAPI.metadataLimit,{ _ in })
+                        try Task.checkCancellation()
+                        result = .success(try HubAPI.searchResults(Data(contentsOf:temporary)))
+                    } catch { result = .failure(error) }
+                    do { try remove(temporary) }
+                    catch {
+                        let original: (any Error)?
+                        if case .failure(let failure) = result { original = failure } else { original = nil }
+                        result = .failure(HubTransfer.metadataCleanupFailure(original,"metadata temporary removal: " + error.localizedDescription))
+                    }
+                    return (index,result)
+                }
+            }
+            var pages = [Result<[HubModel],any Error>](repeating:.failure(HubFailure("Metadata request did not finish.")),count:urls.count)
+            // Drain all children even after an error. A later sibling can carry
+            // a close/removal failure that an early throwing iteration would lose.
+            for await (index,page) in group {
+                pages[index] = page
+                if case .failure(let error) = page, HubTransfer.mergeCleanupFailure(nil,error) != nil { group.cancelAll() }
+            }
+            return pages
+        }
+        var fatal: (any Error)? = Task.isCancelled ? CancellationError() : nil
+        var failures = 0
+        for page in pages {
+            if case .failure(let error) = page {
+                failures += 1
+                if let cleanup = HubTransfer.mergeCleanupFailure(fatal,error) { fatal = cleanup }
+            }
+        }
+        if let fatal { throw fatal }
+        guard failures < urls.count else { throw HubFailure("Cannot reach Hugging Face. Check your connection and tap Find best model to retry.") }
+        var rows: [HubModel] = [], seen = Set<String>()
+        for page in pages {
+            if case .success(let models) = page {
+                for row in models where seen.insert(row.id).inserted { rows.append(row) }
+            }
+        }
+        return HubDiscovery(models:rows,failedRequests:failures)
     }
     func verified(_ profile: HubProfile) throws -> URL? {
         guard !busy else { throw HubFailure("A model operation is already running.") }

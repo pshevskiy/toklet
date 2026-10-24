@@ -27,8 +27,9 @@ performance qualification. UI polling is not the measurement clock.
 
 ## Model shortlist
 
-Find best model filters only the existing pinned, downloadable Chat catalog
-through the current device admission policy, then shows up to five results
+Find best model searches public Hugging Face MLX listings and shows their
+compatibility status. Its runnable shortlist filters the existing pinned,
+downloadable Chat catalog through the current device admission policy, then shows up to five results
 ordered by the selected task's capacity, estimated speed and memory headroom
 scores. [Task-based ranking](mobile-model-ranking.md) documents the weights and
 assumptions; these estimates do not claim measured answer quality or speed.

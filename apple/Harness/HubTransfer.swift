@@ -55,7 +55,8 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
         if maximum >= 1024 * 1024 * 1024 {
             try await ranged(url,destination,maximum,progress)
         } else {
-            try await whole(url,destination,maximum,progress)
+            let metadata = url.host == "huggingface.co" && url.path.hasPrefix("/api/models") && maximum <= HubAPI.metadataLimit
+            try await whole(url,destination,maximum,progress,resourceTimeout:metadata ? .seconds(20) : .seconds(7200))
         }
     }
     static func run(_ url: URL,_ destination: URL,_ maximum: Int64,
@@ -182,6 +183,15 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
 
 
 extension HubTransfer {
+    // Model discovery may tolerate a failed metadata page, but a failed close,
+    // join or temporary-file removal must survive cancellation and every sibling.
+    static func metadataCleanupFailure(_ primary: Error?,_ cause: String) -> any Error {
+        cleanupFailure(primary,cause)
+    }
+    static func mergeCleanupFailure(_ primary: Error?,_ candidate: Error) -> (any Error)? {
+        guard let cleanup = candidate as? HubCleanupFailure else { return nil }
+        return combineCleanup(primary,cleanup)
+    }
     private static func cleanupFailure(_ primary: Error?,_ cause: String) -> HubCleanupFailure {
         let previous = (primary as? HubCleanupFailure)?.causes ?? primary.map { ["original: " + $0.localizedDescription] } ?? []
         return HubCleanupFailure(causes:previous + [cause])
@@ -265,7 +275,7 @@ extension HubTransfer {
             group.addTask { try await operation() }
             group.addTask {
                 try await Task.sleep(for:duration)
-                throw HubFailure("Download exceeded the two-hour resource deadline.")
+                throw HubFailure("Transfer exceeded its resource deadline.")
             }
             var primary: Error?
             do { _ = try await group.next() } catch { primary = error }

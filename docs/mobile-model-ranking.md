@@ -7,6 +7,34 @@ runnable recommendations. This is an independent small implementation inspired
 by [llmfit's task-based scoring](https://github.com/AlexsJones/llmfit/blob/b8124fb6c4ae9a943dac86440020dc0bdefdada1/llmfit-core/src/fit.rs).
 No llmfit source or dependency is bundled.
 
+## Live Hugging Face discovery
+
+Find best model now contacts Hugging Face instead of only evaluating the local
+catalog. It requests the popular MLX text-generation listing and the three
+supported model-family searches. Each of the four concurrent requests is limited
+to 20 rows, 2 MiB and a 20-second total transfer deadline including retries.
+Results are validated, deduplicated in request order and available to browse with
+Hugging Face links. No model weights, credentials or conversation text are sent
+or downloaded by discovery. A partial failure keeps valid pages and reports the
+missing searches; a complete failure explicitly shows the supported offline
+catalog with a retry instruction.
+
+The local supported shortlist remains visible during discovery. Finding an
+online repository does not admit its graph, quantization, tokenizer or memory
+requirements. Unsupported listings are labelled unavailable for Chat. If none
+of the supported profiles fits current memory, online listings remain visible
+and the fit explanation identifies the memory constraint. The ranking and all
+download/open checks below remain authoritative for runnable models.
+
+Both Find best buttons have a minimum 44-point label hit area and an explicit
+button style. The dashboard renders one action layout instead of measuring two
+copies inside ViewThatFits. Opening the Models sheet no longer replaces a live
+discovery with its automatic saved-model inventory. Preference changes rerank
+with fresh memory without restarting discovery. Cancellation joins metadata
+transfers before another service operation and prevents stale results.
+Fatal transfer close/join and temporary-removal errors are preserved after every
+sibling joins, including during cancellation. They cannot become partial success.
+
 ## Eligibility and ownership
 
 The existing unified-GPU/physical-memory requirements and `HubAdmission.check`
@@ -83,3 +111,24 @@ hittable option and confirms256 is committed before closing Settings.
 Scores remain estimates. These checks do not qualify new numerical quality,
 controlled throughput, peak memory, other devices, Gemma4 generation or131072-token
 replies. The separate engine work retains those priorities.
+
+The subsequent live-discovery/tap fix passes eight fresh local commands, the
+existing parser/transport/download/deadline suite, and an actual Hugging Face
+metadata probe returning 68 distinct listings including all three supported
+repositories. Controller regressions also cover discovery surviving sheet
+inventory, task changes during a request, no-memory discovery, offline/partial
+failure, fatal close/removal errors across all four children, cancellation and
+temporary-file cleanup.
+
+All six physical tests pass on the same iPhone, with zero failures or skips.
+The new test uses three ordinary dashboard taps, including an edge tap, checks
+real online discovery and browse links, then repeats with Qwen loaded and the
+keyboard open while preserving the draft. The five previous regression tests
+also pass. Screenshots show 68 online listings, two currently admitted profiles,
+clear unavailable-for-Chat statuses, and a dismissed keyboard. Owner chat bytes
+match before/after; the updated app remains installed and normally launched.
+The [live-discovery receipt](../benchmarks/results/2026-10-24-mobile-hf-discovery-v1.json)
+binds the final source/package/signatures and physical evidence. A prior trial
+was interrupted after source review found swallowed cleanup failures; its
+verified rollback and unchanged owner data are retained, with no passing suite
+claimed for that trial.

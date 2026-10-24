@@ -1,0 +1,759 @@
+{
+  "format": "toklet-mobile-hf-discovery-v1",
+  "date": "2026-10-24",
+  "status": "installed_and_physical_ui_verified",
+  "mobile_source_base_revision": "f739fabea2c80708aadf64a0f866cf8e6d81dcd1",
+  "physical_device": {
+    "model": "iPhone 14 Pro",
+    "os": "iOS 27.0.1"
+  },
+  "source_pins": {
+    "apple/Harness/ChatContent.swift": "7843fe31181c5465e80b15702a1e481bb25b1a90f4e351272076d276839acb97",
+    "apple/Harness/ChatWorkspace.swift": "3efb491b1a5bbbb5647fece57346bb3d82389fd798c7024cb4b0b81cef26c54b",
+    "apple/Harness/ExpertHarness.swift": "cf2f74c57c9fa9008fafdf209ec15d4d56673d455a65550ba0ec5c7d1ed7a839",
+    "apple/Harness/FriendlyChatStore.swift": "2ed323d6fea23406d176561858cb961da2d251f1ce93ffd22614f2c9c2f87ab2",
+    "apple/Harness/FriendlyHarness.swift": "72d6ae9e03c7f3777074fbc64d8f3fefb6ced442dbef7245a4fe55f904b045af",
+    "apple/Harness/HarnessApp.swift": "72b77cd9f9ae46601bd654515abf48bea1e9237f8e9547b4a450554339f6d81f",
+    "apple/Harness/HarnessStore.swift": "07d150e9b83d7164e786560bc5e4aa9b88dc34fb7ce89e2fe100a96da0c20893",
+    "apple/Harness/HubStore.swift": "f272932998dec9d9f92ffb6184d3138b8c1079a44cf0b8e9a687547887b3c6e0",
+    "apple/Harness/HubTransfer.swift": "b590487bb834ef7b4281e412c2dcc21c09b3b47e6124026eff8d724ee2d19386",
+    "apple/Harness/ModelHub.swift": "6364adc6746997577a1f3a0c048458de33d0c0d7cbf6fde8a9925d27e133e0f2",
+    "apple/Harness/NativeChatCheck.swift": "12444fb572e9b4c2a1c5397d33d49b4b7474f57fa2ffccd33084d2022a79c88c",
+    "apple/Harness/NativeCompatibility.swift": "fc5b0cc5eef791df9d15675fffe11da0ba7ec4d10b59fe5b3b7bea1601f81b4f",
+    "apple/Harness/NativeLifecycle.swift": "4a49b4899715dbc8eca0c750253ba49d0ac55d1ee433c77a82b877f28d1b0d00",
+    "apple/Harness/NativeLifecycleRun.swift": "9170e354d07dc09e1f4eb9ea718b68ff5c6df16b68f85fc0dc44872de0f414a2",
+    "apple/Harness/NativeLifecycleSignals.swift": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1",
+    "apple/Harness/NativeMeasurement.swift": "5dcd81db64963db10d2bd50a6e9bc8dee567951f1a344341dd0cd9dfecbf8a46",
+    "apple/Harness/NativeQuality.swift": "e54783e1ed25035340f07c13f593cefdb616152fc296b17fc6508ba1e7e3972a",
+    "apple/Harness/NativeResourcePlan.swift": "c174cd3d51d802619bc780c0cadcc53ecc69da3d54f65fa54deb7dca2a0f0df5",
+    "apple/Harness/NativeStateRun.swift": "e0b8a0d12fd93db67fcab374da3f386d8b3331b1b20bd96413ebca1dfb290a99",
+    "apple/Harness/NativeTaskResponse.swift": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41",
+    "apple/Harness/NativeTasks.swift": "d2df04cf9da12d5b648970e49c64f1bdbc28bf464ca3c05a6a65e4ee6b6ae4e9",
+    "apple/Harness/NativeTeacherForcing.swift": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9",
+    "apple/Harness/NativeWorker.swift": "6b747ab1b84063c29daa214aa0035fe0618a57c714fca03bdfba688074a8cd07",
+    "apple/tests/swift/WorkerChecks.swift": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf",
+    "apple/tests/swift/MobileMain.swift": "cc76d2a289a2cb71d424842a051a65d64457a0935c4f07b8556b13be455c6814",
+    "apple/include/toklet.h": "2bcbe2b2503b37e43a30fc015ef9c46f3c9a6b4a60be4bedca51c5543042cce3",
+    "apple/include/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+    "artifacts/m7-native-tiny-v2/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9",
+    "artifacts/m7-native-tiny-v2/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+    "apple/tests/ui/ModelSwitchUITests.swift": "3d6df1a42f98a2789969aa2b8b67d6a68c3aeeda957585e32a8ca4b2f0cefcbe",
+    "docs/mobile-model-ranking.md": "6a86f87bd50a1aca4369c83f279c2a8cc1a950b9cf4a0c4702c876e62f978745",
+    "docs/mobile-dashboard.md": "90e4e49964eb26269f176d8a02552476e7af7139de818377916806fd6e6577b1"
+  },
+  "native_package": {
+    "path": "artifacts/m8-native-policy-v1/package/build.json",
+    "sha256": "2d7d35b02d5c35a343d29b657cbf254f722171846d0df49f57bb15f92ba2194d"
+  },
+  "native_package_file_count": 10,
+  "installed_app": {
+    "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/UITestDerived/Build/Products/Release-iphoneos/TokletHarness.app",
+    "bundle_identifier": "dev.toklet.harness",
+    "signature_verified": true,
+    "signed_file_sha256": {
+      "TokletHarness": "e97441935fd17bdc428d6e4be84b908924c256c7639f29fccb946a920aaa6be5",
+      "embedded.mobileprovision": "f205de44fba20484b45c00e44df01ad8183177b2427ba9b488679afb22697220",
+      "Info.plist": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47",
+      "PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+      "_CodeSignature/CodeResources": "f7a2be8763bdd7253ef302cd61ee0d9496a66bb954e33176b6eb23f81714a9db",
+      "Tiny/model.safetensors": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2",
+      "Tiny/config.json": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+    },
+    "normal_launch": true
+  },
+  "discovery": {
+    "source": "public Hugging Face API",
+    "maximum_requests": 4,
+    "maximum_rows_per_request": 20,
+    "maximum_metadata_bytes_per_request": 2097152,
+    "transfer_deadline_seconds_per_request_including_retries": 20,
+    "concurrent": true,
+    "stable_deduplication": true,
+    "model_payload_downloaded_by_discovery": false,
+    "new_runnable_profiles": 0,
+    "new_dependencies": 0,
+    "compatible_catalog_size": 3,
+    "observed_mac_public_models": 68,
+    "observed_mac_compatible_repositories": [
+      "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
+      "mlx-community/Qwen2.5-0.5B-Instruct-8bit",
+      "mlx-community/SmolLM2-135M-Instruct-8bit"
+    ],
+    "local_live_probe": {
+      "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/live-discovery-v2.stdout",
+      "sha256": "139acaa4bec5c419abbc55fe15c6c067830c1e35978ab046e06a592e3c6aa455"
+    },
+    "local_live_probe_stderr": {
+      "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/live-discovery-v2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "failure_policy": "Ordinary page failures may retain valid pages with a visible partial-failure notice. Fatal transfer close/join/removal failures are aggregated after all four children join and cannot publish discovery success. Offline fallback is explicitly labelled.",
+    "fit_policy": "Only pinned Chat profiles passing existing device/memory admission are scored. Resident model exemption and fresh post-release admission remain; online discovery grants no compatibility."
+  },
+  "verification": {
+    "local_check": {
+      "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/check-v3/check.json",
+      "sha256": "bc032e5a53a13c6475d45f12a901f6283da4283eb677b4bcce979711d22db0f9"
+    },
+    "local_commands": [
+      {
+        "label": "compile",
+        "exit_code": 0
+      },
+      {
+        "label": "regressions",
+        "exit_code": 0
+      },
+      {
+        "label": "worker-revision",
+        "exit_code": 0
+      },
+      {
+        "label": "render",
+        "exit_code": 0
+      },
+      {
+        "label": "local-model",
+        "exit_code": 0
+      },
+      {
+        "label": "replacement-admission",
+        "exit_code": 0
+      },
+      {
+        "label": "iphoneos",
+        "exit_code": 0
+      },
+      {
+        "label": "iphonesimulator",
+        "exit_code": 0
+      }
+    ],
+    "transport_checks": {
+      "passed": true,
+      "stdout": {
+        "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/hub-check-v2.stdout",
+        "sha256": "7bfd7d0a323c96e1906ecab02be3d3c1592e39cdde5366c2e16cc15677e54fd2"
+      },
+      "stderr": {
+        "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/hub-check-v2.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "signed_build": {
+      "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/build.json",
+      "sha256": "56158558ba4405167a3962614f3c10410b71f7964accdfd3cb2ca857ac8e3c74"
+    },
+    "physical_suite": {
+      "passed": true,
+      "passed_tests": 6,
+      "failed_tests": 0,
+      "skipped_tests": 0,
+      "duration_seconds": 320.43,
+      "tests": [
+        {
+          "name": "testBenchmarkAndGemma4Search()",
+          "result": "Passed",
+          "durationInSeconds": 49.06617200374603
+        },
+        {
+          "name": "testDashboardControls()",
+          "result": "Passed",
+          "durationInSeconds": 34.578601002693176
+        },
+        {
+          "name": "testFindBestSingleTapAndHuggingFace()",
+          "result": "Passed",
+          "durationInSeconds": 51.14292597770691
+        },
+        {
+          "name": "testModelSwitching()",
+          "result": "Passed",
+          "durationInSeconds": 96.4787529706955
+        },
+        {
+          "name": "testRankedRecommendations()",
+          "result": "Passed",
+          "durationInSeconds": 28.051967978477478
+        },
+        {
+          "name": "testReplyLimitAndExpert()",
+          "result": "Passed",
+          "durationInSeconds": 57.10017502307892
+        }
+      ],
+      "summary": {
+        "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/phone-summary.json",
+        "sha256": "1f35676eb295638c2847f953de6cc6690f6e9a164d3ab8368ae62c7d49c836a5"
+      },
+      "xcresult_path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/phone-ui-v1.xcresult",
+      "raw_summary": {
+        "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/xcresult-summary.json",
+        "sha256": "18c897704017f671a70e6e72c596cc39ea4d8ed40638eec08831aa6267f024f5"
+      },
+      "raw_tests": {
+        "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/xcresult-tests.json",
+        "sha256": "2426da262dd1dcabe1546f8a5636341fdaf91c95523bf3d69580ba2416941003"
+      },
+      "stdout": {
+        "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/private-logs/phone-ui.stdout",
+        "sha256": "e0f4b7d1ce8e42f643b5329d4054b50cd5df3de0757744a4e4ae49732ba21551"
+      },
+      "stderr": {
+        "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/private-logs/phone-ui.stderr",
+        "sha256": "c3594c605ec19a38587d6208ac8cc157db9de1957bb3557d421a91318f07a0c8"
+      },
+      "attachments": [
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Gemma4-search-unsupported tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/7BC0DFE7-061E-464A-B559-69629FB99CA3.txt",
+          "sha256": "8e83335b07e7f22ecc3a855d645e59b2235f8fca424da36939a1dd111b8ac941"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Gemma4-search-unsupported",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/38D1421E-F672-4BEE-A303-1365E8015489.png",
+          "sha256": "9e259faa0ae9d858262db768a69591a3a47ca6bca41fef8717464c92076e3350"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Gemma4-search-state tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/8DB2FC9E-F383-4956-BF02-01FF92CF48C3.txt",
+          "sha256": "01f7f31d83ad2d2a4418299a24689a663df375302b5db3014f5ca6d2685bba44"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Gemma4-search-state",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/BFE34002-BDFE-40E9-BCAF-3AB0E9761F2F.png",
+          "sha256": "9e259faa0ae9d858262db768a69591a3a47ca6bca41fef8717464c92076e3350"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Measured-phone-dashboard tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/D9957DFB-3F01-4C4D-BDAB-E237BDD3E64D.txt",
+          "sha256": "9fe6ddb76db2693000150b7e51bc6901e3d716e054c037e77c73dd8a9853e448"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Measured-phone-dashboard",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/2F29F9B0-C248-45EC-B3BB-98A0E1B1FF10.png",
+          "sha256": "d3bb75eff8b3575c87a3d7df855f862746a5d439dac98e7342b309b40bce14b8"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-3 tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/9A7C0CFB-4767-47B8-AB32-98F70B758FA2.txt",
+          "sha256": "e6411a911d9066647d631118762eb89d717e20193e1dd1ef307faea6e80fd35b"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-3",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/69D117F8-7A57-4953-9359-6DA713D0711A.png",
+          "sha256": "3ad3bd32e33df5bf03b16b7e4a61ec43b0154834dd3560d09ed2982dcddbf104"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-2 tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/B7325BF5-3296-4186-BF56-61C46A39E6DD.txt",
+          "sha256": "9ba920b0058437b3e993d7388bccca755a9983274e8905201bc5f29d9cdae353"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-2",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/ED22ABEC-F6C0-42D9-B9A8-4E7CFCFB061A.png",
+          "sha256": "3ad3bd32e33df5bf03b16b7e4a61ec43b0154834dd3560d09ed2982dcddbf104"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-1 tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/D9BC27EC-FB1A-49BA-833C-8B95B1A13898.txt",
+          "sha256": "aebdbbb6e36f26d34503237e8ebe6e4fdeaef5a58fb55f99a5eba0ea38213eab"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Benchmark-run-1",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/7DD60893-F44F-4D20-A9FB-363051CCC86F.png",
+          "sha256": "3ad3bd32e33df5bf03b16b7e4a61ec43b0154834dd3560d09ed2982dcddbf104"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/DFB2C45F-F6AB-4F97-81AB-E0513C92785D.txt",
+          "sha256": "aee28c871f2cbde3e1b010148d995f3f7c21674022a3f3008d615826664bb07c"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/32998065-7E97-4C95-BDBC-0DC66E0F705C.png",
+          "sha256": "f5d5db4c9ebc72646b294491e242efada6d34c62e80ae6b5af0b9403d6283384"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/996DB1B5-2512-48CA-AA2C-746B74775E10.txt",
+          "sha256": "855612b0ac7d12875a6ed5d9b0782d7ef1de4219bcbfaf0a8043fd06254d51d5"
+        },
+        {
+          "test": "PhoneUITests/testBenchmarkAndGemma4Search()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/CADE3B51-8376-4AF1-BE23-BCD9B89C22A1.png",
+          "sha256": "ac608a794dfd82e22116a1a46b02c195d8087a04189995f65233b57be2230409"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Expert-monitoring tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/DE80C66D-DE07-418A-8426-E33F083E1641.txt",
+          "sha256": "58c76a6782e9e21d0edf5d9ffffbe500c8981288c86826bfd6c055e289206b29"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Expert-monitoring",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/37DD6B2A-76BD-47A7-A929-586AB852F186.png",
+          "sha256": "137b8b47137fdddca7e61899235708f87e13b2509c3b27ef2fc2877cc8ee2529"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dialogs-deleted tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/7651FBE0-E295-413E-A311-E4BBBA0444C0.txt",
+          "sha256": "dbdf6c1278e49e5a98a854d67969c29ff0b3e6d8be101d5df0c11dd8a47e018a"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dialogs-deleted",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/0C1E2123-054E-431C-98F6-1727D024976C.png",
+          "sha256": "a42bd9b58196488939e88e60019c50a434478e171647cf43088919fedf2dc4b7"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Single-dialog-deleted tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/089DCA31-8097-403A-9256-A3249E08D1E7.txt",
+          "sha256": "52e854a05068eca7f9abd366e3eabb1eb7a517e9a026f823bf09627792d0f46a"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Single-dialog-deleted",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/E57718D2-D49A-4DD4-A3B3-018BD115FA2D.png",
+          "sha256": "7e2a34a2ac263478e2f645bc1479392dc83f0beaf4cbb13cbbf2e25ccabcf876"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Benchmark-needs-model tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/BCA677A2-2952-4C93-85D6-2003465DC763.txt",
+          "sha256": "019d841fada66e87f52dcd13acea88844a7b3b998c1f57da66976016c27ab88e"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Benchmark-needs-model",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/FD9182B5-6B08-4470-837A-E4C644B94004.png",
+          "sha256": "5f0e6d2a47511ab0f3a173bd5b7d2edd5a935b192697272f4a85c98be7651cc1"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Device-fit-shortlist tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/2426055C-5DE2-4633-BC5B-529346464D1C.txt",
+          "sha256": "230ae2eb87502623f8bd9bedb0b70bee309c311497444fc3264725232031e01a"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Device-fit-shortlist",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/FEB1E611-DC92-43D1-A57D-AC7A2840A493.png",
+          "sha256": "5b401599dae7b5e3bda7c6f3e1de2e5d29029583fa5d607cfff2f9f7c724642a"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dashboard tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/8CEA66C0-FB2A-49A3-B2F1-7942DA631C97.txt",
+          "sha256": "488db79a4ac7feebced15b95fd34b50cb71af8dec72063da1ef83411828ad265"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dashboard",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/6E3A55AE-7008-4679-BD64-B2AD12B38EB4.png",
+          "sha256": "2fa99dfeed5f97c3a98d913fa352cd8a5f6e9cd073ecd496e989dd007020bb8b"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dashboard-initial tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/73C98794-AAE3-4B4F-960C-A3CE8CDD96A6.txt",
+          "sha256": "1b39e32af5513b95d0409b2ada05d67b6839bb67dc59f472deb245e88dc46bd2"
+        },
+        {
+          "test": "PhoneUITests/testDashboardControls()",
+          "name": "Dashboard-initial",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/326BB600-4A46-4430-BFAA-4DBD0EEE3CAD.png",
+          "sha256": "c17333602890a045acc2d68eeb62d7d53800b547e06b1062ae5fce00de8a1e56"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-loaded-model tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/446323CD-535B-4DF5-A2AF-CB551B7CB9E7.txt",
+          "sha256": "013b7d73f8159415726bc5e119ff61da13c72620f450f41f71aedba6d699e8f9"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-loaded-model",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/2D1FB37B-2D21-4408-8B13-A658F6B3A1EF.png",
+          "sha256": "c010d0cae1103403a387f6455d1b74b641ed644767e1d43a62a52d76fc0fd90f"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "Active-qwen tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/3D57B5BE-47DE-45DF-9A7E-ECD14D5C6E74.txt",
+          "sha256": "15b55966d27b06d5e04d0a873bb510f03dbbb0b80eaf1a7578a13f8c1f8e65c9"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "Active-qwen",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/5E630A52-2FFE-42D4-89AD-4CFF994C4050.png",
+          "sha256": "e2dbecd34061d0119e86d8dcb4474256658d8511cededb5399e714e55c29fca2"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "Choose-qwen tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/04D61C69-BB75-4B81-A02B-1E9D461475BF.txt",
+          "sha256": "c67bcb6736fbe81360ff9370099ce3d9547944f6c408a8a0405ed153cdd7173b"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "Choose-qwen",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/5D12DE68-A6A6-4E17-A3F3-C23D1862B125.png",
+          "sha256": "b1ff8df83ed0e209ee1ee92ce235193acc9f252029b7de5cce6e24c66210080e"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-single-tap-2 tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/B908BA24-1049-4EA5-9F07-0488A045224A.txt",
+          "sha256": "55493c87e8b1712d02306b3007483228fe1192eca7807bc31fa61907721ab005"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-single-tap-2",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/1B1E7447-2247-4000-A721-9CDEB30A98A9.png",
+          "sha256": "27e64a509733ccc5c5aaa26500fec8b11a7667abab388f63585df5a64ad1d7e0"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-single-tap-1 tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/64FF4E1F-5FC2-4E61-BADB-A1CAFD4BC964.txt",
+          "sha256": "09deeaf66d430f8303d6756cf44c06d0bd688969b66345d5826f4af5c5eaf440"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-single-tap-1",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/FA22AC45-89D6-4550-BE12-69660BDA1028.png",
+          "sha256": "27e64a509733ccc5c5aaa26500fec8b11a7667abab388f63585df5a64ad1d7e0"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-discovered-models tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/5EBA140F-F195-4D76-9D8F-E3707D990500.txt",
+          "sha256": "12499f4095ef1c37c99f684c0e13bd3084baaba64af97c975712103619c40646"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-discovered-models",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/76EE7295-5DA5-48F8-ACE2-173DF4379131.png",
+          "sha256": "daf01f5a06d024c0205b564a49608429dfa2f7a57f9d0923a2b2a6fd97b98ebc"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-single-tap-0 tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/37F005F3-5CE0-4F81-8779-AE3460582230.txt",
+          "sha256": "17a39f7f89c9b5cc4f7e4043d8b16160cc616bf2410a432e5f1fe3dfbcffdd4e"
+        },
+        {
+          "test": "PhoneUITests/testFindBestSingleTapAndHuggingFace()",
+          "name": "HuggingFace-single-tap-0",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/18BB57A3-B91D-49AB-8D1E-4FD68D365370.png",
+          "sha256": "5b401599dae7b5e3bda7c6f3e1de2e5d29029583fa5d607cfff2f9f7c724642a"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/B328C9C8-6F64-4DD6-9163-999258723E0C.txt",
+          "sha256": "3a9557f427a07ddb281861de289b8e0deac8216b05586e103e05f4af2d7b7f3f"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/08C0CF94-FCF5-4FFF-BC74-77F6BD8003B5.png",
+          "sha256": "e39d01e0bfdbea3fdc852772afe36ef5794174ca833f29eb6e2f0c378badb42a"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/5A3F9F5E-C7E7-4343-AF13-2B0A9381CBD9.txt",
+          "sha256": "e6704a607e9a0c67a7e8f644d4646b715ea1ce845b493c4d92d458f6e1eb4547"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/8B82FEB5-2CE9-49BE-A912-51ADFC7E0449.png",
+          "sha256": "527707d9d90f13ab67604d8e8f77b11977bad3a3bbd05fa5d5466dc620b06e1f"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/782E7AD6-6DFA-4526-BE36-BD362BDB5B01.txt",
+          "sha256": "af6be701a07251397ed4639c0512d30bd73195f4119851b0f8e2567b3dea29ed"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/94FE184D-C451-47F8-99FC-4D5D75835915.png",
+          "sha256": "687ce012b7d33155222281c765949ff106a97949161913f6fcfb7e41aad791ba"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/75008FDF-C97B-4A4B-B4C0-5506360D7148.txt",
+          "sha256": "eaa28b34587714ff385a1a2f2b892f33a2a0543f617737a475505e8987404b93"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/8EC53A2B-D014-432D-84F2-726541EADC10.png",
+          "sha256": "91cd34164ee62b3ffcfa8e65abab53aeee37aecc257d57e238e512cd4d93cbe4"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-qwen tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/5E1C03AC-9815-4A6C-B4F9-23172D5B4B8A.txt",
+          "sha256": "5944186f28eaf720751723f4371922842f84a6b961789b7eeb742b6711fbfb0e"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-qwen",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/609396BA-AB2C-4EC1-9BAF-2D457F18CB27.png",
+          "sha256": "76dbc77b4c87f0528d5334f15abdf02640e81554ca5e8445470f0675a50d6c0e"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-qwen tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/5C8236D2-3451-4582-96D9-1AC79FC1FBF9.txt",
+          "sha256": "e3539b72e39f492ab878c385f55bc52ec60a8d4e6f8c627b17103a4cbcb308e4"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-qwen",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/58E52C51-164C-439A-91DE-617474096DD3.png",
+          "sha256": "ba7054f587c648add0c62ed9df91ccbb58fa91e2f6690f07f2a46e916be11694"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/11E116A6-831C-4184-9E58-5596C27E170B.txt",
+          "sha256": "46f760ea4bf112e64e44738e503f9ebb53da0b77bcb7d827ac3b8ca4ba0a460f"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/BB62D031-E3F3-483E-9919-7318A109BA1E.png",
+          "sha256": "c459d82316520efc138e3636bda19ff8350ac6e731bd144decbeff8894395007"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/E1EF0304-7910-4B65-86AF-738AC3520151.txt",
+          "sha256": "dff6110512c693058edf5ee8d1cb3b09965731201f6076a393f5ed229bf4dfde"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/DA5E0A00-007B-42DE-B9A1-932B4D45C9E6.png",
+          "sha256": "7b1a7443179cd66bafb367284cf59622fa52e533f3b3e586880d4c3cbc06b996"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Qwen-code tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/699D2583-0736-48C3-9431-805C24C7A64B.txt",
+          "sha256": "a129724264aed900e0a15d66f519374216ee8da6d424d7a07c34f37fbeac6972"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Qwen-code",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/433F0C64-7419-4788-AE04-E4622F00FA87.png",
+          "sha256": "99a9048de3a3069682d7a440c2cd69beba876b5ae462ce0c8d78c07f9c6325d0"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-qwen tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/828C8815-70C0-4EE8-A264-3F3C51742EC5.txt",
+          "sha256": "6368378ceb495202a0220e3931cb4c50cc29abdc6d6638e033dda2c9d0dcc642"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-qwen",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/5B90CD00-8D7D-491C-89FB-53ACA1B707A3.png",
+          "sha256": "cd35f7e3533ff0977d3d7c552d85217080614fd71f1318d18b439a04451766cc"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-qwen tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/69A71A07-82F1-4F7A-87CD-EA02F65B0E15.txt",
+          "sha256": "dccfe7f6bf0162d2759d90b45758917228bb99e0d15485513df95aa77b6c6dec"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-qwen",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/0B0DE218-A659-4B16-846C-3653321E65A9.png",
+          "sha256": "f4763774c4d86ea4be62a91bcfd161ff6ad7e78f2a73685c3c47eb54ed42ab3b"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/75C3BBD0-D331-4D5F-A862-B2E3D57F128F.txt",
+          "sha256": "63ca7c1b2712c641dc1750dc63086dfb3b0c4c6ad508e242e7d86324572d1965"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Active-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/4F5BF120-72B0-4DE4-B625-C314A44DA625.png",
+          "sha256": "c82cc31ec79ab0be9048f226c43271b5e182d72964b7b1bb15b793d308f1f34a"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/795C38A0-DAA8-4EE4-AEFF-201095BCAD14.txt",
+          "sha256": "9ba6a1ff6d511272211494e6e1f59467620fc46968ab1108f1fb785b683c54d4"
+        },
+        {
+          "test": "PhoneUITests/testModelSwitching()",
+          "name": "Choose-smol",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/A4BC9ADC-8B22-446A-BE9A-D9C02925C00D.png",
+          "sha256": "d013f45e030df09fc1c43d526099a732a2678f455292c18b10c64df1622487fd"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-model-used tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/BBD5B959-1FAF-4408-A8EB-8AE802B0F2AD.txt",
+          "sha256": "cb0f37d9fc5a55053c99da31190fe1ca079b7a37cca1bf5ade8bd83b540c86a7"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-model-used",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/D2A5F385-1191-4F52-B7F4-51445C0578AD.png",
+          "sha256": "1bce253319e0a0104aadbffb745b5f01053db551fe8dbf62fe96dc073cc5baac"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-coding tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/9D50039E-54CA-4C84-AF3A-EF789B1A6DCE.txt",
+          "sha256": "1371c1950e751aea227c67155b323136e9f4040141a66581ed13e619751b5db9"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-coding",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/A8AD4D1E-67C3-4ED1-87C2-3F390B3D4C0B.png",
+          "sha256": "7fd14f843946b9fed90fb3ba53cc03fd138a828d31d1c1015a3fd47627f37a7d"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-fast-replies tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/4E3C4F75-01E7-40DF-91C9-AC5EC465AC10.txt",
+          "sha256": "8110fffa2bd04abb55ccb9e67364417c9859fc391c6b33ac7d0404525ddbfbc1"
+        },
+        {
+          "test": "PhoneUITests/testRankedRecommendations()",
+          "name": "Ranking-fast-replies",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/4801A703-6D6E-4DB1-AE9E-8CDF4709875F.png",
+          "sha256": "762793e57aa517f64c19ac7282efa3be44dcb67de75d9d8186336310b01c89b9"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Expert-highlighted-output tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/9F4559B1-D773-4939-A881-AFA53185988E.txt",
+          "sha256": "233c136bf0977afcafb2484012e3617f4f6d4dac79a39a1ee88f8e8edf390ef6"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Expert-highlighted-output",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/98399E74-6347-4F30-A6EC-B6158E0AB01D.png",
+          "sha256": "68641f66849e4671966638e6287317c780894b5e2b543059fd6cc8645e019aea"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Long-reply-limit tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/EE19ADC1-0597-40EC-908C-08D0D067BD58.txt",
+          "sha256": "21dbf7c50b6b18bbf1724e47d64c501955d9b0d289f2a3e2554574c602d5a2c7"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Long-reply-limit",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/FEE4147F-CD25-4B58-8394-B13184C08F0F.png",
+          "sha256": "c1e0ceb0de88c13a8c07fac8cfd699f8d932aaec5094c9568b55208f5919f48e"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Active-qwen tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/245C3F93-005D-4609-B81F-07D475C557B0.txt",
+          "sha256": "ad69f296eed1e5b967968305ddf4a4c872b7b0d75dee77dd0cea18af23bb91bd"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Active-qwen",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/874BCAA4-0768-44BE-B9CE-3211518C8FAC.png",
+          "sha256": "aa2081183e684a536190c86fe9c1f431f6918de3899ef239d50f28c685de6452"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Choose-qwen tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/8641F5F9-3E3B-44FC-B98F-D75A9D305A3F.txt",
+          "sha256": "3948f81b051924b29feba7ecd8673b181a716029d982bc7804a12052fb7bcfe4"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Choose-qwen",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/F1640A9F-8B7A-4924-8A33-47E53F660DDD.png",
+          "sha256": "b2c8ab779dbeaf1797c6e12c370cc69d11d24f9de2a8fb049b4f0d48a1dddbf7"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Reply-limit-256 tree",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/F9D52DA9-A0C7-4B9D-8248-F6795DB7975B.txt",
+          "sha256": "13636254970f2e740181da06eda69974c3034509a658f278db40f1cee49737e0"
+        },
+        {
+          "test": "PhoneUITests/testReplyLimitAndExpert()",
+          "name": "Reply-limit-256",
+          "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v3/attempt1/attachments/92F70086-C28C-4ECC-8CEE-0235C4D8ABB4.png",
+          "sha256": "fb4e9dd0d56ed4c144fad1f93457be9dbeaf02e6b3f016f0b58b7f2b008c2a66"
+        }
+      ]
+    }
+  },
+  "history": {
+    "isolated_ui_test_workspace": true,
+    "owner_history_bytes_unchanged": true,
+    "normal_owner_launch_after_tests": true
+  },
+  "retained_interrupted_attempt": {
+    "accepted": false,
+    "summary": {
+      "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/build-v2/attempt1/phone-summary.json",
+      "sha256": "4044b581b36f5298744d1ef6a9410068882798687a537b6abb7d9e0612f6d47d"
+    },
+    "review_note": {
+      "path": "artifacts/mobile-hf-discovery-2026-10-24-v1/interrupted-attempt-review.json",
+      "sha256": "100921d192cc988c39963b67eaee181219499ff8b958ee0d97440a7ae594dd5e"
+    },
+    "owner_history_bytes_unchanged": true,
+    "passing_ranking_app_restored": true,
+    "normal_launch": true,
+    "reason": "Owned test process interrupted after source review found swallowed cleanup failures. No passing suite is claimed for this attempt."
+  },
+  "current_limits": {
+    "chat_output_tokens": 256,
+    "expert_raw_output_tokens": 128,
+    "chat_context_positions": 512,
+    "requested_single_reply_output_tokens": 131072,
+    "requested_single_reply_qualified": false
+  },
+  "limits": [
+    "Scores remain estimates, not measured quality or guaranteed speed.",
+    "Public HF listings outside the3pinned profiles are browseable and explicitly unavailable for Chat.",
+    "Existing native package2d7 remains installed; later engine source changes are not compiled into it.",
+    "No Gemma4 generation,131072-output capability,new model quality,controlled speed,thermal or peak-memory qualification is claimed."
+  ]
+}

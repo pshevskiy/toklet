@@ -122,7 +122,7 @@ struct MobileMain {
         chat.workspace.outputLimit = 128
         try require(chat.outputLimitAvailable,"existing reply preference stays available")
     }
-    static func dashboard() throws {
+    static func dashboard() async throws {
         var state = NativeSnapshot()
         try require(GenerationMetrics(state).firstTokenSeconds == nil && GenerationMetrics(state).decodeTokensPerSecond == nil,"idle has no fabricated speed")
         state.requestStartedUptimeNanoseconds = 1_000_000_000
@@ -161,13 +161,19 @@ struct MobileMain {
         let lessRoom = HubRecommendations.ranked(phone).first(where:{ $0.profile == .qwen })!
         try require(moreRoom.headroom > lessRoom.headroom,"fresh memory allowance affects the score")
         try require(HubRecommendations.ranked(HubAdmission(unifiedGPU:false,physicalMemory:8 << 30,availableMemory:6 << 30)).isEmpty,"unsupported GPU gets no recommendation")
-        let hub = HubStore(admission:{ phone }); hub.findBest()
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("TokletRanking-" + UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at:root) }
+        let offline: HubFetch = { _,_,_,_ in throw HubFailure("Injected offline connection") }
+        let hub = HubStore(hub:ModelHub(root:root,fetch:offline),admission:{ phone }); hub.findBest()
+        await hub.waitForIdle()
         try require(hub.recommendations.map(\.profile) == [.qwen,.smol] && hub.recommendationMessage.contains("3 downloadable"),"shortlist explains why fewer than five are available")
         hub.findBest(task:.fast)
         try require(hub.recommendations.first?.profile == .smol && hub.recommendationTask == .fast,"controller publishes the selected preference and reranks")
         hub.findBest()
+        await hub.waitForIdle()
         try require(hub.recommendationTask == .fast,"refresh preserves task preference")
-        let unavailable = HubStore(admission:{ throw HubFailure("Memory reading failed") }); unavailable.findBest(task:.coding)
+        let unavailable = HubStore(hub:ModelHub(root:root,fetch:offline),admission:{ throw HubFailure("Memory reading failed") }); unavailable.findBest(task:.coding)
+        await unavailable.waitForIdle()
         try require(unavailable.recommendations.isEmpty && unavailable.recommendationMessage.contains("Memory reading failed"),"missing memory cannot produce recommendations")
         try require(NativeSettings.chatContextPositions == 512,"ranking displays the actual current Chat capacity")
         var workspace = ChatWorkspace(); workspace.outputLimit = 256
@@ -258,6 +264,83 @@ struct MobileMain {
         try require(replacement.savedProfiles.contains(HubProfile.qwen.repository),"used saved model is shown as saved")
         try require(HubProfile.matching("qwen 0.5b") == [.qwen],"qualified matches ignore case")
         try require(HubProfile.matching("not-a-profile").isEmpty,"unsupported search stays explicit")
+    }
+    static func discovery() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("TokletDiscovery-" + UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at:root) }
+        let rows = Data(("[" + (HubProfile.catalog.map { "{\"id\":\"" + $0.repository + "\"}" } + ["{\"id\":\"mlx-community/gemma-4-e2b-it-4bit\"}"]).joined(separator:",") + "]").utf8)
+        let allowance = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:2 << 30)
+        actor Requests {
+            var urls: [URL] = []
+            func record(_ url: URL) -> Int { urls.append(url); return urls.count }
+            func count() -> Int { urls.count }
+        }
+        let requests = Requests(), gate = VerificationGate()
+        let service = ModelHub(root:root,fetch:{ url,file,limit,_ in
+            if await requests.record(url) == 1 { await gate.pause() }
+            guard limit == HubAPI.metadataLimit, url.host == "huggingface.co", url.path == "/api/models" else { throw HubFailure("Unbounded or non-HF discovery") }
+            try rows.write(to:file)
+        })
+        let store = HubStore(hub:service,admission:{ allowance })
+        store.findBest(); await gate.waitForStart()
+        try require(store.findingBest && store.discoveryMessage.contains("Searching Hugging Face"),"first tap starts visible live discovery")
+        store.inventory(); store.findBest(task:.fast)
+        await gate.release(); await store.waitForIdle()
+        let requestCount = await requests.count()
+        try require(requestCount == 4 && !store.findingBest && store.discoveryMessage.hasPrefix("Hugging Face: 4"),"sheet inventory and preference changes cannot cancel discovery")
+        try require(store.discoveredModels.count == 4 && store.discoveredModels.last?.profile == nil,"online results are deduplicated; Gemma discovery never grants compatibility")
+        try require(store.recommendations.first?.profile == .smol,"latest preference is used when online search completes")
+        try require(HubAPI.discoveryURLs.count == 4 && HubAPI.discoveryURLs.allSatisfy { URLComponents(url:$0,resolvingAgainstBaseURL:false)?.queryItems?.contains(URLQueryItem(name:"limit",value:"20")) == true },"discovery requests are bounded to four twenty-row pages")
+        let noMemory = HubStore(hub:service,admission:{ HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:0) })
+        noMemory.findBest(); await noMemory.waitForIdle()
+        try require(noMemory.recommendations.isEmpty && noMemory.discoveredModels.count == 4 && noMemory.recommendationMessage.contains("memory"),"low memory still shows online discoveries with no false fit")
+        let offline = HubStore(hub:ModelHub(root:root,fetch:{ _,_,_,_ in throw HubFailure("Injected offline") }),admission:{ allowance })
+        offline.findBest(); await offline.waitForIdle()
+        try require(offline.discoveryMessage.contains("failed") && offline.discoveryMessage.contains("offline catalog") && offline.recommendations.count == 2,"failed network keeps an explicit offline fallback")
+        let partial = HubStore(hub:ModelHub(root:root,fetch:{ url,file,_,_ in
+            if URLComponents(url:url,resolvingAgainstBaseURL:false)?.queryItems?.contains(URLQueryItem(name:"sort",value:"downloads")) == true { throw HubFailure("Injected one failed page") }
+            try rows.write(to:file)
+        }),admission:{ allowance })
+        partial.findBest(); await partial.waitForIdle()
+        try require(partial.discoveredModels.count == 4 && partial.discoveryMessage.contains("Some searches failed"),"partial failure retains valid online results with retry status")
+        let cleanupRequests = Requests()
+        let cleanup = HubStore(hub:ModelHub(root:root,fetch:{ url,file,_,_ in
+            _ = await cleanupRequests.record(url)
+            if URLComponents(url:url,resolvingAgainstBaseURL:false)?.queryItems?.contains(URLQueryItem(name:"sort",value:"downloads")) == true {
+                throw HubTransfer.metadataCleanupFailure(HubFailure("Injected page failure"),"Injected sink close failure")
+            }
+            try rows.write(to:file)
+        }),admission:{ allowance })
+        cleanup.findBest(); await cleanup.waitForIdle()
+        let joined = await cleanupRequests.count()
+        try require(joined == 4 && cleanup.discoveredModels.isEmpty && cleanup.discoveryMessage.contains("Injected sink close failure"),"a partial-page cleanup failure joins siblings and cannot become successful discovery")
+        let removal = HubStore(hub:ModelHub(root:root,fetch:{ _,file,_,_ in try rows.write(to:file) },removeMetadata:{ file in
+            if FileManager.default.fileExists(atPath:file.path) { try FileManager.default.removeItem(at:file) }
+            throw HubFailure("Injected metadata removal failure")
+        }),admission:{ allowance })
+        removal.findBest(); await removal.waitForIdle()
+        try require(removal.discoveredModels.isEmpty && removal.message.components(separatedBy:"Injected metadata removal failure").count == 5,"all four temporary-removal failures survive draining siblings")
+        let closeGate = VerificationGate(), closeRequests = Requests()
+        let cancelledCleanup = HubStore(hub:ModelHub(root:root,fetch:{ url,file,_,_ in
+            if await closeRequests.record(url) == 1 {
+                await closeGate.pause()
+                throw HubTransfer.metadataCleanupFailure(CancellationError(),"Injected cancellation cleanup failure")
+            }
+            try rows.write(to:file)
+        }),admission:{ allowance })
+        cancelledCleanup.findBest(); await closeGate.waitForStart(); cancelledCleanup.cancel()
+        await closeGate.release(); await cancelledCleanup.waitForIdle()
+        try require(cancelledCleanup.discoveredModels.isEmpty && cancelledCleanup.discoveryMessage.contains("Injected cancellation cleanup failure"),"cancellation does not replace a sibling cleanup cause")
+        let cancelledGate = VerificationGate(), cancelRequests = Requests()
+        let cancelled = HubStore(hub:ModelHub(root:root,fetch:{ url,file,_,_ in
+            if await cancelRequests.record(url) == 1 { await cancelledGate.pause() }
+            try rows.write(to:file)
+        }),admission:{ allowance })
+        cancelled.findBest(); await cancelledGate.waitForStart(); cancelled.cancel()
+        await cancelledGate.release(); await cancelled.waitForIdle()
+        try require(cancelled.discoveredModels.isEmpty && !cancelled.findingBest && cancelled.discoveryMessage.contains("stopped"),"cancelled discovery cannot publish stale rows")
+        let files = try FileManager.default.contentsOfDirectory(atPath:root.path)
+        try require(files.isEmpty,"metadata temporary files are removed on success, failure and cancellation")
     }
     static func loading(_ directory: String) throws {
         let file = FileManager.default.temporaryDirectory.appendingPathComponent("TokletMobile-" + UUID().uuidString + ".json")
@@ -381,8 +464,17 @@ struct MobileMain {
         print("TOKLET_MOBILE_HIGHLIGHT_PREVIEW_EXPORTED")
     }
     static func main() async throws {
-        try content(); try workspace(); try dashboard(); try await hub()
-        if CommandLine.arguments.count == 4 && CommandLine.arguments[1] == "--switching" { try await switching(CommandLine.arguments[2],CommandLine.arguments[3]) }
+        try content(); try workspace(); try await dashboard(); try await hub(); try await discovery()
+        if CommandLine.arguments.count == 2 && CommandLine.arguments[1] == "--discovery" {
+            let root = FileManager.default.temporaryDirectory.appendingPathComponent("TokletLiveDiscovery-" + UUID().uuidString)
+            defer { try? FileManager.default.removeItem(at:root) }
+            let store = HubStore(hub:ModelHub(root:root))
+            store.findBest(); await store.waitForIdle()
+            try require(store.discoveryMessage.hasPrefix("Hugging Face:") && !store.discoveredModels.isEmpty,"live Hugging Face discovery returns models")
+            let result: [String:Any] = ["status":store.discoveryMessage,"models":store.discoveredModels.map(\.id),"ranked":store.recommendations.map { $0.profile.repository }]
+            print("TOKLET_LIVE_DISCOVERY_JSON=" + String(decoding:try JSONSerialization.data(withJSONObject:result,options:.sortedKeys),as:UTF8.self))
+        }
+        else if CommandLine.arguments.count == 4 && CommandLine.arguments[1] == "--switching" { try await switching(CommandLine.arguments[2],CommandLine.arguments[3]) }
         else if CommandLine.arguments.count == 3 && CommandLine.arguments[1] == "--polling" { try polling(CommandLine.arguments[2]) }
         else if CommandLine.arguments.count == 3 && CommandLine.arguments[1] == "--model" { try loading(CommandLine.arguments[2]) }
         else if CommandLine.arguments.count == 3 && CommandLine.arguments[1] == "--render" { try render(CommandLine.arguments[2]) }

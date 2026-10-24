@@ -108,6 +108,9 @@ final class HubStore: ObservableObject {
     @Published private(set) var recommendations: [HubRecommendation] = []
     @Published private(set) var recommendationTask: HubRankingTask = .balanced
     @Published private(set) var recommendationMessage = ""
+    @Published private(set) var discoveredModels: [HubModel] = []
+    @Published private(set) var discoveryMessage = ""
+    @Published private(set) var findingBest = false
     private let hub: ModelHub
     let modelsRoot: URL
     private let admission: @Sendable () throws -> HubAdmission
@@ -127,15 +130,27 @@ final class HubStore: ObservableObject {
         modelsRoot = hub == nil ? Self.modelRoot : service.root
         self.verify = verify ?? { try await service.verified($0) }
     }
-    private enum Action { case inventory, refresh, search(String), download, open, use(replacing: Bool) }
+    private enum Action { case inventory, refresh, search(String), discover(HubProfile?), download, open, use(replacing: Bool) }
     func select(_ selected: HubProfile) {
         guard !blocksSelection, HubProfile.catalog.contains(selected) else { return }
         profile = selected; localURL = nil; deviceAllowed = false; refresh()
     }
     func refresh() { start(.refresh) }
-    func inventory() { start(.inventory) }
+    // Opening the sheet must not replace a discovery started by its first tap.
+    func inventory() { if !busy { start(.inventory) } }
     func findBest(task: HubRankingTask? = nil,active: HubProfile? = nil) {
-        if let task { recommendationTask = task }
+        guard !blocksSelection else { return }
+        if let task {
+            recommendationTask = task
+            rank(active:active)
+            // Preferences rerank with fresh memory without restarting the web
+            // request or cancelling a download/verification already in flight.
+            if !discoveryMessage.isEmpty { return }
+        }
+        rank(active:active)
+        start(.discover(active))
+    }
+    private func rank(active: HubProfile?) {
         do {
             recommendations = HubRecommendations.ranked(try admission(),task:recommendationTask,active:active)
             recommendationMessage = recommendations.isEmpty
@@ -186,19 +201,26 @@ final class HubStore: ObservableObject {
         cancelling = false
         completed = 0; total = 0; message = ""
         switch action { case .open, .use: opening = true; default: opening = false }
+        if findingBest { discoveryMessage = "Hugging Face search stopped. Tap Find best model to retry." }
+        findingBest = false
         switch action {
         case .inventory: phase = "Checking saved models…"
         case .refresh: phase = "Checking saved model…"
         case .search(let query):
             phase = "Searching Hugging Face…"
             results = HubProfile.matching(query).map { HubModel(id:$0.repository) }
+        case .discover:
+            findingBest = true
+            phase = "Searching Hugging Face…"
+            discoveryMessage = "Searching Hugging Face… Supported models are shown below while searching."
+            discoveredModels = []
         case .download: phase = "Downloading model…"; total = profile.totalBytes; blocksSelection = true
         case .open: phase = "Verifying model…"; blocksSelection = true
         case .use: phase = "Opening " + profile.name + "…"
         }
         let selected = profile
         task = Task { [self] in
-            defer { if operation == id { task = nil; phase = ""; blocksSelection = false; opening = false } }
+            defer { if operation == id { task = nil; phase = ""; blocksSelection = false; opening = false; findingBest = false } }
             await previous?.value
             do {
                 try Task.checkCancellation()
@@ -225,6 +247,19 @@ final class HubStore: ObservableObject {
                     let pinned = Set(supported.map(\.id))
                     results = supported + rows.filter { !pinned.contains($0.id) }
                     if results.isEmpty { message = "No public MLX models found. Try a different name." }
+                case .discover(let active):
+                    let saved = try await hub.savedProfiles()
+                    try Task.checkCancellation()
+                    guard operation == id else { throw CancellationError() }
+                    savedProfiles = saved
+                    let discovery = try await hub.discover()
+                    try Task.checkCancellation()
+                    guard operation == id else { throw CancellationError() }
+                    discoveredModels = discovery.models
+                    discoveryMessage = "Hugging Face: \(discovery.models.count) public MLX models found. "
+                        + (discovery.models.isEmpty ? "Try searching by name below. " : "Compatibility and memory determine which can run. ")
+                        + (discovery.failedRequests > 0 ? "Some searches failed; tap Find best model to retry." : "Updated " + Date().formatted(date:.omitted,time:.shortened) + ".")
+                    rank(active:active)
                 case .download:
                     let device = try checkDevice()
                     let folder = try await hub.download(selected,admission:device,progress:{ [weak self] current,total in
@@ -254,12 +289,18 @@ final class HubStore: ObservableObject {
             } catch is CancellationError {
                 // cancel() also invalidates callbacks, but keeps ownership until
                 // the task joins. Replaced tasks cannot clear the latest state.
-                if operation == id { message = "Operation cancelled. Any complete saved model is kept." }
+                if operation == id {
+                    message = "Operation cancelled. Any complete saved model is kept."
+                    if case .discover = action { discoveryMessage = "Hugging Face search stopped. Tap Find best model to retry." }
+                }
             }
             catch {
                 guard operation == id else { return }
                 if case .refresh = action { localURL = nil }
                 if case .open = action { localURL = nil }
+                if case .discover = action {
+                    discoveryMessage = "Hugging Face search failed. Showing the supported offline catalog. " + error.localizedDescription
+                }
                 message = error.localizedDescription
             }
         }
