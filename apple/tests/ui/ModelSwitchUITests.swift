@@ -74,6 +74,44 @@ final class PhoneUITests: XCTestCase {
 }
 
 extension PhoneUITests {
+    func testBenchmarkAndGemma4Search() throws {
+        continueAfterFailure = false; executionTimeAllowance = 600
+        let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")
+        app.launchArguments = ["--ui-test-history"]; app.launch()
+        choose("smol",name:"SmolLM2",app:app)
+        app.buttons["local-benchmark"].tap()
+        XCTAssertTrue(app.buttons["benchmark-run"].waitForExistence(timeout:10))
+        XCTAssertTrue(app.buttons["benchmark-run"].isEnabled); app.buttons["benchmark-run"].tap()
+        let complete = app.staticTexts["benchmark-status"]
+        XCTAssertTrue(complete.waitForExistence(timeout:180)); XCTAssertTrue(complete.label.hasPrefix("Complete."))
+        for index in 1...3 {
+            let row = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@","Run \(index) · ")).firstMatch
+            visible(row,app:app); XCTAssertTrue(row.label.contains("tokens"))
+            capture("Benchmark-run-\(index)",app:app)
+        }
+        app.buttons["Close"].tap()
+        for key in ["monitor-memory","monitor-ttft","monitor-rate"] {
+            let reading = app.descendants(matching:.any)[key].firstMatch
+            XCTAssertTrue(reading.exists)
+            XCTAssertNotNil(reading.label.range(of:"[0-9]",options:.regularExpression),"A measured value is shown for " + key)
+        }
+        capture("Measured-phone-dashboard",app:app)
+        app.buttons["chat-model-picker"].tap()
+        let query = app.textFields["hub-search-query"]; visible(query,app:app); query.tap(); query.typeText("gemma-4")
+        app.buttons["hub-search"].tap()
+        let unsupported = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@","Unavailable for chat:")).firstMatch
+        for _ in 0..<12 {
+            if unsupported.exists && unsupported.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(unsupported.exists && unsupported.isHittable,"Gemma 4 search must show its unsupported status")
+        let gemma = app.staticTexts.matching(NSPredicate(format:"label CONTAINS[c] %@","gemma-4")).firstMatch
+        XCTAssertTrue(gemma.exists)
+        capture("Gemma4-search-unsupported",app:app)
+        app.buttons["Close"].tap()
+        XCTAssertTrue(app.buttons["chat-model-picker"].label.contains("SmolLM2"),"Unsupported search preserves the loaded model")
+        app.terminate()
+    }
     func testDashboardControls() throws {
         continueAfterFailure = false; executionTimeAllowance = 240
         let app = XCUIApplication(bundleIdentifier:"dev.toklet.harness")

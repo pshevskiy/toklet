@@ -2,9 +2,9 @@
 
 24 October 2026. This mobile change adds a monitoring strip and **Find best
 model** and **Benchmark** actions to the Chat screen. Expert shows the same
-monitoring strip. Installation on the iPhone remains gated on the separate
-qualified engine candidate requested by the user; local checks do not imply
-installation or physical-device qualification.
+monitoring strip. The reviewed app was subsequently installed and tested on
+iPhone 14 Pro at the user's request; see the
+[physical UI checks and Gemma 4 limitations](mobile-gemma4-testing.md).
 
 ## Measurements
 
@@ -103,8 +103,8 @@ updated row count. An additional test failure assumed a Cancel row existed;
 iOS can present a popover cancelled by tapping outside. The final test uses its
 observed frame to dismiss it and verifies that the dialogs remain.
 
-Physical UI taps, device timings and 128K numerical generation remain unqualified
-by this change. Current native Chat/raw/context limits remain 256/128/512; the
-[128K engine plan](long-reply-engine-plan.md) is separate. The updated mobile app
-will be installed and tested on the iPhone when the qualified engine candidate
-is ready, as requested by the user.
+The subsequent [physical suite](mobile-gemma4-testing.md) passes dashboard,
+benchmark, deletion, model switching and Chat/Expert rendering checks on the
+installed app. Its short device timing observations do not establish controlled
+performance or 128K numerical generation. Current native Chat/raw/context limits
+remain 256/128/512; the [128K engine plan](long-reply-engine-plan.md) is separate.
