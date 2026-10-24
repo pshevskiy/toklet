@@ -73,8 +73,8 @@ now qualifies numerical ring views. The
 scales and normalization axes. Its [native FP32 composition](per-layer-scalar.md)
 now passes the frozen contracts. The [dense decoder-order witness](gemma-decoder-order-reference.md)
 freezes norm/residual/PLE/scalar order with an explicit external attention
-boundary; native composition, quantized backend and full graph/session
-integration remain open.
+boundary; its [native FP32 finish](dense-decoder-scalar.md) passes the frozen
+contracts. Quantized backend and full graph/session integration remain open.
 Qwen3 completion and the
 broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text

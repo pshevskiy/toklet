@@ -89,7 +89,8 @@ with separate FP64 and staged FP32 contracts. The
 [native FP32 composition](per-layer-scalar.md) now passes both frozen contracts.
 The [dense decoder-order witness](gemma-decoder-order-reference.md) now freezes
 the per-layer gate and exact norm/residual/scalar order at an explicit external
-attention boundary. Native layer composition, quantized projection/fetch
+attention boundary. Its [native FP32 finish](dense-decoder-scalar.md) now
+passes the frozen contracts. Quantized projection/fetch and whole-layer graph
 integration, embedding/logit scales and capping remain open, along with the
 upstream rotary precision gate. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device

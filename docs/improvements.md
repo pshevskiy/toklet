@@ -2837,3 +2837,29 @@ weights, native layer/session, full model/device fit, quality, performance and
 long replies remain unqualified. The eight long rotary discrepancies remain
 unwaived. Existing numerical sources, ABI, app limits, protected binaries and
 installed native package remain unchanged.
+
+## 24 October2026 — native dense decoder finish
+
+A plain concrete FP32 function now composes post-attention RMS/residual, GeGLU
+FFN with pre/post norms, optional complete PLE gate and final learned scalar.
+Input normalization/attention and all cache/session ownership stay outside.
+Borrowed immutable weights and five caller-owned scratch buffers avoid numerical
+allocation, weight clones and dynamic inner-loop dispatch. Coherent optional
+PLE admission validates even skipped weights before writes; arithmetic overflow
+requires discarding output/scratch and replaying unchanged inputs.
+
+Six methods compare all11 nonempty frozen cases and final scratch stages against
+both independent contracts, then cover late invalid inputs/scalars/scratch,
+missing input/disabled PLE/scalar absence, signed zero, exact repeated chunks,
+buffer reuse, immutable operands, sizes and epsilon. Seven overflow scenarios
+prove successful prerequisites and the exact failing operator before replay.
+Formatting, strict default/Metal Clippy,257 CPU/279 Metal-feature tests and both
+iOS compile targets pass. Astra reviews final source/evidence before commit.
+See [the contract](dense-decoder-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-dense-decoder-scalar-v1.json).
+
+This is dense FP32 reference composition. Packed quantized/BF16 weights,
+whole-layer attention/cache graph, session/model/Metal, device fit, quality,
+performance and long replies remain open; existing caps/native package and
+protected binaries are unchanged. Upstream long-position rotary discrepancies
+remain unwaived.

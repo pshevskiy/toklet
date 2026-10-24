@@ -73,4 +73,6 @@ The [producer](../tools/reference/gemma_decoder_order.py),
 [owner regressions](../tools/experiments/test_gemma_decoder_order_reference.py)
 are versioned. This witness does not qualify MoE, BF16/quantized weights, a
 native layer/session, full model, device fit, quality, performance or long replies.
+The [native FP32 finish](dense-decoder-scalar.md) now passes the frozen contracts;
+its standalone scope remains separate from checkpoint/graph integration.
 The eight [long rotary discrepancies](gemma-rotary-precision.md) remain unwaived.

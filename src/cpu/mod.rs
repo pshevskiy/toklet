@@ -10,6 +10,7 @@ use std::fmt;
 
 mod attention;
 mod causal_conv;
+mod dense_decoder;
 mod gated_delta;
 mod gelu;
 mod per_layer;
@@ -21,6 +22,10 @@ mod window_attention;
 
 pub use attention::{AttentionShape, CachedAttentionShape, attention, attention_cached, rotary};
 pub use causal_conv::causal_depthwise_conv_step;
+pub use dense_decoder::{
+    DenseDecoderScratch, DenseDecoderShape, DenseDecoderWeights, PerLayerGateWeights,
+    finish_dense_decoder,
+};
 pub use gated_delta::{
     GatedDeltaShape, gated_delta_gates, gated_delta_normalize, gated_delta_step,
 };
