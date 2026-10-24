@@ -39,6 +39,16 @@ impl Write for JsonBuffer {
     }
 }
 
+pub(super) fn capture(report: &impl serde::Serialize) -> Result<*mut CompatibilityHandle> {
+    let mut json = JsonBuffer(Vec::with_capacity(MAX_COMPATIBILITY_JSON_BYTES));
+    serde_json::to_writer(&mut json, report)
+        .map_err(|error| fail(ENGINE_ERROR, error.to_string()))?;
+    Ok(Box::into_raw(Box::new(CompatibilityHandle {
+        owner: thread::current().id(),
+        json: json.0.into_boxed_slice(),
+    })))
+}
+
 /// Capture one local compatibility report, including unsupported/unknown states.
 /// A report is historical metadata, not permission to load without revalidation.
 /// # Safety
@@ -81,13 +91,7 @@ pub unsafe extern "C" fn toklet_mlx_inspect_create(
                     memory_limit_bytes,
                 },
             );
-            let mut json = JsonBuffer(Vec::with_capacity(MAX_COMPATIBILITY_JSON_BYTES));
-            serde_json::to_writer(&mut json, &report)
-                .map_err(|error| fail(ENGINE_ERROR, error.to_string()))?;
-            out.write(Box::into_raw(Box::new(CompatibilityHandle {
-                owner: thread::current().id(),
-                json: json.0.into_boxed_slice(),
-            })));
+            out.write(capture(&report)?);
             Ok(())
         })
     }

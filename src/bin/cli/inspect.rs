@@ -64,10 +64,14 @@ pub(super) fn main(values: Vec<OsString>) -> u8 {
             return 2;
         }
     };
+    write_report(&report)
+}
+
+pub(super) fn write_report(report: &impl serde::Serialize) -> u8 {
     use io::Write;
     let result = (|| -> io::Result<()> {
         let mut out = io::stdout().lock();
-        serde_json::to_writer(&mut out, &report)?;
+        serde_json::to_writer(&mut out, report)?;
         writeln!(out)?;
         out.flush()
     })();

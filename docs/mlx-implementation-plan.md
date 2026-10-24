@@ -155,5 +155,7 @@ admit and download an eligible immutable snapshot. Architecture and device
 coverage must enumerate what actually passed and retain all remaining open work.
 
 The explicit [runtime Metal resource planner](metal-resource-planning.md) shares
-actual loader/session layouts and admission totals. Its app/native consumer and
-qualification-receipt evaluation remain open; this does not qualify another device.
+actual loader/session layouts and admission totals. The
+[CLI/native runtime consumers](metal-resource-consumers.md) expose immutable
+plans. The app consumer and qualification-receipt evaluation remain open; this
+does not qualify another device.

@@ -2102,3 +2102,31 @@ validity. No latency, quality, free-memory or physical-iPhone qualification is
 claimed. The runtime CLI/native/app consumer and qualification receipts remain
 open. See [resource planning](metal-resource-planning.md) and its
 [receipt](../benchmarks/results/2026-10-24-metal-resource-planning-v1.json).
+
+## 24 October 2026 — runtime planning CLI and native consumers
+
+The shared Metal plan is now available through explicit `toklet plan` and the
+additive ABI-v1 `toklet_mlx_plan_create`. The56-byte C options record selects all
+session geometry/modes and separate exact budgets, without bridge deduction.
+Version/size/reserved/mode/range validation precedes runtime initialization.
+Budget-fit failures return immutable reports; unavailable builds or unqualified
+modes reject. The existing metadata command/API keep their CPU-only behavior.
+Both report kinds share bounded JSON copying, owner/thread checks and release.
+
+Formatting, strict Clippy,184 CPU/205 Metal-feature tests pass (14/105 ordinary
+ignored). Explicit release checks compare20 native and4 CLI reports with the
+direct planner; fit=false, bad modes, wrong-thread calls, changed-source snapshots
+and broken pipes pass. A fresh native package builds all three Apple slices with
+24 symbols. New C callers link on all targets and run on Mac; strict Swift6
+imports/layouts pass on Mac/iOS/simulator. Existing C/Swift metadata callers and
+21 wire-mutation/three queued-cleanup checks pass. Real Qwen3 CLI totals exactly
+match the preceding resource receipt for both readbacks.
+
+Initial test-literal Clippy and CLI position-type compiler failures are retained;
+explicit byte-array/type corrections pass the unchanged policies. No numerical
+kernel, shared planner, schema of metadata reports or app load path changes.
+Retain these consumers. Runtime initialization still allocates driver/pipeline
+resources, fit flags reserve nothing, and loading must revalidate. No physical
+phone, task-quality or timing result follows. Swift/app integration and exact
+qualification receipts remain open. See [consumer contracts](metal-resource-consumers.md)
+and the [receipt](../benchmarks/results/2026-10-24-metal-resource-consumers-v1.json).

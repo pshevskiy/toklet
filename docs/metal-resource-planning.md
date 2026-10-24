@@ -66,5 +66,6 @@ targets and16 explicit release GPU tests pass. A test-only Clippy style failure
 and an accidental debug Half allocation-assertion failure are retained; the
 unchanged allocation gate passes in the established release configuration.
 This task does not add timing, quality or physical iPhone qualification. The
-H1 CLI/native/app runtime consumer and exact qualification-receipt evaluation
-remain open, as do the other items in the active expansion plan.
+[H1 CLI/native runtime consumers](metal-resource-consumers.md) now expose
+these plans. The Swift/app runtime consumer and exact qualification-receipt
+evaluation remain open, as do the other items in the active expansion plan.

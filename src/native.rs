@@ -13,6 +13,8 @@
 
 use crate::{generation, model, session, weights};
 mod compatibility;
+mod runtime_planning;
+pub use runtime_planning::*;
 mod text;
 pub use compatibility::*;
 use std::{

@@ -137,8 +137,9 @@ policy with loading. The [CLI/native consumers](mlx-compatibility-consumers.md)
 also pass. The [shared Swift worker adapter](mlx-compatibility-swift.md) adds
 metadata preflight and safe summary invalidation. The explicit Rust
 [runtime Metal resource planner](metal-resource-planning.md) now shares the
-loader/session layouts and accounting. Its CLI/native/app consumer and
-receipt-based qualification remain open. No installed catalog is broadened. The [bounded Chat output extension](chat-output-limit.md)
+loader/session layouts and accounting. Its [CLI/native runtime consumers](metal-resource-consumers.md)
+now expose immutable plans. The Swift/app runtime consumer and receipt-based
+qualification remain open. No installed catalog is broadened. The [bounded Chat output extension](chat-output-limit.md)
 adds 256-token replies within the unchanged 512-token app context; Swift raw
 diagnostic commands stay capped at 128.
 

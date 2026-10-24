@@ -43,6 +43,17 @@ typedef struct {
     uint32_t abi_version, struct_size, backend, context_limit;
     uint64_t memory_limit_bytes;
 } TokletCompatibilityOptions;
+/* Explicit runtime planning, native C alignment/56 bytes. Normalization:
+   0 Original, 1 Compensated; readback: 0 FullLogits, 1 GreedyToken;
+   attention: 0 Reference, 1 Online. Projection is always MlxAffine.
+   reserved must be zero. Budgets are exact, without bridge deduction;
+   load budget must be positive, session budget may be zero (fit=false).
+   capacity+offset must fit context_limit; chunk is1..min(1024,capacity). */
+typedef struct {
+    uint32_t abi_version, struct_size, context_limit, capacity, chunk;
+    uint32_t position_offset, normalization, readback, attention, reserved;
+    uint64_t load_memory_limit_bytes, session_memory_limit_bytes;
+} TokletRuntimePlanningOptions;
 #define TOKLET_MAX_CHAT_OUTPUT_TOKENS 256u
 #define TOKLET_MAX_COMPATIBILITY_JSON_BYTES 65536u
 /* Literal for the Swift importer; checked against 2*maximum+256 by C smoke. */
@@ -58,6 +69,17 @@ typedef struct {
    and runtime requirements. This handle never authorizes inference. */
 uint32_t toklet_mlx_inspect_create(const uint8_t *, size_t,
     const TokletCompatibilityOptions *, TokletCompatibility **, TokletError *);
+/* Additive ABI v1 runtime inspection: initializes Metal/MPS/precise pipelines.
+   Returns the separate runtime schema v1 (session_memory and fit flags), not
+   metadata status/reason. No numerical weight/KV/scratch/logit allocation.
+   The same bounded JSON allowance, copy/release and creating-thread rules apply.
+   Budget-fit failures return OK reports. Invalid arguments/options: INVALID;
+   unavailable/unqualified backend/mode: UNSUPPORTED; rejected artifact: LOAD_ERROR;
+   other runtime failures: ENGINE_ERROR. A valid out is cleared on error.
+   Driver memory uses the existing allowance estimate; fit flags reserve nothing.
+   Captured plans remain historical and require revalidation before loading. */
+uint32_t toklet_mlx_plan_create(const uint8_t *, size_t,
+    const TokletRuntimePlanningOptions *, TokletCompatibility **, TokletError *);
 /* UTF-8 bytes, no NUL, <=65536 bytes. NULL+0 queries required byte count. Short
    buffers return INVALID, set required count and leave output untouched. Other
    failures clear a valid count. Capacity >65536 rejects before copying.
