@@ -2863,3 +2863,25 @@ whole-layer attention/cache graph, session/model/Metal, device fit, quality,
 performance and long replies remain open; existing caps/native package and
 protected binaries are unchanged. Upstream long-position rotary discrepancies
 remain unwaived.
+
+## 24 October2026 — independent unlearned V normalization
+
+The Gemma V witness fixes each D-wide head row's mean-square RMS with epsilon,
+without learned scale. Distinct anisotropic heads, hand literals, D1, zeros,
+epsilon-dominated values and D256/D512 expose identity, wrong-axis, sum/L2 and
+epsilon mistakes. Independent stdlib replay exactly reproduces all24 arrays and
+7,350 values, including staged FP32.
+
+The actual unchanged pinned source helper runs on MLX CPU/GPU. Seven portable,
+three owner and three runtime-admission methods and all six owned commands pass.
+Each device retains seven raw outputs and passes14 ideal/staged comparisons;
+maximum error/policy ratios are below0.001066. Partial outputs, failures, child
+ownership and source/protected-binary guards are retained. Astra reviews final
+source/evidence before commit. See [the contract](gemma-v-norm-reference.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-v-norm-reference-v1.json).
+
+Native mapping, V projection/storage, KV/attention/model/session/Metal graph,
+constructor/config, BF16/quantized checkpoint, fit, quality, performance and long
+replies remain open. Future scalar mapping can reuse RMS with a persistent exact-
+one D vector, counted once and owned by the adapter. No numerical source, ABI,
+capability, protected executable or installed package changes in this task.
