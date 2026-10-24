@@ -9,8 +9,11 @@ struct CompatibilityProfilesMain {
         for profile in HubProfile.catalog {
             let path = root.appendingPathComponent("models/" + folders[profile.key]!).path
             let metadata = try NativeCompatibility.inspect(directory:path,context:512,budget:profile.numericalBudget)
+            let numericalBudget = try NativeResourcePlan.numericalBudget(wholeBudget:profile.numericalBudget)
+            let runtime = try NativeResourcePlan.inspect(directory:path,capacity:512,chunk:32,budget:numericalBudget)
             guard metadata.mayAttemptLoad, !metadata.textProfileChecked, !metadata.qualificationEvaluated,
-                  profile.numericalBudget + profile.textBudget + NativeCompatibility.requiredApplicationAllowance <= profile.processAllowance else {
+                  runtime.fitsRequestedBudgets,
+                  profile.numericalBudget + profile.textBudget + NativeResourcePlan.requiredApplicationAllowance <= profile.processAllowance else {
                 throw HubFailure("Pinned profile metadata or separate application allowance changed")
             }
             results[profile.key] = try runNativeChatCheck(directory:path,profile:profile)

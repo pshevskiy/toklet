@@ -110,7 +110,7 @@ def main(native,expected,output,small=False):
   guard();return ROOT/row['stdout']
  try:
   env,_=package.build_environment();env['TMPDIR']=str(output/'tmp');merge(integration.admit_build(native,expected));merge(integration.FIXTURE)
-  sources=[ROOT/'apple/Harness'/n for n in ('NativeWorker.swift','NativeCompatibility.swift','NativeMeasurement.swift','NativeLifecycle.swift','NativeLifecycleSignals.swift','NativeLifecycleRun.swift')]+[ROOT/'apple/tests/swift/LifecycleAppMain.swift']
+  sources=[ROOT/'apple/Harness'/n for n in ('NativeWorker.swift','NativeCompatibility.swift','NativeResourcePlan.swift','NativeMeasurement.swift','NativeLifecycle.swift','NativeLifecycleSignals.swift','NativeLifecycleRun.swift')]+[ROOT/'apple/tests/swift/LifecycleAppMain.swift']
   helpers=[Path(v.__file__).resolve() for v in (core,measurement,package,integration)]+[Path(__file__).resolve(),Path(__file__).with_name('test_m7_native_lifecycle_app_check.py')]
   merge({str(p.relative_to(ROOT)):package.sha(p) for p in sources+helpers})
   for model,kind in [('tiny-cpu','unit'),('tiny-metal','unit')]+([('small','small')] if small else []):

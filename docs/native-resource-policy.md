@@ -42,6 +42,7 @@ records exact results and source/package identities. Formatting, strict Clippy,
 185 CPU/207 Metal-feature tests, five explicit release GPU tests and all three
 Apple library slices pass. C callers link all SDKs and run four families on Mac;
 strict Swift importer/metadata regressions and both real Qwen3 CLI reports pass. Native policy selection is
-an app-preflight prerequisite; the Swift/app runtime consumer remains open.
+an app-preflight prerequisite; the later [Swift worker consumer](swift-runtime-preflight.md)
+now uses it. The receipt above describes this policy snapshot only.
 No broader graph, text, task-quality, performance or physical-iPhone support is
 implied by this change.

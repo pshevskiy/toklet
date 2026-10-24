@@ -92,7 +92,7 @@ def main(native, expected, output):
         integration.merge(pins,{str(p.relative_to(ROOT)):package.sha(p) for p in helpers})
         verify_inputs(pins)
         archive=native/'Toklet.xcframework/macos-arm64/libtoklet.a'
-        sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/Harness/NativeCompatibility.swift',ROOT/'apple/Harness/NativeMeasurement.swift',ROOT/'apple/tests/swift/MeasurementMain.swift']
+        sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/Harness/NativeCompatibility.swift',ROOT/'apple/Harness/NativeResourcePlan.swift',ROOT/'apple/Harness/NativeMeasurement.swift',ROOT/'apple/tests/swift/MeasurementMain.swift']
         fixture=ROOT/'artifacts/m7-native-tiny-v2'
         paths=[*sources,Path(__file__).resolve(),archive,fixture/'config.json',fixture/'model.safetensors']
         integration.merge(pins,{str(p.relative_to(ROOT)):package.sha(p) for p in paths})

@@ -26,6 +26,10 @@ struct LongChatMain {
         settings.capacity = 512;settings.chunk = 32;settings.numericalBudget = 1024*1024*1024;settings.textBudget = 128*1024*1024
         let loaded = try execute(.load(settings))
         try require(loaded.hasSession && loaded.chatEnabled,"Missing chat owners")
+        let numericalBudget = try NativeResourcePlan.numericalBudget(wholeBudget:settings.numericalBudget)
+        try require(loaded.runtimePlan?.fitsRequestedBudgets == true
+            && loaded.runtimePlan?.requestedSessionBudgetBytes == numericalBudget
+            && loaded.runtimePlan!.sessionMemory.admittedBytes + UInt64(TOKLET_MODEL_SESSION_BRIDGE_BYTES) == loaded.admittedBytes,"Runtime and actual Chat admission differ")
         let firstID = UUID()
         let full = try execute(.chat(id:firstID,conversation:input,maximum:256))
         try require(full.ids.count > 129 && full.ids.count <= 256 && full.emitted == UInt32(full.ids.count),"No authoritative output beyond old bound")

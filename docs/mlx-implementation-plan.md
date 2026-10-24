@@ -157,9 +157,12 @@ coverage must enumerate what actually passed and retain all remaining open work.
 The explicit [runtime Metal resource planner](metal-resource-planning.md) shares
 actual loader/session layouts and admission totals. The
 [CLI/native runtime consumers](metal-resource-consumers.md) expose immutable
-plans. The app consumer and qualification-receipt evaluation remain open; this
-does not qualify another device.
+plans. The [Swift worker consumer](swift-runtime-preflight.md) now preflights
+actual native budgets; qualification-receipt evaluation remains open. This does
+not qualify another device.
 
 The [native factory resource policy](native-resource-policy.md) now shares the
 actual attention choice and fixed owner allowance with runtime inspection. The
-Swift worker runtime preflight remains the next H1 integration task.
+[Swift worker runtime preflight](swift-runtime-preflight.md) now consumes this
+policy and preserves actual factory validation. Receipt-based qualification is
+still open.

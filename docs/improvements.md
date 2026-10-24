@@ -2160,3 +2160,35 @@ text profile, qualification label or phone behavior changes. Swift worker runtim
 preflight and qualification-receipt evaluation remain open. See
 [native resource policy](native-resource-policy.md) and the
 [receipt](../benchmarks/results/2026-10-24-native-resource-policy-v1.json).
+
+## 24 October 2026 — Swift app runtime preflight
+
+The app worker now consumes the engine's bounded runtime plan before MLX
+numerical allocation. It selects native policy2 and subtracts the shared owner
+allowance once for inspection, while passing the original whole budget to the
+actual factory. The Swift adapter validates request/modes, checked memory sums
+and independent fit flags; it releases the C report on its creating thread.
+Consistent non-fitting reports remain visible and reject before numerical owners.
+
+New loads and all cleanup paths clear metadata/runtime summaries. A cold
+post-inspection check prevents a superseded load from publishing or allocating
+after queued cleanup; the actual uncancellable C load still revalidates source
+and device state. Two-summary logical application allowance is1,311,232 bytes,
+not a reservation or process-peak measurement. Ten native-check helper dependency
+lists and the app project include the new adapter.
+
+Strict Swift6 default/Metal checks pass25 wire mutations, budget boundaries,
+plan/factory admission, a runtime-only budget rejection, three queued cleanups
+and source mutation after inspection. Existing21-mutation, legacy CPU/Half/MLX
+and89 helper regressions pass. Complete real SmolLM2/Qwen/Mistral Chat JSON and
+the prior Qwen256-output/cancellation/replay result remain equal. Both SDK modules
+and full Release iOS/simulator/Mac app builds pass. The first test compile's
+mixed-integer array inference error is retained; an explicit UInt64 array fixes
+it without changing policy. Rust/shader/header bytes match the accepted native
+policy package and inherit its185 CPU/207 Metal-feature evidence; a fresh
+default archive independently checks unavailable-Metal behavior.
+
+Retain the preflight. No larger output/context, new model eligibility, numerical,
+quality, timing or physical-phone claim follows. Qualification-receipt evaluation
+and broader acquisition/chat remain open. See [the contract](swift-runtime-preflight.md)
+and [bound receipt](../benchmarks/results/2026-10-24-swift-runtime-preflight-v1.json).

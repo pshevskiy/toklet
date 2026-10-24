@@ -140,8 +140,9 @@ metadata preflight and safe summary invalidation. The explicit Rust
 loader/session layouts and accounting. Its [CLI/native runtime consumers](metal-resource-consumers.md)
 now expose immutable plans. A shared [native factory policy](native-resource-policy.md)
 resolves attention and publishes its fixed bridge allowance for app callers.
-The Swift/app runtime consumer and receipt-based
-qualification remain open. No installed catalog is broadened. The [bounded Chat output extension](chat-output-limit.md)
+The [Swift worker runtime consumer](swift-runtime-preflight.md) now rejects
+non-fitting plans before numerical allocation and preserves factory revalidation.
+Receipt-based qualification remains open. No installed catalog is broadened. The [bounded Chat output extension](chat-output-limit.md)
 adds 256-token replies within the unchanged 512-token app context; Swift raw
 diagnostic commands stay capped at 128.
 

@@ -74,6 +74,7 @@ struct NativeSnapshot: Sendable {
     var score: NativeDistributionScore?
     // Last attempted MLX artifact, never a runtime/text qualification label.
     var compatibility: NativeCompatibility?
+    var runtimePlan: NativeResourcePlan?
     var compatibilityDirectory = ""
     var workerFinished = false
     var chatEnabled = false
@@ -126,14 +127,18 @@ final class NativeWorker: @unchecked Sendable {
     private let afterScorePublication: (@Sendable (Bool) -> Void)?
     // Cold diagnostic gate, outside the condition lock; ordinary callers nil.
     private let beforeCommandDequeue: (@Sendable (NativeCommand) -> Void)?
+    // Cold test gate after C inspection ownership was released, outside the lock.
+    private let afterRuntimeInspection: (@Sendable (NativeResourcePlan) -> Void)?
 
     init(captureSavedPrefix: Bool = false, beforeScorePublication: (@Sendable () -> Void)? = nil,
          afterScorePublication: (@Sendable (Bool) -> Void)? = nil,
-         beforeCommandDequeue: (@Sendable (NativeCommand) -> Void)? = nil) throws {
+         beforeCommandDequeue: (@Sendable (NativeCommand) -> Void)? = nil,
+         afterRuntimeInspection: (@Sendable (NativeResourcePlan) -> Void)? = nil) throws {
         self.captureSavedPrefix = captureSavedPrefix
         self.beforeScorePublication = beforeScorePublication
         self.afterScorePublication = afterScorePublication
         self.beforeCommandDequeue = beforeCommandDequeue
+        self.afterRuntimeInspection = afterRuntimeInspection
         var error = TokletError()
         try requireOK(toklet_cancel_create(&cancelFlag, &error), &error)
         view.ids.reserveCapacity(Int(NativeSettings.maximumChatOutputTokens))
@@ -158,9 +163,9 @@ final class NativeWorker: @unchecked Sendable {
         _ = toklet_cancel_set(flag, initiallyCancelled ? 1 : 0, nil)
         queued = command
         if case .chat = command { view.chatResult = nil }
-        if case .load = command { view.compatibility = nil; view.compatibilityDirectory = "" }
-        if case .unload = command { view.compatibility = nil; view.compatibilityDirectory = "" }
-        if case .suspend = command { view.compatibility = nil; view.compatibilityDirectory = "" }
+        if case .load = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
+        if case .unload = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
+        if case .suspend = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
         view.busy = true
         view.phase = "Queued"
         view.score = nil
@@ -198,7 +203,7 @@ final class NativeWorker: @unchecked Sendable {
         guard !closing, !view.closed else { return }
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
         cancelQueuedChat()
-        view.compatibility = nil; view.compatibilityDirectory = ""
+        view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         // Once a full unload is queued, a later background event cannot weaken it.
         if case .unload? = queued {} else { queued = unload ? .unload : .suspend }
         view.busy = true
@@ -214,7 +219,7 @@ final class NativeWorker: @unchecked Sendable {
         guard !view.closed else { return }
         cancelQueuedChat()
         closing = true; queued = nil
-        view.compatibility = nil; view.compatibilityDirectory = ""
+        view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         view.score = nil
         view.savedPrefix = nil
         view.stopToken = .max
@@ -238,6 +243,12 @@ final class NativeWorker: @unchecked Sendable {
             if !condition.wait(until: end) { return view.closed }
         }
         return true
+    }
+
+    fileprivate func checkLoadAfterRuntimeInspection(_ plan: NativeResourcePlan) throws {
+        afterRuntimeInspection?(plan)
+        condition.lock(); defer { condition.unlock() }
+        guard !closing && queued == nil else { throw invalid("Load superseded by lifecycle cleanup") }
     }
 
     fileprivate func record(_ event: TokletTokenEvent, autoCancelAfter: Int) -> UInt32 {
@@ -296,6 +307,7 @@ final class NativeWorker: @unchecked Sendable {
             view.admittedBytes = engine.admissionUpperBound
             view.compatibility = !closing && queued == nil ? engine.compatibility : nil
             view.compatibilityDirectory = view.compatibility == nil ? "" : engine.compatibilityDirectory
+            view.runtimePlan = !closing && queued == nil ? engine.runtimePlan : nil
             view.score = failure == nil && !closing && queued == nil ? engine.score : nil
             view.status = UInt32(clamping: failure?.code ?? 0)
             view.message = String((failure?.localizedDescription ?? "").prefix(512))
@@ -318,7 +330,7 @@ final class NativeWorker: @unchecked Sendable {
         }
         view.hasModel = false; view.hasSession = false
         view.chatEnabled = false
-        view.compatibility = nil; view.compatibilityDirectory = ""
+        view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         // Closed means there is no active numerical prefix. Do not retain the
         // last command's counts when close supersedes an in-flight operation.
         view.history = 0; view.evaluated = 0; view.pending = 0; view.reason = 0; view.emitted = 0
@@ -370,6 +382,7 @@ private final class Engine {
     var chatStops: [UInt32] = []
     var chatResult: NativeChatResult?
     var compatibility: NativeCompatibility?
+    var runtimePlan: NativeResourcePlan?
     var compatibilityDirectory = ""
 
     func decodeChat(_ ids: [UInt32]) throws -> String {
@@ -445,7 +458,7 @@ private final class Engine {
             var error = TokletError()
             try requireOK(toklet_model_release(value, &error), &error)
         }
-        compatibility = nil; compatibilityDirectory = ""
+        compatibility = nil; runtimePlan = nil; compatibilityDirectory = ""
         saved = []; savedCount = 0; admissionUpperBound = 0; settings = nil; phase = "Unloaded; fresh prompt required"
     }
     func createSession() throws {
@@ -527,7 +540,7 @@ private final class Engine {
             phase = "Ready"
 
         case .load(let requested):
-            compatibility = nil; compatibilityDirectory = ""
+            compatibility = nil; runtimePlan = nil; compatibilityDirectory = ""
             guard model == nil else { throw invalid("Unload the current model first") }
             guard requested.packedDirectory.isEmpty || requested.metal,
                   !requested.mlx || (requested.metal && requested.packedDirectory.isEmpty) else {
@@ -541,11 +554,18 @@ private final class Engine {
             guard !path.isEmpty, path.count <= 16384, packed.count <= 16384,
                   !path.contains(0), !packed.contains(0) else { throw invalid("Invalid artifact path") }
             if requested.mlx {
+                let budget = try NativeResourcePlan.numericalBudget(wholeBudget:requested.numericalBudget)
                 let metadata = try NativeCompatibility.inspect(directory:requested.directory,context:requested.capacity,budget:requested.numericalBudget)
                 compatibility = metadata; compatibilityDirectory = requested.directory
                 guard metadata.mayAttemptLoad else {
                     throw NSError(domain:"TokletCompatibility",code:Int(metadata.rejectionCode),userInfo:[NSLocalizedDescriptionKey:metadata.summary])
                 }
+                let plan = try NativeResourcePlan.inspect(directory:requested.directory,capacity:requested.capacity,chunk:requested.chunk,budget:budget)
+                runtimePlan = plan
+                guard plan.fitsRequestedBudgets else {
+                    throw NSError(domain:"TokletResourcePlan",code:Int(TOKLET_LOAD_ERROR),userInfo:[NSLocalizedDescriptionKey:plan.summary])
+                }
+                try worker.checkLoadAfterRuntimeInspection(plan)
             }
             // The real loader reopens and validates all payload/device/session
             // requirements; captured metadata is never authority to skip them.
@@ -586,7 +606,7 @@ private final class Engine {
             phase = "Ready"
         case .suspend:
             // Also invalidates a queued load that lifecycle cleanup superseded.
-            compatibility = nil; compatibilityDirectory = ""
+            compatibility = nil; runtimePlan = nil; compatibilityDirectory = ""
             try releaseSession()
             phase = model == nil ? "Unloaded" : "Session released; replay required"
         case .replay:

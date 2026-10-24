@@ -57,7 +57,7 @@ def main(native,expected,output):
     try:
         env,_=package.build_environment();env['TMPDIR']=str(output/'tmp')
         merge(integration.admit_build(native,expected));merge(integration.FIXTURE);merge(ORACLE)
-        sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/Harness/NativeCompatibility.swift',ROOT/'apple/Harness/NativeTaskResponse.swift',ROOT/'apple/tests/swift/TaskResponseMain.swift']
+        sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/Harness/NativeCompatibility.swift',ROOT/'apple/Harness/NativeResourcePlan.swift',ROOT/'apple/Harness/NativeTaskResponse.swift',ROOT/'apple/tests/swift/TaskResponseMain.swift']
         helpers=[Path(module.__file__).resolve() for module in (package,integration)]
         helpers.extend([Path(__file__).resolve(),Path(__file__).with_name('test_m7_native_task_check.py')])
         merge({str(p.relative_to(ROOT)):package.sha(p) for p in sources+helpers});guard()
