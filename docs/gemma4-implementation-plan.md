@@ -78,6 +78,8 @@ window boundary. Its [standalone scalar target](window-attention-scalar.md)
 passes the required checks. The [KV staging/ring witness](gemma-kv-reference.md)
 now freezes normal cache state and chunk visibility. Its
 [standalone cache owner](window-cache-scalar.md) passes batch commit/discard
-checks; shared-KV producer/consumer witnesses and ring-aware attention are next. All other
+checks. The [shared-KV routing witness](gemma-shared-kv-reference.md) now freezes
+current-step producer identity and source forwarding; native shared ownership
+and ring-aware attention are next. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.

@@ -2658,3 +2658,25 @@ This establishes cache batch commit/discard, not whole-model rollback or shared
 producer/consumer integration. Ring-aware attention, resident Metal and Gemma
 graph/session/weights/quality/device qualification remain open. No ABI, app
 limits, protected binaries or installed phone package change.
+
+## 24 October2026 — shared-KV routing and current-step identity witness
+
+An independent exact routing fixture now records the35-layer Gemma4 producer
+map: first15 own KV, then local13/global14 supply the last20 consumers. Selected
+unchanged Attention, DecoderLayer and text-model control-flow bodies execute
+with strict shape/identity stand-ins. Consumer cache arguments are None, each
+receives the current-step producer's exact KV objects and offset, and only
+producers append. Four cases/fifteen repeated calls observe226 layer forwards,
+108 appends and118 consumers, including the512-window transition.
+
+Seven portable and four owned-process methods pass; four owned commands and
+independent replay bind all routing observations. Source constructors/numerical
+operators are explicitly replaced, with PLE/MoE/learned scalars disabled. Astra
+reviews final exact source/evidence before commit. See
+[the contract](gemma-shared-kv-reference.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-shared-kv-reference-v1.json).
+
+Native shared-frame/stale-input checks, numerical/full-layer/Gemma graph,
+rotary parity, whole-model rollback, quality/performance/memory/device gates
+remain open. Engine/shader sources, ABI, app limits, protected binaries and
+installed phone package remain unchanged.

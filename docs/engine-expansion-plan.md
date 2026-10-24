@@ -64,7 +64,8 @@ the [checked scalar target](window-attention-scalar.md). The
 [KV staging/ring witness](gemma-kv-reference.md) now passes independent logical
 state and pinned upstream CPU/GPU checks. Its [cache owner](window-cache-scalar.md)
 now passes batch commit/discard checks; full model transactions and shared
-producer ownership remain open. Qwen3 completion and the
+producer ownership remain open. The [shared routing witness](gemma-shared-kv-reference.md)
+qualifies selected-source forwarding/identity only. Qwen3 completion and the
 broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
 streaming, engine-owned capabilities and a qualified long-context graph within
