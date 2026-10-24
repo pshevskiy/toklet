@@ -69,6 +69,9 @@ offline fixtures and required Rust/iOS checks. The
 [proportional rotary diagnostic](gemma-rotary-precision.md) exposes short/long
 position precision differences under the unchanged tolerance. The
 [independent mathematical contract](gemma-rotary-math.md) now freezes broad
-shape/chunk/offset witnesses before a standalone scalar target. Upstream rotary
-qualification remains open. All other listed G2 mechanisms, whole graph/session and later
-real-model/app/device stages remain open.
+shape/chunk/offset witnesses before the
+[standalone scalar reference](gemma-rotary-scalar.md), which now passes the
+required checks. Upstream rotary qualification remains open. Independent
+local/sliding attention and shared-KV ownership witnesses are next. All other
+listed G2 mechanisms, whole graph/session and later real-model/app/device
+stages remain open.

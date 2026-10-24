@@ -56,7 +56,9 @@ maps source/config/headers and names missing mechanisms. The
 [tanh-GELU/GeGLU witness](gemma-gelu-reference.md) is frozen; its standalone
 [scalar target](gemma-gelu-scalar.md) passes offline and Rust/iOS checks. G2
 continues with [proportional rotary precision](gemma-rotary-precision.md), whose
-long-position diagnostic disagreements remain open. Qwen3 completion and the
+long-position diagnostic disagreements remain open. The
+[standalone scalar math reference](gemma-rotary-scalar.md) passes its frozen
+witnesses and required checks; local/shared KV witnesses are next. Qwen3 completion and the
 broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
 streaming, engine-owned capabilities and a qualified long-context graph within

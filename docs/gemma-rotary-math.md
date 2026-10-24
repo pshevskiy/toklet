@@ -44,7 +44,8 @@ the exact producer/tests, six passing tests, export, fixture, replay and the
 retained upstream diagnostic. Astra reviews code and final evidence before
 commit. Existing numerical engine sources and protected binaries are unchanged.
 
-Next is the separate standalone scalar reference with FP64 frequency/angle,
+The [separate standalone scalar reference](gemma-rotary-scalar.md) now passes
+the frozen math cases and required Rust/iOS checks. It uses FP64 frequency/angle,
 then FP32 sine/cosine and rotation arithmetic, matching the existing CPU rotary
 precision style. Whole-graph and Metal precision decisions, upstream agreement,
 real-model quality, context/device admission and Gemma4/131072-output capability

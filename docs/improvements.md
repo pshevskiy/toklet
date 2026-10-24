@@ -2540,3 +2540,28 @@ See [the mathematical contract](gemma-rotary-math.md) and
 This is frozen before its scalar target; the previous eight upstream numerical
 failures remain explicit and unwaived. No graph, Metal execution, quality,
 performance, model/context/phone qualification or capability change follows.
+
+## 24 October2026 — scalar proportional rotary correctness reference
+
+The standalone CPU operation fixes full-width exponents and half-head pairing
+for proportional rotation. It uses FP64 inverse frequencies/absolute angles and
+trig, then explicit FP32 sine/cosine and rotation arithmetic, while inactive
+coordinates copy bit for bit. Admission validates geometry, position and size
+overflow, lengths and all finite inputs before writing. Arithmetic overflow
+leaves discardable output and immutable inputs for replay. No buffers are
+allocated and existing rotary remains unchanged.
+
+Six tests authenticate the prior mathematical receipt, compare every nonempty
+fixture output under unchanged policy, check hand values/signed-zero copies,
+full-rotation equivalence, multiple heads/exact chunks, invalid admission,
+overflow/replay and finite-parameter/position boundaries. Formatting, strict
+default/Metal Clippy, 217 CPU/239 Metal-feature tests and both iOS cross-checks
+pass. Astra reviews exact source and evidence before commit. See
+[the contract](gemma-rotary-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-gemma-rotary-scalar-v1.json).
+
+The eight upstream long-position disagreements remain unwaived. Extreme
+parameter/boundary tests establish finiteness/admission, not extra numerical or
+model quality. No graph/session/Metal integration, context or output cap, phone
+package, real-model/performance qualification follows. G2 continues with
+local/sliding attention and shared-KV ownership witnesses.
