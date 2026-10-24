@@ -100,3 +100,13 @@ staged FP32 contracts. Its [native in-place transform](gemma-softcap-scalar.md)
 now passes them; full-vocabulary graph integration remains open. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.
+
+A [complete tiny token-to-logit witness](gemma-text-graph-reference.md) now
+combines embedding/PLE, four dense local/global/shared-KV layers and the tied
+output head at every position0..31. The original source CPU graph passes all
+7,462 comparisons; its GPU graph completes but fails15 intermediate comparisons
+under unchanged gates. Both the rejection and passing final logits are retained.
+This freezes an independent synthetic short CPU reference for bounded scalar
+work, not G2 completion, checkpoint admission or GPU/device qualification.
+Whole native graph/session integration and the original long-rotary gate remain
+open; the GPU discrepancy does not identify a specific kernel root cause.

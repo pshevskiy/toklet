@@ -199,6 +199,13 @@ old history immutable and prepares raw-input history separately; SiLU remains an
 existing operation. Gated output normalization, masked policy, hybrid graph and
 session, Metal state, real-checkpoint and long-context/device gates remain open.
 
-Status: E1 has an [independent tiny Qwen3 oracle](mlx-qwen3-oracle.md); [native scalar execution](mlx-qwen3-scalar.md) now passes its tiny gates. [Resident tiny Metal execution](mlx-qwen3-metal.md) also passes its frozen gates. An [immutable real Qwen3 candidate](mlx-qwen3-checkpoint.md) is acquired and structurally inspected. Its [independent real numerical reference](mlx-qwen3-real-oracle.md) is frozen, and [selected real Mac execution](mlx-qwen3-real-metal.md) passes the frozen numerical/session gates. [Public generation callback recovery](mlx-qwen3-real-generation.md) also passes. Quality, chat/app integration and iPhone qualification remain next. E1–E6 and
+Status: E1 has an [independent tiny Qwen3 oracle](mlx-qwen3-oracle.md); [native scalar execution](mlx-qwen3-scalar.md) now passes its tiny gates. [Resident tiny Metal execution](mlx-qwen3-metal.md) also passes its frozen gates. An [immutable real Qwen3 candidate](mlx-qwen3-checkpoint.md) is acquired and structurally inspected. Its [independent real numerical reference](mlx-qwen3-real-oracle.md) is frozen, and [selected real Mac execution](mlx-qwen3-real-metal.md) passes the frozen numerical/session gates. [Public generation callback recovery](mlx-qwen3-real-generation.md) also passes. The exact [cold native plain Chat profile](qwen3-native-chat.md) now passes guarded shared-tree codec/C API checks; whole-app/package/iPhone admission and broader quality remain separate. E1–E6 and
 H1–H4 remain open until their stated evidence exists. No reliable whole-program
 ETA is assigned to an open-ended architecture inventory.
+
+Gemma's [complete tiny graph reference](gemma-text-graph-reference.md) now covers
+token embedding through the tied capped head at every position0..31, with
+independent math and passing source CPU comparisons. The original GPU comparison
+retains15 failed intermediate checks; final logits alone do not grant a pass.
+This is partial G2 evidence, with G2/long rotary, native graph/session, Metal,
+checkpoint, app and device stages still open.

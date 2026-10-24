@@ -2971,3 +2971,47 @@ See [the contract](gemma-softcap-scalar.md) and
 Model integration, quantized/BF16 checkpoint, Metal, fit, quality, performance,
 phone and long replies remain open; upstream rotary discrepancies stay unwaived.
 No ABI, app capability/limit, protected executable or installed package changes.
+
+## 25 October2026 — checked native Qwen3 plain Chat profile
+
+Commit `40bf67f` adds the exact immutable Qwen3-0.6B eight-bit text profile to
+native Chat. It preserves the original non-thinking prefix, EOS151645, all26
+reserved input literals and the visible behavior of12 non-special added tokens.
+It adds no numerical kernels or ABI declarations. The conservative256MiB text
+reservation is separate from numerical memory; no whole-app peak follows from it.
+
+Astra accepted the guarded [shared-tree integration receipt](../benchmarks/results/2026-10-25-qwen3-native-chat-integration-v1.json):
+266 CPU/288 Metal-feature tests, strict default/Metal Clippy, formatting, both iOS
+compile targets, four real codecs, four native C API Chat trials and five frozen
+Qwen3 GPU state/admission tests pass. All17 commands, complete test/fixture/model/
+external-array inputs, raw logs, actual binaries and process-group cleanup are
+bound. The narrower isolated evidence and stale Mistral test-boundary failure
+remain explicitly recorded. See [scope and behavior](qwen3-native-chat.md).
+
+Chat256/raw128/total512 limits stay unchanged. New package/app/iPhone admission,
+whole-app memory, held-out quality, performance, Gemma and long replies are
+separate tasks; this native commit alone adds no installed eligible model.
+
+## 25 October2026 — complete tiny Gemma text graph reference
+
+A complete synthetic token-to-logit fixture now composes embedding scaling,
+per-layer inputs, local/global GQA, shared KV, exact dense layer order and the
+tied capped output head. Independent replay verifies4,358 deterministic weight
+values,32 token IDs and180 stage arrays/68,224 values. Staged FP32 values match
+exactly. Three schedules cover every position0..31 and repeated sliding wraps.
+
+All7,462 source CPU comparisons pass. The source GPU run completes but rejects15
+intermediate comparisons under unchanged gates; its maximum ratio is1.35576321.
+All164 final-logit comparisons per device pass, which does not override that
+rejection. Original failed GPU command/raw arrays remain retained. Captured-stage
+reconstruction supports accumulated drift and normalization/residual sensitivity
+without establishing a specific GPU kernel root cause. Weights and tolerances
+remain unchanged. Nine portable, three owner/failure and three runtime-admission
+methods pass; Astra reviews exact code/evidence and the CPU-only decision before
+commit. See [the witness and limitations](gemma-text-graph-reference.md) and
+[acceptance/rejection receipt](../benchmarks/results/2026-10-25-gemma-text-graph-reference-v1.json).
+
+This freezes a short synthetic CPU reference, not a Gemma checkpoint or completed
+G2. Native graph/session, GPU intermediate parity, original long-position rotary,
+quantized storage, real quality/fit/performance and app/device work remain open.
+No Rust/shader, ABI, app cap, protected executable or installed package changes.
