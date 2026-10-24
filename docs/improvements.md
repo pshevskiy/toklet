@@ -2467,3 +2467,19 @@ G1 mapping is complete; G2 starts with independent tanh-GELU/GeGLU witnesses.
 Real weights, graph/session/Metal/Chat, quality and device fit remain open. The
 unchanged131072 total-context configuration cannot meet131072 output tokens plus
 a prompt, so no capability was raised and no new phone package was supplied.
+
+## 24 October2026 — independent Gemma4 GELU/GeGLU witness
+
+The first G2 witness freezes FP64 tanh-GELU and gated-product expectations over
+FP32 inputs. Hand tests distinguish erf-GELU, SiLU and reversed gate order;
+additional tests cover chunk independence, symmetry, tails/tiny values, invalid
+inputs, exact bounded format and preservation of a completed observation when a
+later call fails. Three ownership, seven portable and three runtime-admission
+methods pass. CPU/GPU each pass eight arrays/360 values under unchanged policy.
+
+Astra corrected owner filename references before the first capture; the
+unexecuted proposal is retained. Exact source/runtime, raw arrays and independent
+replay are bound by [the receipt](../benchmarks/results/2026-10-24-gemma-gelu-reference-v1.json)
+and [contract](gemma-gelu-reference.md). No native function, whole graph, quality,
+performance or phone fit follows. The scalar activation target is next; remaining
+Gemma4 and131072-output requirements stay open and current caps are unchanged.

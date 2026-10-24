@@ -52,8 +52,9 @@ The user prioritized Gemma4 and131,072 tokens in one reply, for Chat and Expert.
 Finish the current small [normalization reference](gated-norm-reference.md), then
 follow the [Gemma4 priority queue](gemma4-implementation-plan.md) before unrelated
 architecture expansion. The first [Gemma4 E2B inspection](gemma4-e2b-inspection.md)
-maps source/config/headers and names missing mechanisms; tanh-GELU/GeGLU witnesses
-are next. Qwen3 completion and the broader inventory remain open. The
+maps source/config/headers and names missing mechanisms. The
+[tanh-GELU/GeGLU witness](gemma-gelu-reference.md) is frozen; its scalar target is
+next. Qwen3 completion and the broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
 streaming, engine-owned capabilities and a qualified long-context graph within
 E2/E4/H1/H3/H4. It does not close E1–E6 or broaden current runnable limits. The

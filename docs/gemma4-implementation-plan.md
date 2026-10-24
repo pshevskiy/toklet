@@ -17,7 +17,7 @@ create no native model handle. No Gemma weights or phone memory fit are admitted
 | Task | Work and acceptance | Status |
 | --- | --- | --- |
 | G1 | Authenticate the pinned Gemma4 wrapper/text source, official E2B config and quantized candidate metadata. Map every graph option and tensor/tokenizer/chat requirement. Inspect bounded index/tensor headers and actual representation; enumerate missing mechanisms and rejected variants. Separate effective parameter names from actual stored weights. Derive allocation requirements before downloading a large payload. | [Mapped](gemma4-e2b-inspection.md); full payload/fit not qualified |
-| G2 — next | Freeze independent tiny witnesses for each missing concrete mechanism: local/global attention geometry and position rules, sliding masks, shared KV ownership, per-layer embedding/input paths, exact norm/scale/activation/residual order and logit capping where required by G1. Keep old families' fixtures passing. | Open |
+| G2 — active | Freeze independent tiny witnesses for each missing concrete mechanism: local/global attention geometry and position rules, sliding masks, shared KV ownership, per-layer embedding/input paths, exact norm/scale/activation/residual order and logit capping where required by G1. Keep old families' fixtures passing. | Open |
 | G3 | Implement a small named Gemma4 config/weight adapter and scalar text graph/session using concrete validated layers. Qualify state commit/replay, pending sampled tokens, exact prefix reuse, stop semantics and overflow. Reject every unimplemented graph/modality/representation rather than aliasing an existing family. | Open |
 | G4 | Add resident Metal execution and allocation plans for actual weights, shared/rotating KV, scratch, staging and temporary overlap. Compare scalar/upstream numerical states and outputs. Qualify independent Mac/phone admission and fail before allocation on non-fitting requests. | Open |
 | G5 | Acquire an immutable small real checkpoint only after G1 admission. Freeze independent numerical and tokenizer/chat witnesses; qualify real generation/state, quality and completed Mac timing/memory. Preserve old download/chat profiles. | Open |
@@ -60,3 +60,9 @@ passing installed baseline and its rollback artifact until that candidate is
 ready. Numerical operators or config inspection alone are not an install-ready
 Gemma4 or 128K candidate. The mobile work owns all phone actions and shared-index
 coordination remains explicit.
+
+## G2 progress
+
+The [tanh-GELU/GeGLU witness](gemma-gelu-reference.md) is frozen before its native
+functions. Scalar target implementation is next. All other listed G2 mechanisms,
+whole graph/session and later real-model/app/device stages remain open.

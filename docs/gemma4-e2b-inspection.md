@@ -3,7 +3,8 @@
 G1 inspection, 24 October2026. This maps the first concrete Gemma4 candidate;
 it does not implement its graph or admit loading/generation. The
 [priority plan](gemma4-implementation-plan.md) remains authoritative. The next
-code task is a frozen independent tanh-GELU/GeGLU witness before its scalar target.
+code task is the scalar tanh-GELU/GeGLU target after its separately
+[frozen independent witness](gemma-gelu-reference.md).
 
 ## Immutable inputs and scope
 
