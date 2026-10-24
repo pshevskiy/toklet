@@ -2634,3 +2634,27 @@ rollback. Shared producer reuse, native cache/session and ring-aware attention,
 full graph/Metal, rotary parity, quality/performance and device/capability gates
 remain open. Existing numerical engine, native ABI, app limits and phone package
 are unchanged.
+
+## 24 October2026 — native KV owner with checked batch commit/discard
+
+A standalone FP32 cache now owns fixed global or local-ring K/V buffers and
+exposes borrowed old spans plus immutable new-token staging. It preserves old
+keys needed by early chunk queries until commit, without copying the whole
+cache. Private frames bind owner identity, generation and offset; constructor
+identity reservation adds no decode-step atomics. Actual capacities and owner
+metadata are reported separately from borrowed staging and numerical scratch.
+
+Every batch frame is validated before writes; commit copies only new retained
+rows and advances positions once. Six tests cover all thirty frozen updates,
+exact spans/rings, discard/retry, a failed last frame preserving all owners,
+missing/reordered/duplicate/stale/foreign frames, signed zeros, oversized local
+chunks, global limits, invalid arithmetic and moved owners. Formatting, strict
+default/Metal Clippy,229 CPU/251 Metal-feature tests and both iOS cross-checks
+pass. Astra reviews final code and evidence before commit; see
+[the contract](window-cache-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-window-cache-scalar-v1.json).
+
+This establishes cache batch commit/discard, not whole-model rollback or shared
+producer/consumer integration. Ring-aware attention, resident Metal and Gemma
+graph/session/weights/quality/device qualification remain open. No ABI, app
+limits, protected binaries or installed phone package change.

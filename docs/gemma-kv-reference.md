@@ -52,7 +52,9 @@ commit; numerical engine sources and protected binaries remain unchanged.
 Aborting a proposed native update must preserve exact prior K/V, positions and
 generation, and retry must append once. This is required policy illustrated by
 the witness, not execution of a native transaction or upstream rollback.
-Shared-producer reuse, native cache/session implementation, ring-aware numerical
+The [standalone cache owner](window-cache-scalar.md) now passes native cache
+batch commit/discard checks. Shared-producer reuse, model/session integration,
+ring-aware numerical
 attention, graph/Metal integration, rotary parity, model quality, memory fit,
 performance and phone qualification remain open in the
 [Gemma4 plan](gemma4-implementation-plan.md). No capability or limit changes.

@@ -10,6 +10,7 @@ use std::fmt;
 
 mod cache;
 mod trace;
+pub mod window_cache;
 pub(crate) use cache::KvCache;
 pub use trace::{LayerTrace, Trace};
 

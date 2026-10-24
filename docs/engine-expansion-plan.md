@@ -62,7 +62,8 @@ witnesses and required checks. The
 [local-attention witness](gemma-local-attention-reference.md) is frozen before
 the [checked scalar target](window-attention-scalar.md). The
 [KV staging/ring witness](gemma-kv-reference.md) now passes independent logical
-state and pinned upstream CPU/GPU checks; native transactions and shared
+state and pinned upstream CPU/GPU checks. Its [cache owner](window-cache-scalar.md)
+now passes batch commit/discard checks; full model transactions and shared
 producer ownership remain open. Qwen3 completion and the
 broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
