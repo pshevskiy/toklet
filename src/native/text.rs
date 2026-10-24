@@ -7,33 +7,6 @@ pub struct ChatHandle {
     codec: Codec,
 }
 
-unsafe fn copy_output<T: Copy>(
-    values: &[T],
-    output: *mut T,
-    capacity: usize,
-    count: *mut usize,
-) -> Result<()> {
-    pointer(count)?;
-    if output.is_null() && capacity != 0 {
-        return Err(fail(INVALID, "NULL output requires zero capacity"));
-    }
-    // SAFETY: count is a caller-owned, writable disjoint usize record.
-    unsafe { count.write(values.len()) };
-    if output.is_null() && capacity == 0 {
-        return Ok(());
-    }
-    if capacity < values.len() {
-        return Err(fail(INVALID, "text output buffer is too small"));
-    }
-    if !values.is_empty() {
-        pointer(output)?;
-        // SAFETY: caller owns capacity initialized writable elements; no overlap
-        // with input, handle or count. Only the checked values.len() is written.
-        unsafe { ptr::copy_nonoverlapping(values.as_ptr(), output, values.len()) };
-    }
-    Ok(())
-}
-
 /// Load the pinned chat assets from the loaded model's own directory.
 /// The caller reserves 64MiB (SmolLM2/Mistral) or 128MiB (Qwen) beyond its numerical budget.
 /// # Safety

@@ -133,8 +133,9 @@ performance or physical-device claim follows from a tiny fixture alone.
 
 H1 foundation: [local engine-owned compatibility reporting](mlx-compatibility.md)
 now shares bounded artifact admission, scalar estimates and exact Metal geometry
-policy with loading. CLI/native/app consumers, runtime device/session planning
-and receipt-based qualification remain open. No installed catalog is broadened.
+policy with loading. The [CLI/native consumers](mlx-compatibility-consumers.md)
+also pass. Swift app consumption, runtime device/session planning and
+receipt-based qualification remain open. No installed catalog is broadened.
 
 Status: E1 has an [independent tiny Qwen3 oracle](mlx-qwen3-oracle.md); [native scalar execution](mlx-qwen3-scalar.md) now passes its tiny gates. [Resident tiny Metal execution](mlx-qwen3-metal.md) also passes its frozen gates. An [immutable real Qwen3 candidate](mlx-qwen3-checkpoint.md) is acquired and structurally inspected. Its [independent real numerical reference](mlx-qwen3-real-oracle.md) is frozen, and [selected real Mac execution](mlx-qwen3-real-metal.md) passes the frozen numerical/session gates. [Public generation callback recovery](mlx-qwen3-real-generation.md) also passes. Quality, chat/app integration and iPhone qualification remain next. E1–E6 and
 H1–H4 remain open until their stated evidence exists. No reliable whole-program

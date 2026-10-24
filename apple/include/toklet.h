@@ -30,11 +30,39 @@ typedef struct TokletModel TokletModel;
 typedef struct TokletSession TokletSession;
 typedef struct TokletCancel TokletCancel;
 typedef struct TokletChat TokletChat;
+typedef struct TokletCompatibility TokletCompatibility;
 typedef struct { uint32_t code; uint8_t message[256]; } TokletError;
 typedef struct {
     uint32_t abi_version, struct_size, capacity, chunk;
     uint64_t memory_limit_bytes;
 } TokletOptions;
+/* Cold metadata inspection; numerical budget is reported exactly, without the
+   model/session bridge deduction. Backend: 0 scalar reference, 1 Metal.
+   Context/memory outside engine bounds produce an invalid_request JSON report. */
+typedef struct {
+    uint32_t abi_version, struct_size, backend, context_limit;
+    uint64_t memory_limit_bytes;
+} TokletCompatibilityOptions;
+#define TOKLET_MAX_COMPATIBILITY_JSON_BYTES 65536u
+#define TOKLET_COMPATIBILITY_JSON_ALLOWANCE_BYTES (2u*TOKLET_MAX_COMPATIBILITY_JSON_BYTES+256u)
+/* Reserve this separate logical JSON allowance (two maximum buffers plus the
+   handle). Allocator overhead is excluded; temporary
+   metadata uses the existing bounded artifact parser. No weights are expanded,
+   GPU created, session admitted or text/qualification receipt evaluated.
+   Additive ABI v1 entrypoints. Handles follow the creating-thread rule.
+   Unsupported/unknown models return OK with their machine-readable JSON state.
+   Invalid backend/options/path arguments fail; a valid out is cleared on error.
+   Captured metadata is historical: later loading must revalidate files, budgets
+   and runtime requirements. This handle never authorizes inference. */
+uint32_t toklet_mlx_inspect_create(const uint8_t *, size_t,
+    const TokletCompatibilityOptions *, TokletCompatibility **, TokletError *);
+/* UTF-8 bytes, no NUL, <=65536 bytes. NULL+0 queries required byte count. Short
+   buffers return INVALID, set required count and leave output untouched. Other
+   failures clear a valid count. Capacity >65536 rejects before copying.
+   count/output/error/handle must be disjoint; repeated reads return identical
+   bytes even if source files change. Release once on creating thread. */
+uint32_t toklet_mlx_inspect_json(const TokletCompatibility *, uint8_t *, size_t, size_t *, TokletError *);
+uint32_t toklet_mlx_inspect_release(TokletCompatibility *, TokletError *);
 typedef struct { uint32_t token_id, index; double elapsed_seconds; } TokletTokenEvent;
 typedef struct {
     uint32_t abi_version, struct_size, reason, stop_token;

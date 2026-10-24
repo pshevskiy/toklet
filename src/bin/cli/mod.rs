@@ -1,4 +1,5 @@
 mod chat;
+mod inspect;
 use chat::{Assets, OutputDecoder, invalid};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
@@ -31,6 +32,7 @@ fn publish_terminal<T>(flag: &AtomicBool, publish: impl FnOnce(bool) -> T) -> T 
 const HELP: &str = "Toklet — a small Rust inference engine for Apple Silicon
 
 Usage: toklet [OPTIONS]
+       toklet inspect --help
 
   --model PATH              Local Qwen model directory
   --prompt TEXT             Chat-formatted user prompt
@@ -792,6 +794,9 @@ fn run_session(
 }
 pub fn main() -> u8 {
     let a: Vec<_> = env::args_os().skip(1).collect();
+    if a.first().is_some_and(|value| value == "inspect") {
+        return inspect::main(a.into_iter().skip(1).collect());
+    }
     if a.is_empty() || a.len() == 1 && (a[0] == "--help" || a[0] == "-h") {
         println!("{HELP}");
         return 0;

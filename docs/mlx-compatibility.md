@@ -57,8 +57,9 @@ metadata probe pass. Ordinary suites leave 14 and 101 tests ignored respectively
 those counts are not hardware passes. Exact commands and captures are in the
 [task receipt](../benchmarks/results/2026-10-24-mlx-compatibility-v1.json).
 
-Retain this shared reporting foundation. H1 remains open for CLI/native/app
-consumers, actual device/session resource planning and exact qualification
-receipts. H2–H4 discovery, general downloads and downloaded Chat remain open.
+Retain this shared reporting foundation. The later [CLI/native consumer
+follow-up](mlx-compatibility-consumers.md) exposes these same reports. H1 remains
+open for Swift app consumption, actual device/session resource planning and
+exact qualification receipts. H2–H4 discovery, general downloads and downloaded Chat remain open.
 The installed app still offers its existing three pinned profiles. This task
 adds no new architecture, kernel, performance or physical-device qualification.

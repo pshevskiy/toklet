@@ -1982,3 +1982,21 @@ Retain this shared foundation. CLI/native/app consumers, actual Metal resource
 planning and receipt-based qualification remain open, alongside general Hub
 downloads/Chat and the remaining graph inventory. No new architecture, app,
 quality, performance or phone claim follows from inspection.
+
+### Expose compatibility to the CLI and native callers — 24 October 2026
+
+The [H1 consumer follow-up](mlx-compatibility-consumers.md) adds an offline JSON
+inspection command and immutable, thread-owned C report handles. Dedicated
+versioned inspection options preserve the exact numerical budget. A bounded
+64 KiB writer serializes once; size queries, repeated copies, short buffers and
+source mutation preserve a stable report. JSON ownership has its own explicit
+logical allowance. Existing text queries reuse the unchanged shared copy helper.
+
+Astra requested explicit closed-pipe exit semantics and native/text regression
+checks; both are included. Formatting, both strict Clippy configurations, 178 CPU
+and 198 Metal-feature tests pass. A fresh static library links/runs the real C
+caller, all 23 exports match the header, the local text bridge passes, and actual
+real Qwen3 CLI metadata is correct. The initial environment-only C link failure
+and successful explicit-temporary-directory retry remain captured. Retain these
+consumers. Swift app integration, actual runtime memory planning, qualification
+receipts, general Hub/Chat and the remaining engine inventory stay open.

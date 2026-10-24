@@ -12,7 +12,9 @@
 //! recreate it afterwards. OOM abort and foreign exceptions are not contained.
 
 use crate::{generation, model, session, weights};
+mod compatibility;
 mod text;
+pub use compatibility::*;
 use std::{
     cell::{Cell, RefCell},
     ffi::c_void,
@@ -255,6 +257,33 @@ unsafe fn slice<'a, T>(p: *const T, len: usize, maximum: usize) -> Result<&'a [T
     // alignment, non-null and representable byte length were checked above.
     Ok(unsafe { std::slice::from_raw_parts(p, len) })
 }
+unsafe fn copy_output<T: Copy>(
+    values: &[T],
+    output: *mut T,
+    capacity: usize,
+    count: *mut usize,
+) -> Result<()> {
+    pointer(count)?;
+    if output.is_null() && capacity != 0 {
+        return Err(fail(INVALID, "NULL output requires zero capacity"));
+    }
+    // SAFETY: count is a caller-owned, writable disjoint usize record.
+    unsafe { count.write(values.len()) };
+    if output.is_null() && capacity == 0 {
+        return Ok(());
+    }
+    if capacity < values.len() {
+        return Err(fail(INVALID, "output buffer is too small"));
+    }
+    if !values.is_empty() {
+        pointer(output)?;
+        // SAFETY: caller owns capacity initialized writable elements; no overlap
+        // with input, handle or count. Only the checked values.len() is written.
+        unsafe { ptr::copy_nonoverlapping(values.as_ptr(), output, values.len()) };
+    }
+    Ok(())
+}
+
 unsafe fn options(p: *const Options) -> Result<session::Options> {
     pointer(p)?;
     // SAFETY: caller supplies the entire initialized fixed-width Options record.
