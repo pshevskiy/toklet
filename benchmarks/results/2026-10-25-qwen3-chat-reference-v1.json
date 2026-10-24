@@ -1,0 +1,68 @@
+{
+  "format": "toklet-qwen3-chat-reference-v1",
+  "date": "2026-10-25",
+  "status": "reference_executed",
+  "source_pins": {
+    "tools/reference/app_chat_qwen3.py": "2606638c94f82563ef859a5e64f0996e1ed5be1ffb06cad2adab0f16309b89f5",
+    "tools/reference/chat_reference_runtime.py": "22ea3473ef27f6fbe1e43ea2503e5b34b6b7e99abef40729486c6980d1c123a2",
+    "tools/reference/test_chat_reference_runtime.py": "e2075524f9ade1e03211af19b6b6f5f435679010eaf2068f9f1d80ed1adccaf9",
+    "tools/experiments/qwen3_chat_reference.py": "a95dc1b986b0a2109cff21d420b6739e9284a24d351d136dfca56487d1366527",
+    "tools/experiments/test_qwen3_chat_reference.py": "b9ded42f93434003081277ba25ac258ccbcd64fbddd08c8b317b02f5bf3ac0a4",
+    "tests/fixtures/app-chat-qwen3-v1/reference.json": "767665d4ff123653c2158d40de7371f20166dcdca8e94884c1c3092ed97db661",
+    "docs/qwen3-chat-reference.md": "f554286b9428d958b4c3a9036f0559239d7acb43746f4004ab0ee41c51745bff"
+  },
+  "capture": {
+    "path": "artifacts/mobile-expanded-models-2026-10-24-v1/owned-reference-v4/capture.json",
+    "sha256": "93dff75507a0f2c4b8e1820811f12c3dd4dff4a6296eb228286e8578aa2ae0c1"
+  },
+  "runtime_manifest_sha256": "5d3324da080365a12bfb0d5ff25d320a93a6ed023c76f1d1255d88f5361aca78",
+  "input_files": 95,
+  "commands": [
+    {
+      "label": "preliminary-identity-assertion-reproduction",
+      "exit_code": 1,
+      "expected_exit": 1,
+      "invocation_error": null,
+      "cleanup_errors": []
+    },
+    {
+      "label": "ownership",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "invocation_error": null,
+      "cleanup_errors": []
+    },
+    {
+      "label": "portable",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "invocation_error": null,
+      "cleanup_errors": []
+    },
+    {
+      "label": "capture",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "invocation_error": null,
+      "cleanup_errors": []
+    },
+    {
+      "label": "replay",
+      "exit_code": 0,
+      "expected_exit": 0,
+      "invocation_error": null,
+      "cleanup_errors": []
+    }
+  ],
+  "runtime_admission_tests": 11,
+  "ownership_tests": 4,
+  "frozen_conversations": 5,
+  "decode_cases": 4,
+  "added_literals": 26,
+  "ordinary_added_literals": 12,
+  "all_preliminary_conversation_values_unchanged": true,
+  "preliminary_unaccepted": true,
+  "fixture_sha256": "767665d4ff123653c2158d40de7371f20166dcdca8e94884c1c3092ed97db661",
+  "native_profile_changed": false,
+  "numerical_or_phone_qualified": false
+}

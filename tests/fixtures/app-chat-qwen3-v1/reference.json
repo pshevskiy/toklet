@@ -1,0 +1,541 @@
+{
+  "format": "toklet-qwen3-chat-reference-v1",
+  "repository": "mlx-community/Qwen3-0.6B-8bit",
+  "revision": "11de96878523501bcaa86104e3c186de07ff9068",
+  "asset_sha256": {
+    "config.json": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240",
+    "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config.json": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+  },
+  "template_sha256": "5595e8741bb5500f9d395e05a0aefe6ca1e8d54c5dd8b98bcf7760d895fdc6e6",
+  "runtime": {
+    "python": "3.12.8",
+    "jinja2": "3.1.6",
+    "markupsafe": "3.0.4",
+    "tokenizers": "0.22.2"
+  },
+  "mode": "non-thinking plain alternating user/assistant, no system or tools",
+  "stop_ids": [
+    151645
+  ],
+  "thinking_token_ids": [
+    151667,
+    151668
+  ],
+  "special_literals": [
+    {
+      "text": "</think>",
+      "id": 151668,
+      "special": false
+    },
+    {
+      "text": "</tool_call>",
+      "id": 151658,
+      "special": false
+    },
+    {
+      "text": "</tool_response>",
+      "id": 151666,
+      "special": false
+    },
+    {
+      "text": "<think>",
+      "id": 151667,
+      "special": false
+    },
+    {
+      "text": "<tool_call>",
+      "id": 151657,
+      "special": false
+    },
+    {
+      "text": "<tool_response>",
+      "id": 151665,
+      "special": false
+    },
+    {
+      "text": "<|box_end|>",
+      "id": 151649,
+      "special": true
+    },
+    {
+      "text": "<|box_start|>",
+      "id": 151648,
+      "special": true
+    },
+    {
+      "text": "<|endoftext|>",
+      "id": 151643,
+      "special": true
+    },
+    {
+      "text": "<|file_sep|>",
+      "id": 151664,
+      "special": false
+    },
+    {
+      "text": "<|fim_middle|>",
+      "id": 151660,
+      "special": false
+    },
+    {
+      "text": "<|fim_pad|>",
+      "id": 151662,
+      "special": false
+    },
+    {
+      "text": "<|fim_prefix|>",
+      "id": 151659,
+      "special": false
+    },
+    {
+      "text": "<|fim_suffix|>",
+      "id": 151661,
+      "special": false
+    },
+    {
+      "text": "<|im_end|>",
+      "id": 151645,
+      "special": true
+    },
+    {
+      "text": "<|im_start|>",
+      "id": 151644,
+      "special": true
+    },
+    {
+      "text": "<|image_pad|>",
+      "id": 151655,
+      "special": true
+    },
+    {
+      "text": "<|object_ref_end|>",
+      "id": 151647,
+      "special": true
+    },
+    {
+      "text": "<|object_ref_start|>",
+      "id": 151646,
+      "special": true
+    },
+    {
+      "text": "<|quad_end|>",
+      "id": 151651,
+      "special": true
+    },
+    {
+      "text": "<|quad_start|>",
+      "id": 151650,
+      "special": true
+    },
+    {
+      "text": "<|repo_name|>",
+      "id": 151663,
+      "special": false
+    },
+    {
+      "text": "<|video_pad|>",
+      "id": 151656,
+      "special": true
+    },
+    {
+      "text": "<|vision_end|>",
+      "id": 151653,
+      "special": true
+    },
+    {
+      "text": "<|vision_pad|>",
+      "id": 151654,
+      "special": true
+    },
+    {
+      "text": "<|vision_start|>",
+      "id": 151652,
+      "special": true
+    }
+  ],
+  "cases": [
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello!"
+        }
+      ],
+      "rendered": "<|im_start|>user\nHello!<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "ids": [
+        151644,
+        872,
+        198,
+        9707,
+        0,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        151667,
+        271,
+        151668,
+        271
+      ],
+      "decoded": "user\nHello!\nassistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello, 🌍! Привет."
+        },
+        {
+          "role": "assistant",
+          "content": "Hello! How can I help?"
+        },
+        {
+          "role": "user",
+          "content": "What is 2 + 2?"
+        }
+      ],
+      "rendered": "<|im_start|>user\nHello, 🌍! Привет.<|im_end|>\n<|im_start|>assistant\nHello! How can I help?<|im_end|>\n<|im_start|>user\nWhat is 2 + 2?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "ids": [
+        151644,
+        872,
+        198,
+        9707,
+        11,
+        11162,
+        234,
+        235,
+        0,
+        79484,
+        26991,
+        8178,
+        13,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        9707,
+        0,
+        2585,
+        646,
+        358,
+        1492,
+        30,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        3838,
+        374,
+        220,
+        17,
+        488,
+        220,
+        17,
+        30,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        151667,
+        271,
+        151668,
+        271
+      ],
+      "decoded": "user\nHello, 🌍! Привет.\nassistant\nHello! How can I help?\nuser\nWhat is 2 + 2?\nassistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a Python function add(a, b)."
+        },
+        {
+          "role": "assistant",
+          "content": "```python\ndef add(a, b):\n    return a + b\n```"
+        },
+        {
+          "role": "user",
+          "content": "Explain the return statement."
+        }
+      ],
+      "rendered": "<|im_start|>user\nWrite a Python function add(a, b).<|im_end|>\n<|im_start|>assistant\n```python\ndef add(a, b):\n    return a + b\n```<|im_end|>\n<|im_start|>user\nExplain the return statement.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "ids": [
+        151644,
+        872,
+        198,
+        7985,
+        264,
+        13027,
+        729,
+        912,
+        2877,
+        11,
+        293,
+        568,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        73594,
+        12669,
+        198,
+        750,
+        912,
+        2877,
+        11,
+        293,
+        982,
+        262,
+        470,
+        264,
+        488,
+        293,
+        198,
+        73594,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        840,
+        20772,
+        279,
+        470,
+        5114,
+        13,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        151667,
+        271,
+        151668,
+        271
+      ],
+      "decoded": "user\nWrite a Python function add(a, b).\nassistant\n```python\ndef add(a, b):\n    return a + b\n```\nuser\nExplain the return statement.\nassistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "First question"
+        },
+        {
+          "role": "assistant",
+          "content": "\n\nFirst answer\n"
+        },
+        {
+          "role": "user",
+          "content": "Second question"
+        },
+        {
+          "role": "assistant",
+          "content": "Second answer"
+        },
+        {
+          "role": "user",
+          "content": "Continue."
+        }
+      ],
+      "rendered": "<|im_start|>user\nFirst question<|im_end|>\n<|im_start|>assistant\n\n\nFirst answer\n<|im_end|>\n<|im_start|>user\nSecond question<|im_end|>\n<|im_start|>assistant\nSecond answer<|im_end|>\n<|im_start|>user\nContinue.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "ids": [
+        151644,
+        872,
+        198,
+        5338,
+        3405,
+        151645,
+        198,
+        151644,
+        77091,
+        1406,
+        5338,
+        4226,
+        198,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        15666,
+        3405,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        15666,
+        4226,
+        151645,
+        198,
+        151644,
+        872,
+        198,
+        23526,
+        13,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        151667,
+        271,
+        151668,
+        271
+      ],
+      "decoded": "user\nFirst question\nassistant\n\n\nFirst answer\n\nuser\nSecond question\nassistant\nSecond answer\nuser\nContinue.\nassistant\n<think>\n\n</think>\n\n"
+    },
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "你好！ é 👨‍👩‍👧‍👦\nTabs\tand quotes: \"hello\"."
+        }
+      ],
+      "rendered": "<|im_start|>user\n你好！ é 👨‍👩‍👧‍👦\nTabs\tand quotes: \"hello\".<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "ids": [
+        151644,
+        872,
+        198,
+        108386,
+        6313,
+        3958,
+        61804,
+        101,
+        378,
+        235,
+        145233,
+        378,
+        235,
+        145665,
+        378,
+        235,
+        145988,
+        198,
+        36985,
+        52477,
+        17194,
+        25,
+        330,
+        14990,
+        3263,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        151667,
+        271,
+        151668,
+        271
+      ],
+      "decoded": "user\n你好！ é 👨‍👩‍👧‍👦\nTabs\tand quotes: \"hello\".\nassistant\n<think>\n\n</think>\n\n"
+    }
+  ],
+  "decode_cases": [
+    {
+      "text": "Hello!",
+      "ids": [
+        9707,
+        0
+      ],
+      "decoded": "Hello!",
+      "prefixes": [
+        "",
+        "Hello",
+        "Hello!"
+      ]
+    },
+    {
+      "text": "你好，🌍! é",
+      "ids": [
+        108386,
+        3837,
+        145691,
+        0,
+        3958
+      ],
+      "decoded": "你好，🌍! é",
+      "prefixes": [
+        "",
+        "你好",
+        "你好，",
+        "你好，🌍",
+        "你好，🌍!",
+        "你好，🌍! é"
+      ]
+    },
+    {
+      "text": "```python\ndef add(a, b):\n    return a + b\n```",
+      "ids": [
+        73594,
+        12669,
+        198,
+        750,
+        912,
+        2877,
+        11,
+        293,
+        982,
+        262,
+        470,
+        264,
+        488,
+        293,
+        198,
+        73594
+      ],
+      "decoded": "```python\ndef add(a, b):\n    return a + b\n```",
+      "prefixes": [
+        "",
+        "```",
+        "```python",
+        "```python\n",
+        "```python\ndef",
+        "```python\ndef add",
+        "```python\ndef add(a",
+        "```python\ndef add(a,",
+        "```python\ndef add(a, b",
+        "```python\ndef add(a, b):\n",
+        "```python\ndef add(a, b):\n   ",
+        "```python\ndef add(a, b):\n    return",
+        "```python\ndef add(a, b):\n    return a",
+        "```python\ndef add(a, b):\n    return a +",
+        "```python\ndef add(a, b):\n    return a + b",
+        "```python\ndef add(a, b):\n    return a + b\n",
+        "```python\ndef add(a, b):\n    return a + b\n```"
+      ]
+    },
+    {
+      "text": "<think>work</think> <tool_call>call</tool_call>",
+      "ids": [
+        151667,
+        1778,
+        151668,
+        220,
+        151657,
+        6659,
+        151658
+      ],
+      "decoded": "<think>work</think> <tool_call>call</tool_call>",
+      "prefixes": [
+        "",
+        "<think>",
+        "<think>work",
+        "<think>work</think>",
+        "<think>work</think> ",
+        "<think>work</think> <tool_call>",
+        "<think>work</think> <tool_call>call",
+        "<think>work</think> <tool_call>call</tool_call>"
+      ]
+    }
+  ],
+  "thinking_counterexample": "<|im_start|>user\nHello!<|im_end|>\n<|im_start|>assistant\n"
+}
