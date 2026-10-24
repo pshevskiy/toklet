@@ -2723,3 +2723,26 @@ iOS cross-checks pass. Astra reviews final source/evidence before commit. See
 Ring-aware numerical attention, full Gemma/session/Metal, rotary parity,
 quality/performance/device fit and capability gates remain open. No ABI, app
 limits, protected binaries or installed package changes follow from this task.
+
+## 24 October2026 — scalar attention directly over borrowed ring spans
+
+A concrete three-segment CPU operation reads two old ring spans and the new
+chunk directly, with explicit per-segment head strides and logical origins.
+It preserves the contiguous scalar's reduction order and precision, avoiding
+whole-KV linearization, allocation or dynamic dispatch. Cache views derive the
+physical slices; immutable borrowing prevents concurrent commit.
+
+Eight methods compare frozen scores/probabilities/original FP64 contexts and
+bitwise contiguous outputs, then run all thirty KV-witness updates through
+actual ring views with Hkv2 wrap, pointer identity and512-window coverage.
+Empty spans, NaN/negative-zero padding, late invalid/overflowing metadata before
+writes, fully masked later queries, arithmetic failure/replay and no-commit
+recovery are checked. Formatting, strict default/Metal Clippy,245 CPU/267
+Metal-feature tests and both iOS cross-checks pass. Astra reviews final evidence
+before commit; see [the contract](span-attention-scalar.md) and
+[receipt](../benchmarks/results/2026-10-24-span-attention-scalar-v1.json).
+
+Actual head widths and full window transitions are separate bounded cases;
+maximum-usize arithmetic checks do not grant model/context support. Full Gemma
+layer/session/weights/Metal/rotary/quality/performance/device gates remain open.
+No ABI, app limit, protected binary or installed phone package changes.

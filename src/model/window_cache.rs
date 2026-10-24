@@ -299,6 +299,70 @@ pub fn commit_batch(caches: &mut [WindowKvCache], frames: &[PreparedKv<'_>]) -> 
 }
 
 impl KvView<'_, '_> {
+    /// Borrow all heads as two old-ring intervals and a differently strided new
+    /// chunk. Empty intervals have empty slices; no old KV is linearized/copied.
+    pub fn segments(&self) -> [crate::cpu::AttentionKvSegment<'_>; 3] {
+        let empty = crate::cpu::AttentionKvSegment {
+            k: &[],
+            v: &[],
+            keys: 0,
+            head_stride: 0,
+            key_start: self.cache.offset,
+        };
+        let mut segments = [empty; 3];
+        let start = self.start();
+        let old = self.cache.offset - start;
+        let stride = self.cache.capacity * self.cache.dims;
+        if old > 0 {
+            let slot = start % self.cache.capacity;
+            let first = old.min(self.cache.capacity - slot);
+            for (index, physical, count, position) in
+                [(0, slot, first, start), (1, 0, old - first, start + first)]
+            {
+                if count == 0 {
+                    continue;
+                }
+                let begin = physical * self.cache.dims;
+                let end = (self.cache.heads - 1) * stride + begin + count * self.cache.dims;
+                segments[index] = crate::cpu::AttentionKvSegment {
+                    k: &self.cache.k[begin..end],
+                    v: &self.cache.v[begin..end],
+                    keys: count,
+                    head_stride: stride,
+                    key_start: position,
+                };
+            }
+        }
+        segments[2] = crate::cpu::AttentionKvSegment {
+            k: self.k,
+            v: self.v,
+            keys: self.tokens,
+            head_stride: self.tokens * self.cache.dims,
+            key_start: self.cache.offset,
+        };
+        segments
+    }
+
+    /// Describe the borrowed geometry. The numerical entry point validates the
+    /// requested query-head count and scale together with its input/output sizes.
+    pub fn attention_shape(
+        &self,
+        query_heads: usize,
+        scale: f32,
+    ) -> crate::cpu::SpanAttentionShape {
+        crate::cpu::SpanAttentionShape {
+            queries: self.tokens,
+            keys: self.end() - self.start(),
+            query_heads,
+            kv_heads: self.cache.heads,
+            head_dim: self.cache.dims,
+            query_start: self.cache.offset,
+            key_start: self.start(),
+            window: self.cache.window,
+            scale,
+        }
+    }
+
     pub fn query_start(&self) -> usize {
         self.cache.offset
     }

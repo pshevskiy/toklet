@@ -82,7 +82,10 @@ now freezes normal cache state and chunk visibility. Its
 checks. The [shared-KV routing witness](gemma-shared-kv-reference.md) now freezes
 current-step producer identity and source forwarding. The
 [native routing/publication plan](shared-kv-scalar.md) now passes ordered-prefix
-availability and complete cache-batch checks. Ring-aware numerical attention
-and remaining G2 mechanisms are next. All other
+availability and complete cache-batch checks. [Borrowed-span scalar attention](span-attention-scalar.md)
+now passes frozen numerical/ring-view checks without linearizing KV. Remaining
+G2 work includes per-layer embedding/projection scales and gates, exact
+norm/residual/scalar order, embedding/logit scales and capping, plus the open
+upstream rotary precision gate. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.

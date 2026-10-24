@@ -67,7 +67,8 @@ now passes batch commit/discard checks; full model transactions and shared
 producer ownership remain open. The [shared routing witness](gemma-shared-kv-reference.md)
 qualifies selected-source forwarding/identity only. The
 [native routing/publication plan](shared-kv-scalar.md) now passes ordered-prefix
-and cache-batch checks; numerical graph/session integration remains open.
+and cache-batch checks. [Borrowed-span scalar attention](span-attention-scalar.md)
+now qualifies numerical ring views; full graph/session integration remains open.
 Qwen3 completion and the
 broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text

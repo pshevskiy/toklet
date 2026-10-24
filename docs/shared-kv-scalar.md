@@ -57,7 +57,8 @@ iOS cross-checks pass. Hardware suites remain explicitly ignored here. The
 fixtures, checks and unchanged earlier numerical/shader/protected binary hashes.
 Astra reviews exact final code/evidence before commit.
 
-Ring-aware numerical attention, full layer/Gemma execution, tokenizer/stops,
+The [borrowed-span scalar attention](span-attention-scalar.md) mechanism now
+passes numerical ring-view checks separately. Full layer/Gemma execution, tokenizer/stops,
 model/session replay, Metal residency, rotary parity, quality/performance and
 real-model/device memory qualification remain open in the
 [Gemma4 plan](gemma4-implementation-plan.md). No native ABI, engine capabilities,

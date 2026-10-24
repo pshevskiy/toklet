@@ -14,6 +14,7 @@ mod gated_delta;
 mod gelu;
 mod proportional_rotary;
 mod reductions;
+mod span_attention;
 mod tiled;
 mod window_attention;
 
@@ -25,6 +26,7 @@ pub use gated_delta::{
 pub use gelu::{gated_gelu_tanh, gelu_tanh};
 pub use proportional_rotary::{ProportionalRotaryShape, proportional_rotary};
 pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
+pub use span_attention::{AttentionKvSegment, SpanAttentionShape, span_attention};
 pub use tiled::{ProjectionKernel, matmul_f64_tiled};
 pub use window_attention::{WindowAttentionShape, window_attention};
 
