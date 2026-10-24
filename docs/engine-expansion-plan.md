@@ -76,7 +76,8 @@ freezes norm/residual/PLE/scalar order with an explicit external attention
 boundary; its [native FP32 finish](dense-decoder-scalar.md) passes the frozen
 contracts. The [unlearned V-norm witness](gemma-v-norm-reference.md) freezes
 the per-head norm; its [scalar recipe](gemma-v-norm-scalar.md) now passes
-the accepted fixture. Quantized backend and full graph/session
+the accepted fixture. The [logit-softcap witness](gemma-softcap-reference.md)
+freezes its separate contracts before native implementation. Quantized backend and full graph/session
 integration remain open.
 Qwen3 completion and the
 broader inventory remain open. The

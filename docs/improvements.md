@@ -2913,3 +2913,38 @@ No production numerical/shader code changes. A future Gemma adapter must own and
 account for its shared exact-one vector; V projection/storage, graph/cache/
 session/Metal integration, device fit, quality, performance and long replies
 remain open. No installed package, app cap, protected binary or ABI changes.
+
+## 25 October2026 — independent Qwen3 plain Chat reference
+
+The separately reviewed reference commit `6edb777` freezes original non-thinking
+Qwen3 Chat strings/IDs, original NFC behavior, response prefixes and all26 control
+literal IDs/flags. Twelve controls are non-special and remain visible on decode.
+The guarded runtime admits exact Python/Jinja/MarkupSafe/tokenizers files before
+imports; independent capture/replay,11 admission tests and4 owner failure tests
+pass. Preliminary failed assertions/attempts are retained, with unchanged original
+conversation/Unicode values. See [the witness](qwen3-chat-reference.md) and
+[receipt](../benchmarks/results/2026-10-25-qwen3-chat-reference-v1.json).
+No fourth runnable app profile, native package or phone fit is granted; cold
+profile, memory, package and device qualification follow separately.
+
+## 25 October2026 — independent final-logit softcap
+
+A tiny compiled-source witness now freezes Gemma's cap30 tanh-logit transform,
+plus explicit synthetic smaller caps. Separate ideal/staged contracts expose
+quotient, activation and multiplication rounding without claiming helper-internal
+captures. Four staged divisions overflow for finite extrema/small caps while
+external outputs remain finite; counts are retained without serializing infinity.
+
+Independent replay verifies all18 arrays/585 values, exact staged bits and zero
+signs. Seven portable, three owner and three runtime-admission methods and all
+six owned commands pass. Each MLX CPU/GPU source capture retains five outputs
+and passes ten comparisons under unchanged gates; maximum error/policy ratio
+is below0.00125. Astra reviews final source/evidence before commit. See
+[the contract](gemma-softcap-reference.md) and
+[receipt](../benchmarks/results/2026-10-25-gemma-softcap-reference-v1.json).
+
+Native transform, complete vocabulary/model graph, BF16/quantized checkpoint,
+constructor/disabled-cap routing, device fit, quality, performance and long replies
+remain open. Upstream signed-zero bit parity is unqualified; mathematical/native
+zero semantics are checked separately. No numerical source, ABI, app cap,
+protected executable or installed package changes.

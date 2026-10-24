@@ -94,6 +94,8 @@ passes the frozen contracts. Quantized projection/fetch and whole-layer graph
 integration, embedding/logit scales and capping remain open, along with the
 upstream rotary precision gate. A new [unlearned V-norm witness](gemma-v-norm-reference.md)
 freezes per-head mean-square RMS. The [existing scalar RMS recipe](gemma-v-norm-scalar.md)
-now passes that fixture; adapter/storage integration remains open. All other
+now passes that fixture; adapter/storage integration remains open. The
+[final-logit softcap witness](gemma-softcap-reference.md) now freezes ideal and
+staged FP32 contracts before the native transform. All other
 listed G2 mechanisms, whole graph/session and later real-model/app/device
 stages remain open.
