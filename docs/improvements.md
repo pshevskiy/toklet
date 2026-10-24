@@ -2069,3 +2069,36 @@ so full tap-through and physical-iPhone behavior remain unqualified. No latency,
 quality or memory-limit improvement is claimed. Retain the functional fixes.
 See the [interface report](mobile-interface-fixes.md) and
 [bound receipt](../benchmarks/results/2026-10-24-mobile-interface-v1.json).
+
+## 24 October 2026 — shared runtime Metal resource planning
+
+Hypothesis: one concrete layout/admission plan can serve both constructors and
+cold compatibility inspection without parallel formulas or changing numerical
+execution. The new Rust-only `metal::planning::inspect_mlx` shares the loader's
+MPS-padded floating/affine layouts and the session's exact KV/scratch/history/
+output/table totals. Constructors consume those plans directly. Every numerical
+buffer uses the same device/index limit helper as allocation. Source load,
+resident load and session admission remain overlapping, separately named totals.
+
+Before extraction, 42 M1 Pro actual allocation reports were frozen across six
+tiny artifacts, chunks1/3/32, tied/untied output, mixed storage, independent query
+width, both readbacks and qualified Qwen2 Online. New plans and actual owners
+match every report. Exact/minus-one budgets, offsets, per-buffer bounds and
+overflow checks pass. Real Qwen3 retains633,366,062 resident bytes; capacity32/
+chunk3 admissions are707,649,798 FullLogits and706,434,350 GreedyToken, matching
+actual owners. Its independent final-row numerical/diagnostic budget gate passes.
+
+Formatting, strict Clippy,180 CPU and203 Metal-feature tests pass; both iOS
+library targets compile. Sixteen explicit release GPU tests pass, including
+Half/Q4/MLX numerical/state and warmed-allocation regressions. Initial test-only
+Clippy comparisons were corrected without loosening policy. An accidental debug
+GPU run reached the Half zero-allocation assertion with4640 allocations and
+failed; its complete evidence is retained. The established release invocation
+passes that unchanged gate; allocation evidence is scoped to release.
+
+Retain the shared planner. Driver/pipeline setup still allocates, the64MiB
+allowance remains an estimate, and a fit flag reserves no memory or payload
+validity. No latency, quality, free-memory or physical-iPhone qualification is
+claimed. The runtime CLI/native/app consumer and qualification receipts remain
+open. See [resource planning](metal-resource-planning.md) and its
+[receipt](../benchmarks/results/2026-10-24-metal-resource-planning-v1.json).

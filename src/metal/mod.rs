@@ -14,6 +14,7 @@ mod q4_v2_projection;
 pub use capture::Capture;
 mod memory;
 pub mod mlx;
+pub mod planning;
 mod profile;
 use crate::{model, q4, session, weights};
 pub use diagnostic::Diagnostic;
@@ -264,29 +265,11 @@ impl Model {
             let gpu = Gpu::new()?;
             let pipelines = mlx::compile(&gpu)?;
             let compilation_seconds = compile_clock.elapsed().as_secs_f64();
-            let mut plans = BTreeMap::new();
-            let mut weight_bytes = 0;
-            for (name, spec) in source.tensors() {
-                let (rows, columns) = match spec.shape() {
-                    [n] => (1, *n),
-                    [r, c] => (*r, *c),
-                    _ => return Err(Error::Options("MLX tensor rank differs")),
-                };
-                let layout = Layout::new(rows, columns, true)?;
-                let bytes = match spec.storage() {
-                    crate::mlx::qwen::Storage::Float(_) => layout.bytes(2)?,
-                    crate::mlx::qwen::Storage::Affine(p) => mlx::packed_bytes(p)?,
-                };
-                weight_bytes = add(weight_bytes, bytes)?;
-                plans.insert(name.clone(), (layout, spec.storage()));
-            }
-            let admitted = add(add(weight_bytes, ALLOWANCE)?, 64 * 1024)?;
-            if admitted > options.memory_limit_bytes {
-                return Err(Error::Budget {
-                    required: admitted,
-                    limit: options.memory_limit_bytes,
-                });
-            }
+            let plan = planning::MlxWeights::new(&source)?;
+            plan.admit(options.memory_limit_bytes)?;
+            plan.validate_buffers(gpu.device.maxBufferLength())?;
+            let weight_bytes = plan.weight_bytes;
+            let plans = plan.tensors;
             let conversion_clock = Instant::now();
             let mut tensors = BTreeMap::new();
             for (name, (layout, storage)) in plans {
@@ -752,29 +735,8 @@ impl<'m> Session<'m> {
                     "MLX artifacts require the explicit MlxAffine projection mode",
                 ));
             }
-            if attention_mode == AttentionMode::Online
-                && matches!(
-                    model.mlx_architecture,
-                    Some(
-                        crate::mlx::dense::Architecture::Llama
-                            | crate::mlx::dense::Architecture::Mistral
-                            | crate::mlx::dense::Architecture::Qwen3
-                    )
-                )
-            {
-                return Err(Error::Unsupported(
-                    "Llama/Mistral/Qwen3 Online attention is not qualified; explicitly select Reference attention",
-                ));
-            }
-            if attention_mode == AttentionMode::Online {
-                for kernel in [Kernel::AttentionDecode, Kernel::AttentionPrefill] {
-                    if model.gpu.execution_width(kernel) < 32 {
-                        return Err(Error::Unsupported(
-                            "online attention requires SIMD width >= 32",
-                        ));
-                    }
-                }
-            }
+            planning::validate_attention(model.mlx_architecture, attention_mode)?;
+            planning::validate_attention_device(&model.gpu, attention_mode)?;
             if model.q4_format() == Some(q4::Format::V2)
                 && (!matches!(
                     projection_mode,
@@ -808,129 +770,29 @@ impl<'m> Session<'m> {
                 ));
             }
             let c = &model.config;
-            let chunk = options.prefill_chunk_size;
-            if options.capacity == 0
-                || options.capacity > weights::MAX_CONTEXT_LIMIT
-                || chunk == 0
-                || chunk > 1024
-                || chunk > options.capacity
-                || options
-                    .position_offset
-                    .checked_add(options.capacity)
-                    .is_none_or(|n| n > c.max_positions.min(weights::MAX_CONTEXT_LIMIT))
-                || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
-            {
-                return Err(Error::Options(
-                    "Metal session options outside admitted model/context bounds",
-                ));
-            }
-            let h = Layout::new(chunk, c.hidden_size, true)?;
-            let query_width = c.query_heads * c.head_dim;
-            let q = Layout::new(chunk, query_width, true)?;
-            let k = Layout::new(chunk, c.kv_heads * c.head_dim, true)?;
-            let m = Layout::new(chunk, c.intermediate_size, true)?;
-            let widest = c
-                .vocab_size
-                .max(c.intermediate_size)
-                .max(c.hidden_size)
-                .max(query_width)
-                .max(c.kv_heads * c.head_dim);
-            let f = Layout::new(chunk, widest, false)?;
-            if h.stride != c.hidden_size
-                || q.stride != query_width
-                || k.stride != c.kv_heads * c.head_dim
-                || m.stride != c.intermediate_size
-            {
-                return Err(Error::Unsupported("requires contiguous Half activations"));
-            }
-            let cache_count = c
-                .kv_heads
-                .checked_mul(options.capacity)
-                .and_then(|n| n.checked_mul(c.head_dim))
-                .and_then(|n| n.checked_add(7))
-                .ok_or(Error::Options("cache size overflow"))?;
-            // Reference owns two [heads, chunk, capacity] FP32 matrices.
-            // Online leaves only two eight-word guards, independent of depth.
-            let score_count = if attention_mode == AttentionMode::Online {
-                8
-            } else {
-                c.query_heads
-                    .checked_mul(chunk)
-                    .and_then(|n| n.checked_mul(options.capacity))
-                    .and_then(|n| n.checked_add(7))
-                    .ok_or(Error::Options("score size overflow"))?
-            };
-            let zero_count = widest
-                .checked_add(7)
-                .ok_or(Error::Options("zero bias overflow"))?;
-            let scratch_bytes = add(
-                add(
-                    add(
-                        add(
-                            h.bytes(2)?
-                                .checked_mul(3)
-                                .ok_or(Error::Options("scratch overflow"))?,
-                            q.bytes(2)?
-                                .checked_mul(3)
-                                .ok_or(Error::Options("scratch overflow"))?,
-                        )?,
-                        k.bytes(2)?
-                            .checked_mul(3)
-                            .ok_or(Error::Options("scratch overflow"))?,
-                    )?,
-                    m.bytes(2)?
-                        .checked_mul(4)
-                        .ok_or(Error::Options("scratch overflow"))?,
-                )?,
-                add(
-                    add(
-                        f.bytes(4)?,
-                        score_count
-                            .checked_mul(8)
-                            .ok_or(Error::Options("scores overflow"))?,
-                    )?,
-                    add(
-                        add(
-                            add((chunk + 7) * 4, 32)?,
-                            if readback_mode == ReadbackMode::GreedyToken {
-                                32
-                            } else {
-                                0
-                            },
-                        )?,
-                        zero_count * 2,
-                    )?,
-                )?,
-            )?;
-            let kv_bytes = cache_count
-                .checked_mul(4)
-                .and_then(|n| n.checked_mul(c.num_layers))
-                .ok_or(Error::Options("KV bytes overflow"))?;
-            let history_bytes = options.capacity * 4;
-            let logits_bytes = if readback_mode == ReadbackMode::GreedyToken {
-                8
-            } else {
-                c.vocab_size * 8
-            };
-            let metadata_bytes =
-                chunk * std::mem::size_of::<Views>() + c.num_layers * std::mem::size_of::<Cache>();
-            let admitted = [
+            let plan = planning::SessionPlan::new(
+                c,
                 model.weight_bytes,
-                scratch_bytes,
-                kv_bytes,
-                history_bytes,
-                logits_bytes,
-                metadata_bytes,
-                ALLOWANCE,
-            ]
-            .into_iter()
-            .try_fold(0, add)?;
-            if admitted > options.memory_limit_bytes {
-                return Err(Error::Budget {
-                    required: admitted,
-                    limit: options.memory_limit_bytes,
-                });
-            }
+                options,
+                readback_mode,
+                attention_mode,
+            )?;
+            plan.admit(options.memory_limit_bytes)?;
+            plan.validate_buffers(model.gpu.device.maxBufferLength())?;
+            let planning::SessionPlan {
+                h,
+                q,
+                k,
+                m,
+                f,
+                cache_count,
+                score_count,
+                zero_count,
+                memory,
+                token_count,
+            } = plan;
+            let chunk = options.prefill_chunk_size;
+            let query_width = c.query_heads * c.head_dim;
             let g = &model.gpu;
             let hb = || Buffer::new(g, h.elements);
             let qb = || Buffer::new(g, q.elements);
@@ -953,7 +815,7 @@ impl<'m> Session<'m> {
                 floats: Buffer::new(g, f.elements)?,
                 scores: Buffer::new(g, score_count)?,
                 probs: Buffer::new(g, score_count)?,
-                tokens: Buffer::new(g, chunk + 7)?,
+                tokens: Buffer::new(g, token_count)?,
                 status: Buffer::new(g, 8)?,
                 selection: if readback_mode == ReadbackMode::GreedyToken {
                     Some(Buffer::new(g, 8)?)
@@ -1013,16 +875,7 @@ impl<'m> Session<'m> {
                 normalization_mode,
                 readback_mode,
                 attention_mode,
-                memory: session::Memory {
-                    weights_bytes: model.weight_bytes,
-                    kv_bytes,
-                    scratch_bytes,
-                    history_bytes,
-                    logits_bytes,
-                    metadata_bytes,
-                    metadata_allowance_bytes: ALLOWANCE,
-                    admitted_bytes: admitted,
-                },
+                memory,
                 history: Vec::with_capacity(options.capacity),
                 evaluated: 0,
                 distribution_valid: false,

@@ -19,14 +19,19 @@ pub(super) struct Buffer<T: Scalar> {
     pub len: usize,
     marker: PhantomData<T>,
 }
+/// Shared by allocation and preflight; no physical/free-memory promise.
+pub(super) fn validate_buffer_bytes(bytes: usize, maximum: usize) -> Result<()> {
+    if bytes == 0 || bytes > maximum || bytes > isize::MAX as usize {
+        return Err(Error::Options("buffer exceeds device/index limits"));
+    }
+    Ok(())
+}
 impl<T: Scalar> Buffer<T> {
     pub fn new(gpu: &Gpu, len: usize) -> Result<Self> {
         let bytes = len
             .checked_mul(size_of::<T>())
             .ok_or(Error::Options("buffer bytes overflow"))?;
-        if bytes == 0 || bytes > gpu.device.maxBufferLength() || bytes > isize::MAX as usize {
-            return Err(Error::Options("buffer exceeds device/index limits"));
-        }
+        validate_buffer_bytes(bytes, gpu.device.maxBufferLength())?;
         let raw = gpu
             .device
             .newBufferWithLength_options(

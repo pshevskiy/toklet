@@ -153,3 +153,7 @@ Exit: native Rust/Metal executes the implemented MLX representations/architectur
 with validated local/offline inference; the app on either tested device can find,
 admit and download an eligible immutable snapshot. Architecture and device
 coverage must enumerate what actually passed and retain all remaining open work.
+
+The explicit [runtime Metal resource planner](metal-resource-planning.md) shares
+actual loader/session layouts and admission totals. Its app/native consumer and
+qualification-receipt evaluation remain open; this does not qualify another device.

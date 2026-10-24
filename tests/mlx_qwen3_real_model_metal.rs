@@ -806,6 +806,26 @@ mod gpu {
                 )
             };
             let baseline = make(BUDGET).unwrap();
+            let plan = metal::planning::inspect_mlx(
+                &root().join(MODEL),
+                LoadOptions {
+                    context_limit: 32,
+                    memory_limit_bytes: BUDGET,
+                },
+                options(3, 0),
+                NormalizationMode::Compensated,
+                readback,
+                AttentionMode::Reference,
+            )
+            .unwrap();
+            assert_eq!(plan.resident_weights_bytes, 633_366_062);
+            assert_eq!(plan.resident_weights_bytes, model.weights_bytes());
+            assert_eq!(plan.session_memory, baseline.memory());
+            assert!(plan.fits_requested_budgets);
+            println!(
+                "MLX_QWEN3_REAL_RESOURCE_PLAN {}",
+                serde_json::to_string(&plan).unwrap()
+            );
             let exact = baseline.memory().admitted_bytes;
             assert!(
                 matches!(make(exact-1), Err(metal::Error::Budget { required, limit }) if required == exact && limit == exact-1)

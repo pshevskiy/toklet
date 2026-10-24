@@ -1,0 +1,682 @@
+{
+  "format": "toklet-metal-resource-baseline-v1",
+  "source_revision": "18c9101",
+  "device": "Apple M1 Pro",
+  "source": "Actual Model/Session owners before shared planning extraction",
+  "baseline_stdout_sha256": "4bad178adc71d5befef45cf9ea59dfd52d8f99f5b47f8e482829cae438b8f700",
+  "cases": [
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 1,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 2744,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67134736
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 1,
+      "readback": "FullLogits",
+      "attention": "Online",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 1728,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67133720
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 1,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 2776,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67134264
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 1,
+      "readback": "GreedyToken",
+      "attention": "Online",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 1760,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67133248
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 3,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 7296,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67139528
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 3,
+      "readback": "FullLogits",
+      "attention": "Online",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 4232,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67136464
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 3,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 7328,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67139056
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 3,
+      "readback": "GreedyToken",
+      "attention": "Online",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 4264,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67135992
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 32,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 73300,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67209012
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 32,
+      "readback": "FullLogits",
+      "attention": "Online",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 40540,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67176252
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 32,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 73332,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67208540
+      }
+    },
+    {
+      "directory": "mlx-qwen-v1/model",
+      "chunk": 32,
+      "readback": "GreedyToken",
+      "attention": "Online",
+      "memory": {
+        "weights_bytes": 18152,
+        "kv_bytes": 4152,
+        "scratch_bytes": 40572,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67175780
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/tied",
+      "chunk": 1,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 17812,
+        "kv_bytes": 4152,
+        "scratch_bytes": 2744,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67134396
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/tied",
+      "chunk": 1,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 17812,
+        "kv_bytes": 4152,
+        "scratch_bytes": 2776,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67133924
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/tied",
+      "chunk": 3,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 17812,
+        "kv_bytes": 4152,
+        "scratch_bytes": 7296,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67139188
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/tied",
+      "chunk": 3,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 17812,
+        "kv_bytes": 4152,
+        "scratch_bytes": 7328,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67138716
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/tied",
+      "chunk": 32,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 17812,
+        "kv_bytes": 4152,
+        "scratch_bytes": 73300,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67208672
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/tied",
+      "chunk": 32,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 17812,
+        "kv_bytes": 4152,
+        "scratch_bytes": 73332,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67208200
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/untied",
+      "chunk": 1,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 2744,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67136956
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/untied",
+      "chunk": 1,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 2776,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67136484
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/untied",
+      "chunk": 3,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 7296,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67141748
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/untied",
+      "chunk": 3,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 7328,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67141276
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/untied",
+      "chunk": 32,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 73300,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67211232
+      }
+    },
+    {
+      "directory": "mlx-llama-v1/untied",
+      "chunk": 32,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 73332,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67210760
+      }
+    },
+    {
+      "directory": "mlx-mistral-v1/untied",
+      "chunk": 1,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 2744,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67136956
+      }
+    },
+    {
+      "directory": "mlx-mistral-v1/untied",
+      "chunk": 1,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 2776,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67136484
+      }
+    },
+    {
+      "directory": "mlx-mistral-v1/untied",
+      "chunk": 3,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 7296,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67141748
+      }
+    },
+    {
+      "directory": "mlx-mistral-v1/untied",
+      "chunk": 3,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 7328,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67141276
+      }
+    },
+    {
+      "directory": "mlx-mistral-v1/untied",
+      "chunk": 32,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 73300,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67211232
+      }
+    },
+    {
+      "directory": "mlx-mistral-v1/untied",
+      "chunk": 32,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 20372,
+        "kv_bytes": 4152,
+        "scratch_bytes": 73332,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67210760
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/tied",
+      "chunk": 1,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 23884,
+        "kv_bytes": 8248,
+        "scratch_bytes": 3032,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67144852
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/tied",
+      "chunk": 1,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 23884,
+        "kv_bytes": 8248,
+        "scratch_bytes": 3064,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67144380
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/tied",
+      "chunk": 3,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 23884,
+        "kv_bytes": 8248,
+        "scratch_bytes": 8160,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67150220
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/tied",
+      "chunk": 3,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 23884,
+        "kv_bytes": 8248,
+        "scratch_bytes": 8192,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67149748
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/tied",
+      "chunk": 32,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 23884,
+        "kv_bytes": 8248,
+        "scratch_bytes": 82516,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67228056
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/tied",
+      "chunk": 32,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 23884,
+        "kv_bytes": 8248,
+        "scratch_bytes": 82548,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67227584
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/untied",
+      "chunk": 1,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 26444,
+        "kv_bytes": 8248,
+        "scratch_bytes": 3032,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67147412
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/untied",
+      "chunk": 1,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 26444,
+        "kv_bytes": 8248,
+        "scratch_bytes": 3064,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 184,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67146940
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/untied",
+      "chunk": 3,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 26444,
+        "kv_bytes": 8248,
+        "scratch_bytes": 8160,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67152780
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/untied",
+      "chunk": 3,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 26444,
+        "kv_bytes": 8248,
+        "scratch_bytes": 8192,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 424,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67152308
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/untied",
+      "chunk": 32,
+      "readback": "FullLogits",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 26444,
+        "kv_bytes": 8248,
+        "scratch_bytes": 82516,
+        "history_bytes": 128,
+        "logits_bytes": 512,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67230616
+      }
+    },
+    {
+      "directory": "mlx-qwen3-v1/untied",
+      "chunk": 32,
+      "readback": "GreedyToken",
+      "attention": "Reference",
+      "memory": {
+        "weights_bytes": 26444,
+        "kv_bytes": 8248,
+        "scratch_bytes": 82548,
+        "history_bytes": 128,
+        "logits_bytes": 8,
+        "metadata_bytes": 3904,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 67230144
+      }
+    }
+  ],
+  "physical_or_peak_measurement": false
+}

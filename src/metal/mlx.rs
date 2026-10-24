@@ -162,9 +162,12 @@ pub(super) fn packed_bytes(layout: Layout) -> Result<usize> {
         .and_then(|n| n.checked_add(layout.weight_bytes()))
         .ok_or(Error::Options("MLX resident weight bytes overflow"))
 }
+pub(super) fn validate_resident_layout(layout: Layout) -> Result<()> {
+    Sizes::new(layout, 1, crate::weights::INITIAL_MEMORY_LIMIT_BYTES).map(|_| ())
+}
 impl Packed {
     pub fn allocate(gpu: &Gpu, layout: Layout, pipelines: &[[Pipeline; 2]]) -> Result<Self> {
-        Sizes::new(layout, 1, crate::weights::INITIAL_MEMORY_LIMIT_BYTES)?;
+        validate_resident_layout(layout)?;
         let pair = &pipelines[pipeline_index(layout)];
         Ok(Self {
             layout,
