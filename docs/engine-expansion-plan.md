@@ -46,9 +46,12 @@ The engine owns compatibility facts so app and download code need not repeat
 architecture interpretation. Refactor an existing module only when a concrete
 second use establishes the shared mechanism, with existing fixtures preserved.
 
-## Current user priority: single-reply128K
+## Current user priority: Gemma4 and single-reply128K
 
-The user clarified131,072 tokens in one reply, for Chat and Expert. The
+The user prioritized Gemma4 and131,072 tokens in one reply, for Chat and Expert.
+Finish the current small [normalization reference](gated-norm-reference.md), then
+follow the [Gemma4 priority queue](gemma4-implementation-plan.md) before unrelated
+architecture expansion. Qwen3 completion and the broader inventory remain open. The
 [long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
 streaming, engine-owned capabilities and a qualified long-context graph within
 E2/E4/H1/H3/H4. It does not close E1–E6 or broaden current runnable limits. The
@@ -76,8 +79,8 @@ implementation. Do not combine an unrelated optimization with a graph change.
 
 | Order | Work package | Concrete tasks and completion evidence |
 | --- | --- | --- |
-| E1 — active | Qwen3 dense | Independent tiny upstream/scalar oracle with Q/K per-head RMSNorm and query width different from hidden width; checked scalar loading/execution; resident Metal graph; session/cache/cancellation/memory tests; immutable small real checkpoint and tokenizer/chat probes; Mac then iPhone trials. Start Metal with Reference attention; qualify Online separately. Qwen3 MoE is separate. |
-| E2 | Dense graph variants | Inspect and implement sliding/local attention, supported rotary scaling/partial rotary and independent head geometry; then Gemma- and Phi-family graphs one variant at a time, including their actual norm, activation, embedding/logit scaling or soft-capping rules where required. Each unsupported option rejects explicitly. |
+| E1 | Qwen3 dense | Independent tiny upstream/scalar oracle with Q/K per-head RMSNorm and query width different from hidden width; checked scalar loading/execution; resident Metal graph; session/cache/cancellation/memory tests; immutable small real checkpoint and tokenizer/chat probes; Mac then iPhone trials. Start Metal with Reference attention; qualify Online separately. Qwen3 MoE is separate. |
+| E2 — priority G1–G7 | Dense graph variants | Inspect and implement sliding/local attention, supported rotary scaling/partial rotary and independent head geometry; then Gemma- and Phi-family graphs one variant at a time, including their actual norm, activation, embedding/logit scaling or soft-capping rules where required. Each unsupported option rejects explicitly. |
 | E3 | Expert models | Freeze deterministic routing/tie/normalization fixtures; bounded top-k routing and expert layouts; scalar expert accumulation, resident GPU execution and memory planning; one small real MoE checkpoint. Shared experts and routing variants are separate cases. |
 | E4 | Compressed and recurrent/hybrid attention | MLA-style projection/cache semantics and recurrent/state-space or linear-attention updates in separate tasks; exact rollback/replay and prefix validity, independent state witnesses, bounded state memory and a real checkpoint for each implemented graph. |
 | E5 | Multimodal | Start with one vision-language graph: image decoding/preprocessing, encoder, connector, positions and insertion; real-image reference and app tests on both devices. Audio, video and other modality graphs remain separate backlog items. |

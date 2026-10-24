@@ -2423,3 +2423,23 @@ Astra accepted the exact source and
 [device coverage and limitations](mobile-gemma4-testing.md). The initial
 certificate-trust failure and fresh successful run remain distinct. The full
 engine/Hugging Face and long-reply plans stay open.
+
+## 24 October2026 — gated output-normalization witness and active priorities
+
+A separate independent FP64 reference fixes mean RMS normalization, direct scale
+and subsequent stable SiLU gating over FP32 inputs. Five bounded cases include
+epsilon-dominated rows, asymmetric heads, saturation and tiny negative gates.
+The exact JSON reader rejects Boolean/invalid geometry and non-FP32 inputs.
+Three ownership, eight math/format/failure and three runtime-admission tests pass;
+pinned upstream CPU/GPU each pass all12 comparisons with immediate raw retention.
+See [the contract](gated-norm-reference.md) and
+[receipt](../benchmarks/results/2026-10-24-gated-norm-reference-v1.json).
+No native composition, graph, quality, performance or phone qualification follows.
+
+The human now prioritizes [Gemma4 and131072-token replies](gemma4-implementation-plan.md).
+After finishing this small witness, the next task is pinned source/config/tensor/
+tokenizer mapping and real memory/context feasibility. Gemma4 E2B's declared
+131072 total positions do not establish131072 output tokens plus a prompt.
+The installed passing phone baseline remains preserved until a committed,
+qualified native/app candidate and full handoff evidence exist. The rest of the
+architecture/Hugging Face plan stays open.

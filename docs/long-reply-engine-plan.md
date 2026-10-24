@@ -31,7 +31,13 @@ native constants or a qualified phone process budget. Long records must have
 bounded copying/backpressure and retain exact text. Synthetic131072-ID decoding
 witnesses do not qualify131072 numerical generation, quality or device fit.
 
-## Candidate graph investigation
+## Gemma4 priority and candidate graph investigation
+
+The [Gemma4 priority queue](gemma4-implementation-plan.md) now runs before
+unrelated graph expansion. Its pinned E2B context is131072 total positions, so
+Gemma4 support alone does not close this output-plus-prompt requirement. Qualify
+a concrete extended-context or alternative-checkpoint route and memory budget
+without changing capability constants first.
 
 The immutable official [Qwen3.5-0.8B configuration](https://huggingface.co/Qwen/Qwen3.5-0.8B/raw/eb706f593d2d43c90a10271199c10b07ced7569a/config.json)
 declares262144 positions and a hybrid linear/full-attention text graph. Its
