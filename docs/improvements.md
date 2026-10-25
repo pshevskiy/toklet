@@ -3976,3 +3976,35 @@ See [contract, checks, evidence and limits](gemma-metal-rms.md) and the
 Retain as a standalone correctness prerequisite; no performance/default/app/phone
 claim. Full Gemma GPU composition, all previous source/cross-precision failures,
 and 131072 output tokens plus prompt remain open.
+
+## 25 October 2026 — resident FP32 Gemma packed projection
+
+Add original four-bit/group 64/BF16 projection with FP32 inputs/outputs, preserving
+existing Half and scalar paths. Keep weights resident across smaller/full batches,
+count padded storage/scratch before allocation, and check guards across all six
+buffers, inactive input/output capacity, status and finite output before
+publication. The diagnostic also verifies all immutable tensor bytes.
+Rejected inputs preserve caller output and
+remain reusable. Driver/in-flight failure injection is not qualified.
+
+Before target creation, preserve Astra's ordered-FP64-versus-exact cancellation
+counterexample. Add a derived upward summation-error admission alongside overflow
+admission, without changing gates. Two captures and Decimal400/exact replay
+freeze 27 cases / 306 outputs, adjacent admission boundaries and deep cancellation.
+Twelve portable methods, 346 CPU / 372 Metal-feature tests, both strict checks, both
+iOS compile targets and one exact optimized admission method pass. Thirty-one
+owned verifier methods cover valid transcripts and reject corrupt numerical,
+buffer, ownership and typed records.
+
+Actual M1 Pro execution passes 1296 comparisons over 648 outputs, 50 same-owner
+partitions and 25 full-capacity resumptions. All weights/padding/guards/inactive
+capacity match; constructor/input rejections and recovery pass. Maximum gate
+fraction is 0.0004018994. Largest exercised owner is 168,640 bytes; completed
+RSS/physical peaks are 34,537,472 / 22,479,424 bytes under separate 1 GiB policy.
+Previous output-rounded FP32/affine-ideal contracts retain their original labels.
+
+See [contract, evidence and remaining gates](gemma-metal-affine.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma-metal-affine-v1.json).
+Retain as a bounded correctness prerequisite, with no speed/default/app/phone
+claim. Actual Gemma activation fit, resident full graph and all earlier precision/
+source failures and 131072-output-plus-prompt requirements remain open.

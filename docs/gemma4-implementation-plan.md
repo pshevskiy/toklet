@@ -403,3 +403,14 @@ poison/recreation checks pass. It remains separate from the model graph and
 existing rotary context; joint resident weights/KV/scratch/command scheduling,
 source/cross-precision gates and physical phone fit remain open. No model or
 application eligibility, context limit or 131072-output grant changes.
+
+## G4 packed FP32 projection foundation
+
+The [standalone resident packed projection](gemma-metal-affine.md) now passes
+new exact/ordered witnesses and four unchanged historical projection fixtures
+with FP32 inputs/outputs. Same-owner batch reuse, padding/guards/inactive capacity,
+constructor/input admission and valid recovery checks pass on M1 Pro. The fixed
+numerical subset rejects incompatible ordered/exact sums explicitly. Actual
+Gemma activation fit, whole-model storage/upload, FP32 attention/KV/pointwise
+composition, scheduling, quality/performance and phone admission remain open.
+All prior graph/source/cross-precision and 131072-output gates remain unwaived.

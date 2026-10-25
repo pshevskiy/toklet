@@ -480,3 +480,13 @@ exponent handling preserve amplified tiny inputs under unchanged gates. This is
 one G4 primitive, with ownership/guard/overflow/recreation evidence. It does not
 close Gemma/source/cross-precision, whole-model execution, phone admission,
 capability/app integration or 131072-output-plus-prompt requirements.
+
+## Packed projection with FP32 activations
+
+A [resident fixed-format FP32 projection](gemma-metal-affine.md) now reads original
+four-bit/group 64/BF16 tensors and reuses weights across admitted batch sizes.
+Independent exact/ordered math and correctly labeled historical fixtures pass
+completed M1 Pro checks. A conservative derived admission preserves scalar/math
+compatibility; actual Gemma activation fit remains a separate gate. Full resident
+model/attention/KV/pointwise composition, app/mobile integration and all prior
+source/precision/quality/long-output requirements remain open.

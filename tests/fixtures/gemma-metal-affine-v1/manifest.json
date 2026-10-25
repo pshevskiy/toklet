@@ -1,0 +1,16 @@
+{
+  "format": "toklet-gemma-metal-affine-manifest-v1",
+  "producer_sha256": "51b96cb4d9538e74234b4a42ff61e7f73f78cd28919b2e8270e6517f7473d5a3",
+  "files": {
+    "math.json": {
+      "bytes": 85415,
+      "sha256": "61e78bfd5dfbc9131b2d6804bb7f8c8ff228cce249716c690ed3df90d40a0c53"
+    },
+    "math.bin": {
+      "bytes": 676204,
+      "sha256": "b7c4d03b8095368ba2c41abed1429b215ff5d6a4f1b77bf3dade338fd677817e"
+    }
+  },
+  "cases": 27,
+  "native_target_executed": false
+}
