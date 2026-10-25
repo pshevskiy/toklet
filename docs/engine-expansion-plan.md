@@ -579,3 +579,9 @@ The tiny Mac diagnostic passes 60 steps/10 owners and 22 mutation/reader tests;
 Actual full-head/table-gather execution, model-wide Context/source/output overlap,
 resident graph, source/precision resolution, performance, app/mobile and long-output
 qualification remain open. This adds no architecture or artifact eligibility.
+
+The [complete tied-head reference extraction](gemma-head-reference.md) now freezes
+all four-token input/output values before native full-head qualification. Two
+identical captures, independent byte replay and 20 mutation/retention tests pass.
+This is extraction integrity of the accepted mathematical graph, not a new
+numerical evaluation or native/GPU/model/device capability.

@@ -4278,3 +4278,21 @@ source, execution controller/replay, results and the final evidence packet.
 The old single-owner head rejection and numerical gates remain unchanged. Actual
 large head/table qualification, whole graph, performance, app/phone and long-output
 gates remain open; no historical source/precision failure or capability is waived.
+
+## 2026-10-25 — complete tied-head reference extraction
+
+Hypothesis: the accepted independent mathematical trace can supply the full
+real-head comparison boundary without another model run or retaining a dense
+head. Added bounded, authenticated [complete-array extraction](gemma-head-reference.md)
+and a separately written checker of every source/copied byte and typed descriptor.
+The 4218880-byte frozen binary contains 6144 FP32 inputs and 1048576 FP32 pre-softcap
+outputs for four tokens. Two captures are identical; both independent replays,
+17 mutation/reader tests and 3 original-error/partial-output retention tests pass.
+
+Retain decision: accept extraction integrity for later native diagnostics. No
+numerical reference reevaluation, Rust/GPU execution or source/quality grant.
+Maximum verification RSS 83017728 / physical 39469704 bytes, below separate 512 MiB
+process caps. Source/code, checked owner, results, freeze and publication receive
+Astra review before commit. Engine/test/shader/protected binaries stay unchanged;
+full-head execution, whole graph, historical source/precision discrepancies,
+performance, app/phone and long-output gates remain open.

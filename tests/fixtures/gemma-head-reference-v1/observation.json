@@ -1,0 +1,79 @@
+{
+  "format": "toklet-gemma-head-reference-v1",
+  "passed": true,
+  "contract": "staged_fp32",
+  "precision": "Original independently captured reconstructed-FP32 weights, FP32 input and rounded FP32 head output",
+  "tokens": [
+    2,
+    100,
+    257,
+    100
+  ],
+  "positions": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "arrays": [
+    {
+      "role": "input",
+      "name": "final_norm",
+      "shape": [
+        4,
+        1536
+      ],
+      "source_offset": 94990336,
+      "bytes": 24576,
+      "sha256": "9c4e07465e765d1df255936e7f5a8e0f71b22b9ba1612d1fa6414501b731bfa9",
+      "dtype": "F32",
+      "offset": 0,
+      "completed": true
+    },
+    {
+      "role": "expected",
+      "name": "head",
+      "shape": [
+        4,
+        262144
+      ],
+      "source_offset": 95014912,
+      "bytes": 4194304,
+      "sha256": "dcd99568f15eb6c8a4c60728eef4aaa1873f4de37e3b8e9c3c7cb580911fd548",
+      "dtype": "F32",
+      "offset": 24576,
+      "completed": true
+    }
+  ],
+  "binary_bytes": 4218880,
+  "binary_cap_bytes": 8388608,
+  "sources": {
+    "benchmarks/results/2026-10-25-gemma4-text-math-v1.json": {
+      "bytes": 406993,
+      "sha256": "c8691409336f5242076ad8859784dde7df8c1a5cdcc493f9b3c0bdcc8e974579"
+    },
+    "artifacts/m8-gemma4-text-real-v2/observation/observation.json": {
+      "bytes": 1954149,
+      "sha256": "ca86bd9836c88d5084f770b9ae84ecdb6e1e5a91d775e7cda315702450e918e9"
+    },
+    "artifacts/m8-gemma4-text-real-v2/observation/arrays.bin": {
+      "bytes": 103403520,
+      "sha256": "352385699238b422b430b6f535c2eac99b6e90543becb4c46caa0c59f930ed93"
+    },
+    "tests/fixtures/gemma4-text-math-v1/math.json": {
+      "bytes": 800566,
+      "sha256": "f60c9f355b9008cfba6acd5d39c89c108de2d1ed5a3c8013a3a595576d8f910b"
+    },
+    "tools/reference/gemma4_text_math.py": {
+      "bytes": 12526,
+      "sha256": "6c04a81b93c95edfad4a4de646da3731b71a6dd175163fb856d2009bd103b096"
+    }
+  },
+  "array_attempt": null,
+  "primary_error": null,
+  "native_activation_parity": false,
+  "engine_executed": false,
+  "gpu_executed": false,
+  "actual_full_head_qualified": false,
+  "source_or_precision_failures_waived": false
+}

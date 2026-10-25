@@ -1,0 +1,15 @@
+{
+  "format": "toklet-gemma-head-reference-manifest-v1",
+  "passed": true,
+  "files": {
+    "observation.json": {
+      "bytes": 2145,
+      "sha256": "1c03155565a4a0ef5d0b71ce6c5d0600b3061f85c6c8275561530c9897f08579"
+    },
+    "arrays.bin": {
+      "bytes": 4218880,
+      "sha256": "ba0e853cbf15459e3774afdac233237c68f36560395eb85c2ccb549409a7742c"
+    }
+  },
+  "file_errors": []
+}

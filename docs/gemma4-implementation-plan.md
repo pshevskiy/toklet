@@ -527,3 +527,14 @@ a tiny correctness qualification with explicit per-chunk waits/readbacks, not
 actual full-head, table-gather, graph, performance or phone qualification.
 Context/caller/source-loading overlap needs separate model-wide admission.
 Earlier source/precision failures and all open G2–G7 and long-output gates remain.
+
+## Complete real tied-head reference before native qualification
+
+The [full-head extraction witness](gemma-head-reference.md) now supplies all 6144
+staged final-normalization inputs and 1048576 pre-softcap head outputs from the
+accepted independent mathematical trace. Two captures match byte-for-byte; two
+independent complete-byte replays, 17 mutation/reader and 3 failure-retention tests
+pass. This verifies extraction of an existing numerical reference without
+reevaluating the graph or executing an engine/GPU. Original source/precision
+failures remain unwaived. Actual full-head residency and execution, complete
+graph and later device/app/performance/long-output gates remain open.
