@@ -470,3 +470,13 @@ results within their explicit memory policies. This closes native pairing and
 retention only. Capability/response endpoints, app/device integration, broader
 architectures, Gemma/source/precision/GPU gates and 131072-output-plus-prompt
 qualification remain separate; no text/numerical limit or phone grant changes.
+
+## Gemma FP32 RMS prerequisite
+
+A [bounded standalone resident Metal RMS operator](gemma-metal-rms.md) now passes
+frozen independent/scalar comparisons and completed M1 Pro checks for direct
+weighted and unlearned normalization. Its stable scaled reduction and original-bit
+exponent handling preserve amplified tiny inputs under unchanged gates. This is
+one G4 primitive, with ownership/guard/overflow/recreation evidence. It does not
+close Gemma/source/cross-precision, whole-model execution, phone admission,
+capability/app integration or 131072-output-plus-prompt requirements.

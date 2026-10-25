@@ -3946,3 +3946,33 @@ See [ownership, ABI checks and limits](smol-native-pair.md) and the
 This closes live pairing/retention only. Native capabilities/response production,
 app integration, phone fit, broader architecture/quantization, all earlier Gemma/
 source/precision/GPU gaps and 131072-output-plus-prompt requirements stay open.
+
+## 25 October 2026 — resident FP32 Gemma RMS prerequisite
+
+Add a separate bounded weighted/unweighted Metal RMS operator for Gemma's FP32
+activation contract. Preserve direct scales and exact fixed epsilon. Use scaled
+compensated reduction and integer exponent bookkeeping so large learned weights
+can amplify tiny original inputs without an intermediate flush losing the result.
+Keep immutable weights resident, count all numerical allocations before admission,
+check completion before CPU access, and publish caller output transactionally.
+Completed overflow poisons only that owner; the same weighted variant recreates
+successfully. Existing scalar and Half paths are unchanged.
+
+Before target creation, two independent captures freeze 16 cases / 57,685 outputs;
+Decimal80 and Astra's Decimal90 replay match every rounded FP32 bit. Nine portable
+reference methods, 345 CPU / 370 Metal-feature tests, both strict checks, both iOS
+compilation targets and one optimized admission test pass. Twenty-nine synthetic
+verifier methods reject corrupted numerical, ownership/status and typed records.
+
+Actual optimized M1 Pro execution passes 115,370 numerical comparisons, exact
+repeats and 31 row partitions, plus guards, preflight reuse, weighted overflow,
+sticky poison and same-variant recreation. Maximum gate fraction is 0.00117034
+under unchanged tolerances. Largest exercised owner is 100,604 bytes; process
+RSS/physical peaks are 46,055,424 / 31,326,808 bytes under separate 1 GiB policy.
+The 64 MiB context allowance is policy, not a measured residency claim.
+
+See [contract, checks, evidence and limits](gemma-metal-rms.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma-metal-rms-v1.json).
+Retain as a standalone correctness prerequisite; no performance/default/app/phone
+claim. Full Gemma GPU composition, all previous source/cross-precision failures,
+and 131072 output tokens plus prompt remain open.

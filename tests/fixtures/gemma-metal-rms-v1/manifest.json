@@ -1,0 +1,9 @@
+{
+  "format": "toklet-gemma-metal-rms-manifest-v1",
+  "producer_sha256": "9d6ae9e6e6997466f86567ddf36844190f51f1f77a4565033d54ee80f02638c3",
+  "math_sha256": "935e1ecac3d8418cd4f668b5200e3e58730c0798391561bebe1b945391e859bb",
+  "math_bytes": 4404783,
+  "cases": 16,
+  "values": 57685,
+  "native_target_executed": false
+}

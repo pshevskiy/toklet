@@ -391,3 +391,15 @@ results within their explicit memory policies. This closes native pairing and
 retention only. Capability/response endpoints, app/device integration, broader
 architectures, Gemma/source/precision/GPU gates and 131072-output-plus-prompt
 qualification remain separate; no text/numerical limit or phone grant changes.
+
+## G4 FP32 RMS foundation
+
+The [standalone resident FP32 RMS operator](gemma-metal-rms.md) now passes its
+pre-target independent mathematical fixture, scalar checks and completed M1 Pro
+GPU diagnostic. Direct weighted/unweighted forms cover actual local/global head,
+hidden and PLE widths, including amplified tiny values. Fixed-shape admission,
+guards, transactionally published output, preflight reuse and completed overflow/
+poison/recreation checks pass. It remains separate from the model graph and
+existing rotary context; joint resident weights/KV/scratch/command scheduling,
+source/cross-precision gates and physical phone fit remain open. No model or
+application eligibility, context limit or 131072-output grant changes.
