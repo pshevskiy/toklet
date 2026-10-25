@@ -247,3 +247,10 @@ backing owners separate from execution, with complete-stream integrity and
 text-only residency admission. Its offline synthetic success and public E2B
 metadata rejection do not qualify real acquisition/load, numerical execution,
 quality, performance, device memory or compatibility eligibility.
+
+The [immutable Gemma4 checkpoint and Mac storage load](gemma4-checkpoint.md) now
+admit the actual packed text payload and540 borrowed views after complete-file
+integrity/value checks. The failed first transfer is retained separately from
+the successful recovery. This is acquisition/storage evidence only: real E2B
+execution, tokenizer/chat/generation, resident Metal, quality, representative
+performance and device/app gates remain open.

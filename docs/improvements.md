@@ -3238,3 +3238,29 @@ See the [model and verification report](mobile-qwen3-downloads.md) and
 Chat/raw/context limits remain 256/128/512. Gemma 4 real-model/device admission and
 131,072 output tokens plus prompt/history remain separate prioritized engine
 gates; this mobile addition does not qualify them.
+
+## 25 October2026 — immutable Gemma4 checkpoint and Mac storage admission
+
+Add a bounded data-only downloader for the pinned Gemma4 E2B four-bit candidate
+and an explicit native cold-load example. Nine files total3,583,087,091 bytes.
+Range/response checks, exact Git/LFS identities and the whole-container hash
+precede atomic publication. Retain the failed initial transfer and all four
+rejected/canceled rows; reviewed recovery reuses195 verified ranges and fetches
+17missing ranges, with226 actual HTTP attempts across both runs.
+
+The fresh native process admits all540 text views,278 packed matrices and262
+FP32 vectors. Tensor capacity is2,604,553,356 bytes; conservative load admission
+is2,671,730,828 bytes. On the M1 Pro Mac, observed maximum resident memory is
+1,520,435,200 bytes and peak physical footprint is2,616,527,296 bytes. A single
+debug storage validation takes183.83 seconds after file hashing; these are
+storage observations, without inference or controlled performance qualification.
+
+Eleven portable acquisition tests and four recovery fault regressions pass.
+Formatting, strict default/Metal Clippy,291 CPU and313 Metal-feature tests, both
+iOS compile targets and the example build pass; numerical fixtures/tolerances
+are unchanged. Astra reviews source and final bound evidence before commit.
+See the [scope and result](gemma4-checkpoint.md) and
+[receipt](../benchmarks/results/2026-10-25-gemma4-checkpoint-v1.json).
+Real E2B geometry/execution, tokenizer/chat/generation, Metal, quality/performance,
+phone fit and app support remain open. All existing GPU/long-rotary failures
+remain unwaived; no ABI/catalog/context limit changes.

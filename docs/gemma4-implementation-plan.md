@@ -7,17 +7,18 @@ below ahead of unrelated architecture expansion. The remaining
 [engine/Hugging Face plan](engine-expansion-plan.md) remains open. Astra reviews
 each code task and it is committed after its checks pass.
 
-The installed iPhone baseline is the reviewed `17fbc4f` UI with native
-`2d7d35b0`; its [six physical discovery/UI checks](mobile-model-ranking.md) and
-the earlier [four Gemma checks](mobile-gemma4-testing.md) do not add Gemma4.
-Official and MLX Gemma4 E2B config-only probes reject unknown architecture and
-create no native model handle. No Gemma weights or phone memory fit are admitted.
+The installed iPhone baseline is the reviewed `0dffb16` Qwen3 UI with the
+immutable native package from `40bf67f`; its
+[physical Qwen3 checks](mobile-qwen3-downloads.md) do not add Gemma4. Official and
+MLX Gemma4 E2B config-only app probes reject unknown architecture and create no
+native Gemma model handle. The [Mac storage load](gemma4-checkpoint.md) now
+admits pinned Gemma text weights; numerical execution and phone fit remain open.
 
 ## Ordered tasks
 
 | Task | Work and acceptance | Status |
 | --- | --- | --- |
-| G1 | Authenticate the pinned Gemma4 wrapper/text source, official E2B config and quantized candidate metadata. Map every graph option and tensor/tokenizer/chat requirement. Inspect bounded index/tensor headers and actual representation; enumerate missing mechanisms and rejected variants. Separate effective parameter names from actual stored weights. Derive allocation requirements before downloading a large payload. | [Mapped](gemma4-e2b-inspection.md); full payload/fit not qualified |
+| G1 | Authenticate the pinned Gemma4 wrapper/text source, official E2B config and quantized candidate metadata. Map every graph option and tensor/tokenizer/chat requirement. Inspect bounded index/tensor headers and actual representation; enumerate missing mechanisms and rejected variants. Separate effective parameter names from actual stored weights. Derive allocation requirements before downloading a large payload. | [Mapped](gemma4-e2b-inspection.md); [Mac payload admitted](gemma4-checkpoint.md), inference/fit open |
 | G2 — active | Freeze independent tiny witnesses for each missing concrete mechanism: local/global attention geometry and position rules, sliding masks, shared KV ownership, per-layer embedding/input paths, exact norm/scale/activation/residual order and logit capping where required by G1. Keep old families' fixtures passing. | Open |
 | G3 | Implement a small named Gemma4 config/weight adapter and scalar text graph/session using concrete validated layers. Qualify state commit/replay, pending sampled tokens, exact prefix reuse, stop semantics and overflow. Reject every unimplemented graph/modality/representation rather than aliasing an existing family. | Open |
 | G4 | Add resident Metal execution and allocation plans for actual weights, shared/rotating KV, scratch, staging and temporary overlap. Compare scalar/upstream numerical states and outputs. Qualify independent Mac/phone admission and fail before allocation on non-fitting requests. | Open |
@@ -162,3 +163,12 @@ publication. Synthetic success and public real-metadata budget rejection are
 covered separately. This does not acquire or qualify the real payload. Actual
 E2B acquisition/load and its15-producer geometry remain next, followed by the
 unchanged generation/Metal/quality/device/app gates.
+
+The [immutable E2B acquisition and native Mac storage load](gemma4-checkpoint.md)
+now authenticate all nine selected files and admit actual text values through
+all540 cold views. The original failed transfer remains rejected; recovery uses
+only independently verified successful ranges. A fresh process passes within
+the existing desktop logical allowance. This closes acquisition/storage only
+within G5: the executable35-layer/15-producer geometry, source numerical parity,
+tokenizer/chat/generation, quality, representative performance, Metal, phone fit
+and app integration remain open. No whole G2/G3/G5 gate is marked complete.
