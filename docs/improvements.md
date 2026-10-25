@@ -3786,3 +3786,33 @@ See [design, evidence and limits](smol-load-identity.md) and the
 No loader, ABI, capability, app, phone, Gemma4 or long-reply qualification changes.
 The next producer boundary still requires hashing the bytes actually converted
 or uploaded before publishing a private immutable loaded-model identity.
+
+## 25 October 2026 — resident standalone Metal proportional rotary
+
+Add a fixed-shape owner with cached host FP64 coefficients, one separate precise
+Metal pipeline and resident guarded buffers. Pair opposite half-head coordinates,
+use full-dimension exponents and prevent product/sum contraction. Copy inactive
+FP32 bits exactly. Validate bounded geometry and owned capacity before allocation;
+confirm command completion before CPU access. Pre-submission errors remain
+reusable; later errors poison the owner and preserve caller output.
+
+Independent rational rounding and eight-query-head local/global witnesses were
+frozen before target implementation. Actual M1 Pro execution passes eleven cases
+twice, 86,640 comparisons and twelve bitwise-equal token partitions, plus rounding,
+guards, negative-zero/subnormal copy and completed overflow/recreate checks.
+Maximum absolute error is 5.582909308188277e-7 under unchanged tolerances. Largest
+observed owner is 100,116 bytes; context's separate 64 MiB allowance is policy,
+not measured residency. Completed test RSS/physical peaks are 37,715,968 /
+26,460,760 bytes within a separate 1 GiB diagnostic ceiling.
+
+All 312 CPU/335 Metal-feature tests, both strict checks, both iOS targets and
+release geometry pass. Sixteen controller corruptions reject. The first GPU
+child passed but its controller rejected the prefixed first record; that attempt
+remains retained as failed, followed by a fresh reviewed successful run. The
+initial independent rounding-generator assumption failure is also retained.
+
+See [layout, ownership, checks and limits](gemma-metal-rotary.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma-metal-rotary-v1.json).
+This is a G4 mathematical building block. It does not waive source/precision gaps
+or qualify resident graph execution, driver failure recovery, mobile fit,
+representative performance, app capabilities or 131072 numerical output.

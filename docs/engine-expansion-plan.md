@@ -412,3 +412,13 @@ native loader. Fresh relocated captures/replays and 28 synthetic methods pass;
 checkpoint. Loader publication, trusted profile/tokenizer binding and native
 capability/app integration remain separate reviewed tasks. No inference or
 eligibility change is granted by this reference.
+
+## Gemma Metal rotary foundation
+
+The [standalone resident rotary](gemma-metal-rotary.md) adds precise FP32 GPU
+pair products/sums with cached host FP64 coefficients, guarded bounded ownership
+and explicit completed-failure poison behavior. Frozen actual query-head shapes
+pass on M1 Pro through position 131071, with repeated/partitioned output checks.
+This is mathematical operator qualification only; source parity, resident Gemma
+graph execution, performance, phone fit, app eligibility and long-output gates
+remain open. Existing graph/profile/context limits are unchanged.

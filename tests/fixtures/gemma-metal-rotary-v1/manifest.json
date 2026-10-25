@@ -1,0 +1,19 @@
+{
+  "format": "toklet-gemma-metal-rotary-fixture-v1",
+  "scope": "Independent mathematical and staged-rounding witnesses frozen before the native Metal target; no upstream/model/device qualification",
+  "files": {
+    "math.json": {
+      "bytes": 658679,
+      "sha256": "9969cb2211ec664acb92faaae2055341025a04a0e45cc39f4ff48b41c82ecd3a"
+    },
+    "rounding.json": {
+      "bytes": 3226,
+      "sha256": "314f461b34a80f534ec45e67d57c568eb12ae72c7dba28a026b5b4ed9b247448"
+    }
+  },
+  "math_origin": "artifacts/m8-gemma-metal-rotary-math-v2/owned.json",
+  "rounding_origin": "artifacts/m8-gemma-metal-rotary-witness-v2/owned.json",
+  "rounding_fields_note": "Both contracting_first_output_bits and contracting_second_output_bits describe alternative contractions of the FIRST coordinate, not two output coordinates",
+  "graph_qualified": false,
+  "upstream_parity_qualified": false
+}

@@ -331,3 +331,14 @@ relocated two-capture/two-replay execution with 28 synthetic methods. Their
 694-range/tied-read evidence is an independent prerequisite for the later native
 loaded-model identity boundary. They add no Gemma4 loader or app grant and do
 not close any G2–G7, phone or 131072-output gate.
+
+## G4 foundation — standalone resident rotary
+
+The [fixed-shape Metal proportional rotary](gemma-metal-rotary.md) now matches
+independent mathematical witnesses on M1 Pro: eleven cases/two repeats, 86,640
+comparisons, twelve exact token partitions and explicit rounding/guard/overflow
+checks. All 312 CPU/335 Metal-feature tests, both iOS targets and release geometry
+checks pass. Buffers and coefficients remain resident for fixed offsets; new
+offsets require separately admitted owners. Earlier source/precision failures,
+resident whole-graph scheduling, quality/performance, mobile memory/ABI/app and
+131072-output gates remain open. G4 is not complete and no capability changes.
