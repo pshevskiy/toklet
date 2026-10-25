@@ -3,6 +3,7 @@
 use super::*;
 
 mod gather;
+mod upload;
 pub use gather::Gather;
 
 const MAX_ROWS: usize = 262144;

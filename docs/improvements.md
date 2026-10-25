@@ -4427,3 +4427,46 @@ Bounded large-table source/upload overlap, aggregate resident model memory,
 native table lookup, graph/KV, historical precision/source/rotary failures,
 quality/performance, app/phone and long-output requirements remain open. No
 artifact eligibility or output/context limit changes.
+
+## 2026-10-26 — bounded reusable source upload for resident packed chunks
+
+Hypothesis: a resident table can avoid a second full CPU representation during
+loading by reusing one packed source chunk. Added a named upload module and cold
+generic fill callback beside the existing partitioned affine. Working admission
+counts the complete resident owner, all three maximum source capacities and Vec
+descriptors simultaneously; actual capacities and every device buffer limit are
+checked before callback/upload. Returned owned bytes retain resident-only meaning.
+Complete callback overwrites, authenticated artifact IO and external side effects
+are explicit caller contracts. Late source/domain errors and unwinding panics
+propagate/drop the unpublished partial owner; prior resident owners stay valid.
+No numerical shader/body or old borrowed constructor preflight changes.
+
+Astra reviewed code, frozen diagnostics, independent source/projection replay and
+controlled execution. Two pure plans cover exact adjacent budgets, actual
+capacities, geometry/overflow and the PLE shape's 82575360-byte maximum source
+chunk (versus 1321205760 full source bytes) without large allocation. Required
+formatting/strict default+Metal, CPU 356/16 ignored, Metal 390/120 ignored,
+iOS device/simulator and optimized upload-plan 2/fixture 4 pass.
+
+The first GPU attempt exposed a test classification mistake: existing invalid
+metadata returns Unsupported, while the assertion expected Options. Original
+cause, unchanged warmed owner, exact old source/binary and failed outputs are
+retained without success credit. Only that test category changed; fresh complete
+source checks and the corrected GPU run pass, with no tolerance/domain change.
+
+Actual M1 Pro captures qualify five owners/13 published chunks, 20 source
+callbacks and 25 projections/777 bit-exact outputs. Independent replay checks
+all complete source prefixes, stable disjoint allocation intervals, GPU buffers,
+metadata padding/guards and CPU scratch. Budget-minus-one invokes no callbacks;
+first/late errors, invalid late metadata, original caught panic, unchanged warmed
+owner and fresh recovery pass. Portable 5 and actual-capture/reader 31 checks pass.
+
+Conservative native policy 167820292 bytes includes possible retained failed
+uploads. Native RSS 20234240/physical 9552448 bytes, replay 29884416/19415664 and
+regressions 39043072/27411128 fit 1 GiB native/512 MiB checker limits. These are
+separate process peaks and policy accounting, not model residency or performance.
+Retain the scoped uploader; see [contract and evidence](gemma-stream-upload.md)
+and the [public record](../benchmarks/results/2026-10-26-gemma-stream-upload-v1.json).
+Actual large-table upload/gather, aggregate full-model memory, graph/KV,
+historical precision/source/rotary failures, quality/performance, app/phone and
+long-output requirements remain open. No capability or context/output limit changes.

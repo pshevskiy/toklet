@@ -1,5 +1,10 @@
 # Engine coverage and Hugging Face implementation plan
 
+Latest loading mechanism: [bounded source upload](gemma-stream-upload.md)
+qualifies tiny original packed chunk construction with reusable source storage,
+peak admission and unpublished-error recovery. Real large-table tests and full
+Gemma/native app capabilities remain separate and open.
+
 Latest reference preparation: [real embedding/PLE lookup arrays](gemma-lookup-reference.md)
 are frozen in full for subsequent native large-table comparisons. This is a
 verified extraction of existing independent data, with no new numerical, model,

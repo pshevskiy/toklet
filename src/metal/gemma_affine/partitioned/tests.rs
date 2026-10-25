@@ -75,7 +75,7 @@ fn report(label: &str, value: serde_json::Value) {
 fn bits(values: &[f32]) -> Vec<u32> {
     values.iter().map(|v| v.to_bits()).collect()
 }
-fn observe(owner: &PartitionedAffine<'_>, caller: &[f32]) -> serde_json::Value {
+pub(super) fn observe(owner: &PartitionedAffine<'_>, caller: &[f32]) -> serde_json::Value {
     use serde_json::json;
     let buffer = |buffer: &Buffer<u32>| json!({"allocation":format!("{:p}",&*buffer.raw),"words":buffer.with_slice(<[u32]>::to_vec)});
     let children: Vec<_> = owner.chunks.iter().map(|child| {
@@ -87,7 +87,7 @@ fn observe(owner: &PartitionedAffine<'_>, caller: &[f32]) -> serde_json::Value {
         "owner_slots":owner.chunks.capacity(),"full_scratch_capacity":owner.staged.capacity(),"chunk_scratch_capacity":owner.chunk_output.capacity(),
         "caller_bits":bits(caller),"staged_bits":bits(&owner.staged),"chunk_scratch_bits":bits(&owner.chunk_output),"children":children})
 }
-fn step(
+pub(super) fn step(
     owner: &mut PartitionedAffine<'_>,
     key: &str,
     phase: &str,

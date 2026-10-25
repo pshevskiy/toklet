@@ -14,6 +14,12 @@ MLX Gemma4 E2B config-only app probes reject unknown architecture and create no
 native Gemma model handle. The [Mac storage load](gemma4-checkpoint.md) now
 admits pinned Gemma text weights; numerical execution and phone fit remain open.
 
+Latest standalone G4 loading progress, 26 October 2026:
+[bounded packed upload](gemma-stream-upload.md) reuses one source chunk while
+resident GPU chunks accumulate. Tiny independent fixtures qualify peak admission,
+source/error/unwind ownership and recovery; original real-table loading/gathers,
+whole-model fit and G2–G7 remain open.
+
 Latest reference preparation, 26 October 2026: [complete real lookup rows](gemma-lookup-reference.md)
 freeze all 41984 embedding/PLE values from the accepted independent trace for
 later original-table GPU tests. Extraction does not run a model or qualify large
