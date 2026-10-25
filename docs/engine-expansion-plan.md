@@ -320,3 +320,12 @@ the measured process fits6GiB. This advances short raw generation/state only.
 Tokenizer/basic-text formatting/model-stop witnesses are next; all earlier
 full-graph precision/source failures and Metal, quality/performance, device/app
 and long-output gates remain open. G3 is not marked complete.
+
+The [pinned tokenizer/basic-text witness](gemma4-text-codec-reference.md) now
+freezes97 exact records in two fresh byte-identical upstream captures, with
+manual prompt-layout and scalar complete/prefix-decode replay. The strict
+user/assistant subset, all24 control literals, no-Strip byte-fallback behavior
+and selected-artifact stops1/106/50 are explicit. Seven offline methods and
+separate1GiB reference-process checks pass. Native text-profile implementation
+and formatted model continuation are next; no app capability, streaming, G3,
+numerical/source, quality/performance, device or long-output gate is closed.

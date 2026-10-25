@@ -3490,3 +3490,37 @@ This is bounded short raw continuation evidence; full G3, tokenizer/chat/model
 stop semantics, source-BF16, existing precision/GPU/long-rotary gaps, resident
 Metal, quality/performance, phone fit, app support and131072 output tokens remain
 open. No ABI/catalog/position-limit changes.
+
+## 25 October 2026 — pinned Gemma4 basic-text reference
+
+Freeze exact upstream tokenizer and authenticated template behavior before
+adding a native text profile. Admit a strict bounded non-thinking user/assistant
+subset, reject advanced options and all24 control literals, and explicitly
+resolve the selected artifact's stop IDs1/106/50. Preserve identity
+postprocessor/no-automatic-BOS behavior under both encode modes. Keep raw text,
+normalization, Unicode/whitespace, multiple turns and all control-token observations
+alongside complete/prefix byte-fallback decodes and diagnostic-only macro cases.
+
+Two fresh captures produce identical97-record/36,960-byte witnesses. Manually
+assembled turn layout matches all six rendered prompts, and an independent
+scalar vocabulary decoder replays all Replace/ByteFallback/Fuse outputs and
+prefixes. Invalid UTF-8 can rewrite the entire fallback run; leading spaces are
+not stripped. This informs the native stream design without granting append-only
+streaming or a separately implemented BPE oracle.
+
+Cold admission authenticates1,970 Python/package/native files, source/native
+loaders before import, actual origins afterward and exact endpoint lengths and
+hashes. Seven offline methods pass, including source shadowing, actual partial
+driver failures and signal restoration after publication failure. Retain the
+initial unresolved-temporary-path test failure without acceptance credit; the
+corrected five-method and final seven-method attempts pass with clean guards.
+Separate reference-process resident peaks649,592,832/671,023,104 bytes and
+physical peaks380,700,976/391,661,968 bytes fit1GiB. The2.10/1.94-second combined
+observations are not performance benchmarks. Rust sources/tests/examples remain
+unchanged; no unrelated engine build is rerun.
+
+See [subset, source policy and decoding evidence](gemma4-text-codec-reference.md)
+and the [receipt](../benchmarks/results/2026-10-25-gemma4-text-codec-reference-v1.json).
+Native text/streaming, formatted continuation, full G3 and all earlier numerical,
+source, Metal, quality/performance, device/app and131072-output gates remain
+open. No ABI/catalog/position-limit changes.
