@@ -127,6 +127,59 @@ class Admission(unittest.TestCase):
                 self.assertEqual(values, [0.]*4)  # Reassociation would give one.
         self.assertNotIn('embed_tokens_per_layer.weight', {v[0] for v in first})
 
+    def test_coordinate_correlation_and_joint_or_single_permutation(self):
+        shape = [1, 4, 2]
+        first, second = [10., 1.]*4, [1., 10.]*4
+        for function in (target.coordinate_maxima, replay.coordinate_envelope):
+            value = function(first, shape, second, shape)
+            self.assertEqual(value, [10.]*4)
+            self.assertEqual(function(second, shape, first, shape), value)
+            self.assertEqual(function(first, shape, first, shape), [100.]*4)
+            coarse = target.product_ceiling(max(first), max(second))
+            self.assertTrue(all(v <= coarse for v in value))
+            jointly_reversed = function([1., 10.]*4, shape, [10., 1.]*4, shape)
+            self.assertEqual(jointly_reversed, value)
+        self.assertEqual(list(target.inputs(self.reader, True)), list(replay.invocation_inputs(self.reader, True)))
+
+    def test_coordinate_rounding_underflow_and_overflow_is_unproved(self):
+        a = [1.+2.**-23, 2.**-149, target.MAXIMUM, 0.]*4
+        b = [1.+2.**-23, .5, 2., 0.]*4
+        shape = [1, 4, 4]
+        for function in (target.coordinate_maxima, replay.coordinate_envelope):
+            self.assertEqual(function(a, shape, b, shape), [None]*4)
+            safe = list(b)
+            for offset in range(2, len(b), 4):safe[offset] = 0.
+            values = function(a, shape, safe, shape)
+            expected = replay.envelope(a[0], b[0])
+            self.assertEqual(values, [expected]*4)
+            self.assertGreaterEqual(Fraction(expected), Fraction(a[0])*Fraction(b[0]))
+            tiny_a, tiny_b = [2.**-149]*4, [.5]*4
+            self.assertEqual(function(tiny_a, [1, 4, 1], tiny_b, [1, 4, 1]), [2.**-149]*4)
+
+    def test_coordinate_shapes_and_typed_values_are_checked(self):
+        for function in (target.coordinate_maxima, replay.coordinate_envelope):
+            for a, ashape, b, bshape in [([1.]*8, [1, 4, 2], [1.]*8, [1, 4, 3]),
+                                       ([1.]*7, [1, 4, 2], [1.]*8, [1, 4, 2]),
+                                       ([1.]*8, [True, 4, 2], [1.]*8, [True, 4, 2]),
+                                       ([1.]*6, [1, 3, 2], [1.]*6, [1, 3, 2]),
+                                       ([True]*4, [1, 4, 1], [1.]*4, [1, 4, 1]),
+                                       ([math.nan]*4, [1, 4, 1], [1.]*4, [1, 4, 1])]:
+                with self.assertRaises(ValueError):
+                    function(a, ashape, b, bshape)
+
+    def test_verifier_requires_external_mode_and_rejects_old_evidence(self):
+        replay.mode_identity('toklet-gemma-affine-admission-v1', None, False)
+        replay.mode_identity('toklet-gemma-affine-admission-v2', 'coordinate-correlated', True)
+        for values in [('toklet-gemma-affine-admission-v1', None, True),
+                       ('toklet-gemma-affine-admission-v2', 'coordinate-correlated', False),
+                       ('toklet-gemma-affine-admission-v2', None, True),
+                       ('toklet-gemma-affine-admission-v2', 'coordinate-correlated', 1)]:
+            with self.assertRaises(ValueError):
+                replay.mode_identity(*values)
+        for function in (target.inputs, replay.invocation_inputs):
+            with self.assertRaises(ValueError):
+                list(function(self.reader, 1))
+
     @staticmethod
     def small_trace():
         raw = struct.pack('<ff', 1., -2.)

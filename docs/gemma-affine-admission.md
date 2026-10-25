@@ -1,11 +1,13 @@
 # Real Gemma projection admission
 
 The pinned Gemma 4 E2B checkpoint's 278 text matrix codebooks fit the standalone
-[FP32 packed projection](gemma-metal-affine.md) numerical domain. The frozen
-four-token staged-FP32 trace proves admission for 260 projection calls. Sixteen
-product envelopes remain inconclusive; the complete tied head is separately
-rejected by the operator's output-row limit. This is an admission audit, without
-projection execution, native activation parity, a resident graph or app eligibility.
+[FP32 packed projection](gemma-metal-affine.md) numerical domain. The latest
+coordinate-correlated audit proves admission for 269 projection calls in the
+frozen four-token staged-FP32 trace. Seven product envelopes remain inconclusive;
+the complete tied head is separately rejected by the operator's output-row
+limit. This is admission evidence, without projection execution, native activation
+parity, a resident graph or app eligibility. The initial row-max audit and its
+260/16/1 results remain preserved below.
 
 ## Authenticated inputs and scope
 
@@ -32,7 +34,7 @@ source, not an additional projection invocation. The tied token table supplies
 the one head invocation, which remains geometry rejected. No chunked table/head
 or mobile allocation qualification follows from this audit.
 
-## Input classifications and unchanged limits
+## Initial row-max classifications and unchanged limits
 
 The fixed invocation map contains 277 calls:
 
@@ -87,7 +89,7 @@ unrelated Rust suites or GPU benchmarks. The
 [receipt](../benchmarks/results/2026-10-25-gemma-affine-admission-v1.json) binds
 the exact source, raw captures, commands, resources and retained first failure.
 
-## Remaining work
+## Remaining work after the initial audit
 
 Retain the audited codebook and 260 admitted-call results. Resolve the 16
 inconclusive products, table/head chunking and actual native activation fit
@@ -97,3 +99,43 @@ quality/performance, original-BF16 source parity, app/phone admission and 131072
 output tokens plus prompt remain open. G2/G3/G4 and the earlier 57 cross-precision,
 27 native ideal-logit, 15 dense/15 packed source-GPU and eight long-rotary
 failures remain unwaived.
+
+## Coordinate-correlated product refinement
+
+The optional `coordinate-products` reference mode pairs each gate coordinate
+with its own multiplier. It computes an outward FP32 product ceiling before
+taking the token's maximum. This is a tighter sufficient envelope than the
+product of independent row maxima. Any overflowing coordinate still makes its
+token unproved. Complete equal `[1,4,width]` shapes and typed finite FP32 values
+are required; neither GELU nor a projection is evaluated.
+
+The new report format explicitly identifies the coordinate recipe. The verifier
+requires that mode externally and rejects old row-max evidence presented as a
+coordinate report. The default mode's complete 277 recipe/classification records
+match the authenticated initial capture, including its 16 inconclusive cases.
+Old evidence is preserved; the new mode supplies separate evidence.
+
+Two new captures and independent rational replays prove 269 calls: 171 direct,
+35 exact residual and 63 product envelopes. Nine former inconclusive envelopes
+now pass: FF-down layers 7, 15, 24, 25, 26, 27, 28, 29 and 34. Each token's
+coordinate envelope is no larger than its earlier row envelope. Layers 0..6
+remain not proved; the maximum envelope U remains 4.071010368811304e-6 at layer
+4. Layer 6's tighter U is 6.834568353764063e-7, still above 6.25e-7. The full
+tied head and both whole table owners remain geometry rejected. All numerical
+and geometry limits are unchanged.
+
+Sixteen offline methods now cover correlation, joint versus one-sided coordinate
+permutation, outward/subnormal rounding, overflow propagation, shape/type errors
+and externally selected report modes, along with all prior offline methods.
+The two retention methods and the actual default compatibility replay pass.
+All seven owned commands, resources, endpoint guards and process/group closures
+pass. Both 289,267,712-byte metadata captures retain the initial hash; both new
+observation files match byte for byte. Maximum RSS/physical peaks across these
+processes are 52,625,408 / 45,548,240 bytes under the same separate 512 MiB policy.
+See the [coordinate receipt](../benchmarks/results/2026-10-25-gemma-affine-coordinate-v1.json).
+
+Retain the tighter reference mode. Seven products still need actual-input
+diagnosis; any stronger summation admission needs its own independent proof
+before engine changes. Whole table/head storage, native activation parity,
+resident graph/commands, quality/performance, app/phone fit and long output
+remain open. No earlier source/precision failure is waived.

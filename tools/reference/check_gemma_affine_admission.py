@@ -129,6 +129,36 @@ def envelope(a, b):
     return value
 
 
+def coordinate_envelope(a, a_shape, b, b_shape):
+    if (not isinstance(a_shape, list) or not isinstance(b_shape, list)
+            or len(a_shape) != 3 or len(b_shape) != 3
+            or any(type(n) is not int for n in a_shape+b_shape)
+            or a_shape != b_shape or a_shape[0] != 1 or a_shape[1] != 4
+            or not 0 < a_shape[-1] <= 12288
+            or len(a) != 4*a_shape[-1] or len(a) != len(b)):
+        raise ValueError('complete equal four-token shapes required')
+    result = []
+    for start in range(0, len(a), a_shape[-1]):
+        upper, unproved = 0., False
+        for index in range(start, start+a_shape[-1]):
+            if type(a[index]) not in (int, float) or type(b[index]) not in (int, float):
+                raise ValueError('typed numerical coordinates required')
+            value = envelope(abs(a[index]), abs(b[index]))
+            if value is None:
+                unproved = True
+            elif value > upper:
+                upper = value
+        result.append(None if unproved else upper)
+    return result
+
+
+def mode_identity(format_name, recipe, coordinate_products):
+    if type(coordinate_products) is not bool:
+        raise ValueError('external Boolean mode required')
+    same(format_name, 'toklet-gemma-affine-admission-v2' if coordinate_products else 'toklet-gemma-affine-admission-v1')
+    same(recipe, 'coordinate-correlated' if coordinate_products else None)
+
+
 def bounds(k, w, x):
     if type(k) is not int or not 64 <= k <= 12288 or k % 64:
         raise ValueError('width differs')
@@ -165,7 +195,9 @@ def inventory():
     return matrices
 
 
-def invocation_inputs(reader):
+def invocation_inputs(reader, coordinate_products=False):
+    if type(coordinate_products) is not bool:
+        raise ValueError('external Boolean mode required')
     def maximum(name, head_major=False):
         values, shape = reader(name)
         if head_major:
@@ -182,7 +214,12 @@ def invocation_inputs(reader):
             yield f'layers.{layer}.{suffix}.weight', 'direct', [stem+state], maximum(stem+state, state == 'context')
         for suffix, a, b in [('mlp.down_proj', 'mlp.gate_proj', 'mlp.up_proj'), ('per_layer_projection', 'per_layer_input_gate', 'ple_input')]:
             source = [stem+a, stem+b]
-            values = [envelope(x, y) for x, y in zip(maximum(source[0]), maximum(source[1]), strict=True)]
+            if coordinate_products:
+                a_values, a_shape = reader(source[0])
+                b_values, b_shape = reader(source[1])
+                values = coordinate_envelope(a_values, a_shape, b_values, b_shape)
+            else:
+                values = [envelope(x, y) for x, y in zip(maximum(source[0]), maximum(source[1]), strict=True)]
             yield f'layers.{layer}.{suffix}.weight', 'product-envelope', source, values
         source = [stem+'input', stem+'post_attention_layernorm', stem+'post_feedforward_layernorm']
         data = [reader(n)[0] for n in source]
@@ -199,7 +236,9 @@ def invocation_inputs(reader):
     yield 'embed_tokens.weight', 'direct', ['final_norm'], maximum('final_norm')
 
 
-def verify(model, trace, arrays, compact, report_path, metadata):
+def verify(model, trace, arrays, compact, report_path, metadata, coordinate_products=False):
+    report = load(report_path, 8*1024**2)
+    mode_identity(report.get('format'), report.get('product_envelope'), coordinate_products)
     fixed = [(model, '038e39a37a7667373d2c3991375446b10c96ae1d717a68674870343db376b76e'),
              (trace, 'ca86bd9836c88d5084f770b9ae84ecdb6e1e5a91d775e7cda315702450e918e9'),
              (arrays, '352385699238b422b430b6f535c2eac99b6e90543becb4c46caa0c59f930ed93'),
@@ -207,10 +246,12 @@ def verify(model, trace, arrays, compact, report_path, metadata):
     for path, wanted in fixed:
         if path.is_symlink() or not path.is_file() or digest(path) != wanted:
             raise ValueError('authenticated source differs')
-    report = load(report_path, 8*1024**2)
-    if set(report) != {'format', 'passed', 'matrices', 'invocations', 'tokens', 'metadata_bytes', 'metadata_pairs', 'source_sha256', 'primary_error', 'operator_sha256', 'ordered_error_limit', 'process_allowance_bytes', 'actual_gpu_executed', 'native_activation_parity', 'whole_graph_qualified', 'app_or_phone_qualified', 'source_or_precision_failures_waived', 'long_output_qualified', 'metadata_sha256'}:
+    required = {'format', 'passed', 'matrices', 'invocations', 'tokens', 'metadata_bytes', 'metadata_pairs', 'source_sha256', 'primary_error', 'operator_sha256', 'ordered_error_limit', 'process_allowance_bytes', 'actual_gpu_executed', 'native_activation_parity', 'whole_graph_qualified', 'app_or_phone_qualified', 'source_or_precision_failures_waived', 'long_output_qualified', 'metadata_sha256'}
+    if coordinate_products:
+        required.add('product_envelope')
+    if set(report) != required:
         raise ValueError('exact audit fields required')
-    for key, value in dict(format='toklet-gemma-affine-admission-v1', passed=True, tokens=[2, 100, 257, 100], metadata_bytes=289267712,
+    for key, value in dict(format='toklet-gemma-affine-admission-v2' if coordinate_products else 'toklet-gemma-affine-admission-v1', passed=True, tokens=[2, 100, 257, 100], metadata_bytes=289267712,
                            metadata_pairs=72316928, source_sha256={str(p): h for p, h in fixed}, primary_error=None,
                            operator_sha256='14ac5d6f5df9db2ade7a833c422178d3c4ae889db560bcf7cdaab177c367ac79',
                            ordered_error_limit=ERROR_LIMIT, process_allowance_bytes=512*1024**2,
@@ -321,7 +362,7 @@ def verify(model, trace, arrays, compact, report_path, metadata):
                 raise ValueError('nonfinite activation')
             return values, e['shape']
         invocations = []
-        for name, kind, names, maxima in invocation_inputs(read):
+        for name, kind, names, maxima in invocation_inputs(read, coordinate_products):
             matrix = matrices[name]
             row = dict(name=name, input_kind=kind, sources=[dict(name=n, sha256=ledger[('staged_fp32', n)]['sha256']) for n in names],
                        per_token_maximum=maxima, geometry_admitted=matrix['geometry_admitted'])
@@ -344,6 +385,6 @@ def verify(model, trace, arrays, compact, report_path, metadata):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 7:
-        raise SystemExit('model trace-json trace-bin compact-json observation-json metadata-bin')
-    print(json.dumps(verify(*(Path(v) for v in sys.argv[1:]))))
+    if len(sys.argv) not in (7, 8) or len(sys.argv) == 8 and sys.argv[-1] != 'coordinate-products':
+        raise SystemExit('model trace-json trace-bin compact-json observation-json metadata-bin [coordinate-products]')
+    print(json.dumps(verify(*(Path(v) for v in sys.argv[1:7]), coordinate_products=len(sys.argv) == 8)))

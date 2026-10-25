@@ -4033,3 +4033,26 @@ the [receipt](../benchmarks/results/2026-10-25-gemma-affine-admission-v1.json).
 Retain as independent admission evidence, without native/GPU graph, performance,
 app/phone or long-output qualification. Resolve the 16 product envelopes and
 table/head storage next; no numerical/source failure or limit is waived.
+
+## 25 October 2026 — coordinate-correlated Gemma product bounds
+
+Pair each captured gate coordinate with its actual multiplier before taking
+outward FP32 product maxima. This preserves operand correlation and proves nine
+additional sufficient input envelopes under unchanged operator S/U limits.
+The frozen trace now has 269 admitted calls: 171 direct, 35 exact residual and
+63 product envelopes. Preserve seven inconclusive FF-down cases (layers 0..6)
+and the tied-head geometry rejection; neither GELU nor projections execute.
+
+Keep the row-max default mode and require the new recipe externally in the
+independent verifier. All 277 default recipe/classification records match the
+authenticated original report. Sixteen offline methods, two retention methods,
+two complete coordinate captures/replays and seven owned resource/process
+closures pass. Coordinate bounds never exceed earlier envelopes per token.
+Maximum RSS/physical peaks are 52,625,408 / 45,548,240 bytes below separate
+512 MiB policy; coefficient capture hashes are unchanged.
+
+See [results and remaining gates](gemma-affine-admission.md#coordinate-correlated-product-refinement)
+and the [receipt](../benchmarks/results/2026-10-25-gemma-affine-coordinate-v1.json).
+Retain the reference improvement. Actual/native product admission, table/head
+storage, full GPU graph, source/precision gaps, app/phone and long-output work
+remain open; no limit or rejected result is waived.

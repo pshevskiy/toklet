@@ -426,3 +426,13 @@ row bound. This is independent reference admission, without GPU execution or
 native activation parity. Resolve the products and table/head storage before
 graph composition; all previous G2/G3/G4, source/precision, device and long-output
 requirements remain open.
+
+## Coordinate product admission refinement
+
+The [coordinate-correlated audit](gemma-affine-admission.md#coordinate-correlated-product-refinement)
+proves nine additional FF-down envelopes, bringing the short frozen trace to
+269 admitted calls. Seven envelopes at layers 0..6 remain not proved, and the
+head/table geometry limits remain. The original default mode preserves all 277
+accepted records and its earlier 260/16/1 classification. This changes reference
+envelopes only; operator S/U/geometry, native/GPU graph, source/precision and
+later device/app/long-output gates are unchanged.

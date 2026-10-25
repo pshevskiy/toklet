@@ -500,3 +500,12 @@ is geometry rejected. Two complete captures and independent rational replays
 retain those distinctions. This supplies admission evidence only; native/GPU
 activation parity, table/head chunking, resident graph, app/mobile integration
 and earlier source/precision/long-output gates remain open.
+
+## Correlated Gemma input bounds
+
+The [coordinate product refinement](gemma-affine-admission.md#coordinate-correlated-product-refinement)
+raises proved short-trace calls from 260 to 269 through a stronger sufficient
+input envelope, with no operator threshold or geometry change. Seven products
+remain inconclusive; the full head is geometry rejected. Actual default-mode
+records remain identical. The reference-only evidence does not grant native/GPU
+activation parity, graph execution, app/phone support or long-output capability.

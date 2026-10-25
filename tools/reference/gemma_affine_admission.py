@@ -75,6 +75,32 @@ def product_ceiling(a, b):
     return rounded
 
 
+def coordinate_maxima(first, first_shape, second, second_shape):
+    """Preserve operand correlation; outward round each product before max."""
+    if (type(first_shape) is not list or type(second_shape) is not list
+            or len(first_shape) != 3 or any(type(v) is not int for v in first_shape)
+            or any(type(v) is not int for v in second_shape)
+            or first_shape != second_shape or first_shape[:2] != [1, 4]
+            or not 1 <= first_shape[2] <= 12288
+            or len(first) != math.prod(first_shape) or len(second) != len(first)):
+        raise ValueError('matching complete [1,4,width] operands required')
+    width = first_shape[2]
+    result = []
+    for token in range(4):
+        maximum, overflow = 0., False
+        for column in range(width):
+            offset = token*width+column
+            if any(type(v) not in (int, float) for v in (first[offset], second[offset])):
+                raise ValueError('typed FP32 coordinates required')
+            value = product_ceiling(abs(first[offset]), abs(second[offset]))
+            if value is None:
+                overflow = True
+            else:
+                maximum = max(maximum, value)
+        result.append(None if overflow else maximum)
+    return result
+
+
 def bound(columns, weight, maximum):
     if type(columns) is not int or not 64 <= columns <= 12288 or columns % 64:
         raise ValueError('fixed projection width required')
@@ -166,8 +192,10 @@ def trace_ledger(observation, compact, stream):
     return ledger
 
 
-def inputs(read):
+def inputs(read, coordinate_products=False):
     """Yield named per-token maxima and explicit input proof recipes."""
+    if type(coordinate_products) is not bool:
+        raise ValueError('explicit Boolean envelope mode required')
     def maxima(name, context=False):
         values, shape = read(name)
         if context:
@@ -191,8 +219,13 @@ def inputs(read):
         for suffix, first, second in [('mlp.down_proj', 'mlp.gate_proj', 'mlp.up_proj'),
                                       ('per_layer_projection', 'per_layer_input_gate', 'ple_input')]:
             names = [base+first, base+second]
-            yield f'layers.{i}.{suffix}.weight', 'product-envelope', names, [
-                product_ceiling(a, b) for a, b in zip(maxima(names[0]), maxima(names[1]), strict=True)]
+            if coordinate_products:
+                a, a_shape = read(names[0])
+                b, b_shape = read(names[1])
+                product_maximum = coordinate_maxima(a, a_shape, b, b_shape)
+            else:
+                product_maximum = [product_ceiling(a, b) for a, b in zip(maxima(names[0]), maxima(names[1]), strict=True)]
+            yield f'layers.{i}.{suffix}.weight', 'product-envelope', names, product_maximum
         names = [base+'input', base+'post_attention_layernorm', base+'post_feedforward_layernorm']
         arrays = [read(name)[0] for name in names]
         combined = [f32(f32(a+b)+c) for a, b, c in zip(*arrays, strict=True)]
@@ -201,7 +234,9 @@ def inputs(read):
     yield 'embed_tokens.weight', 'direct', ['final_norm'], maxima('final_norm')
 
 
-def produce(model, trace, arrays, compact, output):
+def produce(model, trace, arrays, compact, output, coordinate_products=False):
+    if type(coordinate_products) is not bool:
+        raise ValueError('explicit Boolean envelope mode required')
     paths = [(model, MODEL_SHA), (trace, TRACE_SHA), (arrays, ARRAY_SHA), (compact, COMPACT_SHA)]
     for path, wanted in paths:
         if path.is_symlink() or not path.is_file() or sha(path) != wanted:
@@ -223,6 +258,8 @@ def produce(model, trace, arrays, compact, output):
                   actual_gpu_executed=False, native_activation_parity=False,
                   whole_graph_qualified=False, app_or_phone_qualified=False,
                   source_or_precision_failures_waived=False, long_output_qualified=False)
+    if coordinate_products:
+        report.update(format='toklet-gemma-affine-admission-v2', product_envelope='coordinate-correlated')
     metadata_path = output/'metadata.bin'
     primary = None
     try:
@@ -290,7 +327,7 @@ def produce(model, trace, arrays, compact, output):
                 if not all(math.isfinite(v) for v in values):
                     raise ValueError('finite FP32 activation required')
                 return values, item['shape']
-            for name, kind, names, maxima in inputs(read):
+            for name, kind, names, maxima in inputs(read, coordinate_products):
                 matrix = by_name[name]
                 result = dict(name=name, input_kind=kind, sources=[dict(name=n, sha256=ledger[('staged_fp32', n)]['sha256']) for n in names],
                               per_token_maximum=maxima, geometry_admitted=matrix['geometry_admitted'])
@@ -333,10 +370,10 @@ def produce(model, trace, arrays, compact, output):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 6:
-        raise SystemExit('model.safetensors trace.json trace.bin compact.json output-directory')
-    args = [Path(v) for v in sys.argv[1:]]
+    if len(sys.argv) not in (6, 7) or len(sys.argv) == 7 and sys.argv[-1] != 'coordinate-products':
+        raise SystemExit('model.safetensors trace.json trace.bin compact.json output-directory [coordinate-products]')
+    args = [Path(v) for v in sys.argv[1:6]]
     args[-1].mkdir()
-    result = produce(*args)
+    result = produce(*args, coordinate_products=len(sys.argv) == 7)
     print(json.dumps(dict(passed=True, matrices=len(result['matrices']), invocations=len(result['invocations']),
                           statuses={s: sum(v['status'] == s for v in result['invocations']) for s in sorted({v['status'] for v in result['invocations']})})))
