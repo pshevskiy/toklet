@@ -236,15 +236,52 @@ fn bounds(columns: usize, max_weight: f64, max_input: f32) -> (f64, f64) {
 fn admit(columns: usize, max_weight: f64, input: &[f32]) -> Result<()> {
     let maximum = input.iter().fold(0_f32, |a, x| a.max(x.abs()));
     let (s, u) = bounds(columns, max_weight, maximum);
-    if s > f64::from(f32::MAX) / 4. {
-        return Err(Error::Options("Gemma affine input absolute-product bound"));
+    let error = if s > f64::from(f32::MAX) / 4. {
+        "Gemma affine input absolute-product bound"
+    } else if u > ORDERED_ERROR_LIMIT {
+        "Gemma affine input ordered-sum accuracy bound"
+    } else {
+        return Ok(());
+    };
+    let (s, u) = l1_bounds(columns, max_weight, input);
+    if s <= f64::from(f32::MAX) / 4. && u <= ORDERED_ERROR_LIMIT {
+        Ok(())
+    } else {
+        // Both proofs fail before staging; preserve the original error priority.
+        Err(Error::Options(error))
     }
-    if u > ORDERED_ERROR_LIMIT {
-        return Err(Error::Options(
-            "Gemma affine input ordered-sum accuracy bound",
-        ));
+}
+// Called only for finite, complete [tokens, columns] rows after the old max
+// proof rejects. FP32 magnitudes convert exactly. Skip zero and the first
+// positive addition; otherwise nearest-add then next_up conservatively encloses
+// every positive term. Independent rows share no sum or temporary allocation.
+fn row_l1(row: &[f32]) -> f64 {
+    let mut total = 0.;
+    for &value in row {
+        let magnitude = f64::from(value.abs());
+        if magnitude != 0. {
+            total = if total == 0. {
+                magnitude
+            } else {
+                (total + magnitude).next_up()
+            };
+        }
     }
-    Ok(())
+    total
+}
+fn l1_bounds(columns: usize, max_weight: f64, input: &[f32]) -> (f64, f64) {
+    #[cfg(test)]
+    tests::L1_CALLS.with(|calls| calls.set(calls.get() + 1));
+    let magnitude = input
+        .chunks_exact(columns)
+        .map(row_l1)
+        .fold(0_f64, f64::max);
+    let s = up_product(max_weight, magnitude);
+    let u = up_product(
+        up_product(up_product(2., columns as f64), f64::EPSILON / 2.),
+        s,
+    );
+    (s, u)
 }
 /// Resident immutable tensors and reusable bounded standalone scratch. Input
 /// admission preserves output and reusability. Failure after staging begins

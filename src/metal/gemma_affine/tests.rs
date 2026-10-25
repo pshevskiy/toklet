@@ -2,7 +2,92 @@ use super::*;
 use crate as engine;
 #[path = "../../../tests/common/gemma_affine_fixture.rs"]
 mod fixture;
+#[path = "../../../tests/common/gemma_affine_l1_fixture.rs"]
+mod l1_fixture;
 use serde_json::{Value, json};
+
+thread_local! {
+    pub(super) static L1_CALLS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+#[test]
+fn frozen_l1_fallback_rows_bounds_and_fast_path_without_gpu() {
+    let before = L1_CALLS.with(std::cell::Cell::get);
+    admit(64, 1., &[1.; 64]).unwrap();
+    assert_eq!(L1_CALLS.with(std::cell::Cell::get), before);
+    let mut new = 0;
+    for case in l1_fixture::cases() {
+        let maximum = codebook(&case.scales, &case.biases).unwrap();
+        Matrix::from_le_bytes(case.layout, &case.codes, &case.scales, &case.biases).unwrap();
+        let k = case.layout.columns();
+        for (row, expected) in case
+            .input
+            .chunks_exact(k)
+            .zip(case.reference["per_token_l1"].as_array().unwrap())
+        {
+            assert_eq!(row_l1(row).to_bits(), expected.as_f64().unwrap().to_bits());
+        }
+        let (s, u) = l1_bounds(k, maximum, &case.input);
+        assert_eq!(
+            s.to_bits(),
+            case.reference["l1"]["absolute_products"]
+                .as_f64()
+                .unwrap()
+                .to_bits()
+        );
+        assert_eq!(
+            u.to_bits(),
+            case.reference["l1"]["ordered_error"]
+                .as_f64()
+                .unwrap()
+                .to_bits()
+        );
+        let old = bounds(
+            k,
+            maximum,
+            case.input.iter().fold(0_f32, |a, x| a.max(x.abs())),
+        );
+        assert_eq!(
+            old.0.to_bits(),
+            case.reference["legacy_max"]["absolute_products"]
+                .as_f64()
+                .unwrap()
+                .to_bits()
+        );
+        assert_eq!(
+            old.1.to_bits(),
+            case.reference["legacy_max"]["ordered_error"]
+                .as_f64()
+                .unwrap()
+                .to_bits()
+        );
+        let before = L1_CALLS.with(std::cell::Cell::get);
+        let result = admit(k, maximum, &case.input);
+        assert_eq!(
+            result.is_ok(),
+            case.reference["combined_admitted"] == true,
+            "{}",
+            case.reference["name"]
+        );
+        let old_passed = case.reference["legacy_max"]["admitted"] == true;
+        assert_eq!(
+            L1_CALLS.with(std::cell::Cell::get),
+            before + usize::from(!old_passed)
+        );
+        if result.is_ok() && !old_passed {
+            new += 1;
+        }
+        if let Err(error) = result {
+            let expected = if old.0 > f64::from(f32::MAX) / 4. {
+                "Gemma affine input absolute-product bound"
+            } else {
+                "Gemma affine input ordered-sum accuracy bound"
+            };
+            assert!(matches!(error, Error::Options(actual) if actual == expected));
+        }
+    }
+    assert_eq!(new, 12);
+}
 
 #[test]
 fn bounded_shapes_codebooks_and_upward_admission_without_gpu() {
@@ -102,6 +187,165 @@ fn device(operator: &Affine<'_>) -> Option<Value> {
     Some(
         json!({"codes":operator.codes.with_slice(|s|s.to_vec()),"scales":operator.scales.with_slice(|s|s.to_vec()),"biases":operator.biases.with_slice(|s|s.to_vec()),"input":operator.input.with_slice(|s|s.to_vec()),"output":operator.output.with_slice(|s|s.to_vec()),"status":operator.status.with_slice(|s|s.to_vec())}),
     )
+}
+
+#[test]
+#[ignore = "explicit Apple GPU L1 fallback qualification"]
+fn real_frozen_l1_projection_reuse_partitions_and_rejections() {
+    autoreleasepool(|_| {
+        let context = Context::new(CONTEXT_ALLOWANCE_BYTES).unwrap();
+        report(
+            "GEMMA_AFFINE_L1_META",
+            json!({"device":context.device_name(),"context_allowance_bytes":CONTEXT_ALLOWANCE_BYTES,"simd_width":context.width,"owner_struct_bytes":size_of::<Affine<'_>>(),"graph_qualified":false,"source_parity_qualified":false}),
+        );
+        let mut accepted = 0;
+        let mut rejected = 0;
+        let mut parts = 0;
+        for case in l1_fixture::cases() {
+            let capacity = case.reference["batch"].as_u64().unwrap() as usize;
+            let sizes = Sizes::new(case.layout, capacity).unwrap();
+            let mut operator = context
+                .affine(
+                    case.layout,
+                    &case.codes,
+                    &case.scales,
+                    &case.biases,
+                    capacity,
+                    sizes.owned,
+                )
+                .unwrap();
+            let mut output = vec![42.; capacity * case.layout.rows()];
+            if case.reference["combined_admitted"] != true {
+                let result = operator.apply(&case.input, &mut output, capacity);
+                report(
+                    "GEMMA_AFFINE_L1_REJECTION",
+                    json!({"name":case.reference["name"],"rejected":result.is_err(),"error":result.as_ref().err().map(ToString::to_string),"output_bits":bits(&output),"poisoned":operator.is_poisoned(),"pending":operator.pending.is_some()}),
+                );
+                assert!(result.is_err());
+                assert!(!operator.is_poisoned() && operator.pending.is_none());
+                assert_eq!(output, vec![42.; output.len()]);
+                let zeros = vec![0.; case.input.len()];
+                let result = operator.apply(&zeros, &mut output, capacity);
+                report(
+                    "GEMMA_AFFINE_L1_RECOVERY",
+                    json!({"name":case.reference["name"],"completed":result.is_ok(),"error":result.as_ref().err().map(ToString::to_string),"output_bits":bits(&output),"poisoned":operator.is_poisoned(),"owned_bytes":operator.owned_bytes(),"device":device(&operator)}),
+                );
+                result.unwrap();
+                assert!(output.iter().all(|&v| v == 0.));
+                rejected += 1;
+                continue;
+            }
+            let mut baseline = Vec::new();
+            for repeat in 0..2 {
+                let result = operator.apply(&case.input, &mut output, capacity);
+                report(
+                    "GEMMA_AFFINE_L1_CASE",
+                    json!({"name":case.reference["name"],"repeat":repeat,"completed":result.is_ok(),"error":result.as_ref().err().map(ToString::to_string),"output_bits":bits(&output),"poisoned":operator.is_poisoned(),"owned_bytes":operator.owned_bytes(),"device":device(&operator)}),
+                );
+                result.unwrap();
+                assert!(!operator.is_poisoned());
+                assert_eq!(operator.owned_bytes(), sizes.owned);
+                if repeat == 0 {
+                    baseline = bits(&output);
+                } else {
+                    assert_eq!(baseline, bits(&output));
+                }
+                for contract in ["ordered_fp64", "mathematical_fp64"] {
+                    for (&value, expected) in output
+                        .iter()
+                        .zip(case.reference[contract].as_array().unwrap())
+                    {
+                        let expected = expected.as_f64().unwrap();
+                        assert!(
+                            value.is_finite()
+                                && (f64::from(value) - expected).abs()
+                                    <= 1e-5 + 1e-4 * expected.abs(),
+                            "{} {contract}: {value} vs {expected}",
+                            case.reference["name"]
+                        );
+                    }
+                }
+            }
+            for token in 0..capacity {
+                let row =
+                    &case.input[token * case.layout.columns()..(token + 1) * case.layout.columns()];
+                let mut part = vec![42.; case.layout.rows()];
+                let result = operator.apply(row, &mut part, 1);
+                report(
+                    "GEMMA_AFFINE_L1_PART",
+                    json!({"name":case.reference["name"],"token":token,"completed":result.is_ok(),"error":result.as_ref().err().map(ToString::to_string),"output_bits":bits(&part),"poisoned":operator.is_poisoned(),"owned_bytes":operator.owned_bytes(),"device":device(&operator)}),
+                );
+                result.unwrap();
+                assert_eq!(
+                    bits(&part),
+                    baseline[token * case.layout.rows()..(token + 1) * case.layout.rows()]
+                );
+                parts += 1;
+            }
+            let result = operator.apply(&case.input, &mut output, capacity);
+            report(
+                "GEMMA_AFFINE_L1_RESUME",
+                json!({"name":case.reference["name"],"completed":result.is_ok(),"error":result.as_ref().err().map(ToString::to_string),"output_bits":bits(&output),"poisoned":operator.is_poisoned(),"owned_bytes":operator.owned_bytes(),"device":device(&operator)}),
+            );
+            result.unwrap();
+            assert_eq!(bits(&output), baseline);
+            accepted += 1;
+        }
+        // A later failing row cannot stage even the earlier valid row. Warm the
+        // same owner first so every raw device buffer is initialized for comparison.
+        let case = l1_fixture::cases()
+            .into_iter()
+            .find(|c| c.reference["name"] == "ordered-exact-conflict")
+            .unwrap();
+        let sizes = Sizes::new(case.layout, 2).unwrap();
+        let mut operator = context
+            .affine(
+                case.layout,
+                &case.codes,
+                &case.scales,
+                &case.biases,
+                2,
+                sizes.owned,
+            )
+            .unwrap();
+        let zeros = vec![0.; case.layout.columns() * 2];
+        let mut output = vec![0.; 2];
+        let warm = operator.apply(&zeros, &mut output, 2);
+        report(
+            "GEMMA_AFFINE_L1_LATE_WARM",
+            json!({"completed":warm.is_ok(),"error":warm.as_ref().err().map(ToString::to_string),"output_bits":bits(&output),"device":device(&operator)}),
+        );
+        warm.unwrap();
+        let before = device(&operator);
+        let mut input = zeros.clone();
+        input[0] = 1e7; // This sparse first row needs and passes the L1 fallback.
+        assert!(bounds(64, 1., 1e7).1 > ORDERED_ERROR_LIMIT);
+        admit(64, 1., &input[..64]).unwrap();
+        input[case.layout.columns()..].copy_from_slice(&case.input);
+        output.fill(42.);
+        let result = operator.apply(&input, &mut output, 2);
+        let after = device(&operator);
+        report(
+            "GEMMA_AFFINE_L1_LATE_REJECTION",
+            json!({"rejected":result.is_err(),"error":result.as_ref().err().map(ToString::to_string),"output_bits":bits(&output),"poisoned":operator.is_poisoned(),"pending":operator.pending.is_some(),"device_before":before,"device_after":after}),
+        );
+        assert!(result.is_err());
+        assert_eq!(output, [42.; 2]);
+        assert!(!operator.is_poisoned() && operator.pending.is_none());
+        assert_eq!(before, after);
+        let result = operator.apply(&zeros, &mut output, 2);
+        report(
+            "GEMMA_AFFINE_L1_LATE_RECOVERY",
+            json!({"completed":result.is_ok(),"error":result.as_ref().err().map(ToString::to_string),"output_bits":bits(&output),"poisoned":operator.is_poisoned(),"owned_bytes":operator.owned_bytes(),"device":device(&operator)}),
+        );
+        result.unwrap();
+        assert_eq!(output, [0.; 2]);
+        report(
+            "GEMMA_AFFINE_L1_FINAL",
+            json!({"accepted_cases":accepted,"rejected_cases":rejected,"partitions":parts,"late_row_rejected":true,"whole_graph_qualified":false}),
+        );
+        assert_eq!((accepted, rejected, parts), (15, 4, 16));
+    });
 }
 #[test]
 #[ignore = "explicit Apple GPU FP32 packed projection qualification"]

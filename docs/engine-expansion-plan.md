@@ -519,3 +519,14 @@ pass under unchanged error limits. Engine admission is not changed by this
 task. A separately reviewed fallback with actual GPU checks, table/head
 chunking and resident graph composition remain next; earlier source/precision,
 app/phone and 131072-output-plus-prompt requirements remain open.
+
+## Gemma L1 fallback checked on the Mac GPU
+
+The [packed projection fallback](gemma-metal-affine.md#per-token-l1-fallback-qualification)
+preserves the original max-proof fast path and uses allocation-free per-token
+L1 sums only on rejection. Fixed limits and shader are unchanged. CPU/Metal
+suites, iOS compilation and explicit optimized M1 Pro checks pass, including
+newly admitted cancellation witnesses and whole-batch rejection recovery.
+This qualifies a standalone operator, with real/native graph composition,
+head/table storage, existing source/precision failures, model performance,
+app/mobile and long-output requirements still open.

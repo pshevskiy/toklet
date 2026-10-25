@@ -449,3 +449,16 @@ independent replays pass; the first failed test attempt remains preserved.
 A separate reviewed engine fallback and actual GPU qualification must precede
 graph use. All native/source/precision, graph, app/device and long-output
 requirements remain open.
+
+## G4 L1 fallback checked on Metal
+
+The [standalone packed projection](gemma-metal-affine.md#per-token-l1-fallback-qualification)
+now tries the frozen per-token L1 proof only after its original max proof
+rejects. Limits, shader and pre-staging rejection behavior are preserved.
+All 347 CPU / 374 Metal-feature tests, both iOS compile targets and optimized
+admission pass. Actual M1 Pro execution passes 15 new cases twice under both
+references, partitions/reuse, four rejection recoveries and a later-row
+failure preserving all device buffers; old GPU cases and ten capture-checker
+regressions pass. This closes the standalone fallback subset only. Actual
+real-model projection/native parity, table/head storage, full graph and all
+prior source/precision, app/device and long-output requirements remain open.

@@ -4,6 +4,8 @@ The standalone Metal projection now passes its frozen mathematical/scalar
 contracts on Apple M1 Pro. It consumes original packed weights with FP32
 activations and outputs. The older operator's Half activation path is unchanged.
 This is a G4 prerequisite, not complete Gemma execution or an app/device grant.
+The current admission also has the independently frozen per-token L1 fallback
+described below; the original max proof remains the first, unchanged fast path.
 
 ## Fixed storage and ownership
 
@@ -51,11 +53,14 @@ This prevents flushed coefficient/weight amplification. With columns at most
 to less than 2^-80, far below the unchanged absolute gate. No bitwise underflow
 or universal FP64-accuracy equivalence is claimed.
 
-Before staging, finite FP32 inputs must satisfy both bounds, computed with
+Before staging, the original fast proof checks both bounds, computed with
 upward-rounded positive FP64 products and exact-zero handling:
 
 - `S >= columns * max_abs_weight * max_abs_input`, with `S <= F32_MAX/4`.
 - `U >= 2 * columns * 2^-53 * S`, with `U <= 1e-5/16`.
+
+If this proof rejects, the current engine tries the tighter L1 proof below
+under the same S/U limits. Both failing returns the original preflight error.
 
 Products of FP32 values are exact finite FP64 values here. For the bounded column
 count, `gamma_K = K*u/(1-K*u) <= 2*K*u`, where `u=2^-53`. Thus the second bound
@@ -144,3 +149,56 @@ FP64-ideal logit failures per raw schedule, 15 dense and 15 packed source-GPU
 intermediate failures and eight long-rotary source failures. Original-BF16,
 broader quality, representative performance, Mac/phone fit and 131072 output
 tokens plus a nonempty prompt remain open. No prior rejection is waived.
+
+## Per-token L1 fallback qualification
+
+The [independently frozen L1 witnesses](gemma-affine-l1.md) now drive an
+allocation-free fallback in input preflight. When the old proof rejects, sum
+FP32 magnitudes separately per token in FP64: skip zeros, copy the first
+positive term exactly, then take the nearest sum followed by one `next_up`
+step for each subsequent positive term. Take the maximum row sum A and compute
+upward `S >= maxW*A`, then `U >= 2*K*2^-53*S`. Limits remain F32_MAX/4 and
+1e-5/16; shader, codebook/shape limits, buffers and ownership are unchanged.
+Both proofs failing preserves the original error and pre-staging transaction.
+
+The portable scalar check compares all 47 new outputs with frozen ordered
+references and 42 admitted outputs with the independent mathematical contract.
+The Metal-feature portable method matches every per-row sum, S/U and original
+max-bound bit pattern; test-only counting confirms old passes never traverse
+the fallback. All 347 CPU / 374 Metal-feature tests, both strict checks,
+formatting, iOS device/simulator compilation and one exact optimized L1 method
+pass. Sixteen CPU / 115 Metal ignored cases remain explicit separate suites.
+
+Completed M1 Pro execution passes 15 new cases twice: 84 output values and
+168 dual-contract comparisons, including twelve cases newly admitted by L1.
+Sixteen same-owner single-token partitions and 15 returns to full capacity
+preserve output bits and original weights. Four rejected cases preserve caller
+output and reusable state, then recover with valid zeros. A warmed batch whose
+first row itself needs/passes L1 and whose second row rejects leaves all six
+device buffers unchanged and recovers. Owner size remains 240 bytes; the
+largest new owner exercised is 119,476 bytes. Maximum new absolute error is
+1.401298464324817e-45, the admitted tiny-input loss, under unchanged gates.
+This does not grant bitwise subnormal equivalence.
+
+The unchanged previous GPU cases also pass again: 648 outputs, 1296 contract
+comparisons, 50 partitions, domain/input rejects and recovery. Ten owned
+capture-checker regressions reject changed original weights, guard/status
+damage, wrong token rows, repeat differences, lost records and late-failure
+buffer mutation. Coherently changing both repeats, partitions and resume to
+one finite wrong value fails the numerical gate itself.
+
+On MacBookPro18,3 / Apple M1 Pro / 16 GiB / macOS 26.6.2 (25G83), the new GPU
+process peaks at RSS 26,460,160 / physical 15,385,176 bytes under separate
+1 GiB limits. The old-case process uses 34,521,088 / 22,463,088 bytes. The
+capture regression process uses 72,204,288 / 31,736,384 bytes under separate
+512 MiB limits. These qualify these processes, not model residency or speed.
+The [fallback receipt](../benchmarks/results/2026-10-25-gemma-metal-affine-l1-v1.json)
+binds source/build identity, exact optimized binary, complete raw captures,
+resources and process closure.
+
+Retain the standalone fallback. The real frozen trace has sufficient reference
+bounds for 276 calls plus a full-head geometry rejection, but this task does
+not execute those real projections or establish native activation parity.
+Table/head chunking, resident full graph, original source/precision failures,
+quality/performance, app/phone admission and 131072 output plus prompt remain
+open. No device capability or earlier failed numerical result changes.

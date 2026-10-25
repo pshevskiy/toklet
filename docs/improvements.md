@@ -4090,3 +4090,40 @@ Retain as independent pre-target evidence. Engine admission, kernel, thresholds
 and capability are unchanged. Actual GPU qualification of a later fallback,
 table/head storage, native/resident graph, source/precision, app/phone and long
 output requirements remain open.
+
+## 25 October 2026 — standalone packed projection L1 fallback
+
+Apply the independently frozen per-token L1 proof only after the original max
+proof rejects. Preserve old fast passes without additional input traversal;
+the fallback sums magnitudes per row with conservative FP64 outward steps,
+without allocating. Original S/U limits, shader, codebook/shape domain and
+buffer ownership are unchanged. Both proofs failing returns the original
+error before staging.
+
+All 347 CPU / 374 Metal-feature tests, formatting, both strict checks,
+iOS device/simulator compilation and exact optimized admission pass. The
+new scalar fixture checks 47 ordered / 42 admitted mathematical outputs;
+portable admission matches all frozen row sums, bounds and classifications.
+Test-only counters confirm no fallback traversal for old passes.
+
+Actual M1 Pro execution passes 15 new cases twice, 84 outputs / 168 dual
+comparisons, 16 same-owner partitions and 15 full resumes. Twelve cases are
+newly admitted. Four rejects recover without caller mutation or poison.
+A first-L1-valid/later-invalid batch preserves all warmed device buffers.
+Maximum new error is 1.401298464324817e-45, admitted tiny-input loss rather
+than bitwise subnormal qualification. The old 25 accepted cases / 1296 dual
+comparisons and their rejection/recovery checks pass unchanged.
+
+Ten owned checker regressions cover original weights, guards, status, token
+layout, deterministic repeats, missing records, late buffer preservation and
+a coherent wrong result that specifically fails the numerical gate.
+New GPU RSS/physical peaks are 26,460,160 / 15,385,176 bytes under separate
+1 GiB limits; old GPU peaks are 34,521,088 / 22,463,088. Regression peaks are
+72,204,288 / 31,736,384 under separate 512 MiB limits. Owner remains 240 bytes;
+largest new exercised owner total is 119,476 bytes. No latency claim follows.
+
+See [behavior, measurements and limitations](gemma-metal-affine.md#per-token-l1-fallback-qualification)
+and [receipt](../benchmarks/results/2026-10-25-gemma-metal-affine-l1-v1.json).
+Retain the checked standalone fallback. Real/native projection composition,
+table/head storage, full graph/KV, prior source/precision failures, app/phone
+and long-output qualification remain open; no capability or failed gate changes.
