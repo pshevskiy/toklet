@@ -551,3 +551,12 @@ outputs for this short trace; separate captured and derived inputs remain
 explicit. Head/table mechanisms, native activation and resident graph composition
 are next. No full architecture, source/precision, quality/performance, app/phone
 or long-output gate is closed by these standalone projections.
+
+## Packed table/head row reference
+
+The [independent storage/numerical witness](gemma-table-reference.md) now covers
+complete packed rows, odd BF16 metadata offsets, zero padding, signed zeros,
+repeated gathers and contiguous head partitions before any native change.
+Bounded captures/replays and failure-retention checks pass. Native borrowed
+row access and separately admitted resident composition remain next; no whole
+architecture, source/precision, app/device or long-output gate changes.

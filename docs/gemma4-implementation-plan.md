@@ -490,3 +490,14 @@ This closes the standalone four-token projection qualification, not G2/G3/G4.
 Next is bounded table/head storage and numerical qualification before resident
 graph composition; prior source/precision, app/device, quality/performance and
 131072-output-plus-prompt requirements remain open.
+
+## Table/head storage reference before native implementation
+
+The [small packed-table reference](gemma-table-reference.md) freezes complete
+19×128 and 11×64 source tables, repeated gathers, partition coverage, exact
+padding and signed zeros. Sixteen portable/two retention methods and two
+identical captures with independent replays pass. Late overflow or missing
+source rows leave the entire gather destination unchanged. This is a pre-target
+witness; native row access, admitted chunked head/table execution and resident
+graph composition are next. The old full-head geometry rejection and all prior
+source/precision, device/app, performance and long-output gates remain unchanged.

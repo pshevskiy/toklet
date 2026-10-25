@@ -4195,3 +4195,32 @@ See [contracts, measurements and exclusions](gemma-real-projections.md) and
 Retain the real standalone projection qualification. Head/table storage,
 native activation/full resident graph/KV, existing source/precision failures,
 quality/performance, app/phone and long-output qualification remain open.
+
+## 25 October 2026 — pre-target table/head row witnesses
+
+Freeze original four-bit/group-64/BF16 tables of 19×128 and 11×64, their complete
+reconstruction, three-token projections and repeated/out-of-order row gathers.
+Keep exact rational dots, ordered FP64 and final FP32 contracts separate.
+An independent Decimal400/exact-IEEE replay validates original bytes, contiguous
+partitions, output placement and shared source accounting. Retain 192 negative
+zero weights by bits and 12 metadata views at odd two-byte offsets, including
+exact padding identities. Twenty arrays total 22,664 bytes under a 64 KiB cap.
+
+Bound materializing helpers independently of large arithmetic checks. Validate
+complete source geometry before gather output changes. A later finite-source
+reconstruction overflow, invalid ID or truncated source preserves the entire
+multi-row destination, including earlier and repeated IDs. Ten explicit boundary
+rejections and sixteen portable/two retention methods pass. Late recipe and
+report-write failures preserve earlier arrays/attempts, partial artifacts and the
+original cause. Two captures match and both complete independent replays pass.
+
+All six owned process/resource closures pass. Maximum RSS/physical peaks are
+35,143,680 / 23,888,616 bytes under separate 512 MiB policies. No model download,
+engine or GPU execution, numerical Rust change or inference-speed claim follows.
+The three small fixture files are frozen before native implementation.
+
+See [contracts and scope](gemma-table-reference.md) and
+[receipt](../benchmarks/results/2026-10-25-gemma-table-reference-v1.json).
+Retain as a pre-target storage witness. Native borrowed rows, chunked head/table
+storage and gathers, activation/resident graph/KV, existing source/precision
+failures, quality/performance, app/phone and long-output qualification remain open.

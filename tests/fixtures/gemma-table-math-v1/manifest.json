@@ -1,0 +1,16 @@
+{
+  "format": "toklet-gemma-table-math-manifest-v1",
+  "passed": true,
+  "files": {
+    "math.json": {
+      "bytes": 87972,
+      "sha256": "9083f619b0a12202955156631e8b65e7824cb7120641edcad6b906d551aa721f"
+    },
+    "math.bin": {
+      "bytes": 22664,
+      "sha256": "cc34796740e66853ecccb950028ff994de37b2bc5a7e12a1cc9877b0ce3a549e"
+    }
+  },
+  "file_errors": [],
+  "primary_error": null
+}
