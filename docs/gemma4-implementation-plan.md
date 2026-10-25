@@ -285,3 +285,17 @@ fits6GiB with3,855,781,740 combined admitted bytes. Append-only streaming is nex
 broader text quality, full G3, earlier numerical/source gaps, resident Metal,
 representative performance, mobile fit/app integration and131072-output gates
 remain open. No app profile, ABI, catalog or numerical-limit change.
+
+
+The [pinned no-Strip Gemma text stream](gemma4-native-stream.md) now reuses a
+private owned decoder state behind a borrowed tokenizer facade. A separately
+admitted 4 MiB stream owner preserves whole fallback runs, skipped specials,
+terminal flushing and poisoned-state semantics. All 310 CPU/332 Metal-feature
+tests, both iOS targets, 22 release text methods and four failure-retention
+methods pass. Existing real profiles retain parity across 233,585 vocabulary IDs.
+The actual Gemma probe matches 262,144 isolated IDs, 67 small cases/four partitions
+and five synthetic long patterns/three partitions; all 7,675,150 raw bytes replay
+against the scalar oracle. Text-process admission passes. This closes the
+bounded text-stream mechanism only; full G3, quality/precision/source gaps,
+Metal, representative performance, mobile fit/ABI/app integration and 131072
+LLM-output qualification remain open, with no numerical-limit changes.

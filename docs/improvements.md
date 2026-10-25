@@ -3651,3 +3651,44 @@ A single formatted reply advances native basic-text execution only. Append-only
 streaming, broader quality/full G3, earlier precision/source failures, Metal,
 performance, mobile fit/app integration and131072 output tokens remain open.
 No public app Profile/ABI/catalog or numerical position/output limits change.
+
+## 25 October 2026 — bounded Gemma4 no-Strip text streaming
+
+Split a private owned ResponseState from the borrowed tokenizer facade and
+select ByteFallback/leading-space behavior in cold pinned factories. Reuse the
+existing byte-level and Mistral paths; Gemma retains leading spaces. Preserve
+whole fallback runs across skipped special tokens, finish on visible stop/cancel
+prefixes and poison failed mutations without leaking partial new chunks. No
+full-response IDs/text or per-token full-prefix decode is retained. A Gemma
+factory separately admits 4 MiB before allocation and reports checked actual
+capacities, counting the borrowed codec once. Per-token temporary String
+allocations remain; delayed fallback output has no per-token latency guarantee.
+
+Freeze 317 actual sparse vocabulary entries and decode-only expectations before
+decoder changes: 59 upstream cases plus generated/edge cases and five synthetic
+131072-ID patterns, including a late invalid byte after a long valid run.
+The isolated source/data extractor fits its 1 GiB gate with 370,819,072 resident/
+281,084,696 physical bytes. Preserve pre-change input identities and runtime
+alias/target byte pins; no encoder or numerical capacity follows from this data.
+
+All 310 CPU/332 Metal-feature tests, both strict checks, both iOS targets,
+22 release text methods and four probe retention methods pass. Preserve the
+initial compile/type/test-call failure and later preliminary snapshots without
+upgrading their scope. Probe prefix mismatch, expected decoder failure, partial
+framing and publication I/O failures now retain actual outputs, active stage and
+original error. Existing real profiles pass 233,585 vocabulary IDs/33 short/eight
+long cases. The actual controller/classification rejects seven corrupt packets.
+
+The real Gemma text probe checks 268 small case/partition records, 472 prefix
+chunks, 15 long records and all 262,144 isolated IDs. All 7,675,150 captured bytes
+replay against the independent scalar vocabulary oracle. Actual maximum stream
+ownership 2,097,419 bytes (single-ID 4,361) fits 4 MiB; native resident/physical
+544,669,696/489,227,032 fit 1,094,713,344 combined codec/stream/diagnostic admission.
+The 3.87-second combined observation is not an LLM performance benchmark.
+
+See [ownership, behavior and limits](gemma4-native-stream.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-native-stream-v1.json).
+This qualifies the pinned text mechanism, with broader quality/full G3,
+earlier precision/source failures, Metal/performance, mobile fit/native ABI/app
+integration and 131072 LLM output tokens still open. No Profile/catalog/position
+or app output limit changes.

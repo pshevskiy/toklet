@@ -1,0 +1,1203 @@
+{
+  "format": "toklet-gemma4-decode-only-stream-fixture-v1",
+  "vocab_bound": 262144,
+  "decode_only": true,
+  "encode_qualified": false,
+  "source_decoder": {
+    "type": "Sequence",
+    "decoders": [
+      {
+        "type": "Replace",
+        "pattern": {
+          "String": "▁"
+        },
+        "content": " "
+      },
+      {
+        "type": "ByteFallback"
+      },
+      {
+        "type": "Fuse"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "chat:hello",
+      "ids": [
+        2,
+        105,
+        2364,
+        107,
+        10979,
+        106,
+        107,
+        105,
+        4368,
+        107
+      ],
+      "prefixes": [
+        "",
+        "",
+        "",
+        "user",
+        "user\n",
+        "user\nHi",
+        "user\nHi",
+        "user\nHi\n",
+        "user\nHi\n",
+        "user\nHi\nmodel",
+        "user\nHi\nmodel\n"
+      ],
+      "expected": "user\nHi\nmodel\n",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "chat:trim",
+      "ids": [
+        2,
+        105,
+        2364,
+        107,
+        9259,
+        106,
+        107,
+        105,
+        4368,
+        107
+      ],
+      "prefixes": [
+        "",
+        "",
+        "",
+        "user",
+        "user\n",
+        "user\nHello",
+        "user\nHello",
+        "user\nHello\n",
+        "user\nHello\n",
+        "user\nHello\nmodel",
+        "user\nHello\nmodel\n"
+      ],
+      "expected": "user\nHello\nmodel\n",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "chat:unicode",
+      "ids": [
+        2,
+        105,
+        2364,
+        107,
+        116130,
+        84679,
+        57235,
+        545,
+        238288,
+        1559,
+        106,
+        107,
+        105,
+        4368,
+        107
+      ],
+      "prefixes": [
+        "",
+        "",
+        "",
+        "user",
+        "user\n",
+        "user\nПривет",
+        "user\nПривет 世界",
+        "user\nПривет 世界 🙂",
+        "user\nПривет 世界 🙂 e",
+        "user\nПривет 世界 🙂 é",
+        "user\nПривет 世界 🙂 é é",
+        "user\nПривет 世界 🙂 é é",
+        "user\nПривет 世界 🙂 é é\n",
+        "user\nПривет 世界 🙂 é é\n",
+        "user\nПривет 世界 🙂 é é\nmodel",
+        "user\nПривет 世界 🙂 é é\nmodel\n"
+      ],
+      "expected": "user\nПривет 世界 🙂 é é\nmodel\n",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "chat:literal_underline",
+      "ids": [
+        2,
+        105,
+        2364,
+        107,
+        26352,
+        106,
+        107,
+        105,
+        4368,
+        107
+      ],
+      "prefixes": [
+        "",
+        "",
+        "",
+        "user",
+        "user\n",
+        "user\n Hello",
+        "user\n Hello",
+        "user\n Hello\n",
+        "user\n Hello\n",
+        "user\n Hello\nmodel",
+        "user\n Hello\nmodel\n"
+      ],
+      "expected": "user\n Hello\nmodel\n",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "chat:multiturn",
+      "ids": [
+        2,
+        105,
+        2364,
+        107,
+        10979,
+        106,
+        107,
+        105,
+        4368,
+        107,
+        9259,
+        236888,
+        106,
+        107,
+        105,
+        2364,
+        107,
+        9272,
+        236881,
+        106,
+        107,
+        105,
+        4368,
+        107
+      ],
+      "prefixes": [
+        "",
+        "",
+        "",
+        "user",
+        "user\n",
+        "user\nHi",
+        "user\nHi",
+        "user\nHi\n",
+        "user\nHi\n",
+        "user\nHi\nmodel",
+        "user\nHi\nmodel\n",
+        "user\nHi\nmodel\nHello",
+        "user\nHi\nmodel\nHello!",
+        "user\nHi\nmodel\nHello!",
+        "user\nHi\nmodel\nHello!\n",
+        "user\nHi\nmodel\nHello!\n",
+        "user\nHi\nmodel\nHello!\nuser",
+        "user\nHi\nmodel\nHello!\nuser\n",
+        "user\nHi\nmodel\nHello!\nuser\nNext",
+        "user\nHi\nmodel\nHello!\nuser\nNext?",
+        "user\nHi\nmodel\nHello!\nuser\nNext?",
+        "user\nHi\nmodel\nHello!\nuser\nNext?\n",
+        "user\nHi\nmodel\nHello!\nuser\nNext?\n",
+        "user\nHi\nmodel\nHello!\nuser\nNext?\nmodel",
+        "user\nHi\nmodel\nHello!\nuser\nNext?\nmodel\n"
+      ],
+      "expected": "user\nHi\nmodel\nHello!\nuser\nNext?\nmodel\n",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "chat:unicode_trim",
+      "ids": [
+        2,
+        105,
+        2364,
+        107,
+        9259,
+        106,
+        107,
+        105,
+        4368,
+        107,
+        7676,
+        106,
+        107,
+        105,
+        2364,
+        107,
+        31711,
+        106,
+        107,
+        105,
+        4368,
+        107
+      ],
+      "prefixes": [
+        "",
+        "",
+        "",
+        "user",
+        "user\n",
+        "user\nHello",
+        "user\nHello",
+        "user\nHello\n",
+        "user\nHello\n",
+        "user\nHello\nmodel",
+        "user\nHello\nmodel\n",
+        "user\nHello\nmodel\nOK",
+        "user\nHello\nmodel\nOK",
+        "user\nHello\nmodel\nOK\n",
+        "user\nHello\nmodel\nOK\n",
+        "user\nHello\nmodel\nOK\nuser",
+        "user\nHello\nmodel\nOK\nuser\n",
+        "user\nHello\nmodel\nOK\nuser\nAgain",
+        "user\nHello\nmodel\nOK\nuser\nAgain",
+        "user\nHello\nmodel\nOK\nuser\nAgain\n",
+        "user\nHello\nmodel\nOK\nuser\nAgain\n",
+        "user\nHello\nmodel\nOK\nuser\nAgain\nmodel",
+        "user\nHello\nmodel\nOK\nuser\nAgain\nmodel\n"
+      ],
+      "expected": "user\nHello\nmodel\nOK\nuser\nAgain\nmodel\n",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:",
+      "ids": [],
+      "prefixes": [
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text: ",
+      "ids": [
+        236743
+      ],
+      "prefixes": [
+        "",
+        " "
+      ],
+      "expected": " ",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:  leading",
+      "ids": [
+        138,
+        26016
+      ],
+      "prefixes": [
+        "",
+        "  ",
+        "  leading"
+      ],
+      "expected": "  leading",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:trailing  ",
+      "ids": [
+        136697,
+        138
+      ],
+      "prefixes": [
+        "",
+        "trailing",
+        "trailing  "
+      ],
+      "expected": "trailing  ",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:a  b",
+      "ids": [
+        236746,
+        138,
+        236763
+      ],
+      "prefixes": [
+        "",
+        "a",
+        "a  ",
+        "a  b"
+      ],
+      "expected": "a  b",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:a\tb\nc\r\nd",
+      "ids": [
+        236746,
+        255968,
+        236763,
+        107,
+        236755,
+        251,
+        107,
+        236753
+      ],
+      "prefixes": [
+        "",
+        "a",
+        "a\t",
+        "a\tb",
+        "a\tb\n",
+        "a\tb\nc",
+        "a\tb\nc\r",
+        "a\tb\nc\r\n",
+        "a\tb\nc\r\nd"
+      ],
+      "expected": "a\tb\nc\r\nd",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:▁",
+      "ids": [
+        236743
+      ],
+      "prefixes": [
+        "",
+        " "
+      ],
+      "expected": " ",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:a▁b",
+      "ids": [
+        236746,
+        518
+      ],
+      "prefixes": [
+        "",
+        "a",
+        "a b"
+      ],
+      "expected": "a b",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:é é",
+      "ids": [
+        236859,
+        545,
+        238288
+      ],
+      "prefixes": [
+        "",
+        "é",
+        "é e",
+        "é é"
+      ],
+      "expected": "é é",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:Привет 世界 🙂",
+      "ids": [
+        116130,
+        84679,
+        57235
+      ],
+      "prefixes": [
+        "",
+        "Привет",
+        "Привет 世界",
+        "Привет 世界 🙂"
+      ],
+      "expected": "Привет 世界 🙂",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "text:�",
+      "ids": [
+        238479
+      ],
+      "prefixes": [
+        "",
+        "�"
+      ],
+      "expected": "�",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:0",
+      "ids": [
+        0
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:1",
+      "ids": [
+        1
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:2",
+      "ids": [
+        2
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:3",
+      "ids": [
+        3
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:4",
+      "ids": [
+        4
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:46",
+      "ids": [
+        46
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:47",
+      "ids": [
+        47
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:48",
+      "ids": [
+        48
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:49",
+      "ids": [
+        49
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:50",
+      "ids": [
+        50
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:51",
+      "ids": [
+        51
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:52",
+      "ids": [
+        52
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:98",
+      "ids": [
+        98
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:100",
+      "ids": [
+        100
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:101",
+      "ids": [
+        101
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:105",
+      "ids": [
+        105
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:106",
+      "ids": [
+        106
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:255999",
+      "ids": [
+        255999
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:256000",
+      "ids": [
+        256000
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:258880",
+      "ids": [
+        258880
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:258881",
+      "ids": [
+        258881
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:258882",
+      "ids": [
+        258882
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:258883",
+      "ids": [
+        258883
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "control:258884",
+      "ids": [
+        258884
+      ],
+      "prefixes": [
+        "",
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:two_raw",
+      "ids": [
+        433,
+        407
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "é"
+      ],
+      "expected": "é",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:two_special_between",
+      "ids": [
+        433,
+        1,
+        407
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "�",
+        "é"
+      ],
+      "expected": "é",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:two_normal_after",
+      "ids": [
+        433,
+        407,
+        236781
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "é",
+        "éx"
+      ],
+      "expected": "éx",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:three_raw",
+      "ids": [
+        464,
+        368,
+        410
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "��",
+        "€"
+      ],
+      "expected": "€",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:three_special_between",
+      "ids": [
+        464,
+        1,
+        368,
+        410
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "�",
+        "��",
+        "€"
+      ],
+      "expected": "€",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:three_normal_after",
+      "ids": [
+        464,
+        368,
+        410,
+        236781
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "��",
+        "€",
+        "€x"
+      ],
+      "expected": "€x",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:four_raw",
+      "ids": [
+        478,
+        397,
+        391,
+        368
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "��",
+        "���",
+        "🙂"
+      ],
+      "expected": "🙂",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:four_special_between",
+      "ids": [
+        478,
+        1,
+        397,
+        391,
+        368
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "�",
+        "��",
+        "���",
+        "🙂"
+      ],
+      "expected": "🙂",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:four_normal_after",
+      "ids": [
+        478,
+        397,
+        391,
+        368,
+        236781
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "��",
+        "���",
+        "🙂",
+        "🙂x"
+      ],
+      "expected": "🙂x",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:incomplete_raw",
+      "ids": [
+        464,
+        368
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "��"
+      ],
+      "expected": "��",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:incomplete_special_between",
+      "ids": [
+        464,
+        1,
+        368
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "�",
+        "��"
+      ],
+      "expected": "��",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:incomplete_normal_after",
+      "ids": [
+        464,
+        368,
+        236781
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "��",
+        "��x"
+      ],
+      "expected": "��x",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:invalid_raw",
+      "ids": [
+        493
+      ],
+      "prefixes": [
+        "",
+        "�"
+      ],
+      "expected": "�",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:invalid_special_between",
+      "ids": [
+        493,
+        1
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "�"
+      ],
+      "expected": "�",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:invalid_normal_after",
+      "ids": [
+        493,
+        236781
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "�x"
+      ],
+      "expected": "�x",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:valid_then_invalid_raw",
+      "ids": [
+        464,
+        368,
+        410,
+        493
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "��",
+        "€",
+        "����"
+      ],
+      "expected": "����",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:valid_then_invalid_special_between",
+      "ids": [
+        464,
+        1,
+        368,
+        410,
+        493
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "�",
+        "��",
+        "€",
+        "����"
+      ],
+      "expected": "����",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "fallback:valid_then_invalid_normal_after",
+      "ids": [
+        464,
+        368,
+        410,
+        493,
+        236781
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "��",
+        "€",
+        "����",
+        "����x"
+      ],
+      "expected": "����x",
+      "oracle": "frozen_upstream_and_scalar"
+    },
+    {
+      "name": "generated:basic-hello",
+      "ids": [
+        10979,
+        236888,
+        2088,
+        740,
+        564,
+        1601,
+        611,
+        3124,
+        236881,
+        103453
+      ],
+      "prefixes": [
+        "",
+        "Hi",
+        "Hi!",
+        "Hi! How",
+        "Hi! How can",
+        "Hi! How can I",
+        "Hi! How can I help",
+        "Hi! How can I help you",
+        "Hi! How can I help you today",
+        "Hi! How can I help you today?",
+        "Hi! How can I help you today? 😊"
+      ],
+      "expected": "Hi! How can I help you today? 😊",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "edge:empty",
+      "ids": [],
+      "prefixes": [
+        ""
+      ],
+      "expected": "",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "edge:space",
+      "ids": [
+        236743
+      ],
+      "prefixes": [
+        "",
+        " "
+      ],
+      "expected": " ",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "edge:spaces",
+      "ids": [
+        236743,
+        236743
+      ],
+      "prefixes": [
+        "",
+        " ",
+        "  "
+      ],
+      "expected": "  ",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "edge:fallback_space_normal",
+      "ids": [
+        270,
+        236781
+      ],
+      "prefixes": [
+        "",
+        " ",
+        " x"
+      ],
+      "expected": " x",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "edge:fallback_space_space",
+      "ids": [
+        270,
+        236743
+      ],
+      "prefixes": [
+        "",
+        " ",
+        "  "
+      ],
+      "expected": "  ",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "edge:literal_replacement",
+      "ids": [
+        238479
+      ],
+      "prefixes": [
+        "",
+        "�"
+      ],
+      "expected": "�",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "edge:special_inside_fallback",
+      "ids": [
+        464,
+        1,
+        368,
+        410
+      ],
+      "prefixes": [
+        "",
+        "�",
+        "�",
+        "��",
+        "€"
+      ],
+      "expected": "€",
+      "oracle": "frozen_scalar_vocabulary"
+    }
+  ],
+  "long_cases": [
+    {
+      "name": "ascii",
+      "pattern_ids": [
+        236781,
+        236743
+      ],
+      "suffix_ids": [],
+      "tokens": 131072,
+      "expected_utf8_bytes": 131072,
+      "expected_sha256": "68e3cdfce5e9da85cea9b7134b9168a443d59eb17fa85305b0f0feff480741ff",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "fallback_ascii",
+      "pattern_ids": [
+        335
+      ],
+      "suffix_ids": [],
+      "tokens": 131072,
+      "expected_utf8_bytes": 131072,
+      "expected_sha256": "b44ffb72fcc259676bd80495fef1b44b808ca8f1ffe1b1706a4d7911b0e31f11",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "invalid_fallback",
+      "pattern_ids": [
+        493
+      ],
+      "suffix_ids": [],
+      "tokens": 131072,
+      "expected_utf8_bytes": 393216,
+      "expected_sha256": "600ab7639b0fa3a584b3187ba543dd1c05576277247fae73c690b9e3ae16e7f5",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "euro_normal",
+      "pattern_ids": [
+        464,
+        368,
+        410,
+        236781
+      ],
+      "suffix_ids": [],
+      "tokens": 131072,
+      "expected_utf8_bytes": 131072,
+      "expected_sha256": "40458fe04b57dd271d859cdbc316a30070906c4049d91fa5c139fa55d96425be",
+      "oracle": "frozen_scalar_vocabulary"
+    },
+    {
+      "name": "late_invalid_fallback",
+      "pattern_ids": [
+        335
+      ],
+      "suffix_ids": [
+        493
+      ],
+      "tokens": 131072,
+      "expected_utf8_bytes": 393216,
+      "expected_sha256": "600ab7639b0fa3a584b3187ba543dd1c05576277247fae73c690b9e3ae16e7f5",
+      "oracle": "frozen_scalar_vocabulary"
+    }
+  ]
+}

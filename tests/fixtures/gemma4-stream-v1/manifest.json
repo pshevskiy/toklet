@@ -1,0 +1,31 @@
+{
+  "format": "toklet-gemma4-decode-only-stream-manifest-v1",
+  "source_bindings": {
+    "benchmarks/results/2026-10-25-gemma4-text-codec-reference-v1.json": "1c71bf5eea1be0b87400a49220929be3f77566d2d8b2b3db7daaf4abfb5c7b78",
+    "artifacts/m8-gemma-text-codec-real-v1/run.py": "0da836938de22ef6897cbe8eb8f532b77feec60595ba3a99a6882a6636a41bfe",
+    "models/MLX-Gemma4-E2B-4bit-2387675/tokenizer.json": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+    "tests/fixtures/gemma4-text-codec-v1/witness.jsonl": "391077f928d1e288c227bc981f42ae505f7b407f9ee854332f9d2d9c3a410c76",
+    "tests/fixtures/gemma4-basic-chat-math-v1/math.json": "dab866a1e86e8bed3179e39383fa2f826222f9b1708aa2c2e6df66e78348627e",
+    "benchmarks/results/2026-10-25-gemma4-basic-chat-math-v1.json": "6fb6382efe2bd0cad568a14bcafaf9c487ecc5923b05d2204a6c25a2d6198c0a"
+  },
+  "generator_sha256": "cd6239d7d494eed53f9c5a466471927973d186af22f2f414a4e9c1e0bda51565",
+  "files": {
+    "tokenizer.json": {
+      "bytes": 12414,
+      "sha256": "eade0327c3bb65fab91011ecae2132d7420092dddb664ff74a306844360dbcb8"
+    },
+    "reference.json": {
+      "bytes": 22408,
+      "sha256": "620b1cb817a7e3976eaa7bdc910545133a3fa645661e4b25f39c2d59720c8158"
+    }
+  },
+  "selected_vocab_ids": 317,
+  "ordinary_cases": 67,
+  "frozen_upstream_cases": 59,
+  "scalar_generated_and_edge_cases": 8,
+  "synthetic_long_cases": 5,
+  "decode_only": true,
+  "encode_qualified": false,
+  "numerical_output_capacity_qualified": false,
+  "app_eligibility_changed": false
+}

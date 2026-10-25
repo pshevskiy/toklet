@@ -144,3 +144,207 @@ fn decode_preflight_bounds_ids_bytes_and_skipped_control_tokens() {
     skipped.push(0);
     assert!(decode_bound(&[5], &skipped, true).is_err());
 }
+
+fn stream_fixture() -> (Codec, Value) {
+    let manifest = include_bytes!("../../../tests/fixtures/gemma4-stream-v1/manifest.json");
+    assert_eq!(
+        format!("{:x}", Sha256::digest(manifest)),
+        "1605844dcb15d3c2a69d3e2df02099750153cef6ec3d754a93ab563646f03b54"
+    );
+    let manifest: Value = serde_json::from_slice(manifest).unwrap();
+    let tokenizer = include_bytes!("../../../tests/fixtures/gemma4-stream-v1/tokenizer.json");
+    let reference = include_bytes!("../../../tests/fixtures/gemma4-stream-v1/reference.json");
+    for (name, raw) in [
+        ("tokenizer.json", tokenizer.as_slice()),
+        ("reference.json", reference.as_slice()),
+    ] {
+        assert_eq!(
+            format!("{:x}", Sha256::digest(raw)),
+            manifest["files"][name]["sha256"]
+        );
+        assert_eq!(
+            raw.len() as u64,
+            manifest["files"][name]["bytes"].as_u64().unwrap()
+        );
+    }
+    let tokenizer = Tokenizer::from_bytes(tokenizer).unwrap();
+    let mut token_bytes = vec![0; VOCAB];
+    for (token, id) in tokenizer.get_vocab(true) {
+        token_bytes[id as usize] = token.len() as u16;
+    }
+    (
+        Codec {
+            tokenizer,
+            token_bytes,
+        },
+        serde_json::from_slice(reference).unwrap(),
+    )
+}
+fn stream_ids(value: &Value) -> Vec<u32> {
+    value
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|id| u32::try_from(id.as_u64().unwrap()).unwrap())
+        .collect()
+}
+
+#[test]
+fn stream_matches_frozen_prefixes_without_strip_for_all_partitions() {
+    let (codec, fixture) = stream_fixture();
+    assert_eq!(fixture["cases"].as_array().unwrap().len(), 67);
+    for case in fixture["cases"].as_array().unwrap() {
+        let ids = stream_ids(&case["ids"]);
+        let expected = case["expected"].as_str().unwrap();
+        for (count, prefix) in case["prefixes"].as_array().unwrap().iter().enumerate() {
+            assert_eq!(
+                codec.tokenizer.decode(&ids[..count], true).unwrap(),
+                prefix.as_str().unwrap(),
+                "{} prefix{count}",
+                case["name"]
+            );
+        }
+        for batch in [1, 3, 7, 128] {
+            let mut stream = codec
+                .response_stream(
+                    ResponseLimits::new(ids.len().max(1), MAX_TEXT_BYTES).unwrap(),
+                    STREAM_ALLOWANCE_BYTES,
+                )
+                .unwrap();
+            let allocated = stream.allocated_bytes().unwrap();
+            assert!(allocated <= STREAM_ALLOWANCE_BYTES);
+            let mut visible = String::new();
+            for chunk in ids.chunks(batch) {
+                visible.push_str(stream.push(chunk).unwrap());
+                let prefix = case["prefixes"][stream.consumed_tokens()].as_str().unwrap();
+                assert!(
+                    prefix.starts_with(&visible),
+                    "{} current prefix",
+                    case["name"]
+                );
+                assert!(
+                    expected.starts_with(&visible),
+                    "{} later rewrite",
+                    case["name"]
+                );
+                assert_eq!(stream.allocated_bytes().unwrap(), allocated);
+            }
+            visible.push_str(stream.finish().unwrap());
+            assert_eq!(visible, expected, "{} batch{batch}", case["name"]);
+            assert_eq!(stream.consumed_tokens(), ids.len());
+            assert_eq!(stream.emitted_bytes(), visible.len());
+            assert!(stream.is_finished() && !stream.is_failed());
+            assert_eq!(stream.allocated_bytes().unwrap(), allocated);
+        }
+    }
+}
+
+#[test]
+fn long_text_stream_hashes_preserve_whole_run_delay_and_bounded_storage() {
+    let (codec, fixture) = stream_fixture();
+    assert_eq!(fixture["long_cases"].as_array().unwrap().len(), 5);
+    for case in fixture["long_cases"].as_array().unwrap() {
+        let pattern = stream_ids(&case["pattern_ids"]);
+        let suffix = stream_ids(&case["suffix_ids"]);
+        let count = case["tokens"].as_u64().unwrap() as usize;
+        assert_eq!(count, 131072);
+        for batch in [1, 3, 128] {
+            let mut stream = codec
+                .response_stream(
+                    ResponseLimits::new(count, 8 * 1024 * 1024).unwrap(),
+                    STREAM_ALLOWANCE_BYTES,
+                )
+                .unwrap();
+            let allocated = stream.allocated_bytes().unwrap();
+            let mut hash = Sha256::new();
+            let mut bytes = 0;
+            let mut ids = Vec::with_capacity(128);
+            for start in (0..count).step_by(batch) {
+                ids.clear();
+                for position in start..(start + batch).min(count) {
+                    ids.push(if position < count - suffix.len() {
+                        pattern[position % pattern.len()]
+                    } else {
+                        suffix[position - (count - suffix.len())]
+                    });
+                }
+                let chunk = stream.push(&ids).unwrap();
+                hash.update(chunk.as_bytes());
+                bytes += chunk.len();
+                if case["name"].as_str().unwrap().contains("fallback") {
+                    assert_eq!(bytes, 0, "whole fallback run must wait for finish");
+                }
+                assert_eq!(stream.allocated_bytes().unwrap(), allocated);
+            }
+            let tail = stream.finish().unwrap();
+            hash.update(tail.as_bytes());
+            bytes += tail.len();
+            assert_eq!(
+                format!("{:x}", hash.finalize()),
+                case["expected_sha256"].as_str().unwrap()
+            );
+            assert_eq!(bytes as u64, case["expected_utf8_bytes"].as_u64().unwrap());
+            assert_eq!(stream.consumed_tokens(), count);
+            assert_eq!(stream.emitted_bytes(), bytes);
+            assert_eq!(stream.allocated_bytes().unwrap(), allocated);
+        }
+    }
+}
+
+#[test]
+fn stream_admission_terminal_flush_and_poisoned_counters_remain_bounded() {
+    let (codec, _) = stream_fixture();
+    let limits = ResponseLimits::new(4, 32).unwrap();
+    assert!(
+        codec
+            .response_stream(limits, STREAM_ALLOWANCE_BYTES - 1)
+            .err()
+            .unwrap()
+            .to_string()
+            .contains("allowance")
+    );
+    let x = codec.tokenizer.token_to_id("x").unwrap();
+    for ids in [vec![VOCAB as u32], vec![x; 129], vec![x; 5]] {
+        let mut stream = codec
+            .response_stream(limits, STREAM_ALLOWANCE_BYTES)
+            .unwrap();
+        assert!(stream.push(&ids).is_err());
+        assert_eq!((stream.consumed_tokens(), stream.emitted_bytes()), (0, 0));
+        assert!(stream.is_failed());
+        assert!(stream.finish().is_err());
+    }
+    let byte = |value: &str| codec.tokenizer.token_to_id(value).unwrap();
+    let mut stream = codec
+        .response_stream(ResponseLimits::new(3, 1).unwrap(), STREAM_ALLOWANCE_BYTES)
+        .unwrap();
+    assert_eq!(stream.push(&[x]).unwrap(), "x");
+    assert!(stream.push(&[byte("�")]).is_err());
+    assert_eq!((stream.consumed_tokens(), stream.emitted_bytes()), (1, 1));
+    assert!(stream.is_failed());
+    assert!(stream.finish().is_err());
+    let mut cancelled = codec
+        .response_stream(limits, STREAM_ALLOWANCE_BYTES)
+        .unwrap();
+    assert_eq!(
+        cancelled.push(&[byte("<0xE2>"), byte("<0x82>")]).unwrap(),
+        ""
+    );
+    // Stop/cancellation flushes the admitted visible prefix; no hidden stop ID
+    // is delivered to this text owner.
+    assert_eq!(cancelled.finish().unwrap(), "��");
+    assert_eq!(
+        (cancelled.consumed_tokens(), cancelled.emitted_bytes()),
+        (2, 6)
+    );
+    assert!(cancelled.push(&[]).is_err());
+    let mut terminal = codec
+        .response_stream(ResponseLimits::new(1, 2).unwrap(), STREAM_ALLOWANCE_BYTES)
+        .unwrap();
+    assert_eq!(terminal.push(&[byte("<0xFF>")]).unwrap(), "");
+    assert!(terminal.finish().is_err());
+    assert_eq!(
+        (terminal.consumed_tokens(), terminal.emitted_bytes()),
+        (1, 0)
+    );
+    assert!(terminal.is_failed());
+}

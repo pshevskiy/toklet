@@ -1,6 +1,9 @@
 //! Exact pinned basic-text codec, separate from app profiles and model kernels.
 //! These text bounds grant no numerical context/output or app capability.
-use super::{invalid, pinned};
+use super::{
+    invalid, pinned,
+    stream::{ResponseLimits, ResponseStream},
+};
 use serde::{Deserialize, Serialize};
 use std::{io, path::Path};
 use tokenizers::Tokenizer;
@@ -12,6 +15,9 @@ pub const VOCAB: usize = 262144;
 /// construction overlap, owned tables, metadata and bounded operation buffers.
 /// Caller-owned retained responses/history need separate application admission.
 pub const ALLOWANCE_BYTES: usize = 1024 * 1024 * 1024;
+/// Separate text-stream owner allowance, including bounded temporary token text.
+/// This grants no numerical context/output or app capability.
+pub const STREAM_ALLOWANCE_BYTES: usize = 4 * 1024 * 1024;
 pub const STOP_IDS: [u32; 3] = [1, 106, 50];
 const MAX_TOKEN_BYTES: usize = 4096;
 const CONTROLS: [(u32, &str); 24] = [
@@ -248,6 +254,26 @@ impl Codec {
     }
     pub fn stop_ids(&self) -> &'static [u32] {
         &STOP_IDS
+    }
+    /// No-Strip Replace/ByteFallback/Fuse delivery from this exact pinned codec.
+    /// Whole fallback runs may be delayed until a normal token or finish; a
+    /// later invalid byte can rewrite the entire run. Always finish on stop or
+    /// cancellation. Caller-owned copies need separate memory admission.
+    pub fn response_stream(
+        &self,
+        limits: ResponseLimits,
+        available_bytes: usize,
+    ) -> io::Result<ResponseStream<'_>> {
+        if available_bytes < STREAM_ALLOWANCE_BYTES {
+            return Err(invalid(
+                "Gemma stream owner allowance exceeds available bytes",
+            ));
+        }
+        let stream = ResponseStream::byte_fallback(&self.tokenizer, VOCAB as u32, false, limits);
+        if stream.allocated_bytes()? > STREAM_ALLOWANCE_BYTES {
+            return Err(invalid("Gemma stream storage exceeds admitted allowance"));
+        }
+        Ok(stream)
     }
     /// Raw text may contain control literals intentionally; only render rejects
     /// them. Identity postprocessing is witnessed with either explicit setting.

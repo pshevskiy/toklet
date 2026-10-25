@@ -7,6 +7,7 @@
 //! decoded once at a normal-token boundary or finish, never per-byte prefix.
 use super::{Codec, Profile, invalid};
 use std::io;
+use tokenizers::Tokenizer;
 
 pub const MAX_STREAM_TOKENS: usize = 131072;
 pub const MAX_STREAM_TEXT_BYTES: usize = 8 * 1024 * 1024;
@@ -32,7 +33,7 @@ impl ResponseLimits {
 #[derive(Clone, Copy)]
 enum Decoder {
     ByteLevel,
-    Mistral,
+    ByteFallback,
 }
 
 /// Chunks borrow this stream until its next call. Copy/consume only the new
@@ -42,7 +43,14 @@ enum Decoder {
 /// Special IDs count toward the token limit but emit no text. Unknown IDs below
 /// the profile vocabulary bound are skipped, matching the original tokenizer.
 pub struct ResponseStream<'codec> {
-    codec: &'codec Codec,
+    tokenizer: &'codec Tokenizer,
+    state: ResponseState,
+}
+
+// The codec mediates all access to its tokenizer. This owned state has no
+// self-reference and cannot be paired with arbitrary tokenizers by callers.
+struct ResponseState {
+    vocab: u32,
     limits: ResponseLimits,
     decoder: Decoder,
     special_ids: Vec<u32>,
@@ -61,42 +69,110 @@ impl Codec {
         // Selection and token inventory are cold. Numerical kernels see neither.
         let decoder = match self.profile {
             Profile::Smol | Profile::Qwen | Profile::Qwen3 => Decoder::ByteLevel,
-            Profile::Mistral => Decoder::Mistral,
+            Profile::Mistral => Decoder::ByteFallback,
         };
-        let mut special_ids: Vec<_> = self
-            .tokenizer
+        ResponseStream::new(&self.tokenizer, self.profile.vocab(), decoder, true, limits)
+    }
+}
+impl<'codec> ResponseStream<'codec> {
+    pub(super) fn byte_fallback(
+        tokenizer: &'codec Tokenizer,
+        vocab: u32,
+        strip_leading_space: bool,
+        limits: ResponseLimits,
+    ) -> Self {
+        Self::new(
+            tokenizer,
+            vocab,
+            Decoder::ByteFallback,
+            strip_leading_space,
+            limits,
+        )
+    }
+    fn new(
+        tokenizer: &'codec Tokenizer,
+        vocab: u32,
+        decoder: Decoder,
+        strip_leading_space: bool,
+        limits: ResponseLimits,
+    ) -> Self {
+        let mut special_ids: Vec<_> = tokenizer
             .get_added_tokens_decoder()
             .into_iter()
             .filter_map(|(id, token)| token.special.then_some(id))
             .collect();
         special_ids.sort_unstable();
         // Worst case: replacement UTF-8 per input byte, plus a retained fallback
-        // run. Limits bound all arithmetic; reserve once, outside text delivery.
+        // run. Limits bound arithmetic; this reserves delivery buffers once.
+        // id_to_token/Replace still allocate temporary text per consumed ID.
         let delta_capacity = limits
             .text_bytes
             .min(3 * (MAX_STREAM_BATCH * MAX_TOKEN_BYTES + limits.tokens) + 3);
-        ResponseStream {
-            codec: self,
-            limits,
-            decoder,
-            special_ids,
-            tokens: 0,
-            text_bytes: 0,
-            delta: String::with_capacity(delta_capacity),
-            utf8: [0; 4],
-            utf8_len: 0,
-            fallback: Vec::with_capacity(if matches!(decoder, Decoder::Mistral) {
-                limits.tokens
-            } else {
-                0
-            }),
-            at_start: true,
-            finished: false,
-            failed: false,
+        Self {
+            tokenizer,
+            state: ResponseState {
+                vocab,
+                limits,
+                decoder,
+                special_ids,
+                tokens: 0,
+                text_bytes: 0,
+                delta: String::with_capacity(delta_capacity),
+                utf8: [0; 4],
+                utf8_len: 0,
+                fallback: Vec::with_capacity(if matches!(decoder, Decoder::ByteFallback) {
+                    limits.tokens
+                } else {
+                    0
+                }),
+                at_start: strip_leading_space,
+                finished: false,
+                failed: false,
+            },
         }
     }
 }
 impl ResponseStream<'_> {
+    pub fn consumed_tokens(&self) -> usize {
+        self.state.consumed_tokens()
+    }
+    pub fn emitted_bytes(&self) -> usize {
+        self.state.emitted_bytes()
+    }
+    pub fn is_finished(&self) -> bool {
+        self.state.is_finished()
+    }
+    pub fn is_failed(&self) -> bool {
+        self.state.is_failed()
+    }
+    pub fn push(&mut self, ids: &[u32]) -> io::Result<&str> {
+        self.state.push(self.tokenizer, ids)
+    }
+    pub fn finish(&mut self) -> io::Result<&str> {
+        self.state.finish()
+    }
+    /// Owned capacities plus State/facade metadata, excluding the borrowed codec.
+    /// Per-token temporary text and caller-retained chunks need separate allowance.
+    pub fn allocated_bytes(&self) -> io::Result<usize> {
+        let special = self
+            .state
+            .special_ids
+            .capacity()
+            .checked_mul(std::mem::size_of::<u32>())
+            .ok_or_else(|| invalid("Response storage accounting overflow"))?;
+        [
+            self.state.delta.capacity(),
+            self.state.fallback.capacity(),
+            special,
+        ]
+        .into_iter()
+        .try_fold(std::mem::size_of::<Self>(), |sum, n| {
+            sum.checked_add(n)
+                .ok_or_else(|| invalid("Response storage accounting overflow"))
+        })
+    }
+}
+impl ResponseState {
     pub fn consumed_tokens(&self) -> usize {
         self.tokens
     }
@@ -109,10 +185,10 @@ impl ResponseStream<'_> {
     pub fn is_failed(&self) -> bool {
         self.failed
     }
-    pub fn push(&mut self, ids: &[u32]) -> io::Result<&str> {
+    pub fn push(&mut self, tokenizer: &Tokenizer, ids: &[u32]) -> io::Result<&str> {
         self.delta.clear();
         let previous = (self.tokens, self.text_bytes);
-        if let Err(error) = self.push_inner(ids) {
+        if let Err(error) = self.push_inner(tokenizer, ids) {
             self.failed = true;
             self.delta.clear();
             // Nothing from this failed call escaped. The decoder state is
@@ -122,7 +198,7 @@ impl ResponseStream<'_> {
         }
         Ok(&self.delta)
     }
-    fn push_inner(&mut self, ids: &[u32]) -> io::Result<()> {
+    fn push_inner(&mut self, tokenizer: &Tokenizer, ids: &[u32]) -> io::Result<()> {
         self.active()?;
         let count = self
             .tokens
@@ -130,7 +206,7 @@ impl ResponseStream<'_> {
             .ok_or_else(|| invalid("Response token count overflow"))?;
         if ids.len() > MAX_STREAM_BATCH
             || count > self.limits.tokens
-            || ids.iter().any(|&id| id >= self.codec.profile.vocab())
+            || ids.iter().any(|&id| id >= self.vocab)
         {
             return Err(invalid("Response batch exceeds admitted token bounds"));
         }
@@ -140,7 +216,7 @@ impl ResponseStream<'_> {
         match self.decoder {
             Decoder::ByteLevel => {
                 for &id in ids {
-                    if let Some(token) = self.token(id)? {
+                    if let Some(token) = self.token(tokenizer, id)? {
                         // Upstream falls back to the *whole* token's UTF-8 if
                         // any character is outside the ByteLevel alphabet.
                         if token.chars().all(|c| byte_value(c).is_some()) {
@@ -155,16 +231,16 @@ impl ResponseStream<'_> {
                     }
                 }
             }
-            Decoder::Mistral => {
+            Decoder::ByteFallback => {
                 for &id in ids {
-                    if let Some(token) = self.token(id)? {
+                    if let Some(token) = self.token(tokenizer, id)? {
                         let token = token.replace('▁', " ");
                         if let Some(byte) = fallback_byte(&token) {
                             // At most one byte per consumed fallback ID.
                             self.fallback.push(byte);
                         } else {
                             self.flush_fallback()?;
-                            self.mistral_text(&token)?;
+                            self.fallback_text(&token)?;
                         }
                     }
                 }
@@ -172,11 +248,11 @@ impl ResponseStream<'_> {
         }
         Ok(())
     }
-    fn token(&self, id: u32) -> io::Result<Option<String>> {
+    fn token(&self, tokenizer: &Tokenizer, id: u32) -> io::Result<Option<String>> {
         if self.special_ids.binary_search(&id).is_ok() {
             return Ok(None);
         }
-        let token = self.codec.tokenizer.id_to_token(id);
+        let token = tokenizer.id_to_token(id);
         if token
             .as_ref()
             .is_some_and(|token| token.len() > MAX_TOKEN_BYTES)
@@ -195,7 +271,7 @@ impl ResponseStream<'_> {
                 }
                 Ok(())
             }
-            Decoder::Mistral => self.flush_fallback(),
+            Decoder::ByteFallback => self.flush_fallback(),
         });
         if let Err(error) = result {
             self.failed = true;
@@ -252,7 +328,7 @@ impl ResponseStream<'_> {
             }
         }
     }
-    fn mistral_text(&mut self, text: &str) -> io::Result<()> {
+    fn fallback_text(&mut self, text: &str) -> io::Result<()> {
         if text.is_empty() {
             return Ok(());
         }
@@ -272,7 +348,7 @@ impl ResponseStream<'_> {
         // Restore its reserved storage even on a terminal byte-budget failure.
         let mut run = std::mem::take(&mut self.fallback);
         let result = match std::str::from_utf8(&run) {
-            Ok(text) => self.mistral_text(text),
+            Ok(text) => self.fallback_text(text),
             Err(_) => {
                 self.at_start = false;
                 let bytes = run.len() * "�".len();
@@ -381,7 +457,10 @@ mod tests {
                             expected.starts_with(&visible),
                             "Published text was later rewritten"
                         );
-                        assert!(stream.utf8_len <= 3 && stream.fallback.len() <= input.len());
+                        assert!(
+                            stream.state.utf8_len <= 3
+                                && stream.state.fallback.len() <= input.len()
+                        );
                     }
                     visible.push_str(stream.finish().unwrap());
                     assert_eq!(visible, expected, "{name}/{} batch{batch}", case["name"]);
@@ -410,14 +489,17 @@ mod tests {
                         ResponseLimits::new(MAX_STREAM_TOKENS, MAX_STREAM_TEXT_BYTES).unwrap(),
                     );
                     let capacities = (
-                        stream.delta.capacity(),
-                        stream.fallback.capacity(),
-                        stream.special_ids.capacity(),
+                        stream.state.delta.capacity(),
+                        stream.state.fallback.capacity(),
+                        stream.state.special_ids.capacity(),
                     );
                     let mut hash = Sha256::new();
                     for chunk in input.chunks(batch) {
                         hash.update(stream.push(chunk).unwrap().as_bytes());
-                        assert!(stream.utf8_len <= 3 && stream.fallback.len() <= MAX_STREAM_TOKENS);
+                        assert!(
+                            stream.state.utf8_len <= 3
+                                && stream.state.fallback.len() <= MAX_STREAM_TOKENS
+                        );
                     }
                     hash.update(stream.finish().unwrap().as_bytes());
                     assert_eq!(
@@ -432,9 +514,9 @@ mod tests {
                     assert_eq!(
                         capacities,
                         (
-                            stream.delta.capacity(),
-                            stream.fallback.capacity(),
-                            stream.special_ids.capacity()
+                            stream.state.delta.capacity(),
+                            stream.state.fallback.capacity(),
+                            stream.state.special_ids.capacity()
                         )
                     );
                     assert!(stream.finish().is_err() && stream.is_failed());
@@ -484,10 +566,10 @@ mod tests {
         fn check(codec: &Codec, bytes: &[u8]) {
             let mut stream = codec.response_stream(ResponseLimits::new(1, 32).unwrap());
             for &byte in bytes {
-                stream.byte(byte).unwrap();
-                assert!(stream.utf8_len <= 3);
+                stream.state.byte(byte).unwrap();
+                assert!(stream.state.utf8_len <= 3);
             }
-            let mut text = stream.delta.clone();
+            let mut text = stream.state.delta.clone();
             text.push_str(stream.finish().unwrap());
             assert_eq!(text, String::from_utf8_lossy(bytes), "{bytes:?}");
         }
