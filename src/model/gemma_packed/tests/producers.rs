@@ -222,3 +222,49 @@ fn producer_bound_and_actual_staging_capacity_are_admitted() {
     assert!(session.forward(&[1]).is_err());
     assert_eq!(snapshot(&session), before);
 }
+
+#[test]
+fn physical_512_slot_rings_keep_32_position_admission_atomic() {
+    let graph = Graph::new();
+    let mut layout = Graph::layout();
+    layout.window = 512;
+    let model = Model::with_layout(graph.weights(), layout).unwrap();
+    let budget = model.model_bytes() + model.planned_session_bytes().unwrap();
+    let mut session = model.new_session(budget).unwrap();
+    let addresses = pointers(&session);
+    assert_eq!(
+        session.allocated_bytes().unwrap(),
+        model.planned_session_bytes().unwrap()
+    );
+    for (i, cache) in session.caches.iter().enumerate() {
+        let (k, v) = cache.committed();
+        let capacity = if i % 5 == 4 { 32 } else { 512 };
+        let dims = if i % 5 == 4 { 128 } else { 64 };
+        assert_eq!(k.len(), capacity * dims);
+        assert_eq!(v.len(), k.len());
+    }
+    session.forward(&graph.data.ids[..3]).unwrap();
+    let before = snapshot(&session);
+    session.fault = Some(ALL_LAYERS + 2);
+    let measured = Measurement::start();
+    let rejected = session.forward(&graph.data.ids[3..]).is_err();
+    assert_eq!(measured.finish(), 0);
+    assert!(rejected);
+    assert_eq!(snapshot(&session), before);
+    session.fault = None;
+    session.forward(&graph.data.ids[3..]).unwrap();
+    let before = snapshot(&session);
+    let measured = Measurement::start();
+    let rejected = session.forward(&[1]).is_err();
+    assert_eq!(measured.finish(), 0);
+    assert!(rejected);
+    assert_eq!(session.tokens().len(), 32);
+    assert_eq!(snapshot(&session), before);
+    assert_eq!(pointers(&session), addresses);
+    assert!(session.caches.iter().all(|c| c.offset() == 32));
+    session.reset().unwrap();
+    let empty = snapshot(&session);
+    assert!(session.forward(&[1; 33]).is_err());
+    assert_eq!(snapshot(&session), empty);
+    assert_eq!(pointers(&session), addresses);
+}

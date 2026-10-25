@@ -1,7 +1,8 @@
-//! Borrowed packed Gemma graph for the frozen H64/V17/four-layer witness.
+//! Borrowed packed Gemma graph for a frozen witness and a named short E2B adapter.
 //!
-//! This constructor admits only the short synthetic profile, not a checkpoint
-//! or app capability. Packed4/group64 BF16 coefficient values reconstruct into
+//! `Model::new` admits the short synthetic profile; `Model::from_e2b` borrows
+//! an admitted E2B payload, with32 executable positions and no app capability.
+//! Packed4/group64 BF16 coefficient values reconstruct into
 //! FP32; activations/KV remain FP32 and reductions use the scalar FP64 oracle.
 //! Original-BF16 source-graph, GPU, long-position and device gates stay separate.
 
@@ -11,6 +12,7 @@ use super::{Error, allocation_bytes, total_bytes, zeros};
 use crate::cpu::{self, finite, length};
 use crate::mlx::affine::{Matrix, MetadataDtype};
 
+mod e2b;
 mod forward;
 #[cfg(test)]
 mod tests;
@@ -136,8 +138,15 @@ impl<'a> Model<'a> {
         Self::with_layout(weights, Layout::witness())
     }
     fn with_layout(weights: Weights<'a>, l: Layout) -> Result<Self, Error> {
+        Self::with_storage(weights, l, None)
+    }
+    fn with_storage(
+        weights: Weights<'a>,
+        l: Layout,
+        retained: Option<&crate::mlx::gemma4::payload::LoadReport>,
+    ) -> Result<Self, Error> {
         // A bounded proposal frame must never spill to the heap during forward.
-        // Public admission still selects only the frozen witness geometry.
+        // Public admission selects only the frozen witness or named E2B geometry.
         if l.producers == 0
             || l.producers > MAX_PRODUCERS
             || l.producers > l.layers.len()
@@ -211,6 +220,18 @@ impl<'a> Model<'a> {
                 return Err(Error::InvalidConfig("Gemma packed scalar"));
             }
         }
+        if let Some(report) = retained {
+            // Replace the borrowed logical tensor sum with its owner's actual
+            // full capacity. This includes retained source scalar vectors and
+            // padding, exactly once; copied LayerWeights scalars are metadata.
+            if report.tensor_capacity_bytes < bytes {
+                return Err(Error::InvalidConfig("Gemma retained backing capacity"));
+            }
+            bytes = add_bytes(
+                report.tensor_capacity_bytes,
+                report.metadata_reservation_bytes,
+            )?;
+        }
         let geometry: Vec<_> = l
             .layers
             .iter()
@@ -225,7 +246,9 @@ impl<'a> Model<'a> {
             l.layers.len() - l.producers,
             l.window,
             l.positions,
-            l.positions,
+            // Physical local rings may exceed the short executable prefix.
+            // Forward still rejects any request beyond l.positions before work.
+            l.positions.max(l.window),
         )?;
         let mut unit_norm = zeros(l.max_dim())?;
         unit_norm.fill(1.);
@@ -250,8 +273,10 @@ impl<'a> Model<'a> {
             bytes,
         })
     }
-    /// Logical packed payload, norms, model metadata and actual Vec capacities.
-    /// Caller/container padding, tokenizer and process memory are outside this count.
+    /// Packed/norm backing plus model metadata and actual owned Vec capacities.
+    /// The E2B constructor includes its entire PayloadStore tensor capacity and
+    /// retained metadata reservation. Other caller padding, tokenizer and process
+    /// memory are outside this count.
     pub fn model_bytes(&self) -> usize {
         self.bytes
     }
@@ -475,7 +500,7 @@ impl Session<'_, '_> {
     pub fn tokens(&self) -> &[u32] {
         &self.history[..self.committed]
     }
-    /// All rows from the last successful chunk, `[rows,17]`, or empty after reset.
+    /// All rows from the last successful chunk, `[rows,vocab]`, or empty after reset.
     pub fn logits(&self) -> &[f32] {
         &self.scratch.published[..self.published_rows * self.model.layout.vocab]
     }

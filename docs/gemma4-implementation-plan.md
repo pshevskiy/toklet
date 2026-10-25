@@ -199,3 +199,15 @@ reject57 cross-precision values under unchanged tolerances; that gap remains
 explicit. This advances real-shape reference evidence only. The named native
 adapter, checkpoint numerical parity, generation, Metal, quality, device and app
 qualification remain open, with all earlier precision failures unwaived.
+
+
+The [named short native E2B adapter](gemma4-short-scalar.md) now borrows the
+admitted payload into the existing packed scalar graph. Physical512-slot local
+rings are separate from the unchanged32-position execution limit, and retained
+store capacity/metadata are counted once. Real four-token batched, one-token
+and mixed schedules produce identical logits and pass every staged-FP32 value.
+Each retains27 FP64-ideal logit failures from the reference precision gap;
+overall numerical acceptance remains false. Native short raw-logit execution
+is now measured on Mac, with generation/state, source-BF16, precision gaps,
+Metal, quality/performance, phone fit and app integration still open. G3 is not
+marked complete and no capability/catalog/position limit changes.

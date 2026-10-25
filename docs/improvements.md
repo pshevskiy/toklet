@@ -3344,3 +3344,43 @@ See [arithmetic, failures and scope](gemma4-text-math.md) and the
 Rust engine/tests/examples stay unchanged fromcb2aeec. Native E2B execution,
 original-BF16/source qualification, generation, Metal, quality/performance,
 iPhone fit, app eligibility and131072-output-token support remain open.
+
+
+## 25 October 2026 — named borrowed short E2B scalar adapter
+
+Resolve the exact admitted Gemma4 E2B text names/geometry in a small cold module
+and reuse the existing packed graph. Keep immutable store -> borrowed model ->
+borrowed session lifetimes explicit, with no expanded full matrices or hot-path
+name lookup. Replace logical borrowed tensor bytes once with the same owner's
+actual capacity plus retained metadata; count source scalar vectors/capacity
+excess and exclude load-only conversion overlap. Keep the tiny constructor's
+behavior/accounting unchanged.
+
+Separate512 physical local cache slots from32 executable positions. Offline
+checks cover exact real geometry, bounded scratch, backing admission/overflow,
+all15 owner snapshots on late failure/token33 rejection and persistent buffer
+addresses. Existing tiny numerical gates and allocation checks remain intact.
+Required formatting, default/Metal strict checks,297 CPU/319 Metal-feature tests,
+both iOS targets and the explicit release probe build pass;16/109 ignored
+hardware/model tests remain explicit.
+
+The real immutable checkpoint executes four raw IDs in batched, single-token
+and mixed schedules. All three full logit arrays are bitwise identical. Each
+passes1,048,576 staged-FP32 comparisons under unchanged gates, with maximum
+error-to-bound fraction0.0013644315853741284. Each retains27 FP64-ideal failures
+(maximum1.2599434792233821) from the existing reference gap. Overall numerical
+acceptance remains false; no precision/quality gate is waived.
+
+Model accounting including its store is2,671,706,548 bytes and actual session
+capacity93,555,912 bytes. The owned Mac process reports2,174,353,408 bytes maximum
+resident memory and2,717,239,840 bytes peak physical footprint, below6GiB. Its
+67.96-second combined load/three-schedule/output observation is not a latency
+benchmark. Diagnostic copies/output are outside numerical accounting and inside
+the process measurement.
+
+See [ownership, numerical results and limitations](gemma4-short-scalar.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-short-scalar-v1.json).
+This is short scalar raw-logit execution, not completed G3 or app support.
+Original-BF16/source qualification, precision gaps, tokenizer/chat/generation,
+resident Metal, quality/performance, phone fit and131072 output tokens remain
+open; no ABI/family/catalog/limit changes.
