@@ -3876,3 +3876,38 @@ See [publication boundary, checks and limits](smol-model-content.md) and the
 [receipt](../benchmarks/results/2026-10-25-smol-model-content-v1.json).
 Codec/profile/device admission, native ABI/capabilities and app integration remain
 separate. Earlier Gemma/source/GPU/precision and 131072-output gates remain open.
+
+
+## 25 October 2026 — consumed Smol tokenizer/profile content pairing
+
+Add an explicit audited codec loader with a separate 64 MiB text allowance.
+Validate every fixed source field/count before opening files, accept legitimate
+repeated reads, and hash bounded regular no-follow config/tokenizer buffers before
+classification/parsing. Share only the existing post-read parser/policy; attach
+immutable evidence after it succeeds. Legacy/synthetic codecs remain unbound.
+This pairs consumed assets with supplied historical source content; source-only
+loads can supply it too, so live model ownership remains a separate boundary.
+
+Eight new portable methods exercise admission, altered/special assets, same-buffer
+authority, parser policy and failure capture. Both original codec errors and a
+bounded active result pair survive capture serialization/admission/write failure;
+second-side capture is attempted independently. All 337 CPU/361 Metal-feature
+tests, both strict checks, both iOS targets and eight release methods pass.
+Three failed preliminary checks are retained without credit; no gate is weakened.
+Seventeen verifier methods pass again under a pinned owned wrapper; the earlier
+direct run remains preliminary evidence.
+
+A fresh actual Mac load supplies resident-model source evidence to the audited
+codec; the legacy codec loads separately for comparison. After the model drops,
+historical pairing persists. All 49,152 singleton decodes,
+two frozen independent chat encode/full-decode cases and 102 same-implementation
+prefixes pass. Each complete 49,258-frame capture is 4,962,863 bytes; files match
+byte for byte. Identity/option/codec sizes are 224 / 232 / 1,744 bytes. Completed
+RSS/physical peaks are 244,580,352 / 209,289,936 bytes within the separate 1.5 GiB
+policy. Singleton/prefix parity is not an independent tokenizer oracle; no
+numerical forward or inference performance is qualified.
+
+See [admission, evidence, diagnostics and limits](smol-codec-content.md) and the
+[receipt](../benchmarks/results/2026-10-25-smol-codec-content-v1.json).
+Live model/codec ownership, native capability/response production, app/device
+qualification and all earlier Gemma/source/precision/131072-output gaps stay open.

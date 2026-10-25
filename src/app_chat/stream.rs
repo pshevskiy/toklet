@@ -415,6 +415,7 @@ mod tests {
             tokenizer: Tokenizer::from_bytes(raw).unwrap(),
             profile,
             special_literals: Vec::new(),
+            content_identity: None,
         }
     }
     fn reference() -> Value {

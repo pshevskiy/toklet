@@ -8,6 +8,28 @@ use std::{
     sync::atomic::{AtomicUsize, Ordering},
 };
 static SERIAL: AtomicUsize = AtomicUsize::new(0);
+// Synthetic test metadata only: no reads or loaded model are attested. Absent
+// from product builds; used to exercise codec admission before any file opens.
+pub(crate) fn synthetic_codec_source(reads: usize) -> SourceContentIdentity {
+    SourceContentIdentity {
+        verified_reads: reads,
+        ..Audit::smol(METADATA_ALLOWANCE_BYTES + CONVERSION_BYTES)
+            .unwrap()
+            .identity
+    }
+}
+pub(crate) fn invalid_codec_sources() -> [SourceContentIdentity; 8] {
+    let mut values = [synthetic_codec_source(694); 8];
+    values[0].config[0] ^= 1;
+    values[1].index[0] ^= 1;
+    values[2].header[0] ^= 1;
+    values[3].reference_container[0] ^= 1;
+    values[4].verified_reads = 693;
+    values[5].physical_ranges = 693;
+    values[6].payload_bytes += 1;
+    values[7].container_bytes += 1;
+    values
+}
 pub(crate) struct Fixture {
     pub path: PathBuf,
     pub data_start: u64,

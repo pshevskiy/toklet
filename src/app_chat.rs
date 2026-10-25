@@ -9,6 +9,7 @@ use std::{
 };
 use tokenizers::Tokenizer;
 
+pub mod content;
 pub mod gemma4;
 pub mod stream;
 
@@ -208,6 +209,8 @@ pub struct Codec {
     profile: Profile,
     // Cold, bounded, exact-tokenizer control inventory. Kernels never see it.
     special_literals: Vec<String>,
+    // Historical consumed asset pairing; legacy constructors remain unbound.
+    content_identity: Option<content::CodecContentIdentity>,
 }
 impl Codec {
     pub fn load(directory: &Path) -> io::Result<Self> {
@@ -244,6 +247,9 @@ impl Codec {
             config_sha,
         )?;
         let bytes = pinned(&directory.join("tokenizer.json"), limit, tokenizer_sha)?;
+        Self::from_tokenizer_bytes(&bytes, profile)
+    }
+    fn from_tokenizer_bytes(bytes: &[u8], profile: Profile) -> io::Result<Self> {
         tokenizers::utils::parallelism::set_parallelism(false);
         let tokenizer = Tokenizer::from_bytes(bytes).map_err(invalid)?;
         if tokenizer.get_truncation().is_some()
@@ -275,6 +281,7 @@ impl Codec {
             tokenizer,
             profile,
             special_literals,
+            content_identity: None,
         })
     }
     pub fn stop_ids(&self) -> &'static [u32] {
@@ -321,6 +328,7 @@ pub(crate) fn decode_fixture() -> Codec {
         .unwrap(),
         profile: Profile::Qwen,
         special_literals: Vec::new(),
+        content_identity: None,
     }
 }
 

@@ -442,3 +442,17 @@ Both import modes pass the same existing Mac graph/state/capacity witnesses;
 no kernel or numerical gate changes. Native capability/profile/codec/device
 integration remains next at this boundary, with all broader architecture and
 long-output requirements still open.
+
+
+## Authenticated tokenizer/profile content
+
+The [audited Smol codec](smol-codec-content.md) now authenticates bounded consumed
+config/tokenizer buffers against supplied source evidence, then publishes immutable
+pairing only after the shared parser/policy succeeds. Legacy loaders stay unbound.
+All 337 CPU/361 Metal-feature tests, both iOS targets and eight release methods
+pass; a real Mac load matches every vocabulary ID, the two independent complete
+chat cases and 102 same-implementation prefixes. Completed process admission
+passes. This closes historical codec-content pairing only; an engine-owned live
+model/codec boundary, native capabilities/response production, app/device support
+and the broader architecture, Gemma/source/precision and 131072-output gates remain
+open. Existing text/numerical limits are unchanged.
