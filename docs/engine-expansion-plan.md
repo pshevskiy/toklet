@@ -456,3 +456,17 @@ passes. This closes historical codec-content pairing only; an engine-owned live
 model/codec boundary, native capabilities/response production, app/device support
 and the broader architecture, Gemma/source/precision and 131072-output gates remain
 open. Existing text/numerical limits are unchanged.
+
+
+## Exact native audited model and codec owners
+
+The [audited native Smol factories](smol-native-pair.md) now publish validated text
+assets with the exact supplied live model allocation, retaining it until the
+final audited chat/session owner ends. Legacy factories keep their behavior.
+All 343 CPU/367 Metal-feature tests, both iOS targets, six release methods and
+three-target strict C links/export checks pass. Separate Mac Rust/C probes verify
+owner lifetime, rejected factories, wrong-thread preservation and frozen text
+results within their explicit memory policies. This closes native pairing and
+retention only. Capability/response endpoints, app/device integration, broader
+architectures, Gemma/source/precision/GPU gates and 131072-output-plus-prompt
+qualification remain separate; no text/numerical limit or phone grant changes.

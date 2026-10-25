@@ -5,6 +5,9 @@ use crate::app_chat::{Codec, MAX_RESPONSE_TOKENS, MAX_TEXT, MAX_TOKENS, Profile}
 pub struct ChatHandle {
     owner: ThreadId,
     codec: Codec,
+    // Exactly the supplied loaded allocation, retained only by audited factory.
+    // Covered by separate text allowance; count the shared physical model once.
+    _model: Option<Rc<NativeModel>>,
 }
 
 /// Load the pinned chat assets from the loaded model's own directory.
@@ -55,6 +58,67 @@ pub unsafe extern "C" fn toklet_chat_create(
             out.write(Box::into_raw(Box::new(ChatHandle {
                 owner: thread::current().id(),
                 codec,
+                _model: None,
+            })));
+            Ok(())
+        })
+    }
+}
+
+/// Bind validated Smol assets to the exact live audited model allocation.
+/// Reserve a separate 64 MiB text allowance BEFORE loading the model. Keep the
+/// model's numerical memory admitted until both external model and all retaining
+/// sessions/audited chats are released. Individual allowance maxima do not prove
+/// combined process/device fit. This does not grant native app capabilities.
+/// # Safety
+/// Follow the parent module's foreign pointer/thread/disjoint-output contract.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_chat_create_smol_audited(
+    model: *const ModelHandle,
+    allowance: u64,
+    out: *mut *mut ChatHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(out)?;
+            out.write(ptr::null_mut());
+            pointer(model)?;
+            let model = &*model;
+            owner(model.owner)?;
+            if allowance < crate::app_chat::TOKENIZER_ALLOWANCE as u64
+                || allowance > weights::INITIAL_MEMORY_LIMIT_BYTES as u64
+            {
+                return Err(fail(
+                    INVALID,
+                    "reserve audited Smol text memory separately: >=64MiB and <=6GiB",
+                ));
+            }
+            // CPU and legacy Metal imports have no eligible source evidence.
+            // Reject them BEFORE inspecting their directory or any text asset.
+            let source = match model.model.as_ref() {
+                NativeModel::Cpu(_) => None,
+                #[cfg(all(
+                    feature = "metal",
+                    any(target_os = "macos", target_os = "ios"),
+                    target_arch = "aarch64"
+                ))]
+                NativeModel::Metal(model) => model.mlx_source_content_identity().copied(),
+            }
+            .ok_or_else(|| {
+                fail(
+                    UNSUPPORTED,
+                    "audited Smol chat requires an audited loaded Smol model",
+                )
+            })?;
+            let codec = Codec::load_smol_audited(&model.directory, &source, allowance as usize)
+                .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
+            // Clone only after every fallible validation; failed factories add
+            // no owner. The codec and exact model association publish atomically.
+            out.write(Box::into_raw(Box::new(ChatHandle {
+                owner: thread::current().id(),
+                codec,
+                _model: Some(Rc::clone(&model.model)),
             })));
             Ok(())
         })
@@ -149,7 +213,8 @@ pub unsafe extern "C" fn toklet_chat_stop_ids(
     }
 }
 
-/// Release an immutable text handle. NULL is a no-op; no model lifetime retained.
+/// Release an immutable text handle. NULL is a no-op. An audited chat releases
+/// its retained model owner; a legacy chat has no model lifetime dependency.
 /// # Safety
 /// Follow the parent module's foreign pointer/thread contract.
 #[unsafe(no_mangle)]
@@ -179,6 +244,7 @@ mod tests {
         let chat = Box::into_raw(Box::new(ChatHandle {
             owner: thread::current().id(),
             codec: crate::app_chat::decode_fixture(),
+            _model: None,
         }));
         let ids = [32; 257];
         let mut count = 0;
@@ -638,6 +704,7 @@ mod tests {
         let chat = Box::into_raw(Box::new(ChatHandle {
             owner: thread::current().id(),
             codec: Codec::load(Path::new("models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8")).unwrap(),
+            _model: None,
         }));
         let input = br#"[{"role":"user","content":"Hello!"}]"#;
         let mut count = 0;
@@ -781,3 +848,9 @@ mod tests {
         }
     }
 }
+
+#[cfg(all(test, feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod audited_tests;
+
+#[cfg(test)]
+mod audited_capture_tests;

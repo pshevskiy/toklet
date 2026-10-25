@@ -23,7 +23,10 @@ extern "C" {
    initialized storage for their full stated extent. Inputs and outputs/error
    records must not overlap. Counts are element counts; null+zero is permitted
    for token/stop arrays and the documented history-size query. Handles come only from this library.
-   Model/session operations and release stay on their creating dedicated thread.
+   Model/session/chat operations and release stay on their creating dedicated thread.
+   Sessions and audited chats retain the exact model allocation after external
+   model release. Keep model memory admitted until those owners end; ordinary
+   legacy chat handles retain no model.
    Callbacks run synchronously there, may not throw/unwind, and may not destroy
    active resources. Reentrant session calls return BUSY. Rust panic poisons a
    session: release/recreate it. OOM abort/foreign exceptions are not contained.
@@ -119,6 +122,11 @@ uint32_t toklet_model_load_metal(const uint8_t *, size_t, const uint8_t *, size_
    Original packed tensors remain resident. Unsupported builds fail without fallback.
    Additive ABI v1 entrypoint; existing layouts and load functions are unchanged. */
 uint32_t toklet_model_load_mlx(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
+/* Explicit audited import of the exact frozen Smol checkpoint. Authenticates
+   consumed source content and publishes evidence only after resident assembly.
+   Unsupported artifacts/builds reject; no text or app capability is granted.
+   Existing options, output-null-on-error and creating-thread rules apply. */
+uint32_t toklet_model_load_mlx_smol_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 uint32_t toklet_model_release(TokletModel *, TokletError *);
 uint32_t toklet_session_create(const TokletModel *, const TokletOptions *, TokletSession **, TokletError *);
 uint32_t toklet_session_release(TokletSession *, TokletError *);
@@ -152,6 +160,14 @@ uint32_t toklet_cancel_release(TokletCancel *, TokletError *);
    for Qwen3 separately from numerical admission.
    No model/session is retained by the returned chat handle. No network access. */
 uint32_t toklet_chat_create(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
+/* Bind exact consumed Smol text assets to the supplied live audited model.
+   CPU/legacy/unqualified models reject before text-asset access. Reserve an
+   independent >=64MiB (<=6GiB) allowance BEFORE loading the model. This handle
+   retains the same model allocation until chat release; shared weights count
+   once and remain admitted even after external model release. Individual
+   allowance maxima do not qualify combined process/device fit. No app grant.
+   Existing encode/decode/stop limits and pointer/thread rules apply. */
+uint32_t toklet_chat_create_smol_audited(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
 /* JSON array of alternating {role,content} messages, starting/ending user.
    Max63 messages/64KiB UTF-8, no template control tokens; output max512 IDs.
    NULL+0 queries required count. Small output returns INVALID, sets required

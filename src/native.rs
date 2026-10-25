@@ -4,7 +4,10 @@
 //! Every non-null pointer must be aligned, live, initialized and valid for its
 //! stated extent. Inputs must not overlap writable outputs/error records. A
 //! handle must come from this library and must not be used after release.
-//! Model/session calls and release run on their creating thread. Only operations
+//! Model/session/chat calls and release run on their creating thread. Audited
+//! chat handles also retain the exact loaded model; releasing its
+//! external handle does not free weights until every session/audited chat ends.
+//! Ordinary legacy chat handles retain no model. Only operations
 //! on the independent cancellation flag may run concurrently; its release must
 //! wait until all users, including generation, have returned. Callbacks are
 //! synchronous on the inference thread and must not unwind/throw across C.
@@ -518,6 +521,33 @@ pub unsafe extern "C" fn toklet_model_load_mlx(
     out: *mut *mut ModelHandle,
     error: *mut NativeError,
 ) -> u32 {
+    unsafe { load_mlx(path, len, opts, out, error, false) }
+}
+/// Explicit audited import of the frozen Smol checkpoint. Successful handles
+/// carry authenticated consumed-source evidence; other artifacts reject.
+/// No text allowance, tokenizer, app capability or device fit is implied.
+/// # Safety
+/// Follow this module's foreign caller contract for all pointers and handles.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_model_load_mlx_smol_audited(
+    path: *const u8,
+    len: usize,
+    opts: *const Options,
+    out: *mut *mut ModelHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe { load_mlx(path, len, opts, out, error, true) }
+}
+// Select the loader once at this cold boundary; publication and ABI checks are
+// shared. No backend choice or evidence hashing enters numerical hot loops.
+unsafe fn load_mlx(
+    path: *const u8,
+    len: usize,
+    opts: *const Options,
+    out: *mut *mut ModelHandle,
+    error: *mut NativeError,
+    audited_smol: bool,
+) -> u32 {
     unsafe {
         boundary(error, || {
             pointer(out)?;
@@ -530,13 +560,15 @@ pub unsafe extern "C" fn toklet_model_load_mlx(
                 target_arch = "aarch64"
             ))]
             {
-                let model = crate::metal::Model::load_mlx(
-                    &path,
-                    weights::LoadOptions {
-                        context_limit: options.capacity,
-                        memory_limit_bytes: options.memory_limit_bytes,
-                    },
-                )
+                let options = weights::LoadOptions {
+                    context_limit: options.capacity,
+                    memory_limit_bytes: options.memory_limit_bytes,
+                };
+                let model = if audited_smol {
+                    crate::metal::Model::load_mlx_smol_audited(&path, options)
+                } else {
+                    crate::metal::Model::load_mlx(&path, options)
+                }
                 .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
                 out.write(Box::into_raw(Box::new(ModelHandle {
                     owner: thread::current().id(),
@@ -551,7 +583,7 @@ pub unsafe extern "C" fn toklet_model_load_mlx(
                 target_arch = "aarch64"
             )))]
             {
-                let _ = (options, path);
+                let _ = (options, path, audited_smol);
                 Err(fail(
                     UNSUPPORTED,
                     "Native MLX Metal backend unavailable in this build/platform",
@@ -560,7 +592,9 @@ pub unsafe extern "C" fn toklet_model_load_mlx(
         })
     }
 }
-/// Release a model handle. Live sessions retain the model; NULL is a no-op.
+/// Release an external model handle. Live sessions and audited chats retain
+/// weights; keep their model memory admitted. Legacy chats retain no model.
+/// NULL is a no-op.
 /// # Safety
 /// Follow the foreign caller contract; release each non-null handle once.
 #[unsafe(no_mangle)]

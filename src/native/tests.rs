@@ -1215,3 +1215,167 @@ fn check_native_mlx_boundary(
         serde_json::json!({"expected_token":expected_token,"retained_model_released":true,"score_matches_direct":true,"ids":ids,"pending_state":[8,7,1],"cancellation_and_rejection_preserve_prefix":true,"physical_device_qualified":false,"performance_qualified":false})
     );
 }
+
+#[test]
+fn audited_mlx_factory_validates_foreign_inputs_and_clears_output() {
+    for (path, options) in [
+        (&b""[..], opts()),
+        (&b"bad\0path"[..], opts()),
+        (&b"\xff"[..], opts()),
+        (
+            &b"missing"[..],
+            Options {
+                abi_version: 99,
+                ..opts()
+            },
+        ),
+        (
+            &b"missing"[..],
+            Options {
+                struct_size: 0,
+                ..opts()
+            },
+        ),
+        (
+            &b"missing"[..],
+            Options {
+                memory_limit_bytes: MODEL_SESSION_BRIDGE_BYTES as u64,
+                ..opts()
+            },
+        ),
+    ] {
+        let mut model = ptr::dangling_mut();
+        assert_eq!(
+            unsafe {
+                toklet_model_load_mlx_smol_audited(
+                    path.as_ptr(),
+                    path.len(),
+                    &options,
+                    &mut model,
+                    ptr::null_mut(),
+                )
+            },
+            INVALID
+        );
+        assert!(model.is_null());
+    }
+    let mut model = ptr::dangling_mut();
+    assert_eq!(
+        unsafe {
+            toklet_model_load_mlx_smol_audited(
+                b"missing".as_ptr(),
+                7,
+                ptr::null(),
+                &mut model,
+                ptr::null_mut(),
+            )
+        },
+        INVALID
+    );
+    assert!(model.is_null());
+    assert_eq!(
+        unsafe {
+            toklet_model_load_mlx_smol_audited(
+                b"missing".as_ptr(),
+                7,
+                &opts(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+            )
+        },
+        INVALID
+    );
+}
+#[test]
+fn audited_chat_rejects_unqualified_cpu_before_files_without_retaining_model() {
+    let model = Box::into_raw(Box::new(ModelHandle {
+        owner: thread::current().id(),
+        model: Rc::new(NativeModel::Cpu(Box::new(model()))),
+        directory: Path::new("nonexistent/pinned-looking/SmolLM2").to_path_buf(),
+    }));
+    unsafe {
+        assert_eq!(Rc::strong_count(&(*model).model), 1);
+        for (allowance, expected) in [
+            (0, INVALID),
+            ((crate::app_chat::TOKENIZER_ALLOWANCE - 1) as u64, INVALID),
+            (u64::MAX, INVALID),
+            (crate::app_chat::TOKENIZER_ALLOWANCE as u64, UNSUPPORTED),
+        ] {
+            let mut chat = ptr::dangling_mut();
+            assert_eq!(
+                toklet_chat_create_smol_audited(model, allowance, &mut chat, ptr::null_mut()),
+                expected
+            );
+            assert!(chat.is_null());
+            assert_eq!(Rc::strong_count(&(*model).model), 1);
+        }
+        assert_eq!(toklet_model_release(model, ptr::null_mut()), OK);
+    }
+}
+#[test]
+fn audited_chat_wrong_thread_and_null_outputs_preserve_owners() {
+    let model = Box::into_raw(Box::new(ModelHandle {
+        owner: thread::current().id(),
+        model: Rc::new(NativeModel::Cpu(Box::new(model()))),
+        directory: Path::new("not-opened").to_path_buf(),
+    }));
+    let address = model as usize;
+    thread::spawn(move || unsafe {
+        let model = address as *mut ModelHandle;
+        let mut chat = ptr::dangling_mut();
+        assert_eq!(
+            toklet_chat_create_smol_audited(
+                model,
+                crate::app_chat::TOKENIZER_ALLOWANCE as u64,
+                &mut chat,
+                ptr::null_mut()
+            ),
+            WRONG_THREAD
+        );
+        assert!(chat.is_null());
+        assert_eq!(toklet_model_release(model, ptr::null_mut()), WRONG_THREAD);
+    })
+    .join()
+    .unwrap();
+    unsafe {
+        assert_eq!(Rc::strong_count(&(*model).model), 1);
+        assert_eq!(
+            toklet_chat_create_smol_audited(model, 0, ptr::null_mut(), ptr::null_mut()),
+            INVALID
+        );
+        let mut chat = ptr::dangling_mut();
+        assert_eq!(
+            toklet_chat_create_smol_audited(ptr::null(), 0, &mut chat, ptr::null_mut()),
+            INVALID
+        );
+        assert!(chat.is_null());
+        assert_eq!(toklet_model_release(model, ptr::null_mut()), OK);
+    }
+}
+#[test]
+fn audited_mlx_small_admission_rejects_before_gpu_and_never_publishes() {
+    let mut model = ptr::dangling_mut();
+    let options = Options {
+        memory_limit_bytes: MODEL_SESSION_BRIDGE_BYTES as u64 + 1,
+        ..opts()
+    };
+    let status = unsafe {
+        toklet_model_load_mlx_smol_audited(
+            b"missing".as_ptr(),
+            7,
+            &options,
+            &mut model,
+            ptr::null_mut(),
+        )
+    };
+    if cfg!(all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    )) {
+        assert_eq!(status, LOAD_ERROR);
+    } else {
+        assert_eq!(status, UNSUPPORTED);
+    }
+    assert!(model.is_null());
+}

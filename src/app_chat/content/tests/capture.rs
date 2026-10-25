@@ -46,7 +46,7 @@ impl fmt::Write for Active {
     }
 }
 #[derive(Debug)]
-pub(super) struct CaptureFailure {
+pub(crate) struct CaptureFailure {
     codec_errors: Vec<String>,
     capture_errors: Vec<String>,
     active: String,
@@ -62,13 +62,13 @@ impl fmt::Display for CaptureFailure {
     }
 }
 impl std::error::Error for CaptureFailure {}
-pub(super) struct Capture {
+pub(crate) struct Capture {
     file: File,
     bytes: usize,
     limit: usize,
 }
 impl Capture {
-    pub(super) fn new(path: &Path, limit: usize) -> io::Result<Self> {
+    pub(crate) fn new(path: &Path, limit: usize) -> io::Result<Self> {
         Ok(Self {
             file: File::options().write(true).create_new(true).open(path)?,
             bytes: 0,
@@ -76,11 +76,11 @@ impl Capture {
         })
     }
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
-    pub(super) fn flush(&mut self) -> io::Result<()> {
+    pub(crate) fn flush(&mut self) -> io::Result<()> {
         self.file.flush()
     }
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
-    pub(super) fn bytes(&self) -> usize {
+    pub(crate) fn bytes(&self) -> usize {
         self.bytes
     }
     fn record<T: Serialize>(
@@ -121,7 +121,7 @@ impl Capture {
         Ok(())
     }
 }
-pub(super) fn capture_pair<T: Serialize + Debug>(
+pub(crate) fn capture_pair<T: Serialize + Debug>(
     files: &mut [Capture; 2],
     kind: &str,
     group: &str,

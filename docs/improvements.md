@@ -3911,3 +3911,38 @@ See [admission, evidence, diagnostics and limits](smol-codec-content.md) and the
 [receipt](../benchmarks/results/2026-10-25-smol-codec-content-v1.json).
 Live model/codec ownership, native capability/response production, app/device
 qualification and all earlier Gemma/source/precision/131072-output gaps stay open.
+
+
+## 25 October 2026 — exact live native Smol model/codec retention
+
+Add two explicit audited ABI-v1 factories while preserving old entrypoints and
+record layouts. Share MLX publication/validation and choose the loader once.
+Reject invalid text allowance, CPU and identity-less Metal before text I/O; take
+source evidence from the supplied live model, validate consumed codec assets,
+then publish the codec with one clone of that exact model allocation. Failed
+factories retain no additional owner. Legacy/synthetic chats remain independent.
+Caller model admission stays live until retaining sessions/audited chats end;
+individual allowance maxima do not qualify combined process/device fit.
+
+All 343 CPU/367 Metal-feature tests, both strict checks, both iOS targets and
+four factory/two observation release methods pass. New fault tests retain bounded
+raw buffers before status/count/UTF-8 validation. Twenty verifier methods pass
+under the final pinned owned controller. Three release static libraries match
+all 26 header exports and strict C links/platform/minimum-OS checks; iOS binaries
+are not executed. Preliminary source-check/build failures and superseded
+regression metadata remain retained without credit; no warning/gate is waived.
+
+Actual separate Mac Rust/C diagnostics pass. Rust retains 39 identical frames
+per side, 10,028 bytes each, against two independent chat cases; exact owners
+progress two to one to final destruction, with rejected factories and wrong-thread
+calls preserving counts. C retains 15 statuses, three ID/two raw-byte buffers,
+matching 32 frozen Hello IDs/98 bytes and transactional short-buffer behavior.
+Chat/owner-option sizes are 1,760/8 bytes inside the existing text allowance.
+Completed RSS/physical peaks are 223,526,912/206,897,848 for Rust and
+225,968,128/207,504,032 for C, each below its separate 1 GiB diagnostic policy.
+
+See [ownership, ABI checks and limits](smol-native-pair.md) and the
+[receipt](../benchmarks/results/2026-10-25-smol-native-pair-v1.json).
+This closes live pairing/retention only. Native capabilities/response production,
+app integration, phone fit, broader architecture/quantization, all earlier Gemma/
+source/precision/GPU gaps and 131072-output-plus-prompt requirements stay open.

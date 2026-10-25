@@ -148,7 +148,7 @@ fn parser_policy_failures_publish_no_codec_and_legacy_stays_unbound() {
     assert!(Codec::from_tokenizer_bytes(&changed, Profile::Smol).is_err());
 }
 
-mod capture;
+pub(crate) mod capture;
 
 // Explicit hardware/model diagnostic, excluded from ordinary offline tests.
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
