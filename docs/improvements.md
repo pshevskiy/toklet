@@ -4224,3 +4224,31 @@ See [contracts and scope](gemma-table-reference.md) and
 Retain as a pre-target storage witness. Native borrowed rows, chunked head/table
 storage and gathers, activation/resident graph/KV, existing source/precision
 failures, quality/performance, app/phone and long-output qualification remain open.
+
+## 25 October 2026 — native immutable packed row views
+
+Add a concrete Matrix row-range method over already validated original code,
+scale and bias slices. Validate nonempty ordered bounds, layout and checked byte
+offsets before slicing. Preserve the original source lifetime, metadata validation
+and all numerical loops; no new tensor allocation, reference count, unsafe code,
+per-element dispatch or raw mutable access is introduced. Parent/child views
+share the same allocations, counted once; no stronger pointer alignment is assumed.
+
+Structural checks cover all 54 admitted bit-width/dtype/group combinations,
+including offset sources, exact pointers/strides/lengths, nested ranges and a
+view outliving its temporary parent. The pre-target fixture verifies 960 native
+selected values / 192 negative zeros, 360 partitioned scalar outputs and invalid,
+reversed, outside/extreme ranges. Outputs match frozen rounded FP32 bits exactly.
+
+Formatting, both strict configurations, 351 CPU / 379 Metal-feature tests,
+iOS device/simulator builds and optimized unit/integration checks pass. All
+12 owned processes/groups close; actual test binaries and source inputs are
+bound. Original release executables remain unchanged. No explicit GPU/model
+suite or unrelated performance benchmark is rerun for this CPU storage change.
+
+See [ownership, checks and limitations](mlx-row-views.md) and
+[receipt](../benchmarks/results/2026-10-25-mlx-row-views-v1.json).
+Retain the checked borrowed view. The full-head single-owner rejection remains;
+transactional multirow gather, admitted chunked head/table execution, native
+activation/full resident graph/KV, prior source/precision failures, app/phone
+quality/performance and long-output qualification remain open.

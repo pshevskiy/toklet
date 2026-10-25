@@ -560,3 +560,13 @@ repeated gathers and contiguous head partitions before any native change.
 Bounded captures/replays and failure-retention checks pass. Native borrowed
 row access and separately admitted resident composition remain next; no whole
 architecture, source/precision, app/device or long-output gate changes.
+
+## Borrowed packed row ranges
+
+The [native storage view](mlx-row-views.md) selects immutable original rows
+without copying weights or changing reconstruction. Generic storage/pointer
+checks and independently frozen gathered/partitioned values pass required
+Rust/Metal/iOS and optimized checks. This qualifies CPU borrowed row access;
+chunked GPU head/table storage, multirow gather transactions and resident graph
+composition remain next. Prior source/precision, app/device, performance and
+long-output requirements remain open.

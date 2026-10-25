@@ -501,3 +501,14 @@ source rows leave the entire gather destination unchanged. This is a pre-target
 witness; native row access, admitted chunked head/table execution and resident
 graph composition are next. The old full-head geometry rejection and all prior
 source/precision, device/app, performance and long-output gates remain unchanged.
+
+## Native immutable packed row views
+
+[Concrete borrowed row ranges](mlx-row-views.md) now share validated original
+codes and metadata without allocating or reconstructing tensors. All 54 existing
+storage combinations preserve source pointers, offsets and lifetimes. Frozen
+scalar checks preserve 960 gathered values / 192 negative zeros and 360
+partitioned outputs; invalid/extreme and nested ranges pass. Required CPU/Metal,
+iOS and optimized checks pass. Existing numerical loops and GPU constructors
+are unchanged. Admitted chunked head/table execution and transactional multirow
+gather are next, with full graph/source/device/quality/long-output gates open.

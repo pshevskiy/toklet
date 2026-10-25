@@ -2,7 +2,7 @@
 //! See `docs/mlx-affine.md` for storage and reconstruction precision contracts.
 
 use half::{bf16, f16};
-use std::fmt;
+use std::{fmt, ops::Range};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Error(pub &'static str);
@@ -186,6 +186,37 @@ impl<'a> Matrix<'a> {
         self.layout
     }
 
+    /// Borrow contiguous original rows without copying or reconstructing weights.
+    ///
+    /// Code and metadata strides stay row-major; BF16/F16 metadata may begin at
+    /// a two-byte offset. The view shares the original immutable allocations,
+    /// which must be counted once. It may outlive this Matrix value but cannot
+    /// outlive its original source bytes. Empty or invalid ranges return no view.
+    pub fn row_range(&self, rows: Range<usize>) -> Result<Matrix<'a>, Error> {
+        let invalid = Error("MLX affine row range out of bounds");
+        if rows.start >= rows.end || rows.end > self.layout.rows {
+            return Err(invalid);
+        }
+        let layout = Layout::new(
+            rows.end - rows.start,
+            self.layout.columns,
+            self.layout.bits,
+            self.layout.group_size,
+            self.layout.dtype,
+        )?;
+        let selected = |source: &'a [u8], stride: usize| {
+            let start = rows.start.checked_mul(stride).ok_or(invalid)?;
+            let end = rows.end.checked_mul(stride).ok_or(invalid)?;
+            source.get(start..end).ok_or(invalid)
+        };
+        Ok(Matrix {
+            layout,
+            weights: selected(self.weights, self.layout.row_bytes)?,
+            scales: selected(self.scales, self.layout.metadata_bytes / self.layout.rows)?,
+            biases: selected(self.biases, self.layout.metadata_bytes / self.layout.rows)?,
+        })
+    }
+
     fn code<const B: u8>(&self, row: usize, column: usize) -> u8 {
         let bit = column * usize::from(B);
         let index = row * self.layout.row_bytes + bit / 8;
@@ -350,4 +381,60 @@ impl<'a> Matrix<'a> {
 }
 fn reconstruct(scale: f32, bias: f32, code: u8) -> f32 {
     (f64::from(scale) * f64::from(code) + f64::from(bias)) as f32
+}
+
+#[cfg(test)]
+mod row_tests {
+    use super::*;
+
+    #[test]
+    fn row_views_share_source_for_all_admitted_storage_formats() {
+        for bits in [2, 3, 4, 5, 6, 8] {
+            for dtype in [MetadataDtype::F16, MetadataDtype::BF16, MetadataDtype::F32] {
+                for group in [32, 64, 128] {
+                    let layout = Layout::new(5, 128, bits, group, dtype).unwrap();
+                    let codes = vec![0xa5; layout.weight_bytes() + 1];
+                    let coefficient = match dtype {
+                        MetadataDtype::F16 => 0x3c00_u16.to_le_bytes().to_vec(),
+                        MetadataDtype::BF16 => 0x3f80_u16.to_le_bytes().to_vec(),
+                        MetadataDtype::F32 => 1_f32.to_le_bytes().to_vec(),
+                    };
+                    // Deliberately offset byte-backed sources: no native-pointer
+                    // alignment guarantee is introduced by a borrowed row view.
+                    let mut scales = vec![0xee];
+                    for _ in 0..layout.metadata_bytes() / coefficient.len() {
+                        scales.extend_from_slice(&coefficient);
+                    }
+                    let biases = vec![0; layout.metadata_bytes() + 1];
+                    let view = {
+                        let parent =
+                            Matrix::from_le_bytes(layout, &codes[1..], &scales[1..], &biases[1..])
+                                .unwrap();
+                        parent.row_range(1..4).unwrap()
+                    };
+                    let stride = 128 / group * dtype.bytes();
+                    assert_eq!(view.layout().rows(), 3);
+                    assert_eq!(
+                        view.weights.as_ptr(),
+                        codes[1 + layout.row_bytes()..].as_ptr()
+                    );
+                    assert_eq!(view.scales.as_ptr(), scales[1 + stride..].as_ptr());
+                    assert_eq!(view.biases.as_ptr(), biases[1 + stride..].as_ptr());
+                    assert_eq!(view.weights.len(), layout.row_bytes() * 3);
+                    assert_eq!(view.scales.len(), stride * 3);
+                    assert_eq!(view.biases.len(), stride * 3);
+                    assert_eq!(
+                        view.layout.total_bytes(),
+                        view.weights.len() + 2 * stride * 3
+                    );
+                    let nested = view.row_range(1..2).unwrap();
+                    assert_eq!(
+                        nested.weights.as_ptr(),
+                        codes[1 + 2 * layout.row_bytes()..].as_ptr()
+                    );
+                    assert_eq!(nested.scales.as_ptr(), scales[1 + 2 * stride..].as_ptr());
+                }
+            }
+        }
+    }
 }
