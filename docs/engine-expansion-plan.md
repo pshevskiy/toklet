@@ -1,5 +1,10 @@
 # Engine coverage and Hugging Face implementation plan
 
+Latest standalone GPU work: [resident table gathers](gemma-table-gather-gpu.md)
+share the existing packed projection weights and qualify tiny lookup transactions
+on Mac. Actual large-table loading/selection, complete Gemma execution, historical
+source/precision discrepancies and app/phone qualification remain open.
+
 Latest Gemma precision work: the [packed table/projection witness](gemma-packed-reference.md)
 passes required FP32/tied CPU/GPU comparisons while retaining BF16 backend
 differences and rejected projection diagnostics. It grants no new artifact,

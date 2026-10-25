@@ -2,6 +2,9 @@
 //! correctness composition, not a resident whole graph or optimized GEMM.
 use super::*;
 
+mod gather;
+pub use gather::Gather;
+
 const MAX_ROWS: usize = 262144;
 const MAX_CHUNKS: usize = 64;
 const INVALID: &str = "Gemma partitioned affine fixed geometry/format outside bounds";

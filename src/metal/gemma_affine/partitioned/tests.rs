@@ -2,7 +2,7 @@ use super::*;
 use crate as engine;
 use sha2::Digest;
 #[path = "../../../../tests/common/gemma_table_fixture.rs"]
-mod fixture;
+pub(super) mod fixture;
 mod head;
 
 #[test]

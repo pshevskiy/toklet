@@ -14,6 +14,12 @@ MLX Gemma4 E2B config-only app probes reject unknown architecture and create no
 native Gemma model handle. The [Mac storage load](gemma4-checkpoint.md) now
 admits pinned Gemma text weights; numerical execution and phone fit remain open.
 
+Latest standalone G4 progress, 26 October 2026: [resident GPU table gathers](gemma-table-gather-gpu.md)
+now reuse the same original packed chunks as affine projection. Tiny independent
+fixtures qualify repeated/reordered rows, complete buffer identity, preflight,
+transactional failure and workspace recovery. This closes one concrete primitive;
+actual large head/PLE selections, whole-model admission and G2–G7 remain open.
+
 ## Ordered tasks
 
 | Task | Work and acceptance | Status |

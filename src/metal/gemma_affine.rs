@@ -17,7 +17,7 @@ use objc2_metal::*;
 use std::{mem::size_of, ptr::NonNull};
 
 mod partitioned;
-pub use partitioned::PartitionedAffine;
+pub use partitioned::{Gather, PartitionedAffine};
 
 pub const CONTEXT_ALLOWANCE_BYTES: usize = 64 * 1024 * 1024;
 const GUARD: usize = 7;

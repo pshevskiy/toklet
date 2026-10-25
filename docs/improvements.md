@@ -4350,3 +4350,48 @@ suite or new resource/latency claim is added; matvec and all GPU code are unchan
 Actual large table selections and GPU gather/storage, whole graph, prior
 source/precision failures, quality, performance, app/phone and long-output gates
 remain open.
+
+## 2026-10-26 — reusable GPU gathers share original resident packed weights
+
+Hypothesis: embedding/table lookup can share immutable resident projection
+storage, preserving transactional callers without a second packed upload or
+expanded table. Added a separate concrete Gather workspace/pipeline over the
+existing PartitionedAffine, with fixed ID/output/status and CPU full/chunk
+scratch. Packed 4-bit/group 64/BF16 reconstruction uses precise FMA; duplicates and
+original slot order survive coarse chunk routing. Full request/readiness
+preflight precedes mutation. Caller publication follows all completed chunks;
+post-staging failure poisons only the workspace and recreation reuses the weights.
+Retained commands protect original buffers after request-borrow error returns.
+Original affine/partitioned numerical bodies and affine shader remain exact.
+
+Astra reviewed code, corrections, frozen independent replay and controlled
+execution. The first strict Metal check rejected a duplicate test-fixture module;
+its original failure/source snapshots are retained without success credit. A
+shared test-only fixture import/visibility fixes that lint issue. Review also
+caught the first-affine cold-list replay bug; a portable regression was added
+after the correction and before GPU use. No numerical tolerance, fixture or
+historical failure gate changed.
+
+Required formatting, strict default/Metal lint, CPU 356/16 ignored, Metal
+388/119 ignored, iOS device/simulator compilation and optimized plan 1/fixture 4
+pass. Actual M1 Pro capture passes 52 steps over four
+cases, 19072 lookup outputs and eight alternating affine calls; independent replay
+checks all complete source/workspace/affine buffers, IDs, guards, signed zeros,
+allocation epochs and CPU scratch. Six malformed and five matrix-state rejects,
+changed staging after two completed chunks, untouched caller, sticky poison and
+fresh-workspace recovery pass. Portable 5 and actual-capture/reader 29 regressions
+pass. No driver/in-flight failure is injected.
+
+Conservative aggregate native policy 335671488 bytes includes two Contexts,
+three simultaneous matrices and old/new Gather pipeline/workspace overlap.
+Native peak RSS 36274176/physical 25510536 bytes; replay 71761920/54346424 and
+regressions 107626496/61801240 remain below 1 GiB native/512 MiB checker allowances.
+Native 0.55 s includes diagnostics and is not a performance benchmark. Retain this
+standalone correctness mechanism; original production numerical paths are
+unchanged and no routing/staging Rust heap allocation is added per request.
+
+See [contract and measurements](gemma-table-gather-gpu.md) and the
+[public evidence record](../benchmarks/results/2026-10-26-gemma-table-gather-gpu-v1.json).
+Actual large-table loading/head/PLE selections, resident graph/KV, prior
+source/precision/rotary failures, quality/performance, app/phone and 131072-output
+plus nonempty prompt qualification remain open. No capability or limit changes.
