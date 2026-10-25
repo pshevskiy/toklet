@@ -24,6 +24,9 @@ ctrlc = "=3.5.2"
 sha2 = "=0.10.9"
 smallvec = "=1.16.2"
 
+[target.'cfg(unix)'.dependencies]
+libc = "=0.2.190"
+
 [features]
 default = []
 metal = ["dep:objc2", "dep:objc2-foundation", "dep:objc2-metal", "dep:objc2-metal-performance-shaders"]

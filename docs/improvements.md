@@ -3816,3 +3816,32 @@ See [layout, ownership, checks and limits](gemma-metal-rotary.md) and the
 This is a G4 mathematical building block. It does not waive source/precision gaps
 or qualify resident graph execution, driver failure recovery, mobile fit,
 representative performance, app capabilities or 131072 numerical output.
+
+## 25 October 2026 — native Smol consumed-range source identity
+
+Add an explicit audited source path for the frozen Smol checkpoint. Authenticate
+metadata from the same parsed buffers and retain the original regular shard
+handle. Hash each raw chunk before conversion/delivery, verify all 694 trusted
+ranges and every repeated visit, and publish historical source evidence only
+when complete. Sticky failure/unwind state and public post-read validation prevent
+later successful calls from resurrecting proof. Identity has private fields and
+grants no successful model assembly or app capability.
+
+Seventeen new source/consumer methods pass, including actual second-chunk
+UnexpectedEof, mutation/restore, repeated reads, path replacement, callback panic,
+post-affine validation and invalid public arguments. All 329 CPU/352 Metal-feature
+tests, both strict checks, both iOS targets and release 13/4-method repeats pass.
+The initial strict-check failure is retained without credit; no warning waived.
+Seventeen controller corruptions reject under the actual typed-schema verifier.
+
+Actual source consumption checks 272 logical tensors/700 raw reads, including six
+additional embedding role reads. Ledger ownership stays 121,326 bytes. Source
+admission plus separate diagnostic reserve fits 512 MiB; completed RSS/physical
+peaks are 36,372,480 / 35,094,912 bytes. The 1.40-second observation is not model
+inference performance. The container digest is an authenticated reference anchor,
+not a newly computed sequential runtime digest or current-disk snapshot.
+
+See [ownership, evidence and limits](smol-native-content.md) and the
+[receipt](../benchmarks/results/2026-10-25-smol-native-content-v1.json).
+Live-model binding, codec/profile pairing, native ABI/capabilities/app integration,
+phone qualification, full Gemma graph and 131072-output gates remain open.

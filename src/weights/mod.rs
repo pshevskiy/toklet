@@ -23,6 +23,8 @@ use std::{
     time::Instant,
 };
 
+pub(crate) mod audit;
+
 const CONVERSION_BYTES: usize = 64 * 1024;
 const MAX_JSON_BYTES: usize = 1024 * 1024;
 const MAX_HEADER_BYTES: usize = 16 * 1024 * 1024;
@@ -333,11 +335,21 @@ struct Shard {
     header_bytes: usize,
 }
 impl Shard {
-    fn open(path: PathBuf) -> Result<Self, Error> {
-        let mut file = io(&path, File::open(&path))?;
+    fn open(path: PathBuf, mut audit: Option<&mut audit::Audit>) -> Result<Self, Error> {
+        let mut file = if audit.is_some() {
+            audit::open_regular(&path)?
+        } else {
+            io(&path, File::open(&path))?
+        };
         let file_bytes = io(&path, file.metadata())?.len();
+        if let Some(audit) = audit.as_deref_mut() {
+            audit.verify_extent(file_bytes)?;
+        }
         let mut length = [0; 8];
         io(&path, file.read_exact(&mut length))?;
+        if let Some(audit) = audit.as_deref_mut() {
+            audit.verify_metadata(audit::MetadataKind::Prefix, &length)?;
+        }
         let count =
             usize::try_from(u64::from_le_bytes(length)).map_err(|_| cpu::Error::SizeOverflow)?;
         if count > MAX_HEADER_BYTES {
@@ -353,6 +365,9 @@ impl Shard {
             .map_err(|_| Error::Allocation)?;
         header.resize(count, 0);
         io(&path, file.read_exact(&mut header))?;
+        if let Some(audit) = audit {
+            audit.verify_metadata(audit::MetadataKind::Header, &header)?;
+        }
         if header.first() != Some(&b'{') {
             return Err(invalid("safetensors header must start with an object"));
         }
@@ -378,11 +393,22 @@ pub(crate) struct Source {
     locations: BTreeMap<String, usize>,
     buffer: Vec<u8>,
     conversion_seconds: f64,
+    audit: Option<audit::Audit>,
 }
 impl Source {
     pub(crate) fn open(directory: &Path) -> Result<Self, Error> {
+        Self::open_with_audit(directory, None)
+    }
+
+    pub(crate) fn open_with_audit(
+        directory: &Path,
+        mut audit: Option<audit::Audit>,
+    ) -> Result<Self, Error> {
         let index_path = directory.join("model.safetensors.index.json");
-        let index = if index_path.try_exists().map_err(|source| Error::Io {
+        let index = if let Some(audit) = audit.as_mut() {
+            let data = audit.read_metadata(&index_path, audit::MetadataKind::Index)?;
+            Some(serde_json::from_slice::<Index>(&data)?)
+        } else if index_path.try_exists().map_err(|source| Error::Io {
             path: index_path.clone(),
             source,
         })? {
@@ -394,6 +420,9 @@ impl Source {
             .as_ref()
             .map(|index| index.weight_map.values().cloned().collect())
             .unwrap_or_else(|| BTreeSet::from(["model.safetensors".into()]));
+        if audit.is_some() && filenames != BTreeSet::from(["model.safetensors".into()]) {
+            return Err(invalid("audited source requires exact single shard"));
+        }
         if filenames.is_empty() {
             return Err(invalid("empty safetensors index"));
         }
@@ -410,7 +439,7 @@ impl Source {
                     "shard filenames must be plain local .safetensors filenames",
                 ));
             }
-            let shard = Shard::open(directory.join(&filename))?;
+            let shard = Shard::open(directory.join(&filename), audit.as_mut())?;
             header_bytes = add(header_bytes, shard.header_bytes)?;
             if header_bytes > MAX_HEADER_BYTES {
                 return Err(invalid("aggregate safetensors headers exceed 16 MiB limit"));
@@ -452,7 +481,20 @@ impl Source {
             locations,
             buffer,
             conversion_seconds: 0.0,
+            audit,
         })
+    }
+
+    pub(crate) fn content_identity(&self) -> Option<audit::SourceContentIdentity> {
+        self.audit.as_ref()?.identity()
+    }
+    pub(crate) fn audit_owned_bytes(&self) -> Option<usize> {
+        self.audit.as_ref().map(audit::Audit::owned_bytes)
+    }
+    pub(crate) fn poison_audit(&mut self) {
+        if let Some(a) = self.audit.as_mut() {
+            a.poison();
+        }
     }
 
     fn validate(&self, expected: &BTreeMap<String, Vec<usize>>) -> Result<(), Error> {
@@ -486,71 +528,40 @@ impl Source {
     pub(crate) fn visit(
         &mut self,
         name: &str,
-        mut consume: impl FnMut(f32) -> Result<(), Error>,
+        consume: impl FnMut(f32) -> Result<(), Error>,
     ) -> Result<(), Error> {
-        let index = *self
-            .locations
-            .get(name)
-            .ok_or_else(|| invalid(format!("missing tensor: {name}")))?;
-        let shard = &mut self.shards[index];
-        let info = shard.metadata.info(name).unwrap();
-        let (begin, end) = info.data_offsets;
-        io(
-            &shard.path,
-            shard
-                .file
-                .seek(SeekFrom::Start(shard.data_start + begin as u64)),
-        )?;
-        // Select the decoding format once, outside all per-value loops.
+        let dtype = self
+            .info(name)
+            .ok_or_else(|| invalid(format!("missing tensor: {name}")))?
+            .dtype;
+        // Choose dtype once. Every decoded value comes from the same raw chunk
+        // audited before delivery; failed consumers invalidate all future proof.
         fn stream<const WIDTH: usize>(
-            shard: &mut Shard,
-            buffer: &mut [u8],
-            mut remaining: usize,
+            source: &mut Source,
+            name: &str,
             decode: impl Fn([u8; WIDTH]) -> f32,
-            consume: &mut impl FnMut(f32) -> Result<(), Error>,
-            conversion_seconds: &mut f64,
+            mut consume: impl FnMut(f32) -> Result<(), Error>,
         ) -> Result<(), Error> {
-            while remaining > 0 {
-                let count = remaining.min(buffer.len());
-                io(&shard.path, shard.file.read_exact(&mut buffer[..count]))?;
-                let conversion_start = Instant::now();
-                for raw in buffer[..count].chunks_exact(WIDTH) {
+            let mut seconds = 0.;
+            let result = source.visit_raw(name, |bytes| {
+                let start = Instant::now();
+                for raw in bytes.chunks_exact(WIDTH) {
                     let value = decode(raw.try_into().unwrap());
                     if !value.is_finite() {
                         return Err(invalid("nonfinite weight value in tensor payload"));
                     }
                     consume(value)?;
                 }
-                *conversion_seconds += conversion_start.elapsed().as_secs_f64();
-                remaining -= count;
-            }
-            Ok(())
+                seconds += start.elapsed().as_secs_f64();
+                Ok(())
+            });
+            source.conversion_seconds += seconds;
+            result
         }
-        match info.dtype {
-            Dtype::F32 => stream(
-                shard,
-                &mut self.buffer,
-                end - begin,
-                f32::from_le_bytes,
-                &mut consume,
-                &mut self.conversion_seconds,
-            ),
-            Dtype::F16 => stream(
-                shard,
-                &mut self.buffer,
-                end - begin,
-                |raw| f16::from_le_bytes(raw).to_f32(),
-                &mut consume,
-                &mut self.conversion_seconds,
-            ),
-            Dtype::BF16 => stream(
-                shard,
-                &mut self.buffer,
-                end - begin,
-                |raw| bf16::from_le_bytes(raw).to_f32(),
-                &mut consume,
-                &mut self.conversion_seconds,
-            ),
+        match dtype {
+            Dtype::F32 => stream(self, name, f32::from_le_bytes, consume),
+            Dtype::F16 => stream(self, name, |raw| f16::from_le_bytes(raw).to_f32(), consume),
+            Dtype::BF16 => stream(self, name, |raw| bf16::from_le_bytes(raw).to_f32(), consume),
             _ => Err(invalid("unsupported weight dtype")),
         }
     }
@@ -588,27 +599,51 @@ impl Source {
         name: &str,
         mut consume: impl FnMut(&[u8]) -> Result<(), Error>,
     ) -> Result<(), Error> {
-        let index = *self
-            .locations
-            .get(name)
-            .ok_or_else(|| invalid(format!("missing tensor: {name}")))?;
-        let shard = &mut self.shards[index];
-        let (begin, end) = shard.metadata.info(name).unwrap().data_offsets;
-        io(
-            &shard.path,
-            shard
-                .file
-                .seek(SeekFrom::Start(shard.data_start + begin as u64)),
-        )?;
-        let mut remaining = end - begin;
-        while remaining > 0 {
-            let count = remaining.min(self.buffer.len());
+        // Begin poisons provisionally before reads/callbacks. Errors or unwind
+        // leave it sticky; only this successful operation can clear that state.
+        let mut ticket = self.audit.as_mut().map(|a| a.begin(name)).transpose()?;
+        let result = (|| {
+            let index = *self
+                .locations
+                .get(name)
+                .ok_or_else(|| invalid(format!("missing tensor: {name}")))?;
+            let shard = &mut self.shards[index];
+            let info = shard.metadata.info(name).unwrap();
+            if let (Some(a), Some(t)) = (self.audit.as_mut(), ticket.as_ref()) {
+                a.validate_range(t, info)?;
+                a.verify_extent(io(&shard.path, shard.file.metadata())?.len())?;
+            }
+            let (begin, end) = info.data_offsets;
             io(
                 &shard.path,
-                shard.file.read_exact(&mut self.buffer[..count]),
+                shard
+                    .file
+                    .seek(SeekFrom::Start(shard.data_start + begin as u64)),
             )?;
-            consume(&self.buffer[..count])?;
-            remaining -= count;
+            let mut remaining = end - begin;
+            while remaining > 0 {
+                let count = remaining.min(self.buffer.len());
+                io(
+                    &shard.path,
+                    shard.file.read_exact(&mut self.buffer[..count]),
+                )?;
+                if let Some(t) = ticket.as_mut() {
+                    t.update(&self.buffer[..count])?;
+                }
+                consume(&self.buffer[..count])?;
+                remaining -= count;
+            }
+            if let Some(a) = self.audit.as_mut() {
+                a.verify_extent(io(&shard.path, shard.file.metadata())?.len())?;
+            }
+            Ok(())
+        })();
+        if result.is_err() {
+            self.poison_audit();
+            return result;
+        }
+        if let (Some(a), Some(t)) = (self.audit.as_mut(), ticket) {
+            a.finish(t)?;
         }
         Ok(())
     }

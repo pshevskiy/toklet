@@ -342,3 +342,14 @@ checks pass. Buffers and coefficients remain resident for fixed offsets; new
 offsets require separately admitted owners. Earlier source/precision failures,
 resident whole-graph scheduling, quality/performance, mobile memory/ABI/app and
 131072-output gates remain open. G4 is not complete and no capability changes.
+
+## Native source-identity prerequisite
+
+The [opt-in Smol source audit](smol-native-content.md) now authenticates consumed
+metadata/ranges and retains historical source evidence with sticky failure
+semantics. Seventeen source/consumer methods and all 329 CPU/352 Metal-feature
+tests pass, as do both iOS targets. A real source-only Mac read checks 694 ranges
+and six repeated visits within its separate budget. This does not construct a
+live model or grant tokenizer/native/app capability. All Gemma G2–G7 and
+131072-output gates remain open; binding a successful resident model is next at
+this integration boundary.

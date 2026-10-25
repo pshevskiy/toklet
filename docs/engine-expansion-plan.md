@@ -422,3 +422,13 @@ pass on M1 Pro through position 131071, with repeated/partitioned output checks.
 This is mathematical operator qualification only; source parity, resident Gemma
 graph execution, performance, phone fit, app eligibility and long-output gates
 remain open. Existing graph/profile/context limits are unchanged.
+
+## Native consumed-range source boundary
+
+The [explicit Smol source audit](smol-native-content.md) implements the maintained
+reference's consumed-byte boundary in Rust. Same-buffer metadata, retained shard
+handles, repeated-range checks and sticky read/consumer failure precede historical
+source-identity publication. Real source-only consumption passes 700 reads and
+required checks. Live resident-model binding and codec/profile/device admission
+remain separate tasks before native capabilities or app eligibility can change.
+No architecture, graph or context-limit support is inferred from this evidence.

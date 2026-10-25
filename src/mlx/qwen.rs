@@ -135,6 +135,8 @@ impl QuantizationPlan {
     }
 }
 
+pub use crate::weights::audit::SourceContentIdentity;
+
 /// Immutable metadata and open shard handles. Tensor-name lookups belong to
 /// loading only; execution should retain resolved concrete buffers/operations.
 pub struct Source {
@@ -162,10 +164,34 @@ impl Source {
         Self::open_impl(directory, options, true)
     }
 
+    /// Opt in to the exact frozen Smol checkpoint's consumed-byte audit. This
+    /// is source evidence only, not model assembly, codec pairing or capability.
+    /// Any failed public consuming operation, including invalid arguments,
+    /// poisons later identity publication. Discard partial destinations on error.
+    pub fn open_smol_audited(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
+        Self::validate_budget(options)?;
+        let mut audit = weights::audit::Audit::smol(options.memory_limit_bytes)?;
+        let bytes = audit.read_metadata(
+            &directory.join("config.json"),
+            weights::audit::MetadataKind::Config,
+        )?;
+        let document = parse_json(&bytes)?;
+        Self::open_document(directory, options, true, document, Some(audit))
+    }
+    /// Historical evidence only after every trusted physical range was consumed
+    /// successfully. Prefer querying once at the final consumption boundary.
+    pub fn content_identity(&self) -> Option<SourceContentIdentity> {
+        self.source.content_identity()
+    }
+    /// Retained ledger capacities, counted inside the existing metadata policy.
+    pub fn content_audit_owned_bytes(&self) -> Option<usize> {
+        self.source.audit_owned_bytes()
+    }
+
     fn open_impl(directory: &Path, options: LoadOptions, allow_dense: bool) -> Result<Self, Error> {
         Self::validate_budget(options)?;
         let document = read_config(&directory.join("config.json"))?;
-        Self::open_document(directory, options, allow_dense, document)
+        Self::open_document(directory, options, allow_dense, document, None)
     }
 
     fn validate_budget(options: LoadOptions) -> Result<(), Error> {
@@ -184,7 +210,7 @@ impl Source {
         options: LoadOptions,
         document: Value,
     ) -> Result<Self, Error> {
-        Self::open_document(directory, options, true, document)
+        Self::open_document(directory, options, true, document, None)
     }
 
     fn open_document(
@@ -192,6 +218,7 @@ impl Source {
         options: LoadOptions,
         allow_dense: bool,
         mut document: Value,
+        audit: Option<weights::audit::Audit>,
     ) -> Result<Self, Error> {
         Self::validate_budget(options)?;
         let object = document
@@ -245,7 +272,7 @@ impl Source {
                 }
             }
         }
-        let source = weights::Source::open(directory)?;
+        let source = weights::Source::open_with_audit(directory, audit)?;
         let has_head = source.info("lm_head.weight").is_some();
         if has_head || !tied_output {
             expected.insert(
@@ -384,13 +411,19 @@ impl Source {
         name: &str,
         consume: impl FnMut(f32) -> Result<(), Error>,
     ) -> Result<(), Error> {
-        if !matches!(
-            self.tensors.get(name).map(|s| s.storage),
-            Some(Storage::Float(_))
-        ) {
-            return Err(invalid("MLX tensor is not a planned floating tensor"));
+        let result = (|| {
+            if !matches!(
+                self.tensors.get(name).map(|s| s.storage),
+                Some(Storage::Float(_))
+            ) {
+                return Err(invalid("MLX tensor is not a planned floating tensor"));
+            }
+            self.source.visit(name, consume)
+        })();
+        if result.is_err() {
+            self.source.poison_audit();
         }
-        self.source.visit(name, consume)
+        result
     }
     /// Read directly into three caller-admitted packed allocations, then check
     /// finite affine metadata. Buffers are partial/unpublished on any error.
@@ -401,22 +434,28 @@ impl Source {
         scales: &mut [u8],
         biases: &mut [u8],
     ) -> Result<Layout, Error> {
-        let Some(Storage::Affine(layout)) = self.tensors.get(name).map(|s| s.storage) else {
-            return Err(invalid("MLX tensor is not a planned affine tensor"));
-        };
-        if weights.len() != layout.weight_bytes()
-            || scales.len() != layout.metadata_bytes()
-            || biases.len() != layout.metadata_bytes()
-        {
-            return Err(invalid("MLX destination sizes do not match planned tensor"));
+        let result = (|| {
+            let Some(Storage::Affine(layout)) = self.tensors.get(name).map(|s| s.storage) else {
+                return Err(invalid("MLX tensor is not a planned affine tensor"));
+            };
+            if weights.len() != layout.weight_bytes()
+                || scales.len() != layout.metadata_bytes()
+                || biases.len() != layout.metadata_bytes()
+            {
+                return Err(invalid("MLX destination sizes do not match planned tensor"));
+            }
+            let module = name.strip_suffix(".weight").unwrap();
+            self.read_raw(name, weights)?;
+            self.read_raw(&format!("{module}.scales"), scales)?;
+            self.read_raw(&format!("{module}.biases"), biases)?;
+            Matrix::from_le_bytes(layout, weights, scales, biases)
+                .map_err(|e| invalid(e.to_string()))?;
+            Ok(layout)
+        })();
+        if result.is_err() {
+            self.source.poison_audit();
         }
-        let module = name.strip_suffix(".weight").unwrap();
-        self.read_raw(name, weights)?;
-        self.read_raw(&format!("{module}.scales"), scales)?;
-        self.read_raw(&format!("{module}.biases"), biases)?;
-        Matrix::from_le_bytes(layout, weights, scales, biases)
-            .map_err(|e| invalid(e.to_string()))?;
-        Ok(layout)
+        result
     }
     fn read_raw(&mut self, name: &str, destination: &mut [u8]) -> Result<(), Error> {
         let mut offset = 0;
@@ -552,3 +591,7 @@ pub(crate) fn parse_json(data: &[u8]) -> Result<Value, Error> {
     serde_json::from_slice::<Unique>(data)?;
     Ok(serde_json::from_slice(data)?)
 }
+
+#[cfg(test)]
+#[path = "qwen/content_tests.rs"]
+mod content_tests;
