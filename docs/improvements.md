@@ -4008,3 +4008,28 @@ See [contract, evidence and remaining gates](gemma-metal-affine.md) and the
 Retain as a bounded correctness prerequisite, with no speed/default/app/phone
 claim. Actual Gemma activation fit, resident full graph and all earlier precision/
 source failures and 131072-output-plus-prompt requirements remain open.
+
+## 25 October 2026 — real Gemma projection admission audit
+
+Authenticate the pinned checkpoint and complete four-token mathematical trace.
+Stream all 556 coefficient tensors / 72,316,928 pairs, including both large
+tables, and verify all possible reconstructed codes with an independent exact
+rational oracle. All 278 text codebooks fit the existing numerical domain.
+
+Map 277 staged-FP32 projection inputs: 172 direct, 35 exact two-add residuals
+and 70 outward GELU-product envelopes. Prove numerical/geometry admission for
+260 calls. Preserve 16 inconclusive FF-down envelopes and one whole-head
+geometry rejection; both whole table owners exceed the unchanged row limit.
+Maximum coarse-envelope U is 4.071010368811304e-6 against unchanged 6.25e-7.
+
+Twelve offline and two retention methods pass. Two fresh captures and rational
+replays match all raw metadata and observations; six process/resource/cleanup
+closures pass. Maximum RSS/physical peaks across processes are 48,529,408 /
+39,142,096 bytes under separate 512 MiB policy. The first sandbox resource-query
+attempt remains failed and retained, despite its passing 12 test methods.
+
+See [scope, classifications and remaining gaps](gemma-affine-admission.md) and
+the [receipt](../benchmarks/results/2026-10-25-gemma-affine-admission-v1.json).
+Retain as independent admission evidence, without native/GPU graph, performance,
+app/phone or long-output qualification. Resolve the 16 product envelopes and
+table/head storage next; no numerical/source failure or limit is waived.

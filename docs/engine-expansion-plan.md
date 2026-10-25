@@ -490,3 +490,13 @@ completed M1 Pro checks. A conservative derived admission preserves scalar/math
 compatibility; actual Gemma activation fit remains a separate gate. Full resident
 model/attention/KV/pointwise composition, app/mobile integration and all prior
 source/precision/quality/long-output requirements remain open.
+
+## Real Gemma projection-domain evidence
+
+The [actual checkpoint/captured-input admission audit](gemma-affine-admission.md)
+passes all 278 text codebooks and proves 260 of 277 short-trace projection calls.
+Sixteen conservative FF-down envelopes remain not proved, and the full tied head
+is geometry rejected. Two complete captures and independent rational replays
+retain those distinctions. This supplies admission evidence only; native/GPU
+activation parity, table/head chunking, resident graph, app/mobile integration
+and earlier source/precision/long-output gates remain open.

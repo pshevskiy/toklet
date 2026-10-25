@@ -414,3 +414,15 @@ numerical subset rejects incompatible ordered/exact sums explicitly. Actual
 Gemma activation fit, whole-model storage/upload, FP32 attention/KV/pointwise
 composition, scheduling, quality/performance and phone admission remain open.
 All prior graph/source/cross-precision and 131072-output gates remain unwaived.
+
+## Real packed-projection admission
+
+The [streaming checkpoint/trace audit](gemma-affine-admission.md) checks all 278
+original text codebooks and all 277 four-token staged-FP32 projection inputs.
+It proves 260 calls' numerical/geometry admission: 171 direct, 35 exact residual
+and 54 sufficient product envelopes. Sixteen FF-down product envelopes remain
+inconclusive; the full tied head and both whole table owners exceed the existing
+row bound. This is independent reference admission, without GPU execution or
+native activation parity. Resolve the products and table/head storage before
+graph composition; all previous G2/G3/G4, source/precision, device and long-output
+requirements remain open.
