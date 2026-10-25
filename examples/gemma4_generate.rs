@@ -1,4 +1,4 @@
-//! Closed raw/basic-hello E2B diagnostics; no app capability or text streaming.
+//! Closed raw/basic-hello E2B diagnostics; no app capability or context extension.
 use sha2::{Digest, Sha256};
 use std::{
     cell::RefCell,
@@ -9,7 +9,10 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 use toklet::{
-    app_chat::gemma4::{self, Codec},
+    app_chat::{
+        gemma4::{self, Codec},
+        stream::ResponseLimits,
+    },
     generation::{self, Input, Request, StopReason},
     mlx::gemma4::{ModalityPolicy, payload},
     model::gemma_packed::{GenerationSession, Model},
@@ -31,12 +34,14 @@ const DIAGNOSTIC_ALLOWANCE: usize = 16 * 1024 * 1024;
 enum Profile {
     Raw,
     BasicHello,
+    BasicHelloStream,
 }
 impl Profile {
     fn parse(value: &str) -> io::Result<Self> {
         match value {
             "raw" => Ok(Self::Raw),
             "basic-hello" => Ok(Self::BasicHello),
+            "basic-hello-stream" => Ok(Self::BasicHelloStream),
             _ => Err(io::Error::other("unsupported fixed generation profile")),
         }
     }
@@ -44,6 +49,7 @@ impl Profile {
         match self {
             Self::Raw => (ROWS, 4, 4, 7),
             Self::BasicHello => (32, 16, 10, 25),
+            Self::BasicHelloStream => (48, 16, 10, 25),
         }
     }
     fn numerical_budget(self, total: usize) -> io::Result<usize> {
@@ -52,8 +58,16 @@ impl Profile {
         }
         match self {
             Self::Raw => Ok(total),
-            Self::BasicHello => total
-                .checked_sub(gemma4::ALLOWANCE_BYTES + DIAGNOSTIC_ALLOWANCE)
+            Self::BasicHello | Self::BasicHelloStream => total
+                .checked_sub(
+                    gemma4::ALLOWANCE_BYTES
+                        + DIAGNOSTIC_ALLOWANCE
+                        + if self == Self::BasicHelloStream {
+                            gemma4::STREAM_ALLOWANCE_BYTES
+                        } else {
+                            0
+                        },
+                )
                 .filter(|remaining| *remaining != 0)
                 .ok_or_else(|| io::Error::other("combined codec/diagnostic reserve exceeds limit")),
         }
@@ -66,7 +80,7 @@ fn admitted_codec(
     total: usize,
 ) -> Result<(usize, Option<Codec>), Box<dyn Error>> {
     let numerical_budget = profile.numerical_budget(total)?;
-    let codec = if profile == Profile::BasicHello {
+    let codec = if profile != Profile::Raw {
         Some(Codec::load(root, gemma4::ALLOWANCE_BYTES)?)
     } else {
         None
@@ -347,12 +361,59 @@ fn basic_requests(
     Ok(())
 }
 
+// None is the single terminal flush. OutputLimit at the internal split is
+// deliberately invisible to delivery, preserving a whole byte-fallback run.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum StreamSchedule {
+    Uninterrupted,
+    Split,
+    Cancel,
+}
+fn stream_requests(
+    session: &mut impl InferenceSession,
+    schedule: StreamSchedule,
+    reports: &mut Vec<generation::Report>,
+    mut deliver: impl FnMut(Option<generation::TokenEvent>) -> io::Result<()>,
+) -> Result<(), generation::Error> {
+    if schedule == StreamSchedule::Cancel {
+        let cancelled = AtomicBool::new(false);
+        let mut visible = 0;
+        let report = generation::generate(
+            session,
+            Request {
+                input: Input::Reset(&HELLO_PROMPT),
+                max_new_tokens: 16,
+                stop_tokens: &gemma4::STOP_IDS,
+            },
+            &cancelled,
+            |event| {
+                deliver(Some(event))?;
+                visible += 1;
+                if visible == 2 {
+                    cancelled.store(true, Ordering::Relaxed);
+                }
+                Ok(())
+            },
+        )?;
+        reports.push(report);
+    } else {
+        basic_requests(
+            session,
+            schedule == StreamSchedule::Split,
+            reports,
+            |event| deliver(Some(event)),
+        )?;
+    }
+    deliver(None).map_err(generation::Error::Output)
+}
+
 fn basic_scenarios(
     model: &Model<'_>,
     codec: &Codec,
     numerical_budget: usize,
     capture: &RefCell<Capture>,
     record: &mut serde_json::Value,
+    streaming: bool,
 ) -> Result<(), Box<dyn Error>> {
     let rendered = gemma4::render(
         HELLO_MESSAGES,
@@ -378,6 +439,13 @@ fn basic_scenarios(
         .admitted_bytes
         .checked_add(codec.allowance_bytes())
         .and_then(|n| n.checked_add(DIAGNOSTIC_ALLOWANCE))
+        .and_then(|n| {
+            n.checked_add(if streaming {
+                gemma4::STREAM_ALLOWANCE_BYTES
+            } else {
+                0
+            })
+        })
         .ok_or("combined diagnostic admission overflow")?;
     if combined > toklet::weights::INITIAL_MEMORY_LIMIT_BYTES {
         return Err("combined diagnostic admission exceeds limit".into());
@@ -385,7 +453,12 @@ fn basic_scenarios(
     record["memory"] = serde_json::to_value(memory)?;
     record["numerical_budget_bytes"] = numerical_budget.into();
     record["combined_admitted_bytes"] = combined.into();
-    for (index, name) in ["uninterrupted", "split"].iter().enumerate() {
+    let names: &[&str] = if streaming {
+        &["uninterrupted", "split", "cancel"]
+    } else {
+        &["uninterrupted", "split"]
+    };
+    for (index, name) in names.iter().enumerate() {
         {
             let mut saved = capture.borrow_mut();
             saved.scenario = index;
@@ -397,19 +470,63 @@ fn basic_scenarios(
         };
         let mut emitted = Vec::with_capacity(16);
         let mut reports = Vec::with_capacity(2);
-        let result = basic_requests(&mut observed, index == 1, &mut reports, |event| {
-            emitted.push(event.token_id);
-            Ok(())
-        });
+        let mut chunks = Vec::with_capacity(17);
+        let mut stream = if streaming {
+            Some(codec.response_stream(
+                ResponseLimits::new(16, gemma4::MAX_TEXT_BYTES)?,
+                gemma4::STREAM_ALLOWANCE_BYTES,
+            )?)
+        } else {
+            None
+        };
+        let owner_before = stream.as_ref().map(|s| s.allocated_bytes()).transpose()?;
+        let result = if let Some(stream) = stream.as_mut() {
+            stream_requests(
+                &mut observed,
+                match index {
+                    0 => StreamSchedule::Uninterrupted,
+                    1 => StreamSchedule::Split,
+                    _ => StreamSchedule::Cancel,
+                },
+                &mut reports,
+                |event| {
+                    // Retain the delivered token even if its text mutation fails.
+                    if let Some(event) = event {
+                        emitted.push(event.token_id);
+                    }
+                    let chunk = match event {
+                        Some(event) => stream.push(&[event.token_id])?,
+                        None => stream.finish()?,
+                    };
+                    // Fixed at <=16 callbacks plus one terminal flush; copy the
+                    // borrowed chunk before the next mutation or comparison.
+                    chunks.push(serde_json::json!({"terminal":event.is_none(),"text":chunk}));
+                    Ok(())
+                },
+            )
+        } else {
+            basic_requests(&mut observed, index == 1, &mut reports, |event| {
+                emitted.push(event.token_id);
+                Ok(())
+            })
+        };
         // Capture the valid state even when generation or diagnostic writes fail.
         let sampled = observed.history().get(HELLO_PROMPT.len()..).unwrap_or(&[]);
-        let state = serde_json::json!({
+        let mut state = serde_json::json!({
             "name":name,"reports":reports,"emitted_ids":emitted,
             "sampled_ids":sampled,"history":observed.history(),
             "evaluated":observed.evaluated_len(),"pending":observed.pending_len(),
             "logits_available":observed.logits().is_some(),
             "completed":result.is_ok(),"error":result.as_ref().err().map(ToString::to_string)
         });
+        if let Some(stream) = stream.as_ref() {
+            state["stream"] = serde_json::json!({
+                "chunks":chunks,"consumed_tokens":stream.consumed_tokens(),
+                "emitted_bytes":stream.emitted_bytes(),"finished":stream.is_finished(),
+                "failed":stream.is_failed(),"owner_before_bytes":owner_before,
+                "owner_after_bytes":stream.allocated_bytes().ok(),
+            });
+        }
         record["scenarios"].as_array_mut().unwrap().push(state);
         result?;
         let rows = capture.borrow().scenario_rows;
@@ -440,6 +557,23 @@ fn basic_scenarios(
         row["visible_decode_keep_special"] = codec.decode(&emitted, false)?.into();
         row["visible_decode_skip_special"] = codec.decode(&emitted, true)?.into();
         row["finish_reason"] = serde_json::to_value(final_reason)?;
+        if let Some(stream) = stream.as_ref() {
+            let actual: String = chunks
+                .iter()
+                .map(|row| row["text"].as_str().unwrap())
+                .collect();
+            if actual != row["visible_decode_skip_special"].as_str().unwrap()
+                || stream.consumed_tokens() != emitted.len()
+                || stream.emitted_bytes() != actual.len()
+                || !stream.is_finished()
+                || stream.is_failed()
+                || Some(stream.allocated_bytes()?) != owner_before
+                || chunks.len() != emitted.len() + 1
+                || chunks.last().unwrap()["terminal"] != true
+            {
+                return Err("stream delivery or diagnostic storage differs".into());
+            }
+        }
     }
     Ok(())
 }
@@ -483,7 +617,14 @@ fn execute(
         return Err("model exceeds remaining combined numerical allowance".into());
     }
     if let Some(codec) = codec {
-        basic_scenarios(&model, &codec, numerical_budget, capture, record)
+        basic_scenarios(
+            &model,
+            &codec,
+            numerical_budget,
+            capture,
+            record,
+            profile == Profile::BasicHelloStream,
+        )
     } else {
         scenarios(&model, capture, record)
     }
@@ -491,7 +632,7 @@ fn execute(
 
 fn main() -> Result<(), Box<dyn Error>> {
     let mut args = std::env::args_os().skip(1).peekable();
-    let usage = "usage: gemma4_generate [--profile raw|basic-hello] CHECKPOINT_DIRECTORY NEW_OUTPUT_DIRECTORY";
+    let usage = "usage: gemma4_generate [--profile raw|basic-hello|basic-hello-stream] CHECKPOINT_DIRECTORY NEW_OUTPUT_DIRECTORY";
     let profile = if args.peek().is_some_and(|value| value == "--profile") {
         args.next();
         Profile::parse(args.next().ok_or(usage)?.to_str().ok_or(usage)?)?
@@ -517,7 +658,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "metal_qualified":false,"performance_qualified":false,"quality_qualified":false,
         "device_fit_qualified":false,"app_eligibility_changed":false
     });
-    if profile == Profile::BasicHello {
+    if profile != Profile::Raw {
         record["format"] = "toklet-gemma4-basic-chat-generation-probe-v1".into();
         record["profile"] = "basic-hello".into();
         record["prompt"] = serde_json::to_value(HELLO_PROMPT)?;
@@ -527,6 +668,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         record["formatted_fixture_sha256"] =
             "dab866a1e86e8bed3179e39383fa2f826222f9b1708aa2c2e6df66e78348627e".into();
         record["text_streaming_qualified"] = false.into();
+    }
+    if profile == Profile::BasicHelloStream {
+        record["format"] = "toklet-gemma4-basic-chat-stream-probe-v1".into();
+        record["profile"] = "basic-hello-stream".into();
+        record["stream_allowance_bytes"] = gemma4::STREAM_ALLOWANCE_BYTES.into();
     }
     if let Err(error) = execute(&root, &capture, &mut record, profile) {
         record["primary_error"] = capture
@@ -551,10 +697,15 @@ fn main() -> Result<(), Box<dyn Error>> {
         && record["endpoint_errors"].as_array().unwrap().is_empty()
         && match profile {
             Profile::Raw => capture.arrays.len() == ROWS,
-            Profile::BasicHello => {
+            Profile::BasicHello | Profile::BasicHelloStream => {
                 !capture.arrays.is_empty()
                     && capture.arrays.len() <= profile.plan().0
-                    && record["scenarios"].as_array().unwrap().len() == 2
+                    && record["scenarios"].as_array().unwrap().len()
+                        == if profile == Profile::BasicHelloStream {
+                            3
+                        } else {
+                            2
+                        }
             }
         })
     .into();
@@ -838,6 +989,193 @@ mod tests {
         assert_eq!(witness["prompt"], serde_json::json!(HELLO_PROMPT));
         assert_eq!(witness["rendered_prompt"], HELLO_RENDERED);
         assert_eq!(witness["stop_ids"], serde_json::json!(gemma4::STOP_IDS));
+    }
+
+    #[test]
+    fn stream_policy_preserves_fallback_run_across_split_until_one_flush() {
+        let tokenizer = tokenizers::Tokenizer::from_bytes(include_bytes!(
+            "../tests/fixtures/gemma4-stream-v1/tokenizer.json"
+        ))
+        .unwrap();
+        let a = tokenizer.token_to_id("<0x41>").unwrap();
+        let ff = tokenizer.token_to_id("<0xFF>").unwrap();
+        for schedule in [StreamSchedule::Uninterrupted, StreamSchedule::Split] {
+            let mut selected = [106; 16];
+            selected[..4].copy_from_slice(&[a, a, ff, 106]);
+            let mut session = Scripted {
+                history: Vec::with_capacity(32),
+                evaluated: 0,
+                selected,
+            };
+            let mut reports = Vec::with_capacity(2);
+            let mut pending = Vec::new();
+            let mut flushed = false;
+            let mut text = String::new();
+            stream_requests(&mut session, schedule, &mut reports, |event| {
+                assert!(!flushed, "delivery after terminal flush");
+                if let Some(event) = event {
+                    pending.push(event.token_id);
+                } else {
+                    text = tokenizer.decode(&pending, true).unwrap();
+                    flushed = true;
+                }
+                Ok(())
+            })
+            .unwrap();
+            assert!(flushed);
+            assert_eq!(pending, [a, a, ff]);
+            assert_eq!(text, "���");
+            assert_eq!(
+                reports.len(),
+                if schedule == StreamSchedule::Split {
+                    2
+                } else {
+                    1
+                }
+            );
+            assert_eq!(
+                reports.last().unwrap().reason,
+                StopReason::StopToken { token_id: 106 }
+            );
+            assert_eq!(session.evaluated, 13);
+            assert_eq!(session.pending_len(), 1);
+        }
+    }
+
+    #[test]
+    fn stream_cancel_finishes_visible_prefix_once_without_continuation() {
+        let mut session = Scripted {
+            history: Vec::with_capacity(32),
+            evaluated: 0,
+            selected: [7; 16],
+        };
+        let mut reports = Vec::with_capacity(2);
+        let mut delivery = Vec::new();
+        stream_requests(
+            &mut session,
+            StreamSchedule::Cancel,
+            &mut reports,
+            |event| {
+                delivery.push(event.map(|e| e.token_id));
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(delivery, [Some(7), Some(7), None]);
+        assert_eq!(reports.len(), 1);
+        assert_eq!(reports[0].reason, StopReason::Cancelled);
+        assert_eq!(
+            (reports[0].sampled_tokens, reports[0].emitted_tokens),
+            (2, 2)
+        );
+        assert_eq!(
+            (
+                session.history.len(),
+                session.evaluated,
+                session.pending_len()
+            ),
+            (12, 11, 1)
+        );
+    }
+
+    #[test]
+    fn stream_callback_failure_preserves_prefix_pending_and_completed_report() {
+        let mut session = Scripted {
+            history: Vec::with_capacity(32),
+            evaluated: 0,
+            selected: [7; 16],
+        };
+        let mut reports = Vec::with_capacity(2);
+        let mut retained = Vec::new();
+        let error = stream_requests(&mut session, StreamSchedule::Split, &mut reports, |event| {
+            retained.push(event.map(|e| e.token_id));
+            if retained.len() == 3 {
+                return Err(io::Error::other("retained publication failure"));
+            }
+            Ok(())
+        })
+        .unwrap_err();
+        assert!(error.to_string().contains("retained publication failure"));
+        assert_eq!(retained, [Some(7), Some(7), Some(7)]);
+        assert_eq!(reports.len(), 1);
+        assert_eq!(reports[0].sampled_tokens, 2);
+        assert_eq!(
+            (
+                session.history.len(),
+                session.evaluated,
+                session.pending_len()
+            ),
+            (13, 12, 1)
+        );
+    }
+
+    #[test]
+    fn stream_terminal_failure_is_primary_and_keeps_completed_reports() {
+        let mut selected = [7; 16];
+        selected[3] = 106;
+        let mut session = Scripted {
+            history: Vec::with_capacity(32),
+            evaluated: 0,
+            selected,
+        };
+        let mut reports = Vec::with_capacity(2);
+        let mut retained = Vec::new();
+        let error = stream_requests(&mut session, StreamSchedule::Split, &mut reports, |event| {
+            retained.push(event.map(|e| e.token_id));
+            if event.is_none() {
+                return Err(io::Error::other("terminal sink already sealed"));
+            }
+            Ok(())
+        })
+        .unwrap_err();
+        assert!(error.to_string().contains("terminal sink already sealed"));
+        assert_eq!(retained, [Some(7), Some(7), Some(7), None]);
+        assert_eq!(reports.len(), 2);
+        assert_eq!(
+            reports.last().unwrap().reason,
+            StopReason::StopToken { token_id: 106 }
+        );
+        assert_eq!(
+            (
+                session.history.len(),
+                session.evaluated,
+                session.pending_len()
+            ),
+            (14, 13, 1)
+        );
+    }
+
+    #[test]
+    fn stream_reserve_rejects_before_asset_access_and_preserves_old_budgets() {
+        let missing = Path::new("/nonexistent-toklet-stream-generation-admission-test");
+        let reserve =
+            gemma4::ALLOWANCE_BYTES + DIAGNOSTIC_ALLOWANCE + gemma4::STREAM_ALLOWANCE_BYTES;
+        assert!(Profile::parse("basic-hello-stream").is_ok());
+        for total in [
+            0,
+            reserve - 1,
+            reserve,
+            toklet::weights::INITIAL_MEMORY_LIMIT_BYTES + 1,
+        ] {
+            let error = admitted_codec(missing, Profile::BasicHelloStream, total)
+                .err()
+                .unwrap();
+            assert!(error.to_string().contains("combined"));
+        }
+        assert_eq!(
+            Profile::BasicHelloStream
+                .numerical_budget(reserve + 1)
+                .unwrap(),
+            1
+        );
+        assert_eq!(
+            Profile::BasicHello.numerical_budget(reserve + 1).unwrap(),
+            gemma4::STREAM_ALLOWANCE_BYTES + 1
+        );
+        assert_eq!(
+            Profile::Raw.numerical_budget(reserve + 1).unwrap(),
+            reserve + 1
+        );
     }
 
     #[test]

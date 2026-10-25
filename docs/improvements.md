@@ -3692,3 +3692,41 @@ This qualifies the pinned text mechanism, with broader quality/full G3,
 earlier precision/source failures, Metal/performance, mobile fit/native ABI/app
 integration and 131072 LLM output tokens still open. No Profile/catalog/position
 or app output limit changes.
+
+
+## 25 October 2026 — short Gemma reply and stream composition
+
+Add an explicit basic-hello-stream diagnostic, preserving prior raw/basic-hello
+request policies and reserves. Admit another 4 MiB before asset reads, keep one
+stream across a split OutputLimit, deliver only visible callback IDs and flush
+once at actual terminal completion. Cancel after the second successful delivery
+without continuation. Copy each new chunk before mutation/comparison; retain
+numerical pending state, completed reports, partial delivery and original errors.
+Bound the diagnostic ledger to 16 callbacks plus one terminal entry.
+
+All 310 CPU/332 Metal-feature tests, both strict checks, both iOS targets and
+12 release methods pass. Five new methods check the actual scheduling helper,
+including a whole fallback run across the split, cancelled-prefix finish,
+second-request callback failure, sealed-terminal failure and admission before
+asset access. Decoder correctness remains supported by its independent fixtures.
+The actual controller rejects 12 corrupt packets and keeps finite numerical
+failure distinct from successful process capture. The owned regression's
+source/log/cleanup proof covers success only; preserve the first identical result
+without standalone invocation/log credit. Synthetic owner sizes grant no memory
+or model qualification.
+
+Actual Mac runs match the frozen eleven samples and exact full reply in both
+full schedules. The third run stops at “Hi!” after two visible IDs and retains
+11 committed plus one pending ID. Every text prefix matches the independent
+scalar oracle. All 24 complete logit rows / 25,165,824 bytes match across schedules;
+48 unchanged gates pass over 12,582,912 values. Stream ownership stays 65,816 bytes
+within 4 MiB. Combined admission is 3,859,976,044 bytes; resident/physical peaks
+2,054,062,080 / 2,776,222,504 fit 6 GiB. The 236.63-second combined observation is
+not a controlled latency benchmark.
+
+See [ownership, checks and limits](gemma4-stream-generation.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-stream-generation-v1.json).
+This closes one short diagnostic composition, with full G3/quality, earlier
+precision/source/GPU/rotary gaps, resident Metal/performance, qualified model/
+codec identity, native ABI/app, phone fit and 131072 numerical output still open.
+No profile/catalog/ABI/capability or numerical-limit change.

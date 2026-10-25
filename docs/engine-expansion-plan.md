@@ -378,3 +378,16 @@ against the scalar oracle. Text-process admission passes. This closes the
 bounded text-stream mechanism only; full G3, quality/precision/source gaps,
 Metal, representative performance, mobile fit/ABI/app integration and 131072
 LLM-output qualification remain open, with no numerical-limit changes.
+
+
+The [short native Gemma streamed reply](gemma4-stream-generation.md) now composes
+the accepted scalar generation and bounded text owners in an explicit diagnostic.
+Uninterrupted and split runs stream the same exact reply with hidden stop 106;
+cancellation after two visible IDs flushes “Hi!” once and preserves 11 committed
+plus one pending ID. All 24 full rows match bitwise across applicable schedules;
+48 unchanged gates pass over 12,582,912 values. All 310 CPU/332 Metal-feature tests,
+both iOS targets and 12 release methods pass. Combined admission is 3,859,976,044
+bytes and the measured Mac process fits 6 GiB. This closes short diagnostic
+composition only. Full G3, quality/precision/source gaps, resident Metal,
+representative performance, qualified identity/ABI/app integration, mobile fit
+and 131072-output gates remain open, with no capability or numerical-limit change.
