@@ -4056,3 +4056,37 @@ and the [receipt](../benchmarks/results/2026-10-25-gemma-affine-coordinate-v1.js
 Retain the reference improvement. Actual/native product admission, table/head
 storage, full GPU graph, source/precision gaps, app/phone and long-output work
 remain open; no limit or rejected result is waived.
+
+## 25 October 2026 — independent per-token L1 admission proof
+
+Freeze a tighter sufficient proof before modifying the engine. Sum magnitudes
+upward per token, then bound absolute products by maxW times that L1 sum under
+the existing S/U and dual numerical gates. Preserve the current max proof as
+the intended fast path; the future fallback must preserve transaction behavior
+when both proofs reject.
+
+Nineteen synthetic cases supply 47 exact/ordered outputs; independent Decimal400
+and Fraction checks agree. Fifteen cases pass L1, including twelve newly
+admitted cases, while the historical ordered-zero/exact-one and product-overflow
+diagnostics reject. Separate row ownership, cutoff adjacency, lost positive
+terms, signed zeros, actual widths and sparse cancellation are covered.
+
+All 277 captured-input calls replay independently: 269 retain legacy passes,
+seven FF-down envelopes gain proposed L1 admission, and the full head remains
+geometry rejected. Products remain envelopes. Original coordinate records
+and their seven inconclusive classifications are preserved.
+
+Thirteen portable and two retention methods, two identical captures, two
+independent replays and six owned process/resource closures pass. The late-read
+regression retains completed and attempted records plus the original error.
+Maximum RSS/physical peaks are 58,949,632 / 38,159,008 bytes under separate
+512 MiB policies. Preserve the first failed test attempt: Python 3.12's built-in
+compensated sum was inappropriate for an ordered-add diagnostic; the test now
+uses explicit additions, matching the unchanged producer/checker.
+
+See the [proof, frozen witnesses and limits](gemma-affine-l1.md) and
+[receipt](../benchmarks/results/2026-10-25-gemma-affine-l1-v1.json).
+Retain as independent pre-target evidence. Engine admission, kernel, thresholds
+and capability are unchanged. Actual GPU qualification of a later fallback,
+table/head storage, native/resident graph, source/precision, app/phone and long
+output requirements remain open.

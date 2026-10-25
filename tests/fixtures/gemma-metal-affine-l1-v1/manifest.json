@@ -1,0 +1,16 @@
+{
+  "format": "toklet-gemma-affine-l1-manifest-v1",
+  "files": {
+    "math.json": {
+      "bytes": 25580,
+      "sha256": "24043c085202e0ef90f558f67e7b53f63b83f1f0c84cd34bd0f9574855efb967"
+    },
+    "math.bin": {
+      "bytes": 625152,
+      "sha256": "81c0f8522b4100d4e34cf23b9d8b7dfa7c9972cf326fa496f9f39f75b458b63a"
+    }
+  },
+  "cases": 19,
+  "producer_sha256": "e59b56c3314c793c83592f2b9c6bea3d8e732b600e6da264791849672aa7feae",
+  "native_target_executed": false
+}

@@ -436,3 +436,16 @@ head/table geometry limits remain. The original default mode preserves all 277
 accepted records and its earlier 260/16/1 classification. This changes reference
 envelopes only; operator S/U/geometry, native/GPU graph, source/precision and
 later device/app/long-output gates are unchanged.
+
+## Independent L1 admission reference
+
+The [pre-target per-token L1 witnesses](gemma-affine-l1.md) freeze 19 synthetic
+cases and independently replay all 277 captured-input calls. The proposed
+combined proof preserves 269 legacy passes and proves the remaining seven
+FF-down envelopes under the existing error allowance. One full-head geometry
+rejection remains, as do whole-table storage limits. The engine is unchanged.
+Thirteen portable and two retention methods, two identical captures and both
+independent replays pass; the first failed test attempt remains preserved.
+A separate reviewed engine fallback and actual GPU qualification must precede
+graph use. All native/source/precision, graph, app/device and long-output
+requirements remain open.

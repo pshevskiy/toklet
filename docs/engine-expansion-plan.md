@@ -509,3 +509,13 @@ input envelope, with no operator threshold or geometry change. Seven products
 remain inconclusive; the full head is geometry rejected. Actual default-mode
 records remain identical. The reference-only evidence does not grant native/GPU
 activation parity, graph execution, app/phone support or long-output capability.
+
+## Independent Gemma L1 admission evidence
+
+The [frozen per-token L1 reference](gemma-affine-l1.md) proposes seven additional
+passes in the short trace, preserving 269 existing passes and the full-head
+geometry rejection. Separate exact/ordered witnesses and independent replays
+pass under unchanged error limits. Engine admission is not changed by this
+task. A separately reviewed fallback with actual GPU checks, table/head
+chunking and resident graph composition remain next; earlier source/precision,
+app/phone and 131072-output-plus-prompt requirements remain open.
