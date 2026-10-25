@@ -7,6 +7,7 @@ use crate::model::gemma_reference::tests::Measurement;
 fn actual_backing_capacity_replaces_borrowed_tensor_sum_once() {
     let data = fixture::Fixture::new();
     let plain = Model::new(data.weights()).unwrap();
+    assert!(plain.content_identity().is_none());
     // Compute the independent frozen byte-backed tensor inventory, excluding
     // source scalar vectors copied into LayerWeights rather than borrowed.
     let packed = data.data["packed_original_bf16"].as_object().unwrap();
@@ -36,6 +37,7 @@ fn actual_backing_capacity_replaces_borrowed_tensor_sum_once() {
         admitted_load_bytes: usize::MAX,
     };
     let model = Model::with_storage(data.weights(), Layout::witness(), Some(&report)).unwrap();
+    assert!(model.content_identity().is_none());
     assert_eq!(
         model.model_bytes(),
         plain.model_bytes() + source_scalars + excess + report.metadata_reservation_bytes

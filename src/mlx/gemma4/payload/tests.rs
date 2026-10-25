@@ -97,6 +97,13 @@ fn synthetic() -> (E2bPlan, Vec<u8>, LoadOptions) {
     };
     (plan, payload, options)
 }
+fn identity_metadata() -> MetadataIdentity {
+    MetadataIdentity::new(
+        br#"{"synthetic":true}"#,
+        br#"{"index":true}"#,
+        PREFIX.len() as u64,
+    )
+}
 fn start() -> Sha256 {
     let mut s = Sha256::new();
     s.update(PREFIX);
@@ -132,7 +139,8 @@ fn synthetic_stream_integrity_exclusion_borrowed_views_and_capacities() {
             width,
             fail_after: None,
         };
-        let store = load_admitted(&mut reader, plan, start(), options).unwrap();
+        let store =
+            load_admitted(&mut reader, plan, start(), options, identity_metadata()).unwrap();
         assert_eq!(reader.data.position(), raw.len() as u64);
         let report = store.report();
         assert_eq!(report.container_sha256, options.container_sha256);
@@ -186,7 +194,7 @@ fn digest_including_excluded_bytes_truncation_tail_and_io_fail_without_store() {
             width: 1,
             fail_after: (case == 4).then_some(65),
         };
-        assert!(load_admitted(&mut reader, plan, start(), options).is_err());
+        assert!(load_admitted(&mut reader, plan, start(), options, identity_metadata()).is_err());
     }
 }
 
@@ -212,7 +220,14 @@ fn finite_vectors_metadata_and_both_affine_overflow_directions_are_required() {
         }
         rehash(&mut options, &raw);
         assert!(
-            load_admitted(&mut Cursor::new(raw), plan, start(), options).is_err(),
+            load_admitted(
+                &mut Cursor::new(raw),
+                plan,
+                start(),
+                options,
+                identity_metadata()
+            )
+            .is_err(),
             "case {case}"
         );
     }
@@ -226,12 +241,19 @@ fn numerical_reservation_rejects_before_payload_reads_and_exact_budget_passes() 
     options.memory_limit_bytes = required - 1;
     let mut reader = Cursor::new(raw.clone());
     assert!(
-        matches!(load_admitted(&mut reader,plan,start(),options),Err(Error::Budget{required:r,..}) if r==required)
+        matches!(load_admitted(&mut reader,plan,start(),options,identity_metadata()),Err(Error::Budget{required:r,..}) if r==required)
     );
     assert_eq!(reader.position(), 0);
     let (plan, _, mut options) = synthetic();
     options.memory_limit_bytes = required;
-    let store = load_admitted(&mut Cursor::new(raw), plan, start(), options).unwrap();
+    let store = load_admitted(
+        &mut Cursor::new(raw),
+        plan,
+        start(),
+        options,
+        identity_metadata(),
+    )
+    .unwrap();
     assert_eq!(store.report().admitted_load_bytes, required);
     assert!(add(usize::MAX, 1).is_err());
     assert!(multiply(usize::MAX, 4).is_err());
@@ -274,5 +296,69 @@ fn public_real_metadata_admits_header_then_rejects_budget_without_payload() {
         (MAX_HEADER_BYTES as u64 + 1).to_le_bytes().to_vec(),
     ] {
         assert!(load(config, index, Cursor::new(raw), options).is_err());
+    }
+}
+
+#[test]
+fn content_identity_uses_exact_metadata_and_completed_consumption() {
+    let (plan, raw, options) = synthetic();
+    let config = br#"{"synthetic":true}"#;
+    let index = br#"{"index":true}"#;
+    let store = load_admitted(
+        &mut Cursor::new(raw),
+        plan,
+        start(),
+        options,
+        MetadataIdentity::new(config, index, PREFIX.len() as u64),
+    )
+    .unwrap();
+    let id = *store.content_identity();
+    assert_eq!(
+        format!("{:x}", Sha256::digest(config)),
+        "a8198524f58e72b56283ab71ebddada22840f108b46ef7165bb3fca9919c5558"
+    );
+    assert_eq!(
+        format!("{:x}", Sha256::digest(index)),
+        "2c5f4604b853198b10417ee859c33c4efaadefc4757adf596787b8115536a751"
+    );
+    assert_eq!(
+        id.config_sha256(),
+        &<[u8; 32]>::from(Sha256::digest(config))
+    );
+    assert_eq!(id.index_sha256(), &<[u8; 32]>::from(Sha256::digest(index)));
+    assert_eq!(id.container_sha256(), &store.report().container_sha256);
+    assert_eq!(id.container_bytes(), store.report().container_bytes);
+    // Same JSON meaning has distinct byte identity. This is synthetic storage,
+    // not a claim that the real E2B public config accepts arbitrary schemas.
+    let config_spaced = br#"{ "synthetic" : true }"#;
+    assert_eq!(
+        serde_json::from_slice::<serde_json::Value>(config).unwrap(),
+        serde_json::from_slice::<serde_json::Value>(config_spaced).unwrap()
+    );
+    let (plan, raw, options) = synthetic();
+    let other = load_admitted(
+        &mut Cursor::new(raw),
+        plan,
+        start(),
+        options,
+        MetadataIdentity::new(config_spaced, index, PREFIX.len() as u64),
+    )
+    .unwrap();
+    assert_ne!(id.config_sha256(), other.content_identity().config_sha256());
+    assert_eq!(id.index_sha256(), other.content_identity().index_sha256());
+    assert_eq!(
+        id.container_sha256(),
+        other.content_identity().container_sha256()
+    );
+    drop(store); // Copied content evidence has no file/store lifetime dependency.
+    assert_eq!(id.container_bytes(), options.container_bytes);
+}
+
+#[test]
+fn consumed_count_mismatch_and_overflow_never_publish_identity() {
+    for prefix in [PREFIX.len() as u64 - 1, PREFIX.len() as u64 + 1, u64::MAX] {
+        let (plan, raw, options) = synthetic();
+        let metadata = MetadataIdentity::new(b"config", b"index", prefix);
+        assert!(load_admitted(&mut Cursor::new(raw), plan, start(), options, metadata).is_err());
     }
 }

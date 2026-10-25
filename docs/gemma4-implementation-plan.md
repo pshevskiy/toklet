@@ -312,3 +312,14 @@ bytes and the measured Mac process fits 6 GiB. This closes short diagnostic
 composition only. Full G3, quality/precision/source gaps, resident Metal,
 representative performance, qualified identity/ABI/app integration, mobile fit
 and 131072-output gates remain open, with no capability or numerical-limit change.
+
+
+[Loaded Gemma content identity](gemma4-content-identity.md) now retains hashes of
+the exact admitted config/index and completely consumed container, and copies
+that evidence into the named short model. Late failures publish no store;
+tiny/manual constructors retain absent identity. All 312 CPU/334 Metal-feature
+tests, both iOS targets and seven payload/15 model release methods pass. A fresh
+Mac cold load checks all 540 views and actual store/model identity without forward
+execution; its measured process fits 6 GiB. This is content binding only. Trusted
+repository/tokenizer pairing, native capabilities/ABI/app integration and the
+remaining G2/G3/G4, quality/performance, phone and long-output gates stay open.

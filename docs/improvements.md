@@ -3730,3 +3730,36 @@ This closes one short diagnostic composition, with full G3/quality, earlier
 precision/source/GPU/rotary gaps, resident Metal/performance, qualified model/
 codec identity, native ABI/app, phone fit and 131072 numerical output still open.
 No profile/catalog/ABI/capability or numerical-limit change.
+
+
+## 25 October 2026 — loaded Gemma content identity
+
+Retain exact config/index SHA-256 and the completed consumed container SHA-256/
+byte count in a private-field immutable identity. Hash the same metadata buffers
+admitted by inspection; count successful chunks with checked arithmetic,
+including excluded modalities. Publish only after EOF, digest/count equality,
+finite values and capacity checks. The named E2B model copies the store evidence
+only after construction succeeds; tiny/manual constructors remain unbound.
+No file reopen, numerical kernel change or per-token hashing is added.
+
+The 104-byte store value stays within the existing 64 MiB metadata reservation;
+the arm64 model's optional copy adds 112 bytes through existing size accounting.
+All 312 CPU/334 Metal-feature tests, both strict checks, both iOS targets and
+seven payload/15 model release methods pass. Exact-byte synthetic metadata,
+copied-value lifetime, off-by-one/overflow and prior late-failure checks pass.
+The controller rejects eleven corrupted packets, with successful owned execution
+provenance and no invocation-failure claim for the regression wrapper.
+
+Actual Mac cold loading resolves 540 views and checks model/store identity
+against exact metadata and the fixed full-container pin. Model bytes are
+2,671,706,676; cold-load admission remains 2,671,730,828. Resident/physical peaks
+1,602,158,592 / 2,616,641,984 fit 6 GiB. The 14.71-second combined observation is
+not a controlled latency benchmark; no forward/tokenization/generation occurs.
+Historical generation measurements keep their original memory scope.
+
+See [content proof, accounting and limitations](gemma4-content-identity.md) and
+the [receipt](../benchmarks/results/2026-10-25-gemma4-content-identity-v1.json).
+Content evidence grants no repository provenance, tokenizer pairing, live
+admission or app capability. Full G3/quality, earlier precision/source/GPU/rotary
+gaps, resident Metal/performance, native ABI/app, phone and 131072-output gates
+remain open, with no catalog/profile/ABI/limit change.

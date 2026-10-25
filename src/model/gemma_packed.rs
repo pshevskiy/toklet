@@ -116,6 +116,7 @@ pub struct Model<'a> {
     bytes: usize,
     tensor_bytes: usize,
     metadata_allowance_bytes: usize,
+    content_identity: Option<crate::mlx::gemma4::payload::ContentIdentity>,
 }
 fn check(values: &[f32], expected: usize, name: &'static str) -> Result<(), Error> {
     length(name, values.len(), expected)?;
@@ -280,7 +281,13 @@ impl<'a> Model<'a> {
             bytes,
             tensor_bytes,
             metadata_allowance_bytes,
+            content_identity: None,
         })
+    }
+    /// Exact storage content evidence, only for a model built from an admitted
+    /// E2B PayloadStore. This grants no provenance/tokenizer/app capability.
+    pub fn content_identity(&self) -> Option<&crate::mlx::gemma4::payload::ContentIdentity> {
+        self.content_identity.as_ref()
     }
     /// Packed/norm backing plus model metadata and actual owned Vec capacities.
     /// The E2B constructor includes its entire PayloadStore tensor capacity and

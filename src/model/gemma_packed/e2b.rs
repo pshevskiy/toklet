@@ -97,12 +97,13 @@ impl<'a> Model<'a> {
             layers,
             final_norm: vector("norm.weight")?,
         };
-        let model = Self::with_storage(weights, layout, Some(store.report()))?;
+        let mut model = Self::with_storage(weights, layout, Some(store.report()))?;
         for (i, layer) in store.plan().layers().iter().enumerate() {
             if model.plan.producer_for(i)? != layer.producer {
                 return Err(Error::InvalidConfig("Gemma E2B shared producer differs"));
             }
         }
+        model.content_identity = Some(*store.content_identity());
         Ok(model)
     }
 }

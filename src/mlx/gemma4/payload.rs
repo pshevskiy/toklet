@@ -30,6 +30,47 @@ pub struct LoadOptions {
     pub modality: ModalityPolicy,
 }
 
+/// Immutable evidence of the exact metadata buffers and complete container
+/// consumed by this loader. This is not repository/revision provenance,
+/// tokenizer pairing, a live memory reservation or an execution capability.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ContentIdentity {
+    config_sha256: [u8; 32],
+    index_sha256: [u8; 32],
+    container_sha256: [u8; 32],
+    container_bytes: u64,
+}
+impl ContentIdentity {
+    pub fn config_sha256(&self) -> &[u8; 32] {
+        &self.config_sha256
+    }
+    pub fn index_sha256(&self) -> &[u8; 32] {
+        &self.index_sha256
+    }
+    pub fn container_sha256(&self) -> &[u8; 32] {
+        &self.container_sha256
+    }
+    pub fn container_bytes(&self) -> u64 {
+        self.container_bytes
+    }
+}
+// Created from the same immutable borrowed buffers passed to inspect. Internal
+// synthetic storage tests supply their own metadata, without public admission.
+struct MetadataIdentity {
+    config_sha256: [u8; 32],
+    index_sha256: [u8; 32],
+    consumed_prefix_bytes: u64,
+}
+impl MetadataIdentity {
+    fn new(config: &[u8], index: &[u8], consumed_prefix_bytes: u64) -> Self {
+        Self {
+            config_sha256: Sha256::digest(config).into(),
+            index_sha256: Sha256::digest(index).into(),
+            consumed_prefix_bytes,
+        }
+    }
+}
+
 pub struct LoadReport {
     pub container_bytes: u64,
     pub container_sha256: [u8; 32],
@@ -59,6 +100,7 @@ pub struct PayloadStore {
     matrices: BTreeMap<String, Packed>,
     vectors: BTreeMap<String, Vec<f32>>,
     report: LoadReport,
+    identity: ContentIdentity,
 }
 impl PayloadStore {
     pub fn plan(&self) -> &E2bPlan {
@@ -66,6 +108,11 @@ impl PayloadStore {
     }
     pub fn report(&self) -> &LoadReport {
         &self.report
+    }
+    /// Bound to bytes consumed before this successful store was published.
+    /// No file is reopened; later path changes cannot alter this value.
+    pub fn content_identity(&self) -> &ContentIdentity {
+        &self.identity
     }
     /// Cold borrowed view construction checks metadata again. Never call this
     /// name-based builder in a numerical loop; retain the resulting Matrix.
@@ -230,7 +277,8 @@ pub fn load<R: Read>(
         options.container_bytes,
         options.modality,
     )?;
-    load_admitted(&mut reader, plan, sha, options)
+    let metadata = MetadataIdentity::new(config, index, (8 + size) as u64);
+    load_admitted(&mut reader, plan, sha, options, metadata)
 }
 
 fn load_admitted<R: Read>(
@@ -238,7 +286,9 @@ fn load_admitted<R: Read>(
     plan: E2bPlan,
     mut sha: Sha256,
     options: LoadOptions,
+    metadata: MetadataIdentity,
 ) -> Result<PayloadStore, Error> {
+    let mut consumed_bytes = metadata.consumed_prefix_bytes;
     let reserve = reservation(&plan)?;
     check_budget(reserve.total, options.memory_limit_bytes)?;
     let mut admitted = reserve.total;
@@ -268,6 +318,9 @@ fn load_admitted<R: Read>(
             )?;
             for chunk in bytes.chunks_mut(STREAM_BYTES) {
                 read_exact(reader, chunk, &mut sha)?;
+                consumed_bytes = consumed_bytes
+                    .checked_add(chunk.len() as u64)
+                    .ok_or_else(|| invalid("Gemma consumed byte count overflow"))?;
             }
             physical.insert(name.clone(), bytes);
         } else {
@@ -275,6 +328,9 @@ fn load_admitted<R: Read>(
             while left > 0 {
                 let n = left.min(stream.len());
                 read_exact(reader, &mut stream[..n], &mut sha)?;
+                consumed_bytes = consumed_bytes
+                    .checked_add(n as u64)
+                    .ok_or_else(|| invalid("Gemma consumed byte count overflow"))?;
                 left -= n;
             }
         }
@@ -288,6 +344,9 @@ fn load_admitted<R: Read>(
         return Err(invalid("Gemma payload has trailing bytes"));
     }
     let digest: [u8; 32] = sha.finalize().into();
+    if consumed_bytes != options.container_bytes {
+        return Err(invalid("Gemma consumed container size differs"));
+    }
     if digest != options.container_sha256 {
         return Err(invalid("Gemma payload SHA256 differs"));
     }
@@ -364,7 +423,7 @@ fn load_admitted<R: Read>(
     )?;
     admit_capacity(&mut admitted, actual, options.memory_limit_bytes)?;
     let report = LoadReport {
-        container_bytes: options.container_bytes,
+        container_bytes: consumed_bytes,
         container_sha256: digest,
         text_source_bytes: plan.text_payload_bytes,
         excluded_source_bytes: plan.excluded_payload_bytes,
@@ -382,5 +441,11 @@ fn load_admitted<R: Read>(
         matrices,
         vectors,
         report,
+        identity: ContentIdentity {
+            config_sha256: metadata.config_sha256,
+            index_sha256: metadata.index_sha256,
+            container_sha256: digest,
+            container_bytes: consumed_bytes,
+        },
     })
 }

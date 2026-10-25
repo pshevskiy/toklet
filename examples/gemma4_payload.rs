@@ -49,7 +49,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         },
     )?;
     // Resolve every cold public view, exercising final name/layout ownership
-    // before any future numerical model builder can consume this store.
+    // before constructing the named adapter (without executing its graph).
     for tensor in store.plan().logical_tensors() {
         match tensor.storage {
             toklet::mlx::gemma4::Storage::Affine(layout) => {
@@ -67,11 +67,29 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
         }
     }
+    let identity = store.content_identity();
+    let model = toklet::model::gemma_packed::Model::from_e2b(&store)?;
+    if model.content_identity() != Some(identity)
+        || identity.config_sha256() != &<[u8; 32]>::from(Sha256::digest(&config))
+        || identity.index_sha256() != &<[u8; 32]>::from(Sha256::digest(&index))
+        || identity.container_sha256() != &digest
+        || identity.container_bytes() != 3550670554
+        || model.model_bytes() > toklet::weights::INITIAL_MEMORY_LIMIT_BYTES
+    {
+        return Err("loaded model content identity or budget differs".into());
+    }
+    let hex = |bytes: &[u8; 32]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
     let r = store.report();
     println!(
         "{}",
         serde_json::json!({
             "format":"toklet-gemma4-cold-load-probe-v1",
+            "content_identity":{"config_sha256":hex(identity.config_sha256()),
+                "index_sha256":hex(identity.index_sha256()),
+                "container_sha256":hex(identity.container_sha256()),
+                "container_bytes":identity.container_bytes()},
+            "model_content_identity_matches_store":true,
+            "model_bytes_including_store":model.model_bytes(),
             "repository":"mlx-community/gemma-4-e2b-it-4bit",
             "revision":"238767527555cb75a05732a84dff5d6ba0dd6809",
             "container_bytes":r.container_bytes,
