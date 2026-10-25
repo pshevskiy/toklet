@@ -4252,3 +4252,29 @@ Retain the checked borrowed view. The full-head single-owner rejection remains;
 transactional multirow gather, admitted chunked head/table execution, native
 activation/full resident graph/KV, prior source/precision failures, app/phone
 quality/performance and long-output qualification remain open.
+
+## 2026-10-25 — bounded resident packed projection chunks
+
+Hypothesis: immutable row views plus existing affine owners can admit a larger
+logical projection without expanding packed weights and can publish output
+transactionally across multiple GPU commands. Added a concrete
+[PartitionedAffine owner](gemma-partitioned-affine.md), bounded cold aggregate plan,
+all-child preflight, reusable CPU chunk/full staging and sticky post-staging poison.
+Actual capacities, padding/guards, child and parent structs are counted once;
+Context, caller output and source/loading overlap remain separate admission duties.
+
+Retain decision: correctness foundation accepted on M1 Pro. All 60 diagnostic
+steps/10 owners and 1501 successful output values pass independent complete-buffer
+replay; 22 actual-capture mutation/reader tests pass. An injected composition
+failure after two completed children changes internal staging but preserves the
+caller, blocks retry and permits a fresh same-geometry owner. Later-child numerical
+preflight rejection preserves every warmed buffer and permits recovery. Native
+diagnostic maximum RSS25772032/physical15188568 bytes; separate replay/regression
+allowances512MiB. These are diagnostic process observations, not an inference
+benchmark. Formatting, strict configurations,351 CPU/381 Metal-feature tests,
+iOS device/simulator checks and optimized plan/row-view checks pass. Astra reviews
+source, execution controller/replay, results and the final evidence packet.
+
+The old single-owner head rejection and numerical gates remain unchanged. Actual
+large head/table qualification, whole graph, performance, app/phone and long-output
+gates remain open; no historical source/precision failure or capability is waived.

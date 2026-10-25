@@ -512,3 +512,18 @@ partitioned outputs; invalid/extreme and nested ranges pass. Required CPU/Metal,
 iOS and optimized checks pass. Existing numerical loops and GPU constructors
 are unchanged. Admitted chunked head/table execution and transactional multirow
 gather are next, with full graph/source/device/quality/long-output gates open.
+
+## G4 bounded resident projection chunks
+
+The [partitioned affine owner](gemma-partitioned-affine.md) now admits simultaneous
+original packed chunks and complete parent/child staging before upload. All-child
+numerical preflight preserves warmed state on rejection; caller publication waits
+for every chunk. A test-only failure after two completed children leaves changed
+partial staging, untouched caller output and sticky parent poison; recreating the
+same geometry succeeds. Independent complete-buffer replay passes 60 steps across
+10 owners and 22 mutation/reader tests. Required source checks pass (351 CPU,
+381 Metal-feature tests, iOS targets and optimized plan/row-view checks). This is
+a tiny correctness qualification with explicit per-chunk waits/readbacks, not
+actual full-head, table-gather, graph, performance or phone qualification.
+Context/caller/source-loading overlap needs separate model-wide admission.
+Earlier source/precision failures and all open G2–G7 and long-output gates remain.

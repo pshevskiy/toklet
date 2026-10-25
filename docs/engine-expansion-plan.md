@@ -570,3 +570,12 @@ Rust/Metal/iOS and optimized checks. This qualifies CPU borrowed row access;
 chunked GPU head/table storage, multirow gather transactions and resident graph
 composition remain next. Prior source/precision, app/device, performance and
 long-output requirements remain open.
+
+The [bounded resident chunk owner](gemma-partitioned-affine.md) now has aggregate
+owner-only admission and transactional caller publication, checked by complete
+independent device/CPU-buffer replay including failure after two completed chunks.
+The tiny Mac diagnostic passes 60 steps/10 owners and 22 mutation/reader tests;
+351 CPU/381 Metal-feature tests, both iOS targets and optimized checks pass.
+Actual full-head/table-gather execution, model-wide Context/source/output overlap,
+resident graph, source/precision resolution, performance, app/mobile and long-output
+qualification remain open. This adds no architecture or artifact eligibility.

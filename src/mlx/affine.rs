@@ -186,6 +186,13 @@ impl<'a> Matrix<'a> {
         self.layout
     }
 
+    // Cold Metal upload consumes these admitted immutable source spans. No
+    // mutable pointer or source view escapes into a GPU request.
+    #[cfg(feature = "metal")]
+    pub(crate) fn original_tensors(&self) -> (&[u8], &[u8], &[u8]) {
+        (self.weights, self.scales, self.biases)
+    }
+
     /// Borrow contiguous original rows without copying or reconstructing weights.
     ///
     /// Code and metadata strides stay row-major; BF16/F16 metadata may begin at
