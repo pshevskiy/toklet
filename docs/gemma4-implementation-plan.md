@@ -260,3 +260,15 @@ isolated text process fits its separate1GiB allowance. Formatted model execution
 and append-only text ownership are next. Numerical/source gaps, full G3, Metal,
 quality/performance, combined/mobile admission, app and long-output gates remain
 open, with the32-position numerical limit unchanged.
+
+
+The [formatted basic-hello mathematical reference](gemma4-basic-chat-reference.md)
+now composes the frozen ten-token text prompt with the complete713-state graph.
+Both precision paths select the same11 IDs, ending naturally at hidden pending
+stop106; ten visible IDs decode to “Hi! How can I help you today? 😊”. All33
+selected-row gates pass over5,784,064 pairs. Independent replay checks exact
+prompt/selection policy, complete arrays, text and committed/pending/stop state;
+the separate512MiB reference-process gate passes. This advances a frozen
+formatted continuation witness. Native formatted execution, streaming, full G3,
+earlier numerical/source gaps, Metal, quality/performance, combined/mobile fit,
+app integration and131072-output qualification remain open. No limits change.

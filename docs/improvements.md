@@ -3557,3 +3557,61 @@ Formatted model continuation, text streaming, full G3, earlier numerical/source
 gaps, Metal, quality/performance, combined/mobile admission, app support and
 131072 output tokens remain open. No Profile/ABI/catalog or numerical-limit
 changes.
+
+## 25 October 2026 — bounded mobile generation consumer foundation
+
+Commit `d96fbffbea66256e3f01a6947adb9ab36c4cc35c` adds strict versioned Swift
+per-mode capability metadata and an ordered bounded response consumer. Immutable
+model identity, request-relative generated counters, full session state,
+caller-owned UTF-8 storage and terminal sealing are explicit. Metadata admission
+does not authorize model loading or generation.
+
+Astra's three findings are closed: replay cannot claim history beyond the
+request, sampled output requires the whole prompt committed, and pre-Foundation
+numeric grammar admits exact checked UInt64 digits without rounded fractions or
+exponents. Five same-closure version/build/iOS/simulator/synthetic checks pass.
+A synthetic131072-token-count/4MiB text run retains8,404,960-byte Array capacity;
+Mac resident/physical observations are73,515,008/67,420,664 bytes. These exercise
+the consumer only and do not qualify real generation or phone fit.
+
+See the [mobile contract](mobile-generation-contract.md) and
+[actual-results receipt](../benchmarks/results/2026-10-25-mobile-generation-consumer-v1.json).
+Astra accepted the exact seven-file packet and refreshed evidence. Existing app
+profiles, UI, header/native ABI, packages and installed application are unchanged.
+The engine publisher, owned cursor, combined admission, real model/device checks
+and131072-output capability remain open.
+
+## 25 October 2026 — formatted Gemma4 basic-hello reference
+
+Add an explicit closed `basic-hello` profile to the independent greedy witness;
+the original four-step raw default and accepted history remain intact. Admit
+only the authenticated text receipt/fixture's ten-token prompt and stops1/106/50,
+16 sampled IDs and at most25 evaluated positions. Both precision contracts
+traverse all713 finite states per prefix. Publish samples only after both full
+traversals/captures; stops remain pending and hidden, while output-limit tokens
+remain pending and visible. Keep capture integrity separate from numerical and
+selection/stop diagnostics.
+
+Six offline greedy methods plus eight graph/eight affine methods pass, including
+first/final stop, no-stop limit and partial retention between precisions. Actual
+controller tail tests accept four valid cases and reject nine corruptions. An
+earlier narrower controller draft missed sample-count shadowing in the inner
+numeric loop; it was corrected before model execution and its source/results
+remain explicitly superseded, without execution acceptance credit.
+
+The actual reference samples11 IDs and stops naturally at106. Ten visible IDs
+decode to “Hi! How can I help you today? 😊”; committed length20/pending1 preserve
+the complete valid prompt/reply prefix. All33 selected-row gates pass over
+5,784,064 values, maximum fraction0.7812509635026432, with zero selection/stop
+membership disagreements. Scalar replay authenticates all66 arrays/69,408,768
+bytes, exact maxima/margins/ties and the decoded output. Eight probes per vector
+form a3,168-byte portable witness. Resident/physical peaks343,932,928/152,011,976
+bytes fit the separate512MiB reference allowance;366.02 seconds combined is not
+a representative latency measurement.
+
+See [workload, state and evidence](gemma4-basic-chat-reference.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-basic-chat-math-v1.json).
+Rust numerical/test/example sources remain unchanged from `e20e601`. Native
+formatted generation and streaming are next. Full G3, earlier precision/source
+failures, Metal, quality/performance, combined/mobile admission, app integration
+and131072-output qualification remain open; no ABI/catalog/position limits change.
