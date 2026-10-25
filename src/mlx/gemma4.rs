@@ -13,6 +13,8 @@ use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use std::ops::Range;
 
+pub mod payload;
+
 #[cfg(test)]
 mod tests;
 

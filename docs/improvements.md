@@ -3183,3 +3183,27 @@ This is a synthetic32-position scalar G3 foundation. Actual payload/value and
 E2B geometry, generation/tokenizer, Metal, quality/performance, Mac/phone fit and
 app stages remain open; no ABI/catalog limit is raised. All existing upstream
 GPU and long-rotary discrepancies remain unwaived.
+
+## 25 October2026 — cold Gemma4 payload ownership and value admission
+
+Add a streaming immutable text-only payload store behind the strict E2B
+metadata adapter. Hash the consumed prefix/header and every payload byte,
+including discarded audio/vision components. Reject trailing data, digest/read
+failures and nonfinite vectors/coefficients; code0/15 reconstruction bounds all
+four-bit codes without expanding weights. Cold borrowed views keep explicit
+store/model/session lifetimes and numerical loops free of name lookups.
+
+Admit packed data, converted norm storage, conversion overlap, streaming scratch
+and cold metadata before large allocations. Recheck actual vector capacities
+and peak live overlap. Five focused offline tests distinguish private synthetic
+success from public real-header budget rejection and cover fragmented reads,
+excluded-byte integrity, failure cleanup, exact budgets and signed overflow.
+Required Rust/default/Metal/iOS checks and Astra review are recorded before
+commit; preliminary source and outputs remain retained.
+
+See [storage contract and accounting](gemma4-payload-storage.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-payload-storage-v1.json).
+The real container is not downloaded by this task. Acquisition/load and E2B
+geometry, generation/Metal/quality/performance, Mac/phone fit and app stages
+remain open. No new family/ABI/catalog limit is granted and all upstream
+precision discrepancies remain unwaived.

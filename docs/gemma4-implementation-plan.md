@@ -154,3 +154,11 @@ foundation. Actual E2B payload/value admission and real geometry are next;
 generation/tokenizer, Metal, quality, performance, device and app gates stay
 open. Original-BF16 and all upstream GPU/long-rotary discrepancies remain
 unqualified; no catalog or ABI capability changes.
+
+A [cold payload store](gemma4-payload-storage.md) now streams an externally pinned
+container into immutable text-only packed storage, checks finite vectors and
+all-code affine bounds, and admits live conversion/capacity overlap before
+publication. Synthetic success and public real-metadata budget rejection are
+covered separately. This does not acquire or qualify the real payload. Actual
+E2B acquisition/load and its15-producer geometry remain next, followed by the
+unchanged generation/Metal/quality/device/app gates.

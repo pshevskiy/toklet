@@ -241,3 +241,9 @@ H64 profile. A private layout separates concrete geometry from execution;
 arbitrary public geometry is not admitted. It is a G3 foundation, with actual
 E2B payload/geometry, general generation, resident Metal and real-model/app/device
 qualification still open. Numerical/GPU/long-position gates remain unchanged.
+
+Gemma's [cold payload storage](gemma4-payload-storage.md) now keeps borrowed-model
+backing owners separate from execution, with complete-stream integrity and
+text-only residency admission. Its offline synthetic success and public E2B
+metadata rejection do not qualify real acquisition/load, numerical execution,
+quality, performance, device memory or compatibility eligibility.
