@@ -3422,3 +3422,36 @@ Real E2B continuation, tokenizer/chat and full G3 qualification remain open.
 Earlier FP64/source/GPU/long-position failures, Metal, quality/performance, phone
 fit, app support and131072 output tokens remain unqualified. No ABI/catalog or
 position-limit changes.
+
+## 25 October 2026 — independent real E2B greedy continuation witness
+
+Freeze four raw greedy selections before testing native generation. Traverse
+all713 states per graph while retaining only complete final-position norm,
+head and logits vectors. Staged FP32 chooses the history; FP64 is explicitly
+teacher-forced on that history. Record first-index argmax, exact promoted
+top-two margins and ties independently for both contracts. Flush raw selected
+arrays before finite rejection, retain incomplete steps on failure, and publish
+sampled IDs only after both complete traversals and captures succeed.
+
+The actual pinned checkpoint selects107,100,45518,107 with unique maxima and
+no selection disagreements. All12 unchanged last-row precision gates pass
+over2,103,296 pairs; maximum error-to-bound fraction0.5103206474158878.
+All six step0 vectors match the earlier accepted four-token reference bitwise.
+Retain24 complete arrays/25,239,552 bytes locally and1,152 bytes of compact
+probes in the committed fixture. Final state is seven committed IDs plus one
+pending sampled107, ready for native continuation comparison.
+
+Four new offline methods and eight existing graph/eight affine methods pass,
+including actual-driver nonfinite and partial write/interruption/endpoint
+retention. The cold process reports249,626,624 bytes maximum resident memory
+and75,465,424 bytes peak physical footprint within a separate512MiB reference
+allowance. The90.08-second combined reference observation is not a benchmark.
+The collector independently replays all raw values, selections, margins,
+prefixes and memory gates. Rust code/tests/examples remain unchanged.
+
+See [contracts, measurements and limits](gemma4-greedy-reference.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-greedy-math-v1.json).
+This qualifies an independent short raw witness, not native generation or G3.
+All earlier full-graph FP64/source/GPU/long-position failures remain unwaived;
+tokenizer/chat/stop metadata, Metal, quality/performance, phone fit, app support
+and131072 output tokens remain open. No ABI/catalog/position-limit changes.

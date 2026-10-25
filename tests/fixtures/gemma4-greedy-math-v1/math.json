@@ -1,0 +1,790 @@
+{
+  "format": "toklet-gemma4-greedy-math-probes-v1",
+  "repository": "mlx-community/gemma-4-e2b-it-4bit",
+  "revision": "238767527555cb75a05732a84dff5d6ba0dd6809",
+  "prompt": [
+    2,
+    100,
+    257,
+    100
+  ],
+  "requested_tokens": 4,
+  "sampled_ids": [
+    107,
+    100,
+    45518,
+    107
+  ],
+  "committed_ids": [
+    2,
+    100,
+    257,
+    100,
+    107,
+    100,
+    45518
+  ],
+  "pending_id": 107,
+  "selection_contract": "staged_fp32; first index of maximum capped logit",
+  "fp64_history_policy": "Teacher-forced on the staged-FP32-selected prefix; not an independent FP64 rollout",
+  "steps": [
+    {
+      "step": 0,
+      "prefix": [
+        2,
+        100,
+        257,
+        100
+      ],
+      "predictions": {
+        "math_fp64": {
+          "token": 107,
+          "margin": 0.05163639561401112,
+          "maximum_ties": 1
+        },
+        "staged_fp32": {
+          "token": 107,
+          "margin": 0.05163764953613281,
+          "maximum_ties": 1
+        }
+      },
+      "cross_precision": [
+        {
+          "name": "final_norm",
+          "values": 1536,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.1731013309966905,
+          "passed": true
+        },
+        {
+          "name": "head",
+          "values": 262144,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.5103200218462061,
+          "passed": true
+        },
+        {
+          "name": "logits",
+          "values": 262144,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.5103206474158878,
+          "passed": true
+        }
+      ],
+      "completed": true,
+      "selection_disagrees": false
+    },
+    {
+      "step": 1,
+      "prefix": [
+        2,
+        100,
+        257,
+        100,
+        107
+      ],
+      "predictions": {
+        "math_fp64": {
+          "token": 100,
+          "margin": 0.9732049144084307,
+          "maximum_ties": 1
+        },
+        "staged_fp32": {
+          "token": 100,
+          "margin": 0.97320556640625,
+          "maximum_ties": 1
+        }
+      },
+      "cross_precision": [
+        {
+          "name": "final_norm",
+          "values": 1536,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.3656786567702669,
+          "passed": true
+        },
+        {
+          "name": "head",
+          "values": 262144,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.2589744194302516,
+          "passed": true
+        },
+        {
+          "name": "logits",
+          "values": 262144,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.2589788729087235,
+          "passed": true
+        }
+      ],
+      "completed": true,
+      "selection_disagrees": false
+    },
+    {
+      "step": 2,
+      "prefix": [
+        2,
+        100,
+        257,
+        100,
+        107,
+        100
+      ],
+      "predictions": {
+        "math_fp64": {
+          "token": 45518,
+          "margin": 6.781302858980656,
+          "maximum_ties": 1
+        },
+        "staged_fp32": {
+          "token": 45518,
+          "margin": 6.781302481889725,
+          "maximum_ties": 1
+        }
+      },
+      "cross_precision": [
+        {
+          "name": "final_norm",
+          "values": 1536,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.21834090514469826,
+          "passed": true
+        },
+        {
+          "name": "head",
+          "values": 262144,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.13219049052739187,
+          "passed": true
+        },
+        {
+          "name": "logits",
+          "values": 262144,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.13210177311565235,
+          "passed": true
+        }
+      ],
+      "completed": true,
+      "selection_disagrees": false
+    },
+    {
+      "step": 3,
+      "prefix": [
+        2,
+        100,
+        257,
+        100,
+        107,
+        100,
+        45518
+      ],
+      "predictions": {
+        "math_fp64": {
+          "token": 107,
+          "margin": 16.876516891649622,
+          "maximum_ties": 1
+        },
+        "staged_fp32": {
+          "token": 107,
+          "margin": 16.876516342163086,
+          "maximum_ties": 1
+        }
+      },
+      "cross_precision": [
+        {
+          "name": "final_norm",
+          "values": 1536,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.5048834521667039,
+          "passed": true
+        },
+        {
+          "name": "head",
+          "values": 262144,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.004368294377769762,
+          "passed": true
+        },
+        {
+          "name": "logits",
+          "values": 262144,
+          "failed_values": 0,
+          "maximum_gate_fraction": 0.00427579362984678,
+          "passed": true
+        }
+      ],
+      "completed": true,
+      "selection_disagrees": false
+    }
+  ],
+  "gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "arrays": [
+    {
+      "step": 0,
+      "contract": "math_fp64",
+      "name": "final_norm",
+      "source_shape": [
+        1536
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "211e5d55318c46cb5b1525fc839365a69a11e5ded88e596eca0286545c5688bb",
+      "indices": [
+        0,
+        219,
+        438,
+        657,
+        877,
+        1096,
+        1315,
+        1535
+      ],
+      "offset": 0,
+      "bytes": 64,
+      "sha256": "3242392600cce7d8928a472c622014629ab5216b93bee73dede73b58641729dc"
+    },
+    {
+      "step": 0,
+      "contract": "math_fp64",
+      "name": "head",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "2770c27c9055148bb74193bfce28eb4643af5ec7423551cc2603f5c7be12cd1f",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 64,
+      "bytes": 64,
+      "sha256": "5eb1d2f0e87be9ae025164c34793a0fd06d78053312202da857e365b91422a40"
+    },
+    {
+      "step": 0,
+      "contract": "math_fp64",
+      "name": "logits",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "3eaa409c63cd783e4c48c85ab81a6c3b302e2cd65f7a85b0ae1405f51d38a41d",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 128,
+      "bytes": 64,
+      "sha256": "ab45dd098b7a1b771efbc71a87c31a7ddfb32dd92a67c5058a96517eb578efcf"
+    },
+    {
+      "step": 0,
+      "contract": "staged_fp32",
+      "name": "final_norm",
+      "source_shape": [
+        1536
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "a5318967466130f892410fb4d28149a97a37693d996b1bc16f222eabb05aaaa1",
+      "indices": [
+        0,
+        219,
+        438,
+        657,
+        877,
+        1096,
+        1315,
+        1535
+      ],
+      "offset": 192,
+      "bytes": 32,
+      "sha256": "e13f312b25fa8f140265efb80128bff443fcb0592f88685e3757ad16aa1fac70"
+    },
+    {
+      "step": 0,
+      "contract": "staged_fp32",
+      "name": "head",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "b2ebf53190d5d409fb8a549061d370168c8062ffb0aa2f31e4743dd5ed630559",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 224,
+      "bytes": 32,
+      "sha256": "77704a40997d15d23909692f3623d33f668622f744376e34a0e155dc9ede725c"
+    },
+    {
+      "step": 0,
+      "contract": "staged_fp32",
+      "name": "logits",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "1a411c16a005a4e2fa6ae058dd3b3f90704b6d278909d7c6422696d1567a618c",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 256,
+      "bytes": 32,
+      "sha256": "c5851bca0b695f536b571ef8873591911b78ac602fc088858b4d1a34a70139a3"
+    },
+    {
+      "step": 1,
+      "contract": "math_fp64",
+      "name": "final_norm",
+      "source_shape": [
+        1536
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "224dc4dafe00922ab80ce72c585bc948975cdc1e95004b34f5fa02f71f014bc0",
+      "indices": [
+        0,
+        219,
+        438,
+        657,
+        877,
+        1096,
+        1315,
+        1535
+      ],
+      "offset": 288,
+      "bytes": 64,
+      "sha256": "aeb66abfc57a06c4bb839441ebd9496b90d97de207ce5a249852fe8ddeedda49"
+    },
+    {
+      "step": 1,
+      "contract": "math_fp64",
+      "name": "head",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "d2f0f186fd3b930e82e17e9f1e8d3c047822e628c12b40dcc637eade087807cf",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 352,
+      "bytes": 64,
+      "sha256": "c5558a55feb732e5779f3390aecc334452509bb6490eec0d08e0dcbcee004fbb"
+    },
+    {
+      "step": 1,
+      "contract": "math_fp64",
+      "name": "logits",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "8eaa0f7e2f8a9bbdb5f0553f59bd2a131a3b8cd52a682e079da4c609498b1fdd",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 416,
+      "bytes": 64,
+      "sha256": "ef4a9b0af3c9115fae37745eebc00767907f83ff5f6911c7bd5e393f541b6a3f"
+    },
+    {
+      "step": 1,
+      "contract": "staged_fp32",
+      "name": "final_norm",
+      "source_shape": [
+        1536
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "a1dfdc8daff9eff3af8bbb8ea805d9b2d38c920f4970280c2fb70cd64d1f4107",
+      "indices": [
+        0,
+        219,
+        438,
+        657,
+        877,
+        1096,
+        1315,
+        1535
+      ],
+      "offset": 480,
+      "bytes": 32,
+      "sha256": "7339509c053b74d28bd3e095302fafefb9665ee156a0475995cfbdd3e70af10b"
+    },
+    {
+      "step": 1,
+      "contract": "staged_fp32",
+      "name": "head",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "29dabf2d53cddacb7f32fdf91e087e852ab22addd093d538220bf41f1333b61a",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 512,
+      "bytes": 32,
+      "sha256": "fe218099e56ea37bcfdf4b852cc6e4c9039e8a65543afd229aa9ad657a519b02"
+    },
+    {
+      "step": 1,
+      "contract": "staged_fp32",
+      "name": "logits",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "d699810bc8e9b41b0cfa2061805003227749c50eccba74ab04492a3b320e7b96",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 544,
+      "bytes": 32,
+      "sha256": "d11974b07ff23b2f1d1eaf6f20cfe5e970efc8afdbd2d2ce2e4b7e145bcad7f7"
+    },
+    {
+      "step": 2,
+      "contract": "math_fp64",
+      "name": "final_norm",
+      "source_shape": [
+        1536
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "2391f271cb2da2894f74e9853cce948effd560e5ab6944bbdf897a2665858a9e",
+      "indices": [
+        0,
+        219,
+        438,
+        657,
+        877,
+        1096,
+        1315,
+        1535
+      ],
+      "offset": 576,
+      "bytes": 64,
+      "sha256": "43b97d556c269a24042b8825dad203fb175d94d645fe8e16ebb76525e1be1e08"
+    },
+    {
+      "step": 2,
+      "contract": "math_fp64",
+      "name": "head",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "78f57894a9e7bc9744765dfd2c3c382998cbec8d9197de71e9c97de445a9a3d7",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 640,
+      "bytes": 64,
+      "sha256": "0a00b7dbd4421fd39a1113aeec75396fc39e733e960d660792b20ef6a5ac4d55"
+    },
+    {
+      "step": 2,
+      "contract": "math_fp64",
+      "name": "logits",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "e9e2ad98c35ee655fefa48bd702fa76ffd242c34ef296e6049c520d6ebd6238b",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 704,
+      "bytes": 64,
+      "sha256": "59baca2af3f1beca61bb07888a566defd55208d32ac3d8bd955e227e806af90c"
+    },
+    {
+      "step": 2,
+      "contract": "staged_fp32",
+      "name": "final_norm",
+      "source_shape": [
+        1536
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "f225c465e66a64b162379ba92035a23c4208517a4bbfee5056273eda089ad956",
+      "indices": [
+        0,
+        219,
+        438,
+        657,
+        877,
+        1096,
+        1315,
+        1535
+      ],
+      "offset": 768,
+      "bytes": 32,
+      "sha256": "31adbbfc069386a24d5419de5868467125c8afc410be8124f1cea371c8a1b1c0"
+    },
+    {
+      "step": 2,
+      "contract": "staged_fp32",
+      "name": "head",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "0c55f478524462571901c3552f7e7496de8c9c6ef332f8ad565f1355e9cf3e6e",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 800,
+      "bytes": 32,
+      "sha256": "fb16db0b52a8cfd747f75144e14c36080f50f8b6073890afddb36b5f7593692a"
+    },
+    {
+      "step": 2,
+      "contract": "staged_fp32",
+      "name": "logits",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "8bc5abe61d148ff3c5ed7ca4bc1ed68de3b85df76e8ffb0a9bd80fdd93981b38",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 832,
+      "bytes": 32,
+      "sha256": "919edf1456bf53c1fa11ea32a9e0fe8792a302131830ba3bfe4507d54e2e2234"
+    },
+    {
+      "step": 3,
+      "contract": "math_fp64",
+      "name": "final_norm",
+      "source_shape": [
+        1536
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "a44a67d0bb649066b765ca0f61929e5fe266bc1cb70eb3a484ac02a523beb1d7",
+      "indices": [
+        0,
+        219,
+        438,
+        657,
+        877,
+        1096,
+        1315,
+        1535
+      ],
+      "offset": 864,
+      "bytes": 64,
+      "sha256": "d393305d5b38faa0659ee4be03f1f4a889e1eed371f656a406033246f8ac050e"
+    },
+    {
+      "step": 3,
+      "contract": "math_fp64",
+      "name": "head",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "838436a4ffc7de4dc122092b0c4523aa09a34d26ddc1e1e17f76c78e288a750e",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 928,
+      "bytes": 64,
+      "sha256": "6652dd0d38a0ee9f8bb77edfe492336a034226f896327452d4109c7f6d8c453b"
+    },
+    {
+      "step": 3,
+      "contract": "math_fp64",
+      "name": "logits",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f8",
+      "source_array_sha256": "d962e5a1d259d78cb7719b12b176bfa3a2e5c62a86df90e64ba18c2d3cf09501",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 992,
+      "bytes": 64,
+      "sha256": "1ead8ec66466c027fe65aefd857aa7b3a2ccf77d472542cdab9cc107ccca0e0b"
+    },
+    {
+      "step": 3,
+      "contract": "staged_fp32",
+      "name": "final_norm",
+      "source_shape": [
+        1536
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "a24535a8bef68f672b48793a5f5c3dcc3c2a971461fa9f850a6bf43a04f83993",
+      "indices": [
+        0,
+        219,
+        438,
+        657,
+        877,
+        1096,
+        1315,
+        1535
+      ],
+      "offset": 1056,
+      "bytes": 32,
+      "sha256": "205a60fc3b9cb8039eb7b7cb1224e99532c760106ce3734e95dca8ccf0dd8d76"
+    },
+    {
+      "step": 3,
+      "contract": "staged_fp32",
+      "name": "head",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "d642b59d65ba27760759742dbb097ec8c9f30a77f0d69a355cddb297f19fd231",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 1088,
+      "bytes": 32,
+      "sha256": "bcfa64235c3e40917fbad2fe7f785579716ddf920fef9aac7c46757aa9d71ffe"
+    },
+    {
+      "step": 3,
+      "contract": "staged_fp32",
+      "name": "logits",
+      "source_shape": [
+        262144
+      ],
+      "dtype": "<f4",
+      "source_array_sha256": "e93995f91c07c5050fabb90dfd32a740d78d251a7574ec0f0dd6472ca060ed96",
+      "indices": [
+        0,
+        37449,
+        74898,
+        112347,
+        149796,
+        187245,
+        224694,
+        262143
+      ],
+      "offset": 1120,
+      "bytes": 32,
+      "sha256": "cab8040a6aa1f0459c53fd6944d3069893d79a4a1da4351480578253a0663be0"
+    }
+  ],
+  "binary": {
+    "bytes": 1152,
+    "sha256": "4754e5e7e636a79a42a704b6d89dca0f12cf1566d03f0576335d26041d8e48c8"
+  },
+  "full_local_arrays": {
+    "bytes": 25239552,
+    "sha256": "5779e6366517cedef11e9b892d596d7087a3cc5b5c32da8c10d546562fc17cff"
+  },
+  "native_engine_executed": false,
+  "tokenizer_chat_or_stop_policy_qualified": false
+}

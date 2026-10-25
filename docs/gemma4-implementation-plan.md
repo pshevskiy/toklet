@@ -222,3 +222,12 @@ five release state methods pass; warmed state operations allocate nothing.
 This does not qualify real E2B continuation or close G3. Independent continuation
 witnesses, tokenizer/chat, precision/source, Metal, quality/performance, device
 and app gates remain open, with no catalog/ABI/position changes.
+
+The [independent four-step greedy reference](gemma4-greedy-reference.md) now
+freezes raw selected IDs107,100,45518,107 before native continuation testing.
+All24 complete selected-row arrays and12 unchanged cross-precision gates are
+independently replayed; FP64 is teacher-forced on staged-FP32 history. Step0
+matches the earlier four-token reference bitwise. This advances continuation
+witnesses only: native generation is next, and all earlier full-graph precision,
+source, tokenizer/chat, Metal, quality/performance, device/app and long-output
+gates remain open. No G2/G3/G4 completion or capability/limit change.
