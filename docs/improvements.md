@@ -3158,3 +3158,28 @@ See [scope and comparisons](gemma-packed-graph-reference.md) and the
 Next is native borrowed packed model/session composition. Real payload/value,
 generation/tokenizer, Metal, quality, performance, Mac/phone fit and app gates
 remain open; the prior15 dense-GPU and8 long-rotary failures remain unwaived.
+
+## 25 October2026 — native borrowed packed Gemma graph/session
+
+Compose packed embedding/PLE, four local/full/shared-KV decoder layers and the
+tied capped head using borrowed matrices. A bounded public constructor admits
+the frozen H64 profile; a private layout drives dimensions and scratch planning.
+Weights are never expanded into a retained matrix. Sessions reuse23 scratch
+buffers, persistent producer staging and two caches. All-cache validation and
+publication follow final normalization/head/cap; history and prior logits remain
+valid on failure. Reset reuses the same storage.
+
+Four unit tests cover all three schedules and selected states from every layer,
+physical cache slots, buffer identities, seven late fault/retry boundaries,
+invalid inputs/capacity, real scalar overflow and model-boundary admission. A
+separate integration test checks96 warmed decode steps/three resets/accounting
+with zero Rust allocations and rejected admission before session allocation.
+The receipt records required default/Metal checks, both iOS compile targets and
+Astra review before commit.
+
+See [scope and ownership](gemma-packed-model-scalar.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma-packed-model-scalar-v1.json).
+This is a synthetic32-position scalar G3 foundation. Actual payload/value and
+E2B geometry, generation/tokenizer, Metal, quality/performance, Mac/phone fit and
+app stages remain open; no ABI/catalog limit is raised. All existing upstream
+GPU and long-rotary discrepancies remain unwaived.

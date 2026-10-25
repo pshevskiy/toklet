@@ -234,3 +234,10 @@ validates the inspected real text graph and exact MLX physical tensor mapping.
 It handles bounded metadata only, requires explicit known-modality exclusion,
 and leaves executable-family and compatibility eligibility unchanged. Payload
 integrity/values, real numerical graph, resources and device/app gates remain.
+
+The [native packed Gemma graph/session](gemma-packed-model-scalar.md) now composes
+borrowed matrices and reusable atomic session state for the frozen synthetic
+H64 profile. A private layout separates concrete geometry from execution;
+arbitrary public geometry is not admitted. It is a G3 foundation, with actual
+E2B payload/geometry, general generation, resident Metal and real-model/app/device
+qualification still open. Numerical/GPU/long-position gates remain unchanged.

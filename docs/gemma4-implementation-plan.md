@@ -144,3 +144,13 @@ BF16 coefficient bits and explicit promoted-FP32 source execution. All7,462 CPU
 comparisons pass;15 GPU intermediate comparisons reject unchanged gates while
 all final logits pass. This is the checked reference for native packed model/
 session composition, with real E2B and original-BF16 qualification still open.
+
+The [native borrowed packed graph/session](gemma-packed-model-scalar.md) now
+executes the exact H64/four-layer witness without expanded matrices. Its public
+constructor admits only the frozen geometry; the private layout drives the
+execution. All three schedules, selected states, shared cache ownership, late
+failure/retry and allocation checks are covered. This is a short scalar G3
+foundation. Actual E2B payload/value admission and real geometry are next;
+generation/tokenizer, Metal, quality, performance, device and app gates stay
+open. Original-BF16 and all upstream GPU/long-rotary discrepancies remain
+unqualified; no catalog or ABI capability changes.
