@@ -4327,3 +4327,26 @@ source, checked controllers/replay, completed results and final publication befo
 commit. Production operators/shaders/admission and prior tiny test bodies remain
 unchanged. Full graph, large table gather, prior precision/source failures, quality,
 representative performance, phone/app and long-output gates remain open.
+
+## 2026-10-26 — transactional scalar packed-table gather
+
+Hypothesis: a bounded gather can preserve the existing scalar row contract and
+whole-output failure atomicity without allocating staging or expanding a table.
+Added [Matrix::gather_rows](mlx-table-gather.md) for 1–32 IDs with checked whole
+shape, all-index validation and all-selected finite preflight before publication.
+Factored the unchanged single-row reconstruction check and write loops into two
+private statically dispatched helpers for the two concrete consumers. No new
+owner, source clone, unsafe code or per-scalar dispatch.
+
+Retain decision: accepted bounded scalar mechanism. Frozen original tables match
+all 960 canonical values, including 192 negative zeros; one-ID and 32-ID successful
+requests preserve repeated/reordered rows. Invalid requests and a later overflowing
+row leave the entire output unchanged, and valid selections recover. The private
+54-format check qualifies batch control against the existing row primitive.
+Formatting, strict configurations, 356 CPU / 387 Metal-feature tests, both iOS
+targets and optimized control/four fixture methods pass. Astra reviews source,
+owned checks, results and final evidence before commit. No GPU/model/performance
+suite or new resource/latency claim is added; matvec and all GPU code are unchanged.
+Actual large table selections and GPU gather/storage, whole graph, prior
+source/precision failures, quality, performance, app/phone and long-output gates
+remain open.

@@ -553,3 +553,16 @@ mutation/reader tests and required source/iOS/optimized checks pass. This closes
 the fixed standalone head boundary only. It does not close G4, large table gather,
 resident graph, historical source/precision discrepancies, performance, phone/app
 or 131072-output-plus-nonempty-prompt gates.
+
+## Transactional scalar table gather
+
+The [native multirow gather](mlx-table-gather.md) now preflights all selected
+indices and finite reconstructions before publishing any FP32 value, over the
+original immutable packed source. The pre-target witness checks all 960 canonical
+values / 192 negative zeros, duplicate/order semantics, successful 1/32-ID
+boundaries, whole-output rejection and recovery after late overflow. Shared
+private helpers preserve the old single-row numerical loops and error semantics.
+Required source/iOS checks and optimized 54-format control plus all four fixture
+methods pass (356 CPU / 387 Metal-feature tests). Actual large table selections,
+GPU gather/storage, full graph and earlier source/precision, performance, app/phone
+and long-output gates remain open. No capabilities or limits change.

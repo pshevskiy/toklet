@@ -286,6 +286,57 @@ impl<'a> Matrix<'a> {
         }
     }
 
+    /// Reconstruct 1..=32 selected rows into contiguous `[ids.len(), columns]`
+    /// caller storage. Repeated IDs and their order are preserved. All indices,
+    /// geometry and selected reconstructions pass before any output is written.
+    /// This is the same scalar FP32 contract as `copy_row`, not native BF16
+    /// gather arithmetic. No scratch allocation or whole-table expansion occurs.
+    pub fn gather_rows(&self, ids: &[usize], output: &mut [f32]) -> Result<(), Error> {
+        if !(1..=32).contains(&ids.len())
+            || ids.len().checked_mul(self.layout.columns) != Some(output.len())
+            || ids.iter().any(|&row| row >= self.layout.rows)
+        {
+            return Err(Error("MLX affine gather destination or indices mismatch"));
+        }
+        match self.layout.dtype {
+            MetadataDtype::F16 => self.gather_rows_bits::<Half>(ids, output),
+            MetadataDtype::BF16 => self.gather_rows_bits::<BFloat>(ids, output),
+            MetadataDtype::F32 => self.gather_rows_bits::<Float>(ids, output),
+        }
+    }
+
+    fn gather_rows_bits<M: Metadata>(
+        &self,
+        ids: &[usize],
+        output: &mut [f32],
+    ) -> Result<(), Error> {
+        match self.layout.bits {
+            2 => self.gather_rows_typed::<M, 2>(ids, output),
+            3 => self.gather_rows_typed::<M, 3>(ids, output),
+            4 => self.gather_rows_typed::<M, 4>(ids, output),
+            5 => self.gather_rows_typed::<M, 5>(ids, output),
+            6 => self.gather_rows_typed::<M, 6>(ids, output),
+            8 => self.gather_rows_typed::<M, 8>(ids, output),
+            _ => unreachable!("validated MLX bit width"),
+        }
+    }
+
+    fn gather_rows_typed<M: Metadata, const B: u8>(
+        &self,
+        ids: &[usize],
+        output: &mut [f32],
+    ) -> Result<(), Error> {
+        for &row in ids {
+            self.check_row_typed::<M, B>(row)?;
+        }
+        // Immutable admitted source and deterministic reconstruction: the
+        // publication pass has no new fallible operation or partial failure.
+        for (&row, values) in ids.iter().zip(output.chunks_exact_mut(self.layout.columns)) {
+            self.write_row_typed::<M, B>(row, values);
+        }
+        Ok(())
+    }
+
     fn copy_row_bits<M: Metadata>(&self, row: usize, output: &mut [f32]) -> Result<(), Error> {
         match self.layout.bits {
             2 => self.copy_row_typed::<M, 2>(row, output),
@@ -303,6 +354,12 @@ impl<'a> Matrix<'a> {
         row: usize,
         output: &mut [f32],
     ) -> Result<(), Error> {
+        self.check_row_typed::<M, B>(row)?;
+        self.write_row_typed::<M, B>(row, output);
+        Ok(())
+    }
+
+    fn check_row_typed<M: Metadata, const B: u8>(&self, row: usize) -> Result<(), Error> {
         let groups = self.layout.columns / self.layout.group_size;
         // Preflight the complete selected row before publishing any scalar.
         // This reference deliberately repeats reconstruction, like matvec,
@@ -318,6 +375,11 @@ impl<'a> Matrix<'a> {
                 }
             }
         }
+        Ok(())
+    }
+
+    fn write_row_typed<M: Metadata, const B: u8>(&self, row: usize, output: &mut [f32]) {
+        let groups = self.layout.columns / self.layout.group_size;
         for (group, values) in output.chunks_exact_mut(self.layout.group_size).enumerate() {
             let offset = (row * groups + group) * M::BYTES;
             let scale = M::read(&self.scales[offset..]);
@@ -327,7 +389,6 @@ impl<'a> Matrix<'a> {
                 *value = reconstruct(scale, bias, self.code::<B>(row, column));
             }
         }
-        Ok(())
     }
 
     /// Reference only: FP64 products/feature-order accumulation, FP32 output.
@@ -393,6 +454,53 @@ fn reconstruct(scale: f32, bias: f32, code: u8) -> f32 {
 #[cfg(test)]
 mod row_tests {
     use super::*;
+
+    #[test]
+    fn gather_control_matches_existing_rows_for_all_admitted_formats() {
+        for bits in [2, 3, 4, 5, 6, 8] {
+            for dtype in [MetadataDtype::F16, MetadataDtype::BF16, MetadataDtype::F32] {
+                for group in [32, 64, 128] {
+                    let layout = Layout::new(5, 128, bits, group, dtype).unwrap();
+                    let codes = vec![0xa5; layout.weight_bytes()];
+                    let coefficient = match dtype {
+                        MetadataDtype::F16 => 0x3c00_u16.to_le_bytes().to_vec(),
+                        MetadataDtype::BF16 => 0x3f80_u16.to_le_bytes().to_vec(),
+                        MetadataDtype::F32 => 1_f32.to_le_bytes().to_vec(),
+                    };
+                    let scales: Vec<_> = coefficient
+                        .iter()
+                        .copied()
+                        .cycle()
+                        .take(layout.metadata_bytes())
+                        .collect();
+                    let biases = vec![0; layout.metadata_bytes()];
+                    let matrix = Matrix::from_le_bytes(layout, &codes, &scales, &biases).unwrap();
+                    let ids = [4, 0, 2, 4];
+                    let mut expected = vec![42.; ids.len() * 128];
+                    for (&row, output) in ids.iter().zip(expected.chunks_exact_mut(128)) {
+                        matrix.copy_row(row, output).unwrap();
+                    }
+                    let mut gathered = vec![42.; expected.len()];
+                    matrix.gather_rows(&ids, &mut gathered).unwrap();
+                    assert!(
+                        gathered
+                            .iter()
+                            .zip(&expected)
+                            .all(|(a, b)| a.to_bits() == b.to_bits())
+                    );
+                    let before = gathered.clone();
+                    assert!(matrix.gather_rows(&[4, 0, 2, 5], &mut gathered).is_err());
+                    assert_eq!(gathered, before);
+                    assert!(
+                        matrix
+                            .gather_rows(&[4, 0, 2, 4], &mut gathered[..511])
+                            .is_err()
+                    );
+                    assert_eq!(gathered, before);
+                }
+            }
+        }
+    }
 
     #[test]
     fn row_views_share_source_for_all_admitted_storage_formats() {

@@ -593,3 +593,10 @@ bitwise repeat/partition/resume. The 24 mutation/reader tests and required sourc
 checks pass. This is a standalone operator boundary, with whole graph, large
 table gather, source/precision resolution, performance, app/phone and long-output
 qualification still open. No new architecture or download eligibility is granted.
+
+The [transactional scalar table gather](mlx-table-gather.md) now reconstructs
+1–32 original packed rows only after all selected rows pass admission, preserving
+whole-output failure atomicity, duplicates, ordering and signed zeros. Frozen
+complete fixtures, 54-format control, required source/iOS and optimized checks
+pass. This does not qualify actual large GPU table storage/gather, full graph or
+new model/app eligibility.
