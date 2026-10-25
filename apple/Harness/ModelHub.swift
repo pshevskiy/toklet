@@ -39,6 +39,14 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer.json",bytes:7031673,sha256:"a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"),
             HubFile(name:"tokenizer_config.json",bytes:7308,sha256:"f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"),
             HubFile(name:"special_tokens_map.json",bytes:613,sha256:"76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd")])
+    static let qwen3 = HubProfile(repository:"mlx-community/Qwen3-0.6B-8bit",
+        revision:"11de96878523501bcaa86104e3c186de07ff9068",files:[
+            HubFile(name:"config.json",bytes:937,sha256:"9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"),
+            HubFile(name:"model.safetensors",bytes:633442994,sha256:"3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"),
+            HubFile(name:"model.safetensors.index.json",bytes:49731,sha256:"45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"),
+            HubFile(name:"tokenizer.json",bytes:11422654,sha256:"aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"),
+            HubFile(name:"tokenizer_config.json",bytes:10219,sha256:"8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"),
+            HubFile(name:"special_tokens_map.json",bytes:613,sha256:"76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd")])
     static let mistral = HubProfile(repository:"mlx-community/Mistral-7B-Instruct-v0.3-4bit",
         revision:"a4b8f870474b0eb527f466a03fbc187830d271f5",files:[
             HubFile(name:"config.json",bytes:721,sha256:"efc145d2f53d6d6ef2639be0556b4ecf6faac6cf8a7199ad2b7bb5ebcf443bdd"),
@@ -47,7 +55,7 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer.json",bytes:1961548,sha256:"e553af6fff7d7ad76e830608b218c5c0b0822998d5a1a96099a74cd3c1cb1a49"),
             HubFile(name:"tokenizer_config.json",bytes:138039,sha256:"e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae"),
             HubFile(name:"special_tokens_map.json",bytes:414,sha256:"6fa06efa2785e450051989a6f8fb4416b10149ded485ddd3f127a40734f5cfd0")])
-    static let catalog: [HubProfile] = [.smol,.qwen,.mistral]
+    static let catalog: [HubProfile] = [.smol,.qwen,.qwen3,.mistral]
     static func matching(_ query: String) -> [HubProfile] {
         let words = query.split(whereSeparator:{ $0.isWhitespace }).map(String.init)
         return catalog.filter { profile in
@@ -57,6 +65,7 @@ struct HubProfile: Codable, Equatable, Sendable {
     var name: String {
         switch repository {
         case Self.qwen.repository: "Qwen2.5-0.5B · 8-bit"
+        case Self.qwen3.repository: "Qwen3-0.6B · 8-bit · non-thinking"
         case Self.mistral.repository: "Mistral-7B-Instruct-v0.3 · 4-bit"
         default: "SmolLM2-135M · 8-bit (Llama family)"
         }
@@ -64,14 +73,22 @@ struct HubProfile: Codable, Equatable, Sendable {
     var numericalBudget: UInt64 {
         switch repository {
         case Self.qwen.repository: 1024 * 1024 * 1024
+        case Self.qwen3.repository: 1536 * 1024 * 1024
         case Self.mistral.repository: 5 * 1024 * 1024 * 1024
         default: 512 * 1024 * 1024
         }
     }
-    var textBudget: UInt64 { repository == Self.qwen.repository ? 128 * 1024 * 1024 : 64 * 1024 * 1024 }
+    var textBudget: UInt64 {
+        switch repository {
+        case Self.qwen.repository: 128 * 1024 * 1024
+        case Self.qwen3.repository: 256 * 1024 * 1024
+        default: 64 * 1024 * 1024
+        }
+    }
     var processAllowance: UInt64 {
         switch repository {
         case Self.qwen.repository: 1536 * 1024 * 1024
+        case Self.qwen3.repository: 2304 * 1024 * 1024
         case Self.mistral.repository: 5632 * 1024 * 1024
         default: 768 * 1024 * 1024
         }
@@ -79,6 +96,7 @@ struct HubProfile: Codable, Equatable, Sendable {
     var vocabulary: UInt32 {
         switch repository {
         case Self.qwen.repository: 151936
+        case Self.qwen3.repository: 151936
         case Self.mistral.repository: 32768
         default: 49152
         }
@@ -86,6 +104,7 @@ struct HubProfile: Codable, Equatable, Sendable {
     var key: String {
         switch repository {
         case Self.qwen.repository: "qwen"
+        case Self.qwen3.repository: "qwen3"
         case Self.mistral.repository: "mistral"
         default: "smol"
         }
@@ -93,6 +112,7 @@ struct HubProfile: Codable, Equatable, Sendable {
     var searchQuery: String {
         switch repository {
         case Self.qwen.repository: "Qwen2.5-0.5B"
+        case Self.qwen3.repository: "Qwen3-0.6B-8bit"
         case Self.mistral.repository: "Mistral-7B-Instruct-v0.3-4bit"
         default: "SmolLM2-135M"
         }

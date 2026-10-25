@@ -342,12 +342,14 @@ struct HubControllerCheck: Codable, Sendable {
     let text: String
     let ids: [UInt32]
     let released: Bool
+    let memory: ChatCheckMemory
 }
 
 // Explicit diagnostic only. Uses a fresh temporary history and refuses all
 // network calls while exercising the actual downloaded-model UI controllers.
 @MainActor
 func checkDownloadedHubController(root: URL,expected: ChatCheckReply,profile: HubProfile = .smol) async throws -> HubControllerCheck {
+    let memoryBefore = try NativeFootprint.read()
     let temporary = FileManager.default.temporaryDirectory.appendingPathComponent("TokletHubChat-" + UUID().uuidString)
     defer { try? FileManager.default.removeItem(at:temporary) }
     let hub = HubStore(profile:profile,hub:ModelHub(root:root,fetch:{ _,_,_,_ in throw HubFailure("Offline controller attempted network access.") }))
@@ -361,17 +363,21 @@ func checkDownloadedHubController(root: URL,expected: ChatCheckReply,profile: Hu
     guard worker.waitUntilIdle(seconds:120) != nil else { throw HubFailure("Downloaded model load timed out.") }
     harness.poll(); chat.observe(harness.state)
     guard chat.ready && chat.modelName == profile.name else { throw HubFailure("Downloaded model did not load through controller: " + harness.state.message) }
+    let memoryLoaded = try NativeFootprint.read()
     chat.workspace.outputLimit = 32; chat.edit("Hello!"); chat.sendOrStop()
     guard worker.waitUntilIdle(seconds:120) != nil else { throw HubFailure("Controller reply timed out.") }
     harness.poll(); chat.observe(harness.state)
     let text = chat.workspace.current.messages.last?.text ?? ""
     let ids = harness.state.ids
     guard !chat.running, text.hasPrefix(expected.text), Array(ids.prefix(expected.ids.count)) == expected.ids else { throw HubFailure("Controller reply differs from native text reference.") }
+    let memoryGenerated = try NativeFootprint.read()
     chat.unload()
     guard worker.waitUntilIdle(seconds:30) != nil else { throw HubFailure("Controller unload timed out.") }
     worker.close()
     guard worker.waitUntilClosed(seconds:30), !worker.snapshot().hasModel else { throw HubFailure("Controller resources remain live.") }
-    return HubControllerCheck(passed:true,text:text,ids:ids,released:true)
+    let memoryReleased = try NativeFootprint.read()
+    return HubControllerCheck(passed:true,text:text,ids:ids,released:true,
+        memory:ChatCheckMemory(before:memoryBefore,loaded:memoryLoaded,generated:memoryGenerated,released:memoryReleased))
 }
 
 // A fresh-transfer witness owns only this newly created temporary tree. It

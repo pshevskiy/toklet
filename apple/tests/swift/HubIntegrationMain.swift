@@ -22,14 +22,18 @@ struct HubIntegrationMain {
         do { try budget.check(.qwen); throw HubFailure("Qwen admitted with Smol-only allowance") }
         catch let error as HubFailure where error.message.contains("Not enough memory") { }
         try require(HubModel(id:HubProfile.qwen.repository).profile == .qwen && HubModel(id:"mlx-community/Qwen2.5-0.5B-Instruct-4bit").profile == nil,"Qwen eight-bit only")
+        try require(HubModel(id:HubProfile.qwen3.repository).profile == .qwen3 && HubModel(id:"mlx-community/Qwen3-0.6B-4bit").profile == nil,"Qwen3 exact eight-bit checkpoint only")
+        try require(HubProfile.qwen3.vocabulary == 151936 && HubProfile.qwen3.textBudget == 256 * 1024 * 1024,"Qwen3 has its own tokenizer vocabulary and allowance")
         try require(HubModel(id:HubProfile.mistral.repository).profile == .mistral && HubModel(id:"mlx-community/Mistral-7B-Instruct-v0.2-4bit").profile == nil,"only pinned Mistral supported")
         try require(HubProfile.mistral.totalBytes == 4079633318 && HubProfile.mistral.vocabulary == 32768,"Mistral inventory and vocabulary")
         try require(HubProfile.mistral.numericalBudget + HubProfile.mistral.textBudget <= HubProfile.mistral.processAllowance && HubProfile.mistral.processAllowance < 6 * 1024 * 1024 * 1024,"separate bounded Mac numerical/text/process allowances")
-        for available in [HubProfile.mistral.processAllowance - 1, HubProfile.mistral.processAllowance] {
-            let candidate = HubAdmission(unifiedGPU:true,physicalMemory:16 * 1024 * 1024 * 1024,availableMemory:available)
-            var admitted = false
-            do { try candidate.check(.mistral); admitted = true } catch { }
-            try require(admitted == (available == HubProfile.mistral.processAllowance),"Mistral exact current-memory boundary")
+        for profile: HubProfile in [.mistral,.qwen3] {
+            for available in [profile.processAllowance - 1, profile.processAllowance] {
+                let candidate = HubAdmission(unifiedGPU:true,physicalMemory:16 * 1024 * 1024 * 1024,availableMemory:available)
+                var admitted = false
+                do { try candidate.check(profile); admitted = true } catch { }
+                try require(admitted == (available == profile.processAllowance),"exact current-memory boundary for " + profile.key)
+            }
         }
         for profile in HubProfile.catalog { try profile.validate() }
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("TokletHubController-" + UUID().uuidString)
@@ -71,7 +75,7 @@ struct HubIntegrationMain {
         },freeBytes:{ _ in Int64.max / 2 })
         let store = HubStore(hub:hub,admission:admission)
         store.select(.qwen); store.select(.smol); await store.waitForIdle()
-        try require(store.profile == .qwen && !store.deviceAllowed,"busy profile selection ignored and per-profile admission")
+        try require(store.profile == .smol && store.deviceAllowed,"latest selection replaces pending verification and receives current-profile admission")
         store.select(.smol); await store.waitForIdle()
         store.refresh(); await store.waitForIdle()
         try require(!store.busy && store.localURL == nil && store.deviceAllowed,"refresh absence and device")

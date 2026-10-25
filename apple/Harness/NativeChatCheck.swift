@@ -5,6 +5,11 @@ struct ChatCheckReply: Codable {
     let text: String
     let reason: UInt32
 }
+// Explicit diagnostics only. Peak is the process lifetime high-water mark,
+// including loading/conversion/text work, rather than an isolated stage delta.
+struct ChatCheckMemory: Codable, Sendable {
+    let before, loaded, generated, released: NativeFootprint
+}
 struct NativeChatCheck: Codable {
     let passed: Bool
     let replies: [ChatCheckReply]
@@ -12,6 +17,7 @@ struct NativeChatCheck: Codable {
     let cancellationObserved: Bool
     let explicitSendAfterSuspend: Bool
     let released: Bool
+    let memory: ChatCheckMemory
 }
 
 func checkChatWorkspace() throws {
@@ -63,6 +69,7 @@ func checkQueuedChatCancellation() throws {
 func runNativeChatCheck(directory: String,profile: HubProfile = .smol) throws -> NativeChatCheck {
     try checkChatWorkspace()
     try checkQueuedChatCancellation()
+    let memoryBefore = try NativeFootprint.read()
     let worker = try NativeWorker()
     defer { worker.close(); _ = worker.waitUntilClosed(seconds:30) }
     func execute(_ command: NativeCommand, cancelled: Bool = false, allowError: Bool = false) throws -> NativeSnapshot {
@@ -82,6 +89,7 @@ func runNativeChatCheck(directory: String,profile: HubProfile = .smol) throws ->
     settings.capacity = 512; settings.chunk = 32; settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
     let loaded = try execute(.load(settings))
     guard loaded.chatEnabled, loaded.hasSession else { throw chatInputError("Text model was not admitted") }
+    let memoryLoaded = try NativeFootprint.read()
     let firstID = UUID()
     let first = try execute(.chat(id:firstID,conversation:data("Hello!"),maximum:8))
     let firstReply = try reply(first,firstID)
@@ -102,11 +110,14 @@ func runNativeChatCheck(directory: String,profile: HubProfile = .smol) throws ->
     let resumed = try execute(.chat(id:resumedID,conversation:data("Hello!"),maximum:8))
     let resumedReply = try reply(resumed,resumedID)
     guard resumedReply.ids == firstReply.ids, resumedReply.text == firstReply.text else { throw chatInputError("Fresh text replay differs") }
+    let memoryGenerated = try NativeFootprint.read()
     let unloaded = try execute(.unload)
     guard unloaded.chatResult?.id == resumedID else { throw chatInputError("Completed response lost during cleanup") }
     worker.close()
     guard worker.waitUntilClosed(seconds:30), worker.snapshot().workerFinished,
           !worker.snapshot().hasModel, !worker.snapshot().chatEnabled else { throw chatInputError("Text resources were not released") }
+    let memoryReleased = try NativeFootprint.read()
     return NativeChatCheck(passed:true,replies:[firstReply,secondReply,resumedReply],
-        contextRejectionPreservedPrefix:preserved,cancellationObserved:true,explicitSendAfterSuspend:true,released:true)
+        contextRejectionPreservedPrefix:preserved,cancellationObserved:true,explicitSendAfterSuspend:true,released:true,
+        memory:ChatCheckMemory(before:memoryBefore,loaded:memoryLoaded,generated:memoryGenerated,released:memoryReleased))
 }

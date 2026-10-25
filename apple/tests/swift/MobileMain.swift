@@ -136,11 +136,13 @@ struct MobileMain {
         state.requestStartedUptimeNanoseconds = 2_000_000_000
         try require(GenerationMetrics(state).firstTokenSeconds == nil && GenerationMetrics(state).totalSeconds == nil,"reversed clock observations never underflow")
         let generous = HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:6 << 30)
-        try require(HubRecommendations.ranked(generous).map(\.profile) == [.mistral,.qwen,.smol],"balanced ranking favors capacity when memory allows")
+        try require(HubRecommendations.ranked(generous).map(\.profile) == [.mistral,.qwen,.qwen3,.smol],"balanced ranking includes Qwen3 and balances capacity with current headroom")
         let phone = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:2 << 30)
         try require(HubRecommendations.ranked(phone).map(\.profile) == [.qwen,.smol],"phone allowance excludes over-budget Mistral")
         try require(HubRecommendations.ranked(phone,task:.fast).map(\.profile) == [.smol,.qwen],"fast-reply preference changes ordering among admitted models")
         try require(HubRecommendations.ranked(phone,task:.coding).first?.profile == .qwen,"coding preference favors capacity without admitting an over-budget model")
+        let qwen3Room = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:HubProfile.qwen3.processAllowance)
+        try require(HubRecommendations.ranked(qwen3Room).contains(where:{ $0.profile == .qwen3 }),"Qwen3 is ranked only when its separate process allowance fits")
         let low = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:0)
         let resident = HubRecommendations.ranked(low,active:.qwen)
         try require(HubRecommendations.ranked(low).isEmpty && resident.map(\.profile) == [.qwen],"resident model need not fit twice; unknown replacements are excluded")
@@ -166,7 +168,7 @@ struct MobileMain {
         let offline: HubFetch = { _,_,_,_ in throw HubFailure("Injected offline connection") }
         let hub = HubStore(hub:ModelHub(root:root,fetch:offline),admission:{ phone }); hub.findBest()
         await hub.waitForIdle()
-        try require(hub.recommendations.map(\.profile) == [.qwen,.smol] && hub.recommendationMessage.contains("3 downloadable"),"shortlist explains why fewer than five are available")
+        try require(hub.recommendations.map(\.profile) == [.qwen,.smol] && hub.recommendationMessage.contains("4 downloadable"),"shortlist explains why fewer than five are available")
         hub.findBest(task:.fast)
         try require(hub.recommendations.first?.profile == .smol && hub.recommendationTask == .fast,"controller publishes the selected preference and reranks")
         hub.findBest()
@@ -287,13 +289,13 @@ struct MobileMain {
         store.inventory(); store.findBest(task:.fast)
         await gate.release(); await store.waitForIdle()
         let requestCount = await requests.count()
-        try require(requestCount == 4 && !store.findingBest && store.discoveryMessage.hasPrefix("Hugging Face: 4"),"sheet inventory and preference changes cannot cancel discovery")
-        try require(store.discoveredModels.count == 4 && store.discoveredModels.last?.profile == nil,"online results are deduplicated; Gemma discovery never grants compatibility")
+        try require(requestCount == 5 && !store.findingBest && store.discoveryMessage.hasPrefix("Hugging Face: 5"),"sheet inventory and preference changes cannot cancel discovery")
+        try require(store.discoveredModels.count == 5 && store.discoveredModels.last?.profile == nil,"online results are deduplicated; Gemma discovery never grants compatibility")
         try require(store.recommendations.first?.profile == .smol,"latest preference is used when online search completes")
-        try require(HubAPI.discoveryURLs.count == 4 && HubAPI.discoveryURLs.allSatisfy { URLComponents(url:$0,resolvingAgainstBaseURL:false)?.queryItems?.contains(URLQueryItem(name:"limit",value:"20")) == true },"discovery requests are bounded to four twenty-row pages")
+        try require(HubAPI.discoveryURLs.count == 5 && HubAPI.discoveryURLs.allSatisfy { URLComponents(url:$0,resolvingAgainstBaseURL:false)?.queryItems?.contains(URLQueryItem(name:"limit",value:"20")) == true },"discovery requests are bounded to five twenty-row pages")
         let noMemory = HubStore(hub:service,admission:{ HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:0) })
         noMemory.findBest(); await noMemory.waitForIdle()
-        try require(noMemory.recommendations.isEmpty && noMemory.discoveredModels.count == 4 && noMemory.recommendationMessage.contains("memory"),"low memory still shows online discoveries with no false fit")
+        try require(noMemory.recommendations.isEmpty && noMemory.discoveredModels.count == 5 && noMemory.recommendationMessage.contains("memory"),"low memory still shows online discoveries with no false fit")
         let offline = HubStore(hub:ModelHub(root:root,fetch:{ _,_,_,_ in throw HubFailure("Injected offline") }),admission:{ allowance })
         offline.findBest(); await offline.waitForIdle()
         try require(offline.discoveryMessage.contains("failed") && offline.discoveryMessage.contains("offline catalog") && offline.recommendations.count == 2,"failed network keeps an explicit offline fallback")
@@ -302,7 +304,7 @@ struct MobileMain {
             try rows.write(to:file)
         }),admission:{ allowance })
         partial.findBest(); await partial.waitForIdle()
-        try require(partial.discoveredModels.count == 4 && partial.discoveryMessage.contains("Some searches failed"),"partial failure retains valid online results with retry status")
+        try require(partial.discoveredModels.count == 5 && partial.discoveryMessage.contains("Some searches failed"),"partial failure retains valid online results with retry status")
         let cleanupRequests = Requests()
         let cleanup = HubStore(hub:ModelHub(root:root,fetch:{ url,file,_,_ in
             _ = await cleanupRequests.record(url)
@@ -313,13 +315,13 @@ struct MobileMain {
         }),admission:{ allowance })
         cleanup.findBest(); await cleanup.waitForIdle()
         let joined = await cleanupRequests.count()
-        try require(joined == 4 && cleanup.discoveredModels.isEmpty && cleanup.discoveryMessage.contains("Injected sink close failure"),"a partial-page cleanup failure joins siblings and cannot become successful discovery")
+        try require(joined == 5 && cleanup.discoveredModels.isEmpty && cleanup.discoveryMessage.contains("Injected sink close failure"),"a partial-page cleanup failure joins siblings and cannot become successful discovery")
         let removal = HubStore(hub:ModelHub(root:root,fetch:{ _,file,_,_ in try rows.write(to:file) },removeMetadata:{ file in
             if FileManager.default.fileExists(atPath:file.path) { try FileManager.default.removeItem(at:file) }
             throw HubFailure("Injected metadata removal failure")
         }),admission:{ allowance })
         removal.findBest(); await removal.waitForIdle()
-        try require(removal.discoveredModels.isEmpty && removal.message.components(separatedBy:"Injected metadata removal failure").count == 5,"all four temporary-removal failures survive draining siblings")
+        try require(removal.discoveredModels.isEmpty && removal.message.components(separatedBy:"Injected metadata removal failure").count == 6,"all five temporary-removal failures survive draining siblings")
         let closeGate = VerificationGate(), closeRequests = Requests()
         let cancelledCleanup = HubStore(hub:ModelHub(root:root,fetch:{ url,file,_,_ in
             if await closeRequests.record(url) == 1 {
@@ -393,6 +395,7 @@ struct MobileMain {
         print("TOKLET_MOBILE_LOCAL_MODEL_PASS")
     }
     static func switching(_ first: String,_ second: String) async throws {
+        let replacementProfile = try HubProfile.identify(URL(fileURLWithPath:second))
         let harness = HarnessStore(enabled:true)
         guard let worker = harness.worker else { throw HubFailure("Missing switch worker") }
         defer { worker.close(); _ = worker.waitUntilClosed(seconds:30) }
@@ -417,9 +420,9 @@ struct MobileMain {
             HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:worker.snapshot().hasModel ? 0 : 6 << 30)
         },verify:{ profile in URL(fileURLWithPath:profile == .smol ? first : second) })
         var rejectedHandoff = false
-        hub.use(.qwen) { _ in rejectedHandoff = true }; await hub.waitForIdle()
+        hub.use(replacementProfile) { _ in rejectedHandoff = true }; await hub.waitForIdle()
         try require(!rejectedHandoff && chat.ready,"resident-memory rejection preserves active model")
-        for profile: HubProfile in [.qwen,.smol] {
+        for profile: HubProfile in [replacementProfile,.smol] {
             hub.use(profile,replacingLoadedModel:true) { chat.open($0) }; await hub.waitForIdle()
             try finishLoad(profile.name)
         }

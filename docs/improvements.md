@@ -3207,3 +3207,34 @@ The real container is not downloaded by this task. Acquisition/load and E2B
 geometry, generation/Metal/quality/performance, Mac/phone fit and app stages
 remain open. No new family/ABI/catalog limit is granted and all upstream
 precision discrepancies remain unwaived.
+
+## 25 October 2026 — downloadable Qwen3 Chat on iPhone
+
+Add the pinned Qwen3-0.6B eight-bit non-thinking profile as the fourth catalog
+entry, with six immutable files totaling 644,927,148 bytes. Discovery queries five
+bounded public Hugging Face pages. Preserve graph/format/tokenizer eligibility,
+download integrity, estimated ranking and fresh memory admission after releasing
+the previous model. The signed app uses the accepted 40bf67f native package;
+parallel Gemma Rust changes are outside that immutable package.
+
+All seven physical UI cases pass on iPhone 14 Pro / iOS 27.0.1, including repeated
+Qwen3/Qwen2/Smol switching, real replies after background/re-selection, colored
+Python with successful Copy feedback and existing Expert fixture controls.
+A separate fresh transfer, offline controller generation, prefix rejection,
+cancellation/resume and handle release pass. All three eight-token native
+replies match Mac IDs. Owner saved-chat bytes are unchanged; the updated app is
+normally launched and a separately signed/pinned rollback copy is preserved.
+
+The fresh process lifetime physical peak is 893,274,528 bytes, within its 2,304 MiB
+reservation. Three 64-token measured benchmark runs report 840/846/846 ms TTFT and
+9.3 tok/s each; these are short UI observations, not controlled performance or
+quality claims. Ten owned local commands, eight interface checks, signed
+app/runner checks and ten publication fault tests support the source-bound
+receipt. Four earlier locator-failed phone trials retain raw evidence and
+successful owner-byte/rollback checks.
+
+See the [model and verification report](mobile-qwen3-downloads.md) and
+[phone receipt](../benchmarks/results/2026-10-25-mobile-qwen3-phone-v1.json).
+Chat/raw/context limits remain 256/128/512. Gemma 4 real-model/device admission and
+131,072 output tokens plus prompt/history remain separate prioritized engine
+gates; this mobile addition does not qualify them.

@@ -48,6 +48,10 @@ struct HubProfileMain {
         var opened: URL?
         store.open { opened = $0 }; await store.waitForIdle()
         try require(opened?.path == "/verified-qwen","selected Qwen open")
+        store.select(.qwen3); await store.waitForIdle()
+        try require(store.localURL?.path == "/verified-qwen3" && store.deviceAllowed,"selected Qwen3 refresh")
+        store.open { opened = $0 }; await store.waitForIdle()
+        try require(opened?.path == "/verified-qwen3","selected Qwen3 open")
         store.select(.mistral); await store.waitForIdle()
         try require(store.localURL?.path == "/verified-mistral" && store.deviceAllowed,"selected Mistral refresh")
         store.open { opened = $0 }; await store.waitForIdle()
@@ -55,7 +59,7 @@ struct HubProfileMain {
         store.select(.smol); await store.waitForIdle()
         try require(store.localURL?.path == "/verified-smol","profile change refresh")
         let values = await seen.values()
-        try require(values == [.qwen,.qwen,.mistral,.mistral,.smol],"verification captured correct profiles")
+        try require(values == [.qwen,.qwen,.qwen3,.qwen3,.mistral,.mistral,.smol],"verification captured correct profiles")
         print("TOKLET_HUB_PROFILE_PASS")
     }
 }

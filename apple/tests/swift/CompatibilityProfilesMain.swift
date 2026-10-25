@@ -4,7 +4,7 @@ import Foundation
 struct CompatibilityProfilesMain {
     static func main() throws {
         let root = URL(fileURLWithPath:CommandLine.arguments[1])
-        let folders = ["smol":"MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8","qwen":"MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c","mistral":"MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87"]
+        let folders = ["smol":"MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8","qwen":"MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c","qwen3":"MLX-Qwen3-0.6B-8bit-11de968","mistral":"MLX-Mistral-7B-Instruct-v0.3-4bit-a4b8f87"]
         var results: [String:NativeChatCheck] = [:]
         for profile in HubProfile.catalog {
             let path = root.appendingPathComponent("models/" + folders[profile.key]!).path

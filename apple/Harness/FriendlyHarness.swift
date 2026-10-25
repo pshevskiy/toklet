@@ -160,7 +160,11 @@ struct FriendlyHarnessView: View {
                                     Text(message.role == "user" ? "You" : "Toklet").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                                     if message.writing { HStack { ProgressView(); Text("Writing…").foregroundStyle(.secondary) } }
                                     else {
-                                        if message.role == "assistant", !message.text.isEmpty { ChatContent(text:message.text).equatable() }
+                                        if message.role == "assistant", !message.text.isEmpty {
+                                            ChatContent(text:message.text).equatable()
+                                                .accessibilityElement(children:.contain)
+                                                .accessibilityIdentifier("chat-assistant-response-" + message.id.uuidString)
+                                        }
                                         else {
                                             Text(message.text.isEmpty ? (message.interrupted ? "Response stopped." : "No text returned.") : message.text).textSelection(.enabled)
                                         }
