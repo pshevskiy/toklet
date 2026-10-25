@@ -254,3 +254,9 @@ integrity/value checks. The failed first transfer is retained separately from
 the successful recovery. This is acquisition/storage evidence only: real E2B
 execution, tokenizer/chat/generation, resident Metal, quality, representative
 performance and device/app gates remain open.
+
+The [packed graph proposal mechanism](gemma-producer-staging.md) now supports a
+validated private prefix of up to15 producers with persistent stage owners and
+inline borrowed proposals. A35-layer structural test covers routing and atomic
+failure/retry without admitting public E2B execution. All real numerical,
+generation, Metal, quality, device and app gates remain open.

@@ -43,14 +43,14 @@ unsafe impl GlobalAlloc for Counting {
 #[global_allocator]
 static ALLOCATOR: Counting = Counting;
 
-struct Measurement;
+pub(crate) struct Measurement;
 impl Measurement {
-    fn start() -> Self {
+    pub(crate) fn start() -> Self {
         ALLOCATIONS.with(|v| v.set(0));
         TRACK.with(|v| v.set(true));
         Self
     }
-    fn finish(self) -> usize {
+    pub(crate) fn finish(self) -> usize {
         TRACK.with(|v| v.set(false));
         ALLOCATIONS.with(Cell::get)
     }

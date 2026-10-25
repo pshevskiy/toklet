@@ -12,7 +12,7 @@ use crate::cpu::{self, DenseDecoderWeights, finite, length};
 
 mod forward;
 #[cfg(test)]
-mod tests;
+pub(crate) mod tests;
 
 pub const MAX_POSITIONS: usize = 32;
 pub const VOCAB_SIZE: usize = 17;

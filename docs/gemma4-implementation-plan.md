@@ -172,3 +172,11 @@ the existing desktop logical allowance. This closes acquisition/storage only
 within G5: the executable35-layer/15-producer geometry, source numerical parity,
 tokenizer/chat/generation, quality, representative performance, Metal, phone fit
 and app integration remain open. No whole G2/G3/G5 gate is marked complete.
+
+The [bounded multi-producer staging mechanism](gemma-producer-staging.md) now
+prepares up to15 borrowed KV proposals without heap spill and preserves atomic
+publication through every shared consumer and the final head. The public graph
+remains the original four-layer witness. A private35-layer structural test
+covers15 owners, routes13/14 and all38 failure/retry boundaries; it does not
+qualify real E2B dimensions or numerical parity. The named checkpoint execution
+adapter and independent real-shape witnesses remain next.

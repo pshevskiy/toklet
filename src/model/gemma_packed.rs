@@ -18,6 +18,7 @@ mod tests;
 pub const MAX_POSITIONS: usize = 32;
 pub const VOCAB_SIZE: usize = 17;
 const EPSILON: f32 = 1e-6;
+const MAX_PRODUCERS: usize = 15;
 
 pub struct KvWeights<'a> {
     pub k: Matrix<'a>,
@@ -67,6 +68,7 @@ struct Layout {
     vocab: usize,
     ple: usize,
     heads: usize,
+    producers: usize,
     positions: usize,
     window: usize,
     layers: Vec<LayerLayout>,
@@ -78,6 +80,7 @@ impl Layout {
             vocab: VOCAB_SIZE,
             ple: 64,
             heads: 2,
+            producers: 2,
             positions: MAX_POSITIONS,
             window: 4,
             layers: (0_usize..4)
@@ -130,7 +133,18 @@ fn add_bytes(a: usize, b: usize) -> Result<usize, Error> {
 }
 impl<'a> Model<'a> {
     pub fn new(weights: Weights<'a>) -> Result<Self, Error> {
-        let l = Layout::witness();
+        Self::with_layout(weights, Layout::witness())
+    }
+    fn with_layout(weights: Weights<'a>, l: Layout) -> Result<Self, Error> {
+        // A bounded proposal frame must never spill to the heap during forward.
+        // Public admission still selects only the frozen witness geometry.
+        if l.producers == 0
+            || l.producers > MAX_PRODUCERS
+            || l.producers > l.layers.len()
+            || l.positions > MAX_POSITIONS
+        {
+            return Err(Error::InvalidConfig("Gemma packed producer/position bound"));
+        }
         if weights.layers.len() != l.layers.len() {
             return Err(Error::LayerCount {
                 expected: l.layers.len(),
@@ -183,7 +197,7 @@ impl<'a> Model<'a> {
                 check(v, n, "Gemma packed layer norm")?;
                 bytes = add_bytes(bytes, allocation_bytes(v.len())?)?;
             }
-            match (&w.kv, i < 2) {
+            match (&w.kv, i < l.producers) {
                 (Some(kv), true) => {
                     bytes = add_bytes(bytes, matrix(&kv.k, g.head_dim, l.hidden)?)?;
                     bytes = add_bytes(bytes, matrix(&kv.v, g.head_dim, l.hidden)?)?;
@@ -206,7 +220,13 @@ impl<'a> Model<'a> {
                 head_dim: g.head_dim,
             })
             .collect();
-        let plan = SharedKvPlan::new(&geometry, 2, l.window, l.positions, l.positions)?;
+        let plan = SharedKvPlan::new(
+            &geometry,
+            l.layers.len() - l.producers,
+            l.window,
+            l.positions,
+            l.positions,
+        )?;
         let mut unit_norm = zeros(l.max_dim())?;
         unit_norm.fill(1.);
         // Scalar fields live in LayerWeights and are counted by its capacity.
@@ -237,15 +257,19 @@ impl<'a> Model<'a> {
     }
     pub fn planned_session_bytes(&self) -> Result<usize, Error> {
         let l = &self.layout;
-        let stages = cpu::product(
-            cpu::product(l.positions, l.layers[0].head_dim + l.layers[1].head_dim)?,
-            2,
-        )?;
+        let mut stages = 0;
+        for g in &l.layers[..l.producers] {
+            stages = add_bytes(
+                stages,
+                cpu::product(cpu::product(l.positions, g.head_dim)?, 2)?,
+            )?;
+        }
         let mut bytes = std::mem::size_of::<Session<'_, '_>>();
         for n in [
             self.plan.planned_cache_bytes()? - std::mem::size_of::<Vec<WindowKvCache>>(),
             total_bytes(&Scratch::counts(l)?)?,
             allocation_bytes(stages)?,
+            cpu::product(l.producers, std::mem::size_of::<Staging>())?,
         ] {
             bytes = add_bytes(bytes, n)?;
         }
@@ -257,19 +281,21 @@ impl<'a> Model<'a> {
             return Err(Error::InvalidConfig("Gemma packed memory budget"));
         }
         let l = &self.layout;
+        let mut staging = Vec::new();
+        staging
+            .try_reserve_exact(l.producers)
+            .map_err(|_| Error::Allocation)?;
+        for g in &l.layers[..l.producers] {
+            let n = cpu::product(l.positions, g.head_dim)?;
+            staging.push(Staging {
+                k: zeros(n)?,
+                v: zeros(n)?,
+            });
+        }
         let result = Session {
             model: self,
             caches: self.plan.new_caches()?,
-            staging: [
-                Staging {
-                    k: zeros(l.positions * l.layers[0].head_dim)?,
-                    v: zeros(l.positions * l.layers[0].head_dim)?,
-                },
-                Staging {
-                    k: zeros(l.positions * l.layers[1].head_dim)?,
-                    v: zeros(l.positions * l.layers[1].head_dim)?,
-                },
-            ],
+            staging,
             scratch: Scratch::new(l)?,
             history: [0; MAX_POSITIONS],
             committed: 0,
@@ -436,7 +462,7 @@ impl Scratch {
 pub struct Session<'model, 'weights> {
     model: &'model Model<'weights>,
     caches: Vec<WindowKvCache>,
-    staging: [Staging; 2],
+    staging: Vec<Staging>,
     scratch: Scratch,
     history: [u32; MAX_POSITIONS],
     committed: usize,
@@ -454,17 +480,22 @@ impl Session<'_, '_> {
         &self.scratch.published[..self.published_rows * self.model.layout.vocab]
     }
     pub fn allocated_bytes(&self) -> Result<usize, Error> {
-        Ok(
-            std::mem::size_of::<Self>() + self.model.plan.allocated_cache_bytes(&self.caches)?
-                - std::mem::size_of::<Vec<WindowKvCache>>()
-                + total_bytes(&self.scratch.capacities())?
-                + total_bytes(&[
-                    self.staging[0].k.capacity(),
-                    self.staging[0].v.capacity(),
-                    self.staging[1].k.capacity(),
-                    self.staging[1].v.capacity(),
-                ])?,
-        )
+        let mut bytes = std::mem::size_of::<Self>();
+        for n in [
+            self.model.plan.allocated_cache_bytes(&self.caches)?
+                - std::mem::size_of::<Vec<WindowKvCache>>(),
+            total_bytes(&self.scratch.capacities())?,
+            cpu::product(self.staging.capacity(), std::mem::size_of::<Staging>())?,
+        ] {
+            bytes = add_bytes(bytes, n)?;
+        }
+        for stage in &self.staging {
+            bytes = add_bytes(
+                bytes,
+                total_bytes(&[stage.k.capacity(), stage.v.capacity()])?,
+            )?;
+        }
+        Ok(bytes)
     }
     /// Discard the committed prefix without allocating new cache/scratch owners.
     pub fn reset(&mut self) -> Result<(), Error> {

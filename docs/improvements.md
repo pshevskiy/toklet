@@ -3264,3 +3264,26 @@ See the [scope and result](gemma4-checkpoint.md) and
 Real E2B geometry/execution, tokenizer/chat/generation, Metal, quality/performance,
 phone fit and app support remain open. All existing GPU/long-rotary failures
 remain unwaived; no ABI/catalog/context limit changes.
+
+## 25 October 2026 — bounded multi-producer packed Gemma staging
+
+Replace the fixed two-owner proposal sequence with a validated private producer
+prefix and persistent session staging vector. Keep up to 15 borrowed proposals
+in an inline container through all shared consumers and the final head. All-cache
+validation precedes public KV/history/logit commit; failure preserves the prior
+prefix. Account actual staging capacity and every K/V allocation. The checked
+inline container uses 976 transient stack bytes separately from persistent memory.
+
+Three small structural tests cover 35 layers / 15 producers, routes 13/14, chunk
+agreement, physical cache slots, reset, 38 failure/retry boundaries, zero Rust
+allocations on failure/retry and 32 decode steps, independent producer bounds
+and exact budget/capacity accounting. Existing four-layer numerical fixtures,
+tolerances and allocation checks remain in force. Required Rust/default/Metal/iOS
+checks and Astra source/evidence review precede commit.
+
+See [ownership and verification](gemma-producer-staging.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma-producers-scalar-v1.json).
+The public constructor remains the frozen four-layer profile. Reused synthetic
+weights give logical accounting, not unique physical residency or E2B parity.
+Real checkpoint execution, generation, Metal, quality/performance, phone fit and
+app gates remain open; no ABI/catalog/limit changes or waived precision failures.

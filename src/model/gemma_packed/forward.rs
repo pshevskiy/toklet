@@ -1,6 +1,7 @@
 use super::*;
 use crate::cpu::{PerLayerInputShape, ProportionalRotaryShape, SpanAttentionShape};
 use crate::model::window_cache::{KvView, PreparedKv};
+use smallvec::SmallVec;
 
 fn affine_error(error: crate::mlx::affine::Error) -> Error {
     Error::InvalidConfig(error.0)
@@ -275,6 +276,12 @@ pub(super) fn run(session: &mut Session<'_, '_>, tokens: &[u32]) -> Result<(), E
     }) {
         return Err(Error::InvalidConfig("Gemma committed cache prefix"));
     }
+    if session.staging.len() != l.producers
+        || session.caches.len() != l.producers
+        || l.producers > MAX_PRODUCERS
+    {
+        return Err(Error::InvalidConfig("Gemma packed proposal frame bound"));
+    }
     let model = session.model;
     let s = &mut session.scratch;
     let h = count * l.hidden;
@@ -321,22 +328,27 @@ pub(super) fn run(session: &mut Session<'_, '_>, tokens: &[u32]) -> Result<(), E
             epsilon: EPSILON,
         },
     )?;
-    // Exact two-producer geometry keeps proposals on the stack. Borrow each
-    // persistent staging owner separately; neither can be overwritten while a
-    // later shared consumer or the all-owner commit still holds its frame.
-    let [local, global] = &mut session.staging;
-    let first = producer(0, model, &session.caches[0], local, s, count, offset)?;
-    #[cfg(test)]
-    if session.fault == Some(0) {
-        return Err(Error::InvalidConfig("injected Gemma layer failure"));
+    // Borrow each persistent stage owner once. Every producer proposal remains
+    // live until all shared consumers and the final head succeed. Admission caps
+    // this prefix at the inline capacity, so this container never spills.
+    let mut frames: SmallVec<[PreparedKv<'_>; MAX_PRODUCERS]> = SmallVec::new();
+    for (index, stage) in session.staging.iter_mut().enumerate() {
+        frames.push(producer(
+            index,
+            model,
+            &session.caches[index],
+            stage,
+            s,
+            count,
+            offset,
+        )?);
+        #[cfg(test)]
+        if session.fault == Some(index) {
+            return Err(Error::InvalidConfig("injected Gemma layer failure"));
+        }
     }
-    let second = producer(1, model, &session.caches[1], global, s, count, offset)?;
-    #[cfg(test)]
-    if session.fault == Some(1) {
-        return Err(Error::InvalidConfig("injected Gemma layer failure"));
-    }
-    let frames = [first, second];
-    for index in 2..l.layers.len() {
+    debug_assert!(!frames.spilled());
+    for index in l.producers..l.layers.len() {
         queries(index, model, s, count, offset)?;
         finish(
             index,
