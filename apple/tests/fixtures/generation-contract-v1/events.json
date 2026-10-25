@@ -1,0 +1,5 @@
+[
+  {"generation_id":"8E93D1A2-FE57-4E7B-BDC0-5C66C35A3F80","sequence":0,"kind":"text","token_count":2,"utf8_delta":"Hi "},
+  {"generation_id":"8E93D1A2-FE57-4E7B-BDC0-5C66C35A3F80","sequence":1,"kind":"text","token_count":0,"utf8_delta":"🌍"},
+  {"generation_id":"8E93D1A2-FE57-4E7B-BDC0-5C66C35A3F80","sequence":2,"kind":"terminal","token_count":1,"utf8_delta":"\n","stop_reason":"output_limit","sampled_total":3,"emitted_total":3,"committed_total":2,"pending_total":1,"session_committed_tokens":11,"session_pending_tokens":1,"replay_required":false,"terminal_flush":true}
+]

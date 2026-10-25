@@ -1,0 +1,85 @@
+{
+  "format": "toklet-mobile-generation-consumer-v1",
+  "date": "2026-10-25",
+  "status": "synthetic_consumer_foundation_checked_pending_review_not_integrated",
+  "scope": "Strict versioned Swift capability/event consumer only. No production UI/profile/ABI/Rust/native package or device change.",
+  "sources": {
+    "apple/Harness/GenerationCapabilities.swift": "71fdc65a6c07ed21613183fc4205c6dbaff71c701f2a2aab268030e27187ad4b",
+    "apple/Harness/GenerationResponse.swift": "61e7b1984ab9bc7009db02dbd790ba6ca669c1e3230271b5af3f921fed2d3254",
+    "apple/tests/swift/GenerationContractMain.swift": "a4ae9c964f87ab01a0ddb2537716d9048080042993819bfb6cb9eab16443240f",
+    "apple/tests/fixtures/generation-contract-v1/capabilities.json": "14d30a60193d7994ae816e04cc1adfaf54f424cfe114a182c8c435b8e8656a78",
+    "apple/tests/fixtures/generation-contract-v1/events.json": "de43dc0f034d392631ee7810844321c9c66f10b2d5dcb5923beeb68003d55620",
+    "docs/mobile-generation-contract.md": "2ce2dec9f8fcc00f3c29a3c9805999d46abe7f8649b8ab96a1c1ba5fe0648bbe"
+  },
+  "check_receipt": {
+    "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/consumer-check-v6/checks.json",
+    "bytes": 9917,
+    "sha256": "d6cc6c6d09de9495530137df43adcd32cdcdf4aaec738c98883cb2c70f05bce9"
+  },
+  "runner": {
+    "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/check_consumer_v1.py",
+    "sha256": "b64446ec481a231146b84af5bc0eb7c33937f98c61cd99e2b3da7f51c8758799"
+  },
+  "executed_checker": {
+    "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/consumer-check-v6/consumer-check",
+    "sha256": "f72e02549a73d464316470428646b2a40809d99fad7bb31fef8ead0c901b92e9"
+  },
+  "platform_checks": {
+    "strict_swift6_optimized_mac_execution": true,
+    "strict_ios_module_compile": true,
+    "strict_simulator_module_compile": true,
+    "physical_device_execution": false
+  },
+  "regressions": [
+    "separate raw/chat availability and immutable identity",
+    "actual prompt plus requested output independent of maxima sum",
+    "duplicate keys/modes and Unicode-escaped key aliases",
+    "pre-Foundation exact unsigned numeric grammar including near-integer rounding andUInt64 maximum",
+    "bounded JSON cardinality, decoded strings and aggregate strings",
+    "UUID/sequence ownership, zero-token text drain and terminal seal",
+    "atomic malformed/stale/counter rejection preserves text/cursor/state",
+    "request-relative generated counters and separate session/replay state",
+    "replay prefix cannot exceed prompt plus sampled",
+    "sampling requires complete prompt commitment",
+    "admitted hidden stop IDs, early stop and failed/cancelled unemitted samples",
+    "fixed response storage and exact escaped-text reassembly"
+  ],
+  "synthetic_result": {
+    "owned_utf8_capacity": 8404960,
+    "passed": true,
+    "physical_device_qualified": false,
+    "real_generation_tested": false,
+    "storage_capacity_unchanged": true,
+    "synthetic_decoded_bytes": 4194304,
+    "synthetic_emitted_count": 131072,
+    "synthetic_only": true
+  },
+  "mac_standalone_observations_bytes": {
+    "maximum resident set size": 73515008,
+    "peak memory footprint": 67420664
+  },
+  "measurement_limits": "Uncontrolled standalone synthetic Mac consumer; no model, tokenizer, native cursor, UI/history encoding or iPhone memory qualification. Array capacity is8404960 rather than the8388608 requested logical bytes; allocator and complete process owners need independent admission.",
+  "review_history": "Initial packet70de269f was blocked by three counter/parser findings. The current sources include their regressions and fresh same-closure builds/execution/memory evidence. Earlier v2-v5 trials and old memory run remain retained and do not qualify these current sources.",
+  "remaining_gates": [
+    "matching reviewed native capability publisher and bounded cursor/lifetime/admission",
+    "Gemma real tokenizer/formatted generation, resident Metal and numerical/quality gates",
+    "concrete graph with131072 output plus actual prompt/history capacity",
+    "complete app/process memory accounting including text/escaping/copy overlap",
+    "new immutable iOS package and signed app followed by real iPhone generation/lifecycle/UI tests"
+  ],
+  "actual_requested_reply_generated": false,
+  "gemma4_qualified": false,
+  "single_reply_131072_qualified": false,
+  "iphone_installed_or_tested_by_this_task": false,
+  "unchanged_passing_app": {
+    "source_commit": "0dffb162415d58478d53cafd847633078032d9ff",
+    "receipt": {
+      "path": "benchmarks/results/2026-10-25-mobile-qwen3-phone-v1.json",
+      "sha256": "a17dfd229f99bd96b598cd25ac9cf241c9c6dedafa3fd668da32f5cd90d92256"
+    },
+    "rollback_metadata": {
+      "path": "artifacts/mobile-expanded-models-2026-10-24-v1/passing-baseline.json",
+      "sha256": "2062442460c6d9b7cc3e34aa4ed17076ee278aa812131c5116f580549f4551d3"
+    }
+  }
+}

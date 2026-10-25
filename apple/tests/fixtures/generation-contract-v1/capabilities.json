@@ -1,0 +1,23 @@
+{
+  "contract_version": 1,
+  "model_identity": {
+    "repository": "synthetic/consumer-fixture",
+    "revision": "0000000000000000000000000000000000000000",
+    "config_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "tokenizer_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "modes": [
+    {"mode": "raw", "runnable": false, "reason": "Synthetic fixture; no real raw model is admitted."},
+    {
+      "mode": "chat",
+      "runnable": true,
+      "total_context_tokens": 262144,
+      "max_prompt_tokens": 262144,
+      "max_output_tokens": 131072,
+      "max_input_bytes": 8388608,
+      "max_decoded_bytes": 8388608,
+      "tokenizer_allowance_bytes": 268435456,
+      "event_limits": {"max_batch_tokens": 128, "max_batch_utf8_bytes": 4096, "max_fallback_tokens": 131072}
+    }
+  ]
+}
