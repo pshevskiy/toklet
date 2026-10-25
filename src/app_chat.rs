@@ -9,6 +9,7 @@ use std::{
 };
 use tokenizers::Tokenizer;
 
+pub mod gemma4;
 pub mod stream;
 
 pub const MAX_TEXT: usize = 64 * 1024;

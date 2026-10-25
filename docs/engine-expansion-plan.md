@@ -329,3 +329,13 @@ and selected-artifact stops1/106/50 are explicit. Seven offline methods and
 separate1GiB reference-process checks pass. Native text-profile implementation
 and formatted model continuation are next; no app capability, streaming, G3,
 numerical/source, quality/performance, device or long-output gate is closed.
+
+The [dedicated native basic-text codec](gemma4-native-codec.md) now matches all97
+frozen records and285 prefix decodes, without adding an app Profile or numerical
+capability. Same-buffer pinned loading, duplicate-safe rendering and preallocated
+decode-byte admission pass offline and real-tokenizer checks. All307 CPU/329
+Metal-feature tests, both iOS targets and the release codec checks pass; the
+isolated text process fits its separate1GiB allowance. Formatted model execution
+and append-only text ownership are next. Numerical/source gaps, full G3, Metal,
+quality/performance, combined/mobile admission, app and long-output gates remain
+open, with the32-position numerical limit unchanged.

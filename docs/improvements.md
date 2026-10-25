@@ -3524,3 +3524,36 @@ and the [receipt](../benchmarks/results/2026-10-25-gemma4-text-codec-reference-v
 Native text/streaming, formatted continuation, full G3 and all earlier numerical,
 source, Metal, quality/performance, device/app and131072-output gates remain
 open. No ABI/catalog/position-limit changes.
+
+## 25 October 2026 — dedicated native Gemma4 text codec
+
+Add a small concrete text module outside kernels and existing app profiles.
+Admit a conservative1GiB codec allowance before any asset access; authenticate
+small profile files first and hash/parse the same captured tokenizer buffer.
+Count tokenizer construction overlap, persistent tables, metadata, precomputed
+token lengths and bounded operation buffers within that allowance. Caller-held
+responses/history and numerical allocations remain separate owners.
+
+Render typed duplicate/unknown-safe basic messages/options with exact manual
+turn layout, reserved-literal/C0 rejection, canonical UTF-8 size and exact output
+admission. Keep raw control-token observations separate from Chat rejection.
+Validate IDs and conservative decode bytes before tokenizer output allocation,
+using cold u16 lengths rather than repeated vocabulary clones. Separate raw,
+rendered and decoded64KiB bounds and the diagnostic codec ID cap from numerical
+position/output admission. Expose selected stops explicitly without changing
+generation policy. No thinking stripper or append-only stream is added.
+
+Five offline methods and all97 real-tokenizer records/285 prefix observations
+pass against the frozen witness. Formatting, strict checks,307 CPU/329
+Metal-feature tests, both iOS targets, release example and five release methods
+pass. Retain the initial strict-style failure with no test acceptance credit.
+Three actual-controller mutations of complete inventories keep parity false.
+On the named Mac, resident/physical peaks515,948,544/488,866,560 bytes fit the
+separate1GiB codec gate; the1.73-second combined observation is not a benchmark.
+
+See [ownership, bounds and parity](gemma4-native-codec.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-native-codec-v1.json).
+Formatted model continuation, text streaming, full G3, earlier numerical/source
+gaps, Metal, quality/performance, combined/mobile admission, app support and
+131072 output tokens remain open. No Profile/ABI/catalog or numerical-limit
+changes.

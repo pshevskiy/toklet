@@ -14,7 +14,7 @@ bounded to64KiB and every content string must remain nonempty after trimming.
 Only `enable_thinking=false, add_generation_prompt=true` is admitted. System,
 developer, tool, reasoning, multimodal/content-array and assistant-continuation
 options are rejected. All24 special literals are rejected inside content, as
-are ASCII controls other than tab, carriage return and newline.
+are C0 controls below U+0020 other than tab, carriage return and newline.
 
 The exact plain generation prefix is:
 
