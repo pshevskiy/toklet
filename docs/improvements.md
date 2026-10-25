@@ -3313,3 +3313,34 @@ See [precision, resources and scope](affine4-tiled-reference.md) and the
 [receipt](../benchmarks/results/2026-10-25-gemma4-affine-tiles-v1.json).
 Full E2B graph, tokenizer/chat/generation, Metal, quality/performance, phone fit
 and app support remain open; no ABI/catalog/limit changes or waived failures.
+
+
+## 25 October 2026 — complete short E2B mathematical reference
+
+Implement independent bounded text-graph math over file-backed packed matrices,
+with named tiny/E2B geometry, explicit precision boundaries, independently
+computed rotary angles, stable reductions, and bounded softcap temporaries.
+Preserve all180 frozen tiny-state comparisons while streaming real states
+instead of retaining an expanded model or complete live graph.
+
+Eight graph and eight established affine methods pass. The actual immutable E2B
+checkpoint produces713 states per precision contract for four raw input IDs.
+All1,426 changed-final-token prefix checks match exact typed bytes. The collector
+independently replays713 cross-precision comparisons using scalar arithmetic;
+five arrays reject57 values, with maximum error-to-bound fraction1.54940274476271.
+Retain both contracts, full raw observations and the compact68,448-byte probe
+fixture. No tolerance or quality gate changes.
+
+The successful owned reference process reports270,467,072 bytes maximum resident
+memory and101,827,400 bytes peak physical footprint under its separate512MiB
+allowance. Admit the cold dependency/native closure before NumPy import; retain
+first-captured output buffers and verify source/model/binary endpoint guards.
+Keep the early per-contract count assertion failure, contaminated source-guard
+attempt and first real controller variable-shadowing failure unaccepted. Test
+the actual corrected verification block and final guard before repeating it.
+
+See [arithmetic, failures and scope](gemma4-text-math.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-text-math-v1.json).
+Rust engine/tests/examples stay unchanged fromcb2aeec. Native E2B execution,
+original-BF16/source qualification, generation, Metal, quality/performance,
+iPhone fit, app eligibility and131072-output-token support remain open.

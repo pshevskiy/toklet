@@ -188,3 +188,14 @@ projection gates pass within a separate256MiB reference-process allowance.
 This validates the streaming reference mechanism, without full E2B graph or
 original-BF16/source qualification. Complete real-shape token-to-logit witnesses
 and the named executable checkpoint adapter remain next.
+
+
+The [complete four-token E2B mathematical reference](gemma4-text-math.md) now
+streams all713 states in each of two precision contracts over the actual pinned
+checkpoint. Every1,426 future-prefix comparison preserves exact typed bytes.
+Independent scalar replay verifies complete cross-precision observations and
+compact probes within a separate512MiB reference-process allowance. Five arrays
+reject57 cross-precision values under unchanged tolerances; that gap remains
+explicit. This advances real-shape reference evidence only. The named native
+adapter, checkpoint numerical parity, generation, Metal, quality, device and app
+qualification remain open, with all earlier precision failures unwaived.

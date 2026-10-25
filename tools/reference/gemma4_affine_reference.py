@@ -98,11 +98,11 @@ def matrices(stream):
     return result
 
 
-def runtime_context(manifest_path, manifest_sha, native_path, native_sha):
+def runtime_context(manifest_path, manifest_sha, native_path, native_sha, *, extra_sources=()):
     """Authenticate the cold runtime before NumPy import, then inspect origins."""
     if not sys.flags.no_user_site:
         raise ValueError('User-site imports must be disabled')
-    selected=[Path(__file__).resolve(),Path(tiles.__file__).resolve()]
+    selected=[Path(__file__).resolve(),Path(tiles.__file__).resolve(),*(Path(q).resolve() for q in extra_sources)]
     admitted=runtime.admit_runtime(manifest_path,manifest_sha,selected)
     raw=runtime.captured(native_path,2*1024**2,runtime.sha(native_sha))
     native=json.loads(raw,object_pairs_hook=runtime.json_unique)
