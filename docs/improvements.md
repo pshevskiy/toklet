@@ -4296,3 +4296,34 @@ process caps. Source/code, checked owner, results, freeze and publication receiv
 Astra review before commit. Engine/test/shader/protected binaries stay unchanged;
 full-head execution, whole graph, historical source/precision discrepancies,
 performance, app/phone and long-output gates remain open.
+
+## 2026-10-26 — original full tied head on Metal
+
+Hypothesis: the reviewed resident chunk owner can execute the actual 262144-row
+Gemma4 E2B tied head within an aggregate workload budget while preserving original
+packed bytes, exact reuse and transactional publication. Added an explicit ignored
+[full-head diagnostic](gemma-real-head.md), separately labeled native ordered
+FP64-to-FP32 rows, complete independent replay and actual-capture mutation checks.
+All 16 chunks remain resident and execute sequentially; original CPU packed
+source vectors are dropped after upload and scalar reference. Large-buffer hashes
+stream through 4 KiB stack scratch. Safely completed child outputs are retained
+separately from caller arrays, with the original outcome published before raw
+writes and no access to unfinished commands.
+
+Retain decision: fixed four-token standalone head qualification accepted on M1
+Pro. Seven calls, 123 complete arrays and 37748736 raw bytes pass replay; 1048576
+scalar/math and 8388608 GPU/reference comparisons have zero difference against
+the rounded FP32 references. Repeat/part/resume are bitwise stable. All 24
+mutation/reader tests pass, including coherent wrong values, tolerated adjacent
+reuse drift, source/buffer/guard/staging corruption and missing outcomes. Owner
+policy is 235543088 bytes; complete actual-capacity workload policy 572937540
+bytes. Native maximum RSS / physical footprint 498171904 / 497746832 bytes stays
+below 1 GiB; replay/regression stay below separate 512 MiB caps. These are
+diagnostic process observations, not inference performance or full-model fit.
+
+Formatting, both strict configurations, 351 CPU / 382 Metal-feature tests, iOS
+device/simulator checks and optimized writer/row-view checks pass. Astra reviews
+source, checked controllers/replay, completed results and final publication before
+commit. Production operators/shaders/admission and prior tiny test bodies remain
+unchanged. Full graph, large table gather, prior precision/source failures, quality,
+representative performance, phone/app and long-output gates remain open.

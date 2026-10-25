@@ -538,3 +538,18 @@ pass. This verifies extraction of an existing numerical reference without
 reevaluating the graph or executing an engine/GPU. Original source/precision
 failures remain unwaived. Actual full-head residency and execution, complete
 graph and later device/app/performance/long-output gates remain open.
+
+## G4 complete real tied-head qualification
+
+The [original full tied head](gemma-real-head.md) now passes seven standalone
+Mac GPU calls with all sixteen packed chunks resident together, using the frozen
+complete four-token reference. All 1048576 scalar/mathematical and 8388608 dual
+GPU/reference comparisons pass with zero difference against rounded FP32 arrays.
+Complete device outputs are retained separately from caller results; all 96
+allocation/buffer identities, guards, inactive capacity and parent/chunk staging
+pass independent replay. Aggregate owner/workload policies and actual process
+peaks pass; original CPU packed sources are dropped before reuse. All 24
+mutation/reader tests and required source/iOS/optimized checks pass. This closes
+the fixed standalone head boundary only. It does not close G4, large table gather,
+resident graph, historical source/precision discrepancies, performance, phone/app
+or 131072-output-plus-nonempty-prompt gates.

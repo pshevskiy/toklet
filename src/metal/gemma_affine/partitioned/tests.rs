@@ -3,6 +3,7 @@ use crate as engine;
 use sha2::Digest;
 #[path = "../../../../tests/common/gemma_table_fixture.rs"]
 mod fixture;
+mod head;
 
 #[test]
 fn aggregate_plan_counts_padding_scratch_and_owner_slots_without_gpu() {

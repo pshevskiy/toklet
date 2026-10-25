@@ -585,3 +585,11 @@ all four-token input/output values before native full-head qualification. Two
 identical captures, independent byte replay and 20 mutation/retention tests pass.
 This is extraction integrity of the accepted mathematical graph, not a new
 numerical evaluation or native/GPU/model/device capability.
+
+The [complete real Gemma tied head](gemma-real-head.md) now passes fixed four-token
+Metal qualification on M1 Pro with all 16 chunks resident, complete dual-reference
+output checks, separate device/caller capture, aggregate memory policy and
+bitwise repeat/partition/resume. The 24 mutation/reader tests and required source
+checks pass. This is a standalone operator boundary, with whole graph, large
+table gather, source/precision resolution, performance, app/phone and long-output
+qualification still open. No new architecture or download eligibility is granted.

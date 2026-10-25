@@ -83,3 +83,13 @@ discrepancies, representative generation performance, app and physical iPhone
 qualification, and 131072 output tokens plus a nonempty prompt remain open.
 No historical source or precision rejection is waived and no app capability or
 context limit changes.
+
+## Follow-up: complete real tied head
+
+The [fixed four-token real-head diagnostic](gemma-real-head.md) now qualifies
+all sixteen resident chunks of the original 262144-row tied head on M1 Pro.
+Complete output/dual-reference gates, bitwise repeated/partitioned reuse,
+original-buffer digests, aggregate workload accounting and CPU-source release
+pass. This extends actual head evidence beyond the earlier tiny task; large
+per-layer table gather, whole graph, source/quality/performance and app/phone
+qualification remain open.
