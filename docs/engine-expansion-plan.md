@@ -402,3 +402,13 @@ Mac cold load checks all 540 views and actual store/model identity without forwa
 execution; its measured process fits 6 GiB. This is content binding only. Trusted
 repository/tokenizer pairing, native capabilities/ABI/app integration and the
 remaining G2/G3/G4, quality/performance, phone and long-output gates stay open.
+
+## Consumed-byte identity reference
+
+The [Smol range witness](smol-load-identity.md) provides maintained independent
+offline producer/replay tools and exact frozen metadata for a later qualified
+native loader. Fresh relocated captures/replays and 28 synthetic methods pass;
+694 ranges and repeated tied-weight reads are checked without duplicating the
+checkpoint. Loader publication, trusted profile/tokenizer binding and native
+capability/app integration remain separate reviewed tasks. No inference or
+eligibility change is granted by this reference.

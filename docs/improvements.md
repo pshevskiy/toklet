@@ -3763,3 +3763,26 @@ Content evidence grants no repository provenance, tokenizer pairing, live
 admission or app capability. Full G3/quality, earlier precision/source/GPU/rotary
 gaps, resident Metal/performance, native ABI/app, phone and 131072-output gates
 remain open, with no catalog/profile/ABI/limit change.
+
+## 25 October 2026 — maintained Smol consumed-byte witnesses
+
+Add separate offline producer/replay tools and frozen exact metadata/range
+witnesses for the pinned eight-bit SmolLM2 checkpoint. Compute whole-container
+and per-range digests from the same sequentially consumed chunks; independently
+reconstruct coverage and reverse-order reads without importing the producer.
+This supplies a reference for later native load-time identity, including six
+repeated tied-weight reads, rather than inferring identity from a model path.
+
+A fresh relocated execution passes twelve portable and sixteen runner methods,
+two captures and two independent replays. All 694 ranges cover 142,955,136 payload
+bytes; the five generated data files equal the frozen fixture byte for byte.
+All six children exit successfully and are reaped/drained. Completed maximum RSS
+is 32,849,920 bytes within 128 MiB; physical footprint is separately recorded.
+The first rejected runner and preliminary newline-check failure remain uncredited.
+Interpreter/scripts are pinned without a full standard-library/native closure.
+
+See [design, evidence and limits](smol-load-identity.md) and the
+[receipt](../benchmarks/results/2026-10-25-smol-load-identity-v1.json).
+No loader, ABI, capability, app, phone, Gemma4 or long-reply qualification changes.
+The next producer boundary still requires hashing the bytes actually converted
+or uploaded before publishing a private immutable loaded-model identity.

@@ -1,0 +1,1998 @@
+{
+  "format": "toklet-smol-load-identity-v1",
+  "passed": true,
+  "scope": "Maintained offline consumed-byte reference, independent range replay and exact metadata for one pinned Smol checkpoint; no native-loader or inference grant",
+  "source_parent_revision": "103a2596c00f82ad095bcf4e92dad1c28e2cdf06",
+  "bindings": {
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/publication-packet-v1.json": "f0ce86cdd291345257d8825eb2746a7cc6b10a92822d6dcbb12959f60380d6fa",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/final-review-packet-v1.json": "07b455d678a21af301cf62e26612659eaf84f68d5d6f157b791523c6facd707d",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/controller-review-v1.json": "fa7a88e3674b81374a9aa1953128a5e8510160dbf325d6c84eb1aff19c21f8c3",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/run-receipt.json": "9fb520b14b9da3a8ac92618ffa7446eaf1a661f58dcd5f88d0b96900fa71f6dc",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/completed-relocated-summary-v1.json": "dd34a865e45234aaf8d29c0b8db9d9322475311734d5b63ae91f2cf03561e0f7",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/proposed-public-receipt-v2.json": "6f45b832f38a3ab733217bb1a9aa8a82fa638619849ef141fb3aae5b47243872",
+    "tests/fixtures/smol-load-identity-v1/config.json": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73",
+    "tests/fixtures/smol-load-identity-v1/header.bin": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8",
+    "tests/fixtures/smol-load-identity-v1/index.json": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44",
+    "tests/fixtures/smol-load-identity-v1/manifest.json": "fb3ecffb8f61f916fa4b1bb5189886be6d07204d057b1180ca41976fdd96a0ff",
+    "tests/fixtures/smol-load-identity-v1/prefix.bin": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625",
+    "tests/fixtures/smol-load-identity-v1/witness.json": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680",
+    "tools/experiments/smol_range_replay.py": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83",
+    "tools/experiments/test_smol_range_witness.py": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd",
+    "tools/reference/smol_range_witness.py": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/admitted-packet.json": "fa7a88e3674b81374a9aa1953128a5e8510160dbf325d6c84eb1aff19c21f8c3",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/config.json": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/header.bin": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/index.json": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/prefix.bin": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/producer-receipt.json": "feb160971b7d0156cc6b7c79bb624b0e60e275e05eb5843151440796b43f7c25",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/witness.json": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/config.json": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/header.bin": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/index.json": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/prefix.bin": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/producer-receipt.json": "5bb75c188d49a5537d1f4b0c137200bc185360d891bad2871bf0a349f4a9a197",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/witness.json": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-a.stderr": "16069beb805ce8dc3333837d6ecaa592a1070eb21c4af0bcbdc195e153bd5cd6",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-a.stdout": "f49f9baad31d22dc7789346cef7915cf9f7b573c0bd40aae43244dc593d3fafc",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-b.stderr": "4613349947788b2e61ba0d935b7cff66f0a867a37b27ec00a959b026795d575c",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-b.stdout": "a22ba6ecf6c9ea8cd67eb18cbe42a4649b91a01b5cbdf2a92580593845a64817",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-a.stderr": "d454f7fe1d18ff83b8a4c5c4338d502cbdbc16be5c1731913f80ba7dcd2ee679",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-a.stdout": "d269c9abfc0f81b14b41b6efe06e84a6ccecb7685e6659d3d93e05d05582a31b",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-b.stderr": "a444f7e29057c536a24f412749567eb88ae8ad8362ed8428489aa9050f3a647c",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-b.stdout": "21939d985449096aee0619c517e3cc31c017ca10a0ee0ff867edd4455e32a26e",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-config.json": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-header.bin": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-index.json": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-prefix.bin": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-producer-receipt.json": "feb160971b7d0156cc6b7c79bb624b0e60e275e05eb5843151440796b43f7c25",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-stderr": "16069beb805ce8dc3333837d6ecaa592a1070eb21c4af0bcbdc195e153bd5cd6",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-stdout": "f49f9baad31d22dc7789346cef7915cf9f7b573c0bd40aae43244dc593d3fafc",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-witness.json": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-config.json": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-header.bin": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-index.json": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-prefix.bin": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-producer-receipt.json": "5bb75c188d49a5537d1f4b0c137200bc185360d891bad2871bf0a349f4a9a197",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-stderr": "4613349947788b2e61ba0d935b7cff66f0a867a37b27ec00a959b026795d575c",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-stdout": "a22ba6ecf6c9ea8cd67eb18cbe42a4649b91a01b5cbdf2a92580593845a64817",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-witness.json": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-a-stderr": "d454f7fe1d18ff83b8a4c5c4338d502cbdbc16be5c1731913f80ba7dcd2ee679",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-a-stdout": "d269c9abfc0f81b14b41b6efe06e84a6ccecb7685e6659d3d93e05d05582a31b",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-b-stderr": "a444f7e29057c536a24f412749567eb88ae8ad8362ed8428489aa9050f3a647c",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-b-stdout": "21939d985449096aee0619c517e3cc31c017ca10a0ee0ff867edd4455e32a26e",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/runner-regressions-stderr": "174a6377665a86869285a7c92bf9ff08f194883bca4ebd20db26e4a74e845e4b",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/runner-regressions-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/synthetic-stderr": "dad8bea4efaa8af4046cff51b0bd3e6f73f7560718afbce14e6061f106f63e24",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/synthetic-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/runner-regressions.stderr": "174a6377665a86869285a7c92bf9ff08f194883bca4ebd20db26e4a74e845e4b",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/runner-regressions.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/synthetic.stderr": "dad8bea4efaa8af4046cff51b0bd3e6f73f7560718afbce14e6061f106f63e24",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/synthetic.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/README.md": "5295f0fe405815c02e774acecb03106732044d714ec41032da318043659cc699",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/approved-source-packet.json": "07b455d678a21af301cf62e26612659eaf84f68d5d6f157b791523c6facd707d",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/owned.py": "f4e3ad12cc9c2604bf8b454cd9e8c30dff3f3654704797c2e06d3ffef6df6dc9",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/preflight.py": "044d8cb6e32cfc7d76dcec8b25b0ffba0838d62315a8af35dd90814626cbe957",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/run_reviewed.py": "62f81fe1c07a81a911bbf3556691ddae36ad54fb6edf39512aee40c2efbc123d",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/test_runner.py": "5a591e1d134f3617757163859d7473efb75fee70a4e77d34c2f1ef0811bfd65a",
+    "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12": "a7f5b535d61d1c7326824204ac80f045a97a652abb154421e2c74fcc365a3539",
+    "/usr/bin/time": "e1e98e68fd988f353cc51842f5a576bc2cb4c341ae24fd2ca4f625f33b38f23a",
+    "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/config.json": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73",
+    "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/model.safetensors": "ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c",
+    "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/model.safetensors.index.json": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44",
+    "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/special_tokens_map.json": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52",
+    "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/tokenizer.json": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7",
+    "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/tokenizer_config.json": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/produce.py": "a216249ed7337527388f280f3a6ac98966418602c51ee0c65b28ed438ed74df3",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check-v2/produce.py.relocation.diff": "b7aaaa3e8d54354d5e7397755046cd89eca93d5bb622b0667b0c42f316f816ac",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/replay.py": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check-v2/replay.py.relocation.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/test_prototype.py": "c1c890952f97ebece19e40c38833f3e576dcac791ed7dbd46bc66efaf94d4cfe",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check-v2/test_prototype.py.relocation.diff": "d4cf93cd87f7f2ed87129cf37becffe34a4008a2d562c513a2da983baa2a8f02",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/config.json": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/header.bin": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/index.json": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/prefix.bin": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/witness.json": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/owned.py": "f4e3ad12cc9c2604bf8b454cd9e8c30dff3f3654704797c2e06d3ffef6df6dc9",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/owned.py.adaptation.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/run_reviewed.py": "c173c69ea73fd016e58d2cdb2c014d3bbc79eda33abd65856d24c347af8d0ad4",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/run_reviewed.py.adaptation.diff": "0d77d167271c4009b498a890142b81905b7189209ce3fd93a726b04fcb96beb7",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/test_runner.py": "e4131b506bf6f501e591accbfd1a138ff1c48c21069a1c7100be8df36940f77c",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/test_runner.py.adaptation.diff": "ed0f05cffcbddc1419cb7ec64e7d379349a280030e4d6abacc193db9ddb0212d",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/preflight.py": "bc2906c6d0e89134dbfae247e475910b64fd145f0a7ce004e00d88b8b28cc1af",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/preflight.py.adaptation.diff": "3b472401b0c334164ba4ceb88f15c275aebf7301b591f7d6ffede919992fd718",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check-v2/checks.json": "6fe82371959af72dac87c175b0e4393b49034f9c4859a6a7ff622006dbd62ef3",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check_tracked_v2.py": "ce9c42b0d02da141bd5b9dd09606ab271e1854e78d2bbb911551dbbb8097a8f3",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/preflight-v1/checks.json": "694493869202484a12d8cf02093af5e463bfa1b4b62d46c68f374929d69674d6",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/run-receipt.json": "98181583de08048af962e6cb1e97359a28aafdff8b3b3dcd52cad0432f46c5a1",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/completed-extraction-summary-v1.json": "1902ea7347c2d83d3e1051600b254a9d1b6e8d54fab07685eae046e39517b01c",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v1/review-v1.json": "10a89ec23cda0198050956f080a4b8117bf78dddebb27f9e044feb66e82985b1",
+    "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/attempt1-failure.json": "478bd42d37871797f3d0114483189a4b9e428f4c4e116c28b048e974432a961c",
+    "artifacts/m8-smol-load-identity-publication-v1/collect-path-draft.py": "c7db51eaa53e2f18511b5f9febb6e20c640aeb8967dbca5b4c505c9c708ad392",
+    "artifacts/m8-smol-load-identity-publication-v1/collector-path-failure-note.json": "775b306c3fcd3385ecdc6105857700ce5175a82b31f41c2ea3b8f68075fc9ec2",
+    "artifacts/m8-smol-load-identity-publication-v1/collect.py": "b7598291f9bd98e3c9a0c6d40ec8543c9a9e85995315faabf2cf7f286ef56ac4",
+    "artifacts/m8-smol-load-identity-publication-v1/receipt-draft.json": "87cb46f834ccb53da4e10a7c729377a2f32ce8cbc91f7c6dfb69fbd25a8f06d1",
+    "docs/smol-load-identity.md": "bf38f068ac9fb496a5ffd67f31908249dccdbaf58c8fb41d51994ab9a5a915b7",
+    "docs/gemma4-implementation-plan.md": "2db84ba9bcaa8d9490769d0d2909a0bc0f8b619ca24eacc041b3de0a11c022a1",
+    "docs/engine-expansion-plan.md": "2ad4df104bc42ddfe3696bcf3b45e4ea618f862f74c689aff7515ab58a8cc834",
+    "docs/improvements.md": "75f2581663ba219623ce99213d7bcc893e813a7bae420884de30a7454317eef9",
+    "artifacts/m8-smol-load-identity-publication-v2/collect.py": "98bfbacf44d08b6c4d6fcaf72dfecf275890309a114c9a437cc526cf0ce9aae3"
+  },
+  "source_files": {
+    "tests/fixtures/smol-load-identity-v1/config.json": {
+      "bytes": 1097,
+      "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+    },
+    "tests/fixtures/smol-load-identity-v1/header.bin": {
+      "bytes": 75257,
+      "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+    },
+    "tests/fixtures/smol-load-identity-v1/index.json": {
+      "bytes": 48979,
+      "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+    },
+    "tests/fixtures/smol-load-identity-v1/manifest.json": {
+      "bytes": 3908,
+      "sha256": "fb3ecffb8f61f916fa4b1bb5189886be6d07204d057b1180ca41976fdd96a0ff"
+    },
+    "tests/fixtures/smol-load-identity-v1/prefix.bin": {
+      "bytes": 8,
+      "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+    },
+    "tests/fixtures/smol-load-identity-v1/witness.json": {
+      "bytes": 294233,
+      "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+    },
+    "tools/experiments/smol_range_replay.py": {
+      "bytes": 13735,
+      "sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83"
+    },
+    "tools/experiments/test_smol_range_witness.py": {
+      "bytes": 10618,
+      "sha256": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd"
+    },
+    "tools/reference/smol_range_witness.py": {
+      "bytes": 12872,
+      "sha256": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f"
+    }
+  },
+  "source_review": {
+    "actual_relocated_extraction_performed": false,
+    "checks": {
+      "check_controller": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check_tracked_v2.py",
+      "check_controller_sha256": "ce9c42b0d02da141bd5b9dd09606ab271e1854e78d2bbb911551dbbb8097a8f3",
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check-v2/checks.json",
+      "sha256": "6fe82371959af72dac87c175b0e4393b49034f9c4859a6a7ff622006dbd62ef3"
+    },
+    "format": "toklet-smol-nine-file-tracked-review-v1",
+    "frozen_source_pins": {
+      "tests/fixtures/smol-load-identity-v1/config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "tests/fixtures/smol-load-identity-v1/header.bin": {
+        "bytes": 75257,
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      "tests/fixtures/smol-load-identity-v1/index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "tests/fixtures/smol-load-identity-v1/manifest.json": {
+        "bytes": 3908,
+        "sha256": "fb3ecffb8f61f916fa4b1bb5189886be6d07204d057b1180ca41976fdd96a0ff"
+      },
+      "tests/fixtures/smol-load-identity-v1/prefix.bin": {
+        "bytes": 8,
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      "tests/fixtures/smol-load-identity-v1/witness.json": {
+        "bytes": 294233,
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      },
+      "tools/experiments/smol_range_replay.py": {
+        "bytes": 13735,
+        "sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83"
+      },
+      "tools/experiments/test_smol_range_witness.py": {
+        "bytes": 10618,
+        "sha256": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd"
+      },
+      "tools/reference/smol_range_witness.py": {
+        "bytes": 12872,
+        "sha256": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f"
+      }
+    },
+    "frozen_source_snapshot": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check-v2/source-snapshot",
+    "held": [
+      "all nine file edits after freeze",
+      "Rust/header/UI/loader/FFI/capabilities",
+      "shared docs and public receipt/report owned by root",
+      "index/staging/commit/publication",
+      "app/phone/install/network"
+    ],
+    "history": {
+      "accepted_artifact_packet_sha256": "77eea68c6aba9809b5f0dc2b079f6864385f1426b636c81074c70cee780e4fb6",
+      "accepted_artifact_run_receipt_sha256": "98181583de08048af962e6cb1e97359a28aafdff8b3b3dcd52cad0432f46c5a1",
+      "prior_uncredited_whitespace_check": "attempt1-failure.json; exact raw config/index lack final newline and were correctly preserved unchanged"
+    },
+    "manifest_origin": "Authored content-only provenance from accepted old model inventory/captured bytes and exact historical+relocated source hashes; historical execution does not attest relocated source",
+    "new_manifest": "tests/fixtures/smol-load-identity-v1/manifest.json",
+    "next": "Root guards/reviews exact9files; root coordinates Astra and a reviewed actual relocated execution controller before any extraction or selective commit.",
+    "proposed_receipt": {
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/proposed-receipt-v1.json",
+      "sha256": "1b0400be91f187dfa9e8c73019386083426ff3b45fef49b8f1291909be5a277a"
+    },
+    "relocation_semantics_changed": true,
+    "required_before_relocated_execution_credit": "Root-coordinated Astra approval, then fresh actual extraction/replay with these exact tracked source bytes and owned guarded runtime. Never credit old artifact execution to relocated files.",
+    "source_origins": [
+      {
+        "byte_equal": false,
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/produce.py",
+        "origin_sha256": "a216249ed7337527388f280f3a6ac98966418602c51ee0c65b28ed438ed74df3",
+        "target": "tools/reference/smol_range_witness.py",
+        "target_sha256": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f",
+        "unified_diff": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check-v2/produce.py.relocation.diff",
+        "unified_diff_sha256": "b7aaaa3e8d54354d5e7397755046cd89eca93d5bb622b0667b0c42f316f816ac"
+      },
+      {
+        "byte_equal": true,
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/replay.py",
+        "origin_sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83",
+        "target": "tools/experiments/smol_range_replay.py",
+        "target_sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83",
+        "unified_diff": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check-v2/replay.py.relocation.diff",
+        "unified_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "byte_equal": false,
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/test_prototype.py",
+        "origin_sha256": "c1c890952f97ebece19e40c38833f3e576dcac791ed7dbd46bc66efaf94d4cfe",
+        "target": "tools/experiments/test_smol_range_witness.py",
+        "target_sha256": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd",
+        "unified_diff": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/check-v2/test_prototype.py.relocation.diff",
+        "unified_diff_sha256": "d4cf93cd87f7f2ed87129cf37becffe34a4008a2d562c513a2da983baa2a8f02"
+      },
+      {
+        "byte_equal": true,
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/config.json",
+        "origin_sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73",
+        "target": "tests/fixtures/smol-load-identity-v1/config.json",
+        "target_sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      {
+        "byte_equal": true,
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/header.bin",
+        "origin_sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8",
+        "target": "tests/fixtures/smol-load-identity-v1/header.bin",
+        "target_sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      {
+        "byte_equal": true,
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/index.json",
+        "origin_sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44",
+        "target": "tests/fixtures/smol-load-identity-v1/index.json",
+        "target_sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      {
+        "byte_equal": true,
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/prefix.bin",
+        "origin_sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625",
+        "target": "tests/fixtures/smol-load-identity-v1/prefix.bin",
+        "target_sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      {
+        "byte_equal": true,
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/capture-a/witness.json",
+        "origin_sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680",
+        "target": "tests/fixtures/smol-load-identity-v1/witness.json",
+        "target_sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      }
+    ],
+    "status": "Nine files FROZEN for root/Astra source review; no further edits until root requests",
+    "workspace_basis_commit": "103a2596c00f82ad095bcf4e92dad1c28e2cdf06"
+  },
+  "controller_review": {
+    "actual_relocated_execution_performed": false,
+    "format": "toklet-relocated-smol-controller-review-v1",
+    "held": [
+      "edits to the9frozen tracked files",
+      "actual extraction until exact controller acceptance",
+      "tracked docs/publicreceipt/index/staging/commit",
+      "Rust/header/UI/loader/FFI/capability",
+      "app/phone/install/network"
+    ],
+    "historical_original_run_receipt_sha256": "98181583de08048af962e6cb1e97359a28aafdff8b3b3dcd52cad0432f46c5a1",
+    "local_source": "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8",
+    "preflight": {
+      "captures_and_all_source_endpoints_match_first_bytes": true,
+      "cli_helps": 3,
+      "completed_RSS_bytes": [
+        27017216,
+        32948224,
+        20676608,
+        20234240,
+        20496384
+      ],
+      "completed_owned_children": 5,
+      "controller_regression_methods": 16,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/preflight-v1/checks.json",
+      "portable_range_methods": 12,
+      "real_model_payload_read": false,
+      "sha256": "694493869202484a12d8cf02093af5e463bfa1b4b62d46c68f374929d69674d6"
+    },
+    "prospective_receipt_kind": "toklet-smol-relocated-range-run-v1; explicitly fresh direct tracked-path execution separate from historical artifact run",
+    "prototype_sources": {
+      "README.md": {
+        "bytes": 3554,
+        "sha256": "5295f0fe405815c02e774acecb03106732044d714ec41032da318043659cc699"
+      },
+      "approved-source-packet.json": {
+        "bytes": 7901,
+        "sha256": "07b455d678a21af301cf62e26612659eaf84f68d5d6f157b791523c6facd707d"
+      },
+      "owned.py": {
+        "bytes": 3407,
+        "sha256": "f4e3ad12cc9c2604bf8b454cd9e8c30dff3f3654704797c2e06d3ffef6df6dc9"
+      },
+      "preflight.py": {
+        "bytes": 4940,
+        "sha256": "044d8cb6e32cfc7d76dcec8b25b0ffba0838d62315a8af35dd90814626cbe957"
+      },
+      "run_reviewed.py": {
+        "bytes": 19109,
+        "sha256": "62f81fe1c07a81a911bbf3556691ddae36ad54fb6edf39512aee40c2efbc123d"
+      },
+      "test_runner.py": {
+        "bytes": 15398,
+        "sha256": "5a591e1d134f3617757163859d7473efb75fee70a4e77d34c2f1ef0811bfd65a"
+      }
+    },
+    "python": {
+      "resolved_path": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+      "sha256": "a7f5b535d61d1c7326824204ac80f045a97a652abb154421e2c74fcc365a3539"
+    },
+    "review_request": "Review artifact-only controller before any actual relocated extraction. Nine tracked files SOURCE-CLEARED by Astra and unchanged; owned helper exact V2 bytes and common capture/cleanup/packet/metrics mechanisms unchanged. New narrow tracked-source/fixture/enrollment admission, direct tracked-path plans and fixture equality require review. No guards on unrelated Rust/plans/Git state. Planned six owned timed children include16controller+12portable tests, two actual captures and independent replays, all five first outputs equal both other capture and admitted fixtures. Verify before/after9source+6model identities, source packet hash07b455, pinned isolated interpreter/time/helpers, first bounded stdout/stderr/output capture including failure, BaseException/signal/group drain/reap, endpoint semantics, RSS128MiB and physical separate. DO NOT RUN ACTUAL EXTRACTION BEFORE ACCEPTANCE.",
+    "runtime_scope": "Exact interpreter/time/controller/helper/approved Python+fixture/model inputs and enrollment; NOT full stdlib/native image closure or unrelated numerical-source qualification",
+    "source_origins": [
+      {
+        "byte_equal": true,
+        "diff_path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/owned.py.adaptation.diff",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/owned.py",
+        "origin_sha256": "f4e3ad12cc9c2604bf8b454cd9e8c30dff3f3654704797c2e06d3ffef6df6dc9",
+        "target": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/owned.py",
+        "target_sha256": "f4e3ad12cc9c2604bf8b454cd9e8c30dff3f3654704797c2e06d3ffef6df6dc9"
+      },
+      {
+        "byte_equal": false,
+        "diff_path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/run_reviewed.py.adaptation.diff",
+        "diff_sha256": "0d77d167271c4009b498a890142b81905b7189209ce3fd93a726b04fcb96beb7",
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/run_reviewed.py",
+        "origin_sha256": "c173c69ea73fd016e58d2cdb2c014d3bbc79eda33abd65856d24c347af8d0ad4",
+        "target": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/run_reviewed.py",
+        "target_sha256": "62f81fe1c07a81a911bbf3556691ddae36ad54fb6edf39512aee40c2efbc123d"
+      },
+      {
+        "byte_equal": false,
+        "diff_path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/test_runner.py.adaptation.diff",
+        "diff_sha256": "ed0f05cffcbddc1419cb7ec64e7d379349a280030e4d6abacc193db9ddb0212d",
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/test_runner.py",
+        "origin_sha256": "e4131b506bf6f501e591accbfd1a138ff1c48c21069a1c7100be8df36940f77c",
+        "target": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/test_runner.py",
+        "target_sha256": "5a591e1d134f3617757163859d7473efb75fee70a4e77d34c2f1ef0811bfd65a"
+      },
+      {
+        "byte_equal": false,
+        "diff_path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/preflight.py.adaptation.diff",
+        "diff_sha256": "3b472401b0c334164ba4ceb88f15c275aebf7301b591f7d6ffede919992fd718",
+        "origin": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/preflight.py",
+        "origin_sha256": "bc2906c6d0e89134dbfae247e475910b64fd145f0a7ce004e00d88b8b28cc1af",
+        "target": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/preflight.py",
+        "target_sha256": "044d8cb6e32cfc7d76dcec8b25b0ffba0838d62315a8af35dd90814626cbe957"
+      }
+    ],
+    "source_review_packet_sha256": "07b455d678a21af301cf62e26612659eaf84f68d5d6f157b791523c6facd707d",
+    "status": "awaiting_astra_before_real_extraction",
+    "time_binary": {
+      "resolved_path": "/usr/bin/time",
+      "sha256": "e1e98e68fd988f353cc51842f5a576bc2cb4c341ae24fd2ca4f625f33b38f23a"
+    },
+    "tracked_sources": {
+      "tests/fixtures/smol-load-identity-v1/config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "tests/fixtures/smol-load-identity-v1/header.bin": {
+        "bytes": 75257,
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      "tests/fixtures/smol-load-identity-v1/index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "tests/fixtures/smol-load-identity-v1/manifest.json": {
+        "bytes": 3908,
+        "sha256": "fb3ecffb8f61f916fa4b1bb5189886be6d07204d057b1180ca41976fdd96a0ff"
+      },
+      "tests/fixtures/smol-load-identity-v1/prefix.bin": {
+        "bytes": 8,
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      "tests/fixtures/smol-load-identity-v1/witness.json": {
+        "bytes": 294233,
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      },
+      "tools/experiments/smol_range_replay.py": {
+        "bytes": 13735,
+        "sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83"
+      },
+      "tools/experiments/test_smol_range_witness.py": {
+        "bytes": 10618,
+        "sha256": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd"
+      },
+      "tools/reference/smol_range_witness.py": {
+        "bytes": 12872,
+        "sha256": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f"
+      }
+    },
+    "trusted_inventory": [
+      {
+        "bytes": 1097,
+        "name": "config.json",
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      {
+        "bytes": 143030401,
+        "name": "model.safetensors",
+        "sha256": "ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c"
+      },
+      {
+        "bytes": 48979,
+        "name": "model.safetensors.index.json",
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      {
+        "bytes": 655,
+        "name": "special_tokens_map.json",
+        "sha256": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52"
+      },
+      {
+        "bytes": 3522656,
+        "name": "tokenizer.json",
+        "sha256": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7"
+      },
+      {
+        "bytes": 3764,
+        "name": "tokenizer_config.json",
+        "sha256": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee"
+      }
+    ],
+    "unchanged_V2_AST_mechanisms": [
+      "sha",
+      "configure_owned",
+      "bounded",
+      "unique",
+      "admit_packet",
+      "file_sha",
+      "Evidence",
+      "signal_scope",
+      "controlled_environment",
+      "completed_metrics",
+      "execute_attempt",
+      "source_pins"
+    ]
+  },
+  "actual_execution": {
+    "approval_precondition": "Operator must obtain Astra acceptance before invocation; digest is not approval",
+    "approved_packet_sha256": "fa7a88e3674b81374a9aa1953128a5e8510160dbf325d6c84eb1aff19c21f8c3",
+    "capture_endpoint_errors": [],
+    "commands": [
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/test_runner.py"
+        ],
+        "capture_errors": [],
+        "captures": {
+          "stderr": {
+            "bytes": 3224,
+            "retained_file": "runner-regressions-stderr",
+            "sha256": "174a6377665a86869285a7c92bf9ff08f194883bca4ebd20db26e4a74e845e4b"
+          },
+          "stdout": {
+            "bytes": 0,
+            "retained_file": "runner-regressions-stdout",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "cleanup_errors": [],
+        "elapsed_seconds": 0.3027619579806924,
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "invocation_error": null,
+        "label": "runner-regressions",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 32849920,
+          "completed_peak_physical_footprint_bytes": 21938800,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "outcome": "completed",
+        "pid": 85169,
+        "primary_error": null
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/experiments/test_smol_range_witness.py"
+        ],
+        "capture_errors": [],
+        "captures": {
+          "stderr": {
+            "bytes": 2612,
+            "retained_file": "synthetic-stderr",
+            "sha256": "dad8bea4efaa8af4046cff51b0bd3e6f73f7560718afbce14e6061f106f63e24"
+          },
+          "stdout": {
+            "bytes": 0,
+            "retained_file": "synthetic-stdout",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "cleanup_errors": [],
+        "elapsed_seconds": 0.0712288748472929,
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "invocation_error": null,
+        "label": "synthetic",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 26329088,
+          "completed_peak_physical_footprint_bytes": 16122432,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "outcome": "completed",
+        "pid": 85175,
+        "primary_error": null
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/reference/smol_range_witness.py",
+          "--source",
+          "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8",
+          "--output",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a"
+        ],
+        "capture_errors": [],
+        "captures": {
+          "config.json": {
+            "bytes": 1097,
+            "retained_file": "produce-a-config.json",
+            "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+          },
+          "header.bin": {
+            "bytes": 75257,
+            "retained_file": "produce-a-header.bin",
+            "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+          },
+          "index.json": {
+            "bytes": 48979,
+            "retained_file": "produce-a-index.json",
+            "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+          },
+          "prefix.bin": {
+            "bytes": 8,
+            "retained_file": "produce-a-prefix.bin",
+            "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+          },
+          "producer-receipt.json": {
+            "bytes": 3862,
+            "retained_file": "produce-a-producer-receipt.json",
+            "sha256": "feb160971b7d0156cc6b7c79bb624b0e60e275e05eb5843151440796b43f7c25"
+          },
+          "stderr": {
+            "bytes": 777,
+            "retained_file": "produce-a-stderr",
+            "sha256": "16069beb805ce8dc3333837d6ecaa592a1070eb21c4af0bcbdc195e153bd5cd6"
+          },
+          "stdout": {
+            "bytes": 87,
+            "retained_file": "produce-a-stdout",
+            "sha256": "f49f9baad31d22dc7789346cef7915cf9f7b573c0bd40aae43244dc593d3fafc"
+          },
+          "witness.json": {
+            "bytes": 294233,
+            "retained_file": "produce-a-witness.json",
+            "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+          }
+        },
+        "cleanup_errors": [],
+        "elapsed_seconds": 0.3719790829345584,
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "invocation_error": null,
+        "label": "produce-a",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 24756224,
+          "completed_peak_physical_footprint_bytes": 14893632,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "outcome": "completed",
+        "pid": 85177,
+        "primary_error": null
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/experiments/smol_range_replay.py",
+          "--source",
+          "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8",
+          "--frozen",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a"
+        ],
+        "capture_errors": [],
+        "captures": {
+          "stderr": {
+            "bytes": 777,
+            "retained_file": "replay-a-stderr",
+            "sha256": "d454f7fe1d18ff83b8a4c5c4338d502cbdbc16be5c1731913f80ba7dcd2ee679"
+          },
+          "stdout": {
+            "bytes": 533,
+            "retained_file": "replay-a-stdout",
+            "sha256": "d269c9abfc0f81b14b41b6efe06e84a6ccecb7685e6659d3d93e05d05582a31b"
+          }
+        },
+        "cleanup_errors": [],
+        "elapsed_seconds": 0.496010750066489,
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "invocation_error": null,
+        "label": "replay-a",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 24788992,
+          "completed_peak_physical_footprint_bytes": 15057568,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "outcome": "completed",
+        "pid": 85180,
+        "primary_error": null
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/reference/smol_range_witness.py",
+          "--source",
+          "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8",
+          "--output",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b"
+        ],
+        "capture_errors": [],
+        "captures": {
+          "config.json": {
+            "bytes": 1097,
+            "retained_file": "produce-b-config.json",
+            "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+          },
+          "header.bin": {
+            "bytes": 75257,
+            "retained_file": "produce-b-header.bin",
+            "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+          },
+          "index.json": {
+            "bytes": 48979,
+            "retained_file": "produce-b-index.json",
+            "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+          },
+          "prefix.bin": {
+            "bytes": 8,
+            "retained_file": "produce-b-prefix.bin",
+            "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+          },
+          "producer-receipt.json": {
+            "bytes": 3862,
+            "retained_file": "produce-b-producer-receipt.json",
+            "sha256": "5bb75c188d49a5537d1f4b0c137200bc185360d891bad2871bf0a349f4a9a197"
+          },
+          "stderr": {
+            "bytes": 777,
+            "retained_file": "produce-b-stderr",
+            "sha256": "4613349947788b2e61ba0d935b7cff66f0a867a37b27ec00a959b026795d575c"
+          },
+          "stdout": {
+            "bytes": 87,
+            "retained_file": "produce-b-stdout",
+            "sha256": "a22ba6ecf6c9ea8cd67eb18cbe42a4649b91a01b5cbdf2a92580593845a64817"
+          },
+          "witness.json": {
+            "bytes": 294233,
+            "retained_file": "produce-b-witness.json",
+            "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+          }
+        },
+        "cleanup_errors": [],
+        "elapsed_seconds": 0.3770985840819776,
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "invocation_error": null,
+        "label": "produce-b",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 25051136,
+          "completed_peak_physical_footprint_bytes": 15188544,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "outcome": "completed",
+        "pid": 85187,
+        "primary_error": null
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/experiments/smol_range_replay.py",
+          "--source",
+          "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8",
+          "--frozen",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b"
+        ],
+        "capture_errors": [],
+        "captures": {
+          "stderr": {
+            "bytes": 777,
+            "retained_file": "replay-b-stderr",
+            "sha256": "a444f7e29057c536a24f412749567eb88ae8ad8362ed8428489aa9050f3a647c"
+          },
+          "stdout": {
+            "bytes": 533,
+            "retained_file": "replay-b-stdout",
+            "sha256": "21939d985449096aee0619c517e3cc31c017ca10a0ee0ff867edd4455e32a26e"
+          }
+        },
+        "cleanup_errors": [],
+        "elapsed_seconds": 0.4837059169076383,
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "invocation_error": null,
+        "label": "replay-b",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 23969792,
+          "completed_peak_physical_footprint_bytes": 14238368,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "outcome": "completed",
+        "pid": 85191,
+        "primary_error": null
+      }
+    ],
+    "complete": true,
+    "current_fixture_match": {
+      "config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "header.bin": {
+        "bytes": 75257,
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      "index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "prefix.bin": {
+        "bytes": 8,
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      "witness.json": {
+        "bytes": 294233,
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      }
+    },
+    "elapsed_seconds": 2.3135929577983916,
+    "endpoint_errors": [],
+    "environment": {
+      "LANG": "C",
+      "LC_ALL": "C",
+      "PATH": "/usr/bin:/bin",
+      "TMPDIR": "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/tmp"
+    },
+    "execution_kind": "Fresh direct tracked-path producer/checker execution; distinct from original artifact execution",
+    "format": "toklet-smol-relocated-range-run-v1",
+    "guard_scope": "Nine approved Python/fixture files, controller/helpers/approval/enrollment, six model assets, interpreter/time; no unrelated Rust or plan files",
+    "historical_original_run_receipt_sha256": "98181583de08048af962e6cb1e97359a28aafdff8b3b3dcd52cad0432f46c5a1",
+    "identical_frozen_outputs": {
+      "config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "header.bin": {
+        "bytes": 75257,
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      "index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "prefix.bin": {
+        "bytes": 8,
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      "witness.json": {
+        "bytes": 294233,
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      }
+    },
+    "memory_measurement": "External completed /usr/bin/time -l for each child; 128 MiB RSS gate",
+    "primary_errors": [],
+    "python_flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "python_path": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "runtime_scope": "Pinned interpreter/time/reviewed source; not full stdlib/native image closure",
+    "signal": null,
+    "source_post": {
+      "config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "model.safetensors": {
+        "bytes": 143030401,
+        "sha256": "ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c"
+      },
+      "model.safetensors.index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "special_tokens_map.json": {
+        "bytes": 655,
+        "sha256": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52"
+      },
+      "tokenizer.json": {
+        "bytes": 3522656,
+        "sha256": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7"
+      },
+      "tokenizer_config.json": {
+        "bytes": 3764,
+        "sha256": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee"
+      }
+    },
+    "source_pre": {
+      "config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "model.safetensors": {
+        "bytes": 143030401,
+        "sha256": "ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c"
+      },
+      "model.safetensors.index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "special_tokens_map.json": {
+        "bytes": 655,
+        "sha256": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52"
+      },
+      "tokenizer.json": {
+        "bytes": 3522656,
+        "sha256": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7"
+      },
+      "tokenizer_config.json": {
+        "bytes": 3764,
+        "sha256": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee"
+      }
+    },
+    "source_review_packet_sha256": "07b455d678a21af301cf62e26612659eaf84f68d5d6f157b791523c6facd707d",
+    "tracked_sources_post": {
+      "tests/fixtures/smol-load-identity-v1/config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "tests/fixtures/smol-load-identity-v1/header.bin": {
+        "bytes": 75257,
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      "tests/fixtures/smol-load-identity-v1/index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "tests/fixtures/smol-load-identity-v1/manifest.json": {
+        "bytes": 3908,
+        "sha256": "fb3ecffb8f61f916fa4b1bb5189886be6d07204d057b1180ca41976fdd96a0ff"
+      },
+      "tests/fixtures/smol-load-identity-v1/prefix.bin": {
+        "bytes": 8,
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      "tests/fixtures/smol-load-identity-v1/witness.json": {
+        "bytes": 294233,
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      },
+      "tools/experiments/smol_range_replay.py": {
+        "bytes": 13735,
+        "sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83"
+      },
+      "tools/experiments/test_smol_range_witness.py": {
+        "bytes": 10618,
+        "sha256": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd"
+      },
+      "tools/reference/smol_range_witness.py": {
+        "bytes": 12872,
+        "sha256": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f"
+      }
+    },
+    "tracked_sources_pre": {
+      "tests/fixtures/smol-load-identity-v1/config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "tests/fixtures/smol-load-identity-v1/header.bin": {
+        "bytes": 75257,
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      "tests/fixtures/smol-load-identity-v1/index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "tests/fixtures/smol-load-identity-v1/manifest.json": {
+        "bytes": 3908,
+        "sha256": "fb3ecffb8f61f916fa4b1bb5189886be6d07204d057b1180ca41976fdd96a0ff"
+      },
+      "tests/fixtures/smol-load-identity-v1/prefix.bin": {
+        "bytes": 8,
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      "tests/fixtures/smol-load-identity-v1/witness.json": {
+        "bytes": 294233,
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      },
+      "tools/experiments/smol_range_replay.py": {
+        "bytes": 13735,
+        "sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83"
+      },
+      "tools/experiments/test_smol_range_witness.py": {
+        "bytes": 10618,
+        "sha256": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd"
+      },
+      "tools/reference/smol_range_witness.py": {
+        "bytes": 12872,
+        "sha256": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f"
+      }
+    }
+  },
+  "actual_summary": {
+    "RSS_limit_bytes": 134217728,
+    "actual_fresh_data_matches_current_fixture": {
+      "config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "header.bin": {
+        "bytes": 75257,
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      "index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "prefix.bin": {
+        "bytes": 8,
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      "witness.json": {
+        "bytes": 294233,
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      }
+    },
+    "actual_relocated_run_receipt_sha256": "9fb520b14b9da3a8ac92618ffa7446eaf1a661f58dcd5f88d0b96900fa71f6dc",
+    "all_28_synthetic_methods_passed": true,
+    "commands": [
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/test_runner.py"
+        ],
+        "argv_sha256": "96b0f5cab49ea3630e957787e5ec3a71127082d731a6bf5a9a66b8f5aa27b0eb",
+        "captures": {
+          "stderr": {
+            "bytes": 3224,
+            "retained_file": "runner-regressions-stderr",
+            "sha256": "174a6377665a86869285a7c92bf9ff08f194883bca4ebd20db26e4a74e845e4b"
+          },
+          "stdout": {
+            "bytes": 0,
+            "retained_file": "runner-regressions-stdout",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "elapsed_seconds": 0.3027619579806924,
+        "executed_script_sha256": "5a591e1d134f3617757163859d7473efb75fee70a4e77d34c2f1ef0811bfd65a",
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "label": "runner-regressions",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 32849920,
+          "completed_peak_physical_footprint_bytes": 21938800,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "pid": 85169
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/experiments/test_smol_range_witness.py"
+        ],
+        "argv_sha256": "a1c0b2532b03346f372a83137ffdd3c927fbc75928548f964cf180e5d2c07a9c",
+        "captures": {
+          "stderr": {
+            "bytes": 2612,
+            "retained_file": "synthetic-stderr",
+            "sha256": "dad8bea4efaa8af4046cff51b0bd3e6f73f7560718afbce14e6061f106f63e24"
+          },
+          "stdout": {
+            "bytes": 0,
+            "retained_file": "synthetic-stdout",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "elapsed_seconds": 0.0712288748472929,
+        "executed_script_sha256": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd",
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "label": "synthetic",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 26329088,
+          "completed_peak_physical_footprint_bytes": 16122432,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "pid": 85175
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/reference/smol_range_witness.py",
+          "--source",
+          "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8",
+          "--output",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a"
+        ],
+        "argv_sha256": "130f265ef57f8f7616b74e77fea56db53619497e8f7d487a2aea7fe4b80a84b9",
+        "captures": {
+          "config.json": {
+            "bytes": 1097,
+            "retained_file": "produce-a-config.json",
+            "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+          },
+          "header.bin": {
+            "bytes": 75257,
+            "retained_file": "produce-a-header.bin",
+            "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+          },
+          "index.json": {
+            "bytes": 48979,
+            "retained_file": "produce-a-index.json",
+            "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+          },
+          "prefix.bin": {
+            "bytes": 8,
+            "retained_file": "produce-a-prefix.bin",
+            "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+          },
+          "producer-receipt.json": {
+            "bytes": 3862,
+            "retained_file": "produce-a-producer-receipt.json",
+            "sha256": "feb160971b7d0156cc6b7c79bb624b0e60e275e05eb5843151440796b43f7c25"
+          },
+          "stderr": {
+            "bytes": 777,
+            "retained_file": "produce-a-stderr",
+            "sha256": "16069beb805ce8dc3333837d6ecaa592a1070eb21c4af0bcbdc195e153bd5cd6"
+          },
+          "stdout": {
+            "bytes": 87,
+            "retained_file": "produce-a-stdout",
+            "sha256": "f49f9baad31d22dc7789346cef7915cf9f7b573c0bd40aae43244dc593d3fafc"
+          },
+          "witness.json": {
+            "bytes": 294233,
+            "retained_file": "produce-a-witness.json",
+            "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+          }
+        },
+        "elapsed_seconds": 0.3719790829345584,
+        "executed_script_sha256": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f",
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "label": "produce-a",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 24756224,
+          "completed_peak_physical_footprint_bytes": 14893632,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "pid": 85177
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/experiments/smol_range_replay.py",
+          "--source",
+          "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8",
+          "--frozen",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a"
+        ],
+        "argv_sha256": "0f25e9d35384989a286710032ea067bcd75f9ae6e8ee26bb7c3e23fc539c66f5",
+        "captures": {
+          "stderr": {
+            "bytes": 777,
+            "retained_file": "replay-a-stderr",
+            "sha256": "d454f7fe1d18ff83b8a4c5c4338d502cbdbc16be5c1731913f80ba7dcd2ee679"
+          },
+          "stdout": {
+            "bytes": 533,
+            "retained_file": "replay-a-stdout",
+            "sha256": "d269c9abfc0f81b14b41b6efe06e84a6ccecb7685e6659d3d93e05d05582a31b"
+          }
+        },
+        "elapsed_seconds": 0.496010750066489,
+        "executed_script_sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83",
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "label": "replay-a",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 24788992,
+          "completed_peak_physical_footprint_bytes": 15057568,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "pid": 85180
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/reference/smol_range_witness.py",
+          "--source",
+          "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8",
+          "--output",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b"
+        ],
+        "argv_sha256": "dfea50968647e655d499f3d1a2d90651f253f277a657691f3fc6fd1dec5c122e",
+        "captures": {
+          "config.json": {
+            "bytes": 1097,
+            "retained_file": "produce-b-config.json",
+            "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+          },
+          "header.bin": {
+            "bytes": 75257,
+            "retained_file": "produce-b-header.bin",
+            "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+          },
+          "index.json": {
+            "bytes": 48979,
+            "retained_file": "produce-b-index.json",
+            "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+          },
+          "prefix.bin": {
+            "bytes": 8,
+            "retained_file": "produce-b-prefix.bin",
+            "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+          },
+          "producer-receipt.json": {
+            "bytes": 3862,
+            "retained_file": "produce-b-producer-receipt.json",
+            "sha256": "5bb75c188d49a5537d1f4b0c137200bc185360d891bad2871bf0a349f4a9a197"
+          },
+          "stderr": {
+            "bytes": 777,
+            "retained_file": "produce-b-stderr",
+            "sha256": "4613349947788b2e61ba0d935b7cff66f0a867a37b27ec00a959b026795d575c"
+          },
+          "stdout": {
+            "bytes": 87,
+            "retained_file": "produce-b-stdout",
+            "sha256": "a22ba6ecf6c9ea8cd67eb18cbe42a4649b91a01b5cbdf2a92580593845a64817"
+          },
+          "witness.json": {
+            "bytes": 294233,
+            "retained_file": "produce-b-witness.json",
+            "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+          }
+        },
+        "elapsed_seconds": 0.3770985840819776,
+        "executed_script_sha256": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f",
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "label": "produce-b",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 25051136,
+          "completed_peak_physical_footprint_bytes": 15188544,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "pid": 85187
+      },
+      {
+        "argv": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "/Users/coloner/work/rust/toklet/tools/experiments/smol_range_replay.py",
+          "--source",
+          "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8",
+          "--frozen",
+          "/Users/coloner/work/rust/toklet/artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b"
+        ],
+        "argv_sha256": "8792fdf469c50c69021bce23114c60f4cf888b12451f5dc500db6d8227de50b7",
+        "captures": {
+          "stderr": {
+            "bytes": 777,
+            "retained_file": "replay-b-stderr",
+            "sha256": "a444f7e29057c536a24f412749567eb88ae8ad8362ed8428489aa9050f3a647c"
+          },
+          "stdout": {
+            "bytes": 533,
+            "retained_file": "replay-b-stdout",
+            "sha256": "21939d985449096aee0619c517e3cc31c017ca10a0ee0ff867edd4455e32a26e"
+          }
+        },
+        "elapsed_seconds": 0.4837059169076383,
+        "executed_script_sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83",
+        "exit_code": 0,
+        "group_drained_and_child_reaped": true,
+        "label": "replay-b",
+        "metrics": {
+          "completed_maximum_resident_set_size_bytes": 23969792,
+          "completed_peak_physical_footprint_bytes": 14238368,
+          "rss_limit_bytes": 134217728,
+          "scope": "Completed directly timed Python child lifetime; RSS and physical footprint are distinct"
+        },
+        "pid": 85191
+      }
+    ],
+    "completed_child_maximum_RSS_bytes": 32849920,
+    "controller_review_packet_sha256": "fa7a88e3674b81374a9aa1953128a5e8510160dbf325d6c84eb1aff19c21f8c3",
+    "controller_sources": {
+      "README.md": {
+        "bytes": 3554,
+        "sha256": "5295f0fe405815c02e774acecb03106732044d714ec41032da318043659cc699"
+      },
+      "approved-source-packet.json": {
+        "bytes": 7901,
+        "sha256": "07b455d678a21af301cf62e26612659eaf84f68d5d6f157b791523c6facd707d"
+      },
+      "owned.py": {
+        "bytes": 3407,
+        "sha256": "f4e3ad12cc9c2604bf8b454cd9e8c30dff3f3654704797c2e06d3ffef6df6dc9"
+      },
+      "preflight.py": {
+        "bytes": 4940,
+        "sha256": "044d8cb6e32cfc7d76dcec8b25b0ffba0838d62315a8af35dd90814626cbe957"
+      },
+      "run_reviewed.py": {
+        "bytes": 19109,
+        "sha256": "62f81fe1c07a81a911bbf3556691ddae36ad54fb6edf39512aee40c2efbc123d"
+      },
+      "test_runner.py": {
+        "bytes": 15398,
+        "sha256": "5a591e1d134f3617757163859d7473efb75fee70a4e77d34c2f1ef0811bfd65a"
+      }
+    },
+    "execution_is_distinct_from_original": true,
+    "file_inventory": [
+      {
+        "bytes": 9104,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/admitted-packet.json",
+        "sha256": "fa7a88e3674b81374a9aa1953128a5e8510160dbf325d6c84eb1aff19c21f8c3"
+      },
+      {
+        "bytes": 1097,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/config.json",
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      {
+        "bytes": 75257,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/header.bin",
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      {
+        "bytes": 48979,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/index.json",
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      {
+        "bytes": 8,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/prefix.bin",
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      {
+        "bytes": 3862,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/producer-receipt.json",
+        "sha256": "feb160971b7d0156cc6b7c79bb624b0e60e275e05eb5843151440796b43f7c25"
+      },
+      {
+        "bytes": 294233,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/witness.json",
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      },
+      {
+        "bytes": 1097,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/config.json",
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      {
+        "bytes": 75257,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/header.bin",
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      {
+        "bytes": 48979,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/index.json",
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      {
+        "bytes": 8,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/prefix.bin",
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      {
+        "bytes": 3862,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/producer-receipt.json",
+        "sha256": "5bb75c188d49a5537d1f4b0c137200bc185360d891bad2871bf0a349f4a9a197"
+      },
+      {
+        "bytes": 294233,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/witness.json",
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      },
+      {
+        "bytes": 777,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-a.stderr",
+        "sha256": "16069beb805ce8dc3333837d6ecaa592a1070eb21c4af0bcbdc195e153bd5cd6"
+      },
+      {
+        "bytes": 87,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-a.stdout",
+        "sha256": "f49f9baad31d22dc7789346cef7915cf9f7b573c0bd40aae43244dc593d3fafc"
+      },
+      {
+        "bytes": 777,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-b.stderr",
+        "sha256": "4613349947788b2e61ba0d935b7cff66f0a867a37b27ec00a959b026795d575c"
+      },
+      {
+        "bytes": 87,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-b.stdout",
+        "sha256": "a22ba6ecf6c9ea8cd67eb18cbe42a4649b91a01b5cbdf2a92580593845a64817"
+      },
+      {
+        "bytes": 777,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-a.stderr",
+        "sha256": "d454f7fe1d18ff83b8a4c5c4338d502cbdbc16be5c1731913f80ba7dcd2ee679"
+      },
+      {
+        "bytes": 533,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-a.stdout",
+        "sha256": "d269c9abfc0f81b14b41b6efe06e84a6ccecb7685e6659d3d93e05d05582a31b"
+      },
+      {
+        "bytes": 777,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-b.stderr",
+        "sha256": "a444f7e29057c536a24f412749567eb88ae8ad8362ed8428489aa9050f3a647c"
+      },
+      {
+        "bytes": 533,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-b.stdout",
+        "sha256": "21939d985449096aee0619c517e3cc31c017ca10a0ee0ff867edd4455e32a26e"
+      },
+      {
+        "bytes": 1097,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-config.json",
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      {
+        "bytes": 75257,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-header.bin",
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      {
+        "bytes": 48979,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-index.json",
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      {
+        "bytes": 8,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-prefix.bin",
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      {
+        "bytes": 3862,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-producer-receipt.json",
+        "sha256": "feb160971b7d0156cc6b7c79bb624b0e60e275e05eb5843151440796b43f7c25"
+      },
+      {
+        "bytes": 777,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-stderr",
+        "sha256": "16069beb805ce8dc3333837d6ecaa592a1070eb21c4af0bcbdc195e153bd5cd6"
+      },
+      {
+        "bytes": 87,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-stdout",
+        "sha256": "f49f9baad31d22dc7789346cef7915cf9f7b573c0bd40aae43244dc593d3fafc"
+      },
+      {
+        "bytes": 294233,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-witness.json",
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      },
+      {
+        "bytes": 1097,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-config.json",
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      {
+        "bytes": 75257,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-header.bin",
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      {
+        "bytes": 48979,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-index.json",
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      {
+        "bytes": 8,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-prefix.bin",
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      {
+        "bytes": 3862,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-producer-receipt.json",
+        "sha256": "5bb75c188d49a5537d1f4b0c137200bc185360d891bad2871bf0a349f4a9a197"
+      },
+      {
+        "bytes": 777,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-stderr",
+        "sha256": "4613349947788b2e61ba0d935b7cff66f0a867a37b27ec00a959b026795d575c"
+      },
+      {
+        "bytes": 87,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-stdout",
+        "sha256": "a22ba6ecf6c9ea8cd67eb18cbe42a4649b91a01b5cbdf2a92580593845a64817"
+      },
+      {
+        "bytes": 294233,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-witness.json",
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      },
+      {
+        "bytes": 777,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-a-stderr",
+        "sha256": "d454f7fe1d18ff83b8a4c5c4338d502cbdbc16be5c1731913f80ba7dcd2ee679"
+      },
+      {
+        "bytes": 533,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-a-stdout",
+        "sha256": "d269c9abfc0f81b14b41b6efe06e84a6ccecb7685e6659d3d93e05d05582a31b"
+      },
+      {
+        "bytes": 777,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-b-stderr",
+        "sha256": "a444f7e29057c536a24f412749567eb88ae8ad8362ed8428489aa9050f3a647c"
+      },
+      {
+        "bytes": 533,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-b-stdout",
+        "sha256": "21939d985449096aee0619c517e3cc31c017ca10a0ee0ff867edd4455e32a26e"
+      },
+      {
+        "bytes": 3224,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/runner-regressions-stderr",
+        "sha256": "174a6377665a86869285a7c92bf9ff08f194883bca4ebd20db26e4a74e845e4b"
+      },
+      {
+        "bytes": 0,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/runner-regressions-stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 2612,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/synthetic-stderr",
+        "sha256": "dad8bea4efaa8af4046cff51b0bd3e6f73f7560718afbce14e6061f106f63e24"
+      },
+      {
+        "bytes": 0,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/synthetic-stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 19016,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/run-receipt.json",
+        "sha256": "9fb520b14b9da3a8ac92618ffa7446eaf1a661f58dcd5f88d0b96900fa71f6dc"
+      },
+      {
+        "bytes": 3224,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/runner-regressions.stderr",
+        "sha256": "174a6377665a86869285a7c92bf9ff08f194883bca4ebd20db26e4a74e845e4b"
+      },
+      {
+        "bytes": 0,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/runner-regressions.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 2612,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/synthetic.stderr",
+        "sha256": "dad8bea4efaa8af4046cff51b0bd3e6f73f7560718afbce14e6061f106f63e24"
+      },
+      {
+        "bytes": 0,
+        "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/synthetic.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "format": "toklet-relocated-smol-completed-summary-v1",
+    "guard_scope": "Nine approved Python/fixture files, controller/helpers/approval/enrollment, six model assets, interpreter/time; no unrelated Rust or plan files",
+    "historical_original_artifact_run_receipt_sha256": "98181583de08048af962e6cb1e97359a28aafdff8b3b3dcd52cad0432f46c5a1",
+    "independent_reverse_name_reads_each_replay": 694,
+    "model_source_pre_post": {
+      "config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "model.safetensors": {
+        "bytes": 143030401,
+        "sha256": "ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c"
+      },
+      "model.safetensors.index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "special_tokens_map.json": {
+        "bytes": 655,
+        "sha256": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52"
+      },
+      "tokenizer.json": {
+        "bytes": 3522656,
+        "sha256": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7"
+      },
+      "tokenizer_config.json": {
+        "bytes": 3764,
+        "sha256": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee"
+      }
+    },
+    "no_new_qualification": "No model inference/numerical/Metal/Gemma4/131072output/native ABI/app or phone grant",
+    "normalization_vectors": 61,
+    "packed_matrices": 211,
+    "physical_tensor_ranges": 694,
+    "publication_scope": "Only the previously approved9files; no staging/commit/docs/publicreceipt edit performed; root owns report/receipt and publication coordination.",
+    "runtime_scope": "Pinned interpreter/time/reviewed source; not full stdlib/native image closure",
+    "selected_model_bytes": 146607552,
+    "source_review_packet_sha256": "07b455d678a21af301cf62e26612659eaf84f68d5d6f157b791523c6facd707d",
+    "status": "Fresh actual direct tracked-source extraction and independent replays passed; awaiting root/Astra publication review",
+    "tied_role_range_reads_each_capture_and_replay": 6,
+    "tracked_sources_pre_post": {
+      "tests/fixtures/smol-load-identity-v1/config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "tests/fixtures/smol-load-identity-v1/header.bin": {
+        "bytes": 75257,
+        "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+      },
+      "tests/fixtures/smol-load-identity-v1/index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "tests/fixtures/smol-load-identity-v1/manifest.json": {
+        "bytes": 3908,
+        "sha256": "fb3ecffb8f61f916fa4b1bb5189886be6d07204d057b1180ca41976fdd96a0ff"
+      },
+      "tests/fixtures/smol-load-identity-v1/prefix.bin": {
+        "bytes": 8,
+        "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+      },
+      "tests/fixtures/smol-load-identity-v1/witness.json": {
+        "bytes": 294233,
+        "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+      },
+      "tools/experiments/smol_range_replay.py": {
+        "bytes": 13735,
+        "sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83"
+      },
+      "tools/experiments/test_smol_range_witness.py": {
+        "bytes": 10618,
+        "sha256": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd"
+      },
+      "tools/reference/smol_range_witness.py": {
+        "bytes": 12872,
+        "sha256": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f"
+      }
+    }
+  },
+  "output_resource_command_file_pins": [
+    {
+      "bytes": 9104,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/admitted-packet.json",
+      "sha256": "fa7a88e3674b81374a9aa1953128a5e8510160dbf325d6c84eb1aff19c21f8c3"
+    },
+    {
+      "bytes": 1097,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/config.json",
+      "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+    },
+    {
+      "bytes": 75257,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/header.bin",
+      "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+    },
+    {
+      "bytes": 48979,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/index.json",
+      "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+    },
+    {
+      "bytes": 8,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/prefix.bin",
+      "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+    },
+    {
+      "bytes": 3862,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/producer-receipt.json",
+      "sha256": "feb160971b7d0156cc6b7c79bb624b0e60e275e05eb5843151440796b43f7c25"
+    },
+    {
+      "bytes": 294233,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-a/witness.json",
+      "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+    },
+    {
+      "bytes": 1097,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/config.json",
+      "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+    },
+    {
+      "bytes": 75257,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/header.bin",
+      "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+    },
+    {
+      "bytes": 48979,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/index.json",
+      "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+    },
+    {
+      "bytes": 8,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/prefix.bin",
+      "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+    },
+    {
+      "bytes": 3862,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/producer-receipt.json",
+      "sha256": "5bb75c188d49a5537d1f4b0c137200bc185360d891bad2871bf0a349f4a9a197"
+    },
+    {
+      "bytes": 294233,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/capture-b/witness.json",
+      "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+    },
+    {
+      "bytes": 777,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-a.stderr",
+      "sha256": "16069beb805ce8dc3333837d6ecaa592a1070eb21c4af0bcbdc195e153bd5cd6"
+    },
+    {
+      "bytes": 87,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-a.stdout",
+      "sha256": "f49f9baad31d22dc7789346cef7915cf9f7b573c0bd40aae43244dc593d3fafc"
+    },
+    {
+      "bytes": 777,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-b.stderr",
+      "sha256": "4613349947788b2e61ba0d935b7cff66f0a867a37b27ec00a959b026795d575c"
+    },
+    {
+      "bytes": 87,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/produce-b.stdout",
+      "sha256": "a22ba6ecf6c9ea8cd67eb18cbe42a4649b91a01b5cbdf2a92580593845a64817"
+    },
+    {
+      "bytes": 777,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-a.stderr",
+      "sha256": "d454f7fe1d18ff83b8a4c5c4338d502cbdbc16be5c1731913f80ba7dcd2ee679"
+    },
+    {
+      "bytes": 533,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-a.stdout",
+      "sha256": "d269c9abfc0f81b14b41b6efe06e84a6ccecb7685e6659d3d93e05d05582a31b"
+    },
+    {
+      "bytes": 777,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-b.stderr",
+      "sha256": "a444f7e29057c536a24f412749567eb88ae8ad8362ed8428489aa9050f3a647c"
+    },
+    {
+      "bytes": 533,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/replay-b.stdout",
+      "sha256": "21939d985449096aee0619c517e3cc31c017ca10a0ee0ff867edd4455e32a26e"
+    },
+    {
+      "bytes": 1097,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-config.json",
+      "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+    },
+    {
+      "bytes": 75257,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-header.bin",
+      "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+    },
+    {
+      "bytes": 48979,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-index.json",
+      "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+    },
+    {
+      "bytes": 8,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-prefix.bin",
+      "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+    },
+    {
+      "bytes": 3862,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-producer-receipt.json",
+      "sha256": "feb160971b7d0156cc6b7c79bb624b0e60e275e05eb5843151440796b43f7c25"
+    },
+    {
+      "bytes": 777,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-stderr",
+      "sha256": "16069beb805ce8dc3333837d6ecaa592a1070eb21c4af0bcbdc195e153bd5cd6"
+    },
+    {
+      "bytes": 87,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-stdout",
+      "sha256": "f49f9baad31d22dc7789346cef7915cf9f7b573c0bd40aae43244dc593d3fafc"
+    },
+    {
+      "bytes": 294233,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-a-witness.json",
+      "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+    },
+    {
+      "bytes": 1097,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-config.json",
+      "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+    },
+    {
+      "bytes": 75257,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-header.bin",
+      "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+    },
+    {
+      "bytes": 48979,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-index.json",
+      "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+    },
+    {
+      "bytes": 8,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-prefix.bin",
+      "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+    },
+    {
+      "bytes": 3862,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-producer-receipt.json",
+      "sha256": "5bb75c188d49a5537d1f4b0c137200bc185360d891bad2871bf0a349f4a9a197"
+    },
+    {
+      "bytes": 777,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-stderr",
+      "sha256": "4613349947788b2e61ba0d935b7cff66f0a867a37b27ec00a959b026795d575c"
+    },
+    {
+      "bytes": 87,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-stdout",
+      "sha256": "a22ba6ecf6c9ea8cd67eb18cbe42a4649b91a01b5cbdf2a92580593845a64817"
+    },
+    {
+      "bytes": 294233,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/produce-b-witness.json",
+      "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+    },
+    {
+      "bytes": 777,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-a-stderr",
+      "sha256": "d454f7fe1d18ff83b8a4c5c4338d502cbdbc16be5c1731913f80ba7dcd2ee679"
+    },
+    {
+      "bytes": 533,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-a-stdout",
+      "sha256": "d269c9abfc0f81b14b41b6efe06e84a6ccecb7685e6659d3d93e05d05582a31b"
+    },
+    {
+      "bytes": 777,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-b-stderr",
+      "sha256": "a444f7e29057c536a24f412749567eb88ae8ad8362ed8428489aa9050f3a647c"
+    },
+    {
+      "bytes": 533,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/replay-b-stdout",
+      "sha256": "21939d985449096aee0619c517e3cc31c017ca10a0ee0ff867edd4455e32a26e"
+    },
+    {
+      "bytes": 3224,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/runner-regressions-stderr",
+      "sha256": "174a6377665a86869285a7c92bf9ff08f194883bca4ebd20db26e4a74e845e4b"
+    },
+    {
+      "bytes": 0,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/runner-regressions-stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2612,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/synthetic-stderr",
+      "sha256": "dad8bea4efaa8af4046cff51b0bd3e6f73f7560718afbce14e6061f106f63e24"
+    },
+    {
+      "bytes": 0,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/retained-first-bytes/synthetic-stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 19016,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/run-receipt.json",
+      "sha256": "9fb520b14b9da3a8ac92618ffa7446eaf1a661f58dcd5f88d0b96900fa71f6dc"
+    },
+    {
+      "bytes": 3224,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/runner-regressions.stderr",
+      "sha256": "174a6377665a86869285a7c92bf9ff08f194883bca4ebd20db26e4a74e845e4b"
+    },
+    {
+      "bytes": 0,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/runner-regressions.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2612,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/synthetic.stderr",
+      "sha256": "dad8bea4efaa8af4046cff51b0bd3e6f73f7560718afbce14e6061f106f63e24"
+    },
+    {
+      "bytes": 0,
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/relocated-smol-execution-v1/extraction-v1/synthetic.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "completed_maximum_resident_set_bytes": 32849920,
+  "completed_maximum_physical_footprint_bytes": 21938800,
+  "rss_limit_bytes": 134217728,
+  "portable_methods": 12,
+  "runner_methods": 16,
+  "physical_ranges": 694,
+  "packed_matrices": 211,
+  "f16_norm_vectors": 61,
+  "payload_bytes": 142955136,
+  "tied_reads_per_capture_and_replay": 6,
+  "two_fresh_captures_and_independent_replays": true,
+  "all_data_outputs_match_fixture": true,
+  "owned_processes_and_groups_absent": true,
+  "local_links_checked": 537,
+  "runtime_scope": "Pinned interpreter/time/reviewed source; not full stdlib/native image closure",
+  "historical_original_execution_sha256": "98181583de08048af962e6cb1e97359a28aafdff8b3b3dcd52cad0432f46c5a1",
+  "historical_original_execution_substituted": false,
+  "historical_record_bindings": {
+    "original_execution": {
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/extraction-v1/run-receipt.json",
+      "sha256": "98181583de08048af962e6cb1e97359a28aafdff8b3b3dcd52cad0432f46c5a1"
+    },
+    "original_summary": {
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/completed-extraction-summary-v1.json",
+      "sha256": "1902ea7347c2d83d3e1051600b254a9d1b6e8d54fab07685eae046e39517b01c"
+    },
+    "first_runner_review": {
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v1/review-v1.json",
+      "sha256": "10a89ec23cda0198050956f080a4b8117bf78dddebb27f9e044feb66e82985b1"
+    },
+    "newline_check_failure": {
+      "path": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/tracked-smol-range-v1/attempt1-failure.json",
+      "sha256": "478bd42d37871797f3d0114483189a4b9e428f4c4e116c28b048e974432a961c"
+    },
+    "collector_path_draft": {
+      "path": "artifacts/m8-smol-load-identity-publication-v1/collect-path-draft.py",
+      "sha256": "c7db51eaa53e2f18511b5f9febb6e20c640aeb8967dbca5b4c505c9c708ad392"
+    },
+    "collector_path_failure_note": {
+      "path": "artifacts/m8-smol-load-identity-publication-v1/collector-path-failure-note.json",
+      "sha256": "775b306c3fcd3385ecdc6105857700ce5175a82b31f41c2ea3b8f68075fc9ec2"
+    },
+    "prior_collector": {
+      "path": "artifacts/m8-smol-load-identity-publication-v1/collect.py",
+      "sha256": "b7598291f9bd98e3c9a0c6d40ec8543c9a9e85995315faabf2cf7f286ef56ac4"
+    },
+    "prior_draft": {
+      "path": "artifacts/m8-smol-load-identity-publication-v1/receipt-draft.json",
+      "sha256": "87cb46f834ccb53da4e10a7c729377a2f32ce8cbc91f7c6dfb69fbd25a8f06d1"
+    }
+  },
+  "collector_path_failure_note_is_retrospective": true,
+  "rejected_initial_runner_credited": false,
+  "failed_newline_check_credited": false,
+  "this_commit_changes_engine": false,
+  "concurrent_root_metal_candidate_excluded": true,
+  "native_loader_qualified": false,
+  "model_provenance_granted": false,
+  "tokenizer_pairing_qualified": false,
+  "native_abi_changed": false,
+  "app_eligibility_changed": false,
+  "iphone_qualified": false,
+  "gemma4_qualified": false,
+  "long_reply_qualified": false,
+  "performance_qualified": false
+}

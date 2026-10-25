@@ -1,0 +1,93 @@
+{
+  "bounds": {
+    "header_bytes": 75257,
+    "length_prefix_bytes": 8,
+    "max_header_bytes": 1048576,
+    "max_witness_bytes": 2097152,
+    "normalization_vectors": 61,
+    "packed_matrices": 211,
+    "payload_bytes": 142955136,
+    "physical_ranges": 694
+  },
+  "contains_tensor_payload": false,
+  "fixture_files": {
+    "config.json": {
+      "bytes": 1097,
+      "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+    },
+    "header.bin": {
+      "bytes": 75257,
+      "sha256": "357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8"
+    },
+    "index.json": {
+      "bytes": 48979,
+      "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+    },
+    "prefix.bin": {
+      "bytes": 8,
+      "sha256": "db8cfabc0a617c1e247673bfaa67cf5320598e244ff9b6538bb01f1c23dc5625"
+    },
+    "witness.json": {
+      "bytes": 294233,
+      "sha256": "cf226bc5a0317b1156964c5e2454dd9242aa01b2aaf03e6949da60e058ce6680"
+    }
+  },
+  "format": "toklet-smol-load-identity-fixture-v1",
+  "origin": {
+    "actual_run_receipt_sha256": "98181583de08048af962e6cb1e97359a28aafdff8b3b3dcd52cad0432f46c5a1",
+    "actual_summary_sha256": "1902ea7347c2d83d3e1051600b254a9d1b6e8d54fab07685eae046e39517b01c",
+    "artifact_producer_sha256": "a216249ed7337527388f280f3a6ac98966418602c51ee0c65b28ed438ed74df3",
+    "artifact_replay_sha256": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83",
+    "historical_execution_does_not_attest_relocated_tools": true,
+    "kind": "Two byte-identical captures made with separately reviewed artifact prototype; independent replays of consumed bytes",
+    "review_packet": "artifacts/mobile-gemma4-long-reply-2026-10-25-v1/smol-identity-prototype-v2/review-v2.json",
+    "review_packet_sha256": "77eea68c6aba9809b5f0dc2b079f6864385f1426b636c81074c70cee780e4fb6",
+    "runtime_scope": "Pinned interpreter, BSD time binary and reviewed scripts; not full stdlib/native image closure"
+  },
+  "original_files": [
+    {
+      "bytes": 1097,
+      "name": "config.json",
+      "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+    },
+    {
+      "bytes": 143030401,
+      "name": "model.safetensors",
+      "sha256": "ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c"
+    },
+    {
+      "bytes": 48979,
+      "name": "model.safetensors.index.json",
+      "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+    },
+    {
+      "bytes": 655,
+      "name": "special_tokens_map.json",
+      "sha256": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52"
+    },
+    {
+      "bytes": 3522656,
+      "name": "tokenizer.json",
+      "sha256": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7"
+    },
+    {
+      "bytes": 3764,
+      "name": "tokenizer_config.json",
+      "sha256": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee"
+    }
+  ],
+  "relocated_execution_policy": "CLI/output-guard/import relocation requires separate source review and fresh actual replay before that relocated execution is credited; original fixture origin does not change.",
+  "relocated_tools": {
+    "tools/experiments/smol_range_replay.py": "4869a7a21da1555182d6216b260cad84c068e5ac819cff97994cd831f29fdb83",
+    "tools/experiments/test_smol_range_witness.py": "7951dd17007e1d10f95721a1eba4ca0eed649d8948596350d581f6d7512473dd",
+    "tools/reference/smol_range_witness.py": "4476166f42e9069d18278251ac64a5f27d765ad4989beeb2d6966b46dad2169f"
+  },
+  "repository": "mlx-community/SmolLM2-135M-Instruct-8bit",
+  "revision": "0f0d9b8218915bc34d401e1a340b8c049d300d5e",
+  "scope": "Content/range identity witness only; no new graph, numerical, quality, memory, output, ABI, app or device qualification",
+  "tie_policy": {
+    "explicit_lm_head": false,
+    "role_rereads_per_capture_and_replay": 6,
+    "tied_word_embeddings": true
+  }
+}

@@ -323,3 +323,11 @@ Mac cold load checks all 540 views and actual store/model identity without forwa
 execution; its measured process fits 6 GiB. This is content binding only. Trusted
 repository/tokenizer pairing, native capabilities/ABI/app integration and the
 remaining G2/G3/G4, quality/performance, phone and long-output gates stay open.
+
+## Native capability prerequisite — consumed-byte reference
+
+The [maintained Smol witness tools](smol-load-identity.md) now pass a fresh
+relocated two-capture/two-replay execution with 28 synthetic methods. Their
+694-range/tied-read evidence is an independent prerequisite for the later native
+loaded-model identity boundary. They add no Gemma4 loader or app grant and do
+not close any G2–G7, phone or 131072-output gate.
