@@ -541,3 +541,13 @@ Two captures and independent complete replays pass within bounded resources.
 This prepares real-checkpoint operator checks; it does not execute native/GPU
 projections, qualify a resident model, change head/table limits or waive
 source/precision, app/phone or long-output requirements.
+
+## Real Gemma projections checked on Metal
+
+The [complete original-checkpoint projection diagnostic](gemma-real-projections.md)
+passes 276 fitting calls / 1932 steps, independent numerical/buffer replay and
+18 regression cases. Both rounded FP32 references match complete repeated GPU
+outputs for this short trace; separate captured and derived inputs remain
+explicit. Head/table mechanisms, native activation and resident graph composition
+are next. No full architecture, source/precision, quality/performance, app/phone
+or long-output gate is closed by these standalone projections.

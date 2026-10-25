@@ -6,6 +6,8 @@ mod fixture;
 mod l1_fixture;
 use serde_json::{Value, json};
 
+mod real;
+
 thread_local! {
     pub(super) static L1_CALLS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
 }

@@ -202,3 +202,14 @@ not execute those real projections or establish native activation parity.
 Table/head chunking, resident full graph, original source/precision failures,
 quality/performance, app/phone admission and 131072 output plus prompt remain
 open. No device capability or earlier failed numerical result changes.
+
+## Complete real-checkpoint projection qualification
+
+The [explicit real-projection run](gemma-real-projections.md) now passes all
+276 fitting calls with complete frozen inputs, original packed/BF16 tensors,
+two full repeats, partitions/resume and independent device-buffer replay.
+All repeated GPU outputs match both rounded FP32 references for this trace.
+Keep the 206 captured-state inputs distinct from 70 mathematical GELU products.
+The full head's exact geometry rejection is retained. This closes the standalone
+short-trace projection gate; native activation parity, table/head chunking,
+resident graph, source/precision failures and app/device/long-output gates remain.

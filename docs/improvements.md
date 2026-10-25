@@ -4157,3 +4157,41 @@ the [receipt](../benchmarks/results/2026-10-25-gemma-projection-trace-v1.json).
 Retain as pre-native qualification evidence. Real GPU projection checks,
 native activation parity, head/table chunking, resident graph/KV, source/precision,
 quality/performance, app/phone and long-output gates remain open.
+
+## 25 October 2026 — complete real Gemma projections on Metal
+
+Execute all 276 fitting frozen four-token projections from the original pinned
+packed/BF16 checkpoint. Reuse one Context and one matrix owner at a time; keep
+206 captured-state reconstructions distinct from 70 mathematical GELU inputs.
+Retain the full head's exact geometry rejection before reading large spans.
+Production shader, admission limits and projection API remain unchanged.
+
+All 1932 GPU steps pass: two full repeats, 1104 one-token partitions and 276
+resumes. Retain 3036 complete actual-output/native-ordered arrays totaling
+76,021,760 bytes. Independent replay checks 7,602,176 repeated GPU values /
+15,204,352 dual-rounded-reference comparisons, plus 3,801,088 native-ordered
+versus rounded-mathematical comparisons. Maximum error is zero for these
+rounded FP32 references. Do not infer unrounded exactness or activation parity.
+Reconstruct all six complete device-buffer digests, padding, inactive capacity,
+status and guards from authenticated original spans and complete raw outputs.
+
+Formatting, both strict checks, 347 CPU / 375 Metal-feature tests, both iOS
+compile targets and optimized failing-writer regression pass. Preserve the
+first strict-lint-only failed check attempt; a logically equivalent predicate
+fix passes a fresh isolated check run. Eighteen replay tests cover malformed
+JSON/read bounds/cleanup and actual-capture integrity, including coherent
+mutations that specifically fail numerical, repeat and partition checks.
+Original apply outcome/device metadata precede raw-write failure, while the
+controller retains binary/text independently and closes every owned process.
+
+On Apple M1 Pro the largest owner totals 10,838,428 bytes including its 240-byte
+structure. Native RSS/physical peaks are 65,585,152 / 57,918,064 bytes under
+separate 1 GiB limits; replay peaks are 95,862,784 / 92,095,280 and regression
+peaks 136,380,416 / 107,184,968 under separate 512 MiB limits. These diagnostic
+policies and exhaustive reads/oracles do not measure whole-model fit or latency.
+
+See [contracts, measurements and exclusions](gemma-real-projections.md) and
+[receipt](../benchmarks/results/2026-10-25-gemma-real-projections-v1.json).
+Retain the real standalone projection qualification. Head/table storage,
+native activation/full resident graph/KV, existing source/precision failures,
+quality/performance, app/phone and long-output qualification remain open.

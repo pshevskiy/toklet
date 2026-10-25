@@ -476,3 +476,17 @@ and six owned process/resource closures pass. The head remains geometry
 rejected. These are pre-native reference inputs, with actual projection/GPU,
 native activation parity, table/head storage, resident graph and earlier
 source/precision, app/device and long-output gates still open.
+
+## Actual real-checkpoint projections on Metal
+
+The [bounded real-projection diagnostic](gemma-real-projections.md) passes all
+276 fitting calls / 1932 GPU steps with original packed/BF16 weights. Complete
+outputs, independent dual-rounded-reference gates, native ordered rows, full
+buffer digests, partitions/resume and 18 checker regressions pass. The largest
+single owner is 10,838,428 bytes; measured diagnostic RSS/physical peaks stay
+below its separate policy. All required Rust/iOS checks pass after a retained
+strict-lint-only first attempt. The head must retain its exact geometry error.
+This closes the standalone four-token projection qualification, not G2/G3/G4.
+Next is bounded table/head storage and numerical qualification before resident
+graph composition; prior source/precision, app/device, quality/performance and
+131072-output-plus-prompt requirements remain open.
