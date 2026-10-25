@@ -211,3 +211,14 @@ overall numerical acceptance remains false. Native short raw-logit execution
 is now measured on Mac, with generation/state, source-BF16, precision gaps,
 Metal, quality/performance, phone fit and app integration still open. G3 is not
 marked complete and no capability/catalog/position limit changes.
+
+
+The [bounded packed generation-state wrapper](gemma-generation-state.md) now
+connects the same model-bound raw session to the existing greedy generator.
+Separate pending history, exact entire committed-prefix reuse, conservative
+fork/shortening replay, deferred physical reset failures and final-row sampling
+are checked offline. All302 CPU/324 Metal-feature tests, both iOS targets and
+five release state methods pass; warmed state operations allocate nothing.
+This does not qualify real E2B continuation or close G3. Independent continuation
+witnesses, tokenizer/chat, precision/source, Metal, quality/performance, device
+and app gates remain open, with no catalog/ABI/position changes.

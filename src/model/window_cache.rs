@@ -143,6 +143,11 @@ impl WindowKvCache {
         self.generation
     }
 
+    #[cfg(test)]
+    pub(crate) fn set_generation_for_test(&mut self, generation: u64) {
+        self.generation = generation;
+    }
+
     pub fn allocated_bytes(&self) -> usize {
         // The constructor checks actual capacities and this addition.
         (self.k.capacity() + self.v.capacity()) * std::mem::size_of::<f32>()

@@ -1,7 +1,7 @@
 use super::*;
 use crate as engine;
 #[path = "../../../tests/common/gemma_packed_fixture.rs"]
-mod fixture;
+pub(super) mod fixture;
 const HIDDEN: usize = 64;
 const LAYERS: usize = 4;
 const HEADS: usize = 2;
@@ -53,7 +53,13 @@ fn close(actual: &[f32], wanted: &[f64]) {
         );
     }
 }
-fn both(data: &fixture::Fixture, name: &str, actual: &[f32], before: usize, count: usize) {
+pub(super) fn both(
+    data: &fixture::Fixture,
+    name: &str,
+    actual: &[f32],
+    before: usize,
+    count: usize,
+) {
     for contract in ["math", "staged_fp32"] {
         close(actual, &expected(data, contract, name, before, count));
     }
@@ -67,7 +73,7 @@ fn unheads(values: &[f32], heads: usize, count: usize, dims: usize) -> Vec<f32> 
         })
         .collect()
 }
-fn pointers(s: &Session<'_, '_>) -> Vec<usize> {
+pub(super) fn pointers(s: &Session<'_, '_>) -> Vec<usize> {
     let mut result = vec![s.caches.as_ptr() as usize];
     result.extend(s.caches.iter().flat_map(|cache| {
         let (k, v) = cache.committed();
@@ -111,12 +117,12 @@ fn pointers(s: &Session<'_, '_>) -> Vec<usize> {
     result
 }
 #[derive(Debug, PartialEq)]
-struct Snapshot {
+pub(super) struct Snapshot {
     tokens: Vec<u32>,
     logits: Vec<u32>,
     caches: Vec<(Vec<u32>, Vec<u32>, usize, u64)>,
 }
-fn snapshot(s: &Session<'_, '_>) -> Snapshot {
+pub(super) fn snapshot(s: &Session<'_, '_>) -> Snapshot {
     Snapshot {
         tokens: s.tokens().to_vec(),
         logits: s.logits().iter().map(|v| v.to_bits()).collect(),

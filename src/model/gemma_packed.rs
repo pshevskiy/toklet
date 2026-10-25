@@ -14,6 +14,8 @@ use crate::mlx::affine::{Matrix, MetadataDtype};
 
 mod e2b;
 mod forward;
+mod generation;
+pub use generation::GenerationSession;
 #[cfg(test)]
 mod tests;
 
@@ -112,6 +114,8 @@ pub struct Model<'a> {
     plan: SharedKvPlan,
     unit_norm: Vec<f32>,
     bytes: usize,
+    tensor_bytes: usize,
+    metadata_allowance_bytes: usize,
 }
 fn check(values: &[f32], expected: usize, name: &'static str) -> Result<(), Error> {
     length(name, values.len(), expected)?;
@@ -220,6 +224,9 @@ impl<'a> Model<'a> {
                 return Err(Error::InvalidConfig("Gemma packed scalar"));
             }
         }
+        let tensor_bytes = retained.map_or(bytes, |report| report.tensor_capacity_bytes);
+        let metadata_allowance_bytes =
+            retained.map_or(0, |report| report.metadata_reservation_bytes);
         if let Some(report) = retained {
             // Replace the borrowed logical tensor sum with its owner's actual
             // full capacity. This includes retained source scalar vectors and
@@ -271,6 +278,8 @@ impl<'a> Model<'a> {
             plan,
             unit_norm,
             bytes,
+            tensor_bytes,
+            metadata_allowance_bytes,
         })
     }
     /// Packed/norm backing plus model metadata and actual owned Vec capacities.

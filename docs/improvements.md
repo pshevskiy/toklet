@@ -3384,3 +3384,41 @@ This is short scalar raw-logit execution, not completed G3 or app support.
 Original-BF16/source qualification, precision gaps, tokenizer/chat/generation,
 resident Metal, quality/performance, phone fit and131072 output tokens remain
 open; no ABI/family/catalog/limit changes.
+
+
+## 25 October 2026 — bounded packed generation-state integration
+
+Connect the existing packed scalar graph to InferenceSession and the shared
+greedy generator without modifying either numerical kernels or generation
+policy. Keep sampled/input history separate from committed KV, expose only the
+final evaluated vocabulary row and validate full appends/replacements before
+mutation. Reuse an entire exact committed prefix; replay changed/shortened
+prompts conservatively from position0.
+
+Invalidate/reset logical state immediately and defer fallible physical reset
+until new numerical work. Actual generation-exhaustion and late-forward failures
+preserve explicit replay/pending state and hide stale distributions. Requests
+cancelled at entry or rejected during validation preserve the entire old state;
+later cancellation/callback failure preserves valid progress and pending sampled
+tokens. Stop IDs remain pending and un-emitted, and continuation evaluates them
+exactly once when requested.
+
+Admit model+raw-session+wrapper bytes before allocation and verify actual
+capacity afterward. Count both fixed histories, full32-row logit capacities,
+cache/staging buffers and the same retained store allowance once. Two cold
+accounting fields add16 bytes of model metadata; smaller requested capacities
+still admit unchanged physical32-position storage.
+
+Five new state methods pass in default, Metal-feature and release builds.
+Required formatting/strict checks,302 CPU/324 Metal-feature tests and both iOS
+targets pass, with16/109 ignored hardware/model tests explicit. Ninety-six warmed
+decode steps and three fork replays/resets/discards allocate zero Rust heap
+storage. Preserve the initial test-helper visibility compile failure without
+test-pass credit; the corrected helpers retain their original numerical bodies.
+
+See [state and accounting rules](gemma-generation-state.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma-generation-state-v1.json).
+Real E2B continuation, tokenizer/chat and full G3 qualification remain open.
+Earlier FP64/source/GPU/long-position failures, Metal, quality/performance, phone
+fit, app support and131072 output tokens remain unqualified. No ABI/catalog or
+position-limit changes.
