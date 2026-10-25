@@ -14,6 +14,11 @@ MLX Gemma4 E2B config-only app probes reject unknown architecture and create no
 native Gemma model handle. The [Mac storage load](gemma4-checkpoint.md) now
 admits pinned Gemma text weights; numerical execution and phone fit remain open.
 
+Latest reference preparation, 26 October 2026: [complete real lookup rows](gemma-lookup-reference.md)
+freeze all 41984 embedding/PLE values from the accepted independent trace for
+later original-table GPU tests. Extraction does not run a model or qualify large
+table loading, graph execution, phone fit or any historical precision gate.
+
 Latest standalone G4 progress, 26 October 2026: [resident GPU table gathers](gemma-table-gather-gpu.md)
 now reuse the same original packed chunks as affine projection. Tiny independent
 fixtures qualify repeated/reordered rows, complete buffer identity, preflight,

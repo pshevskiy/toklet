@@ -1,0 +1,3507 @@
+{
+  "format": "toklet-gemma-lookup-reference-v1",
+  "passed": true,
+  "scope": "Complete extraction of existing independent staged-FP32 embedding and per-layer lookup rows; no new numerical evaluation",
+  "source_parent_revision": "dac8f04f36a21325e4a6a04597a24b7ee5bf65b4",
+  "bindings": {
+    "artifacts/m8-gemma-lookup-publication-v1/collect.py": "8c85d869ad9741677a99797dade293ece7ab437c26c0b37a00f81a4ec318f9dc",
+    "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12": "a7f5b535d61d1c7326824204ac80f045a97a652abb154421e2c74fcc365a3539",
+    "benchmarks/results/2026-10-26-gemma-table-gather-gpu-v1.json": "ea7d9afc13cb65540beb82c7b0d4308cbc3724dac5022863babd51d904cf6bdc",
+    "artifacts/m8-gemma-lookup-reference-v1/checks.json": "1323185e62a4090f80039adbf758cbd72262c0dfc16f95b8a825f1627ee91aaa",
+    "artifacts/m8-gemma-lookup-reference-v1/run.py": "36f5f92cd7a55db08ce4cfb5b4a043aa95c55ca943fea49f75a7cf91b35bfd00",
+    "tools/experiments/m7_apple_package.py": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d",
+    "Cargo.toml": "49e8af0306160ee298922bce267c1893bef78edcd1d51b7a127300ebdca86878",
+    "Cargo.lock": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26",
+    "src/app_chat/content/tests/capture.rs": "360aae0c25424ae5a5247676296d300eac844e7a57fdc94a0b2a43615e6f1083",
+    "src/app_chat/content/tests.rs": "2b65bed151a68e779720cc694e753ba11e0522b08db8c163dbd5f8bc988f276f",
+    "src/app_chat/content.rs": "59c4fce1ce7d6c323d1a20c484ee8b82358f546739b9c2a7fb87e9dd73fef4c5",
+    "src/app_chat/gemma4/tests.rs": "9d1a8e1508b41c99060ce42700cd7f36bd239686ddb4f7de91c59b2d1ab5a711",
+    "src/app_chat/gemma4.rs": "f5a27b34e2dddec9f1bcce13b6a43afa7bd42eb260db43c52fd8f42110aa1ef9",
+    "src/app_chat/stream.rs": "ddfe5d6e2de239df94f1e5f2d78ceaa4ca9df8c5ac62d3ecbbf8cc3563ae9b44",
+    "src/app_chat.rs": "188fe60aa93abcf16156c7de63d37e99b8012b79655260124e319290c62fa17c",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/inspect.rs": "4cbbd66cfd7fed4ccadd90e1ec9d23132df0be8f19b7810325b4bd8d51f34461",
+    "src/bin/cli/mod.rs": "0f35386f986d90c86d4dc8e941a4a97f2e848d987b77c39dff9aec8715b9650d",
+    "src/bin/cli/plan.rs": "119cd9ad3f69e0ef91d1856d7fe0f8bb76c7d00832f632f2f772a9830be44046",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/causal_conv/tests.rs": "19982f2b19dce919a6ee5fd887557c9ba4542c3e2627337e4155de5e61caf967",
+    "src/cpu/causal_conv.rs": "81634447ded8fc9e40f783c3225acc44c3079188f5e7484339f074c43a1614b2",
+    "src/cpu/dense_decoder/tests.rs": "558f016de15740132466baa5a38386f6878019def878038d55b08175c18affd9",
+    "src/cpu/dense_decoder.rs": "e30e0694acf8228c22e1d286833495474ba45a3cad9ca8c7a02bc6e99d5e1a43",
+    "src/cpu/gated_delta/tests.rs": "4ee3e58a03a65edb6ad2a509f70f1d6b006fcb07615962dbccebf0ea05ae626e",
+    "src/cpu/gated_delta.rs": "9eb5c8f89935fcb0c32db145fb3a007ab66e9932dd44600c6503dcf07a5aa6ff",
+    "src/cpu/gelu/tests.rs": "fee0562dab34b3facec9b8bf06e4aa44e0dcb0d3b97192306262e006bfe608a6",
+    "src/cpu/gelu.rs": "f3d5a9b1f374217f554afe946af7f35e1ce5685bcc723d45c41d8b5552a74e20",
+    "src/cpu/mod.rs": "cf9e16dfa3de336a2d8e5448ad807142a25ec4a8f37b578b557719fa51fcfbe4",
+    "src/cpu/per_layer/tests.rs": "420a075249e8da7fe2cdf3a71e3795ed8373ec6719bfdebab59e96e7938e2917",
+    "src/cpu/per_layer.rs": "9c5f0deb16a63e9b8655b513644ec1583e4e170b362cf031f91dfa792ff046d8",
+    "src/cpu/proportional_rotary/tests.rs": "2a176cf2ccd2ed997613fe40f62f8d751c1686de7a50ec41835aa1fbf55fb0a9",
+    "src/cpu/proportional_rotary.rs": "e1140c87e198c340359925b4c50da227ab3a30f6d425574479745dd90c4dbaf3",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/softcap/tests.rs": "6e77a46496ad65a6e22e8fce30086fdaeb260bf6b50cff9d229b732b7d858c9e",
+    "src/cpu/softcap.rs": "0c030176e9396c539c8d58a9aba99e272d3eb0f5c3eb6487fe04d9f74a00e2f7",
+    "src/cpu/span_attention/tests.rs": "446e9623e15d7333fb9a329d03cb187f5dbcfdc989f88add0054a88ba3b7ebe7",
+    "src/cpu/span_attention.rs": "fec2627d50fbddb00858bf1093d12bfdc0c9fb1a99b6f6cd6c8a0eb48b2ed383",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/cpu/window_attention/tests.rs": "b399fe01dbaef0cad27974905fcbdfacd56ebcad744b78107595c200d598b678",
+    "src/cpu/window_attention.rs": "9a0c76ed651b0593a0c6170111c5034bc06e295ec921fd935bb73d74011cf9e0",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "8503e6280e9a7354fad08a39550c9075b4a2d59fe112c210c23ff4f8593a0f26",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "2621b069c41d0622a969b78b4379e859d626d2472a907ff56efebac8e7f11275",
+    "src/metal/gemma_affine/partitioned/gather/tests.rs": "a040c72c0469c6dbefab06b2ad8c0660a3d0f247635a595c45441fbddf1eaac8",
+    "src/metal/gemma_affine/partitioned/gather.rs": "441852445e8b3f2843eb7e95d6ecedf75644fc11bf61c4e87f0ce6b9486f67d2",
+    "src/metal/gemma_affine/partitioned/tests/head.rs": "b37be046ba8c66788d8dd1085b5cf885f28dfd855b7820e7f77101f45572b9e0",
+    "src/metal/gemma_affine/partitioned/tests.rs": "0dc33156387c5a8fba9fe53e1195c4d0fa8e1eb995ee627058faa1a47c891f82",
+    "src/metal/gemma_affine/partitioned.rs": "9bd69ae1fbf183be9d6972f6d16c89c4ea81cb256885f0327c818fbdc2beaf8d",
+    "src/metal/gemma_affine/tests/real.rs": "b30e2ed660be0c758b1cd0c1f4f8de97a3edf0dcb205b3f0a833f00f8ffec81a",
+    "src/metal/gemma_affine/tests.rs": "e6db4cdb6ac9275d8f28f33645c21261f813b98c0aac5a6823b0ad2fcfe6a82a",
+    "src/metal/gemma_affine.rs": "8a62186e40710e0447a3d8d626bf10c0e26197e95966c33d8bfbd65b67fb0174",
+    "src/metal/gemma_rms/tests.rs": "8a9f9b1fdd07424cc6cec0eba8ce17a723e14b43773dde35c7dcb06aae45b374",
+    "src/metal/gemma_rms.rs": "c3ad44d734aed2fb4281bf30941ffa790ef6e9482d4bcbddc5c5013cd2ece925",
+    "src/metal/gemma_rotary/tests.rs": "1b2b1931d93260615972370ad9e82eebb405fa0df53a102c039f283dc6564812",
+    "src/metal/gemma_rotary.rs": "c8c2837e9a11f0555e44acabcc2866d551b96928645de1489eaf793a32633197",
+    "src/metal/half_consistency.rs": "e9ee1e50fba0e49f177ccc6e86b0d5357293c3119a2065ce62b481a4a1e1e460",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/memory.rs": "35f1ff6d12bac8e726c75749e66975a515c2dcc7676c2775dd0f96d97d5fef9d",
+    "src/metal/mlx.rs": "c64e4a21d335687d8b58b43d580a809276bf0c19bb9fd0a777be87922d7d8700",
+    "src/metal/mod.rs": "f98cb3781c699abed4ba1bbc1291e8c47f18d29404a8f9f9ba99168563f5f8a5",
+    "src/metal/online_attention.rs": "e4e6c1f554220174d684396eb6688c86e2e670ef2ad094563fbbffb56219862c",
+    "src/metal/planning.rs": "7e3516f929f20cd5fc19a3374b0ddd5dd8f4fa8f8fb6dde43a690236882fe11d",
+    "src/metal/profile.rs": "1df0c21acb54dcda54bcccc66b02417f343a448a4b0ae0a06538ce0fc3fa614f",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/mlx/affine.rs": "936f105d4dcf70f52d5ea030ba9d2201e5d36644f817099ced3b9e3dbf53ad6d",
+    "src/mlx/compatibility.rs": "05c0f3b3734fa567a113495ba5fb484ae20fc044dba28a8da02711fce78bfba3",
+    "src/mlx/dense.rs": "cd5803d9406e1dff6ac6a65353d1d7c9caf01e5a4e122281b80bead7b52b5d0d",
+    "src/mlx/execution.rs": "138ad46f8ee2f4722a617e2d0a7afa480d9b34c751a85d07fb17db36d552680f",
+    "src/mlx/gemma4/payload/tests.rs": "a933c3c804552ced3f8c7b1883382671a32b27ae49a2df42ee19d6226e40a09c",
+    "src/mlx/gemma4/payload.rs": "9ac244aef046698a4e2c7ccad90a0f61998f8c05bceed020792faacec34ca6b4",
+    "src/mlx/gemma4/tests.rs": "6e78deeba32b74fff3f5af6d8b9b0ad3510d9e4acacb879d8ed4692bce9cd637",
+    "src/mlx/gemma4.rs": "950a18343a1bd311a3a9c132bae5d1b408a2d529affecdd9b6d8244fc255a9f2",
+    "src/mlx/mod.rs": "0a516d4121d972ed99b48c9bf70eeb40b5c7e159157c3eac7a12f9cbde6c0b99",
+    "src/mlx/qwen/content_tests.rs": "ac549b90791327d905c07a417241dfcfc168de10a4c873365949ae0bb7675266",
+    "src/mlx/qwen.rs": "a72bafd5f556fdd31b6e99cb06ee25a9d22280bd4ca7d3e9f747691f9e2d119c",
+    "src/mlx/qwen3.rs": "43fd005573eeedbb60e489dfb220e2b8e1ec6b8d2f03c9547bd4a91bf36abef4",
+    "src/mlx/reference.rs": "86c002e4a23d519fe5a3c66736511d6ffd65803855a6880442a2058c64be3d3d",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/gemma_packed/e2b.rs": "09ca54243b63a408c7393e4514e764c9a88f6ee349a1e3e197fb5cb4af94161d",
+    "src/model/gemma_packed/forward.rs": "2a456bd0ea4c83d120d8eeb5ce44b1c9565c5f400272008d65fcc75751d5c00d",
+    "src/model/gemma_packed/generation/tests.rs": "547188103651586b2f2065fea9f511b8be970dd2c6a4bf1af08e525fb0f94051",
+    "src/model/gemma_packed/generation.rs": "7fe3d8662128c80648ce0ad29256dbaeb0fc7a9873b458a54b502aded21fdc27",
+    "src/model/gemma_packed/tests/e2b.rs": "f4c339dd843623595d97dbcaabeed6a9d0496802e18a2270959fc930ab6fb194",
+    "src/model/gemma_packed/tests/producers.rs": "d2169379712073c771169cbf815a8ac3948e2e38b65094e0b460c046081f375e",
+    "src/model/gemma_packed/tests.rs": "c55f21b617a69d639400a79c8b783aa9ac2a2b6d816928205aba8caa401ef885",
+    "src/model/gemma_packed.rs": "bf72e37b1100bf25e1cf947710afb1b7eb59bb607ac38bb0c938f6b5b03e61ba",
+    "src/model/gemma_reference/forward.rs": "d3f3e80a4122cb09ad644784f101ff57e4b851fcf826e479a2fa9a1830b67778",
+    "src/model/gemma_reference/tests.rs": "bf341cae6cee8e0533cee7758f154435c5a1287de9479eab7e795781a61349c2",
+    "src/model/gemma_reference.rs": "0390cc681c5176e9e274186d0a937790bd30b4d5ea26f2321ec967da19cf4298",
+    "src/model/mod.rs": "64adc9bcc5160618268d4699920e754485d46b8131d4ce725c1364f88ee166e2",
+    "src/model/shared_kv/tests.rs": "89fa202ab45ab43a20dd8adaf0c1a0815d63ee356e28c14ef7a07da02f685c0f",
+    "src/model/shared_kv.rs": "fbe2f68965ddebf267cb0b0b1dae50869a133d838c8cdd321296093cbfe2bed2",
+    "src/model/trace.rs": "6fd516def586350f6f425f6e16eb8c8df7a8a97619aef14f8a4a511a059ca91e",
+    "src/model/window_cache/tests.rs": "f539b9dcea262e84f9b43c381bdf0ca0d95e61bed3dd8082bb63d5112f11c5d2",
+    "src/model/window_cache.rs": "f94da4b700c7b6a7010ef42aa6800f5adb1f982ef7be327a4485de3a05ac1d34",
+    "src/native/compatibility.rs": "8e7119eed2cc13516f611b20367c7b691a4af570ca154f3a3e929aadb03d3da6",
+    "src/native/runtime_planning.rs": "b1537c3b26a2671d59d46c1995c96eff03abddc8a840aa9a5ac4375ed4fb2bbe",
+    "src/native/tests.rs": "b745d0a3e7f25f0e0897f3d3a3048cb2da5dd48b55819f41c6b73319255db0c8",
+    "src/native/text/audited_capture_tests.rs": "cf6b18ecfc85345fa3fc9991a25c9371f8072833ccb46a5cc17ca0badd135be3",
+    "src/native/text/audited_tests.rs": "8151c58f96e02ba50a5e0ce044c1a353a54bd8849280d47220d89b08dfa46a5d",
+    "src/native/text.rs": "f23a750a32009a2fec00854758bc4c96ba0b227d4bb3c2d387fd47be366f04d7",
+    "src/native.rs": "ffd07e8fea5dac54410cc3c26511a68be87469bc655b1acd369c302a1e4e77d1",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/q4.rs": "14277bd171d08d60fea9ad8bc871f62584ed6a84e2ac0ad3f42ecd232a1fcaac",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/audit/tests.rs": "dec155fac6d8e1ca96950b816fe4f0624dff5052297a3ba90e043dfdc7f0ec90",
+    "src/weights/audit.rs": "0130648975f7eb75364126c6443ce7362b866a3d3752d6dc1b3421b5f1620ff9",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "4f8976d5f7bdee125fc192cbc8635028e77e24ba7bfa7ef5dd8a1ce05af941e3",
+    "src/metal/gemma_affine/partitioned/gather.metal": "299c4bf1b93b82e99725a1110589ffe1a579fa680230951c9ce9e4b01f7ed312",
+    "src/metal/gemma_affine.metal": "cf332eb282e123349b0f655c757bb87d877157327d971cb9de73d4a90a8eb118",
+    "src/metal/gemma_rms.metal": "5f786979f8291f9bba2ee3240b6f69fcfd1558b31685c2559df3020987dc8cb9",
+    "src/metal/gemma_rotary.metal": "1a34a3a5b789d6374aadb8d596f654fda5c91898504b3dfd262423beb64efd7f",
+    "src/metal/kernels.metal": "26f893f318f65500b86d702f0fcae65424702b0dd7079fc01db197b5ab985b68",
+    "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+    "tests/bench_contract.rs": "8510550dc5062555509c1f77d8c9b6169fe6122edd802aaa6cc45220d74e7ea1",
+    "tests/cached_attention.rs": "44df14bec20ca607aa18470f36e8e74e2151d75e2db5fb65f0783b91f120b3a8",
+    "tests/cli.rs": "c4dc02a39078a9f28a873edc4c4bb7d8aa935dcda0f097459a77d40483e843a1",
+    "tests/common/gemma_affine_fixture.rs": "9cbef2176993da4c3eabf3e8f0b9ec327f20f3af9a3b9ff58aac3b0836ed7c09",
+    "tests/common/gemma_affine_l1_fixture.rs": "76a5662d470f6212b60d062cfd142b87c4d610030b739c0534203fa2e97dd0f0",
+    "tests/common/gemma_packed_fixture.rs": "ad0021c547cb7ae14b7e87b26e231ad9b03a08a0f725a7e8cb0b45f04ae9e573",
+    "tests/common/gemma_table_fixture.rs": "9edd613a5284874fc98c73ba12c0162d32cde1ee6de830d186a9662d36af6a31",
+    "tests/cpu_attention.rs": "804bb41795c868a0e0a4d1d9a1923270731e137eed986003f57de847bb5fb7e7",
+    "tests/cpu_decoder.rs": "c97638807910b4307e56ded647088b10fdadf9eef50bfe9a21f8635ae83aed79",
+    "tests/cpu_linear.rs": "0aa924009e8803518cb9bce3c178872982b2bc87a7d5c87f6a085f6ee7b98b41",
+    "tests/cpu_reductions.rs": "b4529fba8df103e4e0f289b0595f3498af665d199a1e4aa7babb8ae693dde1e7",
+    "tests/cpu_tiled.rs": "0d1f700ee99000e8c396dd4dc963aaaaa7a2b0d8753e088c2eab8c22ee06ec20",
+    "tests/fixtures.rs": "9cb5a5d77894bf8d946a1d01e9f63929d79e48e64060ccdced9e76ed8780831c",
+    "tests/gemma_metal_affine.rs": "c3bfb04e2ba51267876461c16837924687c144c6bb4e11abcd09e59c8e69fcd1",
+    "tests/gemma_metal_affine_l1.rs": "4249348bee9ff528fb1b92ba5a6db0421a7576a0ebd0c85408ba3bfbebe1335c",
+    "tests/gemma_metal_rms.rs": "1275721b6aad1e0abadde95ad87bd31896e20b122f92dbc819a9a47af5d64c87",
+    "tests/gemma_packed.rs": "32e056519f4b4ff647ab8c00de93b61118d09529212f53f498c39faf2f04bd44",
+    "tests/gemma_table_gather.rs": "107a2d329560c9d536c1a458a77a25e218e242acf2f7cb7e50ec9563ff6b3611",
+    "tests/gemma_table_views.rs": "05902188b4e75313093906f85b57fef8e4cc055fc57fd0f618305886cf234c83",
+    "tests/gemma_v_norm.rs": "7e28b1302947a1a0067dddb54b4db2d23a96681b71710d4d661c5d3cea8c138d",
+    "tests/metal.rs": "5a7f02490404dc6bc90a4234c3fe54b4d48810e7d7fc4a0913ffdecafccf5252",
+    "tests/metal_planning.rs": "60df2b4531ec6474dda486a3708ba1a3ac58c1007762c2d185388e617d274ddc",
+    "tests/mlx_affine.rs": "9ae2d3ec85ac7c031710f77c732c2a7a0a19f0478902a24e66b00fbbfffe9c56",
+    "tests/mlx_cli.rs": "51ca33079d90a1d7bd2f971c9e1cb41364471d1ffe62f485ecc37e9f7539befe",
+    "tests/mlx_compatibility.rs": "3d824bb11940a305fbc88aa8ef553b439607949b28186d91ab63fc9aa7d3fee6",
+    "tests/mlx_inspect_cli.rs": "4a72ffbcd0eaacc30028e5c4b1bff1e369f3c7ff1b62d80e41cdf9aaa5ef20c5",
+    "tests/mlx_llama.rs": "045c6f77f5f346ce821d0589719ca2bd92ecdebb5544148b4679102479fcd0b9",
+    "tests/mlx_llama_metal.rs": "620b2c184544d535194aeab517bf977ae79d88acbc3322bc6ceab9a13c22efdc",
+    "tests/mlx_metal.rs": "eb8568aff9177b768aa8945e1143a9f0ba9ec8873a306a8081cdb5dd0b3adf88",
+    "tests/mlx_mistral.rs": "64c420187939af5f54b0dc715acd16db071e4479342b32b1b02ae65079b043cb",
+    "tests/mlx_mistral_model_metal.rs": "1e2d5efd3559815092bc072e7aed3ca5bba58e743108af0553818e3853f3694e",
+    "tests/mlx_model_metal.rs": "6b02a65278935311396539942a894d2816886d5bdf259d0e167bd8b8be78ed6b",
+    "tests/mlx_plan_cli.rs": "8e41e22724e64b7e0a9d19be8d568739af8e33f5344a5016a54ff37eedd8e947",
+    "tests/mlx_qwen.rs": "c643477945f615f39582886a45c83df1ae2ff26c30608d8d720bc662ac96d878",
+    "tests/mlx_qwen3.rs": "f811d5a6dc6b923acf628640333e1f8ef7b3f95833f235837071771944a51a9f",
+    "tests/mlx_qwen3_metal.rs": "e2057ce30f95cfc14182ba63a8bf9c2659f5ec74503278effab9484ff9b94792",
+    "tests/mlx_qwen3_real_model_metal.rs": "dc531ef79aaf7e8e98f9dca8bba8734d0b09db36d1463a92ad6ddc6875e1e4de",
+    "tests/mlx_real8_model_metal.rs": "ff996ef7cae574d3a4820ae5c0d6784414bcb2718a82175fc91f63457b49e719",
+    "tests/mlx_real_model_metal.rs": "fbbe6234d2eeac2bad1852219e9adc389e477286aa0babf059676b2d31d1d256",
+    "tests/mlx_reference.rs": "6c8db8e1067b2eb5b279bf7eec195cd5cb40f1c9e314e6ff74bd27e7d17f581b",
+    "tests/mlx_smollm_model_metal.rs": "a479a42e651853c903379ec97e352fde7d4ff131431ae7cd1fb156d8a5dd8221",
+    "tests/q4.rs": "3a567d03f08b327264f086324d99e0b586681f090a025ee1307bbca3c1a76952",
+    "tests/q4_artifact.rs": "dcac3e40062b63d3a5c88af35bdb8845f0a3d376f14b88b4e4390f96de810738",
+    "tests/q4_metal.rs": "dfeb8736a9209d89097aec87b02adf2c2d67ebba43081c70c5ea301b7c02b2a2",
+    "tests/q4_v2.rs": "fc3a7aad5ab8e7182a6c11981075691712a5c771cbcadd0a95908229c13943a4",
+    "tests/q4_v2_models.rs": "e2d38d78a0f9095a4146039aca2639405f9a6d550a5b20c276495df102fbaa72",
+    "tests/q4_v2_storage.rs": "04d408d1758eb4f44bd7760b099f7b771e596f3c15c80357cd7b0ed26d89bf6e",
+    "tests/qwen_forward.rs": "0cdd2529dac4c4ffb66e94d721571a40b12696486f26cbab31718cc9e767c7d5",
+    "tests/qwen_larger_forward.rs": "76a755bd50c8f127f91db33ee625a7a4dd24e68ee8388497af98c3ceb8ab1058",
+    "tests/qwen_larger_metal.rs": "0a9a6dfd013269da3a78878f6ebdcb015842b9ed900b31cbc1662e707c4d301d",
+    "tests/qwen_session.rs": "b163c685a3d8bbccc504e47ccc460b3ecc04893bbfa37bda9ceae83d3ccb84e5",
+    "tests/session.rs": "958690e150c1235357a67830e0067b9c472024815d97832c77681a8da0e07c4c",
+    "tests/support/mod.rs": "627a8e94f9981ce53bc9373168c3a2b69eb4ba11bd08d00db52d376c0f02fd13",
+    "tests/support/trace_parity.rs": "fb7144fb65f7422eb656411ebe3f0e842a337cb3beb1aa862803c6ff39994e5d",
+    "tests/weights.rs": "16a026e1ca620b20f4aeb5a8d59231a8818fe5729426a777fa1f759168a9c3e7",
+    "examples/cpu_bench.rs": "d42eafa4f78ec0b9a618c137cd21a43b35f3c1d9af8621eba39d1055ddf2553a",
+    "examples/cpu_projection_bench.rs": "3d798043179bd967eb4102ed18767e882c6c01b5fa8ea0ae17d3e147319b9c47",
+    "examples/cpu_task_reference.rs": "3a2177f9cfb2a97a026a74e26196b64f531179a50f0e16795093e055e0e46b4e",
+    "examples/gemma4_codec.rs": "eef9a118613847d9f99c2773e26b2a0683bf3b79ef2fec61c8d729d9343f0568",
+    "examples/gemma4_generate.rs": "297af34a86cf83a0593dc379a42c9416c6a3e657045088151fd5343f393f0ebe",
+    "examples/gemma4_payload.rs": "e817e03027cad837ddcb4244b601cc4ac3e5f5efa098939b81dcbb20a9e5b0e8",
+    "examples/gemma4_stream.rs": "62c3744300398f2a40dd9c95ad56442105ff829d3f40eef560f1eb794d998713",
+    "examples/gemma4_text.rs": "14e385abee88b36f0e703cea6a482f3f322d52bcda77367b58703959dae04e87",
+    "examples/metal_bench.rs": "08c430a25db6ac348f1bac8932fd72f8b92dd470d6076d829d6bf8e310d85280",
+    "examples/metal_chunks.rs": "9a14ccdc4c8776eeb41d28e5ab6770f3115f68f2c53dd619f9f17025d6857759",
+    "examples/metal_context.rs": "52f210f93640cc9039d62143644b28e27a8a05dd91564502e4768b2f56db583f",
+    "examples/metal_continue.rs": "bbcbad6573e4b0de95307954487e2ad7f496eb77c998fd328da42f96aad9baa6",
+    "examples/metal_greedy.rs": "efc972937c552356cbaf41c9171939a1c1da1912fe8da8c28c4414ffe4f01247",
+    "examples/metal_prefill.rs": "3bdf16ff6973d2ea262ab52498d343f88775671d3d9a79820969fd8757b7b579",
+    "examples/metal_quality.rs": "00d775e0acd3977907b95010c0b1275c430f621fd34b3bb114c5b920476fa84d",
+    "examples/metal_trace.rs": "b4bb14b31921974d9278a6874f86dec6943827166538e5ffaadc25e380b2a7ce",
+    "examples/mlx_content_identity.rs": "06ec32660310d4f9aa7d11be412522120b82ded14e908d0f1420be58b0d8fd5c",
+    "examples/quality_bench.rs": "ecb0501d40aca0a1fe9d6d91d89a6d34222acca9bd56276b95cfe981155e5aa8",
+    "examples/quality_rows.rs": "3004d210ed465ac3c74cb9e4c2f688da1b1657004ea9e8ef1e6f9ebfbeaaad16",
+    "examples/support/loss.rs": "a2cbea031570c1aa539b1096d2af87711935064c844f600f5d0cc6b55ed4c0ff",
+    "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+    "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea",
+    "artifacts/m8-gemma-lookup-reference-design-v1/design.md": "81ae0be7c3338043de20f9b780949a8f7bbbd9c4b6e0a39b532c5c4d874f775f",
+    "tools/reference/gemma_lookup_reference.py": "da616e280dd9d7758964942c01dfda8a588863069dd95fa32ef7e12441455c24",
+    "tools/reference/check_gemma_lookup_reference.py": "b4ac6990a4d0949d3b5a57f2b7c691fab23afb554a91185e7be5477f248fcfed",
+    "tools/reference/test_gemma_lookup_reference.py": "0992218279a92332f7b1556dc0ea27c50ef26a4b6ba15b9b27ca35e3610394be",
+    "tools/reference/gemma_head_reference.py": "18af1cde528ff454e096ce9c05c3653a29f97b5434cfa337c82992e5fb69145e",
+    "tools/reference/check_gemma_head_reference.py": "5bea855bcafbc6a74907d11d066e6c5a800eef5704ed4efa7cbd318837118f42",
+    "benchmarks/results/2026-10-25-gemma4-text-math-v1.json": "c8691409336f5242076ad8859784dde7df8c1a5cdcc493f9b3c0bdcc8e974579",
+    "artifacts/m8-gemma4-text-real-v2/observation/observation.json": "ca86bd9836c88d5084f770b9ae84ecdb6e1e5a91d775e7cda315702450e918e9",
+    "artifacts/m8-gemma4-text-real-v2/observation/arrays.bin": "352385699238b422b430b6f535c2eac99b6e90543becb4c46caa0c59f930ed93",
+    "tests/fixtures/gemma4-text-math-v1/math.json": "f60c9f355b9008cfba6acd5d39c89c108de2d1ed5a3c8013a3a595576d8f910b",
+    "tools/reference/gemma4_text_math.py": "6c04a81b93c95edfad4a4de646da3731b71a6dd175163fb856d2009bd103b096",
+    "artifacts/m8-gemma-lookup-reference-v1/sources/gemma_lookup_reference.py": "da616e280dd9d7758964942c01dfda8a588863069dd95fa32ef7e12441455c24",
+    "artifacts/m8-gemma-lookup-reference-v1/sources/check_gemma_lookup_reference.py": "b4ac6990a4d0949d3b5a57f2b7c691fab23afb554a91185e7be5477f248fcfed",
+    "artifacts/m8-gemma-lookup-reference-v1/sources/test_gemma_lookup_reference.py": "0992218279a92332f7b1556dc0ea27c50ef26a4b6ba15b9b27ca35e3610394be",
+    "artifacts/m8-gemma-lookup-reference-v1/sources/gemma_head_reference.py": "18af1cde528ff454e096ce9c05c3653a29f97b5434cfa337c82992e5fb69145e",
+    "artifacts/m8-gemma-lookup-reference-v1/sources/check_gemma_head_reference.py": "5bea855bcafbc6a74907d11d066e6c5a800eef5704ed4efa7cbd318837118f42",
+    "artifacts/m8-gemma-lookup-reference-v1/sources/owner.py": "36f5f92cd7a55db08ce4cfb5b4a043aa95c55ca943fea49f75a7cf91b35bfd00",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a.stdout": "498df5f55c6c26cbad2b304126734b3c42f8912eae74ec76550cac93cd3e0efd",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a.stderr": "1929967fe7de03d1ed7ca09e7bbcc9916a65858d34000799516d06c05dc6452f",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a/observation.json": "b1818331b5d341444fbc4ea22e018fc99241bd2d4fe5edbca7df9222739546a1",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a/arrays.bin": "aea89e9e83d266ae5e648e1c4bebb01509370ef29ef777dea7018b5822cbf469",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a/manifest.json": "6651c175ea8d90e9759ea40b8746e6c816a8c867a969b9075e5d83e50c860a95",
+    "artifacts/m8-gemma-lookup-reference-v1/replay-a.stdout": "c87e6055801db338ea8af6062577f992631323a15e11d99489b55f29eb5f3018",
+    "artifacts/m8-gemma-lookup-reference-v1/replay-a.stderr": "1c6d4f6387b12afe40f291bbb91db78676128c8f1375b9b42a2a21b14278c5cd",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b.stdout": "498df5f55c6c26cbad2b304126734b3c42f8912eae74ec76550cac93cd3e0efd",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b.stderr": "c0e30ddb4fa30265aa08150a552b65b50ef85097a987c1e00e7dfd625da2624e",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b/observation.json": "b1818331b5d341444fbc4ea22e018fc99241bd2d4fe5edbca7df9222739546a1",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b/arrays.bin": "aea89e9e83d266ae5e648e1c4bebb01509370ef29ef777dea7018b5822cbf469",
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b/manifest.json": "6651c175ea8d90e9759ea40b8746e6c816a8c867a969b9075e5d83e50c860a95",
+    "artifacts/m8-gemma-lookup-reference-v1/replay-b.stdout": "c87e6055801db338ea8af6062577f992631323a15e11d99489b55f29eb5f3018",
+    "artifacts/m8-gemma-lookup-reference-v1/replay-b.stderr": "c2004fcfca2bb3bd4cb8961e36e8f2789b2351a2007774b193a78d72db33cf5e",
+    "artifacts/m8-gemma-lookup-reference-v1/tests.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-gemma-lookup-reference-v1/tests.stderr": "2c450f7bbbf85a04263629f2f691d2de35c156786386258979e4cb75e700899e",
+    "artifacts/m8-gemma-lookup-reference-v1/retention.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-gemma-lookup-reference-v1/retention.stderr": "b071a6d0e0e80f7f6e68fe8d41497e07082d28a4db6822fc108e4bf69bddf9b8",
+    "artifacts/m8-gemma-lookup-freeze-v1/checks.json": "89cb3adfc4940d520ca95f5f29d4f087d885295cf5f856e4a1941fb7fb10cabb",
+    "artifacts/m8-gemma-lookup-freeze-v1/freeze.py": "88e3dc1318dab5f9cd921e130ab51ee0b365745de9207e5e4fb62df2e22e7065",
+    "tests/fixtures/gemma-lookup-reference-v1/observation.json": "b1818331b5d341444fbc4ea22e018fc99241bd2d4fe5edbca7df9222739546a1",
+    "tests/fixtures/gemma-lookup-reference-v1/arrays.bin": "aea89e9e83d266ae5e648e1c4bebb01509370ef29ef777dea7018b5822cbf469",
+    "tests/fixtures/gemma-lookup-reference-v1/manifest.json": "6651c175ea8d90e9759ea40b8746e6c816a8c867a969b9075e5d83e50c860a95",
+    "docs/gemma-lookup-reference.md": "b8de955651180bdbeb0c218c28ae236189915d18cea733c77a40e8ab16ebfaf7",
+    "docs/gemma4-implementation-plan.md": "bf05cfe89d4b3d833bf87ecc58f51534e4beb88867537871e049636124a2b009",
+    "docs/engine-expansion-plan.md": "d61dc22d9fe3c4e0f964a9f118e6f5f90890ccf7c2dd0e14d75677bc2dab1f8c",
+    "docs/improvements.md": "d56fd5baffffd0c38aa6cb7fb7200b79cafd1ac0209f5f1b1fee43a9abebab5c"
+  },
+  "bound_file_bytes": {
+    "artifacts/m8-gemma-lookup-publication-v1/collect.py": 9709,
+    "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12": 152096,
+    "benchmarks/results/2026-10-26-gemma-table-gather-gpu-v1.json": 3184998,
+    "artifacts/m8-gemma-lookup-reference-v1/checks.json": 42960,
+    "artifacts/m8-gemma-lookup-reference-v1/run.py": 11482,
+    "tools/experiments/m7_apple_package.py": 12764,
+    "Cargo.toml": 2249,
+    "Cargo.lock": 24283,
+    "src/app_chat/content/tests/capture.rs": 9160,
+    "src/app_chat/content/tests.rs": 13201,
+    "src/app_chat/content.rs": 5190,
+    "src/app_chat/gemma4/tests.rs": 13461,
+    "src/app_chat/gemma4.rs": 11365,
+    "src/app_chat/stream.rs": 27232,
+    "src/app_chat.rs": 25309,
+    "src/benchmark.rs": 3360,
+    "src/bin/cli/chat.rs": 21958,
+    "src/bin/cli/inspect.rs": 3256,
+    "src/bin/cli/mod.rs": 35684,
+    "src/bin/cli/plan.rs": 6473,
+    "src/bin/toklet.rs": 96,
+    "src/cpu/attention.rs": 11201,
+    "src/cpu/causal_conv/tests.rs": 8277,
+    "src/cpu/causal_conv.rs": 2849,
+    "src/cpu/dense_decoder/tests.rs": 20434,
+    "src/cpu/dense_decoder.rs": 8850,
+    "src/cpu/gated_delta/tests.rs": 18725,
+    "src/cpu/gated_delta.rs": 8852,
+    "src/cpu/gelu/tests.rs": 4685,
+    "src/cpu/gelu.rs": 2278,
+    "src/cpu/mod.rs": 9926,
+    "src/cpu/per_layer/tests.rs": 12889,
+    "src/cpu/per_layer.rs": 5663,
+    "src/cpu/proportional_rotary/tests.rs": 8797,
+    "src/cpu/proportional_rotary.rs": 3991,
+    "src/cpu/reductions.rs": 7659,
+    "src/cpu/softcap/tests.rs": 5309,
+    "src/cpu/softcap.rs": 1351,
+    "src/cpu/span_attention/tests.rs": 20715,
+    "src/cpu/span_attention.rs": 8706,
+    "src/cpu/tiled.rs": 6519,
+    "src/cpu/window_attention/tests.rs": 13334,
+    "src/cpu/window_attention.rs": 6748,
+    "src/generation.rs": 7870,
+    "src/lib.rs": 581,
+    "src/metal/capture.rs": 2365,
+    "src/metal/diagnostic.rs": 7997,
+    "src/metal/gemma_affine/partitioned/gather/tests.rs": 18683,
+    "src/metal/gemma_affine/partitioned/gather.rs": 13707,
+    "src/metal/gemma_affine/partitioned/tests/head.rs": 19034,
+    "src/metal/gemma_affine/partitioned/tests.rs": 18589,
+    "src/metal/gemma_affine/partitioned.rs": 9474,
+    "src/metal/gemma_affine/tests/real.rs": 18351,
+    "src/metal/gemma_affine/tests.rs": 23757,
+    "src/metal/gemma_affine.rs": 16586,
+    "src/metal/gemma_rms/tests.rs": 10085,
+    "src/metal/gemma_rms.rs": 11585,
+    "src/metal/gemma_rotary/tests.rs": 13331,
+    "src/metal/gemma_rotary.rs": 12030,
+    "src/metal/half_consistency.rs": 25965,
+    "src/metal/half_projection.rs": 10662,
+    "src/metal/memory.rs": 17962,
+    "src/metal/mlx.rs": 37344,
+    "src/metal/mod.rs": 126066,
+    "src/metal/online_attention.rs": 22303,
+    "src/metal/planning.rs": 21692,
+    "src/metal/profile.rs": 13939,
+    "src/metal/q4_v2_projection.rs": 11730,
+    "src/mlx/affine.rs": 22434,
+    "src/mlx/compatibility.rs": 12484,
+    "src/mlx/dense.rs": 6806,
+    "src/mlx/execution.rs": 9022,
+    "src/mlx/gemma4/payload/tests.rs": 12283,
+    "src/mlx/gemma4/payload.rs": 16144,
+    "src/mlx/gemma4/tests.rs": 14262,
+    "src/mlx/gemma4.rs": 19178,
+    "src/mlx/mod.rs": 378,
+    "src/mlx/qwen/content_tests.rs": 4447,
+    "src/mlx/qwen.rs": 22488,
+    "src/mlx/qwen3.rs": 3359,
+    "src/mlx/reference.rs": 7972,
+    "src/model/cache.rs": 3096,
+    "src/model/gemma_packed/e2b.rs": 6365,
+    "src/model/gemma_packed/forward.rs": 11698,
+    "src/model/gemma_packed/generation/tests.rs": 13677,
+    "src/model/gemma_packed/generation.rs": 9269,
+    "src/model/gemma_packed/tests/e2b.rs": 3035,
+    "src/model/gemma_packed/tests/producers.rs": 10206,
+    "src/model/gemma_packed/tests.rs": 15196,
+    "src/model/gemma_packed.rs": 18686,
+    "src/model/gemma_reference/forward.rs": 9053,
+    "src/model/gemma_reference/tests.rs": 18626,
+    "src/model/gemma_reference.rs": 13637,
+    "src/model/mod.rs": 28660,
+    "src/model/shared_kv/tests.rs": 17814,
+    "src/model/shared_kv.rs": 11669,
+    "src/model/trace.rs": 3221,
+    "src/model/window_cache/tests.rs": 16259,
+    "src/model/window_cache.rs": 15710,
+    "src/native/compatibility.rs": 16102,
+    "src/native/runtime_planning.rs": 28671,
+    "src/native/tests.rs": 44262,
+    "src/native/text/audited_capture_tests.rs": 3584,
+    "src/native/text/audited_tests.rs": 16276,
+    "src/native/text.rs": 29310,
+    "src/native.rs": 35521,
+    "src/q4/artifact.rs": 10397,
+    "src/q4.rs": 9205,
+    "src/sampling.rs": 616,
+    "src/session.rs": 16921,
+    "src/weights/audit/tests.rs": 14238,
+    "src/weights/audit.rs": 13799,
+    "src/weights/half_tests.rs": 3814,
+    "src/weights/mod.rs": 34226,
+    "src/metal/gemma_affine/partitioned/gather.metal": 1406,
+    "src/metal/gemma_affine.metal": 2752,
+    "src/metal/gemma_rms.metal": 4203,
+    "src/metal/gemma_rotary.metal": 1606,
+    "src/metal/kernels.metal": 25103,
+    "src/metal/mlx.metal": 5748,
+    "tests/bench_contract.rs": 3277,
+    "tests/cached_attention.rs": 3570,
+    "tests/cli.rs": 22238,
+    "tests/common/gemma_affine_fixture.rs": 4205,
+    "tests/common/gemma_affine_l1_fixture.rs": 3524,
+    "tests/common/gemma_packed_fixture.rs": 5335,
+    "tests/common/gemma_table_fixture.rs": 2042,
+    "tests/cpu_attention.rs": 9019,
+    "tests/cpu_decoder.rs": 12789,
+    "tests/cpu_linear.rs": 8565,
+    "tests/cpu_reductions.rs": 10620,
+    "tests/cpu_tiled.rs": 6765,
+    "tests/fixtures.rs": 3611,
+    "tests/gemma_metal_affine.rs": 2180,
+    "tests/gemma_metal_affine_l1.rs": 1498,
+    "tests/gemma_metal_rms.rs": 2634,
+    "tests/gemma_packed.rs": 3059,
+    "tests/gemma_table_gather.rs": 4288,
+    "tests/gemma_table_views.rs": 3741,
+    "tests/gemma_v_norm.rs": 6120,
+    "tests/metal.rs": 39424,
+    "tests/metal_planning.rs": 8548,
+    "tests/mlx_affine.rs": 17868,
+    "tests/mlx_cli.rs": 11365,
+    "tests/mlx_compatibility.rs": 15797,
+    "tests/mlx_inspect_cli.rs": 3758,
+    "tests/mlx_llama.rs": 14780,
+    "tests/mlx_llama_metal.rs": 15807,
+    "tests/mlx_metal.rs": 14084,
+    "tests/mlx_mistral.rs": 9884,
+    "tests/mlx_mistral_model_metal.rs": 22507,
+    "tests/mlx_model_metal.rs": 18324,
+    "tests/mlx_plan_cli.rs": 5878,
+    "tests/mlx_qwen.rs": 21427,
+    "tests/mlx_qwen3.rs": 23849,
+    "tests/mlx_qwen3_metal.rs": 19386,
+    "tests/mlx_qwen3_real_model_metal.rs": 39757,
+    "tests/mlx_real8_model_metal.rs": 17741,
+    "tests/mlx_real_model_metal.rs": 17580,
+    "tests/mlx_reference.rs": 8501,
+    "tests/mlx_smollm_model_metal.rs": 24582,
+    "tests/q4.rs": 3415,
+    "tests/q4_artifact.rs": 11323,
+    "tests/q4_metal.rs": 50923,
+    "tests/q4_v2.rs": 4177,
+    "tests/q4_v2_models.rs": 14941,
+    "tests/q4_v2_storage.rs": 3434,
+    "tests/qwen_forward.rs": 13246,
+    "tests/qwen_larger_forward.rs": 16376,
+    "tests/qwen_larger_metal.rs": 27098,
+    "tests/qwen_session.rs": 9265,
+    "tests/session.rs": 41034,
+    "tests/support/mod.rs": 2056,
+    "tests/support/trace_parity.rs": 1982,
+    "tests/weights.rs": 19133,
+    "examples/cpu_bench.rs": 4922,
+    "examples/cpu_projection_bench.rs": 4250,
+    "examples/cpu_task_reference.rs": 10017,
+    "examples/gemma4_codec.rs": 8767,
+    "examples/gemma4_generate.rs": 45006,
+    "examples/gemma4_payload.rs": 5017,
+    "examples/gemma4_stream.rs": 20040,
+    "examples/gemma4_text.rs": 5614,
+    "examples/metal_bench.rs": 10689,
+    "examples/metal_chunks.rs": 9136,
+    "examples/metal_context.rs": 23042,
+    "examples/metal_continue.rs": 8873,
+    "examples/metal_greedy.rs": 7100,
+    "examples/metal_prefill.rs": 13400,
+    "examples/metal_quality.rs": 11032,
+    "examples/metal_trace.rs": 8089,
+    "examples/mlx_content_identity.rs": 4355,
+    "examples/quality_bench.rs": 10500,
+    "examples/quality_rows.rs": 7261,
+    "examples/support/loss.rs": 4454,
+    "target/release/toklet": 5367760,
+    "target/release/examples/cpu_bench": 1069664,
+    "artifacts/m8-gemma-lookup-reference-design-v1/design.md": 2512,
+    "tools/reference/gemma_lookup_reference.py": 6047,
+    "tools/reference/check_gemma_lookup_reference.py": 4464,
+    "tools/reference/test_gemma_lookup_reference.py": 7249,
+    "tools/reference/gemma_head_reference.py": 8345,
+    "tools/reference/check_gemma_head_reference.py": 7557,
+    "benchmarks/results/2026-10-25-gemma4-text-math-v1.json": 406993,
+    "artifacts/m8-gemma4-text-real-v2/observation/observation.json": 1954149,
+    "artifacts/m8-gemma4-text-real-v2/observation/arrays.bin": 103403520,
+    "tests/fixtures/gemma4-text-math-v1/math.json": 800566,
+    "tools/reference/gemma4_text_math.py": 12526,
+    "artifacts/m8-gemma-lookup-reference-v1/sources/gemma_lookup_reference.py": 6047,
+    "artifacts/m8-gemma-lookup-reference-v1/sources/check_gemma_lookup_reference.py": 4464,
+    "artifacts/m8-gemma-lookup-reference-v1/sources/test_gemma_lookup_reference.py": 7249,
+    "artifacts/m8-gemma-lookup-reference-v1/sources/gemma_head_reference.py": 8345,
+    "artifacts/m8-gemma-lookup-reference-v1/sources/check_gemma_head_reference.py": 7557,
+    "artifacts/m8-gemma-lookup-reference-v1/sources/owner.py": 11482,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a.stdout": 103,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a.stderr": 777,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a/observation.json": 2163,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a/arrays.bin": 167936,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a/manifest.json": 386,
+    "artifacts/m8-gemma-lookup-reference-v1/replay-a.stdout": 271,
+    "artifacts/m8-gemma-lookup-reference-v1/replay-a.stderr": 777,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b.stdout": 103,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b.stderr": 777,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b/observation.json": 2163,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b/arrays.bin": 167936,
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b/manifest.json": 386,
+    "artifacts/m8-gemma-lookup-reference-v1/replay-b.stdout": 271,
+    "artifacts/m8-gemma-lookup-reference-v1/replay-b.stderr": 777,
+    "artifacts/m8-gemma-lookup-reference-v1/tests.stdout": 0,
+    "artifacts/m8-gemma-lookup-reference-v1/tests.stderr": 2585,
+    "artifacts/m8-gemma-lookup-reference-v1/retention.stdout": 0,
+    "artifacts/m8-gemma-lookup-reference-v1/retention.stderr": 1349,
+    "artifacts/m8-gemma-lookup-freeze-v1/checks.json": 36249,
+    "artifacts/m8-gemma-lookup-freeze-v1/freeze.py": 5853,
+    "tests/fixtures/gemma-lookup-reference-v1/observation.json": 2163,
+    "tests/fixtures/gemma-lookup-reference-v1/arrays.bin": 167936,
+    "tests/fixtures/gemma-lookup-reference-v1/manifest.json": 386,
+    "docs/gemma-lookup-reference.md": 3576,
+    "docs/gemma4-implementation-plan.md": 38505,
+    "docs/engine-expansion-plan.md": 43355,
+    "docs/improvements.md": 360003
+  },
+  "retained_outputs": {
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a.stdout": {
+      "bytes": 103,
+      "sha256": "498df5f55c6c26cbad2b304126734b3c42f8912eae74ec76550cac93cd3e0efd"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a.stderr": {
+      "bytes": 777,
+      "sha256": "1929967fe7de03d1ed7ca09e7bbcc9916a65858d34000799516d06c05dc6452f"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a/observation.json": {
+      "bytes": 2163,
+      "sha256": "b1818331b5d341444fbc4ea22e018fc99241bd2d4fe5edbca7df9222739546a1"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a/arrays.bin": {
+      "bytes": 167936,
+      "sha256": "aea89e9e83d266ae5e648e1c4bebb01509370ef29ef777dea7018b5822cbf469"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/capture-a/manifest.json": {
+      "bytes": 386,
+      "sha256": "6651c175ea8d90e9759ea40b8746e6c816a8c867a969b9075e5d83e50c860a95"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/replay-a.stdout": {
+      "bytes": 271,
+      "sha256": "c87e6055801db338ea8af6062577f992631323a15e11d99489b55f29eb5f3018"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/replay-a.stderr": {
+      "bytes": 777,
+      "sha256": "1c6d4f6387b12afe40f291bbb91db78676128c8f1375b9b42a2a21b14278c5cd"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b.stdout": {
+      "bytes": 103,
+      "sha256": "498df5f55c6c26cbad2b304126734b3c42f8912eae74ec76550cac93cd3e0efd"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b.stderr": {
+      "bytes": 777,
+      "sha256": "c0e30ddb4fa30265aa08150a552b65b50ef85097a987c1e00e7dfd625da2624e"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b/observation.json": {
+      "bytes": 2163,
+      "sha256": "b1818331b5d341444fbc4ea22e018fc99241bd2d4fe5edbca7df9222739546a1"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b/arrays.bin": {
+      "bytes": 167936,
+      "sha256": "aea89e9e83d266ae5e648e1c4bebb01509370ef29ef777dea7018b5822cbf469"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/capture-b/manifest.json": {
+      "bytes": 386,
+      "sha256": "6651c175ea8d90e9759ea40b8746e6c816a8c867a969b9075e5d83e50c860a95"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/replay-b.stdout": {
+      "bytes": 271,
+      "sha256": "c87e6055801db338ea8af6062577f992631323a15e11d99489b55f29eb5f3018"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/replay-b.stderr": {
+      "bytes": 777,
+      "sha256": "c2004fcfca2bb3bd4cb8961e36e8f2789b2351a2007774b193a78d72db33cf5e"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/tests.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/tests.stderr": {
+      "bytes": 2585,
+      "sha256": "2c450f7bbbf85a04263629f2f691d2de35c156786386258979e4cb75e700899e"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/retention.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-gemma-lookup-reference-v1/retention.stderr": {
+      "bytes": 1349,
+      "sha256": "b071a6d0e0e80f7f6e68fe8d41497e07082d28a4db6822fc108e4bf69bddf9b8"
+    }
+  },
+  "source_files": [
+    "tools/reference/gemma_lookup_reference.py",
+    "tools/reference/check_gemma_lookup_reference.py",
+    "tools/reference/test_gemma_lookup_reference.py"
+  ],
+  "fixture_files": [
+    "tests/fixtures/gemma-lookup-reference-v1/observation.json",
+    "tests/fixtures/gemma-lookup-reference-v1/arrays.bin",
+    "tests/fixtures/gemma-lookup-reference-v1/manifest.json"
+  ],
+  "documents": [
+    "docs/gemma-lookup-reference.md",
+    "docs/gemma4-implementation-plan.md",
+    "docs/engine-expansion-plan.md",
+    "docs/improvements.md"
+  ],
+  "unchanged_engine_tests_examples": {
+    "Cargo.lock": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26",
+    "Cargo.toml": "49e8af0306160ee298922bce267c1893bef78edcd1d51b7a127300ebdca86878",
+    "examples/cpu_bench.rs": "d42eafa4f78ec0b9a618c137cd21a43b35f3c1d9af8621eba39d1055ddf2553a",
+    "examples/cpu_projection_bench.rs": "3d798043179bd967eb4102ed18767e882c6c01b5fa8ea0ae17d3e147319b9c47",
+    "examples/cpu_task_reference.rs": "3a2177f9cfb2a97a026a74e26196b64f531179a50f0e16795093e055e0e46b4e",
+    "examples/gemma4_codec.rs": "eef9a118613847d9f99c2773e26b2a0683bf3b79ef2fec61c8d729d9343f0568",
+    "examples/gemma4_generate.rs": "297af34a86cf83a0593dc379a42c9416c6a3e657045088151fd5343f393f0ebe",
+    "examples/gemma4_payload.rs": "e817e03027cad837ddcb4244b601cc4ac3e5f5efa098939b81dcbb20a9e5b0e8",
+    "examples/gemma4_stream.rs": "62c3744300398f2a40dd9c95ad56442105ff829d3f40eef560f1eb794d998713",
+    "examples/gemma4_text.rs": "14e385abee88b36f0e703cea6a482f3f322d52bcda77367b58703959dae04e87",
+    "examples/metal_bench.rs": "08c430a25db6ac348f1bac8932fd72f8b92dd470d6076d829d6bf8e310d85280",
+    "examples/metal_chunks.rs": "9a14ccdc4c8776eeb41d28e5ab6770f3115f68f2c53dd619f9f17025d6857759",
+    "examples/metal_context.rs": "52f210f93640cc9039d62143644b28e27a8a05dd91564502e4768b2f56db583f",
+    "examples/metal_continue.rs": "bbcbad6573e4b0de95307954487e2ad7f496eb77c998fd328da42f96aad9baa6",
+    "examples/metal_greedy.rs": "efc972937c552356cbaf41c9171939a1c1da1912fe8da8c28c4414ffe4f01247",
+    "examples/metal_prefill.rs": "3bdf16ff6973d2ea262ab52498d343f88775671d3d9a79820969fd8757b7b579",
+    "examples/metal_quality.rs": "00d775e0acd3977907b95010c0b1275c430f621fd34b3bb114c5b920476fa84d",
+    "examples/metal_trace.rs": "b4bb14b31921974d9278a6874f86dec6943827166538e5ffaadc25e380b2a7ce",
+    "examples/mlx_content_identity.rs": "06ec32660310d4f9aa7d11be412522120b82ded14e908d0f1420be58b0d8fd5c",
+    "examples/quality_bench.rs": "ecb0501d40aca0a1fe9d6d91d89a6d34222acca9bd56276b95cfe981155e5aa8",
+    "examples/quality_rows.rs": "3004d210ed465ac3c74cb9e4c2f688da1b1657004ea9e8ef1e6f9ebfbeaaad16",
+    "examples/support/loss.rs": "a2cbea031570c1aa539b1096d2af87711935064c844f600f5d0cc6b55ed4c0ff",
+    "src/app_chat.rs": "188fe60aa93abcf16156c7de63d37e99b8012b79655260124e319290c62fa17c",
+    "src/app_chat/content.rs": "59c4fce1ce7d6c323d1a20c484ee8b82358f546739b9c2a7fb87e9dd73fef4c5",
+    "src/app_chat/content/tests.rs": "2b65bed151a68e779720cc694e753ba11e0522b08db8c163dbd5f8bc988f276f",
+    "src/app_chat/content/tests/capture.rs": "360aae0c25424ae5a5247676296d300eac844e7a57fdc94a0b2a43615e6f1083",
+    "src/app_chat/gemma4.rs": "f5a27b34e2dddec9f1bcce13b6a43afa7bd42eb260db43c52fd8f42110aa1ef9",
+    "src/app_chat/gemma4/tests.rs": "9d1a8e1508b41c99060ce42700cd7f36bd239686ddb4f7de91c59b2d1ab5a711",
+    "src/app_chat/stream.rs": "ddfe5d6e2de239df94f1e5f2d78ceaa4ca9df8c5ac62d3ecbbf8cc3563ae9b44",
+    "src/benchmark.rs": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a",
+    "src/bin/cli/chat.rs": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de",
+    "src/bin/cli/inspect.rs": "4cbbd66cfd7fed4ccadd90e1ec9d23132df0be8f19b7810325b4bd8d51f34461",
+    "src/bin/cli/mod.rs": "0f35386f986d90c86d4dc8e941a4a97f2e848d987b77c39dff9aec8715b9650d",
+    "src/bin/cli/plan.rs": "119cd9ad3f69e0ef91d1856d7fe0f8bb76c7d00832f632f2f772a9830be44046",
+    "src/bin/toklet.rs": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb",
+    "src/cpu/attention.rs": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf",
+    "src/cpu/causal_conv.rs": "81634447ded8fc9e40f783c3225acc44c3079188f5e7484339f074c43a1614b2",
+    "src/cpu/causal_conv/tests.rs": "19982f2b19dce919a6ee5fd887557c9ba4542c3e2627337e4155de5e61caf967",
+    "src/cpu/dense_decoder.rs": "e30e0694acf8228c22e1d286833495474ba45a3cad9ca8c7a02bc6e99d5e1a43",
+    "src/cpu/dense_decoder/tests.rs": "558f016de15740132466baa5a38386f6878019def878038d55b08175c18affd9",
+    "src/cpu/gated_delta.rs": "9eb5c8f89935fcb0c32db145fb3a007ab66e9932dd44600c6503dcf07a5aa6ff",
+    "src/cpu/gated_delta/tests.rs": "4ee3e58a03a65edb6ad2a509f70f1d6b006fcb07615962dbccebf0ea05ae626e",
+    "src/cpu/gelu.rs": "f3d5a9b1f374217f554afe946af7f35e1ce5685bcc723d45c41d8b5552a74e20",
+    "src/cpu/gelu/tests.rs": "fee0562dab34b3facec9b8bf06e4aa44e0dcb0d3b97192306262e006bfe608a6",
+    "src/cpu/mod.rs": "cf9e16dfa3de336a2d8e5448ad807142a25ec4a8f37b578b557719fa51fcfbe4",
+    "src/cpu/per_layer.rs": "9c5f0deb16a63e9b8655b513644ec1583e4e170b362cf031f91dfa792ff046d8",
+    "src/cpu/per_layer/tests.rs": "420a075249e8da7fe2cdf3a71e3795ed8373ec6719bfdebab59e96e7938e2917",
+    "src/cpu/proportional_rotary.rs": "e1140c87e198c340359925b4c50da227ab3a30f6d425574479745dd90c4dbaf3",
+    "src/cpu/proportional_rotary/tests.rs": "2a176cf2ccd2ed997613fe40f62f8d751c1686de7a50ec41835aa1fbf55fb0a9",
+    "src/cpu/reductions.rs": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d",
+    "src/cpu/softcap.rs": "0c030176e9396c539c8d58a9aba99e272d3eb0f5c3eb6487fe04d9f74a00e2f7",
+    "src/cpu/softcap/tests.rs": "6e77a46496ad65a6e22e8fce30086fdaeb260bf6b50cff9d229b732b7d858c9e",
+    "src/cpu/span_attention.rs": "fec2627d50fbddb00858bf1093d12bfdc0c9fb1a99b6f6cd6c8a0eb48b2ed383",
+    "src/cpu/span_attention/tests.rs": "446e9623e15d7333fb9a329d03cb187f5dbcfdc989f88add0054a88ba3b7ebe7",
+    "src/cpu/tiled.rs": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb",
+    "src/cpu/window_attention.rs": "9a0c76ed651b0593a0c6170111c5034bc06e295ec921fd935bb73d74011cf9e0",
+    "src/cpu/window_attention/tests.rs": "b399fe01dbaef0cad27974905fcbdfacd56ebcad744b78107595c200d598b678",
+    "src/generation.rs": "d7d6b1ac58bfa69a614b4b3aa84b6e6b368ec90f39966209b31c80bf3a0be158",
+    "src/lib.rs": "8503e6280e9a7354fad08a39550c9075b4a2d59fe112c210c23ff4f8593a0f26",
+    "src/metal/capture.rs": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f",
+    "src/metal/diagnostic.rs": "2621b069c41d0622a969b78b4379e859d626d2472a907ff56efebac8e7f11275",
+    "src/metal/gemma_affine.metal": "cf332eb282e123349b0f655c757bb87d877157327d971cb9de73d4a90a8eb118",
+    "src/metal/gemma_affine.rs": "8a62186e40710e0447a3d8d626bf10c0e26197e95966c33d8bfbd65b67fb0174",
+    "src/metal/gemma_affine/partitioned.rs": "9bd69ae1fbf183be9d6972f6d16c89c4ea81cb256885f0327c818fbdc2beaf8d",
+    "src/metal/gemma_affine/partitioned/gather.metal": "299c4bf1b93b82e99725a1110589ffe1a579fa680230951c9ce9e4b01f7ed312",
+    "src/metal/gemma_affine/partitioned/gather.rs": "441852445e8b3f2843eb7e95d6ecedf75644fc11bf61c4e87f0ce6b9486f67d2",
+    "src/metal/gemma_affine/partitioned/gather/tests.rs": "a040c72c0469c6dbefab06b2ad8c0660a3d0f247635a595c45441fbddf1eaac8",
+    "src/metal/gemma_affine/partitioned/tests.rs": "0dc33156387c5a8fba9fe53e1195c4d0fa8e1eb995ee627058faa1a47c891f82",
+    "src/metal/gemma_affine/partitioned/tests/head.rs": "b37be046ba8c66788d8dd1085b5cf885f28dfd855b7820e7f77101f45572b9e0",
+    "src/metal/gemma_affine/tests.rs": "e6db4cdb6ac9275d8f28f33645c21261f813b98c0aac5a6823b0ad2fcfe6a82a",
+    "src/metal/gemma_affine/tests/real.rs": "b30e2ed660be0c758b1cd0c1f4f8de97a3edf0dcb205b3f0a833f00f8ffec81a",
+    "src/metal/gemma_rms.metal": "5f786979f8291f9bba2ee3240b6f69fcfd1558b31685c2559df3020987dc8cb9",
+    "src/metal/gemma_rms.rs": "c3ad44d734aed2fb4281bf30941ffa790ef6e9482d4bcbddc5c5013cd2ece925",
+    "src/metal/gemma_rms/tests.rs": "8a9f9b1fdd07424cc6cec0eba8ce17a723e14b43773dde35c7dcb06aae45b374",
+    "src/metal/gemma_rotary.metal": "1a34a3a5b789d6374aadb8d596f654fda5c91898504b3dfd262423beb64efd7f",
+    "src/metal/gemma_rotary.rs": "c8c2837e9a11f0555e44acabcc2866d551b96928645de1489eaf793a32633197",
+    "src/metal/gemma_rotary/tests.rs": "1b2b1931d93260615972370ad9e82eebb405fa0df53a102c039f283dc6564812",
+    "src/metal/half_consistency.rs": "e9ee1e50fba0e49f177ccc6e86b0d5357293c3119a2065ce62b481a4a1e1e460",
+    "src/metal/half_projection.rs": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0",
+    "src/metal/kernels.metal": "26f893f318f65500b86d702f0fcae65424702b0dd7079fc01db197b5ab985b68",
+    "src/metal/memory.rs": "35f1ff6d12bac8e726c75749e66975a515c2dcc7676c2775dd0f96d97d5fef9d",
+    "src/metal/mlx.metal": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049",
+    "src/metal/mlx.rs": "c64e4a21d335687d8b58b43d580a809276bf0c19bb9fd0a777be87922d7d8700",
+    "src/metal/mod.rs": "f98cb3781c699abed4ba1bbc1291e8c47f18d29404a8f9f9ba99168563f5f8a5",
+    "src/metal/online_attention.rs": "e4e6c1f554220174d684396eb6688c86e2e670ef2ad094563fbbffb56219862c",
+    "src/metal/planning.rs": "7e3516f929f20cd5fc19a3374b0ddd5dd8f4fa8f8fb6dde43a690236882fe11d",
+    "src/metal/profile.rs": "1df0c21acb54dcda54bcccc66b02417f343a448a4b0ae0a06538ce0fc3fa614f",
+    "src/metal/q4_v2_projection.rs": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a",
+    "src/mlx/affine.rs": "936f105d4dcf70f52d5ea030ba9d2201e5d36644f817099ced3b9e3dbf53ad6d",
+    "src/mlx/compatibility.rs": "05c0f3b3734fa567a113495ba5fb484ae20fc044dba28a8da02711fce78bfba3",
+    "src/mlx/dense.rs": "cd5803d9406e1dff6ac6a65353d1d7c9caf01e5a4e122281b80bead7b52b5d0d",
+    "src/mlx/execution.rs": "138ad46f8ee2f4722a617e2d0a7afa480d9b34c751a85d07fb17db36d552680f",
+    "src/mlx/gemma4.rs": "950a18343a1bd311a3a9c132bae5d1b408a2d529affecdd9b6d8244fc255a9f2",
+    "src/mlx/gemma4/payload.rs": "9ac244aef046698a4e2c7ccad90a0f61998f8c05bceed020792faacec34ca6b4",
+    "src/mlx/gemma4/payload/tests.rs": "a933c3c804552ced3f8c7b1883382671a32b27ae49a2df42ee19d6226e40a09c",
+    "src/mlx/gemma4/tests.rs": "6e78deeba32b74fff3f5af6d8b9b0ad3510d9e4acacb879d8ed4692bce9cd637",
+    "src/mlx/mod.rs": "0a516d4121d972ed99b48c9bf70eeb40b5c7e159157c3eac7a12f9cbde6c0b99",
+    "src/mlx/qwen.rs": "a72bafd5f556fdd31b6e99cb06ee25a9d22280bd4ca7d3e9f747691f9e2d119c",
+    "src/mlx/qwen/content_tests.rs": "ac549b90791327d905c07a417241dfcfc168de10a4c873365949ae0bb7675266",
+    "src/mlx/qwen3.rs": "43fd005573eeedbb60e489dfb220e2b8e1ec6b8d2f03c9547bd4a91bf36abef4",
+    "src/mlx/reference.rs": "86c002e4a23d519fe5a3c66736511d6ffd65803855a6880442a2058c64be3d3d",
+    "src/model/cache.rs": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0",
+    "src/model/gemma_packed.rs": "bf72e37b1100bf25e1cf947710afb1b7eb59bb607ac38bb0c938f6b5b03e61ba",
+    "src/model/gemma_packed/e2b.rs": "09ca54243b63a408c7393e4514e764c9a88f6ee349a1e3e197fb5cb4af94161d",
+    "src/model/gemma_packed/forward.rs": "2a456bd0ea4c83d120d8eeb5ce44b1c9565c5f400272008d65fcc75751d5c00d",
+    "src/model/gemma_packed/generation.rs": "7fe3d8662128c80648ce0ad29256dbaeb0fc7a9873b458a54b502aded21fdc27",
+    "src/model/gemma_packed/generation/tests.rs": "547188103651586b2f2065fea9f511b8be970dd2c6a4bf1af08e525fb0f94051",
+    "src/model/gemma_packed/tests.rs": "c55f21b617a69d639400a79c8b783aa9ac2a2b6d816928205aba8caa401ef885",
+    "src/model/gemma_packed/tests/e2b.rs": "f4c339dd843623595d97dbcaabeed6a9d0496802e18a2270959fc930ab6fb194",
+    "src/model/gemma_packed/tests/producers.rs": "d2169379712073c771169cbf815a8ac3948e2e38b65094e0b460c046081f375e",
+    "src/model/gemma_reference.rs": "0390cc681c5176e9e274186d0a937790bd30b4d5ea26f2321ec967da19cf4298",
+    "src/model/gemma_reference/forward.rs": "d3f3e80a4122cb09ad644784f101ff57e4b851fcf826e479a2fa9a1830b67778",
+    "src/model/gemma_reference/tests.rs": "bf341cae6cee8e0533cee7758f154435c5a1287de9479eab7e795781a61349c2",
+    "src/model/mod.rs": "64adc9bcc5160618268d4699920e754485d46b8131d4ce725c1364f88ee166e2",
+    "src/model/shared_kv.rs": "fbe2f68965ddebf267cb0b0b1dae50869a133d838c8cdd321296093cbfe2bed2",
+    "src/model/shared_kv/tests.rs": "89fa202ab45ab43a20dd8adaf0c1a0815d63ee356e28c14ef7a07da02f685c0f",
+    "src/model/trace.rs": "6fd516def586350f6f425f6e16eb8c8df7a8a97619aef14f8a4a511a059ca91e",
+    "src/model/window_cache.rs": "f94da4b700c7b6a7010ef42aa6800f5adb1f982ef7be327a4485de3a05ac1d34",
+    "src/model/window_cache/tests.rs": "f539b9dcea262e84f9b43c381bdf0ca0d95e61bed3dd8082bb63d5112f11c5d2",
+    "src/native.rs": "ffd07e8fea5dac54410cc3c26511a68be87469bc655b1acd369c302a1e4e77d1",
+    "src/native/compatibility.rs": "8e7119eed2cc13516f611b20367c7b691a4af570ca154f3a3e929aadb03d3da6",
+    "src/native/runtime_planning.rs": "b1537c3b26a2671d59d46c1995c96eff03abddc8a840aa9a5ac4375ed4fb2bbe",
+    "src/native/tests.rs": "b745d0a3e7f25f0e0897f3d3a3048cb2da5dd48b55819f41c6b73319255db0c8",
+    "src/native/text.rs": "f23a750a32009a2fec00854758bc4c96ba0b227d4bb3c2d387fd47be366f04d7",
+    "src/native/text/audited_capture_tests.rs": "cf6b18ecfc85345fa3fc9991a25c9371f8072833ccb46a5cc17ca0badd135be3",
+    "src/native/text/audited_tests.rs": "8151c58f96e02ba50a5e0ce044c1a353a54bd8849280d47220d89b08dfa46a5d",
+    "src/q4.rs": "14277bd171d08d60fea9ad8bc871f62584ed6a84e2ac0ad3f42ecd232a1fcaac",
+    "src/q4/artifact.rs": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe",
+    "src/sampling.rs": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9",
+    "src/session.rs": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0",
+    "src/weights/audit.rs": "0130648975f7eb75364126c6443ce7362b866a3d3752d6dc1b3421b5f1620ff9",
+    "src/weights/audit/tests.rs": "dec155fac6d8e1ca96950b816fe4f0624dff5052297a3ba90e043dfdc7f0ec90",
+    "src/weights/half_tests.rs": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2",
+    "src/weights/mod.rs": "4f8976d5f7bdee125fc192cbc8635028e77e24ba7bfa7ef5dd8a1ce05af941e3",
+    "tests/bench_contract.rs": "8510550dc5062555509c1f77d8c9b6169fe6122edd802aaa6cc45220d74e7ea1",
+    "tests/cached_attention.rs": "44df14bec20ca607aa18470f36e8e74e2151d75e2db5fb65f0783b91f120b3a8",
+    "tests/cli.rs": "c4dc02a39078a9f28a873edc4c4bb7d8aa935dcda0f097459a77d40483e843a1",
+    "tests/common/gemma_affine_fixture.rs": "9cbef2176993da4c3eabf3e8f0b9ec327f20f3af9a3b9ff58aac3b0836ed7c09",
+    "tests/common/gemma_affine_l1_fixture.rs": "76a5662d470f6212b60d062cfd142b87c4d610030b739c0534203fa2e97dd0f0",
+    "tests/common/gemma_packed_fixture.rs": "ad0021c547cb7ae14b7e87b26e231ad9b03a08a0f725a7e8cb0b45f04ae9e573",
+    "tests/common/gemma_table_fixture.rs": "9edd613a5284874fc98c73ba12c0162d32cde1ee6de830d186a9662d36af6a31",
+    "tests/cpu_attention.rs": "804bb41795c868a0e0a4d1d9a1923270731e137eed986003f57de847bb5fb7e7",
+    "tests/cpu_decoder.rs": "c97638807910b4307e56ded647088b10fdadf9eef50bfe9a21f8635ae83aed79",
+    "tests/cpu_linear.rs": "0aa924009e8803518cb9bce3c178872982b2bc87a7d5c87f6a085f6ee7b98b41",
+    "tests/cpu_reductions.rs": "b4529fba8df103e4e0f289b0595f3498af665d199a1e4aa7babb8ae693dde1e7",
+    "tests/cpu_tiled.rs": "0d1f700ee99000e8c396dd4dc963aaaaa7a2b0d8753e088c2eab8c22ee06ec20",
+    "tests/fixtures.rs": "9cb5a5d77894bf8d946a1d01e9f63929d79e48e64060ccdced9e76ed8780831c",
+    "tests/gemma_metal_affine.rs": "c3bfb04e2ba51267876461c16837924687c144c6bb4e11abcd09e59c8e69fcd1",
+    "tests/gemma_metal_affine_l1.rs": "4249348bee9ff528fb1b92ba5a6db0421a7576a0ebd0c85408ba3bfbebe1335c",
+    "tests/gemma_metal_rms.rs": "1275721b6aad1e0abadde95ad87bd31896e20b122f92dbc819a9a47af5d64c87",
+    "tests/gemma_packed.rs": "32e056519f4b4ff647ab8c00de93b61118d09529212f53f498c39faf2f04bd44",
+    "tests/gemma_table_gather.rs": "107a2d329560c9d536c1a458a77a25e218e242acf2f7cb7e50ec9563ff6b3611",
+    "tests/gemma_table_views.rs": "05902188b4e75313093906f85b57fef8e4cc055fc57fd0f618305886cf234c83",
+    "tests/gemma_v_norm.rs": "7e28b1302947a1a0067dddb54b4db2d23a96681b71710d4d661c5d3cea8c138d",
+    "tests/metal.rs": "5a7f02490404dc6bc90a4234c3fe54b4d48810e7d7fc4a0913ffdecafccf5252",
+    "tests/metal_planning.rs": "60df2b4531ec6474dda486a3708ba1a3ac58c1007762c2d185388e617d274ddc",
+    "tests/mlx_affine.rs": "9ae2d3ec85ac7c031710f77c732c2a7a0a19f0478902a24e66b00fbbfffe9c56",
+    "tests/mlx_cli.rs": "51ca33079d90a1d7bd2f971c9e1cb41364471d1ffe62f485ecc37e9f7539befe",
+    "tests/mlx_compatibility.rs": "3d824bb11940a305fbc88aa8ef553b439607949b28186d91ab63fc9aa7d3fee6",
+    "tests/mlx_inspect_cli.rs": "4a72ffbcd0eaacc30028e5c4b1bff1e369f3c7ff1b62d80e41cdf9aaa5ef20c5",
+    "tests/mlx_llama.rs": "045c6f77f5f346ce821d0589719ca2bd92ecdebb5544148b4679102479fcd0b9",
+    "tests/mlx_llama_metal.rs": "620b2c184544d535194aeab517bf977ae79d88acbc3322bc6ceab9a13c22efdc",
+    "tests/mlx_metal.rs": "eb8568aff9177b768aa8945e1143a9f0ba9ec8873a306a8081cdb5dd0b3adf88",
+    "tests/mlx_mistral.rs": "64c420187939af5f54b0dc715acd16db071e4479342b32b1b02ae65079b043cb",
+    "tests/mlx_mistral_model_metal.rs": "1e2d5efd3559815092bc072e7aed3ca5bba58e743108af0553818e3853f3694e",
+    "tests/mlx_model_metal.rs": "6b02a65278935311396539942a894d2816886d5bdf259d0e167bd8b8be78ed6b",
+    "tests/mlx_plan_cli.rs": "8e41e22724e64b7e0a9d19be8d568739af8e33f5344a5016a54ff37eedd8e947",
+    "tests/mlx_qwen.rs": "c643477945f615f39582886a45c83df1ae2ff26c30608d8d720bc662ac96d878",
+    "tests/mlx_qwen3.rs": "f811d5a6dc6b923acf628640333e1f8ef7b3f95833f235837071771944a51a9f",
+    "tests/mlx_qwen3_metal.rs": "e2057ce30f95cfc14182ba63a8bf9c2659f5ec74503278effab9484ff9b94792",
+    "tests/mlx_qwen3_real_model_metal.rs": "dc531ef79aaf7e8e98f9dca8bba8734d0b09db36d1463a92ad6ddc6875e1e4de",
+    "tests/mlx_real8_model_metal.rs": "ff996ef7cae574d3a4820ae5c0d6784414bcb2718a82175fc91f63457b49e719",
+    "tests/mlx_real_model_metal.rs": "fbbe6234d2eeac2bad1852219e9adc389e477286aa0babf059676b2d31d1d256",
+    "tests/mlx_reference.rs": "6c8db8e1067b2eb5b279bf7eec195cd5cb40f1c9e314e6ff74bd27e7d17f581b",
+    "tests/mlx_smollm_model_metal.rs": "a479a42e651853c903379ec97e352fde7d4ff131431ae7cd1fb156d8a5dd8221",
+    "tests/q4.rs": "3a567d03f08b327264f086324d99e0b586681f090a025ee1307bbca3c1a76952",
+    "tests/q4_artifact.rs": "dcac3e40062b63d3a5c88af35bdb8845f0a3d376f14b88b4e4390f96de810738",
+    "tests/q4_metal.rs": "dfeb8736a9209d89097aec87b02adf2c2d67ebba43081c70c5ea301b7c02b2a2",
+    "tests/q4_v2.rs": "fc3a7aad5ab8e7182a6c11981075691712a5c771cbcadd0a95908229c13943a4",
+    "tests/q4_v2_models.rs": "e2d38d78a0f9095a4146039aca2639405f9a6d550a5b20c276495df102fbaa72",
+    "tests/q4_v2_storage.rs": "04d408d1758eb4f44bd7760b099f7b771e596f3c15c80357cd7b0ed26d89bf6e",
+    "tests/qwen_forward.rs": "0cdd2529dac4c4ffb66e94d721571a40b12696486f26cbab31718cc9e767c7d5",
+    "tests/qwen_larger_forward.rs": "76a755bd50c8f127f91db33ee625a7a4dd24e68ee8388497af98c3ceb8ab1058",
+    "tests/qwen_larger_metal.rs": "0a9a6dfd013269da3a78878f6ebdcb015842b9ed900b31cbc1662e707c4d301d",
+    "tests/qwen_session.rs": "b163c685a3d8bbccc504e47ccc460b3ecc04893bbfa37bda9ceae83d3ccb84e5",
+    "tests/session.rs": "958690e150c1235357a67830e0067b9c472024815d97832c77681a8da0e07c4c",
+    "tests/support/mod.rs": "627a8e94f9981ce53bc9373168c3a2b69eb4ba11bd08d00db52d376c0f02fd13",
+    "tests/support/trace_parity.rs": "fb7144fb65f7422eb656411ebe3f0e842a337cb3beb1aa862803c6ff39994e5d",
+    "tests/weights.rs": "16a026e1ca620b20f4aeb5a8d59231a8818fe5729426a777fa1f759168a9c3e7"
+  },
+  "source_checks_sha256": "1323185e62a4090f80039adbf758cbd72262c0dfc16f95b8a825f1627ee91aaa",
+  "parent_gpu_receipt_identity_only": true,
+  "prior_gpu_evidence_rerun": false,
+  "required_commands": [
+    {
+      "label": "capture-a",
+      "timeout_seconds": 600,
+      "process_allowance_bytes": 536870912,
+      "invocation_error": null,
+      "owned_result": {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "-c",
+          "import runpy,sys;sys.path.insert(0,'/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources');sys.argv=['/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources/gemma_lookup_reference.py', '/Users/coloner/work/rust/toklet', '/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/capture-a'];runpy.run_path('/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources/gemma_lookup_reference.py',run_name=\"__main__\")"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 10175,
+        "stdout": "artifacts/m8-gemma-lookup-reference-v1/capture-a.stdout",
+        "stderr": "artifacts/m8-gemma-lookup-reference-v1/capture-a.stderr"
+      }
+    },
+    {
+      "label": "replay-a",
+      "timeout_seconds": 600,
+      "process_allowance_bytes": 536870912,
+      "invocation_error": null,
+      "owned_result": {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "-c",
+          "import runpy,sys;sys.path.insert(0,'/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources');sys.argv=['/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources/check_gemma_lookup_reference.py', '/Users/coloner/work/rust/toklet', '/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/capture-a'];runpy.run_path('/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources/check_gemma_lookup_reference.py',run_name=\"__main__\")"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 10179,
+        "stdout": "artifacts/m8-gemma-lookup-reference-v1/replay-a.stdout",
+        "stderr": "artifacts/m8-gemma-lookup-reference-v1/replay-a.stderr"
+      }
+    },
+    {
+      "label": "capture-b",
+      "timeout_seconds": 600,
+      "process_allowance_bytes": 536870912,
+      "invocation_error": null,
+      "owned_result": {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "-c",
+          "import runpy,sys;sys.path.insert(0,'/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources');sys.argv=['/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources/gemma_lookup_reference.py', '/Users/coloner/work/rust/toklet', '/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/capture-b'];runpy.run_path('/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources/gemma_lookup_reference.py',run_name=\"__main__\")"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 10184,
+        "stdout": "artifacts/m8-gemma-lookup-reference-v1/capture-b.stdout",
+        "stderr": "artifacts/m8-gemma-lookup-reference-v1/capture-b.stderr"
+      }
+    },
+    {
+      "label": "replay-b",
+      "timeout_seconds": 600,
+      "process_allowance_bytes": 536870912,
+      "invocation_error": null,
+      "owned_result": {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "-c",
+          "import runpy,sys;sys.path.insert(0,'/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources');sys.argv=['/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources/check_gemma_lookup_reference.py', '/Users/coloner/work/rust/toklet', '/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/capture-b'];runpy.run_path('/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources/check_gemma_lookup_reference.py',run_name=\"__main__\")"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 10196,
+        "stdout": "artifacts/m8-gemma-lookup-reference-v1/replay-b.stdout",
+        "stderr": "artifacts/m8-gemma-lookup-reference-v1/replay-b.stderr"
+      }
+    },
+    {
+      "label": "tests",
+      "timeout_seconds": 600,
+      "process_allowance_bytes": 536870912,
+      "invocation_error": null,
+      "owned_result": {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "-c",
+          "import sys,unittest;sys.path.insert(0,'/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources');sys.argv=['owned-lookup-tests', '/Users/coloner/work/rust/toklet', '/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/capture-a'];suite=unittest.defaultTestLoader.loadTestsFromName('test_gemma_lookup_reference.LookupMutations');result=unittest.TextTestRunner(verbosity=2).run(suite);sys.exit(not result.wasSuccessful())"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 10202,
+        "stdout": "artifacts/m8-gemma-lookup-reference-v1/tests.stdout",
+        "stderr": "artifacts/m8-gemma-lookup-reference-v1/tests.stderr"
+      }
+    },
+    {
+      "label": "retention",
+      "timeout_seconds": 600,
+      "process_allowance_bytes": 536870912,
+      "invocation_error": null,
+      "owned_result": {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+          "-I",
+          "-S",
+          "-B",
+          "-c",
+          "import sys,unittest;sys.path.insert(0,'/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/sources');sys.argv=['owned-lookup-tests', '/Users/coloner/work/rust/toklet', '/Users/coloner/work/rust/toklet/artifacts/m8-gemma-lookup-reference-v1/capture-a'];suite=unittest.defaultTestLoader.loadTestsFromName('test_gemma_lookup_reference.FailureRetention');result=unittest.TextTestRunner(verbosity=2).run(suite);sys.exit(not result.wasSuccessful())"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 10207,
+        "stdout": "artifacts/m8-gemma-lookup-reference-v1/retention.stdout",
+        "stderr": "artifacts/m8-gemma-lookup-reference-v1/retention.stderr"
+      }
+    }
+  ],
+  "mutation_reader_methods": 17,
+  "retention_methods": 3,
+  "two_captures_byte_identical": true,
+  "independent_replays": [
+    {
+      "passed": true,
+      "arrays": 2,
+      "embedding_values": 6144,
+      "per_layer_values": 35840,
+      "binary_bytes": 167936,
+      "numerical_reference_reexecuted": false,
+      "independent_extraction_replay": true,
+      "native_activation_parity": false,
+      "engine_executed": false,
+      "gpu_executed": false
+    },
+    {
+      "passed": true,
+      "arrays": 2,
+      "embedding_values": 6144,
+      "per_layer_values": 35840,
+      "binary_bytes": 167936,
+      "numerical_reference_reexecuted": false,
+      "independent_extraction_replay": true,
+      "native_activation_parity": false,
+      "engine_executed": false,
+      "gpu_executed": false
+    }
+  ],
+  "frozen_files": {
+    "observation.json": {
+      "bytes": 2163,
+      "sha256": "b1818331b5d341444fbc4ea22e018fc99241bd2d4fe5edbca7df9222739546a1"
+    },
+    "arrays.bin": {
+      "bytes": 167936,
+      "sha256": "aea89e9e83d266ae5e648e1c4bebb01509370ef29ef777dea7018b5822cbf469"
+    },
+    "manifest.json": {
+      "bytes": 386,
+      "sha256": "6651c175ea8d90e9759ea40b8746e6c816a8c867a969b9075e5d83e50c860a95"
+    }
+  },
+  "frozen_before_large_table_diagnostic": true,
+  "full_array_count": 2,
+  "embedding_values": 6144,
+  "per_layer_values": 35840,
+  "binary_bytes": 167936,
+  "binary_cap_bytes": 262144,
+  "numerical_reference_reexecuted": false,
+  "independent_extraction_replay": true,
+  "complete_values_finite": true,
+  "original_source_trace_authenticated": true,
+  "process_resources": [
+    {
+      "label": "capture-a",
+      "maximum_resident_set_bytes": 29933568,
+      "peak_physical_footprint_bytes": 20038208
+    },
+    {
+      "label": "replay-a",
+      "maximum_resident_set_bytes": 34013184,
+      "peak_physical_footprint_bytes": 20906704
+    },
+    {
+      "label": "capture-b",
+      "maximum_resident_set_bytes": 29868032,
+      "peak_physical_footprint_bytes": 19972672
+    },
+    {
+      "label": "replay-b",
+      "maximum_resident_set_bytes": 33243136,
+      "peak_physical_footprint_bytes": 20152968
+    },
+    {
+      "label": "tests",
+      "maximum_resident_set_bytes": 69533696,
+      "peak_physical_footprint_bytes": 31933136
+    },
+    {
+      "label": "retention",
+      "maximum_resident_set_bytes": 46858240,
+      "peak_physical_footprint_bytes": 28131952
+    }
+  ],
+  "process_allowance_bytes": 536870912,
+  "maximum_rss_bytes": 69533696,
+  "maximum_physical_bytes": 31933136,
+  "process_allowance_is_model_residency": false,
+  "owned_processes_and_groups_absent": [
+    10175,
+    10179,
+    10184,
+    10196,
+    10202,
+    10207
+  ],
+  "local_links_checked": [
+    {
+      "source": "docs/gemma-lookup-reference.md",
+      "target": "gemma4-text-math.md"
+    },
+    {
+      "source": "docs/gemma-lookup-reference.md",
+      "target": "gemma-table-gather-gpu.md"
+    },
+    {
+      "source": "docs/gemma-lookup-reference.md",
+      "target": "../tests/fixtures/gemma-lookup-reference-v1/observation.json"
+    },
+    {
+      "source": "docs/gemma-lookup-reference.md",
+      "target": "../benchmarks/results/2026-10-26-gemma-lookup-reference-v1.json"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "engine-expansion-plan.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "mobile-qwen3-downloads.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-checkpoint.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-lookup-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-table-gather-gpu.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-e2b-inspection.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-checkpoint.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gated-norm-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "long-reply-engine-plan.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-gelu-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-gelu-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-rotary-precision.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-rotary-math.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-rotary-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-local-attention-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "window-attention-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-kv-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "window-cache-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-shared-kv-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "shared-kv-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "span-attention-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-per-layer-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "per-layer-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-decoder-order-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "dense-decoder-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-v-norm-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-v-norm-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-softcap-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-softcap-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-text-graph-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-text-graph-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-config-layout.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-packed-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "mlx-affine.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-packed-graph-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-packed-model-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-payload-storage.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-checkpoint.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-producer-staging.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "affine4-tiled-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-text-math.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-short-scalar.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-generation-state.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-greedy-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-raw-generation.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-text-codec-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-native-codec.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-basic-chat-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-basic-chat-generation.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-native-stream.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-stream-generation.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma4-content-identity.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "smol-load-identity.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-metal-rotary.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "smol-native-content.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "smol-model-content.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "smol-codec-content.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "smol-native-pair.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-metal-rms.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-metal-affine.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-affine-admission.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-affine-admission.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-affine-l1.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-metal-affine.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-projection-trace.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-real-projections.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-table-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "mlx-row-views.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-partitioned-affine.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-head-reference.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "gemma-real-head.md"
+    },
+    {
+      "source": "docs/gemma4-implementation-plan.md",
+      "target": "mlx-table-gather.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-lookup-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-table-gather-gpu.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-packed-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-affine.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-packed-graph-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-implementation-plan.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "../PLAN.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-architectures.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gated-norm-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-implementation-plan.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-e2b-inspection.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-gelu-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-gelu-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-rotary-precision.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-rotary-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-local-attention-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "window-attention-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-kv-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "window-cache-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-shared-kv-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "shared-kv-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "span-attention-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-per-layer-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "per-layer-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-decoder-order-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "dense-decoder-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-v-norm-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-v-norm-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-softcap-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-softcap-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "long-reply-engine-plan.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "long-reply-mobile.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "improvements.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-compatibility.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-compatibility-consumers.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-compatibility-swift.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "metal-resource-planning.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "metal-resource-consumers.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "native-resource-policy.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "swift-runtime-preflight.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "chat-output-limit.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gated-delta-oracle-preparation.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gated-delta-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gated-delta-normalization.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gated-delta-gates.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "causal-conv-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "causal-conv-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-qwen3-oracle.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-qwen3-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-qwen3-metal.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-qwen3-checkpoint.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-qwen3-real-oracle.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-qwen3-real-metal.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-qwen3-real-generation.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "qwen3-native-chat.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-text-graph-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-text-graph-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-config-layout.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-packed-model-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-payload-storage.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-checkpoint.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-producer-staging.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "affine4-tiled-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-text-math.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-short-scalar.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-generation-state.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-greedy-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-raw-generation.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-text-codec-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-native-codec.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-basic-chat-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-basic-chat-generation.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-native-stream.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-stream-generation.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma4-content-identity.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "smol-load-identity.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-metal-rotary.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "smol-native-content.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "smol-model-content.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "smol-codec-content.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "smol-native-pair.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-metal-rms.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-metal-affine.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-affine-admission.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-affine-admission.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-affine-l1.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-metal-affine.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-projection-trace.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-real-projections.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-table-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-row-views.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-partitioned-affine.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-head-reference.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "gemma-real-head.md"
+    },
+    {
+      "source": "docs/engine-expansion-plan.md",
+      "target": "mlx-table-gather.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m5-release.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-12-cpu-tiled-retention.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-accurate-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-12-cpu-tiled-retention.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../tools/reference/README.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../PLAN.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-09-qwen-load.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-09-qwen-forward.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-09-qwen-session.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-10-qwen-cli.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-larger-independent-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-compensated-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-compensated-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-compensated.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-scorer.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-metal-cli-half.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-metal-controlled.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-cpu-task-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-metal-tasks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-09-qwen-session.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-engine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-trace.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "q4-v1.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-q4-artifact.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-q4-decode.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-required-position-logits.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-greedy.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-chunks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-m5-dispatch-closure.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-m5-prefill-closure.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-cpu-all-row-logits.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-streamed-storage-oracles.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../PLAN.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../tools/reference/README.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/README.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-10-external-matrix.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-11-m2.5-scalar-comparison.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-prefix-continuation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-larger-metal-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-trace.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-cpu-row-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-11-held-out-tiled-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-11-held-out-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-11-linux-literal-controller.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-larger-preselection.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-larger-fp32-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-consistency.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-scorer.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-task-grading-admission.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-task-grading-window.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-metal-application.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-full-task-responses.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-small-half-controlled-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-larger-half-controlled-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-application-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-primary-confirm.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-half-application-confirm.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "q4-v2.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-format.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-gpu.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-real-oracles.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-real-geometry.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-scorer.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-cli.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-task-collector.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-11-ane-feasibility-closure.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-residual-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-rotary-cache.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-mlp-gating.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-greedy.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-chunks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-q4-prefill.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-q4-compensated-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-held-out-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-metal-held-out-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-larger-half-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-13-larger-metal-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-10-code-isolation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-11-linux-literal-controller.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-m5-performance-decision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m5-release.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-full-tasks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-bench.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-application.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-shapes.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-14-q4-v2-primary.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-q4-v2-controlled.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-q4-v2-application-full.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m5-release.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-online-attention.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-long-admission.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-quality-collector.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-online-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-context-worker.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-context-collector.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-tasks-collector.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-application-collector.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-online-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-long-budget.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-short-performance.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-long-quality-audit.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/m6-kv-component-v1/manifest.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-context-scope-audit.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-kv-component.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-15-m6-full-application.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-16-m6-typed-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-16-m6-winner-investigation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-16-m6-full-long-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-16-m6-supervised-runs.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-19-m6-context.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-19-m6-release.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-19-m7-native-abi.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-19-m7-metal-abi.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-19-m7-apple-package.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-19-m7-native-history.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-19-m7-swift-worker.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-19-m7-swift-harness.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-19-m7-physical-setup-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-20-m7-physical-tiny.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-20-m7-worker-timing.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-20-m7-measurement-runner.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-physical-measurement.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-filesystem-observation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-storage-admission.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-hash-memory.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-larger-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-phone-context.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-score-api.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-worker-score.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-teacher-forcing.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-quality-harness.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-physical-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-task-response.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-task-harness.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-task-id-compat.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-phone-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-physical-tasks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-phone-tasks.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-phone-small-sustained.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-worker-prefix.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-lifecycle-core.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-lifecycle-app.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-physical-lifecycle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-state-app.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-physical-state.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-lifecycle-cli-fix.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-phone-state-lifecycle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-phone-energy.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-iphone14pro.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-m7-release.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-grading-fixture-audit.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "experiments/2026-10-21-full-plan-audit.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "final-summary.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-affine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-implementation-plan.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-qwen-source.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-metal-affine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-half-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-metal-model.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-cli.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-native-bridge.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-apple-worker.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-apple-package.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-apple-jobs.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-lifecycle-cleanup.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-real-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-real-metal.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-mac-jobs.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-phone-jobs.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-upstream-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-checkpoint.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-real-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-real-metal.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-app-jobs.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-full-loss.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-task-grading-window.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-full-task-collection.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-task-responses.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-full-task-quality.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-mac-measurement.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-performance.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-phone-state.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx8-phone-lifecycle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-architectures.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-llama-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-llama-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-llama-metal.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-smollm-checkpoint.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-smollm-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-smollm-metal.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-smollm-app-device.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "app-chat-profile.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-app-chat-profile-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "app-interface.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-app-interface-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "model-hub.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-model-hub-core-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "model-hub.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-model-hub-app-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-qwen-app-chat-profile-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-qwen-model-hub-app-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-mistral-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-mistral-reference-tools-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-model-hub-large-limits-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-mistral-checkpoint.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-mistral-checkpoint-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-mistral-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-mistral-real-oracle-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-mistral-metal.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-mistral-metal-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "app-chat-profile.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-mistral-app-chat-profile-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "model-hub.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-model-hub-ranges-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-mistral-app.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-mistral-model-hub-app-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "model-hub.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-model-hub-cleanup-errors-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-mistral-mac-observations.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-mistral-mac-observations-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "model-hub.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-model-hub-whole-retries-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-mistral-hub-download.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mac-app.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-macos-window-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "app-recovery.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "iphone-app-audit.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-23-iphone-ui-controls-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "engine-expansion-plan.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-qwen3-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-qwen3-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-qwen3-metal.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-qwen3-checkpoint.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-qwen3-real-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-qwen3-real-metal.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-qwen3-real-generation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-compatibility.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-compatibility-consumers.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-compatibility-swift.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "chat-output-limit.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mobile-interface-fixes.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-mobile-interface-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "metal-resource-planning.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-metal-resource-planning-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "metal-resource-consumers.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-metal-resource-consumers-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "native-resource-policy.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-native-resource-policy-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "swift-runtime-preflight.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-swift-runtime-preflight-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "long-reply-engine-plan.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "chat-stream-oracle.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-chat-stream-oracle-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mobile-model-switching.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-mobile-model-switch-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "chat-stream-decoder.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-chat-stream-decoder-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gated-delta-oracle-preparation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gated-delta-oracle-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gated-delta-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gated-delta-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gated-delta-normalization.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gated-delta-normalization-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gated-delta-gates.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gated-delta-gates-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-mobile-dashboard-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "causal-conv-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-causal-conv-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "causal-conv-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-causal-conv-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-mobile-gemma4-phone-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mobile-gemma4-testing.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gated-norm-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gated-norm-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-implementation-plan.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-e2b-inspection.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma4-inspection-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-gelu-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-gelu-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-gelu-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-gelu-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-rotary-precision.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-rotary-precision-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-rotary-math.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-rotary-math-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-rotary-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-rotary-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-local-attention-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-local-attention-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "window-attention-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-window-attention-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-kv-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-kv-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "window-cache-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-window-cache-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-shared-kv-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-shared-kv-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mobile-model-ranking.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-mobile-model-ranking-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "shared-kv-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-shared-kv-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "span-attention-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-span-attention-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-per-layer-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-per-layer-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mobile-model-ranking.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-mobile-hf-discovery-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "per-layer-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-per-layer-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-decoder-order-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-decoder-order-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "dense-decoder-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-dense-decoder-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-v-norm-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-gemma-v-norm-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-v-norm-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-24-v-norm-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "qwen3-chat-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-qwen3-chat-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-softcap-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-softcap-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-softcap-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-softcap-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-qwen3-native-chat-integration-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "qwen3-native-chat.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-text-graph-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-text-graph-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-text-graph-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-text-graph-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-config-layout.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-config-layout-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-packed-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-packed-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-affine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-mlx-affine-row-fetch-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-packed-graph-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-packed-graph-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-packed-model-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-packed-model-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-payload-storage.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-payload-storage-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mobile-qwen3-downloads.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-mobile-qwen3-phone-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-checkpoint.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-checkpoint-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-producer-staging.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-producers-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "affine4-tiled-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-affine-tiles-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-text-math.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-text-math-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-short-scalar.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-short-scalar-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-generation-state.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-generation-state-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-greedy-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-greedy-math-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-raw-generation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-raw-generation-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-text-codec-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-text-codec-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-native-codec.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-native-codec-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mobile-generation-contract.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-mobile-generation-consumer-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-basic-chat-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-basic-chat-math-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-basic-chat-generation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-basic-chat-generation-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-native-stream.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-native-stream-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-stream-generation.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-stream-generation-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma4-content-identity.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma4-content-identity-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "smol-load-identity.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-smol-load-identity-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-metal-rotary.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-metal-rotary-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "smol-native-content.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-smol-native-content-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "smol-model-content.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-smol-model-content-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "smol-codec-content.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-smol-codec-content-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "smol-native-pair.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-smol-native-pair-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-metal-rms.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-metal-rms-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-metal-affine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-metal-affine-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-affine-admission.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-affine-admission-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-affine-admission.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-affine-coordinate-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-affine-l1.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-affine-l1-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-metal-affine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-metal-affine-l1-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-projection-trace.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-projection-trace-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-real-projections.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-real-projections-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-table-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-gemma-table-reference-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-row-views.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-25-mlx-row-views-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-partitioned-affine.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-head-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-real-head.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "mlx-table-gather.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-table-gather-gpu.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-26-gemma-table-gather-gpu-v1.json"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "gemma-lookup-reference.md"
+    },
+    {
+      "source": "docs/improvements.md",
+      "target": "../benchmarks/results/2026-10-26-gemma-lookup-reference-v1.json"
+    }
+  ],
+  "runtime_scope": "Exact scripts/interpreter and unchanged Rust/shader/test sources; no full standard-library/native closure",
+  "numerical_engine_unchanged": true,
+  "engine_executed": false,
+  "gpu_executed": false,
+  "actual_full_tables_qualified": false,
+  "native_activation_parity": false,
+  "whole_graph_qualified": false,
+  "original_bf16_source_qualified": false,
+  "quality_qualified": false,
+  "performance_qualified": false,
+  "app_or_phone_qualified": false,
+  "source_or_precision_failures_waived": false,
+  "previous_math_cross_precision_failed_arrays_unwaived": 5,
+  "previous_math_cross_precision_failed_values_unwaived": 57,
+  "previous_native_fp64_ideal_logit_failures_per_schedule_unwaived": 27,
+  "packed_source_gpu_intermediate_failures_unwaived": 15,
+  "dense_source_gpu_intermediate_failures_unwaived": 15,
+  "source_long_rotary_failures_unwaived": 8,
+  "g2_complete": false,
+  "g3_complete": false,
+  "g4_complete": false,
+  "long_reply_qualified": false
+}

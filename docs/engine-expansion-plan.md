@@ -1,5 +1,10 @@
 # Engine coverage and Hugging Face implementation plan
 
+Latest reference preparation: [real embedding/PLE lookup arrays](gemma-lookup-reference.md)
+are frozen in full for subsequent native large-table comparisons. This is a
+verified extraction of existing independent data, with no new numerical, model,
+GPU or app capability.
+
 Latest standalone GPU work: [resident table gathers](gemma-table-gather-gpu.md)
 share the existing packed projection weights and qualify tiny lookup transactions
 on Mac. Actual large-table loading/selection, complete Gemma execution, historical

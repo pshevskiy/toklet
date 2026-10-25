@@ -4395,3 +4395,35 @@ See [contract and measurements](gemma-table-gather-gpu.md) and the
 Actual large-table loading/head/PLE selections, resident graph/KV, prior
 source/precision/rotary failures, quality/performance, app/phone and 131072-output
 plus nonempty prompt qualification remain open. No capability or limit changes.
+
+## 2026-10-26 — freeze complete real embedding and PLE lookup references
+
+Hypothesis: large native table qualification should compare every selected value
+against an immutable independent result before implementing its loader and GPU
+composition. Extracted complete staged-FP32 embedding [4,1536] and PLE lookup
+[4,8960] arrays for IDs [2,100,257,100] from the previously accepted real Gemma
+math trace. The two arrays contain 41984 values/167936 bytes, including duplicate
+rows. This is integrity-preserving extraction, with no new numerical evaluation.
+
+Small named producer/checker/test modules reuse authenticated head-reference IO
+helpers at the coarse artifact boundary. Independent explicit span definitions,
+full/compact metadata, complete byte equality and finite-value checks prevent
+scaled embeddings or partial probes from replacing the raw table rows. Astra
+review found a controller cap typo and a missing test helper import before any
+execution; both were corrected. No historical numerical failure was changed.
+
+Two controlled captures and independent replays are byte identical. Seventeen
+actual-output mutation/reader methods and three original-error/partial-output
+retention methods pass. First outputs, exact copied scripts/helper modules and
+interpreter, source endpoints and six absent process groups are retained.
+Maximum RSS 69533696/physical 31933136 bytes fit the 512 MiB per-process policy;
+no model-residency or performance claim follows. All Rust/shader/test sources and
+protected executables remain unchanged, so validation uses focused Python checks.
+
+Retain the three exclusively frozen fixture files for subsequent real original
+head/PLE gather tests. See [reference contract](gemma-lookup-reference.md) and the
+[public evidence record](../benchmarks/results/2026-10-26-gemma-lookup-reference-v1.json).
+Bounded large-table source/upload overlap, aggregate resident model memory,
+native table lookup, graph/KV, historical precision/source/rotary failures,
+quality/performance, app/phone and long-output requirements remain open. No
+artifact eligibility or output/context limit changes.

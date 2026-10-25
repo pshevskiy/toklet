@@ -1,0 +1,15 @@
+{
+  "format": "toklet-gemma-lookup-reference-manifest-v1",
+  "passed": true,
+  "files": {
+    "observation.json": {
+      "bytes": 2163,
+      "sha256": "b1818331b5d341444fbc4ea22e018fc99241bd2d4fe5edbca7df9222739546a1"
+    },
+    "arrays.bin": {
+      "bytes": 167936,
+      "sha256": "aea89e9e83d266ae5e648e1c4bebb01509370ef29ef777dea7018b5822cbf469"
+    }
+  },
+  "file_errors": []
+}
