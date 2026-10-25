@@ -3615,3 +3615,39 @@ Rust numerical/test/example sources remain unchanged from `e20e601`. Native
 formatted generation and streaming are next. Full G3, earlier precision/source
 failures, Metal, quality/performance, combined/mobile admission, app integration
 and131072-output qualification remain open; no ABI/catalog/position limits change.
+
+## 25 October 2026 — native formatted Gemma4 generation
+
+Extend the existing diagnostic with an explicit closed `basic-hello` profile;
+keep the raw default and its four schedules. Compose one pinned codec/model and
+reset session across uninterrupted and split2+remaining replies. Reuse selected
+stops1/106/50 on every call, resume only after output limit and decrement the
+16-token budget by sampled count. Preserve hidden pending natural stops,
+completed earlier reports and valid state on later failure. Capture the full
+logit row before sample append, stream bounded diagnostics and decode only the
+visible IDs after generation. Keep primary capture I/O failures visible.
+
+Before asset access, reserve1GiB codec and16MiB diagnostic/text ownership from
+6GiB; pass the remaining numerical budget consistently and count model/store
+once. Seven offline/release methods cover both raw/new capture bounds, closed
+profile/pre-open memory rejection, early/final stops, no-stop output limit and
+second-call output failure. Both strict checks,307 CPU/329 Metal-feature tests,
+both iOS targets and release compilation pass. Retain the earlier six-method
+preliminary result before adding direct formatted capture-bound coverage.
+The full controller-verifier regression rejects six corrupt packets and records
+a finite numerical failure without falsifying capture success.
+
+Actual Mac uninterrupted and split runs match all11 frozen sampled IDs, emit
+“Hi! How can I help you today? 😊” and finish with20 committed IDs/pending106.
+All22 full rows match bitwise across schedules;44 unchanged reference gates
+pass over11,534,336 pairs (max FP640.46041798867955425/FP320.0013559174399768907).
+Combined admission is3,855,781,740 bytes; resident/physical process peaks are
+2,273,132,544/2,900,626,216 below6GiB. The188.52-second combined diagnostic is
+not a representative latency benchmark.
+
+See [workload, ownership and checks](gemma4-basic-chat-generation.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-basic-chat-generation-v1.json).
+A single formatted reply advances native basic-text execution only. Append-only
+streaming, broader quality/full G3, earlier precision/source failures, Metal,
+performance, mobile fit/app integration and131072 output tokens remain open.
+No public app Profile/ABI/catalog or numerical position/output limits change.

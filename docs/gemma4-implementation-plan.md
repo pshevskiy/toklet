@@ -272,3 +272,16 @@ the separate512MiB reference-process gate passes. This advances a frozen
 formatted continuation witness. Native formatted execution, streaming, full G3,
 earlier numerical/source gaps, Metal, quality/performance, combined/mobile fit,
 app integration and131072-output qualification remain open. No limits change.
+
+
+The [native formatted basic-hello diagnostic](gemma4-basic-chat-generation.md)
+now composes the pinned codec, named scalar E2B model and generation owner with
+combined admission. Uninterrupted and split2+remaining schedules produce the
+same eleven samples and exact reply, naturally stopping at hidden pending106.
+All22 logit rows are bitwise identical between schedules and all44 reference
+gates pass over11,534,336 pairs. Required307 CPU/329 Metal-feature tests, both
+iOS targets and seven release diagnostic methods pass. The whole Mac process
+fits6GiB with3,855,781,740 combined admitted bytes. Append-only streaming is next;
+broader text quality, full G3, earlier numerical/source gaps, resident Metal,
+representative performance, mobile fit/app integration and131072-output gates
+remain open. No app profile, ABI, catalog or numerical-limit change.

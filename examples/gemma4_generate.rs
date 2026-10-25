@@ -1,4 +1,4 @@
-//! Bounded raw E2B generation diagnostic; no tokenizer/chat or app capability.
+//! Closed raw/basic-hello E2B diagnostics; no app capability or text streaming.
 use sha2::{Digest, Sha256};
 use std::{
     cell::RefCell,
@@ -9,6 +9,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 use toklet::{
+    app_chat::gemma4::{self, Codec},
     generation::{self, Input, Request, StopReason},
     mlx::gemma4::{ModalityPolicy, payload},
     model::gemma_packed::{GenerationSession, Model},
@@ -18,6 +19,60 @@ use toklet::{
 const PROMPT: [u32; 4] = [2, 100, 257, 100];
 const VOCAB: usize = 262144;
 const ROWS: usize = 16;
+
+const HELLO_PROMPT: [u32; 10] = [2, 105, 2364, 107, 10979, 106, 107, 105, 4368, 107];
+const HELLO_RENDERED: &str = "<bos><|turn>user\nHi<turn|>\n<|turn>model\n";
+const HELLO_MESSAGES: &[u8] = br#"[{"role":"user","content":"Hi"}]"#;
+// Resident reserve, separate from streamed diagnostic files: bounded ledgers,
+// JSON serialization, BufWriter, input/render/IDs and both decoded Strings.
+const DIAGNOSTIC_ALLOWANCE: usize = 16 * 1024 * 1024;
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Profile {
+    Raw,
+    BasicHello,
+}
+impl Profile {
+    fn parse(value: &str) -> io::Result<Self> {
+        match value {
+            "raw" => Ok(Self::Raw),
+            "basic-hello" => Ok(Self::BasicHello),
+            _ => Err(io::Error::other("unsupported fixed generation profile")),
+        }
+    }
+    fn plan(self) -> (usize, usize, usize, usize) {
+        match self {
+            Self::Raw => (ROWS, 4, 4, 7),
+            Self::BasicHello => (32, 16, 10, 25),
+        }
+    }
+    fn numerical_budget(self, total: usize) -> io::Result<usize> {
+        if total == 0 || total > toklet::weights::INITIAL_MEMORY_LIMIT_BYTES {
+            return Err(io::Error::other("combined diagnostic memory limit differs"));
+        }
+        match self {
+            Self::Raw => Ok(total),
+            Self::BasicHello => total
+                .checked_sub(gemma4::ALLOWANCE_BYTES + DIAGNOSTIC_ALLOWANCE)
+                .filter(|remaining| *remaining != 0)
+                .ok_or_else(|| io::Error::other("combined codec/diagnostic reserve exceeds limit")),
+        }
+    }
+}
+
+fn admitted_codec(
+    root: &Path,
+    profile: Profile,
+    total: usize,
+) -> Result<(usize, Option<Codec>), Box<dyn Error>> {
+    let numerical_budget = profile.numerical_budget(total)?;
+    let codec = if profile == Profile::BasicHello {
+        Some(Codec::load(root, gemma4::ALLOWANCE_BYTES)?)
+    } else {
+        None
+    };
+    Ok((numerical_budget, codec))
+}
 
 fn metadata(path: PathBuf, expected: &str) -> Result<Vec<u8>, Box<dyn Error>> {
     let mut bytes = Vec::new();
@@ -40,11 +95,14 @@ struct Capture {
     scenario: usize,
     scenario_rows: usize,
     error: Option<String>,
+    plan: (usize, usize, usize, usize),
 }
 impl Capture {
-    fn new(root: &Path) -> io::Result<Self> {
+    fn new(root: &Path, profile: Profile) -> io::Result<Self> {
         let mut arrays = Vec::new();
-        arrays.try_reserve_exact(ROWS).map_err(io::Error::other)?;
+        arrays
+            .try_reserve_exact(profile.plan().0)
+            .map_err(io::Error::other)?;
         Ok(Self {
             output: BufWriter::with_capacity(
                 64 * 1024,
@@ -58,13 +116,14 @@ impl Capture {
             scenario: 0,
             scenario_rows: 0,
             error: None,
+            plan: profile.plan(),
         })
     }
     fn row(&mut self, prefix: &[u32], values: &[f32]) -> io::Result<()> {
-        if self.arrays.len() >= ROWS
-            || self.scenario_rows >= 4
+        if self.arrays.len() >= self.plan.0
+            || self.scenario_rows >= self.plan.1
             || values.len() != VOCAB
-            || !(4..=7).contains(&prefix.len())
+            || !(self.plan.2..=self.plan.3).contains(&prefix.len())
         {
             return Err(io::Error::other("fixed diagnostic capture bound differs"));
         }
@@ -251,11 +310,148 @@ fn scenarios(
     Ok(())
 }
 
+// This is the actual two-call policy, shared with small scripted-session tests.
+// A natural stop is terminal; only an output limit permits continuation.
+fn basic_requests(
+    session: &mut impl InferenceSession,
+    split: bool,
+    reports: &mut Vec<generation::Report>,
+    mut emit: impl FnMut(generation::TokenEvent) -> io::Result<()>,
+) -> Result<(), generation::Error> {
+    let cancelled = AtomicBool::new(false);
+    let first = generation::generate(
+        session,
+        Request {
+            input: Input::Reset(&HELLO_PROMPT),
+            max_new_tokens: if split { 2 } else { 16 },
+            stop_tokens: &gemma4::STOP_IDS,
+        },
+        &cancelled,
+        &mut emit,
+    )?;
+    let remaining = 16 - first.sampled_tokens;
+    let resume = split && first.reason == StopReason::OutputLimit && remaining != 0;
+    reports.push(first);
+    if resume {
+        reports.push(generation::generate(
+            session,
+            Request {
+                input: Input::Continue,
+                max_new_tokens: remaining,
+                stop_tokens: &gemma4::STOP_IDS,
+            },
+            &cancelled,
+            emit,
+        )?);
+    }
+    Ok(())
+}
+
+fn basic_scenarios(
+    model: &Model<'_>,
+    codec: &Codec,
+    numerical_budget: usize,
+    capture: &RefCell<Capture>,
+    record: &mut serde_json::Value,
+) -> Result<(), Box<dyn Error>> {
+    let rendered = gemma4::render(
+        HELLO_MESSAGES,
+        gemma4::RenderOptions {
+            enable_thinking: false,
+            add_generation_prompt: true,
+        },
+    )?;
+    let prompt = codec.encode_raw(&rendered, false)?;
+    if rendered != HELLO_RENDERED || prompt != HELLO_PROMPT || codec.stop_ids() != [1, 106, 50] {
+        return Err("frozen basic-hello prompt or stop policy differs".into());
+    }
+    record["rendered_prompt"] = rendered.into();
+    record["stop_ids"] = serde_json::to_value(codec.stop_ids())?;
+    let mut session = model.new_generation_session(Options {
+        capacity: 32,
+        prefill_chunk_size: 4,
+        position_offset: 0,
+        memory_limit_bytes: numerical_budget,
+    })?;
+    let memory = session.memory();
+    let combined = memory
+        .admitted_bytes
+        .checked_add(codec.allowance_bytes())
+        .and_then(|n| n.checked_add(DIAGNOSTIC_ALLOWANCE))
+        .ok_or("combined diagnostic admission overflow")?;
+    if combined > toklet::weights::INITIAL_MEMORY_LIMIT_BYTES {
+        return Err("combined diagnostic admission exceeds limit".into());
+    }
+    record["memory"] = serde_json::to_value(memory)?;
+    record["numerical_budget_bytes"] = numerical_budget.into();
+    record["combined_admitted_bytes"] = combined.into();
+    for (index, name) in ["uninterrupted", "split"].iter().enumerate() {
+        {
+            let mut saved = capture.borrow_mut();
+            saved.scenario = index;
+            saved.scenario_rows = 0;
+        }
+        let mut observed = Observed {
+            inner: &mut session,
+            capture,
+        };
+        let mut emitted = Vec::with_capacity(16);
+        let mut reports = Vec::with_capacity(2);
+        let result = basic_requests(&mut observed, index == 1, &mut reports, |event| {
+            emitted.push(event.token_id);
+            Ok(())
+        });
+        // Capture the valid state even when generation or diagnostic writes fail.
+        let sampled = observed.history().get(HELLO_PROMPT.len()..).unwrap_or(&[]);
+        let state = serde_json::json!({
+            "name":name,"reports":reports,"emitted_ids":emitted,
+            "sampled_ids":sampled,"history":observed.history(),
+            "evaluated":observed.evaluated_len(),"pending":observed.pending_len(),
+            "logits_available":observed.logits().is_some(),
+            "completed":result.is_ok(),"error":result.as_ref().err().map(ToString::to_string)
+        });
+        record["scenarios"].as_array_mut().unwrap().push(state);
+        result?;
+        let rows = capture.borrow().scenario_rows;
+        let count: usize = reports.iter().map(|r| r.sampled_tokens).sum();
+        let final_reason = reports
+            .last()
+            .ok_or("missing basic generation report")?
+            .reason;
+        if rows != count
+            || !(1..=16).contains(&count)
+            || sampled.len() != count
+            || observed.history()[..10] != HELLO_PROMPT
+            || observed.evaluated_len() + 1 != observed.history().len()
+            || observed.pending_len() != 1
+            || observed.logits().is_some()
+            || observed.memory() != memory
+            || emitted
+                != sampled
+                    [..count - usize::from(matches!(final_reason, StopReason::StopToken { .. }))]
+        {
+            return Err("basic generation state or diagnostic storage differs".into());
+        }
+        let row = record["scenarios"]
+            .as_array_mut()
+            .unwrap()
+            .last_mut()
+            .unwrap();
+        row["visible_decode_keep_special"] = codec.decode(&emitted, false)?.into();
+        row["visible_decode_skip_special"] = codec.decode(&emitted, true)?.into();
+        row["finish_reason"] = serde_json::to_value(final_reason)?;
+    }
+    Ok(())
+}
+
 fn execute(
     root: &Path,
     capture: &RefCell<Capture>,
     record: &mut serde_json::Value,
+    profile: Profile,
 ) -> Result<(), Box<dyn Error>> {
+    let total = toklet::weights::INITIAL_MEMORY_LIMIT_BYTES;
+    let (numerical_budget, codec) = admitted_codec(root, profile, total)?;
     let config = metadata(
         root.join("config.json"),
         "6397cb6eca41b911d1dcab74e17941351057bd759284052a2331918ff6f9246c",
@@ -277,25 +473,38 @@ fn execute(
         payload::LoadOptions {
             container_bytes: 3550670554,
             container_sha256: digest,
-            memory_limit_bytes: toklet::weights::INITIAL_MEMORY_LIMIT_BYTES,
+            memory_limit_bytes: numerical_budget,
             modality: ModalityPolicy::TextOnly,
         },
     )?;
     let model = Model::from_e2b(&store)?;
     record["model_bytes_including_store"] = model.model_bytes().into();
-    scenarios(&model, capture, record)
+    if model.model_bytes() > numerical_budget {
+        return Err("model exceeds remaining combined numerical allowance".into());
+    }
+    if let Some(codec) = codec {
+        basic_scenarios(&model, &codec, numerical_budget, capture, record)
+    } else {
+        scenarios(&model, capture, record)
+    }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut args = std::env::args_os().skip(1);
-    let usage = "usage: gemma4_generate CHECKPOINT_DIRECTORY NEW_OUTPUT_DIRECTORY";
+    let mut args = std::env::args_os().skip(1).peekable();
+    let usage = "usage: gemma4_generate [--profile raw|basic-hello] CHECKPOINT_DIRECTORY NEW_OUTPUT_DIRECTORY";
+    let profile = if args.peek().is_some_and(|value| value == "--profile") {
+        args.next();
+        Profile::parse(args.next().ok_or(usage)?.to_str().ok_or(usage)?)?
+    } else {
+        Profile::Raw
+    };
     let root = PathBuf::from(args.next().ok_or(usage)?);
     let output = PathBuf::from(args.next().ok_or(usage)?);
     if args.next().is_some() {
         return Err(usage.into());
     }
     std::fs::create_dir(&output)?;
-    let capture = RefCell::new(Capture::new(&output)?);
+    let capture = RefCell::new(Capture::new(&output, profile)?);
     let mut record = serde_json::json!({
         "format":"toklet-gemma4-raw-generation-probe-v1","passed":false,
         "repository":"mlx-community/gemma-4-e2b-it-4bit",
@@ -308,8 +517,24 @@ fn main() -> Result<(), Box<dyn Error>> {
         "metal_qualified":false,"performance_qualified":false,"quality_qualified":false,
         "device_fit_qualified":false,"app_eligibility_changed":false
     });
-    if let Err(error) = execute(&root, &capture, &mut record) {
-        record["primary_error"] = error.to_string().into();
+    if profile == Profile::BasicHello {
+        record["format"] = "toklet-gemma4-basic-chat-generation-probe-v1".into();
+        record["profile"] = "basic-hello".into();
+        record["prompt"] = serde_json::to_value(HELLO_PROMPT)?;
+        record["diagnostic_byte_limit"] = (profile.plan().0 * VOCAB * 4).into();
+        record["tokenizer_allowance_bytes"] = gemma4::ALLOWANCE_BYTES.into();
+        record["diagnostic_allowance_bytes"] = DIAGNOSTIC_ALLOWANCE.into();
+        record["formatted_fixture_sha256"] =
+            "dab866a1e86e8bed3179e39383fa2f826222f9b1708aa2c2e6df66e78348627e".into();
+        record["text_streaming_qualified"] = false.into();
+    }
+    if let Err(error) = execute(&root, &capture, &mut record, profile) {
+        record["primary_error"] = capture
+            .borrow()
+            .error
+            .as_deref()
+            .map_or_else(|| error.to_string(), str::to_owned)
+            .into();
     }
     let mut capture = capture.into_inner();
     record["capture_error"] = serde_json::to_value(&capture.error)?;
@@ -324,8 +549,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     record["passed"] = (record["primary_error"].is_null()
         && capture.error.is_none()
         && record["endpoint_errors"].as_array().unwrap().is_empty()
-        && capture.arrays.len() == ROWS)
-        .into();
+        && match profile {
+            Profile::Raw => capture.arrays.len() == ROWS,
+            Profile::BasicHello => {
+                !capture.arrays.is_empty()
+                    && capture.arrays.len() <= profile.plan().0
+                    && record["scenarios"].as_array().unwrap().len() == 2
+            }
+        })
+    .into();
     let mut file = OpenOptions::new()
         .write(true)
         .create_new(true)
@@ -370,7 +602,7 @@ mod tests {
     #[test]
     fn finite_rows_preserve_exact_bytes_offsets_and_prewrite_bounds() {
         let temp = Temporary::new();
-        let mut capture = Capture::new(&temp.0).unwrap();
+        let mut capture = Capture::new(&temp.0, Profile::Raw).unwrap();
         let mut values = vec![0.0; VOCAB];
         values[..4].copy_from_slice(&[-0.0, 1.25, f32::MIN_POSITIVE, f32::from_bits(1)]);
         capture.row(&PROMPT, &values).unwrap();
@@ -401,7 +633,7 @@ mod tests {
     #[test]
     fn invalid_shape_rejects_before_capture_nonfinite_retains_complete_raw() {
         let temp = Temporary::new();
-        let mut capture = Capture::new(&temp.0).unwrap();
+        let mut capture = Capture::new(&temp.0, Profile::Raw).unwrap();
         assert!(capture.row(&PROMPT, &[0.0]).is_err());
         assert!(capture.arrays.is_empty());
         let mut values = vec![0.0; VOCAB];
@@ -430,6 +662,7 @@ mod tests {
             scenario: 0,
             scenario_rows: 0,
             error: None,
+            plan: Profile::Raw.plan(),
         };
         let error = capture.row(&PROMPT, &vec![0.0; VOCAB]).unwrap_err();
         assert!(error.raw_os_error().is_some());
@@ -439,5 +672,199 @@ mod tests {
         assert_eq!(capture.bytes, 0);
         assert_eq!(capture.scenario_rows, 0);
         assert_eq!(std::fs::metadata(path).unwrap().len(), 0);
+    }
+
+    struct Scripted {
+        history: Vec<u32>,
+        evaluated: usize,
+        selected: [u32; 16],
+    }
+    impl InferenceSession for Scripted {
+        fn history(&self) -> &[u32] {
+            &self.history
+        }
+        fn evaluated_len(&self) -> usize {
+            self.evaluated
+        }
+        fn pending_len(&self) -> usize {
+            self.history.len() - self.evaluated
+        }
+        fn capacity(&self) -> usize {
+            32
+        }
+        fn vocab_size(&self) -> usize {
+            VOCAB
+        }
+        fn memory(&self) -> Memory {
+            Memory {
+                weights_bytes: 0,
+                kv_bytes: 0,
+                scratch_bytes: 0,
+                history_bytes: 128,
+                logits_bytes: 0,
+                metadata_bytes: 0,
+                metadata_allowance_bytes: 0,
+                admitted_bytes: 128,
+            }
+        }
+        fn logits(&self) -> Option<&[f32]> {
+            None
+        }
+        fn greedy_token(&self) -> Option<Result<u32, toklet::cpu::Error>> {
+            (self.evaluated == self.history.len())
+                .then(|| Ok(self.selected[self.history.len() - 10]))
+        }
+        fn append(&mut self, tokens: &[u32]) -> Result<(), session::Error> {
+            self.history.extend_from_slice(tokens);
+            Ok(())
+        }
+        fn set_tokens(&mut self, tokens: &[u32]) -> Result<(), session::Error> {
+            self.reset();
+            self.append(tokens)
+        }
+        fn evaluate_next_chunk(&mut self) -> Result<usize, session::Error> {
+            let count = self.pending_len();
+            self.evaluated = self.history.len();
+            Ok(count)
+        }
+        fn discard_pending(&mut self) {
+            self.history.truncate(self.evaluated);
+        }
+        fn reset(&mut self) {
+            self.history.clear();
+            self.evaluated = 0;
+        }
+    }
+
+    #[test]
+    fn basic_split_preserves_early_stop_final_stop_and_sampled_budget() {
+        for split in [false, true] {
+            for stop in [Some((0, 106)), Some((1, 50)), Some((15, 1)), None] {
+                let mut selected = [7; 16];
+                if let Some((index, id)) = stop {
+                    selected[index] = id;
+                }
+                let mut session = Scripted {
+                    history: Vec::with_capacity(32),
+                    evaluated: 0,
+                    selected,
+                };
+                let mut reports = Vec::with_capacity(2);
+                let mut emitted = Vec::with_capacity(16);
+                basic_requests(&mut session, split, &mut reports, |event| {
+                    emitted.push(event.token_id);
+                    Ok(())
+                })
+                .unwrap();
+                let count = stop.map_or(16, |(index, _)| index + 1);
+                assert_eq!(reports.len(), if split && count > 2 { 2 } else { 1 });
+                assert_eq!(
+                    reports.iter().map(|r| r.sampled_tokens).sum::<usize>(),
+                    count
+                );
+                assert_eq!(emitted, selected[..count - usize::from(stop.is_some())]);
+                assert_eq!(&session.history[..10], &HELLO_PROMPT);
+                assert_eq!(&session.history[10..], &selected[..count]);
+                assert_eq!(session.evaluated, 10 + count - 1);
+                assert_eq!(session.pending_len(), 1);
+                assert_eq!(
+                    reports.last().unwrap().reason,
+                    stop.map_or(StopReason::OutputLimit, |(_, token_id)| {
+                        StopReason::StopToken { token_id }
+                    })
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn basic_failure_retains_completed_report_and_pending_sample() {
+        let mut session = Scripted {
+            history: Vec::with_capacity(32),
+            evaluated: 0,
+            selected: [7; 16],
+        };
+        let mut reports = Vec::with_capacity(2);
+        let mut emitted = 0;
+        let error = basic_requests(&mut session, true, &mut reports, |_| {
+            emitted += 1;
+            if emitted == 3 {
+                Err(io::Error::other("synthetic output failure"))
+            } else {
+                Ok(())
+            }
+        })
+        .unwrap_err();
+        assert!(matches!(error, generation::Error::Output(_)));
+        assert!(error.to_string().contains("synthetic output failure"));
+        assert_eq!(reports.len(), 1);
+        assert_eq!(reports[0].sampled_tokens, 2);
+        assert_eq!(session.history.len(), 13);
+        assert_eq!(session.evaluated, 12);
+        assert_eq!(session.pending_len(), 1);
+    }
+
+    #[test]
+    fn closed_profile_and_combined_reserve_reject_before_asset_access() {
+        assert!(Profile::parse("other").is_err());
+        assert!(Profile::parse("basic-hello ").is_err());
+        assert!(Profile::parse("basic-hello").is_ok());
+        assert!(Profile::parse("raw").is_ok());
+        let temp = Temporary::new();
+        let reserve = gemma4::ALLOWANCE_BYTES + DIAGNOSTIC_ALLOWANCE;
+        for total in [
+            0,
+            reserve - 1,
+            reserve,
+            toklet::weights::INITIAL_MEMORY_LIMIT_BYTES + 1,
+        ] {
+            let error = match admitted_codec(&temp.0, Profile::BasicHello, total) {
+                Err(error) => error,
+                Ok(_) => panic!("invalid reserve admitted"),
+            };
+            assert!(error.to_string().contains("combined"));
+        }
+        assert_eq!(
+            Profile::BasicHello.numerical_budget(reserve + 1).unwrap(),
+            1
+        );
+        assert_eq!(Profile::Raw.numerical_budget(reserve).unwrap(), reserve);
+        let fixture = include_bytes!("../tests/fixtures/gemma4-basic-chat-math-v1/math.json");
+        assert_eq!(
+            format!("{:x}", Sha256::digest(fixture)),
+            "dab866a1e86e8bed3179e39383fa2f826222f9b1708aa2c2e6df66e78348627e"
+        );
+        let witness: serde_json::Value = serde_json::from_slice(fixture).unwrap();
+        assert_eq!(witness["prompt"], serde_json::json!(HELLO_PROMPT));
+        assert_eq!(witness["rendered_prompt"], HELLO_RENDERED);
+        assert_eq!(witness["stop_ids"], serde_json::json!(gemma4::STOP_IDS));
+    }
+
+    #[test]
+    fn basic_capture_plan_rejects_outside_prefix_and_row_bounds_before_write() {
+        let temp = Temporary::new();
+        let mut capture = Capture::new(&temp.0, Profile::BasicHello).unwrap();
+        let values = vec![0.0; VOCAB];
+        capture.row(&[2; 10], &values).unwrap();
+        capture.row(&[2; 25], &values).unwrap();
+        let bytes = capture.bytes;
+        for prefix in [9, 26] {
+            assert!(capture.row(&vec![2; prefix], &values).is_err());
+            assert_eq!(capture.arrays.len(), 2);
+            assert_eq!(capture.bytes, bytes);
+        }
+        capture.scenario_rows = 16;
+        assert!(capture.row(&[2; 10], &values).is_err());
+        assert_eq!(capture.arrays.len(), 2);
+        assert_eq!(capture.bytes, bytes);
+        capture.scenario_rows = 0;
+        capture.arrays.resize(32, serde_json::Value::Null);
+        assert!(capture.row(&[2; 10], &values).is_err());
+        assert_eq!(capture.arrays.len(), 32);
+        assert_eq!(capture.bytes, bytes);
+        assert_eq!(
+            std::fs::metadata(temp.0.join("arrays.bin")).unwrap().len(),
+            bytes as u64
+        );
     }
 }
