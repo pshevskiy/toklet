@@ -530,3 +530,14 @@ newly admitted cancellation witnesses and whole-batch rejection recovery.
 This qualifies a standalone operator, with real/native graph composition,
 head/table storage, existing source/precision failures, model performance,
 app/mobile and long-output requirements still open.
+
+## Complete real Gemma projection reference
+
+The [four-token projection capture](gemma-projection-trace.md) now retains all
+552 complete input/expected arrays for 276 geometry-fitting calls. Actual
+captured-state reconstructions and derived mathematical GELU products stay
+distinct, as do rounded mathematical outputs and later native ordered outputs.
+Two captures and independent complete replays pass within bounded resources.
+This prepares real-checkpoint operator checks; it does not execute native/GPU
+projections, qualify a resident model, change head/table limits or waive
+source/precision, app/phone or long-output requirements.

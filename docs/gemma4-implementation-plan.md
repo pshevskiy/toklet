@@ -462,3 +462,17 @@ failure preserving all device buffers; old GPU cases and ten capture-checker
 regressions pass. This closes the standalone fallback subset only. Actual
 real-model projection/native parity, table/head storage, full graph and all
 prior source/precision, app/device and long-output requirements remain open.
+
+## Complete real-projection reference arrays
+
+The [complete projection reference](gemma-projection-trace.md) freezes 552
+arrays / 26,333,184 bytes for 276 fitting calls in the four-token trace.
+Separate 206 captured-state reconstructions from 70 acknowledged mathematical
+GELU products; outputs are complete rounded staged-FP32 linear states before
+norms/scales/residuals. Independent mappings/rounding/raw-byte replays agree,
+including signed zeros, FF-width transition and max-first/L1 admission.
+Eleven portable and two retention methods, two identical captures/replays
+and six owned process/resource closures pass. The head remains geometry
+rejected. These are pre-native reference inputs, with actual projection/GPU,
+native activation parity, table/head storage, resident graph and earlier
+source/precision, app/device and long-output gates still open.

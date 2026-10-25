@@ -4127,3 +4127,33 @@ and [receipt](../benchmarks/results/2026-10-25-gemma-metal-affine-l1-v1.json).
 Retain the checked standalone fallback. Real/native projection composition,
 table/head storage, full graph/KV, prior source/precision failures, app/phone
 and long-output qualification remain open; no capability or failed gate changes.
+
+## 25 October 2026 — complete real-projection input/output reference
+
+Retain all 552 arrays / 26,333,184 bytes for 276 geometry-fitting projections
+from the accepted complete four-token mathematical trace. Separate 206
+captured-state input reconstructions from 70 derived mathematical GELU products;
+the latter preserve original x**3, activation rounding, multiplication and final
+FP32 rounding. Preserve head-major context order, both residual roundings and
+zero signs. Expected outputs precede norms/scales/residuals and use the existing
+rounded staged-FP32 mathematical contract, not ideal-history or new exact dots.
+
+Independent complete name/shape/output mappings and raw-byte replays agree.
+Current actual-input proofs classify 269 max passes and seven L1 passes; the
+full tied head remains geometry rejected. Input/output byte totals are
+11,128,832 / 15,204,352, below the 32 MiB binary cap; every array is at most
+196,608 bytes. Keep the model-specific binary in an explicitly bound frozen
+artifact directory rather than ordinary source checkouts.
+
+Eleven portable and two retention methods, two identical captures, both full
+independent replays and six owned process/resource closures pass. Late-read and
+post-success report-write failures retain earlier arrays, partial attempt/report,
+failed manifest and original error. Maximum RSS/physical peaks are 62,603,264 /
+44,384,904 bytes, each below separate 512 MiB reference-process policies.
+No numerical Rust or device path changes, and no unrelated benchmarks rerun.
+
+See [contracts, ownership and remaining work](gemma-projection-trace.md) and
+the [receipt](../benchmarks/results/2026-10-25-gemma-projection-trace-v1.json).
+Retain as pre-native qualification evidence. Real GPU projection checks,
+native activation parity, head/table chunking, resident graph/KV, source/precision,
+quality/performance, app/phone and long-output gates remain open.
