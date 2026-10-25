@@ -3845,3 +3845,34 @@ See [ownership, evidence and limits](smol-native-content.md) and the
 [receipt](../benchmarks/results/2026-10-25-smol-native-content-v1.json).
 Live-model binding, codec/profile pairing, native ABI/capabilities/app integration,
 phone qualification, full Gemma graph and 131072-output gates remain open.
+
+## 25 October 2026 — audited resident Smol model binding
+
+Add an explicit audited Metal model import that reuses existing upload/assembly.
+Initialize every constructor with absent identity; attach copied historical source
+evidence only after every upload and final assembly succeeds. An incomplete audit
+cannot publish the model. Legacy imports remain unbound, and no public setter can
+retrofit proof. Move padded-weight admission ahead of device compilation while
+keeping queried buffer-length validation before weight allocation.
+
+All 329 CPU/353 Metal-feature tests, both strict checks, both iOS targets and the
+release admission method pass. Zero-selection targeted attempts remain uncredited;
+corrected debug/release filters each run the intended method once against unchanged
+binaries, with the full Metal suite already covering it. Six separate actual
+legacy/audited processes pass
+the existing graph, generation/state and 512-capacity witnesses with unchanged
+numerical gates. Each graph run checks 816 snapshots/4,988,928 values; observed
+stage/logit errors remain 16 / 0.0589752197265625. Audited models report all exact
+reference hashes and 694 verified ranges/reads; legacy models report no identity.
+Nineteen controller corruptions reject across twelve valid prefix/mode cases.
+
+The inline option is 168 bytes within the metadata policy; model structure is
+832 bytes and resident weights remain 142,955,990 bytes. Maximum audited completed
+RSS/physical peaks are 260,472,832 / 249,332,408 bytes within the existing 1.5 GiB
+diagnostic policy. These regressions add no new raw-array, pairwise-bitwise,
+quality, long-context numerical or representative performance qualification.
+
+See [publication boundary, checks and limits](smol-model-content.md) and the
+[receipt](../benchmarks/results/2026-10-25-smol-model-content-v1.json).
+Codec/profile/device admission, native ABI/capabilities and app integration remain
+separate. Earlier Gemma/source/GPU/precision and 131072-output gates remain open.

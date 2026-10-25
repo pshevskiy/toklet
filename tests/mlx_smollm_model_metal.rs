@@ -162,15 +162,45 @@ mod gpu {
         }
     }
     fn model(reference: &Reference) -> metal::Model {
+        model_with_context(reference, 32)
+    }
+    fn model_with_context(reference: &Reference, context: usize) -> metal::Model {
         reference.checkpoint();
-        metal::Model::load_mlx(
-            &root().join(MODEL),
-            LoadOptions {
-                context_limit: 32,
-                memory_limit_bytes: BUDGET,
-            },
-        )
-        .unwrap()
+        let mode = match std::env::var_os("TOKLET_SMOL_IMPORT_MODE") {
+            None => "legacy",
+            Some(value) if value == "legacy" => "legacy",
+            Some(value) if value == "audited" => "audited",
+            _ => panic!("TOKLET_SMOL_IMPORT_MODE must be legacy or audited"),
+        };
+        let options = LoadOptions {
+            context_limit: context,
+            memory_limit_bytes: BUDGET,
+        };
+        let model = if mode == "audited" {
+            metal::Model::load_mlx_smol_audited(&root().join(MODEL), options)
+        } else {
+            metal::Model::load_mlx(&root().join(MODEL), options)
+        }
+        .unwrap();
+        let hex =
+            |bytes: [u8; 32]| -> String { bytes.iter().map(|v| format!("{v:02x}")).collect() };
+        let identity=model.mlx_source_content_identity().map(|id|json!({"repository":id.repository(),"revision":id.revision(),"config_sha256":hex(id.config_sha256()),"index_sha256":hex(id.index_sha256()),"header_sha256":hex(id.header_sha256()),"authenticated_reference_container_sha256":hex(id.reference_container_sha256()),"physical_ranges":id.physical_ranges(),"verified_reads":id.verified_reads(),"payload_bytes":id.payload_bytes(),"container_bytes":id.container_bytes()}));
+        println!(
+            "MLX_SMOLLM_MODEL_SOURCE {}",
+            json!({"mode":mode,"context":context,"weights_bytes":model.weights_bytes(),"model_structure_bytes":std::mem::size_of::<metal::Model>(),"inline_identity_option_bytes":std::mem::size_of::<Option<toklet::mlx::qwen::SourceContentIdentity>>(),"identity":identity})
+        );
+        assert_eq!(model.weights_bytes(), 142955990);
+        if mode == "audited" {
+            assert_eq!(
+                identity,
+                Some(
+                    json!({"repository":"mlx-community/SmolLM2-135M-Instruct-8bit","revision":"0f0d9b8218915bc34d401e1a340b8c049d300d5e","config_sha256":"5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73","index_sha256":"d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44","header_sha256":"357edb41f2242613ddddcbe671be7c60923abf4850c77105c63a870df4ccb1f8","authenticated_reference_container_sha256":"ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c","physical_ranges":694,"verified_reads":694,"payload_bytes":142955136,"container_bytes":143030401})
+                )
+            );
+        } else {
+            assert!(identity.is_none());
+        }
+        model
     }
     fn options(chunk: usize, offset: usize) -> session::Options {
         session::Options {
@@ -451,15 +481,7 @@ mod gpu {
     #[ignore = "Explicit Apple GPU real SmolLM512 capacity/resume/replay witness, separate from short numerical oracle"]
     fn native_mlx_smollm_512_capacity_preserves_committed_state() {
         let reference = Reference::open();
-        reference.checkpoint();
-        let model = metal::Model::load_mlx(
-            &root().join(MODEL),
-            LoadOptions {
-                context_limit: 512,
-                memory_limit_bytes: BUDGET,
-            },
-        )
-        .unwrap();
+        let model = model_with_context(&reference, 512);
         let options = session::Options {
             capacity: 512,
             prefill_chunk_size: 128,

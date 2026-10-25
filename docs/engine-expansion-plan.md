@@ -432,3 +432,13 @@ source-identity publication. Real source-only consumption passes 700 reads and
 required checks. Live resident-model binding and codec/profile/device admission
 remain separate tasks before native capabilities or app eligibility can change.
 No architecture, graph or context-limit support is inferred from this evidence.
+
+## Successful resident model carries source evidence
+
+The [explicit audited Smol import](smol-model-content.md) attaches historical
+source evidence only after uploads and final assembly succeed, with no retrofit
+for legacy models. Padded resident admission now precedes device compilation.
+Both import modes pass the same existing Mac graph/state/capacity witnesses;
+no kernel or numerical gate changes. Native capability/profile/codec/device
+integration remains next at this boundary, with all broader architecture and
+long-output requirements still open.

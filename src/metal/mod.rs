@@ -171,6 +171,7 @@ pub struct Model {
     layers: Vec<Layer>,
     weight_bytes: usize,
     mlx_architecture: Option<crate::mlx::dense::Architecture>,
+    mlx_source_identity: Option<crate::mlx::qwen::SourceContentIdentity>,
     pub load_timing: LoadTiming,
 }
 impl Model {
@@ -200,6 +201,12 @@ impl Model {
     /// Explicit artifact graph identity; legacy Half/Q4 loaders return None.
     pub fn mlx_architecture(&self) -> Option<crate::mlx::dense::Architecture> {
         self.mlx_architecture
+    }
+    /// Historical source-consumption evidence carried only by a successfully
+    /// assembled audited import. Not a resident-byte digest, tokenizer pairing,
+    /// current-disk snapshot or application capability. Legacy imports are None.
+    pub fn mlx_source_content_identity(&self) -> Option<&crate::mlx::qwen::SourceContentIdentity> {
+        self.mlx_source_identity.as_ref()
     }
     pub(crate) fn native_attention_mode(&self) -> AttentionMode {
         planning::native_attention_mode(self.mlx_architecture)
@@ -245,19 +252,37 @@ impl Model {
     /// Explicit native MLX artifact import. Packed tensors stream directly into
     /// resident buffers, with no full FP32 model or temporary packed copy.
     pub fn load_mlx(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
+        Self::load_mlx_impl(directory, options, false)
+    }
+    /// Explicit one-checkpoint audited source import. Evidence is attached only
+    /// after every upload and final model assembly succeeds. Codec/device/session
+    /// admission and application capabilities remain separate boundaries.
+    pub fn load_mlx_smol_audited(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
+        Self::load_mlx_impl(directory, options, true)
+    }
+    fn load_mlx_impl(
+        directory: &Path,
+        options: weights::LoadOptions,
+        audited: bool,
+    ) -> Result<Self> {
         autoreleasepool(|_| {
             let clock = Instant::now();
-            let mut source = crate::mlx::qwen::Source::open_dense(directory, options)?;
+            let mut source = if audited {
+                crate::mlx::qwen::Source::open_smol_audited(directory, options)?
+            } else {
+                crate::mlx::qwen::Source::open_dense(directory, options)?
+            };
             let config = source.config().clone();
             let bias_free = !source.architecture().has_projection_bias();
             let untied_output = !source.tied_output();
             mlx_geometry(&config, source.architecture())?;
+            // Admit padded resident weights before device/context compilation.
+            let plan = planning::MlxWeights::new(&source)?;
+            plan.admit(options.memory_limit_bytes)?;
             let compile_clock = Instant::now();
             let gpu = Gpu::new()?;
             let pipelines = mlx::compile(&gpu)?;
             let compilation_seconds = compile_clock.elapsed().as_secs_f64();
-            let plan = planning::MlxWeights::new(&source)?;
-            plan.admit(options.memory_limit_bytes)?;
             plan.validate_buffers(gpu.device.maxBufferLength())?;
             let weight_bytes = plan.weight_bytes;
             let plans = plan.tensors;
@@ -316,6 +341,12 @@ impl Model {
                 source.architecture() == crate::mlx::dense::Architecture::Qwen3,
             )?;
             model.mlx_architecture = Some(source.architecture());
+            if audited {
+                let identity = source.content_identity().ok_or(Error::Options(
+                    "audited source incomplete after model assembly",
+                ))?;
+                model.mlx_source_identity = Some(identity);
+            }
             model.load_timing = LoadTiming {
                 load_seconds: clock.elapsed().as_secs_f64(),
                 conversion_seconds,
@@ -522,6 +553,7 @@ impl Model {
             layers,
             weight_bytes,
             mlx_architecture: None,
+            mlx_source_identity: None,
             load_timing: LoadTiming {
                 load_seconds: 0.,
                 conversion_seconds: 0.,
@@ -3104,6 +3136,31 @@ mod llama_admission {
         c.num_layers = 2;
         c.max_positions = 33;
         assert!(mlx_geometry(&c, architecture).is_err());
+    }
+    #[test]
+    fn audited_model_admission_rejects_budget_and_missing_path_before_device() {
+        let path = Path::new("/nonexistent/toklet-smol-audit");
+        assert!(matches!(
+            Model::load_mlx_smol_audited(
+                path,
+                weights::LoadOptions {
+                    context_limit: 8,
+                    memory_limit_bytes: 1
+                }
+            ),
+            Err(Error::Weights(weights::Error::Budget { .. }))
+        ));
+        assert!(matches!(
+            Model::load_mlx_smol_audited(
+                path,
+                weights::LoadOptions {
+                    context_limit: 8,
+                    memory_limit_bytes: 512 * 1024 * 1024
+                }
+            ),
+            Err(Error::Weights(weights::Error::Io { .. }))
+        ));
+        assert!(std::mem::size_of::<Option<crate::mlx::qwen::SourceContentIdentity>>() <= 512);
     }
     #[test]
     fn smollm_geometry_has_explicit_context_theta_and_norm_limits() {

@@ -353,3 +353,13 @@ and six repeated visits within its separate budget. This does not construct a
 live model or grant tokenizer/native/app capability. All Gemma G2–G7 and
 131072-output gates remain open; binding a successful resident model is next at
 this integration boundary.
+
+## Resident-model identity prerequisite
+
+The [audited Smol resident import](smol-model-content.md) now retains historical
+consumed-source evidence only after complete upload and successful assembly.
+Legacy imports remain unbound. All required 329 CPU/353 Metal-feature and iOS
+checks pass; six separate legacy/audited real regressions pass the existing frozen
+numerical/state/capacity witnesses. Codec/profile/device admission and native ABI/
+capability/app boundaries remain separate. This does not add Gemma execution,
+close earlier numerical/source failures or qualify 131072 output.
