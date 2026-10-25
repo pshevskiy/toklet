@@ -260,3 +260,10 @@ validated private prefix of up to15 producers with persistent stage owners and
 inline borrowed proposals. A35-layer structural test covers routing and atomic
 failure/retry without admitting public E2B execution. All real numerical,
 generation, Metal, quality, device and app gates remain open.
+
+The [independent tiled four-bit reference](affine4-tiled-reference.md) avoids
+whole-table expansion for large embeddings and projections. Eight offline tests
+and a bounded actual Gemma4 matrix probe pass, with scalar bitwise row checks
+and unchanged projection tolerances. This advances real-checkpoint reference
+tooling only; full numerical graph, generation, Metal, quality, device and app
+qualification remain open.

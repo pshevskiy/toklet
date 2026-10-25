@@ -3287,3 +3287,29 @@ The public constructor remains the frozen four-layer profile. Reused synthetic
 weights give logical accounting, not unique physical residency or E2B parity.
 Real checkpoint execution, generation, Metal, quality/performance, phone fit and
 app gates remain open; no ABI/catalog/limit changes or waived precision failures.
+
+## 25 October 2026 — bounded independent four-bit matrix reference
+
+Add independent file-row lookup and tiled projection for packed4/group64/BF16
+weights. Reconstruct once to FP32, then accumulate projections in NumPy/BLAS
+FP64 with explicit output precision. Keep exact-affine and reconstructed-FP32
+contracts distinct with an authored cancellation case. Validate extents, unused
+codes and array reservations before reading/expanding weights.
+
+Eight offline tests, three captured-output regressions and three cold-runtime
+admission tests pass. On the actual pinned Gemma4 checkpoint, all834 selected
+rows from278 text matrices match independent scalar decoding bitwise. Two full
+projections, including the12,288-column MLP, pass all eight scalar-fsum/sequential
+comparisons under unchanged tolerances. The reference process reports
+161,611,776 bytes maximum resident memory and76,759,832 bytes peak physical
+footprint, below its separate256MiB allowance.
+
+Authenticate cold runtime files, actual imported/native origins and first-captured
+output buffers. Retain the initial receipt-field error, rejected unexecuted
+controller and failed first real runtime-admission/resource-query attempt. The
+reviewed retry preserves numerical and memory gates. Rust engine, tests,
+fixtures, examples and protected binaries remain unchanged fromab408f4.
+See [precision, resources and scope](affine4-tiled-reference.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-affine-tiles-v1.json).
+Full E2B graph, tokenizer/chat/generation, Metal, quality/performance, phone fit
+and app support remain open; no ABI/catalog/limit changes or waived failures.

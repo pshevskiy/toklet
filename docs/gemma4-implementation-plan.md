@@ -180,3 +180,11 @@ remains the original four-layer witness. A private35-layer structural test
 covers15 owners, routes13/14 and all38 failure/retry boundaries; it does not
 qualify real E2B dimensions or numerical parity. The named checkpoint execution
 adapter and independent real-shape witnesses remain next.
+
+The [bounded four-bit real-data reference](affine4-tiled-reference.md) now
+checks834 selected rows across all278 packed text matrices and two complete
+projections against independent scalar decoding/reductions. All eight unchanged
+projection gates pass within a separate256MiB reference-process allowance.
+This validates the streaming reference mechanism, without full E2B graph or
+original-BF16/source qualification. Complete real-shape token-to-logit witnesses
+and the named executable checkpoint adapter remain next.
