@@ -3455,3 +3455,38 @@ This qualifies an independent short raw witness, not native generation or G3.
 All earlier full-graph FP64/source/GPU/long-position failures remain unwaived;
 tokenizer/chat/stop metadata, Metal, quality/performance, phone fit, app support
 and131072 output tokens remain open. No ABI/catalog/position-limit changes.
+
+## 25 October 2026 — real E2B raw generation and continuation checks
+
+Add an explicit scalar generation example over the immutable checkpoint and
+existing model-bound generation session. Stream complete vocabulary rows at
+the sampling boundary before append through a statically dispatched diagnostic
+observer. Preserve ordinary callback-time logits unavailability. Bound capture
+to16 rows/16MiB with a64KiB writer, small descriptors and no full-row clones.
+Keep kernel, session and shared generation-policy code unchanged.
+
+The four real Mac scenarios cover uninterrupted output, two-plus-two
+continuation, cancellation after two visible tokens then resume, and explicit
+caller-stop107 followed by continuation. All select107,100,45518,107 and finish
+with seven committed IDs plus one pending sampled107. Caller stop emits only
+the final three IDs; it does not qualify model EOS metadata. Every captured
+prefix, emitted sequence, report counter/reason and final memory/state invariant
+passes independent replay. All16 distributions are bitwise identical across
+schedules. All32 unchanged precision gates pass over8,388,608 values, maximum
+error-to-bound fraction0.5103206474158878 against FP64 and0.0013656471300556837
+against staged FP32. Earlier full-prompt/intermediate failures remain unwaived.
+
+Three new capture tests verify exact finite/nonfinite raw bytes, hashes,
+offsets, prewrite limits and an actual read-only-file write error. Required
+formatting/strict checks,302 CPU/324 Metal-feature tests, both iOS targets,
+release example and five release state methods pass. Numerical admission is
+2,765,262,700 bytes. The actual process reports2,143,485,952 bytes maximum
+resident memory and2,710,440,456 bytes peak physical footprint, below6GiB.
+Its138.13-second combined diagnostic observation is not a performance benchmark.
+
+See [scenarios, ownership and remaining gates](gemma4-raw-generation.md) and the
+[receipt](../benchmarks/results/2026-10-25-gemma4-raw-generation-v1.json).
+This is bounded short raw continuation evidence; full G3, tokenizer/chat/model
+stop semantics, source-BF16, existing precision/GPU/long-rotary gaps, resident
+Metal, quality/performance, phone fit, app support and131072 output tokens remain
+open. No ABI/catalog/position-limit changes.

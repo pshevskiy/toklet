@@ -231,3 +231,13 @@ matches the earlier four-token reference bitwise. This advances continuation
 witnesses only: native generation is next, and all earlier full-graph precision,
 source, tokenizer/chat, Metal, quality/performance, device/app and long-output
 gates remain open. No G2/G3/G4 completion or capability/limit change.
+
+The [real short raw continuation probe](gemma4-raw-generation.md) now checks
+uninterrupted, split, cancellation/resume and explicit caller-stop/continue
+schedules on Mac. All32 complete-logit gates pass over8,388,608 pairs and all
+four schedules preserve bitwise-identical distributions, seven committed IDs
+and one pending sampled token. Required Rust/default/Metal/iOS checks pass and
+the measured process fits6GiB. This advances short raw generation/state only.
+Tokenizer/basic-text formatting/model-stop witnesses are next; all earlier
+full-graph precision/source failures and Metal, quality/performance, device/app
+and long-output gates remain open. G3 is not marked complete.
