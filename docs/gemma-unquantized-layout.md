@@ -5,6 +5,8 @@ header and independently checked text layout. This closes the header/geometry
 question for the [quality baseline](gemma-quality-contract.md). It does not
 verify the weight payload, admit a reference runtime, measure model fit or
 execute numerical inference. G2.1/G5 and full model-window support remain open.
+The subsequent [complete acquisition](gemma-unquantized-checkpoint.md) separately
+verifies the advertised full payload; this report retains its header-only scope.
 
 ## Source and exact scope
 
@@ -98,9 +100,9 @@ storage alone exceeds the6GiB Mac policy. Excluding the PLE table leaves
 every complete projection. A bounded tile/row route is therefore a concrete
 candidate; its IO costs, conversions and arithmetic still require measurement.
 
-Next acquire and authenticate the complete official payload without retaining a
-second full assembly copy, qualify bounded BF16 row reads and same-consumption
-identity, and declare/verify the reference arithmetic profile. Compare short
+The subsequent complete acquisition authenticates the official payload without
+retaining a second full assembly copy. Next qualify bounded BF16 row reads and
+same-consumption identity, and declare/verify the reference arithmetic profile. Compare short
 operators/full graphs with an independent source and measure whole-process fit
 before using it for scores. BF16 storage converted for FP32/FP64 operations is
 not automatically an upstream BF16 execution match.

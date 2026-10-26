@@ -17,9 +17,12 @@ the unquantized baseline, rather than substituting a later upstream revision.
 The [official pinned inventory](https://huggingface.co/api/models/google/gemma-4-E2B-it/revision/70af34e20bd4b7a91f0de6b22675850c43922a03?blobs=true)
 advertises a 10246621918-byte `model.safetensors` with LFS SHA-256
 `2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550`.
-This is authenticated metadata, not a downloaded, verified or executed weight
-payload. A bounded reference execution route still needs admission. Its file
-size alone is not a runtime memory estimate.
+At contract freeze this was authenticated metadata, with no downloaded, verified
+or executed weight payload. The subsequent
+[complete acquisition](gemma-unquantized-checkpoint.md) now verifies that exact
+file. Frozen preparation flags and workload bytes remain unchanged. A bounded
+reference execution route still needs admission; file size alone is not a
+runtime memory estimate.
 
 The official tokenizer payload matches the candidate's pinned tokenizer JSON.
 Git blob identities also match the candidate's template and generation config;
@@ -143,11 +146,12 @@ text weights are 9257138758 bytes; excluding that table leaves 4559518278.
 These were deductions at contract freeze. Subsequent
 [official header/layout inspection](gemma-unquantized-layout.md) confirms those
 exact tensor extents, including60 unused shared-consumer K/V parameters beyond
-the selected inventory. Full payload identity, arithmetic and model fit remain
+the selected inventory. The subsequent complete acquisition verifies full
+payload identity. Positive row/layout binding, arithmetic and model fit remain
 unproved; header inspection does not qualify reference execution.
 
-Acquire and authenticate the official payload/header before qualifying a bounded
-reference. Prefer explicit bounded row reads/conversion ownership over assuming
+Use the authenticated official payload/header to qualify positive row/layout
+binding and the bounded reference. Prefer explicit bounded row reads/conversion ownership over assuming
 mapped pages stay within budget. The tied `[262144,1536]` embedding/head still
 needs all 805306368 BF16 bytes for a full vocabulary projection. Independently
 validate layout, same-consumption identity, tied weights, arithmetic precision,

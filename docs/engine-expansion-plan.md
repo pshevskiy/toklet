@@ -20,7 +20,8 @@ precision/quality decision (G2.1/G5), informed by the completed
 source and Rust codec replay without clipping its 1025-position requirement.
 The [official unquantized header/layout](gemma-unquantized-layout.md) now checks
 all2011 tensor extents and exact540 selected/60 unused text entries without
-weight loading. Next acquire/authenticate the payload, admit the unquantized
+weight loading. The [complete official acquisition](gemma-unquantized-checkpoint.md)
+now authenticates the full file/header in the Mac cache. Next admit the unquantized
 reference and separate chunk scratch from numerical
 context capacity, then collect unchanged quality gates and continue resident
 scheduling/progressive model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid

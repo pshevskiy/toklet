@@ -4953,3 +4953,48 @@ context/app/phone and E1–E6/H1–H4 remain open. See
 [layout/source scope](gemma-unquantized-layout.md),
 [offline metadata](../tests/fixtures/gemma-unquantized-header-v1/README.md) and
 [public evidence](../benchmarks/results/2026-10-26-gemma-unquantized-header-v1.json).
+
+
+## 26 October 2026 — complete official Gemma baseline acquisition
+
+**Hypothesis:** the full pinned unquantized baseline can be acquired and
+authenticated through one bounded staging descriptor, avoiding a second full
+assembly copy before reference-memory qualification.
+
+The new data-only acquirer uses the exact official conversion-lineage revision,
+minimal environment, HTTPS-only redirects and independent diagnostic caps. It
+inherits an exact body-file limit and restores the parent limit after spawning.
+An immediate bounded child journal, unconditional nested-group audits and an
+outer60-second cleanup grace close the process-lifetime gap found by Astra.
+Cancellation/deadlines cover transfer, hashing and publication; partial artifacts
+remain available. Source endpoints precede exclusive same-volume publication,
+and post-publication/receipt failures preserve the actual publication state.
+
+The full10246621918-byte file matches pinned SHA-256
+2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550 through the
+retained descriptor. Original header bytes and config match; an independent
+streamed cache rehash passes. One full payload resides at
+`models/Gemma4-E2B-it-BF16-70af34e`; weights stay ignored. No model code,
+weight expansion, numerical inference or quality grading executes.
+
+Seventeen offline owner tests and eleven transport regressions pass, including
+actual pipe/file caps, deadline/cancel/journal failures and reaping, path/source
+mutation, successful exclusive publication, failed post-publication identity and
+receipt error semantics. All14 recorded groups are absent. Core Rust/tests/
+examples/shaders and protected release binaries remain unchanged. Astra accepted
+implementation, controllers, offline and actual file-identity evidence.
+
+Completed-command physical peak35881752/RSS41680896 fits the256MiB acquisition
+policy;2582.81 seconds includes network/hashing/instrumentation under uncontrolled
+network conditions. These are not model-load, inference or app-fit measurements.
+The frozen quality workload and thresholds remain byte-identical; its original
+false payload flags describe the earlier preparation scope, while this separate
+record supplies subsequent full-file evidence.
+
+**Decision:** retain the exact authenticated baseline input. Next qualify real
+row/layout binding and the bounded reference's arithmetic/whole-process fit,
+then execute the full1025-position quality workload after numerical-capacity
+expansion. Historical precision, resident scheduling, full model windows,
+app/phone and E1–E6/H1–H4 remain open. See
+[acquisition contract](gemma-unquantized-checkpoint.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-unquantized-checkpoint-v1.json).
