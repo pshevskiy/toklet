@@ -74,8 +74,9 @@ The ignored capture retains 18900108 array bytes and 48473228 source-excerpt
 bytes under `artifacts/m8-gemma-bf16-oracle-checks-v1/oracle/`; their hashes are
 in the manifest. See the [public evidence](../benchmarks/results/2026-10-26-gemma-bf16-rows-oracle-v1.json).
 
-Next compare positive official layout binding, split/contiguous/repeated row
-access and bounded projections through the existing target adapter. Then compose
+The subsequent [target checks](gemma-bf16-reader.md) now pass positive official
+binding, grouped/split/repeated access, recovery and bounded projections, with
+independent saved-output/read-chain replay. Next compose
 the unquantized graph using the existing weight interface, separate numerical
 context from chunk scratch, and run the complete quality workload. Historical
 precision failures and full model-window/app/phone/architecture gates stay open.

@@ -19,15 +19,16 @@ ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / 'tests/fixtures/bf16-source-v1'
 
 
-def sources():
+def sources(extra_sources=()):
     # Preserve existing runtime contracts. The union adds the complete Python
     # closure to the NumPy/MLX inventory; MLX/text packages need not execute.
     return text_runtime.paths([Path(__file__).resolve(), Path(bf16_source.__file__).resolve(),
-                               Path(affine4_tiles.__file__).resolve(), Path(safe.__file__).resolve()])
+                               Path(affine4_tiles.__file__).resolve(), Path(safe.__file__).resolve(),
+                               *extra_sources])
 
 
-def endpoint(manifest, selected):
-    safe.same(runtime.runtime_paths(sources()), selected)
+def endpoint(manifest, selected, extra_sources=()):
+    safe.same(runtime.runtime_paths(sources(extra_sources)), selected)
     for path in selected:
         pin = manifest['files'][str(path)]
         raw = safe.read(path, pin['bytes'])

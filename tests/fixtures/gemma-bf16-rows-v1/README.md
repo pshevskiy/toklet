@@ -15,5 +15,12 @@ Both are required for replay; this committed manifest alone is not a numerical
 fixture or permission to claim target-reader/model support. Whole source hashes
 are independently required. Do not regenerate expected values from the target.
 
+The subsequent `target-plan.json` fixes 1366 capture schedules and 4004 ordered
+reads before the target runs. It is 973550 bytes, SHA
+`bb63f6e72690bfa959273b710a8315376e3958962d0b6e490febf6d81b77dc82`.
+The [separate target qualification](../../../docs/gemma-bf16-reader.md) replays
+saved outputs against this plan and the original oracle; it does not revise the
+original expected values or qualify a model graph.
+
 See the [method and limits](../../../docs/gemma-bf16-rows-oracle.md) and
 [public qualification record](../../../benchmarks/results/2026-10-26-gemma-bf16-rows-oracle-v1.json).

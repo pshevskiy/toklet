@@ -33,11 +33,11 @@ diagnostic. The [official header/layout](docs/gemma-unquantized-layout.md) now
 checks all2011 descriptors and the selected/excluded text geometry. The
 [complete official acquisition](docs/gemma-unquantized-checkpoint.md) now verifies
 the pinned full file/header. The [bounded BF16 reference owner](docs/bf16-source.md)
-passes ownership, exact conversion and greater-than4GiB offset checks. Positive
-official-row binding now has a separately frozen
-[real BF16 row/scalar oracle](docs/gemma-bf16-rows-oracle.md): all selected tensor
-geometry, 541 row cases and 262 complete vector lineages pass independent replay.
-Target-reader comparisons, reference arithmetic/fit and quality remain open. Admit the
+passes ownership, exact conversion and greater-than4GiB offset checks. The
+[real BF16 row/scalar oracle](docs/gemma-bf16-rows-oracle.md) and subsequent
+[official target-reader checks](docs/gemma-bf16-reader.md) now pass all selected
+geometry, 541 row cases, split/gather/recovery schedules and two bounded
+projections. Reference graph arithmetic/fit and quality remain open. Admit the
 unquantized reference and expand bounded numerical context
 before scoring; all original failures remain. No quality/app/window gate closes.
 

@@ -5073,3 +5073,38 @@ execution through existing operators, and expand context for the complete qualit
 workload. Historical precision and wider E1–E6/H1–H4 requirements remain open.
 See the [reference record](gemma-bf16-rows-oracle.md) and
 [public evidence](../benchmarks/results/2026-10-26-gemma-bf16-rows-oracle-v1.json).
+
+## 2026-10-26 — Official BF16 row/projection path checked against frozen references
+
+The original Gemma source now has positive layout-bound target-reader evidence,
+using existing BF16 conversion and bounded projection operators. A separate
+stdlib plan freezes 1366 output schedules and 4004 ordered source spans before
+launch. All 541 cases pass grouped/split/repeated gathers and recovery, with
+14061417 exact FP32 values. The 128-by-12288 tile and aggregate gather pass;
+129-row requests reject without changing the audit and a subsequent read works.
+Layout, all 60 excluded tensors, unknown-name and wrong-source controls reject.
+All 65 intended admission errors pass; the final closed/unpoisoned owner matches
+all 4004 reads, 105193170 bytes and the precomputed ordered hash chain.
+
+Two original matrices run with both FP32 and FP64 projection output, preserving
+actual arrays before gates. Both scalar fsum/ordered references pass the original
+FP32 policy (maximum errors 2.9802322387695312e-8 and 7.142079994082451e-8); FP64
+matches exactly under its separate frozen policy. Independent saved-output replay
+passes all bytes, metadata, read audit and both scalar comparisons. Five coherent
+controls reject row bits, dtype, audit, finite projection error and NaN at their
+intended gates. No source checkpoint is changed by these controls.
+
+The runtime helper accepts explicit extra caller sources with unchanged defaults;
+13 ownership tests and the original cold 37-value witness pass again. The official
+cold worker peaks at 286606296 physical bytes/308854784 RSS, including runtime,
+oracle loading and conversion/projection overlap. All measured workers remain
+below 512 MiB. Nine new and seven reused oracle groups close. Core Rust/shaders,
+examples and protected binaries remain unchanged; no fresh unrelated engine/GPU
+qualification is claimed. IO tiles do not limit model input/output context.
+
+Next compose the unquantized graph through the existing weight interface and
+separate context capacity from chunk scratch for the full quality workload.
+Upstream BF16 parity, whole-model fit/quality/performance, app/phone and full
+model-window plus broader E1–E6/H1–H4 gates remain open. See the
+[reader record](gemma-bf16-reader.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-bf16-reader-v1.json).

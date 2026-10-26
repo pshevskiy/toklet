@@ -32,8 +32,9 @@ complete model workloads instead of clipping them to128 rows.
 The official adapter checks the exact source size/hash and frozen layout hash,
 then resolves a selected tensor's name, shape and offset once. It excludes the
 60 unused shared-consumer tensors recorded by the header task. Generic row
-extents alone do not qualify an official model. The positive official-file
-adapter exercise remains a separate acceptance task.
+extents alone do not qualify an official model. The subsequent
+[official-file adapter checks](gemma-bf16-reader.md) qualify selected row and
+projection schedules separately from this primitive's original fixture scope.
 
 `read_rows` and `gather` reuse the existing `affine4_tiles.bf16` conversion,
 preserving exact FP32 bits and nonfinite rejection. No new rounding recipe or
@@ -84,7 +85,8 @@ See the [small fixture](../tests/fixtures/bf16-source-v1/README.md) and
 [public evidence](../benchmarks/results/2026-10-26-bf16-source-v1.json).
 The separately completed official-payload acquisition authenticates the baseline
 file. The [independent real-row/scalar oracle](gemma-bf16-rows-oracle.md) now
-freezes 541 cases and complete selected-vector lineage. Next exercise the
-positive layout-bound target row path against these references, then compose and qualify reference
+freezes 541 cases and complete selected-vector lineage. The subsequent
+[target row/projection checks](gemma-bf16-reader.md) now pass independent saved-output
+and ordered-read replay. Next compose and qualify reference graph
 arithmetic and whole-process memory. The full1025-position quality suite,
 historical precision gates and model-driven app/context delivery remain open.
