@@ -4855,3 +4855,56 @@ Product precision, source-BF16/GPU/rotary discrepancies, G2.1/G5 and the full
 model-window/app/phone/architecture plan remain open. See the
 [localization report](gemma-precision-localization.md) and
 [public evidence](../benchmarks/results/2026-10-26-gemma-precision-localization-v1.json).
+
+
+## 26 October 2026 — complete Gemma quality-input contract
+
+**Hypothesis:** the original held-out quality policy can be frozen for Gemma's
+exact tokenizer/template before numerical scoring, with independent source and
+Rust codec replay. Keep the full workload even though the current diagnostic
+cannot execute its required capacity.
+
+The producer and separate source checker authenticate all four original datasets,
+candidate metadata, conversion README and official baseline lineage. The latter
+is revision70af34e20bd4b7a91f0de6b22675850c43922a03, as recorded by the conversion,
+rather than a later upstream revision. Official tokenizer/template/generation
+identities match, and complete text configurations agree. The official10.246GB
+weight file is advertised metadata only; its payload is not downloaded, verified
+or executed. Same-four-bit-source precision parity stays separate from required
+unquantized quality.
+
+All100 tasks retain first40/30/30 source selectors, exact scorer/stop semantics
+and256/32/16 output caps. All10000 loss targets retain ten independent blocks
+with at most1025 input tokens and only one preceding-token overlap. Mean NLL
+increase≤0.05 and task pass-rate loss≤2percentagepoints are unchanged. Selected
+sources/cases remain forbidden for calibration/tuning. No generated code runs.
+
+The actual largest task is567 positions: HumanEval/32 rendered311 plus requested
+256. Full-suite demand is1025. Current32-position numerical support is explicitly
+insufficient; no prompts, output caps or blocks were clipped. The versioned
+manifest/loss IDs reproduce exact bytes, while full held-out text remains ignored.
+Source replay checks complete-corpus tokenization; the Rust codec separately
+matches all100 full prompts and10001 loss IDs using a verified65,536-byte prefix.
+
+Seven recipe, eight structural, six coherent source-content corruption and two
+coherent Rust rejection controls pass, plus five Rust example unit tests. CPU356
+tests/16explicitlyignored, formatting and strict default/Metal all-target Clippy
+pass. The first collection's copied integration test embedded a stale absolute
+CLI path; its failure remains retained, and a fresh CPU target passed without
+source/test/gate changes. All17 command groups close and protected binaries stay
+unchanged. Astra accepted implementation, controllers and actual evidence.
+
+Cold preparation/source replay/source-control physical peaks are419383648,
+407931160 and399723040 bytes; maximum source-control RSS976879616 stays below
+1GiB. Rust codec physical peak487506688 fits its1GiB+32MiB diagnostic policies.
+These are preparation/codec observations, not model fit or performance results.
+
+**Decision:** retain the full contract. Next authenticate/admit a bounded
+unquantized reference and separate chunk scratch from context capacity before
+scoring. Astra's derived BF16 geometry identifies selected-row PLE reading as a
+possible memory route; the official header, arithmetic/source agreement and
+whole-process fit still need proof. Quality, required historical precision
+gates, resident scheduling, full model windows, app/phone and widerE1–E6/H1–H4
+remain open. See [contract and next dependencies](gemma-quality-contract.md),
+[versioned inputs](../benchmarks/gemma-quality-v1/README.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-quality-contract-v1.json).

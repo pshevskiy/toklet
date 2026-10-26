@@ -15,8 +15,12 @@ per forward remain. Selected raw/formatted/streamed generation rows pass both
 frozen contracts. No full32-position boundary, product quality, resident
 performance, app or full-window/device qualification follows. Next: resolve the
 precision/quality decision (G2.1/G5), informed by the completed
-[frozen-reference localization](gemma-precision-localization.md), then resident scheduling and progressive
-model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid
+[frozen-reference localization](gemma-precision-localization.md). The
+[full quality-input contract](gemma-quality-contract.md) now passes independent
+source and Rust codec replay without clipping its 1025-position requirement.
+Next admit the unquantized reference and separate chunk scratch from numerical
+context capacity, then collect unchanged quality gates and continue resident
+scheduling/progressive model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid
 implementations remain short diagnostics. Qwen3 plain Chat and selected physical
 phone checks exist in [the current profile record](mobile-qwen3-downloads.md).
 

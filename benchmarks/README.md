@@ -64,6 +64,12 @@ quantizer tuning, and do not change gates to accept a failing optimization.
 Future execution of generated HumanEval code belongs in an explicit isolated
 quality suite; preparing this contract does not execute dataset code.
 
+The [Gemma E2B contract](gemma-quality-v1/README.md) applies the same gates and
+source selectors with Gemma-specific token IDs and chat formatting. Its
+[preparation report](../docs/gemma-quality-contract.md) separates unquantized
+quality from same-four-bit-source precision parity. Full workloads are retained
+even when the current diagnostic cannot execute their required context.
+
 Dataset provenance is the pinned [Salesforce WikiText repository](https://huggingface.co/datasets/Salesforce/wikitext),
 [OpenAI HumanEval](https://github.com/openai/human-eval),
 [TruthfulQA](https://github.com/sylinrl/TruthfulQA), and

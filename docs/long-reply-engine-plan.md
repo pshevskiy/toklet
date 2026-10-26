@@ -50,6 +50,12 @@ selected native MLX 512 ceilings are separate qualified scopes. Gemma's current
 Mac scalar diagnostic has 32 positions and no app capability. These are current
 limits to remove through qualification, not the corrected product target.
 
+The [Gemma quality-input contract](gemma-quality-contract.md) now freezes its
+complete 1025-position loss/task demand, independently replayed through source
+and Rust tokenizers. That is a next numerical-capacity dependency, not a new app
+limit or proof of the model's full window. Context and chunk scratch must be
+separated before expanding the current diagnostic; preserve complete requests.
+
 | Task | Mechanism and acceptance | Status |
 | --- | --- | --- |
 | L1 | Independent decoding/terminal witnesses for existing tokenizers, including incomplete UTF-8, controls, whitespace and fallback rewrites. | [Frozen witnesses](chat-stream-oracle.md); historical synthetic 131072-ID cases remain decoder evidence only. Gemma has separate [stream composition](gemma4-stream-generation.md). |

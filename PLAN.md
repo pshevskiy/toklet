@@ -26,7 +26,11 @@ no app or full-window capability. G2.1/G5 precision/quality and G4.3 resident
 scheduling/progressive context are next; M8 and the full architecture/Hugging Face
 plan remain open. The [precision localization](docs/gemma-precision-localization.md)
 now distinguishes inherited reference differences from selected local rounding;
-held-out/source-quality evaluation is next, with all original failures retained.
+the [full Gemma quality-input contract](docs/gemma-quality-contract.md) now
+freezes all 100 tasks/10000 loss targets and passes independent source/Rust codec
+replay. Its full 1025-position demand is retained despite the current 32-position
+diagnostic. Admit the unquantized reference and expand bounded numerical context
+before scoring; all original failures remain. No quality/app/window gate closes.
 
 ## Historical starting point
 
