@@ -14,7 +14,8 @@ evidence. Full raw graph staged-FP32 comparisons pass;27 ideal-logit failures
 per forward remain. Selected raw/formatted/streamed generation rows pass both
 frozen contracts. No full32-position boundary, product quality, resident
 performance, app or full-window/device qualification follows. Next: resolve the
-precision/quality decision (G2.1/G5), then resident scheduling and progressive
+precision/quality decision (G2.1/G5), informed by the completed
+[frozen-reference localization](gemma-precision-localization.md), then resident scheduling and progressive
 model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid
 implementations remain short diagnostics. Qwen3 plain Chat and selected physical
 phone checks exist in [the current profile record](mobile-qwen3-downloads.md).

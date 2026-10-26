@@ -4820,3 +4820,38 @@ including the32-position boundary before claiming the whole current capacity.
 Required numerical/quality, full model windows, app/phone fit and wider E1–E6/
 H1–H4 acceptance remain open. See [real hybrid contract](gemma-hybrid-real.md)
 and [public evidence](../benchmarks/results/2026-10-26-gemma-hybrid-real-v1.json).
+
+
+## 26 October 2026 — Gemma reference precision-gap localization
+
+**Hypothesis:** same-input replay can distinguish local norm/head/softcap rounding
+from inherited graph differences before changing a kernel or precision policy.
+
+A stdlib-only producer and independent reader authenticate the original complete
+math/staged reference, packed inventory, full model and eight selected source
+components. All713 states retain their actual execution order and all57 failed
+values. Thirty-one counterfactuals reproduce exact staged endpoints and satisfy
+the existing FP64 reconstruction bound. Source excerpts and attempted results
+are durably retained before gates, including controlled incomplete attempts.
+
+First inequality is scaled embedding0,−9.750119889240239e−8, split between
+constant/output rounding and well inside tolerance. First actual gate failure
+is layer14 post-FF norm5014. At the selected norm/Q/head failures, inherited
+inputs dominate local storage. Head inherited terms are approximately1.003e−5
+to1.392e−5 versus at most7.308e−10 local storage; softcap local boundaries are
+at most8.400e−10. These ordered nonlinear counterfactuals are not unique causal
+attributions or GPU error measurements; tiny reconstruction residuals include
+original BLAS versus `fsum` reduction differences.
+
+Six mechanism and eight corruption/capture controls pass. The analysis uses
+30336 selected original source bytes; physical peak136151784 stays below512MiB.
+Four owned groups close; all engine/shader files and protected executables are
+unchanged. Astra accepted the code, evidence and interpretation. No arithmetic,
+limits, app eligibility or original gate changes.
+
+**Decision:** defer an isolated head/norm rounding change, retain the FP32
+diagnostic candidate and freeze held-out/source-quality evaluation next.
+Product precision, source-BF16/GPU/rotary discrepancies, G2.1/G5 and the full
+model-window/app/phone/architecture plan remain open. See the
+[localization report](gemma-precision-localization.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-precision-localization-v1.json).

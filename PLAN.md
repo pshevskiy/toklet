@@ -24,7 +24,9 @@ semantics. Full raw graph staged-FP32 and selected generation contracts pass;
 historical mathematical-logit failures remain unwaived. This diagnostic grants
 no app or full-window capability. G2.1/G5 precision/quality and G4.3 resident
 scheduling/progressive context are next; M8 and the full architecture/Hugging Face
-plan remain open.
+plan remain open. The [precision localization](docs/gemma-precision-localization.md)
+now distinguishes inherited reference differences from selected local rounding;
+held-out/source-quality evaluation is next, with all original failures retained.
 
 ## Historical starting point
 
