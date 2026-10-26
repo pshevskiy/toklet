@@ -381,3 +381,5 @@ fn frozen_resident_table_gathers_share_weights_and_preserve_transactions() {
 }
 
 mod real;
+
+mod weights;

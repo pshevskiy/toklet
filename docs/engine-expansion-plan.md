@@ -622,3 +622,12 @@ whole-output failure atomicity, duplicates, ordering and signed zeros. Frozen
 complete fixtures, 54-format control, required source/iOS and optimized checks
 pass. This does not qualify actual large GPU table storage/gather, full graph or
 new model/app eligibility.
+
+The [immutable original packed GPU owner](gemma-immutable-weights.md) now separates
+weights/device lifetime from Context and per-session lookup scratch. Both the
+legacy stricter exact-Context path and new fresh same-device path pass their
+complete witnesses; original full Gemma tables pass all 1102080 returned values
+and 34 mutation/capture checks after the construction Context drops. Requested
+weight-owner storage is 5004032 bytes lower than the coupled owners, without a
+physical-memory/performance claim. Full graph/KV/scheduling, source/precision,
+app/iPhone, other architectures and long-output gates remain open.

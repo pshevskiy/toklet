@@ -16,8 +16,11 @@ use objc2_foundation::NSString;
 use objc2_metal::*;
 use std::{mem::size_of, ptr::NonNull};
 
+mod loading;
 mod partitioned;
+mod weights;
 pub use partitioned::{Gather, PartitionedAffine};
+pub use weights::Weights;
 
 pub const CONTEXT_ALLOWANCE_BYTES: usize = 64 * 1024 * 1024;
 const GUARD: usize = 7;
@@ -109,27 +112,15 @@ impl Context {
         for words in sizes.buffers() {
             validate_buffer_bytes((words + GUARD) * 4, self.gpu.device.maxBufferLength())?;
         }
-        let upload = |bytes: &[u8]| -> Result<Buffer<u32>> {
-            let mut buffer = Buffer::new(&self.gpu, bytes.len().div_ceil(4) + GUARD)?;
-            buffer.with_mut(|out| {
-                out.fill(SENTINEL);
-                for (word, bytes) in out.iter_mut().zip(bytes.chunks(4)) {
-                    let mut raw = [0; 4];
-                    raw[..bytes.len()].copy_from_slice(bytes);
-                    *word = u32::from_le_bytes(raw);
-                }
-            });
-            Ok(buffer)
-        };
         Ok(Affine {
             context: self,
             layout,
             capacity,
             sizes,
             max_weight,
-            codes: upload(weights)?,
-            scales: upload(scales)?,
-            biases: upload(biases)?,
+            codes: loading::upload(&self.gpu, weights)?,
+            scales: loading::upload(&self.gpu, scales)?,
+            biases: loading::upload(&self.gpu, biases)?,
             input: Buffer::new(&self.gpu, sizes.input + GUARD)?,
             output: Buffer::new(&self.gpu, sizes.output + GUARD)?,
             status: Buffer::new(&self.gpu, 1 + GUARD)?,
@@ -423,3 +414,22 @@ impl Affine<'_> {
 }
 #[cfg(test)]
 mod tests;
+
+/// Internal immutable operation view; native resource owners retain lifetimes.
+#[derive(Clone, Copy)]
+struct WeightView<'a> {
+    layout: Layout,
+    codes: &'a Buffer<u32>,
+    scales: &'a Buffer<u32>,
+    biases: &'a Buffer<u32>,
+}
+impl Affine<'_> {
+    fn weight_view(&self) -> WeightView<'_> {
+        WeightView {
+            layout: self.layout,
+            codes: &self.codes,
+            scales: &self.scales,
+            biases: &self.biases,
+        }
+    }
+}

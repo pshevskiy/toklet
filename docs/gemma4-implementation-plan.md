@@ -14,6 +14,14 @@ MLX Gemma4 E2B config-only app probes reject unknown architecture and create no
 native Gemma model handle. The [Mac storage load](gemma4-checkpoint.md) now
 admits pinned Gemma text weights; numerical execution and phone fit remain open.
 
+Latest scoped G4 ownership qualification, 26 October 2026:
+[immutable packed GPU weights](gemma-immutable-weights.md) now outlive their
+construction Context and feed fresh same-device lookup sessions. Tiny teardown,
+recovery/width-rejection and legacy controls pass; both complete original tables
+pass all 12 schedules/1102080 exact returned values with 102 live buffer identities.
+This removes per-matrix activation/status ownership from shared weights; it does
+not close G2–G7, source/precision, whole graph, app/phone or long-output gates.
+
 Latest actual G4 table qualification, 26 October 2026:
 [complete real embedding/PLE upload and lookup](gemma-real-tables.md) keeps both
 original tables resident, checks all 32 chunk-boundary rows and repeated/reordered

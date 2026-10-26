@@ -439,3 +439,5 @@ fn real_streamed_tables_remain_resident_across_lookups() {
         );
     });
 }
+
+mod immutable;

@@ -178,20 +178,7 @@ impl Gather<'_> {
         ids: &[usize],
         output: &mut [f32],
     ) -> Result<()> {
-        if self.poisoned || self.pending.is_some() {
-            return Err(Error::Options(
-                "Gemma table gather poisoned; recreate workspace",
-            ));
-        }
-        if ids.is_empty()
-            || ids.len() > self.capacity
-            || ids.len().checked_mul(self.columns) != Some(output.len())
-            || ids.iter().any(|&id| id >= matrix.rows)
-        {
-            return Err(Error::Options(
-                "Gemma table gather request shape or indices",
-            ));
-        }
+        self.check_request(matrix.rows, ids, output.len())?;
         if matrix.columns != self.columns
             || matrix.poisoned
             || matrix.chunks.iter().any(|child| {
@@ -204,11 +191,57 @@ impl Gather<'_> {
                 "Gemma table gather matrix Context/shape/state mismatch",
             ));
         }
+        self.apply_views(matrix.chunks.iter().map(Affine::weight_view), ids, output)
+    }
+    /// Gather directly from immutable original weights. The same underlying
+    /// Metal device is required; the construction Context need not stay alive.
+    /// Workspace failures never mutate the shared weights; a fresh workspace
+    /// can reuse them after a completed-request failure without uploading again.
+    pub fn apply_weights(
+        &mut self,
+        weights: &Weights,
+        ids: &[usize],
+        output: &mut [f32],
+    ) -> Result<()> {
+        self.check_request(weights.layout().rows(), ids, output.len())?;
+        if weights.layout().columns() != self.columns || !weights.same_device(self.context) {
+            return Err(Error::Options(
+                "Gemma table gather weights device/shape mismatch",
+            ));
+        }
+        self.apply_views(weights.views(), ids, output)
+    }
+    fn check_request(&self, rows: usize, ids: &[usize], output_len: usize) -> Result<()> {
+        if self.poisoned || self.pending.is_some() {
+            return Err(Error::Options(
+                "Gemma table gather poisoned; recreate workspace",
+            ));
+        }
+        if ids.is_empty()
+            || ids.len() > self.capacity
+            || ids.len().checked_mul(self.columns) != Some(output_len)
+            || ids.iter().any(|&id| id >= rows)
+        {
+            return Err(Error::Options(
+                "Gemma table gather request shape or indices",
+            ));
+        }
+        Ok(())
+    }
+    // Two concrete iterator types select their source before encoding. Views
+    // are borrowed stack descriptors, with no materialized collection or dyn
+    // numerical dispatch. Both sources share every command/completion check.
+    fn apply_views<'w>(
+        &mut self,
+        views: impl Iterator<Item = WeightView<'w>>,
+        ids: &[usize],
+        output: &mut [f32],
+    ) -> Result<()> {
         self.poisoned = true;
         let mut first = 0;
         #[cfg(test)]
         let mut completed = 0;
-        for child in &matrix.chunks {
+        for child in views {
             let rows = child.layout.rows();
             let mut local = [0_u32; 32];
             let mut slots = [0_usize; 32];
@@ -245,7 +278,7 @@ impl Gather<'_> {
         self.poisoned = false;
         Ok(())
     }
-    fn run(&mut self, child: &Affine<'_>, local: &[u32]) -> Result<()> {
+    fn run(&mut self, child: WeightView<'_>, local: &[u32]) -> Result<()> {
         autoreleasepool(|_| {
             self.ids.with_mut(|out| {
                 out.fill(SENTINEL);
@@ -313,9 +346,15 @@ impl Gather<'_> {
                     .output
                     .with_slice(|v| tail(v, local.len() * self.columns))
                 || !self.status.with_slice(|v| tail(v, 1))
-                || !child.codes.with_slice(|v| tail(v, child.sizes.codes))
-                || !child.scales.with_slice(|v| tail(v, child.sizes.metadata))
-                || !child.biases.with_slice(|v| tail(v, child.sizes.metadata))
+                || !child
+                    .codes
+                    .with_slice(|v| tail(v, child.layout.weight_bytes().div_ceil(4)))
+                || !child
+                    .scales
+                    .with_slice(|v| tail(v, child.layout.metadata_bytes().div_ceil(4)))
+                || !child
+                    .biases
+                    .with_slice(|v| tail(v, child.layout.metadata_bytes().div_ceil(4)))
             {
                 return Err(Error::Options(
                     "Gemma table gather guard/inactive capacity changed",

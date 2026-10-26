@@ -4511,3 +4511,46 @@ and [public evidence](../benchmarks/results/2026-10-26-gemma-real-tables-v1.json
 Full resident Gemma graph/KV, historical source/precision/long-rotary failures,
 quality, generation performance, app/iPhone and 131072-output gates remain open.
 No capability, download eligibility or context/output limit changes.
+
+## 2026-10-26 — immutable GPU weights independent of lookup sessions
+
+Hypothesis: model weights should outlive construction Context and serve fresh
+session workspaces, avoiding self-referential model storage and unused per-matrix
+activation/status ownership. Added a concrete original packed weight owner with
+retained device identity, bounded reusable source upload and actual-capacity
+admission. Extracted the existing byte upload without arithmetic changes. Both
+legacy and immutable paths share the existing statically selected gather shader,
+command retention/completion, guards and transactional caller publication.
+
+Four construction Contexts drop before fresh-session reuse; 40 tiny request steps,
+22272 exact returned values, five original construction failure/unwind controls,
+width rejection without mutation, valid retry and four legacy/fresh-workspace
+recoveries pass. The old complete gather witness retains 52 steps and 29 checks.
+The real two-table witness retains all original bytes and independent pre-target
+row/chunk oracles: 32 callbacks, 12 schedules, 84 arrays/32624592 capture bytes,
+1102080 exact returned values and 102 distinct unchanged live buffer identities.
+Eight explicit portable controls precede GPU; 34 tiny and 34 real capture/mutation
+checks pass. Synthetic/transformed captures exercise readers only.
+
+Astra required full-path replay controls after catching a missing checker constant,
+both deterministic snapshot paths in preflight, and bounded same-buffer size/SHA
+checks for parsed receipts. These were fixed before controlled GPU execution.
+Formatting/strict Clippy default+Metal, CPU 356/16 ignored, Metal 395/123 ignored,
+iOS device/simulator and optimized 2+1+4 checks pass; all 26 owned source/actual
+process groups close. Source, original model/oracle/captures and executed snapshots
+are pinned, with first outcomes and partial captures preserved.
+
+Requested resident immutable owners total 1547704672 bytes, 5004032 fewer than
+coupled owners; this is not a measured physical-memory or speed improvement.
+Conservative aggregate policy 1829144492 includes both Context allowances,
+37585648 lookup policies, 82575432 maximum source staging/descriptors and bounded
+surrounding state. M1 Pro real native RSS 1655652352 / physical 1663059696 fits
+3 GiB; replay 86261760 / 65340088 and regressions 149504000 / 91554584 fit
+512 MiB each. Diagnostic load/hash/capture duration is not inference performance.
+
+Retain this ownership mechanism; see [contract](gemma-immutable-weights.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-immutable-weights-v1.json).
+No driver/in-flight or physical foreign-device fault is qualified. Full resident
+Gemma graph/KV/scheduling, historical source/precision/rotary discrepancies,
+quality/performance, app/iPhone and 131072-output-plus-prompt gates remain open.
+No compatibility eligibility, tolerance or context/output limit changes.

@@ -3,31 +3,8 @@ use super::*;
 
 const OVERFLOW: &str = "Gemma stream upload size overflow";
 
-struct SourceScratch {
-    arrays: [Vec<u8>; 3],
-}
-impl SourceScratch {
-    fn new(lengths: [usize; 3]) -> Result<Self> {
-        let reserve = |length| -> Result<Vec<u8>> {
-            let mut bytes = Vec::new();
-            bytes
-                .try_reserve_exact(length)
-                .map_err(|_| Error::Native("stream source reservation failed".into()))?;
-            bytes.resize(length, 0);
-            Ok(bytes)
-        };
-        Ok(Self {
-            arrays: [
-                reserve(lengths[0])?,
-                reserve(lengths[1])?,
-                reserve(lengths[2])?,
-            ],
-        })
-    }
-    fn capacities(&self) -> [usize; 3] {
-        self.arrays.each_ref().map(Vec::capacity)
-    }
-}
+use super::super::loading::SourceScratch;
+
 struct UploadPlan {
     resident: Plan,
     source_bytes: [usize; 3],
