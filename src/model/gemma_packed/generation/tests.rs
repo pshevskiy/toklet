@@ -393,3 +393,5 @@ fn warmed_history_evaluation_replay_reset_and_discard_allocate_nothing() {
         "Gemma generation: 96 warmed decode steps,3 fork replays,resets,discards; zero Rust allocations"
     );
 }
+
+mod long_context;

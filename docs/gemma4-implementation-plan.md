@@ -39,15 +39,17 @@ transaction and synthetic GPU admission checks. The
 [session-capacity mechanism](gemma-session-capacity.md) now sizes actual KV,
 routes and both histories for admitted C1–32 with independent chunk bounds.
 Logical/segmented KV, tiny numerical/state and budget checks pass; the executable
-ceiling remains32 and real whole32 is unqualified. The
+ceilings for default/real E2B/hybrid/GPU remain32 and real whole32 is unqualified. The
 [full-sequence tiny1025 oracle](gemma-long-witness.md) now passes two cold
 captures, frozen-prefix/causal replay, selected scalar boundaries and controls
 before cached/native implementation. Its W4 scope does not qualify real E2B.
 The [FP64 matrix-dot reference attention](gemma-reference-attention.md) now passes
 the original state gates and two matched reference-operation timing runs. Next
-qualify native scalar tiny capacity through1025 against the frozen full-sequence
-oracle and independent KV witness, retaining real E2B/hybrid/GPU32. A second
-cached Python graph is not a prerequisite. The real1025-position demand remains. Held-out/source quality and
+advance L3 engine-owned capability/shared-window admission through the existing
+Qwen3 bridge and both app modes. The [explicit scalar witness context](gemma-scalar-long-context.md)
+now passes through1025 with32-row calls and frozen numerical/state/argmax checks,
+including structural two-head W512 wraps. Default/real E2B/hybrid/GPU remain32;
+real whole32, long BF16 and the unchanged real1025-position demand remain open. Held-out/source quality and
 remaining BF16/GPU/rotary discrepancies stay open; no workload or gate is reduced.
 Each code task needs Astra review, applicable checks and a commit; keep
 [improvements](improvements.md) current.

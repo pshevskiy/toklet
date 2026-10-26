@@ -469,3 +469,5 @@ mod chunk;
 mod producers;
 
 mod e2b;
+
+pub(crate) mod long_context;

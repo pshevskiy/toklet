@@ -1,6 +1,7 @@
 //! Borrowed packed Gemma graph for a frozen witness and a named short E2B adapter.
 //!
-//! `Model::new` admits the short synthetic profile; `Model::from_e2b` borrows
+//! `Model::new` admits the short synthetic profile; an explicit scalar witness
+//! constructor admits up to1025 positions. `Model::from_e2b` borrows
 //! an admitted E2B payload, with32 executable positions and no app capability.
 //! Packed4/group64 BF16 coefficient values reconstruct into
 //! FP32; activations/KV remain FP32 and reductions use the scalar FP64 oracle.
@@ -22,6 +23,8 @@ pub use operations::{BackendMemory, MatrixSource, Operations, Scalar};
 mod tests;
 
 pub const MAX_POSITIONS: usize = 32;
+/// Explicit synthetic scalar context bound, independent of the32-row call bound.
+pub const MAX_WITNESS_CONTEXT: usize = 1025;
 pub const VOCAB_SIZE: usize = 17;
 const EPSILON: f32 = 1e-6;
 const MAX_PRODUCERS: usize = 15;
@@ -154,6 +157,16 @@ impl<'a> Model<'a> {
     pub fn new(weights: Weights<'a>) -> Result<Self, Error> {
         Self::with_layout(weights, Layout::witness())
     }
+    /// Synthetic scalar diagnostic only; does not admit E2B or raise GPU limits.
+    /// Sessions retain at most32 rows of per-call scratch independently of C.
+    pub fn new_witness_with_context(weights: Weights<'a>, capacity: usize) -> Result<Self, Error> {
+        if !(1..=MAX_WITNESS_CONTEXT).contains(&capacity) {
+            return Err(Error::InvalidConfig("Gemma scalar witness context bound"));
+        }
+        let mut layout = Layout::witness();
+        layout.positions = capacity;
+        Self::with_layout(weights, layout)
+    }
     fn with_layout(weights: Weights<'a>, l: Layout) -> Result<Self, Error> {
         Self::with_storage(weights, l, None)
     }
@@ -221,7 +234,8 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         if l.producers == 0
             || l.producers > MAX_PRODUCERS
             || l.producers > l.layers.len()
-            || l.positions > MAX_POSITIONS
+            || l.positions == 0
+            || l.positions > MAX_WITNESS_CONTEXT
         {
             return Err(Error::InvalidConfig("Gemma packed producer/position bound"));
         }
@@ -389,7 +403,7 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         self.bytes
     }
     pub(crate) fn planned_backend_session_bytes<B>(&self) -> Result<usize, Error> {
-        self.planned_backend_session_bytes_for_chunk::<B>(self.layout.positions)
+        self.planned_backend_session_bytes_for_chunk::<B>(self.layout.positions.min(MAX_POSITIONS))
     }
     pub(crate) fn planned_backend_session_bytes_for_chunk<B>(
         &self,
@@ -432,7 +446,11 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         operations: B,
         budget: usize,
     ) -> Result<Session<'_, 'a, M, B>, B::Error> {
-        self.session_with_backend_for_chunk(operations, self.layout.positions, budget)
+        self.session_with_backend_for_chunk(
+            operations,
+            self.layout.positions.min(MAX_POSITIONS),
+            budget,
+        )
     }
     pub(crate) fn session_with_backend_for_chunk<B: Operations<M>>(
         &self,
@@ -535,7 +553,7 @@ impl Scratch {
                 "Gemma capacity exceeds executable model positions",
             ));
         }
-        if chunk_rows > capacity {
+        if chunk_rows > capacity || chunk_rows > MAX_POSITIONS {
             return Err(Error::InvalidConfig("Gemma packed chunk capacity"));
         }
         let h = cpu::product(chunk_rows, l.hidden)?;

@@ -5351,3 +5351,51 @@ execution, unchanged precision/quality gates, model/device fit,
 app eligibility and full selected-model shared windows remain open. See the
 [method and limits](gemma-reference-attention.md) and
 [public evidence](../benchmarks/results/2026-10-27-gemma-reference-attention-v1.json).
+
+## 2026-10-27 — Explicit native scalar witness context through1025
+
+A separate scalar WITNESS constructor admits C1–1025 while default, real E2B and
+hybrid/GPU limits remain32. Sessions use actual context-owned KV/history/routes
+and independent per-call rows<=32; default planning/construction use min(C,32).
+Raw and generation admission reject chunk33 before allocation/backend work.
+Existing numerical kernels, packed format, proposal transaction and publication
+order are unchanged. A second cached Python graph is not required: Astra
+approved direct use of the frozen full-sequence oracle and independent KV state.
+
+The first five exact-integer W512 structural cases were frozen twice before
+production edits. Astra caught missing wrap-straddling appends; a sixth case
+510→517/1018→1025 was frozen twice after draft admission/tests and before native
+execution, with old pins preserved and timing explicit. Two heads,15 producers,
+35 routes, logical/segmented view hashes, visible intervals and physical slots
+cover C511/512/513/1024/1025. Actual replay checks9,870 views and4,230 commits.
+
+Eight native schedules pass8,901,008 comparisons against both independent frozen
+contracts, maximum gate fraction0.15695623024778313, plus13,712 raw argmax rows
+including contracts/repeated observations. All-position logits/producer KV and
+17 selected intermediate positions agree. Late layer/final failures preserve
+committed KV/history/published logits; retry, overflow rejection, exact-budget,
+zero numerical allocations, reset and pointer stability pass. C1025 generation
+checks68 fixed prompt/restored-logit values/four argmax rows and separates the
+sampled final pending token from the committed prefix; failure/retry and bitwise
+sampled-history replay pass. Generated continuation quality is not claimed.
+
+Default CPU361 passes/19 ignored, formatting and strict default/Metal all-target
+Clippy pass; scoped Metal19 passes/five ignored. Explicit release long tests run
+separately. Seventeen coherent reader controls pass. Review tightened negative
+index/complete keyset checks, exact-case chunk and independent memory geometry,
+and moved rejected-append snapshots before the call. A Clippy-only test warning
+and later577,503,232-byte reader-control RSS failure remain archived. Removing
+redundant transcript copies lowers retry RSS to458,293,248/physical332,563,224
+within512MiB. Rust builds and native capture are authenticated and reused for
+the reader-only correction; no unrelated test or native capture is repeated.
+All27 owned groups close. Protected release binaries remain unchanged.
+
+Raw C1025 session bytes are1,086,540/1,145,724/2,003,892 for chunks1/3/32;
+actual KV payload1,051,648/history4,100/staging1,536/4,608/49,152 bytes. Native
+tiny process physical/RSS peaks14,270,872/28,753,920 bytes establish this scoped
+mechanism only. Astra accepts it. Next L3 engine-owned capability/shared-window
+admission for existing Qwen3 bridge and both app modes, preserving qualified
+limits. Real Gemma whole32, bounded long BF16 reference, full unchanged1025
+quality/precision/fit and progressive real-model/device windows remain open.
+See [the mechanism](gemma-scalar-long-context.md) and
+[public evidence](../benchmarks/results/2026-10-27-gemma-scalar-long-context-v1.json).

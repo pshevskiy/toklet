@@ -63,15 +63,18 @@ and synthetic GPU admission checks pass. The
 [session-capacity mechanism](gemma-session-capacity.md) now admits actual
 context/cache/history/routes at C1–32 independently of chunk rows. Its tiny
 numerical/state, two-head logical/segmented KV and exact-budget checks pass.
-The executable ceiling and GPU pools remain32, and real whole32 remains
+Default/real E2B/hybrid/GPU ceilings remain32, and real whole32 remains
 unqualified; this does not close L3–L6 or real full-window support.
 The [pre-target tiny1025 full-sequence oracle](gemma-long-witness.md) now
 freezes independent long expectations for subsequent cached/native checks. Its
 W4 graph and selected boundaries do not raise native capacity or qualify real
 E2B window512. The separately qualified [FP64 matrix-dot reference attention](gemma-reference-attention.md)
 passes original numerical gates and two reference-operation timing runs. Next
-qualify native scalar tiny C<=1025 directly against the existing full-sequence
-oracle and independent KV witness; real E2B/hybrid/GPU32 stay separate.
+implement L3 engine-owned capability/shared-window admission on the existing
+Qwen3 bridge and both app modes. The [explicit scalar witness context](gemma-scalar-long-context.md)
+now passes C<=1025 with bounded32-row calls, frozen numerical/argmax/state
+checks and structural two-head W512 wraps. Default/real E2B/hybrid/GPU32 and
+real whole32/long BF16/1025 quality remain separate.
 
 | Task | Mechanism and acceptance | Status |
 | --- | --- | --- |

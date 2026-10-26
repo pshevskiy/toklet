@@ -468,3 +468,5 @@ fn ordered_publication_supports_sequential_execution_and_rejects_late_bad_frames
     assert!(plan.commit(&mut caches, &late).is_err());
     assert_eq!(snapshot(&caches), committed);
 }
+
+mod long_context;

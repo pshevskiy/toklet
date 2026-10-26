@@ -46,16 +46,19 @@ passes tiny32-position scalar/Metal checks with smaller physical chunk buffers.
 The [session-context/cache/history mechanism](docs/gemma-session-capacity.md) now
 physically admits capacities1–32 with separate chunk bounds, owned routes and
 counted history heaps. Independent logical/segmented KV, tiny numerical/state
-and exact-budget checks pass. The executable ceiling remains32; real whole32
+and exact-budget checks pass. The default/real E2B/hybrid/GPU ceilings remain32; real whole32
 and larger contexts are not qualified. The [full-sequence tiny1025 oracle](docs/gemma-long-witness.md)
 now has two identical captures, frozen-prefix/causal replay, selected independent
 scalar boundaries and coherent controls, before cached/native implementation.
 It retains W4 and does not qualify real E2B boundaries. The separately qualified
 [FP64 matrix-dot reference attention](docs/gemma-reference-attention.md) now passes
 complete tiny1025/real four-token state comparisons and repeated reference-operation
-timing gates. Next qualify native scalar tiny capacity through1025 directly against the
-frozen full-sequence oracle and independent KV witness, retaining real E2B and
-hybrid/GPU32. A second cached Python graph is not required before that task. All original failures remain;
+timing gates. The [explicit scalar witness context](docs/gemma-scalar-long-context.md) now
+passes through1025 with bounded32-row calls, frozen full-sequence numerics,
+structural two-head W512 wrap and generation failure/replay checks. Default,
+real E2B and hybrid/GPU remain32. Next implement L3 engine-owned capability and
+shared-window admission through the existing Qwen3 bridge and both app modes.
+Real Gemma whole32/long BF16/1025 quality and progressive real windows remain open. All original failures remain;
 no quality/app/window gate closes.
 
 ## Historical starting point

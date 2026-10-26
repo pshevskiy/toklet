@@ -38,9 +38,12 @@ pub(crate) fn validate_options<M: MatrixSource>(
             "Gemma capacity must fit executable model positions",
         ));
     }
-    if options.prefill_chunk_size == 0 || options.prefill_chunk_size > options.capacity {
+    if options.prefill_chunk_size == 0
+        || options.prefill_chunk_size > options.capacity
+        || options.prefill_chunk_size > MAX_POSITIONS
+    {
         return Err(session::Error::InvalidOptions(
-            "Gemma chunk must be within 1..=capacity",
+            "Gemma chunk must fit capacity and the32-row call bound",
         ));
     }
     if options.position_offset != 0 {
