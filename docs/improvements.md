@@ -4554,3 +4554,59 @@ No driver/in-flight or physical foreign-device fault is qualified. Full resident
 Gemma graph/KV/scheduling, historical source/precision/rotary discrepancies,
 quality/performance, app/iPhone and 131072-output-plus-prompt gates remain open.
 No compatibility eligibility, tolerance or context/output limit changes.
+
+## 2026-10-26 — reusable projection sessions over immutable packed weights
+
+Hypothesis: fixed-geometry mutable scratch can serve independently owned model
+weights, preserve whole-request failure atomicity and share weights with lookup
+without coupling model lifetime to construction Context. Added a concrete
+Projection workspace, exact actual-capacity admission and borrowed per-request
+weights. Extracted the existing affine encode/completion/readback path with its
+shader, arithmetic and legacy API/ABI unchanged. All-child device/layout/row and
+cached maximum/L1 checks precede staging. Caller publication waits for all
+children; post-staging failures poison only the workspace.
+
+Four construction Context teardowns, 24 tiny weight owners/60 chunks, 88 steps
+and 1500 exact returned values cover changing weight owners and 7/8-row child
+boundaries, sparse-only L1 admission, rejection without mutation, failure after
+two completed children, sticky poison and fresh recovery with the same weights.
+Complete cold/active/inactive/stale buffers, source/guarded hashes, odd metadata
+padding, signed zeros and 204 allocation identities pass independent replay and
+39 capture/mutation tests. Five tiny and four head portable controls precede
+GPU; their synthetic reader paths are explicitly not native evidence.
+
+The real original tied table is loaded once in 16 bounded chunks, construction
+Context drops, then the same immutable weights serve two lookups around seven
+full/single/resumed projections. All 4194304 projection and 12288 lookup returned
+values match the frozen staged-FP32 reference bitwise; 49 arrays/54772416 bytes
+and 51 observed GPU identities pass independent replay and 38 mutation tests.
+This new reuse scope captures complete staging and final shared GPU scratch,
+not overwritten intermediate child device outputs or private lookup scratch.
+Separate unchanged legacy affine/L1/partition/gather/head checks pass; the legacy
+head retains 1048576 ordered/scalar and 8388608 GPU/reference comparisons with
+zero difference against rounded FP32 arrays.
+
+Astra reviewed the production extraction, independent readers and both controlled
+owners before GPU execution. Review separated new bitwise reuse from old scalar
+qualification and corrected an actual padding mutation to target unused payload
+bits rather than a guard. Development failures remain retained: duplicate test
+fixture inclusion failed strict lint and was replaced with shared test-only
+visibility; one reader-test byte constant was corrected from 1820 to 1420.
+No domain or numerical tolerance changed. Formatting/strict default+Metal Clippy,
+CPU 356/16 ignored, Metal 400/125 ignored, both iOS targets and optimized 2+1+5+4
+checks pass. All 38 source/actual process groups close; original references,
+source snapshots, partial-output paths and protected binaries are bound.
+
+Real requested weight/projection/lookup policies are 226495664/4743496/16851208
+bytes, source staging with descriptors 14155848 bytes, conservative aggregate
+439229020 bytes. M1 Pro real native RSS/physical peaks 274694144/265503464 fit
+1 GiB; replay 95125504/88507112 and regressions 171622400/138904320 fit 512 MiB
+each. Tiny native 20054016/9126464 fits 512 MiB. These are separate process peaks
+and conservative allowances, not whole-model fit or a speed/memory improvement.
+
+Retain the ownership boundary; see [contract](gemma-projection-session.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-projection-session-v1.json).
+Per-child waits/readbacks remain. Foreign-device and driver/in-flight failures,
+full Gemma graph/KV/attention/scheduling, historical source/precision/rotary gaps,
+quality/performance, app/iPhone and 131072-output-plus-prompt gates remain open.
+No compatibility eligibility, tolerance or context/output limit changes.

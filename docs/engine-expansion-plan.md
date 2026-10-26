@@ -1,5 +1,12 @@
 # Engine coverage and Hugging Face implementation plan
 
+Latest ownership composition: [reusable projection sessions](gemma-projection-session.md)
+borrow immutable packed weights independently of construction Context and share
+them with lookup workspaces. Tiny shape/boundary/poison/recovery and complete
+real-head reuse tests pass, with separate unchanged legacy numerical gates.
+This closes a standalone ownership boundary; full Gemma graph, historical
+source/precision failures, app/phone and long-output qualification remain open.
+
 Latest actual table qualification: [complete Gemma embedding/PLE tables](gemma-real-tables.md)
 now load through bounded source staging and stay resident together on the Mac.
 Twelve alternating lookup requests match 1102080 values exactly, with independent

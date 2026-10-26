@@ -18,8 +18,11 @@ use std::{mem::size_of, ptr::NonNull};
 
 mod loading;
 mod partitioned;
+mod project;
+mod projection;
 mod weights;
 pub use partitioned::{Gather, PartitionedAffine};
+pub use projection::Projection;
 pub use weights::Weights;
 
 pub const CONTEXT_ALLOWANCE_BYTES: usize = 64 * 1024 * 1024;
@@ -320,98 +323,32 @@ impl Affine<'_> {
         }
         admit(self.layout.columns(), self.max_weight, input)?;
         self.poisoned = true;
-        autoreleasepool(|_| {
-            self.input.with_mut(|out| {
-                out.fill(SENTINEL);
-                for (y, x) in out.iter_mut().zip(input) {
-                    *y = x.to_bits();
-                }
-            });
-            self.output.with_mut(|out| out.fill(SENTINEL));
-            self.status.with_mut(|out| {
-                out.fill(SENTINEL);
-                out[0] = 0;
-            });
-            let raw = self.context.gpu.command()?;
-            let encoder = raw
-                .computeCommandEncoder()
-                .ok_or_else(|| Error::Native("Gemma affine encoder absent".into()))?;
-            encoder.setComputePipelineState(&self.context.pipeline);
-            let shape = [
-                tokens as u32,
-                self.layout.columns() as u32,
-                self.layout.rows() as u32,
-            ];
-            // SAFETY: private fixed ABI; all same-device u32 buffers initialized,
-            // aligned, disjoint, admitted with guards and validated dimensions.
-            // Metadata's padded final word allows aligned ushort reads. Parameter
-            // bytes copy immediately. Tracked hazards and retained command
-            // resources protect lifetimes; CPU views wait for checked completion.
-            unsafe {
-                encoder.setBuffer_offset_atIndex(Some(&self.codes.raw), 0, 0);
-                encoder.setBuffer_offset_atIndex(Some(&self.scales.raw), 0, 1);
-                encoder.setBuffer_offset_atIndex(Some(&self.biases.raw), 0, 2);
-                encoder.setBuffer_offset_atIndex(Some(&self.input.raw), 0, 3);
-                encoder.setBuffer_offset_atIndex(Some(&self.output.raw), 0, 4);
-                encoder.setBytes_length_atIndex(
-                    NonNull::from(&shape).cast(),
-                    size_of::<[u32; 3]>(),
-                    5,
-                );
-                encoder.setBuffer_offset_atIndex(Some(&self.status.raw), 0, 6);
-            }
-            encoder.dispatchThreadgroups_threadsPerThreadgroup(
-                MTLSize {
-                    width: tokens * self.layout.rows(),
-                    height: 1,
-                    depth: 1,
-                },
-                MTLSize {
-                    width: self.context.width,
-                    height: 1,
-                    depth: 1,
-                },
-            );
-            encoder.endEncoding();
-            self.pending = Some(raw);
-            let command = self.pending.as_ref().unwrap();
-            command.commit();
-            command.waitUntilCompleted();
-            if command.status() != MTLCommandBufferStatus::Completed {
-                return Err(Error::Completion);
-            }
-            let tail = |words: &[u32], active| words[active..].iter().all(|&v| v == SENTINEL);
-            if !self.codes.with_slice(|s| tail(s, self.sizes.codes))
-                || !self.scales.with_slice(|s| tail(s, self.sizes.metadata))
-                || !self.biases.with_slice(|s| tail(s, self.sizes.metadata))
-                || !self.input.with_slice(|s| tail(s, input.len()))
-                || !self.output.with_slice(|s| tail(s, output.len()))
-                || !self.status.with_slice(|s| tail(s, 1))
-            {
-                return Err(Error::Options(
-                    "Gemma affine guard/inactive capacity changed",
-                ));
-            }
-            if self.status.with_slice(|s| s[0]) != 0
-                || !self.output.with_slice(|s| {
-                    s[..output.len()]
-                        .iter()
-                        .all(|&v| f32::from_bits(v).is_finite())
-                })
-            {
-                return Err(Error::Nonfinite);
-            }
-            self.output.with_slice(|s| {
-                for (out, &bits) in output.iter_mut().zip(s) {
-                    *out = f32::from_bits(bits);
-                }
-            });
-            self.pending = None;
-            self.poisoned = false;
-            Ok(())
-        })
+        // Explicit field borrows keep immutable weights separate from pending
+        // command and mutable scratch without changing the legacy owner layout.
+        let weights = WeightView {
+            layout: self.layout,
+            codes: &self.codes,
+            scales: &self.scales,
+            biases: &self.biases,
+        };
+        project::run(
+            self.context,
+            weights,
+            project::Buffers {
+                input: &mut self.input,
+                output: &mut self.output,
+                status: &mut self.status,
+                pending: &mut self.pending,
+            },
+            input,
+            output,
+            tokens,
+        )?;
+        self.poisoned = false;
+        Ok(())
     }
 }
+
 #[cfg(test)]
 mod tests;
 
