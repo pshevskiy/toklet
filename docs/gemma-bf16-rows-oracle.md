@@ -76,7 +76,9 @@ in the manifest. See the [public evidence](../benchmarks/results/2026-10-26-gemm
 
 The subsequent [target checks](gemma-bf16-reader.md) now pass positive official
 binding, grouped/split/repeated access, recovery and bounded projections, with
-independent saved-output/read-chain replay. Next compose
-the unquantized graph using the existing weight interface, separate numerical
+independent saved-output/read-chain replay. The
+[original-weight short graph preparation](gemma-bf16-text-reference.md) now
+composes the existing weight interface with complete capture and selected
+scalar checks; full independent agreement remains open. Next separate numerical
 context from chunk scratch, and run the complete quality workload. Historical
 precision failures and full model-window/app/phone/architecture gates stay open.

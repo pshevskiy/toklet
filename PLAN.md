@@ -37,9 +37,13 @@ passes ownership, exact conversion and greater-than4GiB offset checks. The
 [real BF16 row/scalar oracle](docs/gemma-bf16-rows-oracle.md) and subsequent
 [official target-reader checks](docs/gemma-bf16-reader.md) now pass all selected
 geometry, 541 row cases, split/gather/recovery schedules and two bounded
-projections. Reference graph arithmetic/fit and quality remain open. Admit the
-unquantized reference and expand bounded numerical context
-before scoring; all original failures remain. No quality/app/window gate closes.
+projections. The [original BF16 short graph reference](docs/gemma-bf16-text-reference.md)
+now has two identical complete captures, causal checks and selected independent
+scalar boundaries. Eleven cross-precision failures remain across seven state
+comparisons; full independent graph/upstream BF16 agreement and quality are open.
+Next separate bounded chunk scratch from numerical context and validate the
+complete 1025-position workload before scoring. All original failures remain;
+no quality/app/window gate closes.
 
 ## Historical starting point
 

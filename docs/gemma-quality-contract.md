@@ -21,8 +21,10 @@ At contract freeze this was authenticated metadata, with no downloaded, verified
 or executed weight payload. The subsequent
 [complete acquisition](gemma-unquantized-checkpoint.md) now verifies that exact
 file. Frozen preparation flags and workload bytes remain unchanged. A bounded
-reference execution route still needs admission; file size alone is not a
-runtime memory estimate.
+reference route now has [complete short graph preparation](gemma-bf16-text-reference.md)
+with a separate diagnostic memory policy. Full independent graph/upstream BF16
+agreement and complete 1025-position capacity still require qualification;
+file size alone is not a runtime memory estimate.
 
 The official tokenizer payload matches the candidate's pinned tokenizer JSON.
 Git blob identities also match the candidate's template and generation config;

@@ -26,9 +26,12 @@ now authenticates the full file/header in the Mac cache. The
 conversion and greater-than4GiB offsets on fixtures. Positive
 [official row/layout binding and bounded projections](gemma-bf16-reader.md) now
 pass against the independently frozen [BF16 row/scalar references](gemma-bf16-rows-oracle.md),
-with split/gather/recovery schedules and saved-output replay. Next admit the unquantized
-reference and separate chunk scratch from numerical
-context capacity, then collect unchanged quality gates and continue resident
+with split/gather/recovery schedules and saved-output replay. The
+[original BF16 short graph reference](gemma-bf16-text-reference.md) now has two
+identical full captures, causal checks and selected scalar boundary agreement.
+Its eleven cross-precision failures remain; full independent graph/upstream BF16
+and quality agreement are open. Next separate chunk scratch from numerical
+context capacity, validate the complete 1025-position demand, then collect unchanged quality gates and continue resident
 scheduling/progressive model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid
 implementations remain short diagnostics. Qwen3 plain Chat and selected physical
 phone checks exist in [the current profile record](mobile-qwen3-downloads.md).

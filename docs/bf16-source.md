@@ -87,6 +87,8 @@ The separately completed official-payload acquisition authenticates the baseline
 file. The [independent real-row/scalar oracle](gemma-bf16-rows-oracle.md) now
 freezes 541 cases and complete selected-vector lineage. The subsequent
 [target row/projection checks](gemma-bf16-reader.md) now pass independent saved-output
-and ordered-read replay. Next compose and qualify reference graph
-arithmetic and whole-process memory. The full1025-position quality suite,
+and ordered-read replay. The subsequent
+[original BF16 short graph preparation](gemma-bf16-text-reference.md) now passes
+complete capture, causal and selected scalar checks within its diagnostic memory
+policy; full independent graph agreement remains open. The full1025-position quality suite,
 historical precision gates and model-driven app/context delivery remain open.

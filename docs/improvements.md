@@ -5108,3 +5108,45 @@ Upstream BF16 parity, whole-model fit/quality/performance, app/phone and full
 model-window plus broader E1–E6/H1–H4 gates remain open. See the
 [reader record](gemma-bf16-reader.md) and
 [public evidence](../benchmarks/results/2026-10-26-gemma-bf16-reader-v1.json).
+
+## 2026-10-26 — Original BF16 complete short graph reference preparation
+
+A concrete row-backed weight adapter now supplies all278 matrices and262 vectors
+to the unchanged independent E2B graph/operators. Only1143948 bytes of finite FP32
+vectors stay expanded. The named original-BF16-weight profile uses exact FP32
+weight storage, separate FP64/staged-FP32 activations, FP64 reductions and
+Decimal80 rotary. It is distinct from upstream BF16 arithmetic and product
+eligibility. No new numerical operator or whole expanded model is introduced.
+
+The pre-execution plan fixes all2852 typed states for original/future four-token
+inputs,206807040 total bytes, and38182 source reads/18236693062 bytes. Two cold
+captures match their complete original/future array files exactly and match the
+independently prepared source-read chain. Each independent stdlib replay checks
+all states,1426 causal prefixes and24 scalar boundaries. Embedding/PLE,
+normalization and K-projection checks derive from official bytes; softcap is
+independently recomputed from saved head values, without independently rebuilding
+the head. All selected boundaries pass;
+1060 raw source excerpts/3493888 bytes are preserved before their gates. Internally
+nonfinite states rejected by the unchanged graph before its sink are not promised
+as captured. Eleven offline graph/composition/error/interrupt/endpoint methods
+and seven coherent saved-capture controls pass.
+
+Every cross-precision failure remains visible: eleven values across seven
+sequence/state comparisons, with maximum gate fraction2.106351505638157. The
+original sequence has two failed values; the changed sequence has nine. Full
+independent graph agreement and upstream BF16 qualification remain false. The
+capture/preparation pass does not turn these numerical failures into passes or
+waive earlier packed/GPU/rotary failures. Original raw per-position predictions
+are[236761,106,1018,106], without Chat/generation or quality scoring.
+
+A lifetime ledger admits512MiB including runtime/BLAS, source/conversion/tile
+overlap, vectors/views, graph/head/logits, sink copies, comparisons and endpoint
+verification. Both graph workers fit: physical peaks295470136/291013640 bytes,
+RSS301760512/381485056. All other measured workers fit too. Ten new and sixteen
+reused process groups close. Rust/core/shaders/examples and protected binaries
+are unchanged. These reference measurements do not establish model/phone fit
+or generation performance. Next separate numerical context from chunk scratch,
+validate the entire frozen1025-position workload and continue unwaived quality,
+resident scheduling, selected-model full-window/app/device and E1–E6/H1–H4 work.
+See the [reference preparation record](gemma-bf16-text-reference.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-bf16-text-reference-v1.json).

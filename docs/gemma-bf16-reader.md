@@ -72,8 +72,10 @@ plan and result identities are in the [public record](../benchmarks/results/2026
 
 Core Rust/shaders/examples and protected release binaries remain unchanged;
 no unrelated engine/GPU/device suites are claimed. The 128-row IO bound is
-independent of numerical input/output context. Next compose original BF16
-matrices and vectors through the existing graph weight interface, validate that
-reference, and separate numerical context capacity from chunk scratch before
+independent of numerical input/output context. The subsequent
+[original BF16 short graph preparation](gemma-bf16-text-reference.md) now composes
+these matrices/vectors through the existing interface, with complete capture,
+causal and selected scalar checks; full independent graph agreement remains open.
+Next separate numerical context capacity from chunk scratch before
 running the complete 1025-position quality workload. Existing precision failures,
 resident scheduling and model-driven full-window/app/phone delivery remain open.
