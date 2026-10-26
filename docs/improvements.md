@@ -5150,3 +5150,45 @@ validate the entire frozen1025-position workload and continue unwaived quality,
 resident scheduling, selected-model full-window/app/device and E1–E6/H1–H4 work.
 See the [reference preparation record](gemma-bf16-text-reference.md) and
 [public evidence](../benchmarks/results/2026-10-26-gemma-bf16-text-reference-v1.json).
+
+## 2026-10-26 — Native Gemma host scratch bounded by chunk rows
+
+Raw scalar sessions now accept a separate validated per-call chunk bound while
+retaining the current total context and cache/history geometry. Activations,
+producer proposals and both private/published logits allocate by chunk rows;
+attention buffers allocate heads*chunk_rows*positions. Default raw calls retain
+their32-row behavior, with the new usize bound included in metadata. Generation
+prefill_chunk_size selects host scratch, and scalar/generation/hybrid admission
+share the checked count. GPU pools remain32-row allocations and fully charged.
+Oversized calls reject before backend readiness, commands or scratch writes.
+
+Full tiny32-token schedules at chunk1/3/8/32 match both frozen independent
+contracts:48 emitted records,4352 scalar comparisons, maximum gate ratio
+0.017896043200363743. Actual tiny test-session ownership is49632/77040/145560/
+474456 bytes respectively; the three-row case saves397416 bytes against the
+same-build32-row case. These exclude immutable model and caller/process memory,
+and are not real E2B/release footprints. Budgets at exact/minus-one, invalid0/33,
+context exhaustion, oversized calls after a prefix, the exact injected final
+failure, retry/reset and zero steady-state numerical allocations pass. Generation
+pending/committed/replay/stop/cancel/output-failure behavior remains checked.
+
+The independent reader reconstructs all23 scratch dimensions, stage/cache
+payloads and aggregate session ownership. Six semantic corruption controls pass.
+The legacy hybrid reader keeps its default interpretation; explicit chunk-aware
+metadata uses an opt-in mode, with nine portable methods. The synthetic GPU
+control matches35 matrices/105 unchanged owners, three-row host admission and
+two pre-command failures. In-flight GPU failure remains unqualified. Formatting,
+default/Metal strict all-target Clippy,357 default CPU tests(16 ignored),16 scoped
+Metal tests(3 ignored) and the explicitly selected synthetic GPU control pass.
+Direct CPU/GPU processes peak at4276608/13795928 physical bytes and14434304/
+35012608 RSS, below512MiB. All14 owned groups close; protected binaries are unchanged.
+
+This closes only the bounded host-scratch prerequisite. Total context/history
+remain32, existing cache geometry and GPU pools are unchanged, and real E2B
+whole32,511/512/513,1024/1025 and model-full-window qualification remain open.
+The original BF16 captures were not rerun; all eleven new and historical
+source/precision/GPU/rotary failures remain. Next parameterize actual context,
+cache/history and reference chunks, preserving the full quality workload and
+broader E1–E6/H1–H4/app/device objective. See the
+[mechanism and evidence](gemma-chunk-scratch.md) and
+[public result](../benchmarks/results/2026-10-26-gemma-chunk-scratch-v1.json).

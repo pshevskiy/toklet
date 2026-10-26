@@ -56,6 +56,12 @@ and Rust tokenizers. That is a next numerical-capacity dependency, not a new app
 limit or proof of the model's full window. Context and chunk scratch must be
 separated before expanding the current diagnostic; preserve complete requests.
 
+The [native host chunk-scratch prerequisite](gemma-chunk-scratch.md) now sizes
+activations, producer proposals and private/published logits by per-call rows;
+attention scratch scales with chunk rows times current context. Tiny32-prefix
+and synthetic GPU admission checks pass. Total context/cache/history and GPU
+pool limits remain unchanged; this does not close L3–L6 or real full-window support.
+
 | Task | Mechanism and acceptance | Status |
 | --- | --- | --- |
 | L1 | Independent decoding/terminal witnesses for existing tokenizers, including incomplete UTF-8, controls, whitespace and fallback rewrites. | [Frozen witnesses](chat-stream-oracle.md); historical synthetic 131072-ID cases remain decoder evidence only. Gemma has separate [stream composition](gemma4-stream-generation.md). |

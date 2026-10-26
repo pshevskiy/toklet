@@ -41,8 +41,10 @@ projections. The [original BF16 short graph reference](docs/gemma-bf16-text-refe
 now has two identical complete captures, causal checks and selected independent
 scalar boundaries. Eleven cross-precision failures remain across seven state
 comparisons; full independent graph/upstream BF16 agreement and quality are open.
-Next separate bounded chunk scratch from numerical context and validate the
-complete 1025-position workload before scoring. All original failures remain;
+The [native host chunk-scratch prerequisite](docs/gemma-chunk-scratch.md) now
+passes tiny32-position scalar/Metal checks with smaller physical chunk buffers.
+Total context/cache/history remain unchanged. Next parameterize actual numerical
+context/cache/history and validate the complete 1025-position workload before scoring. All original failures remain;
 no quality/app/window gate closes.
 
 ## Historical starting point

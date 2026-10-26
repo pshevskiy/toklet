@@ -1,6 +1,6 @@
 """Independent ownership/admission transcript replay; no engine import."""
 from pathlib import Path
-import hashlib,json,re,struct,sys
+import argparse,hashlib,json,re,struct,sys
 import check_gemma_hybrid_tiny as check
 TEST='model::gemma_packed::tests::hybrid::controls::admission_failure_replay_generation_and_source_ownership'
 PREFIX='GEMMA_HYBRID_CONTROL_'
@@ -35,7 +35,7 @@ def records(raw):
     check.require(len(wrapper)==3 and wrapper[:2]==['running 1 test','ok'] and re.fullmatch(r'test result: ok\. 1 passed; 0 failed; 0 ignored; 0 measured; \d+ filtered out; finished in \d+\.\d+s',wrapper[2]),'complete exact control wrapper')
     return events
 
-def replay(events,data,binary):
+def replay(events,data,binary,*,chunk_rows=None):
     expected=expected_weights(data,binary);n=len(expected)
     check.require(len(events)==2*n+4,'complete control record count')
     identities=set();before=[]
@@ -50,13 +50,23 @@ def replay(events,data,binary):
             identity=value.pop('identity');check.require(type(identity)is str and re.fullmatch('0x[0-9a-f]+',identity) and int(identity,16)!=0 and identity not in identities,'unique live buffer identity');identities.add(identity)
         check.same(cleaned,wanted);before.append(record)
     label,memory=events[n];check.require(label=='MEMORY','memory record order')
-    check.require(type(memory)is dict and set(memory)=={'raw_admitted_bytes','model_bytes','generation_wrapper_bytes','generation','raw_minus_one_rust_allocations','generation_minus_one_rust_allocations','smaller_request_capacity','physical_capacity'},'memory fields')
+    fields={'raw_admitted_bytes','model_bytes','generation_wrapper_bytes','generation','raw_minus_one_rust_allocations','generation_minus_one_rust_allocations','smaller_request_capacity','physical_capacity'}
+    if chunk_rows is not None:
+        check.require(type(chunk_rows)is int and 1<=chunk_rows<=32,'explicit bounded host chunk required')
+        fields|={'physical_chunk_rows','smaller_chunk_rows'}
+    check.require(type(memory)is dict and set(memory)==fields,'memory fields')
     m=memory['generation'];categories=['weights_bytes','kv_bytes','scratch_bytes','history_bytes','logits_bytes','metadata_bytes','metadata_allowance_bytes']
     check.require(type(m)is dict and set(m)==set(categories)|{'admitted_bytes'},'memory categories')
     for value in [*m.values(),memory['raw_admitted_bytes'],memory['model_bytes'],memory['generation_wrapper_bytes']]:check.require(type(value)is int and value>0,'positive exact byte counts')
     check.require(sum(m[k] for k in categories)==m['admitted_bytes']<=512*1024**2,'memory sum and budget')
-    check.same(m['admitted_bytes'],memory['raw_admitted_bytes']+memory['generation_wrapper_bytes'])
-    check.same(m['history_bytes'],256);check.same(m['logits_bytes'],4352);check.same(m['metadata_allowance_bytes'],96*1024**2)
+    rows=32 if chunk_rows is None else chunk_rows
+    # Independent witness geometry: per-row host activations/attention/logits
+    # total3042 FP32 values, plus two K/V proposals of widths64 and128.
+    host_reduction=(32-rows)*(3042+2*(64+128))*4
+    check.same(m['admitted_bytes'],memory['raw_admitted_bytes']+memory['generation_wrapper_bytes']-host_reduction)
+    check.same(m['history_bytes'],256);check.same(m['logits_bytes'],2*rows*17*4);check.same(m['metadata_allowance_bytes'],96*1024**2)
+    if chunk_rows is not None:
+        check.same(memory['physical_chunk_rows'],chunk_rows);check.same(memory['smaller_chunk_rows'],2)
     for key,value in [('raw_minus_one_rust_allocations',0),('generation_minus_one_rust_allocations',0),('smaller_request_capacity',5),('physical_capacity',32)]:check.same(memory[key],value)
     extra=memory['raw_admitted_bytes']-memory['model_bytes']-64*1024**2;check.require(extra>0,'additional failed-session ownership')
     for i,(gather,calls) in enumerate([(False,12),(True,1)]):
@@ -69,5 +79,6 @@ def replay(events,data,binary):
     return dict(passed=True,matrices=n,unique_unchanged_buffers=len(identities),memory=memory,injected_pre_command_failures=2,in_flight_failure_qualified=False,whole_e2b_qualified=False,performance_qualified=False,phone_qualified=False)
 
 if __name__=='__main__':
-    transcript,directory=map(Path,sys.argv[1:]);data,binary=check.fixture(directory)
-    print(json.dumps(replay(records(check.read(transcript,1024**2)),data,binary)))
+    parser=argparse.ArgumentParser();parser.add_argument('transcript',type=Path);parser.add_argument('directory',type=Path);parser.add_argument('--chunk-rows',type=int)
+    args=parser.parse_args();data,binary=check.fixture(args.directory)
+    print(json.dumps(replay(records(check.read(args.transcript,1024**2)),data,binary,chunk_rows=args.chunk_rows)))

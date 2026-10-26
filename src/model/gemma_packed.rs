@@ -153,6 +153,19 @@ impl<'a> Model<'a> {
     pub fn new_session(&self, budget: usize) -> Result<Session<'_, 'a>, Error> {
         self.session_with_backend(Scalar, budget)
     }
+    /// Plan bounded per-call scratch independently of the unchanged context.
+    pub fn planned_session_bytes_with_chunk(&self, chunk_rows: usize) -> Result<usize, Error> {
+        self.planned_backend_session_bytes_for_chunk::<Scalar>(chunk_rows)
+    }
+    /// Keep the same total context/cache bound, admitting at most chunk_rows per
+    /// forward. All private/published logits and producer proposals share this bound.
+    pub fn new_session_with_chunk(
+        &self,
+        chunk_rows: usize,
+        budget: usize,
+    ) -> Result<Session<'_, 'a>, Error> {
+        self.session_with_backend_for_chunk(Scalar, chunk_rows, budget)
+    }
 }
 /// Known backing is supplied only by the two admitted artifact owners. Includes
 /// their real capacities once; no source loader scratch is retained as live data.
@@ -350,18 +363,25 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         self.bytes
     }
     pub(crate) fn planned_backend_session_bytes<B>(&self) -> Result<usize, Error> {
+        self.planned_backend_session_bytes_for_chunk::<B>(self.layout.positions)
+    }
+    pub(crate) fn planned_backend_session_bytes_for_chunk<B>(
+        &self,
+        chunk_rows: usize,
+    ) -> Result<usize, Error> {
         let l = &self.layout;
+        let scratch = Scratch::counts(l, chunk_rows)?;
         let mut stages = 0;
         for g in &l.layers[..l.producers] {
             stages = add_bytes(
                 stages,
-                cpu::product(cpu::product(l.positions, g.head_dim)?, 2)?,
+                cpu::product(cpu::product(chunk_rows, g.head_dim)?, 2)?,
             )?;
         }
         let mut bytes = std::mem::size_of::<Session<'_, '_, M, B>>();
         for n in [
             self.plan.planned_cache_bytes()? - std::mem::size_of::<Vec<WindowKvCache>>(),
-            total_bytes(&Scratch::counts(l)?)?,
+            total_bytes(&scratch)?,
             allocation_bytes(stages)?,
             cpu::product(l.producers, std::mem::size_of::<Staging>())?,
         ] {
@@ -375,17 +395,18 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         operations: B,
         budget: usize,
     ) -> Result<Session<'_, 'a, M, B>, B::Error> {
+        self.session_with_backend_for_chunk(operations, self.layout.positions, budget)
+    }
+    pub(crate) fn session_with_backend_for_chunk<B: Operations<M>>(
+        &self,
+        operations: B,
+        chunk_rows: usize,
+        budget: usize,
+    ) -> Result<Session<'_, 'a, M, B>, B::Error> {
+        let numerical = self.planned_backend_session_bytes_for_chunk::<B>(chunk_rows)?;
         operations.ready()?;
         let backend = operations.memory()?.total()?;
-        if budget
-            < add_bytes(
-                add_bytes(
-                    self.model_bytes(),
-                    self.planned_backend_session_bytes::<B>()?,
-                )?,
-                backend,
-            )?
-        {
+        if budget < add_bytes(add_bytes(self.model_bytes(), numerical)?, backend)? {
             return Err(Error::InvalidConfig("Gemma packed memory budget").into());
         }
         let l = &self.layout;
@@ -394,7 +415,7 @@ impl<'a, M: MatrixSource> Model<'a, M> {
             .try_reserve_exact(l.producers)
             .map_err(|_| Error::Allocation)?;
         for g in &l.layers[..l.producers] {
-            let n = cpu::product(l.positions, g.head_dim)?;
+            let n = cpu::product(chunk_rows, g.head_dim)?;
             staging.push(Staging {
                 k: zeros(n)?,
                 v: zeros(n)?,
@@ -403,9 +424,10 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         let result = Session {
             model: self,
             operations,
+            chunk_rows,
             caches: self.plan.new_caches()?,
             staging,
-            scratch: Scratch::new(l)?,
+            scratch: Scratch::new(l, chunk_rows)?,
             history: [0; MAX_POSITIONS],
             committed: 0,
             published_rows: 0,
@@ -450,13 +472,17 @@ struct Scratch {
 }
 
 impl Scratch {
-    fn counts(l: &Layout) -> Result<[usize; 23], Error> {
-        let h = cpu::product(l.positions, l.hidden)?;
-        let q = cpu::product(cpu::product(l.positions, l.heads)?, l.max_dim())?;
-        let kv = cpu::product(l.positions, l.max_dim())?;
-        let ple = cpu::product(cpu::product(l.positions, l.layers.len())?, l.ple)?;
-        let ff = cpu::product(l.positions, l.max_ff().max(l.ple))?;
-        let scores = cpu::product(cpu::product(l.heads, l.positions)?, l.positions)?;
+    fn counts(l: &Layout, chunk_rows: usize) -> Result<[usize; 23], Error> {
+        cpu::nonzero(chunk_rows, "Gemma chunk capacity")?;
+        if chunk_rows > l.positions {
+            return Err(Error::InvalidConfig("Gemma packed chunk capacity"));
+        }
+        let h = cpu::product(chunk_rows, l.hidden)?;
+        let q = cpu::product(cpu::product(chunk_rows, l.heads)?, l.max_dim())?;
+        let kv = cpu::product(chunk_rows, l.max_dim())?;
+        let ple = cpu::product(cpu::product(chunk_rows, l.layers.len())?, l.ple)?;
+        let ff = cpu::product(chunk_rows, l.max_ff().max(l.ple))?;
+        let scores = cpu::product(cpu::product(l.heads, chunk_rows)?, l.positions)?;
         Ok([
             h,
             h,
@@ -471,7 +497,7 @@ impl Scratch {
             ple,
             ple,
             ple,
-            cpu::product(l.positions, l.ple)?,
+            cpu::product(chunk_rows, l.ple)?,
             h,
             h,
             ff,
@@ -479,11 +505,11 @@ impl Scratch {
             ff,
             scores,
             scores,
-            cpu::product(l.positions, l.vocab)?,
-            cpu::product(l.positions, l.vocab)?,
+            cpu::product(chunk_rows, l.vocab)?,
+            cpu::product(chunk_rows, l.vocab)?,
         ])
     }
-    fn new(l: &Layout) -> Result<Self, Error> {
+    fn new(l: &Layout, chunk_rows: usize) -> Result<Self, Error> {
         let [
             h,
             n,
@@ -508,7 +534,7 @@ impl Scratch {
             pr,
             l,
             pub_l,
-        ] = Self::counts(l)?;
+        ] = Self::counts(l, chunk_rows)?;
         Ok(Self {
             hidden: zeros(h)?,
             next: zeros(n)?,
@@ -571,6 +597,7 @@ impl Scratch {
 pub struct Session<'model, 'weights, M = Matrix<'weights>, B = Scalar> {
     model: &'model Model<'weights, M>,
     operations: B,
+    chunk_rows: usize,
     caches: Vec<WindowKvCache>,
     staging: Vec<Staging>,
     scratch: Scratch,
@@ -582,6 +609,10 @@ pub struct Session<'model, 'weights, M = Matrix<'weights>, B = Scalar> {
 }
 
 impl<M: MatrixSource, B: Operations<M>> Session<'_, '_, M, B> {
+    /// Maximum rows admitted per forward; independent of total context positions.
+    pub fn chunk_capacity(&self) -> usize {
+        self.chunk_rows
+    }
     pub fn tokens(&self) -> &[u32] {
         &self.history[..self.committed]
     }

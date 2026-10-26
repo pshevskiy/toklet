@@ -60,7 +60,10 @@ fn admission_categories_actual_capacities_and_smaller_request_limits() {
         );
         assert_eq!(sum(memory), memory.admitted_bytes);
         assert_eq!(memory.history_bytes, 256);
-        assert_eq!(memory.logits_bytes, 2 * 32 * 17 * 4);
+        assert_eq!(
+            memory.logits_bytes,
+            2 * options().prefill_chunk_size * 17 * 4
+        );
         assert_eq!(memory.weights_bytes, model.tensor_bytes);
         assert_eq!(
             memory.metadata_allowance_bytes,
@@ -83,7 +86,13 @@ fn admission_categories_actual_capacities_and_smaller_request_limits() {
         smaller.capacity = 5;
         smaller.prefill_chunk_size = 2;
         let mut small = model.new_generation_session(smaller).unwrap();
-        assert_eq!(small.memory(), memory); // physical raw storage remains32
+        assert_eq!(small.inner.chunk_capacity(), 2);
+        assert_eq!(small.memory().history_bytes, memory.history_bytes);
+        assert_eq!(small.memory().weights_bytes, memory.weights_bytes);
+        assert_eq!(small.memory().logits_bytes, 2 * 2 * 17 * 4);
+        assert!(small.memory().scratch_bytes < memory.scratch_bytes);
+        assert!(small.memory().kv_bytes < memory.kv_bytes); // smaller proposals, same caches
+        assert!(small.memory().admitted_bytes < memory.admitted_bytes);
         small.append(&data.ids[..5]).unwrap();
         assert!(small.append(&[1]).is_err());
         evaluated(&mut small);

@@ -226,9 +226,10 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     session: &mut Session<'_, '_, M, B>,
     tokens: &[u32],
 ) -> Result<(), B::Error> {
-    let ops = &mut session.operations;
-    ops.ready()?;
     cpu::nonzero(tokens.len(), "Gemma chunk")?;
+    if tokens.len() > session.chunk_rows {
+        return Err(Error::InvalidConfig("Gemma chunk exceeds scratch capacity").into());
+    }
     let l = &session.model.layout;
     let count = tokens.len();
     let offset = session.committed;
@@ -262,6 +263,8 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     {
         return Err(Error::InvalidConfig("Gemma packed proposal frame bound").into());
     }
+    let ops = &mut session.operations;
+    ops.ready()?;
     let model = session.model;
     let s = &mut session.scratch;
     let h = count * l.hidden;

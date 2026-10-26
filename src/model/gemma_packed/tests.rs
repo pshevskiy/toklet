@@ -464,6 +464,7 @@ fn packed_profile_and_all_model_terms_are_admitted_before_session() {
     );
 }
 
+mod chunk;
 mod producers;
 
 mod e2b;

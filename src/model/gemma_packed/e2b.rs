@@ -169,7 +169,7 @@ mod tests {
             assert_eq!(layer.theta, if full { 1e6 } else { 1e4 });
             assert_eq!(layer.intermediate, if i < 15 { 6144 } else { 12288 });
         }
-        let counts = Scratch::counts(&layout).unwrap();
+        let counts = Scratch::counts(&layout, MAX_POSITIONS).unwrap();
         assert_eq!(counts[4], 32 * 8 * 512);
         assert_eq!(counts[16], 32 * 12288);
         assert_eq!(counts[21], 32 * 262144);

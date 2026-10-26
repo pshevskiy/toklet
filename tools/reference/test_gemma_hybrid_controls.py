@@ -52,5 +52,18 @@ class Controls(unittest.TestCase):
         raw+='ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 1.00s\n'
         self.assertEqual(control.records(raw.encode()),self.events)
         with self.assertRaises(ValueError):control.records(raw.replace('ok\n','FAILED\n').encode())
+    def test_explicit_host_chunk_variant_preserves_legacy_admission(self):
+        events=copy.deepcopy(self.events);memory=events[35][1];m=memory['generation']
+        memory.update(physical_chunk_rows=3,smaller_chunk_rows=2);m['logits_bytes']=2*3*17*4
+        m['admitted_bytes']=sum(value for key,value in m.items()if key!='admitted_bytes')
+        memory['raw_admitted_bytes']=m['admitted_bytes']-memory['generation_wrapper_bytes']+(32-3)*13704
+        extra=memory['raw_admitted_bytes']-memory['model_bytes']-64*1024**2
+        for index in (36,37):events[index][1]['extra_live_session_bytes']=extra
+        self.assertTrue(control.replay(events,self.data,self.binary,chunk_rows=3)['passed'])
+        self.rejects(events) # New metadata never silently reinterprets old receipts.
+        for rows in (0,True,2,33):
+            with self.assertRaises(ValueError):control.replay(events,self.data,self.binary,chunk_rows=rows)
+        memory['raw_admitted_bytes']+=1
+        with self.assertRaises(ValueError):control.replay(events,self.data,self.binary,chunk_rows=3)
 
 if __name__=='__main__':unittest.main(argv=[sys.argv[0]])

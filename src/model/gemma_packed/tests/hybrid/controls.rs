@@ -78,7 +78,10 @@ fn admission_failure_replay_generation_and_source_ownership() {
     assert_eq!(sum(memory), memory.admitted_bytes);
     assert_eq!(memory.weights_bytes, model.tensor_bytes);
     assert_eq!(memory.history_bytes, 2 * 32 * 4);
-    assert_eq!(memory.logits_bytes, 2 * 32 * 17 * 4);
+    assert_eq!(
+        memory.logits_bytes,
+        2 * options().prefill_chunk_size * 17 * 4
+    );
     assert_eq!(
         memory.metadata_allowance_bytes,
         gemma_affine::CONTEXT_ALLOWANCE_BYTES + 2 * 16 * 1024 * 1024
@@ -105,7 +108,12 @@ fn admission_failure_replay_generation_and_source_ownership() {
     let mut smaller = norms
         .new_generation_session(&model, &context, requested)
         .unwrap();
-    assert_eq!(smaller.memory(), memory); // Physical storage remains32 positions.
+    assert_eq!(smaller.memory().history_bytes, memory.history_bytes);
+    assert_eq!(smaller.memory().weights_bytes, memory.weights_bytes);
+    assert_eq!(smaller.memory().logits_bytes, 2 * 2 * 17 * 4);
+    assert!(smaller.memory().scratch_bytes < memory.scratch_bytes);
+    assert!(smaller.memory().kv_bytes < memory.kv_bytes);
+    assert!(smaller.memory().admitted_bytes < memory.admitted_bytes);
     smaller.append(&data.ids[..5]).unwrap();
     assert!(smaller.append(&[1]).is_err());
     while smaller.evaluate_next_chunk().unwrap() != 0 {}
@@ -118,7 +126,8 @@ fn admission_failure_replay_generation_and_source_ownership() {
         "raw_admitted_bytes":raw_admitted,"model_bytes":model.model_bytes(),
         "generation_wrapper_bytes":size_of::<hybrid::GenerationSession<'_ ,'_ ,'_ ,'_>>() - size_of::<hybrid::Session<'_ ,'_ ,'_ ,'_>>(),"generation":memory,
         "raw_minus_one_rust_allocations":0,"generation_minus_one_rust_allocations":0,
-        "smaller_request_capacity":5,"physical_capacity":32})
+        "smaller_request_capacity":5,"physical_capacity":32,
+        "physical_chunk_rows":options().prefill_chunk_size,"smaller_chunk_rows":2})
     );
 
     // A separate norm owner cannot authorize a model bound to the first owner.

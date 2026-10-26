@@ -30,8 +30,11 @@ with split/gather/recovery schedules and saved-output replay. The
 [original BF16 short graph reference](gemma-bf16-text-reference.md) now has two
 identical full captures, causal checks and selected scalar boundary agreement.
 Its eleven cross-precision failures remain; full independent graph/upstream BF16
-and quality agreement are open. Next separate chunk scratch from numerical
-context capacity, validate the complete 1025-position demand, then collect unchanged quality gates and continue resident
+and quality agreement are open. The [native host chunk scratch](gemma-chunk-scratch.md)
+now scales by per-call rows, with tiny full32-prefix/failure and synthetic GPU
+admission evidence. Total context/history remain32, cache geometry is unchanged
+and GPU pools keep their old bounds. Next separate numerical context/cache/history capacity,
+validate the complete 1025-position demand, then collect unchanged quality gates and continue resident
 scheduling/progressive model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid
 implementations remain short diagnostics. Qwen3 plain Chat and selected physical
 phone checks exist in [the current profile record](mobile-qwen3-downloads.md).

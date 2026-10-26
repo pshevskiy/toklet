@@ -114,3 +114,7 @@ then execute the complete frozen quality requests without shortening prompts,
 targets or output caps. Resident execution, existing source/precision failures,
 model-specific full input/output windows, app integration and independent phone
 feasibility remain open under the [active plan](gemma4-implementation-plan.md).
+
+The subsequent [native host scratch mechanism](gemma-chunk-scratch.md) addresses
+the Rust allocation prerequisite separately. This full-prefix Python reference
+and the native total context still retain their existing32-position bounds.

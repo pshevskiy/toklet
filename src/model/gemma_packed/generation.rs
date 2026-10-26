@@ -72,7 +72,8 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
             add_bytes(
                 add_bytes(
                     model.model_bytes(),
-                    model.planned_backend_session_bytes::<B>()?,
+                    model
+                        .planned_backend_session_bytes_for_chunk::<B>(options.prefill_chunk_size)?,
                 )?,
                 operations.memory()?.total()?,
             )?,
@@ -85,7 +86,11 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
             });
         }
         let inner = model
-            .session_with_backend(operations, options.memory_limit_bytes - extra)
+            .session_with_backend_for_chunk(
+                operations,
+                options.prefill_chunk_size,
+                options.memory_limit_bytes - extra,
+            )
             .map_err(Into::into)?;
         let backend = inner.operations.memory()?;
         let raw_bytes = inner.allocated_bytes()?;

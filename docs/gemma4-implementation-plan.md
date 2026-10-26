@@ -33,7 +33,10 @@ now pass saved-output/read-chain replay. The
 [original BF16 short mathematical graph](gemma-bf16-text-reference.md) now has
 two identical complete captures, causal checks and selected scalar boundaries.
 Eleven cross-precision failures across seven comparisons remain; full independent
-graph/upstream BF16 agreement, model fit and quality are open. Decouple chunk scratch from context capacity
+graph/upstream BF16 agreement, model fit and quality are open. The
+[native host chunk-scratch mechanism](gemma-chunk-scratch.md) now has tiny32-prefix,
+transaction and synthetic GPU admission checks. Total context/cache/history are
+unchanged; next parameterize their capacity and the reference's bounded chunks
 before executing its full 1025-position demand. Held-out/source quality and
 remaining BF16/GPU/rotary discrepancies stay open; no workload or gate is reduced.
 Each code task needs Astra review, applicable checks and a commit; keep
@@ -59,7 +62,7 @@ listed below, while full qualification and phone fit remain open.
 | G1 — mapped/acquired | [Source/config/header mapping](gemma4-e2b-inspection.md), [Mac payload admission](gemma4-checkpoint.md), named layout and scalar adapter. | Any newly selected artifact/representation needs its own admission; mapping is not graph/device support. |
 | G2 — mechanisms implemented, parity open | Scalar local/rotary/norm/PLE/dense/softcap operations, tiny graphs, shared KV/cache and [real FP64/staged-gap localization](gemma-precision-localization.md). | G2.1: remaining source-BF16/GPU/long-rotary investigation and product precision decision with held-out/source quality; existing gates remain unwaived. |
 | G3 — bounded scalar graph/session implemented | [Real E2B scalar execution](gemma4-short-scalar.md), [generation state](gemma-generation-state.md), raw/formatted/streamed schedules at 32 positions. | Broader session/quality qualification and useful/full model context; short diagnostics grant no public app capability. |
-| G4 — storage and short hybrid diagnostic implemented | Original resident weights, [tiny graph/session](gemma-hybrid-graph.md), [real E2B vector-copy/graph and raw/formatted/streamed schedules](gemma-hybrid-real.md). | Required precision/quality decision remains open; G4.3 resident graph/KV/scheduling, whole32-position boundary and progressive context/memory qualification. |
+| G4 — storage and short hybrid diagnostic implemented | Original resident weights, [tiny graph/session](gemma-hybrid-graph.md), [real E2B vector-copy/graph and raw/formatted/streamed schedules](gemma-hybrid-real.md), [bounded host chunk scratch](gemma-chunk-scratch.md). | Required precision/quality decision remains open; G4.3 total context/cache/history separation, resident graph/KV/scheduling, real whole32-position boundary and progressive context/memory qualification. |
 | G5 — quality inputs/reference preparation; scoring open | [Basic-hello generation](gemma4-basic-chat-generation.md), [bounded stream composition](gemma4-stream-generation.md), [full quality-input/source/Rust codec replay](gemma-quality-contract.md) and [original BF16 short mathematical reference preparation](gemma-bf16-text-reference.md) on Mac. | Preserve eleven new cross-precision failures and earlier gaps; qualify full independent graph/upstream agreement, expand bounded numerical capacity to the complete1025-position suite, then collect checkpoint-specific held-out quality, required parity, representative completed timings and real-context evidence. |
 | G6 — app integration open | Existing app search/download/chat infrastructure can be reused. | Engine-owned compatibility/capacities, exact model/codec identity and pinned Gemma acquisition, offline Chat/Expert, stop/cancel/reopen/model-switch and truthful partial/full-window labels. |
 | G7 — phone route open | Existing Qwen3 baseline and rollback only. | Independent whole-process fit/representation decision first; then immutable package and physical iPhone 14 Pro numerical/state/context/UI/lifecycle evidence. |
