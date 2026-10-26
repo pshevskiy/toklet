@@ -36,8 +36,12 @@ admission evidence. The [session-capacity mechanism](gemma-session-capacity.md)
 now sizes actual cache/history/routes for admitted C1–32 independently of chunks.
 Logical and segmented two-head KV, frozen tiny numerical/state and exact-budget
 checks pass. The executable ceiling remains32 and GPU pools keep their old bounds;
-real whole32 is unqualified. Next expand bounded reference/native capacity to
-validate the complete1025-position demand, then collect unchanged quality gates and continue resident
+real whole32 is unqualified. The [pre-target tiny1025 batch oracle](gemma-long-witness.md)
+now freezes complete logits/KV and selected states, with identical cold captures,
+frozen-prefix/causal and selected scalar replay. Its W4 graph is not real E2B
+boundary evidence. The measured scalar cost puts separately qualified FP64
+matrix-dot reference attention next, then cached reference/native1025 capacity
+and unchanged real quality gates. Continue resident
 scheduling/progressive model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid
 implementations remain short diagnostics. Qwen3 plain Chat and selected physical
 phone checks exist in [the current profile record](mobile-qwen3-downloads.md).

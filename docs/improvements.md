@@ -5252,3 +5252,60 @@ resolve required precision/quality and whole-process fit, then qualify useful
 partial app/device delivery and progressive full-window support while continuing
 the broader E1–E6/H1–H4 plan. See the [mechanism](gemma-session-capacity.md) and
 [public evidence](../benchmarks/results/2026-10-26-gemma-session-capacity-v1.json).
+
+## 2026-10-27 — Pre-target full-sequence tiny1025 context oracle
+
+A new explicitly bounded batch oracle retains the historical scalar graph's
+arithmetic while admitting only the existing tiny WITNESS through1025 absolute
+positions. Gather/projection calls stay at most32 rows; full sequences require
+a streaming sink. Stable fsum softmax/reductions, FP32 stage boundaries, direct
+norms, GELU/softcap and Decimal80 rotary remain. Hoisting identical max(scores)
+work preserves arithmetic, without a measured speed claim. The historical
+batch source remains byte-identical for its authenticated replay consumers.
+No incremental cache implementation or native ceiling increase existed during
+collection; Rust/core/shaders/examples and protected release binaries are unchanged.
+
+All12 offline methods pass, including every old32-token state in both frozen
+contracts,33-token projection/gather tails and unchanged prefixes, invalid/E2B
+rejection and sink failure. Two cold captures contain identical original/future
+files of109051800 bytes each,360 complete states and218103600 bytes per capture.
+The original begins with the frozen32 IDs; subsequent IDs are(7*p+3)%17. The
+future sequence changes only the final token. Local retention remains W4; this
+is not real E2B numerical evidence at its512-position local boundary.
+
+Each independent replay checks1134848 frozen short-prefix values and18157568
+causal-prefix values. Forty-eight independently recomputed boundaries cover
+complete frozen-source embedding/PLE/scaling, late rotary from captured q_norm
+and attention from captured Q/K/V at positions511/512/1024 for all four layers/
+both contracts/sequences, and complete softcap from the captured head. These
+local recomputations keep full independent graph agreement separate.
+All1662532 selected boundary values agree with zero measured difference.
+All18175300 tiny cross-precision comparisons pass the unchanged gate; the
+largest ratio0.9539444607715041 occurs at layer.3.context. This does not waive
+any of the eleven real original-BF16 or prior packed/GPU/rotary discrepancies.
+
+The compact frozen fixture contains346994 manifest bytes and6974448 binary
+bytes: complete original/future logits, all original producer K/V,17 selected
+original intermediate positions and final future intermediates. Full traces
+remain immutable local evidence. Eight coherent controls update state/file/
+manifest hashes and then fail the intended shape/scope/prefix/late-operator
+checks. Exact mutation recipes preserve replay without retaining another218 MB
+private copy for each intended failed control.
+
+The512 MiB ledger includes cold runtime/BLAS, conversion, live graph arrays,
+capture/comparison and metadata/immutable tiny weights/margin. Actual capture
+physical peaks277922656/294896504 bytes and RSS339574784/320651264 fit. Complete
+cold collection takes357.21/359.07 seconds for four forwards plus serialization
+and endpoint verification per worker; these are reference costs, not engine
+performance. All11 owned groups close, both runtime inventories are rechecked,
+and all measured test/replay/control workers fit too.
+
+This closes the long tiny batch-oracle preparation prerequisite. Native Gemma
+still executes at most32 positions; real whole32, source/quality agreement,
+phone fit, app eligibility and the selected model's full shared window remain
+open. The measured scalar attention cost motivates a separate FP64 matrix-dot
+reference experiment with the same gates, before cached reference composition
+and native progressive context. Preserve the full1025-position real quality
+workload and broader E1–E6/H1–H4 scope. See the
+[reference record](gemma-long-witness.md) and
+[public evidence](../benchmarks/results/2026-10-27-gemma-long-witness-v1.json).

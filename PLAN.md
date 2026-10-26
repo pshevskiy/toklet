@@ -47,8 +47,12 @@ The [session-context/cache/history mechanism](docs/gemma-session-capacity.md) no
 physically admits capacities1–32 with separate chunk bounds, owned routes and
 counted history heaps. Independent logical/segmented KV, tiny numerical/state
 and exact-budget checks pass. The executable ceiling remains32; real whole32
-and larger contexts are not qualified. Next expand bounded reference/native
-capacity to the complete1025-position workload before scoring. All original failures remain;
+and larger contexts are not qualified. The [full-sequence tiny1025 oracle](docs/gemma-long-witness.md)
+now has two identical captures, frozen-prefix/causal replay, selected independent
+scalar boundaries and coherent controls, before cached/native implementation.
+It retains W4 and does not qualify real E2B boundaries. Next qualify practical
+reference attention reductions against that scalar oracle, then cached reference
+and native capacity for the complete1025-position workload before scoring. All original failures remain;
 no quality/app/window gate closes.
 
 ## Historical starting point

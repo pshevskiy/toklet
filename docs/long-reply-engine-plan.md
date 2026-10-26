@@ -65,6 +65,11 @@ context/cache/history/routes at C1–32 independently of chunk rows. Its tiny
 numerical/state, two-head logical/segmented KV and exact-budget checks pass.
 The executable ceiling and GPU pools remain32, and real whole32 remains
 unqualified; this does not close L3–L6 or real full-window support.
+The [pre-target tiny1025 full-sequence oracle](gemma-long-witness.md) now
+freezes independent long expectations for subsequent cached/native checks. Its
+W4 graph and selected boundaries do not raise native capacity or qualify real
+E2B window512. Qualify practical reference reductions separately before cached
+composition and native longer-context trials.
 
 | Task | Mechanism and acceptance | Status |
 | --- | --- | --- |

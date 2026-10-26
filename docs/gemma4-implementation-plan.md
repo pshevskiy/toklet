@@ -39,8 +39,12 @@ transaction and synthetic GPU admission checks. The
 [session-capacity mechanism](gemma-session-capacity.md) now sizes actual KV,
 routes and both histories for admitted C1–32 with independent chunk bounds.
 Logical/segmented KV, tiny numerical/state and budget checks pass; the executable
-ceiling remains32 and real whole32 is unqualified. Next expand bounded reference
-and native capacity before executing the full1025-position demand. Held-out/source quality and
+ceiling remains32 and real whole32 is unqualified. The
+[full-sequence tiny1025 oracle](gemma-long-witness.md) now passes two cold
+captures, frozen-prefix/causal replay, selected scalar boundaries and controls
+before cached/native implementation. Its W4 scope does not qualify real E2B.
+Next qualify practical FP64 matrix-dot reference attention under the original
+gates, then cached reference/native capacity and the full1025-position demand. Held-out/source quality and
 remaining BF16/GPU/rotary discrepancies stay open; no workload or gate is reduced.
 Each code task needs Astra review, applicable checks and a commit; keep
 [improvements](improvements.md) current.
@@ -66,7 +70,7 @@ listed below, while full qualification and phone fit remain open.
 | G2 — mechanisms implemented, parity open | Scalar local/rotary/norm/PLE/dense/softcap operations, tiny graphs, shared KV/cache and [real FP64/staged-gap localization](gemma-precision-localization.md). | G2.1: remaining source-BF16/GPU/long-rotary investigation and product precision decision with held-out/source quality; existing gates remain unwaived. |
 | G3 — bounded scalar graph/session implemented | [Real E2B scalar execution](gemma4-short-scalar.md), [generation state](gemma-generation-state.md), raw/formatted/streamed schedules at 32 positions. | Broader session/quality qualification and useful/full model context; short diagnostics grant no public app capability. |
 | G4 — storage and short hybrid diagnostic implemented | Original resident weights, [tiny graph/session](gemma-hybrid-graph.md), [real E2B vector-copy/graph and raw/formatted/streamed schedules](gemma-hybrid-real.md), [bounded host chunk scratch](gemma-chunk-scratch.md) and [session context/cache/history ownership](gemma-session-capacity.md). | Required precision/quality decision remains open; G4.3 larger bounded reference/native capacity, resident graph/KV/scheduling, real whole32-position boundary and progressive context/memory qualification. |
-| G5 — quality inputs/reference preparation; scoring open | [Basic-hello generation](gemma4-basic-chat-generation.md), [bounded stream composition](gemma4-stream-generation.md), [full quality-input/source/Rust codec replay](gemma-quality-contract.md) and [original BF16 short mathematical reference preparation](gemma-bf16-text-reference.md) on Mac. | Preserve eleven new cross-precision failures and earlier gaps; qualify full independent graph/upstream agreement, expand bounded numerical capacity to the complete1025-position suite, then collect checkpoint-specific held-out quality, required parity, representative completed timings and real-context evidence. |
+| G5 — quality inputs/reference preparation; scoring open | [Basic-hello generation](gemma4-basic-chat-generation.md), [bounded stream composition](gemma4-stream-generation.md), [full quality-input/source/Rust codec replay](gemma-quality-contract.md) and [original BF16 short mathematical reference preparation](gemma-bf16-text-reference.md) and [pre-target full-sequence tiny1025 oracle](gemma-long-witness.md) on Mac. | Preserve eleven new cross-precision failures and earlier gaps; qualify full independent graph/upstream agreement, expand bounded numerical capacity to the complete1025-position suite, then collect checkpoint-specific held-out quality, required parity, representative completed timings and real-context evidence. |
 | G6 — app integration open | Existing app search/download/chat infrastructure can be reused. | Engine-owned compatibility/capacities, exact model/codec identity and pinned Gemma acquisition, offline Chat/Expert, stop/cancel/reopen/model-switch and truthful partial/full-window labels. |
 | G7 — phone route open | Existing Qwen3 baseline and rollback only. | Independent whole-process fit/representation decision first; then immutable package and physical iPhone 14 Pro numerical/state/context/UI/lifecycle evidence. |
 
