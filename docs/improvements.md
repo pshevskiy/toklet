@@ -4470,3 +4470,44 @@ and the [public record](../benchmarks/results/2026-10-26-gemma-stream-upload-v1.
 Actual large-table upload/gather, aggregate full-model memory, graph/KV,
 historical precision/source/rotary failures, quality/performance, app/phone and
 long-output requirements remain open. No capability or context/output limit changes.
+
+## 2026-10-26 — complete real Gemma tables loaded once and gathered on Metal
+
+Hypothesis: the bounded uploader and separate resident lookup workspace can load
+both actual embedding tables without retaining a second complete CPU representation,
+then reuse their weights across chunk-boundary, reordered and repeated requests.
+Added an explicit ignored real-model diagnostic and independent pre-capture oracle/
+replay; production kernels and prior numerical functions remain unchanged.
+Both 262144-row original packed4/group64/BF16 tables (width 1536/8960) stay resident
+as 32 total chunks, with affine capacity 1 and separate lookup capacity 32 workspaces.
+
+Before the target executes, exact original source chunks and 35 complete rows per
+table are independently reconstructed and frozen. All 41984 original trace values
+match the accepted lookup reference bitwise. All 12 alternating requests, including
+all 32 chunk-boundary IDs, reverse order, one final row and 32 duplicates, match
+1102080 returned values exactly. The 198 live device allocations remain distinct;
+whole cold/final matrix digests and all 84 workspace/caller arrays (12 cold and
+72 request arrays) are retained, with independent simulation of inactive and stale scratch tails.
+
+Astra required preparation-schema consistency, structured partial progress and
+original-error retention, plus safe buffer metadata before raw publication.
+Those were fixed before actual execution, with small-source late-read/secondary
+publication and no-GPU raw-writer fault controls. Strict formatting/Clippy both
+configurations, CPU 356/16 ignored, Metal 392/121 ignored, iOS device/simulator,
+optimized ordinary 2 and fixture 4 pass. Eight portable checks precede preparation;
+Independent replay and all 37 tests (8 portable, 29 actual-capture/reader) pass. All 19 controlled process groups are
+absent and exact source/binary/model/oracle/output identities are bound.
+
+Conservative aggregate policy 1767039660 bytes counts both resident owners,
+both pipeline/workspace policies, maximum 82575432-byte source staging/descriptors
+and bounded surrounding allocations. Actual capacities must fit exact sub-budgets.
+Native M1 Pro RSS 1578057728/physical 1661945536 bytes fit 3 GiB; replay
+82624512/61801120 and regressions 169082880/93815528 fit 512 MiB each. These are
+separate process peaks and policy allowances, not whole-model or phone fit.
+Native 18.47 seconds includes loading/hashing/capture and is not a performance result.
+
+Retain the qualified actual-table composition; see [contract](gemma-real-tables.md)
+and [public evidence](../benchmarks/results/2026-10-26-gemma-real-tables-v1.json).
+Full resident Gemma graph/KV, historical source/precision/long-rotary failures,
+quality, generation performance, app/iPhone and 131072-output gates remain open.
+No capability, download eligibility or context/output limit changes.

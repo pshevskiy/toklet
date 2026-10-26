@@ -14,11 +14,18 @@ MLX Gemma4 E2B config-only app probes reject unknown architecture and create no
 native Gemma model handle. The [Mac storage load](gemma4-checkpoint.md) now
 admits pinned Gemma text weights; numerical execution and phone fit remain open.
 
+Latest actual G4 table qualification, 26 October 2026:
+[complete real embedding/PLE upload and lookup](gemma-real-tables.md) keeps both
+original tables resident, checks all 32 chunk-boundary rows and repeated/reordered
+requests, and matches 1102080 returned values exactly. Aggregate policy and actual
+Mac process peaks pass; whole Gemma graph/model fit, G2–G7, app/phone and long-output
+gates remain open. No source/precision failures or limits are waived.
+
 Latest standalone G4 loading progress, 26 October 2026:
 [bounded packed upload](gemma-stream-upload.md) reuses one source chunk while
 resident GPU chunks accumulate. Tiny independent fixtures qualify peak admission,
-source/error/unwind ownership and recovery; original real-table loading/gathers,
-whole-model fit and G2–G7 remain open.
+source/error/unwind ownership and recovery. The subsequent actual-table result
+above covers those two loading/gather boundaries; whole-model fit and G2–G7 remain open.
 
 Latest reference preparation, 26 October 2026: [complete real lookup rows](gemma-lookup-reference.md)
 freeze all 41984 embedding/PLE values from the accepted independent trace for
@@ -29,7 +36,8 @@ Latest standalone G4 progress, 26 October 2026: [resident GPU table gathers](gem
 now reuse the same original packed chunks as affine projection. Tiny independent
 fixtures qualify repeated/reordered rows, complete buffer identity, preflight,
 transactional failure and workspace recovery. This closes one concrete primitive;
-actual large head/PLE selections, whole-model admission and G2–G7 remain open.
+subsequent actual head/PLE selections are recorded above; whole-model admission
+and G2–G7 remain open.
 
 ## Ordered tasks
 

@@ -1,9 +1,16 @@
 # Engine coverage and Hugging Face implementation plan
 
+Latest actual table qualification: [complete Gemma embedding/PLE tables](gemma-real-tables.md)
+now load through bounded source staging and stay resident together on the Mac.
+Twelve alternating lookup requests match 1102080 values exactly, with independent
+pre-capture references, combined memory admission and measured process peaks.
+This closes those standalone real-table boundaries; complete Gemma graph, existing
+source/precision gaps, app/phone and long-output requirements remain open.
+
 Latest loading mechanism: [bounded source upload](gemma-stream-upload.md)
 qualifies tiny original packed chunk construction with reusable source storage,
-peak admission and unpublished-error recovery. Real large-table tests and full
-Gemma/native app capabilities remain separate and open.
+peak admission and unpublished-error recovery. The subsequent real-table result
+above is separate; full Gemma/native app capabilities remain open.
 
 Latest reference preparation: [real embedding/PLE lookup arrays](gemma-lookup-reference.md)
 are frozen in full for subsequent native large-table comparisons. This is a
@@ -12,8 +19,8 @@ GPU or app capability.
 
 Latest standalone GPU work: [resident table gathers](gemma-table-gather-gpu.md)
 share the existing packed projection weights and qualify tiny lookup transactions
-on Mac. Actual large-table loading/selection, complete Gemma execution, historical
-source/precision discrepancies and app/phone qualification remain open.
+on Mac. Subsequent actual large-table loading/selection is recorded above; complete
+Gemma execution, historical source/precision discrepancies and app/phone remain open.
 
 Latest Gemma precision work: the [packed table/projection witness](gemma-packed-reference.md)
 passes required FP32/tied CPU/GPU comparisons while retaining BF16 backend
