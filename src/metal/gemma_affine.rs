@@ -20,6 +20,7 @@ mod loading;
 mod partitioned;
 mod project;
 mod projection;
+pub mod resident;
 mod weights;
 pub use partitioned::{Gather, PartitionedAffine};
 pub use projection::Projection;

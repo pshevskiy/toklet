@@ -8,10 +8,11 @@ sharing its total capacity. The fixed 131072-output target is superseded.
 Use the [model capacity contract](long-reply-engine-plan.md) and
 [Astra-assisted research/plan correction](m8-plan-review-2026-10-26.md).
 
-Next three deliverables: finish the current Gemma storage loader (G4.1), compose
-a complete short hybrid Mac graph/session (G4.2), then resolve the product
-precision/quality decision (G2.1/G5). Existing 32-position real scalar/formatted/
-streamed generation is implemented; resident graph, product quality, app and
+G4.1 [complete immutable storage now passes](gemma-resident-weights.md) on Mac.
+Next: compose a complete short hybrid Mac graph/session (G4.2), resolve the
+product precision/quality decision (G2.1/G5), then resident scheduling and
+progressive model-context qualification (G4.3/L3/L4). Existing 32-position real
+scalar/formatted/streamed generation is implemented; resident graph, product quality, app and
 full-window/device qualification are open. Qwen3 plain Chat and selected physical
 phone checks already exist in [the current profile record](mobile-qwen3-downloads.md).
 

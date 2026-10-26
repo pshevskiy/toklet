@@ -36,8 +36,9 @@ numerical kernels and follow engine support, as requested.
 ## Active M8 correction — 26 October 2026
 
 The [Astra-assisted review](m8-plan-review-2026-10-26.md) puts complete short
-Gemma Mac execution before more standalone foundations: G4.1 storage, G4.2 hybrid
-graph/session, then G2.1/G5 precision and quality. Existing scalar E2B generation
+Gemma Mac execution before more standalone foundations. [G4.1 storage](gemma-resident-weights.md)
+now passes complete Mac loading/replay; next are G4.2 hybrid graph/session,
+then G2.1/G5 precision and quality. Existing scalar E2B generation
 and Qwen3 Chat/selected phone evidence are implemented in their named scopes.
 Resident Gemma/app/full-window/device gates remain open.
 

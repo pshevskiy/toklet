@@ -4690,3 +4690,40 @@ whitespace and protected-binary checks pass. Rust/hardware suites are not rerun
 for these documentation edits. This task changes no code, executable ceiling,
 installed app, model eligibility or performance/device qualification. In-progress
 native storage code and unrelated Apple metadata are excluded from its commit.
+
+
+## 2026-10-26 — complete immutable Gemma GPU storage
+
+The native E2bWeights loader now authenticates and owns all 278 original packed
+matrices and 262 FP32-converted vectors without retaining a second CPU model.
+Two-pass consumption binds the same interpreted header and every selected upload
+byte; complete coverage precedes identity publication. Actual owner/chunk/source
+capacities replace minima under cumulative admission. Small named role bindings
+and separate immutable storage/session boundaries preserve the modular design.
+
+All 1186 original guarded GPU buffers match the frozen pre-target inventory
+after construction Context teardown on M1 Pro. Requested resident ownership is
+2604665212 bytes, conservative load policy 2821589444 and maximum source staging
+82575432. Observed full-process RSS/physical peaks are 2644393984/2637728120,
+below the 6 GiB Mac policy. These measure storage loading/hash diagnostics, not
+inference performance. Tiny GPU/replay checks cover all 90 projection values,
+five rejected candidates, successful replacement and unchanged previous owners.
+Failed candidate buffers remain explicitly uncaptured.
+
+Formatting, strict default/Metal Clippy, CPU356 and Metal408 tests pass, with
+16/127 ordinary ignored checks. Both iOS targets compile. Ten portable verifier
+controls and both explicit release GPU tests/replays pass. All 15 owned command
+groups close; 3762 input bindings/30 outputs and protected binaries match.
+Astra accepted core code and actual evidence, after catching pre-run expected
+budget-message and Cargo-target-selector errors. The early lint and wrong-
+Python development attempts remain recorded; no failed actual GPU run or gate
+relaxation occurred. A publication-directory collision overwrote an earlier
+collector; its exact original SHA was restored from its prior creation record,
+and the first new publication was preserved in a fresh directory. Model/test
+captures were unchanged and not rerun.
+
+See [storage contract](gemma-resident-weights.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-resident-weights-v1.json).
+Retain this storage mechanism; G4.2 short hybrid graph is next. Full graph/session,
+precision/quality, model-defined windows, app/phone fit and broader E1–E6/H1–H4
+acceptance stay open. Current capabilities and executable limits do not change.

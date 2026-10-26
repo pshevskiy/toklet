@@ -64,7 +64,7 @@ impl Weights {
         std::ptr::eq(&*self.device, &*context.gpu.device)
     }
 }
-struct Plan {
+pub(super) struct Plan {
     layout: Layout,
     maximum: usize,
     chunks: usize,
@@ -73,7 +73,7 @@ struct Plan {
     minimum_working: usize,
 }
 impl Plan {
-    fn new(layout: Layout, maximum: usize, available: usize) -> Result<Self> {
+    pub(super) fn new(layout: Layout, maximum: usize, available: usize) -> Result<Self> {
         if layout.rows() > 262144
             || !(1..=16384).contains(&maximum)
             || layout.rows().div_ceil(maximum) > 64
@@ -163,6 +163,33 @@ impl Plan {
         }
         Ok(())
     }
+    pub(super) fn minimum_owned(&self) -> Result<usize> {
+        self.owned(self.chunks)
+    }
+    pub(super) fn minimum_source(&self) -> Result<usize> {
+        self.minimum_working
+            .checked_sub(self.minimum_owned()?)
+            .ok_or(Error::Options(OVERFLOW))
+    }
+    pub(super) fn validate_device(&self, maximum: usize) -> Result<()> {
+        for index in 0..self.chunks {
+            let (_, child) = self.child(index)?;
+            for words in Self::buffer_lengths(child) {
+                let bytes = words
+                    .checked_add(GUARD)
+                    .and_then(|n| n.checked_mul(4))
+                    .ok_or(Error::Options(OVERFLOW))?;
+                validate_buffer_bytes(bytes, maximum)?;
+            }
+        }
+        Ok(())
+    }
+}
+/// Cold actual-capacity observations, admitted before callbacks/upload. Keeping
+/// this separate preserves the immutable owner's qualified layout and lifetime.
+pub(super) struct UploadStats {
+    pub(super) working_bytes: usize,
+    pub(super) source_capacity_bytes: usize,
 }
 impl Context {
     /// Upload an immutable matrix through three reusable initialized source
@@ -176,32 +203,37 @@ impl Context {
         layout: Layout,
         maximum_rows: usize,
         available_working_bytes: usize,
-        mut fill: F,
+        fill: F,
     ) -> Result<Weights>
     where
         F: FnMut(usize, Layout, &mut [u8], &mut [u8], &mut [u8]) -> Result<()>,
     {
+        self.weights_from_fill_reported(layout, maximum_rows, available_working_bytes, fill)
+            .map(|(weights, _)| weights)
+    }
+    pub(super) fn weights_from_fill_reported<F>(
+        &self,
+        layout: Layout,
+        maximum_rows: usize,
+        available_working_bytes: usize,
+        mut fill: F,
+    ) -> Result<(Weights, UploadStats)>
+    where
+        F: FnMut(usize, Layout, &mut [u8], &mut [u8], &mut [u8]) -> Result<()>,
+    {
         let plan = Plan::new(layout, maximum_rows, available_working_bytes)?;
-        for index in 0..plan.chunks {
-            let (_, child) = plan.child(index)?;
-            for words in Plan::buffer_lengths(child) {
-                let bytes = words
-                    .checked_add(GUARD)
-                    .and_then(|n| n.checked_mul(4))
-                    .ok_or(Error::Options(OVERFLOW))?;
-                validate_buffer_bytes(bytes, self.gpu.device.maxBufferLength())?;
-            }
-        }
+        plan.validate_device(self.gpu.device.maxBufferLength())?;
         let mut chunks = Vec::new();
         chunks
             .try_reserve_exact(plan.chunks)
             .map_err(|_| Error::Native("immutable chunk reservation failed".into()))?;
         let mut source = SourceScratch::new(plan.source_bytes)?;
-        Plan::admit(
-            plan.working(chunks.capacity(), source.capacities())?,
-            available_working_bytes,
-        )?;
+        let working_bytes = plan.working(chunks.capacity(), source.capacities())?;
+        Plan::admit(working_bytes, available_working_bytes)?;
         let owned = plan.owned(chunks.capacity())?;
+        let source_capacity_bytes = working_bytes
+            .checked_sub(owned)
+            .ok_or(Error::Options(OVERFLOW))?;
         let mut max_weight = 0_f64;
         for index in 0..plan.chunks {
             let (first, child) = plan.child(index)?;
@@ -219,13 +251,19 @@ impl Context {
                 biases: loading::upload(&self.gpu, biases)?,
             });
         }
-        Ok(Weights {
-            device: self.gpu.device.clone(),
-            layout,
-            chunks,
-            owned,
-            max_weight,
-        })
+        Ok((
+            Weights {
+                device: self.gpu.device.clone(),
+                layout,
+                chunks,
+                owned,
+                max_weight,
+            },
+            UploadStats {
+                working_bytes,
+                source_capacity_bytes,
+            },
+        ))
     }
 }
 #[cfg(test)]
