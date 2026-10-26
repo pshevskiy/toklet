@@ -4652,3 +4652,41 @@ and [public evidence](../benchmarks/results/2026-10-26-gemma-resident-storage-re
 Next are native two-pass bundle loading, actual cumulative admission/failure
 recovery, full graph/session and all existing source/precision/rotary, app/device,
 quality/performance and 131072-output-plus-prompt gates. No capability or limits change.
+
+
+## 2026-10-26 — Astra-assisted delivery plan and model-window correction
+
+Research with Astra found stale umbrella statuses and a critical path obscured
+by standalone prerequisites. The existing real 32-position Gemma scalar,
+formatted and streamed generation is now recorded as implemented, with its
+numerical/product limits explicit. The next queue is complete storage → short
+hybrid Mac graph → precision/quality decision, followed by resident scheduling,
+model-driven capacity and Mac app integration. Reuse CPU forward/cache semantics
+and GPU packed projections/gathers; avoid a second full CPU model and unrelated
+ownership/framework work. Preserve every historical numerical failure and gate.
+
+The human corrected the requirement to the input/output context window supported
+by the selected model, replacing fixed 131072-output replies. Chat and Expert
+must use model-owned total/input/output constraints, rendered prompt/history
+accounting, checked capacity arithmetic and current device admission. Declared,
+implemented, qualified and usable limits stay distinct. Smaller runnable windows
+remain partial support; the full-model-window target stays open. Normal EOS can
+still stop earlier. Sliding KV retention is separate from absolute positions.
+
+Official pinned configs and upstream source confirm Gemma E2B's shared 131072
+positions and the optional Qwen3.5 hybrid graph. The latter is no longer a
+prerequisite for Gemma delivery. Its candidate listing was observed, but browser
+retrieval of immutable config/index failed; no artifact or fit is claimed.
+Hugging Face's revision/filtered-download contract supports reusing existing
+pinned acquisition infrastructure per admitted model. Phone feasibility is now
+an explicit early gate: provisional Gemma storage already exceeds the tested
+Qwen3 phone profile's process reservation, which is not a universal iOS limit.
+
+See the [research and decision record](m8-plan-review-2026-10-26.md),
+[updated Gemma queue](gemma4-implementation-plan.md) and
+[model-driven context plan](long-reply-engine-plan.md). Root/M8/engine plans and adjacent mobile/hybrid planning notes are
+aligned. Documentation checks find 968 local link targets with none missing;
+whitespace and protected-binary checks pass. Rust/hardware suites are not rerun
+for these documentation edits. This task changes no code, executable ceiling,
+installed app, model eligibility or performance/device qualification. In-progress
+native storage code and unrelated Apple metadata are excluded from its commit.

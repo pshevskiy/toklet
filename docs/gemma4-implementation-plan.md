@@ -1,18 +1,85 @@
-# Gemma4 and 128K reply priorities
+# Gemma4 delivery and model context support
 
-Human instruction relayed through the authorized mobile work on 24 October2026:
-prioritize native Gemma4 support and 131072 output tokens in one Chat/Expert
-reply. Finish the current small normalization reference, then perform the tasks
-below ahead of unrelated architecture expansion. The remaining
-[engine/Hugging Face plan](engine-expansion-plan.md) remains open. Astra reviews
-each code task and it is committed after its checks pass.
+**Active correction, 26 October 2026:** the human replaced the fixed 131072-output
+requirement with support for the selected model's input/output context window.
+Follow the [model context contract](long-reply-engine-plan.md). Gemma E2B's target
+is its declared shared total window; short support remains explicitly partial.
+The [Astra-assisted review](m8-plan-review-2026-10-26.md) corrects stale statuses
+and puts a complete short Mac path before further standalone prerequisites.
+
+Next: **G4.1 finish resident storage → G4.2 compose short hybrid Mac generation →
+G2.1/G5 precision and quality decision.** Then qualify resident scheduling,
+model-driven capacities and Mac Chat/Expert; decide phone fit before installation.
+The current native storage code has eight passing pure tests and no GPU run.
+It remains uncommitted and unqualified. Each code task needs Astra review,
+applicable checks and a commit; keep [improvements](improvements.md) current.
+
+The G2–G7 rows below are umbrella work packages. Their mechanisms may be
+implemented while numerical/product gates remain open. Historical progress
+sections retain the scope and limitations at their publication dates; this
+current queue and table supersede their stale next-step instructions.
 
 The installed iPhone baseline is the reviewed `0dffb16` Qwen3 UI with the
 immutable native package from `40bf67f`; its
 [physical Qwen3 checks](mobile-qwen3-downloads.md) do not add Gemma4. Official and
 MLX Gemma4 E2B config-only app probes reject unknown architecture and create no
 native Gemma model handle. The [Mac storage load](gemma4-checkpoint.md) now
-admits pinned Gemma text weights; numerical execution and phone fit remain open.
+admits pinned Gemma text weights; the short scalar diagnostic is checked as
+listed below, while full qualification and phone fit remain open.
+
+## Current status and execution tasks
+
+| Package | Implemented and checked | Remaining acceptance |
+| --- | --- | --- |
+| G1 — mapped/acquired | [Source/config/header mapping](gemma4-e2b-inspection.md), [Mac payload admission](gemma4-checkpoint.md), named layout and scalar adapter. | Any newly selected artifact/representation needs its own admission; mapping is not graph/device support. |
+| G2 — mechanisms implemented, parity open | Scalar local/rotary/norm/PLE/dense/softcap operations, tiny dense and packed graphs, shared KV/cache witnesses. | G2.1: isolate first divergence in existing mathematical/BF16/GPU/long-rotary failures and record a reviewed precision decision; preserve existing gates. |
+| G3 — bounded scalar graph/session implemented | [Real E2B scalar execution](gemma4-short-scalar.md), [generation state](gemma-generation-state.md), raw/formatted/streamed schedules at 32 positions. | Broader session/quality qualification and useful/full model context; short diagnostics grant no public app capability. |
+| G4 — standalone Metal qualified, composition open | RMS/rotary/packed projection, real head/tables, independent weights and reusable workspaces. | G4.1 complete native storage qualification; G4.2 hybrid 32-position graph; G4.3 resident graph/KV/scheduling and progressive context/memory qualification. |
+| G5 — selected real generation/codec evidence exists | [Basic-hello generation](gemma4-basic-chat-generation.md) and [bounded stream composition](gemma4-stream-generation.md) on Mac. | Checkpoint-specific held-out quality, unresolved required parity gates, representative completed timings and real-context evidence. |
+| G6 — app integration open | Existing app search/download/chat infrastructure can be reused. | Engine-owned compatibility/capacities, exact model/codec identity and pinned Gemma acquisition, offline Chat/Expert, stop/cancel/reopen/model-switch and truthful partial/full-window labels. |
+| G7 — phone route open | Existing Qwen3 baseline and rollback only. | Independent whole-process fit/representation decision first; then immutable package and physical iPhone 14 Pro numerical/state/context/UI/lifecycle evidence. |
+
+G4.2 reuses the existing CPU forward ordering and transaction semantics while
+GPU packed weights serve projection/gather. Use a small concrete adapter or
+coarse static provider, without per-element dynamic dispatch or a second full
+CPU model. Count bounded vector copies and CPU/GPU staging/readback. Keep the
+scalar implementation as oracle. Hybrid timings do not qualify fully resident
+performance. Require whole-graph feedback before more general prerequisites.
+
+G4.3 begins with a useful 512-position candidate, then model-specific larger
+boundaries. A short candidate can be integrated as explicitly partial support
+after its required numerical/quality checks pass. It cannot close the full
+model-window requirement. The original cross-precision, upstream BF16, dense/
+packed GPU and long-rotary discrepancies remain unwaived.
+
+## Shared model window replaces fixed output length
+
+The [pinned official E2B text config](https://huggingface.co/google/gemma-4-E2B-it/raw/3e22461f65e89153144f8adb70e3b8c2cc9845a7/config.json)
+declares 131072 total positions. Chat's rendered prompt/history and requested
+continuation share that capacity. The engine must admit both together, subject
+to qualified positions and current device memory, with any distinct model output
+limit applied separately. A generation default is not such a hard limit.
+
+The former requirement for 131072 output plus a nonempty prompt is superseded;
+an extended-context Gemma or different architecture is no longer a prerequisite
+for this target. Full-window numerical/quality/device qualification remains
+open. Preserve historical fixed-output decoder fixtures and receipts as scoped
+evidence, without carrying their old product requirement forward.
+
+## Mobile handoff contract
+
+Send the mobile work the committed engine source/ABI, immutable native and signed
+package manifests with hashes, admitted model/tokenizer/revision, actual raw/Chat
+output, total-context and byte capabilities, checked phone memory admission,
+Mac real generation/state evidence and remaining limitations. Distinguish declared
+model windows from qualified and device-admitted capacity; do not send a candidate
+based on metadata alone. Preserve the
+passing installed baseline and its rollback artifact until that candidate is
+ready. Numerical operators or config inspection alone are not an install-ready
+Gemma4 app or full-context candidate. The mobile work owns all phone actions and shared-index
+coordination remains explicit.
+
+## Historical scoped progress
 
 Latest G4 complete-model storage preparation, 26 October 2026:
 [the independent source/guard inventory](gemma-resident-storage-reference.md)
@@ -63,55 +130,6 @@ fixtures qualify repeated/reordered rows, complete buffer identity, preflight,
 transactional failure and workspace recovery. This closes one concrete primitive;
 subsequent actual head/PLE selections are recorded above; whole-model admission
 and G2–G7 remain open.
-
-## Ordered tasks
-
-| Task | Work and acceptance | Status |
-| --- | --- | --- |
-| G1 | Authenticate the pinned Gemma4 wrapper/text source, official E2B config and quantized candidate metadata. Map every graph option and tensor/tokenizer/chat requirement. Inspect bounded index/tensor headers and actual representation; enumerate missing mechanisms and rejected variants. Separate effective parameter names from actual stored weights. Derive allocation requirements before downloading a large payload. | [Mapped](gemma4-e2b-inspection.md); [Mac payload admitted](gemma4-checkpoint.md), inference/fit open |
-| G2 — active | Freeze independent tiny witnesses for each missing concrete mechanism: local/global attention geometry and position rules, sliding masks, shared KV ownership, per-layer embedding/input paths, exact norm/scale/activation/residual order and logit capping where required by G1. Keep old families' fixtures passing. | Open |
-| G3 | Implement a small named Gemma4 config/weight adapter and scalar text graph/session using concrete validated layers. Qualify state commit/replay, pending sampled tokens, exact prefix reuse, stop semantics and overflow. Reject every unimplemented graph/modality/representation rather than aliasing an existing family. | Open |
-| G4 | Add resident Metal execution and allocation plans for actual weights, shared/rotating KV, scratch, staging and temporary overlap. Compare scalar/upstream numerical states and outputs. Qualify independent Mac/phone admission and fail before allocation on non-fitting requests. | Open |
-| G5 | Acquire an immutable small real checkpoint only after G1 admission. Freeze independent numerical and tokenizer/chat witnesses; qualify real generation/state, quality and completed Mac timing/memory. Preserve old download/chat profiles. | Open |
-| G6 | Integrate engine-owned compatibility/capabilities into search, required-file downloads, offline loading, Chat and Expert. Bind source/model/tokenizer revisions and explicit raw/Chat/context/byte limits. Exercise stop/reopen/offline/model-switch and failure recovery. | Open |
-| G7 | Deliver a committed native/signed package and complete evidence checklist to the mobile work. Install and run physical iPhone14Pro tests with rollback, history preservation and explicit unsupported/over-budget outcomes. | Open |
-
-Independent engine operators already checked for other graphs remain available,
-including gated-delta math and scalar causal convolution. Those do not qualify
-Gemma4. The current [gated normalization reference](gated-norm-reference.md) is
-finished as a small separate witness before the priority switch; no further
-unrelated hybrid graph work takes precedence over G1.
-
-## 131072 output tokens is a separate acceptance gate
-
-The pinned official E2B text config at
-[`3e22461f65e89153144f8adb70e3b8c2cc9845a7`](https://huggingface.co/google/gemma-4-E2B-it/raw/3e22461f65e89153144f8adb70e3b8c2cc9845a7/config.json)
-declares 131072 total positions. It cannot accommodate 131072 output tokens plus
-a nonempty prompt under those unchanged position semantics. Google describes
-smaller and larger family context sizes in its
-[official overview](https://ai.google.dev/gemma/docs/core); those published sizes
-are not Toklet artifact or device qualification.
-
-Gemma4 functionality may first run shorter replies while the
-[long-reply engine plan](long-reply-engine-plan.md) qualifies its distinct graph,
-position and memory route. Determine whether an explicitly supported extended
-context Gemma4 configuration or another small long-context checkpoint can meet
-actual prompt+output capacity and both device budgets. Any context extension
-needs independent numerical/position and long-context quality evidence. A model
-name, advertised mobile format, constant change or hypothetical KV calculation
-cannot grant support. Larger model weights are not assumed to fit this Mac's
-6GiB working-set policy or the phone's changing allowance.
-
-## Mobile handoff contract
-
-Send the mobile work the committed engine source/ABI, immutable native and signed
-package manifests with hashes, admitted model/tokenizer/revision, actual raw/Chat
-output, total-context and byte capabilities, checked phone memory admission,
-Mac real generation/state evidence and remaining limitations. Preserve the
-passing installed baseline and its rollback artifact until that candidate is
-ready. Numerical operators or config inspection alone are not an install-ready
-Gemma4 or 128K candidate. The mobile work owns all phone actions and shared-index
-coordination remains explicit.
 
 ## G2 progress
 

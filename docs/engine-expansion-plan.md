@@ -1,5 +1,28 @@
 # Engine coverage and Hugging Face implementation plan
 
+## Active delivery correction — 26 October 2026
+
+The human corrected the context requirement: **support the input/output context
+window of the selected model**, with rendered input and requested continuation
+sharing its total capacity. The fixed 131072-output target is superseded.
+Use the [model capacity contract](long-reply-engine-plan.md) and
+[Astra-assisted research/plan correction](m8-plan-review-2026-10-26.md).
+
+Next three deliverables: finish the current Gemma storage loader (G4.1), compose
+a complete short hybrid Mac graph/session (G4.2), then resolve the product
+precision/quality decision (G2.1/G5). Existing 32-position real scalar/formatted/
+streamed generation is implemented; resident graph, product quality, app and
+full-window/device qualification are open. Qwen3 plain Chat and selected physical
+phone checks already exist in [the current profile record](mobile-qwen3-downloads.md).
+
+Use existing operators and forward/session order before adding more independent
+prerequisites. Mac delivery, full-model context qualification and phone fit are
+separate exits. A smaller usable window must be labelled partial. Phone
+representation/budget feasibility precedes a Gemma install promise. General
+Hugging Face support follows each admitted graph; all-family coverage is not a
+prerequisite for a useful app. Historical progress below keeps its original
+scope; this queue supersedes stale forward-looking instructions.
+
 Latest complete-model storage preparation: [the Gemma resident-storage reference](gemma-resident-storage-reference.md)
 freezes all 1096 original text components and expected packed/FP32 guarded buffers
 before native bundle loading. Two captures/replays and 34 reader/failure controls
@@ -95,46 +118,22 @@ The engine owns compatibility facts so app and download code need not repeat
 architecture interpretation. Refactor an existing module only when a concrete
 second use establishes the shared mechanism, with existing fixtures preserved.
 
-## Current user priority: Gemma4 and single-reply128K
+## Current user priority: Gemma4 and model-driven windows
 
-The user prioritized Gemma4 and131,072 tokens in one reply, for Chat and Expert.
-Finish the current small [normalization reference](gated-norm-reference.md), then
-follow the [Gemma4 priority queue](gemma4-implementation-plan.md) before unrelated
-architecture expansion. The first [Gemma4 E2B inspection](gemma4-e2b-inspection.md)
-maps source/config/headers and names missing mechanisms. The
-[tanh-GELU/GeGLU witness](gemma-gelu-reference.md) is frozen; its standalone
-[scalar target](gemma-gelu-scalar.md) passes offline and Rust/iOS checks. G2
-continues with [proportional rotary precision](gemma-rotary-precision.md), whose
-long-position diagnostic disagreements remain open. The
-[standalone scalar math reference](gemma-rotary-scalar.md) passes its frozen
-witnesses and required checks. The
-[local-attention witness](gemma-local-attention-reference.md) is frozen before
-the [checked scalar target](window-attention-scalar.md). The
-[KV staging/ring witness](gemma-kv-reference.md) now passes independent logical
-state and pinned upstream CPU/GPU checks. Its [cache owner](window-cache-scalar.md)
-now passes batch commit/discard checks; full model transactions and shared
-producer ownership remain open. The [shared routing witness](gemma-shared-kv-reference.md)
-qualifies selected-source forwarding/identity only. The
-[native routing/publication plan](shared-kv-scalar.md) now passes ordered-prefix
-and cache-batch checks. [Borrowed-span scalar attention](span-attention-scalar.md)
-now qualifies numerical ring views. The
-[per-layer lookup/projection witness](gemma-per-layer-reference.md) freezes
-scales and normalization axes. Its [native FP32 composition](per-layer-scalar.md)
-now passes the frozen contracts. The [dense decoder-order witness](gemma-decoder-order-reference.md)
-freezes norm/residual/PLE/scalar order with an explicit external attention
-boundary; its [native FP32 finish](dense-decoder-scalar.md) passes the frozen
-contracts. The [unlearned V-norm witness](gemma-v-norm-reference.md) freezes
-the per-head norm; its [scalar recipe](gemma-v-norm-scalar.md) now passes
-the accepted fixture. The [logit-softcap witness](gemma-softcap-reference.md)
-freezes its separate contracts; the [native in-place transform](gemma-softcap-scalar.md)
-now passes them. Quantized backend and full graph/session
-integration remain open.
-Qwen3 completion and the
-broader inventory remain open. The
-[long-reply engine plan](long-reply-engine-plan.md) sequences bounded text
-streaming, engine-owned capabilities and a qualified long-context graph within
-E2/E4/H1/H3/H4. It does not close E1–E6 or broaden current runnable limits. The
-[mobile preparation](long-reply-mobile.md) remains a separately scoped UI task.
+Follow the current [Gemma delivery queue](gemma4-implementation-plan.md). The
+small normalization reference and short scalar/packed graph foundations have
+already been completed in their recorded scopes. Diagnose retained precision
+failures as a concrete task rather than treating every mechanism as absent.
+The next end-to-end diagnostic uses GPU packed projections/gathers with existing
+CPU graph operations; measured bottlenecks then drive resident composition.
+
+The [context plan](long-reply-engine-plan.md) applies model-owned input/output/
+position limits, native capability reporting and whole-session memory admission
+to both Chat and Expert. Qualify supported windows progressively, preserving
+absolute positions, sliding/shared KV semantics, cancellation and long-context
+quality. Short app delivery may precede full-window qualification only with an
+explicit partial-support label. No current executable ceiling changes in this
+planning task. Qwen3.5 remains optional later E4 expansion.
 
 ## Coverage before E1
 
@@ -179,9 +178,8 @@ than an alias: the official [0.6B config](https://huggingface.co/Qwen/Qwen3-0.6B
 declares hidden width 1024, 16 query heads and head width 128. The query projection
 therefore has width 2048. At plan start, the native invariant equated query width
 with hidden width. E1's scalar and tiny Metal tasks now support independent
-widths and per-head Q/K normalization. Their real-checkpoint qualification still
-needs independent checking
-against the [Qwen3 implementation](https://github.com/ml-explore/mlx-lm/blob/0d4d3d04f8ab7ce4a51e7209e8615755a48ba94d/mlx_lm/models/qwen3.py).
+widths and per-head Q/K normalization. Selected real-checkpoint and phone evidence is linked above; other
+configurations still need independent checking against the [Qwen3 implementation](https://github.com/ml-explore/mlx-lm/blob/0d4d3d04f8ab7ce4a51e7209e8615755a48ba94d/mlx_lm/models/qwen3.py).
 These are graph requirements, not measured performance claims.
 
 ## Optimization coverage

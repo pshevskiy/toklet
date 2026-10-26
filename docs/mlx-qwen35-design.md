@@ -1,5 +1,12 @@
 # Qwen3.5 text candidate: implementation investigation
 
+**Ordering correction, 26 October 2026:** this remains optional E4 architecture
+work. The human replaced the fixed 131072-output requirement with the selected
+model's supported input/output context window. A new Qwen3.5 graph is therefore
+not a prerequisite for Gemma delivery; follow the
+[corrected delivery queue](m8-plan-review-2026-10-26.md) and
+[model capacity contract](long-reply-engine-plan.md).
+
 This is design work for L4/E2/E4, not an implemented graph or selected production
 model. Testing has resumed; the independent unmasked gated-delta reference is
 checked separately. No downloaded weight payload, new model

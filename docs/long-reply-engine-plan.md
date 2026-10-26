@@ -1,56 +1,88 @@
-# Engine plan for one 128K-token reply
+# Model-driven input, output and context support
 
-The user clarified on24 October2026 that128K means **131,072 output tokens in
-one reply**, in Chat and Expert. Prompt/template/history consume additional
-positions. This is a new priority within E2/E4/H1/H3/H4 of the
-[active engine plan](engine-expansion-plan.md), whose remaining architecture and
-Hugging Face work stays open. Every code task receives Astra review and a commit
-after its checks pass.
+**Requirement corrected by the human on 26 October 2026:** Chat and Expert should
+support the input/output context window of the selected model. This replaces
+the earlier fixed requirement for 131072 output tokens in one reply. The file
+path is retained for existing links; previous fixtures and receipts retain their
+original scope. See the [Astra-assisted plan review](m8-plan-review-2026-10-26.md)
+and [active engine plan](engine-expansion-plan.md).
 
-Current execution remains256 Chat output,128 raw Expert output,512 app context
-positions and64KiB conversation/decoded text. The general engine ceiling32768
-and selected native MLX geometry ceiling512 are separate constraints. Raising a
-UI preference or constant does not implement a longer model/context path.
-The [mobile preparation](long-reply-mobile.md) preserves future131072 preferences
-and bounds stored text; runnable settings still follow current native limits.
+The target is each admitted model's full supported window. A smaller implemented,
+qualified or device-admitted window is partial support, with the actual bound
+and reason visible. Do not silently substitute a smaller limit and call the
+full requirement complete. Do not offer the declared maximum as runnable before execution,
+text ownership and memory are qualified. It can still be shown as model metadata.
 
-## Tasks and acceptance
+## Capacity contract
 
-| Task | Mechanism and evidence | Status |
+The engine reports separate facts for the exact model/tokenizer revision and
+execution profile: declared total positions and any distinct input/output
+constraints; implemented and numerically qualified bounds; device-admitted
+capacity for this session; rendered input tokens, requested output and remaining
+capacity. Unknown or conflicting source limits need explicit adapter decisions.
+Generation defaults are defaults, not automatically hard model limits.
+
+For ordinary shared-window causal models, conservatively admit:
+
+`rendered_prompt_tokens + requested_max_new_tokens <= usable_total_positions`
+
+Rendered input includes system text, chat template/control tokens, retained
+history and the actual user input. Apply a distinct documented output/input cap
+where the model has one. Raw Expert still uses the same numerical position and
+memory contract; Chat adds its own rendering costs. Exact-prefix reuse, fully
+cached prompts and pending sampled tokens must not double-count history or
+incorrectly create free capacity. Specify hidden stop and final pending-token
+semantics. Reject overflow or over-budget requests before state mutation; any
+history truncation requires a visible policy rather than silent loss of input.
+
+For sliding/hybrid/recurrent graphs, distinguish absolute positions from
+retained KV/recurrent state and input/output token counts. Sliding retention
+does not extend a model's declared positions or erase its full-attention layers.
+Any context extension or KV precision change needs its own numerical and quality
+qualification. A supported maximum permits generation up to that limit; normal
+EOS/cancellation still ends a response earlier.
+
+## Current state and next tasks
+
+The installed baseline still uses 256 Chat output, 128 raw Expert output, 512 app
+context positions and 64 KiB conversation/decoded text. General engine 32768 and
+selected native MLX 512 ceilings are separate qualified scopes. Gemma's current
+Mac scalar diagnostic has 32 positions and no app capability. These are current
+limits to remove through qualification, not the corrected product target.
+
+| Task | Mechanism and acceptance | Status |
 | --- | --- | --- |
-| L1 | Freeze independent full-prefix/final decoding witnesses for all three existing pinned tokenizers, including split/incomplete UTF-8, controls, whitespace, literal replacement characters and Mistral fallback-run rewrites. Include exact131072-ID synthetic text cases and compact decode-only fixtures; no model-generation claim. | [Witnesses frozen](chat-stream-oracle.md); target implementation remains L2 |
-| L2 | Bounded incremental response decoding and event delivery with explicit token/byte/carry/batch limits, terminal flush, failure state and no full-prefix decode or output clone per token. Match L1, document any decoder/input restrictions, preserve current three-profile behavior. Qualify text ownership separately from numerical state. | [Rust decoder checked](chat-stream-decoder.md); native/app event ownership remains L3/L5 |
-| L3 | Engine-owned runnable capabilities: distinguish raw/Chat output, total context and input/decoded-byte bounds; admit prompt plus requested output with checked arithmetic and exact source position semantics. Cursor/batch delivery must preserve sampled versus committed history, hidden stops, cancellation and replay. Keep unavailable choices explicit. | Open |
-| L4 | Implement a concrete long-context graph one mechanism at a time: independent scalar oracles, checked config/tensor mapping, scalar execution, resident Metal/state, memory planning and independent real-checkpoint parity. Require more than131072 admitted positions for the requested output plus actual prompt/history. | Open |
-| L5 | Integrate bounded text and generation into Chat and Expert; include numerical weights/KV/recurrent state/scratch, tokenizer, callbacks, UI/history and conversion peaks in admission. Test exact131072 output boundary, overflow, early stop, cancellation near boundaries, stale events and replay on Mac before exposing the capability. | Open |
-| L6 | Qualify a real long-context checkpoint and full app on Mac and separately iPhone14Pro, including meaningful long generation, quality gates, completed timings, memory and lifecycle. Restore/offline chat, model switching and UI controls must pass. An unavailable or over-budget device stays explicitly unqualified. | Open |
+| L1 | Independent decoding/terminal witnesses for existing tokenizers, including incomplete UTF-8, controls, whitespace and fallback rewrites. | [Frozen witnesses](chat-stream-oracle.md); historical synthetic 131072-ID cases remain decoder evidence only. Gemma has separate [stream composition](gemma4-stream-generation.md). |
+| L2 | Bounded incremental decoding/event delivery: token, byte, carry and batch bounds, terminal flush, backpressure/failure state, no per-token full-prefix decode or full-output clone. | [Rust decoder checked](chat-stream-decoder.md); whole native/app ownership and every model profile remain separate. |
+| L3 — next capacity task | Engine-owned model/runtime/device capability schema and checked request admission, exposed through native bridge to both app modes. Resolve exact config/position rules, raw versus rendered input, sampled/committed history, stops and replay. | Open; can use existing supported graphs before full Gemma residency. |
+| L4 | Qualify each model's declared window progressively: short baseline, useful context, window/chunk/rotary/cache boundaries, near-maximum and exact maximum, plus rejected maximum+1. Use bounded chunked prefill and correct absolute offsets; test long input and long continuation independently and together. | Open; integrate Gemma through G4, without requiring an unrelated new long-context architecture first. |
+| L5 | Chat/Expert controls and bounded text/history delivery driven by L3. Display model maximum, usable device limit, remaining tokens and limiting reason. Test model switching, stale events/settings, early stop, cancel/resume and offline restore. | Open; no universal 128/256/512 product ceiling, and no silent clipping to one. |
+| L6 | Real checkpoint/context quality, completed prefill/decode/visible timing, weights/KV/state/scratch/text/UI/conversion memory and lifecycle on Mac, then independently iPhone 14 Pro. | Open per checkpoint, execution profile and device; a smaller usable window remains partial qualification. |
 
-The working future text targets are8MiB per conversation JSON and decoded reply,
-with64MiB persisted UI history. These are proposed engine limits, not current
-native constants or a qualified phone process budget. Long records must have
-bounded copying/backpressure and retain exact text. Synthetic131072-ID decoding
-witnesses do not qualify131072 numerical generation, quality or device fit.
+Capacity arithmetic tests and synthetic text IDs do not prove full-context
+numerical execution. At the admitted boundary, preserve complete raw evidence
+and compare independent numerical/state witnesses; use held-out long-context
+quality tasks as well as short loss/task gates. Run a bounded output-limit
+witness without treating forced no-EOS generation as ordinary model behavior.
+Freeze workloads and expected results before target trials.
 
-## Gemma4 priority and candidate graph investigation
+Working future text proposals of 8 MiB per reply/conversation JSON and 64 MiB
+persisted UI history are not universal model limits or qualified budgets. Derive
+and qualify bounded token/byte/storage policies for each supported tokenizer;
+if a byte/UI limit prevents the full model window, show that restriction and
+keep full-window support open. Count conversion overlap and copying/backpressure.
 
-The [Gemma4 priority queue](gemma4-implementation-plan.md) now runs before
-unrelated graph expansion. Its pinned E2B context is131072 total positions, so
-Gemma4 support alone does not close this output-plus-prompt requirement. Qualify
-a concrete extended-context or alternative-checkpoint route and memory budget
-without changing capability constants first.
+## Model selection after the requirement correction
 
-The immutable official [Qwen3.5-0.8B configuration](https://huggingface.co/Qwen/Qwen3.5-0.8B/raw/eb706f593d2d43c90a10271199c10b07ced7569a/config.json)
-declares262144 positions and a hybrid linear/full-attention text graph. Its
-[upstream text implementation](https://github.com/ml-explore/mlx-lm/blob/0d4d3d04f8ab7ce4a51e7209e8615755a48ba94d/mlx_lm/models/qwen3_5.py)
-uses causal convolution and gated-delta state alongside attention. This makes it
-a candidate for L4, not an admitted or device-qualified model. The
-[mechanism investigation](mlx-qwen35-design.md) maps the concrete missing pieces
-and state/memory requirements without adding an executable graph. Its partial rotary,
-attention gate, normalization/weight-conversion conventions and recurrent state
-need their own explicit fixtures. Text-only support must neither imply vision
-support nor inherit Qwen3/Qwen2 tokenizer or chat semantics. Inspect immutable
-quantized candidates and actual resource requirements before selecting one.
+The [pinned Gemma E2B config](https://huggingface.co/google/gemma-4-E2B-it/raw/3e22461f65e89153144f8adb70e3b8c2cc9845a7/config.json)
+declares 131072 total positions. It is a valid declared target for the corrected
+shared-window requirement; it never implies 131072 input plus another 131072
+output. Its present short diagnostic does not qualify that window.
 
-No reliable completion time is assigned before these missing mechanisms and
-hardware gates are resolved. A fit report reserves no memory and cannot grant
-numerical, text or physical-device qualification.
+[Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B/raw/eb706f593d2d43c90a10271199c10b07ced7569a/config.json)
+is an optional 262144-position hybrid candidate. The
+[mechanism investigation](mlx-qwen35-design.md) remains useful for later E4 work;
+it is no longer needed to satisfy an artificial fixed-output target before
+Gemma delivery. New checkpoint selection still requires immutable artifact,
+tokenizer, numerical and resource admission. There is no reliable full-window
+or phone ETA before actual fit, boundary checks and throughput measurements.

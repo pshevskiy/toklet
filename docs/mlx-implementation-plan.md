@@ -33,15 +33,30 @@ recurrent state, scratch, tokenizer/media/application allocations and temporary
 buffers. Mac and phone limits remain independent. Search/downloads stay outside
 numerical kernels and follow engine support, as requested.
 
+## Active M8 correction — 26 October 2026
+
+The [Astra-assisted review](m8-plan-review-2026-10-26.md) puts complete short
+Gemma Mac execution before more standalone foundations: G4.1 storage, G4.2 hybrid
+graph/session, then G2.1/G5 precision and quality. Existing scalar E2B generation
+and Qwen3 Chat/selected phone evidence are implemented in their named scopes.
+Resident Gemma/app/full-window/device gates remain open.
+
+The human replaced the fixed 131072-output target with the selected model's
+input/output context window. Use [engine-owned capacity admission](long-reply-engine-plan.md)
+for Chat and Expert. Declared model limits, qualified runtime bounds and current
+device-admitted capacity stay separate; smaller usable windows are partial
+support. General Hugging Face H1–H4 proceeds per admitted model without waiting
+for all architecture E1–E6 work. Phone feasibility precedes Gemma installation.
+
 ## Ordered tasks and exits
 
-The [23 October engine coverage and Hugging Face plan](engine-expansion-plan.md)
-sets the active implementation order for the remaining M8.3–M8.5 work, starting
-with a Qwen3 dense oracle and native execution before broader model admission.
-Tiny scalar/Metal gates now pass. The [real Qwen3 candidate](mlx-qwen3-checkpoint.md)
-is acquired as data, with an [independent real numerical reference](mlx-qwen3-real-oracle.md).
-[Real Mac numerical/session checks](mlx-qwen3-real-metal.md) now pass.
-Quality, chat and physical iPhone qualification remain open.
+The [engine coverage and Hugging Face plan](engine-expansion-plan.md) sets the
+active order for remaining M8.3–M8.5 work. The
+[real Qwen3 numerical/session checks](mlx-qwen3-real-metal.md) and
+[later downloadable Chat/phone evidence](mobile-qwen3-downloads.md) are separate
+completed scopes. Broader quality/performance, full model windows and wider
+architecture/checkpoint coverage remain open; earlier rows retain publication
+scope rather than current next-step authority.
 
 Astra reviews each code task; commit only after its checks pass and before starting
 the next code task. Keep [the improvement record](improvements.md) updated.

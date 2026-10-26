@@ -11,7 +11,12 @@ Build a correct Rust decoder, run Qwen2.5-0.5B-Instruct with persistent session 
 This plan translates the [Apple LLM performance proposal](apple_llm_performance_plan.md) into repository work. The proposal supplies design context; its references to an existing linear layer and earlier plan do not establish completed work in this checkout.
 
 The [engine coverage and Hugging Face implementation queue](docs/engine-expansion-plan.md)
-orders the remaining M8 work requested on 23 October, beginning with Qwen3 dense.
+orders the remaining M8 work. The [26 October Astra-assisted correction](docs/m8-plan-review-2026-10-26.md)
+prioritizes complete Gemma Mac execution and model-driven input/output context
+support. The human superseded the fixed 131072-output target; rendered input and
+requested continuation share the selected model's window. Declared, qualified
+and device-admitted limits must be distinguished, with smaller windows labelled
+partial support. M8 remains incomplete; historical milestone evidence is unchanged.
 
 ## Historical starting point
 
@@ -34,7 +39,7 @@ The environment reports Rust and Cargo 1.90.0, macOS 26.6.2 (25G83), and `/Libra
 | Mac memory | Initial 6 GiB engine working-set ceiling, including transient loading allocations |
 | Applications | CLI first; Swift bridge and minimal native app after the Mac engine |
 
-Defer Gemma, GGUF import, model discovery and downloads, speculative decoding, multi-session serving, paged KV, disk snapshots, and broad UI work. TensorOps is an optional implementation choice within the Metal milestones after capability and shape measurements. Core AI and newer GPU features are separate experiments; they are not prerequisites.
+The original M0–M7 scope deferred Gemma, GGUF import, model discovery and downloads, speculative decoding, multi-session serving, paged KV, disk snapshots, and broad UI work. Gemma and model discovery/downloads are now active M8 work under the linked extension plans. TensorOps is an optional implementation choice within the Metal milestones after capability and shape measurements. Core AI and newer GPU features are separate experiments; they are not prerequisites.
 
 The published Qwen config specifies hidden size 896, intermediate size 4,864, 24 layers, 14 query heads, 2 KV heads, vocabulary 151,936, BF16, and tied embeddings. Head dimension is therefore 64. Validate the pinned artifact rather than assuming every family member shares these values. The initial 2,048-token cap is an engine qualification limit. [Qwen configuration](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/blob/main/config.json).
 

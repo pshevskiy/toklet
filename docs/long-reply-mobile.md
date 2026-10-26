@@ -1,4 +1,14 @@
-# Mobile preparation for 128K-token replies
+# Mobile text preparation and model-driven context integration
+
+**Requirement corrected on 26 October 2026:** the selected model's input/output
+context window replaces the fixed 131072-output target. Use the
+[engine-owned capacity contract](long-reply-engine-plan.md). Existing large-text
+fixtures, stored preferences and the receipt below retain their historical
+scope; they neither impose a universal output maximum nor qualify a model
+window. Future settings must show declared model capacity and the smaller usable
+runtime/device capacity with its reason, in both Chat and Expert.
+
+## Historical 24 October preparation
 
 Requested 24 October 2026. The user explicitly means **128K in one reply**,
 rather than a 128K total conversation. The target preference is 131,072 output
@@ -62,8 +72,10 @@ also remains pending.
 ## Remaining integration
 
 The engine must publish bounded conversation/decoded-text constants, admitted
-context and runnable output capabilities, and implement a model/context path
-with room for the requested reply plus prompt/history. Generation, cancellation,
+model-specific context/input/output capabilities and implement the selected
+model window with room for the rendered input plus requested continuation.
+Treat a smaller checked device window as partial support rather than silently
+reusing the historical 131072 preference as every model's limit. Generation, cancellation,
 prefix recovery and memory/quality checks must cover those limits. The app can
 then expose the admitted reply choices and replace its remaining short-context
 help and input bounds. The complete updated package must be installed and tested
