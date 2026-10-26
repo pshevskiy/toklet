@@ -1,0 +1,593 @@
+{
+  "format": "toklet-session-capacity-oracle-v1",
+  "window": 512,
+  "original_global_capacity": 32,
+  "original_max_positions": 512,
+  "layers": 35,
+  "producer_count": 15,
+  "routes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    13,
+    13,
+    13,
+    13,
+    14,
+    13,
+    13,
+    13,
+    13,
+    14,
+    13,
+    13,
+    13,
+    13,
+    14,
+    13,
+    13,
+    13,
+    13,
+    14
+  ],
+  "producers": [
+    {
+      "producer": 0,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 0,
+        "bytes": 512,
+        "sha256": "9c7d07dcbf58962c87a9754f29691a1eea3d370a001a470302d2d08d3658b894"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 512,
+        "bytes": 512,
+        "sha256": "8e3a22bb778d7c14a73c17db597295c4cc7d3feab3894f42df8bb4dff7d93bb0"
+      }
+    },
+    {
+      "producer": 1,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 1024,
+        "bytes": 512,
+        "sha256": "3f6cbe6582b859c2394496fac1073c8425bd23d447315d806ca772b20b9a3379"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 1536,
+        "bytes": 512,
+        "sha256": "ce7abfda0862d2f1f3f11658834d3096d0cded9b9ecce0519b1247f4f83d8a68"
+      }
+    },
+    {
+      "producer": 2,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 2048,
+        "bytes": 512,
+        "sha256": "23f4f4e0899097e14f419540f223f64414d9662a704718bb1802ad5f47199bab"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 2560,
+        "bytes": 512,
+        "sha256": "cd64ae3b4aab806d3f0371b681fa71a8c4c7c5d8882bed46c0a6b686c7a12904"
+      }
+    },
+    {
+      "producer": 3,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 3072,
+        "bytes": 512,
+        "sha256": "e47c824f7c5a60ba1715984e311b8a8ce91508a98d746a688518809a2160b5b8"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 3584,
+        "bytes": 512,
+        "sha256": "5ed6f9a2eee46a6b2d95327b74b2b912ddf184f77f604c6d12e7d0e0e3c5fdf8"
+      }
+    },
+    {
+      "producer": 4,
+      "kind": "full",
+      "heads": 2,
+      "head_dim": 3,
+      "k": {
+        "shape": [
+          2,
+          32,
+          3
+        ],
+        "dtype": "<f4",
+        "offset": 4096,
+        "bytes": 768,
+        "sha256": "ea4c059b121ea0535cdbfe0d34afc70d8cedb9f7e782e430effd39c63923a8ba"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          3
+        ],
+        "dtype": "<f4",
+        "offset": 4864,
+        "bytes": 768,
+        "sha256": "37272e067d1b85f4614ec1ab8bc4cda2f41d6042c11c73c21840d364b83da544"
+      }
+    },
+    {
+      "producer": 5,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 5632,
+        "bytes": 512,
+        "sha256": "4e56c19d0f545c377250b939ddc1bf1b3fd770c030618c3d5e2efb60fdf30eae"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 6144,
+        "bytes": 512,
+        "sha256": "2d8141db08ee780ad8320970c4852a241aeaf8e29ce9fe5b93ebce395afea670"
+      }
+    },
+    {
+      "producer": 6,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 6656,
+        "bytes": 512,
+        "sha256": "e9d98b90f76c0af45f7c3c1010da1044d51030dc82251cfc411934b333776873"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 7168,
+        "bytes": 512,
+        "sha256": "2ab490d35929adbdd5ad6704768dc822659fc4c735d9a1da725a96c0ba89ff6f"
+      }
+    },
+    {
+      "producer": 7,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 7680,
+        "bytes": 512,
+        "sha256": "c310dd79c261412e23e04204db7169fd90496505e44b7d9300789b189171d28a"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 8192,
+        "bytes": 512,
+        "sha256": "2853e9b55abeb5b77a33875a28d9f783f063335b198d8168b8cc92dd4d2b46a2"
+      }
+    },
+    {
+      "producer": 8,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 8704,
+        "bytes": 512,
+        "sha256": "ff2e996dfa89a3a3763316b1b7affd0b03f8fa2b9dacfc84763b202de9d0df52"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 9216,
+        "bytes": 512,
+        "sha256": "1172eb4cc922756019cf71a7338afdbfcc3a968c52c85bfc7b901a189e0c9c16"
+      }
+    },
+    {
+      "producer": 9,
+      "kind": "full",
+      "heads": 2,
+      "head_dim": 3,
+      "k": {
+        "shape": [
+          2,
+          32,
+          3
+        ],
+        "dtype": "<f4",
+        "offset": 9728,
+        "bytes": 768,
+        "sha256": "59974488bc74ec3894985b103592b3f4699528375db6700f595003b67103ce52"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          3
+        ],
+        "dtype": "<f4",
+        "offset": 10496,
+        "bytes": 768,
+        "sha256": "b9f95f732a64158e11a772d0751d2660d6b4e41f76c986950b92b7f0985f8341"
+      }
+    },
+    {
+      "producer": 10,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 11264,
+        "bytes": 512,
+        "sha256": "1c2972024dffb052ae3749b9ff801b50899bc7166353482e24f5a8663257f219"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 11776,
+        "bytes": 512,
+        "sha256": "ba1e3efa86f3b085200aa6d092e26a1bdd513876445f1232c035ad23052a1628"
+      }
+    },
+    {
+      "producer": 11,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 12288,
+        "bytes": 512,
+        "sha256": "6964d69b3c9fd7c1eabf4c382f3f60fc84727adc0528119b7ce97ccda918da97"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 12800,
+        "bytes": 512,
+        "sha256": "88a3a8de5ccce61766fdad94e50120aa42b808048d7ba5cfb65881ad5819dde0"
+      }
+    },
+    {
+      "producer": 12,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 13312,
+        "bytes": 512,
+        "sha256": "79943c811db4ec28ff3f796e87a5953afdbd7c3ea78ed912c803ed654e092900"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 13824,
+        "bytes": 512,
+        "sha256": "45a9dc56e188a24c25d1aabb8b0b6017f04d7dfa4b657bec6ceb84c6fcabb84f"
+      }
+    },
+    {
+      "producer": 13,
+      "kind": "sliding",
+      "heads": 2,
+      "head_dim": 2,
+      "k": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 14336,
+        "bytes": 512,
+        "sha256": "8454c79cfc30cedf82485503161c24ec6e5151b8d8a724bf60b367139873703b"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          2
+        ],
+        "dtype": "<f4",
+        "offset": 14848,
+        "bytes": 512,
+        "sha256": "f8e93d9f9604b8d7f606e4fa8e3c22ccb43853cd0671eef5dfc178faa3492b4a"
+      }
+    },
+    {
+      "producer": 14,
+      "kind": "full",
+      "heads": 2,
+      "head_dim": 3,
+      "k": {
+        "shape": [
+          2,
+          32,
+          3
+        ],
+        "dtype": "<f4",
+        "offset": 15360,
+        "bytes": 768,
+        "sha256": "1fa92583d2052cd222416307cd4db2d5f2a9a61608030951c87fd64a29f3bd12"
+      },
+      "v": {
+        "shape": [
+          2,
+          32,
+          3
+        ],
+        "dtype": "<f4",
+        "offset": 16128,
+        "bytes": 768,
+        "sha256": "d6a702831c27fff3defc226bffb8fd3e258615c04c7bc1b64acae5f0a32b3330"
+      }
+    }
+  ],
+  "cases": [
+    {
+      "capacity": 1,
+      "chunk_rows": 1,
+      "steps": 1,
+      "view_records": 70
+    },
+    {
+      "capacity": 2,
+      "chunk_rows": 1,
+      "steps": 2,
+      "view_records": 140
+    },
+    {
+      "capacity": 2,
+      "chunk_rows": 2,
+      "steps": 1,
+      "view_records": 70
+    },
+    {
+      "capacity": 3,
+      "chunk_rows": 1,
+      "steps": 3,
+      "view_records": 210
+    },
+    {
+      "capacity": 3,
+      "chunk_rows": 3,
+      "steps": 1,
+      "view_records": 70
+    },
+    {
+      "capacity": 4,
+      "chunk_rows": 1,
+      "steps": 4,
+      "view_records": 280
+    },
+    {
+      "capacity": 4,
+      "chunk_rows": 3,
+      "steps": 2,
+      "view_records": 140
+    },
+    {
+      "capacity": 4,
+      "chunk_rows": 4,
+      "steps": 1,
+      "view_records": 70
+    },
+    {
+      "capacity": 5,
+      "chunk_rows": 1,
+      "steps": 5,
+      "view_records": 350
+    },
+    {
+      "capacity": 5,
+      "chunk_rows": 3,
+      "steps": 2,
+      "view_records": 140
+    },
+    {
+      "capacity": 5,
+      "chunk_rows": 5,
+      "steps": 1,
+      "view_records": 70
+    },
+    {
+      "capacity": 17,
+      "chunk_rows": 1,
+      "steps": 17,
+      "view_records": 1190
+    },
+    {
+      "capacity": 17,
+      "chunk_rows": 3,
+      "steps": 6,
+      "view_records": 420
+    },
+    {
+      "capacity": 17,
+      "chunk_rows": 8,
+      "steps": 3,
+      "view_records": 210
+    },
+    {
+      "capacity": 17,
+      "chunk_rows": 17,
+      "steps": 1,
+      "view_records": 70
+    },
+    {
+      "capacity": 32,
+      "chunk_rows": 1,
+      "steps": 32,
+      "view_records": 2240
+    },
+    {
+      "capacity": 32,
+      "chunk_rows": 3,
+      "steps": 11,
+      "view_records": 770
+    },
+    {
+      "capacity": 32,
+      "chunk_rows": 8,
+      "steps": 4,
+      "view_records": 280
+    },
+    {
+      "capacity": 32,
+      "chunk_rows": 32,
+      "steps": 1,
+      "view_records": 70
+    }
+  ],
+  "binary": {
+    "file": "kv.bin",
+    "bytes": 16896,
+    "sha256": "3450e059297fc605d68e7bd957b2f0abd8676ec68ff85fa198beffc1099710b4"
+  },
+  "real_model": false,
+  "numerical_graph_executed": false,
+  "larger_context_qualified": false,
+  "full_model_window_qualified": false,
+  "app_eligibility_changed": false
+}

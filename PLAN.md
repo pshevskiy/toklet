@@ -43,8 +43,12 @@ scalar boundaries. Eleven cross-precision failures remain across seven state
 comparisons; full independent graph/upstream BF16 agreement and quality are open.
 The [native host chunk-scratch prerequisite](docs/gemma-chunk-scratch.md) now
 passes tiny32-position scalar/Metal checks with smaller physical chunk buffers.
-Total context/cache/history remain unchanged. Next parameterize actual numerical
-context/cache/history and validate the complete 1025-position workload before scoring. All original failures remain;
+The [session-context/cache/history mechanism](docs/gemma-session-capacity.md) now
+physically admits capacities1–32 with separate chunk bounds, owned routes and
+counted history heaps. Independent logical/segmented KV, tiny numerical/state
+and exact-budget checks pass. The executable ceiling remains32; real whole32
+and larger contexts are not qualified. Next expand bounded reference/native
+capacity to the complete1025-position workload before scoring. All original failures remain;
 no quality/app/window gate closes.
 
 ## Historical starting point

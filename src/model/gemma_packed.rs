@@ -140,6 +140,16 @@ fn matrix(value: &impl MatrixSource, rows: usize, columns: usize) -> Result<usiz
 fn add_bytes(a: usize, b: usize) -> Result<usize, Error> {
     a.checked_add(b).ok_or(cpu::Error::SizeOverflow.into())
 }
+fn token_history(capacity: usize) -> Result<Vec<u32>, Error> {
+    // Both f32 numerical elements and u32 token IDs occupy four bytes.
+    allocation_bytes(capacity)?;
+    let mut history = Vec::new();
+    history
+        .try_reserve_exact(capacity)
+        .map_err(|_| Error::Allocation)?;
+    history.resize(capacity, 0);
+    Ok(history)
+}
 impl<'a> Model<'a> {
     pub fn new(weights: Weights<'a>) -> Result<Self, Error> {
         Self::with_layout(weights, Layout::witness())
@@ -165,6 +175,22 @@ impl<'a> Model<'a> {
         budget: usize,
     ) -> Result<Session<'_, 'a>, Error> {
         self.session_with_backend_for_chunk(Scalar, chunk_rows, budget)
+    }
+    /// Plan actual context/cache/history and independent per-call scratch.
+    pub fn planned_session_bytes_with_capacity(
+        &self,
+        capacity: usize,
+        chunk_rows: usize,
+    ) -> Result<usize, Error> {
+        self.planned_backend_session_bytes_for_capacity::<Scalar>(capacity, chunk_rows)
+    }
+    pub fn new_session_with_capacity(
+        &self,
+        capacity: usize,
+        chunk_rows: usize,
+        budget: usize,
+    ) -> Result<Session<'_, 'a>, Error> {
+        self.session_with_backend_for_capacity(Scalar, capacity, chunk_rows, budget)
     }
 }
 /// Known backing is supplied only by the two admitted artifact owners. Includes
@@ -369,8 +395,15 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         &self,
         chunk_rows: usize,
     ) -> Result<usize, Error> {
+        self.planned_backend_session_bytes_for_capacity::<B>(self.layout.positions, chunk_rows)
+    }
+    pub(crate) fn planned_backend_session_bytes_for_capacity<B>(
+        &self,
+        capacity: usize,
+        chunk_rows: usize,
+    ) -> Result<usize, Error> {
         let l = &self.layout;
-        let scratch = Scratch::counts(l, chunk_rows)?;
+        let scratch = Scratch::counts(l, capacity, chunk_rows)?;
         let mut stages = 0;
         for g in &l.layers[..l.producers] {
             stages = add_bytes(
@@ -380,7 +413,11 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         }
         let mut bytes = std::mem::size_of::<Session<'_, '_, M, B>>();
         for n in [
-            self.plan.planned_cache_bytes()? - std::mem::size_of::<Vec<WindowKvCache>>(),
+            self.plan.planned_narrowed_cache_bytes(capacity)?
+                - std::mem::size_of::<Vec<WindowKvCache>>(),
+            SharedKvPlan::planned_metadata_bytes(l.layers.len())?
+                - std::mem::size_of::<SharedKvPlan>(),
+            allocation_bytes(capacity)?,
             total_bytes(&scratch)?,
             allocation_bytes(stages)?,
             cpu::product(l.producers, std::mem::size_of::<Staging>())?,
@@ -403,13 +440,29 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         chunk_rows: usize,
         budget: usize,
     ) -> Result<Session<'_, 'a, M, B>, B::Error> {
-        let numerical = self.planned_backend_session_bytes_for_chunk::<B>(chunk_rows)?;
+        self.session_with_backend_for_capacity(
+            operations,
+            self.layout.positions,
+            chunk_rows,
+            budget,
+        )
+    }
+    pub(crate) fn session_with_backend_for_capacity<B: Operations<M>>(
+        &self,
+        operations: B,
+        capacity: usize,
+        chunk_rows: usize,
+        budget: usize,
+    ) -> Result<Session<'_, 'a, M, B>, B::Error> {
+        let numerical =
+            self.planned_backend_session_bytes_for_capacity::<B>(capacity, chunk_rows)?;
         operations.ready()?;
         let backend = operations.memory()?.total()?;
         if budget < add_bytes(add_bytes(self.model_bytes(), numerical)?, backend)? {
             return Err(Error::InvalidConfig("Gemma packed memory budget").into());
         }
         let l = &self.layout;
+        let plan = self.plan.narrowed(capacity)?;
         let mut staging = Vec::new();
         staging
             .try_reserve_exact(l.producers)
@@ -424,11 +477,13 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         let result = Session {
             model: self,
             operations,
+            capacity,
             chunk_rows,
-            caches: self.plan.new_caches()?,
+            caches: plan.new_caches()?,
+            plan,
             staging,
-            scratch: Scratch::new(l, chunk_rows)?,
-            history: [0; MAX_POSITIONS],
+            scratch: Scratch::new(l, capacity, chunk_rows)?,
+            history: token_history(capacity)?,
             committed: 0,
             published_rows: 0,
             #[cfg(test)]
@@ -472,9 +527,15 @@ struct Scratch {
 }
 
 impl Scratch {
-    fn counts(l: &Layout, chunk_rows: usize) -> Result<[usize; 23], Error> {
+    fn counts(l: &Layout, capacity: usize, chunk_rows: usize) -> Result<[usize; 23], Error> {
+        cpu::nonzero(capacity, "Gemma context capacity")?;
         cpu::nonzero(chunk_rows, "Gemma chunk capacity")?;
-        if chunk_rows > l.positions {
+        if capacity > l.positions {
+            return Err(Error::InvalidConfig(
+                "Gemma capacity exceeds executable model positions",
+            ));
+        }
+        if chunk_rows > capacity {
             return Err(Error::InvalidConfig("Gemma packed chunk capacity"));
         }
         let h = cpu::product(chunk_rows, l.hidden)?;
@@ -482,7 +543,7 @@ impl Scratch {
         let kv = cpu::product(chunk_rows, l.max_dim())?;
         let ple = cpu::product(cpu::product(chunk_rows, l.layers.len())?, l.ple)?;
         let ff = cpu::product(chunk_rows, l.max_ff().max(l.ple))?;
-        let scores = cpu::product(cpu::product(l.heads, chunk_rows)?, l.positions)?;
+        let scores = cpu::product(cpu::product(l.heads, chunk_rows)?, capacity)?;
         Ok([
             h,
             h,
@@ -509,7 +570,7 @@ impl Scratch {
             cpu::product(chunk_rows, l.vocab)?,
         ])
     }
-    fn new(l: &Layout, chunk_rows: usize) -> Result<Self, Error> {
+    fn new(l: &Layout, capacity: usize, chunk_rows: usize) -> Result<Self, Error> {
         let [
             h,
             n,
@@ -534,7 +595,7 @@ impl Scratch {
             pr,
             l,
             pub_l,
-        ] = Self::counts(l, chunk_rows)?;
+        ] = Self::counts(l, capacity, chunk_rows)?;
         Ok(Self {
             hidden: zeros(h)?,
             next: zeros(n)?,
@@ -597,11 +658,13 @@ impl Scratch {
 pub struct Session<'model, 'weights, M = Matrix<'weights>, B = Scalar> {
     model: &'model Model<'weights, M>,
     operations: B,
+    capacity: usize,
     chunk_rows: usize,
+    plan: SharedKvPlan,
     caches: Vec<WindowKvCache>,
     staging: Vec<Staging>,
     scratch: Scratch,
-    history: [u32; MAX_POSITIONS],
+    history: Vec<u32>,
     committed: usize,
     published_rows: usize,
     #[cfg(test)]
@@ -612,6 +675,9 @@ impl<M: MatrixSource, B: Operations<M>> Session<'_, '_, M, B> {
     /// Maximum rows admitted per forward; independent of total context positions.
     pub fn chunk_capacity(&self) -> usize {
         self.chunk_rows
+    }
+    pub fn capacity(&self) -> usize {
+        self.capacity
     }
     pub fn tokens(&self) -> &[u32] {
         &self.history[..self.committed]
@@ -626,8 +692,10 @@ impl<M: MatrixSource, B: Operations<M>> Session<'_, '_, M, B> {
             self.operations.memory()?.total()?,
         )?;
         for n in [
-            self.model.plan.allocated_cache_bytes(&self.caches)?
+            self.plan.allocated_cache_bytes(&self.caches)?
                 - std::mem::size_of::<Vec<WindowKvCache>>(),
+            self.plan.allocated_metadata_bytes() - std::mem::size_of::<SharedKvPlan>(),
+            allocation_bytes(self.history.capacity())?,
             total_bytes(&self.scratch.capacities())?,
             cpu::product(self.staging.capacity(), std::mem::size_of::<Staging>())?,
         ] {
@@ -650,7 +718,7 @@ impl<M: MatrixSource, B: Operations<M>> Session<'_, '_, M, B> {
         self.history.fill(0);
         Ok(())
     }
-    /// Append a nonempty chunk within 32 total positions. Failure preserves all
+    /// Append within the admitted context and chunk bounds. Failure preserves all
     /// committed KV/history and the prior public logits; scratch is discardable.
     pub fn forward(&mut self, tokens: &[u32]) -> Result<&[f32], B::Error> {
         forward::run(self, tokens)?;

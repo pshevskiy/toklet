@@ -2,6 +2,8 @@ use super::*;
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 
+mod capacity;
+
 type Snapshot = Vec<(Vec<u32>, Vec<u32>, usize, u64)>;
 fn snapshot(caches: &[WindowKvCache]) -> Snapshot {
     caches

@@ -224,7 +224,7 @@ fn producer_bound_and_actual_staging_capacity_are_admitted() {
 }
 
 #[test]
-fn physical_512_slot_rings_keep_32_position_admission_atomic() {
+fn model_512_window_narrows_to_32_position_admission_atomically() {
     let graph = Graph::new();
     let mut layout = Graph::layout();
     layout.window = 512;
@@ -238,7 +238,9 @@ fn physical_512_slot_rings_keep_32_position_admission_atomic() {
     );
     for (i, cache) in session.caches.iter().enumerate() {
         let (k, v) = cache.committed();
-        let capacity = if i % 5 == 4 { 32 } else { 512 };
+        // Both kinds retain the entire admitted lifetime. The original model
+        // window remains512 in numerical attention; unused physical slots vanish.
+        let capacity = 32;
         let dims = if i % 5 == 4 { 128 } else { 64 };
         assert_eq!(k.len(), capacity * dims);
         assert_eq!(v.len(), k.len());

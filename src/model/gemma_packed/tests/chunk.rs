@@ -33,6 +33,8 @@ fn bounded_chunk_memory_full_prefix_oracle_and_transaction_recovery() {
                 "model_bytes":model.model_bytes(),"budget":budget,"budget_minus_one_rejected":true,
                 "planned_session_bytes":planned,"actual_session_bytes":session.allocated_bytes().unwrap(),
                 "session_header_bytes":std::mem::size_of_val(&session),
+                "route_heap_bytes":session.plan.allocated_metadata_bytes()-std::mem::size_of::<SharedKvPlan>(),
+                "history_bytes":session.history.capacity()*4,
                 "cache_owner_capacity":session.caches.capacity(),
                 "cache_owner_bytes":std::mem::size_of::<WindowKvCache>(),
                 "staging_owner_capacity":session.staging.capacity(),

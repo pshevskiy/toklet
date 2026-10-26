@@ -108,7 +108,7 @@ fn admission_failure_replay_generation_and_source_ownership() {
     let mut smaller = norms
         .new_generation_session(&model, &context, requested)
         .unwrap();
-    assert_eq!(smaller.memory().history_bytes, memory.history_bytes);
+    assert_eq!(smaller.memory().history_bytes, 2 * requested.capacity * 4);
     assert_eq!(smaller.memory().weights_bytes, memory.weights_bytes);
     assert_eq!(smaller.memory().logits_bytes, 2 * 2 * 17 * 4);
     assert!(smaller.memory().scratch_bytes < memory.scratch_bytes);
@@ -124,7 +124,7 @@ fn admission_failure_replay_generation_and_source_ownership() {
         "GEMMA_HYBRID_CONTROL_MEMORY {}",
         serde_json::json!({
         "raw_admitted_bytes":raw_admitted,"model_bytes":model.model_bytes(),
-        "generation_wrapper_bytes":size_of::<hybrid::GenerationSession<'_ ,'_ ,'_ ,'_>>() - size_of::<hybrid::Session<'_ ,'_ ,'_ ,'_>>(),"generation":memory,
+        "generation_wrapper_bytes":hybrid::GenerationSession::planned_wrapper_bytes(options().capacity).unwrap(),"generation":memory,
         "raw_minus_one_rust_allocations":0,"generation_minus_one_rust_allocations":0,
         "smaller_request_capacity":5,"physical_capacity":32,
         "physical_chunk_rows":options().prefill_chunk_size,"smaller_chunk_rows":2})

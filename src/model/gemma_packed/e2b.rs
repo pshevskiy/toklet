@@ -169,14 +169,48 @@ mod tests {
             assert_eq!(layer.theta, if full { 1e6 } else { 1e4 });
             assert_eq!(layer.intermediate, if i < 15 { 6144 } else { 12288 });
         }
-        let counts = Scratch::counts(&layout, MAX_POSITIONS).unwrap();
+        let counts = Scratch::counts(&layout, MAX_POSITIONS, MAX_POSITIONS).unwrap();
         assert_eq!(counts[4], 32 * 8 * 512);
         assert_eq!(counts[16], 32 * 12288);
         assert_eq!(counts[21], 32 * 262144);
         assert_eq!(counts[22], 32 * 262144);
         println!(
-            "Gemma E2B bounded scratch: {} bytes",
-            total_bytes(&counts).unwrap()
+            "GEMMA_SESSION_CAPACITY_E2B_SCRATCH {}",
+            serde_json::json!({
+            "positions":32,"chunk_rows":32,"declared_positions":plan.declared_total_positions(),
+            "scratch_elements":counts,"scratch_bytes":total_bytes(&counts).unwrap()})
         );
+        let geometry: Vec<_> = layout
+            .layers
+            .iter()
+            .map(|layer| LayerKvGeometry {
+                kind: layer.kind,
+                heads: 1,
+                head_dim: layer.head_dim,
+            })
+            .collect();
+        let original = SharedKvPlan::new(&geometry, 20, 512, 32, 512).unwrap();
+        for capacity in [1, 5, 32] {
+            let narrowed = original.narrowed(capacity).unwrap();
+            let caches = narrowed.new_caches().unwrap();
+            let payload: usize = caches
+                .iter()
+                .map(|cache| {
+                    let (k, v) = cache.committed();
+                    (k.len() + v.len()) * 4
+                })
+                .sum();
+            assert_eq!(payload, capacity * 36864);
+            assert_eq!(
+                narrowed.allocated_cache_bytes(&caches).unwrap(),
+                original.planned_narrowed_cache_bytes(capacity).unwrap()
+            );
+            println!(
+                "GEMMA_SESSION_CAPACITY_E2B_ALLOCATION {}",
+                serde_json::json!({
+                "capacity":capacity,"cache_payload_bytes":payload,"producer_count":caches.len(),
+                "whole_model_executed":false,"real_numerical_graph_qualified":false})
+            );
+        }
     }
 }

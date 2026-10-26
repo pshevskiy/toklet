@@ -9,7 +9,7 @@ use crate::session::{self, InferenceSession, Memory, Options};
 
 pub struct GenerationSession<'model, 'weights, M = Matrix<'weights>, B = Scalar> {
     inner: Session<'model, 'weights, M, B>,
-    history: [u32; MAX_POSITIONS],
+    history: Vec<u32>,
     len: usize,
     capacity: usize,
     chunk: usize,
@@ -35,7 +35,7 @@ pub(crate) fn validate_options<M: MatrixSource>(
 ) -> Result<(), session::Error> {
     if options.capacity == 0 || options.capacity > model.layout.positions {
         return Err(session::Error::InvalidOptions(
-            "Gemma capacity must be within 1..=32",
+            "Gemma capacity must fit executable model positions",
         ));
     }
     if options.prefill_chunk_size == 0 || options.prefill_chunk_size > options.capacity {
@@ -61,19 +61,27 @@ pub(crate) fn validate_options<M: MatrixSource>(
 impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
     GenerationSession<'model, 'weights, M, B>
 {
+    pub(crate) fn planned_wrapper_bytes(capacity: usize) -> Result<usize, Error> {
+        add_bytes(
+            std::mem::size_of::<Self>() - std::mem::size_of::<Session<'_, '_, M, B>>(),
+            allocation_bytes(capacity)?,
+        )
+    }
     pub(crate) fn with_backend(
         model: &'model Model<'weights, M>,
         operations: B,
         options: Options,
     ) -> Result<Self, session::Error> {
         validate_options(model, options)?;
-        let extra = std::mem::size_of::<Self>() - std::mem::size_of::<Session<'_, '_, M, B>>();
+        let extra = Self::planned_wrapper_bytes(options.capacity)?;
         let required = add_bytes(
             add_bytes(
                 add_bytes(
                     model.model_bytes(),
-                    model
-                        .planned_backend_session_bytes_for_chunk::<B>(options.prefill_chunk_size)?,
+                    model.planned_backend_session_bytes_for_capacity::<B>(
+                        options.capacity,
+                        options.prefill_chunk_size,
+                    )?,
                 )?,
                 operations.memory()?.total()?,
             )?,
@@ -86,14 +94,16 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
             });
         }
         let inner = model
-            .session_with_backend_for_chunk(
+            .session_with_backend_for_capacity(
                 operations,
+                options.capacity,
                 options.prefill_chunk_size,
                 options.memory_limit_bytes - extra,
             )
             .map_err(Into::into)?;
         let backend = inner.operations.memory()?;
         let raw_bytes = inner.allocated_bytes()?;
+        let history_storage = token_history(options.capacity)?;
         let mut kv = 0;
         for cache in &inner.caches {
             kv = add_bytes(
@@ -112,8 +122,12 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
             total_bytes(&inner.scratch.capacities())? - logits,
             backend.scratch_bytes,
         )?;
-        let history = 2 * std::mem::size_of::<[u32; MAX_POSITIONS]>();
-        let session_bytes = add_bytes(raw_bytes, extra)?;
+        let history = total_bytes(&[inner.history.capacity(), history_storage.capacity()])?;
+        let wrapper = add_bytes(
+            std::mem::size_of::<Self>() - std::mem::size_of::<Session<'_, '_, M, B>>(),
+            allocation_bytes(history_storage.capacity())?,
+        )?;
+        let session_bytes = add_bytes(raw_bytes, wrapper)?;
         let numerical = add_bytes(add_bytes(kv, scratch)?, add_bytes(logits, history)?)?;
         let metadata = session_bytes
             .checked_sub(add_bytes(numerical, backend.metadata_allowance_bytes)?)
@@ -148,7 +162,7 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
         }
         Ok(Self {
             inner,
-            history: [0; MAX_POSITIONS],
+            history: history_storage,
             len: 0,
             capacity: options.capacity,
             chunk: options.prefill_chunk_size,

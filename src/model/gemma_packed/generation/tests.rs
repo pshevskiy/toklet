@@ -7,6 +7,8 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 
+mod capacity;
+
 fn options() -> Options {
     Options {
         capacity: 32,
@@ -53,7 +55,8 @@ fn admission_categories_actual_capacities_and_smaller_request_limits() {
         let session = model.new_generation_session(options()).unwrap();
         let memory = session.memory();
         let extra = std::mem::size_of::<GenerationSession<'_, '_>>()
-            - std::mem::size_of::<Session<'_, '_>>();
+            - std::mem::size_of::<Session<'_, '_>>()
+            + session.history.capacity() * 4;
         assert_eq!(
             memory.admitted_bytes,
             model.model_bytes() + session.inner.allocated_bytes().unwrap() + extra
@@ -87,7 +90,8 @@ fn admission_categories_actual_capacities_and_smaller_request_limits() {
         smaller.prefill_chunk_size = 2;
         let mut small = model.new_generation_session(smaller).unwrap();
         assert_eq!(small.inner.chunk_capacity(), 2);
-        assert_eq!(small.memory().history_bytes, memory.history_bytes);
+        assert_eq!(small.memory().history_bytes, 2 * smaller.capacity * 4);
+        assert_eq!(small.inner.capacity(), smaller.capacity);
         assert_eq!(small.memory().weights_bytes, memory.weights_bytes);
         assert_eq!(small.memory().logits_bytes, 2 * 2 * 17 * 4);
         assert!(small.memory().scratch_bytes < memory.scratch_bytes);

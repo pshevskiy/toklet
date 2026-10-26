@@ -234,11 +234,11 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     let count = tokens.len();
     let offset = session.committed;
     let after = offset.checked_add(count).ok_or(cpu::Error::SizeOverflow)?;
-    if after > l.positions {
+    if after > session.capacity {
         return Err(Error::Capacity {
             offset,
             tokens: count,
-            limit: l.positions,
+            limit: session.capacity,
         }
         .into());
     }
@@ -323,7 +323,7 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
             index,
             model,
             s,
-            model.plan.view(index, &session.caches, &frames)?,
+            session.plan.view(index, &session.caches, &frames)?,
             count,
             offset,
         )?;
@@ -361,7 +361,7 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     }
     // No fallible operation follows publication: every producer is validated
     // before any cache writes, then history and public logits advance together.
-    model.plan.commit(&mut session.caches, &frames)?;
+    session.plan.commit(&mut session.caches, &frames)?;
     session.history[offset..after].copy_from_slice(tokens);
     session.committed = after;
     session.published_rows = count;

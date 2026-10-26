@@ -25,7 +25,7 @@ def records(raw):
     return result
 
 
-def verify(raw):
+def verify(raw, *, owned_context=False):
     data, binary = fixture.fixture(ROOT / 'tests/fixtures/gemma-packed-graph-v1')
     events = iter(records(raw)); summaries = []; compared = rows_checked = 0; maximum = 0.
     def take(label):
@@ -34,10 +34,12 @@ def verify(raw):
         return item[1]
     for chunk in (1, 3, 8, 32):
         m = take('MEMORY'); fixture.same(m['chunk_rows'], chunk); fixture.same(m['context_positions'], 32)
-        fixture.same(set(m), {'chunk_rows', 'context_positions', 'model_bytes', 'budget', 'budget_minus_one_rejected',
+        fields = {'chunk_rows', 'context_positions', 'model_bytes', 'budget', 'budget_minus_one_rejected',
                              'planned_session_bytes', 'actual_session_bytes', 'session_header_bytes',
                              'cache_owner_capacity', 'cache_owner_bytes', 'staging_owner_capacity', 'staging_owner_bytes',
-                             'cache_payload_bytes', 'staging_payload_bytes', 'scratch_elements', 'budget_minus_one_allocations'})
+                             'cache_payload_bytes', 'staging_payload_bytes', 'scratch_elements', 'budget_minus_one_allocations'}
+        if owned_context: fields |= {'route_heap_bytes', 'history_bytes'}
+        fixture.same(set(m), fields)
         expected = ([chunk * 64] * 4 + [chunk * 2 * 128] * 3 + [chunk * 128] * 2
                     + [chunk * 4 * 64] * 4 + [chunk * 64] + [chunk * 64] * 2
                     + [chunk * 128] * 3 + [2 * chunk * 32] * 2 + [chunk * 17] * 2)
@@ -50,6 +52,10 @@ def verify(raw):
         total = (m['session_header_bytes'] + m['cache_owner_capacity'] * m['cache_owner_bytes']
                  + m['staging_owner_capacity'] * m['staging_owner_bytes'] + m['cache_payload_bytes']
                  + m['staging_payload_bytes'] + 4 * sum(expected))
+        if owned_context:
+            fixture.same(m['history_bytes'], 32 * 4)
+            fixture.require(type(m['route_heap_bytes']) is int and 0 < m['route_heap_bytes'] <= 4096, 'bounded owned route metadata required')
+            total += m['route_heap_bytes'] + m['history_bytes']
         fixture.same(m['planned_session_bytes'], total); fixture.same(m['actual_session_bytes'], total)
         fixture.same(m['budget'], m['model_bytes'] + total)
         fixture.same(m['budget_minus_one_rejected'], True); fixture.same(m['budget_minus_one_allocations'], 0)
@@ -79,5 +85,5 @@ def verify(raw):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(); parser.add_argument('capture', type=Path); args = parser.parse_args()
-    print(json.dumps(verify(fixture.read(args.capture, 1024**2))))
+    parser = argparse.ArgumentParser(); parser.add_argument('capture', type=Path); parser.add_argument('--owned-context', action='store_true'); args = parser.parse_args()
+    print(json.dumps(verify(fixture.read(args.capture, 1024**2), owned_context=args.owned_context)))

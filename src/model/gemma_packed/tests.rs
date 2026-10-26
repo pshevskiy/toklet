@@ -81,7 +81,7 @@ fn unheads(values: &[f32], heads: usize, count: usize, dims: usize) -> Vec<f32> 
         .collect()
 }
 pub(super) fn pointers<M: MatrixSource, B: Operations<M>>(s: &Session<'_, '_, M, B>) -> Vec<usize> {
-    let mut result = vec![s.caches.as_ptr() as usize];
+    let mut result = vec![s.caches.as_ptr() as usize, s.history.as_ptr() as usize];
     result.extend(s.caches.iter().flat_map(|cache| {
         let (k, v) = cache.committed();
         [k.as_ptr() as usize, v.as_ptr() as usize]
@@ -464,6 +464,7 @@ fn packed_profile_and_all_model_terms_are_admitted_before_session() {
     );
 }
 
+mod capacity;
 mod chunk;
 mod producers;
 

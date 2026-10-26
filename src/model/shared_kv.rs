@@ -22,6 +22,7 @@ pub struct LayerKvGeometry {
     pub head_dim: usize,
 }
 
+#[derive(Clone, Copy)]
 struct Route {
     geometry: LayerKvGeometry,
     producer: usize,
@@ -147,20 +148,61 @@ impl SharedKvPlan {
     /// Cache Vec header, occupied owner objects and their two FP32 buffers.
     /// Route metadata, new-token staging and numerical scratch are separate.
     pub fn planned_cache_bytes(&self) -> Result<usize, Error> {
+        self.cache_bytes(self.window, self.global_capacity, self.max_positions)
+    }
+
+    fn cache_bytes(&self, window: usize, global: usize, positions: usize) -> Result<usize, Error> {
         let mut total = std::mem::size_of::<Vec<WindowKvCache>>();
         for producer in 0..self.producers {
             let geometry = self.routes[producer].geometry;
-            let (capacity, window) = self.storage(producer);
+            let (capacity, retention) = match geometry.kind {
+                KvKind::Sliding => (window, Some(window)),
+                KvKind::Full => (global, None),
+            };
             let bytes = WindowKvCache::planned_bytes(
                 geometry.heads,
                 geometry.head_dim,
                 capacity,
-                self.max_positions,
-                window,
+                positions,
+                retention,
             )?;
             total = total.checked_add(bytes).ok_or(cpu::Error::SizeOverflow)?;
         }
         Ok(total)
+    }
+
+    /// Nonallocating producer-cache admission for a shorter complete lifetime.
+    /// The global capacity, not physical-ring max_positions, bounds this request.
+    pub(crate) fn planned_narrowed_cache_bytes(&self, positions: usize) -> Result<usize, Error> {
+        nonzero(positions, "KV narrowed positions")?;
+        if positions > self.global_capacity {
+            return Err(Error::InvalidConfig("KV narrowed capacity exceeds plan"));
+        }
+        self.cache_bytes(self.window.min(positions), positions, positions)
+    }
+
+    /// Copy resolved routes once after admission. For C < window every query in
+    /// the admitted lifetime <= C still sees its entire causal prefix. Numerical
+    /// callers keep the original model window; physical local retention is min(W,C).
+    pub(crate) fn narrowed(&self, positions: usize) -> Result<Self, Error> {
+        self.planned_narrowed_cache_bytes(positions)?;
+        let mut routes = Vec::new();
+        routes
+            .try_reserve_exact(self.routes.len())
+            .map_err(|_| Error::Allocation)?;
+        routes.extend_from_slice(&self.routes);
+        let result = Self {
+            routes,
+            producers: self.producers,
+            window: self.window.min(positions),
+            global_capacity: positions,
+            max_positions: positions,
+        };
+        result
+            .allocated_metadata_bytes()
+            .checked_add(result.planned_cache_bytes()?)
+            .ok_or(cpu::Error::SizeOverflow)?;
+        Ok(result)
     }
 
     /// Allocate only producer caches once, outside decode. The caller must admit

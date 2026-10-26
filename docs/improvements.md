@@ -5192,3 +5192,63 @@ cache/history and reference chunks, preserving the full quality workload and
 broader E1–E6/H1–H4/app/device objective. See the
 [mechanism and evidence](gemma-chunk-scratch.md) and
 [public result](../benchmarks/results/2026-10-26-gemma-chunk-scratch-v1.json).
+
+## 2026-10-26 — Actual Gemma session context, KV and history capacity
+
+Raw scalar construction now admits independent context C and per-call chunk
+bounds before allocation. Each session owns a narrowed resolved KV plan:
+full producers retain C, local producers min(model_window,C), and consumers keep
+the original shared routes. Numerical attention retains the original model
+window and absolute positions. Raw and generation histories each allocate C
+u32 slots. Aggregate planning and actual accounting include both history heaps,
+route heap storage, owner objects, caches, staging, scratch and wrapper metadata;
+hybrid preadmission uses the same calculation. GPU pools remain32 and fully
+charged. The numerical executable ceiling stays32.
+
+Astra's review corrected an old512-slot expectation and required explicit
+attention-segment and query-visible-range witnesses. The independent pre-target
+source fixture and reconstruction freeze19 schedules at C1/2/3/4/5/17/32, with
+35 consumers,15 producers, two KV heads and distinct dyadic data. Native wide512
+and narrowed plans match6860 logical/segmented views and723184 exact K/V words.
+The reader reconstructs segment key positions/counts/head strides and per-head
+content hashes, rather than comparing unused physical storage. Foreign/stale
+proposals and overflow preserve committed prefixes.
+
+Tiny raw execution passes98 emitted records/7956 comparisons against both
+existing frozen graph contracts, including the W4 boundary. Maximum gate fraction
+is0.017896043200363743, with unchanged tolerances/arithmetic. Exact/minus-one
+budgets reject before allocations; invalid capacities, steady forwards, reset,
+exact late failure and retry check allocation-free behavior and stable addresses.
+Seven generation capacities check both history allocations, frozen greedy
+selection, final pending token, failure at C-1 committed positions, retry/replay
+and restored frozen prompts. C1 correctly rejects one input plus one requested
+output; its manually pending input is not claimed as a sampled token. Sampled
+full replay checks native state consistency, not independent changed-token logits.
+
+Actual instrumented tiny raw session bytes at C1/chunk1, C3/chunk3, C5/chunk3,
+C17/chunk3 and C32/chunk3 are15948/45540/48204/61116/77256. These exclude
+immutable model/caller ownership and are not release E2B footprints. Real E2B
+cache geometry alone allocates36864/184320/1179648 payload bytes at C1/5/32;
+no real weights or numerical graph execute in that witness. All23 new saved-output
+controls, six legacy chunk controls and nine portable hybrid-reader methods pass.
+
+Formatting, default/Metal strict all-target Clippy,360 default CPU tests(16
+ignored),18 scoped Metal tests(3 ignored) and the explicit synthetic GPU control
+pass. The latter checks35 matrices/105 unchanged buffer owners and two
+pre-command failures; in-flight failure remains unqualified. KV/raw/generation/
+E2B-cache physical peaks are3440976/4866408/4555112/8143232 bytes; chunk/GPU
+regressions peak4407656/14156352. Their RSS peaks remain below36 MiB, all within
+the512 MiB diagnostic policy. All26 current owned groups close; six pre-target
+and four preserved failed-attempt groups are separately rechecked absent. The
+initial strict-Clippy loop warning is corrected without changing gates. Protected
+release binaries remain unchanged.
+
+This closes the actual context/cache/history ownership prerequisite, without
+qualifying real whole32, larger511–1025 boundaries, unchanged full quality,
+phone fit, app eligibility or the selected model's full shared window. No BF16
+captures are rerun; all eleven new and historical discrepancies remain unwaived.
+Next expand bounded reference/native capacity to the full1025-position demand,
+resolve required precision/quality and whole-process fit, then qualify useful
+partial app/device delivery and progressive full-window support while continuing
+the broader E1–E6/H1–H4 plan. See the [mechanism](gemma-session-capacity.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-session-capacity-v1.json).

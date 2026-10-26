@@ -271,11 +271,15 @@ impl<'weights> Norms<'weights> {
             .map_err(session::Error::from)?;
         graph::generation::validate_options(model, options)?;
         let raw = model
-            .planned_backend_session_bytes_for_chunk::<Backend<'a, 'weights, 'context>>(
+            .planned_backend_session_bytes_for_capacity::<Backend<'a, 'weights, 'context>>(
+                options.capacity,
                 options.prefill_chunk_size,
             )?;
-        let extra = size_of::<GenerationSession<'model, 'a, 'weights, 'context>>()
-            - size_of::<Session<'model, 'a, 'weights, 'context>>();
+        let extra = GenerationSession::<'model, 'a, 'weights, 'context>::planned_wrapper_bytes(
+            options.capacity,
+        )
+        .map_err(Error::from)
+        .map_err(session::Error::from)?;
         let required = add(model.model_bytes(), add(raw, extra).map_err(Error::from)?)
             .map_err(Error::from)
             .map_err(session::Error::from)?;

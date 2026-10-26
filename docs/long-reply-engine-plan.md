@@ -59,8 +59,12 @@ separated before expanding the current diagnostic; preserve complete requests.
 The [native host chunk-scratch prerequisite](gemma-chunk-scratch.md) now sizes
 activations, producer proposals and private/published logits by per-call rows;
 attention scratch scales with chunk rows times current context. Tiny32-prefix
-and synthetic GPU admission checks pass. Total context/cache/history and GPU
-pool limits remain unchanged; this does not close L3–L6 or real full-window support.
+and synthetic GPU admission checks pass. The
+[session-capacity mechanism](gemma-session-capacity.md) now admits actual
+context/cache/history/routes at C1–32 independently of chunk rows. Its tiny
+numerical/state, two-head logical/segmented KV and exact-budget checks pass.
+The executable ceiling and GPU pools remain32, and real whole32 remains
+unqualified; this does not close L3–L6 or real full-window support.
 
 | Task | Mechanism and acceptance | Status |
 | --- | --- | --- |

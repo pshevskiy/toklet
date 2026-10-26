@@ -5,8 +5,8 @@ import json
 import check_gemma_chunk_scratch as checker
 
 
-def controls(raw):
-    checker.verify(raw); results = []
+def controls(raw, *, owned_context=False):
+    checker.verify(raw, owned_context=owned_context); results = []
     for mode, error in [('value', 'independent chunk numerical gate failed'),
                         ('scratch', 'independent chunk scratch shape differs'),
                         ('missing_recovery', 'complete ordered chunk records required'),
@@ -31,7 +31,7 @@ def controls(raw):
             changed = True; break
         checker.fixture.require(changed, 'coherent chunk control mutation required')
         mutated = ('\n'.join(lines) + '\n').encode()
-        try: checker.verify(mutated)
+        try: checker.verify(mutated, owned_context=owned_context)
         except ValueError as actual:
             checker.fixture.same(str(actual), error)
             results.append(dict(control=mode, rejected=True, intended_error=error))
@@ -40,5 +40,5 @@ def controls(raw):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(); parser.add_argument('capture', type=Path); args = parser.parse_args()
-    print(json.dumps(controls(checker.fixture.read(args.capture, 1024**2))))
+    parser = argparse.ArgumentParser(); parser.add_argument('capture', type=Path); parser.add_argument('--owned-context', action='store_true'); args = parser.parse_args()
+    print(json.dumps(controls(checker.fixture.read(args.capture, 1024**2), owned_context=args.owned_context)))
