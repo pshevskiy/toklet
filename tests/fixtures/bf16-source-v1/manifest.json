@@ -1,0 +1,58 @@
+{
+  "format": "toklet-bf16-source-v1",
+  "oracle": "Explicit IEEE bit words expanded independently with stdlib struct, not NumPy or target imports.",
+  "assets": {
+    "source.bin": {
+      "bytes": 40,
+      "sha256": "cd1f0d6dd1061d41d1d6f53109fb850962398bacc97332e00ae8cad91c1f6fc3"
+    },
+    "finite.f32le": {
+      "bytes": 48,
+      "sha256": "8313445c8a666035c464caebf7e25d22fd66e8f52654fc7d583cbf04872a30a3"
+    }
+  },
+  "finite_words": [
+    0,
+    32768,
+    1,
+    127,
+    128,
+    16256,
+    49024,
+    32639,
+    65407,
+    16457,
+    16128,
+    32769
+  ],
+  "views": {
+    "finite": {
+      "offset": 8,
+      "rows": 4,
+      "columns": 3
+    },
+    "scalar": {
+      "offset": 32,
+      "rows": 1,
+      "columns": 1
+    },
+    "nonfinite": {
+      "offset": 34,
+      "rows": 1,
+      "columns": 3
+    }
+  },
+  "nonfinite_words": [
+    32640,
+    65408,
+    32705
+  ],
+  "gather_ids": [
+    3,
+    0,
+    3,
+    1
+  ],
+  "official_checkpoint": false,
+  "numerical_engine_executed": false
+}

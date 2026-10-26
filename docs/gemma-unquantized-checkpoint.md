@@ -87,7 +87,8 @@ describe the earlier preparation capture. This separate qualification supplies
 subsequent payload evidence for the exact same baseline identity, without
 changing any workload ID, threshold or held-out selection.
 
-Next qualify positive official row/layout binding, the chosen unquantized
+The [bounded BF16 reference owner](bf16-source.md) now has separate fixture,
+conversion and greater-than4GiB offset evidence. Next qualify positive official row/layout binding, the chosen unquantized
 reference arithmetic and short independent graph agreement, then measure
 whole-process fit. Selected BF16 text storage alone exceeds6GiB, so a fully
 resident unquantized text model is not admitted by the Mac policy. Bounded file

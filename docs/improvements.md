@@ -4998,3 +4998,50 @@ expansion. Historical precision, resident scheduling, full model windows,
 app/phone and E1–E6/H1–H4 remain open. See
 [acquisition contract](gemma-unquantized-checkpoint.md) and
 [public evidence](../benchmarks/results/2026-10-26-gemma-unquantized-checkpoint-v1.json).
+
+
+## 26 October 2026 — bounded BF16 reference-file owner
+
+**Hypothesis:** one authenticated file owner with bounded row views can supply
+the unquantized reference's weights without mapping or expanding whole tensors.
+
+The new Python reference owner authenticates exact size/SHA through one retained
+regular descriptor and preserves its original FD/path identity. Before/after
+checks, short-read/IO poisoning and changed/restored-source controls prevent
+reusing a newer source baseline. Argument rejection and cancellation preserve
+valid immutable weights. Close is idempotent and retains primary exceptions.
+The bounded, domain-separated read chain commits actual returned bytes only
+after endpoint/deadline checks; it is not a per-row proof against the whole hash.
+
+Concrete BF16 row views accept scalar/narrow vectors and cap contiguous/gather
+requests at128 aggregate rows. Raw tile cap is3145728 bytes; gather can hold both
+its bytearray and immutable result. Conversion/runtime/caller-retained tiles
+are separate charges. The official adapter binds exact source/layout identity
+and selected tensor name/shape/offset; only its rejection path is checked so far.
+These IO bounds do not become product context/output limits.
+
+Existing BF16-to-FP32 conversion is reused without another rounding recipe.
+Thirteen stdlib ownership tests pass. Three cold capture versions retain37 exact
+FP32 comparisons across full/split/gather/scalar schedules, with explicit dtype/
+shape checks, signed zeros/subnormals, separate+Inf/−Inf/NaN rejection and
+conversion-end cancellation. Runtime bytes and actual module/native origins
+are admitted. MLX/text files are present in the shared inventory but do not
+execute. Final cold physical peak289637192/RSS325877760 fits512MiB.
+
+An independent sparse-file recipe authenticates4294967360 logical bytes with
+20480 allocated bytes, then compares four reads/30 bytes at offset4294967304.
+Physical29639376/RSS34144256 fits128MiB. This qualifies offset handling beyond
+4GiB, not official weights or model fit. Unchanged owner/test sources justify
+reusing the original ownership/sparse checks; the two superseded witnesses are
+verified against exact archived copies. All eight groups close. Core Rust/
+shaders/existing tests/examples and protected release binaries remain unchanged.
+Astra accepted code, actual captures, source continuity and publication scope.
+
+**Decision:** retain this bounded reference mechanism. The separately committed
+official acquisition verifies the full baseline file, but positive real-row
+binding, reference arithmetic/whole-process fit and all numerical/quality gates
+remain open. Next use independently frozen real rows before reference composition
+and full1025-position quality execution. Historical precision, resident/context/
+app/phone and E1–E6/H1–H4 scope remain open. See
+[ownership contract](bf16-source.md), [fixture](../tests/fixtures/bf16-source-v1/README.md)
+and [public evidence](../benchmarks/results/2026-10-26-bf16-source-v1.json).

@@ -32,7 +32,9 @@ replay. Its full 1025-position demand is retained despite the current 32-positio
 diagnostic. The [official header/layout](docs/gemma-unquantized-layout.md) now
 checks all2011 descriptors and the selected/excluded text geometry. The
 [complete official acquisition](docs/gemma-unquantized-checkpoint.md) now verifies
-the pinned full file/header. Reference arithmetic/fit and quality remain open. Admit the
+the pinned full file/header. The [bounded BF16 reference owner](docs/bf16-source.md)
+passes ownership, exact conversion and greater-than4GiB offset checks. Positive
+official-row binding, reference arithmetic/fit and quality remain open. Admit the
 unquantized reference and expand bounded numerical context
 before scoring; all original failures remain. No quality/app/window gate closes.
 
