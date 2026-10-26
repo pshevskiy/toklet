@@ -25,8 +25,10 @@ The [official unquantized header/layout](gemma-unquantized-layout.md) now verifi
 all2011 descriptors and the540 selected/60 unused text tensors. The
 [complete official acquisition](gemma-unquantized-checkpoint.md) now authenticates
 the full file/header. The [bounded BF16 file owner](bf16-source.md) now passes
-fixture ownership, exact conversion and greater-than4GiB offset checks. Positive
-official row/layout binding, reference execution/fit and quality remain open. Admit the
+fixture ownership, exact conversion and greater-than4GiB offset checks. The
+[independent original BF16 row/scalar references](gemma-bf16-rows-oracle.md) now
+pass 541 cases, all 262 vector lineages and coherent corruption controls. Positive
+target row/layout binding, reference execution/fit and quality remain open. Admit the
 unquantized reference and decouple chunk scratch from context capacity
 before executing its full 1025-position demand. Held-out/source quality and
 remaining BF16/GPU/rotary discrepancies stay open; no workload or gate is reduced.

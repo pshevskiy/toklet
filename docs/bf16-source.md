@@ -83,7 +83,8 @@ and protected release binaries are unchanged.
 See the [small fixture](../tests/fixtures/bf16-source-v1/README.md) and
 [public evidence](../benchmarks/results/2026-10-26-bf16-source-v1.json).
 The separately completed official-payload acquisition authenticates the baseline
-file. Next exercise the positive layout-bound row path against independently
-frozen real rows, then compose and qualify reference
+file. The [independent real-row/scalar oracle](gemma-bf16-rows-oracle.md) now
+freezes 541 cases and complete selected-vector lineage. Next exercise the
+positive layout-bound target row path against these references, then compose and qualify reference
 arithmetic and whole-process memory. The full1025-position quality suite,
 historical precision gates and model-driven app/context delivery remain open.

@@ -24,7 +24,9 @@ weight loading. The [complete official acquisition](gemma-unquantized-checkpoint
 now authenticates the full file/header in the Mac cache. The
 [bounded BF16 reference owner](bf16-source.md) qualifies ownership, exact
 conversion and greater-than4GiB offsets on fixtures. Next qualify positive
-official row/layout binding and admit the unquantized
+official row/layout binding against the independently frozen
+[real BF16 row/scalar references](gemma-bf16-rows-oracle.md), whose 541 cases,
+complete selected-vector lineage and corruption controls now pass. Admit the unquantized
 reference and separate chunk scratch from numerical
 context capacity, then collect unchanged quality gates and continue resident
 scheduling/progressive model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid

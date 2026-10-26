@@ -5045,3 +5045,31 @@ and full1025-position quality execution. Historical precision, resident/context/
 app/phone and E1–E6/H1–H4 scope remain open. See
 [ownership contract](bf16-source.md), [fixture](../tests/fixtures/bf16-source-v1/README.md)
 and [public evidence](../benchmarks/results/2026-10-26-bf16-source-v1.json).
+## 2026-10-26 — Independent original BF16 row and projection references
+
+The stdlib producer and separate checker freeze real official Gemma BF16 values
+before target-reader trials. Fixed header/inventory geometry checks all 540
+selected tensors and 60 unused shared-KV consumers. Four sampled rows per matrix,
+all 262 complete vectors and a maximum 128-by-12288 tile produce 541 cases and
+4683043 exact FP32 values. All selected candidate vector bytes match their prior
+component hashes and original BF16 source. Two full matrices with dyadic inputs
+have independently replayed scalar FP64 fsum/ordered projection references.
+Existing FP32 gates remain; a separate strict FP64 gate is frozen before targets.
+
+Eleven offline ownership/bit/geometry/failure methods and thirteen coherent
+captured-data controls pass; each control rejects its intended error after
+updating applicable binary hashes. Source descriptors are authenticated in full,
+retained and guarded. Candidate bytes and attempt descriptors precede equality
+gates; independent cleanup closes both sources while preserving primary errors.
+Raw arrays/excerpts and partial structured diagnostics remain retained. The
+capture, replay and control workers peak at 92046128, 141067032 and 264324080
+physical bytes; maximum RSS is 425066496, below the 512 MiB diagnostic policy.
+All seven owned groups close. Core Rust/shaders and protected binaries are unchanged.
+
+This is reference preparation, with no positive target-adapter, whole-graph,
+upstream BF16, model-fit, quality, performance, app or full-window qualification.
+Next compare the concrete official row adapter, compose unquantized reference
+execution through existing operators, and expand context for the complete quality
+workload. Historical precision and wider E1–E6/H1–H4 requirements remain open.
+See the [reference record](gemma-bf16-rows-oracle.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-bf16-rows-oracle-v1.json).
