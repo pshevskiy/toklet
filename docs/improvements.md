@@ -5309,3 +5309,45 @@ and native progressive context. Preserve the full1025-position real quality
 workload and broader E1–E6/H1–H4 scope. See the
 [reference record](gemma-long-witness.md) and
 [public evidence](../benchmarks/results/2026-10-27-gemma-long-witness-v1.json).
+
+## 2026-10-27 — Qualified faster reference attention before cached composition
+
+Measured scalar collection cost motivated replacing only reference QK and
+probability–V reductions with bounded FP64 matrix products. Scalar max/exp/fsum
+softmax and explicit FP32 stage cuts remain. Queries tile by eight, with absolute
+causal/local coverage checked before work. Immutable weights stay outside this
+operator; the new batch graph preserves other arithmetic. The historical scalar
+batch and long witness remain unchanged. Numerical inputs and every computed
+score, including masked columns, must remain finite: this explicit stricter
+domain is covered by rejection tests. No Rust or Metal kernel changes.
+
+Before candidate implementation, two cold scalar preparations freeze eight
+cases/96 complete arrays. Independent recipe/sequential-dot replay checks932968
+values and seven coherent controls. A compact fixture preserves all48 complete
+output arrays and source offsets. New offline checks total14 methods. Independent
+readers compare48 standalone arrays/932968 values, two identical tiny1025
+captures of360 states/36350600 values each, and2852 real four-token states/
+34467840 values. All matching-contract gates pass;111608 masked probabilities
+are exactly zero, and all4100 tiny/16 real raw argmax positions agree. The eleven
+prior real cross-precision failures retain exactly their old indices. Original
+BF16 source audit remains38182 reads/18236693062 bytes. Ten coherent reader
+controls reject intended numerical/profile/mask/audit/timing discrepancies.
+
+Two matched M1 Pro reference-operation runs use three warmups and ten samples,
+with paired alternating order and reversed initial order on repeat. Global
+D512/Q9/K1025 median scalar times11.537/11.594s become0.023035/0.022857s;
+trimmed localW512/D256/Q5/K516 times1.624/1.629s become0.006171/0.006278s.
+Both median and observed-range gates pass within and across runs. These CPU
+Python/BLAS reference measurements do not establish engine performance. All
+measured workers fit512MiB: maximum physical299303800 bytes, RSS399048704.
+AC power remains attached; no recorded thermal/performance warning is reported,
+while CPU power status is unavailable. All22 current and nine pre-target owned
+groups close. Astra accepts retaining this scoped reduction experiment.
+
+Native capacity remains32. Astra confirms the next native scalar tiny C<=1025
+task can use existing full-sequence and independent KV expectations directly;
+a second cached Python graph is not a prerequisite. Real whole32/1025-position
+execution, unchanged precision/quality gates, model/device fit,
+app eligibility and full selected-model shared windows remain open. See the
+[method and limits](gemma-reference-attention.md) and
+[public evidence](../benchmarks/results/2026-10-27-gemma-reference-attention-v1.json).

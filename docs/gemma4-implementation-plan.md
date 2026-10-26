@@ -43,8 +43,11 @@ ceiling remains32 and real whole32 is unqualified. The
 [full-sequence tiny1025 oracle](gemma-long-witness.md) now passes two cold
 captures, frozen-prefix/causal replay, selected scalar boundaries and controls
 before cached/native implementation. Its W4 scope does not qualify real E2B.
-Next qualify practical FP64 matrix-dot reference attention under the original
-gates, then cached reference/native capacity and the full1025-position demand. Held-out/source quality and
+The [FP64 matrix-dot reference attention](gemma-reference-attention.md) now passes
+the original state gates and two matched reference-operation timing runs. Next
+qualify native scalar tiny capacity through1025 against the frozen full-sequence
+oracle and independent KV witness, retaining real E2B/hybrid/GPU32. A second
+cached Python graph is not a prerequisite. The real1025-position demand remains. Held-out/source quality and
 remaining BF16/GPU/rotary discrepancies stay open; no workload or gate is reduced.
 Each code task needs Astra review, applicable checks and a commit; keep
 [improvements](improvements.md) current.

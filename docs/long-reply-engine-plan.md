@@ -68,8 +68,10 @@ unqualified; this does not close L3–L6 or real full-window support.
 The [pre-target tiny1025 full-sequence oracle](gemma-long-witness.md) now
 freezes independent long expectations for subsequent cached/native checks. Its
 W4 graph and selected boundaries do not raise native capacity or qualify real
-E2B window512. Qualify practical reference reductions separately before cached
-composition and native longer-context trials.
+E2B window512. The separately qualified [FP64 matrix-dot reference attention](gemma-reference-attention.md)
+passes original numerical gates and two reference-operation timing runs. Next
+qualify native scalar tiny C<=1025 directly against the existing full-sequence
+oracle and independent KV witness; real E2B/hybrid/GPU32 stay separate.
 
 | Task | Mechanism and acceptance | Status |
 | --- | --- | --- |

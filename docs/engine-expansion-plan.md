@@ -39,9 +39,11 @@ checks pass. The executable ceiling remains32 and GPU pools keep their old bound
 real whole32 is unqualified. The [pre-target tiny1025 batch oracle](gemma-long-witness.md)
 now freezes complete logits/KV and selected states, with identical cold captures,
 frozen-prefix/causal and selected scalar replay. Its W4 graph is not real E2B
-boundary evidence. The measured scalar cost puts separately qualified FP64
-matrix-dot reference attention next, then cached reference/native1025 capacity
-and unchanged real quality gates. Continue resident
+boundary evidence. The separately qualified [FP64 matrix-dot reference attention](gemma-reference-attention.md)
+now passes complete tiny1025/real four-token state comparisons and two matched
+reference-operation timing runs. Next qualify native scalar tiny capacity
+through1025 directly against the frozen full-sequence oracle and independent KV
+witness; retain real E2B/hybrid/GPU32, then unchanged real context/quality gates. Continue resident
 scheduling/progressive model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid
 implementations remain short diagnostics. Qwen3 plain Chat and selected physical
 phone checks exist in [the current profile record](mobile-qwen3-downloads.md).
