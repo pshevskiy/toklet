@@ -138,10 +138,13 @@ source/build continuity checks.
 
 Astra's geometry audit identifies the main unquantized-reference opportunity:
 the per-layer embedding table has expected BF16 shape `[262144,8960]`, or
-4697620480 bytes, but one selected row is only 17920 bytes. Expected complete
+4697620480 bytes, but one selected row is only 17920 bytes. Expected selected
 text weights are 9257138758 bytes; excluding that table leaves 4559518278.
-These are deductions from the admitted candidate inventory and matching official
-text config, **not inspected official tensor extents or a fit proof**.
+These were deductions at contract freeze. Subsequent
+[official header/layout inspection](gemma-unquantized-layout.md) confirms those
+exact tensor extents, including60 unused shared-consumer K/V parameters beyond
+the selected inventory. Full payload identity, arithmetic and model fit remain
+unproved; header inspection does not qualify reference execution.
 
 Acquire and authenticate the official payload/header before qualifying a bounded
 reference. Prefer explicit bounded row reads/conversion ownership over assuming

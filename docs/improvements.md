@@ -4908,3 +4908,48 @@ gates, resident scheduling, full model windows, app/phone and widerE1–E6/H1–
 remain open. See [contract and next dependencies](gemma-quality-contract.md),
 [versioned inputs](../benchmarks/gemma-quality-v1/README.md) and
 [public evidence](../benchmarks/results/2026-10-26-gemma-quality-contract-v1.json).
+
+
+## 26 October 2026 — official unquantized Gemma header/layout
+
+**Hypothesis:** inspecting the exact conversion-lineage checkpoint can replace
+assumed BF16 geometry with a complete checked layout before admitting the
+unquantized quality reference.
+
+Two bounded HTTPS ranges acquire the length/header from official revision
+70af34e20bd4b7a91f0de6b22675850c43922a03. The header is263952 bytes, with all2011
+BF16 descriptors and full gap-free/nonoverlapping payload coverage. HTTP source
+provenance and frozen header identity do not verify the advertised full10.246GB
+weight file. No payload loading or numerical graph executes.
+
+The new stdlib inspector resolves exact official names/shapes/absolute offsets.
+The independent reader instead maps the prior278-matrix/262-vector inventory.
+Both agree on540 selected tensors totaling9257138758 bytes. Official text has
+60 additional K/V parameters in shared-consumer layers15–34, totaling37761024
+bytes. Inspected pinned Transformers code excludes these from construction/load
+and uses producers13/14. Every extra name/extent is recorded explicitly;1411
+audio/vision/connector descriptors remain excluded from execution.
+
+Actual header extents confirm PLE4697620480 bytes and tied embedding/head
+805306368. All selected BF16 text exceeds6GiB; selected-row PLE plus bounded
+projection reading is the next candidate, with payload identity, conversions,
+arithmetic/source agreement and whole-process fit still requiring qualification.
+This is a concrete route to the unchanged full quality suite, not a fit result.
+
+Eleven offline unit methods pass, including eight coherent layout corruptions
+with updated external digests. The independent capture replays all2011 extents,
+540 selected tensors and60 exclusions. Producer physical peak14828168/RSS24592384
+fits the128MiB header diagnostic policy. First-attempt layout/tests passed but
+the timing tool's clock query was sandbox-denied; original failure/streams remain,
+and retry obtained a real measurement with byte-identical layout. All10 groups
+close; core Rust/tests/examples/shaders and protected release binaries are
+unchanged. No new Rust/GPU/phone qualification is claimed. Astra accepted code,
+controllers and actual evidence.
+
+**Decision:** retain the acquired metadata and inspected layout; next acquire/
+authenticate the complete official payload and qualify bounded BF16 reading.
+G2.1/G5, original precision gates, full1025-position quality execution, model
+context/app/phone and E1–E6/H1–H4 remain open. See
+[layout/source scope](gemma-unquantized-layout.md),
+[offline metadata](../tests/fixtures/gemma-unquantized-header-v1/README.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-unquantized-header-v1.json).

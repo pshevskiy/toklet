@@ -29,7 +29,10 @@ now distinguishes inherited reference differences from selected local rounding;
 the [full Gemma quality-input contract](docs/gemma-quality-contract.md) now
 freezes all 100 tasks/10000 loss targets and passes independent source/Rust codec
 replay. Its full 1025-position demand is retained despite the current 32-position
-diagnostic. Admit the unquantized reference and expand bounded numerical context
+diagnostic. The [official header/layout](docs/gemma-unquantized-layout.md) now
+checks all2011 descriptors and the selected/excluded text geometry. Payload
+identity, reference arithmetic/fit and quality remain open. Admit the
+unquantized reference and expand bounded numerical context
 before scoring; all original failures remain. No quality/app/window gate closes.
 
 ## Historical starting point

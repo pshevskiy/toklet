@@ -21,7 +21,9 @@ now identifies all57 cross-precision failures and their selected endpoint
 contributions. It supports deferring an isolated head/norm change. The
 [full quality-input contract](gemma-quality-contract.md) now freezes all 100
 tasks/10000 loss targets and passes independent source/Rust codec replay.
-Admit the unquantized reference and decouple chunk scratch from context capacity
+The [official unquantized header/layout](gemma-unquantized-layout.md) now verifies
+all2011 descriptors and the540 selected/60 unused text tensors; payload identity
+and reference execution are still open. Admit the unquantized reference and decouple chunk scratch from context capacity
 before executing its full 1025-position demand. Held-out/source quality and
 remaining BF16/GPU/rotary discrepancies stay open; no workload or gate is reduced.
 Each code task needs Astra review, applicable checks and a commit; keep

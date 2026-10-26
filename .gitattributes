@@ -1635,3 +1635,6 @@ benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/templates.
 benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/templates.stdout -text -whitespace
 benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/record-help.stderr -text -whitespace
 benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/record-help.stdout -text -whitespace
+
+# Raw safetensors header padding participates in source hashes and file offsets.
+tests/fixtures/gemma-unquantized-header-v1/header.json binary
