@@ -4610,3 +4610,45 @@ Per-child waits/readbacks remain. Foreign-device and driver/in-flight failures,
 full Gemma graph/KV/attention/scheduling, historical source/precision/rotary gaps,
 quality/performance, app/iPhone and 131072-output-plus-prompt gates remain open.
 No compatibility eligibility, tolerance or context/output limit changes.
+
+## 2026-10-26 — independent full Gemma resident-storage inventory
+
+Hypothesis: the next native model loader needs complete original component and
+guarded-buffer expectations before it can assemble independently owned GPU
+weights under cumulative memory admission. Added source-only capture, independent
+replay and failure/mutation controls. All 278 packed matrices/262 vectors,
+1096 text components, 308 packed chunks and 1186 expected guarded allocations
+are covered, including resident FP32 expectations for every BF16 vector.
+
+The full-container first pass hashes the exact interpreted header and all
+physical bytes; selected second-pass component bytes must match its ledgers.
+Two 806478-byte inventories match exactly, with complete independent replays.
+Fifteen portable methods and nineteen actual cases cover signed/short reads,
+true odd metadata padding, changed source/header, partial IO/publication,
+duplicate/missing coverage, coherent numerical-hash replacements and scope claims.
+Astra caught missing partial failure observations and later-output guards before
+execution. Prefix counts/digests, offending nonfinite bits/index, original-error
+priority, stable first retention, literal reviewed script pins, all output
+endpoint guards, repeated native-source inventory and final group audits were
+added. No failed actual run or numerical tolerance change was needed.
+
+Known matrix resident arithmetic is 2603500912 bytes; expected guarded vectors
+add 1151284. Largest source staging is 82575432 including descriptors, vector
+raw overlap 3072, Context/cold policies 67108864 each. New owner ABIs, actual
+capacity overhead, aggregate model policy and complete-model admission remain
+explicitly unknown. No full CPU packed model or expanded matrix is retained by
+the reference tools, and they do not execute an engine or GPU.
+
+M1 Pro capture RSS/physical peaks 29425664/21791488 and 29163520/24101560,
+replays 28753920/21938800 and 28721152/21283440, regressions 37978112/29295216
+fit separate 512 MiB process allowances. All eight owned groups close with
+source/input/output/binary identities bound. These are reference-tool resource
+observations, not model memory or performance. Prior committed `607bbb1` Rust/
+Metal/iOS checks are explicitly carried forward under unchanged-source/include/
+build-file pins, without pretending to rerun them for Python-only changes.
+
+Retain this frozen pre-target witness; see [contract](gemma-resident-storage-reference.md)
+and [public evidence](../benchmarks/results/2026-10-26-gemma-resident-storage-reference-v1.json).
+Next are native two-pass bundle loading, actual cumulative admission/failure
+recovery, full graph/session and all existing source/precision/rotary, app/device,
+quality/performance and 131072-output-plus-prompt gates. No capability or limits change.

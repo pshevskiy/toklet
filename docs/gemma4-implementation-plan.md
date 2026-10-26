@@ -14,7 +14,15 @@ MLX Gemma4 E2B config-only app probes reject unknown architecture and create no
 native Gemma model handle. The [Mac storage load](gemma4-checkpoint.md) now
 admits pinned Gemma text weights; numerical execution and phone fit remain open.
 
-Latest scoped G4 projection-session qualification, 26 October 2026:
+Latest G4 complete-model storage preparation, 26 October 2026:
+[the independent source/guard inventory](gemma-resident-storage-reference.md)
+now freezes all 278 matrices/262 vectors, 1096 text components, 308 packed chunks
+and 1186 expected guarded allocations before a new native loader. Two identical
+captures, complete independent replays and 34 portable/actual reader controls
+pass. New bundle/vector ABI and aggregate model admission remain unknown; no GPU
+model or new graph/app/device eligibility is qualified by this reference.
+
+Scoped G4 projection-session qualification, 26 October 2026:
 [reusable fixed-geometry projection scratch](gemma-projection-session.md) now
 borrows independent immutable weights per request and shares those weights with
 lookup sessions after construction Context teardown. Tiny 88-step ownership,

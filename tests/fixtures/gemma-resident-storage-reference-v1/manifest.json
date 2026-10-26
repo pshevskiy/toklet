@@ -1,0 +1,39 @@
+{
+  "format": "toklet-gemma-resident-storage-reference-manifest-v1",
+  "reference_only": true,
+  "inventory": {
+    "file": "inventory.json",
+    "bytes": 806478,
+    "sha256": "a3dff3b9d825fcf4fa6f391262732c5f429345682d683d6a39bc551ddacd68e2"
+  },
+  "source_repository": "mlx-community/gemma-4-e2b-it-4bit",
+  "source_revision": "238767527555cb75a05732a84dff5d6ba0dd6809",
+  "model": {
+    "bytes": 3550670554,
+    "sha256": "038e39a37a7667373d2c3991375446b10c96ae1d717a68674870343db376b76e"
+  },
+  "metadata": {
+    "config.json": {
+      "bytes": 6395,
+      "sha256": "6397cb6eca41b911d1dcab74e17941351057bd759284052a2331918ff6f9246c"
+    },
+    "index.json": {
+      "bytes": 218323,
+      "sha256": "edb157dbf495e23f37377af4a628a9ad13c4ee7937f93ccb36ec9e9a19940f16"
+    },
+    "header.json": {
+      "bytes": 318220,
+      "sha256": "4d1819ededded19812059691c0f77cfec0fe10c9c89c720950f919bfc26544a7"
+    }
+  },
+  "counts": {
+    "matrices": 278,
+    "vectors": 262,
+    "source_components": 1096,
+    "packed_chunks": 308,
+    "guarded_gpu_allocations": 1186
+  },
+  "original_source_or_precision_failures_waived": false,
+  "engine_or_gpu_executed": false,
+  "complete_model_storage_admitted": false
+}

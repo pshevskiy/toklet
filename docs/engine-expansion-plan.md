@@ -1,5 +1,12 @@
 # Engine coverage and Hugging Face implementation plan
 
+Latest complete-model storage preparation: [the Gemma resident-storage reference](gemma-resident-storage-reference.md)
+freezes all 1096 original text components and expected packed/FP32 guarded buffers
+before native bundle loading. Two captures/replays and 34 reader/failure controls
+pass. Complete-model GPU storage, new ABI/actual capacities and aggregate admission
+remain unqualified; full graph, source/precision, app/device and long-output gates
+remain open.
+
 Latest ownership composition: [reusable projection sessions](gemma-projection-session.md)
 borrow immutable packed weights independently of construction Context and share
 them with lookup workspaces. Tiny shape/boundary/poison/recovery and complete
