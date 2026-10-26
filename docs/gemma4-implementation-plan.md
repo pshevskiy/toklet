@@ -7,14 +7,17 @@ is its declared shared total window; short support remains explicitly partial.
 The [Astra-assisted review](m8-plan-review-2026-10-26.md) corrects stale statuses
 and puts a complete short Mac path before further standalone prerequisites.
 
-G4.1 is now [qualified for complete immutable storage](gemma-resident-weights.md).
-The [tiny hybrid graph/session task](gemma-hybrid-graph.md) passes on Mac.
-Next: **remaining G4.2 real short hybrid Mac generation → G2.1/G5 precision and quality
-decision → G4.3 resident scheduling and progressive context.** Then integrate
-model-driven Mac Chat/Expert; decide phone fit before installation.
-The complete Mac load and independent replay pass all 1186 guarded buffers;
-this is storage qualification, not numerical graph/app/device support. Each code
-task needs Astra review, applicable checks and a commit; keep [improvements](improvements.md) current.
+G4.1 [complete immutable storage](gemma-resident-weights.md) and the first G4.2
+[real short hybrid execution/generation](gemma-hybrid-real.md) now pass their
+stated Mac scopes. The complete raw graph passes staged FP32 while retaining
+its27 mathematical-logit failures per forward; selected raw/formatted/streamed
+generation rows pass both contracts. This is a short functional diagnostic,
+not product quality, a whole32-position boundary, resident performance or app
+support. Next: **G2.1/G5 precision and quality decision → G4.3 resident scheduling
+and progressive context.** Integrate model-driven Mac Chat/Expert only after
+required admission/quality checks; decide phone fit before installation.
+Each code task needs Astra review, applicable checks and a commit; keep
+[improvements](improvements.md) current.
 
 The G2–G7 rows below are umbrella work packages. Their mechanisms may be
 implemented while numerical/product gates remain open. Historical progress
@@ -36,7 +39,7 @@ listed below, while full qualification and phone fit remain open.
 | G1 — mapped/acquired | [Source/config/header mapping](gemma4-e2b-inspection.md), [Mac payload admission](gemma4-checkpoint.md), named layout and scalar adapter. | Any newly selected artifact/representation needs its own admission; mapping is not graph/device support. |
 | G2 — mechanisms implemented, parity open | Scalar local/rotary/norm/PLE/dense/softcap operations, tiny dense and packed graphs, shared KV/cache witnesses. | G2.1: isolate first divergence in existing mathematical/BF16/GPU/long-rotary failures and record a reviewed precision decision; preserve existing gates. |
 | G3 — bounded scalar graph/session implemented | [Real E2B scalar execution](gemma4-short-scalar.md), [generation state](gemma-generation-state.md), raw/formatted/streamed schedules at 32 positions. | Broader session/quality qualification and useful/full model context; short diagnostics grant no public app capability. |
-| G4 — storage and tiny hybrid composition qualified | RMS/rotary/packed projection, real head/tables, independent weights, reusable workspaces and [tiny hybrid graph/session](gemma-hybrid-graph.md). | G4.2 real E2B vector-copy/graph and raw/formatted/streamed schedules; G4.3 resident graph/KV/scheduling and progressive context/memory qualification. |
+| G4 — storage and short hybrid diagnostic implemented | Original resident weights, [tiny graph/session](gemma-hybrid-graph.md), [real E2B vector-copy/graph and raw/formatted/streamed schedules](gemma-hybrid-real.md). | Required precision/quality decision remains open; G4.3 resident graph/KV/scheduling, whole32-position boundary and progressive context/memory qualification. |
 | G5 — selected real generation/codec evidence exists | [Basic-hello generation](gemma4-basic-chat-generation.md) and [bounded stream composition](gemma4-stream-generation.md) on Mac. | Checkpoint-specific held-out quality, unresolved required parity gates, representative completed timings and real-context evidence. |
 | G6 — app integration open | Existing app search/download/chat infrastructure can be reused. | Engine-owned compatibility/capacities, exact model/codec identity and pinned Gemma acquisition, offline Chat/Expert, stop/cancel/reopen/model-switch and truthful partial/full-window labels. |
 | G7 — phone route open | Existing Qwen3 baseline and rollback only. | Independent whole-process fit/representation decision first; then immutable package and physical iPhone 14 Pro numerical/state/context/UI/lifecycle evidence. |
@@ -48,7 +51,8 @@ CPU model. Count bounded vector copies and CPU/GPU staging/readback. Keep the
 scalar implementation as oracle. Hybrid timings do not qualify fully resident
 performance. Require whole-graph feedback before more general prerequisites.
 
-G4.3 begins with a useful 512-position candidate, then model-specific larger
+G4.3 checks the whole32-position boundary before claiming that current capacity,
+then a useful512-position candidate and model-specific larger
 boundaries. A short candidate can be integrated as explicitly partial support
 after its required numerical/quality checks pass. It cannot close the full
 model-window requirement. The original cross-precision, upstream BF16, dense/

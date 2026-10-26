@@ -15,7 +15,7 @@ use toklet::{
     },
     generation::{self, Input, Request, StopReason},
     mlx::gemma4::{ModalityPolicy, payload},
-    model::gemma_packed::{GenerationSession, Model},
+    model::gemma_packed::Model,
     session::{self, InferenceSession, Memory, Options},
 };
 
@@ -170,11 +170,11 @@ impl Capture {
     }
 }
 
-struct Observed<'a, 'model, 'weights> {
-    inner: &'a mut GenerationSession<'model, 'weights>,
+struct Observed<'a, S> {
+    inner: &'a mut S,
     capture: &'a RefCell<Capture>,
 }
-impl InferenceSession for Observed<'_, '_, '_> {
+impl<S: InferenceSession> InferenceSession for Observed<'_, S> {
     fn history(&self) -> &[u32] {
         self.inner.history()
     }
@@ -226,16 +226,10 @@ impl InferenceSession for Observed<'_, '_, '_> {
 }
 
 fn scenarios(
-    model: &Model<'_>,
+    session: &mut impl InferenceSession,
     capture: &RefCell<Capture>,
     record: &mut serde_json::Value,
 ) -> Result<(), Box<dyn Error>> {
-    let mut session = model.new_generation_session(Options {
-        capacity: 32,
-        prefill_chunk_size: 4,
-        position_offset: 0,
-        memory_limit_bytes: toklet::weights::INITIAL_MEMORY_LIMIT_BYTES,
-    })?;
     let memory = session.memory();
     record["memory"] = serde_json::to_value(memory)?;
     for (index, name) in ["uninterrupted", "split", "cancel_resume", "caller_stop"]
@@ -248,7 +242,7 @@ fn scenarios(
             saved.scenario_rows = 0;
         }
         let mut observed = Observed {
-            inner: &mut session,
+            inner: session,
             capture,
         };
         let cancelled = AtomicBool::new(false);
@@ -408,7 +402,7 @@ fn stream_requests(
 }
 
 fn basic_scenarios(
-    model: &Model<'_>,
+    session: &mut impl InferenceSession,
     codec: &Codec,
     numerical_budget: usize,
     capture: &RefCell<Capture>,
@@ -428,12 +422,6 @@ fn basic_scenarios(
     }
     record["rendered_prompt"] = rendered.into();
     record["stop_ids"] = serde_json::to_value(codec.stop_ids())?;
-    let mut session = model.new_generation_session(Options {
-        capacity: 32,
-        prefill_chunk_size: 4,
-        position_offset: 0,
-        memory_limit_bytes: numerical_budget,
-    })?;
     let memory = session.memory();
     let combined = memory
         .admitted_bytes
@@ -465,7 +453,7 @@ fn basic_scenarios(
             saved.scenario_rows = 0;
         }
         let mut observed = Observed {
-            inner: &mut session,
+            inner: session,
             capture,
         };
         let mut emitted = Vec::with_capacity(16);
@@ -578,12 +566,67 @@ fn basic_scenarios(
     Ok(())
 }
 
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+#[path = "gemma4_generate/hybrid.rs"]
+mod hybrid;
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Backend {
+    Scalar,
+    Hybrid,
+}
+impl Backend {
+    fn parse(value: &str) -> io::Result<Self> {
+        match value {
+            "scalar" => Ok(Self::Scalar),
+            "hybrid" => Ok(Self::Hybrid),
+            _ => Err(io::Error::other("unsupported fixed backend")),
+        }
+    }
+    fn check_available(self) -> io::Result<()> {
+        if self == Self::Hybrid
+            && !cfg!(all(
+                feature = "metal",
+                target_os = "macos",
+                target_arch = "aarch64"
+            ))
+        {
+            return Err(io::Error::other(
+                "hybrid diagnostic requires Apple Silicon Mac and metal feature",
+            ));
+        }
+        Ok(())
+    }
+}
+fn run_session(
+    session: &mut impl InferenceSession,
+    codec: Option<&Codec>,
+    budget: usize,
+    capture: &RefCell<Capture>,
+    record: &mut serde_json::Value,
+    profile: Profile,
+) -> Result<(), Box<dyn Error>> {
+    if let Some(codec) = codec {
+        basic_scenarios(
+            session,
+            codec,
+            budget,
+            capture,
+            record,
+            profile == Profile::BasicHelloStream,
+        )
+    } else {
+        scenarios(session, capture, record)
+    }
+}
+
 fn execute(
     root: &Path,
     capture: &RefCell<Capture>,
     record: &mut serde_json::Value,
     profile: Profile,
+    backend: Backend,
 ) -> Result<(), Box<dyn Error>> {
+    backend.check_available()?;
     let total = toklet::weights::INITIAL_MEMORY_LIMIT_BYTES;
     let (numerical_budget, codec) = admitted_codec(root, profile, total)?;
     let config = metadata(
@@ -600,6 +643,20 @@ fn execute(
         0xb1, 0x0c, 0x96, 0xae, 0x1d, 0x71, 0x7a, 0x68, 0x67, 0x48, 0x70, 0x34, 0x3d, 0xb3, 0x76,
         0xb7, 0x6e,
     ];
+    if backend == Backend::Hybrid {
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        return hybrid::execute(
+            root,
+            capture,
+            record,
+            profile,
+            numerical_budget,
+            codec.as_ref(),
+            (&config, &index, digest),
+        );
+        #[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+        unreachable!("backend checked before reading assets");
+    }
     let store = payload::load(
         &config,
         &index,
@@ -616,29 +673,45 @@ fn execute(
     if model.model_bytes() > numerical_budget {
         return Err("model exceeds remaining combined numerical allowance".into());
     }
-    if let Some(codec) = codec {
-        basic_scenarios(
-            &model,
-            &codec,
-            numerical_budget,
-            capture,
-            record,
-            profile == Profile::BasicHelloStream,
-        )
-    } else {
-        scenarios(&model, capture, record)
-    }
+    let mut session = model.new_generation_session(Options {
+        capacity: 32,
+        prefill_chunk_size: 4,
+        position_offset: 0,
+        memory_limit_bytes: numerical_budget,
+    })?;
+    run_session(
+        &mut session,
+        codec.as_ref(),
+        numerical_budget,
+        capture,
+        record,
+        profile,
+    )
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
     let mut args = std::env::args_os().skip(1).peekable();
-    let usage = "usage: gemma4_generate [--profile raw|basic-hello|basic-hello-stream] CHECKPOINT_DIRECTORY NEW_OUTPUT_DIRECTORY";
-    let profile = if args.peek().is_some_and(|value| value == "--profile") {
-        args.next();
-        Profile::parse(args.next().ok_or(usage)?.to_str().ok_or(usage)?)?
-    } else {
-        Profile::Raw
-    };
+    let usage = "usage: gemma4_generate [--backend scalar|hybrid] [--profile raw|basic-hello|basic-hello-stream] CHECKPOINT_DIRECTORY NEW_OUTPUT_DIRECTORY";
+    let mut profile = Profile::Raw;
+    let mut backend = Backend::Scalar;
+    let mut seen_profile = false;
+    let mut seen_backend = false;
+    while let Some(value) = args.peek().and_then(|v| v.to_str()) {
+        match value {
+            "--profile" if !seen_profile => {
+                args.next();
+                profile = Profile::parse(args.next().ok_or(usage)?.to_str().ok_or(usage)?)?;
+                seen_profile = true;
+            }
+            "--backend" if !seen_backend => {
+                args.next();
+                backend = Backend::parse(args.next().ok_or(usage)?.to_str().ok_or(usage)?)?;
+                seen_backend = true;
+            }
+            value if value.starts_with("--") => return Err(usage.into()),
+            _ => break,
+        }
+    }
     let root = PathBuf::from(args.next().ok_or(usage)?);
     let output = PathBuf::from(args.next().ok_or(usage)?);
     if args.next().is_some() {
@@ -674,7 +747,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         record["profile"] = "basic-hello-stream".into();
         record["stream_allowance_bytes"] = gemma4::STREAM_ALLOWANCE_BYTES.into();
     }
-    if let Err(error) = execute(&root, &capture, &mut record, profile) {
+    if backend == Backend::Hybrid {
+        record["execution_backend"] = "hybrid".into();
+    }
+    if let Err(error) = execute(&root, &capture, &mut record, profile, backend) {
         record["primary_error"] = capture
             .borrow()
             .error

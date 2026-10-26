@@ -8,14 +8,16 @@ sharing its total capacity. The fixed 131072-output target is superseded.
 Use the [model capacity contract](long-reply-engine-plan.md) and
 [Astra-assisted research/plan correction](m8-plan-review-2026-10-26.md).
 
-G4.1 [complete immutable storage now passes](gemma-resident-weights.md) on Mac.
-The [tiny hybrid graph and sessions](gemma-hybrid-graph.md) now pass on Mac.
-Next: execute and check the real short hybrid graph/generation (remaining G4.2), resolve the
-product precision/quality decision (G2.1/G5), then resident scheduling and
-progressive model-context qualification (G4.3/L3/L4). Existing 32-position real
-scalar/formatted/streamed generation is implemented; resident graph, product quality, app and
-full-window/device qualification are open. Qwen3 plain Chat and selected physical
-phone checks already exist in [the current profile record](mobile-qwen3-downloads.md).
+G4.1 [complete immutable storage](gemma-resident-weights.md) and the first G4.2
+[real short hybrid graph/generation](gemma-hybrid-real.md) now have explicit Mac
+evidence. Full raw graph staged-FP32 comparisons pass;27 ideal-logit failures
+per forward remain. Selected raw/formatted/streamed generation rows pass both
+frozen contracts. No full32-position boundary, product quality, resident
+performance, app or full-window/device qualification follows. Next: resolve the
+precision/quality decision (G2.1/G5), then resident scheduling and progressive
+model-context qualification (G4.3/L3/L4). Existing32-position scalar and hybrid
+implementations remain short diagnostics. Qwen3 plain Chat and selected physical
+phone checks exist in [the current profile record](mobile-qwen3-downloads.md).
 
 Use existing operators and forward/session order before adding more independent
 prerequisites. Mac delivery, full-model context qualification and phone fit are

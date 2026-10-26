@@ -18,11 +18,13 @@ requested continuation share the selected model's window. Declared, qualified
 and device-admitted limits must be distinguished, with smaller windows labelled
 partial support. M8 remains incomplete; historical milestone evidence is unchanged.
 
-A [tiny hybrid Gemma graph/session](docs/gemma-hybrid-graph.md) now composes GPU
-packed products/gathers with the shared CPU graph and generation state on Mac.
-Its numerical, ownership, admission and injected-failure checks do not qualify
-real E2B execution, app integration or full model windows. Remaining G4.2 real
-checkpoint generation is next.
+The [real short hybrid Gemma graph and generation](docs/gemma-hybrid-real.md)
+now reuse original resident GPU weights and shared CPU graph/session/codec
+semantics. Full raw graph staged-FP32 and selected generation contracts pass;
+historical mathematical-logit failures remain unwaived. This diagnostic grants
+no app or full-window capability. G2.1/G5 precision/quality and G4.3 resident
+scheduling/progressive context are next; M8 and the full architecture/Hugging Face
+plan remain open.
 
 ## Historical starting point
 

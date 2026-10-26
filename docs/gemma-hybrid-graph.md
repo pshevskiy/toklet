@@ -7,6 +7,10 @@ selected failure/generation semantics pass on Apple M1 Pro. This is the first
 G4.2 composition task; real E2B raw, formatted and streamed execution remain
 open. No app profile, artifact eligibility, context ceiling or default changes.
 
+Subsequent [real E2B hybrid execution/generation](gemma-hybrid-real.md) checks
+the actual vector-copy/adapter and selected short schedules. The remaining
+acceptance statements below describe this earlier tiny-only publication.
+
 See the [public evidence](../benchmarks/results/2026-10-26-gemma-hybrid-tiny-v1.json),
 [storage owner](gemma-resident-weights.md), [tiny independent graph](gemma-packed-graph-reference.md)
 and [active delivery queue](gemma4-implementation-plan.md).

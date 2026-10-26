@@ -217,3 +217,54 @@ impl Uploaded<'_> {
             "chunks":w.views().map(|v|serde_json::json!({"rows":v.layout.rows(),"codes":buffer(v.codes),"scales":buffer(v.scales),"biases":buffer(v.biases)})).collect::<Vec<_>>()})).collect::<Vec<_>>())
     }
 }
+
+// Bounded diagnostic hashes of complete immutable buffers, never full copies.
+pub(crate) fn resident_snapshot(source: &E2bWeights) -> Vec<serde_json::Value> {
+    use sha2::{Digest, Sha256};
+    let buffer = |b: &Buffer<u32>| {
+        let digest = b.with_slice(|words| {
+            let mut hash = Sha256::new();
+            let mut bytes = [0u8; 4096];
+            for part in words.chunks(1024) {
+                for (word, target) in part.iter().zip(bytes.chunks_exact_mut(4)) {
+                    target.copy_from_slice(&word.to_le_bytes());
+                }
+                hash.update(&bytes[..part.len() * 4]);
+            }
+            format!("{:x}", hash.finalize())
+        });
+        serde_json::json!({"allocation":format!("{:p}",&*b.raw),"bytes":b.len*4,"sha256":digest})
+    };
+    let mut out = Vec::new();
+    for (index, matrix) in source.storage.matrices.iter().enumerate() {
+        for (chunk, view) in matrix.views().enumerate() {
+            for (role, value) in [
+                ("codes", view.codes),
+                ("scales", view.scales),
+                ("biases", view.biases),
+            ] {
+                out.push(serde_json::json!({"kind":"matrix","index":index,"chunk":chunk,"role":role,"buffer":buffer(value)}));
+            }
+        }
+    }
+    for (index, vector) in source.storage.vectors.iter().enumerate() {
+        out.push(
+            serde_json::json!({"kind":"vector","index":index,"buffer":buffer(&vector.buffer)}),
+        );
+    }
+    out
+}
+impl Norms<'_> {
+    pub(crate) fn copied_vectors(&self) -> Vec<serde_json::Value> {
+        use sha2::{Digest, Sha256};
+        let source = self.source.expect("real E2B norm copy diagnostic");
+        self.values.iter().enumerate().map(|(index,values)| {
+            source.storage.vectors[index].buffer.with_slice(|words| {
+                assert_eq!(words[..values.len()],values.iter().map(|v|v.to_bits()).collect::<Vec<_>>());
+            });
+            let mut hash=Sha256::new();
+            for value in values {hash.update(value.to_le_bytes());}
+            serde_json::json!({"index":index,"bytes":values.len()*4,"capacity_bytes":values.capacity()*4,"sha256":format!("{:x}",hash.finalize())})
+        }).collect()
+    }
+}

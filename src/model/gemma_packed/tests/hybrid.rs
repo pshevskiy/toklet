@@ -5,6 +5,7 @@ use hybrid::test_support::Uploaded;
 use objc2::rc::autoreleasepool;
 mod capture;
 mod controls;
+mod real;
 
 #[test]
 #[ignore = "explicit complete tiny hybrid Gemma graph qualification"]

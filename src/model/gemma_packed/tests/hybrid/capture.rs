@@ -11,9 +11,14 @@ pub(super) struct Capture {
     bytes: usize,
     records: usize,
     digest: Sha256,
+    limit: usize,
 }
 impl Capture {
     pub(super) fn new() -> Self {
+        Self::bounded(64 * 1024 * 1024)
+    }
+    pub(super) fn bounded(limit: usize) -> Self {
+        assert!(limit > 0 && limit <= 128 * 1024 * 1024);
         let path = PathBuf::from(
             std::env::var_os("TOKLET_GEMMA_HYBRID_OUTPUT")
                 .expect("explicit fresh diagnostic output path"),
@@ -28,11 +33,12 @@ impl Capture {
             bytes: 0,
             records: 0,
             digest: Sha256::new(),
+            limit,
         }
     }
     pub(super) fn record(&mut self, name: &str, values: &[f32], before: usize, count: usize) {
         let bytes = values.len().checked_mul(4).unwrap();
-        assert!(self.bytes.checked_add(bytes).unwrap() <= 64 * 1024 * 1024 && self.records < 16384);
+        assert!(self.bytes.checked_add(bytes).unwrap() <= self.limit && self.records < 16384);
         println!(
             "GEMMA_HYBRID_ARRAY_ATTEMPT {}",
             json!({"record":self.records,"name":name,"offset":self.bytes,"bytes":bytes,"before":before,"count":count,"values":values.len()})

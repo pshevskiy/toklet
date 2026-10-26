@@ -4771,3 +4771,52 @@ raw/formatted/streamed generation. Existing precision/quality discrepancies,
 resident scheduling/performance, selected-model full windows and app/phone fit
 remain open. See the [contract](gemma-hybrid-graph.md) and
 [public evidence](../benchmarks/results/2026-10-26-gemma-hybrid-tiny-v1.json).
+
+
+## 26 October 2026 — original E2B hybrid graph and generation
+
+**Hypothesis:** the tiny qualified static provider composition also executes the
+original complete resident E2B checkpoint without retaining a second CPU packed
+model. Retain shared graph, KV transactions and generation/codec state; collect
+whole-graph evidence before adding more standalone prerequisites.
+
+The public real norm-copy/adapter now executes. All262 CPU vector copies match
+original bits and frozen FP32 digests. All1186 original guarded GPU buffer
+identities/hashes remain unchanged across Context teardown, copying and repeated
+sessions. Real raw exact/minus1 admission checks expected budget variants, with
+per-layer fault snapshots, pointers and actual capacities preserved.
+
+The four-token3-schedule capture contains3016 arrays/66600960 bytes and
+33300480 comparisons. Staged FP32 passes with maximum gate fraction
+0.0013644315853741284. Original mathematical near-zero-logit failures remain27
+per forward, repeated by reset, with maximum1.2599434792233821. No gate changes.
+
+The explicit Mac `gemma4_generate --backend hybrid` shares high-level raw,
+formatted and streamed handlers with default scalar. Nine raw/codec schedules
+across three profiles capture62 full distributions;32505856 comparisons pass
+both independent contracts, with matching-prefix schedules bitwise identical.
+Pinned previously qualified scalar state/codec captures separately verify
+stop/pending/history/continuation, split/cancel and stream terminal behavior.
+Hello emits `Hi! How can I help you today? 😊`,20 committed/21 history tokens.
+Passing these sampled-prefix rows does not resolve the full-prefill failures.
+
+Actual generation admission is2862709528 bytes, with specific minus1 rejection
+and identical exact-budget Memory in each profile. Physical process peaks are
+2899692064 raw,2970880856 formatted and2981284696 streamed bytes, independently
+below6GiB; raw ownership/policy sum is not a physical-footprint predictor.
+Single functional request timings, including full-logit diagnostic writes,
+are retained in the report; there is no benchmark/sustained speed claim.
+
+Eight real-graph and eight generation-reader controls pass. Formatting, strict
+default/Metal Clippy,356 CPU/408 Metal tests (16/130 ignored),12 example tests in
+each configuration and both iOS compilation targets pass. All31 owned groups
+close; protected release binaries stay unchanged. Astra accepted code, readers
+and actual evidence after strengthening budget/error and per-fault assertions,
+and catching a controller variable-shadowing bug before execution.
+
+Retain this first G4.2 short hybrid diagnostic. The next work is G2.1/G5
+precision/quality decision and G4.3 resident scheduling plus progressive context,
+including the32-position boundary before claiming the whole current capacity.
+Required numerical/quality, full model windows, app/phone fit and wider E1–E6/
+H1–H4 acceptance remain open. See [real hybrid contract](gemma-hybrid-real.md)
+and [public evidence](../benchmarks/results/2026-10-26-gemma-hybrid-real-v1.json).
