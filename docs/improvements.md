@@ -1,6 +1,6 @@
 # Toklet improvement record
 
-Updated 25 October 2026. This records implemented capabilities, measured benefits,
+Updated 26 October 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
@@ -4727,3 +4727,47 @@ See [storage contract](gemma-resident-weights.md) and
 Retain this storage mechanism; G4.2 short hybrid graph is next. Full graph/session,
 precision/quality, model-defined windows, app/phone fit and broader E1–E6/H1–H4
 acceptance stay open. Current capabilities and executable limits do not change.
+
+
+## 26 October 2026 — tiny hybrid Gemma graph and sessions
+
+**Hypothesis:** the existing packed GPU projection/gather owners can execute the
+complete tiny graph through the same scalar forward and generation transaction
+order, without a second CPU packed model or a separate GPU graph implementation.
+
+The sealed static operation provider changes products/gathers only. Generic
+model/session defaults retain the readable CPU reference. The hybrid adapter
+borrows immutable weights and external Context, pools geometry-specific scratch,
+and accounts for inline owners, external actual capacities and opaque policies
+once. Failed backend scratch requires a fresh session and prefix replay. The
+public named E2B norm-copy/graph path is compiled but remains unexecuted here.
+
+The Mac release test captures3805 records/3048704 bytes. Independent replay
+passes1524352 comparisons against both frozen mathematical and staged-FP32
+contracts with unchanged tolerances. A separate reader verifies35 original
+packed matrices and105 guarded-buffer identities/hashes before and after all
+controls. Native assertions check exact/minus1 admission, a smaller logical
+capacity, foreign-source rejection, late pre-command injected project/gather
+failure, unchanged public prefix, failed reset/reuse, fresh replay while the old
+owner remains charged, and shared stop/cancel/output-failure/continuation state.
+Memory/state transcripts supplement those assertions; they are not an
+independent allocation-layout or complete KV snapshot oracle.
+
+Tiny model/raw/generation ownership is171164/101744196/101744420 bytes,
+including100663296 bytes of Context/pipeline policies. Peak physical footprints
+are10224216 bytes for numerical execution and11354688 for controls, below the
+512MiB diagnostic policy. These are small-fixture observations, with no real
+E2B or performance claim. Ten numerical-reader and eight ownership-reader
+portable controls pass. Early expected-error and strict-lint failures remain
+retained; no numerical waiver occurred.
+
+Formatting, strict default/Metal Clippy,356 CPU/408 Metal tests and both iOS
+compile targets pass;16/129 ordinary ignored checks remain explicit. All23
+owned command groups close; protected release binaries remain unchanged.
+
+Astra accepted the code, readers and actual tiny evidence. Retain this composed
+mechanism; **G4.2 remains open** for real E2B vector-copy/adapter and complete
+raw/formatted/streamed generation. Existing precision/quality discrepancies,
+resident scheduling/performance, selected-model full windows and app/phone fit
+remain open. See the [contract](gemma-hybrid-graph.md) and
+[public evidence](../benchmarks/results/2026-10-26-gemma-hybrid-tiny-v1.json).

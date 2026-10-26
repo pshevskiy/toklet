@@ -18,6 +18,12 @@ requested continuation share the selected model's window. Declared, qualified
 and device-admitted limits must be distinguished, with smaller windows labelled
 partial support. M8 remains incomplete; historical milestone evidence is unchanged.
 
+A [tiny hybrid Gemma graph/session](docs/gemma-hybrid-graph.md) now composes GPU
+packed products/gathers with the shared CPU graph and generation state on Mac.
+Its numerical, ownership, admission and injected-failure checks do not qualify
+real E2B execution, app integration or full model windows. Remaining G4.2 real
+checkpoint generation is next.
+
 ## Historical starting point
 
 Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0 establishes the package, frozen independent fixtures, workloads, quality gates, and the first native MLX baseline. M1 implements the complete scalar tiny decoder and greedy trace. M2.1 loads the pinned Qwen checkpoint into validated FP32 weights; M2.2 qualifies its full-prefix forward pass on short independent numerical probes. M2.3 adds bounded KV sessions and exact continuation; M2.4 adds bounded CLI generation; engine profiling remains next.

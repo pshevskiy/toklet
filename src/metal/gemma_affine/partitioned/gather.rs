@@ -163,6 +163,12 @@ impl Context {
     }
 }
 impl Gather<'_> {
+    pub(crate) fn minimum_admitted_bytes(columns: usize, capacity: usize) -> Result<usize> {
+        Ok(Sizes::new(columns, capacity, usize::MAX)?.minimum_admitted)
+    }
+    pub(crate) fn pipeline_allowance_bytes() -> usize {
+        PIPELINE_ALLOWANCE
+    }
     /// Known requested storage plus opaque pipeline policy, not measured physical residency.
     pub fn admitted_bytes(&self) -> usize {
         self.admitted

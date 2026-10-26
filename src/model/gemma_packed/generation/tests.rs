@@ -43,7 +43,12 @@ fn admission_categories_actual_capacities_and_smaller_request_limits() {
         metadata_reservation_bytes: 64 * 1024 * 1024,
         admitted_load_bytes: usize::MAX,
     };
-    let backed = Model::with_storage(data.weights(), Layout::witness(), Some(&report)).unwrap();
+    let backed = Model::with_storage(
+        data.weights(),
+        Layout::witness(),
+        Some(Backing::cpu(&report)),
+    )
+    .unwrap();
     for model in [&plain, &backed] {
         let session = model.new_generation_session(options()).unwrap();
         let memory = session.memory();
@@ -213,6 +218,22 @@ fn existing_generator_stop_cancel_output_failure_and_continuation_keep_pending_s
     let data = fixture::Fixture::new();
     let model = Model::new(data.weights()).unwrap();
     let mut session = model.new_generation_session(options()).unwrap();
+    generator_checks(&data, &mut session, || {
+        model.new_session(usize::MAX).unwrap()
+    });
+}
+pub(in crate::model::gemma_packed) fn generator_checks<
+    'model,
+    'weights: 'model,
+    M: MatrixSource + 'model,
+    B: Operations<M>,
+>(
+    data: &fixture::Fixture,
+    session: &mut GenerationSession<'model, 'weights, M, B>,
+    mut control: impl FnMut() -> Session<'model, 'weights, M, B>,
+) where
+    B::Error: std::fmt::Debug,
+{
     let cancelled = AtomicBool::new(false);
     let expected = crate::sampling::greedy(
         &data.values("staged_fp32", "logits")[2 * 17..3 * 17]
@@ -222,7 +243,7 @@ fn existing_generator_stop_cancel_output_failure_and_continuation_keep_pending_s
     )
     .unwrap();
     let report = generation::generate(
-        &mut session,
+        session,
         Request {
             input: Input::Prompt(&data.ids[..3]),
             max_new_tokens: 2,
@@ -246,7 +267,7 @@ fn existing_generator_stop_cancel_output_failure_and_continuation_keep_pending_s
     let before = snapshot(&session.inner);
     let history = session.history().to_vec();
     let rejected = generation::generate(
-        &mut session,
+        session,
         Request {
             input: Input::Continue,
             max_new_tokens: 32,
@@ -260,7 +281,7 @@ fn existing_generator_stop_cancel_output_failure_and_continuation_keep_pending_s
     assert_eq!(session.history(), history);
     cancelled.store(true, Ordering::Relaxed);
     let report = generation::generate(
-        &mut session,
+        session,
         Request {
             input: Input::Reset(&data.ids[..2]),
             max_new_tokens: 1,
@@ -275,7 +296,7 @@ fn existing_generator_stop_cancel_output_failure_and_continuation_keep_pending_s
     assert_eq!(session.history(), history);
     cancelled.store(false, Ordering::Relaxed);
     let error = generation::generate(
-        &mut session,
+        session,
         Request {
             input: Input::Reset(&data.ids[..3]),
             max_new_tokens: 2,
@@ -290,7 +311,7 @@ fn existing_generator_stop_cancel_output_failure_and_continuation_keep_pending_s
     assert_eq!(session.pending_len(), 1);
     let history = session.history().to_vec();
     let report = generation::generate(
-        &mut session,
+        session,
         Request {
             input: Input::Continue,
             max_new_tokens: 0,
@@ -302,11 +323,11 @@ fn existing_generator_stop_cancel_output_failure_and_continuation_keep_pending_s
     .unwrap();
     assert_eq!(report.pending_tokens, 0);
     assert_eq!(session.evaluated_len(), 4);
-    let mut control = model.new_session(usize::MAX).unwrap();
+    let mut control = control();
     let raw = control.forward(&history).unwrap();
     assert_eq!(session.logits().unwrap(), &raw[3 * 17..]);
     let report = generation::generate(
-        &mut session,
+        session,
         Request {
             input: Input::Prompt(&data.ids[..3]),
             max_new_tokens: 2,
@@ -325,7 +346,7 @@ fn existing_generator_stop_cancel_output_failure_and_continuation_keep_pending_s
     session.discard_pending();
     assert_eq!(session.evaluated_len(), 3);
     assert_eq!(session.pending_len(), 0);
-    both(&data, "logits", session.logits().unwrap(), 2, 1);
+    both(data, "logits", session.logits().unwrap(), 2, 1);
 }
 
 #[test]

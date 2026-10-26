@@ -6,11 +6,17 @@ const PREFIX: &str = "language_model.model.";
 
 impl Layout {
     fn e2b(plan: &E2bPlan) -> Result<Self, Error> {
+        Self::e2b_layers(plan.layers())
+    }
+    fn e2b_layers(geometry: &[crate::mlx::gemma4::LayerPlan]) -> Result<Self, Error> {
+        if geometry.len() != 35 {
+            return Err(Error::InvalidConfig("Gemma E2B geometry count"));
+        }
         let mut layers = Vec::new();
         layers
-            .try_reserve_exact(plan.layers().len())
+            .try_reserve_exact(geometry.len())
             .map_err(|_| Error::Allocation)?;
-        for g in plan.layers() {
+        for g in geometry {
             layers.push(LayerLayout {
                 kind: g.kind,
                 head_dim: g.head_dim,
@@ -31,6 +37,27 @@ impl Layout {
             window: 512,
             layers,
         })
+    }
+}
+
+#[cfg(all(
+    feature = "metal",
+    any(target_os = "macos", target_os = "ios"),
+    target_arch = "aarch64"
+))]
+impl<'a, M: MatrixSource> Model<'a, M> {
+    pub(crate) fn from_e2b_parts(
+        weights: Weights<'a, M>,
+        geometry: &[crate::mlx::gemma4::LayerPlan],
+        backing: Backing,
+    ) -> Result<Self, Error> {
+        let result = Self::with_storage(weights, Layout::e2b_layers(geometry)?, Some(backing))?;
+        for (index, layer) in geometry.iter().enumerate() {
+            if result.plan.producer_for(index)? != layer.producer {
+                return Err(Error::InvalidConfig("Gemma E2B shared producer differs"));
+            }
+        }
+        Ok(result)
     }
 }
 
@@ -97,7 +124,7 @@ impl<'a> Model<'a> {
             layers,
             final_norm: vector("norm.weight")?,
         };
-        let mut model = Self::with_storage(weights, layout, Some(store.report()))?;
+        let mut model = Self::with_storage(weights, layout, Some(Backing::cpu(store.report())))?;
         for (i, layer) in store.plan().layers().iter().enumerate() {
             if model.plan.producer_for(i)? != layer.producer {
                 return Err(Error::InvalidConfig("Gemma E2B shared producer differs"));

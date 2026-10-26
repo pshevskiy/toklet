@@ -14,8 +14,10 @@ use crate::mlx::affine::{Matrix, MetadataDtype};
 
 mod e2b;
 mod forward;
-mod generation;
+pub(crate) mod generation;
+pub(crate) mod operations;
 pub use generation::GenerationSession;
+pub use operations::{BackendMemory, MatrixSource, Operations, Scalar};
 #[cfg(test)]
 mod tests;
 
@@ -24,38 +26,38 @@ pub const VOCAB_SIZE: usize = 17;
 const EPSILON: f32 = 1e-6;
 const MAX_PRODUCERS: usize = 15;
 
-pub struct KvWeights<'a> {
-    pub k: Matrix<'a>,
-    pub v: Matrix<'a>,
+pub struct KvWeights<'a, M = Matrix<'a>> {
+    pub k: M,
+    pub v: M,
     pub k_norm: &'a [f32],
 }
-pub struct LayerWeights<'a> {
+pub struct LayerWeights<'a, M = Matrix<'a>> {
     pub input_norm: &'a [f32],
-    pub q: Matrix<'a>,
+    pub q: M,
     pub q_norm: &'a [f32],
-    pub o: Matrix<'a>,
+    pub o: M,
     /// Only the producer prefix owns K/V projections.
-    pub kv: Option<KvWeights<'a>>,
+    pub kv: Option<KvWeights<'a, M>>,
     pub post_attention_norm: &'a [f32],
     pub pre_ff_norm: &'a [f32],
     pub post_ff_norm: &'a [f32],
-    pub ff_gate: Matrix<'a>,
-    pub ff_up: Matrix<'a>,
-    pub ff_down: Matrix<'a>,
-    pub ple_gate: Matrix<'a>,
-    pub ple_projection: Matrix<'a>,
+    pub ff_gate: M,
+    pub ff_up: M,
+    pub ff_down: M,
+    pub ple_gate: M,
+    pub ple_projection: M,
     pub post_ple_norm: &'a [f32],
     pub scalar: f32,
 }
 /// Immutable borrowed byte-backed matrices and direct learned FP32 norms.
 /// The embedding is the tied output head and is counted only once. Tensor names
 /// and byte spans are resolved before construction, never in numerical loops.
-pub struct Weights<'a> {
-    pub embedding: Matrix<'a>,
-    pub per_layer_embedding: Matrix<'a>,
-    pub per_layer_projection: Matrix<'a>,
+pub struct Weights<'a, M = Matrix<'a>> {
+    pub embedding: M,
+    pub per_layer_embedding: M,
+    pub per_layer_projection: M,
     pub per_layer_norm: &'a [f32],
-    pub layers: Vec<LayerWeights<'a>>,
+    pub layers: Vec<LayerWeights<'a, M>>,
     pub final_norm: &'a [f32],
 }
 struct LayerLayout {
@@ -108,8 +110,8 @@ impl Layout {
         self.layers.iter().map(|l| l.intermediate).max().unwrap()
     }
 }
-pub struct Model<'a> {
-    weights: Weights<'a>,
+pub struct Model<'a, M = Matrix<'a>> {
+    weights: Weights<'a, M>,
     layout: Layout,
     plan: SharedKvPlan,
     unit_norm: Vec<f32>,
@@ -123,7 +125,7 @@ fn check(values: &[f32], expected: usize, name: &'static str) -> Result<(), Erro
     finite(name, values)?;
     Ok(())
 }
-fn matrix(value: &Matrix<'_>, rows: usize, columns: usize) -> Result<usize, Error> {
+fn matrix(value: &impl MatrixSource, rows: usize, columns: usize) -> Result<usize, Error> {
     let l = value.layout();
     if l.rows() != rows
         || l.columns() != columns
@@ -145,10 +147,35 @@ impl<'a> Model<'a> {
     fn with_layout(weights: Weights<'a>, l: Layout) -> Result<Self, Error> {
         Self::with_storage(weights, l, None)
     }
+    pub fn planned_session_bytes(&self) -> Result<usize, Error> {
+        self.planned_backend_session_bytes::<Scalar>()
+    }
+    pub fn new_session(&self, budget: usize) -> Result<Session<'_, 'a>, Error> {
+        self.session_with_backend(Scalar, budget)
+    }
+}
+/// Known backing is supplied only by the two admitted artifact owners. Includes
+/// their real capacities once; no source loader scratch is retained as live data.
+#[derive(Clone, Copy)]
+pub(crate) struct Backing {
+    pub tensor_bytes: usize,
+    pub metadata_bytes: usize,
+    pub metadata_allowance_bytes: usize,
+}
+impl Backing {
+    fn cpu(report: &crate::mlx::gemma4::payload::LoadReport) -> Self {
+        Self {
+            tensor_bytes: report.tensor_capacity_bytes,
+            metadata_bytes: 0,
+            metadata_allowance_bytes: report.metadata_reservation_bytes,
+        }
+    }
+}
+impl<'a, M: MatrixSource> Model<'a, M> {
     fn with_storage(
-        weights: Weights<'a>,
+        weights: Weights<'a, M>,
         l: Layout,
-        retained: Option<&crate::mlx::gemma4::payload::LoadReport>,
+        retained: Option<Backing>,
     ) -> Result<Self, Error> {
         // A bounded proposal frame must never spill to the heap during forward.
         // Public admission selects only the frozen witness or named E2B geometry.
@@ -225,19 +252,18 @@ impl<'a> Model<'a> {
                 return Err(Error::InvalidConfig("Gemma packed scalar"));
             }
         }
-        let tensor_bytes = retained.map_or(bytes, |report| report.tensor_capacity_bytes);
-        let metadata_allowance_bytes =
-            retained.map_or(0, |report| report.metadata_reservation_bytes);
+        let tensor_bytes = retained.map_or(bytes, |report| report.tensor_bytes);
+        let metadata_allowance_bytes = retained.map_or(0, |report| report.metadata_allowance_bytes);
         if let Some(report) = retained {
             // Replace the borrowed logical tensor sum with its owner's actual
             // full capacity. This includes retained source scalar vectors and
             // padding, exactly once; copied LayerWeights scalars are metadata.
-            if report.tensor_capacity_bytes < bytes {
+            if report.tensor_bytes < bytes {
                 return Err(Error::InvalidConfig("Gemma retained backing capacity"));
             }
             bytes = add_bytes(
-                report.tensor_capacity_bytes,
-                report.metadata_reservation_bytes,
+                add_bytes(report.tensor_bytes, report.metadata_bytes)?,
+                report.metadata_allowance_bytes,
             )?;
         }
         let geometry: Vec<_> = l
@@ -265,7 +291,7 @@ impl<'a> Model<'a> {
             std::mem::size_of::<Self>(),
             cpu::product(
                 weights.layers.capacity(),
-                std::mem::size_of::<LayerWeights<'_>>(),
+                std::mem::size_of::<LayerWeights<'_, M>>(),
             )?,
             cpu::product(l.layers.capacity(), std::mem::size_of::<LayerLayout>())?,
             allocation_bytes(unit_norm.capacity())?,
@@ -284,6 +310,33 @@ impl<'a> Model<'a> {
             content_identity: None,
         })
     }
+    // Cold adapter check; numerical forward does not search these handles.
+    #[cfg(all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    ))]
+    pub(crate) fn matrix_handles(&self) -> impl Iterator<Item = &M> {
+        [
+            &self.weights.embedding,
+            &self.weights.per_layer_embedding,
+            &self.weights.per_layer_projection,
+        ]
+        .into_iter()
+        .chain(self.weights.layers.iter().flat_map(|w| {
+            [
+                &w.q,
+                &w.o,
+                &w.ff_gate,
+                &w.ff_up,
+                &w.ff_down,
+                &w.ple_gate,
+                &w.ple_projection,
+            ]
+            .into_iter()
+            .chain(w.kv.iter().flat_map(|kv| [&kv.k, &kv.v]))
+        }))
+    }
     /// Exact storage content evidence, only for a model built from an admitted
     /// E2B PayloadStore. This grants no provenance/tokenizer/app capability.
     pub fn content_identity(&self) -> Option<&crate::mlx::gemma4::payload::ContentIdentity> {
@@ -296,7 +349,7 @@ impl<'a> Model<'a> {
     pub fn model_bytes(&self) -> usize {
         self.bytes
     }
-    pub fn planned_session_bytes(&self) -> Result<usize, Error> {
+    pub(crate) fn planned_backend_session_bytes<B>(&self) -> Result<usize, Error> {
         let l = &self.layout;
         let mut stages = 0;
         for g in &l.layers[..l.producers] {
@@ -305,7 +358,7 @@ impl<'a> Model<'a> {
                 cpu::product(cpu::product(l.positions, g.head_dim)?, 2)?,
             )?;
         }
-        let mut bytes = std::mem::size_of::<Session<'_, '_>>();
+        let mut bytes = std::mem::size_of::<Session<'_, '_, M, B>>();
         for n in [
             self.plan.planned_cache_bytes()? - std::mem::size_of::<Vec<WindowKvCache>>(),
             total_bytes(&Scratch::counts(l)?)?,
@@ -317,9 +370,23 @@ impl<'a> Model<'a> {
         Ok(bytes)
     }
     /// Admit model+session before allocating any numerical session buffers.
-    pub fn new_session(&self, budget: usize) -> Result<Session<'_, 'a>, Error> {
-        if budget < add_bytes(self.model_bytes(), self.planned_session_bytes()?)? {
-            return Err(Error::InvalidConfig("Gemma packed memory budget"));
+    pub(crate) fn session_with_backend<B: Operations<M>>(
+        &self,
+        operations: B,
+        budget: usize,
+    ) -> Result<Session<'_, 'a, M, B>, B::Error> {
+        operations.ready()?;
+        let backend = operations.memory()?.total()?;
+        if budget
+            < add_bytes(
+                add_bytes(
+                    self.model_bytes(),
+                    self.planned_backend_session_bytes::<B>()?,
+                )?,
+                backend,
+            )?
+        {
+            return Err(Error::InvalidConfig("Gemma packed memory budget").into());
         }
         let l = &self.layout;
         let mut staging = Vec::new();
@@ -335,6 +402,7 @@ impl<'a> Model<'a> {
         }
         let result = Session {
             model: self,
+            operations,
             caches: self.plan.new_caches()?,
             staging,
             scratch: Scratch::new(l)?,
@@ -345,7 +413,7 @@ impl<'a> Model<'a> {
             fault: None,
         };
         if add_bytes(self.model_bytes(), result.allocated_bytes()?)? > budget {
-            return Err(Error::InvalidConfig("Gemma packed actual memory budget"));
+            return Err(Error::InvalidConfig("Gemma packed actual memory budget").into());
         }
         Ok(result)
     }
@@ -500,8 +568,9 @@ impl Scratch {
 /// A session borrows exactly one immutable model. Callers cannot pass a different
 /// same-shaped model into forward. Committed history contains only input tokens;
 /// sampling, pending-token history and prefix reuse are not implemented here.
-pub struct Session<'model, 'weights> {
-    model: &'model Model<'weights>,
+pub struct Session<'model, 'weights, M = Matrix<'weights>, B = Scalar> {
+    model: &'model Model<'weights, M>,
+    operations: B,
     caches: Vec<WindowKvCache>,
     staging: Vec<Staging>,
     scratch: Scratch,
@@ -512,7 +581,7 @@ pub struct Session<'model, 'weights> {
     fault: Option<usize>,
 }
 
-impl Session<'_, '_> {
+impl<M: MatrixSource, B: Operations<M>> Session<'_, '_, M, B> {
     pub fn tokens(&self) -> &[u32] {
         &self.history[..self.committed]
     }
@@ -521,7 +590,10 @@ impl Session<'_, '_> {
         &self.scratch.published[..self.published_rows * self.model.layout.vocab]
     }
     pub fn allocated_bytes(&self) -> Result<usize, Error> {
-        let mut bytes = std::mem::size_of::<Self>();
+        let mut bytes = add_bytes(
+            std::mem::size_of::<Self>(),
+            self.operations.memory()?.total()?,
+        )?;
         for n in [
             self.model.plan.allocated_cache_bytes(&self.caches)?
                 - std::mem::size_of::<Vec<WindowKvCache>>(),
@@ -539,7 +611,8 @@ impl Session<'_, '_> {
         Ok(bytes)
     }
     /// Discard the committed prefix without allocating new cache/scratch owners.
-    pub fn reset(&mut self) -> Result<(), Error> {
+    pub fn reset(&mut self) -> Result<(), B::Error> {
+        self.operations.ready()?;
         reset_batch(&mut self.caches)?;
         self.committed = 0;
         self.published_rows = 0;
@@ -548,7 +621,7 @@ impl Session<'_, '_> {
     }
     /// Append a nonempty chunk within 32 total positions. Failure preserves all
     /// committed KV/history and the prior public logits; scratch is discardable.
-    pub fn forward(&mut self, tokens: &[u32]) -> Result<&[f32], Error> {
+    pub fn forward(&mut self, tokens: &[u32]) -> Result<&[f32], B::Error> {
         forward::run(self, tokens)?;
         Ok(self.logits())
     }

@@ -9,7 +9,8 @@ Use the [model capacity contract](long-reply-engine-plan.md) and
 [Astra-assisted research/plan correction](m8-plan-review-2026-10-26.md).
 
 G4.1 [complete immutable storage now passes](gemma-resident-weights.md) on Mac.
-Next: compose a complete short hybrid Mac graph/session (G4.2), resolve the
+The [tiny hybrid graph and sessions](gemma-hybrid-graph.md) now pass on Mac.
+Next: execute and check the real short hybrid graph/generation (remaining G4.2), resolve the
 product precision/quality decision (G2.1/G5), then resident scheduling and
 progressive model-context qualification (G4.3/L3/L4). Existing 32-position real
 scalar/formatted/streamed generation is implemented; resident graph, product quality, app and
@@ -27,9 +28,9 @@ scope; this queue supersedes stale forward-looking instructions.
 Latest complete-model storage preparation: [the Gemma resident-storage reference](gemma-resident-storage-reference.md)
 freezes all 1096 original text components and expected packed/FP32 guarded buffers
 before native bundle loading. Two captures/replays and 34 reader/failure controls
-pass. Complete-model GPU storage, new ABI/actual capacities and aggregate admission
-remain unqualified; full graph, source/precision, app/device and long-output gates
-remain open.
+pass. The subsequent [G4.1 storage result](gemma-resident-weights.md) qualifies complete
+GPU storage, ABI/capacities and aggregate loading admission on Mac. Real hybrid
+graph, source/precision, app/device and model-window gates remain open.
 
 Latest ownership composition: [reusable projection sessions](gemma-projection-session.md)
 borrow immutable packed weights independently of construction Context and share

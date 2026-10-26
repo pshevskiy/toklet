@@ -36,7 +36,12 @@ fn actual_backing_capacity_replaces_borrowed_tensor_sum_once() {
         // Load-only stream/conversion overlap must never be counted here.
         admitted_load_bytes: usize::MAX,
     };
-    let model = Model::with_storage(data.weights(), Layout::witness(), Some(&report)).unwrap();
+    let model = Model::with_storage(
+        data.weights(),
+        Layout::witness(),
+        Some(Backing::cpu(&report)),
+    )
+    .unwrap();
     assert!(model.content_identity().is_none());
     assert_eq!(
         model.model_bytes(),
@@ -70,7 +75,7 @@ fn actual_backing_capacity_replaces_borrowed_tensor_sum_once() {
         let weights = data.weights();
         let layout = Layout::witness();
         let measured = Measurement::start();
-        let rejected = Model::with_storage(weights, layout, Some(&report)).is_err();
+        let rejected = Model::with_storage(weights, layout, Some(Backing::cpu(&report))).is_err();
         assert_eq!(measured.finish(), 0);
         assert!(rejected);
     }

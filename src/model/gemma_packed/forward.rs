@@ -3,42 +3,14 @@ use crate::cpu::{PerLayerInputShape, ProportionalRotaryShape, SpanAttentionShape
 use crate::model::window_cache::{KvView, PreparedKv};
 use smallvec::SmallVec;
 
-fn affine_error(error: crate::mlx::affine::Error) -> Error {
-    Error::InvalidConfig(error.0)
-}
-fn project(
-    input: &[f32],
-    weight: &Matrix<'_>,
-    output: &mut [f32],
-    tokens: usize,
-) -> Result<(), Error> {
-    let l = weight.layout();
-    length(
-        "Gemma packed projection input",
-        input.len(),
-        cpu::product(tokens, l.columns())?,
-    )?;
-    length(
-        "Gemma packed projection output",
-        output.len(),
-        cpu::product(tokens, l.rows())?,
-    )?;
-    for (row, out) in input
-        .chunks_exact(l.columns())
-        .zip(output.chunks_exact_mut(l.rows()))
-    {
-        weight.matvec(row, out).map_err(affine_error)?;
-    }
-    Ok(())
-}
-
-fn queries(
+fn queries<M: MatrixSource, B: Operations<M>>(
+    ops: &mut B,
     index: usize,
-    model: &Model<'_>,
+    model: &Model<'_, M>,
     s: &mut Scratch,
     count: usize,
     offset: usize,
-) -> Result<(), Error> {
+) -> Result<(), B::Error> {
     let layer = &model.weights.layers[index];
     let l = &model.layout;
     let d = l.layers[index].head_dim;
@@ -51,7 +23,7 @@ fn queries(
         l.hidden,
         EPSILON,
     )?;
-    project(&s.norm[..count * l.hidden], &layer.q, &mut s.q[..q], count)?;
+    ops.project(&s.norm[..count * l.hidden], &layer.q, &mut s.q[..q], count)?;
     cpu::rmsnorm(
         &s.q[..q],
         layer.q_norm,
@@ -80,14 +52,15 @@ fn rotary(g: &LayerLayout, tokens: usize, heads: usize, offset: usize) -> Propor
     }
 }
 
-fn finish(
+fn finish<M: MatrixSource, B: Operations<M>>(
+    ops: &mut B,
     index: usize,
-    model: &Model<'_>,
+    model: &Model<'_, M>,
     s: &mut Scratch,
     view: KvView<'_, '_>,
     count: usize,
     offset: usize,
-) -> Result<(), Error> {
+) -> Result<(), B::Error> {
     let l = &model.layout;
     let d = l.layers[index].head_dim;
     let q = count * l.heads * d;
@@ -115,7 +88,7 @@ fn finish(
             scale: 1.,
         },
     )?;
-    project(
+    ops.project(
         &s.context[..q],
         &model.weights.layers[index].o,
         &mut s.attention[..count * l.hidden],
@@ -149,10 +122,10 @@ fn finish(
         l.hidden,
         EPSILON,
     )?;
-    project(&s.dense_norm[..h], &w.ff_gate, &mut s.gate[..ff], count)?;
-    project(&s.dense_norm[..h], &w.ff_up, &mut s.up[..ff], count)?;
+    ops.project(&s.dense_norm[..h], &w.ff_gate, &mut s.gate[..ff], count)?;
+    ops.project(&s.dense_norm[..h], &w.ff_up, &mut s.up[..ff], count)?;
     cpu::gated_gelu_tanh(&s.gate[..ff], &s.up[..ff], &mut s.product[..ff])?;
-    project(&s.product[..ff], &w.ff_down, &mut s.dense_norm[..h], count)?;
+    ops.project(&s.product[..ff], &w.ff_down, &mut s.dense_norm[..h], count)?;
     cpu::rmsnorm(
         &s.dense_norm[..h],
         w.post_ff_norm,
@@ -162,9 +135,9 @@ fn finish(
         EPSILON,
     )?;
     cpu::residual_add(&mut s.next[..h], &s.dense_work[..h])?;
-    project(&s.next[..h], &w.ple_gate, &mut s.gate[..p], count)?;
+    ops.project(&s.next[..h], &w.ple_gate, &mut s.gate[..p], count)?;
     cpu::gated_gelu_tanh(&s.gate[..p], &s.layer_ple[..p], &mut s.product[..p])?;
-    project(
+    ops.project(
         &s.product[..p],
         &w.ple_projection,
         &mut s.dense_work[..h],
@@ -193,16 +166,17 @@ fn finish(
     Ok(())
 }
 
-fn producer<'a>(
+fn producer<'a, M: MatrixSource, B: Operations<M>>(
+    ops: &mut B,
     index: usize,
-    model: &Model<'_>,
+    model: &Model<'_, M>,
     cache: &WindowKvCache,
     stage: &'a mut Staging,
     s: &mut Scratch,
-    count: usize,
-    offset: usize,
-) -> Result<PreparedKv<'a>, Error> {
-    queries(index, model, s, count, offset)?;
+    span: (usize, usize),
+) -> Result<PreparedKv<'a>, B::Error> {
+    let (count, offset) = span;
+    queries(ops, index, model, s, count, offset)?;
     let l = &model.layout;
     let d = l.layers[index].head_dim;
     let kv = count * d;
@@ -210,7 +184,7 @@ fn producer<'a>(
         .kv
         .as_ref()
         .ok_or(Error::InvalidConfig("Gemma producer projection"))?;
-    project(
+    ops.project(
         &s.norm[..count * l.hidden],
         &weights.k,
         &mut s.kv[..kv],
@@ -229,7 +203,7 @@ fn producer<'a>(
         &mut stage.k[..kv],
         &rotary(&l.layers[index], count, 1, offset),
     )?;
-    project(
+    ops.project(
         &s.norm[..count * l.hidden],
         &weights.v,
         &mut s.kv[..kv],
@@ -244,11 +218,16 @@ fn producer<'a>(
         EPSILON,
     )?;
     let frame = cache.prepare(&stage.k[..kv], &stage.v[..kv], count)?;
-    finish(index, model, s, cache.view(&frame)?, count, offset)?;
+    finish(ops, index, model, s, cache.view(&frame)?, count, offset)?;
     Ok(frame)
 }
 
-pub(super) fn run(session: &mut Session<'_, '_>, tokens: &[u32]) -> Result<(), Error> {
+pub(super) fn run<M: MatrixSource, B: Operations<M>>(
+    session: &mut Session<'_, '_, M, B>,
+    tokens: &[u32],
+) -> Result<(), B::Error> {
+    let ops = &mut session.operations;
+    ops.ready()?;
     cpu::nonzero(tokens.len(), "Gemma chunk")?;
     let l = &session.model.layout;
     let count = tokens.len();
@@ -259,7 +238,8 @@ pub(super) fn run(session: &mut Session<'_, '_>, tokens: &[u32]) -> Result<(), E
             offset,
             tokens: count,
             limit: l.positions,
-        });
+        }
+        .into());
     }
     for (position, &token) in tokens.iter().enumerate() {
         if token as usize >= l.vocab {
@@ -274,41 +254,26 @@ pub(super) fn run(session: &mut Session<'_, '_>, tokens: &[u32]) -> Result<(), E
     if session.caches.iter().any(|cache| {
         cache.offset() != offset || cache.generation() != session.caches[0].generation()
     }) {
-        return Err(Error::InvalidConfig("Gemma committed cache prefix"));
+        return Err(Error::InvalidConfig("Gemma committed cache prefix").into());
     }
     if session.staging.len() != l.producers
         || session.caches.len() != l.producers
         || l.producers > MAX_PRODUCERS
     {
-        return Err(Error::InvalidConfig("Gemma packed proposal frame bound"));
+        return Err(Error::InvalidConfig("Gemma packed proposal frame bound").into());
     }
     let model = session.model;
     let s = &mut session.scratch;
     let h = count * l.hidden;
     let p = count * l.layers.len() * l.ple;
-    for (row, &token) in tokens.iter().enumerate() {
-        model
-            .weights
-            .embedding
-            .copy_row(
-                token as usize,
-                &mut s.next[row * l.hidden..(row + 1) * l.hidden],
-            )
-            .map_err(affine_error)?;
-    }
+    ops.gather(&model.weights.embedding, tokens, &mut s.next[..h])?;
     cpu::prepare_per_layer_projection_input(&s.next[..h], &mut s.hidden[..h], count, l.hidden)?;
-    for (row, &token) in tokens.iter().enumerate() {
-        let width = l.layers.len() * l.ple;
-        model
-            .weights
-            .per_layer_embedding
-            .copy_row(
-                token as usize,
-                &mut s.ple_lookup[row * width..(row + 1) * width],
-            )
-            .map_err(affine_error)?;
-    }
-    project(
+    ops.gather(
+        &model.weights.per_layer_embedding,
+        tokens,
+        &mut s.ple_lookup[..p],
+    )?;
+    ops.project(
         &s.hidden[..h],
         &model.weights.per_layer_projection,
         &mut s.ple_projection[..p],
@@ -334,23 +299,24 @@ pub(super) fn run(session: &mut Session<'_, '_>, tokens: &[u32]) -> Result<(), E
     let mut frames: SmallVec<[PreparedKv<'_>; MAX_PRODUCERS]> = SmallVec::new();
     for (index, stage) in session.staging.iter_mut().enumerate() {
         frames.push(producer(
+            ops,
             index,
             model,
             &session.caches[index],
             stage,
             s,
-            count,
-            offset,
+            (count, offset),
         )?);
         #[cfg(test)]
         if session.fault == Some(index) {
-            return Err(Error::InvalidConfig("injected Gemma layer failure"));
+            return Err(Error::InvalidConfig("injected Gemma layer failure").into());
         }
     }
     debug_assert!(!frames.spilled());
     for index in l.producers..l.layers.len() {
-        queries(index, model, s, count, offset)?;
+        queries(ops, index, model, s, count, offset)?;
         finish(
+            ops,
             index,
             model,
             s,
@@ -360,7 +326,7 @@ pub(super) fn run(session: &mut Session<'_, '_>, tokens: &[u32]) -> Result<(), E
         )?;
         #[cfg(test)]
         if session.fault == Some(index) {
-            return Err(Error::InvalidConfig("injected Gemma layer failure"));
+            return Err(Error::InvalidConfig("injected Gemma layer failure").into());
         }
     }
     cpu::rmsnorm(
@@ -373,9 +339,9 @@ pub(super) fn run(session: &mut Session<'_, '_>, tokens: &[u32]) -> Result<(), E
     )?;
     #[cfg(test)]
     if session.fault == Some(l.layers.len()) {
-        return Err(Error::InvalidConfig("injected Gemma final norm failure"));
+        return Err(Error::InvalidConfig("injected Gemma final norm failure").into());
     }
-    project(
+    ops.project(
         &s.norm[..h],
         &model.weights.embedding,
         &mut s.logits[..count * l.vocab],
@@ -383,12 +349,12 @@ pub(super) fn run(session: &mut Session<'_, '_>, tokens: &[u32]) -> Result<(), E
     )?;
     #[cfg(test)]
     if session.fault == Some(l.layers.len() + 1) {
-        return Err(Error::InvalidConfig("injected Gemma head failure"));
+        return Err(Error::InvalidConfig("injected Gemma head failure").into());
     }
     cpu::logit_softcap(&mut s.logits[..count * l.vocab], 30.)?;
     #[cfg(test)]
     if session.fault == Some(l.layers.len() + 2) {
-        return Err(Error::InvalidConfig("injected Gemma final failure"));
+        return Err(Error::InvalidConfig("injected Gemma final failure").into());
     }
     // No fallible operation follows publication: every producer is validated
     // before any cache writes, then history and public logits advance together.

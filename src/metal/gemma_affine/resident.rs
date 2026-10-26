@@ -4,6 +4,7 @@ use crate::mlx::gemma4::ModalityPolicy;
 use std::io::{Read, Seek};
 
 mod bindings;
+pub mod hybrid;
 mod plan;
 mod source;
 #[cfg(test)]

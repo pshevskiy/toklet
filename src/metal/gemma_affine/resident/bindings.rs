@@ -172,6 +172,64 @@ impl Bindings {
         }
         Ok(())
     }
+    pub(super) fn embedding_index(&self) -> usize {
+        self.embedding
+    }
+    pub(super) fn ple_embedding_index(&self) -> usize {
+        self.ple_embedding
+    }
+    pub(super) fn geometry(&self) -> [LayerPlan; 35] {
+        self.layers.each_ref().map(|layer| layer.geometry)
+    }
+    pub(super) fn graph_weights<'a, 'weights>(
+        &self,
+        norms: &'a super::hybrid::Norms<'weights>,
+    ) -> Result<crate::model::gemma_packed::Weights<'a, super::hybrid::MatrixRef<'a, 'weights>>>
+    {
+        use crate::model::gemma_packed::{KvWeights, LayerWeights, Weights};
+        let m = |index| norms.matrix(index);
+        let v = |index| norms.vector(index);
+        let mut layers = owner_vec(self.layers.len())?;
+        for layer in &self.layers {
+            layers.push(LayerWeights {
+                input_norm: v(layer.input_norm)?,
+                q: m(layer.q)?,
+                q_norm: v(layer.q_norm)?,
+                o: m(layer.o)?,
+                kv: layer
+                    .kv
+                    .as_ref()
+                    .map(|kv| {
+                        Ok::<_, Error>(KvWeights {
+                            k: m(kv.k)?,
+                            v: m(kv.v)?,
+                            k_norm: v(kv.norm)?,
+                        })
+                    })
+                    .transpose()?,
+                post_attention_norm: v(layer.post_attention_norm)?,
+                pre_ff_norm: v(layer.pre_ff_norm)?,
+                post_ff_norm: v(layer.post_ff_norm)?,
+                ff_gate: m(layer.gate)?,
+                ff_up: m(layer.up)?,
+                ff_down: m(layer.down)?,
+                ple_gate: m(layer.ple_gate)?,
+                ple_projection: m(layer.ple_projection)?,
+                post_ple_norm: v(layer.post_ple_norm)?,
+                scalar: *v(layer.scalar)?
+                    .first()
+                    .ok_or(Error::Options("Gemma hybrid scalar role"))?,
+            });
+        }
+        Ok(Weights {
+            embedding: m(self.embedding)?,
+            per_layer_embedding: m(self.ple_embedding)?,
+            per_layer_projection: m(self.ple_projection)?,
+            per_layer_norm: v(self.ple_norm)?,
+            layers,
+            final_norm: v(self.final_norm)?,
+        })
+    }
     pub(super) fn layer_geometry(&self, index: usize) -> Option<LayerPlan> {
         self.layers.get(index).map(|layer| layer.geometry)
     }

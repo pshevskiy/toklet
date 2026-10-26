@@ -2,6 +2,13 @@ use super::*;
 use crate as engine;
 #[path = "../../../tests/common/gemma_packed_fixture.rs"]
 pub(super) mod fixture;
+#[cfg(all(
+    feature = "metal",
+    any(target_os = "macos", target_os = "ios"),
+    target_arch = "aarch64"
+))]
+mod hybrid;
+
 const HIDDEN: usize = 64;
 const LAYERS: usize = 4;
 const HEADS: usize = 2;
@@ -73,7 +80,7 @@ fn unheads(values: &[f32], heads: usize, count: usize, dims: usize) -> Vec<f32> 
         })
         .collect()
 }
-pub(super) fn pointers(s: &Session<'_, '_>) -> Vec<usize> {
+pub(super) fn pointers<M: MatrixSource, B: Operations<M>>(s: &Session<'_, '_, M, B>) -> Vec<usize> {
     let mut result = vec![s.caches.as_ptr() as usize];
     result.extend(s.caches.iter().flat_map(|cache| {
         let (k, v) = cache.committed();
@@ -122,7 +129,7 @@ pub(super) struct Snapshot {
     logits: Vec<u32>,
     caches: Vec<(Vec<u32>, Vec<u32>, usize, u64)>,
 }
-pub(super) fn snapshot(s: &Session<'_, '_>) -> Snapshot {
+pub(super) fn snapshot<M: MatrixSource, B: Operations<M>>(s: &Session<'_, '_, M, B>) -> Snapshot {
     Snapshot {
         tokens: s.tokens().to_vec(),
         logits: s.logits().iter().map(|v| v.to_bits()).collect(),
@@ -145,10 +152,33 @@ pub(super) fn snapshot(s: &Session<'_, '_>) -> Snapshot {
 #[test]
 fn complete_frozen_graph_chunks_staging_cache_and_immutable_weights() {
     let data = fixture::Fixture::new();
-    let ids = &data.ids;
     let model = Model::new(data.weights()).unwrap();
+    frozen_graph_checks(
+        &data,
+        || model.new_session(usize::MAX).unwrap(),
+        |_, _, _, _| {},
+    );
+}
+pub(super) fn frozen_graph_checks<
+    'model,
+    'weights: 'model,
+    M: MatrixSource + 'model,
+    B: Operations<M>,
+>(
+    data: &fixture::Fixture,
+    mut create: impl FnMut() -> Session<'model, 'weights, M, B>,
+    mut observe: impl FnMut(&str, &[f32], usize, usize),
+) where
+    B::Error: std::fmt::Debug + std::fmt::Display,
+{
+    let ids = &data.ids;
+    let mut both =
+        |data: &fixture::Fixture, name: &str, actual: &[f32], before: usize, count: usize| {
+            observe(name, actual, before, count);
+            self::both(data, name, actual, before, count);
+        };
     for schedule in data.data["schedules"].as_array().unwrap() {
-        let mut session = model.new_session(usize::MAX).unwrap();
+        let mut session = create();
         let storage = pointers(&session);
         let bytes = session.allocated_bytes().unwrap();
         let mut offset = 0;
@@ -157,7 +187,12 @@ fn complete_frozen_graph_chunks_staging_cache_and_immutable_weights() {
             let prior = snapshot(&session);
             for layer in 0..LAYERS {
                 session.fault = Some(layer);
-                assert!(session.forward(&ids[offset..offset + n]).is_err());
+                let result = session.forward(&ids[offset..offset + n]);
+                assert!(
+                    result.as_ref().err().is_some_and(|e| e.to_string()
+                        == Error::InvalidConfig("injected Gemma layer failure").to_string()),
+                    "expected injected layer failure at layer {layer}, actual: {result:?}"
+                );
                 assert_eq!(snapshot(&session), prior);
                 let d = dimension(layer);
                 let s = &session.scratch;
@@ -171,17 +206,17 @@ fn complete_frozen_graph_chunks_staging_cache_and_immutable_weights() {
                     ("mlp.up_proj", &s.up[..n * intermediate(layer)]),
                     ("self_attn.q_norm", &s.q_norm[..n * HEADS * d]),
                 ] {
-                    both(&data, &(name.clone() + stage), values, offset, n);
+                    both(data, &(name.clone() + stage), values, offset, n);
                 }
                 both(
-                    &data,
+                    data,
                     &(name.clone() + "q_rotary"),
                     &unheads(&s.q[..n * HEADS * d], HEADS, n, d),
                     offset,
                     n,
                 );
                 both(
-                    &data,
+                    data,
                     &(name + "context"),
                     &unheads(&s.context[..n * HEADS * d], HEADS, n, d),
                     offset,
@@ -190,7 +225,7 @@ fn complete_frozen_graph_chunks_staging_cache_and_immutable_weights() {
             }
             session.fault = None;
             both(
-                &data,
+                data,
                 "logits",
                 session.forward(&ids[offset..offset + n]).unwrap(),
                 offset,
@@ -211,17 +246,17 @@ fn complete_frozen_graph_chunks_staging_cache_and_immutable_weights() {
                 ("ple_lookup", &s.ple_lookup[..n * LAYERS * PLE]),
                 ("ple_projection", &s.ple_projection[..n * LAYERS * PLE]),
             ] {
-                both(&data, name, values, offset, n);
+                both(data, name, values, offset, n);
             }
             both(
-                &data,
+                data,
                 "layer.3.q_rotary",
                 &unheads(&s.q[..n * HEADS * 128], HEADS, n, 128),
                 offset,
                 n,
             );
             both(
-                &data,
+                data,
                 "layer.3.context",
                 &unheads(&s.context[..n * HEADS * 128], HEADS, n, 128),
                 offset,
@@ -231,14 +266,14 @@ fn complete_frozen_graph_chunks_staging_cache_and_immutable_weights() {
                 let d = dimension(owner);
                 let stage = &session.staging[owner];
                 both(
-                    &data,
+                    data,
                     &format!("layer.{owner}.k_rotary"),
                     &stage.k[..n * d],
                     offset,
                     n,
                 );
                 both(
-                    &data,
+                    data,
                     &format!("layer.{owner}.self_attn.v_norm"),
                     &stage.v[..n * d],
                     offset,
@@ -250,14 +285,14 @@ fn complete_frozen_graph_chunks_staging_cache_and_immutable_weights() {
                 for slot in 0..capacity {
                     if let Some(position) = cache.position_in_slot(slot) {
                         both(
-                            &data,
+                            data,
                             &format!("layer.{owner}.k_rotary"),
                             &k[slot * d..(slot + 1) * d],
                             position,
                             1,
                         );
                         both(
-                            &data,
+                            data,
                             &format!("layer.{owner}.self_attn.v_norm"),
                             &v[slot * d..(slot + 1) * d],
                             position,
@@ -275,7 +310,7 @@ fn complete_frozen_graph_chunks_staging_cache_and_immutable_weights() {
         session.reset().unwrap();
         assert!(session.tokens().is_empty() && session.logits().is_empty());
         assert_eq!(pointers(&session), storage);
-        both(&data, "logits", session.forward(ids).unwrap(), 0, 32);
+        both(data, "logits", session.forward(ids).unwrap(), 0, 32);
     }
 }
 

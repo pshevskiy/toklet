@@ -156,6 +156,13 @@ impl Context {
     }
 }
 impl Projection<'_> {
+    pub(crate) fn minimum_owned_bytes(
+        layout: Layout,
+        maximum: usize,
+        capacity: usize,
+    ) -> Result<usize> {
+        Ok(Plan::new(layout, maximum, capacity, usize::MAX)?.minimum_owned)
+    }
     pub fn owned_bytes(&self) -> usize {
         self.owned
     }

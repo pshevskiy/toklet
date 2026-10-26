@@ -7,8 +7,8 @@
 use super::*;
 use crate::session::{self, InferenceSession, Memory, Options};
 
-pub struct GenerationSession<'model, 'weights> {
-    inner: Session<'model, 'weights>,
+pub struct GenerationSession<'model, 'weights, M = Matrix<'weights>, B = Scalar> {
+    inner: Session<'model, 'weights, M, B>,
     history: [u32; MAX_POSITIONS],
     len: usize,
     capacity: usize,
@@ -25,37 +25,57 @@ impl<'weights> Model<'weights> {
         &self,
         options: Options,
     ) -> Result<GenerationSession<'_, 'weights>, session::Error> {
-        GenerationSession::new(self, options)
+        GenerationSession::with_backend(self, Scalar, options)
     }
 }
 
-impl<'model, 'weights> GenerationSession<'model, 'weights> {
-    fn new(model: &'model Model<'weights>, options: Options) -> Result<Self, session::Error> {
-        if options.capacity == 0 || options.capacity > model.layout.positions {
-            return Err(session::Error::InvalidOptions(
-                "Gemma capacity must be within 1..=32",
-            ));
-        }
-        if options.prefill_chunk_size == 0 || options.prefill_chunk_size > options.capacity {
-            return Err(session::Error::InvalidOptions(
-                "Gemma chunk must be within 1..=capacity",
-            ));
-        }
-        if options.position_offset != 0 {
-            return Err(session::Error::InvalidOptions(
-                "Gemma requires position offset0",
-            ));
-        }
-        if options.memory_limit_bytes == 0
-            || options.memory_limit_bytes > crate::weights::INITIAL_MEMORY_LIMIT_BYTES
-        {
-            return Err(session::Error::InvalidOptions(
-                "Gemma budget must be within the initial6GiB limit",
-            ));
-        }
-        let extra = std::mem::size_of::<Self>() - std::mem::size_of::<Session<'_, '_>>();
+pub(crate) fn validate_options<M: MatrixSource>(
+    model: &Model<'_, M>,
+    options: Options,
+) -> Result<(), session::Error> {
+    if options.capacity == 0 || options.capacity > model.layout.positions {
+        return Err(session::Error::InvalidOptions(
+            "Gemma capacity must be within 1..=32",
+        ));
+    }
+    if options.prefill_chunk_size == 0 || options.prefill_chunk_size > options.capacity {
+        return Err(session::Error::InvalidOptions(
+            "Gemma chunk must be within 1..=capacity",
+        ));
+    }
+    if options.position_offset != 0 {
+        return Err(session::Error::InvalidOptions(
+            "Gemma requires position offset0",
+        ));
+    }
+    if options.memory_limit_bytes == 0
+        || options.memory_limit_bytes > crate::weights::INITIAL_MEMORY_LIMIT_BYTES
+    {
+        return Err(session::Error::InvalidOptions(
+            "Gemma budget must be within the initial6GiB limit",
+        ));
+    }
+    Ok(())
+}
+
+impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
+    GenerationSession<'model, 'weights, M, B>
+{
+    pub(crate) fn with_backend(
+        model: &'model Model<'weights, M>,
+        operations: B,
+        options: Options,
+    ) -> Result<Self, session::Error> {
+        validate_options(model, options)?;
+        let extra = std::mem::size_of::<Self>() - std::mem::size_of::<Session<'_, '_, M, B>>();
         let required = add_bytes(
-            add_bytes(model.model_bytes(), model.planned_session_bytes()?)?,
+            add_bytes(
+                add_bytes(
+                    model.model_bytes(),
+                    model.planned_backend_session_bytes::<B>()?,
+                )?,
+                operations.memory()?.total()?,
+            )?,
             extra,
         )?;
         if required > options.memory_limit_bytes {
@@ -64,7 +84,10 @@ impl<'model, 'weights> GenerationSession<'model, 'weights> {
                 limit: options.memory_limit_bytes,
             });
         }
-        let inner = model.new_session(options.memory_limit_bytes - extra)?;
+        let inner = model
+            .session_with_backend(operations, options.memory_limit_bytes - extra)
+            .map_err(Into::into)?;
+        let backend = inner.operations.memory()?;
         let raw_bytes = inner.allocated_bytes()?;
         let mut kv = 0;
         for cache in &inner.caches {
@@ -80,12 +103,15 @@ impl<'model, 'weights> GenerationSession<'model, 'weights> {
             inner.scratch.logits.capacity(),
             inner.scratch.published.capacity(),
         ])?;
-        let scratch = total_bytes(&inner.scratch.capacities())? - logits;
+        let scratch = add_bytes(
+            total_bytes(&inner.scratch.capacities())? - logits,
+            backend.scratch_bytes,
+        )?;
         let history = 2 * std::mem::size_of::<[u32; MAX_POSITIONS]>();
         let session_bytes = add_bytes(raw_bytes, extra)?;
         let numerical = add_bytes(add_bytes(kv, scratch)?, add_bytes(logits, history)?)?;
         let metadata = session_bytes
-            .checked_sub(numerical)
+            .checked_sub(add_bytes(numerical, backend.metadata_allowance_bytes)?)
             .ok_or(cpu::Error::SizeOverflow)
             .map_err(Error::Kernel)?;
         let model_metadata = model
@@ -103,7 +129,10 @@ impl<'model, 'weights> GenerationSession<'model, 'weights> {
             history_bytes: history,
             logits_bytes: logits,
             metadata_bytes: add_bytes(metadata, model_metadata)?,
-            metadata_allowance_bytes: model.metadata_allowance_bytes,
+            metadata_allowance_bytes: add_bytes(
+                model.metadata_allowance_bytes,
+                backend.metadata_allowance_bytes,
+            )?,
             admitted_bytes: add_bytes(model.model_bytes(), session_bytes)?,
         };
         if memory.admitted_bytes > options.memory_limit_bytes {
@@ -201,11 +230,13 @@ impl<'model, 'weights> GenerationSession<'model, 'weights> {
             return Ok(0);
         }
         if self.needs_replay {
-            self.inner.reset()?;
+            self.inner.reset().map_err(Into::into)?;
             self.needs_replay = false;
         }
         let start = self.inner.tokens().len();
-        self.inner.forward(&self.history[start..start + count])?;
+        self.inner
+            .forward(&self.history[start..start + count])
+            .map_err(Into::into)?;
         Ok(count)
     }
     pub fn discard_pending(&mut self) {
@@ -218,7 +249,7 @@ impl<'model, 'weights> GenerationSession<'model, 'weights> {
     }
 }
 
-impl InferenceSession for GenerationSession<'_, '_> {
+impl<M: MatrixSource, B: Operations<M>> InferenceSession for GenerationSession<'_, '_, M, B> {
     fn history(&self) -> &[u32] {
         Self::history(self)
     }
@@ -258,4 +289,4 @@ impl InferenceSession for GenerationSession<'_, '_> {
 }
 
 #[cfg(test)]
-mod tests;
+pub(in crate::model::gemma_packed) mod tests;
