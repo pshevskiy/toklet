@@ -1,0 +1,250 @@
+{
+  "format": "toklet-qwen3-native-profile-contract-v1",
+  "profile_id": "qwen3-0.6b-mlx8-fp16-reference-v1",
+  "authority": "Human approval on27October2026: native arithmetic qualification target; autonomous decisions with Astra.",
+  "model": {
+    "repository": "mlx-community/Qwen3-0.6B-8bit",
+    "revision": "11de96878523501bcaa86104e3c186de07ff9068",
+    "files": {
+      "config.json": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240",
+      "model.safetensors": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397",
+      "model.safetensors.index.json": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc",
+      "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config.json": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+    }
+  },
+  "execution": {
+    "projection": "MlxAffine",
+    "normalization": "Compensated",
+    "attention": "Reference",
+    "activations": "FP16",
+    "kv": "FP16",
+    "logits": "FP32",
+    "prefill_chunk_default": 128,
+    "position_offset": 0
+  },
+  "scope": {
+    "device": "Apple M1 Pro Mac",
+    "app_context_target": 512,
+    "model_declared_positions": 40960,
+    "quality_diagnostic_capacity": 1025,
+    "full_model_window_qualified": false,
+    "iphone_qualified": false
+  },
+  "arithmetic": {
+    "weights": "Original group64 eight-bit affine reconstruction; unchanged qualified FP32 product/compensated accumulation and explicit store boundaries.",
+    "normalization": "Compensated FP32 sum of exact Half squares; existing FP32 divide/sqrt/inverse/scale and Half stores.",
+    "rotary": "Unchanged FP32 power/trigonometric and split-half rotation, absolute offsets, Half stores.",
+    "attention": "Unchanged ordered FP32 QK, stable max/exp/mass and probability-times-V reductions, FP32 score/probability stores, Half context.",
+    "precision_comparison": "Independent operator and miniature graph expectations at original fixture tolerances. Full-trajectory FP32/FP64 differences are separately reported fidelity evidence."
+  },
+  "conformance": {
+    "independent_fixture_gates": "unchanged; no retuning",
+    "required_existing_suites": [
+      "MLX affine projection/gather/rounding",
+      "tied and untied complete miniature Qwen3 graphs",
+      "real checkpoint short independent graph",
+      "real512/1025 pending/cancel/replay/overflow/admission"
+    ],
+    "analytical_shape_controls": [
+      "RMS widths128 and1024",
+      "Reference attention head_dim128, query_heads16,kv_heads8, up to512 keys; exact analytical cases"
+    ],
+    "validation_manifest": {
+      "path": "benchmarks/qwen3-context-candidate-v2/manifest.json",
+      "identity": {
+        "bytes": 21757,
+        "sha256": "959fb8bf1de469c2d8036bf79698664ef829a72d26a81759e4a426ddd2f4bd09"
+      }
+    },
+    "validation_cases": [
+      {
+        "id": "val-prose-127",
+        "split": "validation",
+        "source": "validation_prose",
+        "tokens": 127,
+        "source_text": {
+          "bytes": 6512,
+          "sha256": "99ceb1e6571a88f8d227764018e6a02fcf16c89effd9b90f057e3e27258c00f4"
+        },
+        "encoded_source_tokens": 1232,
+        "token_array": {
+          "bytes": 508,
+          "sha256": "c70c3c24fb279ba57c2449b27c1466ec6387d4bf0d0aafcb8ac26780574813ad"
+        },
+        "offset": 0,
+        "file": "val-prose-127.u32le",
+        "dtype": "u32le"
+      },
+      {
+        "id": "val-prose-128",
+        "split": "validation",
+        "source": "validation_prose",
+        "tokens": 128,
+        "source_text": {
+          "bytes": 6512,
+          "sha256": "99ceb1e6571a88f8d227764018e6a02fcf16c89effd9b90f057e3e27258c00f4"
+        },
+        "encoded_source_tokens": 1232,
+        "token_array": {
+          "bytes": 512,
+          "sha256": "0862bb57c5093d9301696bc1bbdbbc42bb0b020dc6b1033381ab7aeefe65e0bd"
+        },
+        "offset": 0,
+        "file": "val-prose-128.u32le",
+        "dtype": "u32le"
+      },
+      {
+        "id": "val-prose-129",
+        "split": "validation",
+        "source": "validation_prose",
+        "tokens": 129,
+        "source_text": {
+          "bytes": 6512,
+          "sha256": "99ceb1e6571a88f8d227764018e6a02fcf16c89effd9b90f057e3e27258c00f4"
+        },
+        "encoded_source_tokens": 1232,
+        "token_array": {
+          "bytes": 516,
+          "sha256": "00f48e0be35d309e35da0dc5cb34f67006146f53a453b9889b41cb8299a98586"
+        },
+        "offset": 0,
+        "file": "val-prose-129.u32le",
+        "dtype": "u32le"
+      },
+      {
+        "id": "val-unicode-255",
+        "split": "validation",
+        "source": "validation_unicode",
+        "tokens": 255,
+        "source_text": {
+          "bytes": 8416,
+          "sha256": "75cb07e700f696e6770efcc9dee63a14bcb4c9dc6b872898c2a2edd9ad290b16"
+        },
+        "encoded_source_tokens": 1536,
+        "token_array": {
+          "bytes": 1020,
+          "sha256": "164b1cef16ddc0c9125d23e335902830901b417177a77e148ca0afb3503061fb"
+        },
+        "offset": 0,
+        "file": "val-unicode-255.u32le",
+        "dtype": "u32le"
+      },
+      {
+        "id": "val-unicode-256",
+        "split": "validation",
+        "source": "validation_unicode",
+        "tokens": 256,
+        "source_text": {
+          "bytes": 8416,
+          "sha256": "75cb07e700f696e6770efcc9dee63a14bcb4c9dc6b872898c2a2edd9ad290b16"
+        },
+        "encoded_source_tokens": 1536,
+        "token_array": {
+          "bytes": 1024,
+          "sha256": "a25f1b5b68c00b201695c996a5c59fa16e088fc4922bb8ef337e42a3c48bde0c"
+        },
+        "offset": 0,
+        "file": "val-unicode-256.u32le",
+        "dtype": "u32le"
+      },
+      {
+        "id": "val-unicode-257",
+        "split": "validation",
+        "source": "validation_unicode",
+        "tokens": 257,
+        "source_text": {
+          "bytes": 8416,
+          "sha256": "75cb07e700f696e6770efcc9dee63a14bcb4c9dc6b872898c2a2edd9ad290b16"
+        },
+        "encoded_source_tokens": 1536,
+        "token_array": {
+          "bytes": 1028,
+          "sha256": "ce3b43d7169a06055f1f004e9d2fbed3a8c91ce90b811d155ddd12c8919a92ee"
+        },
+        "offset": 0,
+        "file": "val-unicode-257.u32le",
+        "dtype": "u32le"
+      },
+      {
+        "id": "val-code-511",
+        "split": "validation",
+        "source": "validation_code",
+        "tokens": 511,
+        "source_text": {
+          "bytes": 5888,
+          "sha256": "d40953b76a030a5a39ebd7c3831d4e6ce730998ae46c2edb8d5c3a04d7e83754"
+        },
+        "encoded_source_tokens": 1392,
+        "token_array": {
+          "bytes": 2044,
+          "sha256": "dd9e319b795fcd740d3f791f0564f552d69c5bc2e305a97c6aba0c6604fea5ec"
+        },
+        "offset": 0,
+        "file": "val-code-511.u32le",
+        "dtype": "u32le"
+      },
+      {
+        "id": "val-code-512",
+        "split": "validation",
+        "source": "validation_code",
+        "tokens": 512,
+        "source_text": {
+          "bytes": 5888,
+          "sha256": "d40953b76a030a5a39ebd7c3831d4e6ce730998ae46c2edb8d5c3a04d7e83754"
+        },
+        "encoded_source_tokens": 1392,
+        "token_array": {
+          "bytes": 2048,
+          "sha256": "1dc3441ffe2adb47133621c4b40ed5e9a8d6b6817a283961138d7a7606e7e112"
+        },
+        "offset": 0,
+        "file": "val-code-512.u32le",
+        "dtype": "u32le"
+      }
+    ],
+    "validation_acceptance": [
+      "Every prescribed input authenticated before execution; eight cases required.",
+      "All-row finite logits and exact bit identity between chunk128 and chunk32 schedules.",
+      "Exact native causal prefix identity across same-source nested validation inputs.",
+      "Exact history/evaluated/pending state, fully cached prompt reuse, replay and atomic capacity rejection.",
+      "GPU greedy/token-only and generation lifecycle semantics retain existing independent checks."
+    ],
+    "new_global_trajectory_tolerance": null,
+    "near_tie_waiver": false
+  },
+  "quality": {
+    "input_manifest": {
+      "path": "benchmarks/qwen3-quality-v1/manifest.json",
+      "identity": {
+        "bytes": 41001,
+        "sha256": "908e037de5b399d9e9a8dd09aa9fcc568f67abb714b06508672deac6bb8ac529"
+      }
+    },
+    "loss_targets": 10000,
+    "tasks": 100,
+    "max_mean_nll_increase": 0.05,
+    "max_task_pass_rate_loss_pp": 2.0,
+    "clip_inputs_or_outputs": false,
+    "current_native_continuity": "Replay complete current native loss and tasks once. Exact per-target distribution hashes/target bits/NLL and complete per-task output IDs/reports must equal old authenticated native journals to reuse old baseline and grades.",
+    "changed_outputs": "No continuity claim. Apply original full-quality scoring and isolated grading to changed code outputs; never execute generated code on Mac.",
+    "historical_absolute_task_score": "3/100 versus5/100; weak and at relative loss limit; no usefulness guarantee."
+  },
+  "resources": {
+    "native_process_limit_bytes": 6442450944,
+    "reader_process_limit_bytes": 536870912,
+    "required": "Checked admission, completed-process lifetime peaks and source/input/output endpoints; owned groups absent."
+  },
+  "fidelity_history": {
+    "original_stage_gates": "remain rejected",
+    "uniform_fp64_log_probability_0_05": "both Reference and CompensatedReference rejected; preserved separately; no gate/reference change",
+    "rejected_calibration_envelope": "not used for this contract"
+  },
+  "adoption": {
+    "qualified": false,
+    "default_changed": false,
+    "capacity_raised": false,
+    "requirements": "Conformance and current complete quality continuity/scoring pass, Astra final review and committed evidence before declaring this named profile qualified. Expansion is a separate task."
+  }
+}

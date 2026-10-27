@@ -5,6 +5,10 @@ candidate. Local attention accuracy improves, but that benefit does not establis
 complete-model fidelity. No default, reference, threshold, context limit or
 qualification changes. This experiment stops here.
 
+Historical result: the human subsequently approved the separate
+[native-profile qualification target](qwen3-native-profile.md) on27 October2026.
+That changes the next product task; this measured fidelity rejection is preserved.
+
 ## Complete result
 
 Apple M1 Pro,16GiB, macOS26.6.2; pinned

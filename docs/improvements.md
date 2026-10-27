@@ -6067,3 +6067,22 @@ separate native-precision product contract is recorded as a decision proposal,
 not an applied waiver. See [the report](qwen3-compensated-output-screen.md),
 [plan](qwen3-mac-delivery-plan.md) and
 [evidence](../benchmarks/results/2026-10-27-qwen3-compensated-output-screen-v1.json).
+
+## 2026-10-27 — Human approves explicit native arithmetic qualification target
+
+The human approves Astra's native arithmetic recommendation and autonomous
+technical decisions. The [versioned contract](../benchmarks/qwen3-native-profile-v1/contract.json)
+freezes the existing MlxAffine/Compensated/Reference/Half-state profile, unchanged
+independent operator/graph gates, exact eight-case state/schedule validation,
+and complete current-native quality-output continuity. Only named timing/resource
+observations may differ in the bridge. Original0.05-nat/2-percentage-point quality
+limits remain fixed; matching full distributions and task outputs is required to
+reuse the historical baseline and grades. Changed outputs receive investigation
+and their own scoring/grading.
+
+This is an explicit product-contract decision, not a repaired fidelity result:
+both historical trajectory contracts remain rejected, and the rejected envelope
+is unused. CompensatedReference is excluded from this target. Qualification is
+pending execution and final Astra review; defaults and C512 app admission do not
+change. Full40960 support and independent iPhone qualification remain open.
+See [the profile](qwen3-native-profile.md) and [active plan](qwen3-mac-delivery-plan.md).
