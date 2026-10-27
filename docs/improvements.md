@@ -5771,3 +5771,30 @@ and lead to a retain/change/reject decision. Coherent code tasks retain Astra
 review, relevant checks, improvement recording and commits; mechanical edits
 do not become separate review cycles. Progress is delivered capacity, full
 quality and app journeys. This is a plan correction, not a new qualification.
+
+## 2026-10-27 — Original Qwen3 source experiment complete; Half candidate retained
+
+The unchanged original eight-bit source now executes all six frozen calibration
+cases twice in a genuinely isolated MLX-only environment. Both complete sets
+agree bit-for-bit:204201984 BF16 logits/set with exact FP32 widening. Two full
+bounded readbacks pass. Capture peaks1.380/1.495GB fit6GiB; readback peaks315MB
+fit512MiB. Twenty-three cold source checks and four distribution checks pass.
+Failed cold imports are preserved; no library or availability check was patched.
+
+Saved-data comparison covers1344 full distributions/1338 next-token targets,
+both CPU Half arithmetic profiles, stable FP64 losses/KL/TV and exact margins.
+Three source/CPU greedy differences represent two unique positions, including
+an exact BF16 tie repeated across prefixes. Source itself changes one greedy
+choice with execution length. Average source/CPU TV is about0.00479; diagnostic
+loss differences have mixed signs. These overlapping authored cases are not
+held-out quality, native execution or an unquantized baseline.
+
+Astra's concrete decision closes Q1/Q2: retain native Half unchanged **as an
+experimental candidate**, reject current C512 qualification, and stop further
+layer walks/envelope expansion. No BF16 change, adopted tolerance, capacity or
+app-limit increase. The [focused queue](qwen3-mac-delivery-plan.md) narrowly moves
+diagnostic1025/full quality before a new precision contract. Freeze the candidate
+and existing quality rules before scoring; never fit tolerances to held-out
+results. The next code task is the explicit diagnostic1025 path with bounded
+memory and boundary/state checks. See [the source report](qwen3-quantized-source.md)
+and [evidence](../benchmarks/results/2026-10-27-qwen3-quantized-source-v1.json).

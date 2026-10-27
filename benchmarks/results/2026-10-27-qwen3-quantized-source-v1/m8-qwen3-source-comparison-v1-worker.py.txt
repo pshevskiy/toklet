@@ -1,0 +1,37 @@
+from pathlib import Path
+import argparse,json,os,signal,sys,unittest
+R=Path.cwd();sys.path.insert(0,str(R/'tools/reference'));sys.path.insert(0,str(R/'tools/experiments'))
+import qwen3_quantized_source as producer
+F=R/'benchmarks/qwen3-context-candidate-v2';C=R/'tests/fixtures/qwen3-context-calibration-v2'
+def extras():
+ names=['qwen3_source_comparison.py','test_qwen3_source_comparison.py','qwen3_quantized_source.py','qwen3_context_calibration.py','qwen3_context_inputs.py','qwen3_long_context.py','qwen3_context_precision.py','mlx_qwen3_real.py','mlx_qwen3_checkpoint.py','qwen3_fp16.py','qwen_fp16.py','qwen.py']
+ return[Path(__file__).resolve(),*[R/'tools/reference'/n for n in names],R/'tools/bench/prepare.py',R/'tools/experiments/native_usage.py',F/'manifest.json',F/'recipe.json',C/'manifest.json',R/'.venv/mlx-source-only-v1/pyvenv.cfg',*sorted(F.glob('cal-*.u32le'))]
+def sources():return producer.source_paths(extras())
+def stop(number,_):
+ for sig in(signal.SIGINT,signal.SIGTERM):signal.signal(sig,signal.SIG_IGN)
+ raise InterruptedError(str(number))
+if __name__=='__main__':
+ parser=argparse.ArgumentParser();parser.add_argument('--runtime',type=Path,required=True);parser.add_argument('--runtime-sha',required=True);parser.add_argument('--mode',choices=['unit','compare'],required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--source',type=Path);parser.add_argument('--source-sha');args=parser.parse_args()
+ selected=producer.runtime.runtime.runtime_paths(sources());admission=producer.runtime.runtime.admit_runtime(args.runtime,args.runtime_sha,sources());manifest=producer.runtime.safe.document(producer.runtime.safe.read(args.runtime,2*1024**2));record=dict(passed=False,primary_error=None,endpoint_errors=[],runtime_admission=admission,report={})
+ old={sig:signal.signal(sig,stop)for sig in(signal.SIGINT,signal.SIGTERM)}
+ try:
+  record['availability_profile']=producer.isolation_profile()
+  import qwen3_source_comparison as comparison
+  if args.mode=='unit':
+   import test_qwen3_source_comparison
+   result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(test_qwen3_source_comparison));record['tests']=dict(run=result.testsRun,failures=len(result.failures),errors=len(result.errors));assert result.wasSuccessful()and result.testsRun==4
+  else:
+   assert args.source and args.source_sha;comparison.compare(args.source,args.source_sha,R/'artifacts/m8-qwen3-context-calibration-checks-v1/capture-a',C,F,args.output.parent/'rows.jsonl',record['report'])
+  import native_usage
+  record['native_usage']=native_usage.usage();assert 0<record['native_usage']['lifetime_max_phys_footprint']<=512*1024**2;record['passed']=True
+ except BaseException as error:record['primary_error']=type(error).__name__+': '+str(error);record['primary_error_notes']=getattr(error,'__notes__',[])
+ finally:
+  for sig in old:signal.signal(sig,signal.SIG_IGN)
+  try:record['final_availability_profile']=producer.isolation_profile();record['runtime_endpoint']=producer.runtime.endpoint(manifest,selected,sources())
+  except BaseException as error:record['endpoint_errors'].append(type(error).__name__+': '+str(error))
+  try:
+   with args.output.open('x')as f:json.dump(record,f,indent=2,allow_nan=False);f.write('\n')
+  finally:
+   for sig,handler in old.items():signal.signal(sig,handler)
+ print(json.dumps(dict(passed=record['passed']and not record['endpoint_errors'],primary_error=record['primary_error'],endpoint_errors=record['endpoint_errors'])),flush=True)
+ sys.exit(0 if record['passed']and not record['endpoint_errors']else 1)

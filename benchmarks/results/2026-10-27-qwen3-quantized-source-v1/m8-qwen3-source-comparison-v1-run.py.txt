@@ -1,0 +1,123 @@
+"""Cold bounded C512 precision-coordinate/interval diagnosis; no native or gate change."""
+from pathlib import Path
+import hashlib,json,os,re,signal,stat,sys,shutil,importlib.util
+R=Path.cwd();O=Path(__file__).resolve().parent
+sys.path.insert(0,str(R/'tools/experiments'));import m7_apple_package as p
+pins={};outputs={};buffers={};commands=[];observations={};counts={};errors=[];primary=None
+protected={'target/release/toklet':'5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59','target/release/examples/cpu_bench':'e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea'}
+def read(q,limit=128*1024**2,keep=False):
+ fd=os.open(q,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK);body=[];h=hashlib.sha256();size=0
+ def ident(s):return s.st_dev,s.st_ino,s.st_mode,s.st_size,s.st_mtime_ns,s.st_ctime_ns
+ with os.fdopen(fd,'rb') as f:
+  before=os.fstat(f.fileno());assert stat.S_ISREG(before.st_mode) and before.st_size<=limit,q
+  while True:
+   part=f.read(min(65536,limit-size+1))
+   if not part:break
+   size+=len(part);assert size<=limit;h.update(part)
+   if keep:body.append(part)
+  assert size==before.st_size and ident(os.fstat(f.fileno()))==ident(before) and ident(q.lstat())==ident(before),q
+ return dict(bytes=size,sha256=h.hexdigest()),b''.join(body) if keep else None
+def name(q):return str(q.relative_to(R)) if q.is_relative_to(R) else str(q)
+def bind(q,wanted=None):
+ info,_=read(q,4*1024**3);key=name(q)
+ assert wanted is None or info['sha256']==wanted,q
+ assert key not in pins or pins[key]==info,q
+ pins[key]=info;return info
+
+def sources():return sorted(set([*p.numerical_sources(),*sorted((R/'tests').rglob('*.rs')),*sorted((R/'examples').rglob('*.rs'))]))
+initial=sources()
+def retain(q,limit=128*1024**2):
+ info,body=read(q,limit,True);key=name(q)
+ assert key not in outputs or outputs[key]==info,q
+ assert key not in buffers or buffers[key]==body,q
+ if key not in outputs:outputs[key]=info;buffers[key]=body
+ return buffers[key]
+def guard():
+ assert sources()==initial,'numerical source inventory changed'
+ if 'model' in globals():assert sorted(model.glob('model*.safetensors'))==[model/'model.safetensors']
+ for key,wanted in pins.items():assert read(Path(key) if Path(key).is_absolute() else R/key,4*1024**3)[0]==wanted,key
+ for key,wanted in protected.items():assert read(R/key)[0]['sha256']==wanted,key
+ for key,wanted in list(outputs.items()):assert read(R/key,4*1024**3)[0]==wanted,key
+
+def invoke(label,argv,env,timeout=1800,cleanup_timeout=15):
+ guard();attempt=dict(label=label,invocation_error=None,owned_result=None);commands.append(attempt)
+ try:attempt['owned_result']=p.owned(argv,O/(label+'.stdout'),O/(label+'.stderr'),env,timeout,cleanup_timeout=cleanup_timeout)
+ except BaseException as ex:attempt['invocation_error']=type(ex).__name__+': '+str(ex)
+ finally:
+  for stream in ('stdout','stderr'):
+   try:retain(O/(label+'.'+stream))
+   except BaseException as ex:errors.append(label+'/'+stream+': '+str(ex))
+  q=O/(label+'.json')
+  if q.is_file():
+   try:retain(q,32*1024**2)
+   except BaseException as ex:errors.append('worker result '+str(ex))
+  q=O/'rows.jsonl'
+  if q.is_file():
+   try:retain(q,32*1024**2)
+   except BaseException as ex:errors.append('partial row journal '+str(ex))
+  try:guard()
+  except BaseException as ex:errors.append('endpoint: '+str(ex))
+ result=attempt['owned_result']
+ assert attempt['invocation_error'] is None and result and result['exit_code']==0 and result['primary_error'] is None and not result['cleanup_errors'] and not errors,attempt
+ print(json.dumps(dict(completed=label,pid=result['pid'])),flush=True)
+ return buffers[name(O/(label+'.stdout'))],buffers[name(O/(label+'.stderr'))]
+def stop(number,_):
+ for s in (signal.SIGINT,signal.SIGTERM):signal.signal(s,signal.SIG_IGN)
+ raise InterruptedError(str(number))
+old={s:signal.signal(s,stop)for s in(signal.SIGINT,signal.SIGTERM)}
+assert not(O/'checks.json').exists()and not(O/'sources').exists()
+worker=None;inventory=[]
+try:
+ main=O/'worker.py';spec=importlib.util.spec_from_file_location('qwen3_source_comparison_worker',main);worker=importlib.util.module_from_spec(spec);spec.loader.exec_module(worker);inventory=worker.producer.runtime.runtime.runtime_paths(worker.sources())
+ for q in[*initial,Path(__file__).resolve(),Path(p.__file__).resolve(),*inventory]:bind(q)
+ for n in('qwen3_source_comparison.py','test_qwen3_source_comparison.py'):
+  q=R/'tools/reference'/n;dest=O/'sources'/q.relative_to(R);dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(read(q,1024**2,True)[1]);bind(dest,pins[name(q)]['sha256'])
+ capture_checks=R/'artifacts/m8-qwen3-quantized-source-capture-v1/checks.json';bind(capture_checks,'055a9e311a2d53dbd38e285b7b204339dcc2b654fb10bc189859ecb2d05a63b1');previous=json.loads(read(capture_checks,8*1024**2,True)[1]);assert previous['passed']and not previous['endpoint_errors']and previous['primary_error']is None
+ source_folder=R/'artifacts/m8-qwen3-quantized-source-capture-v1/capture-a';source_manifest=source_folder/'manifest.json';bind(source_manifest,'0183168d5f61b8fb103af547cd89e74ae7b053764146eb94c565dbf88b0c788a');src=json.loads(read(source_manifest,2*1024**2,True)[1]);assert src['complete']and not src['cleanup_errors']
+ for row in src['records'].values():
+  for field in('raw','widened'):bind(source_folder/row[field]['file'],row[field]['sha256'])
+ cpu_manifest=R/'tests/fixtures/qwen3-context-calibration-v2/manifest.json';bind(cpu_manifest,'e7e65c2b6f578bd31478085dcf9221aa0c8776ae8c115cb9574782249c59af81');cpu=json.loads(read(cpu_manifest,2*1024**2,True)[1])
+ for row in cpu['records'].values():bind(R/'artifacts/m8-qwen3-context-calibration-checks-v1/capture-a'/row['file'],row['sha256'])
+ for attempt in previous['commands']:
+  owned=attempt['owned_result'];assert owned['exit_code']==0 and owned['primary_error']is None and not owned['cleanup_errors']
+  for target in(owned['pid'],-owned['pid']):
+   try:os.kill(target,0)
+   except ProcessLookupError:pass
+   else:raise AssertionError('source capture group alive')
+ manifest_file=O/'runtime.json';runtime=dict(format='toklet-mlx-reference-runtime-v1',versions=worker.producer.runtime.runtime.VERSIONS,files={str(q):pins[name(q)]for q in inventory})
+ with manifest_file.open('x')as f:json.dump(runtime,f,separators=(',',':'));f.write('\n')
+ bind(manifest_file);assert manifest_file.stat().st_size<=2*1024**2;observations['runtime_manifest_bytes']=manifest_file.stat().st_size
+ env,_=p.build_environment();env.update(PYTHONHASHSEED='0',OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',VECLIB_MAXIMUM_THREADS='1');env.update(worker.producer.ENVIRONMENT);(O/'tmp').mkdir();env['TMPDIR']=str(O/'tmp');python=R/'.venv/mlx-source-only-v1/bin/python';resolved=python.resolve();bind(resolved)
+ for mode in('unit','compare'):
+  cache=O/(mode+'-cold-cache');cache.mkdir();assert python.resolve()==resolved
+  argv=['/usr/bin/time','-l',str(python),'-s','-B','-X','pycache_prefix='+str(cache),str(main),'--runtime',str(manifest_file),'--runtime-sha',pins[name(manifest_file)]['sha256'],'--mode',mode,'--output',str(O/(mode+'.json'))]
+  if mode=='compare':argv+=['--source',str(source_folder),'--source-sha',pins[name(source_manifest)]['sha256']]
+  out,err=invoke(mode,argv,env,1200)
+  v=json.loads(buffers[name(O/(mode+'.json'))]);assert v['passed']and v['primary_error']is None and not v['endpoint_errors']and v['runtime_endpoint']
+  memory={key:int(re.search(rb'(\d+)\s+'+word,err)[1])for key,word in[('rss',b'maximum resident set size'),('physical',b'peak memory footprint')]};assert all(0<n<=512*1024**2 for n in memory.values()),memory;observations[mode]=dict(memory=memory,native_usage=v['native_usage'])
+  if mode=='unit':assert v['tests']==dict(run=4,failures=0,errors=0)
+  else:
+   report=v['report'];assert report['complete']and len(report['cases'])==6 and sum(x['rows']for x in report['cases'])==1344 and sum(x['targets']for x in report['cases'])==1338 and report['journal']['complete_rows']==1344 and outputs[name(O/'rows.jsonl')]==dict(bytes=report['journal']['bytes'],sha256=report['journal']['sha256'])and all(x['endpoint_checked']for x in report['parents']);observations[mode].update(rows=1344,diagnostic_targets=1338,cases=report['cases'])
+ observations['scope']=dict(calibration_descriptive_comparison_only=True,validation_evaluated=False,native_executed=False,numerical_qualified=False,held_out_quality=False,adopted=False)
+except BaseException as ex:primary=type(ex).__name__+': '+str(ex)
+finally:
+ for sig in old:signal.signal(sig,signal.SIG_IGN)
+ try:
+  guard()
+  if worker is not None and inventory:assert worker.producer.runtime.runtime.runtime_paths(worker.sources())==inventory
+  if 'resolved'in globals():assert python.resolve()==resolved
+ except BaseException as ex:errors.append('final endpoint: '+type(ex).__name__+': '+str(ex))
+ for attempt in commands:
+  v=attempt['owned_result']
+  if v and v['pid']is not None:
+   for pid in(v['pid'],-v['pid']):
+    try:os.kill(pid,0)
+    except ProcessLookupError:pass
+    else:errors.append('owned group exists: '+str(pid))
+ result=dict(passed=primary is None and not errors,bindings=pins,outputs=outputs,commands=commands,observations=observations,primary_error=primary,endpoint_errors=errors,protected_binary_pins=protected)
+ try:
+  with(O/'checks.json').open('x')as f:json.dump(result,f,indent=2,allow_nan=False);f.write('\n')
+ finally:
+  for sig,handler in old.items():signal.signal(sig,handler)
+print(json.dumps(dict(passed=result['passed'],observations=observations,primary_error=primary,endpoint_errors=errors)),flush=True)
+sys.exit(0 if result['passed']else 1)

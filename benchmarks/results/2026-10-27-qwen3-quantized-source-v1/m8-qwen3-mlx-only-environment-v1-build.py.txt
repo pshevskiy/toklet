@@ -1,0 +1,63 @@
+"""Create an owned offline MLX-only venv from exact installed package bytes."""
+from pathlib import Path
+import hashlib,importlib.metadata,json,os,shutil,signal,sys,sysconfig,venv
+R=Path.cwd();O=Path(__file__).resolve().parent;sys.path.insert(0,str(R/'tools/reference'));import qwen3_quantized_source as source
+OLD=Path(sysconfig.get_path('purelib')).resolve();DEST=R/'.venv/mlx-source-only-v1';roots=set(source.PACKAGES)|{'mlx','numpy','tokenizers','jinja2','markupsafe'};roots.update(p.name for p in OLD.glob('numpy*.libs'))
+def ident(s):return s.st_dev,s.st_ino,s.st_mode,s.st_size,s.st_mtime_ns,s.st_ctime_ns
+def pin(path):
+ assert path.is_file()and not path.is_symlink(),path;before=path.stat();h=hashlib.sha256()
+ with path.open('rb')as f:
+  while body:=f.read(65536):h.update(body)
+ assert ident(before)==ident(path.stat()),path
+ return dict(bytes=before.st_size,sha256=h.hexdigest())
+def inventory():
+ selected={OLD/name for name in roots if(OLD/name).exists()};distributions=[]
+ for d in importlib.metadata.distributions(path=[str(OLD)]):
+  files=d.files or[];provided={Path(str(f)).parts[0]for f in files if Path(str(f)).parts}
+  if provided&roots:
+   metadata=Path(d._path);assert metadata.parent==OLD and metadata.suffix=='.dist-info';selected.add(metadata);distributions.append(dict(name=d.metadata['Name'],version=d.version,metadata=metadata.name))
+ assert not any(d['name'].lower().replace('_','-')in('torch','torchvision','torchaudio','torchgen')for d in distributions)
+ result={}
+ for root in sorted(selected):
+  assert not root.is_symlink()
+  paths=[root]if root.is_file()else sorted(root.rglob('*'))
+  for p in paths:
+   if '__pycache__'in p.parts:continue
+   assert not p.is_symlink(),p
+   if p.is_file():
+    assert p.suffix!='.pth',p
+    result[str(p.relative_to(OLD))]=pin(p)
+ distributions.sort(key=lambda d:(d['name'].lower(),d['version'],d['metadata']))
+ return result,distributions
+def stop(number,_):
+ for sig in(signal.SIGINT,signal.SIGTERM):signal.signal(sig,signal.SIG_IGN)
+ raise InterruptedError('environment copy signal '+str(number))
+def main():
+ result=dict(complete=False,primary_error=None,copied={},source_endpoint=False,stage='admission')
+ previous={sig:signal.signal(sig,stop)for sig in(signal.SIGINT,signal.SIGTERM)}
+ try:
+  assert OLD==R/'.venv/lib/python3.12/site-packages'and not os.path.lexists(DEST)
+  base=Path(sys._base_executable).resolve();invoking=Path(sys.executable).resolve();base_pin=pin(base);invoking_pin=pin(invoking)
+  before,distributions=inventory();plan=dict(format='toklet-mlx-only-environment-copy-v1',original_site=str(OLD),destination=str(DEST),source_files=before,distributions=distributions,torch_code_and_metadata_omitted=True,network_or_installer_invoked=False,base_executable=dict(path=str(base),**base_pin),invoking_executable=dict(path=str(invoking),**invoking_pin),expected_created_python_target=str(base))
+  with(O/'plan.json').open('x')as f:json.dump(plan,f,indent=2);f.write('\n')
+  result['stage']='reserve';DEST.mkdir(mode=0o700);reserved=(DEST.stat().st_dev,DEST.stat().st_ino)
+  result['stage']='venv';venv.EnvBuilder(with_pip=False,system_site_packages=False,symlinks=True).create(DEST)
+  assert not DEST.is_symlink()and(DEST.stat().st_dev,DEST.stat().st_ino)==reserved
+  assert(DEST/'bin/python').resolve()==base and pin(base)==base_pin and pin(invoking)==invoking_pin
+  site=DEST/'lib/python3.12/site-packages';assert site.is_dir();result['stage']='copy'
+  for relative,wanted in before.items():
+   old=OLD/relative;new=site/relative;new.parent.mkdir(parents=True,exist_ok=True);assert not os.path.lexists(new);shutil.copy2(old,new);assert pin(new)==wanted;result['copied'][relative]=wanted
+  result['stage']='endpoints';after,after_distributions=inventory();assert after==before and after_distributions==distributions;result['source_endpoint']=True
+  assert not list(site.glob('*.pth'))and not(site/'torch').exists()and not list(site.glob('torch*.dist-info'))
+  assert not DEST.is_symlink()and(DEST.stat().st_dev,DEST.stat().st_ino)==reserved
+  config=(DEST/'pyvenv.cfg').read_text();assert 'include-system-site-packages = false'in config
+  result.update(complete=True,stage='complete',pyvenv_cfg=pin(DEST/'pyvenv.cfg'),python_target=str((DEST/'bin/python').resolve()),source_files=len(before),source_bytes=sum(v['bytes']for v in before.values()))
+ except BaseException as error:result['primary_error']=type(error).__name__+': '+str(error)
+ finally:
+  for sig in previous:signal.signal(sig,signal.SIG_IGN)
+  try:
+   with(O/'result.json').open('x')as f:json.dump(result,f,indent=2);f.write('\n')
+  finally:
+   for sig,handler in previous.items():signal.signal(sig,handler)
+ print(json.dumps({k:v for k,v in result.items()if k!='copied'}),flush=True);return 0 if result['complete']else 1
+if __name__=='__main__':sys.exit(main())

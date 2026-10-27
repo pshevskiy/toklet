@@ -1,0 +1,874 @@
+{
+  "format": "toklet-qwen3-quantized-source-v1",
+  "engine_revision_before_task": "3078cef",
+  "hardware": {
+    "model": "MacBookPro18,3",
+    "chip": "Apple M1 Pro",
+    "memory_bytes": 17179869184,
+    "os": "macOS26.6.2(25G83)"
+  },
+  "source_fixture": {
+    "file": "tests/fixtures/qwen3-quantized-source-v1/manifest.json",
+    "sha256": "0183168d5f61b8fb103af547cd89e74ae7b053764146eb94c565dbf88b0c788a"
+  },
+  "provenance": {
+    "artifacts/m8-qwen3-mlx-only-environment-v1/build.py": {
+      "retained_source": "benchmarks/results/2026-10-27-qwen3-quantized-source-v1/m8-qwen3-mlx-only-environment-v1-build.py.txt",
+      "bytes": 4813,
+      "sha256": "4ffa1f53df652937605248f62f5adbd9d73d0e00ae45ced75445a766260163ee"
+    },
+    "artifacts/m8-qwen3-quantized-source-design-v2/plan.json": {
+      "retained_source": "benchmarks/results/2026-10-27-qwen3-quantized-source-v1/m8-qwen3-quantized-source-design-v2-plan.json.txt",
+      "bytes": 23915,
+      "sha256": "d4fa5f85f07bd254ca48861adc7364dfc0edfb29a730d9693706f1740299a10d"
+    },
+    "artifacts/m8-qwen3-quantized-source-preflight-v3/run.py": {
+      "retained_source": "benchmarks/results/2026-10-27-qwen3-quantized-source-v1/m8-qwen3-quantized-source-preflight-v3-run.py.txt",
+      "bytes": 8572,
+      "sha256": "777643476f0b9ada36cb1b3ee0eecf85e7c0f385adf53885936a150881cb90b4"
+    },
+    "artifacts/m8-qwen3-quantized-source-preflight-v3/worker.py": {
+      "retained_source": "benchmarks/results/2026-10-27-qwen3-quantized-source-v1/m8-qwen3-quantized-source-preflight-v3-worker.py.txt",
+      "bytes": 4662,
+      "sha256": "0e521841584baea077cd66108f630dc24e705c841a44d9207d39e3e3b0e7f056"
+    },
+    "artifacts/m8-qwen3-quantized-source-capture-v1/run.py": {
+      "retained_source": "benchmarks/results/2026-10-27-qwen3-quantized-source-v1/m8-qwen3-quantized-source-capture-v1-run.py.txt",
+      "bytes": 11292,
+      "sha256": "3f1213bb58c03613aabc0e75a5aa5592cae2f9e01cb2448d6fca1de245f55d81"
+    },
+    "artifacts/m8-qwen3-quantized-source-capture-v1/worker.py": {
+      "retained_source": "benchmarks/results/2026-10-27-qwen3-quantized-source-v1/m8-qwen3-quantized-source-capture-v1-worker.py.txt",
+      "bytes": 4318,
+      "sha256": "464d284a9d3f61e7ed74f03bc139b297a921b66b13179eda0a7c47167579e956"
+    },
+    "artifacts/m8-qwen3-source-comparison-v1/run.py": {
+      "retained_source": "benchmarks/results/2026-10-27-qwen3-quantized-source-v1/m8-qwen3-source-comparison-v1-run.py.txt",
+      "bytes": 9573,
+      "sha256": "aeec66355c57b0e388381e866325d767de637a85cc480f01ce8c7d9c0f927050"
+    },
+    "artifacts/m8-qwen3-source-comparison-v1/worker.py": {
+      "retained_source": "benchmarks/results/2026-10-27-qwen3-quantized-source-v1/m8-qwen3-source-comparison-v1-worker.py.txt",
+      "bytes": 3608,
+      "sha256": "edac7c5839ca43e65caecce18ae80959a3bbd856c16b1cd139ccbe08d07d40df"
+    }
+  },
+  "raw_receipts": {
+    "artifacts/m8-qwen3-mlx-only-environment-v1/result.json": {
+      "bytes": 848806,
+      "sha256": "7d361e1338fbc949ed8f0603090ce5a7a844d0c7d635accb3a0820f5f0f2f27f"
+    },
+    "artifacts/m8-qwen3-quantized-source-preflight-v1/checks.json": {
+      "bytes": 1421365,
+      "sha256": "29598aef81921bbb431d81a85e40cf0e7d8194429061445c3d99066d07d1725c"
+    },
+    "artifacts/m8-qwen3-quantized-source-preflight-v2/checks.json": {
+      "bytes": 1497670,
+      "sha256": "12a1604dbc4a60c47c34b188bbf2d29c7ce2fdcb6f89302cb9aa7ddc974a6d30"
+    },
+    "artifacts/m8-qwen3-quantized-source-preflight-v3/checks.json": {
+      "bytes": 1582060,
+      "sha256": "88d038d7c36ad33e34fffb1c953abe4ed89ad64ffa4ac16449a52f1af1859da5"
+    },
+    "artifacts/m8-qwen3-quantized-source-capture-v1/checks.json": {
+      "bytes": 1594900,
+      "sha256": "055a9e311a2d53dbd38e285b7b204339dcc2b654fb10bc189859ecb2d05a63b1"
+    },
+    "artifacts/m8-qwen3-source-comparison-v1/checks.json": {
+      "bytes": 1603276,
+      "sha256": "b8d4f4ebb477f59cdcb2a359a507d259ae768387119718851cc8133fd9187062"
+    },
+    "artifacts/m8-qwen3-source-comparison-v1/compare.json": {
+      "bytes": 65383,
+      "sha256": "c6a878275754c7f0912abf2b145db5965ca8d0bbc7d23279a431e1489f266812"
+    },
+    "artifacts/m8-qwen3-source-comparison-v1/rows.jsonl": {
+      "bytes": 1969024,
+      "sha256": "abc47736caf22f0ea7fbb340d9e31d37348705d368131c48810281fc16401bb0"
+    }
+  },
+  "source_capture_observations": {
+    "runtime_manifest_bytes": 1515663,
+    "capture-a": {
+      "memory": {
+        "rss": 1130938368,
+        "physical": 1380353512
+      },
+      "native_usage": {
+        "resident_size": 308461568,
+        "phys_footprint": 150406296,
+        "lifetime_max_phys_footprint": 1380353512
+      },
+      "source_dtypes": [
+        "bfloat16"
+      ],
+      "parameters": 704,
+      "quantized_modules": 197,
+      "bytes": 1225211904
+    },
+    "capture-b": {
+      "memory": {
+        "rss": 1027260416,
+        "physical": 1494926824
+      },
+      "native_usage": {
+        "resident_size": 288587776,
+        "phys_footprint": 159941832,
+        "lifetime_max_phys_footprint": 1494926824
+      },
+      "source_dtypes": [
+        "bfloat16"
+      ],
+      "parameters": 704,
+      "quantized_modules": 197,
+      "bytes": 1225211904
+    },
+    "replay-a": {
+      "memory": {
+        "rss": 320520192,
+        "physical": 314786632
+      },
+      "native_usage": {
+        "resident_size": 80674816,
+        "phys_footprint": 71303840,
+        "lifetime_max_phys_footprint": 77070936
+      },
+      "values": 204201984,
+      "cases": 6
+    },
+    "replay-b": {
+      "memory": {
+        "rss": 305577984,
+        "physical": 315179848
+      },
+      "native_usage": {
+        "resident_size": 87474176,
+        "phys_footprint": 70124192,
+        "lifetime_max_phys_footprint": 78578336
+      },
+      "values": 204201984,
+      "cases": 6
+    },
+    "scope": {
+      "original_quantized_source_capture": true,
+      "two_cold_raw_captures_byte_identical": true,
+      "validation_evaluated": false,
+      "native_executed": false,
+      "source_parity_qualified": false,
+      "quality_qualified": false,
+      "adopted": false,
+      "phone_qualified": false
+    },
+    "reused_preflight": {
+      "identity": {
+        "bytes": 1582060,
+        "sha256": "88d038d7c36ad33e34fffb1c953abe4ed89ad64ffa4ac16449a52f1af1859da5"
+      },
+      "unit_tests": 23,
+      "cold_original_source_import_passed": true
+    }
+  },
+  "comparison_observations": {
+    "runtime_manifest_bytes": 1515482,
+    "unit": {
+      "memory": {
+        "rss": 332382208,
+        "physical": 317326200
+      },
+      "native_usage": {
+        "resident_size": 92766208,
+        "phys_footprint": 74941112,
+        "lifetime_max_phys_footprint": 79135416
+      }
+    },
+    "compare": {
+      "memory": {
+        "rss": 348061696,
+        "physical": 320521104
+      },
+      "native_usage": {
+        "resident_size": 189038592,
+        "phys_footprint": 73646824,
+        "lifetime_max_phys_footprint": 95519440
+      },
+      "rows": 1344,
+      "diagnostic_targets": 1338,
+      "cases": [
+        {
+          "case": "cal-prose-32",
+          "rows": 32,
+          "targets": 31,
+          "complete": true,
+          "profiles": {
+            "source": {
+              "mean_diagnostic_nll": 4.826556756022067
+            },
+            "fp32": {
+              "mean_diagnostic_nll": 4.832248585378621
+            },
+            "fp64": {
+              "mean_diagnostic_nll": 4.832040743452432
+            }
+          },
+          "comparisons": {
+            "source.fp32": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 0,
+                "maximum_absolute": 0.7994070053100586,
+                "maximum_vocabulary_id": 40864,
+                "left_logit": 11.3125,
+                "right_logit": 12.111907005310059,
+                "kl_left_right": 0.01198642740710091,
+                "kl_right_left": 0.01198927042018187,
+                "total_variation": 0.06280330447391395,
+                "argmax_equal": true,
+                "target_nll_difference": -0.3544042753358312
+              },
+              "mean_kl_left_right": 0.0018234977899840186,
+              "mean_kl_right_left": 0.0018282689847527677,
+              "mean_total_variation": 0.02165396461085487
+            },
+            "source.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 0,
+                "maximum_absolute": 0.8021316528320312,
+                "maximum_vocabulary_id": 40864,
+                "left_logit": 11.3125,
+                "right_logit": 12.114631652832031,
+                "kl_left_right": 0.01196770406311806,
+                "kl_right_left": 0.01196825490617637,
+                "total_variation": 0.06277583644170122,
+                "argmax_equal": true,
+                "target_nll_difference": -0.35684414360519945
+              },
+              "mean_kl_left_right": 0.0018095912627887885,
+              "mean_kl_right_left": 0.0018126704847251662,
+              "mean_total_variation": 0.021552624173200904
+            },
+            "fp32.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 11,
+                "maximum_absolute": 0.04210782051086426,
+                "maximum_vocabulary_id": 93223,
+                "left_logit": 1.4679737091064453,
+                "right_logit": 1.5100815296173096,
+                "kl_left_right": 1.2761082055343228e-05,
+                "kl_right_left": 1.2820937976363032e-05,
+                "total_variation": 0.001514910736090078,
+                "argmax_equal": true,
+                "target_nll_difference": -0.003907201560589435
+              },
+              "mean_kl_left_right": 1.1534193391946773e-05,
+              "mean_kl_right_left": 1.1535607252897114e-05,
+              "mean_total_variation": 0.0017878392234450334
+            }
+          }
+        },
+        {
+          "case": "cal-prose-128",
+          "rows": 128,
+          "targets": 127,
+          "complete": true,
+          "profiles": {
+            "source": {
+              "mean_diagnostic_nll": 2.804595023229865
+            },
+            "fp32": {
+              "mean_diagnostic_nll": 2.8038673711757154
+            },
+            "fp64": {
+              "mean_diagnostic_nll": 2.80388391917984
+            }
+          },
+          "comparisons": {
+            "source.fp32": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 0,
+                "maximum_absolute": 0.8814935684204102,
+                "maximum_vocabulary_id": 89260,
+                "left_logit": 8.0625,
+                "right_logit": 8.94399356842041,
+                "kl_left_right": 0.014643351666408136,
+                "kl_right_left": 0.014585287072699137,
+                "total_variation": 0.06979401443676668,
+                "argmax_equal": true,
+                "target_nll_difference": -0.4932137140514552
+              },
+              "mean_kl_left_right": 0.0008977967542343101,
+              "mean_kl_right_left": 0.000899432516153893,
+              "mean_total_variation": 0.01209456499674472
+            },
+            "source.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 0,
+                "maximum_absolute": 0.8814554214477539,
+                "maximum_vocabulary_id": 89260,
+                "left_logit": 8.0625,
+                "right_logit": 8.943955421447754,
+                "kl_left_right": 0.0146338892150726,
+                "kl_right_left": 0.014571782329908694,
+                "total_variation": 0.0698175654964989,
+                "argmax_equal": true,
+                "target_nll_difference": -0.49565358232082346
+              },
+              "mean_kl_left_right": 0.000898487331484836,
+              "mean_kl_right_left": 0.0009000851095171757,
+              "mean_total_variation": 0.012074605821737324
+            },
+            "fp32.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 98,
+                "maximum_absolute": 0.058203697204589844,
+                "maximum_vocabulary_id": 72167,
+                "left_logit": -15.139679908752441,
+                "right_logit": -15.081476211547852,
+                "kl_left_right": 9.427610547561122e-09,
+                "kl_right_left": 9.511413689530288e-09,
+                "total_variation": 7.833365425327968e-07,
+                "argmax_equal": true,
+                "target_nll_difference": -7.821947774888565e-07
+              },
+              "mean_kl_left_right": 6.576656560610618e-06,
+              "mean_kl_right_left": 6.57703885887514e-06,
+              "mean_total_variation": 0.0010416414806499416
+            }
+          }
+        },
+        {
+          "case": "cal-prose-512",
+          "rows": 512,
+          "targets": 511,
+          "complete": true,
+          "profiles": {
+            "source": {
+              "mean_diagnostic_nll": 0.721545097640325
+            },
+            "fp32": {
+              "mean_diagnostic_nll": 0.7200065949716725
+            },
+            "fp64": {
+              "mean_diagnostic_nll": 0.7200149779075735
+            }
+          },
+          "comparisons": {
+            "source.fp32": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 317,
+                "maximum_absolute": 2.0391197204589844,
+                "maximum_vocabulary_id": 112437,
+                "left_logit": -8.125,
+                "right_logit": -6.085880279541016,
+                "kl_left_right": 4.3802406418850557e-07,
+                "kl_right_left": 5.25143696342186e-07,
+                "total_variation": 1.204703509015531e-06,
+                "argmax_equal": true,
+                "target_nll_difference": -8.637219368203885e-07
+              },
+              "mean_kl_left_right": 0.0001710500837580753,
+              "mean_kl_right_left": 0.0001720599231733619,
+              "mean_total_variation": 0.0028879168595261745
+            },
+            "source.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 317,
+                "maximum_absolute": 2.857820510864258,
+                "maximum_vocabulary_id": 120923,
+                "left_logit": -7.125,
+                "right_logit": -4.267179489135742,
+                "kl_left_right": 1.1916853489342455e-06,
+                "kl_right_left": 1.5981234213734206e-06,
+                "total_variation": 2.4846284975682603e-06,
+                "argmax_equal": true,
+                "target_nll_difference": -2.055112005346556e-06
+              },
+              "mean_kl_left_right": 0.0001738443322144774,
+              "mean_kl_right_left": 0.00017476793089537626,
+              "mean_total_variation": 0.0029071111757557945
+            },
+            "fp32.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 317,
+                "maximum_absolute": 1.1971473693847656,
+                "maximum_vocabulary_id": 4577,
+                "left_logit": -10.032958030700684,
+                "right_logit": -8.835810661315918,
+                "kl_left_right": 2.730161394637251e-07,
+                "kl_right_left": 3.211726556195551e-07,
+                "total_variation": 1.2908897282130976e-06,
+                "argmax_equal": true,
+                "target_nll_difference": -1.1913900685261677e-06
+              },
+              "mean_kl_left_right": 1.7750235327756892e-06,
+              "mean_kl_right_left": 1.7724035783288972e-06,
+              "mean_total_variation": 0.00027985442900205627
+            }
+          }
+        },
+        {
+          "case": "cal-code-32",
+          "rows": 32,
+          "targets": 31,
+          "complete": true,
+          "profiles": {
+            "source": {
+              "mean_diagnostic_nll": 2.142257372547331
+            },
+            "fp32": {
+              "mean_diagnostic_nll": 2.1521090311188225
+            },
+            "fp64": {
+              "mean_diagnostic_nll": 2.1514889130715047
+            }
+          },
+          "comparisons": {
+            "source.fp32": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 0,
+                "maximum_absolute": 0.6493873596191406,
+                "maximum_vocabulary_id": 84844,
+                "left_logit": 10.5,
+                "right_logit": 9.85061264038086,
+                "kl_left_right": 0.009364213687524957,
+                "kl_right_left": 0.00943657691785484,
+                "total_variation": 0.05885256826492608,
+                "argmax_equal": true,
+                "target_nll_difference": -0.0730736960107663
+              },
+              "mean_kl_left_right": 0.0011086519797374147,
+              "mean_kl_right_left": 0.0010831011948467836,
+              "mean_total_variation": 0.01165802305925541
+            },
+            "source.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 0,
+                "maximum_absolute": 0.6470985412597656,
+                "maximum_vocabulary_id": 84844,
+                "left_logit": 10.5,
+                "right_logit": 9.852901458740234,
+                "kl_left_right": 0.009355597744377261,
+                "kl_right_left": 0.009427016466183907,
+                "total_variation": 0.058916506493780316,
+                "argmax_equal": true,
+                "target_nll_difference": -0.07304743190152152
+              },
+              "mean_kl_left_right": 0.0011300415872016142,
+              "mean_kl_right_left": 0.001103045561940329,
+              "mean_total_variation": 0.011745270466095055
+            },
+            "fp32.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 26,
+                "maximum_absolute": 0.0687255859375,
+                "maximum_vocabulary_id": 88669,
+                "left_logit": -8.212124824523926,
+                "right_logit": -8.143399238586426,
+                "kl_left_right": 1.4590932028186299e-05,
+                "kl_right_left": 1.4624317545772464e-05,
+                "total_variation": 0.0023446340183910226,
+                "argmax_equal": true,
+                "target_nll_difference": -0.003472919364749305
+              },
+              "mean_kl_left_right": 4.455039980710003e-06,
+              "mean_kl_right_left": 4.457887356686515e-06,
+              "mean_total_variation": 0.0007999586227863061
+            }
+          }
+        },
+        {
+          "case": "cal-code-128",
+          "rows": 128,
+          "targets": 127,
+          "complete": true,
+          "profiles": {
+            "source": {
+              "mean_diagnostic_nll": 1.7824949688064993
+            },
+            "fp32": {
+              "mean_diagnostic_nll": 1.776987878506313
+            },
+            "fp64": {
+              "mean_diagnostic_nll": 1.776859717979457
+            }
+          },
+          "comparisons": {
+            "source.fp32": {
+              "argmax_disagreements": 1,
+              "maximum_absolute": {
+                "position": 19,
+                "maximum_absolute": 0.44283437728881836,
+                "maximum_vocabulary_id": 24152,
+                "left_logit": 1.859375,
+                "right_logit": 2.3022093772888184,
+                "kl_left_right": 7.419332989542514e-05,
+                "kl_right_left": 7.347918396905873e-05,
+                "total_variation": 0.002568936177487983,
+                "argmax_equal": true,
+                "target_nll_difference": 0.003241696887177792
+              },
+              "mean_kl_left_right": 0.0004786540774718202,
+              "mean_kl_right_left": 0.00047763241624515154,
+              "mean_total_variation": 0.008050201087979134
+            },
+            "source.fp64": {
+              "argmax_disagreements": 1,
+              "maximum_absolute": {
+                "position": 19,
+                "maximum_absolute": 0.45070815086364746,
+                "maximum_vocabulary_id": 24152,
+                "left_logit": 1.859375,
+                "right_logit": 2.3100831508636475,
+                "kl_left_right": 8.414808409893248e-05,
+                "kl_right_left": 8.37594596112165e-05,
+                "total_variation": 0.003398581132700315,
+                "argmax_equal": true,
+                "target_nll_difference": 0.004351213320313352
+              },
+              "mean_kl_left_right": 0.0004699666714617813,
+              "mean_kl_right_left": 0.0004694094103556725,
+              "mean_total_variation": 0.007970385846427574
+            },
+            "fp32.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 26,
+                "maximum_absolute": 0.0687255859375,
+                "maximum_vocabulary_id": 88669,
+                "left_logit": -8.212124824523926,
+                "right_logit": -8.143399238586426,
+                "kl_left_right": 1.4590932028186299e-05,
+                "kl_right_left": 1.4624317545772464e-05,
+                "total_variation": 0.0023446340183910226,
+                "argmax_equal": true,
+                "target_nll_difference": -0.003472919364749305
+              },
+              "mean_kl_left_right": 4.461557264227082e-06,
+              "mean_kl_right_left": 4.4658458912206955e-06,
+              "mean_total_variation": 0.0007348680292087898
+            }
+          }
+        },
+        {
+          "case": "cal-code-512",
+          "rows": 512,
+          "targets": 511,
+          "complete": true,
+          "profiles": {
+            "source": {
+              "mean_diagnostic_nll": 0.4525790664150126
+            },
+            "fp32": {
+              "mean_diagnostic_nll": 0.4542632375255755
+            },
+            "fp64": {
+              "mean_diagnostic_nll": 0.4542701342146841
+            }
+          },
+          "comparisons": {
+            "source.fp32": {
+              "argmax_disagreements": 2,
+              "maximum_absolute": {
+                "position": 314,
+                "maximum_absolute": 1.8185701370239258,
+                "maximum_vocabulary_id": 4985,
+                "left_logit": -1.578125,
+                "right_logit": -3.396695137023926,
+                "kl_left_right": 4.151059870539387e-06,
+                "kl_right_left": 3.8114086771948854e-06,
+                "total_variation": 3.779431272977228e-05,
+                "argmax_equal": true,
+                "target_nll_difference": 3.7801358654905104e-05
+              },
+              "mean_kl_left_right": 0.00014832868749562242,
+              "mean_kl_right_left": 0.00014899306408740003,
+              "mean_total_variation": 0.002563933805696992
+            },
+            "source.fp64": {
+              "argmax_disagreements": 2,
+              "maximum_absolute": {
+                "position": 284,
+                "maximum_absolute": 1.9435667991638184,
+                "maximum_vocabulary_id": 12892,
+                "left_logit": -0.79296875,
+                "right_logit": 1.1505980491638184,
+                "kl_left_right": 6.67362430763582e-05,
+                "kl_right_left": 7.202271256209576e-05,
+                "total_variation": 0.0006482800451465476,
+                "argmax_equal": true,
+                "target_nll_difference": -0.0005998873468067113
+              },
+              "mean_kl_left_right": 0.00014917639314464818,
+              "mean_kl_right_left": 0.00014991680497947554,
+              "mean_total_variation": 0.002573472368127389
+            },
+            "fp32.fp64": {
+              "argmax_disagreements": 0,
+              "maximum_absolute": {
+                "position": 380,
+                "maximum_absolute": 0.3188587427139282,
+                "maximum_vocabulary_id": 60618,
+                "left_logit": -1.620510220527649,
+                "right_logit": -1.3016514778137207,
+                "kl_left_right": 1.2825901780877731e-06,
+                "kl_right_left": 1.3087104394844608e-06,
+                "total_variation": 4.187021052456788e-05,
+                "argmax_equal": true,
+                "target_nll_difference": -3.124282916906968e-05
+              },
+              "mean_kl_left_right": 1.4711779520078605e-06,
+              "mean_kl_right_left": 1.4733488334304907e-06,
+              "mean_total_variation": 0.00023799086594299942
+            }
+          }
+        }
+      ]
+    },
+    "scope": {
+      "calibration_descriptive_comparison_only": true,
+      "validation_evaluated": false,
+      "native_executed": false,
+      "numerical_qualified": false,
+      "held_out_quality": false,
+      "adopted": false
+    }
+  },
+  "comparison_scope": {
+    "calibration_only": true,
+    "held_out_quality": false,
+    "numerical_qualified": false,
+    "adopted": false,
+    "accumulation": "NumPy FP64 stable log-sum-exp/reductions; descriptive metrics, no gates",
+    "overlapping_prefix_cases": true,
+    "source_dtypes": [
+      "bfloat16"
+    ]
+  },
+  "aggregate_diagnostic_nll": {
+    "source": 1.045269891484714,
+    "fp32": 1.045093861903686,
+    "fp64": 1.0450699204528748
+  },
+  "aggregate_mean_tv": {
+    "source.fp32": 0.004788587206013723,
+    "source.fp64": 0.004789695190811584,
+    "fp32.fp64": 0.00042808001439969417
+  },
+  "commands": {
+    "source": [
+      {
+        "label": "capture-a",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/time",
+            "-l",
+            "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+            "-s",
+            "-B",
+            "-X",
+            "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/capture-a-cold-cache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/worker.py",
+            "--runtime",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/runtime.json",
+            "--runtime-sha",
+            "afc19008cfc2c15a5ad38ecd3df13409d022d06a6c776ea0c59c6bc968007808",
+            "--mode",
+            "capture-a",
+            "--output",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/capture-a.json",
+            "--capture",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/capture-a"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 12519,
+          "stdout": "artifacts/m8-qwen3-quantized-source-capture-v1/capture-a.stdout",
+          "stderr": "artifacts/m8-qwen3-quantized-source-capture-v1/capture-a.stderr"
+        }
+      },
+      {
+        "label": "capture-b",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/time",
+            "-l",
+            "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+            "-s",
+            "-B",
+            "-X",
+            "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/capture-b-cold-cache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/worker.py",
+            "--runtime",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/runtime.json",
+            "--runtime-sha",
+            "afc19008cfc2c15a5ad38ecd3df13409d022d06a6c776ea0c59c6bc968007808",
+            "--mode",
+            "capture-b",
+            "--output",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/capture-b.json",
+            "--capture",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/capture-b"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 12589,
+          "stdout": "artifacts/m8-qwen3-quantized-source-capture-v1/capture-b.stdout",
+          "stderr": "artifacts/m8-qwen3-quantized-source-capture-v1/capture-b.stderr"
+        }
+      },
+      {
+        "label": "replay-a",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/time",
+            "-l",
+            "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+            "-s",
+            "-B",
+            "-X",
+            "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/replay-a-cold-cache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/worker.py",
+            "--runtime",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/runtime.json",
+            "--runtime-sha",
+            "afc19008cfc2c15a5ad38ecd3df13409d022d06a6c776ea0c59c6bc968007808",
+            "--mode",
+            "replay-a",
+            "--output",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/replay-a.json",
+            "--capture",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/capture-a",
+            "--manifest-sha",
+            "0183168d5f61b8fb103af547cd89e74ae7b053764146eb94c565dbf88b0c788a"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 12634,
+          "stdout": "artifacts/m8-qwen3-quantized-source-capture-v1/replay-a.stdout",
+          "stderr": "artifacts/m8-qwen3-quantized-source-capture-v1/replay-a.stderr"
+        }
+      },
+      {
+        "label": "replay-b",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/time",
+            "-l",
+            "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+            "-s",
+            "-B",
+            "-X",
+            "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/replay-b-cold-cache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/worker.py",
+            "--runtime",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/runtime.json",
+            "--runtime-sha",
+            "afc19008cfc2c15a5ad38ecd3df13409d022d06a6c776ea0c59c6bc968007808",
+            "--mode",
+            "replay-b",
+            "--output",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/replay-b.json",
+            "--capture",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/capture-b",
+            "--manifest-sha",
+            "f030c4c49673d81558c88852f2b971859d704e26d2eed87dc68d54b1e0aa6869"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 12654,
+          "stdout": "artifacts/m8-qwen3-quantized-source-capture-v1/replay-b.stdout",
+          "stderr": "artifacts/m8-qwen3-quantized-source-capture-v1/replay-b.stderr"
+        }
+      }
+    ],
+    "comparison": [
+      {
+        "label": "unit",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/time",
+            "-l",
+            "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+            "-s",
+            "-B",
+            "-X",
+            "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-source-comparison-v1/unit-cold-cache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-source-comparison-v1/worker.py",
+            "--runtime",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-source-comparison-v1/runtime.json",
+            "--runtime-sha",
+            "4d55884e7c9f2af8b2cf60666685e7465e6da59ae0b4ad5b5aa16304226dc075",
+            "--mode",
+            "unit",
+            "--output",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-source-comparison-v1/unit.json"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 13695,
+          "stdout": "artifacts/m8-qwen3-source-comparison-v1/unit.stdout",
+          "stderr": "artifacts/m8-qwen3-source-comparison-v1/unit.stderr"
+        }
+      },
+      {
+        "label": "compare",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/time",
+            "-l",
+            "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+            "-s",
+            "-B",
+            "-X",
+            "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-source-comparison-v1/compare-cold-cache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-source-comparison-v1/worker.py",
+            "--runtime",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-source-comparison-v1/runtime.json",
+            "--runtime-sha",
+            "4d55884e7c9f2af8b2cf60666685e7465e6da59ae0b4ad5b5aa16304226dc075",
+            "--mode",
+            "compare",
+            "--output",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-source-comparison-v1/compare.json",
+            "--source",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quantized-source-capture-v1/capture-a",
+            "--source-sha",
+            "0183168d5f61b8fb103af547cd89e74ae7b053764146eb94c565dbf88b0c788a"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 13717,
+          "stdout": "artifacts/m8-qwen3-source-comparison-v1/compare.stdout",
+          "stderr": "artifacts/m8-qwen3-source-comparison-v1/compare.stderr"
+        }
+      }
+    ]
+  },
+  "historical_failures_preserved": true,
+  "validation_evaluated": false,
+  "native_executed": false,
+  "performance_benchmark": false,
+  "capacity_changed": false
+}

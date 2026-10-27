@@ -1,0 +1,47 @@
+from pathlib import Path
+import argparse,inspect,json,os,signal,sys,unittest
+R=Path.cwd();sys.path.insert(0,str(R/'tools/reference'));sys.path.insert(0,str(R/'tools/experiments'))
+import qwen3_quantized_source as producer
+D=R/'artifacts/m8-qwen3-quantized-source-design-v2/plan.json';F=R/'benchmarks/qwen3-context-candidate-v2'
+def extras():
+ names=['qwen3_quantized_source.py','test_qwen3_quantized_source.py','qwen3_context_calibration.py','test_qwen3_context_calibration.py','qwen3_context_inputs.py','test_qwen3_context_inputs.py','qwen3_long_context.py','qwen3_context_precision.py','mlx_qwen3_real.py','mlx_qwen3_checkpoint.py','qwen3_fp16.py','qwen_fp16.py','qwen.py']
+ return[Path(__file__).resolve(),*[R/'tools/reference'/n for n in names],R/'tools/bench/prepare.py',R/'tools/experiments/native_usage.py',D,F/'manifest.json',F/'recipe.json',R/'.venv/mlx-source-only-v1/pyvenv.cfg',*sorted(F.glob('cal-*.u32le'))]
+def sources():return producer.source_paths(extras())
+def stop(number,_):
+ for sig in(signal.SIGINT,signal.SIGTERM):signal.signal(sig,signal.SIG_IGN)
+ raise InterruptedError(str(number))
+if __name__=='__main__':
+ parser=argparse.ArgumentParser();parser.add_argument('--runtime',type=Path,required=True);parser.add_argument('--runtime-sha',required=True);parser.add_argument('--mode',choices=['unit','import'],required=True);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args()
+ selected=producer.runtime.runtime.runtime_paths(sources());admission=producer.runtime.runtime.admit_runtime(args.runtime,args.runtime_sha,sources());manifest=producer.runtime.safe.document(producer.runtime.safe.read(args.runtime,2*1024**2));record=dict(passed=False,primary_error=None,endpoint_errors=[],runtime_admission=admission,model_loaded=False,graph_executed=False)
+ old={sig:signal.signal(sig,stop)for sig in(signal.SIGINT,signal.SIGTERM)}
+ try:
+  plan=producer.calibration.reference.load(D,'d4fa5f85f07bd254ca48861adc7364dfc0edfb29a730d9693706f1740299a10d');assert all(os.environ.get(k)==v for k,v in producer.ENVIRONMENT.items())
+  record['availability_profile']=producer.isolation_profile()
+  if args.mode=='unit':
+   import test_qwen3_quantized_source,test_qwen3_context_calibration,test_qwen3_context_inputs
+   suite=unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromModule(m)for m in(test_qwen3_quantized_source,test_qwen3_context_calibration,test_qwen3_context_inputs));result=unittest.TextTestRunner(verbosity=2).run(suite);record['tests']=dict(run=result.testsRun,failures=len(result.failures),errors=len(result.errors));assert result.wasSuccessful()and result.testsRun==23
+  else:
+   assert {k:producer.version(k)for k in producer.VERSIONS}==producer.VERSIONS
+   import mlx.core as mx
+   from mlx_lm.models.qwen3 import Model,ModelArgs
+   from mlx_lm.utils import load_model
+   record['imports']=dict(model=inspect.getsourcefile(Model),model_args=inspect.getsourcefile(ModelArgs),loader=inspect.getsourcefile(load_model))
+   record['mlx_memory']=producer.memory(mx);record['environment']=producer.ENVIRONMENT
+   record['cold_import_endpoint']=producer.runtime.endpoint(manifest,selected,sources())
+  import native_usage
+  record['native_usage']=native_usage.usage();limit=512*1024**2 if args.mode=='unit'else producer.LIMIT;assert 0<record['native_usage']['lifetime_max_phys_footprint']<=limit;record['passed']=True
+ except BaseException as error:record['primary_error']=type(error).__name__+': '+str(error);record['primary_error_notes']=getattr(error,'__notes__',[])
+ finally:
+  for sig in old:signal.signal(sig,signal.SIG_IGN)
+  record['actual_module_origins']={name:str(Path(origin).resolve())for name,module in list(sys.modules.items())if(origin:=getattr(module,'__file__',None))}
+  record['unadmitted_module_origins']={name:path for name,path in record['actual_module_origins'].items()if path not in manifest['files']}
+  try:record['final_availability_profile']=producer.isolation_profile()
+  except BaseException as error:record['endpoint_errors'].append(type(error).__name__+': '+str(error))
+  try:record['runtime_endpoint']=producer.runtime.endpoint(manifest,selected,sources())
+  except BaseException as error:record['endpoint_errors'].append(type(error).__name__+': '+str(error))
+  try:
+   with args.output.open('x')as f:json.dump(record,f,indent=2,allow_nan=False);f.write('\n')
+  finally:
+   for sig,handler in old.items():signal.signal(sig,handler)
+ print(json.dumps(dict(passed=record['passed']and not record['endpoint_errors'],primary_error=record['primary_error'],endpoint_errors=record['endpoint_errors'])),flush=True)
+ sys.exit(0 if record['passed']and not record['endpoint_errors']else 1)
