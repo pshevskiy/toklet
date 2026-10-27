@@ -1,0 +1,63 @@
+{
+  "format": "toklet-qwen3-context4096-inputs-v1",
+  "capacity": 4096,
+  "numerical_parent_manifest_sha256": "21d54e567025f70fdda01d7f1bede1a71f730c6b7c10aec62f5aaffec52a7f08",
+  "quality_parent_manifest_sha256": "908e037de5b399d9e9a8dd09aa9fcc568f67abb714b06508672deac6bb8ac529",
+  "quality_global_token_start": 10001,
+  "score_rows": [
+    3071,
+    4095
+  ],
+  "score_target_indices": [
+    3072,
+    4096
+  ],
+  "targets": 1024,
+  "quality_mean_nll_increase_limit": 0.05,
+  "files": {
+    "A.u32le": {
+      "bytes": 16384,
+      "sha256": "45f734c5fca32780b251eb14bf777bd4c512ba36a9a655c256d064aeea8b5c0b"
+    },
+    "B.u32le": {
+      "bytes": 16384,
+      "sha256": "acef763a2ca5fa7fd19bc6bf05098689285b84bfded5f2ff6748584ae3a0dd9c"
+    },
+    "Q.u32le": {
+      "bytes": 16384,
+      "sha256": "f266ab276dce6bcc9c0467b1c7d5b3e23efa9f3d1703d9fd1e7eda7956820890"
+    }
+  },
+  "provenance": {
+    "model_executed": false,
+    "dataset": {
+      "bytes": 732610,
+      "id": "wikitext.test",
+      "path": "artifacts/datasets/wikitext-2-raw-test.parquet",
+      "revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "role": "held_out_loss",
+      "sha256": "5f1bea067869d04849c0f975a2b29c4ff47d867f484f5010ea5e861eab246d91",
+      "url": "https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext-2-raw-v1/test-00000-of-00001.parquet"
+    },
+    "tokenizer": {
+      "bytes": 11422654,
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    },
+    "corpus_utf8_bytes": 1290546,
+    "corpus_sha256": "430983e5a711fbc4c6576edffecacf47ff23d58f62f3923d2386d798e0a794c9",
+    "complete_corpus_tokens": 298938,
+    "old_prefix_preserved": true,
+    "new_span_global_half_open": [
+      10001,
+      14097
+    ],
+    "add_special_tokens": false,
+    "join_policy": "newline_join_nonempty_original_rows"
+  },
+  "native_recipe": {
+    "B": "A with last token incremented by1 modulo151936",
+    "source": "eight original512 repeats; structural witness, not quality"
+  },
+  "numerical_or_quality_executed": false,
+  "ordinary_app_capacity_changed": false
+}

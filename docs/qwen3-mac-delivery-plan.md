@@ -38,7 +38,7 @@ rejected for qualification and cannot authorize validation or larger app limits.
 | Q3 — diagnostic1025 and complete quality | Diagnostic-only1025 capacity/state checks, frozen checkpoint-specific inputs/candidate/policy, pinned original BF16 baseline, all10000 loss targets and100 tasks per profile, isolated grading and unchanged0.05-nat/2-percentage-point limits. App limits stay fixed. | Complete. [Full comparison](qwen3-full-quality.md): loss increase0.00400406; strict tasks3/100 versus5/100, exactly the two-case limit. Historical relative-quality decision retained experimental Half. Q4 now binds the current native profile to those exact full outputs; weak absolute quality and historical fidelity rejection remain explicit. |
 | Q4 — qualify the retained native precision/context profile | Human-approved [native-profile v1](qwen3-native-profile.md): frozen Reference attention, unchanged independent operator/graph gates, exact state/schedule validation and complete current-native quality continuity under original0.05-nat/2-percentage-point limits. Strict trajectory fidelity remains a separate rejected result. | Complete at C512 on M1 Pro: unchanged independent gates and all eight reserved cases pass; full current-native10000-target/100-task replay is identical to the historical quality result. Astra accepts the scoped profile. No default/capacity increase or transfer to CompensatedReference. |
 | Q5 — usable Qwen3 Mac milestone | Complete Chat, Expert and the supported pinned HF search/import/download/offline-reopen journey for this admitted profile. Verify long input/reply, shared budgets, cancellation/resume, model switching, truthful limits and whole-process memory. Reuse L3; retain a clearly stated partial window until Q6 qualifies more. | [Bounded experimental C512 functional milestone complete](qwen3-mac-functional.md): visible recovery/switching, pinned HF download/offline path, full raw Expert384+128 and normal-stop Chat-worker385+127, exact saved prefix/overflow/closure and memory checks pass. The selected native profile now passes Q4; C512 remains partial and larger-window delivery follows Q6. |
-| Q6 — expand the selected model window | Progress through named context/rotary/cache boundaries toward the declared40960 shared positions, including exact boundary and rejected maximum+1, separate long input/continuation, full quality and complete memory/text/UI delivery accounting. | Subsequent expansion; smaller windows remain partial. |
+| Q6 — expand the selected model window | Progress through named context/rotary/cache boundaries toward the declared40960 shared positions, including exact boundary and rejected maximum+1, separate long input/continuation, full quality and complete memory/text/UI delivery accounting. | Scoped4096 diagnostic passes state, generation, deep relative quality and process fit. Ordinary app512 stays partial. Next address the measured Reference scheduling bottleneck before8192; full-window source memory, streaming/admission and final quality remain open. |
 
 Gemma, additional architectures/optimizations, broader HF compatibility and
 iPhone14Pro qualification remain in their existing plans, deferred from this
@@ -108,10 +108,20 @@ Qwen3 diagnostic admission and checked resource planning, then boundary/deep-qua
 qualification and bounded real streaming/application delivery. The first
 [diagnostic admission/resource mechanism](qwen3-context-admission.md) is checked,
 including successful pinned-source40960 metadata and ordinary short regression.
-Long numerical execution, fit and quality remain unqualified. Next freeze the
-actual4096 experiment. Preserve ordinary and other-model limits until the
-corresponding qualification authorizes expansion.
+The [finite4096 diagnostic](qwen3-context4096.md) now passes exact native
+state/schedule/generation, deep controls, a1024-target BF16 relative-quality
+supplement and whole-process fit. Native loss increase is0.00040249≤0.05.
+The ordinary app remains512, and other-model limits stay unchanged.
 
-Measure completed chunk latency at4096 before estimating larger contexts. Source
-BF16 long-cache workspace and full-process memory must be admitted independently.
+Astra recommends one bit-exact Reference scheduling experiment before8192:
+the ordinary4064-input chunk32 prefill alone records456.64 seconds of completed
+model calls, followed by206.10 seconds for31 decode calls. These single
+uncontrolled observations establish a delivery bottleneck, not a qualified
+performance result. Keep Serial as oracle/default, qualify the separate explicit
+schedule through exact F2 and complete10000/100 output bridges, and require
+representative repeated/confirmed benefit before retaining it. The full-window
+source's separate host-reader/workspace proof remains open.
+
+Completed4096 call times are now retained. Source BF16 long-cache workspace and
+full-process memory must still be admitted independently at later depths.
 Full40960, other architectures and iPhone work have no reliable completion ETA yet.

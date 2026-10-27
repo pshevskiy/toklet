@@ -6157,3 +6157,54 @@ deep quality, full-process memory and app delivery still open. Next freeze the
 fidelity rejections. See [admission](qwen3-context-admission.md),
 [evidence](../benchmarks/results/2026-10-28-qwen3-context-admission-v1.json) and
 [full-window plan](qwen3-full-window-plan.md).
+
+## 2026-10-28 — Qwen3 native 4096 diagnostic passes
+
+The approved native Reference arithmetic now passes the finite 4096-position
+diagnostic on M1 Pro. All 37376 prescribed commits complete: archived512 anchor,
+exact chunk32/chunk128 rows, a4095-row causal prefix, cached/reset/pending/discard
+and replay state, three32-token continuations, final flush and14 exact atomic
+overflow checks. GreedyToken matches visible IDs and final selection; FullLogits
+also matches final distribution bits. No production arithmetic or app cap changes.
+
+Prospectively frozen, independently reconstructed WikiText IDs add1024 targets
+at deep positions. Native mean NLL1.9171930208055907 versus original BF16
+1.9167905279642214 increases0.0004024928413692841≤0.05. The original complete
+10000-target/100-task evidence and weak3/100 versus5/100 strict task scores retain
+their scope. Both historical trajectory-fidelity contracts remain rejected.
+
+The bounded BF16 cache/layer schedule first passes all1025 exact stock/adapted
+rows, all28-layer valid K/V at five endpoints and six masked-head rows. All18 raw
+BF16/FP32 pairs, target identities and aggregate mean/delta arithmetic from
+retained per-target losses pass independent readback. Full quality logits are
+not retained for independent per-row rescoring. The first attempt's validator
+wrongly rounded stock cache capacity;
+Astra traced the pinned trim/concatenate recurrence and reviewed its exact
+correction and13 portable controls. Original code bytes, partial rows and failure
+receipts remain retained; passing unchanged builds/operators were authenticated
+and reused.
+
+Formatting, strict default/Metal Clippy,372 default tests,247 Metal-library
+tests, five example tests, three input controls and two explicit deep GPU controls
+pass; counts overlap. All308 final bindings and10 model files authenticate;
+27 test-owned groups close, including the failed attempt, plus the publication
+reader. Maximum native physical/RSS1426802176/1435074560 bytes, BF16 quality
+1841317520/1243398144, BF16 equivalence1834469080/1417461760 and independent
+readback20529656/32358400 stay within their limits. Historical protected binaries
+remain unchanged.
+
+Single ordinary completed-call observations expose a delivery bottleneck:
+chunk32's4064-input prefill takes456.64 seconds,31 deep decode calls206.10 seconds;
+chunk128 records166.72/206.35 seconds. No warmup/repetition, controlled thermal
+state, speedup or performance qualification is claimed. Astra recommends a
+bounded bit-exact three-pass scheduling experiment before8192, retaining Serial
+as oracle/default and requiring full F2/current-quality bridges and repeated
+measured benefit. Its reviewed private proposals remain unapplied/unqualified.
+
+The full40960 BF16 ledger also needs a separate host-reader allowance and actual
+workspace/physical proof; smaller-context peaks do not establish fit. The
+improvement closes scoped4096 diagnostic behavior, relative quality and process
+memory. Ordinary app512, full-window streaming/admission, final quality and iPhone
+remain open. See [report](qwen3-context4096.md),
+[receipt](../benchmarks/results/2026-10-28-qwen3-context4096-v1.json) and
+[corrected next sequence](qwen3-full-window-plan.md).

@@ -194,3 +194,180 @@ fn reference_attention_qwen3_shapes() {
         }
     });
 }
+
+#[test]
+#[ignore = "Explicit GPU analytical Reference attention16:8/head128 at1024/2048/4096; no model"]
+fn reference_attention_qwen3_deep_controls() {
+    autoreleasepool(|_| {
+        let gpu = Gpu::new().unwrap();
+        let (heads, kvheads, dim, chunk) = (16, 8, 128, 2);
+        // Three exact uniform means and three exact dominant-key selections.
+        // These constants are independent analytical witnesses, not fitted gates.
+        for (causal, selected) in [
+            (1024, None),
+            (2048, None),
+            (4096, None),
+            (4095, Some(0)),
+            (4095, Some(2047)),
+            (4095, Some(4094)),
+        ] {
+            let valid = if selected.is_some() { 4096 } else { causal };
+            let cap = valid + 3;
+            // One logical query, with a second untouched padded query row.
+            let mut q_values = vec![HALF_GUARD; chunk * heads * dim];
+            q_values[..heads * dim].fill(0);
+            let mut k_values = vec![0x7e00; kvheads * cap * dim];
+            let mut v_values = k_values.clone();
+            for head in 0..heads {
+                if selected.is_some() {
+                    q_values[head * dim] = f16::from_f32(8.).to_bits();
+                }
+            }
+            for head in 0..kvheads {
+                for position in 0..valid {
+                    for feature in 0..dim {
+                        let index = (head * cap + position) * dim + feature;
+                        let key = if selected.is_none() || feature != 0 {
+                            0.
+                        } else if position == causal {
+                            4096.
+                        } else if Some(position) == selected {
+                            128.
+                        } else {
+                            -128.
+                        };
+                        k_values[index] = f16::from_f32(key).to_bits();
+                        if position < causal {
+                            let value = if selected.is_some() {
+                                (head + 1) as f32 / 16.
+                                    + ((position % 17) as i32 - 8) as f32 / 64.
+                                    + ((feature % 5) as i32 - 2) as f32 / 128.
+                            } else {
+                                let sign = if (position + feature) % 2 == 0 {
+                                    1.
+                                } else {
+                                    -1.
+                                };
+                                (head + 1) as f32 / 16. + sign / 16.
+                            };
+                            v_values[index] = f16::from_f32(value).to_bits();
+                        }
+                    }
+                }
+            }
+            // Equal numbers of +/-1/16 cancel exactly at power-of-two depths.
+            // In the dominant cases the >180 score gap underflows every losing
+            // exponential to +0, so the exact result is the selected dyadic V.
+            let expected: Vec<_> = (0..heads * dim)
+                .map(|i| {
+                    let head = i / dim / 2;
+                    let feature = i % dim;
+                    let value = (head + 1) as f32 / 16.
+                        + selected.map_or(0., |p| {
+                            ((p % 17) as i32 - 8) as f32 / 64.
+                                + ((feature % 5) as i32 - 2) as f32 / 128.
+                        });
+                    f16::from_f32(value).to_bits()
+                })
+                .collect();
+            let q = upload(&gpu, &q_values);
+            let k = upload(&gpu, &k_values);
+            let v = upload(&gpu, &v_values);
+            let output = upload(&gpu, &vec![HALF_GUARD; chunk * heads * dim]);
+            let scratch_len = heads * chunk * cap;
+            let mut scores = Buffer::<u32>::new(&gpu, scratch_len + GUARD).unwrap();
+            let mut probs = Buffer::<u32>::new(&gpu, scratch_len + GUARD).unwrap();
+            scores.with_mut(|b| b.fill(FLOAT_GUARD));
+            probs.with_mut(|b| b.fill(FLOAT_GUARD));
+            let status = Buffer::<u32>::new(&gpu, 8).unwrap();
+            let shape = [1, heads, kvheads, dim, cap, chunk, causal - 1, valid].map(|n| n as u32);
+            let raw = gpu.command().unwrap();
+            gpu.encode(
+                &Command {
+                    raw: &raw,
+                    trace: None,
+                },
+                Kernel::Attention,
+                &[&q.raw, &k.raw, &v.raw, &scores.raw, &probs.raw, &output.raw],
+                &shape,
+                heads,
+                Some(&status),
+            )
+            .unwrap();
+            raw.commit();
+            raw.waitUntilCompleted();
+            let actual = output.with_slice(|b| b.to_vec());
+            let status_words = status.with_slice(|b| b.to_vec());
+            let preserved: Vec<_> = [(&q, &q_values), (&k, &k_values), (&v, &v_values)]
+                .iter()
+                .map(|(b, original)| {
+                    b.with_slice(|words| {
+                        words[..original.len()] == **original
+                            && words[original.len()..].iter().all(|x| *x == HALF_GUARD)
+                    })
+                })
+                .collect();
+            let output_padding = actual[heads * dim..].iter().all(|x| *x == HALF_GUARD);
+            let scratch_padding: Vec<_> = [&scores, &probs]
+                .iter()
+                .map(|b| {
+                    b.with_slice(|words| {
+                        (0..heads).all(|h| {
+                            words[h * chunk * cap + valid..(h + 1) * chunk * cap]
+                                .iter()
+                                .all(|x| *x == FLOAT_GUARD)
+                        }) && words[scratch_len..].iter().all(|x| *x == FLOAT_GUARD)
+                    })
+                })
+                .collect();
+            let probability_mismatch = probs.with_slice(|words| {
+                (0..heads).flat_map(|h|(0..valid).map(move |p|(h,p))).find_map(|(h,p)| {
+                    let expected = if let Some(winner)=selected { if p==winner {1f32} else {0.} } else {1./causal as f32};
+                    let actual=words[h*chunk*cap+p];
+                    (actual!=expected.to_bits()).then_some(serde_json::json!({"head":h,"position":p,"actual_bits":actual,"expected_bits":expected.to_bits()}))
+                })
+            });
+            let score_valid = scores.with_slice(|words| {
+                (0..heads).all(|h| {
+                    let row = &words[h * chunk * cap..h * chunk * cap + valid];
+                    if let Some(winner) = selected {
+                        row.iter().all(|x| f32::from_bits(*x).is_finite())
+                            && f32::from_bits(row[causal]) > f32::from_bits(row[winner])
+                            && f32::from_bits(row[winner]) > 90.
+                            && row[..causal]
+                                .iter()
+                                .enumerate()
+                                .all(|(p, x)| p == winner || f32::from_bits(*x) < -90.)
+                    } else {
+                        row.iter().all(|x| *x == 0)
+                    }
+                })
+            });
+            let future_probability_bits: Vec<_> = if selected.is_some() {
+                probs.with_slice(|words| {
+                    (0..heads)
+                        .map(|h| words[h * chunk * cap + causal])
+                        .collect()
+                })
+            } else {
+                Vec::new()
+            };
+            println!(
+                "{}",
+                serde_json::json!({"kind":"native_profile_deep_attention","shape":shape,"selected_position":selected,
+                "expected_half_bits":expected,"actual_half_bits":actual,"status":status_words,
+                "command_completed":raw.status()==MTLCommandBufferStatus::Completed,
+                "input_and_guards_preserved":preserved,"output_padding_preserved":output_padding,
+                "scratch_padding_preserved":scratch_padding,"probability_first_mismatch":probability_mismatch,
+                "score_structure_valid":score_valid,"future_probability_bits":future_probability_bits})
+            );
+            assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+            assert_eq!(status_words, [0; 8]);
+            assert_eq!(&actual[..heads * dim], expected);
+            assert!(preserved.iter().all(|x| *x));
+            assert!(output_padding && scratch_padding.iter().all(|x| *x));
+            assert!(probability_mismatch.is_none());
+            assert!(score_valid);
+        }
+    });
+}

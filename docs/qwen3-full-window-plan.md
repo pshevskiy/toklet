@@ -25,6 +25,12 @@ delivery bottleneck.
 
 ## F2 — Boundary qualification and a bounded source reference
 
+The [4096-position diagnostic](qwen3-context4096.md) now passes its finite native
+state/schedule/generation, independent controls,1024-target BF16 quality and
+whole-process memory gates. The scoped result leaves ordinary app512 unchanged.
+Proceed through the measured scheduling experiment below before8192; later
+boundaries and the full model window remain open.
+
 Use1025 as the existing anchor, then4096,8192,16384,32768 and40960. Freeze input
 IDs, candidate/source profiles and criteria before execution. Require deep-offset
 rotary/operator controls under the original primitive gates, long causal/GQA
@@ -80,6 +86,44 @@ weights, full KV, one layer's old/new overlap,256MiB framework allowance and64Mi
 workspace provisionally total6393036800 bytes, just49414144 below6GiB; workspace
 is not proven. Reject admission if the checked ledger fails. A Metal memory-limit
 hint cannot replace that proof or owned external lifetime measurement.
+
+A subsequent Astra ledger audit identifies a missing separate host-reader reserve
+in that provisional total. Keeping the current 512MiB framework and 160MiB host
+allowances does not admit a full40960 source run. A proposed reader bounded by
+construction to32MiB, with a separately qualified256MiB non-buffer allowance,
+would raise the provisional total to6426591232 bytes, only15859712 below6GiB.
+Neither smaller allowance is established by a successful smaller-context peak.
+Require a concrete bounded-reader/lifetime design, unique backing-allocation
+accounting and the finite workspace/process probe before using that candidate
+ledger. The current4096 experiment keeps its original conservative reserves.
+
+### Measured Reference bottleneck before8192
+
+The frozen4096 experiment's completed chunk32 diagnostic pass records463.1623
+seconds of completed model calls, excluding load and diagnostic host processing.
+These are individual planning observations, not a performance benchmark. The
+current shader gives one query/head lane serial QK and PV reductions; call time
+grows with valid cache depth. No per-layer host wait or whole-cache copy explains
+this observed cost.
+
+After F2 closes successfully, Astra recommends one bounded scheduling experiment
+before8192. Preserve the serial Reference implementation as oracle and default.
+An explicit experimental Qwen3 diagnostic schedule may split score, stable
+softmax and context into three GPU dispatches, parallelizing independent outputs
+while preserving every reduction order, division, mask and Half rounding. Reuse
+the same score/probability buffers and command dependency chain. Bound capacity
+and absolute positions to the admitted4096 endpoint; this is not a new arithmetic
+profile or an automatic larger-window rollout.
+
+Require exact independent controls, the complete frozen F2 row/state/quality
+bridge and current Q4's complete10000-target/100-task output bridge. Retain the
+experiment only after representative completed whole-model calls and short
+generation requests satisfy the original warmup/repetition/confirmation policy,
+memory accounting and practical gain criteria. Deep prefixes may be prepared
+once and safely replayed to measure named tail calls; record that replay cost.
+Such a benchmark cannot claim full4096-request throughput. Revert complexity
+that fails identity or useful measured benefit. Do not switch schedules during
+the current frozen F2 execution.
 
 ## F3 — Bounded real streaming and Mac application admission
 
