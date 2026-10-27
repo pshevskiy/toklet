@@ -91,8 +91,10 @@ per-layer localization and keep kernels unchanged. The [separate experimental
 C512 input freeze](benchmarks/qwen3-context-candidate-v2/README.md) now has two byte-identical cold
 preparations: two calibration texts/six cases and three validation texts/eight
 cases, explicit57-state pooling and six prefix pairs. No gates are derived or
-adopted. Next run CPU calibration only, freeze/review gates before untouched
-validation, then require separate source parity and complete quality evidence.
+adopted. The [CPU-only calibration captures](docs/qwen3-context-calibration.md) now repeat
+all12 graphs/756 arrays/768,983,040 values per set with full cold readback.
+Next derive/freeze/review experimental gates before untouched validation;
+separate source parity and complete quality evidence remain required.
 Source parity, unquantized/held-out quality and broader context remain open;
 no precision-policy or capacity upgrade follows.
 Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.

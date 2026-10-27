@@ -5687,3 +5687,33 @@ unquantized baseline and separate source parity remain required without clipping
 See [the frozen proposal](../benchmarks/qwen3-context-candidate-v2/README.md) and
 [public evidence](../benchmarks/results/2026-10-27-qwen3-context-inputs-v2.json).
 Next CPU calibration precedes immutable gate review and untouched validation.
+
+## 2026-10-27 — Complete experimental CPU calibration capture and readback
+
+The unchanged independent Qwen3 graph now captures all six calibration inputs
+with separate FP32/FP64 arithmetic, original reconstructed weights and Half
+storage. Validation token arrays remain unopened. One model/returned graph is
+live at a time. Each run saves12 complete graphs/756 arrays/768,983,040 values,
+including CPU attention scores/probabilities outside the57-state target map.
+Complete storage is2,569,469,952 bytes; the prior conservative5,214,106,290-byte
+memory ledger and two-capture disk admission remain within their limits.
+
+Active array descriptors retain intended/actual bytes and hashes through short
+writes. Returned nonfinite arrays are saved before rejection. Per-attempt/final
+journals preserve partial results and original errors; export-level failure
+controls verify earlier captures and owner closure. Internal graph failures
+cannot expose unreturned states and gain no capture claim. Independent streaming
+readers verify exact coverage/schema, every value's finiteness, full/array hashes
+and descriptor/path endpoints. Separate standard-library publication replays
+complete raw hashes and geometry without loading a model.
+
+All13 cold tests pass. Both cold captures have identical complete record sets;
+both full readbacks pass. Five execution groups and the publication group close.
+Capture physical/RSS peaks1,275,463,936/2,188,410,880 and
+1,245,940,064/2,190,180,352 bytes fit6GiB. Readback peaks
+292,684,760/274,661,376 and292,930,472/269,058,048 bytes fit512MiB.
+No gates, numerical/source/quality/device qualification, precision or capacity
+changes. See [the report](qwen3-context-calibration.md),
+[frozen metadata](../tests/fixtures/qwen3-context-calibration-v2/README.md) and
+[public evidence](../benchmarks/results/2026-10-27-qwen3-context-calibration-v2.json).
+Next experimental gate derivation and immutable review precede any validation.
