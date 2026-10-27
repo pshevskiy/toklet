@@ -6,6 +6,10 @@ larger app limit or full-window qualification by itself.
 
 ## F1 — Scoped diagnostic admission and resource planning
 
+**Mechanism complete on28 October2026.** [Admission and evidence](qwen3-context-admission.md)
+cover the scoped route, pure resource controls and authenticated successful source
+opening. Long-context numerical execution and app admission remain unqualified.
+
 Add an explicit Qwen3-only long-context diagnostic route through its same-document
 declared40960 positions. Preserve ordinary512, historical quality-diagnostic1025,
 other-model and scalar CPU limits. Do not globally widen the32768 ceiling merely

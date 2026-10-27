@@ -165,6 +165,50 @@ impl Source {
         Self::open_impl(directory, options, true)
     }
 
+    /// Explicit Metal-only context diagnostic. Validate the ordinary source at
+    /// its existing ceiling first, retaining the same document's declaration.
+    /// Context does not affect tensor shapes or payload ownership. No generic
+    /// parser/CPU/ordinary compatibility limit is widened by this route.
+    #[cfg(any(
+        test,
+        all(
+            feature = "metal",
+            any(target_os = "macos", target_os = "ios"),
+            target_arch = "aarch64"
+        )
+    ))]
+    pub(crate) fn open_qwen3_context_diagnostic(
+        directory: &Path,
+        options: LoadOptions,
+    ) -> Result<Self, Error> {
+        let requested = options.context_limit;
+        if requested == 0 || requested > super::execution::QWEN3_CONTEXT_DIAGNOSTIC_LIMIT {
+            return Err(invalid(
+                "Qwen3 context diagnostic requires1..=40960 positions",
+            ));
+        }
+        let mut source = Self::open_dense(
+            directory,
+            LoadOptions {
+                context_limit: requested.min(weights::MAX_CONTEXT_LIMIT),
+                ..options
+            },
+        )?;
+        if requested > source.declared_positions {
+            return Err(invalid(
+                "Qwen3 context diagnostic exceeds source position declaration",
+            ));
+        }
+        let config = Config {
+            max_positions: requested,
+            ..source.config.clone()
+        };
+        super::execution::qwen3_context_geometry(&config, source.architecture)
+            .map_err(|error| invalid(error.message()))?;
+        source.config = config;
+        Ok(source)
+    }
+
     /// Opt in to the exact frozen Smol checkpoint's consumed-byte audit. This
     /// is source evidence only, not model assembly, codec pairing or capability.
     /// Any failed public consuming operation, including invalid arguments,
@@ -605,6 +649,176 @@ pub(crate) fn parse_json(data: &[u8]) -> Result<Value, Error> {
     }
     serde_json::from_slice::<Unique>(data)?;
     Ok(serde_json::from_slice(data)?)
+}
+
+#[cfg(test)]
+mod context_diagnostic_tests {
+    use super::*;
+    #[cfg(unix)]
+    #[test]
+    #[ignore = "Explicit authenticated pinned Qwen3 source40960 metadata probe; no GPU/upload"]
+    fn pinned_qwen3_context40960_source_metadata() {
+        use std::io::{Seek, SeekFrom};
+        use std::os::unix::fs::{MetadataExt, OpenOptionsExt};
+        type Identity = (u64, u64, u64, i64, i64, i64, i64);
+        fn identity(file: &File) -> Identity {
+            let m = file.metadata().unwrap();
+            (
+                m.dev(),
+                m.ino(),
+                m.len(),
+                m.mtime(),
+                m.mtime_nsec(),
+                m.ctime(),
+                m.ctime_nsec(),
+            )
+        }
+        fn open(path: &Path) -> File {
+            let file = std::fs::OpenOptions::new()
+                .read(true)
+                .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+                .open(path)
+                .unwrap();
+            assert!(file.metadata().unwrap().is_file());
+            file
+        }
+        fn digest(file: &mut File) -> String {
+            let mut remaining = file.metadata().unwrap().len();
+            assert!(remaining > 0 && remaining <= 1024 * 1024 * 1024);
+            file.seek(SeekFrom::Start(0)).unwrap();
+            let mut sha = Sha256::new();
+            let mut bytes = [0u8; 65536];
+            while remaining > 0 {
+                let n = usize::try_from(remaining.min(bytes.len() as u64)).unwrap();
+                file.read_exact(&mut bytes[..n]).unwrap();
+                sha.update(&bytes[..n]);
+                remaining -= n as u64;
+            }
+            assert_eq!(file.read(&mut bytes[..1]).unwrap(), 0);
+            format!("{:x}", sha.finalize())
+        }
+        // Reuse the frozen checkpoint identities without opening validation inputs.
+        const CONTRACT: &str =
+            include_str!("../../benchmarks/qwen3-native-profile-v1/contract.json");
+        assert_eq!(
+            format!("{:x}", Sha256::digest(CONTRACT.as_bytes())),
+            "05c6046c10945b637735c9a86de82d17f42372dd6e0fec1124b22c4ff47afb24"
+        );
+        let contract: Value = serde_json::from_str(CONTRACT).unwrap();
+        assert_eq!(
+            contract["model"]["repository"],
+            "mlx-community/Qwen3-0.6B-8bit"
+        );
+        assert_eq!(
+            contract["model"]["revision"],
+            "11de96878523501bcaa86104e3c186de07ff9068"
+        );
+        let pins = contract["model"]["files"].as_object().unwrap();
+        assert_eq!(pins.len(), 6);
+        let root = Path::new(env!("CARGO_MANIFEST_DIR"));
+        let directory = root.join("models/MLX-Qwen3-0.6B-8bit-11de968");
+        let mut owners = Vec::with_capacity(pins.len());
+        for (name, expected) in pins {
+            assert_eq!(Path::new(name).file_name().unwrap(), name.as_str());
+            let path = directory.join(name);
+            let mut file = open(&path);
+            let before = identity(&file);
+            let sha = digest(&mut file);
+            println!(
+                "{}",
+                serde_json::json!({"event":"source_pin_before","file":name,
+                "identity":before,"sha256":sha})
+            );
+            assert_eq!(sha, expected.as_str().unwrap());
+            assert_eq!(identity(&file), before);
+            assert_eq!(identity(&open(&path)), before);
+            owners.push((name.clone(), path, file, before, sha));
+        }
+        // Source validation owns bounded metadata and streaming file readers.
+        // It performs no tensor expansion, GPU creation or numerical allocation.
+        let result = Source::open_qwen3_context_diagnostic(
+            &directory,
+            LoadOptions {
+                context_limit: 40960,
+                memory_limit_bytes: 1536 * 1024 * 1024,
+            },
+        );
+        let observation = match &result {
+            Ok(source) => serde_json::json!({"event":"source_opened","requested":40960,
+                "loaded_positions":source.config().max_positions,
+                "declared_positions":source.declared_positions(),
+                "architecture":format!("{:?}",source.architecture()),
+                "tied_output":source.tied_output(),
+                "tensor_payload_bytes":source.tensor_payload_bytes()}),
+            Err(error) => {
+                serde_json::json!({"event":"source_open_error","error":format!("{error:?}")})
+            }
+        };
+        println!("{observation}");
+        let passed = result.as_ref().is_ok_and(|source| {
+            source.config().max_positions == 40960
+                && source.declared_positions() == 40960
+                && source.architecture() == Architecture::Qwen3
+                && source.tied_output()
+        });
+        drop(result);
+        // Retain every source descriptor through validation and check full bytes,
+        // descriptor metadata and current path identities again even on open error.
+        for (name, path, file, before, expected) in &mut owners {
+            let after = identity(file);
+            let sha = digest(file);
+            let current = identity(&open(path));
+            println!(
+                "{}",
+                serde_json::json!({"event":"source_pin_after","file":name,
+                "before_identity":before,"after_identity":after,"path_identity":current,"sha256":sha})
+            );
+            assert_eq!(after, *before);
+            assert_eq!(sha, *expected);
+            assert_eq!(identity(file), *before);
+            assert_eq!(current, *before);
+        }
+        assert!(
+            passed,
+            "pinned long-context source did not preserve requested and declared40960"
+        );
+        println!(
+            "{}",
+            serde_json::json!({"event":"source_metadata_probe_complete","passed":true,
+            "requested_positions":40960,"declared_positions":40960,"loaded_positions":40960,
+            "model_files_authenticated":6,"gpu_created":false,"tensor_upload":false,
+            "numerical_buffers_allocated":false,"context_qualified":false,"app_capacity_changed":false})
+        );
+    }
+
+    #[test]
+    fn out_of_scope_context_rejects_before_source_io() {
+        for capacity in [0, 40961, usize::MAX] {
+            let result = Source::open_qwen3_context_diagnostic(
+                Path::new("/nonexistent-qwen3-context-diagnostic"),
+                LoadOptions {
+                    context_limit: capacity,
+                    memory_limit_bytes: weights::INITIAL_MEMORY_LIMIT_BYTES,
+                },
+            );
+            assert!(
+                matches!(result,Err(Error::Invalid(ref message)) if message=="Qwen3 context diagnostic requires1..=40960 positions")
+            );
+        }
+    }
+    #[test]
+    fn tiny_dense_source_is_not_a_long_context_diagnostic_model() {
+        let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/mlx-qwen3-v1/tied");
+        let options = LoadOptions {
+            context_limit: 32,
+            memory_limit_bytes: 256 * 1024 * 1024,
+        };
+        assert!(Source::open_dense(&path, options).is_ok());
+        assert!(matches!(
+            Source::open_qwen3_context_diagnostic(&path, options),
+            Err(Error::Invalid(_))
+        ));
+    }
 }
 
 #[cfg(test)]

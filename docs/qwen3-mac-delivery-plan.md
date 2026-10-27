@@ -105,10 +105,12 @@ weak absolute quality and the partial model window remain explicit.
 
 Follow the [Astra full-window design](qwen3-full-window-plan.md): first scoped
 Qwen3 diagnostic admission and checked resource planning, then boundary/deep-quality
-qualification and bounded real streaming/application delivery. A reviewed patch
-for the first mechanism is prepared without changing the qualified source tree.
-Apply it only after the Q4 task is committed. Preserve ordinary and other-model
-limits until the corresponding qualification authorizes expansion.
+qualification and bounded real streaming/application delivery. The first
+[diagnostic admission/resource mechanism](qwen3-context-admission.md) is checked,
+including successful pinned-source40960 metadata and ordinary short regression.
+Long numerical execution, fit and quality remain unqualified. Next freeze the
+actual4096 experiment. Preserve ordinary and other-model limits until the
+corresponding qualification authorizes expansion.
 
 Measure completed chunk latency at4096 before estimating larger contexts. Source
 BF16 long-cache workspace and full-process memory must be admitted independently.

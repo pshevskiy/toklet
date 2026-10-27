@@ -131,16 +131,58 @@ impl SessionPlan {
         readback_mode: ReadbackMode,
         attention_mode: AttentionMode,
     ) -> Result<Self> {
+        Self::with_context_limit(
+            c,
+            weight_bytes,
+            options,
+            readback_mode,
+            attention_mode,
+            weights::MAX_CONTEXT_LIMIT,
+        )
+    }
+    pub fn new_qwen3_context_diagnostic(
+        c: &model::Config,
+        weight_bytes: usize,
+        options: session::Options,
+        readback_mode: ReadbackMode,
+        attention_mode: AttentionMode,
+    ) -> Result<Self> {
+        // This additional validation prevents a caller from using the longer
+        // planner route for another model or an unadmitted attention mode.
+        crate::mlx::execution::qwen3_context_geometry(c, Architecture::Qwen3)
+            .map_err(|error| Error::Options(error.message()))?;
+        if attention_mode != AttentionMode::Reference {
+            return Err(Error::Options(
+                "Qwen3 context diagnostic requires Reference attention",
+            ));
+        }
+        Self::with_context_limit(
+            c,
+            weight_bytes,
+            options,
+            readback_mode,
+            attention_mode,
+            crate::mlx::execution::QWEN3_CONTEXT_DIAGNOSTIC_LIMIT,
+        )
+    }
+    fn with_context_limit(
+        c: &model::Config,
+        weight_bytes: usize,
+        options: session::Options,
+        readback_mode: ReadbackMode,
+        attention_mode: AttentionMode,
+        context_limit: usize,
+    ) -> Result<Self> {
         let chunk = options.prefill_chunk_size;
         if options.capacity == 0
-            || options.capacity > weights::MAX_CONTEXT_LIMIT
+            || options.capacity > context_limit
             || chunk == 0
             || chunk > 1024
             || chunk > options.capacity
             || options
                 .position_offset
                 .checked_add(options.capacity)
-                .is_none_or(|n| n > c.max_positions.min(weights::MAX_CONTEXT_LIMIT))
+                .is_none_or(|n| n > c.max_positions.min(context_limit))
             || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
         {
             return Err(Error::Options(
@@ -489,6 +531,222 @@ mod tests {
             Err(Error::Options("memory arithmetic overflow"))
         ));
     }
+    #[test]
+    fn qwen3_context_diagnostic_resource_equations_and_boundaries_without_gpu() {
+        // MPS stride metadata only; no device, numerical buffer or model load.
+        let c = model::Config {
+            hidden_size: 1024,
+            intermediate_size: 3072,
+            query_heads: 16,
+            kv_heads: 8,
+            head_dim: 128,
+            num_layers: 28,
+            vocab_size: 151936,
+            max_positions: 40960,
+            rope_theta: 1e6,
+            rms_norm_eps: 1e-6,
+        };
+        let options = session::Options {
+            capacity: 40960,
+            prefill_chunk_size: 32,
+            position_offset: 0,
+            memory_limit_bytes: weights::INITIAL_MEMORY_LIMIT_BYTES,
+        };
+        let make = |o, weight_bytes| {
+            SessionPlan::new_qwen3_context_diagnostic(
+                &c,
+                weight_bytes,
+                o,
+                ReadbackMode::FullLogits,
+                AttentionMode::Reference,
+            )
+        };
+        const WEIGHTS: usize = 633366062;
+        for capacity in [512, 1025, 4096, 8192, 16384, 32768, 40960] {
+            for chunk in [32, 128] {
+                let o = session::Options {
+                    capacity,
+                    prefill_chunk_size: chunk,
+                    ..options
+                };
+                let plan = make(o, WEIGHTS).unwrap();
+                // Independent explicit byte equations include the seven-element
+                // guards, padded layout geometry, scratch owners and host readback.
+                assert_eq!(
+                    (
+                        plan.h.stride,
+                        plan.q.stride,
+                        plan.k.stride,
+                        plan.m.stride,
+                        plan.f.stride
+                    ),
+                    (1024, 2048, 1024, 3072, 151936)
+                );
+                let kv = (8usize
+                    .checked_mul(capacity)
+                    .unwrap()
+                    .checked_mul(128)
+                    .unwrap()
+                    + 7)
+                    * 4
+                    * 28;
+                let scratch = 656900usize
+                    .checked_mul(chunk)
+                    .unwrap()
+                    .checked_add(
+                        128usize
+                            .checked_mul(chunk)
+                            .unwrap()
+                            .checked_mul(capacity)
+                            .unwrap(),
+                    )
+                    .unwrap()
+                    .checked_add(304212)
+                    .unwrap();
+                let metadata =
+                    chunk * std::mem::size_of::<Views>() + 28 * std::mem::size_of::<Cache>();
+                let total = [
+                    WEIGHTS,
+                    kv,
+                    scratch,
+                    capacity * 4,
+                    151936 * 8,
+                    metadata,
+                    64 * 1024 * 1024,
+                ]
+                .into_iter()
+                .try_fold(0usize, usize::checked_add)
+                .unwrap();
+                assert_eq!(plan.memory.kv_bytes, kv);
+                assert_eq!(plan.memory.scratch_bytes, scratch);
+                assert_eq!(plan.memory.admitted_bytes, total);
+                assert!(plan.admit(total).is_ok());
+                assert!(
+                    matches!(plan.admit(total-1),Err(Error::Budget {required,limit}) if required==total && limit==total-1)
+                );
+                let largest = (plan.score_count * 4)
+                    .max(plan.cache_count * 2)
+                    .max(plan.f.bytes(4).unwrap());
+                assert!(plan.validate_buffers(largest).is_ok());
+                assert!(matches!(
+                    plan.validate_buffers(largest - 1),
+                    Err(Error::Options("buffer exceeds device/index limits"))
+                ));
+                assert!(
+                    plan.cache_count <= u32::MAX as usize && plan.score_count <= u32::MAX as usize
+                );
+            }
+        }
+        assert_eq!(
+            make(options, WEIGHTS).unwrap().memory.admitted_bytes,
+            5588577426
+        );
+        assert!(
+            SessionPlan::new(
+                &c,
+                WEIGHTS,
+                options,
+                ReadbackMode::FullLogits,
+                AttentionMode::Reference
+            )
+            .is_err()
+        );
+        for o in [
+            session::Options {
+                capacity: 0,
+                ..options
+            },
+            session::Options {
+                capacity: 40961,
+                ..options
+            },
+            session::Options {
+                position_offset: 1,
+                ..options
+            },
+            session::Options {
+                capacity: 1,
+                prefill_chunk_size: 1,
+                position_offset: usize::MAX,
+                ..options
+            },
+            session::Options {
+                prefill_chunk_size: 0,
+                ..options
+            },
+            session::Options {
+                prefill_chunk_size: 1025,
+                ..options
+            },
+            session::Options {
+                memory_limit_bytes: weights::INITIAL_MEMORY_LIMIT_BYTES + 1,
+                ..options
+            },
+        ] {
+            assert!(make(o, WEIGHTS).is_err());
+        }
+        assert!(
+            make(
+                session::Options {
+                    capacity: 1,
+                    prefill_chunk_size: 1,
+                    position_offset: 40959,
+                    ..options
+                },
+                WEIGHTS
+            )
+            .is_ok()
+        );
+        assert!(matches!(
+            make(options, usize::MAX),
+            Err(Error::Options("memory arithmetic overflow"))
+        ));
+        for mode in [AttentionMode::Online, AttentionMode::CompensatedReference] {
+            assert!(matches!(
+                SessionPlan::new_qwen3_context_diagnostic(
+                    &c,
+                    WEIGHTS,
+                    options,
+                    ReadbackMode::FullLogits,
+                    mode
+                ),
+                Err(Error::Options(
+                    "Qwen3 context diagnostic requires Reference attention"
+                ))
+            ));
+        }
+        // Existing512 route has exactly the same resource geometry/accounting.
+        let c512 = model::Config {
+            max_positions: 512,
+            ..c
+        };
+        let o512 = session::Options {
+            capacity: 512,
+            ..options
+        };
+        let old = SessionPlan::new(
+            &c512,
+            WEIGHTS,
+            o512,
+            ReadbackMode::FullLogits,
+            AttentionMode::Reference,
+        )
+        .unwrap();
+        let diagnostic = SessionPlan::new_qwen3_context_diagnostic(
+            &c512,
+            WEIGHTS,
+            o512,
+            ReadbackMode::FullLogits,
+            AttentionMode::Reference,
+        )
+        .unwrap();
+        assert_eq!(old.memory, diagnostic.memory);
+        assert_eq!(
+            (old.cache_count, old.score_count),
+            (diagnostic.cache_count, diagnostic.score_count)
+        );
+    }
+
     #[test]
     fn plans_check_each_buffer_and_overflow_without_gpu() {
         let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/mlx-qwen3-v1/tied");

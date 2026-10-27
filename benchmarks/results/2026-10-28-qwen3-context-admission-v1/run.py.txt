@@ -1,0 +1,130 @@
+"""Finite checks of scoped long-context admission, not long numerical execution."""
+from pathlib import Path
+import hashlib
+import json
+import os
+import re
+import signal
+import sys
+
+R = Path.cwd()
+O = Path(__file__).resolve().parent
+sys.path.insert(0, str(R / 'tools/experiments'))
+import m7_apple_package as p
+
+
+def pin(path):
+    path = Path(path)
+    with path.open('rb') as stream:
+        sha = hashlib.file_digest(stream, 'sha256').hexdigest()
+    return dict(bytes=path.stat().st_size, sha256=sha)
+
+
+def absent(pid):
+    for value in (pid, -pid):
+        try:
+            os.kill(value, 0)
+        except ProcessLookupError:
+            continue
+        raise RuntimeError('Owned process/group remains: ' + str(value))
+
+
+def main():
+    paths = {*p.numerical_sources(), *(R / 'tests').glob('*.rs'),
+             Path(__file__).resolve(), Path(p.__file__).resolve(),
+             R / 'benchmarks/qwen3-native-profile-v1/contract.json'}
+    for directory in ('mlx-qwen3-v1', 'mlx-qwen3-real-v1'):
+        paths |= {path for path in (R / 'tests/fixtures' / directory).rglob('*') if path.is_file()}
+    paths |= {Path('/opt/homebrew/bin/' + name).resolve() for name in ('cargo', 'rustc', 'rustdoc')}
+    bindings = {str(path): pin(path) for path in sorted(paths)}
+    model = json.loads((R / 'benchmarks/qwen3-native-profile-v1/contract.json').read_bytes())['model']
+    for name, sha in model['files'].items():
+        path = R / 'models/MLX-Qwen3-0.6B-8bit-11de968' / name
+        assert pin(path)['sha256'] == sha
+        bindings[str(path)] = pin(path)
+    protected = {'target/release/toklet': '5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59',
+                 'target/release/examples/cpu_bench': 'e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea'}
+    result = dict(passed=False, commands=[], outputs={}, bindings=bindings, protected=protected,
+                  error=None, endpoint_errors=[], long_model_numerical_execution=False,
+                  app_capacity_changed=False, long_context_qualified=False)
+    env, _ = p.build_environment()
+    env.update(PATH='/opt/homebrew/bin:' + env['PATH'], RUSTC='/opt/homebrew/bin/rustc',
+               RUSTDOC='/opt/homebrew/bin/rustdoc', CARGO_TARGET_DIR=str(O / 'target'),
+               CARGO_NET_OFFLINE='true')
+    def guard():
+        for path, wanted in bindings.items():
+            assert pin(path) == wanted, path
+        for path, sha in protected.items():
+            assert pin(R / path)['sha256'] == sha, path
+    def invoke(name, argv, measured=False):
+        guard()
+        value = p.owned(argv, O / (name + '.stdout'), O / (name + '.stderr'), env, 1800, cleanup_timeout=60)
+        result['commands'].append(value)
+        for stream in ('stdout', 'stderr'):
+            result['outputs'][str(R / value[stream])] = pin(R / value[stream])
+        guard();absent(value['pid'])
+        assert value['exit_code'] == 0 and value['primary_error'] is None and not value['cleanup_errors'], value
+        if measured:
+            mem = {key: int(number) for number, key in re.findall(
+                r'^\s*(\d+)\s+(maximum resident set size|peak memory footprint)\s*$',
+                (O / (name + '.stderr')).read_text(), re.M)}
+            assert len(mem) == 2 and all(0 < n <= 6*1024**3 for n in mem.values()), mem
+            value['memory'] = mem
+        print(json.dumps(dict(completed=name, pid=value['pid'])), flush=True)
+    old = {item: signal.signal(item, p.interrupted) for item in (signal.SIGTERM, signal.SIGINT)}
+    try:
+        cargo = '/opt/homebrew/bin/cargo'
+        commands = [('fmt', ['fmt', '--check']),
+                    ('clippy', ['clippy', '--offline', '--all-targets', '--', '-D', 'warnings']),
+                    ('metal-clippy', ['clippy', '--offline', '--all-targets', '--features', 'metal', '--', '-D', 'warnings']),
+                    ('cpu-tests', ['test', '--offline']),
+                    ('metal-lib-tests', ['test', '--offline', '--features', 'metal', '--lib', '--', '--test-threads=1']),
+                    ('build', ['test', '--offline', '--release', '--features', 'metal', '--lib',
+                        '--test', 'mlx_qwen3_real_model_metal', '--no-run'])]
+        for name, args in commands:
+            invoke(name, [cargo, *args])
+        text = (O / 'build.stderr').read_text()
+        binaries = {}
+        for name, pattern in [('unit', r'Executable unittests src/lib.rs \(([^)]+)\)'),
+                             ('ordinary', r'Executable tests/mlx_qwen3_real_model_metal.rs \(([^)]+)\)')]:
+            matches = re.findall(pattern, text)
+            assert len(matches) == 1, (name, matches)
+            path = R / matches[0]
+            assert path.is_relative_to(O / 'target/release/deps')
+            binaries[name] = str(path);bindings[str(path)] = pin(path)
+        for name, binary, test, ignored in [
+                ('planner', 'unit', 'metal::planning::tests::qwen3_context_diagnostic_resource_equations_and_boundaries_without_gpu', False),
+                ('source-metadata', 'unit', 'mlx::qwen::context_diagnostic_tests::pinned_qwen3_context40960_source_metadata', True),
+                ('ordinary-short', 'ordinary', 'gpu::native_mlx_qwen3_real_graph_matches_prefrozen_cpu_reference', True)]:
+            argv = ['/usr/bin/time', '-l', binaries[binary], test, '--exact', '--nocapture', '--test-threads=1']
+            if ignored:
+                argv.append('--ignored')
+            invoke(name, argv, measured=True)
+            assert re.findall(r'^test result: ok\. (\d+) passed; (\d+) failed; (\d+) ignored;',
+                              (O / (name + '.stdout')).read_text(), re.M) == [('1', '0', '0')]
+        result['binaries'] = {name: dict(path=path, identity=bindings[path]) for name, path in binaries.items()}
+        result['passed'] = True
+    except BaseException as error:
+        result['error'] = type(error).__name__ + ': ' + str(error)
+    finally:
+        for path in [*O.glob('*.stdout'), *O.glob('*.stderr')]:
+            result['outputs'][str(path)] = pin(path)
+        try:
+            guard()
+        except BaseException as error:
+            result['endpoint_errors'].append(str(error));result['passed'] = False
+        for value in result['commands']:
+            try:
+                absent(value['pid'])
+            except BaseException as error:
+                result['endpoint_errors'].append(str(error));result['passed'] = False
+        with (O / 'checks.json').open('x') as stream:
+            json.dump(result, stream, indent=2, allow_nan=False);stream.write('\n')
+        for item, handler in old.items():
+            signal.signal(item, handler)
+    print(json.dumps({key: result[key] for key in ('passed', 'error', 'endpoint_errors')}), flush=True)
+    return 0 if result['passed'] else 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

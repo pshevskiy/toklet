@@ -1,0 +1,194 @@
+{
+  "format": "toklet-qwen3-context-diagnostic-admission-v1",
+  "base_revision": "919223d",
+  "mechanism_accepted": true,
+  "diagnostic_context_max": 40960,
+  "ordinary_qwen3_limit": 512,
+  "quality_diagnostic_limit": 1025,
+  "shared_cpu_limit": 32768,
+  "other_model_limits_changed": false,
+  "c_swift_limits_changed": false,
+  "app_capacity_changed": false,
+  "shaders_or_arithmetic_changed": false,
+  "long_context_numerical_execution": false,
+  "long_context_quality_qualified": false,
+  "whole_process_long_context_fit_qualified": false,
+  "iphone_qualified": false,
+  "session_profile": "MlxAffine / Compensated normalization / Reference attention; FullLogits or GreedyToken",
+  "implementation": "Explicit validated source and Metal import route sets a private model diagnostic flag. Only that route selects the longer checked planner. Existing ordinary/quality paths and generic ceiling remain unchanged.",
+  "tests": {
+    "cpu-tests": {
+      "passed": 372,
+      "failed": 0,
+      "ignored": 20
+    },
+    "metal-lib-tests": {
+      "passed": 247,
+      "failed": 0,
+      "ignored": 66
+    }
+  },
+  "source_metadata_probe": {
+    "event": "source_metadata_probe_complete",
+    "passed": true,
+    "requested_positions": 40960,
+    "declared_positions": 40960,
+    "loaded_positions": 40960,
+    "model_files_authenticated": 6,
+    "gpu_created": false,
+    "tensor_upload": false,
+    "numerical_buffers_allocated": false,
+    "context_qualified": false,
+    "app_capacity_changed": false
+  },
+  "source_open": {
+    "event": "source_opened",
+    "requested": 40960,
+    "loaded_positions": 40960,
+    "declared_positions": 40960,
+    "architecture": "Qwen3",
+    "tied_output": true,
+    "tensor_payload_bytes": 633364480
+  },
+  "resource_equations": {
+    "resident_weights_bytes": 633366062,
+    "allocated_kv_40960": 4697621264,
+    "kv_payload_40960": 4697620480,
+    "chunk32_scores_probabilities_payload": 167772160,
+    "score_probability_guard_bytes": 56,
+    "chunk32_40960_numerical_admission": 5588577426,
+    "chunk128_40960_numerical_admission": 6154967826,
+    "native_metadata_allowance": 67108864,
+    "predictions_only": true,
+    "app_text_and_process_costs_additional": true
+  },
+  "boundary_controls": [
+    "Exact ordinary512/quality1025/generic32768 retention",
+    "40961/zero/usize::MAX source and context rejection",
+    "Only exact0.6B Qwen3 geometry; no other family admission",
+    "Selected Reference profile only; no CompensatedReference or Online transfer",
+    "Budget exact/required-minus-one; per-buffer exact/maximum-minus-one",
+    "Checked capacity+position overflow and512 planner byte equality",
+    "Authenticated successful pinned source requested=loaded=declared40960"
+  ],
+  "measurements": {
+    "planner": {
+      "maximum resident set size": 7733248,
+      "peak memory footprint": 2441600
+    },
+    "source-metadata": {
+      "maximum resident set size": 10780672,
+      "peak memory footprint": 4260248
+    },
+    "ordinary-short": {
+      "maximum resident set size": 768344064,
+      "peak memory footprint": 766280808
+    }
+  },
+  "named_hardware": "Apple M1 Pro/MacBookPro18,3/16GiB/macOS26.6.2(25G83)",
+  "rust": "Homebrew1.90.0; offline builds; isolated Cargo target",
+  "owned_groups_absent": 9,
+  "frozen_bindings": 229,
+  "source_files": {
+    "src/mlx/execution.rs": {
+      "bytes": 15635,
+      "sha256": "df7424247e31fefd7227ee79e4dae51de6f155b242bb511c391b55fd85b04ae5"
+    },
+    "src/mlx/qwen.rs": {
+      "bytes": 32132,
+      "sha256": "3a93c61b06daebe1e8df0f41b3eddcfb6967b354eca17a398a2e1df580cdd8ab"
+    },
+    "src/metal/mod.rs": {
+      "bytes": 130349,
+      "sha256": "beb7c54cf163f8bc592d6b127e6d318162929fc1ec577944a388a3c07911599e"
+    },
+    "src/metal/planning.rs": {
+      "bytes": 30934,
+      "sha256": "153288e048a930c975dfb91a08084d9c8b1dc697f2e642c71fd7efdc0c658a1c"
+    }
+  },
+  "evidence": {
+    "artifacts/m8-qwen3-context-admission-checks-v1/checks.json": {
+      "bytes": 51989,
+      "sha256": "881457e64d9ec5e9d6f0f9436b47716cd7265701884aeadca53cb11e21cac01a"
+    },
+    "benchmarks/results/2026-10-28-qwen3-context-admission-v1/run.py.txt": {
+      "bytes": 6852,
+      "sha256": "db3eaff43f49289cb29f02329ed0cda0806e36f063be1812cd71a88433e44e3b"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/fmt.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/fmt.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/clippy.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/clippy.stderr": {
+      "bytes": 3074,
+      "sha256": "f679cc9fade230af7709aeea6d8382f433f3609351d1227982afec5afd4d927d"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/metal-clippy.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/metal-clippy.stderr": {
+      "bytes": 406,
+      "sha256": "cd3e84169652d43255b84c12a95bc509be1e34341537bf18432aa1f712f8c401"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/cpu-tests.stdout": {
+      "bytes": 42107,
+      "sha256": "16193f2eadae366c988d5f33048e74bb1b8e096e1eda15f21c967a951ae928f6"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/cpu-tests.stderr": {
+      "bytes": 9465,
+      "sha256": "5ebc2f2e1a389ea2af6271eb41ff7148a5986a0a25f14d7d4895b724879c531e"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/metal-lib-tests.stdout": {
+      "bytes": 36827,
+      "sha256": "88e369a4058861b7637aaa0deceeef3350f408dec557809ec759909054c4b85d"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/metal-lib-tests.stderr": {
+      "bytes": 532,
+      "sha256": "e0ea1613776226b5b2fd0a7169c8caf9e4013cdf7f89275720cc33922166f8cd"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/build.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/build.stderr": {
+      "bytes": 3516,
+      "sha256": "dc9333d887e10d9f56d169070edb3cc36abe50cc966d47b69a7cfceed3478ebf"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/planner.stdout": {
+      "bytes": 221,
+      "sha256": "16add5e3d537c00352b3b132310b27471b4a5758db6c1eeae0caa3c002973ff5"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/planner.stderr": {
+      "bytes": 777,
+      "sha256": "141d916564ad8c03222134ab7af72fe418031327af790d62ac5ee83671947c67"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/source-metadata.stdout": {
+      "bytes": 4290,
+      "sha256": "824b8e019070e94d50f3eeb7486aff4fdaefff9996d07ec3e85e13a37bad4b44"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/source-metadata.stderr": {
+      "bytes": 777,
+      "sha256": "9b26416e1278d6b4a0aaca5adf9aea167810d86af860c9376745df801b816fd8"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/ordinary-short.stdout": {
+      "bytes": 548,
+      "sha256": "ac93c3b47503b7e2e10daf6f43028e0db71711fca58ca07928f99d2126b2edd2"
+    },
+    "artifacts/m8-qwen3-context-admission-checks-v1/ordinary-short.stderr": {
+      "bytes": 777,
+      "sha256": "a02ada54152fdc35714f25c29755a2708f4ded1067cf094c4cf7bd95ca60ab7e"
+    }
+  },
+  "astra_review": "Code, scope, equations, source probe and completed checks accepted; final publication review separate.",
+  "next": "Freeze actual4096 execution/deep-operator/state/timing and supplementary long-depth quality before running; keep app ordinary512 until corresponding qualification/delivery."
+}

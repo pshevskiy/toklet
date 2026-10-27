@@ -85,6 +85,7 @@ enum MlxImport {
     Ordinary,
     SmolAudited,
     Qwen3QualityDiagnostic,
+    Qwen3ContextDiagnostic,
 }
 /// The planning source contributes shapes only. Reopen payload descriptors after
 /// artifact identity is established, then check metadata and endpoint identities.
@@ -182,6 +183,8 @@ pub struct Model {
     layers: Vec<Layer>,
     weight_bytes: usize,
     mlx_architecture: Option<crate::mlx::dense::Architecture>,
+    // Set only by the explicit validated0.6B long-context diagnostic loader.
+    qwen3_context_diagnostic: bool,
     mlx_declared_positions: Option<usize>,
     mlx_source_identity: Option<crate::mlx::qwen::SourceContentIdentity>,
     pub load_timing: LoadTiming,
@@ -287,6 +290,15 @@ impl Model {
     ) -> Result<Self> {
         Self::load_mlx_impl(directory, options, MlxImport::Qwen3QualityDiagnostic)
     }
+    /// Explicit Qwen3 0.6B context diagnostic through40960 shared positions.
+    /// This grants no ordinary loader/app/device/numerical qualification. The
+    /// same packed weights, Half graph, checked budgets and session state apply.
+    pub fn load_mlx_qwen3_context_diagnostic(
+        directory: &Path,
+        options: weights::LoadOptions,
+    ) -> Result<Self> {
+        Self::load_mlx_impl(directory, options, MlxImport::Qwen3ContextDiagnostic)
+    }
     fn load_mlx_impl(
         directory: &Path,
         options: weights::LoadOptions,
@@ -296,6 +308,8 @@ impl Model {
             let clock = Instant::now();
             let mut source = if matches!(import, MlxImport::SmolAudited) {
                 crate::mlx::qwen::Source::open_smol_audited(directory, options)?
+            } else if matches!(import, MlxImport::Qwen3ContextDiagnostic) {
+                crate::mlx::qwen::Source::open_qwen3_context_diagnostic(directory, options)?
             } else {
                 crate::mlx::qwen::Source::open_dense(directory, options)?
             };
@@ -305,6 +319,13 @@ impl Model {
             if matches!(import, MlxImport::Qwen3QualityDiagnostic) {
                 use crate::mlx::execution::GeometryError;
                 crate::mlx::execution::qwen3_quality_geometry(&config, source.architecture())
+                    .map_err(|error| match error {
+                        GeometryError::Invalid(message) => Error::Options(message),
+                        GeometryError::Unsupported(message) => Error::Unsupported(message),
+                    })?;
+            } else if matches!(import, MlxImport::Qwen3ContextDiagnostic) {
+                use crate::mlx::execution::GeometryError;
+                crate::mlx::execution::qwen3_context_geometry(&config, source.architecture())
                     .map_err(|error| match error {
                         GeometryError::Invalid(message) => Error::Options(message),
                         GeometryError::Unsupported(message) => Error::Unsupported(message),
@@ -377,6 +398,7 @@ impl Model {
                 source.architecture() == crate::mlx::dense::Architecture::Qwen3,
             )?;
             model.mlx_architecture = Some(source.architecture());
+            model.qwen3_context_diagnostic = matches!(import, MlxImport::Qwen3ContextDiagnostic);
             model.mlx_declared_positions = Some(source.declared_positions());
             if matches!(import, MlxImport::SmolAudited) {
                 let identity = source.content_identity().ok_or(Error::Options(
@@ -590,6 +612,7 @@ impl Model {
             layers,
             weight_bytes,
             mlx_architecture: None,
+            qwen3_context_diagnostic: false,
             mlx_declared_positions: None,
             mlx_source_identity: None,
             load_timing: LoadTiming {
@@ -800,6 +823,13 @@ impl<'m> Session<'m> {
                     "MLX artifacts require the explicit MlxAffine projection mode",
                 ));
             }
+            if model.qwen3_context_diagnostic
+                && normalization_mode != NormalizationMode::Compensated
+            {
+                return Err(Error::Options(
+                    "Qwen3 context diagnostic requires Compensated normalization",
+                ));
+            }
             planning::validate_attention(model.mlx_architecture, attention_mode)?;
             planning::validate_attention_device(&model.gpu, attention_mode)?;
             if model.q4_format() == Some(q4::Format::V2)
@@ -835,13 +865,23 @@ impl<'m> Session<'m> {
                 ));
             }
             let c = &model.config;
-            let plan = planning::SessionPlan::new(
-                c,
-                model.weight_bytes,
-                options,
-                readback_mode,
-                attention_mode,
-            )?;
+            let plan = if model.qwen3_context_diagnostic {
+                planning::SessionPlan::new_qwen3_context_diagnostic(
+                    c,
+                    model.weight_bytes,
+                    options,
+                    readback_mode,
+                    attention_mode,
+                )?
+            } else {
+                planning::SessionPlan::new(
+                    c,
+                    model.weight_bytes,
+                    options,
+                    readback_mode,
+                    attention_mode,
+                )?
+            };
             plan.admit(options.memory_limit_bytes)?;
             plan.validate_buffers(model.gpu.device.maxBufferLength())?;
             let planning::SessionPlan {

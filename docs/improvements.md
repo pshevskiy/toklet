@@ -6127,3 +6127,33 @@ permitted retry. No numerical/data/threshold changes follow these failures.
 See [the profile](qwen3-native-profile.md),
 [evidence](../benchmarks/results/2026-10-28-qwen3-native-profile-v1.json) and
 [Astra's next full-window design](qwen3-full-window-plan.md).
+
+## 2026-10-28 — Scoped Qwen3 long-context admission mechanism checked
+
+An explicit Rust/Metal diagnostic loader now retains the pinned model's40960
+declaration and can select the longer checked session planner. It grants authority
+only through a private validated model flag, with MlxAffine/Compensated/Reference
+required. Ordinary512, quality1025, shared CPU32768, other-model and C/Swift/app
+limits stay unchanged. No shader, arithmetic or KV format changes.
+
+The actual pinned source opens with requested/loaded/declared40960 and tied output;
+all six source descriptors/full hashes/endpoints authenticate before and after.
+This metadata proof creates no GPU or numerical buffers. Pure planner tests
+independently verify allocation equations/guards, offset and integer boundaries,
+exact budget/per-buffer rejection and byte-identical512 accounting. Full40960
+chunk32 predicts5588577426 numerical bytes; chunk1286154967826. Neither establishes
+whole-process fit or admits larger app requests.
+
+Formatting, strict default/Metal Clippy,372 default CPU tests,247 Metal library
+tests, explicit planner/source probes and the unchanged ordinary short-model GPU
+oracle pass. Counts overlap. All229 bindings/18 outputs and protected historical
+binaries match; nine owned groups close. Planner physical/RSS2441600/7733248,
+source metadata4260248/10780672, ordinary short GPU766280808/768344064 bytes.
+Astra reviews the scoped design, applied code, positive source proof and results.
+
+This closes F1 mechanism/resource planning, with long numerical execution,
+deep quality, full-process memory and app delivery still open. Next freeze the
+4096 experiment; preserve the qualified native C512 profile and both historical
+fidelity rejections. See [admission](qwen3-context-admission.md),
+[evidence](../benchmarks/results/2026-10-28-qwen3-context-admission-v1.json) and
+[full-window plan](qwen3-full-window-plan.md).
