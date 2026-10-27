@@ -1,0 +1,33 @@
+"""Cold complete-input preparation/replay, without inference or grading."""
+from pathlib import Path
+import argparse,json,signal,sys,unittest
+R=Path.cwd();sys.path.insert(0,str(R/'tools/reference'));sys.path.insert(0,str(R/'tools/bench'));sys.path.insert(0,str(R/'tools/experiments'))
+import prepare_qwen3_quality as subject
+import check_qwen3_quality as checker
+
+def sources():return subject.sources()+[Path(__file__).resolve(),R/'tools/experiments/native_usage.py']
+if __name__=='__main__':
+ parser=argparse.ArgumentParser();parser.add_argument('--runtime',type=Path,required=True);parser.add_argument('--runtime-sha',required=True);parser.add_argument('--mode',choices=('unit','prepare','check','controls'),required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--inputs',type=Path,required=True);parser.add_argument('--input-sha');args=parser.parse_args()
+ admission,endpoint=subject.gemma_quality_runtime.admit(args.runtime,args.runtime_sha,sources());record=dict(passed=False,primary_error=None,endpoint_errors=[],admission=admission)
+ def stop(number,_):raise InterruptedError(str(number))
+ old={s:signal.signal(s,stop)for s in(signal.SIGINT,signal.SIGTERM)}
+ try:
+  import numpy,pyarrow,tokenizers,jinja2,markupsafe
+  import test_qwen3_quality_inputs as tests
+  if args.mode=='unit':
+   result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(tests));assert result.wasSuccessful()and result.testsRun==4;record['tests']=dict(run=result.testsRun,failures=len(result.failures),errors=len(result.errors))
+  elif args.mode=='prepare':
+   value=subject.produce(args.inputs);record['manifest_sha256']=subject.sha((args.inputs/'manifest.json').read_bytes());record['capacity']=value['maximum_task_capacity'];record['targets']=value['loss_targets'];record['tasks']=len(value['tasks'])
+  elif args.mode=='check':record['replay']=checker.check(args.inputs,args.input_sha)
+  else:record['controls']=tests.corruption_controls(args.inputs,args.output.parent/'controls')
+  import native_usage
+  record['usage']=native_usage.usage();assert 0<record['usage']['lifetime_max_phys_footprint']<=1024**3;record['passed']=True
+ except BaseException as error:record['primary_error']=type(error).__name__+': '+str(error)
+ finally:
+  for sig in old:signal.signal(sig,signal.SIG_IGN)
+  try:record['runtime_endpoint']=endpoint()
+  except BaseException as error:record['endpoint_errors'].append(type(error).__name__+': '+str(error))
+  with args.output.open('x')as f:json.dump(record,f,indent=2,allow_nan=False);f.write('\n')
+  for sig,handler in old.items():signal.signal(sig,handler)
+ print(json.dumps({k:record[k]for k in('passed','primary_error','endpoint_errors')}),flush=True)
+ sys.exit(0 if record['passed']and not record['endpoint_errors']else 1)

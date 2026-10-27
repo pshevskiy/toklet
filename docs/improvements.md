@@ -5824,3 +5824,36 @@ were used to obtain the pass. This is diagnostic capacity/state evidence,
 not independent1025 numerics, full quality, app-window expansion or performance.
 See [the report](qwen3-quality-diagnostic.md) and
 [evidence](../benchmarks/results/2026-10-27-qwen3-quality-diagnostic-v1.json).
+
+## 2026-10-27 — Full Qwen3 quality inputs/worker frozen; baseline acquired
+
+The explicit diagnostic worker now supports complete10000-target loss and
+100-task generation under original0.05-nat/2-percentage-point policies. Full
+loss requires exactly10001 IDs; its four-token probe is separate and expressly
+non-quality. All causal rows are scored once with existing stable FP64 loss;
+task caps256/32/16, EOS151645, reset and pending semantics stay explicit.
+No app-window or numerical qualification is enlarged.
+
+Checkpoint-specific inputs freeze actual numerical/worker source bytes, pinned
+plain Qwen3 rendering/tokenization and complete source selection. Independent
+Python source replay and Rust rendering/tokenizer replay pass all100 tasks/
+10001 loss IDs, including70 actual app-codec prompts. Twelve coherent metadata/
+source/asset corruptions and two Rust controls reject. Input manifest SHA
+908e037de5b399d9e9a8dd09aa9fcc568f67abb714b06508672deac6bb8ac529;
+loss-ID SHA f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb.
+Largest request HumanEval/32 needs289+256=545 positions: no clipping to512.
+
+The official contemporary BF16 baseline is acquired and hash-verified:
+1503300328 bytes, f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b.
+Config equality excluding quantization and identical tokenizer payload are
+independently checked. Converter source-revision omission remains explicit;
+official history/digest continuity supports the selected pinned baseline.
+
+Cold input tests4, portable protocol tests2, Metal example tests5, full source/
+codec replay and the bounded short GPU target/loss probe pass. Source/runtime/
+model endpoints and11 owned groups close. Python/codec physical peaks stay
+below256MB; probe946259096 bytes fits6GiB. Default/Metal strict Clippy and
+formatting pass. Held-out scoring, generated-code grading, full-quality memory,
+numerical adoption and app-window expansion remain pending. See
+[the contract](qwen3-quality-contract.md) and
+[evidence](../benchmarks/results/2026-10-27-qwen3-quality-inputs-v1.json).

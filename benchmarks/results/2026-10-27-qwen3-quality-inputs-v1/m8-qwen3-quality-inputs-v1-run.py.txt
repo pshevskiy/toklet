@@ -1,0 +1,107 @@
+"""Bounded complete-input replay and explicit short worker probe, not held-out scoring."""
+from pathlib import Path
+import hashlib,importlib.util,json,math,os,re,signal,struct,sys
+R=Path.cwd();O=Path(__file__).resolve().parent
+sys.path.insert(0,str(R/'tools/experiments'));import m7_apple_package as p
+bindings={};outputs={};commands=[];errors=[];primary=None;observations={}
+def read(path,maximum=8*1024**2):
+ with path.open('rb')as f:body=f.read(maximum+1)
+ assert len(body)<=maximum,path
+ return body
+
+def identity(path):
+ def fields(s):return s.st_dev,s.st_ino,s.st_mode,s.st_size,s.st_mtime_ns,s.st_ctime_ns
+ before=path.stat();h=hashlib.sha256()
+ with path.open('rb')as f:
+  opened=os.fstat(f.fileno());assert fields(opened)==fields(before)
+  for body in iter(lambda:f.read(1024**2),b''):h.update(body)
+  assert fields(os.fstat(f.fileno()))==fields(before)
+ assert fields(path.stat())==fields(before)
+ return dict(bytes=before.st_size,sha256=h.hexdigest())
+def name(path):return str(path.relative_to(R)) if path.is_relative_to(R) else str(path)
+def bind(path):
+ v=identity(path);assert name(path)not in bindings or bindings[name(path)]==v;bindings[name(path)]=v;return v
+
+def guard():
+ for n,v in bindings.items():assert identity(R/n)==v,n
+ for n,v in outputs.items():assert identity(R/n)==v,n
+
+def run(label,args,env,timeout=1200,expected=0):
+ guard();v=p.owned(args,O/(label+'.stdout'),O/(label+'.stderr'),env,timeout);commands.append(v)
+ for path in [O/(label+'.stdout'),O/(label+'.stderr'),O/(label+'.json')]:
+  if path.is_file():outputs[name(path)]=identity(path)
+ for path in (O/'inputs').glob('*'):
+  if path.is_file():
+   item=identity(path);assert name(path)not in outputs or outputs[name(path)]==item;outputs[name(path)]=item
+ for path in (O/'controls').rglob('*'):
+  if path.is_file():
+   item=identity(path);assert name(path)not in outputs or outputs[name(path)]==item;outputs[name(path)]=item
+ guard();assert v['exit_code']==expected and v['primary_error']==(None if expected==0 else 'tool exit '+str(expected))and not v['cleanup_errors'],v
+ print(json.dumps(dict(completed=label,pid=v['pid'],exit_code=v['exit_code'])),flush=True)
+ return read(O/(label+'.stdout'),32*1024**2).decode(),read(O/(label+'.stderr'),32*1024**2).decode()
+def memory(stderr,limit):
+ result={k:int(re.search(r'(\d+)\s+'+label,stderr)[1])for k,label in [('rss','maximum resident set size'),('physical','peak memory footprint')]};assert all(0<n<=limit for n in result.values()),result;return result
+
+def stop(number,_):raise InterruptedError(str(number))
+old={s:signal.signal(s,stop)for s in(signal.SIGINT,signal.SIGTERM)}
+try:
+ assert not(O/'checks.json').exists()
+ spec=importlib.util.spec_from_file_location('quality_input_worker',O/'worker.py');worker=importlib.util.module_from_spec(spec);spec.loader.exec_module(worker)
+ inventory=worker.subject.runtime.paths(worker.sources())
+ for path in[*p.numerical_sources(),R/'examples/qwen3_quality.rs',R/'examples/qwen3_quality_contract.rs',R/'examples/support/loss.rs',Path(__file__).resolve(),Path(p.__file__).resolve(),*inventory]:bind(path)
+ for folder,files in [(worker.subject.MODEL,['config.json','tokenizer.json','tokenizer_config.json','model.safetensors','model.safetensors.index.json']), (worker.subject.BASELINE,['config.json','tokenizer.json','tokenizer_config.json','model.safetensors'])]:
+  for n in files:bind(folder/n)
+ for item in json.loads(read(R/'benchmarks/sources.json'))['assets']:
+  if item['id']in ('wikitext.test','humaneval.test','truthfulqa.test','lambada.test'):bind(R/item['path'])
+ for n in ['benchmarks/sources.json','benchmarks/contract-v1/manifest.json','tests/fixtures/mlx-qwen3-real-v1/manifest.json','artifacts/m8-qwen3-real-reference-v1/arrays.bin','artifacts/m8-qwen3-unquantized-baseline-v1/acquisition.json','artifacts/m8-qwen3-unquantized-baseline-v1/contemporary-api.json']:bind(R/n)
+ assert bindings[name(worker.subject.MODEL/'model.safetensors')]['sha256']==worker.subject.WEIGHT_SHA and bindings[name(worker.subject.BASELINE/'model.safetensors')]['sha256']==worker.subject.BASE_SHA
+ assert bindings['tests/fixtures/mlx-qwen3-real-v1/manifest.json']['sha256']=='4594118378d2c583c80c8f0987e06d3bbca0fa77188d4869e670252070b23fc7'
+ assert bindings['artifacts/m8-qwen3-real-reference-v1/arrays.bin']['sha256']=='812c8302de38ca6bf2c073a23940cfef27a64a950c1bfa8e841444606d3dd010'
+ runtime=dict(format='toklet-text-reference-runtime-v1',versions=worker.subject.runtime.VERSIONS,files={str(q):bindings[name(q)]for q in inventory});manifest=O/'runtime.json'
+ with manifest.open('x')as f:json.dump(runtime,f,separators=(',',':'));f.write('\n')
+ bind(manifest);assert manifest.stat().st_size<=2*1024**2
+ env,_=p.build_environment();env.update(PYTHONHASHSEED='0',TOKENIZERS_PARALLELISM='false',HF_HUB_OFFLINE='1',TRANSFORMERS_OFFLINE='1',OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',VECLIB_MAXIMUM_THREADS='1');(O/'tmp').mkdir();env['TMPDIR']=str(O/'tmp')
+ python=R/'.venv/bin/python';input_sha=None
+ for mode in ('unit','prepare','check','controls'):
+  cache=O/(mode+'-cold-cache');cache.mkdir();argv=['/usr/bin/time','-l',str(python),'-s','-B','-X','pycache_prefix='+str(cache),str(O/'worker.py'),'--runtime',str(manifest),'--runtime-sha',bindings[name(manifest)]['sha256'],'--mode',mode,'--output',str(O/(mode+'.json')),'--inputs',str(O/'inputs')]
+  if input_sha:argv+=['--input-sha',input_sha]
+  _,err=run(mode,argv,env);value=json.loads(read(O/(mode+'.json')));assert value['passed']and value['primary_error']is None and not value['endpoint_errors']and value['runtime_endpoint'];observations[mode]=dict(memory=memory(err,1024**3),usage=value['usage'])
+  if mode=='unit':assert value['tests']==dict(run=4,errors=0,failures=0)
+  elif mode=='prepare':input_sha=value['manifest_sha256'];assert value['targets']==10000 and value['tasks']==100;observations[mode].update(manifest_sha256=input_sha,maximum_task_capacity=value['capacity'])
+  elif mode=='check':assert value['replay']['passed']and value['replay']['targets']==10000 and value['replay']['tasks']==100;observations[mode]['replay']=value['replay']
+  else:assert len(value['controls'])==12 and all(v['rejected']for v in value['controls']);observations[mode]['controls']=value['controls']
+ env.update(PATH='/opt/homebrew/bin:'+env['PATH'],RUSTC='/opt/homebrew/bin/rustc',RUSTDOC='/opt/homebrew/bin/rustdoc',CARGO_INCREMENTAL='0',CARGO_TARGET_DIR=str(R/'artifacts/m8-qwen3-quality-diagnostic-v1/target'))
+ cargo='/opt/homebrew/bin/cargo';run('build',[cargo,'build','--offline','--release','--features','metal','--example','qwen3_quality','--example','qwen3_quality_contract'],env)
+ quality=Path(env['CARGO_TARGET_DIR'])/'release/examples/qwen3_quality';codec=quality.with_name('qwen3_quality_contract');bind(quality);bind(codec)
+ run('rust-unit',[cargo,'test','--offline','--release','--features','metal','--example','qwen3_quality'],env)
+ raw,err=run('rust-codec',['/usr/bin/time','-l',str(codec),str(O/'inputs'),input_sha,str(worker.subject.MODEL)],env);v=json.loads(raw);assert v['passed']and v['tasks']==100 and v['loss_targets']==10000;observations['rust_codec']=dict(result=v,memory=memory(err,1024**3))
+ for label,message in [('loss_ids','raw loss tokenizer differs'),('prompt_ids','app codec IDs differ')]:
+  directory=O/'controls'/label;changed=identity(directory/'manifest.json')['sha256'];_,err=run('rust-negative-'+label,[str(codec),str(directory),changed,str(worker.subject.MODEL)],env,expected=1);assert err.strip()==message
+ probe=O/'probe.u32le';probe.write_bytes(struct.pack('<4I',9707,11,1879,0));bind(probe)
+ _,err=run('loss-rejects-probe',[str(quality),str(O/'nonexistent-model'),'loss',str(probe)],env,expected=1);assert err.strip()=='loss requires all10001 IDs; probe requires the exact frozen four-token input'
+ raw,err=run('gpu-probe',['/usr/bin/time','-l',str(quality),str(worker.subject.MODEL),'probe',str(probe)],env,600);events=[json.loads(line)for line in raw.splitlines()];ready=events[0];done=events[-1];losses=[v for v in events if v['event']=='loss'];assert ready['event']=='ready'and ready['full_quality_workload']is False and ready['c512_numerical_gate_status']=='rejected_unchanged'and ready['context_capacity']==1025 and not ready['debug_assertions'];assert done['event']=='done'and done['targets']==3 and done['full_quality_workload']is False and len(losses)==3
+ ref=json.loads(read(R/'tests/fixtures/mlx-qwen3-real-v1/manifest.json'));item=ref['arrays']['cases.short.logits'];witnesses=[]
+ with (R/'artifacts/m8-qwen3-real-reference-v1/arrays.bin').open('rb')as f:
+  f.seek(item['offset']);body=f.read(item['bytes']);assert hashlib.sha256(body).hexdigest()==item['sha256']
+ for pos,(event,target)in enumerate(zip(losses,[11,1879,0],strict=True)):
+  values=[v[0]for v in struct.iter_unpack('<f',body[pos*151936*4:(pos+1)*151936*4])];assert event['target_index']==pos and event['position']==pos and event['target_token']==target
+  peak=max(values);expected=(peak-values[target])+math.log(math.fsum(math.exp(v-peak)for v in values));value=struct.unpack('<f',struct.pack('<I',event['target_logit_f32_bits']))[0];gate=item['gate'];assert abs(value-values[target])<=gate['atol']+gate['rtol']*abs(values[target]);bound=2*(gate['atol']+gate['rtol']*max(map(abs,values)));delta=abs(event['negative_log_likelihood']-expected);assert delta<=bound;witnesses.append(dict(position=pos,target=target,reference_nll=expected,observed_nll=event['negative_log_likelihood'],nll_absolute_difference=delta,inherited_logit_gate_derived_nll_bound=bound))
+ assert abs(done['total_negative_log_likelihood']-math.fsum(v['negative_log_likelihood']for v in losses))<1e-12
+ observations['gpu_probe']=dict(memory=memory(err,6*1024**3),ready=ready,witnesses=witnesses,scope='short target-logit and inherited-gate-derived NLL consistency; not full-logit qualification or held-out scoring')
+ observations['scope']=dict(input_preparation_and_short_probe=True,held_out_quality_scored=False,generated_code_executed=False,numerical_qualified=False,adopted=False)
+except BaseException as error:primary=type(error).__name__+': '+str(error)
+finally:
+ for sig in old:signal.signal(sig,signal.SIG_IGN)
+ try:guard()
+ except BaseException as error:errors.append('endpoint: '+str(error))
+ for command in commands:
+  if command['pid']:
+   for pid in(command['pid'],-command['pid']):
+    try:os.kill(pid,0)
+    except ProcessLookupError:pass
+    else:errors.append('owned process/group exists: '+str(pid))
+ result=dict(passed=primary is None and not errors,bindings=bindings,outputs=outputs,commands=commands,observations=observations,primary_error=primary,endpoint_errors=errors)
+ with(O/'checks.json').open('x')as f:json.dump(result,f,indent=2,allow_nan=False);f.write('\n')
+ for sig,handler in old.items():signal.signal(sig,handler)
+print(json.dumps({k:result[k]for k in('passed','observations','primary_error','endpoint_errors')}),flush=True)
+sys.exit(0 if result['passed']else 1)

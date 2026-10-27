@@ -1,0 +1,39 @@
+"""Acquire pinned inert BF16 baseline bytes; execute no model or repository code."""
+from pathlib import Path
+import hashlib,json,os,shutil,sys
+R=Path.cwd();O=Path(__file__).resolve().parent
+sys.path.insert(0,str(R/'tools/experiments'));import m7_apple_package as p
+REV='a9c98e602b9d36d2a2f7ba1eb0f5f31e4e8e5143';SHA='f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b';SIZE=1503300328
+DEST=R/'models/Qwen3-0.6B-a9c98e6';commands=[];primary=None;files={};errors=[]
+def digest(path):
+ with path.open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
+def check_blob(path,item):
+ body=path.read_bytes();assert len(body)==item['size']
+ assert hashlib.sha1(('blob '+str(len(body))+'\0').encode()+body).hexdigest()==item['blobId']
+ return body
+try:
+ assert not(O/'acquisition.json').exists() and not DEST.exists();assert shutil.disk_usage(R).free > SIZE+2*1024**3
+ api_raw=(O/'contemporary-api.json').read_bytes();api=json.loads(api_raw);assert api['id']=='Qwen/Qwen3-0.6B' and api['sha']==REV
+ items={v['rfilename']:v for v in api['siblings']};weight=items['model.safetensors'];assert weight['size']==SIZE and weight['lfs']['sha256']==SHA
+ config=check_blob(O/'official-config.json',items['config.json']);tokconfig=check_blob(O/'official-tokenizer-config.json',items['tokenizer_config.json'])
+ candidate=R/'models/MLX-Qwen3-0.6B-8bit-11de968/tokenizer.json';assert candidate.stat().st_size==items['tokenizer.json']['size'] and digest(candidate)==items['tokenizer.json']['lfs']['sha256']
+ current=json.loads((O/'official-api.json').read_text());current_weight=next(x for x in current['siblings']if x['rfilename']=='model.safetensors');assert current_weight['lfs']==weight['lfs']
+ env,_=p.build_environment();part=O/'model.safetensors.part'
+ result=p.owned(['/usr/bin/curl','--fail','--silent','--show-error','--location','--connect-timeout','20','--max-time','900','--max-filesize',str(SIZE),'https://huggingface.co/Qwen/Qwen3-0.6B/resolve/'+REV+'/model.safetensors'],part,O/'weight-download.stderr',env,930);commands.append(result)
+ assert result['exit_code']==0 and result['primary_error']is None and not result['cleanup_errors'],result
+ assert part.stat().st_size==SIZE and digest(part)==SHA
+ DEST.mkdir();os.rename(part,DEST/'model.safetensors');(DEST/'config.json').write_bytes(config);(DEST/'tokenizer_config.json').write_bytes(tokconfig);shutil.copyfile(candidate,DEST/'tokenizer.json')
+ for file in DEST.iterdir():files[file.name]=dict(bytes=file.stat().st_size,sha256=digest(file))
+ assert files['model.safetensors']==dict(bytes=SIZE,sha256=SHA)
+except BaseException as error:primary=type(error).__name__+': '+str(error)
+finally:
+ for result in commands:
+  if result['pid']:
+   for pid in(result['pid'],-result['pid']):
+    try:os.kill(pid,0)
+    except ProcessLookupError:pass
+    else:errors.append('owned process/group exists: '+str(pid))
+ record=dict(passed=primary is None and not errors,repository='Qwen/Qwen3-0.6B',revision=REV,destination=str(DEST.relative_to(R)),api_sha256=hashlib.sha256((O/'contemporary-api.json').read_bytes()).hexdigest(),files=files,commands=commands,primary_error=primary,endpoint_errors=errors,model_executed=False,quality_qualified=False,conversion_revision_recorded_by_converter=False,lineage_scope='official revision immediately preceding converted weight upload; original card names repository but omits source revision; current official weight digest identical')
+ with(O/'acquisition.json').open('x')as f:json.dump(record,f,indent=2);f.write('\n')
+print(json.dumps(record),flush=True)
+sys.exit(0 if record['passed']else 1)
