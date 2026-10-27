@@ -1,0 +1,280 @@
+{
+  "format": "toklet-qwen3-compensated-attention-local-accuracy-v1",
+  "opt_in_candidate": "AttentionMode::CompensatedReference",
+  "local_primitive_acceptance": true,
+  "whole_model_screen_executed": false,
+  "whole_model_qualified": false,
+  "default_factory_mode_changed": false,
+  "storage_layout_or_scratch_changed": false,
+  "legacy_scalar_launch_width_changed": false,
+  "numerical_gates_changed": false,
+  "reference_changed": false,
+  "validation_inputs_opened": false,
+  "quality_transferred_to_candidate": false,
+  "app_context_limits_raised": false,
+  "diagnosis": "Arithmetic-profile sensitivity is demonstrated. No native operator bug is established. The strict uniform trajectory-fidelity gate differs from mean held-out loss acceptance.",
+  "triangle": {
+    "cpu32_cpu64": {
+      "failed_entries": 96620,
+      "greedy_disagreements": 0,
+      "worst": {
+        "position": 65,
+        "maximum_absolute_log_probability_error": 0.21534818258089317,
+        "maximum_vocabulary_id": 83172,
+        "native_log_probability": -26.68509006356247,
+        "reference_log_probability": -26.900438246143363,
+        "failed_vocabulary_entries": 61481,
+        "native_greedy": 1879,
+        "reference_greedy": 1879,
+        "greedy_equal": true,
+        "native_log_normalizer": 0.004652737131196786,
+        "reference_log_normalizer": 0.004640516651176971,
+        "passed": false
+      },
+      "failed_row_count": 24
+    },
+    "native_cpu32": {
+      "failed_entries": 72487,
+      "greedy_disagreements": 0,
+      "worst": {
+        "position": 41,
+        "maximum_absolute_log_probability_error": 0.1526226727748039,
+        "maximum_vocabulary_id": 93515,
+        "native_log_probability": -21.134241072765853,
+        "reference_log_probability": -21.286863745540657,
+        "failed_vocabulary_entries": 14041,
+        "native_greedy": 1879,
+        "reference_greedy": 1879,
+        "greedy_equal": true,
+        "native_log_normalizer": 0.008632270924117008,
+        "reference_log_normalizer": 0.008639694541970153,
+        "passed": false
+      },
+      "failed_row_count": 19
+    },
+    "native_cpu64": {
+      "failed_entries": 56034,
+      "greedy_disagreements": 0,
+      "worst": {
+        "position": 41,
+        "maximum_absolute_log_probability_error": 0.20223375120124842,
+        "maximum_vocabulary_id": 93515,
+        "native_log_probability": -21.134241072765853,
+        "reference_log_probability": -21.3364748239671,
+        "failed_vocabulary_entries": 32682,
+        "native_greedy": 1879,
+        "reference_greedy": 1879,
+        "greedy_equal": true,
+        "native_log_normalizer": 0.008632270924117008,
+        "reference_log_normalizer": 0.008666861072661132,
+        "passed": false
+      },
+      "failed_row_count": 11
+    }
+  },
+  "triangle_lifetime_peak_measured": false,
+  "triangle_not_resource_qualification": true,
+  "own_input_layer": 0,
+  "own_input_positions": [
+    0,
+    41,
+    65
+  ],
+  "fixture_identity": {
+    "bytes": 282624,
+    "sha256": "1d82f23393652efc0c440366e68fa1932086da98f73105846f835cbf1b1035d9"
+  },
+  "independent_gpu_readback": {
+    "passed": true,
+    "raw_records": 9,
+    "rows": [
+      {
+        "position": 0,
+        "reference": {
+          "bit_mismatches": 0,
+          "squared_units_2_minus_48": 0
+        },
+        "candidate": {
+          "bit_mismatches": 0,
+          "squared_units_2_minus_48": 0
+        }
+      },
+      {
+        "position": 41,
+        "reference": {
+          "bit_mismatches": 9,
+          "squared_units_2_minus_48": 27744
+        },
+        "candidate": {
+          "bit_mismatches": 2,
+          "squared_units_2_minus_48": 272
+        }
+      },
+      {
+        "position": 65,
+        "reference": {
+          "bit_mismatches": 7,
+          "squared_units_2_minus_48": 1329169
+        },
+        "candidate": {
+          "bit_mismatches": 1,
+          "squared_units_2_minus_48": 1024
+        }
+      }
+    ],
+    "expected_half_bits_match_separate_numpy_fp64_diagnostic": true
+  },
+  "benefit_policy": "Before execution: each position nonregresses Half-bit mismatch count and exact squared error; pooled41+65 strictly improves both; control0 exact; original1e-4+1e-3|expected| primitive gate and controls pass.",
+  "squared_error_metric": "Exact u128 sum of squared Half differences in2^-48 units, including separately counted signed-zero bit mismatches; f64 reporting only.",
+  "gpu_test_count": 3,
+  "gpu_peak_physical_bytes": 24592984,
+  "gpu_max_rss_bytes": 37928960,
+  "process_memory_limit": 6442450944,
+  "whole_phase_peak_measured": false,
+  "performance_qualified": false,
+  "required_checks": [
+    "cargo fmt --check",
+    "cargo clippy --all-targets -- -D warnings",
+    "cargo clippy --all-targets --features metal -- -D warnings",
+    "cargo test",
+    "explicit CPU oracle/fixture test",
+    "explicit CPU planning equivalence test"
+  ],
+  "owned_cargo_gpu_groups_absent": 9,
+  "candidate_manifest": {
+    "bytes": 1632,
+    "sha256": "dbd85fde814b9b1598e671c6c54abb9bfb4c1f9d4f6804b4ce5e90d227d04e1a"
+  },
+  "evidence": {
+    "artifacts/astra-numerics-2026-10-27/findings.md": {
+      "bytes": 12810,
+      "sha256": "94b4dffadb065f9ab1448ae30e608e537c949b1d17440f780682ad43ea3df0d8"
+    },
+    "artifacts/astra-numerics-2026-10-27/triangle.py": {
+      "bytes": 3763,
+      "sha256": "580f3388f6e8a1351b4ea36e23c5505be7231876244c84e5078219386a1d338d"
+    },
+    "artifacts/astra-numerics-2026-10-27/triangle.json": {
+      "bytes": 3993,
+      "sha256": "cb5a4839c705ad3f5260ffe623f5cab2f0c6e1aa856c051ab25ec906f7e53f05"
+    },
+    "artifacts/astra-numerics-2026-10-27/triangle.rows.jsonl": {
+      "bytes": 659737,
+      "sha256": "3ff23bce75cf85c372db01a5f8a86427a1afafaa820ae67014b7295e2e55c690"
+    },
+    "artifacts/astra-numerics-2026-10-27/attention.py": {
+      "bytes": 6634,
+      "sha256": "bf343eb68865695af3bfb5f50bba13b889e23741536c14a0202a149fb665f91d"
+    },
+    "artifacts/astra-numerics-2026-10-27/attention.json": {
+      "bytes": 11183,
+      "sha256": "2347c5a485133546f583157a4cf352a16a5076dd90f7c209ecc1b5c5fdc8f7a5"
+    },
+    "artifacts/astra-numerics-2026-10-27/attention.rows.jsonl": {
+      "bytes": 612004,
+      "sha256": "816d7c4234cebc07ce7e2c1c3cd16736da8b76eacb5aa362254fac66f9e5cd72"
+    },
+    "artifacts/astra-numerics-2026-10-27/candidate-protocol.md": {
+      "bytes": 4812,
+      "sha256": "b915b0c41774fb246ece5463fd387bc04c6a3bb99791f246c8f448aa5ada068c"
+    },
+    "artifacts/astra-numerics-2026-10-27/candidate-sources-v3.json": {
+      "bytes": 1632,
+      "sha256": "dbd85fde814b9b1598e671c6c54abb9bfb4c1f9d4f6804b4ce5e90d227d04e1a"
+    },
+    "artifacts/astra-numerics-2026-10-27/run-gpu.py": {
+      "bytes": 4617,
+      "sha256": "52e3a9f5eb4f36e0c0cc989f1f97a8717da95b76e179dce76533d3c7e60b8c15"
+    },
+    "artifacts/astra-numerics-2026-10-27/gpu-v1/report.json": {
+      "bytes": 35365,
+      "sha256": "2d7c6ecf2766785cb958e8fbd1f9ae4dce78c67fe19aeb74f4922d8857e0950a"
+    },
+    "artifacts/m8-qwen3-attention-checks-v1/run.py": {
+      "bytes": 3546,
+      "sha256": "fa4ed5a0c6ecd6e05360e50ff09eee71ee55cdcb153c0955a9ea9c31234c033f"
+    },
+    "artifacts/m8-qwen3-attention-checks-v1/checks.json": {
+      "bytes": 50197,
+      "sha256": "16e25d5012231bc843aa4eca7140e9b9e19a411046c190db6018e2648ba8878f"
+    },
+    "artifacts/m8-qwen3-attention-checks-v1/gpu-readback.json": {
+      "bytes": 822,
+      "sha256": "7a5f4467e000efa8564bebdd054a3ae685f2307b23036a8a1a97bdea2294812f"
+    },
+    "artifacts/astra-numerics-2026-10-27/gpu-v1/compensated_attention_controls.stdout": {
+      "bytes": 192442,
+      "sha256": "7d23e7fc577d6ddeb5cf8e42a4ca10ff0727e9185f79e31c67cef6d8a50959b2"
+    },
+    "artifacts/astra-numerics-2026-10-27/gpu-v1/compensated_attention_controls.stderr": {
+      "bytes": 777,
+      "sha256": "22a9aed8080a743401d93b95ebde55f71f7b17d8fe36442405d19e1a5aa37dd6"
+    },
+    "artifacts/astra-numerics-2026-10-27/gpu-v1/compensated_attention_cancellation_and_midpoints.stdout": {
+      "bytes": 1117,
+      "sha256": "23336f0c8f3fe85960b9b7cd8e82f77e05d8ac62e09f91e3c49816addf221eb9"
+    },
+    "artifacts/astra-numerics-2026-10-27/gpu-v1/compensated_attention_cancellation_and_midpoints.stderr": {
+      "bytes": 777,
+      "sha256": "acf6804b5b5924aee09b68f49956f4b3b350c51eff7a3329cb62da6b7f992e7f"
+    },
+    "artifacts/astra-numerics-2026-10-27/gpu-v1/compensated_attention_qwen3_own_input_accuracy.stdout": {
+      "bytes": 109369,
+      "sha256": "10e5eaef8ba0450c59f819c9376080ab5ae247ae2fdd9f6eab3ff4bcf8818103"
+    },
+    "artifacts/astra-numerics-2026-10-27/gpu-v1/compensated_attention_qwen3_own_input_accuracy.stderr": {
+      "bytes": 777,
+      "sha256": "5396463a268c7352a97989e0da78938d933d18753c28ece504d5a21c1707f9ca"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/fmt.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/fmt.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/clippy.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/clippy.stderr": {
+      "bytes": 72,
+      "sha256": "f2066ca264b9a8598ecd436c70919e1efe1acea4098ad2a13b5d82d67bc049ec"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/metal-clippy.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/metal-clippy.stderr": {
+      "bytes": 133,
+      "sha256": "bbb8a4ea7d0e0976c489d31071943fd61c0ccffe34d559ed12fb420e2de15103"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/cpu-tests.stdout": {
+      "bytes": 41527,
+      "sha256": "243e23524bd2388a1222d9af34602f82041bed989c4c613f7a711ecc64809add"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/cpu-tests.stderr": {
+      "bytes": 4622,
+      "sha256": "19cacb9dd6b62786c153114132ce8a82cdbdea3ada839713754dfa4e0b20fc58"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/oracle.stdout": {
+      "bytes": 220,
+      "sha256": "824c0c48e255651bf4e5441b61d254078cf290c8e581e000ff28a72ab393bfea"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/oracle.stderr": {
+      "bytes": 212,
+      "sha256": "9814874418df208de4e9988467c2c23761b3f965c259624f64d7320355255c40"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/planning.stdout": {
+      "bytes": 199,
+      "sha256": "9af10c75f1065005b1874b9a569785e2deae164e823dcb18503015b233d56d42"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-attention-checks-v1/planning.stderr": {
+      "bytes": 151,
+      "sha256": "6a4f3b46a9e06346f257b89a4229c848303ed711334d40518cae0ddaaa648563"
+    }
+  },
+  "review": "Astra authored diagnosis/candidate; independent Astra reviewed protocol/code/correctness controls and independently reconstructed GPU benefit. Final publication review before selective commit.",
+  "decision": "Retain opt-in local accuracy experiment. One frozen original/future-tail512 logits-only screen follows under unchanged0.05/exactgreedy. No adoption/default switch; stop if rejected. Untouched validation/full quality require separate passing gates/review."
+}

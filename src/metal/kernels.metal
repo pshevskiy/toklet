@@ -298,6 +298,43 @@ inline float compensated_store_value(float2 sum) {
     }
     return value;
 }
+// Experimental score-matrix attention. The Reference kernel above remains
+// unchanged. Layout, masking and FP32 score/probability storage are identical;
+// only the three reductions and final two-component Half store differ.
+// Each query/head owns its scratch row and output; no cross-thread reduction.
+kernel void attention_compensated(device const half* q[[buffer(0)]],device const half* k[[buffer(1)]],device const half* v[[buffer(2)]],device float* scores[[buffer(3)]],device float* probs[[buffer(4)]],device half* out[[buffer(5)]],constant uint* s[[buffer(6)]],device atomic_uint* status[[buffer(7)]],uint query[[thread_position_in_grid]]) {
+    uint rows=s[0],heads=s[1],kvheads=s[2],d=s[3],cap=s[4],chunk=s[5],offset=s[6],valid=s[7];
+    if(query>=rows*heads)return;
+    uint token=query/heads,head=query%heads,kv=head/(heads/kvheads),base=(head*chunk+token)*cap,causal=offset+token+1;
+    float scale=sqrt(float(d)),maximum=-INFINITY;
+    for(uint p=0;p<valid;++p) {
+        float2 acc=float2(0.0f);
+        // Products of finite Half values are exact and in range in FP32.
+        for(uint f=0;f<d;++f)acc=compensated_add(acc,float(q[(token*heads+head)*d+f])*float(k[(kv*cap+p)*d+f]));
+        float score=(acc.x+acc.y)/scale;
+        scores[base+p]=score;
+        if(p<causal)maximum=max(maximum,score);
+    }
+    float2 mass=float2(0.0f);
+    for(uint p=0;p<valid;++p) {
+        float e=p<causal?exp(scores[base+p]-maximum):0.0f;
+        probs[base+p]=e;
+        mass=compensated_add(mass,e);
+    }
+    float sum=mass.x+mass.y;
+    if(!isfinite(sum)||sum<=0)atomic_fetch_or_explicit(status,2u,memory_order_relaxed);
+    for(uint p=0;p<valid;++p)probs[base+p]=probs[base+p]/sum;
+    for(uint f=0;f<d;++f) {
+        float2 acc=float2(0.0f);
+        for(uint p=0;p<causal;++p) {
+            float probability=probs[base+p],value=float(v[(kv*cap+p)*d+f]);
+            float product=probability*value;
+            acc=compensated_add(acc,product);
+            acc=compensated_add(acc,fma(probability,value,-product));
+        }
+        checked_half(out,(token*heads+head)*d+f,compensated_store_value(acc),status);
+    }
+}
 inline float2 compensated_reduce(float2 sum,uint lane,uint width) {
     // Merge disjoint adjacent subtrees for any queried positive width. All
     // lanes participate in shuffles; out-of-range results are never consumed.

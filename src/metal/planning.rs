@@ -518,6 +518,18 @@ mod tests {
         };
         const LIMIT: usize = 1024 * 1024;
         assert!(make().validate_buffers(LIMIT).is_ok());
+        let compensated = SessionPlan::new(
+            source.config(),
+            100,
+            options,
+            ReadbackMode::GreedyToken,
+            AttentionMode::CompensatedReference,
+        )
+        .unwrap();
+        let reference = make();
+        assert_eq!(compensated.score_count, reference.score_count);
+        assert_eq!(compensated.cache_count, reference.cache_count);
+        assert_eq!(compensated.memory, reference.memory);
         for field in 0..10 {
             let mut plan = make();
             match field {
@@ -586,6 +598,9 @@ mod tests {
                 Err(Error::Unsupported(_))
             ));
             assert!(validate_attention(Some(architecture), AttentionMode::Reference).is_ok());
+            assert!(
+                validate_attention(Some(architecture), AttentionMode::CompensatedReference).is_ok()
+            );
         }
         assert!(validate_attention(Some(Architecture::Qwen2), AttentionMode::Online).is_ok());
     }

@@ -6012,3 +6012,32 @@ activity alone. Review complete code tasks with results ready rather than each
 routine tooling subdivision. All numerical gates and untouched validation inputs
 remain unchanged. See [the report](qwen3-mac-functional.md) and
 [evidence](../benchmarks/results/2026-10-27-qwen3-chat-window-v1.json).
+
+## 2026-10-27 — Astra resolves arithmetic distinction; opt-in attention improves
+
+The unchanged output-fidelity rule also rejects independent CPU FP32 against
+FP64:24/512 rows,96620 entries,max0.21534818, with identical greedy IDs. Native
+againstFP64 remains11rows,max0.20223375. This demonstrates arithmetic-profile
+sensitivity and clarifies the strict trajectory requirement; it neither proves
+a native bug nor waives rejection or the mean-loss quality limits.
+
+A bounded layer0 own-input check supports one concrete accuracy mechanism.
+The opt-in CompensatedReference kernel uses compensated score/mass/context sums
+and a product residual while retaining FP32 transcendental/store boundaries,
+Half KV/context, masking/GQA/scratch and default selection. Actual GPU Half
+mismatches fall9→2 at41 and7→1 at65; squared2^-48 units fall27744→272 and
+1329169→1024. Control0 stays exact. Per-position and pooled benefit rules were
+fixed before execution; independent readback reconstructs all values.
+
+Three focused GPU tests and required formatting/default+Metal Clippy/CPU checks
+pass. Exact zero/one-key, causal/offset/GQA/chunk/guard, nonfinite and signed
+midpoint controls preserve the original tolerance. The compact fixture uses only
+old native inputs, not untouched validation. Largest GPU process physical/RSS
+24592984/37928960 bytes fit6GiB; no performance or whole-phase claim. Triangle
+reader lifetime peak was not measured and is not treated as resource qualification.
+
+Astra independently reviews code/protocol/results. Retain the opt-in accuracy
+experiment for one unchanged whole-model screen; ordinary app/defaults and all
+old failures remain. No model execution, full-quality transfer, gate/reference
+change or adoption occurs in this task. See [the diagnosis](qwen3-attention-accuracy-experiment.md)
+and [evidence](../benchmarks/results/2026-10-27-qwen3-compensated-attention-v1.json).

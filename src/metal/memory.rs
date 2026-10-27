@@ -233,6 +233,7 @@ pub(super) enum Kernel {
     HalfCompensatedFloat,
     Q4V2Compensated,
     Q4V2CompensatedPrefill,
+    AttentionCompensated,
 }
 impl Kernel {
     pub fn name(self) -> &'static str {
@@ -260,6 +261,7 @@ impl Kernel {
             "half_compensated_float",
             "q4_v2_compensated",
             "q4_v2_compensated_prefill",
+            "attention_compensated",
         ][self as usize]
     }
 }
@@ -331,6 +333,7 @@ impl Gpu {
             Kernel::HalfCompensatedFloat,
             Kernel::Q4V2Compensated,
             Kernel::Q4V2CompensatedPrefill,
+            Kernel::AttentionCompensated,
         ] {
             let f = library
                 .newFunctionWithName(&NSString::from_str(k.name()))
@@ -338,9 +341,13 @@ impl Gpu {
             let p = device
                 .newComputePipelineStateWithFunction_error(&f)
                 .map_err(|e| Error::Native(e.to_string()))?;
-            width = width
-                .min(p.threadExecutionWidth())
-                .min(p.maxTotalThreadsPerThreadgroup());
+            // An experimental pipeline must not alter existing scalar-kernel
+            // launch geometry. Its own limit is applied at dispatch below.
+            if !matches!(k, Kernel::AttentionCompensated) {
+                width = width
+                    .min(p.threadExecutionWidth())
+                    .min(p.maxTotalThreadsPerThreadgroup());
+            }
             pipelines.push(p);
         }
         if width == 0 {
@@ -395,6 +402,9 @@ impl Gpu {
                 | Kernel::Q4V2CompensatedPrefill
         ) {
             self.execution_width(k)
+        } else if matches!(k, Kernel::AttentionCompensated) {
+            self.width
+                .min(self.pipelines[k as usize].maxTotalThreadsPerThreadgroup())
         } else {
             self.width
         };

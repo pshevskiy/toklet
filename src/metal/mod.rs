@@ -2,6 +2,8 @@
 //! Numerical kernels use concrete owned buffers; token/chat/application state is
 //! outside GPU execution. A chunk has one completion boundary, not per-op waits.
 mod capture;
+#[cfg(test)]
+mod compensated_attention;
 mod diagnostic;
 #[cfg(test)]
 mod half_consistency;
@@ -676,6 +678,10 @@ pub enum NormalizationMode {
 pub enum AttentionMode {
     #[default]
     Reference,
+    /// Experimental score-matrix attention with compensated FP32 reductions.
+    /// Storage and scalar transcendental arithmetic match Reference; this is
+    /// not a claim of FP64 equivalence or whole-model numerical qualification.
+    CompensatedReference,
     /// FP32 online softmax over bounded key tiles, with resident FP16 K/V.
     Online,
 }
@@ -1318,9 +1324,13 @@ impl<'m> Session<'m> {
                 (start + n) as u32,
             ];
             match self.attention_mode {
-                AttentionMode::Reference => g.encode(
+                AttentionMode::Reference | AttentionMode::CompensatedReference => g.encode(
                     &command,
-                    Kernel::Attention,
+                    if self.attention_mode == AttentionMode::CompensatedReference {
+                        Kernel::AttentionCompensated
+                    } else {
+                        Kernel::Attention
+                    },
                     &[
                         &q_rotary.raw,
                         &cache.k.raw,
