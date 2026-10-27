@@ -35,6 +35,40 @@ fn qwen_geometry(c: &model::Config) -> Result<(), GeometryError> {
     }
     Ok(())
 }
+/// Quality experiments use a separate, explicit loader. This is a resource/
+/// geometry boundary, not numerical qualification or application eligibility.
+#[cfg(any(
+    test,
+    all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    )
+))]
+pub(crate) fn qwen3_quality_geometry(
+    c: &model::Config,
+    architecture: crate::mlx::dense::Architecture,
+) -> Result<(), GeometryError> {
+    c.validate()
+        .map_err(|_| GeometryError::Invalid("invalid Qwen3 diagnostic configuration"))?;
+    if architecture != crate::mlx::dense::Architecture::Qwen3
+        || c.hidden_size != 1024
+        || c.max_positions > 1025
+    {
+        return Err(GeometryError::Unsupported(
+            "quality diagnostic requires Qwen3 0.6B and at most 1025 positions",
+        ));
+    }
+    // Reuse every ordinary shape/rotary/epsilon restriction. Only the explicit
+    // diagnostic's capacity differs; inspection and ordinary loading stay512.
+    metal_geometry(
+        &model::Config {
+            max_positions: c.max_positions.min(512),
+            ..c.clone()
+        },
+        architecture,
+    )
+}
 /// Keep bias-free geometry admission explicit and before GPU creation. Wider dense
 /// shapes/rotary variants require their own numerical and resource qualification.
 pub(crate) fn metal_geometry(
@@ -132,6 +166,76 @@ pub(crate) fn metal_geometry(
 mod tests {
     use super::*;
     use crate::mlx::dense::Architecture;
+
+    #[test]
+    fn qwen3_quality_context_is_explicit_and_does_not_expand_ordinary_admission() {
+        let c = model::Config {
+            hidden_size: 1024,
+            intermediate_size: 3072,
+            query_heads: 16,
+            kv_heads: 8,
+            head_dim: 128,
+            num_layers: 28,
+            vocab_size: 151936,
+            max_positions: 1025,
+            rope_theta: 1e6,
+            rms_norm_eps: 1e-6,
+        };
+        for capacity in [1, 32, 512, 513, 1024, 1025] {
+            let candidate = model::Config {
+                max_positions: capacity,
+                ..c.clone()
+            };
+            assert!(qwen3_quality_geometry(&candidate, Architecture::Qwen3).is_ok());
+            assert_eq!(
+                metal_geometry(&candidate, Architecture::Qwen3).is_ok(),
+                capacity <= 512
+            );
+        }
+        for invalid in [0, 1026, usize::MAX] {
+            assert!(
+                qwen3_quality_geometry(
+                    &model::Config {
+                        max_positions: invalid,
+                        ..c.clone()
+                    },
+                    Architecture::Qwen3
+                )
+                .is_err()
+            );
+        }
+        for architecture in [
+            Architecture::Qwen2,
+            Architecture::Llama,
+            Architecture::Mistral,
+        ] {
+            assert!(qwen3_quality_geometry(&c, architecture).is_err());
+        }
+        for unsupported in [
+            model::Config {
+                hidden_size: 32,
+                ..c.clone()
+            },
+            model::Config {
+                kv_heads: 4,
+                ..c.clone()
+            },
+            model::Config {
+                intermediate_size: 4096,
+                ..c.clone()
+            },
+            model::Config {
+                rope_theta: 10000.0,
+                ..c.clone()
+            },
+            model::Config {
+                rms_norm_eps: 1e-5,
+                ..c.clone()
+            },
+        ] {
+            assert!(qwen3_quality_geometry(&unsupported, Architecture::Qwen3).is_err());
+        }
+    }
 
     #[test]
     fn all_current_shape_policies_and_error_categories_are_device_independent() {

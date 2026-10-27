@@ -5798,3 +5798,29 @@ and existing quality rules before scoring; never fit tolerances to held-out
 results. The next code task is the explicit diagnostic1025 path with bounded
 memory and boundary/state checks. See [the source report](qwen3-quantized-source.md)
 and [evidence](../benchmarks/results/2026-10-27-qwen3-quantized-source-v1.json).
+
+## 2026-10-27 — Explicit native Qwen3 diagnostic1025 capacity/state path
+
+An explicit quality-diagnostic loader admits only real Qwen3 0.6B geometry up
+to1025 positions, selecting its policy before device creation and retaining
+ordinary512/app boundaries. Packed weights, Half activations/KV, kernels and
+memory/session planners are unchanged. Smol audited identity remains restricted
+to its existing loader variant. CPU policy checks reject wrong shapes, families,
+rotary/epsilon and maximum+1 without requiring Metal.
+
+The reviewed release GPU witness passes exact/minus-one memory admission,
+capacity/offset overflow, partial-prefill discard/resume, full1025 commitment,
+atomic rejected append/replacement/continuation,128/37-row exact replay,
+position1023 causal-prefix stability with a changed future token, and sampled
+pending/cancel/later-commit semantics at the boundary. Whole-process physical
+peak1126729000/RSS992460800 bytes fit6GiB. Build/test groups close; all pinned
+source/model/reference endpoints pass. CPU suite, formatting and strict
+default/Metal all-target Clippy pass.
+
+The interrupted wrong-toolchain build and failed pending-logits test assumption
+remain retained. Rust1.90 is explicit on retry; the corrected test expects
+unavailable logits while sampled history is pending. No engine or gate changes
+were used to obtain the pass. This is diagnostic capacity/state evidence,
+not independent1025 numerics, full quality, app-window expansion or performance.
+See [the report](qwen3-quality-diagnostic.md) and
+[evidence](../benchmarks/results/2026-10-27-qwen3-quality-diagnostic-v1.json).

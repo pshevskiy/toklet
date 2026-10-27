@@ -77,6 +77,11 @@ fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture
         GeometryError::Unsupported(message) => Error::Unsupported(message),
     })
 }
+enum MlxImport {
+    Ordinary,
+    SmolAudited,
+    Qwen3QualityDiagnostic,
+}
 /// The planning source contributes shapes only. Reopen payload descriptors after
 /// artifact identity is established, then check metadata and endpoint identities.
 /// This prevents an atomic replacement before Artifact::open from leaving an
@@ -260,22 +265,32 @@ impl Model {
     /// Explicit native MLX artifact import. Packed tensors stream directly into
     /// resident buffers, with no full FP32 model or temporary packed copy.
     pub fn load_mlx(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
-        Self::load_mlx_impl(directory, options, false)
+        Self::load_mlx_impl(directory, options, MlxImport::Ordinary)
     }
     /// Explicit one-checkpoint audited source import. Evidence is attached only
     /// after every upload and final model assembly succeeds. Codec/device/session
     /// admission and application capabilities remain separate boundaries.
     pub fn load_mlx_smol_audited(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
-        Self::load_mlx_impl(directory, options, true)
+        Self::load_mlx_impl(directory, options, MlxImport::SmolAudited)
+    }
+    /// Experimental Qwen3 0.6B quality execution up to1025 positions. Uses the
+    /// unchanged Half graph, packed weights and session planners. This does not
+    /// qualify numerics/quality, increase app limits, or waive known C512 failures.
+    /// Ordinary MLX loading and compatibility inspection retain their own bounds.
+    pub fn load_mlx_qwen3_quality_diagnostic(
+        directory: &Path,
+        options: weights::LoadOptions,
+    ) -> Result<Self> {
+        Self::load_mlx_impl(directory, options, MlxImport::Qwen3QualityDiagnostic)
     }
     fn load_mlx_impl(
         directory: &Path,
         options: weights::LoadOptions,
-        audited: bool,
+        import: MlxImport,
     ) -> Result<Self> {
         autoreleasepool(|_| {
             let clock = Instant::now();
-            let mut source = if audited {
+            let mut source = if matches!(import, MlxImport::SmolAudited) {
                 crate::mlx::qwen::Source::open_smol_audited(directory, options)?
             } else {
                 crate::mlx::qwen::Source::open_dense(directory, options)?
@@ -283,7 +298,16 @@ impl Model {
             let config = source.config().clone();
             let bias_free = !source.architecture().has_projection_bias();
             let untied_output = !source.tied_output();
-            mlx_geometry(&config, source.architecture())?;
+            if matches!(import, MlxImport::Qwen3QualityDiagnostic) {
+                use crate::mlx::execution::GeometryError;
+                crate::mlx::execution::qwen3_quality_geometry(&config, source.architecture())
+                    .map_err(|error| match error {
+                        GeometryError::Invalid(message) => Error::Options(message),
+                        GeometryError::Unsupported(message) => Error::Unsupported(message),
+                    })?;
+            } else {
+                mlx_geometry(&config, source.architecture())?;
+            }
             // Admit padded resident weights before device/context compilation.
             let plan = planning::MlxWeights::new(&source)?;
             plan.admit(options.memory_limit_bytes)?;
@@ -350,7 +374,7 @@ impl Model {
             )?;
             model.mlx_architecture = Some(source.architecture());
             model.mlx_declared_positions = Some(source.declared_positions());
-            if audited {
+            if matches!(import, MlxImport::SmolAudited) {
                 let identity = source.content_identity().ok_or(Error::Options(
                     "audited source incomplete after model assembly",
                 ))?;

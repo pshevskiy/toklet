@@ -867,6 +867,234 @@ mod gpu {
     }
 
     #[test]
+    #[ignore = "Explicit Apple GPU diagnostic-only Qwen3 1025 capacity/state; no numerical or quality qualification"]
+    fn native_qwen3_quality_diagnostic_1025_preserves_boundaries_and_pending_state() {
+        use std::sync::atomic::{AtomicBool, Ordering};
+        use toklet::generation::{self, Input, Request, StopReason};
+        let reference = Reference::open();
+        reference.checkpoint();
+        let load = LoadOptions {
+            context_limit: 1025,
+            memory_limit_bytes: BUDGET,
+        };
+        let directory = root().join(MODEL);
+        assert!(matches!(
+            metal::Model::load_mlx(&directory, load),
+            Err(metal::Error::Unsupported(
+                "Metal Qwen3 requires the admitted tiny/0.6B geometry, context and ordinary RoPE"
+            ))
+        ));
+        assert!(matches!(
+            metal::Model::load_mlx_qwen3_quality_diagnostic(
+                &directory,
+                LoadOptions {
+                    context_limit: 1026,
+                    ..load
+                }
+            ),
+            Err(metal::Error::Unsupported(
+                "quality diagnostic requires Qwen3 0.6B and at most 1025 positions"
+            ))
+        ));
+        let model = metal::Model::load_mlx_qwen3_quality_diagnostic(&directory, load).unwrap();
+        assert_eq!(model.config().max_positions, 1025);
+        assert_eq!(model.mlx_declared_positions(), Some(40960));
+        let options = session::Options {
+            capacity: 1025,
+            prefill_chunk_size: 128,
+            position_offset: 0,
+            memory_limit_bytes: BUDGET,
+        };
+        let create = |options| {
+            metal::Session::with_attention_mode(
+                &model,
+                options,
+                ProjectionMode::MlxAffine,
+                NormalizationMode::Compensated,
+                ReadbackMode::FullLogits,
+                AttentionMode::Reference,
+            )
+        };
+        for invalid in [
+            session::Options {
+                capacity: 1026,
+                ..options
+            },
+            session::Options {
+                position_offset: 1,
+                ..options
+            },
+        ] {
+            assert!(matches!(
+                create(invalid),
+                Err(metal::Error::Options(
+                    "Metal session options outside admitted model/context bounds"
+                ))
+            ));
+        }
+        let mut active = create(options).unwrap();
+        let admitted = active.memory().admitted_bytes;
+        assert!(admitted <= BUDGET);
+        assert!(matches!(
+            create(session::Options {
+                memory_limit_bytes: admitted - 1,
+                ..options
+            }),
+            Err(metal::Error::Budget { required, limit }) if required == admitted && limit == admitted - 1
+        ));
+        let exact = create(session::Options {
+            memory_limit_bytes: admitted,
+            ..options
+        })
+        .unwrap();
+        assert_eq!(exact.memory().admitted_bytes, admitted);
+        drop(exact);
+        let prompt: Vec<_> = [9707, 11, 1879, 0].into_iter().cycle().take(1025).collect();
+        active.set_tokens(&prompt[..1024]).unwrap();
+        assert_eq!(active.evaluate_next_chunk().unwrap(), 128);
+        active.discard_pending();
+        assert_eq!(active.history(), &prompt[..128]);
+        assert_eq!((active.evaluated_len(), active.pending_len()), (128, 0));
+        active.append(&prompt[128..1024]).unwrap();
+        active.evaluate().unwrap();
+        let prefix_logits = active.logits().unwrap().to_vec();
+        active.append(&prompt[1024..]).unwrap();
+        active.evaluate().unwrap();
+        let full_logits = active.logits().unwrap().to_vec();
+        assert!(full_logits.iter().all(|v| v.is_finite()));
+        assert_eq!((active.evaluated_len(), active.pending_len()), (1025, 0));
+        let assert_full = |s: &metal::Session<'_>| {
+            assert_eq!(s.history(), prompt);
+            assert_eq!((s.evaluated_len(), s.pending_len()), (1025, 0));
+            assert_eq!(s.logits().unwrap(), full_logits);
+        };
+        assert!(matches!(
+            active.append(&[11]),
+            Err(metal::Error::Options(
+                "token ID/count outside session capacity"
+            ))
+        ));
+        assert_full(&active);
+        assert!(matches!(
+            active.set_tokens(&[9707; 1026]),
+            Err(metal::Error::Options(
+                "token ID/count outside session capacity"
+            ))
+        ));
+        assert_full(&active);
+        active.set_tokens(&prompt).unwrap();
+        assert_eq!(active.evaluate_next_chunk().unwrap(), 0);
+        drop(active);
+
+        // A different chunk schedule and future tail must preserve the exact
+        // preceding distribution. This tests causal state, not source parity.
+        let mut replay = create(session::Options {
+            prefill_chunk_size: 37,
+            ..options
+        })
+        .unwrap();
+        replay.enable_diagnostics(&[]).unwrap();
+        let diagnostic_admitted = replay.memory().admitted_bytes;
+        assert!(diagnostic_admitted <= BUDGET);
+        replay.set_tokens(&prompt[..1024]).unwrap();
+        replay.evaluate().unwrap();
+        assert_eq!(replay.logits().unwrap(), prefix_logits);
+        replay.append(&prompt[1024..]).unwrap();
+        replay.evaluate().unwrap();
+        assert_eq!(replay.logits().unwrap(), full_logits);
+        replay.reset();
+        let mut changed = prompt.clone();
+        changed[1024] = 17;
+        replay.set_tokens(&changed).unwrap();
+        replay.evaluate().unwrap();
+        let snapshots = replay.diagnostics().unwrap();
+        let logits = snapshots.iter().find(|s| s.stage == "logits").unwrap();
+        assert_eq!(logits.rows, 26);
+        assert_eq!(logits.columns, 151936);
+        let row = logits.rows - 2;
+        assert_eq!(
+            &logits.values[row * logits.columns..(row + 1) * logits.columns],
+            prefix_logits
+        );
+        assert_eq!(replay.evaluated_len(), 1025);
+        drop(snapshots);
+        drop(replay);
+
+        // One sampled output at the boundary remains pending. Cancellation,
+        // overflow rejection and later commitment preserve its valid prefix.
+        let mut generated = create(options).unwrap();
+        let cancel = AtomicBool::new(false);
+        let stopped = generation::generate(
+            &mut generated,
+            Request {
+                input: Input::Prompt(&prompt[..1024]),
+                max_new_tokens: 1,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |_| {
+                cancel.store(true, Ordering::Relaxed);
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(stopped.reason, StopReason::Cancelled);
+        assert_eq!((stopped.sampled_tokens, stopped.emitted_tokens), (1, 1));
+        assert_eq!(
+            (
+                generated.evaluated_len(),
+                generated.pending_len(),
+                generated.history().len()
+            ),
+            (1024, 1, 1025)
+        );
+        let history = generated.history().to_vec();
+        let generated_logits = generated.logits().map(<[f32]>::to_vec);
+        assert!(generated_logits.is_none()); // Sampled history is still pending.
+        cancel.store(false, Ordering::Relaxed);
+        assert!(matches!(
+            generation::generate(
+                &mut generated,
+                Request {
+                    input: Input::Continue,
+                    max_new_tokens: 1,
+                    stop_tokens: &[],
+                },
+                &cancel,
+                |_| panic!("full diagnostic must reject before emission")
+            ),
+            Err(generation::Error::InvalidRequest(
+                "prompt plus requested output exceeds session capacity"
+            ))
+        ));
+        assert_eq!(generated.history(), history);
+        assert_eq!(
+            (generated.evaluated_len(), generated.pending_len()),
+            (1024, 1)
+        );
+        assert_eq!(generated.logits().map(<[f32]>::to_vec), generated_logits);
+        generated.evaluate().unwrap();
+        assert_eq!(
+            (generated.evaluated_len(), generated.pending_len()),
+            (1025, 0)
+        );
+        drop(generated);
+        reference.checkpoint();
+        println!(
+            "QWEN3_QUALITY_DIAGNOSTIC_1025 {}",
+            json!({
+                "device":model.device_name(),"capacity":1025,"chunks":[128,37],
+                "exact_chunk_prefix_replay":true,"maximum_plus_one_rejected":true,
+                "pending_cancel_commit_checked":true,"session_admitted_bytes":admitted,
+                "diagnostic_session_admitted_bytes":diagnostic_admitted,
+                "experimental_only":true,"c512_numerical_qualified":false,
+                "known_c512_numerical_gate_status":"rejected_unchanged",
+                "quality_qualified":false,"app_limits_changed":false,"iphone_qualified":false
+            })
+        );
+    }
+
+    #[test]
     #[ignore = "Explicit Apple GPU real Qwen3 512 capacity/resume/replay witness, separate from short numerical oracle"]
     fn native_mlx_qwen3_real_512_capacity_preserves_committed_state() {
         let reference = Reference::open();

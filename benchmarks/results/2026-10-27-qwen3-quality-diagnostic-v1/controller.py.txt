@@ -1,0 +1,60 @@
+"""One reviewed diagnostic capacity/state witness; no numerical gate waiver."""
+from pathlib import Path
+import hashlib,json,os,re,signal,sys
+R=Path.cwd();O=Path(__file__).resolve().parent
+sys.path.insert(0,str(R/'tools/experiments'));import m7_apple_package as p
+bindings={};outputs={};commands=[];errors=[];primary=None;observations={}
+def identity(path):
+ def fields(v):return v.st_dev,v.st_ino,v.st_mode,v.st_size,v.st_mtime_ns,v.st_ctime_ns
+ before=path.stat();h=hashlib.sha256()
+ with path.open('rb') as f:
+  opened=os.fstat(f.fileno());assert (opened.st_dev,opened.st_ino,opened.st_size,opened.st_mtime_ns)==(before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns)
+  for data in iter(lambda:f.read(1024**2),b''):h.update(data)
+  assert fields(os.fstat(f.fileno()))==fields(opened)
+ assert fields(path.stat())==fields(before)
+ return dict(bytes=before.st_size,sha256=h.hexdigest())
+def bind(path):bindings[str(path.relative_to(R))]=identity(path)
+def guard():
+ for name,expected in bindings.items():assert identity(R/name)==expected,name
+ for name,expected in outputs.items():assert identity(R/name)==expected,name
+
+def run(label,args,env,timeout=1200):
+ guard();result=p.owned(args,O/(label+'.stdout'),O/(label+'.stderr'),env,timeout);commands.append(result)
+ for stream in('stdout','stderr'):
+  path=O/(label+'.'+stream);outputs[str(path.relative_to(R))]=identity(path)
+ guard();assert result['exit_code']==0 and result['primary_error']is None and not result['cleanup_errors'],result
+ print(json.dumps(dict(completed=label,pid=result['pid'])),flush=True)
+ return (O/(label+'.stdout')).read_text(),(O/(label+'.stderr')).read_text()
+def stop(number,_):raise InterruptedError(str(number))
+old={s:signal.signal(s,stop)for s in(signal.SIGTERM,signal.SIGINT)}
+try:
+ assert not(O/'checks.json').exists()
+ for path in[*p.numerical_sources(),R/'tests/mlx_qwen3_real_model_metal.rs',R/'tests/fixtures/mlx-qwen3-real-v1/manifest.json',R/'artifacts/m8-qwen3-real-reference-v1/arrays.bin',R/'tests/fixtures/qwen3-context512-v1/comparison.json',Path(__file__).resolve(),Path(p.__file__).resolve()]:bind(path)
+ model=R/'models/MLX-Qwen3-0.6B-8bit-11de968'
+ for name in('config.json','model.safetensors','model.safetensors.index.json','tokenizer.json','tokenizer_config.json','special_tokens_map.json'):bind(model/name)
+ env,_=p.build_environment();env.update(CARGO_TARGET_DIR=str(R/'artifacts/m8-qwen3-quality-diagnostic-v1/target'),CARGO_INCREMENTAL='0',RUST_TEST_THREADS='1',RUSTC='/opt/homebrew/bin/rustc',RUSTDOC='/opt/homebrew/bin/rustdoc')
+ env['PATH']='/opt/homebrew/bin:'+env['PATH'];cargo=str(Path('/opt/homebrew/bin/cargo'));bind(Path(cargo).resolve()) if Path(cargo).resolve().is_relative_to(R) else None
+ build,_=run('build',[cargo,'test','--offline','--release','--features','metal','--test','mlx_qwen3_real_model_metal','--no-run','--message-format=json'],env)
+ artifacts=[json.loads(line) for line in build.splitlines() if line.startswith('{')];binaries=[v['executable']for v in artifacts if v.get('reason')=='compiler-artifact' and v.get('target',{}).get('name')=='mlx_qwen3_real_model_metal' and v.get('executable')]
+ assert len(binaries)==1;b=Path(binaries[0]);bind(b)
+ raw,stderr=run('gpu',['/usr/bin/time','-l',str(b),'gpu::native_qwen3_quality_diagnostic_1025_preserves_boundaries_and_pending_state','--ignored','--exact','--nocapture','--test-threads=1'],env,600)
+ lines=[line.split('QWEN3_QUALITY_DIAGNOSTIC_1025 ',1)[1]for line in raw.splitlines()if 'QWEN3_QUALITY_DIAGNOSTIC_1025 'in line];assert len(lines)==1
+ observations['witness']=json.loads(lines[0]);assert '1 passed; 0 failed'in raw
+ observations['memory']={key:int(re.search(r'(\d+)\s+'+word,stderr)[1])for key,word in[('rss','maximum resident set size'),('physical','peak memory footprint')]};assert all(0<x<=6*1024**3 for x in observations['memory'].values())
+ assert observations['witness']['capacity']==1025 and observations['witness']['known_c512_numerical_gate_status']=='rejected_unchanged' and observations['witness']['quality_qualified']is False
+except BaseException as error:primary=type(error).__name__+': '+str(error)
+finally:
+ for sig in old:signal.signal(sig,signal.SIG_IGN)
+ try:guard()
+ except BaseException as error:errors.append('endpoint: '+str(error))
+ for command in commands:
+  if command['pid']:
+   for pid in(command['pid'],-command['pid']):
+    try:os.kill(pid,0)
+    except ProcessLookupError:pass
+    else:errors.append('owned process/group exists: '+str(pid))
+ result=dict(passed=primary is None and not errors,bindings=bindings,outputs=outputs,commands=commands,observations=observations,primary_error=primary,endpoint_errors=errors)
+ with(O/'checks.json').open('x')as f:json.dump(result,f,indent=2,allow_nan=False);f.write('\n')
+ for sig,handler in old.items():signal.signal(sig,handler)
+print(json.dumps({k:result[k]for k in('passed','observations','primary_error','endpoint_errors')}),flush=True)
+sys.exit(0 if result['passed']else 1)
