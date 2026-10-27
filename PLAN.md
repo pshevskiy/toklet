@@ -81,9 +81,11 @@ requirement. The [complete native C512 diagnosis](docs/qwen3-context512-native.m
 now captures/replays5016 snapshots and1,008,357,760 values per contract. All4096
 argmax rows and state contracts pass; all57 full512-row captured arrays are
 byte-identical across four schedules per case. Canonical numerical qualification
-still rejects18,400 values; FP64 diagnostic failures total37,040. Next one bounded
-same-input layer27 Q/K/V projection diagnosis separates inherited inputs from
-local reduction/Half rounding with authenticated rows and passing controls.
+still rejects18,400 values; FP64 diagnostic failures total37,040. The bounded
+[same-input Q/K/V diagnosis](docs/qwen3-projection-localization.md) reproduces all42 saved
+outputs from their own inputs exactly, including14 native coordinates and six
+passing controls. Selected failures are inherited input differences plus correct
+Half rounding; keep Q/K/V kernels unchanged and investigate the upstream path.
 Source parity, unquantized/held-out quality and broader context remain open;
 no precision-policy or capacity upgrade follows.
 Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.

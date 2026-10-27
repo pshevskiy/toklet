@@ -5604,3 +5604,32 @@ Next one bounded same-input layer27 Q/K/V dot diagnosis authenticates selected
 packed rows and separates inherited inputs, local reduction and Half rounding,
 with passing-coordinate controls. Keep numerical gates and the full source/
 held-out quality workload intact; no all-layer CPU trace is a prerequisite.
+
+## 2026-10-27 — Exact same-input Q/K/V projection localization
+
+Astra reviewed a frozen14-coordinate layer27 plan with two canonical failures
+and two passing controls per Q/K/V projection, plus two disjoint CPU-envelope V
+coordinates. Whole parent files and consumed weight/input/output spans are
+authenticated. Original eight-bit/BF16 rows reconstruct once to FP32; exact
+rational1024-term dots round once to nearest-even Half. Error decomposition
+separates local arithmetic, inherited input and reference rounding without
+instantiating a model graph. A separate exact binary-search rounding replay
+independently reproduces all selected results.
+
+All42 own-input outputs match saved Half bits:14 native and28 CPU reference
+results. Extra local arithmetic error is zero at every selected point. Eight
+canonical failures remain failures and six controls remain passes. This supports
+retaining Q/K/V kernels unchanged; upstream input differences explain these
+selected discrepancies, without locating their first source or qualifying the
+whole context. Existing gates, precision, capacities and full quality demands
+remain intact.
+
+All31 cold tests pass, including nine new portable controls. Reader physical/RSS
+peaks288,441,208/271,482,880 bytes fit512MiB. Two diagnostic groups and both
+publication groups close. The initial environment-admission and publisher
+access-time failures remain recorded; corrected runs preserve source/data pins.
+Rust/shader/protected release artifacts remain unchanged. See
+[the diagnosis](qwen3-projection-localization.md) and
+[public evidence](../benchmarks/results/2026-10-27-qwen3-projection-localization-v1.json).
+L4 numerical qualification, source/held-out quality, broader model context and
+independent phone qualification remain open.
