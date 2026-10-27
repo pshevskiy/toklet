@@ -2,6 +2,7 @@ use super::*;
 use crate::weights::audit::tests::Fixture;
 fn wrapper(source: weights::Source, storage: Storage) -> Source {
     Source {
+        declared_positions: 8,
         config: Config {
             vocab_size: 1,
             hidden_size: 32,

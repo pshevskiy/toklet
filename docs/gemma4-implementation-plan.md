@@ -67,6 +67,14 @@ native Gemma model handle. The [Mac storage load](gemma4-checkpoint.md) now
 admits pinned Gemma text weights; the short scalar diagnostic is checked as
 listed below, while full qualification and phone fit remain open.
 
+L3.1 [engine context facts and shared request preflight](context-admission.md) now
+passes Rust/native/C and tiny Metal checks. Same-document declared positions,
+global loader/loaded/session bounds, process-local model/session identity and
+pending-history arithmetic remain separate from qualification/device fit.
+Next L3.2 consumes these fixed native records in both Swift modes with explicit
+codec/text/event and qualification policy; current qualified ranges stay fixed.
+Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
+
 ## Current status and execution tasks
 
 | Package | Implemented and checked | Remaining acceptance |

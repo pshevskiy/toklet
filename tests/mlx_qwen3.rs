@@ -672,3 +672,134 @@ fn cancellation_pending_append_and_edited_replay_preserve_a_valid_qwen3_prefix()
         close(s.logits().unwrap(), &expected);
     }
 }
+
+#[test]
+fn declared_context_survives_requested_narrowing_and_later_config_changes() {
+    manifest();
+    let a = CopyArtifact::new("tied");
+    let source = Source::open_dense(
+        &a.0,
+        LoadOptions {
+            context_limit: 8,
+            ..options()
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        (source.declared_positions(), source.config().max_positions),
+        (32, 8)
+    );
+    a.config("max_position_embeddings", json!(64));
+    assert_eq!(
+        (source.declared_positions(), source.config().max_positions),
+        (32, 8)
+    );
+    let later = Source::open_dense(
+        &a.0,
+        LoadOptions {
+            context_limit: 16,
+            ..options()
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        (later.declared_positions(), later.config().max_positions),
+        (64, 16)
+    );
+    a.config("max_position_embeddings", json!(0));
+    assert!(Source::open_dense(&a.0, options()).is_err());
+}
+
+#[cfg(all(
+    feature = "metal",
+    any(target_os = "macos", target_os = "ios"),
+    target_arch = "aarch64"
+))]
+#[test]
+#[ignore = "explicit native Metal context metadata propagation and retained ownership"]
+fn native_mlx_declared_context_is_copied_at_load_not_reopened_for_query() {
+    use std::ptr;
+    use toklet::native::*;
+    manifest();
+    let a = CopyArtifact::new("tied");
+    let directory = a.0.to_str().unwrap().as_bytes();
+    let options = toklet::native::Options {
+        abi_version: ABI_VERSION,
+        struct_size: std::mem::size_of::<toklet::native::Options>() as u32,
+        capacity: 8,
+        chunk: 3,
+        memory_limit_bytes: 256 * 1024 * 1024,
+    };
+    let mut model = ptr::null_mut();
+    let mut session = ptr::null_mut();
+    let mut error = NativeError {
+        code: 0,
+        message: [0; 256],
+    };
+    unsafe {
+        assert_eq!(
+            toklet_model_load_mlx(
+                directory.as_ptr(),
+                directory.len(),
+                &options,
+                &mut model,
+                &mut error
+            ),
+            OK,
+            "{}",
+            String::from_utf8_lossy(&error.message)
+        );
+        assert_eq!(
+            toklet_session_create(model, &options, &mut session, &mut error),
+            OK
+        );
+        assert_eq!(toklet_model_release(model, &mut error), OK);
+        a.config("max_position_embeddings", json!(128));
+        let mut info = ContextInfo::default();
+        assert_eq!(toklet_session_context(session, &mut info, &mut error), OK);
+        assert_eq!(
+            (
+                info.backend,
+                info.known_fields,
+                info.declared_total_positions,
+                info.loaded_position_limit,
+                info.session_capacity
+            ),
+            (1, CONTEXT_DECLARED_TOTAL_KNOWN, 32, 8, 8)
+        );
+        assert_eq!(
+            (
+                info.declared_input_tokens,
+                info.declared_output_tokens,
+                info.context_qualification,
+                info.whole_app_device_fit
+            ),
+            (0, 0, CONTEXT_NOT_EVALUATED, CONTEXT_NOT_EVALUATED)
+        );
+        let mut admission = RequestAdmission::default();
+        let prompt = [1, 2];
+        assert_eq!(
+            toklet_session_preflight(
+                session,
+                0,
+                prompt.as_ptr(),
+                2,
+                6,
+                ptr::null(),
+                0,
+                &mut admission,
+                &mut error
+            ),
+            OK
+        );
+        assert_eq!(admission.context, info);
+        assert_eq!(
+            (admission.required_capacity, admission.remaining_tokens),
+            (8, 0)
+        );
+        assert_eq!(toklet_session_release(session, &mut error), OK);
+        println!(
+            "CONTEXT_NATIVE_MLX {{\"passed\":true,\"declared\":32,\"loaded\":8,\"session\":8,\"disk_after\":128,\"model_released\":true,\"qualification_evaluated\":false}}"
+        );
+    }
+}

@@ -51,6 +51,14 @@ scheduling/progressive model-context qualification (G4.3/L3/L4). Existing32-posi
 implementations remain short diagnostics. Qwen3 plain Chat and selected physical
 phone checks exist in [the current profile record](mobile-qwen3-downloads.md).
 
+L3.1 [engine context facts and shared request preflight](context-admission.md) now
+passes Rust/native/C and tiny Metal checks. Same-document declared positions,
+global loader/loaded/session bounds, process-local model/session identity and
+pending-history arithmetic remain separate from qualification/device fit.
+Next L3.2 consumes these fixed native records in both Swift modes with explicit
+codec/text/event and qualification policy; current qualified ranges stay fixed.
+Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
+
 Use existing operators and forward/session order before adding more independent
 prerequisites. Mac delivery, full-model context qualification and phone fit are
 separate exits. A smaller usable window must be labelled partial. Phone

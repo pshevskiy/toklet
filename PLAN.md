@@ -61,6 +61,14 @@ shared-window admission through the existing Qwen3 bridge and both app modes.
 Real Gemma whole32/long BF16/1025 quality and progressive real windows remain open. All original failures remain;
 no quality/app/window gate closes.
 
+L3.1 [engine context facts and shared request preflight](docs/context-admission.md) now
+passes Rust/native/C and tiny Metal checks. Same-document declared positions,
+global loader/loaded/session bounds, process-local model/session identity and
+pending-history arithmetic remain separate from qualification/device fit.
+Next L3.2 consumes these fixed native records in both Swift modes with explicit
+codec/text/event and qualification policy; current qualified ranges stay fixed.
+Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
+
 ## Historical starting point
 
 Before implementation, the repository contained a short README, license, ignore file, and the supplied performance proposal. There was no Cargo package, engine code, fixture suite, or benchmark harness. M0 establishes the package, frozen independent fixtures, workloads, quality gates, and the first native MLX baseline. M1 implements the complete scalar tiny decoder and greedy trace. M2.1 loads the pinned Qwen checkpoint into validated FP32 weights; M2.2 qualifies its full-prefix forward pass on short independent numerical probes. M2.3 adds bounded KV sessions and exact continuation; M2.4 adds bounded CLI generation; engine profiling remains next.

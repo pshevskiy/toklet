@@ -76,11 +76,19 @@ now passes C<=1025 with bounded32-row calls, frozen numerical/argmax/state
 checks and structural two-head W512 wraps. Default/real E2B/hybrid/GPU32 and
 real whole32/long BF16/1025 quality remain separate.
 
+L3.1 [engine context facts and shared request preflight](context-admission.md) now
+passes Rust/native/C and tiny Metal checks. Same-document declared positions,
+global loader/loaded/session bounds, process-local model/session identity and
+pending-history arithmetic remain separate from qualification/device fit.
+Next L3.2 consumes these fixed native records in both Swift modes with explicit
+codec/text/event and qualification policy; current qualified ranges stay fixed.
+Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
+
 | Task | Mechanism and acceptance | Status |
 | --- | --- | --- |
 | L1 | Independent decoding/terminal witnesses for existing tokenizers, including incomplete UTF-8, controls, whitespace and fallback rewrites. | [Frozen witnesses](chat-stream-oracle.md); historical synthetic 131072-ID cases remain decoder evidence only. Gemma has separate [stream composition](gemma4-stream-generation.md). |
 | L2 | Bounded incremental decoding/event delivery: token, byte, carry and batch bounds, terminal flush, backpressure/failure state, no per-token full-prefix decode or full-output clone. | [Rust decoder checked](chat-stream-decoder.md); whole native/app ownership and every model profile remain separate. |
-| L3 — next capacity task | Engine-owned model/runtime/device capability schema and checked request admission, exposed through native bridge to both app modes. Resolve exact config/position rules, raw versus rendered input, sampled/committed history, stops and replay. | Open; can use existing supported graphs before full Gemma residency. |
+| L3 — next capacity task | Engine-owned model/runtime/device capability schema and checked request admission, exposed through native bridge to both app modes. Resolve exact config/position rules, raw versus rendered input, sampled/committed history, stops and replay. | [Engine facts/preflight checked](context-admission.md); Swift policy/consumption and end-to-end admission remain open. Can use existing supported graphs before full Gemma residency. |
 | L4 | Qualify each model's declared window progressively: short baseline, useful context, window/chunk/rotary/cache boundaries, near-maximum and exact maximum, plus rejected maximum+1. Use bounded chunked prefill and correct absolute offsets; test long input and long continuation independently and together. | Open; integrate Gemma through G4, without requiring an unrelated new long-context architecture first. |
 | L5 | Chat/Expert controls and bounded text/history delivery driven by L3. Display model maximum, usable device limit, remaining tokens and limiting reason. Test model switching, stale events/settings, early stop, cancel/resume and offline restore. | Open; no universal 128/256/512 product ceiling, and no silent clipping to one. |
 | L6 | Real checkpoint/context quality, completed prefill/decode/visible timing, weights/KV/state/scratch/text/UI/conversion memory and lifecycle on Mac, then independently iPhone 14 Pro. | Open per checkpoint, execution profile and device; a smaller usable window remains partial qualification. |

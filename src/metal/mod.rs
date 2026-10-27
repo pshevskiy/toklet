@@ -173,6 +173,7 @@ pub struct Model {
     layers: Vec<Layer>,
     weight_bytes: usize,
     mlx_architecture: Option<crate::mlx::dense::Architecture>,
+    mlx_declared_positions: Option<usize>,
     mlx_source_identity: Option<crate::mlx::qwen::SourceContentIdentity>,
     pub load_timing: LoadTiming,
 }
@@ -203,6 +204,11 @@ impl Model {
     /// Explicit artifact graph identity; legacy Half/Q4 loaders return None.
     pub fn mlx_architecture(&self) -> Option<crate::mlx::dense::Architecture> {
         self.mlx_architecture
+    }
+    /// Declaration retained from the same validated MLX configuration used by
+    /// loading. Legacy imports do not reconstruct it from a requested limit.
+    pub fn mlx_declared_positions(&self) -> Option<usize> {
+        self.mlx_declared_positions
     }
     /// Historical source-consumption evidence carried only by a successfully
     /// assembled audited import. Not a resident-byte digest, tokenizer pairing,
@@ -343,6 +349,7 @@ impl Model {
                 source.architecture() == crate::mlx::dense::Architecture::Qwen3,
             )?;
             model.mlx_architecture = Some(source.architecture());
+            model.mlx_declared_positions = Some(source.declared_positions());
             if audited {
                 let identity = source.content_identity().ok_or(Error::Options(
                     "audited source incomplete after model assembly",
@@ -555,6 +562,7 @@ impl Model {
             layers,
             weight_bytes,
             mlx_architecture: None,
+            mlx_declared_positions: None,
             mlx_source_identity: None,
             load_timing: LoadTiming {
                 load_seconds: 0.,

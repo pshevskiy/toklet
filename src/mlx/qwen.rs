@@ -141,6 +141,7 @@ pub use crate::weights::audit::SourceContentIdentity;
 /// loading only; execution should retain resolved concrete buffers/operations.
 pub struct Source {
     config: Config,
+    declared_positions: usize,
     architecture: Architecture,
     tied_output: bool,
     tensors: BTreeMap<String, TensorSpec>,
@@ -238,6 +239,14 @@ impl Source {
             }
         };
         let plan = QuantizationPlan::parse(quantization)?;
+        // Retain the declaration from this exact duplicate-checked document,
+        // before architecture validation narrows Config to requested context.
+        let declared_positions = object
+            .get("max_position_embeddings")
+            .and_then(Value::as_u64)
+            .and_then(|value| usize::try_from(value).ok())
+            .filter(|&value| value > 0)
+            .ok_or_else(|| invalid("positive model position declaration required"))?;
         let (config, architecture, tied_output) = if allow_dense {
             dense::config(document, options)?
         } else {
@@ -371,6 +380,7 @@ impl Source {
         }
         let mut result = Self {
             config,
+            declared_positions,
             architecture,
             tied_output,
             tensors,
@@ -386,6 +396,11 @@ impl Source {
     }
     pub fn config(&self) -> &Config {
         &self.config
+    }
+    /// Validated declared total positions, before the requested load limit.
+    /// Not proof of numerical qualification, artifact provenance or device fit.
+    pub fn declared_positions(&self) -> usize {
+        self.declared_positions
     }
     pub fn architecture(&self) -> Architecture {
         self.architecture

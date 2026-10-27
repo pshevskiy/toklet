@@ -1046,3 +1046,60 @@ fn generation_events_and_statistics_allocate_no_numerical_buffers() {
         assert_eq!(report.emitted_tokens, 4);
     }
 }
+
+#[test]
+fn request_arithmetic_is_shared_read_only_and_relative_to_session_capacity() {
+    use toklet::generation::{self, Input, Request};
+    let f = Fixture::tiny();
+    let (c, w) = tiny_parts(&f);
+    let model = Model::new(c, w).unwrap();
+    let mut s = Session::new(&model, options(8, 3, 5)).unwrap();
+    s.append(&[1, 7, 13]).unwrap();
+    s.evaluate().unwrap();
+    s.append(&[3, 1]).unwrap();
+    let history = s.history().to_vec();
+    let before = (s.evaluated_len(), s.pending_len());
+    for (input, output, base, after) in [
+        (Input::Prompt(&[1, 7]), 6, 0, 2),
+        (Input::Reset(&[1, 7]), 6, 0, 2),
+        (Input::Append(&[1]), 2, 5, 6),
+        (Input::Continue, 3, 5, 5),
+        (Input::Continue, 0, 5, 5),
+    ] {
+        let request = Request {
+            input,
+            max_new_tokens: output,
+            stop_tokens: &[],
+        };
+        let a = generation::request_admission(&s, &request).unwrap();
+        generation::validate_request(&s, &request).unwrap();
+        assert_eq!(
+            (
+                a.base_history_tokens,
+                a.history_after_input_tokens,
+                a.required_capacity,
+                a.remaining_tokens
+            ),
+            (base, after, after + output, 8 - after - output)
+        );
+        assert_eq!(s.history(), history);
+        assert_eq!((s.evaluated_len(), s.pending_len()), before);
+    }
+    for request in [
+        Request {
+            input: Input::Continue,
+            max_new_tokens: 4,
+            stop_tokens: &[],
+        },
+        Request {
+            input: Input::Prompt(&[1]),
+            max_new_tokens: usize::MAX,
+            stop_tokens: &[],
+        },
+    ] {
+        assert!(generation::request_admission(&s, &request).is_err());
+        assert!(generation::validate_request(&s, &request).is_err());
+        assert_eq!(s.history(), history);
+        assert_eq!((s.evaluated_len(), s.pending_len()), before);
+    }
+}

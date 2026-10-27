@@ -93,11 +93,23 @@ impl fmt::Display for Error {
 }
 impl std::error::Error for Error {}
 
-/// Validate admission before changing session or application output state.
-pub fn validate_request(
+/// Read-only arithmetic for the same validation used immediately by generation.
+/// This snapshot reserves nothing; pending sampled history occupies capacity.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct RequestAdmission {
+    pub base_history_tokens: usize,
+    pub input_tokens: usize,
+    pub history_after_input_tokens: usize,
+    pub requested_output_tokens: usize,
+    pub required_capacity: usize,
+    /// Capacity remaining after both input history and requested continuation.
+    pub remaining_tokens: usize,
+}
+
+pub fn request_admission(
     session: &impl InferenceSession,
     request: &Request<'_>,
-) -> Result<(), Error> {
+) -> Result<RequestAdmission, Error> {
     let (tokens, base) = match &request.input {
         Input::Prompt(t) | Input::Reset(t) => (*t, 0),
         Input::Append(t) => (*t, session.history().len()),
@@ -112,7 +124,8 @@ pub fn validate_request(
     if input_len == 0 {
         return Err(Error::InvalidRequest("a nonempty prompt is required"));
     }
-    if end > session.capacity() {
+    let capacity = session.capacity();
+    if end > capacity {
         return Err(Error::InvalidRequest(
             "prompt plus requested output exceeds session capacity",
         ));
@@ -124,7 +137,22 @@ pub fn validate_request(
             ));
         }
     }
-    Ok(())
+    Ok(RequestAdmission {
+        base_history_tokens: base,
+        input_tokens: tokens.len(),
+        history_after_input_tokens: input_len,
+        requested_output_tokens: request.max_new_tokens,
+        required_capacity: end,
+        remaining_tokens: capacity - end,
+    })
+}
+
+/// Validate admission before changing session or application output state.
+pub fn validate_request(
+    session: &impl InferenceSession,
+    request: &Request<'_>,
+) -> Result<(), Error> {
+    request_admission(session, request).map(|_| ())
 }
 
 /// Emit visible token IDs through a coarse statically dispatched callback.

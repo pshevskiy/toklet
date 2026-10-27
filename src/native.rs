@@ -18,6 +18,8 @@ use crate::{generation, model, session, weights};
 mod compatibility;
 mod runtime_planning;
 pub use runtime_planning::*;
+mod context;
+pub use context::*;
 mod text;
 pub use compatibility::*;
 use std::{
@@ -210,6 +212,7 @@ impl NativeSession {
 }
 pub struct ModelHandle {
     owner: ThreadId,
+    instance: u64,
     model: Rc<NativeModel>,
     directory: std::path::PathBuf,
 }
@@ -219,9 +222,11 @@ pub struct ModelHandle {
 struct OwnedSession {
     session: NativeSession,
     _model: Rc<NativeModel>,
+    model_instance: u64,
 }
 pub struct SessionHandle {
     owner: ThreadId,
+    instance: u64,
     poisoned: Cell<bool>,
     state: RefCell<OwnedSession>,
 }
@@ -338,6 +343,9 @@ unsafe fn boundary(error: *mut NativeError, work: impl FnOnce() -> Result<()>) -
 }
 impl SessionHandle {
     fn access<T>(&self, work: impl FnOnce(&mut NativeSession) -> Result<T>) -> Result<T> {
+        self.access_owned(|state| work(&mut state.session))
+    }
+    fn access_owned<T>(&self, work: impl FnOnce(&mut OwnedSession) -> Result<T>) -> Result<T> {
         owner(self.owner)?;
         if self.poisoned.get() {
             return Err(fail(POISONED, "session requires release and recreation"));
@@ -346,7 +354,7 @@ impl SessionHandle {
             .state
             .try_borrow_mut()
             .map_err(|_| fail(BUSY, "session is in a callback or another operation"))?;
-        match catch_unwind(AssertUnwindSafe(|| work(&mut state.session))) {
+        match catch_unwind(AssertUnwindSafe(|| work(&mut state))) {
             Ok(result) => result,
             Err(_) => {
                 self.poisoned.set(true);
@@ -435,6 +443,7 @@ pub unsafe extern "C" fn toklet_model_load(
             .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
             out.write(Box::into_raw(Box::new(ModelHandle {
                 owner: thread::current().id(),
+                instance: context::next_instance()?,
                 model: Rc::new(NativeModel::Cpu(Box::new(loaded.model))),
                 directory: path,
             })));
@@ -488,6 +497,7 @@ pub unsafe extern "C" fn toklet_model_load_metal(
                 }
                 out.write(Box::into_raw(Box::new(ModelHandle {
                     owner: thread::current().id(),
+                    instance: context::next_instance()?,
                     model: Rc::new(NativeModel::Metal(Box::new(model))),
                     directory: path,
                 })));
@@ -572,6 +582,7 @@ unsafe fn load_mlx(
                 .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
                 out.write(Box::into_raw(Box::new(ModelHandle {
                     owner: thread::current().id(),
+                    instance: context::next_instance()?,
                     model: Rc::new(NativeModel::Metal(Box::new(model))),
                     directory: path,
                 })));
@@ -630,6 +641,7 @@ pub unsafe extern "C" fn toklet_session_create(
             pointer(model)?;
             owner((*model).owner)?;
             let opts = options(opts)?;
+            let instance = context::next_instance()?;
             let retained = Rc::clone(&(*model).model);
             // SAFETY: private OwnedSession retains this immutable stable allocation
             // and drops the session first. No reference can escape the wrapper.
@@ -671,10 +683,12 @@ pub unsafe extern "C" fn toklet_session_create(
             };
             out.write(Box::into_raw(Box::new(SessionHandle {
                 owner: thread::current().id(),
+                instance,
                 poisoned: Cell::new(false),
                 state: RefCell::new(OwnedSession {
                     session,
                     _model: retained,
+                    model_instance: (*model).instance,
                 }),
             })));
             Ok(())
@@ -851,13 +865,7 @@ pub unsafe extern "C" fn toklet_session_generate(
             pointer(out)?;
             let tokens = slice(tokens, token_count, 32768)?;
             let stops = slice(stops, stop_count, 32768)?;
-            let input = match operation {
-                0 => generation::Input::Prompt(tokens),
-                1 => generation::Input::Append(tokens),
-                2 if tokens.is_empty() => generation::Input::Continue,
-                3 => generation::Input::Reset(tokens),
-                _ => return Err(fail(INVALID, "invalid operation or continue input")),
-            };
+            let input = context::generation_input(operation, tokens)?;
             (*session).access(|s| {
                 let mut emitted = 0;
                 let result = s.generate(

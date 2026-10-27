@@ -109,6 +109,33 @@ typedef struct {
     uint32_t vocab_size, evaluated_tokens;
     double target_logit, greedy_logit, negative_log_likelihood;
 } TokletScore;
+/* Additive scalar execution facts. Instance IDs are process-local object
+   continuity, never artifact hashes or persistent identity. Unknown declared
+   limits are zero with their known bit clear; defaults do not populate them.
+   Numerical session admission is not context qualification or whole-app fit.
+   engine_global_position_ceiling is a global loader bound, not this backend's
+   usable graph/window limit; loaded_position_limit/session_capacity remain binding. */
+#define TOKLET_CONTEXT_DECLARED_TOTAL_KNOWN 1u
+#define TOKLET_CONTEXT_DECLARED_INPUT_KNOWN 2u
+#define TOKLET_CONTEXT_DECLARED_OUTPUT_KNOWN 4u
+#define TOKLET_CONTEXT_NOT_EVALUATED 0u
+#define TOKLET_CONTEXT_CPU 0u
+#define TOKLET_CONTEXT_METAL 1u
+typedef struct {
+    uint32_t abi_version, struct_size, known_fields, backend;
+    uint32_t context_qualification, whole_app_device_fit, reserved[2];
+    uint64_t model_instance, session_instance;
+    uint64_t declared_total_positions, declared_input_tokens, declared_output_tokens;
+    uint64_t engine_global_position_ceiling, loaded_position_limit, session_capacity;
+    uint64_t absolute_position_offset, history_tokens, committed_tokens, pending_tokens;
+    uint64_t numerical_and_bridge_admitted_bytes;
+} TokletContextInfo;
+typedef struct {
+    TokletContextInfo context;
+    uint32_t operation, reserved;
+    uint64_t base_history_tokens, input_tokens, history_after_input_tokens;
+    uint64_t requested_output_tokens, required_capacity, remaining_tokens;
+} TokletRequestAdmission;
 /* Return nonzero for output failure; sampled ID remains pending in history. */
 typedef uint32_t (*TokletEmit)(void *, TokletTokenEvent);
 uint32_t toklet_abi_version(void);
@@ -131,6 +158,21 @@ uint32_t toklet_model_release(TokletModel *, TokletError *);
 uint32_t toklet_session_create(const TokletModel *, const TokletOptions *, TokletSession **, TokletError *);
 uint32_t toklet_session_release(TokletSession *, TokletError *);
 uint32_t toklet_session_state(const TokletSession *, TokletReport *, TokletError *);
+/* Read-only live model/session snapshot, valid after external model release.
+   No directory reads, new execution, reservation or app eligibility grant.
+   Outputs are complete native-aligned records, untouched on failure. Existing
+   thread/busy/poison/disjoint-output rules apply. Qualification/whole-app fit
+   remain NOT_EVALUATED. All current native factories use absolute offset zero. */
+uint32_t toklet_session_context(const TokletSession *, TokletContextInfo *, TokletError *);
+/* Same operation/token/stop semantics as generate, including zero-output
+   prefill. Prompt/Reset use base zero; Append/Continue count sampled history,
+   including pending IDs. Arrays <=32768 IDs. This snapshot reserves nothing;
+   actual generate revalidates and execution can still fail. remaining_tokens is
+   session_capacity-required_capacity AFTER requested continuation. Output is
+   untouched on every error. */
+uint32_t toklet_session_preflight(const TokletSession *, uint32_t,
+    const uint32_t *, size_t, uint32_t, const uint32_t *, size_t,
+    TokletRequestAdmission *, TokletError *);
 /* Scores only the CURRENT FINAL committed row; earlier prefill rows are unavailable.
    Full-corpus callers score each exact prefix BEFORE appending its target, and
    verify evaluated/history counts after any cancelled request.

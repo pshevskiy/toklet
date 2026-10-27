@@ -5399,3 +5399,43 @@ limits. Real Gemma whole32, bounded long BF16 reference, full unchanged1025
 quality/precision/fit and progressive real-model/device windows remain open.
 See [the mechanism](gemma-scalar-long-context.md) and
 [public evidence](../benchmarks/results/2026-10-27-gemma-scalar-long-context-v1.json).
+
+## 2026-10-27 — Engine context facts and shared request preflight (L3.1)
+
+MLX dense Source retains declared total positions from the same bounded,
+duplicate-checked config document before requested context narrows Config.
+Successful resident Metal assembly copies the value; legacy declarations remain
+unknown. No late directory read or manufactured provenance/qualification hash.
+The additive136-byte C context record separates declared fields/known bits,
+global loader ceiling, loaded graph and session limits, absolute offset and
+sampled/committed/pending history. Qualification and whole-app/device fit are
+explicitly not evaluated. Native model/session IDs are process-local, checked
+against exhaustion and retained with exact model ownership after external release.
+
+The192-byte request record reuses generation's validation arithmetic and token/
+stop checks. Prompt/Reset use base zero; Append/Continue count full sampled
+history, including pending IDs. Checked overflow and exact shared capacity
+remain. Zero-output prefill is preserved, remaining capacity includes requested
+continuation, and actual generation revalidates after a non-reserving snapshot.
+Queries/preflight inherit creating-thread, busy and poison rules; failure leaves
+caller output untouched. No numerical loop, model/app range or codec limit changes.
+
+367 ordinary CPU tests/19 ignored, formatting and strict default/Metal all-target
+Clippy pass. Native lifetime/admission/thread/busy/poison methods pass with zero
+heap allocations on successful query/five preflights. Declaration/requested
+window divergence and later config mutation are checked. The explicit tiny
+Metal native path reports declared32/load8/session8 while disk changes to128
+and the external model handle is released; all three existing independent tiny
+Qwen3 GPU regressions pass. Linked C smoke confirms136/192-byte ABI records and
+failure output, and all28 header entrypoints match exports. Mac SDK27.0/minimum15
+is recorded, with no new real-model/window/device qualification.
+
+A missing field in a private synthetic fixture and a C invocation missing its
+SDK sysroot remain archived. The C-only retry authenticates/reuses unchanged
+Rust/fixtures/header/library/results; no unrelated build or GPU test is repeated.
+All21 owned groups close; protected CLI/benchmark release binaries stay unchanged.
+Astra accepts the source and complete scoped evidence. Next L3.2 wires both app
+modes with explicit codec/text/event/qualification policy and stale-instance
+handling, preserving current qualified ranges and remaining real Gemma full
+precision/quality/fit/context work. See [the API contract](context-admission.md)
+and [public evidence](../benchmarks/results/2026-10-27-context-admission-v1.json).

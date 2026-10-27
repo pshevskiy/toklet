@@ -64,6 +64,7 @@ fn opts() -> Options {
 fn handles() -> (*mut ModelHandle, *mut SessionHandle, *mut CancelHandle) {
     let m = Box::into_raw(Box::new(ModelHandle {
         owner: thread::current().id(),
+        instance: context::next_instance().unwrap(),
         model: Rc::new(NativeModel::Cpu(Box::new(model()))),
         directory: std::path::PathBuf::new(),
     }));
@@ -1290,6 +1291,7 @@ fn audited_mlx_factory_validates_foreign_inputs_and_clears_output() {
 fn audited_chat_rejects_unqualified_cpu_before_files_without_retaining_model() {
     let model = Box::into_raw(Box::new(ModelHandle {
         owner: thread::current().id(),
+        instance: context::next_instance().unwrap(),
         model: Rc::new(NativeModel::Cpu(Box::new(model()))),
         directory: Path::new("nonexistent/pinned-looking/SmolLM2").to_path_buf(),
     }));
@@ -1316,6 +1318,7 @@ fn audited_chat_rejects_unqualified_cpu_before_files_without_retaining_model() {
 fn audited_chat_wrong_thread_and_null_outputs_preserve_owners() {
     let model = Box::into_raw(Box::new(ModelHandle {
         owner: thread::current().id(),
+        instance: context::next_instance().unwrap(),
         model: Rc::new(NativeModel::Cpu(Box::new(model()))),
         directory: Path::new("not-opened").to_path_buf(),
     }));
@@ -1379,3 +1382,5 @@ fn audited_mlx_small_admission_rejects_before_gpu_and_never_publishes() {
     }
     assert!(model.is_null());
 }
+
+mod context_info;
