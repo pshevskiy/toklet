@@ -85,10 +85,12 @@ records in Chat and Expert, with explicit codec/text/event policy, fresh instanc
 checks, rendered shared-window preflight and draft/prefix-preserving rejection.
 Strict Mac/iOS source checks, both app builds and Mac real admission/lifecycle
 regressions pass. The385+127 versus128 workload cancels after one token; no new
-512-position numerical qualification follows. Current ranges stay fixed. Next L4
-freezes independent Qwen3 C512 original/future-tail FP32/FP64 full-sequence
-references using existing graph math and unchanged gates, then compares native
-chunk32/128, uneven and late continuation schedules before raising capacity.
+512-position numerical qualification follows. Current ranges stay fixed. The [independent Qwen3 C512 reference](qwen3-context512-reference.md)
+now has two byte-identical complete cold captures and two readbacks. Old17,
+causal/mask/argmax checks pass, but7282 scalar comparisons exceed unchanged
+FP32/FP64 short-context gates; numerical context qualification remains false.
+Next localize failing coordinates/positions/margins and disjoint target-acceptance
+intervals before any precision-policy decision or native context upgrade.
 Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
 
 | Task | Mechanism and acceptance | Status |

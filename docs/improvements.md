@@ -5481,3 +5481,43 @@ See [the integration contract](context-app-integration.md) and
 Next L4 directly qualifies independent numerical execution at Qwen3's current512
 positions before raising limits; Gemma real precision/quality/context and broader
 architecture/Hugging Face/device work remain open.
+
+## 2026-10-27 — Complete independent Qwen3 C512 captures with retained precision gap
+
+A separate reference owner reuses unchanged batched Qwen3 math and pinned real
+weights, preserving Half activation/KV and FP32 affine-weight/logit storage with
+FP32/FP64 arithmetic witnesses. Two512-token original/future-tail cases save all
+512 logit rows, embedding/final norm and20 boundaries in layers0/1/27. Each graph
+is508,297,216 bytes; four are streamed individually, with immutable per-capture
+journals and final partial-manifest/comparison preservation on failure. The ledger
+counts weights, source mapping, live graph/BLAS/operator temporaries, comparison
+pages/stripes, short reference and runtime metadata within6GiB.
+
+Twelve portable tests pass, including coherent mask, signed-zero causal,
+nonfinite, argmax disagreement and later-forward failure controls. Exact cold
+runtime admission precedes NumPy imports and checks actual module/native origins.
+Two complete captures are byte-identical; two independent readbacks reproduce
+all records. All252 old17 comparisons,126 typed causal-prefix checks and
+25,116,672 masked zeros pass per set. All1024 case/token argmax positions agree
+between contracts, with2048 IDs/margins saved per set. Repetition establishes
+reproducibility, not independent mathematical agreement or held-out quality.
+
+The unchanged short-context gates **fail7282 scalar comparisons** across32 state
+comparisons, including3250 logits per case. Layer27 is the first failing captured
+layer; layers2–26 are unobserved. Maximum logit difference0.17894530296325684 and
+maximum gate fraction2.197846894771957 remain rejected. Raw captures, schema,
+failed summaries and exact rejection are retained; no tolerance expands. The
+first controller correctly halts, then the reviewed recovery reuses unchanged
+source/plan/unit/first capture and admits only that complete expected numerical
+rejection for repetition/readback. All six groups close. Rust sources/protected
+release binaries stay unchanged; no native/window/quality/device upgrade follows.
+
+Reference physical/RSS peaks are1,259,243,752/2,510,831,616 bytes and
+1,299,450,064/2,472,673,280 bytes, both within6GiB. These are CPU-reference
+measurements. See [the report](qwen3-context512-reference.md),
+[frozen records](../tests/fixtures/qwen3-context512-v1/README.md) and
+[public evidence](../benchmarks/results/2026-10-27-qwen3-context512-reference-v1.json).
+Next localize exact failures, affected token positions/margins and disjoint
+unchanged target-acceptance intervals. Any new long-context policy needs separate
+independent precision and held-out/source quality justification; CPU disagreement
+alone does not justify changing production precision. Broader plan gates remain.
