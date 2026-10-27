@@ -1,5 +1,7 @@
 # Gemma4 delivery and model context support
 
+**Active execution order, 27 October 2026:** follow the [Astra-reviewed Qwen3 Mac delivery queue](qwen3-mac-delivery-plan.md). Finish the existing source experiment and precision decision, then C512/complete quality and the admitted Mac app path. Q1–Q5 define the near-term milestone; full40960-position expansion follows. Gemma, other architectures and iPhone work remain deferred, open requirements. This queue supersedes earlier execution-order statements below; historical evidence and acceptance policies remain unchanged.
+
 **Active correction, 26 October 2026:** the human replaced the fixed 131072-output
 requirement with support for the selected model's input/output context window.
 Follow the [model context contract](long-reply-engine-plan.md). Gemma E2B's target

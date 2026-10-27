@@ -1,5 +1,7 @@
 # Model-driven input, output and context support
 
+**Active execution order, 27 October 2026:** follow the [Astra-reviewed Qwen3 Mac delivery queue](qwen3-mac-delivery-plan.md). Finish the existing source experiment and precision decision, then C512/complete quality and the admitted Mac app path. Q1–Q5 define the near-term milestone; full40960-position expansion follows. Gemma, other architectures and iPhone work remain deferred, open requirements. This queue supersedes earlier execution-order statements below; historical evidence and acceptance policies remain unchanged.
+
 **Requirement corrected by the human on 26 October 2026:** Chat and Expert should
 support the input/output context window of the selected model. This replaces
 the earlier fixed requirement for 131072 output tokens in one reply. The file

@@ -5750,3 +5750,24 @@ See [the artifact and separate review](../tests/fixtures/qwen3-context-gates-v2/
 and [public evidence](../benchmarks/results/2026-10-27-qwen3-context-gates-v2.json).
 Next independently pin/execute the original quantized source precision profile
 on calibration inputs, retaining complete unquantized/held-out quality demands.
+
+## 2026-10-27 — Qwen3 Mac delivery focus and bounded decisions
+
+The human requested Qwen3 on Mac first and completion of the existing source
+experiment. Astra reviewed the [focused delivery queue](qwen3-mac-delivery-plan.md):
+source evidence → one precision decision → concrete C512 qualification work →
+1025/full checkpoint-specific quality → admitted Mac Chat/Expert/HF journey.
+Q1–Q5 define the near-term delivery; expansion toward40960 shared positions
+follows. Gemma, other architectures/optimizations and iPhone remain open but
+outside this critical path. Existing L3 functionality is credited and reused.
+
+The four broader plans now defer to this execution order while preserving their
+requirements and historical evidence. A failed numerical gate remains failed;
+no new contract is evaluated against untouched validation before review/freeze.
+Full10000-target/100-task quality and an unquantized baseline remain required.
+Correct primitives and schedule-independent cache behavior close their bounded
+investigations. Further preparation must finish the existing source experiment
+and lead to a retain/change/reject decision. Coherent code tasks retain Astra
+review, relevant checks, improvement recording and commits; mechanical edits
+do not become separate review cycles. Progress is delivered capacity, full
+quality and app journeys. This is a plan correction, not a new qualification.

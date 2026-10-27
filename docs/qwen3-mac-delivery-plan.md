@@ -1,0 +1,67 @@
+# Qwen3 Mac delivery queue — 27 October 2026
+
+The human requested Qwen3 on Mac first, completion of the existing source
+experiment, Astra review of each code task, commits after checks pass, and an
+updated improvement record. Astra reviewed this sequence on27 October.
+This queue controls execution order over the earlier Gemma/architecture queues.
+The broader requirements remain open; they are not prerequisites for this first
+delivery. Near-term completion means **Q1–Q5**, followed by Q6 expansion.
+
+## Selected delivery
+
+Use `mlx-community/Qwen3-0.6B-8bit` at revision
+`11de96878523501bcaa86104e3c186de07ff9068`, its pinned tokenizer and the named
+plain Chat/raw Expert profiles on the Apple M1 Pro Mac. The exact rendering and
+stop semantics must be frozen with checkpoint-specific quality inputs. Source
+MLX execution is a reference experiment; Toklet remains the native Rust engine.
+
+The model declares40960 shared positions. Rendered input/history plus requested
+continuation must fit the usable window and any separate documented caps.
+Smaller qualified or device-admitted windows must be visibly labelled partial.
+Q1–Q5 do not establish the full model window or iPhone qualification.
+
+Current app admission/context facts and lifecycle integration already exist
+([L3 evidence](context-app-integration.md)). Current C512 cache/state schedules
+pass their witnesses, but numerical qualification remains rejected. The
+[experimental envelope](../tests/fixtures/qwen3-context-gates-v2/README.md) is
+rejected for qualification and cannot authorize validation or larger app limits.
+
+## Active sequence
+
+| Task | Deliverable and decision gate | Current state |
+| --- | --- | --- |
+| Q1 — finish the source experiment | Complete cold admission in the already built isolated MLX-only environment; run the six frozen calibration cases through the original quantized source in two fresh processes; retain original bits, exact FP32 widening and complete readback. Compare source with both saved CPU profiles using distributions, argmax/margins and diagnostic teacher-forced loss. End with evidence for Q2. | Open. Source capture tooling and exact copied environment exist; final cold import and actual captures remain. |
+| Q2 — precision decision | Choose exactly one outcome: retain the profile under a defensible contract; make one specified implementation change; or reject the candidate. Explain dtype/reduction/storage differences and the required reference. Preserve historical failures. Source parity cannot replace an unquantized quality baseline. | Pending Q1. No further layer walk or automatic envelope expansion. |
+| Q3 — implement the decision and qualify C512 | Make only the specified change, if any. Freeze and review any new numerical contract before opening untouched validation. Run independent numerical and exact causal/masking/cache/pending/cancel/replay/capacity checks. A retained profile cannot be qualified under a gate it still fails. | Open; reuse existing state/evidence infrastructure. |
+| Q4 — 1025 and complete quality | Admit a clearly experimental diagnostic capacity sufficient for the complete workload. Prepare checkpoint/tokenizer/rendering-specific inputs and reference execution, including an independently pinned unquantized baseline. Run all10000 loss targets and100 tasks with unchanged0.05-nat/2-percentage-point policies. No clipping to512; calibration remains separate from held-out quality. | Open. Baseline/input preparation belongs within this task, not another unbounded prerequisite chain. |
+| Q5 — usable Qwen3 Mac milestone | Complete Chat, Expert and the supported pinned HF search/import/download/offline-reopen journey for this admitted profile. Verify long input/reply, shared budgets, cancellation/resume, model switching, truthful limits and whole-process memory. Reuse L3; retain a clearly stated partial window until Q6 qualifies more. | Open. No universal HF/architecture expansion in this milestone. |
+| Q6 — expand the selected model window | Progress through named context/rotary/cache boundaries toward the declared40960 shared positions, including exact boundary and rejected maximum+1, separate long input/continuation, full quality and complete memory/text/UI delivery accounting. | Subsequent expansion; smaller windows remain partial. |
+
+Gemma, additional architectures/optimizations, broader HF compatibility and
+iPhone14Pro qualification remain in their existing plans, deferred from this
+critical path. They are not removed or marked complete.
+
+## Working rules and stopping conditions
+
+- A coherent code task includes implementation, targeted checks, Astra review,
+  improvement-record update and commit. Reuse existing controllers and raw
+  evidence. Add another harness or replay only for uncovered behavior or a
+  concrete unresolved risk.
+- Review changed numerical contracts before measurements. Review completed code
+  and results before commit; intermediate review is for material correctness
+  changes, not every mechanical edit.
+- Q1's bounded endpoint is the source comparison and Q2 decision. Further
+  environment work must be necessary to complete those existing captures.
+- Correctly rounded primitives close their investigations. Schedule-independent
+  cache results close cache debugging unless contrary evidence appears.
+- A failed envelope review triggers a profile decision, not another tolerance
+  derivation. No rejected gate or quality threshold is loosened to obtain a pass.
+- Track delivered capability: qualified usable context, completed full quality,
+  and working Mac app journeys. Test/commit counts support that evidence.
+- Status reports state the current usable profile, acceptance gap, next concrete
+  deliverable and remaining uncertainty. Do not give a full-roadmap ETA from
+  diagnostic throughput or count partial support as full-window completion.
+
+The [model capacity contract](long-reply-engine-plan.md),
+[broader engine inventory](engine-expansion-plan.md) and original milestone
+acceptance policies remain applicable. Historical receipts keep their scope.
