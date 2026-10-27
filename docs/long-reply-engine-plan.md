@@ -91,11 +91,16 @@ causal/mask/argmax checks pass, but7282 scalar comparisons exceed unchanged
 FP32/FP64 short-context gates; numerical context qualification remains false.
 The [precision reader](qwen3-context512-precision.md) now authenticates
 all7282 failures, including five unique disjoint interval pairs at token65.
-Existing target acceptance uses canonical FP32 values; this diagnostic introduces
-no dual-oracle requirement. Next run native C512 full-logit/argmax and selected
-intermediate/chunk/state checks against unchanged canonical gates, reporting FP64
-discrepancies separately. Source parity, unquantized/held-out quality and broader
-context remain open; no precision-policy or capacity upgrade follows.
+Existing target acceptance uses canonical FP32 values, without a dual-oracle
+requirement. The [complete native C512 diagnosis](qwen3-context512-native.md)
+now captures/replays5016 snapshots and1,008,357,760 values per contract. All4096
+argmax rows and state contracts pass; all57 full512-row captured arrays are
+byte-identical across four schedules per case. Canonical numerical qualification
+still rejects18,400 values; FP64 diagnostic failures total37,040. Next one bounded
+same-input layer27 Q/K/V projection diagnosis separates inherited inputs from
+local reduction/Half rounding with authenticated rows and passing controls.
+Source parity, unquantized/held-out quality and broader context remain open;
+no precision-policy or capacity upgrade follows.
 Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
 
 | Task | Mechanism and acceptance | Status |

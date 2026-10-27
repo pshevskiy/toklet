@@ -5558,3 +5558,49 @@ qualification changes. See [the diagnosis](qwen3-context512-precision.md) and
 Next directly qualify native C512 canonical-FP32 full-logit/argmax, selected-stage
 and chunk/state behavior with unchanged gates, retaining separate FP64 failures.
 Source parity, unquantized/held-out quality and wider/device contexts remain open.
+
+## 2026-10-27 — Full native C512 capture/replay, numerical qualification rejected
+
+An explicit Mac Qwen3 diagnostic captures every chunk for two512-token cases
+across chunk32, chunk128, uneven appends and late-single-token schedules. Its
+5016 snapshots cover57 states total:18 in each selected layer0/1/27 plus
+embedding, final norm and logits, every512 rows per case/schedule. Attention scores/probabilities remain
+unexposed. Actual arrays/journals precede numerical assertions. Independent cold
+readback authenticates all raw frames and consumed complete oracle arrays,
+reconstructs all metrics/examples and4096 argmax rows, and binds metadata/admission
+and generation claims to the immutable plan. All captured full-state arrays are
+byte-identical across schedules for each case; future prefixes also match.
+
+All state witnesses pass: exact capacity errors with state checks after each
+rejected call, fully cached no-work reuse, original-only510+2 admission/cancel1,
+continuation1879/0 and final pending flush, pre-cancelled reset, injected output
+failure/retry, fresh sampled-history replay and partial discard/reappend. The
+final generation row passes151,936 comparisons per oracle. One live numerical
+session shares the model; completed sessions drop before the next replay.
+
+The strict canonical FP32 acceptance **rejects18,400 values**,2300 in each pair,
+including2038 logits; FP64 diagnostic failures total37,040. The full trial compares
+1,008,357,760 values per contract including generation. All4096 raw argmax rows
+match, but do not waive numerical/quality gates. Layer27 is the first failing
+captured layer, with layers2–26 unobserved. No production operator, precision,
+capacity, default, architecture eligibility or qualification changes.
+
+Formatting, strict default/Metal Clippy,368 ordinary CPU tests/19 ignored and31
+cold Python controls pass. The ignored Rust numerical qualifier retains its
+failing assertion. The initial reader's shortest-decimal FP32 example mismatch
+is repaired by exact declared-FP32 bit comparison; all other fields and gates
+remain exact. Only cold units/readback rerun; the complete unchanged GPU capture,
+compiler results and both failure receipts remain. Twelve owned groups close.
+Protected release binaries stay unchanged. Complete actual raw output is
+4,033,431,040 bytes, held outside Git.
+
+On Apple M1 Pro/MacBookPro18,3,16GiB/macOS26.6.2(25G83), maximum logical admission
+is1,081,145,016 bytes. Native physical/RSS peaks1,190,167,944/636,125,184 bytes fit
+6GiB; readback272,909,224/279,019,520 bytes fit512MiB. These are diagnostic memory
+results, without speed, app-fit or phone qualification. See
+[the rejected qualification](qwen3-context512-native.md) and
+[public evidence](../benchmarks/results/2026-10-27-qwen3-context512-native-v1.json).
+Next one bounded same-input layer27 Q/K/V dot diagnosis authenticates selected
+packed rows and separates inherited inputs, local reduction and Half rounding,
+with passing-coordinate controls. Keep numerical gates and the full source/
+held-out quality workload intact; no all-layer CPU trace is a prerequisite.

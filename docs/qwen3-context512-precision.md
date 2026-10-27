@@ -63,12 +63,12 @@ and verifies all duplicate/count summaries. Producer math, gates, Rust sources
 and protected release binaries remain unchanged. See the
 [public receipt](../benchmarks/results/2026-10-27-qwen3-context512-precision-v1.json).
 
-Next run bounded native C512 diagnostics against canonical FP32 values with the
-unchanged gates, while reporting FP64 discrepancies separately. Freeze all512
-logit/argmax rows, selected intermediate coverage, chunk schedules, capacity,
-retry/replay and future-prefix checks before target execution. Source parity,
-held-out quality and broader context/device qualification remain open. Another
-all-layer CPU trace is not a prerequisite. A future pinned/cold MLX run can
-check source parity; the same quantized checkpoint cannot substitute for an
-unquantized quality baseline. No production precision change is justified by
-CPU-reference disagreement alone.
+The [native C512 diagnosis](qwen3-context512-native.md) now completes all
+chunk/raw/state replay but retains18,400 canonical failures. Captured arrays are
+byte-identical across schedules; source quality and numerical qualification
+remain open. Next isolate selected layer27 Q/K/V dots with the same saved native
+and reference input rows, authenticated packed weights and passing controls.
+An all-layer CPU trace or source-framework run is not a prerequisite for that
+bounded diagnosis. A later source-parity run cannot substitute the same quantized
+checkpoint for an unquantized quality baseline, and the full quality workload
+must remain intact. No production precision change or gate widening follows.

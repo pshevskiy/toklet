@@ -66,9 +66,10 @@ See the [public receipt](../benchmarks/results/2026-10-27-qwen3-context512-refer
 The separately completed [precision reader](qwen3-context512-precision.md) now
 localizes every failure and identifies five unique disjoint interval pairs at
 position65. Existing native target acceptance uses canonical FP32 values; the
-two-oracle diagnosis does not add a dual-target requirement. Next run native
-C512 chunk32/128, uneven and late-continuation full-logit/argmax and selected-stage
-checks against unchanged canonical gates, reporting FP64 discrepancies separately.
-No production precision change is justified by CPU disagreement alone. Source
-parity, unquantized/held-out quality, higher/full40960 contexts, app limits and
-phone qualification remain separate in the [active plan](long-reply-engine-plan.md).
+two-oracle diagnosis does not add a dual-target requirement. The [native diagnosis](qwen3-context512-native.md) now captures and independently
+replays the complete C512 matrix, retaining18,400 canonical numerical failures.
+Its state/argmax and schedule comparisons pass. Next selected same-input Q/K/V
+dots separate inherited-input variation from local arithmetic before considering
+any precision-policy or production change. Source parity, unquantized/held-out
+quality, higher/full40960 contexts, app limits and phone qualification remain
+separate in the [active plan](long-reply-engine-plan.md).
