@@ -5521,3 +5521,40 @@ Next localize exact failures, affected token positions/margins and disjoint
 unchanged target-acceptance intervals. Any new long-context policy needs separate
 independent precision and held-out/source quality justification; CPU disagreement
 alone does not justify changing production precision. Broader plan gates remain.
+
+## 2026-10-27 — Authenticated C512 precision coordinates and exact intervals
+
+A bounded reader streams frozen array bytes in65536-element blocks, preserving
+asymmetric FP32-versus-FP64 failure classification and separately evaluating each
+oracle's target-acceptance interval. Exact rational endpoints, conservative
+outward rounding and oracle-specific relative terms prevent false disjoint
+claims near touching bounds. The rounding guard is diagnostic only; target gates
+stay unchanged. Inclusive overlap is necessary, without proving representability
+or correct execution. Existing native acceptance compares canonical FP32 values;
+this analysis introduces no dual-oracle requirement.
+
+Whole-file hashes and descriptor/path endpoints plus hashes of actually consumed
+array bytes must match before completion. Partial findings retain authentication
+status and primary errors. Reads stay within admitted extents, probing only one
+extra byte for growth. Ten new tests cover exact/touching/relative/sign intervals,
+semantic layouts, coherent byte streams, partial hash findings, nonfinite data,
+extents/symlinks, truncation and growth with original-error preservation. All22
+cold tests including12 reference regressions pass.
+
+Every7282 case-specific failure is authenticated and localized:3641 unique stage
+coordinates/value pairs,40 affected positions25–504. Ten entries have disjoint
+bounds: five distinct pairs at position65, repeated in both cases, spanning two
+V-projection features, two attention-output features and vocabulary logit83172.
+Both contracts still select1879 there, with margins6.518730163574219 and
+6.510900497436523. Layer27 is the first failing captured layer, not a claim about
+unobserved layers2–26. A separate standard-library publication replay reads all
+7282 raw pairs and independently verifies coordinates, exact intervals, semantic
+axes, IDs/margins and duplicate/count summaries.
+
+External reader peaks295,912,312 physical/349,224,960 RSS bytes fit512MiB. Both
+owned groups close. No producer math, gate, native precision, model capacity or
+qualification changes. See [the diagnosis](qwen3-context512-precision.md) and
+[public evidence](../benchmarks/results/2026-10-27-qwen3-context512-precision-v1.json).
+Next directly qualify native C512 canonical-FP32 full-logit/argmax, selected-stage
+and chunk/state behavior with unchanged gates, retaining separate FP64 failures.
+Source parity, unquantized/held-out quality and wider/device contexts remain open.

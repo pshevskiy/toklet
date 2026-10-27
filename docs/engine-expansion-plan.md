@@ -64,8 +64,13 @@ regressions pass. The385+127 versus128 workload cancels after one token; no new
 now has two byte-identical complete cold captures and two readbacks. Old17,
 causal/mask/argmax checks pass, but7282 scalar comparisons exceed unchanged
 FP32/FP64 short-context gates; numerical context qualification remains false.
-Next localize failing coordinates/positions/margins and disjoint target-acceptance
-intervals before any precision-policy decision or native context upgrade.
+The [precision reader](qwen3-context512-precision.md) now authenticates
+all7282 failures, including five unique disjoint interval pairs at token65.
+Existing target acceptance uses canonical FP32 values; this diagnostic introduces
+no dual-oracle requirement. Next run native C512 full-logit/argmax and selected
+intermediate/chunk/state checks against unchanged canonical gates, reporting FP64
+discrepancies separately. Source parity, unquantized/held-out quality and broader
+context remain open; no precision-policy or capacity upgrade follows.
 Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
 
 Use existing operators and forward/session order before adding more independent

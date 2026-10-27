@@ -63,10 +63,12 @@ plan, unit results and first capture and permits only that exact complete
 rejection classification. Both replays retain it, without a tolerance waiver.
 
 See the [public receipt](../benchmarks/results/2026-10-27-qwen3-context512-reference-v1.json).
-Next localize failed coordinates, token positions/margins and whether each pair's
-two unchanged target-acceptance intervals overlap. No production precision change
-is justified by CPU-reference disagreement alone. Any different long-context
-policy requires explicit independent precision and held-out/source quality
-justification, retaining these failures. Native C512 chunk32/128, uneven and late
-continuation checks, higher capacities/full40960, app limits and phone qualification
-remain separate in the [active plan](long-reply-engine-plan.md).
+The separately completed [precision reader](qwen3-context512-precision.md) now
+localizes every failure and identifies five unique disjoint interval pairs at
+position65. Existing native target acceptance uses canonical FP32 values; the
+two-oracle diagnosis does not add a dual-target requirement. Next run native
+C512 chunk32/128, uneven and late-continuation full-logit/argmax and selected-stage
+checks against unchanged canonical gates, reporting FP64 discrepancies separately.
+No production precision change is justified by CPU disagreement alone. Source
+parity, unquantized/held-out quality, higher/full40960 contexts, app limits and
+phone qualification remain separate in the [active plan](long-reply-engine-plan.md).
