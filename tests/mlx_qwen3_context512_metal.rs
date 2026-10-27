@@ -732,6 +732,146 @@ mod gpu {
     }
 
     #[test]
+    #[ignore = "Explicit Mac GPU experimental CompensatedReference capture; saved-logit screening is separate"]
+    fn native_qwen3_compensated_context512_logits_only() {
+        const LOGIT_BYTES: usize = 512 * VOCABULARY * 4;
+        let (m, _) = frozen();
+        let folder = PathBuf::from(
+            std::env::var_os("TOKLET_COMPENSATED_CONTEXT512_OUTPUT")
+                .expect("owned fresh compensated capture output required"),
+        );
+        assert!(
+            folder.is_absolute()
+                && folder.components().all(|part| !matches!(
+                    part,
+                    std::path::Component::ParentDir | std::path::Component::CurDir
+                ))
+        );
+        assert!(
+            folder
+                .parent()
+                .unwrap()
+                .canonicalize()
+                .unwrap()
+                .starts_with(root().join("artifacts").canonicalize().unwrap())
+        );
+        fs::create_dir(&folder).unwrap();
+        // Retain the authenticated descriptors through execution, then verify
+        // their bytes and path identities again before declaring completion.
+        let mut sources = Vec::new();
+        for (name, pin) in m["model_pins"].as_object().unwrap() {
+            let path = root().join(SOURCE).join(name);
+            let mut file = captured_file(&path);
+            let before = identity(&file);
+            assert_eq!(hash(&mut file), pin.as_str().unwrap());
+            assert_eq!(identity(&file), before);
+            sources.push((path, pin.as_str().unwrap().to_owned(), file, before));
+        }
+        let model = metal::Model::load_mlx(
+            &root().join(SOURCE),
+            LoadOptions {
+                context_limit: 512,
+                memory_limit_bytes: BUDGET,
+            },
+        )
+        .unwrap();
+        let device = model.device_name();
+        let mut results = Vec::new();
+        for case in ["original", "future_tail"] {
+            let input = tokens(&m, case);
+            assert_eq!(input.len(), 512);
+            let label = format!("compensated-{case}");
+            let mut writer = Raw::new(&folder, &label);
+            let mut s = metal::Session::with_attention_mode(
+                &model,
+                session::Options {
+                    capacity: 512,
+                    prefill_chunk_size: 128,
+                    position_offset: 0,
+                    memory_limit_bytes: BUDGET,
+                },
+                ProjectionMode::MlxAffine,
+                NormalizationMode::Compensated,
+                ReadbackMode::FullLogits,
+                AttentionMode::CompensatedReference,
+            )
+            .unwrap();
+            // Existing empty-layer diagnostics admit all-row logits plus two
+            // small embedding/final-norm snapshots. Persist only logits.
+            s.enable_diagnostics(&[]).unwrap();
+            s.append(&input).unwrap();
+            let mut frames = 0;
+            for start in (0..512).step_by(128) {
+                assert_eq!(s.evaluated_len(), start);
+                assert_eq!(s.evaluate_next_chunk().unwrap(), 128);
+                let diagnostics = s.diagnostics().unwrap();
+                assert_eq!(
+                    diagnostics.iter().map(|d| d.stage).collect::<Vec<_>>(),
+                    ["embedding", "final_norm", "logits"]
+                );
+                let logits = diagnostics
+                    .into_iter()
+                    .find(|d| d.stage == "logits")
+                    .unwrap();
+                assert_eq!(
+                    (logits.layer, logits.rows, logits.columns),
+                    (None, 128, VOCABULARY)
+                );
+                writer.array("logits", start, 128, VOCABULARY, &logits.values);
+                writer.flush();
+                assert_eq!(writer.bytes, (start + 128) * VOCABULARY * 4);
+                frames += 1;
+            }
+            assert_eq!(s.evaluate_next_chunk().unwrap(), 0);
+            assert_eq!(
+                (s.history(), s.evaluated_len(), s.pending_len()),
+                (input.as_slice(), 512, 0)
+            );
+            assert_eq!((frames, writer.bytes), (4, LOGIT_BYTES));
+            let native_sha = format!("{:x}", writer.digest.clone().finalize());
+            let mut raw = captured_file(&folder.join(format!("{label}.bin")));
+            assert_eq!(identity(&raw), identity(&writer.file));
+            assert_eq!(raw.metadata().unwrap().len(), LOGIT_BYTES as u64);
+            assert_eq!(hash(&mut raw), native_sha);
+            let mut journal = captured_file(&folder.join(format!("{label}.jsonl")));
+            assert_eq!(identity(&journal), identity(&writer.journal));
+            let journal_sha = hash(&mut journal);
+            let result = json!({"case":case,"attention_mode":"CompensatedReference", "chunk":128,
+                "frames":frames,"rows":512,"vocabulary":VOCABULARY,"dtype":"<f4",
+                "native_bytes":writer.bytes,"native_sha256":native_sha,
+                "journal_bytes":journal.metadata().unwrap().len(),"journal_sha256":journal_sha,
+                "history":s.history(),"evaluated_len":s.evaluated_len(),"pending_len":s.pending_len(),
+                "history_matches_frozen_input":true,"memory":s.memory(),"capture_complete":true,
+                "numerical_screen_evaluated":false,"numerically_qualified":false});
+            json_file(&folder.join(format!("{label}.json")), &result);
+            results.push(result);
+            println!(
+                "TOKLET_QWEN3_COMPENSATED_CAPTURE {}",
+                json!({"case":case,"frames":frames,"native_bytes":writer.bytes,"native_sha256":native_sha})
+            );
+        }
+        future_prefix(&folder, "compensated");
+        drop(model);
+        for (path, expected, file, before) in &mut sources {
+            assert_eq!(identity(file), *before);
+            assert_eq!(hash(file), *expected);
+            assert_eq!(identity(file), *before);
+            assert_eq!(identity(&captured_file(path)), *before);
+        }
+        let summary = json!({"device":device,"manifest_sha256":MANIFEST_SHA,
+            "comparison_sha256":COMPARISON_SHA,"attention_mode":"CompensatedReference",
+            "projection_mode":"MlxAffine","normalization_mode":"Compensated",
+            "capacity":512,"chunk":128,"position_offset":0,"activation_dtype":"FP16","kv_dtype":"FP16",
+            "persisted_stages":["logits"],"allocated_diagnostic_stages":["embedding","final_norm","logits"],
+            "cases":results,"future_prefix_exact":true,"source_endpoints_checked":true,
+            "capture_complete":true,"numerical_screen_evaluated":false,"numerically_qualified":false,
+            "historical_qualification_changed":false,"quality_evaluated":false,"validation_opened":false});
+        json_file(&folder.join("compensated-summary.json"), &summary);
+        // Completion means the authenticated capture and state checks passed.
+        // The unchanged output screen classifies these saved logits separately.
+    }
+
+    #[test]
     #[ignore = "Explicit Mac GPU, frozen real checkpoint and complete C512 CPU captures"]
     fn native_qwen3_context512_all_rows_chunks_and_pending_contracts() {
         let (m, expected) = frozen();

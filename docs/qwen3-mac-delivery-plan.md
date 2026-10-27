@@ -33,7 +33,7 @@ rejected for qualification and cannot authorize validation or larger app limits.
 | Q1 — finish the source experiment | Two cold original-source captures, original bits/exact FP32 widening/full readbacks, then distributions, argmax/margins and diagnostic loss against both saved CPU profiles. | Complete. [Source experiment](qwen3-quantized-source.md):204201984 values per set, BF16 output,1344 compared rows/1338 diagnostic targets. |
 | Q2 — precision decision | Choose one bounded implementation outcome and state qualification separately. Source parity cannot replace an unquantized quality baseline. | Complete: retain native Half unchanged **only as an experimental candidate**; reject current C512 qualification. No BF16 switch, adoption or gate expansion. |
 | Q3 — diagnostic1025 and complete quality | Diagnostic-only1025 capacity/state checks, frozen checkpoint-specific inputs/candidate/policy, pinned original BF16 baseline, all10000 loss targets and100 tasks per profile, isolated grading and unchanged0.05-nat/2-percentage-point limits. App limits stay fixed. | Complete. [Full comparison](qwen3-full-quality.md): loss increase0.00400406; strict tasks3/100 versus5/100, exactly the two-case limit. Retain experimental Half only. Weak absolute quality and rejected C512 numerics remain explicit. |
-| Q4 — qualify the retained precision/context profile | Preserve the uniform0.05 normalized-log-probability/exact-greedy contract and independent FP64/Half reference. A changed candidate must be frozen before screening; untouched validation remains conditional on passing. | [Old candidate remains rejected](qwen3-output-screen.md). [Astra's diagnosis](qwen3-attention-accuracy-experiment.md) identifies attention reduction rounding as a concrete local mechanism. An opt-in compensated candidate passes primitive/control checks and improves GPU Half mismatches16→3. Next: one complete logits-only original/future-tail512 screen under unchanged limits. No default/adoption, gate widening or automatic next-operator search. Eight validation inputs remain unopened. |
+| Q4 — qualify the retained precision/context profile | Preserve the uniform0.05 normalized-log-probability/exact-greedy contract and independent FP64/Half reference. A changed candidate must be frozen before screening; untouched validation remains conditional on passing. | [Both candidates rejected](qwen3-compensated-output-screen.md). Compensated attention improves local Half mismatches16→3, but the complete screen has20 failed rows per case versus11 before; maximum0.16445338 versus0.20223375. All1024 greedy IDs match. The bounded experiment is closed with rejection. Next is an explicit versioned product-contract decision, not another operator search. Defaults/gates unchanged; eight validation inputs remain unopened. |
 | Q5 — usable Qwen3 Mac milestone | Complete Chat, Expert and the supported pinned HF search/import/download/offline-reopen journey for this admitted profile. Verify long input/reply, shared budgets, cancellation/resume, model switching, truthful limits and whole-process memory. Reuse L3; retain a clearly stated partial window until Q6 qualifies more. | [Bounded experimental C512 functional milestone complete](qwen3-mac-functional.md): visible recovery/switching, pinned HF download/offline path, full raw Expert384+128 and normal-stop Chat-worker385+127, exact saved prefix/overflow/closure and memory checks pass. Qualified Q1–Q5 delivery remains incomplete because Q4 is rejected. |
 | Q6 — expand the selected model window | Progress through named context/rotary/cache boundaries toward the declared40960 shared positions, including exact boundary and rejected maximum+1, separate long input/continuation, full quality and complete memory/text/UI delivery accounting. | Subsequent expansion; smaller windows remain partial. |
 
@@ -100,9 +100,13 @@ compensated Reference attention. This is not a demonstrated bug fix. CPU FP32
 also fails the uniform FP64 trajectory rule, so that rule must not be confused
 with generic FP32/Half conformance or the mean-loss quality policy.
 
-The opt-in implementation and local GPU checks are complete. The next endpoint
-is one frozen whole-model screen, then retain/reject that candidate under the
-existing criterion. If it rejects, stop and resolve the explicit acceptance-policy
-question; do not launch another trace, harness or envelope merely to keep activity
-moving. Q6/full40960 and broader architecture/phone scope still have no reliable
-completion ETA. No threshold/reference/default change is authorized by this result.
+The opt-in implementation, local GPU checks and one frozen whole-model screen
+are complete. The candidate rejects under the existing criterion; this experiment
+stops. Astra recommends considering a separately specified native precision
+product profile with independent operator/state and unchanged full-quality gates,
+while retaining the uniform-fidelity rejection separately. This proposal has not
+changed the current acceptance contract or authorized dependent validation.
+Resolve that explicit product-contract question before more qualification work;
+do not launch another trace, harness or envelope merely to keep activity moving.
+Q6/full40960 and broader architecture/phone scope still have no reliable completion
+ETA. No threshold/reference/default change is authorized by this result.

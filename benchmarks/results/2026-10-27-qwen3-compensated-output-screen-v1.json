@@ -1,0 +1,277 @@
+{
+  "format": "toklet-qwen3-compensated-whole-model-screen-v1",
+  "completed": true,
+  "accepted": false,
+  "candidate_engine_commit": "261f836",
+  "candidate_precision": "MlxAffine / CompensatedNorm / CompensatedReference; FP16 activations and KV; FP32 logits",
+  "hardware": {
+    "cpu": "Apple M1 Pro",
+    "ram_bytes": 17179869184,
+    "os": "macOS26.6.2(25G83)"
+  },
+  "model": {
+    "repository": "mlx-community/Qwen3-0.6B-8bit",
+    "revision": "11de96878523501bcaa86104e3c186de07ff9068"
+  },
+  "build": {
+    "profile": "debug",
+    "feature": "metal",
+    "rust": "1.90.0 Homebrew",
+    "binary": "/Users/coloner/work/rust/toklet/target/debug/deps/mlx_qwen3_context512_metal-d9f2993489fa8188",
+    "identity": {
+      "bytes": 7475064,
+      "sha256": "975044219cd0d165818b5b8807aab295aced3d26089fd1c95efb963fb3e2c8ea"
+    },
+    "latency_or_throughput_qualification": false
+  },
+  "frozen_contract": {
+    "bytes": 285296,
+    "sha256": "6f19cf76ec78d31ce953181cf63017aebb2511846a83e96274d0d3c62b7e1aa7"
+  },
+  "criterion": {
+    "maximum_absolute_log_probability_error": 0.05,
+    "inclusive": true,
+    "exact_lowest_id_greedy": true,
+    "nonfinite_rejected": true
+  },
+  "cases": [
+    {
+      "case": "original",
+      "rows": 512,
+      "failed_rows": 20,
+      "failed_vocabulary_entries": 137559,
+      "greedy_disagreements": 0,
+      "worst": {
+        "case": "original",
+        "position": 45,
+        "maximum_absolute_log_probability_error": 0.1644533777242394,
+        "maximum_vocabulary_id": 27921,
+        "native_log_probability": -24.692907863176806,
+        "reference_log_probability": -24.528454485452567,
+        "failed_vocabulary_entries": 19255,
+        "native_greedy": 1879,
+        "reference_greedy": 1879,
+        "greedy_equal": true,
+        "native_log_normalizer": 0.008912139452442723,
+        "reference_log_normalizer": 0.009069147622976538,
+        "passed": false
+      },
+      "complete": true
+    },
+    {
+      "case": "future_tail",
+      "rows": 512,
+      "failed_rows": 20,
+      "failed_vocabulary_entries": 137559,
+      "greedy_disagreements": 0,
+      "worst": {
+        "case": "future_tail",
+        "position": 45,
+        "maximum_absolute_log_probability_error": 0.1644533777242394,
+        "maximum_vocabulary_id": 27921,
+        "native_log_probability": -24.692907863176806,
+        "reference_log_probability": -24.528454485452567,
+        "failed_vocabulary_entries": 19255,
+        "native_greedy": 1879,
+        "reference_greedy": 1879,
+        "greedy_equal": true,
+        "native_log_normalizer": 0.008912139452442723,
+        "reference_log_normalizer": 0.009069147622976538,
+        "passed": false
+      },
+      "complete": true
+    }
+  ],
+  "previous_candidate": {
+    "failed_rows_per_case": 11,
+    "failed_entries_per_case": 56034,
+    "maximum_error": 0.20223375120124842,
+    "greedy_disagreements": 0
+  },
+  "comparison_decision": "Mixed fidelity: maximum error decreases but violations increase. Reject under unchanged criterion; no overall improvement or adoption claim.",
+  "raw_logit_bytes": 622329856,
+  "logit_frames": 8,
+  "screen_rows": 1024,
+  "screen_endpoint_audits": 2004,
+  "all_screen_endpoints_checked": true,
+  "causal_first_511_rows_exact": true,
+  "histories_and_committed_positions_exact": true,
+  "native_process_memory": {
+    "maximum resident set size": 983875584,
+    "peak memory footprint": 971916464
+  },
+  "reader_process_memory": {
+    "maximum resident set size": 119242752,
+    "peak memory footprint": 56394424
+  },
+  "native_memory_bound_bytes": 6442450944,
+  "reader_memory_bound_bytes": 536870912,
+  "checks": {
+    "formatting": true,
+    "strict_metal_clippy": true,
+    "cpu_passed": 369,
+    "cpu_ignored": 19,
+    "integration_compile": true,
+    "capture": true,
+    "screen_completed": true,
+    "numerical_acceptance": false,
+    "owned_groups_absent": 6
+  },
+  "defaults_changed": false,
+  "numerical_gates_changed": false,
+  "reference_changed": false,
+  "validation_inputs_opened": false,
+  "full_quality_transferred": false,
+  "app_capacity_raised": false,
+  "iphone_qualified": false,
+  "astra_review": {
+    "premeasurement": true,
+    "independent_results": true,
+    "code_approved": true,
+    "decision": "Stop this experiment; retain opt-in variant only for measured local benefit. Q4 remains rejected."
+  },
+  "hard_question": {
+    "resolution": "Arithmetic-profile sensitivity does not establish a native bug or waive rejection. Uniform same-reference bounds imply mean target-loss bounds; the converse is false.",
+    "recommendation": "Consider a separately specified native precision product profile with independent operator/state conformance and unchanged full-quality gates; report uniform fidelity separately.",
+    "policy_change_applied": false
+  },
+  "preparation_note": "Initial runner edit was correctly rejected by its endpoint guard. Successful frozen checks and the reviewed argument-only rebind are retained separately.",
+  "evidence": {
+    "artifacts/m8-qwen3-compensated-screen-v1/prepare.json": {
+      "bytes": 2727,
+      "sha256": "e1868c3032ffd6934819aba9df72938097e1be03b3e1cbdfcc66bcf145a9dbe9"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/capture.json": {
+      "bytes": 2990,
+      "sha256": "ccf689a0aceb45e3c5325c0a04a3e5ba6ee5f2d0de5c2fa3a696ecec9a9ce736"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/execute.json": {
+      "bytes": 6872,
+      "sha256": "26b5ff88c9d65720c515ddbf31c8e12c4ed98796d1a1d8dea381c55061398977"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/frozen-pre-review.json": {
+      "bytes": 285296,
+      "sha256": "ab6a6829c0585fc92a2b78068f7dd311295026fa2daebc8b90c941a7966deaf7"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/frozen.json": {
+      "bytes": 285296,
+      "sha256": "6f19cf76ec78d31ce953181cf63017aebb2511846a83e96274d0d3c62b7e1aa7"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/native-output/compensated-future_tail.bin": {
+      "bytes": 311164928,
+      "sha256": "0eae2a6cc0b32a6841a704fbb04f52b5d726dee48bf194caf11813d01f43ddaa"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/native-output/compensated-future_tail.json": {
+      "bytes": 5342,
+      "sha256": "909ae197eb49d190c06f7db6f2cd8fccf2f08458f0bf3fa0e5f8c94cae4a192b"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/native-output/compensated-future_tail.jsonl": {
+      "bytes": 725,
+      "sha256": "b8ab17aa9482b2d88805b4cac6fdf6acfa862da0b7d0d78a2b8c3f6e7c37ee53"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/native-output/compensated-original.bin": {
+      "bytes": 311164928,
+      "sha256": "5c5bb3a0e1dad2f3e3766ed2dfaab0b631907736c990783aeda4b1a61d3c0a04"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/native-output/compensated-original.json": {
+      "bytes": 5338,
+      "sha256": "f96b1826cc91bb160cebfd8fb35caec72121218108ddd3bd76285fabd48fb38d"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/native-output/compensated-original.jsonl": {
+      "bytes": 725,
+      "sha256": "8a12f02a8e98db3f52d1cc9436b07e9bbf4a6b4de687c34524ed102d42652557"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/native-output/compensated-summary.json": {
+      "bytes": 15885,
+      "sha256": "6b9770a9560e2507a1188e24fc6e4801050510da7321d6707707302f1bcd154c"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/prepare.json": {
+      "bytes": 50796,
+      "sha256": "b9581c57aa7b73608adf2c8b242e1eb54c0857b747a4cbcb0da0158e07197626"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/rebind.json": {
+      "bytes": 895,
+      "sha256": "2f2d3cf27234d65c9754c28b4a4d67d9d98d3b63bac46c8fa34fe3c171a5de5d"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/run.py": {
+      "bytes": 10712,
+      "sha256": "75782f30b9241dda21f79af40dba8d7e52ccce32fef85d3e5f6b72fcadfa4ad8"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/screen-pre-review.py": {
+      "bytes": 8984,
+      "sha256": "5e6995bdbf30df9e0846af28df9ee0b7d71ec1a0845aa895147eae36612aca75"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/screen.json": {
+      "bytes": 473099,
+      "sha256": "d0156e4eebcce0e7d24757b9691718c2637b6e31c2221abeb1d944a041ff8658"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/screen.py": {
+      "bytes": 8984,
+      "sha256": "ba6e9b35207eb64dd8a44ff541fc126a532391ad294068f78d717a459122d6dd"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/screen.rows.jsonl": {
+      "bytes": 430309,
+      "sha256": "2987a6a74e39b4e8beef7be4e6c84685572c25ef1bbbc95619b6ca7661be9792"
+    },
+    "tests/fixtures/qwen3-context512-v1/manifest.json": {
+      "bytes": 166723,
+      "sha256": "21d54e567025f70fdda01d7f1bede1a71f730c6b7c10aec62f5aaffec52a7f08"
+    },
+    "tests/fixtures/qwen3-output-screen-v1/contract.json": {
+      "bytes": 240608,
+      "sha256": "0df7e712e7d397d8f334a194a187c0c26938656ab86867fe3a1a3ce624e21721"
+    },
+    "tests/mlx_qwen3_context512_metal.rs": {
+      "bytes": 38611,
+      "sha256": "ac0fe8433e51bb623d8e1a7a291ca364d372ec877745dea4d19909ee9721d32b"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/capture.stdout": {
+      "bytes": 526,
+      "sha256": "ef1ef17016cf77a859c11db348436fa7ac348a4cc7fc739b24eca4baa3de6e90"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/capture.stderr": {
+      "bytes": 777,
+      "sha256": "765630cfb8b104f95b7548011588904d1cd442b631c2a859f49bc2b51b5048db"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/screen.stdout": {
+      "bytes": 1194,
+      "sha256": "b3b12a42f8aac1e10dbc478ef92184e79eb8cf0ea8bd4d9fcf987156bed966e9"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/screen.stderr": {
+      "bytes": 777,
+      "sha256": "d328c81b08ac571f0aa603c9bd936de192739796a6f1a67ecb916ba6d4a160fb"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/cpu-tests.stdout": {
+      "bytes": 41527,
+      "sha256": "8cab1a1851e2bc90252ff1a7ddc299ca54165ebbcbb3e3f0f53ed967c83d1b26"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/build.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/fmt.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/metal-clippy.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/build.stderr": {
+      "bytes": 186,
+      "sha256": "5f575879d8c9e4247626a63dd1a97e2216dfd223cf674efb7e47f2f571422eb8"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/cpu-tests.stderr": {
+      "bytes": 4622,
+      "sha256": "c0b7a5279d3556fbe3df6bc9dfa5f74bd54c52055c3799463b90a33d90dd84ba"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/metal-clippy.stderr": {
+      "bytes": 72,
+      "sha256": "2461b00c8697c4189b2de92ca6fb05b5d72273c78a0a47b1ce4e83ccca077b70"
+    },
+    "artifacts/m8-qwen3-compensated-screen-v2/fmt.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

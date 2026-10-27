@@ -1,6 +1,6 @@
 # Toklet improvement record
 
-Updated 26 October 2026. This records implemented capabilities, measured benefits,
+Updated 27 October 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
@@ -6041,3 +6041,29 @@ experiment for one unchanged whole-model screen; ordinary app/defaults and all
 old failures remain. No model execution, full-quality transfer, gate/reference
 change or adoption occurs in this task. See [the diagnosis](qwen3-attention-accuracy-experiment.md)
 and [evidence](../benchmarks/results/2026-10-27-qwen3-compensated-attention-v1.json).
+
+## 2026-10-27 — Complete compensated Qwen3 screen; stop rejected experiment
+
+One reviewed logits-only capture retains all151936 logits for512 positions in
+each of the original/future-tail cases, eight frames/622329856 bytes. Exact frozen
+histories, committed state and first511-row causal identity pass. The unchanged
+FP64/Half uniform0.05/exact-greedy screen completes: each case has20 failed rows
+and137559 failed entries, maximum0.1644533777242394 at45/vocabulary27921. All1024
+greedy selections match. Compared with11 failed rows/56034 entries/max0.20223375,
+this is mixed fidelity, not a qualified improvement.
+
+Formatting, strict Metal Clippy,369 CPU tests and capture compilation pass; six
+owned groups close, all2004 reader endpoint audits pass. Native physical/RSS
+971916464/983875584 bytes fit6GiB; reader56394424/119242752 fit512MiB. Debug
+accuracy execution is not a performance measurement. Failed/partial producer
+files are retained before classification; the initial preparation's detected
+runner edit and successful frozen checks/argument-only rebind remain recorded.
+
+Astra reviews code, frozen execution and complete results. Stop this numerical
+experiment with rejection; retain the opt-in variant only for its local measured
+benefit. Defaults, gates, reference, context and Q4 rejection stay unchanged;
+unused validation remains closed and old quality cannot transfer. Astra's proposed
+separate native-precision product contract is recorded as a decision proposal,
+not an applied waiver. See [the report](qwen3-compensated-output-screen.md),
+[plan](qwen3-mac-delivery-plan.md) and
+[evidence](../benchmarks/results/2026-10-27-qwen3-compensated-output-screen-v1.json).

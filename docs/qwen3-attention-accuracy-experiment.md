@@ -3,8 +3,9 @@
 Astra found **arithmetic-profile sensitivity, not a demonstrated native operator
 bug**. A bounded same-input check then identified one concrete accuracy mechanism:
 ordered FP32 attention reductions can cross Half rounding boundaries. The new
-opt-in compensated attention reduces that local error on the GPU. It has not yet
-passed the whole-model output contract; defaults and qualification stay unchanged.
+opt-in compensated attention reduces that local error on the GPU. The subsequent
+[whole-model screen rejects it](qwen3-compensated-output-screen.md); defaults and
+qualification stay unchanged. The sections below preserve the local experiment.
 
 ## Why the previous gate did not identify a bug
 
@@ -100,6 +101,10 @@ capture before execution. Rejection stops this experiment; it does not trigger
 another automatic layer investigation. The eight untouched validation inputs
 remain closed unless the frozen candidate passes and receives review. Full
 quality must rerun before adoption; the old result belongs to old candidate bytes.
+
+That bounded follow-on is now complete and rejected:20 failed rows per case,
+maximum error0.16445338, with all greedy IDs matching. The maximum decreases but
+violations increase. No untouched validation or quality/adoption follows.
 
 See the [delivery plan](qwen3-mac-delivery-plan.md),
 [historical rejection](qwen3-output-screen.md) and
