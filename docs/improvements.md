@@ -5984,3 +5984,31 @@ the next bounded task; normal stop behavior remains in effect. Numerical gates,
 the eight untouched validation inputs, full40960 support and phone qualification
 remain unchanged. See [the follow-up](qwen3-mac-functional.md) and
 [evidence](../benchmarks/results/2026-10-27-qwen3-mac-visible-v1.json).
+
+## 2026-10-27 — Full normal-stop Chat window completes; bounded Mac scope closed
+
+The existing context checker separately prepares an authored long-story case
+with exactly385 native-rendered input IDs and127 requested outputs. Input7312B
+SHA0b0aca92794419fc5d1d0cd3488b8b56b31ef409cb29079de717993e328bcd1a
+freezes before token generation. One ordinary Chat-worker run, with normal stops
+unchanged, emits all127 IDs and reaches history512/committed511/pending1.
+Actual admission is385+127=512; saved tokens match frozen inputs+actual outputs.
+The same conversation with128 requested outputs rejects513 atomically. Separate
+raw pending flush/scalar availability and explicit closed/joined ownership pass.
+Six snapshots retain raw outcomes before assertions; no numerical oracle claim.
+
+Strict Swift compile and existing CPU fixture/context checks pass. Chat physical
+peak898041080/RSS821886976 bytes and preparation813909192 physical bytes fit6GiB;
+all four owned groups close with source/model/archive/frozen-input endpoints
+unchanged. Astra accepts the functional result. This closes the bounded
+experimental C512 Mac milestone alongside visible recovery/model switching,
+pinned HF/offline use and full raw Expert execution.
+
+The plan now distinguishes that completed functionality from rejected Q4
+qualification/full40960 delivery. A concrete mechanism hypothesis, fixed candidate
+and reference, and unchanged acceptance criterion are prerequisites for further
+precision implementation. No additional trace/harness/envelope is justified by
+activity alone. Review complete code tasks with results ready rather than each
+routine tooling subdivision. All numerical gates and untouched validation inputs
+remain unchanged. See [the report](qwen3-mac-functional.md) and
+[evidence](../benchmarks/results/2026-10-27-qwen3-chat-window-v1.json).

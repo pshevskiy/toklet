@@ -1,0 +1,153 @@
+{
+  "format": "toklet-qwen3-chat-window-functional-v1",
+  "functional_chat_worker512_complete": true,
+  "bounded_experimental_c512_mac_functional_milestone_complete": true,
+  "qualified_delivery": false,
+  "numerical_qualification": false,
+  "full40960_qualification": false,
+  "validation_inputs_opened": false,
+  "numerical_or_production_code_changed": false,
+  "phone_contacted": false,
+  "profile": {
+    "repository": "mlx-community/Qwen3-0.6B-8bit",
+    "revision": "11de96878523501bcaa86104e3c186de07ff9068",
+    "capacity": 512,
+    "chunk": 32,
+    "precision": "existing native eight-bit affine weights / Half state; ordinary app worker",
+    "status": "experimental accuracy not qualified"
+  },
+  "test_source": {
+    "bytes": 30222,
+    "sha256": "de8bb0ad5c5b08a9906128b7b29a7b24b382276bb8f5335afb900f8d237de96d"
+  },
+  "prepared_input": {
+    "bytes": 7312,
+    "sha256": "0b0aca92794419fc5d1d0cd3488b8b56b31ef409cb29079de717993e328bcd1a"
+  },
+  "prepared_roles": [
+    "user",
+    "assistant",
+    "user"
+  ],
+  "prepared_draft_utf8_bytes": 2133,
+  "rendered_input": 385,
+  "requested_output": 127,
+  "shared_budget": 512,
+  "token_generation_during_preparation": false,
+  "normal_chat_stops_unmodified": true,
+  "hidden_stop_metadata": 151645,
+  "completion": {
+    "passed": true,
+    "rendered_input": 385,
+    "output": 127,
+    "history": 512,
+    "normal_stops_preserved": true,
+    "overflow_prefix_preserved": true,
+    "closed": true,
+    "numerical_qualification": false
+  },
+  "atomic_513_rejection": true,
+  "exact_frozen_input_plus_emitted_prefix": true,
+  "raw_pending_flush_separate_from_chat_completion": true,
+  "full_context_scalar_available": true,
+  "raw_events": [
+    "loaded",
+    "chat_385_plus_127",
+    "chat_513_rejected",
+    "pending_committed",
+    "full_context_score",
+    "closed"
+  ],
+  "journal": {
+    "bytes": 14350,
+    "sha256": "8e9ceead95c9a7e82359171606021023f9f1a6fe574b7414c500fafc4159c332"
+  },
+  "independent_journal_readback": true,
+  "process_memory": {
+    "rss": 821886976,
+    "physical": 898041080
+  },
+  "preparation_memory": {
+    "rss": 827752448,
+    "physical": 813909192
+  },
+  "process_memory_limit": 6442450944,
+  "strict_swift_compile": true,
+  "existing_cpu_fixture_context_regressions_passed": true,
+  "owned_groups_absent": 4,
+  "hardware": "Apple M1 Pro / MacBookPro18,3 / 16GiB / macOS26.6.2(25G83)",
+  "performance_qualified": false,
+  "quality_scores_or_gates_changed": false,
+  "evidence": {
+    "artifacts/m8-qwen3-chat-window-v1/run.py": {
+      "bytes": 5560,
+      "sha256": "5c844e7003cfe3c02086f763b5345728829c1f9056a1f1fa71591bee2fed1503"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/compile-checks.json": {
+      "bytes": 15940,
+      "sha256": "292416c4b3cd79c9f277fa1deb0b0173833e5926fde0d649ecb54071d3ad4f92"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/fixture-checks.json": {
+      "bytes": 11347,
+      "sha256": "93bcafeee8bd3231cace6dbafc40afd866ece0420870548f18002f09d346b0da"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/prepare-checks.json": {
+      "bytes": 11597,
+      "sha256": "57257f5c1201c65a5eea46dff438b5905ddc1014b58a8a72619470f6c031ea48"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/model-checks.json": {
+      "bytes": 12186,
+      "sha256": "1f5252765886823fe3f60eab330e1993aa1219415dd353188b8a4c6a125b8fca"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/prepared/input.json": {
+      "bytes": 7312,
+      "sha256": "0b0aca92794419fc5d1d0cd3488b8b56b31ef409cb29079de717993e328bcd1a"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/model-output/chat-window.jsonl": {
+      "bytes": 14350,
+      "sha256": "8e9ceead95c9a7e82359171606021023f9f1a6fe574b7414c500fafc4159c332"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/sources/ContextIntegrationMain.swift": {
+      "bytes": 30222,
+      "sha256": "de8bb0ad5c5b08a9906128b7b29a7b24b382276bb8f5335afb900f8d237de96d"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/sources/WorkerChecks.swift": {
+      "bytes": 11449,
+      "sha256": "347b57680485d4539e37200c0b8436476a8a9b54ca202a7b93acd595f0c14874"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/compile.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/compile.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/fixture.stdout": {
+      "bytes": 190,
+      "sha256": "db7699b600033f7ac21270acc00ee22abc12c51298caedd4c2c77b7fa2a64183"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/fixture.stderr": {
+      "bytes": 777,
+      "sha256": "21c3225179074414082009f1a8e7f8a4170c8ea17b25e1203907ee477db52de1"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/prepare.stdout": {
+      "bytes": 137,
+      "sha256": "f89171427f0b85767302f543e43fe86e17f42a3039b8031c94a132e6c31367d4"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/prepare.stderr": {
+      "bytes": 777,
+      "sha256": "f86a6ed59219cf11e53ef97c6f87f50c5e4cc766f9ee8e93a33cc2a80a0f4553"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/model.stdout": {
+      "bytes": 197,
+      "sha256": "0bb055d3afd29dc34102e96f902f136cca824a0ef7b4383d6ac042038eaff1c3"
+    },
+    "artifacts/m8-qwen3-chat-window-v1/model.stderr": {
+      "bytes": 777,
+      "sha256": "d6eb5d48508b1b85afc81379cfbf997e29308d97b4d2677288a217df1ce5ea80"
+    }
+  },
+  "review": "Astra cleared source/controller before prepare/freeze/one execution, then accepted completed Chat result and functional-only classification. Publication review before commit.",
+  "remaining": "Q4 numerical acceptance remains rejected. Full40960/model breadth/phone qualification are not granted. Further precision work requires a concrete mechanism hypothesis, fixed candidate/reference and unchanged acceptance criterion; no extra harness by default."
+}

@@ -34,7 +34,7 @@ rejected for qualification and cannot authorize validation or larger app limits.
 | Q2 — precision decision | Choose one bounded implementation outcome and state qualification separately. Source parity cannot replace an unquantized quality baseline. | Complete: retain native Half unchanged **only as an experimental candidate**; reject current C512 qualification. No BF16 switch, adoption or gate expansion. |
 | Q3 — diagnostic1025 and complete quality | Diagnostic-only1025 capacity/state checks, frozen checkpoint-specific inputs/candidate/policy, pinned original BF16 baseline, all10000 loss targets and100 tasks per profile, isolated grading and unchanged0.05-nat/2-percentage-point limits. App limits stay fixed. | Complete. [Full comparison](qwen3-full-quality.md): loss increase0.00400406; strict tasks3/100 versus5/100, exactly the two-case limit. Retain experimental Half only. Weak absolute quality and rejected C512 numerics remain explicit. |
 | Q4 — qualify the retained precision/context profile | Separately version output-distribution/state qualification. Freeze uniform maximum absolute normalized-log-probability error0.05 over every vocabulary entry/position, exact lowest-ID greedy agreement, the independent FP64/Half reference identity and stable FP64 comparison method **before computing a screen**. Screen already captured paired native/reference logits only, with no new calibration execution. If it passes, freeze complete candidate/contract and run the eight untouched numerical-validation inputs once, preserving exact causal/masking/chunk/cache/pending/cancel/replay/capacity checks. | [Screen complete, candidate rejected](qwen3-output-screen.md): maximum error0.20223375; all1024 greedy IDs agree. Qualification remains open/rejected; eight validation inputs unopened. No supported precision change, widening, recalibration or layer walk. Historical canonical-FP32 stage qualification stays rejected. |
-| Q5 — usable Qwen3 Mac milestone | Complete Chat, Expert and the supported pinned HF search/import/download/offline-reopen journey for this admitted profile. Verify long input/reply, shared budgets, cancellation/resume, model switching, truthful limits and whole-process memory. Reuse L3; retain a clearly stated partial window until Q6 qualifies more. | [Bounded audit progressing](qwen3-mac-functional.md): visible retry fix and Qwen3/Smol switching pass; full raw Expert512 execution, exact prefix/overflow/scalar diagnostic/suspend/replay pass. Pinned download/Chat/Stop/oversized draft preservation/offline controller already pass. Next: freeze and run one actual rendered385-input/127-output Chat witness with normal stops. Chat512 completion and qualified Q1–Q5 delivery remain open; Q4 is rejected. |
+| Q5 — usable Qwen3 Mac milestone | Complete Chat, Expert and the supported pinned HF search/import/download/offline-reopen journey for this admitted profile. Verify long input/reply, shared budgets, cancellation/resume, model switching, truthful limits and whole-process memory. Reuse L3; retain a clearly stated partial window until Q6 qualifies more. | [Bounded experimental C512 functional milestone complete](qwen3-mac-functional.md): visible recovery/switching, pinned HF download/offline path, full raw Expert384+128 and normal-stop Chat-worker385+127, exact saved prefix/overflow/closure and memory checks pass. Qualified Q1–Q5 delivery remains incomplete because Q4 is rejected. |
 | Q6 — expand the selected model window | Progress through named context/rotary/cache boundaries toward the declared40960 shared positions, including exact boundary and rejected maximum+1, separate long input/continuation, full quality and complete memory/text/UI delivery accounting. | Subsequent expansion; smaller windows remain partial. |
 
 Gemma, additional architectures/optimizations, broader HF compatibility and
@@ -50,6 +50,10 @@ critical path. They are not removed or marked complete.
 - Review changed numerical contracts before measurements. Review completed code
   and results before commit; intermediate review is for material correctness
   changes, not every mechanical edit.
+- Default to one final Astra review per coherent code task, with checks/results
+  ready. Add pre-measurement review for changed numerical contracts, not routine
+  tooling subdivisions. Reuse existing controls; no new general harness unless
+  it covers a specific missing behavior.
 - Q1's bounded endpoint is the source comparison and Q2 decision. Further
   environment work must be necessary to complete those existing captures.
 - Q1/Q2 are closed. Astra's source review retains the Half implementation as an
@@ -83,3 +87,18 @@ The archived screen has now rejected this contract/candidate pairing. Astra
 approved proceeding with independent Q5 functional work while preserving that
 rejection, experimental/partial labels and all current limits. No numerical
 validation is authorized by the relative-quality pass or matching greedy IDs.
+
+## Current critical path and ETA
+
+Q5's bounded experimental Mac functional scope is complete. Source/runtime
+validation and repeated review/tooling subdivisions contributed substantially
+to elapsed time. The remaining blocker is Q4 numerical acceptance, not Chat
+integration. There is no defensible full-qualified-delivery date yet.
+
+No specific precision repair is currently supported by the evidence. Before
+another implementation experiment, identify one concrete mechanism hypothesis
+tied to the retained discrepancy, specify its candidate/reference identities and
+unchanged acceptance criterion, then review that bounded task with Astra.
+Do not launch another trace, harness or envelope merely to keep activity moving.
+Estimate the implementation once that prerequisite exists. Q6/full40960 and the
+broader architecture/phone scope cannot receive a reliable ETA before then.

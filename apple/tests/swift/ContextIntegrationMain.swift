@@ -82,7 +82,7 @@ struct ContextIntegrationMain {
         let ids: [UInt32]
     }
     static let prior = [["role":"user","content":"Earlier question"],["role":"assistant","content":"Earlier answer"]]
-    static func probe(_ directory: String) throws -> RenderedProbe {
+    static func probe(_ directory: String, suffix: String = "") throws -> RenderedProbe {
         try autoreleasepool {
             let profile = try HubProfile.identify(URL(fileURLWithPath:directory))
             try require(profile == .qwen3,"pinned Qwen3 probe")
@@ -94,7 +94,7 @@ struct ContextIntegrationMain {
             defer { if let chat { _ = toklet_chat_release(chat,nil) }; if let model { _ = toklet_model_release(model,nil) } }
             try require(toklet_chat_create(model,profile.textBudget,&chat,&error) == TOKLET_OK,"load pinned codec probe")
             for n in 250...430 {
-                let draft = String(repeating:"Hello ",count:n)
+                let draft = String(repeating:"Hello ",count:n) + suffix
                 let data = try JSONSerialization.data(withJSONObject:prior+[["role":"user","content":draft]],options:[.sortedKeys])
                 var count = 0
                 let query = data.withUnsafeBytes { bytes in
@@ -267,6 +267,84 @@ struct ContextIntegrationMain {
         try stream.synchronize(); try stream.close()
         print("TOKLET_RAW_WINDOW_JSON={\"passed\":true,\"input\":384,\"output\":128,\"history\":512,\"exact_saved_prefix\":true,\"overflow_scalar_diagnostic_unchanged\":true,\"suspend_replay\":true,\"closed\":true,\"numerical_qualification\":false,\"chat512_completion\":false}")
     }
+    struct ChatWindowInput: Codable {
+        let version: UInt32
+        let conversation: Data
+        let ids: [UInt32]
+        let maximum: UInt32
+        let hiddenStop: UInt32
+    }
+    static func prepareChatWindow(_ directory: String,_ output: URL) throws {
+        let counted = try probe(directory,suffix:"Write a long story about a small robot in a forest.")
+        let value = ChatWindowInput(version:1,conversation:counted.conversation,ids:counted.ids,maximum:127,hiddenStop:151645)
+        let encoder = JSONEncoder(); encoder.outputFormatting = [.sortedKeys,.prettyPrinted]
+        try encoder.encode(value).write(to:output.appendingPathComponent("input.json"),options:.withoutOverwriting)
+        print("TOKLET_CHAT_WINDOW_INPUT_JSON={\"prepared\":true,\"rendered_input\":385,\"maximum\":127,\"shared_budget\":512,\"token_generation_executed\":false}")
+    }
+    // Consumes the separately frozen rendering. Early natural EOS is retained
+    // as a completed request, but cannot pass the full512-completion assertion.
+    static func chatWindow(_ directory: String,_ input: URL,_ output: URL) throws {
+        let file = try FileHandle(forReadingFrom:input)
+        let bytes = try file.read(upToCount:64 * 1024 + 1) ?? Data(); try file.close()
+        try require(bytes.count <= 64 * 1024,"bounded frozen Chat input")
+        let prepared = try JSONDecoder().decode(ChatWindowInput.self,from:bytes)
+        try require(prepared.version == 1 && prepared.ids.count == 385 && prepared.ids.allSatisfy { $0 < 151936 }
+            && prepared.maximum == 127 && prepared.hiddenStop == 151645,"fixed rendered input/budget/normal stop")
+        let profile = try HubProfile.identify(URL(fileURLWithPath:directory))
+        try require(profile == .qwen3,"pinned Qwen3 Chat configuration")
+        let journal = output.appendingPathComponent("chat-window.jsonl")
+        try Data().write(to:journal,options:.withoutOverwriting)
+        let stream = try FileHandle(forWritingTo:journal)
+        defer { try? stream.close() }
+        let worker = try NativeWorker(captureSavedPrefix:true)
+        defer { worker.close(); _ = worker.waitUntilClosed(seconds:30) }
+        func record(_ name: String,_ state: NativeSnapshot) throws {
+            var row: [String:Any] = ["event":name,"status":state.status,"message":state.message,
+                "history":state.history,"committed":state.evaluated,"pending":state.pending,
+                "saved_prefix":state.savedPrefix ?? [],"emitted_ids":state.ids,"reason":state.reason,
+                "stop_token":state.stopToken,"model_instance":state.modelContext?.modelInstance ?? 0,
+                "session_instance":state.liveContext?.sessionInstance ?? 0]
+            if let budget = state.requestBudget { row["budget"] = ["input":budget.input,"output":budget.output,"required":budget.required] }
+            if let result = state.chatResult { row["chat_text"] = result.text; row["chat_rejected"] = result.rejected }
+            if let score = state.score { row["score"] = try JSONSerialization.jsonObject(with:JSONEncoder().encode(score)) }
+            var data = try JSONSerialization.data(withJSONObject:row,options:[.sortedKeys]); data.append(10)
+            try stream.write(contentsOf:data)
+        }
+        func run(_ name: String,_ command: NativeCommand,_ failure: Bool = false) throws -> NativeSnapshot {
+            try require(worker.submit(command),"Chat-window command accepted")
+            let state = try settled(worker); try record(name,state)
+            try require(failure ? state.status == TOKLET_INVALID : state.status == 0,"Chat-window command status: " + state.message)
+            return state
+        }
+        var settings = NativeSettings(directory:directory)
+        settings.metal = true; settings.mlx = true; settings.chat = true; settings.capacity = 512; settings.chunk = 32
+        settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
+        let loaded = try run("loaded",.load(settings))
+        try require(loaded.chatEnabled && loaded.modelContext?.declaredTotal == 40960,"ordinary partial Qwen3 Chat loaded")
+        let completed = try run("chat_385_plus_127",.chat(id:UUID(),conversation:prepared.conversation,maximum:prepared.maximum))
+        try require(completed.chatResult?.rejected == false && completed.reason == 1
+            && completed.stopToken == UInt32.max && completed.ids.count == 127
+            && completed.history == 512 && completed.evaluated == 511 && completed.pending == 1,"normal127-output Chat completion at512")
+        try require(completed.requestBudget?.input == 385 && completed.requestBudget?.output == 127
+            && completed.requestBudget?.required == 512,"actual rendered Chat budget")
+        let expected = prepared.ids + completed.ids
+        try require(completed.savedPrefix == expected,"actual Chat tokens match frozen renderer and outputs")
+        let rejected = try run("chat_513_rejected",.chat(id:UUID(),conversation:prepared.conversation,maximum:128),true)
+        try require(rejected.chatResult?.rejected == true && rejected.savedPrefix == expected
+            && rejected.history == 512 && rejected.evaluated == 511 && rejected.pending == 1
+            && rejected.modelContext == completed.modelContext && rejected.liveContext == completed.liveContext,"Chat+1 rejects before changing full prefix")
+        let flushed = try run("pending_committed",.generate(operation:2,tokens:[],maximum:0,stops:[]))
+        try require(flushed.history == 512 && flushed.evaluated == 512 && flushed.pending == 0
+            && flushed.ids.isEmpty && flushed.savedPrefix == expected,"raw diagnostic flush after completed Chat")
+        let scored = try run("full_context_score",.score(target:0))
+        try require(scored.score?.evaluated == 512,"full-context scalar diagnostic available")
+        worker.close()
+        try require(worker.waitUntilClosed(seconds:30) && worker.snapshot().workerFinished,"Chat-window worker closes and joins")
+        let closed = worker.snapshot(); try record("closed",closed)
+        try require(!closed.hasModel && !closed.hasSession,"Chat native owners released")
+        try stream.synchronize(); try stream.close()
+        print("TOKLET_CHAT_WINDOW_JSON={\"passed\":true,\"rendered_input\":385,\"output\":127,\"history\":512,\"normal_stops_preserved\":true,\"overflow_prefix_preserved\":true,\"closed\":true,\"numerical_qualification\":false}")
+    }
     static func main() throws {
         guard CommandLine.arguments.count >= 3 else { throw NativeContextFailure("Expected --fixture PATH or --model PATH OUTPUT") }
         if CommandLine.arguments[1] == "--fixture" { try fixture(CommandLine.arguments[2]) }
@@ -276,6 +354,12 @@ struct ContextIntegrationMain {
         } else if CommandLine.arguments[1] == "--raw-window", CommandLine.arguments.count == 4 {
             let output = URL(fileURLWithPath:CommandLine.arguments[3]); try FileManager.default.createDirectory(at:output,withIntermediateDirectories:false)
             try rawWindow(CommandLine.arguments[2],output)
+        } else if CommandLine.arguments[1] == "--prepare-chat-window", CommandLine.arguments.count == 4 {
+            let output = URL(fileURLWithPath:CommandLine.arguments[3]); try FileManager.default.createDirectory(at:output,withIntermediateDirectories:false)
+            try prepareChatWindow(CommandLine.arguments[2],output)
+        } else if CommandLine.arguments[1] == "--chat-window", CommandLine.arguments.count == 5 {
+            let output = URL(fileURLWithPath:CommandLine.arguments[4]); try FileManager.default.createDirectory(at:output,withIntermediateDirectories:false)
+            try chatWindow(CommandLine.arguments[2],URL(fileURLWithPath:CommandLine.arguments[3]),output)
         } else { throw NativeContextFailure("Unknown context integration mode") }
     }
 }

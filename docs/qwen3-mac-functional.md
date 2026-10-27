@@ -90,9 +90,39 @@ and the existing CPU worker/context regressions pass. The one real-model process
 peaks at751,109,224 physical/766,738,432 RSS bytes, below6GiB; all four new owned
 UI/build/check groups are absent.
 
-This closes the raw Expert C512 functional gap. **Chat completion at512 positions
-remains open**, along with numerical qualification and full40960 delivery.
+This closes the raw Expert C512 functional gap. Numerical qualification and
+full40960 delivery remain open.
 See the [follow-up receipt](../benchmarks/results/2026-10-27-qwen3-mac-visible-v1.json).
+
+## Completed Chat-worker C512 witness
+
+The remaining Chat boundary now passes through the ordinary app worker and codec.
+An authored long-story conversation was prepared separately using the native
+renderer: exactly385 input IDs and127 requested outputs. Its7,312-byte frozen
+input has SHA
+`0b0aca92794419fc5d1d0cd3488b8b56b31ef409cb29079de717993e328bcd1a`.
+Preparation generated no tokens. Execution consumed those exact bytes/IDs with
+normal Chat stops unchanged; no stop override or post-result prompt tuning.
+
+The one request emits127 visible IDs, terminates at its normal output limit and
+reaches history512/committed511/pending1. Actual admission reports385+127=512.
+Saved tokens exactly equal the frozen rendered IDs plus emitted IDs. Requesting
+128 outputs for the same conversation rejects513 before changing that prefix or
+session facts. A separately labelled raw Continue(0) flush commits the last
+pending token, and the full-context scalar diagnostic is available. Six snapshots
+precede assertions; closure is joined and native owners release.
+
+Strict Swift compilation, existing CPU fixture/context checks and the separately
+prepared input pass. The one Chat process peaks at898,041,080 physical/
+821,886,976 RSS bytes; preparation peaks at813,909,192 physical bytes, each below
+6GiB. All four phase groups exit with source/model/archive/input endpoints
+unchanged. These are functional resources, not a throughput benchmark.
+
+**The bounded experimental C512 Mac functional milestone is complete.** This
+combines the visible recovery/model-switch journey, pinned download/offline path,
+and full Expert and Chat-worker shared-window checks. It is not numerical or
+full40960 qualification. See the
+[Chat receipt](../benchmarks/results/2026-10-27-qwen3-chat-window-v1.json).
 
 ## Existing evidence reused
 
@@ -100,8 +130,9 @@ The unchanged [context integration](context-app-integration.md) already verifies
 385 rendered input plus 127 requested output positions, rejects one additional
 position in both modes without altering the prefix, and checks cancellation,
 suspend/replay, fresh model/session identities and rejected-draft restoration.
-Its Chat admission witness cancels after one output; it is not completed512-position
-Chat execution. The [native C512 trial](qwen3-context512-native.md) supplies separate
+That historical Chat admission witness cancels after one output; the newer
+Chat-worker witness above supplies completed512-position execution. The
+[native C512 trial](qwen3-context512-native.md) supplies separate
 complete cache/chunk/state witnesses while retaining rejected numerical gates.
 
 The bounded audit retains these distinctions. Larger app/codec/output delivery,
