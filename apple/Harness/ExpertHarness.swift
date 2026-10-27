@@ -143,6 +143,8 @@ struct HarnessView: View {
                     Text("Capacity reserves positions for prompt and output together. Prefill chunk sets how many prompt tokens run at once. The numerical cap bounds admitted engine allocations; app and framework memory are additional.").font(.caption).foregroundStyle(.secondary)
                     Button("Load") { load() }.disabled(!idle || store.state.hasModel)
                     Text("Select MLX-format for supported Qwen2/Qwen3, Llama-family and full-attention Mistral artifacts, or use the existing floating/Q4 formats. Choose a complete local artifact folder. The bundled fixture is for integration checks.")
+                    Text(HubProfile.qwen3AccuracyNotice).font(.caption).foregroundStyle(.secondary)
+                        .accessibilityIdentifier("expert-qwen3-support-status")
                 }.disabled(!idle || store.state.hasModel)
                 Section("Raw token generation") {
                     VStack(alignment:.leading) { Text("Prompt or append IDs").font(.caption); TextField("IDs",text:bounded($prompt,262144),axis:.vertical).harnessLiteralInput() }

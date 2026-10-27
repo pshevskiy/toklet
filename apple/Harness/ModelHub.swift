@@ -56,6 +56,8 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer_config.json",bytes:138039,sha256:"e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae"),
             HubFile(name:"special_tokens_map.json",bytes:414,sha256:"6fa06efa2785e450051989a6f8fb4416b10149ded485ddd3f127a40734f5cfd0")])
     static let catalog: [HubProfile] = [.smol,.qwen,.qwen3,.mistral]
+    static let qwen3AccuracyNotice = "The pinned Qwen3-0.6B 8-bit profile is experimental and has not passed Toklet’s accuracy checks."
+    var supportNotice: String? { self == Self.qwen3 ? Self.qwen3AccuracyNotice : nil }
     static func matching(_ query: String) -> [HubProfile] {
         let words = query.split(whereSeparator:{ $0.isWhitespace }).map(String.init)
         return catalog.filter { profile in

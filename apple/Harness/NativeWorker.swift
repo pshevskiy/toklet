@@ -175,6 +175,8 @@ final class NativeWorker: @unchecked Sendable {
         // Clear only while idle, under the same lock as cancel/enqueue. A cancel
         // arriving after this point survives until the request observes it.
         _ = toklet_cancel_set(flag, initiallyCancelled ? 1 : 0, nil)
+        // A previous command's failure is not the status of this accepted work.
+        view.status = 0; view.message = ""
         queued = command
         switch command {
         case .chat, .generate: view.requestStartedUptimeNanoseconds = DispatchTime.now().uptimeNanoseconds

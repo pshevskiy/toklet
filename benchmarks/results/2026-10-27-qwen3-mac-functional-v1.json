@@ -1,0 +1,230 @@
+{
+  "format": "toklet-qwen3-mac-functional-partial-v1",
+  "code_checks_passed": true,
+  "functional_audit_complete": false,
+  "qualified_delivery": false,
+  "profile": {
+    "repository": "mlx-community/Qwen3-0.6B-8bit",
+    "revision": "11de96878523501bcaa86104e3c186de07ff9068",
+    "status": "experimental; accuracy checks not passed",
+    "selected_positions": 512,
+    "declared_positions": 40960
+  },
+  "changes": [
+    "Exact pinned-profile accuracy notice in Models/active Chat/persistent Expert instructions.",
+    "Accepted NativeWorker commands clear prior failure under queue lock; rejected submissions preserve state."
+  ],
+  "sources": {
+    "apple/Harness/ModelHub.swift": {
+      "bytes": 27542,
+      "sha256": "c6c295a0071d53c7c0173d3bd37c13a6a3fc0773309f207edb5cd55ae0db8a72"
+    },
+    "apple/Harness/FriendlyHarness.swift": {
+      "bytes": 38191,
+      "sha256": "165fe83d6a2ca6faedc684bb43308b240e02a4dccf18abd4644f5c8bacd09a94"
+    },
+    "apple/Harness/ExpertHarness.swift": {
+      "bytes": 15342,
+      "sha256": "2bdfd467792dc3bd598596b0f9ecd6f1f76a12e932530259a64ce150a864e9b4"
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "bytes": 37582,
+      "sha256": "6043ab79d490a447861d0753bd8f73d65300cb9ac7af61da481654f6692cff18"
+    },
+    "apple/tests/swift/WorkerChecks.swift": {
+      "bytes": 11449,
+      "sha256": "347b57680485d4539e37200c0b8436476a8a9b54ca202a7b93acd595f0c14874"
+    }
+  },
+  "mac_app": {
+    "path": "artifacts/m8-qwen3-mac-functional-v3/app-build/Toklet.app",
+    "build_identity": {
+      "bytes": 18510,
+      "sha256": "e4d9e8cee48782997f60ed91f11166feefabe898fcf36770769e654a194ca56b"
+    },
+    "strict_swift6": true,
+    "ad_hoc_signature_verified": true
+  },
+  "regression": {
+    "cpu_worker_context_passed": true,
+    "held_valid_retry_clears_error": true,
+    "rejected_busy_submission_preserves_state": true,
+    "literal_prefix": [
+      1,
+      7,
+      13,
+      3
+    ],
+    "prefix_preserved_through_error_retry": true,
+    "successfully_closed_and_joined": true
+  },
+  "ios_sdk_typecheck": true,
+  "phone_contacted": false,
+  "visible_pre_fix_audit": {
+    "labels": [
+      "Models",
+      "Search result",
+      "Active Chat",
+      "Expert instructions"
+    ],
+    "public_search": true,
+    "unsupported_results_marked_unavailable": true,
+    "download_cancel": true,
+    "expert_mode_change_cancels_download": true,
+    "complete_download_bytes": 644927148,
+    "download_loaded": true,
+    "hello_reply": "Hello! How can I assist you today?",
+    "stop_retains_partial_text": true,
+    "overflow": {
+      "passed": true,
+      "conversation_id_unchanged": true,
+      "message_count": 4,
+      "message_objects_identical": true,
+      "entire_3600_byte_draft_restored": true,
+      "after_sha256": "cec13fc2546682f0a2d58da9aff5e69f7a81be1d60735e1d3a3f858e85f4169d",
+      "ui_error": "Conversation is full; start a new chat"
+    },
+    "valid_retry_demonstrated_stale_error": true,
+    "original_sessions_quit_normally": true
+  },
+  "corrected_worker_saved_snapshot": {
+    "reused_snapshot": true,
+    "public_metadata_search_passed": true,
+    "saved_snapshot_verified": true,
+    "native_functional": {
+      "released": true,
+      "passed": true,
+      "cancellationObserved": true,
+      "contextRejectionPreservedPrefix": true,
+      "explicitSendAfterSuspend": true
+    },
+    "offline_controller_network_forbidden": true,
+    "offline_controller_passed": true,
+    "offline_controller_released": true,
+    "hello_reply": "Hello! How can I assist you today?",
+    "process_memory": {
+      "rss": 1005862912,
+      "physical": 932463960
+    },
+    "process_memory_limit": 6442450944
+  },
+  "pre_fix_visible_process_lifetime_physical_peak": 944817664,
+  "performance_qualified": false,
+  "whole_phase_peak_memory_measured": false,
+  "unavailable": [
+    "Visible replay of corrected worker: Mac locked; user asked once to unlock.",
+    "Interactive switch to another model remains unobserved in this bounded audit.",
+    "Completed512-position app execution remains separate from admission/state witnesses."
+  ],
+  "cleanup": {
+    "owned_groups_absent": 26,
+    "idle_lab_app_stopped_with_SIGTERM_after_Mac_lock": true,
+    "termination_exit_code": -15,
+    "termination_is_not_a_passed_UI_replay": true,
+    "cleanup_errors": []
+  },
+  "evidence": {
+    "artifacts/m8-qwen3-mac-functional-v1/build-checks.json": {
+      "bytes": 8165,
+      "sha256": "e6776c57317a77df50009c3f6200c16f7eaf9993ffd4966d567d102834d64e8d"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/app-build/build.json": {
+      "bytes": 18510,
+      "sha256": "a50310f37b2598af0a041b621b278e5b7b636fe01b149ce32d57879562b448df"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/checks-checks.json": {
+      "bytes": 13419,
+      "sha256": "bbbc2c3a5548b8fb51697d289b1b6cf4ff492092283ea176d58dcfc0a35e16dc"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/ios-checks.json": {
+      "bytes": 14015,
+      "sha256": "ad44f16848c1b898f8ad3ac955af5bd77cb175de2b68d587ccfed1e8897575f9"
+    },
+    "artifacts/m8-qwen3-mac-functional-v2/ios-checks.json": {
+      "bytes": 11571,
+      "sha256": "7fa5cfd41a3a1ef940d5e06ea3edeee15d70ca48a0219da3d17089c9541cb92a"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/ui-owner.json": {
+      "bytes": 597,
+      "sha256": "b1978c727b5a298b96f8068015f61f8b72a49ff5c3c3a68b339d046977b4e5ed"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/ui-retry-owner.json": {
+      "bytes": 609,
+      "sha256": "52407c5b819772066818c4c80e1902cfa8245a67caf13e59016c1e17bbc3b7d6"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/download-memory.json": {
+      "bytes": 472,
+      "sha256": "7bc28ef695ac34afd3ad20622c7a56fa75ec7846359984c7ba38b5a0b446f436"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/generated-memory.json": {
+      "bytes": 569,
+      "sha256": "0914e05071172fce8a99344eca3c12a7ea776ce5759eab98525840fc8503a97e"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/before-overflow-history.json": {
+      "bytes": 1323,
+      "sha256": "9ff2185acb514a80b5cd5d3b9294fb61b042f8c1e0541a2b5af3d42fb7ec1dae"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/overflow-observation.json": {
+      "bytes": 302,
+      "sha256": "cb2c6c0a0523e477375fbcecdd3ce6ecc09b3924ad580acd0003dda2435a658c"
+    },
+    "artifacts/m8-qwen3-mac-functional-v3/build-checks.json": {
+      "bytes": 8355,
+      "sha256": "0404312fc6fb6a06e662beda6bea3f1b0e454fad32fa4c8e67a4338ed6b11c4b"
+    },
+    "artifacts/m8-qwen3-mac-functional-v3/app-build/build.json": {
+      "bytes": 18510,
+      "sha256": "e4d9e8cee48782997f60ed91f11166feefabe898fcf36770769e654a194ca56b"
+    },
+    "artifacts/m8-qwen3-mac-functional-v3/ios-checks.json": {
+      "bytes": 11779,
+      "sha256": "c9e0ca2164cd9421ae1952cf40317b3d3a9ee6c98dc90e1ee7c79c598c76d952"
+    },
+    "artifacts/m8-qwen3-mac-functional-v3/ui-owner.json": {
+      "bytes": 610,
+      "sha256": "35d16ad84c2a91aeda49321d8df1f14f4ce4aa1cbf28ef2dd3dcb1ab6a360fd9"
+    },
+    "artifacts/m8-qwen3-mac-functional-v3/ui-cleanup-intent.json": {
+      "bytes": 413,
+      "sha256": "afd65f884c35b600b1cd496643b81c5045d722ea0e23ed54fd580dadf968cb6a"
+    },
+    "artifacts/m8-qwen3-mac-functional-v4/checks-checks.json": {
+      "bytes": 20522,
+      "sha256": "47578ce3d6d8c55fa2bb1db1480d6bd47de673372a088bfb1a6fc480dfb7015b"
+    },
+    "artifacts/m8-qwen3-mac-functional-v4/ios-checks.json": {
+      "bytes": 11772,
+      "sha256": "4c64325cd55ac484a1dd8208418470002c29d8ef3343c9c399019da7380d4e4b"
+    },
+    "artifacts/m8-qwen3-mac-functional-v4/offline-checks.json": {
+      "bytes": 4170,
+      "sha256": "a19265dea843e79759a2eea2770e814e92f987b83ada7652d3186dff5c602b83"
+    },
+    "artifacts/m8-qwen3-mac-functional-v4/worker-context-controls.stdout": {
+      "bytes": 190,
+      "sha256": "db7699b600033f7ac21270acc00ee22abc12c51298caedd4c2c77b7fa2a64183"
+    },
+    "artifacts/m8-qwen3-mac-functional-v4/offline.stdout": {
+      "bytes": 1835,
+      "sha256": "8f1c29218c2bfed1d09bb65e410929b08a39df70507d6a299d64e0e77fcd5037"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/ui.stdout": {
+      "bytes": 733,
+      "sha256": "e60359b81efef9c35785ea1e80ee54eb8bd02f2aa29c42d5949bcaad8a1ffdb0"
+    },
+    "artifacts/m8-qwen3-mac-functional-v1/ui-retry.stdout": {
+      "bytes": 726,
+      "sha256": "c9025bd65c6993fcc9c1b7d3713614e82438715bc12e21c926660a2fc2fad921"
+    },
+    "artifacts/m8-qwen3-mac-functional-v3/ui.stdout": {
+      "bytes": 271,
+      "sha256": "8b2c8bbcc72c5ce500e2cee34646101ac64ed801bee787760d6e224a785e942a"
+    }
+  },
+  "numerical_validation_inputs_opened": false,
+  "numerical_gates_changed": false,
+  "numerical_rust_code_changed": false,
+  "context_or_output_caps_raised": false,
+  "historical_numerical_qualification_still_rejected": true,
+  "review": "Astra reviewed pinned-profile wording, worker acceptance lock placement and strengthened prefix/shutdown regression; no production/regression blockers. Publication review before selective commit."
+}

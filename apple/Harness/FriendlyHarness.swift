@@ -253,6 +253,10 @@ struct FriendlyHarnessView: View {
             RuntimeMonitorView(store:store)
             if chat.hasChatModel, let context = store.state.modelContext {
                 ContextWindowSummary(model:context).font(.caption)
+                if let notice = activeHubProfile?.supportNotice {
+                    Text(notice).font(.caption).foregroundStyle(.secondary)
+                        .accessibilityIdentifier("chat-model-support-status")
+                }
             }
             if typeSize.isAccessibilitySize {
                 VStack(alignment:.leading) { dashboardActions }
@@ -460,6 +464,10 @@ struct FriendlyHarnessView: View {
                 .font(.caption).foregroundStyle(.secondary)
             Text("Memory allowance needed to open: " + RuntimeMonitorView.bytes(profile.processAllowance))
                 .font(.caption).foregroundStyle(.secondary)
+            if let notice = profile.supportNotice {
+                Text(notice).font(.caption).foregroundStyle(.secondary)
+                    .accessibilityIdentifier("hub-support-" + profile.key)
+            }
             if hub.discoveredModels.contains(where:{ $0.id == profile.repository }) {
                 Text("Found on Hugging Face").font(.caption).foregroundStyle(.secondary)
             }

@@ -133,6 +133,48 @@ func runWorkerChecks(directory: String, metal: Bool, mlx: Bool = false) throws -
     let releaseDeadline = Date(timeIntervalSinceNow: 5)
     while weakOwner != nil && Date() < releaseDeadline { Thread.sleep(forTimeInterval:0.002) }
     try expect(weakOwner == nil,"Worker/thread retain cycle after close")
+    try checkQueuedErrorRecovery(directory:directory,metal:metal,mlx:mlx)
     return WorkerCheckResult(passed:true,backend:mlx ? "metal-mlx" : (metal ? "metal" : "cpu"),states:states,timingChecks:timingChecks,tokens:ids,
                              closed:true,released:true,physicalDeviceQualified:false)
+}
+
+// Hold a valid retry in the queue so an old failure cannot disappear merely
+// because the new command finished before the UI observed its busy snapshot.
+private func checkQueuedErrorRecovery(directory: String, metal: Bool, mlx: Bool) throws {
+    let entered = DispatchSemaphore(value:0), proceed = DispatchSemaphore(value:0)
+    let worker = try NativeWorker(captureSavedPrefix:true,beforeCommandDequeue:{ command in
+        if case .score(let target) = command, target == 47 {
+            entered.signal(); _ = proceed.wait(timeout:.now()+30)
+        }
+    })
+    defer { proceed.signal(); worker.close(); _ = worker.waitUntilClosed(seconds:30) }
+    var settings = NativeSettings(directory:directory); settings.metal = metal; settings.mlx = mlx
+    try expect(worker.submit(.load(settings)),"Recovery load queued")
+    let loaded = try settled(worker)
+    try expect(loaded.status == 0,"Recovery model loaded")
+    try expect(worker.submit(.generate(operation:0,tokens:[1,7,13,3],maximum:0,stops:[])),"Recovery prefix queued")
+    let prefixed = try settled(worker)
+    try expect(prefixed.status == 0 && prefixed.savedPrefix == [1,7,13,3],"Recovery prefix committed")
+    try expect(worker.submit(.score(target:UInt32.max)),"Invalid score queued")
+    let failed = try settled(worker)
+    try expect(failed.status != 0 && !failed.message.isEmpty,"Previous failure is observable")
+    try expect(worker.submit(.score(target:47)),"Valid retry queued")
+    try expect(entered.wait(timeout:.now()+30) == .success,"Valid retry held before execution")
+    let queued = worker.snapshot()
+    try expect(queued.busy && queued.status == 0 && queued.message.isEmpty,"Queued retry clears stale failure")
+    try expect(queued.history == failed.history && queued.evaluated == failed.evaluated
+               && queued.pending == failed.pending,"Queue preserves token counts")
+    try expect(!worker.submit(.reset),"Busy worker rejects replacement")
+    let rejected = worker.snapshot()
+    try expect(rejected.busy == queued.busy && rejected.status == queued.status && rejected.message == queued.message
+               && rejected.history == queued.history && rejected.evaluated == queued.evaluated
+               && rejected.pending == queued.pending,"Rejected submission preserves queued state")
+    proceed.signal()
+    let completed = try settled(worker)
+    try expect(completed.status == 0 && completed.message.isEmpty && completed.score?.target == 47,"Valid score retry completes")
+    try expect(prefixed.savedPrefix == failed.savedPrefix && completed.savedPrefix == prefixed.savedPrefix
+               && completed.history == prefixed.history && completed.evaluated == prefixed.evaluated
+               && completed.pending == prefixed.pending,"Retry preserves the original token prefix")
+    worker.close()
+    try expect(worker.waitUntilClosed(seconds:30) && worker.snapshot().workerFinished,"Recovery worker closes and joins")
 }

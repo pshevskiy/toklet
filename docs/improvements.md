@@ -5925,3 +5925,36 @@ journey. Functional success cannot imply qualified Q1–Q5 delivery. Rust numeri
 code and its preceding complete checks remain unchanged. See
 [the report](qwen3-output-screen.md) and
 [evidence](../benchmarks/results/2026-10-27-qwen3-output-screen-v1.json).
+
+## 2026-10-27 — Truthful Qwen3 app status and stale retry error repaired
+
+The pinned Qwen3-0.6B eight-bit profile now has an explicit experimental accuracy
+notice in Models, active Chat and persistent Expert instructions. Other model
+rows/active profiles do not inherit the notice. Actual Mac inspection verifies
+Models/search/Chat/Expert visibility while preserving the separate40960 model
+declaration and512 selected positions.
+
+The bounded audit finds and fixes a real error-state defect: a valid retry
+streams while the old “Conversation is full” error remains visible. Accepted
+commands now clear status/message under the queue lock; rejected submissions
+preserve state. A deterministic held-dequeue regression proves immediate error
+clearing, busy rejection, exact literal prefix preservation across failure/retry
+and explicit successful worker closure. Existing CPU worker/context and Hub
+checks, strict Mac compilation/signature verification and iOS typechecking pass.
+
+The isolated Mac journey completes public search and the644927148-byte pinned
+download, opens Qwen3, replies, stops with a valid partial response, and rejects
+a3600-byte oversized draft without altering four existing message objects or
+losing the draft. The current corrected-worker self-test reuses that snapshot;
+its offline controller forbids network while opening/chatting/unloading. Context
+rejection, cancellation and explicit Send after suspend pass. Process physical
+peak932463960/RSS1005862912 bytes fit6GiB; pre-fix visible-process lifetime peak
+944817664 bytes is separate, without a performance or whole-phase claim.
+
+Astra reviews code and the strengthened regression. Mac lock prevents final
+visible fix replay and interactive cross-model switching; those remain open,
+and the user is asked once to unlock. No new numerical validation, precision
+change, gate expansion, context increase or phone qualification follows. The
+initial incomplete iOS check invocation is preserved. See
+[the report](qwen3-mac-functional.md) and
+[evidence](../benchmarks/results/2026-10-27-qwen3-mac-functional-v1.json).
