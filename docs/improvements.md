@@ -1,6 +1,6 @@
 # Toklet improvement record
 
-Updated 27 October 2026. This records implemented capabilities, measured benefits,
+Updated 28 October 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
@@ -6086,3 +6086,44 @@ is unused. CompensatedReference is excluded from this target. Qualification is
 pending execution and final Astra review; defaults and C512 app admission do not
 change. Full40960 support and independent iPhone qualification remain open.
 See [the profile](qwen3-native-profile.md) and [active plan](qwen3-mac-delivery-plan.md).
+
+## 2026-10-28 — Native Qwen3 C512 conformance and complete quality accepted
+
+The frozen Reference-attention native profile passes current-build qualification
+on the M1 Pro Mac. All18688 analytical Half outputs, unchanged affine/gather and
+tiny/real short graph gates pass. Eight reserved boundary cases from three texts
+produce4350 finite row hashes across chunk32/128, with five exact nested prefixes,
+16 cached/replay checks and32 exact atomic capacity rejections. No global
+CPU-trajectory tolerance or near-tie exception is introduced.
+
+The current full10000-target loss journal is byte-identical to the old native
+collection. All100 tasks/5640 events agree after excluding only five named timing
+fields and readiness resource observations; every deterministic output, stop and
+accounting field matches. The authenticated baseline and exact graded programs
+therefore apply without running generated code again. Mean loss remains3.25264908
+versus3.24864501, increase0.00400406≤0.05. Strict tasks remain3/100 versus5/100,
+exactly the permitted two-case loss and weak absolute quality.
+
+Formatting, strict default/Metal Clippy,369 default CPU tests,243 nonignored
+Metal-feature library tests and six portable bridge controls pass; overlapping
+counts are not summed as unique tests. Eleven explicit GPU tests pass. All282
+frozen bindings,73 evidence pins and nine reader endpoints pass;20 successful
+owned groups close. The highest-physical native process records1126778152 bytes
+physical/898793472 RSS; maximum native RSS is validation's1059946496 bytes. Native
+loss1033094368/1039745024, tasks864945280/873529344, reader41976360/51658752.
+Native6GiB and reader512MiB bounds hold; no throughput claim follows.
+
+Astra independently audits the contract, code, analytical values, validation and
+full quality/output ownership, and accepts scoped native-profile C512. Both
+historical trajectory-fidelity contracts remain rejected; CompensatedReference,
+useful instruction quality, full40960 and iPhone are unqualified by this result.
+Defaults and app capacity remain unchanged. The improvement is a justified native
+qualification and current-candidate binding, not a faster or wider engine.
+
+The historical CLI was restored byte-exact after Cargo's integration build
+unexpectedly rebuilt it; all successful builds use a private target. A blocked
+memory observer after a passed CPU suite is retained separately from its completed
+permitted retry. No numerical/data/threshold changes follow these failures.
+See [the profile](qwen3-native-profile.md),
+[evidence](../benchmarks/results/2026-10-28-qwen3-native-profile-v1.json) and
+[Astra's next full-window design](qwen3-full-window-plan.md).

@@ -1,0 +1,265 @@
+"""Owned native-profile preparation, conformance and complete quality bridge."""
+from pathlib import Path
+import hashlib
+import json
+import os
+import re
+import signal
+import sys
+
+R = Path.cwd()
+O = Path(__file__).resolve().parent
+sys.path.insert(0, str(R / 'tools/experiments'))
+import m7_apple_package as p
+sys.path.insert(0, str(R / 'tools/bench'))
+import qwen3_native_continuity as bridge
+
+PROFILE = R / 'benchmarks/qwen3-native-profile-v1/contract.json'
+PROFILE_SHA = '05c6046c10945b637735c9a86de82d17f42372dd6e0fec1124b22c4ff47afb24'
+PRIOR = R / 'benchmarks/results/2026-10-27-qwen3-full-quality-v1.json'
+PRIOR_SHA = '601c5c6d47af6dba4af7fdcc3b654c06a50906d8f2fde2f6f4a0619c2b2c2f33'
+QUALITY_INPUTS = R / 'artifacts/m8-qwen3-quality-inputs-v1/inputs'
+PROTECTED = {'target/release/toklet': '5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59',
+             'target/release/examples/cpu_bench': 'e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea'}
+
+
+def pin(path):
+    path = Path(path)
+    def identity(value):
+        return value.st_dev, value.st_ino, value.st_mode, value.st_size, value.st_mtime_ns, value.st_ctime_ns
+    before = path.stat()
+    with path.open('rb') as stream:
+        digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+        assert identity(os.fstat(stream.fileno())) == identity(before)
+    assert identity(path.stat()) == identity(before)
+    return dict(bytes=before.st_size, sha256=digest)
+
+
+def write(name, value):
+    with (O / name).open('x') as stream:
+        json.dump(value, stream, indent=2, allow_nan=False)
+        stream.write('\n')
+
+
+def absent(pid):
+    for value in (pid, -pid):
+        try:
+            os.kill(value, 0)
+        except ProcessLookupError:
+            continue
+        raise RuntimeError('Owned process/group remains: ' + str(value))
+
+
+def memory(path, limit):
+    values = {name: int(value) for value, name in re.findall(
+        r'^\s*(\d+)\s+(maximum resident set size|peak memory footprint)\s*$', path.read_text(), re.M)}
+    assert len(values) == 2 and all(0 < value <= limit for value in values.values()), values
+    return values
+
+
+def main():
+    phase = sys.argv[1]
+    assert phase in ('prepare', 'execute')
+    result = dict(passed=False, native_profile_qualified=False, commands=[], outputs={},
+                  error=None, endpoint_errors=[], historical_fidelity_rejected=True,
+                  full_model_window_qualified=False, default_or_capacity_changed=False)
+    env, _ = p.build_environment()
+    env.update(PATH='/opt/homebrew/bin:' + env['PATH'], RUSTC='/opt/homebrew/bin/rustc',
+               RUSTDOC='/opt/homebrew/bin/rustdoc', CARGO_TARGET_DIR=str(O / 'target'),
+               CARGO_NET_OFFLINE='true', PYTHONHASHSEED='0')
+    assert pin(PROFILE)['sha256'] == PROFILE_SHA
+    assert pin(PRIOR)['sha256'] == PRIOR_SHA
+    if phase == 'prepare':
+        paths = {*p.numerical_sources(), *(R / 'tests').glob('*.rs'),
+                 R / 'examples/qwen3_quality.rs', R / 'examples/support/loss.rs',
+                 R / 'tools/bench/qwen3_native_continuity.py',
+                 R / 'tools/bench/test_qwen3_native_continuity.py', PROFILE, PRIOR,
+                 Path(__file__).resolve(), O / 'continuity_worker.py', Path(p.__file__).resolve()}
+        paths |= {Path('/opt/homebrew/bin/' + name).resolve() for name in ('cargo', 'rustc', 'rustdoc')}
+        paths.add(Path(sys.executable).resolve())
+        paths |= {Path(module.__file__).resolve() for name, module in sys.modules.items()
+                  if (name == 'json' or name.startswith('json.') or name in ('math', '_json', '_hashlib', 'hashlib'))
+                  and getattr(module, '__file__', None)}
+        for folder in ('mlx-qwen3-v1', 'mlx-qwen3-real-v1', 'qwen3-attention-inputs-v1', 'mlx-affine-v1'):
+            paths |= {path for path in (R / 'tests/fixtures' / folder).rglob('*') if path.is_file()}
+        paths |= {R / 'benchmarks/qwen3-context-candidate-v2/manifest.json'}
+        bindings = {str(path): pin(path) for path in sorted(paths)}
+        prior = json.loads(PRIOR.read_bytes())
+        assert prior['decision']['complete'] is True
+        assert prior['decision']['loss_passed'] is True and prior['decision']['tasks_passed'] is True
+        assert prior['scope']['full_quality_workload_completed'] is True
+        # Historical captures and grading are immutable evidence, not an assertion
+        # that all old production-source hashes match the changed current build.
+        for name, wanted in prior['raw_evidence'].items():
+            path = R / name
+            assert pin(path) == wanted, name
+            bindings[str(path)] = wanted
+        for name, wanted in prior['source_files'].items():
+            assert pin(R / name) == wanted, name
+            bindings[str(R / name)] = wanted
+        quality = R / 'benchmarks/qwen3-quality-v1/manifest.json'
+        q = json.loads(quality.read_bytes())
+        assert pin(quality)['sha256'] == prior['input_manifest_sha256']
+        bindings[str(quality)] = pin(quality)
+        assert pin(QUALITY_INPUTS / 'manifest.json') == pin(quality)
+        bindings[str(QUALITY_INPUTS / 'manifest.json')] = pin(quality)
+        for name, wanted in q['files'].items():
+            path = QUALITY_INPUTS / name
+            assert pin(path) == wanted, name
+            bindings[str(path)] = wanted
+        profile = json.loads(PROFILE.read_bytes())
+        for name, wanted in profile['model']['files'].items():
+            path = R / 'models/MLX-Qwen3-0.6B-8bit-11de968' / name
+            assert pin(path)['sha256'] == wanted, name
+            bindings[str(path)] = pin(path)
+    else:
+        frozen_path = O / 'execution.json'
+        raw = frozen_path.read_bytes()
+        assert len(raw) <= 8*1024**2 and hashlib.sha256(raw).hexdigest() == sys.argv[2]
+        frozen = json.loads(raw)
+        bindings = dict(frozen['bindings'])
+        bindings[str(frozen_path)] = dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+        prior = json.loads(PRIOR.read_bytes())
+        result['execution'] = bindings[str(frozen_path)]
+
+    def guard():
+        for name, wanted in bindings.items():
+            assert pin(name) == wanted, name
+        for name, wanted in PROTECTED.items():
+            assert pin(R / name)['sha256'] == wanted, name
+
+    def invoke(name, argv, child_env=env, timeout=1800, measured=False):
+        guard()
+        command = p.owned(argv, O / (name + '.stdout'), O / (name + '.stderr'),
+                          child_env, timeout, cleanup_timeout=60)
+        result['commands'].append(command)
+        for stream in ('stdout', 'stderr'):
+            result['outputs'][str(R / command[stream])] = pin(R / command[stream])
+        guard()
+        absent(command['pid'])
+        assert command['exit_code'] == 0 and command['primary_error'] is None and not command['cleanup_errors'], command
+        if measured:
+            command['memory'] = memory(R / command['stderr'], 6*1024**3)
+        print(json.dumps(dict(completed=name, pid=command['pid'])), flush=True)
+        return command
+
+    old = {item: signal.signal(item, p.interrupted) for item in (signal.SIGINT, signal.SIGTERM)}
+    try:
+        guard()
+        if phase == 'prepare':
+            cargo = '/opt/homebrew/bin/cargo'
+            jobs = [('fmt', ['fmt', '--check']),
+                    ('clippy', ['clippy', '--offline', '--all-targets', '--', '-D', 'warnings']),
+                    ('metal-clippy', ['clippy', '--offline', '--all-targets', '--features', 'metal', '--', '-D', 'warnings']),
+                    ('cpu-tests', ['test', '--offline']),
+                    ('gpu-build', ['test', '--offline', '--release', '--features', 'metal', '--lib',
+                        '--test', 'mlx_metal', '--test', 'mlx_qwen3_metal', '--test', 'mlx_qwen3_real_model_metal',
+                        '--test', 'qwen3_native_profile_metal', '--no-run']),
+                    ('quality-build', ['build', '--offline', '--release', '--features', 'metal', '--example', 'qwen3_quality'])]
+            for name, args in jobs:
+                invoke(name, [cargo, *args])
+            binaries = {}
+            text = (O / 'gpu-build.stderr').read_text()
+            for key, pattern in [('unit', r'Executable unittests src/lib.rs \(([^)]+)\)'),
+                    *[(name, r'Executable tests/' + name + r'.rs \(([^)]+)\)')
+                      for name in ('mlx_metal', 'mlx_qwen3_metal', 'mlx_qwen3_real_model_metal', 'qwen3_native_profile_metal')]]:
+                found = re.findall(pattern, text)
+                assert len(found) == 1, (key, found)
+                binaries[key] = str(R / found[0])
+                assert Path(binaries[key]).is_relative_to(O / 'target/release/deps')
+            binaries['quality'] = str(O / 'target/release/examples/qwen3_quality')
+            for path in binaries.values():
+                bindings[path] = pin(path)
+            invoke('continuity-unit', ['/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12',
+                '-I', '-S', '-B', '-c', "import sys,unittest;sys.path.insert(0,'tools/bench');import test_qwen3_native_continuity as t;r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(t));sys.exit(not r.wasSuccessful())"])
+            frozen = dict(profile=pin(PROFILE), bindings=bindings, binaries=binaries,
+                supported_chunks=[32, 128], supported_readbacks=['FullLogits', 'GreedyToken'],
+                quality_comparison=dict(excluded_task_report_fields=sorted(bridge.TIMINGS),
+                    excluded_ready_resource_fields=sorted(bridge.READY_RESOURCES),
+                    all_other_protocol_fields='exact canonical JSON; complete target/task coverage required'),
+                historical_quality=pin(PRIOR), validation_arrays_opened=False,
+                fidelity_rejections_preserved=True)
+            write('execution.json', frozen)
+            result['execution'] = pin(O / 'execution.json')
+        else:
+            binary = frozen['binaries']
+            def gpu(name, key, tests, extra_env=None):
+                argv = ['/usr/bin/time', '-l', binary[key], *tests, '--ignored', '--nocapture', '--test-threads=1']
+                command = invoke(name, argv, dict(env, **(extra_env or {})), measured=True)
+                counts = re.findall(r'^test result: ok\. (\d+) passed; (\d+) failed; (\d+) ignored;',
+                                    (O / (name + '.stdout')).read_text(), re.M)
+                assert counts == [('3' if name == 'tiny-graphs' else '1', '0', '0')], counts
+                return command
+            gpu('rms-shapes', 'unit', ['metal::native_profile::rms_qwen3_shapes', '--exact'])
+            gpu('attention-shapes', 'unit', ['metal::native_profile::reference_attention_qwen3_shapes', '--exact'])
+            gpu('affine-gather', 'mlx_metal', ['resident_affine_and_embedding_match_all_pinned_storage_cases', '--exact'])
+            gpu('tiny-graphs', 'mlx_qwen3_metal', [])
+            gpu('real-short-graph', 'mlx_qwen3_real_model_metal', ['gpu::native_mlx_qwen3_real_graph_matches_prefrozen_cpu_reference', '--exact'])
+            gpu('real-pending', 'mlx_qwen3_real_model_metal', ['gpu::native_mlx_qwen3_real_generation_callbacks_preserve_pending_state', '--exact'])
+            gpu('real-readback', 'mlx_qwen3_real_model_metal', ['gpu::native_mlx_qwen3_real_cached_and_token_only_execution', '--exact'])
+            gpu('quality-boundary', 'mlx_qwen3_real_model_metal', ['gpu::native_qwen3_quality_diagnostic_1025_preserves_boundaries_and_pending_state', '--exact'])
+            gpu('validation', 'qwen3_native_profile_metal', ['native_profile_validation_rows_and_state', '--exact'],
+                dict(TOKLET_NATIVE_PROFILE_OUTPUT=str(O / 'validation-output')))
+            collections = dict(execution=result['execution'], modes={})
+            for mode, input_name in [('loss', 'held_out_loss.u32le'), ('tasks', 'execution.jsonl')]:
+                invoke('native-' + mode, ['/usr/bin/time', '-l', binary['quality'],
+                    str(R / 'models/MLX-Qwen3-0.6B-8bit-11de968'), mode,
+                    str(QUALITY_INPUTS / input_name)], timeout=3600, measured=True)
+                historical = R / 'artifacts/m8-qwen3-full-quality-v2' / ('native-' + mode + '.stdout')
+                collections['modes'][mode] = dict(current=pin(O / ('native-' + mode + '.stdout')),
+                    historical=dict(path=str(historical), identity=frozen['bindings'][str(historical)]))
+            write('collections.json', collections)
+            collection_pin = pin(O / 'collections.json')
+            bindings[str(O / 'collections.json')] = collection_pin
+            command = invoke('continuity-reader', ['/usr/bin/time', '-l',
+                '/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12', '-I', '-S', '-B',
+                str(O / 'continuity_worker.py'), collection_pin['sha256'], str(collection_pin['bytes'])], timeout=180)
+            command['memory'] = memory(O / 'continuity-reader.stderr', 512*1024**2)
+            continuity = json.loads((O / 'continuity.json').read_bytes())
+            assert continuity['complete'] and continuity['error'] is None and not continuity['endpoint_errors']
+            result['quality_continuity'] = continuity['modes']
+            result['native_profile_qualified'] = continuity['identical'] is True
+            assert result['native_profile_qualified'], 'quality continuity changed; preserve output for separate Astra investigation/grading'
+        result['passed'] = True
+    except BaseException as error:
+        result['error'] = type(error).__name__ + ': ' + str(error)
+    finally:
+        # Retain partial generated evidence even when producer completion fails.
+        paths = [*O.glob('*.stdout'), *O.glob('*.stderr'), O / 'continuity.json', O / 'collections.json']
+        paths += list((O / 'validation-output').glob('*'))
+        for path in paths:
+            try:
+                if not path.exists():
+                    continue
+                assert path.is_file() and not path.is_symlink(), path
+                actual = pin(path)
+                previous = result['outputs'].get(str(path))
+                assert previous is None or previous == actual, path
+                result['outputs'][str(path)] = actual
+            except BaseException as error:
+                result['endpoint_errors'].append('retention: ' + str(error))
+        try:
+            guard()
+        except BaseException as error:
+            result['endpoint_errors'].append(str(error))
+        for command in result['commands']:
+            try:
+                absent(command['pid'])
+            except BaseException as error:
+                result['endpoint_errors'].append(str(error))
+        if result['endpoint_errors']:
+            result['passed'] = result['native_profile_qualified'] = False
+        write(phase + '.json', result)
+        for item, handler in old.items():
+            signal.signal(item, handler)
+    print(json.dumps({key: result[key] for key in ('passed', 'native_profile_qualified', 'error', 'endpoint_errors')}), flush=True)
+    return 0 if result['passed'] else 1
+
+
+if __name__ == '__main__':
+    try:
+        status = main()
+    except BaseException as error:
+        write('preflight-failure.json', dict(passed=False, error=type(error).__name__ + ': ' + str(error)))
+        raise
+    sys.exit(status)

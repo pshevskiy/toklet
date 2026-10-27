@@ -1,4 +1,4 @@
-# Qwen3 Mac delivery queue — 27 October 2026
+# Qwen3 Mac delivery queue — 28 October 2026
 
 The human requested Qwen3 on Mac first, completion of the existing source
 experiment, Astra review of each code task, commits after checks pass, and an
@@ -24,7 +24,7 @@ Current app admission/context facts and lifecycle integration already exist
 ([L3 evidence](context-app-integration.md)). Current C512 cache/state schedules
 pass their witnesses. On27 October the human approved the
 [native arithmetic profile](qwen3-native-profile.md) as the qualification target;
-current-build conformance and quality continuity are in progress. Historical
+current-build conformance and complete quality continuity now pass. Historical
 CPU-trajectory fidelity remains rejected. The
 [experimental envelope](../tests/fixtures/qwen3-context-gates-v2/README.md) is
 rejected for qualification and cannot authorize validation or larger app limits.
@@ -34,10 +34,10 @@ rejected for qualification and cannot authorize validation or larger app limits.
 | Task | Deliverable and decision gate | Current state |
 | --- | --- | --- |
 | Q1 — finish the source experiment | Two cold original-source captures, original bits/exact FP32 widening/full readbacks, then distributions, argmax/margins and diagnostic loss against both saved CPU profiles. | Complete. [Source experiment](qwen3-quantized-source.md):204201984 values per set, BF16 output,1344 compared rows/1338 diagnostic targets. |
-| Q2 — precision decision | Choose one bounded implementation outcome and state qualification separately. Source parity cannot replace an unquantized quality baseline. | Complete: retain native Half unchanged **only as an experimental candidate**; reject current C512 qualification. No BF16 switch, adoption or gate expansion. |
-| Q3 — diagnostic1025 and complete quality | Diagnostic-only1025 capacity/state checks, frozen checkpoint-specific inputs/candidate/policy, pinned original BF16 baseline, all10000 loss targets and100 tasks per profile, isolated grading and unchanged0.05-nat/2-percentage-point limits. App limits stay fixed. | Complete. [Full comparison](qwen3-full-quality.md): loss increase0.00400406; strict tasks3/100 versus5/100, exactly the two-case limit. Retain experimental Half only. Weak absolute quality and rejected C512 numerics remain explicit. |
-| Q4 — qualify the retained native precision/context profile | Human-approved [native-profile v1](qwen3-native-profile.md): frozen Reference attention, unchanged independent operator/graph gates, exact state/schedule validation and complete current-native quality continuity under original0.05-nat/2-percentage-point limits. Strict trajectory fidelity remains a separate rejected result. | Contract frozen with Astra; current-build tests and complete replay in progress. Eight reserved cases execute only after code/binary/expectations review. No default or capacity increase precedes acceptance; no transfer to CompensatedReference. |
-| Q5 — usable Qwen3 Mac milestone | Complete Chat, Expert and the supported pinned HF search/import/download/offline-reopen journey for this admitted profile. Verify long input/reply, shared budgets, cancellation/resume, model switching, truthful limits and whole-process memory. Reuse L3; retain a clearly stated partial window until Q6 qualifies more. | [Bounded experimental C512 functional milestone complete](qwen3-mac-functional.md): visible recovery/switching, pinned HF download/offline path, full raw Expert384+128 and normal-stop Chat-worker385+127, exact saved prefix/overflow/closure and memory checks pass. Current native-profile Q4 acceptance remains pending. |
+| Q2 — precision decision | Choose one bounded implementation outcome and state qualification separately. Source parity cannot replace an unquantized quality baseline. | Historical source decision: retain native Half as an experimental candidate and reject the then-current C512 fidelity qualification. No BF16 switch or gate expansion. The separate native-profile Q4 result now qualifies C512 under its approved contract. |
+| Q3 — diagnostic1025 and complete quality | Diagnostic-only1025 capacity/state checks, frozen checkpoint-specific inputs/candidate/policy, pinned original BF16 baseline, all10000 loss targets and100 tasks per profile, isolated grading and unchanged0.05-nat/2-percentage-point limits. App limits stay fixed. | Complete. [Full comparison](qwen3-full-quality.md): loss increase0.00400406; strict tasks3/100 versus5/100, exactly the two-case limit. Historical relative-quality decision retained experimental Half. Q4 now binds the current native profile to those exact full outputs; weak absolute quality and historical fidelity rejection remain explicit. |
+| Q4 — qualify the retained native precision/context profile | Human-approved [native-profile v1](qwen3-native-profile.md): frozen Reference attention, unchanged independent operator/graph gates, exact state/schedule validation and complete current-native quality continuity under original0.05-nat/2-percentage-point limits. Strict trajectory fidelity remains a separate rejected result. | Complete at C512 on M1 Pro: unchanged independent gates and all eight reserved cases pass; full current-native10000-target/100-task replay is identical to the historical quality result. Astra accepts the scoped profile. No default/capacity increase or transfer to CompensatedReference. |
+| Q5 — usable Qwen3 Mac milestone | Complete Chat, Expert and the supported pinned HF search/import/download/offline-reopen journey for this admitted profile. Verify long input/reply, shared budgets, cancellation/resume, model switching, truthful limits and whole-process memory. Reuse L3; retain a clearly stated partial window until Q6 qualifies more. | [Bounded experimental C512 functional milestone complete](qwen3-mac-functional.md): visible recovery/switching, pinned HF download/offline path, full raw Expert384+128 and normal-stop Chat-worker385+127, exact saved prefix/overflow/closure and memory checks pass. The selected native profile now passes Q4; C512 remains partial and larger-window delivery follows Q6. |
 | Q6 — expand the selected model window | Progress through named context/rotary/cache boundaries toward the declared40960 shared positions, including exact boundary and rejected maximum+1, separate long input/continuation, full quality and complete memory/text/UI delivery accounting. | Subsequent expansion; smaller windows remain partial. |
 
 Gemma, additional architectures/optimizations, broader HF compatibility and
@@ -59,8 +59,9 @@ critical path. They are not removed or marked complete.
   it covers a specific missing behavior.
 - Q1's bounded endpoint is the source comparison and Q2 decision. Further
   environment work must be necessary to complete those existing captures.
-- Q1/Q2 are closed. Astra's source review retains the Half implementation as an
-  experimental candidate and rejects current C512 qualification. Q3/Q4 were
+- Q1/Q2 are closed. Astra's historical source review retained Half as an
+  experimental candidate and rejected the then-current C512 fidelity contract.
+  The separately approved native-profile Q4 qualification now passes. Q3/Q4 were
   narrowly reordered to obtain full quality evidence before selecting a new
   precision contract. Quality outcomes cannot tune that contract or its gates.
 - Correctly rounded primitives close their investigations. Schedule-independent
@@ -97,18 +98,18 @@ into a pass or use the rejected calibration envelope.
 
 ## Current critical path and ETA
 
-The human-approved native profile resolves the product-contract question. Q5's
-bounded C512 Mac functionality is complete; Q4 now requires the frozen current
-conformance/state and complete quality-output bridge. Historical fidelity stays
-rejected and does not trigger another operator search.
+The native Reference profile passes current-build conformance/state and the
+complete quality-output bridge. The bounded C512 native-profile milestone and
+existing Mac functionality are complete. Historical fidelity remains rejected;
+weak absolute quality and the partial model window remain explicit.
 
-Astra selected Reference attention, which owns the existing full-quality evidence.
-The current native10000-target/100-task replay needs approximately25 minutes of
-model execution on this Mac, based on the same historical workload, plus builds,
-conformance and final review. This is an estimate for the bounded qualification
-task, not a full40960 or whole-roadmap date. A failure receives Astra investigation
-under the frozen native contract; no outcome-fitted threshold is introduced.
+Follow the [Astra full-window design](qwen3-full-window-plan.md): first scoped
+Qwen3 diagnostic admission and checked resource planning, then boundary/deep-quality
+qualification and bounded real streaming/application delivery. A reviewed patch
+for the first mechanism is prepared without changing the qualified source tree.
+Apply it only after the Q4 task is committed. Preserve ordinary and other-model
+limits until the corresponding qualification authorizes expansion.
 
-Next expand Q6 through explicit context boundaries toward40960, with complete
-quality, memory, text/UI delivery and rejection checks. That full-window scope,
-other architectures and iPhone work still have no reliable completion ETA.
+Measure completed chunk latency at4096 before estimating larger contexts. Source
+BF16 long-cache workspace and full-process memory must be admitted independently.
+Full40960, other architectures and iPhone work have no reliable completion ETA yet.

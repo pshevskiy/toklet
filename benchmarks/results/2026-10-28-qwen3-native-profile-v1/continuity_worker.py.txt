@@ -1,0 +1,88 @@
+"""Measured, bounded exact quality-output bridge. No model or generated code."""
+from pathlib import Path
+import hashlib
+import json
+import os
+import signal
+import stat
+import sys
+
+R = Path.cwd()
+O = Path(__file__).resolve().parent
+sys.path.insert(0, str(R / 'tools/bench'))
+import qwen3_native_continuity as bridge
+
+
+def main():
+    report = dict(complete=False, identical=False, modes=[], parents=[], error=None, endpoint_errors=[])
+    admitted = {}
+    def fields(s):
+        return s.st_dev, s.st_ino, s.st_mode, s.st_size, s.st_mtime_ns, s.st_ctime_ns
+    def read(path, wanted, limit):
+        path = Path(path)
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        with os.fdopen(fd, 'rb') as stream:
+            start = os.fstat(stream.fileno())
+            assert stat.S_ISREG(start.st_mode) and 0 < start.st_size <= limit
+            assert fields(path.lstat()) == fields(start)
+            if str(path) in admitted:
+                assert fields(start) == admitted[str(path)]['identity']
+            raw = stream.read(limit + 1)
+            actual = dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+            assert actual == wanted and len(raw) == start.st_size
+            assert fields(os.fstat(stream.fileno())) == fields(start) == fields(path.lstat())
+            if str(path) not in admitted:
+                audit = dict(path=str(path), identity=fields(start), pin=actual, endpoint_checked=False)
+                admitted[str(path)] = audit
+                report['parents'].append(audit)
+            return raw
+    def stop(number, _):
+        for item in (signal.SIGINT, signal.SIGTERM):
+            signal.signal(item, signal.SIG_IGN)
+        raise InterruptedError(str(number))
+    handlers = {item: signal.signal(item, stop) for item in (signal.SIGINT, signal.SIGTERM)}
+    try:
+        metadata = O / 'collections.json'
+        raw = read(metadata, dict(bytes=int(sys.argv[2]), sha256=sys.argv[1]), 65536)
+        selected = json.loads(raw)
+        assert set(selected['modes']) == {'loss', 'tasks'}
+        execution = O / 'execution.json'
+        raw = read(execution, selected['execution'], 8*1024**2)
+        frozen = json.loads(raw)
+        # Authenticate exact executing reader/comparison/interpreter inputs.
+        for path in (Path(__file__).resolve(), Path(bridge.__file__).resolve(), Path(sys.executable).resolve()):
+            wanted = frozen['bindings'][str(path)]
+            assert read(path, wanted, 32*1024**2)
+        for mode in ('loss', 'tasks'):
+            item = selected['modes'][mode]
+            historical_path = R / 'artifacts/m8-qwen3-full-quality-v2' / ('native-' + mode + '.stdout')
+            assert item['historical']['path'] == str(historical_path)
+            assert item['historical']['identity'] == frozen['bindings'][str(historical_path)]
+            current = read(O / ('native-' + mode + '.stdout'), item['current'], 32*1024**2)
+            historical = read(historical_path, item['historical']['identity'], 32*1024**2)
+            observed = bridge.compare(bridge.parse(current), bridge.parse(historical), mode)
+            report['modes'].append(observed)
+            print(json.dumps(observed), flush=True)
+        report['complete'] = True
+        report['identical'] = all(item['identical'] for item in report['modes'])
+    except BaseException as error:
+        report['error'] = type(error).__name__ + ': ' + str(error)
+    finally:
+        for path, audit in list(admitted.items()):
+            try:
+                read(path, audit['pin'], max(audit['pin']['bytes'], 65536))
+                audit['endpoint_checked'] = True
+            except BaseException as error:
+                report['endpoint_errors'].append(path + ': ' + str(error))
+        if report['endpoint_errors']:
+            report['complete'] = report['identical'] = False
+        with (O / 'continuity.json').open('x') as stream:
+            json.dump(report, stream, indent=2, allow_nan=False)
+            stream.write('\n')
+        for item, handler in handlers.items():
+            signal.signal(item, handler)
+    return 0 if report['complete'] and report['error'] is None else 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

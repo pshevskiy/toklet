@@ -10,6 +10,8 @@ mod half_consistency;
 #[cfg(test)]
 mod half_projection;
 #[cfg(test)]
+mod native_profile;
+#[cfg(test)]
 mod online_attention;
 #[cfg(test)]
 mod q4_v2_projection;
