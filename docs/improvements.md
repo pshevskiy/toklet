@@ -5899,3 +5899,29 @@ on already captured pairs before any untouched numerical validation. Failure
 rejects that contract/candidate pairing without widening or a layer walk.
 See [the report](qwen3-full-quality.md) and
 [evidence](../benchmarks/results/2026-10-27-qwen3-full-quality-v1.json).
+
+## 2026-10-27 — Bounded Qwen3 output screen completed; numerical adoption rejected
+
+The new versioned screen fixes maximum absolute normalized-log-probability
+error0.05 and exact lowest-ID greedy before measuring existing paired native/
+FP64-Half logits. All1024 rows and155582464 vocabulary entries are compared.
+Maximum error0.20223375120124842 rejects the candidate under this contract:
+22 failed case-rows/112068 entries, with overlapping original/future prefixes.
+All1024 greedy IDs agree. The eight numerical-validation inputs stay unopened.
+No dtype switch, gate expansion or further layer walk follows without a concrete
+supported implementation hypothesis. Prior canonical stage rejection remains.
+
+The small saved-data reader reuses existing frame and array ownership checks,
+binds actual numerical/helper/shared-runtime origins and retains per-position
+evidence before aggregate decisions. Thirty cold controls pass, all1996 endpoint
+audits close and both groups exit. Reader physical47104672/RSS93995008 bytes
+fit512MiB. Signal cleanup preserves partial structured reports. Failed sandbox
+memory-counter and zero-byte package-marker admissions remain archived; the
+localized runtime-only marker correction was reviewed before the numerical run.
+
+Astra reviewed code, frozen criterion and measured rejection, then approved one
+independent Q5 audit of the existing experimental C512 Mac Chat/Expert/pinned-HF
+journey. Functional success cannot imply qualified Q1–Q5 delivery. Rust numerical
+code and its preceding complete checks remain unchanged. See
+[the report](qwen3-output-screen.md) and
+[evidence](../benchmarks/results/2026-10-27-qwen3-output-screen-v1.json).

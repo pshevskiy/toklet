@@ -1,0 +1,222 @@
+{
+  "format": "toklet-qwen3-archived-output-screen-result-v1",
+  "diagnostic_completed": true,
+  "numerical_accepted": false,
+  "contract": {
+    "path": "tests/fixtures/qwen3-output-screen-v1/contract.json",
+    "identity": {
+      "bytes": 240608,
+      "sha256": "0df7e712e7d397d8f334a194a187c0c26938656ab86867fe3a1a3ce624e21721"
+    }
+  },
+  "candidate_scope": {
+    "head": "6c778af",
+    "source_differences_since_archived_capture": {
+      "src/metal/mod.rs": {
+        "archived": {
+          "bytes": 126488,
+          "sha256": "ff655e667bd13bd3272058dc96da614abdd966cff1539c6fe38b0424d2c9a030"
+        },
+        "current": {
+          "bytes": 127733,
+          "sha256": "a5a45f181d356027bf1cbf40f649e4da67658b1807feb028a1167e3b3842ee03"
+        }
+      },
+      "src/mlx/execution.rs": {
+        "archived": {
+          "bytes": 9022,
+          "sha256": "138ad46f8ee2f4722a617e2d0a7afa480d9b34c751a85d07fb17db36d552680f"
+        },
+        "current": {
+          "bytes": 12314,
+          "sha256": "cc3b068d3a31979894cd70c0eb0d33bebd2e63c2c894db310bb93831cb1b3320"
+        }
+      }
+    },
+    "qualification_scope": "Archived profile only. No claim that a pass qualifies current loader, 1025 diagnostic, app, or full model window."
+  },
+  "criterion": {
+    "maximum_absolute_log_probability_error": 0.05,
+    "inclusive": true,
+    "exact_lowest_id_greedy": true,
+    "nonfinite_rejected": true
+  },
+  "method": "Saved little-endian FP32 logits widened exactly to FP64. Per row/profile subtract the raw maximum, apply NumPy FP64 exp elementwise, accumulate all entries with math.fsum, math.log, then subtract that log normalizer. Compare every FP64 log probability with inclusive 0.05; do not round before comparison. NumPy argmax returns the first/lowest vocabulary ID without tie tolerance.",
+  "cases": [
+    {
+      "case": "original",
+      "rows": 512,
+      "complete": true,
+      "failed_rows": 11,
+      "failed_vocabulary_entries": 56034,
+      "greedy_disagreements": 0,
+      "worst": {
+        "case": "original",
+        "position": 41,
+        "maximum_absolute_log_probability_error": 0.20223375120124842,
+        "maximum_vocabulary_id": 93515,
+        "native_log_probability": -21.134241072765853,
+        "reference_log_probability": -21.3364748239671,
+        "failed_vocabulary_entries": 32682,
+        "native_greedy": 1879,
+        "reference_greedy": 1879,
+        "greedy_equal": true,
+        "native_log_normalizer": 0.008632270924117008,
+        "reference_log_normalizer": 0.008666861072661132,
+        "passed": false
+      }
+    },
+    {
+      "case": "future_tail",
+      "rows": 512,
+      "complete": true,
+      "failed_rows": 11,
+      "failed_vocabulary_entries": 56034,
+      "greedy_disagreements": 0,
+      "worst": {
+        "case": "future_tail",
+        "position": 41,
+        "maximum_absolute_log_probability_error": 0.20223375120124842,
+        "maximum_vocabulary_id": 93515,
+        "native_log_probability": -21.134241072765853,
+        "reference_log_probability": -21.3364748239671,
+        "failed_vocabulary_entries": 32682,
+        "native_greedy": 1879,
+        "reference_greedy": 1879,
+        "greedy_equal": true,
+        "native_log_normalizer": 0.008632270924117008,
+        "reference_log_normalizer": 0.008666861072661132,
+        "passed": false
+      }
+    }
+  ],
+  "compared_rows": 1024,
+  "compared_entries": 155582464,
+  "failed_case_rows": 22,
+  "failed_vocabulary_entries": 112068,
+  "greedy_disagreements": 0,
+  "case_prefixes_overlap": true,
+  "journal": {
+    "bytes": 430378,
+    "rows": 1024,
+    "sha256": "1c8ecda6750e1f76e2dcf7c66307ea32f64654b6445d0ce242cf1511b2df9ad4"
+  },
+  "raw_parents": {
+    "artifacts/m8-qwen3-context512-native-trial-v1/native-output/chunk128-original.bin": {
+      "bytes": 504102912,
+      "sha256": "f449ae5086b6a6196e17fd1db26053a45ef8a11e9a7a8350e100aad0a61e1268"
+    },
+    "artifacts/m8-qwen3-long-reference-checks-v1/capture-a/original.fp64.bin": {
+      "bytes": 508297216,
+      "sha256": "39adca01c5aece18d3cab0649798395cfbfd7001333e91a41c90f37b5b8f64b0"
+    },
+    "artifacts/m8-qwen3-context512-native-trial-v1/native-output/chunk128-original.jsonl": {
+      "bytes": 44240,
+      "sha256": "9dd08d44138c19a54c74b2aaef1172281a5fc94aaef0e837bcaf809ada2d7e15"
+    },
+    "artifacts/m8-qwen3-context512-native-trial-v1/native-output/chunk128-future_tail.bin": {
+      "bytes": 504102912,
+      "sha256": "53c41e5c250597954c04d83aebda53b20d13b598672f79fe4a0214c6960630e7"
+    },
+    "artifacts/m8-qwen3-long-reference-checks-v1/capture-a/future_tail.fp64.bin": {
+      "bytes": 508297216,
+      "sha256": "8ee8edce40f781ed88a8f17e1960633bf87d86ab725cc54ef635600f65b0d644"
+    },
+    "artifacts/m8-qwen3-context512-native-trial-v1/native-output/chunk128-future_tail.jsonl": {
+      "bytes": 44240,
+      "sha256": "3cf7cbdba3016a83d92518311381e50ce4f1a97cdaa4ca529e7acd2bfd559550"
+    }
+  },
+  "evidence": {
+    "artifacts/m8-qwen3-output-screen-v4/run.py": {
+      "bytes": 4118,
+      "sha256": "5ce6545e18c4d7149e61623257bc4702c15c50296896a9278273f86677257e37"
+    },
+    "artifacts/m8-qwen3-output-screen-v4/screen.json": {
+      "bytes": 496653,
+      "sha256": "e58290d13ad7be278e92876a9083d1373233fce0b30d72410653275087dddc71"
+    },
+    "artifacts/m8-qwen3-output-screen-v4/screen-checks.json": {
+      "bytes": 2822,
+      "sha256": "cebfc8a6bcca6df3d794395102c363009224222ae7cdd5ad30c9664f261c5b73"
+    },
+    "artifacts/m8-qwen3-output-screen-v4/unit-checks.json": {
+      "bytes": 2136,
+      "sha256": "47b128d45fc7b767ec880c36c74818cac3ec309a7bdda64303fb259170b28337"
+    },
+    "artifacts/m8-qwen3-output-screen-v4/rows.jsonl": {
+      "bytes": 430378,
+      "sha256": "1c8ecda6750e1f76e2dcf7c66307ea32f64654b6445d0ce242cf1511b2df9ad4"
+    },
+    "artifacts/m8-qwen3-output-screen-v4/unit.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/m8-qwen3-output-screen-v4/unit.stderr": {
+      "bytes": 5486,
+      "sha256": "dce5e4c12c48b1a25ff3e370ae2dacfdd45da7fc85d75939decac6753b6b9e78"
+    },
+    "artifacts/m8-qwen3-output-screen-v4/screen.stdout": {
+      "bytes": 271,
+      "sha256": "aebb5b0ddcdf19145cc0c0fd533fbb99536a72fdefec82950fc8e7c6b5c0b5b7"
+    },
+    "artifacts/m8-qwen3-output-screen-v4/screen.stderr": {
+      "bytes": 777,
+      "sha256": "f6b60a99b2df6582a28037acd756d2a0fb9300c4f613ad725efab6555f3d933d"
+    },
+    "artifacts/m8-qwen3-output-screen-v1/unit-checks.json": {
+      "bytes": 2857,
+      "sha256": "30ffc5f2379e149d950ba41cbf21f7d57fa9ca405f7dbfcbb557484c48d9bbfd"
+    },
+    "artifacts/m8-qwen3-output-screen-v3/screen-checks.json": {
+      "bytes": 3498,
+      "sha256": "6b116ff42b014d5e80fd32179136d1421ecffd384aee690bdc3dc1fe29c65d43"
+    },
+    "artifacts/m8-qwen3-output-screen-v3/screen.json": {
+      "bytes": 102027,
+      "sha256": "f77687c014cb2acfa94bef18569b4ee0f6693f44d6a6eda10392d93740cc260c"
+    },
+    "artifacts/m8-qwen3-output-screen-v3/pre-empty-marker-fix-contract.json": {
+      "bytes": 240608,
+      "sha256": "9e425650037da8a9d3f5584284dd193166644a12d8e50bb95115493076ee7b89"
+    },
+    "artifacts/m8-qwen3-output-screen-v3/sources/qwen3_output_screen.py": {
+      "bytes": 15133,
+      "sha256": "629b9620e81d1f7aa542635b0ba7444a7d8ad38c7ea2ddba8eee08c598aca38b"
+    },
+    "artifacts/m8-qwen3-full-quality-final-checks-v1/checks.json": {
+      "bytes": 1727,
+      "sha256": "1113517ce9b440392a07cf0bdbfa92fdd4a9fd563957fcc7495cef9a2052f555"
+    }
+  },
+  "cold_tests_passed": 30,
+  "endpoint_audits": 1996,
+  "actual_numerical_helper_modules": 90,
+  "actual_non_system_native_images": 18,
+  "runtime_origins_before_after": true,
+  "reader_memory": {
+    "rss": 93995008,
+    "physical": 47104672
+  },
+  "reader_memory_limit": 536870912,
+  "hardware": "Apple M1 Pro / MacBookPro18,3 / 16GiB / macOS26.6.2(25G83)",
+  "owned_groups_absent": 2,
+  "new_model_execution": false,
+  "new_calibration_execution": false,
+  "numerical_validation_opened": false,
+  "numerical_validation_case_count_untouched": 8,
+  "historical_fp32_stage_gate_changed": false,
+  "historical_canonical_qualified": false,
+  "app_limits_changed": false,
+  "current_engine_or_app_qualified": false,
+  "full_model_window_qualified": false,
+  "phone_contacted": false,
+  "numerical_rust_sources_unchanged": 157,
+  "previous_full_rust_checks_carried_forward": true,
+  "failures_retained": [
+    "Sandbox unit checks passed but macOS time memory counters denied; no screen.",
+    "Runtime admission rejected20 empty installed package/type markers before any logit comparison. Source reconstructed and hash-verified; bounded runtime-only fix reviewed before screen."
+  ],
+  "review": "Astra approved code, pre-measurement contract, runtime safeguards and empty-marker fix, then independently reconstructed journal totals and accepted completed rejection. Final publication review before commit.",
+  "decision": "Reject candidate under frozen output-fidelity contract; leave8 numerical validation inputs unopened. No supported precision implementation change; no dtype switch, widening or layer walk. Proceed with bounded independent experimental C512 Mac functional audit; qualified Q1-Q5 remains incomplete."
+}
