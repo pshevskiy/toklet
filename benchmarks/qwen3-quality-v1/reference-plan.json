@@ -1,0 +1,51 @@
+{
+  "contract_sha256": "908e037de5b399d9e9a8dd09aa9fcc568f67abb714b06508672deac6bb8ac529",
+  "source_script": {
+    "bytes": 18535,
+    "sha256": "f622fda4d218e6ba121d31ddf9f60bc3cbe842b63669e76dd00e1af5f0b7ab34"
+  },
+  "source_parameters": {
+    "config.json": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+    "model.safetensors": "f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b",
+    "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config.json": "bbc2c089e3bef8753f63348c10595767be8998bc6ca7c7ebcaada346d401fba8"
+  },
+  "memory_admission": {
+    "load": {
+      "original_storage": 1503300328,
+      "fp32_constructor": 2384199680,
+      "conditional_storage_copy": 1503300328,
+      "python_frameworks": 536870912
+    },
+    "inference": {
+      "original_storage": 1503300328,
+      "graph_workspace": 2147483648,
+      "full_output_max_fp32": 622937600,
+      "cache_and_growth_overlap": 293601280,
+      "host_tiles_and_journal": 167772160,
+      "python_frameworks": 536870912
+    },
+    "admitted": 5927671248,
+    "limit": 6442450944,
+    "phases_are_separate": true,
+    "conditional_reserves_are_not_measured_duplicates": true
+  },
+  "native_binary": {
+    "bytes": 1823712,
+    "sha256": "5674e8e01bb2e2c5059feb7e890abeceb893cb0a86cac691c9b783280d26400e"
+  },
+  "quality_limits": {
+    "mean_nll_increase": 0.05,
+    "task_pass_rate_loss_pp": 2.0
+  },
+  "sequence": [
+    "unit",
+    "probe",
+    "task_probe",
+    "source-loss",
+    "native-loss",
+    "source-tasks",
+    "native-tasks"
+  ],
+  "held_out_scoring_after_authored_probes": true
+}

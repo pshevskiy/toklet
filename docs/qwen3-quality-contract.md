@@ -2,8 +2,10 @@
 
 The [active Q3 task](qwen3-mac-delivery-plan.md) now has frozen complete inputs,
 an explicit native diagnostic execution worker, and a verified unquantized
-baseline payload. **Full held-out scoring remains pending.** Numerical C512
-qualification stays rejected; app and ordinary-loader limits stay512.
+baseline payload. Subsequent [complete scoring](qwen3-full-quality.md) passes the
+unchanged relative policy: loss increase0.00400406 nats/token and tasks3/100
+versus5/100, exactly the two-case limit. Absolute strict quality is weak.
+Numerical C512 qualification stays rejected; app and ordinary-loader limits stay512.
 
 ## Candidate and baseline
 
@@ -102,7 +104,8 @@ input/probe observations, not full-quality memory or latency benchmarks.
 
 See [frozen metadata](../benchmarks/qwen3-quality-v1/README.md) and
 [public evidence](../benchmarks/results/2026-10-27-qwen3-quality-inputs-v1.json).
-Next execute the original BF16 baseline and frozen native candidate on all
-targets/tasks, grade with the isolated evaluator, and make an explicit retention
-decision. A subsequent precision contract still needs review and untouched
-numerical validation before C512 or app-window qualification.
+The subsequent complete comparison executes both profiles on every target/task,
+resolves all80 isolated code runs and restores the VM before retaining the
+experimental candidate. Frozen preparation flags remain historical facts and
+are not rewritten. A subsequent precision contract still needs review and
+untouched numerical validation before C512 or app-window qualification.

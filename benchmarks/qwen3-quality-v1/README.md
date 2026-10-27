@@ -15,7 +15,9 @@ reconstruct full inputs from the exact pinned sources and preparation tools.
 
 The independently pinned official baseline's [API metadata](baseline-api.json)
 and [config](baseline-config.json) are retained. Its actual1.503GB BF16 payload
-was downloaded and verified; it has not yet been executed by this task.
+was downloaded and verified at input freeze. The subsequent
+[full comparison](../../docs/qwen3-full-quality.md) now executes that baseline
+and the frozen native candidate on the complete workload.
 The converter records its source repository without a source revision. The
 baseline uses the official revision contemporary with conversion; its weight
 digest matches the later official revision as well.
@@ -24,7 +26,12 @@ All inputs replay independently in Python and through Rust's tokenizer/plain
 Qwen3 rendering, including70 app Chat-codec cases. Twelve coherent corruption
 controls and two Rust negative controls reject. The explicit short worker probe
 is non-quality. Source/model/runtime endpoints and process cleanup pass.
-Current numerical qualification remains rejected; no held-out scores, app-window
-expansion or full-model-window qualification are claimed. See
+Current numerical qualification remains rejected. The subsequent full comparison
+passes the relative limits with weak strict scores3/100 versus5/100, exactly
+the two-case loss limit. App-window and full-model-window qualification stay open.
+[reference-plan.json](reference-plan.json) and
+[reference-actual-profile.json](reference-actual-profile.json) preserve the
+reference profile frozen before held-out execution. Input-manifest bytes and
+historical preparation flags remain unchanged. See
 [the contract report](../../docs/qwen3-quality-contract.md) and
 [public evidence](../results/2026-10-27-qwen3-quality-inputs-v1.json).

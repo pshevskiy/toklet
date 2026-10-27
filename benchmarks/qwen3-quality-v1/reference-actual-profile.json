@@ -1,0 +1,35 @@
+{
+  "frozen_plan_sha256": "31dd4a22a540bee5a4cbeceb3fd979c16584b35685738aeebacc36893a0a9833",
+  "loss_probe": {
+    "bytes": 166349,
+    "sha256": "fa25388dc67757f095e8136822a64216a49ffb726bbc8cfbb6337bbe4e8ce37f"
+  },
+  "task_probe": {
+    "bytes": 166248,
+    "sha256": "84e391a0005d6ead38c014f85bd32a6a0f1ae511dba5e88b43c1bd0618de2f33"
+  },
+  "actual_parameter_storage": [
+    "mlx.core.bfloat16"
+  ],
+  "source_profile": {
+    "dtype_override": false,
+    "strict": true,
+    "lazy": false,
+    "trust_remote_code": false,
+    "loss_batch": 1,
+    "loss_cache": null,
+    "loss_full_blocks": true,
+    "task_prefill_chunk": 128,
+    "task_cache": "original KVCache step256 BF16",
+    "kv_quantization": false,
+    "greedy": "host FP64 comparison of exact-widened raw source logits, lowest ID ties",
+    "stop_ids": [
+      151645
+    ],
+    "final_sample_pending": true
+  },
+  "source_script": {
+    "bytes": 18535,
+    "sha256": "f622fda4d218e6ba121d31ddf9f60bc3cbe842b63669e76dd00e1af5f0b7ab34"
+  }
+}

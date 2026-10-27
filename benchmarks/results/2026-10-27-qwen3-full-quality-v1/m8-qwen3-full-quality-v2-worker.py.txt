@@ -1,0 +1,36 @@
+"""Admitted original BF16 quality execution; no grading or engine changes."""
+from pathlib import Path
+import argparse,json,os,signal,sys,unittest
+R=Path.cwd();sys.path.insert(0,str(R/'tools/reference'));sys.path.insert(0,str(R/'tools/experiments'))
+import qwen3_quality_source as quality
+producer=quality.source
+F=R/'artifacts/m8-qwen3-quality-inputs-v1/inputs'
+def sources():return producer.source_paths([Path(__file__).resolve(),R/'tools/reference/qwen3_quality_source.py',R/'tools/reference/test_qwen3_quality_source.py',R/'tools/bench/prepare.py',R/'benchmarks/qwen3-quality-v1/manifest.json',R/'.venv/mlx-source-only-v1/pyvenv.cfg',*[F/n for n in('manifest.json','held_out_loss.u32le','execution.jsonl')]])
+if __name__=='__main__':
+ parser=argparse.ArgumentParser();parser.add_argument('--runtime',type=Path,required=True);parser.add_argument('--runtime-sha',required=True);parser.add_argument('--mode',choices=('unit','probe','task_probe','loss','tasks'),required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--journal',type=Path);args=parser.parse_args()
+ selected=producer.runtime.runtime.runtime_paths(sources());admission=producer.runtime.runtime.admit_runtime(args.runtime,args.runtime_sha,sources());manifest=producer.runtime.safe.document(producer.runtime.safe.read(args.runtime,2*1024**2));record=dict(passed=False,primary_error=None,endpoint_errors=[],admission=admission,report={})
+ def endpoint():
+  producer.isolation_profile();return producer.runtime.endpoint(manifest,selected,sources())
+ def stop(number,_):
+  for s in(signal.SIGINT,signal.SIGTERM):signal.signal(s,signal.SIG_IGN)
+  raise InterruptedError(str(number))
+ old={s:signal.signal(s,stop)for s in(signal.SIGINT,signal.SIGTERM)}
+ try:
+  record['availability_profile']=producer.isolation_profile();assert all(os.environ.get(k)==v for k,v in producer.ENVIRONMENT.items())
+  if args.mode=='unit':
+   import test_qwen3_quality_source
+   result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(test_qwen3_quality_source));record['tests']=dict(run=result.testsRun,failures=len(result.failures),errors=len(result.errors));assert result.wasSuccessful()and result.testsRun==8
+  else:
+   assert args.journal;quality.execute(F,args.mode,args.journal,record['report'],endpoint)
+   assert record['report']['complete']and record['report']['primary_error']is None and not record['report']['cleanup_errors']
+  import native_usage
+  record['usage']=native_usage.usage();limit=512*1024**2 if args.mode=='unit'else 6*1024**3;assert 0<record['usage']['lifetime_max_phys_footprint']<=limit;record['passed']=True
+ except BaseException as error:record['primary_error']=type(error).__name__+': '+str(error);record['primary_error_notes']=getattr(error,'__notes__',[])
+ finally:
+  for sig in old:signal.signal(sig,signal.SIG_IGN)
+  try:record['runtime_endpoint']=endpoint()
+  except BaseException as error:record['endpoint_errors'].append(type(error).__name__+': '+str(error))
+  with args.output.open('x')as f:json.dump(record,f,indent=2,allow_nan=False);f.write('\n')
+  for sig,handler in old.items():signal.signal(sig,handler)
+ print(json.dumps({k:record[k]for k in('passed','primary_error','endpoint_errors')}),flush=True)
+ sys.exit(0 if record['passed']and not record['endpoint_errors']else 1)

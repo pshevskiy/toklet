@@ -51,7 +51,8 @@ No engine behavior or gate was changed to pass either retry.
 
 These checks establish diagnostic capacity/state behavior and self-consistency,
 not independent1025 numerical qualification, full quality, latency or iPhone
-qualification. The [active quality task](qwen3-mac-delivery-plan.md) still needs
-the complete10000-target/100-task comparison against the pinned unquantized
-baseline, with unchanged0.05-nat/2-percentage-point rules and a candidate frozen
-before scoring. App delivery and broader40960-position qualification stay open.
+qualification. The subsequent [complete10000-target/100-task comparison](qwen3-full-quality.md)
+passes the unchanged relative policy against the pinned unquantized baseline;
+absolute strict task scores remain weak at3/100 versus5/100. The candidate was
+frozen before scoring. Numerical qualification, app delivery and broader40960-position
+qualification stay open.

@@ -1,0 +1,110 @@
+"""Authored probes followed by complete frozen baseline/native held-out collection; grading remains separate."""
+from pathlib import Path
+import hashlib,importlib.util,json,math,os,re,signal,struct,sys
+R=Path.cwd();O=Path(__file__).resolve().parent
+sys.path.insert(0,str(R/'tools/experiments'));import m7_apple_package as p
+bindings={};outputs={};commands=[];errors=[];primary=None;observations={}
+def read(path,maximum=8*1024**2):
+ with path.open('rb')as f:body=f.read(maximum+1)
+ assert len(body)<=maximum,path
+ return body
+
+def identity(path):
+ def fields(s):return s.st_dev,s.st_ino,s.st_mode,s.st_size,s.st_mtime_ns,s.st_ctime_ns
+ before=path.stat();h=hashlib.sha256()
+ with path.open('rb')as f:
+  opened=os.fstat(f.fileno());assert fields(opened)==fields(before)
+  for body in iter(lambda:f.read(1024**2),b''):h.update(body)
+  assert fields(os.fstat(f.fileno()))==fields(before)
+ assert fields(path.stat())==fields(before)
+ return dict(bytes=before.st_size,sha256=h.hexdigest())
+def name(path):return str(path.relative_to(R)) if path.is_relative_to(R) else str(path)
+def bind(path):
+ v=identity(path);assert name(path)not in bindings or bindings[name(path)]==v;bindings[name(path)]=v;return v
+
+def guard():
+ for n,v in bindings.items():assert identity(R/n)==v,n
+ for n,v in outputs.items():assert identity(R/n)==v,n
+
+def run(label,args,env,timeout=1200,expected=0):
+ guard();v=p.owned(args,O/(label+'.stdout'),O/(label+'.stderr'),env,timeout);commands.append(v)
+ for path in [O/(label+'.stdout'),O/(label+'.stderr'),O/(label+'.json')]:
+  if path.is_file():outputs[name(path)]=identity(path)
+ for path in list(O.glob('*.jsonl'))+list(O.glob('nonfinite-output-*/*')):
+  if path.is_file():
+   item=identity(path);assert name(path)not in outputs or outputs[name(path)]==item;outputs[name(path)]=item
+ for path in []:
+  if path.is_file():
+   item=identity(path);assert name(path)not in outputs or outputs[name(path)]==item;outputs[name(path)]=item
+ guard();assert v['exit_code']==expected and v['primary_error']==(None if expected==0 else 'tool exit '+str(expected))and not v['cleanup_errors'],v
+ print(json.dumps(dict(completed=label,pid=v['pid'],exit_code=v['exit_code'])),flush=True)
+ return read(O/(label+'.stdout'),32*1024**2).decode(),read(O/(label+'.stderr'),32*1024**2).decode()
+def memory(stderr,limit):
+ result={k:int(re.search(r'(\d+)\s+'+label,stderr)[1])for k,label in [('rss','maximum resident set size'),('physical','peak memory footprint')]};assert all(0<n<=limit for n in result.values()),result;return result
+
+def stop(number,_):raise InterruptedError(str(number))
+old={s:signal.signal(s,stop)for s in(signal.SIGINT,signal.SIGTERM)}
+try:
+ assert not(O/'checks.json').exists()
+ spec=importlib.util.spec_from_file_location('quality_source_worker',O/'worker.py');worker=importlib.util.module_from_spec(spec);spec.loader.exec_module(worker)
+ inventory=worker.producer.runtime.runtime.runtime_paths(worker.sources())
+ for path in[*p.numerical_sources(),R/'examples/qwen3_quality.rs',R/'examples/support/loss.rs',Path(__file__).resolve(),Path(p.__file__).resolve(),*inventory]:bind(path)
+ F=worker.F
+ contract=json.loads(read(F/'manifest.json'));assert identity(F/'manifest.json')['sha256']==worker.quality.CONTRACT_SHA
+ for n,sha in contract['candidate']['numerical_source_sha256'].items():assert identity(R/n)['sha256']==sha,n
+ for input_name,item in contract['files'].items():assert bind(F/input_name)==item
+ for folder,pins in [(worker.quality.BASELINE,worker.quality.PINS)]:
+  for n,sha in pins.items():assert bind(folder/n)['sha256']==sha
+ native=R/'artifacts/m8-qwen3-quality-diagnostic-v1/target/release/examples/qwen3_quality'
+ previous_path=R/'artifacts/m8-qwen3-quality-inputs-v1/checks.json';assert bind(previous_path)['sha256']=='5996761a54fe85213197d8748be057a769617fdd4168e46d630778099806db96';previous=json.loads(read(previous_path));assert previous['passed']and not previous['endpoint_errors']
+ expected=previous['bindings'][str(native.relative_to(R))];assert bind(native)==expected
+ # Full candidate model/source identity is inherited only after checking every
+ # exact previously consumed artifact against its frozen value again.
+ model=R/'models/MLX-Qwen3-0.6B-8bit-11de968'
+ candidate_fixture=R/'tests/fixtures/mlx-qwen3-real-v1/manifest.json';assert bind(candidate_fixture)['sha256']=='4594118378d2c583c80c8f0987e06d3bbca0fa77188d4869e670252070b23fc7'
+ for n,sha in json.loads(read(candidate_fixture))['model']['file_pins'].items():assert bind(model/n)['sha256']==sha
+ runtime=dict(format='toklet-mlx-reference-runtime-v1',versions=worker.producer.runtime.runtime.VERSIONS,files={str(q):bindings[name(q)]for q in inventory});manifest=O/'runtime.json'
+ with manifest.open('x')as f:json.dump(runtime,f,separators=(',',':'));f.write('\n')
+ bind(manifest);assert manifest.stat().st_size<=2*1024**2
+ env,_=p.build_environment();env.update(PYTHONHASHSEED='0',OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',VECLIB_MAXIMUM_THREADS='1');env.update(worker.producer.ENVIRONMENT);(O/'tmp').mkdir();env['TMPDIR']=str(O/'tmp')
+ python=R/'.venv/mlx-source-only-v1/bin/python'
+ plan=dict(contract_sha256=worker.quality.CONTRACT_SHA,source_script=bindings['tools/reference/qwen3_quality_source.py'],source_parameters=worker.quality.PINS,memory_admission=worker.quality.memory_plan(),native_binary=expected,quality_limits=dict(mean_nll_increase=0.05,task_pass_rate_loss_pp=2.0),sequence=['unit','probe','task_probe','source-loss','native-loss','source-tasks','native-tasks'],held_out_scoring_after_authored_probes=True)
+ with(O/'plan.json').open('x')as f:json.dump(plan,f,indent=2);f.write('\n')
+ bind(O/'plan.json')
+ for label,source_mode in [('unit','unit'),('probe','probe'),('task_probe','task_probe'),('source-loss','loss'),('native-loss',None),('source-tasks','tasks'),('native-tasks',None)]:
+  if source_mode:
+   cache=O/(label+'-cold-cache');cache.mkdir();argv=['/usr/bin/time','-l',str(python),'-s','-B','-X','pycache_prefix='+str(cache),str(O/'worker.py'),'--runtime',str(manifest),'--runtime-sha',bindings[name(manifest)]['sha256'],'--mode',source_mode,'--output',str(O/(label+'.json'))]
+   if source_mode!='unit':argv+=['--journal',str(O/(label+'.jsonl'))]
+   raw,err=run(label,argv,env,3600);v=json.loads(read(O/(label+'.json')));assert v['passed']and v['primary_error']is None and not v['endpoint_errors']and v['runtime_endpoint'];observations[label]=dict(memory=memory(err,512*1024**2 if label=='unit'else 6*1024**3),usage=v['usage'])
+   if label=='unit':assert v['tests']==dict(run=8,failures=0,errors=0)
+   else:
+    report=v['report'];assert report['complete']and not report['cleanup_errors']and report['primary_error']is None
+    journal=O/(label+'.jsonl');assert identity(journal)==dict(bytes=report['journal']['bytes'],sha256=report['journal']['sha256']);events=[json.loads(line)for line in read(journal,64*1024**2).splitlines()];done=events[-1];assert done['event']=='done';observations[label].update(done=done,source_profile=report['source_profile'],parameter_storage=sorted({p['dtype']for p in report['parameters']}))
+    if source_mode in('probe','task_probe'):
+     assert done['full_quality_workload']is False and observations[label]['parameter_storage']==['mlx.core.bfloat16']
+     assert done['targets']==(3 if source_mode=='probe'else 0) and done['tasks']==(1 if source_mode=='task_probe'else 0)
+    elif source_mode=='loss':assert done['targets']==10000 and len([v for v in events if v['event']=='loss'])==10000 and len([v for v in events if v['event']=='block_done'])==10
+    else:assert done['tasks']==100 and len([v for v in events if v['event']=='task_done'])==100
+    if source_mode=='task_probe':
+     actual=dict(frozen_plan_sha256=bindings[name(O/'plan.json')]['sha256'],loss_probe=outputs[name(O/'probe.json')],task_probe=outputs[name(O/'task_probe.json')],actual_parameter_storage=observations[label]['parameter_storage'],source_profile=report['source_profile'],source_script=bindings['tools/reference/qwen3_quality_source.py'])
+     with(O/'actual-profile.json').open('x')as f:json.dump(actual,f,indent=2);f.write('\n')
+     bind(O/'actual-profile.json')
+  else:
+   mode='loss'if label=='native-loss'else'tasks';input_path=F/('held_out_loss.u32le'if mode=='loss'else'execution.jsonl');raw,err=run(label,['/usr/bin/time','-l',str(native),str(model),mode,str(input_path)],env,3600);events=[json.loads(line)for line in raw.splitlines()];ready=events[0];done=events[-1];assert ready['event']=='ready'and ready['full_quality_workload']is True and ready['c512_numerical_gate_status']=='rejected_unchanged'and not ready['debug_assertions'];assert done['event']=='done'and done['targets']==(10000 if mode=='loss'else 0)and done['tasks']==(100 if mode=='tasks'else 0);assert len([v for v in events if v['event']==('loss'if mode=='loss'else'task_done')])==(10000 if mode=='loss'else 100);observations[label]=dict(memory=memory(err,6*1024**3),ready=ready,done=done)
+ observations['scope']=dict(full_model_collections_complete=True,grading_complete=False,quality_qualified=False,numerical_qualified=False,adopted=False)
+except BaseException as error:primary=type(error).__name__+': '+str(error)
+finally:
+ for sig in old:signal.signal(sig,signal.SIG_IGN)
+ try:guard()
+ except BaseException as error:errors.append('endpoint: '+str(error))
+ for command in commands:
+  if command['pid']:
+   for pid in(command['pid'],-command['pid']):
+    try:os.kill(pid,0)
+    except ProcessLookupError:pass
+    else:errors.append('owned process/group exists: '+str(pid))
+ result=dict(passed=primary is None and not errors,bindings=bindings,outputs=outputs,commands=commands,observations=observations,primary_error=primary,endpoint_errors=errors)
+ with(O/'checks.json').open('x')as f:json.dump(result,f,indent=2,allow_nan=False);f.write('\n')
+ for sig,handler in old.items():signal.signal(sig,handler)
+print(json.dumps({k:result[k]for k in('passed','observations','primary_error','endpoint_errors')}),flush=True)
+sys.exit(0 if result['passed']else 1)

@@ -6,6 +6,11 @@ candidate and reject its current C512 qualification**. There is no BF16 switch,
 capacity increase, adoption or tolerance expansion. Historical numerical
 failures and the rejected calibration envelope remain rejected.
 
+The subsequent diagnostic1025 and [full quality comparison](qwen3-full-quality.md)
+are now complete. Relative quality passes with weak strict scores3/100 versus
+5/100; the next bounded numerical screen is in the active Mac queue. The next-step
+description below records the decision at this experiment's closure.
+
 ## Original source and capture
 
 The original `mlx-community/Qwen3-0.6B-8bit` checkpoint at

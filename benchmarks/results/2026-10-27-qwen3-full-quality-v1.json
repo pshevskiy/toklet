@@ -1,0 +1,4104 @@
+{
+  "format": "toklet-qwen3-full-quality-comparison-v1",
+  "engine_revision": "477a536",
+  "hardware": {
+    "model": "MacBookPro18,3",
+    "chip": "Apple M1 Pro",
+    "memory_bytes": 17179869184,
+    "os": "macOS26.6.2(25G83)"
+  },
+  "input_manifest_sha256": "908e037de5b399d9e9a8dd09aa9fcc568f67abb714b06508672deac6bb8ac529",
+  "source_files": {
+    "tools/reference/qwen3_quality_source.py": {
+      "bytes": 18535,
+      "sha256": "f622fda4d218e6ba121d31ddf9f60bc3cbe842b63669e76dd00e1af5f0b7ab34"
+    },
+    "tools/reference/test_qwen3_quality_source.py": {
+      "bytes": 6869,
+      "sha256": "0315aeba36ab317997ecebad43131759e81c31ca1f85f9d85fc5c2e4cc125b34"
+    },
+    "tools/bench/qwen3_quality_results.py": {
+      "bytes": 12690,
+      "sha256": "ee753cacb2d16d8dc6c634ea12b0829b0bb13c3503959ff4abe690b571eaf1b5"
+    },
+    "tools/bench/test_qwen3_quality_results.py": {
+      "bytes": 7741,
+      "sha256": "a47fad3dc6eb4893b0bd87fc017ea3de7227e5009b5e22620566a0017c7ce0da"
+    },
+    "tools/bench/qwen3_quality_grading.py": {
+      "bytes": 18801,
+      "sha256": "34699a8de1e8484cc7bf5c422b2fcddec7fdffe823b344bd402c14eb3b5734e2"
+    },
+    "tools/bench/test_qwen3_quality_grading.py": {
+      "bytes": 6600,
+      "sha256": "0f3d5e91ff8461dcf3b85f566f90beacd291778a7089c2a9e0496224a7c97592"
+    }
+  },
+  "provenance": {
+    "artifacts/m8-qwen3-full-quality-v2/run.py": {
+      "retained_copy": "benchmarks/results/2026-10-27-qwen3-full-quality-v1/m8-qwen3-full-quality-v2-run.py.txt",
+      "bytes": 9977,
+      "sha256": "6ed7f33943f31bdb56d96e7d32405b82b25aca76e31453e8002f75951f249bde"
+    },
+    "artifacts/m8-qwen3-full-quality-v2/worker.py": {
+      "retained_copy": "benchmarks/results/2026-10-27-qwen3-full-quality-v1/m8-qwen3-full-quality-v2-worker.py.txt",
+      "bytes": 3330,
+      "sha256": "cc97806f2ec0b09984baf3fc893113d5731cc2b55369b4e62629e834c906c299"
+    },
+    "artifacts/m8-qwen3-quality-grading-v1/run.py": {
+      "retained_copy": "benchmarks/results/2026-10-27-qwen3-full-quality-v1/m8-qwen3-quality-grading-v1-run.py.txt",
+      "bytes": 7389,
+      "sha256": "8a02879b6e1813b6f3660a92b5f244a823858bf4e01e9647b9539588aed4363c"
+    },
+    "artifacts/m8-qwen3-quality-grading-v1/worker.py": {
+      "retained_copy": "benchmarks/results/2026-10-27-qwen3-full-quality-v1/m8-qwen3-quality-grading-v1-worker.py.txt",
+      "bytes": 2976,
+      "sha256": "a3dca3f37a94d80f08ecb3c32afa2615415d42eb98c7cc19fb0e66d3fbbafdfb"
+    }
+  },
+  "raw_evidence": {
+    "artifacts/m8-qwen3-full-quality-v2/checks.json": {
+      "bytes": 1583853,
+      "sha256": "09ca67a9033b3a63a4616ac6004694749da98ee5f70baba76fb67675ded362b5"
+    },
+    "artifacts/m8-qwen3-quality-grading-v1/checks.json": {
+      "bytes": 797232,
+      "sha256": "042353bdf8663b63d0e4cd8efd094f97333ef4a64c39bb0ce0f985cf8611fa0b"
+    },
+    "artifacts/m8-qwen3-quality-grading-v1/grade/result.json": {
+      "bytes": 10407514,
+      "sha256": "86b21282b078c15cc75e663c45da5d92e9947e02f64afe5da407d9659b646d6a"
+    },
+    "artifacts/m8-qwen3-full-quality-v1/checks.json": {
+      "bytes": 1569265,
+      "sha256": "2c7002ed851b892bb63db20d41ab9de8643d3740d481ede94e8009d173d9fd12"
+    },
+    "artifacts/m8-qwen3-full-quality-v2/plan.json": {
+      "bytes": 1650,
+      "sha256": "31dd4a22a540bee5a4cbeceb3fd979c16584b35685738aeebacc36893a0a9833"
+    },
+    "artifacts/m8-qwen3-full-quality-v2/actual-profile.json": {
+      "bytes": 1007,
+      "sha256": "ec02756f03f0c7a6bd966af278bfffd85d2797a2249d11108f4e56f5b0bf3b81"
+    },
+    "artifacts/m8-qwen3-quality-grading-v1/grade/grading.jsonl": {
+      "bytes": 8197162,
+      "sha256": "82ecec3b7b2e8c7e4dd12670498e455530d36ca794f1af5f1d22e223fd27bc7f"
+    },
+    "artifacts/m8-qwen3-full-quality-v2/probe.jsonl": {
+      "bytes": 1675,
+      "sha256": "2eef38cc0ce19d5e6f9a137368aa0a4111f7437d2e98828d3cc62945bf188d3e"
+    },
+    "artifacts/m8-qwen3-full-quality-v2/task_probe.jsonl": {
+      "bytes": 1718,
+      "sha256": "b87b7aa7af4aa1d5188c8582f09470c6c6a6a61df4ebe5f3d29182a4fb717142"
+    },
+    "artifacts/m8-qwen3-full-quality-v2/source-loss.jsonl": {
+      "bytes": 3739890,
+      "sha256": "bb1e01437913c47217176976c6d8524eb999d74efdfcce72916487b96971512b"
+    },
+    "artifacts/m8-qwen3-full-quality-v2/source-tasks.jsonl": {
+      "bytes": 1496233,
+      "sha256": "f6c1f76ad7f548a3ec980cbbb3c2bca7b775b765702751fe78cbc9db7520294a"
+    },
+    "artifacts/m8-qwen3-full-quality-v2/native-loss.stdout": {
+      "bytes": 2454875,
+      "sha256": "cb7c24ee69b6501b7556b939596f6a0f74332fe205bd7986e7ac80c4fe37718d"
+    },
+    "artifacts/m8-qwen3-full-quality-v2/native-tasks.stdout": {
+      "bytes": 433230,
+      "sha256": "400a2b1362e52e9f037fe7046e5b00ee42acc24d37523360469acc476d0d7893"
+    },
+    "artifacts/m8-qwen3-quality-grading-v1/grade/baseline-decoded.json": {
+      "bytes": 185853,
+      "sha256": "fd943cd2ff2f68be9c870ebdd7a75ad1e5741698b2a910f16068ecd6aaa39fa3"
+    },
+    "artifacts/m8-qwen3-quality-grading-v1/grade/native-decoded.json": {
+      "bytes": 214775,
+      "sha256": "1bbc6bd92400dd23524f3352c0501b704f4bb47081da6c820de881e024b2f282"
+    },
+    "artifacts/m8-qwen3-full-quality-final-checks-v1/checks.json": {
+      "bytes": 1727,
+      "sha256": "1113517ce9b440392a07cf0bdbfa92fdd4a9fd563957fcc7495cef9a2052f555"
+    }
+  },
+  "reference_profile": {
+    "frozen_plan_sha256": "31dd4a22a540bee5a4cbeceb3fd979c16584b35685738aeebacc36893a0a9833",
+    "loss_probe": {
+      "bytes": 166349,
+      "sha256": "fa25388dc67757f095e8136822a64216a49ffb726bbc8cfbb6337bbe4e8ce37f"
+    },
+    "task_probe": {
+      "bytes": 166248,
+      "sha256": "84e391a0005d6ead38c014f85bd32a6a0f1ae511dba5e88b43c1bd0618de2f33"
+    },
+    "actual_parameter_storage": [
+      "mlx.core.bfloat16"
+    ],
+    "source_profile": {
+      "dtype_override": false,
+      "strict": true,
+      "lazy": false,
+      "trust_remote_code": false,
+      "loss_batch": 1,
+      "loss_cache": null,
+      "loss_full_blocks": true,
+      "task_prefill_chunk": 128,
+      "task_cache": "original KVCache step256 BF16",
+      "kv_quantization": false,
+      "greedy": "host FP64 comparison of exact-widened raw source logits, lowest ID ties",
+      "stop_ids": [
+        151645
+      ],
+      "final_sample_pending": true
+    },
+    "source_script": {
+      "bytes": 18535,
+      "sha256": "f622fda4d218e6ba121d31ddf9f60bc3cbe842b63669e76dd00e1af5f0b7ab34"
+    }
+  },
+  "reference_memory_admission": {
+    "load": {
+      "original_storage": 1503300328,
+      "fp32_constructor": 2384199680,
+      "conditional_storage_copy": 1503300328,
+      "python_frameworks": 536870912
+    },
+    "inference": {
+      "original_storage": 1503300328,
+      "graph_workspace": 2147483648,
+      "full_output_max_fp32": 622937600,
+      "cache_and_growth_overlap": 293601280,
+      "host_tiles_and_journal": 167772160,
+      "python_frameworks": 536870912
+    },
+    "admitted": 5927671248,
+    "limit": 6442450944,
+    "phases_are_separate": true,
+    "conditional_reserves_are_not_measured_duplicates": true
+  },
+  "model_observations": {
+    "unit": {
+      "memory": {
+        "rss": 326598656,
+        "physical": 309347120
+      },
+      "usage": {
+        "resident_size": 87801856,
+        "phys_footprint": 66781808,
+        "lifetime_max_phys_footprint": 70926936
+      }
+    },
+    "probe": {
+      "memory": {
+        "rss": 914472960,
+        "physical": 1353631376
+      },
+      "usage": {
+        "resident_size": 211566592,
+        "phys_footprint": 143229792,
+        "lifetime_max_phys_footprint": 1353631376
+      },
+      "done": {
+        "event": "done",
+        "mode": "probe",
+        "full_quality_workload": false,
+        "targets": 3,
+        "tasks": 0,
+        "total_negative_log_likelihood": 15.207773206485244,
+        "mean_negative_log_likelihood": 5.069257735495081
+      },
+      "source_profile": {
+        "dtype_override": false,
+        "strict": true,
+        "lazy": false,
+        "trust_remote_code": false,
+        "loss_batch": 1,
+        "loss_cache": null,
+        "loss_full_blocks": true,
+        "task_prefill_chunk": 128,
+        "task_cache": "original KVCache step256 BF16",
+        "kv_quantization": false,
+        "greedy": "host FP64 comparison of exact-widened raw source logits, lowest ID ties",
+        "stop_ids": [
+          151645
+        ],
+        "final_sample_pending": true
+      },
+      "parameter_storage": [
+        "mlx.core.bfloat16"
+      ]
+    },
+    "task_probe": {
+      "memory": {
+        "rss": 1396408320,
+        "physical": 1371162280
+      },
+      "usage": {
+        "resident_size": 239992832,
+        "phys_footprint": 141804504,
+        "lifetime_max_phys_footprint": 1371162280
+      },
+      "done": {
+        "event": "done",
+        "mode": "task_probe",
+        "full_quality_workload": false,
+        "targets": 0,
+        "tasks": 1
+      },
+      "source_profile": {
+        "dtype_override": false,
+        "strict": true,
+        "lazy": false,
+        "trust_remote_code": false,
+        "loss_batch": 1,
+        "loss_cache": null,
+        "loss_full_blocks": true,
+        "task_prefill_chunk": 128,
+        "task_cache": "original KVCache step256 BF16",
+        "kv_quantization": false,
+        "greedy": "host FP64 comparison of exact-widened raw source logits, lowest ID ties",
+        "stop_ids": [
+          151645
+        ],
+        "final_sample_pending": true
+      },
+      "parameter_storage": [
+        "mlx.core.bfloat16"
+      ]
+    },
+    "source-loss": {
+      "memory": {
+        "rss": 1376714752,
+        "physical": 2257569544
+      },
+      "usage": {
+        "resident_size": 302235648,
+        "phys_footprint": 132727960,
+        "lifetime_max_phys_footprint": 2257569544
+      },
+      "done": {
+        "event": "done",
+        "mode": "loss",
+        "full_quality_workload": true,
+        "targets": 10000,
+        "tasks": 0,
+        "total_negative_log_likelihood": 32486.450139387212,
+        "mean_negative_log_likelihood": 3.248645013938721
+      },
+      "source_profile": {
+        "dtype_override": false,
+        "strict": true,
+        "lazy": false,
+        "trust_remote_code": false,
+        "loss_batch": 1,
+        "loss_cache": null,
+        "loss_full_blocks": true,
+        "task_prefill_chunk": 128,
+        "task_cache": "original KVCache step256 BF16",
+        "kv_quantization": false,
+        "greedy": "host FP64 comparison of exact-widened raw source logits, lowest ID ties",
+        "stop_ids": [
+          151645
+        ],
+        "final_sample_pending": true
+      },
+      "parameter_storage": [
+        "mlx.core.bfloat16"
+      ]
+    },
+    "native-loss": {
+      "memory": {
+        "rss": 743538688,
+        "physical": 1032733896
+      },
+      "ready": {
+        "event": "ready",
+        "format": "toklet-qwen3-quality-diagnostic-events-v1",
+        "mode": "loss",
+        "diagnostic_only": true,
+        "full_quality_workload": true,
+        "c512_numerical_gate_status": "rejected_unchanged",
+        "quality_qualified": false,
+        "device": "Apple M1 Pro",
+        "debug_assertions": false,
+        "context_capacity": 1025,
+        "prefill_chunk_size": 128,
+        "input_sha256": "f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb",
+        "targets": 10000,
+        "tasks": 0,
+        "projection": "mlx_affine",
+        "normalization": "compensated",
+        "attention": "reference",
+        "activation_dtype": "FP16",
+        "kv_dtype": "FP16",
+        "memory": {
+          "weights_bytes": 633366062,
+          "kv_bytes": 117555984,
+          "scratch_bytes": 258336618,
+          "history_bytes": 4100,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 16256,
+          "metadata_allowance_bytes": 67108864,
+          "admitted_bytes": 1077603372
+        },
+        "application_allowance_bytes": 67108864,
+        "admitted_bytes": 1144712236,
+        "external_source_identity_and_endpoint_required": true
+      },
+      "done": {
+        "event": "done",
+        "mode": "loss",
+        "full_quality_workload": true,
+        "targets": 10000,
+        "tasks": 0,
+        "context_policy": "independent_blocks_of_up_to_1025_tokens_one_token_overlap_score_every_target_once",
+        "total_negative_log_likelihood": 32526.49075779492,
+        "mean_negative_log_likelihood": 3.252649075779492
+      }
+    },
+    "source-tasks": {
+      "memory": {
+        "rss": 1335476224,
+        "physical": 1681360816
+      },
+      "usage": {
+        "resident_size": 230457344,
+        "phys_footprint": 169985272,
+        "lifetime_max_phys_footprint": 1681360816
+      },
+      "done": {
+        "event": "done",
+        "mode": "tasks",
+        "full_quality_workload": true,
+        "targets": 0,
+        "tasks": 100
+      },
+      "source_profile": {
+        "dtype_override": false,
+        "strict": true,
+        "lazy": false,
+        "trust_remote_code": false,
+        "loss_batch": 1,
+        "loss_cache": null,
+        "loss_full_blocks": true,
+        "task_prefill_chunk": 128,
+        "task_cache": "original KVCache step256 BF16",
+        "kv_quantization": false,
+        "greedy": "host FP64 comparison of exact-widened raw source logits, lowest ID ties",
+        "stop_ids": [
+          151645
+        ],
+        "final_sample_pending": true
+      },
+      "parameter_storage": [
+        "mlx.core.bfloat16"
+      ]
+    },
+    "native-tasks": {
+      "memory": {
+        "rss": 605700096,
+        "physical": 864453760
+      },
+      "ready": {
+        "event": "ready",
+        "format": "toklet-qwen3-quality-diagnostic-events-v1",
+        "mode": "tasks",
+        "diagnostic_only": true,
+        "full_quality_workload": true,
+        "c512_numerical_gate_status": "rejected_unchanged",
+        "quality_qualified": false,
+        "device": "Apple M1 Pro",
+        "debug_assertions": false,
+        "context_capacity": 1025,
+        "prefill_chunk_size": 128,
+        "input_sha256": "27e092d8669ddc74710928739c4381a602ff26f8f86e2683428d8abca3f4763c",
+        "targets": 0,
+        "tasks": 100,
+        "projection": "mlx_affine",
+        "normalization": "compensated",
+        "attention": "reference",
+        "activation_dtype": "FP16",
+        "kv_dtype": "FP16",
+        "memory": {
+          "weights_bytes": 633366062,
+          "kv_bytes": 117555984,
+          "scratch_bytes": 101181012,
+          "history_bytes": 4100,
+          "logits_bytes": 1215488,
+          "metadata_bytes": 16256,
+          "metadata_allowance_bytes": 67108864,
+          "admitted_bytes": 920447766
+        },
+        "application_allowance_bytes": 67108864,
+        "admitted_bytes": 987556630,
+        "external_source_identity_and_endpoint_required": true
+      },
+      "done": {
+        "event": "done",
+        "targets": 0,
+        "tasks": 100
+      }
+    },
+    "scope": {
+      "full_model_collections_complete": true,
+      "grading_complete": false,
+      "quality_qualified": false,
+      "numerical_qualified": false,
+      "adopted": false
+    }
+  },
+  "grading_observations": {
+    "unit": {
+      "memory": {
+        "rss": 216809472,
+        "physical": 119440056
+      },
+      "usage": {
+        "resident_size": 209534976,
+        "phys_footprint": 92488448,
+        "lifetime_max_phys_footprint": 119440056
+      }
+    },
+    "grade": {
+      "memory": {
+        "rss": 286031872,
+        "physical": 200000736
+      },
+      "usage": {
+        "resident_size": 187990016,
+        "phys_footprint": 111560024,
+        "lifetime_max_phys_footprint": 200000736
+      },
+      "losses": {
+        "baseline": {
+          "targets": 10000,
+          "blocks": 10,
+          "total_negative_log_likelihood": 32486.450139387212,
+          "mean_negative_log_likelihood": 3.248645013938721
+        },
+        "native": {
+          "targets": 10000,
+          "blocks": 10,
+          "total_negative_log_likelihood": 32526.49075779492,
+          "mean_negative_log_likelihood": 3.252649075779492
+        }
+      },
+      "decision": {
+        "complete": true,
+        "loss_increase_nats_per_token": 0.004004061840770845,
+        "loss_limit": 0.05,
+        "loss_passed": true,
+        "task_pass_rate_loss_percentage_points": 2,
+        "task_limit_percentage_points": 2,
+        "tasks_passed": true,
+        "candidate_tasks": {
+          "cases": 100,
+          "passed": 3,
+          "pass_rate": 0.03,
+          "aggregation": "100_equal_weight_binary_cases",
+          "categories": {
+            "code": {
+              "cases": 40,
+              "passed": 3
+            },
+            "prose": {
+              "cases": 30,
+              "passed": 0
+            },
+            "continuation": {
+              "cases": 30,
+              "passed": 0
+            }
+          }
+        },
+        "baseline_tasks": {
+          "cases": 100,
+          "passed": 5,
+          "pass_rate": 0.05,
+          "aggregation": "100_equal_weight_binary_cases",
+          "categories": {
+            "code": {
+              "cases": 40,
+              "passed": 5
+            },
+            "prose": {
+              "cases": 30,
+              "passed": 0
+            },
+            "continuation": {
+              "cases": 30,
+              "passed": 0
+            }
+          }
+        },
+        "decision": "retain_experimental_candidate",
+        "numerical_qualified": false,
+        "app_window_changed": false,
+        "full_model_window_qualified": false
+      },
+      "isolated_code_cases": 80,
+      "restored_stopped": true,
+      "guest_vm_memory_reservation_bytes": 2147483648,
+      "host_grader_native_physical_limit_bytes": 1073741824,
+      "whole_grading_phase_physical_peak_measured": false
+    },
+    "scope": {
+      "full_quality_scored": true,
+      "numerical_qualified": false,
+      "app_window_changed": false,
+      "full_model_window_qualified": false,
+      "iphone_qualified": false
+    }
+  },
+  "decision": {
+    "complete": true,
+    "loss_increase_nats_per_token": 0.004004061840770845,
+    "loss_limit": 0.05,
+    "loss_passed": true,
+    "task_pass_rate_loss_percentage_points": 2,
+    "task_limit_percentage_points": 2,
+    "tasks_passed": true,
+    "candidate_tasks": {
+      "cases": 100,
+      "passed": 3,
+      "pass_rate": 0.03,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 3
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 0
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "baseline_tasks": {
+      "cases": 100,
+      "passed": 5,
+      "pass_rate": 0.05,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 5
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 0
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "decision": "retain_experimental_candidate",
+    "numerical_qualified": false,
+    "app_window_changed": false,
+    "full_model_window_qualified": false
+  },
+  "losses": {
+    "baseline": {
+      "targets": 10000,
+      "blocks": 10,
+      "total_negative_log_likelihood": 32486.450139387212,
+      "mean_negative_log_likelihood": 3.248645013938721
+    },
+    "native": {
+      "targets": 10000,
+      "blocks": 10,
+      "total_negative_log_likelihood": 32526.49075779492,
+      "mean_negative_log_likelihood": 3.252649075779492
+    }
+  },
+  "outcomes": {
+    "baseline": [
+      {
+        "id": "HumanEval/0",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/0",
+            "program_sha256": "8d442f2a080c5532736eb8c14f41d804b9972e2ce479a30561462efe0609d9a7",
+            "program_bytes": 1370
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/1",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/1",
+            "program_sha256": "94cf06b2f1f71b9de6dd739414716dcb9b7fd08998abe0701b38e93c25ce767e",
+            "program_bytes": 1784
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/2",
+        "category": "code",
+        "passed": true,
+        "status": "model_pass",
+        "resolved": {
+          "outcome": "passed",
+          "passed": true,
+          "binding": {
+            "case_id": "HumanEval/2",
+            "program_sha256": "7bca5bc52473386b9d5135b671af0fa0f30558f71d0c59d86908062bbe05ea07",
+            "program_bytes": 887
+          },
+          "reason": null,
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/3",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/3",
+            "program_sha256": "438ea1f8e7af58feeb5fe288f191d3bf9afb70ec6579db766c7ac2afe5629f72",
+            "program_bytes": 1052
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/4",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/4",
+            "program_sha256": "f7a4c0794b4f3f4e959bc774992fba0a069842b21c064198acb277f14e41fd09",
+            "program_bytes": 1152
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/5",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/5",
+            "program_sha256": "1dde2b12f06c3f1daf208aeba6c23af17372e7a8b38c0a9749e6c2809bfa9d50",
+            "program_bytes": 894
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/6",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/6",
+            "program_sha256": "0ff1d68ffecebfe68f38d9f3d9aa75dcfe29d80e55c40121a2593ca00127fc27",
+            "program_bytes": 1201
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/7",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/7",
+            "program_sha256": "be8e0b8f25487832bdbe4c8be1a8cc71d325d0cea2aaeaa9323942337fc9756a",
+            "program_bytes": 1032
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/8",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/8",
+            "program_sha256": "cf73ea64c3f7f40c1da37cbb4791771ffcf8bd14c7c9d4843f4324e2ca1c7c38",
+            "program_bytes": 1244
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/9",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/9",
+            "program_sha256": "dc55d7985b0ab5c569280236af10b2cbea3b5bc2866d0714aeb823fea2e64734",
+            "program_bytes": 1000
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/10",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/10",
+            "program_sha256": "5397ff2ae96ebed4a1a3c5973dd1fad8bea2c56c63ab2e22ab1c8b31de4d233e",
+            "program_bytes": 1845
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/11",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/11",
+            "program_sha256": "70c7cce1054fec79cc7aa78696a3647cbce4da6ca4aab8c01f134066161896ea",
+            "program_bytes": 728
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/12",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/12",
+            "program_sha256": "7aa9ed992a636b8b88c2e3b496bfd8b3653420a3f27835aa29b316c1606daebe",
+            "program_bytes": 998
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/13",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/13",
+            "program_sha256": "724260045739ada5f42cd4e8e05adb4d9cc85fac63ddc3c63bb03dd8f00143a0",
+            "program_bytes": 684
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/14",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/14",
+            "program_sha256": "614029f359bcd9f960ba4df7a7fc4b3eba22a013a5ac1d43a3c4ce995088033a",
+            "program_bytes": 674
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/15",
+        "category": "code",
+        "passed": true,
+        "status": "model_pass",
+        "resolved": {
+          "outcome": "passed",
+          "passed": true,
+          "binding": {
+            "case_id": "HumanEval/15",
+            "program_sha256": "5922d8a4c17494d49f584066dd6d29fc8ecf5610bcf0f9bddf1c132d78f7ad20",
+            "program_bytes": 712
+          },
+          "reason": null,
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/16",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/16",
+            "program_sha256": "7292aeacfd842d23ac042007ff47a038e31bf9c5e3cd9b95cfc20b59a2a83fe9",
+            "program_bytes": 876
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/17",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/17",
+            "program_sha256": "36fdc6f4fa8fb7c49890022aa84ffedf8904a7f4f4f74ac8b300156d19284f79",
+            "program_bytes": 1471
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/18",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/18",
+            "program_sha256": "c3e1749fda5b3eb56a11eb7bb4c117efd7446ed93176bdfd88342e1784dd4410",
+            "program_bytes": 1077
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/19",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/19",
+            "program_sha256": "e90f9e48d320d4807826808274d49498eb038e21c45c876f5d77046101ed88aa",
+            "program_bytes": 1217
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/20",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/20",
+            "program_sha256": "559b98096a66a709924e6547f3f58544f4a01928eda62093ed49eb0aa9f54eb6",
+            "program_bytes": 1672
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/21",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/21",
+            "program_sha256": "157b5edbbe550b6d5de619b73e32615f496bcbfcd99a632e4f9e8e04418ecee8",
+            "program_bytes": 1251
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/22",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/22",
+            "program_sha256": "e56260abc3a60c18076bef0a3739b6e6b01d00b1042f57b79975cff2fce2e583",
+            "program_bytes": 719
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/23",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/23",
+            "program_sha256": "60651ab9e710c5b44d1317ca136375864c2df8dec963014e7d6d8f8fd7fbe29c",
+            "program_bytes": 463
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/24",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/24",
+            "program_sha256": "ec4b38c354c2aa81d00310694c3ba01212608751541e16fcbd9f95ea678819ff",
+            "program_bytes": 632
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/25",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/25",
+            "program_sha256": "b9a920062b43f69e93318089e59b3598ba77ad8207beb7715e9bb1d32faa14c4",
+            "program_bytes": 1630
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/26",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/26",
+            "program_sha256": "29a4459c30fbfa70f1f9ee9c9800732115a741884eee6704ef48dd3123fc9415",
+            "program_bytes": 962
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/27",
+        "category": "code",
+        "passed": true,
+        "status": "model_pass",
+        "resolved": {
+          "outcome": "passed",
+          "passed": true,
+          "binding": {
+            "case_id": "HumanEval/27",
+            "program_sha256": "b9581b914c297d7302d4009144381c6c46c47043b48471c20e81c050c4ca0913",
+            "program_bytes": 668
+          },
+          "reason": null,
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/28",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/28",
+            "program_sha256": "432dd48fe117ffa7e10ef23f09c2b68b0207d5ba3f368b82b182c105ee61ff8a",
+            "program_bytes": 641
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/29",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/29",
+            "program_sha256": "d7296ba9d0a62afcd1adcfc5d0e3aa461db318925690b7ec837c98f8b4c42dec",
+            "program_bytes": 1126
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/30",
+        "category": "code",
+        "passed": true,
+        "status": "model_pass",
+        "resolved": {
+          "outcome": "passed",
+          "passed": true,
+          "binding": {
+            "case_id": "HumanEval/30",
+            "program_sha256": "30b2324906c37113812034adfa3011a47e1dc5b76f51ab110361e0dce9ac2b04",
+            "program_bytes": 769
+          },
+          "reason": null,
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/31",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/31",
+            "program_sha256": "8a2c894bb9f70d5ef614234abbbcc2c4f6b53406c3418d74501d449d471e55ce",
+            "program_bytes": 1157
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/32",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/32",
+            "program_sha256": "909d437415590b2fa32ed0ad2542029b716674a2a576eb96ce004465660048c8",
+            "program_bytes": 1499
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/33",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/33",
+            "program_sha256": "57da6c328f87ab56a34152bd0a2a923c5deb3412d4d5e371f280c3c622df67e1",
+            "program_bytes": 1647
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/34",
+        "category": "code",
+        "passed": true,
+        "status": "model_pass",
+        "resolved": {
+          "outcome": "passed",
+          "passed": true,
+          "binding": {
+            "case_id": "HumanEval/34",
+            "program_sha256": "fc4afd996957f436c2d3e92f84f9cd63c25f33d5c4bd0fdd6437a2703601a008",
+            "program_bytes": 450
+          },
+          "reason": null,
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/35",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/35",
+            "program_sha256": "becc92b18568438ded1acbb048171a5236ca1ee59678a721fc79060fee6b81dd",
+            "program_bytes": 535
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/36",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/36",
+            "program_sha256": "79d7a467a855c1dae88dbb3ab6e6e9cef2deac89750e6fd151d3d957c76c70ae",
+            "program_bytes": 916
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/37",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/37",
+            "program_sha256": "ccea631e4090be4ee3c2a1d884f8be3ad1a846413bb41167891350ceb98079f8",
+            "program_bytes": 1005
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/38",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/38",
+            "program_sha256": "e813f54b460fe11c339378c553f3834fbcf5c63ba69f55f129c3e8bce7968e0f",
+            "program_bytes": 1549
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/39",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/39",
+            "program_sha256": "0ee3557cb94b25e36fec46a67440cbda44b46c0f31c278dcd555b84b918f423b",
+            "program_bytes": 910
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "truthfulqa/row-0",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-1",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-2",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-3",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-4",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-5",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-6",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-7",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-8",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-9",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-10",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-11",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-12",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-13",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-14",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-15",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-16",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-17",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-18",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-19",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-20",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-21",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-22",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-23",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-24",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-25",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-26",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-27",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-28",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-29",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-0",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-1",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-2",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-3",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-4",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-5",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-6",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-7",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-8",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-9",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-10",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-11",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-12",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-13",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-14",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-15",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-16",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-17",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-18",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-19",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-20",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-21",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-22",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-23",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-24",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-25",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-26",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-27",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-28",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-29",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      }
+    ],
+    "native": [
+      {
+        "id": "HumanEval/0",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/0",
+            "program_sha256": "8d442f2a080c5532736eb8c14f41d804b9972e2ce479a30561462efe0609d9a7",
+            "program_bytes": 1370
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/1",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/1",
+            "program_sha256": "1c24f2ff733a27ae957a86ee686293554976687c45e216827a4b9a6553114daa",
+            "program_bytes": 1788
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/2",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/2",
+            "program_sha256": "9ad60b518283eeb702d7a7bb34033261eb4d5228324984bfcbc7eb75f274b7c4",
+            "program_bytes": 906
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/3",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/3",
+            "program_sha256": "438ea1f8e7af58feeb5fe288f191d3bf9afb70ec6579db766c7ac2afe5629f72",
+            "program_bytes": 1052
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/4",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/4",
+            "program_sha256": "f7a4c0794b4f3f4e959bc774992fba0a069842b21c064198acb277f14e41fd09",
+            "program_bytes": 1152
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/5",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/5",
+            "program_sha256": "1dde2b12f06c3f1daf208aeba6c23af17372e7a8b38c0a9749e6c2809bfa9d50",
+            "program_bytes": 894
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/6",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/6",
+            "program_sha256": "cb6bad0d732e549e1cf2abfa09d0d06119e1dc7412ec36c83e1efd2f68021f63",
+            "program_bytes": 1626
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/7",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/7",
+            "program_sha256": "be8e0b8f25487832bdbe4c8be1a8cc71d325d0cea2aaeaa9323942337fc9756a",
+            "program_bytes": 1032
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/8",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/8",
+            "program_sha256": "cf73ea64c3f7f40c1da37cbb4791771ffcf8bd14c7c9d4843f4324e2ca1c7c38",
+            "program_bytes": 1244
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/9",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/9",
+            "program_sha256": "dc55d7985b0ab5c569280236af10b2cbea3b5bc2866d0714aeb823fea2e64734",
+            "program_bytes": 1000
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/10",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/10",
+            "program_sha256": "505782f310c25c26389517855b49aa2212a384986ae20b5cf6739f3cb5f6d5de",
+            "program_bytes": 1788
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/11",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/11",
+            "program_sha256": "70c7cce1054fec79cc7aa78696a3647cbce4da6ca4aab8c01f134066161896ea",
+            "program_bytes": 728
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/12",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/12",
+            "program_sha256": "79c3bd554e2e684857f6bee139e46ff0a85276bbc69db9bbd622ccf297385990",
+            "program_bytes": 927
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/13",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/13",
+            "program_sha256": "724260045739ada5f42cd4e8e05adb4d9cc85fac63ddc3c63bb03dd8f00143a0",
+            "program_bytes": 684
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/14",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/14",
+            "program_sha256": "78e8342bd1e5052dd8374979e5382121ce4e0b28389a79582b86ce2f35e97255",
+            "program_bytes": 733
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/15",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/15",
+            "program_sha256": "8658ce291a5e4aaa38d256c36b9e691c535d6dbf0239954acc987ecc45a121c3",
+            "program_bytes": 731
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/16",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/16",
+            "program_sha256": "44610745dd457d24ea709930f0bd29da94a97caded8c77dcb3ea451f557b2d80",
+            "program_bytes": 890
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/17",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/17",
+            "program_sha256": "36fdc6f4fa8fb7c49890022aa84ffedf8904a7f4f4f74ac8b300156d19284f79",
+            "program_bytes": 1471
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/18",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/18",
+            "program_sha256": "fae5fde9a84a3cfdcc907a4da38fc09c90a5784e56aa33298b99ae960661e336",
+            "program_bytes": 1091
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/19",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/19",
+            "program_sha256": "e90f9e48d320d4807826808274d49498eb038e21c45c876f5d77046101ed88aa",
+            "program_bytes": 1217
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/20",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/20",
+            "program_sha256": "d95ab781599751419a8331216dd42c170afaf07a2462920a06348da045aab08b",
+            "program_bytes": 1732
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/21",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/21",
+            "program_sha256": "157b5edbbe550b6d5de619b73e32615f496bcbfcd99a632e4f9e8e04418ecee8",
+            "program_bytes": 1251
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/22",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/22",
+            "program_sha256": "8fd1b90e96bb7b8acc1987d57a9d5604912e7a60c40f2bcf8a794cde23c9529b",
+            "program_bytes": 725
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/23",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/23",
+            "program_sha256": "60651ab9e710c5b44d1317ca136375864c2df8dec963014e7d6d8f8fd7fbe29c",
+            "program_bytes": 463
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/24",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/24",
+            "program_sha256": "ec4b38c354c2aa81d00310694c3ba01212608751541e16fcbd9f95ea678819ff",
+            "program_bytes": 632
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/25",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/25",
+            "program_sha256": "b9a920062b43f69e93318089e59b3598ba77ad8207beb7715e9bb1d32faa14c4",
+            "program_bytes": 1630
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/26",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/26",
+            "program_sha256": "29a4459c30fbfa70f1f9ee9c9800732115a741884eee6704ef48dd3123fc9415",
+            "program_bytes": 962
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/27",
+        "category": "code",
+        "passed": true,
+        "status": "model_pass",
+        "resolved": {
+          "outcome": "passed",
+          "passed": true,
+          "binding": {
+            "case_id": "HumanEval/27",
+            "program_sha256": "b9581b914c297d7302d4009144381c6c46c47043b48471c20e81c050c4ca0913",
+            "program_bytes": 668
+          },
+          "reason": null,
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/28",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/28",
+            "program_sha256": "432dd48fe117ffa7e10ef23f09c2b68b0207d5ba3f368b82b182c105ee61ff8a",
+            "program_bytes": 641
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/29",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/29",
+            "program_sha256": "251714b1530437669c2138b4138cce9a5cb3ed0b91d9cd7e09681af2f0f742d1",
+            "program_bytes": 1110
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/30",
+        "category": "code",
+        "passed": true,
+        "status": "model_pass",
+        "resolved": {
+          "outcome": "passed",
+          "passed": true,
+          "binding": {
+            "case_id": "HumanEval/30",
+            "program_sha256": "30b2324906c37113812034adfa3011a47e1dc5b76f51ab110361e0dce9ac2b04",
+            "program_bytes": 769
+          },
+          "reason": null,
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/31",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/31",
+            "program_sha256": "8a2c894bb9f70d5ef614234abbbcc2c4f6b53406c3418d74501d449d471e55ce",
+            "program_bytes": 1157
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/32",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/32",
+            "program_sha256": "909d437415590b2fa32ed0ad2542029b716674a2a576eb96ce004465660048c8",
+            "program_bytes": 1499
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/33",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/33",
+            "program_sha256": "57da6c328f87ab56a34152bd0a2a923c5deb3412d4d5e371f280c3c622df67e1",
+            "program_bytes": 1647
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/34",
+        "category": "code",
+        "passed": true,
+        "status": "model_pass",
+        "resolved": {
+          "outcome": "passed",
+          "passed": true,
+          "binding": {
+            "case_id": "HumanEval/34",
+            "program_sha256": "fc4afd996957f436c2d3e92f84f9cd63c25f33d5c4bd0fdd6437a2703601a008",
+            "program_bytes": 450
+          },
+          "reason": null,
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/35",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/35",
+            "program_sha256": "becc92b18568438ded1acbb048171a5236ca1ee59678a721fc79060fee6b81dd",
+            "program_bytes": 535
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/36",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/36",
+            "program_sha256": "af8fa0f5f250843b0da26011793c5058197624a289d8c4d2a47168190638c90a",
+            "program_bytes": 832
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/37",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/37",
+            "program_sha256": "6e326e9234f86433fe163c21d5602a15532aca9fdd77c193c371bbdbb1b17d06",
+            "program_bytes": 1093
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/38",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/38",
+            "program_sha256": "b459009055d758410e972ec5249fffbcf6905fd7637999b5c7f9103527c908ba",
+            "program_bytes": 1562
+          },
+          "reason": "SyntaxError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "HumanEval/39",
+        "category": "code",
+        "passed": false,
+        "status": "model_fail",
+        "resolved": {
+          "outcome": "model_failure",
+          "passed": false,
+          "binding": {
+            "case_id": "HumanEval/39",
+            "program_sha256": "0ee3557cb94b25e36fec46a67440cbda44b46c0f31c278dcd555b84b918f423b",
+            "program_bytes": 910
+          },
+          "reason": "AssertionError",
+          "output_frames": 0
+        }
+      },
+      {
+        "id": "truthfulqa/row-0",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-1",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-2",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-3",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-4",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-5",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-6",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-7",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-8",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-9",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-10",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-11",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-12",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-13",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-14",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-15",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-16",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-17",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-18",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-19",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-20",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-21",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-22",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-23",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-24",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-25",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-26",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-27",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-28",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "truthfulqa/row-29",
+        "category": "prose",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-0",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-1",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-2",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-3",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-4",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-5",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-6",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-7",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-8",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-9",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-10",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-11",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-12",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-13",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-14",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-15",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-16",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-17",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-18",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-19",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-20",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-21",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-22",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-23",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-24",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-25",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-26",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-27",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-28",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      },
+      {
+        "id": "lambada/row-29",
+        "category": "continuation",
+        "passed": false,
+        "status": "model_fail"
+      }
+    ]
+  },
+  "formatting_diagnostics": {
+    "profiles": {
+      "baseline": {
+        "code_fenced_responses": 25,
+        "prose_responses_not_single_uppercase_letter": 30
+      },
+      "native": {
+        "code_fenced_responses": 31,
+        "prose_responses_not_single_uppercase_letter": 30
+      }
+    },
+    "exact_visible_id_sequences": 60,
+    "diagnostic_only": true,
+    "no_regrading": true
+  },
+  "model_commands": [
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/unit-cold-cache",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/worker.py",
+        "--runtime",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/runtime.json",
+        "--runtime-sha",
+        "1e0dad43569b326b1af957fca33ceef87e17df0736292c436baa9e95f0393c34",
+        "--mode",
+        "unit",
+        "--output",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/unit.json"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 22676,
+      "stdout": "artifacts/m8-qwen3-full-quality-v2/unit.stdout",
+      "stderr": "artifacts/m8-qwen3-full-quality-v2/unit.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/probe-cold-cache",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/worker.py",
+        "--runtime",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/runtime.json",
+        "--runtime-sha",
+        "1e0dad43569b326b1af957fca33ceef87e17df0736292c436baa9e95f0393c34",
+        "--mode",
+        "probe",
+        "--output",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/probe.json",
+        "--journal",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/probe.jsonl"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 22694,
+      "stdout": "artifacts/m8-qwen3-full-quality-v2/probe.stdout",
+      "stderr": "artifacts/m8-qwen3-full-quality-v2/probe.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/task_probe-cold-cache",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/worker.py",
+        "--runtime",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/runtime.json",
+        "--runtime-sha",
+        "1e0dad43569b326b1af957fca33ceef87e17df0736292c436baa9e95f0393c34",
+        "--mode",
+        "task_probe",
+        "--output",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/task_probe.json",
+        "--journal",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/task_probe.jsonl"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 22722,
+      "stdout": "artifacts/m8-qwen3-full-quality-v2/task_probe.stdout",
+      "stderr": "artifacts/m8-qwen3-full-quality-v2/task_probe.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/source-loss-cold-cache",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/worker.py",
+        "--runtime",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/runtime.json",
+        "--runtime-sha",
+        "1e0dad43569b326b1af957fca33ceef87e17df0736292c436baa9e95f0393c34",
+        "--mode",
+        "loss",
+        "--output",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/source-loss.json",
+        "--journal",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/source-loss.jsonl"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 22751,
+      "stdout": "artifacts/m8-qwen3-full-quality-v2/source-loss.stdout",
+      "stderr": "artifacts/m8-qwen3-full-quality-v2/source-loss.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-diagnostic-v1/target/release/examples/qwen3_quality",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968",
+        "loss",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-inputs-v1/inputs/held_out_loss.u32le"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 22854,
+      "stdout": "artifacts/m8-qwen3-full-quality-v2/native-loss.stdout",
+      "stderr": "artifacts/m8-qwen3-full-quality-v2/native-loss.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/source-tasks-cold-cache",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/worker.py",
+        "--runtime",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/runtime.json",
+        "--runtime-sha",
+        "1e0dad43569b326b1af957fca33ceef87e17df0736292c436baa9e95f0393c34",
+        "--mode",
+        "tasks",
+        "--output",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/source-tasks.json",
+        "--journal",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/source-tasks.jsonl"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 23232,
+      "stdout": "artifacts/m8-qwen3-full-quality-v2/source-tasks.stdout",
+      "stderr": "artifacts/m8-qwen3-full-quality-v2/source-tasks.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-diagnostic-v1/target/release/examples/qwen3_quality",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968",
+        "tasks",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-inputs-v1/inputs/execution.jsonl"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 23350,
+      "stdout": "artifacts/m8-qwen3-full-quality-v2/native-tasks.stdout",
+      "stderr": "artifacts/m8-qwen3-full-quality-v2/native-tasks.stderr"
+    }
+  ],
+  "grading_commands": [
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/unit-cold-cache",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/worker.py",
+        "--runtime",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/runtime.json",
+        "--runtime-sha",
+        "1ea09b98ff4fbdfc1391159d5f5e0c6b82a251f97734786ed3cf7a765a045f4d",
+        "--mode",
+        "unit",
+        "--output",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/unit.json",
+        "--collection",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/checks.json",
+        "--collection-sha",
+        "09ca67a9033b3a63a4616ac6004694749da98ee5f70baba76fb67675ded362b5",
+        "--destination",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/grade"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 26125,
+      "stdout": "artifacts/m8-qwen3-quality-grading-v1/unit.stdout",
+      "stderr": "artifacts/m8-qwen3-quality-grading-v1/unit.stderr"
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/grade-cold-cache",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/worker.py",
+        "--runtime",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/runtime.json",
+        "--runtime-sha",
+        "1ea09b98ff4fbdfc1391159d5f5e0c6b82a251f97734786ed3cf7a765a045f4d",
+        "--mode",
+        "grade",
+        "--output",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/grade.json",
+        "--collection",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v2/checks.json",
+        "--collection-sha",
+        "09ca67a9033b3a63a4616ac6004694749da98ee5f70baba76fb67675ded362b5",
+        "--destination",
+        "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-quality-grading-v1/grade"
+      ],
+      "exit_code": 0,
+      "pid": 26143,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "signals": [],
+      "lifetime_policy": "graceful TERM only; retain owner until group exit; independently verify VM stopped",
+      "machine_before": [
+        {
+          "Name": "podman-machine-default",
+          "Default": true,
+          "Created": "2026-01-15T12:12:42.666462+03:00",
+          "Running": false,
+          "Starting": false,
+          "LastUp": "2026-10-22T17:07:59.118783+03:00",
+          "Stream": "default",
+          "VMType": "applehv",
+          "CPUs": 5,
+          "Memory": "2147483648",
+          "Swap": "0",
+          "DiskSize": "107374182400",
+          "Port": 51387,
+          "RemoteUsername": "core",
+          "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+          "UserModeNetworking": true
+        }
+      ],
+      "machine_after": [
+        {
+          "Name": "podman-machine-default",
+          "Default": true,
+          "Created": "2026-01-15T12:12:42.666462+03:00",
+          "Running": false,
+          "Starting": false,
+          "LastUp": "2026-10-27T11:50:36.216956+03:00",
+          "Stream": "default",
+          "VMType": "applehv",
+          "CPUs": 5,
+          "Memory": "2147483648",
+          "Swap": "0",
+          "DiskSize": "107374182400",
+          "Port": 51387,
+          "RemoteUsername": "core",
+          "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+          "UserModeNetworking": true
+        }
+      ],
+      "independent_stopped_verification": true,
+      "stdout": "artifacts/m8-qwen3-quality-grading-v1/grade.stdout",
+      "stderr": "artifacts/m8-qwen3-quality-grading-v1/grade.stderr"
+    }
+  ],
+  "outer_vm_observation_commands": [
+    {
+      "command": [
+        "/opt/podman/bin/podman",
+        "machine",
+        "list",
+        "--format=json"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.09569408325478435,
+      "stdout_base64": "WwogICAgewogICAgICAgICJOYW1lIjogInBvZG1hbi1tYWNoaW5lLWRlZmF1bHQiLAogICAgICAgICJEZWZhdWx0IjogdHJ1ZSwKICAgICAgICAiQ3JlYXRlZCI6ICIyMDI2LTAxLTE1VDEyOjEyOjQyLjY2NjQ2MiswMzowMCIsCiAgICAgICAgIlJ1bm5pbmciOiBmYWxzZSwKICAgICAgICAiU3RhcnRpbmciOiBmYWxzZSwKICAgICAgICAiTGFzdFVwIjogIjIwMjYtMTAtMjJUMTc6MDc6NTkuMTE4NzgzKzAzOjAwIiwKICAgICAgICAiU3RyZWFtIjogImRlZmF1bHQiLAogICAgICAgICJWTVR5cGUiOiAiYXBwbGVodiIsCiAgICAgICAgIkNQVXMiOiA1LAogICAgICAgICJNZW1vcnkiOiAiMjE0NzQ4MzY0OCIsCiAgICAgICAgIlN3YXAiOiAiMCIsCiAgICAgICAgIkRpc2tTaXplIjogIjEwNzM3NDE4MjQwMCIsCiAgICAgICAgIlBvcnQiOiA1MTM4NywKICAgICAgICAiUmVtb3RlVXNlcm5hbWUiOiAiY29yZSIsCiAgICAgICAgIklkZW50aXR5UGF0aCI6ICIvVXNlcnMvY29sb25lci8ubG9jYWwvc2hhcmUvY29udGFpbmVycy9wb2RtYW4vbWFjaGluZS9tYWNoaW5lIiwKICAgICAgICAiVXNlck1vZGVOZXR3b3JraW5nIjogdHJ1ZQogICAgfQpd",
+      "stdout_captured_bytes": 591,
+      "stdout_captured_sha256": "a5b65399ff2e0fe9d0e4edd2e6555e36794e53f9352cb56d1f025be21d4af43b",
+      "stderr_base64": "",
+      "stderr_captured_bytes": 0,
+      "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/opt/podman/bin/podman",
+        "machine",
+        "list",
+        "--format=json"
+      ],
+      "wall_timed_out": false,
+      "output_limit_exceeded": false,
+      "exit_code": 0,
+      "process_group_killed": false,
+      "cleanup_errors": [],
+      "surviving_group_members": [],
+      "elapsed_seconds": 0.03273737523704767,
+      "stdout_base64": "WwogICAgewogICAgICAgICJOYW1lIjogInBvZG1hbi1tYWNoaW5lLWRlZmF1bHQiLAogICAgICAgICJEZWZhdWx0IjogdHJ1ZSwKICAgICAgICAiQ3JlYXRlZCI6ICIyMDI2LTAxLTE1VDEyOjEyOjQyLjY2NjQ2MiswMzowMCIsCiAgICAgICAgIlJ1bm5pbmciOiBmYWxzZSwKICAgICAgICAiU3RhcnRpbmciOiBmYWxzZSwKICAgICAgICAiTGFzdFVwIjogIjIwMjYtMTAtMjdUMTE6NTA6MzYuMjE2OTU2KzAzOjAwIiwKICAgICAgICAiU3RyZWFtIjogImRlZmF1bHQiLAogICAgICAgICJWTVR5cGUiOiAiYXBwbGVodiIsCiAgICAgICAgIkNQVXMiOiA1LAogICAgICAgICJNZW1vcnkiOiAiMjE0NzQ4MzY0OCIsCiAgICAgICAgIlN3YXAiOiAiMCIsCiAgICAgICAgIkRpc2tTaXplIjogIjEwNzM3NDE4MjQwMCIsCiAgICAgICAgIlBvcnQiOiA1MTM4NywKICAgICAgICAiUmVtb3RlVXNlcm5hbWUiOiAiY29yZSIsCiAgICAgICAgIklkZW50aXR5UGF0aCI6ICIvVXNlcnMvY29sb25lci8ubG9jYWwvc2hhcmUvY29udGFpbmVycy9wb2RtYW4vbWFjaGluZS9tYWNoaW5lIiwKICAgICAgICAiVXNlck1vZGVOZXR3b3JraW5nIjogdHJ1ZQogICAgfQpd",
+      "stdout_captured_bytes": 591,
+      "stdout_captured_sha256": "54209300827cfc34211dd3855751c9e49ac625e9e5635681081a123474afea3b",
+      "stderr_base64": "",
+      "stderr_captured_bytes": 0,
+      "stderr_captured_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "isolated_evaluator": {
+    "code_cases": 80,
+    "qualified_image": {
+      "Id": "eb7d16fec874f15b584063275012ac719885a2b87574d124c0da9c156d504629",
+      "Digest": "sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+      "RepoDigests": [
+        "docker.io/library/python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        "docker.io/library/python@sha256:739ba32ae445e8d58f3d90feb85f83bebc8346f8dd280fa1eb5848f4ff1ed163"
+      ],
+      "Architecture": "arm64",
+      "Os": "linux",
+      "RootFS": {
+        "Type": "layers",
+        "Layers": [
+          "sha256:dca69811453d69d10b6c0345a5c49147162abe20a2f77802d66efc60667949ea",
+          "sha256:aa7917539601453a983066ad360b759c92c30002edee05749dfe4baa9fa4dde8",
+          "sha256:54e908385c73b1f7a6708f9807d9da4cc2a1e7f4cc4f17e00e6e90a3d8c5007f",
+          "sha256:0e4e1e69caa145889e7738a6089b168f6c66c26184bba2c41b1c6a3e0bb21ff7"
+        ]
+      }
+    },
+    "qualification": {
+      "prior_sha256": "0736ec7d8cf7481c5327c01c5f0c8555b6e3c8669c6c63e7a267f0044873d3f1",
+      "literal_sha256": "77cdda26d80a079bc56da9a80d52f7fa09d7b2942ce768d464128f07798a9453",
+      "runtime": {
+        "python_executable": "/usr/local/bin/python3",
+        "python_sha256": "7863a4d5e03fde7791c7f8c2c304cf3522f435e19745364ad18a6b7a0458af57",
+        "kernel": "6.17.7-300.fc43.aarch64",
+        "machine": "aarch64",
+        "uid": 65534,
+        "gid": 65534,
+        "capabilities": {
+          "CapEff": 0,
+          "CapBnd": 0
+        },
+        "filter_sha256": "7584e24ca69a1c2da42105b5956ef2e5bdccf215eca35cd3bea7da717c6c9e12"
+      },
+      "python_version": "3.12.15 (main, Oct  6 2026, 02:08:14) [GCC 12.2.0]"
+    },
+    "podman_sha256": "1da4bec6e2529e1b04020fcb6bc25f30489e873a0d8535e5a5ae8baf65f5361d",
+    "podman_version": {
+      "Client": {
+        "APIVersion": "5.7.1",
+        "Version": "5.7.1",
+        "GoVersion": "go1.25.5",
+        "GitCommit": "f845d14e941889ba4c071f35233d09b29d363c75",
+        "BuiltTime": "Wed Dec 10 17:53:41 2025",
+        "Built": 1765378421,
+        "BuildOrigin": "pkginstaller",
+        "OsArch": "darwin/arm64",
+        "Os": "darwin"
+      },
+      "Server": {
+        "APIVersion": "5.7.1",
+        "Version": "5.7.1",
+        "GoVersion": "go1.25.4 X:nodwarf5",
+        "GitCommit": "f845d14e941889ba4c071f35233d09b29d363c75",
+        "BuiltTime": "Tue Dec  9 03:00:00 2025",
+        "Built": 1765238400,
+        "OsArch": "linux/arm64",
+        "Os": "linux"
+      }
+    },
+    "machine_before": [
+      {
+        "Name": "podman-machine-default",
+        "Default": true,
+        "Created": "2026-01-15T12:12:42.666462+03:00",
+        "Running": false,
+        "Starting": false,
+        "LastUp": "2026-10-22T17:07:59.118783+03:00",
+        "Stream": "default",
+        "VMType": "applehv",
+        "CPUs": 5,
+        "Memory": "2147483648",
+        "Swap": "0",
+        "DiskSize": "107374182400",
+        "Port": 51387,
+        "RemoteUsername": "core",
+        "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+        "UserModeNetworking": true
+      }
+    ],
+    "machine_after": [
+      {
+        "Name": "podman-machine-default",
+        "Default": true,
+        "Created": "2026-01-15T12:12:42.666462+03:00",
+        "Running": false,
+        "Starting": false,
+        "LastUp": "2026-10-27T11:50:36.216956+03:00",
+        "Stream": "default",
+        "VMType": "applehv",
+        "CPUs": 5,
+        "Memory": "2147483648",
+        "Swap": "0",
+        "DiskSize": "107374182400",
+        "Port": 51387,
+        "RemoteUsername": "core",
+        "IdentityPath": "/Users/coloner/.local/share/containers/podman/machine/machine",
+        "UserModeNetworking": true
+      }
+    ],
+    "restored_stopped": true,
+    "helper_lifetime_completed": true,
+    "unresolved_case_ids": [],
+    "scope": "Literal source-test outcomes, no adversarial shared-interpreter grading attestation or timing acceptance"
+  },
+  "code_run_summaries": [
+    {
+      "profile": "baseline",
+      "id": "HumanEval/0",
+      "program_sha256": "8d442f2a080c5532736eb8c14f41d804b9972e2ce479a30561462efe0609d9a7",
+      "completion_sha256": "0a47f9dd1360920cce1baee0e1bdde932586c9f04dc3e6490d6385987375b7cc",
+      "container_id": "38f12dd255e75ca6361f1ff2052fe67a8c1404e5f73f30efc9b58f097c06fcfd",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/1",
+      "program_sha256": "94cf06b2f1f71b9de6dd739414716dcb9b7fd08998abe0701b38e93c25ce767e",
+      "completion_sha256": "66c9c7bd7adc7da96b91491a1a7d92a25f8fcea061a021f5072b98c3a1d4c8ad",
+      "container_id": "bb51bc7d78422e58ab77c6429477ad232b219070f556b2d123d16ed62e88605c",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/2",
+      "program_sha256": "7bca5bc52473386b9d5135b671af0fa0f30558f71d0c59d86908062bbe05ea07",
+      "completion_sha256": "c775b8db1c94269a53b795d82aecf16b827d88e988bd3a565a7f25c74d98fbff",
+      "container_id": "c2fa9aac2cf7716f01ee6869b2e247877c5bd9441a689817a7cd69b28a5839e4",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/3",
+      "program_sha256": "438ea1f8e7af58feeb5fe288f191d3bf9afb70ec6579db766c7ac2afe5629f72",
+      "completion_sha256": "c3fbecd5191aaac27a7a1f5d14fe7c5d8047ebace6e127fb83ed6337893e17cb",
+      "container_id": "7e187b96eea514c01ecd27b22d7b8dd14f0ba6aa07dc130487d804ac6564947f",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/4",
+      "program_sha256": "f7a4c0794b4f3f4e959bc774992fba0a069842b21c064198acb277f14e41fd09",
+      "completion_sha256": "89672a935528cf934d6eae83db1c50b34ffdd67a1919e1ab8ba295baadc47948",
+      "container_id": "086cfb684840d60f5d43419d400dac341f89d3aa79d14cee07a57514aeb972d0",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/5",
+      "program_sha256": "1dde2b12f06c3f1daf208aeba6c23af17372e7a8b38c0a9749e6c2809bfa9d50",
+      "completion_sha256": "88a3ffd2cbb266e6d3feb8d1a7075f9d423ba88df777c09620bc0ac8e0200fd1",
+      "container_id": "3e019408a6bd951112e94a2395db9d21b89f7f9ddb53dc35ebd7ecd3d294fbd1",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/6",
+      "program_sha256": "0ff1d68ffecebfe68f38d9f3d9aa75dcfe29d80e55c40121a2593ca00127fc27",
+      "completion_sha256": "897740d7542737e6f6fc35d84f2b35ab89121053152b4aa99905e798cc6d175f",
+      "container_id": "9ab01e9baa44c28a647c7fd520919e7927b628719ae309ba23728fbe217e755e",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/7",
+      "program_sha256": "be8e0b8f25487832bdbe4c8be1a8cc71d325d0cea2aaeaa9323942337fc9756a",
+      "completion_sha256": "de04f397305f7aa0cedb166e90149adc141d3d613bb57c43a38b769606e99da8",
+      "container_id": "b6d3da24d808aae94d40e02be92714901b8422471057ed4f51f5cb1a276d453d",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/8",
+      "program_sha256": "cf73ea64c3f7f40c1da37cbb4791771ffcf8bd14c7c9d4843f4324e2ca1c7c38",
+      "completion_sha256": "fb36b70e20a7b213aaa569cbbc77e70349bbd65b5df5ebf0591730de71303940",
+      "container_id": "23b4c782a649622ce6c8a21f4c0631474b6d3ae42590a4c41deddd4748bda74d",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/9",
+      "program_sha256": "dc55d7985b0ab5c569280236af10b2cbea3b5bc2866d0714aeb823fea2e64734",
+      "completion_sha256": "973150cc2b578f39c3e51c1721a2d799b53f9c3194fa0bd186d55617fa6754bb",
+      "container_id": "4d7ee326e84cdacf98a97acea5698f2eaec9653149a0f988daa32f696ffae1c2",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/10",
+      "program_sha256": "5397ff2ae96ebed4a1a3c5973dd1fad8bea2c56c63ab2e22ab1c8b31de4d233e",
+      "completion_sha256": "d4a518d1f42eff7925eab3a1b7c16b606b44a8fc7770a00a154528e9266a776f",
+      "container_id": "76ed038fe501ced75aeca9cb324ee73542b9a135caabf892fb5615c7623ea2bc",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/11",
+      "program_sha256": "70c7cce1054fec79cc7aa78696a3647cbce4da6ca4aab8c01f134066161896ea",
+      "completion_sha256": "1087d6494ef148a8aac9b6e9dcc9c778e33e3f3dcbf84763d09d08ad553b10b0",
+      "container_id": "2a5d7abf8b692ab9b6e3a8d3d12a952863789b14cc07ebcfd9508b65e8091cc2",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/12",
+      "program_sha256": "7aa9ed992a636b8b88c2e3b496bfd8b3653420a3f27835aa29b316c1606daebe",
+      "completion_sha256": "21c07c8f56a33c5c44045c51cbf9c585dfb37690f72770fa3ebbcfe231ad0a12",
+      "container_id": "3f8b08f82c1afea89089d81188712f87cd176b8e689a7e6a1b4a0fb28d9a3db5",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/13",
+      "program_sha256": "724260045739ada5f42cd4e8e05adb4d9cc85fac63ddc3c63bb03dd8f00143a0",
+      "completion_sha256": "46fd0d8189b0743bbf51abe906202d248e3c47d6dc1d2104fd254284a0567022",
+      "container_id": "67f6469790b036b5fd5d9468fef829ce68750c86c264f4365a7658e6032c04b9",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/14",
+      "program_sha256": "614029f359bcd9f960ba4df7a7fc4b3eba22a013a5ac1d43a3c4ce995088033a",
+      "completion_sha256": "4d465464bffb184a53966ad499bcd13625dfc4bc712d2e0fd0bf86d8824977fd",
+      "container_id": "9a03bd99ac0328ef2535a250920b9e4f416b965567eb24329a717bfbd703babf",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/15",
+      "program_sha256": "5922d8a4c17494d49f584066dd6d29fc8ecf5610bcf0f9bddf1c132d78f7ad20",
+      "completion_sha256": "639dc13d75e6e5b0d25761da3c8da7410d382cadc203b5dc31c30da4387705b2",
+      "container_id": "920dac85d2d12bdccd1b5c23aba3d3444ec9aeddc1e7739244b1c5ecab088485",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/16",
+      "program_sha256": "7292aeacfd842d23ac042007ff47a038e31bf9c5e3cd9b95cfc20b59a2a83fe9",
+      "completion_sha256": "5d76e946d282537f3d3e948165d0086497ae8751ffb9aacdb4b15f017f0f7e6c",
+      "container_id": "71bfccf5648c5d82574365ac60364ba71ac7986ea51f16de6a676eab22baa8e1",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/17",
+      "program_sha256": "36fdc6f4fa8fb7c49890022aa84ffedf8904a7f4f4f74ac8b300156d19284f79",
+      "completion_sha256": "72bf8d8138b6be53ebaba6af8c0209208fb275b1d892f5c9a7570485f3df4f35",
+      "container_id": "f0c36e3df0404b04ef9fba8b6b3575fa1055677f163c86a7831a34967c0b33bd",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/18",
+      "program_sha256": "c3e1749fda5b3eb56a11eb7bb4c117efd7446ed93176bdfd88342e1784dd4410",
+      "completion_sha256": "04223f530cc731521e313dc3c289bfe7774fcf3df33c1af0118848929f2f5750",
+      "container_id": "bb2dca233fa4e1adb7766faff4686dfdd3a982dfc8706b627ec623ce8e55d9d3",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/19",
+      "program_sha256": "e90f9e48d320d4807826808274d49498eb038e21c45c876f5d77046101ed88aa",
+      "completion_sha256": "b078ccb8c61f8ecf42864447390cd58da61e3b85e6d52a337d7032f19da18655",
+      "container_id": "b6ba790d6571c92f190c2d6ba61922ae09a743e487ea19e303cd14ccacc230a5",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/20",
+      "program_sha256": "559b98096a66a709924e6547f3f58544f4a01928eda62093ed49eb0aa9f54eb6",
+      "completion_sha256": "faed5387796750312d9571150e2fe2baf557d9885213836679750c34d9e61aaf",
+      "container_id": "22fd406ba7b9a313c0ec4ba4392ef6ac66281919a89f40d9bbbbee262a2230db",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/21",
+      "program_sha256": "157b5edbbe550b6d5de619b73e32615f496bcbfcd99a632e4f9e8e04418ecee8",
+      "completion_sha256": "38b96f1db7441ebc4165468043a4ee805ab8fd3dbb477a54684c4badb6c9f019",
+      "container_id": "9824c36662480893d5e712caa61d192bcccd72ba7bde6b2901b206641f8862ba",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/22",
+      "program_sha256": "e56260abc3a60c18076bef0a3739b6e6b01d00b1042f57b79975cff2fce2e583",
+      "completion_sha256": "629ccdc89518860dca869f65c89d119e0271c4a39f5bd329814b147f78563546",
+      "container_id": "907ea843fb13d8e716dbf0b5f82abae2844299f56f284ed86c5ac65f4f16ec0b",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/23",
+      "program_sha256": "60651ab9e710c5b44d1317ca136375864c2df8dec963014e7d6d8f8fd7fbe29c",
+      "completion_sha256": "8c1e86f92e7409af002897485fa972c823c12f8dad399beb2ba1f059445da72f",
+      "container_id": "4d7b2c24f2eff2ee2e386f28094713de39cdbc1730869b7d6715a59c438c8e23",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/24",
+      "program_sha256": "ec4b38c354c2aa81d00310694c3ba01212608751541e16fcbd9f95ea678819ff",
+      "completion_sha256": "659b185346590ed03c0f4d888d5f8ceb0a7e26d66e7ce698e18933172d6de42a",
+      "container_id": "fba4a4c9e6febaa780f71da2c7ad4d34a78bb4d3e404c00bead026c578ef47f1",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/25",
+      "program_sha256": "b9a920062b43f69e93318089e59b3598ba77ad8207beb7715e9bb1d32faa14c4",
+      "completion_sha256": "4ff14c0b71e6a7c241a539445eff4bb42d694e563f9f328dea78f9171ece39ce",
+      "container_id": "e9a5a05545729e5dd7dd2f328bacce8bbd4035954c1cd2b6bb40ebb9ad0971e5",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/26",
+      "program_sha256": "29a4459c30fbfa70f1f9ee9c9800732115a741884eee6704ef48dd3123fc9415",
+      "completion_sha256": "732f9d4e096a6662d4323fe3a34a801a023f6fcfb8d364d01080627eb44d4089",
+      "container_id": "32b8420eb11fbc0ff13ed90a42694ccdb6f0823f3b7c6838f226cb525e904a82",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/27",
+      "program_sha256": "b9581b914c297d7302d4009144381c6c46c47043b48471c20e81c050c4ca0913",
+      "completion_sha256": "d1c29d27de5dc1cd331ee8529c66404bca0a7b17ee695c1baacd902734f18a2d",
+      "container_id": "d89f9b75413a541488bc0c12889aebe0b0867a5bcbfcb5c28fc4084a2b02cfe7",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/28",
+      "program_sha256": "432dd48fe117ffa7e10ef23f09c2b68b0207d5ba3f368b82b182c105ee61ff8a",
+      "completion_sha256": "62b400bb68f046b287175e00e0f8c9f3e5b442bfed8aedf760974995671e0d2f",
+      "container_id": "283016abc5b7ced3b800f2d9043bec2c1a35d550c6bab5a9200bb4e6bca33615",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/29",
+      "program_sha256": "d7296ba9d0a62afcd1adcfc5d0e3aa461db318925690b7ec837c98f8b4c42dec",
+      "completion_sha256": "b995fa8b0df0cf97ec552afe40ca63afb6bf169a624fec68c992f8bab01a771d",
+      "container_id": "87295ed7c1f6bfcabcbd8b72eab132d102de1746efbd434163cc64e4ed9b8365",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/30",
+      "program_sha256": "30b2324906c37113812034adfa3011a47e1dc5b76f51ab110361e0dce9ac2b04",
+      "completion_sha256": "ad8950468ca56c8224afb740d6ef7aa79f2906964332bb2041933e0f972e58b2",
+      "container_id": "1dded719e33c736db0b5bd11e013329af4cf674c8ea08c55042286e13129ba87",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/31",
+      "program_sha256": "8a2c894bb9f70d5ef614234abbbcc2c4f6b53406c3418d74501d449d471e55ce",
+      "completion_sha256": "3a761409d2b3fa9dac936d99af25904adc35236f48fc9fdbd701a831cb818f36",
+      "container_id": "77d62dd5b0445f093d61403b515c073d1a13dde185db0f5e72fbb5a66bed67b7",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/32",
+      "program_sha256": "909d437415590b2fa32ed0ad2542029b716674a2a576eb96ce004465660048c8",
+      "completion_sha256": "33e9122c46da78bf1e2d9a38a65d7ee5278d07b5aaa08312264348ba46a7249e",
+      "container_id": "5e5d1a58cab25616d3799ec6fca98f8859395b82655cb72530052c97df286e12",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/33",
+      "program_sha256": "57da6c328f87ab56a34152bd0a2a923c5deb3412d4d5e371f280c3c622df67e1",
+      "completion_sha256": "ec19688181cdf19af4ba4814ce55e63d5fc1c34b1d43540d6667282253b9218c",
+      "container_id": "bab83faff811be3648fe5c09af021f3e95b05c1b5f0c3305dd1d33a61438a471",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/34",
+      "program_sha256": "fc4afd996957f436c2d3e92f84f9cd63c25f33d5c4bd0fdd6437a2703601a008",
+      "completion_sha256": "dbe5941c21ff4e6b8a7afcd6bbce9a6b40bd27cd7ae7c2376c12a04a73719531",
+      "container_id": "174d61e746f7d6a23631255e14bea8c6402182f8675cb0a7d3bdcc756f690ee5",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/35",
+      "program_sha256": "becc92b18568438ded1acbb048171a5236ca1ee59678a721fc79060fee6b81dd",
+      "completion_sha256": "0ac70b45c18404e895277abf82b5ca78e699cc73a6b39832869c5514ddbc743a",
+      "container_id": "3f143bb526258cd8c40a701028528fdb27d9c1c2f5d24391da3bbf2edddea0f0",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/36",
+      "program_sha256": "79d7a467a855c1dae88dbb3ab6e6e9cef2deac89750e6fd151d3d957c76c70ae",
+      "completion_sha256": "1e914f41a9c364ccf8f9d3dd6ae465312b42b807ad2bb3e393deabae596d5188",
+      "container_id": "a31d857236b0f1d43747ed73648c40fc28d4aacaa1f7a542724bc55a21f309a9",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/37",
+      "program_sha256": "ccea631e4090be4ee3c2a1d884f8be3ad1a846413bb41167891350ceb98079f8",
+      "completion_sha256": "0a5c5653a29a63566870ea6b3e08d804e8a6024c9c99e747eeb8d9e320c0ff44",
+      "container_id": "141af9933cea36676cb1767bcff9c0e5cd4cf005e9fc060df08b658077144750",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/38",
+      "program_sha256": "e813f54b460fe11c339378c553f3834fbcf5c63ba69f55f129c3e8bce7968e0f",
+      "completion_sha256": "c9d189bdf089c8b4bd2125552762eb8c40c830d4f137a20194a223bd22fed7cf",
+      "container_id": "a0c4e52c4e34454c85cc7d95becb53dc248207f018a7aa3144a3d462a5ff8be5",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "baseline",
+      "id": "HumanEval/39",
+      "program_sha256": "0ee3557cb94b25e36fec46a67440cbda44b46c0f31c278dcd555b84b918f423b",
+      "completion_sha256": "70862f17db11845ecdff42f4a7b14012afcc07f0f1c3e8c3cd91baa5ce8cdeed",
+      "container_id": "33fabb4e1e3c59dc0e14829c1a7dd8e08c836a35b8b8507a930a0aaf982a8dd8",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/0",
+      "program_sha256": "8d442f2a080c5532736eb8c14f41d804b9972e2ce479a30561462efe0609d9a7",
+      "completion_sha256": "0a47f9dd1360920cce1baee0e1bdde932586c9f04dc3e6490d6385987375b7cc",
+      "container_id": "9854de9c2f471b0df2a472e91883d8261a0e17af6fa552cd03dbaecdb7e1a72b",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/1",
+      "program_sha256": "1c24f2ff733a27ae957a86ee686293554976687c45e216827a4b9a6553114daa",
+      "completion_sha256": "9633fa88dc1fc745483942019e604d345fcdf2ca6458872e8c0bc7e8309db8c3",
+      "container_id": "5674f1b79d4a7f6c059edf3dd74e5459a1f82bee34df611e6402881eeda60ec7",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/2",
+      "program_sha256": "9ad60b518283eeb702d7a7bb34033261eb4d5228324984bfcbc7eb75f274b7c4",
+      "completion_sha256": "25bfd5011083cf8b69f61640bb021ceb8ae85b8e09918b533dfd4f38aee24971",
+      "container_id": "d30cee58b98ed18367ade3efa592a26236289b6ab40f0138766a2fa5b8364039",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/3",
+      "program_sha256": "438ea1f8e7af58feeb5fe288f191d3bf9afb70ec6579db766c7ac2afe5629f72",
+      "completion_sha256": "c3fbecd5191aaac27a7a1f5d14fe7c5d8047ebace6e127fb83ed6337893e17cb",
+      "container_id": "c13800e3554acd9426cd76bcc45a567d30565c3a641c32a782ae78e30bd0c7c1",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/4",
+      "program_sha256": "f7a4c0794b4f3f4e959bc774992fba0a069842b21c064198acb277f14e41fd09",
+      "completion_sha256": "89672a935528cf934d6eae83db1c50b34ffdd67a1919e1ab8ba295baadc47948",
+      "container_id": "bbc81da5a036a9252cd224bd94a971993f8a23dccb8bbf55db29c23c6b0c1c33",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/5",
+      "program_sha256": "1dde2b12f06c3f1daf208aeba6c23af17372e7a8b38c0a9749e6c2809bfa9d50",
+      "completion_sha256": "88a3ffd2cbb266e6d3feb8d1a7075f9d423ba88df777c09620bc0ac8e0200fd1",
+      "container_id": "bebf0b12e9e62dfd8355ecdf94e6854d7f3baf7be41f16be40a26fff830c3655",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/6",
+      "program_sha256": "cb6bad0d732e549e1cf2abfa09d0d06119e1dc7412ec36c83e1efd2f68021f63",
+      "completion_sha256": "5433c77e8d917f76f59be7abb621a9e00e69924e005ca03f5ed929eb63825369",
+      "container_id": "17a455a31d2b5b78d36b9a97637b4b43e9c75b20ff8886b699ccdcb795dbbde8",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/7",
+      "program_sha256": "be8e0b8f25487832bdbe4c8be1a8cc71d325d0cea2aaeaa9323942337fc9756a",
+      "completion_sha256": "de04f397305f7aa0cedb166e90149adc141d3d613bb57c43a38b769606e99da8",
+      "container_id": "0075b9e6f0acc862828d1578ce2dd0588d80ad8d4ee825b121d57360b1d0c47c",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/8",
+      "program_sha256": "cf73ea64c3f7f40c1da37cbb4791771ffcf8bd14c7c9d4843f4324e2ca1c7c38",
+      "completion_sha256": "fb36b70e20a7b213aaa569cbbc77e70349bbd65b5df5ebf0591730de71303940",
+      "container_id": "a628b13e36e3f6e6848a148cc8fee12412478abf314219f38b5a90792cce3838",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/9",
+      "program_sha256": "dc55d7985b0ab5c569280236af10b2cbea3b5bc2866d0714aeb823fea2e64734",
+      "completion_sha256": "973150cc2b578f39c3e51c1721a2d799b53f9c3194fa0bd186d55617fa6754bb",
+      "container_id": "46cf77f6405709c73b488b0c40cc27a20e2920da31ea021945b299ab928593a1",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/10",
+      "program_sha256": "505782f310c25c26389517855b49aa2212a384986ae20b5cf6739f3cb5f6d5de",
+      "completion_sha256": "f52170499ae2b47ffd3367e0d0aad515e799f93ac26f2e9e7d4930220bd5a1c7",
+      "container_id": "ad240559ad5e3f5fc4229924ece13cdf8ca06e0018c07c28d22fc34dd3316893",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/11",
+      "program_sha256": "70c7cce1054fec79cc7aa78696a3647cbce4da6ca4aab8c01f134066161896ea",
+      "completion_sha256": "1087d6494ef148a8aac9b6e9dcc9c778e33e3f3dcbf84763d09d08ad553b10b0",
+      "container_id": "d49c595ab1876e57300c86457208f12f9e665e4a8250a26d80b9edba7bbeec22",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/12",
+      "program_sha256": "79c3bd554e2e684857f6bee139e46ff0a85276bbc69db9bbd622ccf297385990",
+      "completion_sha256": "de1aecb882435cbcad05a7dd71971df4019f3b78c5cfdcda846e413b90f88ef2",
+      "container_id": "37924e9af0f2c417e9dcc1167ab2e52eea5f5cf83d893c4e3367e3c2c8253b52",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/13",
+      "program_sha256": "724260045739ada5f42cd4e8e05adb4d9cc85fac63ddc3c63bb03dd8f00143a0",
+      "completion_sha256": "46fd0d8189b0743bbf51abe906202d248e3c47d6dc1d2104fd254284a0567022",
+      "container_id": "c8c1f1d4bf6b9087b009b8a7baa4401eb728c31466175f02a9bb0bdf6f5e7347",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/14",
+      "program_sha256": "78e8342bd1e5052dd8374979e5382121ce4e0b28389a79582b86ce2f35e97255",
+      "completion_sha256": "309e699ececa0701a1fa082a747425692265421972a7011089736d359b7a0a63",
+      "container_id": "6fd3e269f721fe1de67a0b65113240243bde576835c59d096acc4737602dc525",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/15",
+      "program_sha256": "8658ce291a5e4aaa38d256c36b9e691c535d6dbf0239954acc987ecc45a121c3",
+      "completion_sha256": "97235f09de4aae8e6d018fd2b8b841cec4b9df4775f70b0ea58970732a1258a0",
+      "container_id": "baa68693c644c18a2cc56d7a4fd82f10055a6e811364bf80f025f120851bad77",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/16",
+      "program_sha256": "44610745dd457d24ea709930f0bd29da94a97caded8c77dcb3ea451f557b2d80",
+      "completion_sha256": "fdc91f68c5d0f31a6d848900aa6e8797942ce3cee54bd473ca1f9800718cbedb",
+      "container_id": "e5e1147896433238b30c753b18ce3589c2fd2f98a0425ec317852ae820e1a458",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/17",
+      "program_sha256": "36fdc6f4fa8fb7c49890022aa84ffedf8904a7f4f4f74ac8b300156d19284f79",
+      "completion_sha256": "72bf8d8138b6be53ebaba6af8c0209208fb275b1d892f5c9a7570485f3df4f35",
+      "container_id": "b9f59d9ce04d8152e6dec812965e30699657ad2c4a4cb12b48cefc1fa3abde2e",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/18",
+      "program_sha256": "fae5fde9a84a3cfdcc907a4da38fc09c90a5784e56aa33298b99ae960661e336",
+      "completion_sha256": "037f9da31ba729c50cb384c235c7bdec22b88fe4bae66c6b01525dc292974a39",
+      "container_id": "2b76daa1cd46220b89023a9a860ff843a7ad889ef50697c9d9552c8179884394",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/19",
+      "program_sha256": "e90f9e48d320d4807826808274d49498eb038e21c45c876f5d77046101ed88aa",
+      "completion_sha256": "b078ccb8c61f8ecf42864447390cd58da61e3b85e6d52a337d7032f19da18655",
+      "container_id": "122ab6b0438ff593effca993e7920248a6be1c8380b332cceba2daf3f8c56ada",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/20",
+      "program_sha256": "d95ab781599751419a8331216dd42c170afaf07a2462920a06348da045aab08b",
+      "completion_sha256": "702207c6fd544ea5fcac3e65489f5fe59c59ed772d052bc5f7ed678d14b672dd",
+      "container_id": "53f07bfa9cca318e02824330a1b998accee1a83c65afcfaa4665d5840f0c7ece",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/21",
+      "program_sha256": "157b5edbbe550b6d5de619b73e32615f496bcbfcd99a632e4f9e8e04418ecee8",
+      "completion_sha256": "38b96f1db7441ebc4165468043a4ee805ab8fd3dbb477a54684c4badb6c9f019",
+      "container_id": "f62ad072996068bcd39e66a7e25ce662cc08e710cf6bc1d948a165c7a9de05f8",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/22",
+      "program_sha256": "8fd1b90e96bb7b8acc1987d57a9d5604912e7a60c40f2bcf8a794cde23c9529b",
+      "completion_sha256": "4c1b3eafc77f8d7eef66dddf49d0ed07601b88444b667ad9e590484d4a0f8ed5",
+      "container_id": "3cf8669ef1ab7924fffa193e42eb6647dc4e32f6e96e366bdc5477a4f839b972",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/23",
+      "program_sha256": "60651ab9e710c5b44d1317ca136375864c2df8dec963014e7d6d8f8fd7fbe29c",
+      "completion_sha256": "8c1e86f92e7409af002897485fa972c823c12f8dad399beb2ba1f059445da72f",
+      "container_id": "d97efd1dd92c1bf6dbc9e96014b3d3b22723ad0d89f0b8e8190fe9fdf7ed1f2f",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/24",
+      "program_sha256": "ec4b38c354c2aa81d00310694c3ba01212608751541e16fcbd9f95ea678819ff",
+      "completion_sha256": "659b185346590ed03c0f4d888d5f8ceb0a7e26d66e7ce698e18933172d6de42a",
+      "container_id": "f0d2d3a875a78dd64bf9492f9e115f9ba4d49e9454f9fdf88f2ce92f8a348ac9",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/25",
+      "program_sha256": "b9a920062b43f69e93318089e59b3598ba77ad8207beb7715e9bb1d32faa14c4",
+      "completion_sha256": "4ff14c0b71e6a7c241a539445eff4bb42d694e563f9f328dea78f9171ece39ce",
+      "container_id": "a6e959801a9b378860c59acff015d04bb176dd7de9638f89514438646922e205",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/26",
+      "program_sha256": "29a4459c30fbfa70f1f9ee9c9800732115a741884eee6704ef48dd3123fc9415",
+      "completion_sha256": "732f9d4e096a6662d4323fe3a34a801a023f6fcfb8d364d01080627eb44d4089",
+      "container_id": "595dc3b7c2b1f9fc42f7c7da5d7d5982923d472014d7e5ba582f5a40f82b31a9",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/27",
+      "program_sha256": "b9581b914c297d7302d4009144381c6c46c47043b48471c20e81c050c4ca0913",
+      "completion_sha256": "d1c29d27de5dc1cd331ee8529c66404bca0a7b17ee695c1baacd902734f18a2d",
+      "container_id": "baa32c6428492c665e2c776c0027709387c450a79dd9c784f5a98aacebe5c6c4",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/28",
+      "program_sha256": "432dd48fe117ffa7e10ef23f09c2b68b0207d5ba3f368b82b182c105ee61ff8a",
+      "completion_sha256": "62b400bb68f046b287175e00e0f8c9f3e5b442bfed8aedf760974995671e0d2f",
+      "container_id": "22b02be3467a697fa059a2553a5fbda9ee66a2a6d20489a1d734ee2b57f29560",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/29",
+      "program_sha256": "251714b1530437669c2138b4138cce9a5cb3ed0b91d9cd7e09681af2f0f742d1",
+      "completion_sha256": "f3e213370a422961637486f1e8ad779b219ae215ac4eb05b199ad23be4792390",
+      "container_id": "70ec2ca3092de8506c6139d8a3a18b3946fd8f5a71cd76ae9fdd9450bf3f5002",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/30",
+      "program_sha256": "30b2324906c37113812034adfa3011a47e1dc5b76f51ab110361e0dce9ac2b04",
+      "completion_sha256": "ad8950468ca56c8224afb740d6ef7aa79f2906964332bb2041933e0f972e58b2",
+      "container_id": "4e75025b4d7ee2bd72e52ccd39d82161b5cacb6eb85ec8b36a17171e28cb7d34",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/31",
+      "program_sha256": "8a2c894bb9f70d5ef614234abbbcc2c4f6b53406c3418d74501d449d471e55ce",
+      "completion_sha256": "3a761409d2b3fa9dac936d99af25904adc35236f48fc9fdbd701a831cb818f36",
+      "container_id": "ed36cf24e9bcf03e40a2c737138850a097c3a39d157e0e60ba954354db665839",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/32",
+      "program_sha256": "909d437415590b2fa32ed0ad2542029b716674a2a576eb96ce004465660048c8",
+      "completion_sha256": "33e9122c46da78bf1e2d9a38a65d7ee5278d07b5aaa08312264348ba46a7249e",
+      "container_id": "62972761907efb0a7657e670f4509bcd3054d39455da715954e1ccd30c351e41",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/33",
+      "program_sha256": "57da6c328f87ab56a34152bd0a2a923c5deb3412d4d5e371f280c3c622df67e1",
+      "completion_sha256": "ec19688181cdf19af4ba4814ce55e63d5fc1c34b1d43540d6667282253b9218c",
+      "container_id": "bba31a1602f896378bfc609f6b42eba56b672f099564a927a8489d1a5fe1b31f",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/34",
+      "program_sha256": "fc4afd996957f436c2d3e92f84f9cd63c25f33d5c4bd0fdd6437a2703601a008",
+      "completion_sha256": "dbe5941c21ff4e6b8a7afcd6bbce9a6b40bd27cd7ae7c2376c12a04a73719531",
+      "container_id": "a24f8e14fe1b5a5eb8f0c7685f43a60c750c580045676be4f856412e71c55807",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/35",
+      "program_sha256": "becc92b18568438ded1acbb048171a5236ca1ee59678a721fc79060fee6b81dd",
+      "completion_sha256": "0ac70b45c18404e895277abf82b5ca78e699cc73a6b39832869c5514ddbc743a",
+      "container_id": "5fb61e491f4be9a2ec7fc74d450d1a8658eed2a7a12a65810e160d9ec1b5a1f6",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/36",
+      "program_sha256": "af8fa0f5f250843b0da26011793c5058197624a289d8c4d2a47168190638c90a",
+      "completion_sha256": "5304bae173732792e62d204cc2b2e05fd0ff3ad5b766d49a830a74fe6fa192ff",
+      "container_id": "1e313df06dc96bf66b13f32c0b9fe4c4aa83d9467ae3fac8fcc10d5f67bdc5d9",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/37",
+      "program_sha256": "6e326e9234f86433fe163c21d5602a15532aca9fdd77c193c371bbdbb1b17d06",
+      "completion_sha256": "1c2b53023b2c07352c1705d89bc0db98400e4b56f7e5008591a02d343c59782a",
+      "container_id": "b0ca6f32dbfa9ff9ef962e5286d23bb6c33de2b7695a8843cbe530eb7a671390",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/38",
+      "program_sha256": "b459009055d758410e972ec5249fffbcf6905fd7637999b5c7f9103527c908ba",
+      "completion_sha256": "4c3ed7d98ba7dcaf5f8f1d41602b8f3e464a5db95e1cc144e40446ff2d6bc148",
+      "container_id": "4af94558dbd67c771aff5ec70d711031b788551d093df1166f6f5dddea524c8a",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    },
+    {
+      "profile": "native",
+      "id": "HumanEval/39",
+      "program_sha256": "0ee3557cb94b25e36fec46a67440cbda44b46c0f31c278dcd555b84b918f423b",
+      "completion_sha256": "70862f17db11845ecdff42f4a7b14012afcc07f0f1c3e8c3cd91baa5ce8cdeed",
+      "container_id": "569ce2d0beb9b62bc2e2471b3d9c09886b4ffaa05fb0b0d496808ca08f77189e",
+      "container_exit_code": 0,
+      "container_removed": true,
+      "container_cleanup_errors": []
+    }
+  ],
+  "failed_attempt": {
+    "checks_sha256": "2c7002ed851b892bb63db20d41ab9de8643d3740d481ede94e8009d173d9fd12",
+    "primary_error": "AssertionError: {'command': ['/usr/bin/time', '-l', '/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python', '-s', '-B', '-X', 'pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/probe-cold-cache', '/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/worker.py', '--runtime', '/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/runtime.json', '--runtime-sha', '67d1ed84e085ba8cfc651af28e79cabf924977073ee547ccd9d94ea1a002551a', '--mode', 'probe', '--output', '/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/probe.json', '--journal', '/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/probe.jsonl'], 'exit_code': 1, 'primary_error': 'tool exit 1', 'cleanup_errors': [], 'pid': 22254, 'stdout': 'artifacts/m8-qwen3-full-quality-v1/probe.stdout', 'stderr': 'artifacts/m8-qwen3-full-quality-v1/probe.stderr'}",
+    "endpoint_errors": [],
+    "commands": [
+      {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+          "-s",
+          "-B",
+          "-X",
+          "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/unit-cold-cache",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/worker.py",
+          "--runtime",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/runtime.json",
+          "--runtime-sha",
+          "67d1ed84e085ba8cfc651af28e79cabf924977073ee547ccd9d94ea1a002551a",
+          "--mode",
+          "unit",
+          "--output",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/unit.json"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 22240,
+        "stdout": "artifacts/m8-qwen3-full-quality-v1/unit.stdout",
+        "stderr": "artifacts/m8-qwen3-full-quality-v1/unit.stderr"
+      },
+      {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Users/coloner/work/rust/toklet/.venv/mlx-source-only-v1/bin/python",
+          "-s",
+          "-B",
+          "-X",
+          "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/probe-cold-cache",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/worker.py",
+          "--runtime",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/runtime.json",
+          "--runtime-sha",
+          "67d1ed84e085ba8cfc651af28e79cabf924977073ee547ccd9d94ea1a002551a",
+          "--mode",
+          "probe",
+          "--output",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/probe.json",
+          "--journal",
+          "/Users/coloner/work/rust/toklet/artifacts/m8-qwen3-full-quality-v1/probe.jsonl"
+        ],
+        "exit_code": 1,
+        "primary_error": "tool exit 1",
+        "cleanup_errors": [],
+        "pid": 22254,
+        "stdout": "artifacts/m8-qwen3-full-quality-v1/probe.stdout",
+        "stderr": "artifacts/m8-qwen3-full-quality-v1/probe.stderr"
+      }
+    ],
+    "correction": "loader keyword callback renamed from underscore to config; no model constructed or held-out scoring before retry",
+    "retained_source": {
+      "file": "benchmarks/results/2026-10-27-qwen3-full-quality-v1/failed-loader-callback-reference.py.txt",
+      "bytes": 18530,
+      "sha256": "8923ed8647b20a32363bc4114ed970174be8c7b8fd73b93a8e09cb0b234db3dd"
+    }
+  },
+  "final_checks": {
+    "passed": true,
+    "commands": [
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "fmt",
+          "--check"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 29068,
+        "stdout": "artifacts/m8-qwen3-full-quality-final-checks-v1/fmt.stdout",
+        "stderr": "artifacts/m8-qwen3-full-quality-final-checks-v1/fmt.stderr"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--offline",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 29077,
+        "stdout": "artifacts/m8-qwen3-full-quality-final-checks-v1/clippy.stdout",
+        "stderr": "artifacts/m8-qwen3-full-quality-final-checks-v1/clippy.stderr"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--offline",
+          "--features",
+          "metal",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 29086,
+        "stdout": "artifacts/m8-qwen3-full-quality-final-checks-v1/metal-clippy.stdout",
+        "stderr": "artifacts/m8-qwen3-full-quality-final-checks-v1/metal-clippy.stderr"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--offline"
+        ],
+        "exit_code": 0,
+        "primary_error": null,
+        "cleanup_errors": [],
+        "pid": 29093,
+        "stdout": "artifacts/m8-qwen3-full-quality-final-checks-v1/cpu-tests.stdout",
+        "stderr": "artifacts/m8-qwen3-full-quality-final-checks-v1/cpu-tests.stderr"
+      }
+    ]
+  },
+  "scope": {
+    "full_quality_workload_completed": true,
+    "relative_quality_limits_passed": true,
+    "absolute_task_quality_low": true,
+    "task_gate_exactly_at_limit": true,
+    "precision_candidate_retained_experimentally": true,
+    "numerical_qualified": false,
+    "known_c512_stage_gate_status": "rejected_unchanged",
+    "app_window_changed": false,
+    "full_model_window_qualified": false,
+    "iphone_qualified": false,
+    "performance_benchmark": false
+  }
+}

@@ -5857,3 +5857,45 @@ formatting pass. Held-out scoring, generated-code grading, full-quality memory,
 numerical adoption and app-window expansion remain pending. See
 [the contract](qwen3-quality-contract.md) and
 [evidence](../benchmarks/results/2026-10-27-qwen3-quality-inputs-v1.json).
+
+## 2026-10-27 — Complete Qwen3 relative-quality comparison and retained candidate
+
+Both pinned original BF16 baseline and unchanged native eight-bit/Half candidate
+complete all10000 loss targets and100 tasks under the frozen original policy.
+Mean loss3.248645013938721 baseline versus3.252649075779492 native gives
+increase0.004004061840770845, below0.05. Strict tasks score5/100 versus3/100:
+exactly the allowed two-case loss. **Absolute quality is weak and the task gate
+has no safety margin.** Astra retains only the experimental precision candidate;
+useful instruction-following and C512 numerical qualification remain unproven.
+
+All80 code cases resolve through the unchanged qualified isolated Linux evaluator;
+all120 text outcomes resolve through literal rules. No host execution, fence
+repair, answer extraction or regrading. Baseline/native code fences occur25/40
+and31/40 times; all30 prose responses per profile exceed a single letter. These
+format observations are diagnostic. Complete visible token sequences agree60/100.
+
+The new original-source quality driver pins BF16 storage, exact widening, static
+loader, full-block teacher forcing, original step256 cache, prefill128, raw-logit
+lowest-ID greedy and hidden/pending EOS. Profiles freeze before held-out scoring.
+Every output shape and target count is checked. Partial nonfinite captures retain
+their descriptors/hash before writing; early EOS is tested. The first authored
+probe catches a loader callback keyword mismatch before model construction;
+its failed evidence remains and the corrected two probes precede full scoring.
+
+Native loss/tasks peak physical1032733896/864453760 bytes; source2257569544/
+1681360816 bytes, all below6GiB. All seven model groups exit before grading.
+The2GiB VM returns to stopped, all80 containers are removed, and both worker
+helper lifetime and independent outer restoration checks complete. A TERM-only
+supervisor retains the owner through timeout/interruption; no forced drain can
+kill it while restoring the VM. Grader-host physical200000736 bytes is separate
+from guest reservation; whole grading-phase peak is not claimed.
+
+Nineteen cold regression groups, final CPU suite, formatting, strict default/
+Metal all-target Clippy, source/model/runtime/input/journal endpoints and owned
+cleanup pass. Q3 is complete as relative-quality acceptance; app caps512,
+historical numerical rejection, larger40960 delivery and iPhone remain open.
+Astra's next Q4 task freezes a uniform normalized-log-probability/greedy screen
+on already captured pairs before any untouched numerical validation. Failure
+rejects that contract/candidate pairing without widening or a layer walk.
+See [the report](qwen3-full-quality.md) and
+[evidence](../benchmarks/results/2026-10-27-qwen3-full-quality-v1.json).

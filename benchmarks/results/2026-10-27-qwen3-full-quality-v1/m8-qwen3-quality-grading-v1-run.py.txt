@@ -1,0 +1,98 @@
+"""Bounded complete-input replay and explicit short worker probe, not held-out scoring."""
+from pathlib import Path
+import hashlib,importlib.util,json,math,os,re,signal,struct,sys
+R=Path.cwd();O=Path(__file__).resolve().parent
+sys.path.insert(0,str(R/'tools/experiments'));import m7_apple_package as p
+bindings={};outputs={};commands=[];vm_commands=[];errors=[];primary=None;observations={}
+def read(path,maximum=8*1024**2):
+ with path.open('rb')as f:body=f.read(maximum+1)
+ assert len(body)<=maximum,path
+ return body
+
+def identity(path):
+ def fields(s):return s.st_dev,s.st_ino,s.st_mode,s.st_size,s.st_mtime_ns,s.st_ctime_ns
+ before=path.stat();h=hashlib.sha256()
+ with path.open('rb')as f:
+  opened=os.fstat(f.fileno());assert fields(opened)==fields(before)
+  remaining=before.st_size;assert 0<=remaining<=4*1024**3
+  while remaining:
+   body=f.read(min(1024**2,remaining));assert body;remaining-=len(body);h.update(body)
+  assert not f.read(1)
+  assert fields(os.fstat(f.fileno()))==fields(before)
+ assert fields(path.stat())==fields(before)
+ return dict(bytes=before.st_size,sha256=h.hexdigest())
+def name(path):return str(path.relative_to(R)) if path.is_relative_to(R) else str(path)
+def bind(path):
+ v=identity(path);assert name(path)not in bindings or bindings[name(path)]==v;bindings[name(path)]=v;return v
+
+def guard():
+ for n,v in bindings.items():assert identity(R/n)==v,n
+ for n,v in outputs.items():assert identity(R/n)==v,n
+
+def run(label,args,env,timeout=1200,expected=0):
+ guard()
+ if label=='grade':
+  sys.path.insert(0,str(R/'tools/bench'));sys.path.insert(0,str(R/'tools/reference'));import qwen3_quality_grading as grading
+  def observe_vm():
+   item=grading.boundary.capture([grading.PODMAN,'machine','list','--format=json'],20,262144);vm_commands.append(item)
+   assert not item.get('failure')and item['exit_code']==0 and not item['wall_timed_out']and not item['output_limit_exceeded']and item['cleanup_errors']==[]and item['surviving_group_members']==[]
+   return json.loads(grading.boundary.output(item))
+  v=grading.supervise_window(args,O/(label+'.stdout'),O/(label+'.stderr'),env,observe_vm,p.group_exists,timeout)
+ else:v=p.owned(args,O/(label+'.stdout'),O/(label+'.stderr'),env,timeout)
+ commands.append(v)
+ for path in [O/(label+'.stdout'),O/(label+'.stderr'),O/(label+'.json')]:
+  if path.is_file():outputs[name(path)]=identity(path)
+ for path in (O/'grade').glob('*'):
+  if path.is_file():
+   item=identity(path);assert name(path)not in outputs or outputs[name(path)]==item;outputs[name(path)]=item
+ for path in []:
+  if path.is_file():
+   item=identity(path);assert name(path)not in outputs or outputs[name(path)]==item;outputs[name(path)]=item
+ guard();assert v['exit_code']==expected and v['primary_error']==(None if expected==0 else 'tool exit '+str(expected))and not v['cleanup_errors'],v
+ print(json.dumps(dict(completed=label,pid=v['pid'],exit_code=v['exit_code'])),flush=True)
+ return read(O/(label+'.stdout'),32*1024**2).decode(),read(O/(label+'.stderr'),32*1024**2).decode()
+def memory(stderr,limit):
+ result={k:int(re.search(r'(\d+)\s+'+label,stderr)[1])for k,label in [('rss','maximum resident set size'),('physical','peak memory footprint')]};assert all(0<n<=limit for n in result.values()),result;return result
+
+def stop(number,_):raise InterruptedError(str(number))
+old={s:signal.signal(s,stop)for s in(signal.SIGINT,signal.SIGTERM)}
+try:
+ assert not(O/'checks.json').exists()
+ spec=importlib.util.spec_from_file_location('quality_grading_worker',O/'worker.py');worker=importlib.util.module_from_spec(spec);spec.loader.exec_module(worker)
+ inventory=worker.runtime.paths(worker.sources())
+ for path in [Path(__file__).resolve(),Path(p.__file__).resolve(),*inventory]:bind(path)
+ collection=R/'artifacts/m8-qwen3-full-quality-v2/checks.json';collection_pin=bind(collection);assert collection_pin['sha256']=='09ca67a9033b3a63a4616ac6004694749da98ee5f70baba76fb67675ded362b5';value=json.loads(read(collection));assert value['passed']and not value['endpoint_errors']and value['primary_error']is None and value['observations']['scope']['full_model_collections_complete']
+ for entry in value['commands']:
+  assert entry['exit_code']==0 and entry['primary_error']is None and not entry['cleanup_errors']
+  for pid in(entry['pid'],-entry['pid']):
+   try:os.kill(pid,0)
+   except ProcessLookupError:pass
+   else:raise AssertionError('model process/group alive')
+ runtime=dict(format='toklet-text-reference-runtime-v1',versions=worker.runtime.VERSIONS,files={str(q):bindings[name(q)]for q in inventory});manifest=O/'runtime.json'
+ with manifest.open('x')as f:json.dump(runtime,f,separators=(',',':'));f.write('\n')
+ bind(manifest);assert manifest.stat().st_size<=2*1024**2
+ env,_=p.build_environment();env.update(PYTHONHASHSEED='0',TOKENIZERS_PARALLELISM='false',HF_HUB_OFFLINE='1',TRANSFORMERS_OFFLINE='1',OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',VECLIB_MAXIMUM_THREADS='1');(O/'tmp').mkdir();env['TMPDIR']=str(O/'tmp')
+ python=R/'.venv/bin/python'
+ for mode in ('unit','grade'):
+  cache=O/(mode+'-cold-cache');cache.mkdir();argv=['/usr/bin/time','-l',str(python),'-s','-B','-X','pycache_prefix='+str(cache),str(O/'worker.py'),'--runtime',str(manifest),'--runtime-sha',bindings[name(manifest)]['sha256'],'--mode',mode,'--output',str(O/(mode+'.json')),'--collection',str(collection),'--collection-sha',collection_pin['sha256'],'--destination',str(O/'grade')]
+  _,err=run(mode,argv,env,3600);v=json.loads(read(O/(mode+'.json'),32*1024**2));assert v['passed']and v['primary_error']is None and not v['endpoint_errors']and v['runtime_endpoint'];observations[mode]=dict(memory=memory(err,(1024**3 if mode=='unit'else 4*1024**3)),usage=v['usage'])
+  if mode=='unit':assert v['tests']==dict(run=19,failures=0,errors=0)
+  else:
+   report=json.loads(read(O/'grade/result.json',64*1024**2));assert report['completed']and report['restored_stopped']and report['pipe_lifetime_finished']and not report.get('failure')and not report.get('restoration_failure')and len(report['runs'])==80;observations[mode].update(losses=report['losses'],decision=report['decision'],isolated_code_cases=80,restored_stopped=True,guest_vm_memory_reservation_bytes=2147483648,host_grader_native_physical_limit_bytes=1024**3,whole_grading_phase_physical_peak_measured=False)
+ observations['scope']=dict(full_quality_scored=True,numerical_qualified=False,app_window_changed=False,full_model_window_qualified=False,iphone_qualified=False)
+except BaseException as error:primary=type(error).__name__+': '+str(error)
+finally:
+ for sig in old:signal.signal(sig,signal.SIG_IGN)
+ try:guard()
+ except BaseException as error:errors.append('endpoint: '+str(error))
+ for command in commands:
+  if command['pid']:
+   for pid in(command['pid'],-command['pid']):
+    try:os.kill(pid,0)
+    except ProcessLookupError:pass
+    else:errors.append('owned process/group exists: '+str(pid))
+ result=dict(passed=primary is None and not errors,bindings=bindings,outputs=outputs,commands=commands,vm_observation_commands=vm_commands,observations=observations,primary_error=primary,endpoint_errors=errors)
+ with(O/'checks.json').open('x')as f:json.dump(result,f,indent=2,allow_nan=False);f.write('\n')
+ for sig,handler in old.items():signal.signal(sig,handler)
+print(json.dumps({k:result[k]for k in('passed','observations','primary_error','endpoint_errors')}),flush=True)
+sys.exit(0 if result['passed']else 1)
