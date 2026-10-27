@@ -93,8 +93,12 @@ outputs from their own inputs exactly, including14 native coordinates and six
 passing controls. The [first-layer check](qwen3-first-divergence.md) now proves
 identical embedding/norm inputs and weights: native/FP64 dots round correctly at
 all12 selected coordinates; canonical FP32 crosses a Half boundary at six. Stop
-per-layer localization and keep kernels unchanged. Next freeze a separate C512
-precision proposal with independent calibration/validation and full quality dependencies.
+per-layer localization and keep kernels unchanged. The [separate experimental
+C512 input freeze](../benchmarks/qwen3-context-candidate-v2/README.md) now has two byte-identical cold
+preparations: two calibration texts/six cases and three validation texts/eight
+cases, explicit57-state pooling and six prefix pairs. No gates are derived or
+adopted. Next run CPU calibration only, freeze/review gates before untouched
+validation, then require separate source parity and complete quality evidence.
 Source parity, unquantized/held-out quality and broader context remain open;
 no precision-policy or capacity upgrade follows.
 Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.

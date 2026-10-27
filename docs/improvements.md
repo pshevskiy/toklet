@@ -5658,3 +5658,32 @@ Three diagnostic groups and one publication group close. Independent exact
 bisection replay verifies36 new dots and midpoint distances. No GPU rerun,
 performance or phone qualification follows. See [the report](qwen3-first-divergence.md)
 and [public evidence](../benchmarks/results/2026-10-27-qwen3-first-divergence-v1.json).
+
+## 2026-10-27 — Separate experimental C512 calibration/validation inputs
+
+The candidate-v2 recipe freezes two authored calibration texts and three distinct
+validation texts. Explicit16-fold text repetition and token-prefix extraction
+produce six calibration cases at32/128/512 and eight validation cases at
+127/128/129,255/256/257,511/512. These are nested-prefix numerical witnesses,
+not fourteen independent texts or quality samples. Original offline Qwen3
+tokenizer/revision and arithmetic/storage/native-profile identities are pinned.
+
+The preparer validates fixed policy/profile/quality semantics, rejects duplicate
+arrays and cross-split content/prefix reuse, preserves exclusive outputs and
+retains partial files/manifest before controller success gates. Its57 exact
+layer/stage pooling keys and six calibration prefix pairs are explicit.
+Calibration alone may derive experimental gates using the frozen formula;
+absolute envelope/adoption review remains pending. Native/canonical-FP32 and
+CPU cross-precision comparisons have separate rejection rules. Historical C512
+rejections are excluded from both splits and remain rejected.
+
+Six cold controls pass. Two actual preparations match every manifest/array byte:
+14 arrays,1344 calibration tokens and2175 validation tokens. Independent
+publication verifies complete arrays/splits/prefixes; four owned groups close.
+Physical/RSS peaks264,963,392/459,177,984 and268,600,712/469,549,056 bytes fit512MiB.
+No numerical graph, target validation, derived gate or adoption occurs. Original
+10000-target/100-task quality,1025-position demand,0.05-nat/2-point limits,
+unquantized baseline and separate source parity remain required without clipping.
+See [the frozen proposal](../benchmarks/qwen3-context-candidate-v2/README.md) and
+[public evidence](../benchmarks/results/2026-10-27-qwen3-context-inputs-v2.json).
+Next CPU calibration precedes immutable gate review and untouched validation.

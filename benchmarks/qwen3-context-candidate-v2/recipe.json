@@ -1,0 +1,165 @@
+{
+  "format": "toklet-qwen3-context-input-recipe-v2",
+  "status": "experimental-input-freeze-only",
+  "context": 512,
+  "vocabulary": 151936,
+  "text_repetitions": 16,
+  "sources": {
+    "calibration_prose": "Orchard inventory: Mira counts seven green crates beside the east gate. Each crate holds twelve pears. After two crates leave on Tuesday, the remaining fruit is sorted by size and recorded in a notebook. Explain the stock changes carefully, distinguish fruit from containers, and preserve the order of events. The next delivery arrives after sunset, so its contents belong to a separate ledger entry.",
+    "calibration_code": "def merge_counts(left, right):\n    result = dict(left)\n    for name, count in right.items():\n        if count < 0:\n            raise ValueError('negative inventory')\n        result[name] = result.get(name, 0) + count\n    return result\n\n# Review empty inputs, duplicate keys, and preservation of caller dictionaries.\n# State the expected result for {'a': 2} merged with {'a': 3, 'b': 1}.\n",
+    "validation_prose": "Harbor timetable: the north ferry departs before the south ferry, while the cargo vessel waits for a pilot. Lidia writes the arrival times in blue ink and departure times in black. A cancelled trip receives its own note rather than erasing the original entry. Describe a procedure for checking this record, retaining uncertainty when a clock reading is missing, and keeping passengers distinct from cargo.",
+    "validation_unicode": "Лабораторный журнал: температура воды равна 18 °C, масса образца — 2,5 г. Исследователь записывает время, единицы измерения и причину каждого повторного опыта. Compare these observations with a separate English summary. Preserve punctuation, decimal separators, and the distinction between an observation and a prediction. Symbols include α, β, ±, and an arrow → between two labelled states.",
+    "validation_code": "struct Queue { items: Vec<u32>, head: usize }\nimpl Queue {\n    fn pop(&mut self) -> Option<u32> {\n        let value = self.items.get(self.head).copied()?;\n        self.head += 1;\n        Some(value)\n    }\n}\n// Trace three successful calls and one empty call. Discuss indexing, ownership,\n// and how an error differs from exhaustion. Keep the examples deterministic.\n"
+  },
+  "cases": [
+    {
+      "id": "cal-prose-32",
+      "split": "calibration",
+      "source": "calibration_prose",
+      "tokens": 32
+    },
+    {
+      "id": "cal-prose-128",
+      "split": "calibration",
+      "source": "calibration_prose",
+      "tokens": 128
+    },
+    {
+      "id": "cal-prose-512",
+      "split": "calibration",
+      "source": "calibration_prose",
+      "tokens": 512
+    },
+    {
+      "id": "cal-code-32",
+      "split": "calibration",
+      "source": "calibration_code",
+      "tokens": 32
+    },
+    {
+      "id": "cal-code-128",
+      "split": "calibration",
+      "source": "calibration_code",
+      "tokens": 128
+    },
+    {
+      "id": "cal-code-512",
+      "split": "calibration",
+      "source": "calibration_code",
+      "tokens": 512
+    },
+    {
+      "id": "val-prose-127",
+      "split": "validation",
+      "source": "validation_prose",
+      "tokens": 127
+    },
+    {
+      "id": "val-prose-128",
+      "split": "validation",
+      "source": "validation_prose",
+      "tokens": 128
+    },
+    {
+      "id": "val-prose-129",
+      "split": "validation",
+      "source": "validation_prose",
+      "tokens": 129
+    },
+    {
+      "id": "val-unicode-255",
+      "split": "validation",
+      "source": "validation_unicode",
+      "tokens": 255
+    },
+    {
+      "id": "val-unicode-256",
+      "split": "validation",
+      "source": "validation_unicode",
+      "tokens": 256
+    },
+    {
+      "id": "val-unicode-257",
+      "split": "validation",
+      "source": "validation_unicode",
+      "tokens": 257
+    },
+    {
+      "id": "val-code-511",
+      "split": "validation",
+      "source": "validation_code",
+      "tokens": 511
+    },
+    {
+      "id": "val-code-512",
+      "split": "validation",
+      "source": "validation_code",
+      "tokens": 512
+    }
+  ],
+  "reference_profile": {
+    "weights": "original affine checkpoint reconstructed by FP64 multiply/add then FP32 cast",
+    "activations_and_kv": "Half",
+    "logits": "FP32",
+    "arithmetic": [
+      "FP32",
+      "FP64"
+    ],
+    "graph": "unchanged independent qwen3_fp16.forward",
+    "layers": [
+      0,
+      1,
+      27
+    ]
+  },
+  "native_profile": {
+    "projection": "MlxAffine",
+    "normalization": "Compensated",
+    "attention": "Reference",
+    "readback": "FullLogits"
+  },
+  "proposal": {
+    "id": "toklet-qwen3-context512-experimental-v2",
+    "gate_status": "not-derived-not-adopted",
+    "pooling": "exact captured state name across calibration cases only; no layer or dtype pooling",
+    "atol_floor": 0.0001,
+    "envelope_multiplier": 2,
+    "rtol": 0.001,
+    "formula": "atol=max(atol_floor,2*calibration_FP32_FP64_max_abs,2*calibration_equivalent_prefix_max_abs)",
+    "envelope_ceiling": "pending independent calibration review; no universal or native-error-derived ceiling",
+    "freeze_order": [
+      "inputs-and-formula",
+      "CPU-calibration-only",
+      "review-and-immutable-gates",
+      "untouched-CPU-and-native-validation",
+      "source-and-full-quality-before-adoption"
+    ],
+    "rejection_rules": [
+      "nonfinite-or-missing-value",
+      "incomplete-case-or-state-coverage",
+      "source-or-artifact-identity-drift",
+      "any-native-scalar-outside-frozen-canonical-FP32-gate",
+      "CPU-validation-FP32-versus-FP64-outside-frozen-envelope",
+      "any-causal-mask-or-state-contract-failure",
+      "any-native-canonical-FP32-argmax-mismatch-including-near-ties",
+      "any-retuning-after-validation",
+      "unreviewed-or-unacceptable-calibration-envelope"
+    ],
+    "near_ties": "retain full row, top-two IDs and margin; any native versus canonical CPU-FP32 argmax mismatch rejects, including near ties",
+    "historical_c512": "preserve rejected historical trials; never use them to derive or validate this proposal",
+    "quality": {
+      "targets": 10000,
+      "tasks": 100,
+      "required_capacity_at_least": 1025,
+      "loss_increase_limit_nats_per_token": 0.05,
+      "task_drop_limit_percentage_points": 2,
+      "clipping_allowed": false,
+      "same_quantized_source_parity_is_unquantized_baseline": false
+    },
+    "adopted": false,
+    "capacity_or_precision_changed": false,
+    "canonical_target": "independent CPU FP32 saved values; FP64 is a separately reported arithmetic diagnostic, not a second acceptance oracle",
+    "same_quantized_source_parity": "pending separately pinned MLX-LM original-artifact profile and execution comparison; not an unquantized quality baseline",
+    "cpu_cross_precision_validation": "abs(FP32-FP64)<=atol+rtol*abs(FP64) using the frozen calibration envelope; failure rejects calibration coverage, not a second native target oracle; report CPU argmax disagreements separately"
+  }
+}

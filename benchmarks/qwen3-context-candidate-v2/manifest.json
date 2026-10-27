@@ -1,0 +1,576 @@
+{
+  "format": "toklet-qwen3-context-inputs-v2",
+  "complete": true,
+  "primary_error": null,
+  "recipe": {
+    "format": "toklet-qwen3-context-input-recipe-v2",
+    "status": "experimental-input-freeze-only",
+    "context": 512,
+    "vocabulary": 151936,
+    "text_repetitions": 16,
+    "sources": {
+      "calibration_prose": "Orchard inventory: Mira counts seven green crates beside the east gate. Each crate holds twelve pears. After two crates leave on Tuesday, the remaining fruit is sorted by size and recorded in a notebook. Explain the stock changes carefully, distinguish fruit from containers, and preserve the order of events. The next delivery arrives after sunset, so its contents belong to a separate ledger entry.",
+      "calibration_code": "def merge_counts(left, right):\n    result = dict(left)\n    for name, count in right.items():\n        if count < 0:\n            raise ValueError('negative inventory')\n        result[name] = result.get(name, 0) + count\n    return result\n\n# Review empty inputs, duplicate keys, and preservation of caller dictionaries.\n# State the expected result for {'a': 2} merged with {'a': 3, 'b': 1}.\n",
+      "validation_prose": "Harbor timetable: the north ferry departs before the south ferry, while the cargo vessel waits for a pilot. Lidia writes the arrival times in blue ink and departure times in black. A cancelled trip receives its own note rather than erasing the original entry. Describe a procedure for checking this record, retaining uncertainty when a clock reading is missing, and keeping passengers distinct from cargo.",
+      "validation_unicode": "\u041b\u0430\u0431\u043e\u0440\u0430\u0442\u043e\u0440\u043d\u044b\u0439 \u0436\u0443\u0440\u043d\u0430\u043b: \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u043e\u0434\u044b \u0440\u0430\u0432\u043d\u0430 18 \u00b0C, \u043c\u0430\u0441\u0441\u0430 \u043e\u0431\u0440\u0430\u0437\u0446\u0430 \u2014 2,5 \u0433. \u0418\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u0437\u0430\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u0442 \u0432\u0440\u0435\u043c\u044f, \u0435\u0434\u0438\u043d\u0438\u0446\u044b \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f \u0438 \u043f\u0440\u0438\u0447\u0438\u043d\u0443 \u043a\u0430\u0436\u0434\u043e\u0433\u043e \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e\u0433\u043e \u043e\u043f\u044b\u0442\u0430. Compare these observations with a separate English summary. Preserve punctuation, decimal separators, and the distinction between an observation and a prediction. Symbols include \u03b1, \u03b2, \u00b1, and an arrow \u2192 between two labelled states.",
+      "validation_code": "struct Queue { items: Vec<u32>, head: usize }\nimpl Queue {\n    fn pop(&mut self) -> Option<u32> {\n        let value = self.items.get(self.head).copied()?;\n        self.head += 1;\n        Some(value)\n    }\n}\n// Trace three successful calls and one empty call. Discuss indexing, ownership,\n// and how an error differs from exhaustion. Keep the examples deterministic.\n"
+    },
+    "cases": [
+      {
+        "id": "cal-prose-32",
+        "split": "calibration",
+        "source": "calibration_prose",
+        "tokens": 32
+      },
+      {
+        "id": "cal-prose-128",
+        "split": "calibration",
+        "source": "calibration_prose",
+        "tokens": 128
+      },
+      {
+        "id": "cal-prose-512",
+        "split": "calibration",
+        "source": "calibration_prose",
+        "tokens": 512
+      },
+      {
+        "id": "cal-code-32",
+        "split": "calibration",
+        "source": "calibration_code",
+        "tokens": 32
+      },
+      {
+        "id": "cal-code-128",
+        "split": "calibration",
+        "source": "calibration_code",
+        "tokens": 128
+      },
+      {
+        "id": "cal-code-512",
+        "split": "calibration",
+        "source": "calibration_code",
+        "tokens": 512
+      },
+      {
+        "id": "val-prose-127",
+        "split": "validation",
+        "source": "validation_prose",
+        "tokens": 127
+      },
+      {
+        "id": "val-prose-128",
+        "split": "validation",
+        "source": "validation_prose",
+        "tokens": 128
+      },
+      {
+        "id": "val-prose-129",
+        "split": "validation",
+        "source": "validation_prose",
+        "tokens": 129
+      },
+      {
+        "id": "val-unicode-255",
+        "split": "validation",
+        "source": "validation_unicode",
+        "tokens": 255
+      },
+      {
+        "id": "val-unicode-256",
+        "split": "validation",
+        "source": "validation_unicode",
+        "tokens": 256
+      },
+      {
+        "id": "val-unicode-257",
+        "split": "validation",
+        "source": "validation_unicode",
+        "tokens": 257
+      },
+      {
+        "id": "val-code-511",
+        "split": "validation",
+        "source": "validation_code",
+        "tokens": 511
+      },
+      {
+        "id": "val-code-512",
+        "split": "validation",
+        "source": "validation_code",
+        "tokens": 512
+      }
+    ],
+    "reference_profile": {
+      "weights": "original affine checkpoint reconstructed by FP64 multiply/add then FP32 cast",
+      "activations_and_kv": "Half",
+      "logits": "FP32",
+      "arithmetic": [
+        "FP32",
+        "FP64"
+      ],
+      "graph": "unchanged independent qwen3_fp16.forward",
+      "layers": [
+        0,
+        1,
+        27
+      ]
+    },
+    "native_profile": {
+      "projection": "MlxAffine",
+      "normalization": "Compensated",
+      "attention": "Reference",
+      "readback": "FullLogits"
+    },
+    "proposal": {
+      "id": "toklet-qwen3-context512-experimental-v2",
+      "gate_status": "not-derived-not-adopted",
+      "pooling": "exact captured state name across calibration cases only; no layer or dtype pooling",
+      "atol_floor": 0.0001,
+      "envelope_multiplier": 2,
+      "rtol": 0.001,
+      "formula": "atol=max(atol_floor,2*calibration_FP32_FP64_max_abs,2*calibration_equivalent_prefix_max_abs)",
+      "envelope_ceiling": "pending independent calibration review; no universal or native-error-derived ceiling",
+      "freeze_order": [
+        "inputs-and-formula",
+        "CPU-calibration-only",
+        "review-and-immutable-gates",
+        "untouched-CPU-and-native-validation",
+        "source-and-full-quality-before-adoption"
+      ],
+      "rejection_rules": [
+        "nonfinite-or-missing-value",
+        "incomplete-case-or-state-coverage",
+        "source-or-artifact-identity-drift",
+        "any-native-scalar-outside-frozen-canonical-FP32-gate",
+        "CPU-validation-FP32-versus-FP64-outside-frozen-envelope",
+        "any-causal-mask-or-state-contract-failure",
+        "any-native-canonical-FP32-argmax-mismatch-including-near-ties",
+        "any-retuning-after-validation",
+        "unreviewed-or-unacceptable-calibration-envelope"
+      ],
+      "near_ties": "retain full row, top-two IDs and margin; any native versus canonical CPU-FP32 argmax mismatch rejects, including near ties",
+      "historical_c512": "preserve rejected historical trials; never use them to derive or validate this proposal",
+      "quality": {
+        "targets": 10000,
+        "tasks": 100,
+        "required_capacity_at_least": 1025,
+        "loss_increase_limit_nats_per_token": 0.05,
+        "task_drop_limit_percentage_points": 2,
+        "clipping_allowed": false,
+        "same_quantized_source_parity_is_unquantized_baseline": false
+      },
+      "adopted": false,
+      "capacity_or_precision_changed": false,
+      "canonical_target": "independent CPU FP32 saved values; FP64 is a separately reported arithmetic diagnostic, not a second acceptance oracle",
+      "same_quantized_source_parity": "pending separately pinned MLX-LM original-artifact profile and execution comparison; not an unquantized quality baseline",
+      "cpu_cross_precision_validation": "abs(FP32-FP64)<=atol+rtol*abs(FP64) using the frozen calibration envelope; failure rejects calibration coverage, not a second native target oracle; report CPU argmax disagreements separately"
+    }
+  },
+  "recipe_identity": {
+    "bytes": 6597,
+    "sha256": "1ab5175eb2736e1754dd008efe6af697d85944228a04f05c0d5cc0bd4669a1da"
+  },
+  "profile": {
+    "model_repo": "mlx-community/Qwen3-0.6B-8bit",
+    "model_revision": "11de96878523501bcaa86104e3c186de07ff9068",
+    "required_model_files": {
+      "config.json": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240",
+      "model.safetensors": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397",
+      "model.safetensors.index.json": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc",
+      "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config.json": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+    },
+    "tokenizer_runtime": "0.22.2",
+    "tokenizer": {
+      "bytes": 11422654,
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    },
+    "add_special_tokens": false,
+    "chat_template_evaluated": false,
+    "quality_dependency_manifest": {
+      "bytes": 6490,
+      "sha256": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66"
+    },
+    "quality_execution": "pending original complete demand; no C512 substitute",
+    "quality_checkpoint_profile": "unprepared; requires original source retokenization and complete frozen loss/task demand for this checkpoint",
+    "reference_profile": {
+      "weights": "original affine checkpoint reconstructed by FP64 multiply/add then FP32 cast",
+      "activations_and_kv": "Half",
+      "logits": "FP32",
+      "arithmetic": [
+        "FP32",
+        "FP64"
+      ],
+      "graph": "unchanged independent qwen3_fp16.forward",
+      "layers": [
+        0,
+        1,
+        27
+      ]
+    },
+    "native_profile": {
+      "projection": "MlxAffine",
+      "normalization": "Compensated",
+      "attention": "Reference",
+      "readback": "FullLogits"
+    }
+  },
+  "rows": [
+    {
+      "id": "cal-prose-32",
+      "split": "calibration",
+      "source": "calibration_prose",
+      "tokens": 32,
+      "source_text": {
+        "bytes": 6432,
+        "sha256": "53b79ca8c02c2a79c5db8ebea47b508024ff8208939e96bdf222650c6cb7ec0e"
+      },
+      "encoded_source_tokens": 1248,
+      "token_array": {
+        "bytes": 128,
+        "sha256": "c5e2c50df754658939784f5e36e0e7cec50f263afa1efde4ab184b39288cf23e"
+      },
+      "offset": 0,
+      "file": "cal-prose-32.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "cal-prose-128",
+      "split": "calibration",
+      "source": "calibration_prose",
+      "tokens": 128,
+      "source_text": {
+        "bytes": 6432,
+        "sha256": "53b79ca8c02c2a79c5db8ebea47b508024ff8208939e96bdf222650c6cb7ec0e"
+      },
+      "encoded_source_tokens": 1248,
+      "token_array": {
+        "bytes": 512,
+        "sha256": "7203ea6a3971848d897ac2322b5198828ab8ecc9026518243c2b8d83bcff2967"
+      },
+      "offset": 0,
+      "file": "cal-prose-128.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "cal-prose-512",
+      "split": "calibration",
+      "source": "calibration_prose",
+      "tokens": 512,
+      "source_text": {
+        "bytes": 6432,
+        "sha256": "53b79ca8c02c2a79c5db8ebea47b508024ff8208939e96bdf222650c6cb7ec0e"
+      },
+      "encoded_source_tokens": 1248,
+      "token_array": {
+        "bytes": 2048,
+        "sha256": "20530f845f5c209b387c39804f653b7480d657c483428958b20d25a0799b76bf"
+      },
+      "offset": 0,
+      "file": "cal-prose-512.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "cal-code-32",
+      "split": "calibration",
+      "source": "calibration_code",
+      "tokens": 32,
+      "source_text": {
+        "bytes": 6224,
+        "sha256": "05f2d5332f35be9ca8ddf3025342785ed7c94e3eef0f34b88bcce530d629f52a"
+      },
+      "encoded_source_tokens": 1536,
+      "token_array": {
+        "bytes": 128,
+        "sha256": "fe5ede5cca7a7fb931ffa0431a36454c8d2f867f9a484278196371de112ad29e"
+      },
+      "offset": 0,
+      "file": "cal-code-32.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "cal-code-128",
+      "split": "calibration",
+      "source": "calibration_code",
+      "tokens": 128,
+      "source_text": {
+        "bytes": 6224,
+        "sha256": "05f2d5332f35be9ca8ddf3025342785ed7c94e3eef0f34b88bcce530d629f52a"
+      },
+      "encoded_source_tokens": 1536,
+      "token_array": {
+        "bytes": 512,
+        "sha256": "507e5a3906b7c21279be6283517a0260241e0cee29d2e43c1905a72f60eb7a15"
+      },
+      "offset": 0,
+      "file": "cal-code-128.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "cal-code-512",
+      "split": "calibration",
+      "source": "calibration_code",
+      "tokens": 512,
+      "source_text": {
+        "bytes": 6224,
+        "sha256": "05f2d5332f35be9ca8ddf3025342785ed7c94e3eef0f34b88bcce530d629f52a"
+      },
+      "encoded_source_tokens": 1536,
+      "token_array": {
+        "bytes": 2048,
+        "sha256": "8faf7208568685f5c1a6decc916e70b174f4e26d0bedd06ab8d7443e65c38428"
+      },
+      "offset": 0,
+      "file": "cal-code-512.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "val-prose-127",
+      "split": "validation",
+      "source": "validation_prose",
+      "tokens": 127,
+      "source_text": {
+        "bytes": 6512,
+        "sha256": "99ceb1e6571a88f8d227764018e6a02fcf16c89effd9b90f057e3e27258c00f4"
+      },
+      "encoded_source_tokens": 1232,
+      "token_array": {
+        "bytes": 508,
+        "sha256": "c70c3c24fb279ba57c2449b27c1466ec6387d4bf0d0aafcb8ac26780574813ad"
+      },
+      "offset": 0,
+      "file": "val-prose-127.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "val-prose-128",
+      "split": "validation",
+      "source": "validation_prose",
+      "tokens": 128,
+      "source_text": {
+        "bytes": 6512,
+        "sha256": "99ceb1e6571a88f8d227764018e6a02fcf16c89effd9b90f057e3e27258c00f4"
+      },
+      "encoded_source_tokens": 1232,
+      "token_array": {
+        "bytes": 512,
+        "sha256": "0862bb57c5093d9301696bc1bbdbbc42bb0b020dc6b1033381ab7aeefe65e0bd"
+      },
+      "offset": 0,
+      "file": "val-prose-128.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "val-prose-129",
+      "split": "validation",
+      "source": "validation_prose",
+      "tokens": 129,
+      "source_text": {
+        "bytes": 6512,
+        "sha256": "99ceb1e6571a88f8d227764018e6a02fcf16c89effd9b90f057e3e27258c00f4"
+      },
+      "encoded_source_tokens": 1232,
+      "token_array": {
+        "bytes": 516,
+        "sha256": "00f48e0be35d309e35da0dc5cb34f67006146f53a453b9889b41cb8299a98586"
+      },
+      "offset": 0,
+      "file": "val-prose-129.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "val-unicode-255",
+      "split": "validation",
+      "source": "validation_unicode",
+      "tokens": 255,
+      "source_text": {
+        "bytes": 8416,
+        "sha256": "75cb07e700f696e6770efcc9dee63a14bcb4c9dc6b872898c2a2edd9ad290b16"
+      },
+      "encoded_source_tokens": 1536,
+      "token_array": {
+        "bytes": 1020,
+        "sha256": "164b1cef16ddc0c9125d23e335902830901b417177a77e148ca0afb3503061fb"
+      },
+      "offset": 0,
+      "file": "val-unicode-255.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "val-unicode-256",
+      "split": "validation",
+      "source": "validation_unicode",
+      "tokens": 256,
+      "source_text": {
+        "bytes": 8416,
+        "sha256": "75cb07e700f696e6770efcc9dee63a14bcb4c9dc6b872898c2a2edd9ad290b16"
+      },
+      "encoded_source_tokens": 1536,
+      "token_array": {
+        "bytes": 1024,
+        "sha256": "a25f1b5b68c00b201695c996a5c59fa16e088fc4922bb8ef337e42a3c48bde0c"
+      },
+      "offset": 0,
+      "file": "val-unicode-256.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "val-unicode-257",
+      "split": "validation",
+      "source": "validation_unicode",
+      "tokens": 257,
+      "source_text": {
+        "bytes": 8416,
+        "sha256": "75cb07e700f696e6770efcc9dee63a14bcb4c9dc6b872898c2a2edd9ad290b16"
+      },
+      "encoded_source_tokens": 1536,
+      "token_array": {
+        "bytes": 1028,
+        "sha256": "ce3b43d7169a06055f1f004e9d2fbed3a8c91ce90b811d155ddd12c8919a92ee"
+      },
+      "offset": 0,
+      "file": "val-unicode-257.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "val-code-511",
+      "split": "validation",
+      "source": "validation_code",
+      "tokens": 511,
+      "source_text": {
+        "bytes": 5888,
+        "sha256": "d40953b76a030a5a39ebd7c3831d4e6ce730998ae46c2edb8d5c3a04d7e83754"
+      },
+      "encoded_source_tokens": 1392,
+      "token_array": {
+        "bytes": 2044,
+        "sha256": "dd9e319b795fcd740d3f791f0564f552d69c5bc2e305a97c6aba0c6604fea5ec"
+      },
+      "offset": 0,
+      "file": "val-code-511.u32le",
+      "dtype": "u32le"
+    },
+    {
+      "id": "val-code-512",
+      "split": "validation",
+      "source": "validation_code",
+      "tokens": 512,
+      "source_text": {
+        "bytes": 5888,
+        "sha256": "d40953b76a030a5a39ebd7c3831d4e6ce730998ae46c2edb8d5c3a04d7e83754"
+      },
+      "encoded_source_tokens": 1392,
+      "token_array": {
+        "bytes": 2048,
+        "sha256": "1dc3441ffe2adb47133621c4b40ed5e9a8d6b6817a283961138d7a7606e7e112"
+      },
+      "offset": 0,
+      "file": "val-code-512.u32le",
+      "dtype": "u32le"
+    }
+  ],
+  "stage_pooling": {
+    "embedding": "embedding",
+    "final_norm": "final_norm",
+    "logits": "logits",
+    "layers.0.input_norm": "layers.0.input_norm",
+    "layers.0.q_projection": "layers.0.q_projection",
+    "layers.0.k_projection": "layers.0.k_projection",
+    "layers.0.v_projection": "layers.0.v_projection",
+    "layers.0.q_norm": "layers.0.q_norm",
+    "layers.0.k_norm": "layers.0.k_norm",
+    "layers.0.q_rotary": "layers.0.q_rotary",
+    "layers.0.k_rotary": "layers.0.k_rotary",
+    "layers.0.attention_context": "layers.0.attention_context",
+    "layers.0.attention_projection": "layers.0.attention_projection",
+    "layers.0.attention_residual": "layers.0.attention_residual",
+    "layers.0.post_attention_norm": "layers.0.post_attention_norm",
+    "layers.0.gate_projection": "layers.0.gate_projection",
+    "layers.0.up_projection": "layers.0.up_projection",
+    "layers.0.gate_silu": "layers.0.gate_silu",
+    "layers.0.gated": "layers.0.gated",
+    "layers.0.down_projection": "layers.0.down_projection",
+    "layers.0.output": "layers.0.output",
+    "layers.1.input_norm": "layers.1.input_norm",
+    "layers.1.q_projection": "layers.1.q_projection",
+    "layers.1.k_projection": "layers.1.k_projection",
+    "layers.1.v_projection": "layers.1.v_projection",
+    "layers.1.q_norm": "layers.1.q_norm",
+    "layers.1.k_norm": "layers.1.k_norm",
+    "layers.1.q_rotary": "layers.1.q_rotary",
+    "layers.1.k_rotary": "layers.1.k_rotary",
+    "layers.1.attention_context": "layers.1.attention_context",
+    "layers.1.attention_projection": "layers.1.attention_projection",
+    "layers.1.attention_residual": "layers.1.attention_residual",
+    "layers.1.post_attention_norm": "layers.1.post_attention_norm",
+    "layers.1.gate_projection": "layers.1.gate_projection",
+    "layers.1.up_projection": "layers.1.up_projection",
+    "layers.1.gate_silu": "layers.1.gate_silu",
+    "layers.1.gated": "layers.1.gated",
+    "layers.1.down_projection": "layers.1.down_projection",
+    "layers.1.output": "layers.1.output",
+    "layers.27.input_norm": "layers.27.input_norm",
+    "layers.27.q_projection": "layers.27.q_projection",
+    "layers.27.k_projection": "layers.27.k_projection",
+    "layers.27.v_projection": "layers.27.v_projection",
+    "layers.27.q_norm": "layers.27.q_norm",
+    "layers.27.k_norm": "layers.27.k_norm",
+    "layers.27.q_rotary": "layers.27.q_rotary",
+    "layers.27.k_rotary": "layers.27.k_rotary",
+    "layers.27.attention_context": "layers.27.attention_context",
+    "layers.27.attention_projection": "layers.27.attention_projection",
+    "layers.27.attention_residual": "layers.27.attention_residual",
+    "layers.27.post_attention_norm": "layers.27.post_attention_norm",
+    "layers.27.gate_projection": "layers.27.gate_projection",
+    "layers.27.up_projection": "layers.27.up_projection",
+    "layers.27.gate_silu": "layers.27.gate_silu",
+    "layers.27.gated": "layers.27.gated",
+    "layers.27.down_projection": "layers.27.down_projection",
+    "layers.27.output": "layers.27.output"
+  },
+  "calibration_prefix_pairs": [
+    {
+      "short": "cal-prose-32",
+      "long": "cal-prose-128",
+      "positions": 32,
+      "axes": "token axis 0 for every listed captured state"
+    },
+    {
+      "short": "cal-prose-32",
+      "long": "cal-prose-512",
+      "positions": 32,
+      "axes": "token axis 0 for every listed captured state"
+    },
+    {
+      "short": "cal-prose-128",
+      "long": "cal-prose-512",
+      "positions": 128,
+      "axes": "token axis 0 for every listed captured state"
+    },
+    {
+      "short": "cal-code-32",
+      "long": "cal-code-128",
+      "positions": 32,
+      "axes": "token axis 0 for every listed captured state"
+    },
+    {
+      "short": "cal-code-32",
+      "long": "cal-code-512",
+      "positions": 32,
+      "axes": "token axis 0 for every listed captured state"
+    },
+    {
+      "short": "cal-code-128",
+      "long": "cal-code-512",
+      "positions": 128,
+      "axes": "token axis 0 for every listed captured state"
+    }
+  ],
+  "token_selection": "encode((source + two newlines) * explicit 16 repetitions), then take the declared token prefix; numerical witness only",
+  "numerical_gates_derived": false,
+  "numerical_qualified": false,
+  "quality_qualified": false,
+  "adopted": false
+}
