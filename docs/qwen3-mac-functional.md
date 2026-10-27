@@ -58,13 +58,41 @@ suspend. All workers release. The process peaks at 932,463,960 physical bytes /
 a separately observed lifetime physical peak of 944,817,664 bytes. These are
 functional resources, not throughput or whole-phase memory qualification.
 
-**The final visible replay of the worker fix and interactive switching to another
-model remain pending because the Mac locked.** The user has been asked once to
-unlock it. This prevents that observation; it does not invalidate the passing
-compiled/fixture checks or establish complete Q5 acceptance. No phone is contacted.
-The idle corrected lab window was stopped with SIGTERM after the lock; its
-exit−15 is recorded as cleanup, not a successful visual replay. All26 owned
-build/check/audit process groups are absent. The isolated snapshot is retained.
+The first visible replay was blocked by Mac lock. Its idle lab window was stopped
+with SIGTERM; that exit−15 remains cleanup evidence. After the user unlocked the
+Mac, **the corrected visible replay and cross-model switching passed**. A valid
+story retry streamed after the oversized rejection with the previous error
+removed, then completed its 128-token limit. Qwen3 → local pinned SmolLM → saved
+Qwen3 switching worked: the Qwen3 notice disappeared for SmolLM and returned for
+Qwen3, which generated normally. Intervening human input was preserved and is
+excluded from controlled response results. The user yielded the window before
+the final switch. The later audit app quit normally with clean source/bundle
+endpoints; its lifetime physical peak was 952,174,128 bytes. No phone is contacted.
+
+## Completed raw Expert C512 witness
+
+The actual Expert window completed 384 authored input IDs plus 128 output IDs
+without hidden stops. Displayed output was exactly32 repetitions of
+`9707,11,1879,0`, a functional replay expectation rather than an independent
+numerical oracle. It reached history512/committed511/pending1. Requesting position
+513 rejected with those counts unchanged; Continue(0) committed the pending token.
+Suspend retained the 512-token prefix, and Replay restored512 committed positions
+in a new session with the same model.
+
+An explicit `--raw-window` mode in the existing Swift context checker covers
+values the UI cannot expose. Eleven retained snapshots precede assertions. Both
+pending and committed overflow reject while preserving the exact literal512-ID
+prefix; the available scalar diagnostic is unchanged across committed overflow.
+Replay restores the exact saved IDs and makes the scalar diagnostic available.
+This does **not** assert equality of every logit across replay schedules. Closure
+is explicitly joined and native owners are released. Strict Swift compilation
+and the existing CPU worker/context regressions pass. The one real-model process
+peaks at751,109,224 physical/766,738,432 RSS bytes, below6GiB; all four new owned
+UI/build/check groups are absent.
+
+This closes the raw Expert C512 functional gap. **Chat completion at512 positions
+remains open**, along with numerical qualification and full40960 delivery.
+See the [follow-up receipt](../benchmarks/results/2026-10-27-qwen3-mac-visible-v1.json).
 
 ## Existing evidence reused
 
@@ -72,8 +100,8 @@ The unchanged [context integration](context-app-integration.md) already verifies
 385 rendered input plus 127 requested output positions, rejects one additional
 position in both modes without altering the prefix, and checks cancellation,
 suspend/replay, fresh model/session identities and rejected-draft restoration.
-Its admission witness cancels after one output; it is not completed 512-position
-app execution. The [native C512 trial](qwen3-context512-native.md) supplies separate
+Its Chat admission witness cancels after one output; it is not completed512-position
+Chat execution. The [native C512 trial](qwen3-context512-native.md) supplies separate
 complete cache/chunk/state witnesses while retaining rejected numerical gates.
 
 The bounded audit retains these distinctions. Larger app/codec/output delivery,

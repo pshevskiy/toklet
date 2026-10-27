@@ -5958,3 +5958,29 @@ change, gate expansion, context increase or phone qualification follows. The
 initial incomplete iOS check invocation is preserved. See
 [the report](qwen3-mac-functional.md) and
 [evidence](../benchmarks/results/2026-10-27-qwen3-mac-functional-v1.json).
+
+## 2026-10-27 — Visible Mac recovery/switching and full raw Expert window verified
+
+After unlock, the corrected app visibly clears the previous oversized-request
+error while a valid retry streams, then completes128 outputs. Qwen3→local SmolLM
+→saved Qwen3 switching succeeds; the profile-specific notice disappears and
+returns correctly. Human input during the audit is preserved and excluded from
+controlled response results. The app subsequently quits normally with checked
+source/bundle endpoints; lifetime physical peak952174128 bytes is below6GiB.
+
+Expert completes384 authored inputs+128 outputs with no hidden stops, reaching
+history512/committed511/pending1. Position513 rejects; Continue(0) commits the
+pending token; suspend/replay restores512 committed positions in a fresh session.
+The existing Swift checker gains an explicit raw-window mode to assert exact
+saved tokens and scalar diagnostic availability beyond what the UI exposes.
+Eleven journaled snapshots prove both overflow states preserve the literal512-ID
+prefix, committed overflow preserves scalar fields, and replay restores saved
+tokens. No full-logit replay equality or numerical oracle is claimed.
+
+Strict Swift compile and existing CPU fixture/context checks pass; one reviewed
+real-model run peaks at751109224 physical/766738432 RSS bytes. All four owned
+groups exit. Astra accepts this raw functional closure. Chat512 completion is
+the next bounded task; normal stop behavior remains in effect. Numerical gates,
+the eight untouched validation inputs, full40960 support and phone qualification
+remain unchanged. See [the follow-up](qwen3-mac-functional.md) and
+[evidence](../benchmarks/results/2026-10-27-qwen3-mac-visible-v1.json).

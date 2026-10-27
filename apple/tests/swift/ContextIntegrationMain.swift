@@ -193,12 +193,89 @@ struct ContextIntegrationMain {
         try png.write(to:output.appendingPathComponent("context-window.png"))
         print("TOKLET_CONTEXT_REAL_JSON={\"passed\":true,\"declared\":40960,\"loaded\":512,\"selected\":512,\"rendered_input\":385,\"exact_reply\":127,\"overflow_reply\":128,\"raw_and_chat_boundary\":true,\"token_prefix_preserved\":true,\"cancel_after_tokens\":1,\"completed_512_positions\":false,\"suspend_send_new_identity\":true,\"rejected_draft_cases\":3,\"offline_preference_preserved\":true,\"phone_qualified\":false}")
     }
+    // Explicit real-model functional check. This neither executes numerical
+    // validation inputs nor qualifies logits against a reference/tolerance.
+    static func rawWindow(_ directory: String,_ output: URL) throws {
+        let profile = try HubProfile.identify(URL(fileURLWithPath:directory))
+        try require(profile == .qwen3,"pinned Qwen3 configuration")
+        let journal = output.appendingPathComponent("raw-window.jsonl")
+        try Data().write(to:journal,options:.withoutOverwriting)
+        let stream = try FileHandle(forWritingTo:journal)
+        defer { try? stream.close() }
+        let worker = try NativeWorker(captureSavedPrefix:true)
+        defer { worker.close(); _ = worker.waitUntilClosed(seconds:30) }
+        func record(_ name: String,_ state: NativeSnapshot) throws {
+            var row: [String:Any] = ["event":name,"status":state.status,"message":state.message,
+                "history":state.history,"committed":state.evaluated,"pending":state.pending,
+                "saved_prefix":state.savedPrefix ?? [],"emitted_ids":state.ids,"reason":state.reason,
+                "model_instance":state.modelContext?.modelInstance ?? 0,
+                "session_instance":state.liveContext?.sessionInstance ?? 0]
+            if let score = state.score { row["score"] = try JSONSerialization.jsonObject(with:JSONEncoder().encode(score)) }
+            var bytes = try JSONSerialization.data(withJSONObject:row,options:[.sortedKeys]); bytes.append(10)
+            try stream.write(contentsOf:bytes)
+        }
+        func run(_ name: String,_ command: NativeCommand,_ failure: Bool = false) throws -> NativeSnapshot {
+            try require(worker.submit(command),"raw-window command accepted")
+            let state = try settled(worker); try record(name,state)
+            try require(failure ? state.status == TOKLET_INVALID : state.status == 0,"raw-window command status: " + state.message)
+            return state
+        }
+        let pattern: [UInt32] = [9707,11,1879,0]
+        let input = Array(repeating:pattern,count:96).flatMap { $0 }
+        let emitted = Array(repeating:pattern,count:32).flatMap { $0 }
+        let expected = input + emitted
+        func prefix(_ state: NativeSnapshot,_ committed: UInt32,_ pending: UInt32) throws {
+            try require(state.history == 512 && state.evaluated == committed && state.pending == pending
+                && state.savedPrefix == expected,"complete literal prefix/counts")
+        }
+        var settings = NativeSettings(directory:directory)
+        settings.metal = true; settings.mlx = true; settings.capacity = 512; settings.chunk = 32
+        settings.numericalBudget = HubProfile.qwen3.numericalBudget
+        let loaded = try run("loaded",.load(settings))
+        try require(loaded.modelContext?.declaredTotal == 40960 && loaded.modelContext?.configuredCapacity == 512,"partial declared/selected window")
+        let completed = try run("generated_384_plus_128",.generate(operation:0,tokens:input,maximum:128,stops:[]))
+        try prefix(completed,511,1)
+        try require(completed.ids == emitted && completed.emitted == 128 && completed.reason == 1
+            && completed.stopToken == UInt32.max && completed.requestBudget?.required == 512,"all128 outputs; no hidden stop")
+        let pendingRejected = try run("pending_513_rejected",.generate(operation:2,tokens:[],maximum:1,stops:[]),true)
+        try prefix(pendingRejected,511,1)
+        let flushed = try run("pending_committed",.generate(operation:2,tokens:[],maximum:0,stops:[]))
+        try prefix(flushed,512,0); try require(flushed.ids.isEmpty,"pending flush emits nothing")
+        let scored = try run("score_before_overflow",.score(target:0))
+        guard let beforeScore = scored.score else { throw NativeContextFailure("Missing available scalar distribution") }
+        try require(beforeScore.vocabulary == 151936 && beforeScore.evaluated == 512
+            && beforeScore.targetLogit.isFinite && beforeScore.greedyLogit.isFinite
+            && beforeScore.negativeLogLikelihood.isFinite,"finite full-context scalar diagnostic")
+        let rejected = try run("committed_513_rejected",.generate(operation:2,tokens:[],maximum:1,stops:[]),true)
+        try prefix(rejected,512,0)
+        try require(rejected.modelContext == scored.modelContext && rejected.liveContext == scored.liveContext,"overflow preserves model/session facts")
+        let after = try run("score_after_overflow",.score(target:0))
+        try require(after.score == beforeScore,"overflow preserves available scalar diagnostic")
+        let suspended = try run("suspended",.suspend)
+        try require(suspended.hasModel && !suspended.hasSession && suspended.savedPrefix == expected
+            && suspended.liveContext == nil && suspended.modelContext == scored.modelContext,"suspend preserves immutable model and exact prefix")
+        let replayed = try run("replayed",.replay)
+        try prefix(replayed,512,0)
+        try require(replayed.modelContext == scored.modelContext
+            && replayed.liveContext?.sessionInstance != scored.liveContext?.sessionInstance,"replay uses fresh session")
+        let replayScore = try run("score_after_replay",.score(target:0))
+        try require(replayScore.score?.evaluated == 512,"replayed distribution is available")
+        worker.close()
+        try require(worker.waitUntilClosed(seconds:30) && worker.snapshot().workerFinished,"raw-window worker closed and joined")
+        let closed = worker.snapshot(); try record("closed",closed)
+        try require(!closed.hasModel && !closed.hasSession,"native model/session released")
+        try stream.synchronize(); try stream.close()
+        print("TOKLET_RAW_WINDOW_JSON={\"passed\":true,\"input\":384,\"output\":128,\"history\":512,\"exact_saved_prefix\":true,\"overflow_scalar_diagnostic_unchanged\":true,\"suspend_replay\":true,\"closed\":true,\"numerical_qualification\":false,\"chat512_completion\":false}")
+    }
     static func main() throws {
         guard CommandLine.arguments.count >= 3 else { throw NativeContextFailure("Expected --fixture PATH or --model PATH OUTPUT") }
         if CommandLine.arguments[1] == "--fixture" { try fixture(CommandLine.arguments[2]) }
         else if CommandLine.arguments[1] == "--model", CommandLine.arguments.count == 4 {
             let output = URL(fileURLWithPath:CommandLine.arguments[3]); try FileManager.default.createDirectory(at:output,withIntermediateDirectories:false)
             try real(CommandLine.arguments[2],output)
+        } else if CommandLine.arguments[1] == "--raw-window", CommandLine.arguments.count == 4 {
+            let output = URL(fileURLWithPath:CommandLine.arguments[3]); try FileManager.default.createDirectory(at:output,withIntermediateDirectories:false)
+            try rawWindow(CommandLine.arguments[2],output)
         } else { throw NativeContextFailure("Unknown context integration mode") }
     }
 }
