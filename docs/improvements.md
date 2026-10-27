@@ -5633,3 +5633,28 @@ Rust/shader/protected release artifacts remain unchanged. See
 [public evidence](../benchmarks/results/2026-10-27-qwen3-projection-localization-v1.json).
 L4 numerical qualification, source/held-out quality, broader model context and
 independent phone qualification remain open.
+
+## 2026-10-27 — First projection divergence with identical inputs
+
+The final bounded localization freezes12 layer0 Q/K/V coordinates: first two
+native/canonical differences and two exact controls per projection. Authenticated
+full embedding and normalization rows agree across all three profiles before
+dot analysis. Actual CPU FP64 multiply/add→FP32 weight reconstruction matches
+the fused FP32 rows. Exact dots, nearest-even Half and signed midpoint distances
+separate accumulation/store differences from inherited input differences.
+
+Native and FP64 outputs match exact rounding at every selected coordinate.
+Canonical FP32 crosses one adjacent Half boundary at the six differences; six
+controls and all original local gates pass. The14-point legacy diagnosis remains
+unchanged. This establishes an initial arithmetic-profile divergence without
+attributing every later failure to it. The reviewed stopping rule is met: retain
+kernels, stop per-layer diagnosis, and prepare a separate independent calibration/
+validation proposal before further target evaluation. Historical C512 failures,
+quality demands and production limits remain unchanged.
+
+All33 cold tests pass, including11 projection controls. New diagnostic physical/
+RSS peaks287,343,528/268,206,080 bytes fit512MiB; the legacy replay also fits.
+Three diagnostic groups and one publication group close. Independent exact
+bisection replay verifies36 new dots and midpoint distances. No GPU rerun,
+performance or phone qualification follows. See [the report](qwen3-first-divergence.md)
+and [public evidence](../benchmarks/results/2026-10-27-qwen3-first-divergence-v1.json).

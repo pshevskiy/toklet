@@ -139,6 +139,65 @@ class ProjectionDiagnosis(unittest.TestCase):
             with self.assertRaises(ValueError):
                 subject.validate(changed)
 
+        first = copy.deepcopy(plan)
+        first.update(format="toklet-qwen3-first-projection-divergence-plan-v1", point_count=12)
+        first["points"] = first["points"][:12]
+        for point in first["points"]:
+            point["stage"] = point["stage"].replace("layers.27", "layers.0")
+            point["position"] = 0
+            if point["category"] == "native_canonical_failure":
+                point["category"] = "first_divergence"
+                point["feature"] += 2
+        subject.validate(first)
+        first["points"][0]["position"] = 25
+        with self.assertRaises(ValueError):
+            subject.validate(first)
+
+    def test_exact_half_midpoints_positive_negative_and_subnormal(self):
+        for value, low, high in ((Fraction(1), Fraction(4095, 4096), Fraction(2049, 2048)),
+                (Fraction(-1), Fraction(-2049, 2048), Fraction(-4095, 4096)),
+                (Fraction(0), -Fraction(1, 2**25), Fraction(1, 2**25))):
+            result = subject.midpoint_distances(value)
+            self.assertEqual((Fraction(result["lower_midpoint"]), Fraction(result["upper_midpoint"])), (low, high))
+            self.assertEqual(Fraction(result["above_lower"]), value - low)
+            self.assertEqual(Fraction(result["below_upper"]), high - value)
+        with self.assertRaises(ValueError):
+            subject.midpoint_distances(Fraction(65504))
+
+    def test_identical_inputs_detect_reference_store_boundary_error(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); selected, _ = miniature(root)
+            selected.update(stage="layers.0.q_projection", category="first_divergence")
+            data = bytearray((root / "parent.bin").read_bytes())
+            for contract in ("fp32", "fp64"):
+                for family, body in (("reference_inputs", struct.pack("<e", 1) * 1024),
+                                     ("reference_outputs", struct.pack("<e", 1537 if contract == "fp32" else 1536))):
+                    item = selected[family][contract];data[item["offset"]:item["offset"] + item["bytes"]] = body
+                    item["sha256"] = hashlib.sha256(body).hexdigest()
+            (root / "parent.bin").write_bytes(data)
+            record = dict(bytes=len(data), sha256=hashlib.sha256(data).hexdigest())
+            with subject.Owner(root / "parent.bin", record) as owner:
+                result = subject.point({"parent.bin": owner}, selected)
+                self.assertEqual(result["input_rows_identical_to_native"], dict(fp32=True, fp64=True))
+                self.assertEqual(result["local_extra_error"], dict(native="0", fp32="1", fp64="0"))
+                self.assertEqual(result["decomposition"]["inherited_input"], "0")
+                self.assertEqual(result["cpu_and_fused_reconstruction_identical_weights"], 1024)
+                broken = copy.deepcopy(selected);broken["category"] = "passing_control"
+                with self.assertRaises(ValueError):
+                    subject.point({"parent.bin": owner}, broken)
+            row = dict(native=selected["native_input"], **selected["reference_inputs"])
+            plan = dict(format="toklet-qwen3-first-projection-divergence-plan-v1",
+                parents={"parent.bin": record}, points=[selected],
+                initial_rows={"embedding": row, "layers.0.input_norm": copy.deepcopy(row)})
+            with mock.patch.object(subject, "validate"):
+                report = {};subject.analyze(root, plan, report)
+                self.assertTrue(report["complete"])
+                self.assertEqual(report["initial_rows"]["embedding"], dict(columns=1024, fp32_exact=True, fp64_exact=True))
+                plan["initial_rows"]["embedding"]["fp32"] = copy.deepcopy(row["fp32"])
+                plan["initial_rows"]["embedding"]["fp32"]["sha256"] = "0" * 64
+                with self.assertRaises(ValueError):
+                    subject.analyze(root, plan, {})
+
 
 if __name__ == "__main__":
     unittest.main()

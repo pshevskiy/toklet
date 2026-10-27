@@ -74,8 +74,11 @@ byte-identical across four schedules per case. Canonical numerical qualification
 still rejects18,400 values; FP64 diagnostic failures total37,040. The bounded
 [same-input Q/K/V diagnosis](qwen3-projection-localization.md) reproduces all42 saved
 outputs from their own inputs exactly, including14 native coordinates and six
-passing controls. Selected failures are inherited input differences plus correct
-Half rounding; keep Q/K/V kernels unchanged and investigate the upstream path.
+passing controls. The [first-layer check](qwen3-first-divergence.md) now proves
+identical embedding/norm inputs and weights: native/FP64 dots round correctly at
+all12 selected coordinates; canonical FP32 crosses a Half boundary at six. Stop
+per-layer localization and keep kernels unchanged. Next freeze a separate C512
+precision proposal with independent calibration/validation and full quality dependencies.
 Source parity, unquantized/held-out quality and broader context remain open;
 no precision-policy or capacity upgrade follows.
 Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
