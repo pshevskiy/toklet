@@ -5717,3 +5717,36 @@ changes. See [the report](qwen3-context-calibration.md),
 [frozen metadata](../tests/fixtures/qwen3-context-calibration-v2/README.md) and
 [public evidence](../benchmarks/results/2026-10-27-qwen3-context-calibration-v2.json).
 Next experimental gate derivation and immutable review precede any validation.
+
+## 2026-10-27 — Experimental C512 envelope derived, rejected for qualification
+
+The frozen CPU calibration alone supplies57 independent stage/layer gates under
+the predeclared formula. Six cross-precision comparisons and six prefix pairs
+under both arithmetic profiles produce1026 bounded comparisons/36 parent
+admissions. Consumed prefixes have explicit hashes and immutable full-parent
+authentication; full-array hashes and endpoint checks remain mandatory. Maximum
+coordinates/value pairs support direct inspection. No native, historical-failure
+or validation values enter derivation. Partial findings survive errors; no gate
+artifact returns until all owners close successfully.
+
+Two cold runs agree exactly. Independent admitted replay with different block
+sizes verifies all1026 comparisons/witnesses, pooled errors and final formulas.
+All18 cold tests pass. Comparison-label metadata was separated from span audits;
+the corrected cold runs require the exact original gate SHA. Original reports
+and the unchanged derived pending artifact remain. Seven owned groups close.
+Corrected derivation physical/RSS peaks294,355,880/276,938,752 and
+297,436,144/292,339,712 bytes, replay304,202,640/320,536,576 bytes, fit512MiB.
+
+Astra **rejects the envelope as a qualification contract**. One prose512
+position drives24.5 layer27-output and1.1971473693847656 logit differences,
+yielding blanket atol49 and2.3942947387695312. All prefix maxima are zero, but
+no independent error/quality budget establishes those allowances remain
+discriminative. Reproducibility or exact argmax does not establish distribution/
+quality preservation. This does not prove a native bug or failed model quality,
+and introduces no arbitrary replacement ceiling. Validation stays untouched;
+precision, capacities and historical rejection statuses remain unchanged.
+
+See [the artifact and separate review](../tests/fixtures/qwen3-context-gates-v2/README.md)
+and [public evidence](../benchmarks/results/2026-10-27-qwen3-context-gates-v2.json).
+Next independently pin/execute the original quantized source precision profile
+on calibration inputs, retaining complete unquantized/held-out quality demands.

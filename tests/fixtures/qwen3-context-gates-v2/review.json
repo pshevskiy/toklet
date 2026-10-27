@@ -1,0 +1,16 @@
+{
+  "format": "toklet-qwen3-context-envelope-review-v2",
+  "reviewer": "Astra",
+  "date": "2026-10-27",
+  "derived_artifact_sha256": "40cf0fd86ee1b67f3fe9719b23e2942c8a2b21fbec6d91b7cf99bfc547aef6d3",
+  "derivation_checks_accepted": true,
+  "qualification_contract_approved": false,
+  "validation_may_start": false,
+  "adopted": false,
+  "reason": "One calibration position produces blanket layer27 output atol 49 and logits atol 2.3942947387695312 across all validation positions. No independent error or quality budget establishes that these allowances distinguish acceptable arithmetic variation from meaningful model errors. Reproducibility and exact argmax checks do not establish distribution or quality preservation.",
+  "native_bug_established": false,
+  "poor_model_quality_established": false,
+  "replacement_ceiling_introduced": false,
+  "historical_failures_preserved": true,
+  "next": "Pin and execute the original quantized model source implementation and precision profile on calibration inputs. Keep an unquantized baseline and the complete held-out quality workload as separate adoption requirements. Preserve the untouched validation split."
+}

@@ -83,8 +83,12 @@ preparations: two calibration texts/six cases and three validation texts/eight
 cases, explicit57-state pooling and six prefix pairs. No gates are derived or
 adopted. The [CPU-only calibration captures](qwen3-context-calibration.md) now repeat
 all12 graphs/756 arrays/768,983,040 values per set with full cold readback.
-Next derive/freeze/review experimental gates before untouched validation;
-separate source parity and complete quality evidence remain required.
+The [derived57-gate envelope](../tests/fixtures/qwen3-context-gates-v2/README.md) is reproducible and
+independently replayed, but Astra rejects it for qualification: one calibration
+position produces blanket layer27-output atol49 and logits atol2.3943 without
+an independent error/quality budget. Keep validation untouched. Next pin/execute
+the original quantized source precision profile on calibration inputs; full
+unquantized/held-out quality remains a separate adoption requirement.
 Source parity, unquantized/held-out quality and broader context remain open;
 no precision-policy or capacity upgrade follows.
 Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
