@@ -44,9 +44,9 @@ ceilings for default/real E2B/hybrid/GPU remain32 and real whole32 is unqualifie
 captures, frozen-prefix/causal replay, selected scalar boundaries and controls
 before cached/native implementation. Its W4 scope does not qualify real E2B.
 The [FP64 matrix-dot reference attention](gemma-reference-attention.md) now passes
-the original state gates and two matched reference-operation timing runs. Next
-advance L3 engine-owned capability/shared-window admission through the existing
-Qwen3 bridge and both app modes. The [explicit scalar witness context](gemma-scalar-long-context.md)
+the original state gates and two matched reference-operation timing runs.
+[L3 app integration](context-app-integration.md) now passes scoped admission/state checks;
+next L4 qualifies real Qwen3 C512 numerics. The [explicit scalar witness context](gemma-scalar-long-context.md)
 now passes through1025 with32-row calls and frozen numerical/state/argmax checks,
 including structural two-head W512 wraps. Default/real E2B/hybrid/GPU remain32;
 real whole32, long BF16 and the unchanged real1025-position demand remain open. Held-out/source quality and
@@ -71,8 +71,14 @@ L3.1 [engine context facts and shared request preflight](context-admission.md) n
 passes Rust/native/C and tiny Metal checks. Same-document declared positions,
 global loader/loaded/session bounds, process-local model/session identity and
 pending-history arithmetic remain separate from qualification/device fit.
-Next L3.2 consumes these fixed native records in both Swift modes with explicit
-codec/text/event and qualification policy; current qualified ranges stay fixed.
+L3.2 [app context integration](context-app-integration.md) now consumes these fixed
+records in both modes with explicit policy, fresh identities, shared-window
+preflight and draft/prefix-preserving rejection. Strict Mac/iOS source checks,
+both app builds and Mac real admission/lifecycle regressions pass. The385+127
+versus128 witness cancels after one token; current qualified ranges stay fixed.
+Next L4 freezes independent Qwen3 C512 original/future-tail FP32/FP64 references
+using existing graph math and unchanged gates, then compares native chunk32/128,
+uneven and late continuation schedules before raising capacity.
 Real Gemma whole32/long BF16/full1025 precision/quality/fit remain required.
 
 ## Current status and execution tasks

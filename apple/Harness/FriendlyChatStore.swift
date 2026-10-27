@@ -33,6 +33,7 @@ final class FriendlyChatStore: ObservableObject {
     private var pendingFolder: URL?
     private var scopedFolder: URL?
     private var loadedKey = ""
+    private var loadedModelInstance: UInt64?
     private var saving: Task<Void,Never>?
     private var storageBlocked = false
     private let file: URL
@@ -60,13 +61,21 @@ final class FriendlyChatStore: ObservableObject {
     var hasChatModel: Bool {
         guard let harness else { return false }
         return harness.state.hasModel && harness.state.chatEnabled && loadedKey == workspace.current.modelKey
+            && loadedModelInstance != nil && harness.state.modelContext?.modelInstance == loadedModelInstance
     }
     var ready: Bool {
         guard let harness else { return false }
-        return hasChatModel && !loadingModel && !harness.state.closed && !harness.state.busy && !running
+        return hasChatModel && harness.state.modelContext != nil && !loadingModel && !harness.state.closed && !harness.state.busy && !running
     }
     var availableOutputLimits: [UInt32] {
-        ChatWorkspace.outputLimits.filter { $0 <= NativeSettings.maximumChatOutputTokens }
+        // Before choosing/opening this conversation's model these are saved
+        // preference choices, not advertised model capability or admission.
+        guard hasChatModel else {
+            return ChatWorkspace.outputLimits.filter { $0 <= NativeGenerationPolicy.maximumChatOutput }
+        }
+        guard let context = harness?.state.modelContext else { return [] }
+        let limits = NativeGenerationPolicy.limits(.chat,model:context)
+        return ChatWorkspace.outputLimits.filter { UInt64($0) <= limits.maximumOutput }
     }
     var outputLimitAvailable: Bool { availableOutputLimits.contains(workspace.outputLimit) }
     var canSend: Bool { ready && outputLimitAvailable && !workspace.current.draft.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && !storageBlocked }
@@ -100,7 +109,7 @@ final class FriendlyChatStore: ObservableObject {
     func retryStorage() { if storageBlocked { restore() } else { save() } }
     func edit(_ text: String) {
         guard !storageBlocked else { return }
-        guard text.utf8.count <= 16384 else { notice = "A message can contain up to 16 KiB of text."; return }
+        guard text.utf8.count <= NativeGenerationPolicy.maximumDraftBytes else { notice = "A message can contain up to 16 KiB of text."; return }
         draftEdit = UUID()
         workspace.edit(text)
         saving?.cancel()
@@ -210,6 +219,7 @@ final class FriendlyChatStore: ObservableObject {
         observeBenchmark(state)
         if loadingModel && !state.busy && pendingFolder == nil {
             loadingModel = false
+            loadedModelInstance = state.chatEnabled ? state.modelContext?.modelInstance : nil
             if !state.chatEnabled { notice = state.message.isEmpty ? "The model could not be opened. Choose a model to try again." : state.message }
         }
         if let result = state.chatResult, result.id == request {
@@ -222,7 +232,7 @@ final class FriendlyChatStore: ObservableObject {
             request = nil; requestDraftEdit = nil; save()
         }
         if !state.busy && !state.hasModel {
-            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""
+            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""; loadedModelInstance = nil
             if modelName != "Toklet" { modelName = "Toklet" }
             if let folder = pendingFolder, harness?.expert == false {
                 pendingFolder = nil; beginLoad(folder)
@@ -239,7 +249,8 @@ final class FriendlyChatStore: ObservableObject {
         notice = ""
         do {
             guard let actual = harness.worker?.snapshot(), !actual.busy, !actual.closed,
-                  actual.hasModel == harness.state.hasModel else {
+                  actual.hasModel == harness.state.hasModel,
+                  actual.modelContext?.modelInstance == harness.state.modelContext?.modelInstance else {
                 harness.poll()
                 throw HubFailure("The engine state changed. Wait for it to finish and choose the model again.")
             }

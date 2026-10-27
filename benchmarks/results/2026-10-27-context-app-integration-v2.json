@@ -1,0 +1,2245 @@
+{
+  "format": "toklet-context-app-integration-v1",
+  "passed": true,
+  "earlier_publication": {
+    "bytes": 111901,
+    "sha256": "518a6acb0548ffa39e0a50b67466f2b4e62f9162c1c63cc5b97910cc4b935014"
+  },
+  "unchanged_retry_sources": 36,
+  "saved_success_records_replayed": true,
+  "source_snapshot_base_revision": "e54921565b09de84e666c0d06d4ad9951d0e9dfd",
+  "checks_identity": {
+    "bytes": 104656,
+    "sha256": "9486098cb6e6bc63f4ae2c77534f401233265e4442755ca01b6b836d36b4b667"
+  },
+  "checks": {
+    "passed": true,
+    "bindings": {
+      "artifacts/m8-context-ui-native-package-v1/package/build.json": {
+        "bytes": 39513,
+        "sha256": "1f187db18feb5131a8c2dc31d28963ea329ab029a6741d642b144cb5053caffc"
+      },
+      "Cargo.toml": {
+        "bytes": 2249,
+        "sha256": "49e8af0306160ee298922bce267c1893bef78edcd1d51b7a127300ebdca86878"
+      },
+      "Cargo.lock": {
+        "bytes": 24283,
+        "sha256": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26"
+      },
+      "src/app_chat/content/tests/capture.rs": {
+        "bytes": 9160,
+        "sha256": "360aae0c25424ae5a5247676296d300eac844e7a57fdc94a0b2a43615e6f1083"
+      },
+      "src/app_chat/content/tests.rs": {
+        "bytes": 13201,
+        "sha256": "2b65bed151a68e779720cc694e753ba11e0522b08db8c163dbd5f8bc988f276f"
+      },
+      "src/app_chat/content.rs": {
+        "bytes": 5190,
+        "sha256": "59c4fce1ce7d6c323d1a20c484ee8b82358f546739b9c2a7fb87e9dd73fef4c5"
+      },
+      "src/app_chat/gemma4/tests.rs": {
+        "bytes": 13461,
+        "sha256": "9d1a8e1508b41c99060ce42700cd7f36bd239686ddb4f7de91c59b2d1ab5a711"
+      },
+      "src/app_chat/gemma4.rs": {
+        "bytes": 11365,
+        "sha256": "f5a27b34e2dddec9f1bcce13b6a43afa7bd42eb260db43c52fd8f42110aa1ef9"
+      },
+      "src/app_chat/stream.rs": {
+        "bytes": 27232,
+        "sha256": "ddfe5d6e2de239df94f1e5f2d78ceaa4ca9df8c5ac62d3ecbbf8cc3563ae9b44"
+      },
+      "src/app_chat.rs": {
+        "bytes": 25309,
+        "sha256": "188fe60aa93abcf16156c7de63d37e99b8012b79655260124e319290c62fa17c"
+      },
+      "src/benchmark.rs": {
+        "bytes": 3360,
+        "sha256": "cbf39dcc6025acc9cdf647bc77199dd28a081ea213bb6876a7194b5d8c83088a"
+      },
+      "src/bin/cli/chat.rs": {
+        "bytes": 21958,
+        "sha256": "4cc8da3c7b6f6adcb39e92e6a8b7800e865fa3e9299dc5b2389c43ed00ed80de"
+      },
+      "src/bin/cli/inspect.rs": {
+        "bytes": 3256,
+        "sha256": "4cbbd66cfd7fed4ccadd90e1ec9d23132df0be8f19b7810325b4bd8d51f34461"
+      },
+      "src/bin/cli/mod.rs": {
+        "bytes": 35684,
+        "sha256": "0f35386f986d90c86d4dc8e941a4a97f2e848d987b77c39dff9aec8715b9650d"
+      },
+      "src/bin/cli/plan.rs": {
+        "bytes": 6473,
+        "sha256": "119cd9ad3f69e0ef91d1856d7fe0f8bb76c7d00832f632f2f772a9830be44046"
+      },
+      "src/bin/toklet.rs": {
+        "bytes": 96,
+        "sha256": "53076dc69f4e91dfe2bbd8c8aac693d733289c0047bb641e5b36e4bdae0c9cbb"
+      },
+      "src/cpu/attention.rs": {
+        "bytes": 11201,
+        "sha256": "389cd2f083f79c27971980f17d2f6dff92cd4d747964299e6bfe82836ddd5abf"
+      },
+      "src/cpu/causal_conv/tests.rs": {
+        "bytes": 8277,
+        "sha256": "19982f2b19dce919a6ee5fd887557c9ba4542c3e2627337e4155de5e61caf967"
+      },
+      "src/cpu/causal_conv.rs": {
+        "bytes": 2849,
+        "sha256": "81634447ded8fc9e40f783c3225acc44c3079188f5e7484339f074c43a1614b2"
+      },
+      "src/cpu/dense_decoder/tests.rs": {
+        "bytes": 20434,
+        "sha256": "558f016de15740132466baa5a38386f6878019def878038d55b08175c18affd9"
+      },
+      "src/cpu/dense_decoder.rs": {
+        "bytes": 8850,
+        "sha256": "e30e0694acf8228c22e1d286833495474ba45a3cad9ca8c7a02bc6e99d5e1a43"
+      },
+      "src/cpu/gated_delta/tests.rs": {
+        "bytes": 18725,
+        "sha256": "4ee3e58a03a65edb6ad2a509f70f1d6b006fcb07615962dbccebf0ea05ae626e"
+      },
+      "src/cpu/gated_delta.rs": {
+        "bytes": 8852,
+        "sha256": "9eb5c8f89935fcb0c32db145fb3a007ab66e9932dd44600c6503dcf07a5aa6ff"
+      },
+      "src/cpu/gelu/tests.rs": {
+        "bytes": 4685,
+        "sha256": "fee0562dab34b3facec9b8bf06e4aa44e0dcb0d3b97192306262e006bfe608a6"
+      },
+      "src/cpu/gelu.rs": {
+        "bytes": 2278,
+        "sha256": "f3d5a9b1f374217f554afe946af7f35e1ce5685bcc723d45c41d8b5552a74e20"
+      },
+      "src/cpu/mod.rs": {
+        "bytes": 9926,
+        "sha256": "cf9e16dfa3de336a2d8e5448ad807142a25ec4a8f37b578b557719fa51fcfbe4"
+      },
+      "src/cpu/per_layer/tests.rs": {
+        "bytes": 12889,
+        "sha256": "420a075249e8da7fe2cdf3a71e3795ed8373ec6719bfdebab59e96e7938e2917"
+      },
+      "src/cpu/per_layer.rs": {
+        "bytes": 5663,
+        "sha256": "9c5f0deb16a63e9b8655b513644ec1583e4e170b362cf031f91dfa792ff046d8"
+      },
+      "src/cpu/proportional_rotary/tests.rs": {
+        "bytes": 8797,
+        "sha256": "2a176cf2ccd2ed997613fe40f62f8d751c1686de7a50ec41835aa1fbf55fb0a9"
+      },
+      "src/cpu/proportional_rotary.rs": {
+        "bytes": 3991,
+        "sha256": "e1140c87e198c340359925b4c50da227ab3a30f6d425574479745dd90c4dbaf3"
+      },
+      "src/cpu/reductions.rs": {
+        "bytes": 7659,
+        "sha256": "1ef7d30aa22c6493d6c60d51d229e4b7ce9b8872c8e0a8de9f6b8351ae3cc61d"
+      },
+      "src/cpu/softcap/tests.rs": {
+        "bytes": 5309,
+        "sha256": "6e77a46496ad65a6e22e8fce30086fdaeb260bf6b50cff9d229b732b7d858c9e"
+      },
+      "src/cpu/softcap.rs": {
+        "bytes": 1351,
+        "sha256": "0c030176e9396c539c8d58a9aba99e272d3eb0f5c3eb6487fe04d9f74a00e2f7"
+      },
+      "src/cpu/span_attention/tests.rs": {
+        "bytes": 20715,
+        "sha256": "446e9623e15d7333fb9a329d03cb187f5dbcfdc989f88add0054a88ba3b7ebe7"
+      },
+      "src/cpu/span_attention.rs": {
+        "bytes": 8706,
+        "sha256": "fec2627d50fbddb00858bf1093d12bfdc0c9fb1a99b6f6cd6c8a0eb48b2ed383"
+      },
+      "src/cpu/tiled.rs": {
+        "bytes": 6519,
+        "sha256": "4f5a6cdce919e073f5c7bfb6c3a42f6a341fce166acea2ee24e731ffa9cca4eb"
+      },
+      "src/cpu/window_attention/tests.rs": {
+        "bytes": 13334,
+        "sha256": "b399fe01dbaef0cad27974905fcbdfacd56ebcad744b78107595c200d598b678"
+      },
+      "src/cpu/window_attention.rs": {
+        "bytes": 6748,
+        "sha256": "9a0c76ed651b0593a0c6170111c5034bc06e295ec921fd935bb73d74011cf9e0"
+      },
+      "src/generation.rs": {
+        "bytes": 8887,
+        "sha256": "dd3efad86bd36998129c83257f33cf505dbb82646298e47e2617c984fa5b2cc1"
+      },
+      "src/lib.rs": {
+        "bytes": 581,
+        "sha256": "8503e6280e9a7354fad08a39550c9075b4a2d59fe112c210c23ff4f8593a0f26"
+      },
+      "src/metal/capture.rs": {
+        "bytes": 2365,
+        "sha256": "d2d0c4056644db522a73958f88ebbb8b2aa64151f911738728bbf06ccc4ac44f"
+      },
+      "src/metal/diagnostic.rs": {
+        "bytes": 7997,
+        "sha256": "2621b069c41d0622a969b78b4379e859d626d2472a907ff56efebac8e7f11275"
+      },
+      "src/metal/gemma_affine/loading.rs": {
+        "bytes": 1291,
+        "sha256": "44c93db275ffcc2aff23a5143f2141a20a7fe468e044c93b87ed92002391265b"
+      },
+      "src/metal/gemma_affine/partitioned/gather/tests/real/immutable.rs": {
+        "bytes": 11011,
+        "sha256": "e9ac52fbe3750f01652f234e1f88c3acb0cbc8e3b2c816ee1df5c688760d6cd4"
+      },
+      "src/metal/gemma_affine/partitioned/gather/tests/real.rs": {
+        "bytes": 18630,
+        "sha256": "9fff939019b98b08683fd5bcbef0b0f2fac722afab202a6433bdc18cdf296e8c"
+      },
+      "src/metal/gemma_affine/partitioned/gather/tests/weights.rs": {
+        "bytes": 18520,
+        "sha256": "28391dc80039b6075d91eb5d7c444e5462915b2e34f0b5d019013588693d7dca"
+      },
+      "src/metal/gemma_affine/partitioned/gather/tests.rs": {
+        "bytes": 18708,
+        "sha256": "d43d44d6ed0e12db8f4b14e5afb4182361b86347ec6b6deee020fef9b61865ea"
+      },
+      "src/metal/gemma_affine/partitioned/gather.rs": {
+        "bytes": 15632,
+        "sha256": "0dda7df482e4cfa34829dae4376a9b282974ba725752f547e8d3b0a8afc668b4"
+      },
+      "src/metal/gemma_affine/partitioned/tests/head.rs": {
+        "bytes": 19034,
+        "sha256": "b37be046ba8c66788d8dd1085b5cf885f28dfd855b7820e7f77101f45572b9e0"
+      },
+      "src/metal/gemma_affine/partitioned/tests.rs": {
+        "bytes": 18635,
+        "sha256": "65a2a7078923ac962d3a00f7572c8ceba25a7b7c902d48e45cad7e4cc4a198db"
+      },
+      "src/metal/gemma_affine/partitioned/upload/tests/gpu.rs": {
+        "bytes": 13259,
+        "sha256": "3f9a81a8b102cbbd14ea22eec70725d5843527cae61a6d7fe452187bd9a88723"
+      },
+      "src/metal/gemma_affine/partitioned/upload/tests.rs": {
+        "bytes": 2053,
+        "sha256": "38cd8662779796f358de6d06fd18b4e54eadc2aa1b238b729e8f008082e64d47"
+      },
+      "src/metal/gemma_affine/partitioned/upload.rs": {
+        "bytes": 5887,
+        "sha256": "43400cc70bf4bb2c88ee3eeea62a1213769f1a1c21e1e9c4db7a17d4bb65b14c"
+      },
+      "src/metal/gemma_affine/partitioned.rs": {
+        "bytes": 9497,
+        "sha256": "ea40efddd8954aa0bb40f0e39046f29562573b2bbd3a3ae2929020859f58beb3"
+      },
+      "src/metal/gemma_affine/project.rs": {
+        "bytes": 4492,
+        "sha256": "22a8171cf1d3f881183595db1e89969ef3f3411eb0a4f5dcbd364f95e7117c0f"
+      },
+      "src/metal/gemma_affine/projection/tests/gpu/real.rs": {
+        "bytes": 19171,
+        "sha256": "aec5125736fa0c461bdb0b4f066cb583d9c8c23a24b2a0d20bcc74ef0ddad1bf"
+      },
+      "src/metal/gemma_affine/projection/tests/gpu.rs": {
+        "bytes": 15357,
+        "sha256": "cf72c0d31c89ad1164b0f236f376b5f43ec357a9da51b3d02df16df14c448ff7"
+      },
+      "src/metal/gemma_affine/projection/tests.rs": {
+        "bytes": 2952,
+        "sha256": "8b35bea0dcd5a77dd4f24f0dd7e637c68a6431eceb3a9f51364cd6afb6e22520"
+      },
+      "src/metal/gemma_affine/projection.rs": {
+        "bytes": 9252,
+        "sha256": "7da11deb02de9cf460d7afe9e8b187375dd8fd716ab3f1e78d1749b0507c2170"
+      },
+      "src/metal/gemma_affine/resident/bindings.rs": {
+        "bytes": 8950,
+        "sha256": "86264221d3641eb9d42a1462b425d5807242b4c51b92c952ea15ace42ea24874"
+      },
+      "src/metal/gemma_affine/resident/hybrid/test_support.rs": {
+        "bytes": 10288,
+        "sha256": "f41126f10e3d6428dfe9adb628e5b94d3c72ecf9605aa1cff98b349e29a470fc"
+      },
+      "src/metal/gemma_affine/resident/hybrid/workspace.rs": {
+        "bytes": 5310,
+        "sha256": "7c49b98f590aed3fda350ad6e143c7b883bd0136c374ee403b79de9aada71817"
+      },
+      "src/metal/gemma_affine/resident/hybrid.rs": {
+        "bytes": 14474,
+        "sha256": "c5944310ef20106de08768ed548f63e3104926ef5fc05ab691e15908b08504f3"
+      },
+      "src/metal/gemma_affine/resident/plan.rs": {
+        "bytes": 3813,
+        "sha256": "dcdfb26c2d173e56251d8b0d6920424f0d302d0216aa61e1f118573c4c41e3c1"
+      },
+      "src/metal/gemma_affine/resident/source/test_support.rs": {
+        "bytes": 1943,
+        "sha256": "c2e56db90327fd1d12d6e819653e7e6fe90c263f3758b83b381b2e3bb3c21fb2"
+      },
+      "src/metal/gemma_affine/resident/source/tests.rs": {
+        "bytes": 5703,
+        "sha256": "c8c74f6218683c313b3600656c0fcda06a4e4d17798e48de77fb058947d1ac6e"
+      },
+      "src/metal/gemma_affine/resident/source.rs": {
+        "bytes": 14196,
+        "sha256": "2062bde3a51f4c2f401551f74a81383a493acdecfe97682aa28febea5af6f9c8"
+      },
+      "src/metal/gemma_affine/resident/tests/gpu.rs": {
+        "bytes": 10498,
+        "sha256": "e1924d0000b725f08b47630fb4403ebbebea8a99012c1f72f617d5f87ee349c1"
+      },
+      "src/metal/gemma_affine/resident/tests/real.rs": {
+        "bytes": 7343,
+        "sha256": "b9796e2d45175d4356afeb663a7892c998d1e5eee9f5613f766d40fcc5f6568d"
+      },
+      "src/metal/gemma_affine/resident/tests.rs": {
+        "bytes": 4046,
+        "sha256": "2cdaf6e61dd96dcc0241127dce4583a9fadd33115486a4e5211f1a3e418585d2"
+      },
+      "src/metal/gemma_affine/resident.rs": {
+        "bytes": 10185,
+        "sha256": "83114e4914b2ed2ac9d5dbce6c0d974e6a839fb7c6ed9569b6f40b22f50ea21e"
+      },
+      "src/metal/gemma_affine/tests/real.rs": {
+        "bytes": 18351,
+        "sha256": "b30e2ed660be0c758b1cd0c1f4f8de97a3edf0dcb205b3f0a833f00f8ffec81a"
+      },
+      "src/metal/gemma_affine/tests.rs": {
+        "bytes": 23757,
+        "sha256": "e6db4cdb6ac9275d8f28f33645c21261f813b98c0aac5a6823b0ad2fcfe6a82a"
+      },
+      "src/metal/gemma_affine/weights/tests.rs": {
+        "bytes": 2148,
+        "sha256": "4b0b46aae59c80ce7a0e8b656b21058886c8b2508985e48f052f22eab0cf427a"
+      },
+      "src/metal/gemma_affine/weights.rs": {
+        "bytes": 9854,
+        "sha256": "4629a1a0535a2b4f0d88943101c0df95eb094a77c0a515531692b18f5a6b0502"
+      },
+      "src/metal/gemma_affine.rs": {
+        "bytes": 13492,
+        "sha256": "d92d76c2e3e27bcba80d6e879e02486a035df392ce9632fec4644dc0bdc8c70f"
+      },
+      "src/metal/gemma_rms/tests.rs": {
+        "bytes": 10085,
+        "sha256": "8a9f9b1fdd07424cc6cec0eba8ce17a723e14b43773dde35c7dcb06aae45b374"
+      },
+      "src/metal/gemma_rms.rs": {
+        "bytes": 11585,
+        "sha256": "c3ad44d734aed2fb4281bf30941ffa790ef6e9482d4bcbddc5c5013cd2ece925"
+      },
+      "src/metal/gemma_rotary/tests.rs": {
+        "bytes": 13331,
+        "sha256": "1b2b1931d93260615972370ad9e82eebb405fa0df53a102c039f283dc6564812"
+      },
+      "src/metal/gemma_rotary.rs": {
+        "bytes": 12030,
+        "sha256": "c8c2837e9a11f0555e44acabcc2866d551b96928645de1489eaf793a32633197"
+      },
+      "src/metal/half_consistency.rs": {
+        "bytes": 25965,
+        "sha256": "e9ee1e50fba0e49f177ccc6e86b0d5357293c3119a2065ce62b481a4a1e1e460"
+      },
+      "src/metal/half_projection.rs": {
+        "bytes": 10662,
+        "sha256": "60cc2019c540f5db017b2d104f3c1ac62d597f59d4559332419d7a4b7b15c8b0"
+      },
+      "src/metal/memory.rs": {
+        "bytes": 17962,
+        "sha256": "35f1ff6d12bac8e726c75749e66975a515c2dcc7676c2775dd0f96d97d5fef9d"
+      },
+      "src/metal/mlx.rs": {
+        "bytes": 37344,
+        "sha256": "c64e4a21d335687d8b58b43d580a809276bf0c19bb9fd0a777be87922d7d8700"
+      },
+      "src/metal/mod.rs": {
+        "bytes": 126488,
+        "sha256": "ff655e667bd13bd3272058dc96da614abdd966cff1539c6fe38b0424d2c9a030"
+      },
+      "src/metal/online_attention.rs": {
+        "bytes": 22303,
+        "sha256": "e4e6c1f554220174d684396eb6688c86e2e670ef2ad094563fbbffb56219862c"
+      },
+      "src/metal/planning.rs": {
+        "bytes": 21692,
+        "sha256": "7e3516f929f20cd5fc19a3374b0ddd5dd8f4fa8f8fb6dde43a690236882fe11d"
+      },
+      "src/metal/profile.rs": {
+        "bytes": 13939,
+        "sha256": "1df0c21acb54dcda54bcccc66b02417f343a448a4b0ae0a06538ce0fc3fa614f"
+      },
+      "src/metal/q4_v2_projection.rs": {
+        "bytes": 11730,
+        "sha256": "3aeeee050eeed115610ec3794c0309b56933c60ecdbd03791be24e2b8986217a"
+      },
+      "src/mlx/affine.rs": {
+        "bytes": 22434,
+        "sha256": "936f105d4dcf70f52d5ea030ba9d2201e5d36644f817099ced3b9e3dbf53ad6d"
+      },
+      "src/mlx/compatibility.rs": {
+        "bytes": 12484,
+        "sha256": "05c0f3b3734fa567a113495ba5fb484ae20fc044dba28a8da02711fce78bfba3"
+      },
+      "src/mlx/dense.rs": {
+        "bytes": 6806,
+        "sha256": "cd5803d9406e1dff6ac6a65353d1d7c9caf01e5a4e122281b80bead7b52b5d0d"
+      },
+      "src/mlx/execution.rs": {
+        "bytes": 9022,
+        "sha256": "138ad46f8ee2f4722a617e2d0a7afa480d9b34c751a85d07fb17db36d552680f"
+      },
+      "src/mlx/gemma4/payload/tests.rs": {
+        "bytes": 12283,
+        "sha256": "a933c3c804552ced3f8c7b1883382671a32b27ae49a2df42ee19d6226e40a09c"
+      },
+      "src/mlx/gemma4/payload.rs": {
+        "bytes": 16144,
+        "sha256": "9ac244aef046698a4e2c7ccad90a0f61998f8c05bceed020792faacec34ca6b4"
+      },
+      "src/mlx/gemma4/tests.rs": {
+        "bytes": 14262,
+        "sha256": "6e78deeba32b74fff3f5af6d8b9b0ad3510d9e4acacb879d8ed4692bce9cd637"
+      },
+      "src/mlx/gemma4.rs": {
+        "bytes": 19178,
+        "sha256": "950a18343a1bd311a3a9c132bae5d1b408a2d529affecdd9b6d8244fc255a9f2"
+      },
+      "src/mlx/mod.rs": {
+        "bytes": 378,
+        "sha256": "0a516d4121d972ed99b48c9bf70eeb40b5c7e159157c3eac7a12f9cbde6c0b99"
+      },
+      "src/mlx/qwen/content_tests.rs": {
+        "bytes": 4478,
+        "sha256": "e7fc625131247a403044576fb3936920be7c25e19f72f5f6924bb0323d2ef624"
+      },
+      "src/mlx/qwen.rs": {
+        "bytes": 23258,
+        "sha256": "431c02ac7afa1cd2b3b51fbbb649b9fb75b68e6d023cf93403d79a2c653b9fdc"
+      },
+      "src/mlx/qwen3.rs": {
+        "bytes": 3359,
+        "sha256": "43fd005573eeedbb60e489dfb220e2b8e1ec6b8d2f03c9547bd4a91bf36abef4"
+      },
+      "src/mlx/reference.rs": {
+        "bytes": 7972,
+        "sha256": "86c002e4a23d519fe5a3c66736511d6ffd65803855a6880442a2058c64be3d3d"
+      },
+      "src/model/cache.rs": {
+        "bytes": 3096,
+        "sha256": "a9d6fdfe0db3cb9ca6fc9936d40ccfb2a06847ebb513c6d9085d6ab5f5ee9fb0"
+      },
+      "src/model/gemma_packed/e2b.rs": {
+        "bytes": 8811,
+        "sha256": "b0662972414e4d7481ed36b7921b2ffa30e26dfb78accd38ce38c0ba22072099"
+      },
+      "src/model/gemma_packed/forward.rs": {
+        "bytes": 11162,
+        "sha256": "96e1b7a8cd4a5b7f97042b87db63f2fb60e87e611a105bf5bc3563501c9bc731"
+      },
+      "src/model/gemma_packed/generation/tests/capacity.rs": {
+        "bytes": 6136,
+        "sha256": "834a94401412d0edd31cc4530af80165345e280ef0255ee750835fa3c464a3d3"
+      },
+      "src/model/gemma_packed/generation/tests/long_context.rs": {
+        "bytes": 4846,
+        "sha256": "fd7ce0e626fbe61afe784bf6a1097f09d69eefef267fa4ad08c6246e861915d0"
+      },
+      "src/model/gemma_packed/generation/tests.rs": {
+        "bytes": 14738,
+        "sha256": "5f54cf7c884c0ab1f0948910dfcf53918a60034d2582e39da0a16848a4583f56"
+      },
+      "src/model/gemma_packed/generation.rs": {
+        "bytes": 11021,
+        "sha256": "367ea3507f4a853950db5f222f6c0c41061f4a0e479cd75d3438d39faa4591db"
+      },
+      "src/model/gemma_packed/operations.rs": {
+        "bytes": 3399,
+        "sha256": "a3819060eda7eae98ef3e5940e65f183bfeea9115561ddc4eaad3efffe91e426"
+      },
+      "src/model/gemma_packed/tests/capacity.rs": {
+        "bytes": 5549,
+        "sha256": "2b5625fb697687fe147f1a02c3b3ea61eef287a4955f1ccccb5af63ca0d86946"
+      },
+      "src/model/gemma_packed/tests/chunk.rs": {
+        "bytes": 5392,
+        "sha256": "d01e5e2b2bf5ec7f349332ae8625ed3d3c9c4ef0b56c1b24b8664bca9c44635e"
+      },
+      "src/model/gemma_packed/tests/e2b.rs": {
+        "bytes": 3099,
+        "sha256": "b2f0993f1a35ed7619426fda245f1ede42758f2d8b5e90599a96ac087ef70156"
+      },
+      "src/model/gemma_packed/tests/hybrid/capture.rs": {
+        "bytes": 2695,
+        "sha256": "f5f81512f2b175f4b6f3880e926d0193c701ead820debb29d99dec28d10b8ba2"
+      },
+      "src/model/gemma_packed/tests/hybrid/controls.rs": {
+        "bytes": 8889,
+        "sha256": "26c155772ff47e155d7d11c87a324ce9bf6f734cc17e346b585ef4308814468a"
+      },
+      "src/model/gemma_packed/tests/hybrid/real.rs": {
+        "bytes": 9751,
+        "sha256": "20744f4b0e912f8584d367fcac2308f0531cbff1df856ff60d1a7080fef71bbb"
+      },
+      "src/model/gemma_packed/tests/hybrid.rs": {
+        "bytes": 1667,
+        "sha256": "8939f3a514ddeb0338a18c92fe9f2fd24104cfaa88f1d05e150d52a6a68f5e1a"
+      },
+      "src/model/gemma_packed/tests/long_context.rs": {
+        "bytes": 13870,
+        "sha256": "64e1d95c0282952c364c96d61f9aa62e1360a73fd736715a9a80608f7f6f5818"
+      },
+      "src/model/gemma_packed/tests/producers.rs": {
+        "bytes": 10339,
+        "sha256": "8bffc144c04335f6690352989e2c755f63985713ae3b892bad6176c7c684854d"
+      },
+      "src/model/gemma_packed/tests.rs": {
+        "bytes": 16437,
+        "sha256": "80d6b0b6b1070f0ae08009a4f4e2db107a4dd9293fefc6f8174bfb57339a6291"
+      },
+      "src/model/gemma_packed.rs": {
+        "bytes": 25990,
+        "sha256": "64abe5ce90400230e480813139c61fb2262f7334f4a3551a4e071925d0de1ba2"
+      },
+      "src/model/gemma_reference/forward.rs": {
+        "bytes": 9053,
+        "sha256": "d3f3e80a4122cb09ad644784f101ff57e4b851fcf826e479a2fa9a1830b67778"
+      },
+      "src/model/gemma_reference/tests.rs": {
+        "bytes": 18626,
+        "sha256": "bf341cae6cee8e0533cee7758f154435c5a1287de9479eab7e795781a61349c2"
+      },
+      "src/model/gemma_reference.rs": {
+        "bytes": 13637,
+        "sha256": "0390cc681c5176e9e274186d0a937790bd30b4d5ea26f2321ec967da19cf4298"
+      },
+      "src/model/mod.rs": {
+        "bytes": 28660,
+        "sha256": "64adc9bcc5160618268d4699920e754485d46b8131d4ce725c1364f88ee166e2"
+      },
+      "src/model/shared_kv/tests/capacity.rs": {
+        "bytes": 9114,
+        "sha256": "a02e03a60b1084a5104193ee643e5c3347ca16b7f30d5c001cc59545f7f278b2"
+      },
+      "src/model/shared_kv/tests/long_context.rs": {
+        "bytes": 7144,
+        "sha256": "a800543a7c77c9322707c755b4d4617b0d182664896e237fcb6b582fc170e585"
+      },
+      "src/model/shared_kv/tests.rs": {
+        "bytes": 17848,
+        "sha256": "fd732380388e46ef1c90aaddfec2db953ae40288d7486b29f6306ff1206ae035"
+      },
+      "src/model/shared_kv.rs": {
+        "bytes": 13517,
+        "sha256": "4f03add8b3118bb34436458ba14b57899ac63a49535c173019d48f1ef2e582d5"
+      },
+      "src/model/trace.rs": {
+        "bytes": 3221,
+        "sha256": "6fd516def586350f6f425f6e16eb8c8df7a8a97619aef14f8a4a511a059ca91e"
+      },
+      "src/model/window_cache/tests.rs": {
+        "bytes": 16259,
+        "sha256": "f539b9dcea262e84f9b43c381bdf0ca0d95e61bed3dd8082bb63d5112f11c5d2"
+      },
+      "src/model/window_cache.rs": {
+        "bytes": 15710,
+        "sha256": "f94da4b700c7b6a7010ef42aa6800f5adb1f982ef7be327a4485de3a05ac1d34"
+      },
+      "src/native/compatibility.rs": {
+        "bytes": 16102,
+        "sha256": "8e7119eed2cc13516f611b20367c7b691a4af570ca154f3a3e929aadb03d3da6"
+      },
+      "src/native/context/tests.rs": {
+        "bytes": 393,
+        "sha256": "165f7c6333993f90c04f4141bbe3161ee4d2ca623d70fe55f38f261fd2068f67"
+      },
+      "src/native/context.rs": {
+        "bytes": 8556,
+        "sha256": "5dec504ea7db678985d48977a2d1e60720a3f6e97b665e45feebef566838fa79"
+      },
+      "src/native/runtime_planning.rs": {
+        "bytes": 28671,
+        "sha256": "b1537c3b26a2671d59d46c1995c96eff03abddc8a840aa9a5ac4375ed4fb2bbe"
+      },
+      "src/native/tests/context_info.rs": {
+        "bytes": 9384,
+        "sha256": "a3de98b7cb3ea7009912544fb2aa7dcd23f14aa774977dcd4370f7b94fbb4136"
+      },
+      "src/native/tests.rs": {
+        "bytes": 44440,
+        "sha256": "53d239311325921b508afd407c070227d110fde53479b62c2e3ad0303ad7cf19"
+      },
+      "src/native/text/audited_capture_tests.rs": {
+        "bytes": 3584,
+        "sha256": "cf6b18ecfc85345fa3fc9991a25c9371f8072833ccb46a5cc17ca0badd135be3"
+      },
+      "src/native/text/audited_tests.rs": {
+        "bytes": 16276,
+        "sha256": "8151c58f96e02ba50a5e0ce044c1a353a54bd8849280d47220d89b08dfa46a5d"
+      },
+      "src/native/text.rs": {
+        "bytes": 29310,
+        "sha256": "f23a750a32009a2fec00854758bc4c96ba0b227d4bb3c2d387fd47be366f04d7"
+      },
+      "src/native.rs": {
+        "bytes": 35762,
+        "sha256": "3d5fb87fc746547ba104932f3a070f764c0b662f0e66758aa36cc30aa8e8b09a"
+      },
+      "src/q4/artifact.rs": {
+        "bytes": 10397,
+        "sha256": "f1fb98f1a435dbfd5c533302e49a27270928f03f57428ca548e346748e657ffe"
+      },
+      "src/q4.rs": {
+        "bytes": 9205,
+        "sha256": "14277bd171d08d60fea9ad8bc871f62584ed6a84e2ac0ad3f42ecd232a1fcaac"
+      },
+      "src/sampling.rs": {
+        "bytes": 616,
+        "sha256": "ef8306ec183ae1f4f26efb91afa6c1777cea1a5f89588eb45de11e3543323ae9"
+      },
+      "src/session.rs": {
+        "bytes": 16921,
+        "sha256": "99b4a1c97201243a0a19db3a08b4613e9ee81bd00689734fa90dda0c03c86fd0"
+      },
+      "src/weights/audit/tests.rs": {
+        "bytes": 14238,
+        "sha256": "dec155fac6d8e1ca96950b816fe4f0624dff5052297a3ba90e043dfdc7f0ec90"
+      },
+      "src/weights/audit.rs": {
+        "bytes": 13799,
+        "sha256": "0130648975f7eb75364126c6443ce7362b866a3d3752d6dc1b3421b5f1620ff9"
+      },
+      "src/weights/half_tests.rs": {
+        "bytes": 3814,
+        "sha256": "52d3b745a845e692820eae8a6560f946df7b83433521c2843d53baa5e7c5a6b2"
+      },
+      "src/weights/mod.rs": {
+        "bytes": 34226,
+        "sha256": "4f8976d5f7bdee125fc192cbc8635028e77e24ba7bfa7ef5dd8a1ce05af941e3"
+      },
+      "src/metal/gemma_affine/partitioned/gather.metal": {
+        "bytes": 1406,
+        "sha256": "299c4bf1b93b82e99725a1110589ffe1a579fa680230951c9ce9e4b01f7ed312"
+      },
+      "src/metal/gemma_affine.metal": {
+        "bytes": 2752,
+        "sha256": "cf332eb282e123349b0f655c757bb87d877157327d971cb9de73d4a90a8eb118"
+      },
+      "src/metal/gemma_rms.metal": {
+        "bytes": 4203,
+        "sha256": "5f786979f8291f9bba2ee3240b6f69fcfd1558b31685c2559df3020987dc8cb9"
+      },
+      "src/metal/gemma_rotary.metal": {
+        "bytes": 1606,
+        "sha256": "1a34a3a5b789d6374aadb8d596f654fda5c91898504b3dfd262423beb64efd7f"
+      },
+      "src/metal/kernels.metal": {
+        "bytes": 25103,
+        "sha256": "26f893f318f65500b86d702f0fcae65424702b0dd7079fc01db197b5ab985b68"
+      },
+      "src/metal/mlx.metal": {
+        "bytes": 5748,
+        "sha256": "aa353a7b7556f29ed35c6f8f73e4929c2a80eafafa75b610a9e9a46b4b1cd049"
+      },
+      "apple/include/toklet.h": {
+        "bytes": 15007,
+        "sha256": "d85b9f790bdb4852428f8c8bfecc5839a86bb9cd13bca7ab245b9b0ddafb7853"
+      },
+      "apple/include/module.modulemap": {
+        "bytes": 54,
+        "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af"
+      },
+      "apple/tests/native_smoke.c": {
+        "bytes": 4068,
+        "sha256": "c5b0cf0a96bb4b2489275cabb02acf89a53deccfc977c1dc63e9ff9d6b7a9d61"
+      },
+      "tools/experiments/m7_apple_package.py": {
+        "bytes": 12764,
+        "sha256": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d"
+      },
+      "tools/experiments/test_m7_apple_package.py": {
+        "bytes": 6846,
+        "sha256": "efdd9835b9c8301cdb91f3e466b5b8791155d4eb5d663f56a267588dc700f162"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/Info.plist": {
+        "bytes": 1614,
+        "sha256": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/ios-arm64/Headers/module.modulemap": {
+        "bytes": 54,
+        "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/ios-arm64/Headers/toklet.h": {
+        "bytes": 15007,
+        "sha256": "d85b9f790bdb4852428f8c8bfecc5839a86bb9cd13bca7ab245b9b0ddafb7853"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/ios-arm64/libtoklet.a": {
+        "bytes": 33808312,
+        "sha256": "78ea2c6e088501aaba66afe8feff90f802adaf4d261529733ab988790d8007b2"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": {
+        "bytes": 54,
+        "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": {
+        "bytes": 15007,
+        "sha256": "d85b9f790bdb4852428f8c8bfecc5839a86bb9cd13bca7ab245b9b0ddafb7853"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": {
+        "bytes": 33787208,
+        "sha256": "1403d563d7aa6d8a170264b8972414fe085af6977deea6513a8cd96c184784e5"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/macos-arm64/Headers/module.modulemap": {
+        "bytes": 54,
+        "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/macos-arm64/Headers/toklet.h": {
+        "bytes": 15007,
+        "sha256": "d85b9f790bdb4852428f8c8bfecc5839a86bb9cd13bca7ab245b9b0ddafb7853"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework/macos-arm64/libtoklet.a": {
+        "bytes": 34095056,
+        "sha256": "3b24495925f5173759f43d34882b96a03f9b26277467a8f785cb891167596831"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/target/aarch64-apple-darwin/release/libtoklet.a": {
+        "bytes": 34095056,
+        "sha256": "3b24495925f5173759f43d34882b96a03f9b26277467a8f785cb891167596831"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/target/aarch64-apple-ios/release/libtoklet.a": {
+        "bytes": 33808312,
+        "sha256": "78ea2c6e088501aaba66afe8feff90f802adaf4d261529733ab988790d8007b2"
+      },
+      "artifacts/m8-context-ui-native-package-v1/package/target/aarch64-apple-ios-sim/release/libtoklet.a": {
+        "bytes": 33787208,
+        "sha256": "1403d563d7aa6d8a170264b8972414fe085af6977deea6513a8cd96c184784e5"
+      },
+      "artifacts/m8-context-ui-native-package-v1/result.json": {
+        "bytes": 754472,
+        "sha256": "9421f98cea0a3e20fc9aa317f1c465778530e9c9884b2843eac32144ffdca1c1"
+      },
+      "apple/Harness/ChatContent.swift": {
+        "bytes": 9664,
+        "sha256": "7843fe31181c5465e80b15702a1e481bb25b1a90f4e351272076d276839acb97"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatContent.swift": {
+        "bytes": 9664,
+        "sha256": "7843fe31181c5465e80b15702a1e481bb25b1a90f4e351272076d276839acb97"
+      },
+      "apple/Harness/ChatWorkspace.swift": {
+        "bytes": 6676,
+        "sha256": "3efb491b1a5bbbb5647fece57346bb3d82389fd798c7024cb4b0b81cef26c54b"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatWorkspace.swift": {
+        "bytes": 6676,
+        "sha256": "3efb491b1a5bbbb5647fece57346bb3d82389fd798c7024cb4b0b81cef26c54b"
+      },
+      "apple/Harness/ExpertHarness.swift": {
+        "bytes": 15162,
+        "sha256": "8e7dd786bb8608de95c50a0308fb52b0c046dd7835985641cad83212d232a635"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ExpertHarness.swift": {
+        "bytes": 15162,
+        "sha256": "8e7dd786bb8608de95c50a0308fb52b0c046dd7835985641cad83212d232a635"
+      },
+      "apple/Harness/FriendlyChatStore.swift": {
+        "bytes": 16520,
+        "sha256": "96c5365e6b15858d226ff08e97a18d0da0bb809307474172c70e4593e565f3f7"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyChatStore.swift": {
+        "bytes": 16520,
+        "sha256": "96c5365e6b15858d226ff08e97a18d0da0bb809307474172c70e4593e565f3f7"
+      },
+      "apple/Harness/FriendlyHarness.swift": {
+        "bytes": 37740,
+        "sha256": "c86fe26f50721b0db748c83b1d60b60babb66eeb5d861803407de4f7f36b945e"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyHarness.swift": {
+        "bytes": 37740,
+        "sha256": "c86fe26f50721b0db748c83b1d60b60babb66eeb5d861803407de4f7f36b945e"
+      },
+      "apple/Harness/GenerationCapabilities.swift": {
+        "bytes": 14823,
+        "sha256": "71fdc65a6c07ed21613183fc4205c6dbaff71c701f2a2aab268030e27187ad4b"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationCapabilities.swift": {
+        "bytes": 14823,
+        "sha256": "71fdc65a6c07ed21613183fc4205c6dbaff71c701f2a2aab268030e27187ad4b"
+      },
+      "apple/Harness/GenerationResponse.swift": {
+        "bytes": 9434,
+        "sha256": "61e7b1984ab9bc7009db02dbd790ba6ca669c1e3230271b5af3f921fed2d3254"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationResponse.swift": {
+        "bytes": 9434,
+        "sha256": "61e7b1984ab9bc7009db02dbd790ba6ca669c1e3230271b5af3f921fed2d3254"
+      },
+      "apple/Harness/HarnessApp.swift": {
+        "bytes": 17227,
+        "sha256": "72b77cd9f9ae46601bd654515abf48bea1e9237f8e9547b4a450554339f6d81f"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessApp.swift": {
+        "bytes": 17227,
+        "sha256": "72b77cd9f9ae46601bd654515abf48bea1e9237f8e9547b4a450554339f6d81f"
+      },
+      "apple/Harness/HarnessStore.swift": {
+        "bytes": 3559,
+        "sha256": "07d150e9b83d7164e786560bc5e4aa9b88dc34fb7ce89e2fe100a96da0c20893"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessStore.swift": {
+        "bytes": 3559,
+        "sha256": "07d150e9b83d7164e786560bc5e4aa9b88dc34fb7ce89e2fe100a96da0c20893"
+      },
+      "apple/Harness/HubStore.swift": {
+        "bytes": 22524,
+        "sha256": "5f5eaf200663f8604c1980f0b85668f14e17d66ebd983ae18c38eb7fd24e890e"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubStore.swift": {
+        "bytes": 22524,
+        "sha256": "5f5eaf200663f8604c1980f0b85668f14e17d66ebd983ae18c38eb7fd24e890e"
+      },
+      "apple/Harness/HubTransfer.swift": {
+        "bytes": 23785,
+        "sha256": "b590487bb834ef7b4281e412c2dcc21c09b3b47e6124026eff8d724ee2d19386"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubTransfer.swift": {
+        "bytes": 23785,
+        "sha256": "b590487bb834ef7b4281e412c2dcc21c09b3b47e6124026eff8d724ee2d19386"
+      },
+      "apple/Harness/ModelHub.swift": {
+        "bytes": 27317,
+        "sha256": "25d4c298117c17996b69f2b3405a521bc2021cc5e9a855faf3c097cd21b64a61"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ModelHub.swift": {
+        "bytes": 27317,
+        "sha256": "25d4c298117c17996b69f2b3405a521bc2021cc5e9a855faf3c097cd21b64a61"
+      },
+      "apple/Harness/NativeChatCheck.swift": {
+        "bytes": 7752,
+        "sha256": "95aacecbca351a08fb4c2c1c1624f178d004a8d9deaa561f9cce34c569bf3aba"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeChatCheck.swift": {
+        "bytes": 7752,
+        "sha256": "95aacecbca351a08fb4c2c1c1624f178d004a8d9deaa561f9cce34c569bf3aba"
+      },
+      "apple/Harness/NativeCompatibility.swift": {
+        "bytes": 7838,
+        "sha256": "fc5b0cc5eef791df9d15675fffe11da0ba7ec4d10b59fe5b3b7bea1601f81b4f"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeCompatibility.swift": {
+        "bytes": 7838,
+        "sha256": "fc5b0cc5eef791df9d15675fffe11da0ba7ec4d10b59fe5b3b7bea1601f81b4f"
+      },
+      "apple/Harness/NativeContext.swift": {
+        "bytes": 9281,
+        "sha256": "eeb8ca4e22dbe336b488ed736cbe1ceb142a8a3fbcee6fc226bc54f0c3bff626"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeContext.swift": {
+        "bytes": 9281,
+        "sha256": "eeb8ca4e22dbe336b488ed736cbe1ceb142a8a3fbcee6fc226bc54f0c3bff626"
+      },
+      "apple/Harness/NativeLifecycle.swift": {
+        "bytes": 8124,
+        "sha256": "4a49b4899715dbc8eca0c750253ba49d0ac55d1ee433c77a82b877f28d1b0d00"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycle.swift": {
+        "bytes": 8124,
+        "sha256": "4a49b4899715dbc8eca0c750253ba49d0ac55d1ee433c77a82b877f28d1b0d00"
+      },
+      "apple/Harness/NativeLifecycleRun.swift": {
+        "bytes": 18822,
+        "sha256": "9170e354d07dc09e1f4eb9ea718b68ff5c6df16b68f85fc0dc44872de0f414a2"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleRun.swift": {
+        "bytes": 18822,
+        "sha256": "9170e354d07dc09e1f4eb9ea718b68ff5c6df16b68f85fc0dc44872de0f414a2"
+      },
+      "apple/Harness/NativeLifecycleSignals.swift": {
+        "bytes": 5283,
+        "sha256": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleSignals.swift": {
+        "bytes": 5283,
+        "sha256": "23768429430d9efcd757ec5065bae37c78cf3bb791d6d9ff5679aaec43973ca1"
+      },
+      "apple/Harness/NativeMeasurement.swift": {
+        "bytes": 26271,
+        "sha256": "5dcd81db64963db10d2bd50a6e9bc8dee567951f1a344341dd0cd9dfecbf8a46"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeMeasurement.swift": {
+        "bytes": 26271,
+        "sha256": "5dcd81db64963db10d2bd50a6e9bc8dee567951f1a344341dd0cd9dfecbf8a46"
+      },
+      "apple/Harness/NativeQuality.swift": {
+        "bytes": 11182,
+        "sha256": "e54783e1ed25035340f07c13f593cefdb616152fc296b17fc6508ba1e7e3972a"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeQuality.swift": {
+        "bytes": 11182,
+        "sha256": "e54783e1ed25035340f07c13f593cefdb616152fc296b17fc6508ba1e7e3972a"
+      },
+      "apple/Harness/NativeResourcePlan.swift": {
+        "bytes": 6672,
+        "sha256": "c174cd3d51d802619bc780c0cadcc53ecc69da3d54f65fa54deb7dca2a0f0df5"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeResourcePlan.swift": {
+        "bytes": 6672,
+        "sha256": "c174cd3d51d802619bc780c0cadcc53ecc69da3d54f65fa54deb7dca2a0f0df5"
+      },
+      "apple/Harness/NativeStateRun.swift": {
+        "bytes": 15138,
+        "sha256": "e0b8a0d12fd93db67fcab374da3f386d8b3331b1b20bd96413ebca1dfb290a99"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeStateRun.swift": {
+        "bytes": 15138,
+        "sha256": "e0b8a0d12fd93db67fcab374da3f386d8b3331b1b20bd96413ebca1dfb290a99"
+      },
+      "apple/Harness/NativeTaskResponse.swift": {
+        "bytes": 5963,
+        "sha256": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTaskResponse.swift": {
+        "bytes": 5963,
+        "sha256": "27b3d44a4ba765fb6fc2c384236cf7fe4d7aeca325ee24dd96907f88468b4c41"
+      },
+      "apple/Harness/NativeTasks.swift": {
+        "bytes": 13770,
+        "sha256": "d2df04cf9da12d5b648970e49c64f1bdbc28bf464ca3c05a6a65e4ee6b6ae4e9"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTasks.swift": {
+        "bytes": 13770,
+        "sha256": "d2df04cf9da12d5b648970e49c64f1bdbc28bf464ca3c05a6a65e4ee6b6ae4e9"
+      },
+      "apple/Harness/NativeTeacherForcing.swift": {
+        "bytes": 5326,
+        "sha256": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTeacherForcing.swift": {
+        "bytes": 5326,
+        "sha256": "7da0dce1aa00e7879f65217aa3f209cd407ff9a870b9426a3dffdcc15fe217b9"
+      },
+      "apple/Harness/NativeWorker.swift": {
+        "bytes": 37458,
+        "sha256": "91de4cc3865c1d199f703e127756a360275a9d0dc2c9e830f0a37cf87ee949bf"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeWorker.swift": {
+        "bytes": 37458,
+        "sha256": "91de4cc3865c1d199f703e127756a360275a9d0dc2c9e830f0a37cf87ee949bf"
+      },
+      "apple/tests/swift/WorkerChecks.swift": {
+        "bytes": 8439,
+        "sha256": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/WorkerChecks.swift": {
+        "bytes": 8439,
+        "sha256": "bcb1ee306b635acf58bb776260447d304bdfa2724747a74d31252e44d15d24bf"
+      },
+      "apple/tests/swift/ContextPolicyMain.swift": {
+        "bytes": 8171,
+        "sha256": "4329b36a15cb9544f4c36b0e609b65ce96d78ee8bdaf033190843c4af10d3d2d"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/ContextPolicyMain.swift": {
+        "bytes": 8171,
+        "sha256": "4329b36a15cb9544f4c36b0e609b65ce96d78ee8bdaf033190843c4af10d3d2d"
+      },
+      "apple/tests/swift/ContextIntegrationMain.swift": {
+        "bytes": 16754,
+        "sha256": "76bb0e24831936d0b8cc66eeeeb1c07215914f37b69390dab21a15175d353264"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/ContextIntegrationMain.swift": {
+        "bytes": 16754,
+        "sha256": "76bb0e24831936d0b8cc66eeeeb1c07215914f37b69390dab21a15175d353264"
+      },
+      "apple/tests/swift/MobileMain.swift": {
+        "bytes": 38996,
+        "sha256": "b40e466f000aa5ceabdc812b9b385118f9e62d4c2d62176f07af1a4da56de3b0"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/MobileMain.swift": {
+        "bytes": 38996,
+        "sha256": "b40e466f000aa5ceabdc812b9b385118f9e62d4c2d62176f07af1a4da56de3b0"
+      },
+      "apple/tests/swift/ScoreMain.swift": {
+        "bytes": 10077,
+        "sha256": "efb78fc83a03efbf7563363835f6efd330bdebe36c9a23bb5f658bd99dc21f17"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/ScoreMain.swift": {
+        "bytes": 10077,
+        "sha256": "efb78fc83a03efbf7563363835f6efd330bdebe36c9a23bb5f658bd99dc21f17"
+      },
+      "apple/tests/swift/AppRecoveryMain.swift": {
+        "bytes": 7889,
+        "sha256": "585f6349d505ae2821f6b40ea113fe14a72cce29cc50ee2ede8ff5e046ff07c0"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/AppRecoveryMain.swift": {
+        "bytes": 7889,
+        "sha256": "585f6349d505ae2821f6b40ea113fe14a72cce29cc50ee2ede8ff5e046ff07c0"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/include/module.modulemap": {
+        "bytes": 54,
+        "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/include/toklet.h": {
+        "bytes": 15007,
+        "sha256": "d85b9f790bdb4852428f8c8bfecc5839a86bb9cd13bca7ab245b9b0ddafb7853"
+      },
+      "apple/tests/context_smoke.c": {
+        "bytes": 1001,
+        "sha256": "d8cf9ab9c3a95b405070bccd7214bf2082afa38825eeafbd9a238c14fd278198"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/tests/context_smoke.c": {
+        "bytes": 1001,
+        "sha256": "d8cf9ab9c3a95b405070bccd7214bf2082afa38825eeafbd9a238c14fd278198"
+      },
+      "apple/TokletHarness.xcodeproj/project.pbxproj": {
+        "bytes": 12179,
+        "sha256": "0e115a4bdc96cb7ad0c3ed3d60e55ec2863960b5e8687cea0f2989e9a99a353a"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/apple/TokletHarness.xcodeproj/project.pbxproj": {
+        "bytes": 12179,
+        "sha256": "0e115a4bdc96cb7ad0c3ed3d60e55ec2863960b5e8687cea0f2989e9a99a353a"
+      },
+      "tools/experiments/m7_swift_harness_build.py": {
+        "bytes": 8793,
+        "sha256": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/tools/experiments/m7_swift_harness_build.py": {
+        "bytes": 8793,
+        "sha256": "de5ede3c4051f40dd8a081ac075e69755d644487e3dcb1cb661af75d908029f7"
+      },
+      "tools/experiments/m7_apple_integration.py": {
+        "bytes": 7322,
+        "sha256": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/tools/experiments/m7_apple_integration.py": {
+        "bytes": 7322,
+        "sha256": "e51c8e1f32f769b2957e6208c291d9dbd4befe5c619e39fccbfa5b3fb77c7952"
+      },
+      "tools/experiments/test_m7_swift_harness_build.py": {
+        "bytes": 4527,
+        "sha256": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/tools/experiments/test_m7_swift_harness_build.py": {
+        "bytes": 4527,
+        "sha256": "534da39efbcc80fa12b54016fc8ffecfee0fe6d18c14502b4911a8932ed83037"
+      },
+      "artifacts/m8-context-ui-checks-v2/run.py": {
+        "bytes": 17824,
+        "sha256": "c06e0987318d6e9801fc846f559a2a7b632efabb6c24459dbceaac1d05f25b16"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/artifacts/m8-context-ui-checks-v2/run.py": {
+        "bytes": 17824,
+        "sha256": "c06e0987318d6e9801fc846f559a2a7b632efabb6c24459dbceaac1d05f25b16"
+      },
+      "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12": {
+        "bytes": 152096,
+        "sha256": "a7f5b535d61d1c7326824204ac80f045a97a652abb154421e2c74fcc365a3539"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/interpreter/python3.12": {
+        "bytes": 152096,
+        "sha256": "a7f5b535d61d1c7326824204ac80f045a97a652abb154421e2c74fcc365a3539"
+      },
+      "artifacts/m8-context-ui-checks-v2/sources/tools/experiments/m7_apple_package.py": {
+        "bytes": 12764,
+        "sha256": "8fc6a735783d653c734dca969268a319fc5dffc488b6ec6ff018355f98b2625d"
+      },
+      "artifacts/m8-context-ui-checks-v1/checks.json": {
+        "bytes": 49358,
+        "sha256": "ca266ed074bea4934036eba593f296cdda081d71ad01e8121e886175944350b2"
+      },
+      "artifacts/m8-context-ui-dev-v1/typecheck.json": {
+        "bytes": 808,
+        "sha256": "c592c185f7533bd96fd1ce9dd7d2854900f2f1d612c9995dac974752b57656b7"
+      },
+      "artifacts/m8-context-ui-dev-v2/checks.json": {
+        "bytes": 1512,
+        "sha256": "0963fc78883bceda15e5c992ef7f745541943cc9a51770cffe6693045a07f380"
+      },
+      "artifacts/m8-context-ui-dev-v3/compile.json": {
+        "bytes": 3199,
+        "sha256": "ecc8a718de91a2bc44fe91d5618fe3af800e1cbc09da7a4afb93b5cdbfd7b694"
+      },
+      "artifacts/m8-context-ui-dev-v4/compile.json": {
+        "bytes": 3190,
+        "sha256": "f7c2cbce5b7ed4f0e58166279cd5df31a62c209abb6ec8812825f75e9a228de5"
+      },
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend": {
+        "bytes": 173118384,
+        "sha256": "c90fc92073e78cd2b3c65efcacf65acfaf4290b02f7a9d301853563b85f4a993"
+      },
+      "artifacts/m8-context-ui-checks-v2/policy-check": {
+        "bytes": 100048,
+        "sha256": "a565ba758c7a387a578623e97cc17b4d0bbb697a51d605986577b9afbdbaa1e7"
+      },
+      "artifacts/m8-context-ui-checks-v2/context-check": {
+        "bytes": 15184912,
+        "sha256": "8e409715b9efd7a6a7014dd87aa02dd694951436cb78da284715b6cdb0ac9404"
+      },
+      "artifacts/m7-native-tiny-v2/config.json": {
+        "bytes": 357,
+        "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+      },
+      "artifacts/m7-native-tiny-v2/model.safetensors": {
+        "bytes": 85640,
+        "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+      },
+      "artifacts/m8-context-ui-checks-v2/mobile-check": {
+        "bytes": 15304768,
+        "sha256": "1910a21be1d9e49946f9db9dbd94b2dea8d8252f9ed9f1dd4e8bfc32cc966579"
+      },
+      "artifacts/m8-context-ui-checks-v2/score-check": {
+        "bytes": 15175080,
+        "sha256": "b9c3230692ad2532cbe6e9e2318598f2146259c9ace6b15e129eefe8f68832be"
+      },
+      "artifacts/m8-context-ui-checks-v2/recovery-check": {
+        "bytes": 15155680,
+        "sha256": "fa71e54c6eda622fd1393c28befdc3c6ea9be50c26ca449ea5167d3e2de24fcc"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphoneos.swiftmodule": {
+        "bytes": 693852,
+        "sha256": "db7d9911e202006c9ba016b4f6dad0ab3938545733e9e4e11ac92d9e182836f9"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphonesimulator.swiftmodule": {
+        "bytes": 693884,
+        "sha256": "2be64605e8a3f209acfc0e4ae8f4408c5b3ade1e8263c7e61d3d9b56fc92117c"
+      },
+      "artifacts/m8-native-policy-v1/package/build.json": {
+        "bytes": 26489,
+        "sha256": "2d7d35b02d5c35a343d29b657cbf254f722171846d0df49f57bb15f92ba2194d"
+      }
+    },
+    "model_bindings": {
+      "models/MLX-Qwen3-0.6B-8bit-11de968/config.json": {
+        "bytes": 937,
+        "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+      },
+      "models/MLX-Qwen3-0.6B-8bit-11de968/model.safetensors": {
+        "bytes": 633442994,
+        "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+      },
+      "models/MLX-Qwen3-0.6B-8bit-11de968/model.safetensors.index.json": {
+        "bytes": 49731,
+        "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+      },
+      "models/MLX-Qwen3-0.6B-8bit-11de968/tokenizer.json": {
+        "bytes": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      "models/MLX-Qwen3-0.6B-8bit-11de968/tokenizer_config.json": {
+        "bytes": 10219,
+        "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+      },
+      "models/MLX-Qwen3-0.6B-8bit-11de968/special_tokens_map.json": {
+        "bytes": 613,
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+      },
+      "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/config.json": {
+        "bytes": 1097,
+        "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+      },
+      "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/model.safetensors": {
+        "bytes": 143030401,
+        "sha256": "ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c"
+      },
+      "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/model.safetensors.index.json": {
+        "bytes": 48979,
+        "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+      },
+      "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/tokenizer.json": {
+        "bytes": 3522656,
+        "sha256": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7"
+      },
+      "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/tokenizer_config.json": {
+        "bytes": 3764,
+        "sha256": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee"
+      },
+      "models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8/special_tokens_map.json": {
+        "bytes": 655,
+        "sha256": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52"
+      }
+    },
+    "protected_binary_pins": {
+      "target/release/toklet": "5250694e814ea112148a52cfdeaf5bc6286ff2804b3acfd8f89e80bc73122a59",
+      "target/release/examples/cpu_bench": "e3debabbae7db9e5801bc9bfba177275444ebe1d9849eb3ad0f2dff487ac8dea"
+    },
+    "outputs": {
+      "artifacts/m8-context-ui-checks-v2/swift-path.stdout": {
+        "bytes": 94,
+        "sha256": "d7169a86b1252865dcd21df69011451b7e64416aac297516eb7b717d58af7c89"
+      },
+      "artifacts/m8-context-ui-checks-v2/swift-path.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/swift-version.stdout": {
+        "bytes": 96,
+        "sha256": "c469aee809408e0f8f981436d9afb0cf3deb47b1647747357cf47aa1d7f9f922"
+      },
+      "artifacts/m8-context-ui-checks-v2/swift-version.stderr": {
+        "bytes": 30,
+        "sha256": "bbc8b176d3c74d4c5a7fd00b40280f98168e116d5272273bfe8e71407625540e"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-policy-check.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-policy-check.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/policy.stdout": {
+        "bytes": 225,
+        "sha256": "80d6136b19da8ab84aa71624fe5ef256c1f8aae59051e736dd6185b905ade1c8"
+      },
+      "artifacts/m8-context-ui-checks-v2/policy.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-context-check.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-context-check.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/fixture.stdout": {
+        "bytes": 190,
+        "sha256": "db7699b600033f7ac21270acc00ee22abc12c51298caedd4c2c77b7fa2a64183"
+      },
+      "artifacts/m8-context-ui-checks-v2/fixture.stderr": {
+        "bytes": 777,
+        "sha256": "1f35e2dfdf12025a083add9017c95ede78db5b0450f33be59a14c88c148ca32c"
+      },
+      "artifacts/m8-context-ui-checks-v2/real.stdout": {
+        "bytes": 379,
+        "sha256": "4bd967d1717aa22763793e92399a681f2e2744e437a4c9951526033afba57c84"
+      },
+      "artifacts/m8-context-ui-checks-v2/real.stderr": {
+        "bytes": 777,
+        "sha256": "4b1c923bae65072ebadcf9fc534ea98a88cd89c357713a44029ff2972fb6efb7"
+      },
+      "artifacts/m8-context-ui-checks-v2/real-output/context-window.png": {
+        "bytes": 55806,
+        "sha256": "03bf1517ec08287c882c22e03fcfa27ab3f46b27403db36b0f95356f71f6c972"
+      },
+      "artifacts/m8-context-ui-checks-v2/real-output/history.json": {
+        "bytes": 530,
+        "sha256": "676bacd0170b5908021c642483f578a10a5ad082b6f29617d722fba46b0b7cfd"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-mobile-check.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-mobile-check.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/mobile-regressions.stdout": {
+        "bytes": 29,
+        "sha256": "baf5e1ba8a14f14b61c14fb25d2b6b033e476fe0d0d078e17860efb23aefbfe5"
+      },
+      "artifacts/m8-context-ui-checks-v2/mobile-regressions.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-score-check.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-score-check.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/score-regressions.stdout": {
+        "bytes": 2796,
+        "sha256": "4d022c3b7c5c3d1f9be98b1db36675ad742a87ad92fd84fa95e1e6b273af5969"
+      },
+      "artifacts/m8-context-ui-checks-v2/score-regressions.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-recovery-check.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/compile-recovery-check.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/recovery-regressions.stdout": {
+        "bytes": 25,
+        "sha256": "0968a089e5fc1b8918a0f56ece00c93cb50248b188a8585265c119d76fdc0233"
+      },
+      "artifacts/m8-context-ui-checks-v2/recovery-regressions.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphoneos-sdk.stdout": {
+        "bytes": 103,
+        "sha256": "b2591e080c0bf70d321e9b24dce762b470ead1f9e54887c13737c1565c183bd2"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphoneos-sdk.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphoneos-module.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphoneos-module.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphoneos-context-c-layout.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphoneos-context-c-layout.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphonesimulator-sdk.stdout": {
+        "bytes": 117,
+        "sha256": "fc0e1f390e49274ccc3b9484c8af9047f9e78868439ada0261b8fcda80a25990"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphonesimulator-sdk.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphonesimulator-module.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphonesimulator-module.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphonesimulator-context-c-layout.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/iphonesimulator-context-c-layout.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps.stdout": {
+        "bytes": 63,
+        "sha256": "f0cc413211a96bd54a87c5e5b32c518ed3eb9b03cd6ec5a105143d47f997539b"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/build.json": {
+        "bytes": 34521,
+        "sha256": "566c960da64e7d898afde7a727d3c6b96e49dc00c2aaaf44ff55aeaaf642705c"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/xcode-version.stdout": {
+        "bytes": 33,
+        "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/xcode-version.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphonesimulator-build.stdout": {
+        "bytes": 92943,
+        "sha256": "042734428487ee32e582761afc17758feb28371f853d1e707c4f9ac3593c3185"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphonesimulator-build.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphonesimulator-arch.stdout": {
+        "bytes": 6,
+        "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphonesimulator-arch.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphonesimulator-load-commands.stdout": {
+        "bytes": 20196,
+        "sha256": "5fd70cf8cf791e3360765976c1ec5b12259cb72cd928a2a17c1d3b03337995a8"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphonesimulator-load-commands.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/simulator-sign.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/simulator-sign.stderr": {
+        "bytes": 186,
+        "sha256": "d49ba54cb7d9592b55367576af8d2ee2a1d29ad3eca318ab76007ee0efbbd169"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/simulator-sign-verify.stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/simulator-sign-verify.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphoneos-build.stdout": {
+        "bytes": 88696,
+        "sha256": "b23c31047c4d4de0500348d822d0f340508fe378d4da6f125433891fa521a00c"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphoneos-build.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphoneos-arch.stdout": {
+        "bytes": 6,
+        "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphoneos-arch.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphoneos-load-commands.stdout": {
+        "bytes": 20239,
+        "sha256": "9aed7d83214c3614866e232b944cadc2369e777bf641b521f3d0c52692df1648"
+      },
+      "artifacts/m8-context-ui-checks-v2/ios-apps/logs/iphoneos-load-commands.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "commands": [
+      {
+        "label": "swift-path",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/xcrun",
+            "--find",
+            "swiftc"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 82756,
+          "stdout": "artifacts/m8-context-ui-checks-v2/swift-path.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/swift-path.stderr"
+        }
+      },
+      {
+        "label": "swift-version",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+            "--version"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 82761,
+          "stdout": "artifacts/m8-context-ui-checks-v2/swift-version.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/swift-version.stderr"
+        }
+      },
+      {
+        "label": "compile-policy-check",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+            "-target",
+            "arm64-apple-macos15.0",
+            "-swift-version",
+            "6",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-parse-as-library",
+            "-O",
+            "-I",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/include",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/ModuleCache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeContext.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/ContextPolicyMain.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-native-package-v1/package/target/aarch64-apple-darwin/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/policy-check"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 82767,
+          "stdout": "artifacts/m8-context-ui-checks-v2/compile-policy-check.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/compile-policy-check.stderr"
+        }
+      },
+      {
+        "label": "policy",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/policy-check"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 82792,
+          "stdout": "artifacts/m8-context-ui-checks-v2/policy.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/policy.stderr"
+        }
+      },
+      {
+        "label": "compile-context-check",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+            "-target",
+            "arm64-apple-macos15.0",
+            "-swift-version",
+            "6",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-parse-as-library",
+            "-O",
+            "-I",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/include",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/ModuleCache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatContent.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatWorkspace.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ExpertHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyChatStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationCapabilities.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubTransfer.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ModelHub.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeChatCheck.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeCompatibility.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeContext.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycle.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleSignals.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeMeasurement.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeQuality.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeResourcePlan.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeStateRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTaskResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTasks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTeacherForcing.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeWorker.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/WorkerChecks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/ContextIntegrationMain.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-native-package-v1/package/target/aarch64-apple-darwin/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/context-check"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 82800,
+          "stdout": "artifacts/m8-context-ui-checks-v2/compile-context-check.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/compile-context-check.stderr"
+        }
+      },
+      {
+        "label": "fixture",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/time",
+            "-l",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/context-check",
+            "--fixture",
+            "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83014,
+          "stdout": "artifacts/m8-context-ui-checks-v2/fixture.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/fixture.stderr"
+        }
+      },
+      {
+        "label": "real",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/time",
+            "-l",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/context-check",
+            "--model",
+            "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/real-output"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83018,
+          "stdout": "artifacts/m8-context-ui-checks-v2/real.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/real.stderr"
+        }
+      },
+      {
+        "label": "compile-mobile-check",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+            "-target",
+            "arm64-apple-macos15.0",
+            "-swift-version",
+            "6",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-parse-as-library",
+            "-O",
+            "-I",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/include",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/ModuleCache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatContent.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatWorkspace.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ExpertHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyChatStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationCapabilities.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubTransfer.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ModelHub.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeChatCheck.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeCompatibility.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeContext.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycle.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleSignals.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeMeasurement.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeQuality.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeResourcePlan.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeStateRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTaskResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTasks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTeacherForcing.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeWorker.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/WorkerChecks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/MobileMain.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-native-package-v1/package/target/aarch64-apple-darwin/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/mobile-check"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83098,
+          "stdout": "artifacts/m8-context-ui-checks-v2/compile-mobile-check.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/compile-mobile-check.stderr"
+        }
+      },
+      {
+        "label": "mobile-regressions",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/mobile-check",
+            "--polling",
+            "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83235,
+          "stdout": "artifacts/m8-context-ui-checks-v2/mobile-regressions.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/mobile-regressions.stderr"
+        }
+      },
+      {
+        "label": "compile-score-check",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+            "-target",
+            "arm64-apple-macos15.0",
+            "-swift-version",
+            "6",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-parse-as-library",
+            "-O",
+            "-I",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/include",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/ModuleCache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatContent.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatWorkspace.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ExpertHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyChatStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationCapabilities.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubTransfer.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ModelHub.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeChatCheck.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeCompatibility.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeContext.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycle.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleSignals.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeMeasurement.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeQuality.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeResourcePlan.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeStateRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTaskResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTasks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTeacherForcing.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeWorker.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/WorkerChecks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/ScoreMain.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-native-package-v1/package/target/aarch64-apple-darwin/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/score-check"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83238,
+          "stdout": "artifacts/m8-context-ui-checks-v2/compile-score-check.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/compile-score-check.stderr"
+        }
+      },
+      {
+        "label": "score-regressions",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/score-check",
+            "/Users/coloner/work/rust/toklet/artifacts/m7-native-tiny-v2"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83384,
+          "stdout": "artifacts/m8-context-ui-checks-v2/score-regressions.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/score-regressions.stderr"
+        }
+      },
+      {
+        "label": "compile-recovery-check",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+            "-target",
+            "arm64-apple-macos15.0",
+            "-swift-version",
+            "6",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-parse-as-library",
+            "-O",
+            "-I",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/include",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/ModuleCache",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatContent.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatWorkspace.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ExpertHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyChatStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationCapabilities.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubTransfer.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ModelHub.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeChatCheck.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeCompatibility.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeContext.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycle.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleSignals.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeMeasurement.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeQuality.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeResourcePlan.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeStateRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTaskResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTasks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTeacherForcing.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeWorker.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/WorkerChecks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/AppRecoveryMain.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-native-package-v1/package/target/aarch64-apple-darwin/release/libtoklet.a",
+            "-framework",
+            "Metal",
+            "-framework",
+            "MetalPerformanceShaders",
+            "-framework",
+            "Security",
+            "-lobjc",
+            "-liconv",
+            "-lresolv",
+            "-lc++",
+            "-o",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/recovery-check"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83387,
+          "stdout": "artifacts/m8-context-ui-checks-v2/compile-recovery-check.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/compile-recovery-check.stderr"
+        }
+      },
+      {
+        "label": "recovery-regressions",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/recovery-check",
+            "/Users/coloner/work/rust/toklet/models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83545,
+          "stdout": "artifacts/m8-context-ui-checks-v2/recovery-regressions.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/recovery-regressions.stderr"
+        }
+      },
+      {
+        "label": "iphoneos-sdk",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/xcrun",
+            "--sdk",
+            "iphoneos",
+            "--show-sdk-path"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83570,
+          "stdout": "artifacts/m8-context-ui-checks-v2/iphoneos-sdk.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/iphoneos-sdk.stderr"
+        }
+      },
+      {
+        "label": "iphoneos-module",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+            "-target",
+            "arm64-apple-ios18.0",
+            "-swift-version",
+            "6",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-parse-as-library",
+            "-O",
+            "-I",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/include",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/ModuleCache",
+            "-emit-module",
+            "-module-name",
+            "TokletContextCheck",
+            "-emit-module-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/iphoneos.swiftmodule",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatContent.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatWorkspace.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ExpertHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyChatStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationCapabilities.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessApp.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubTransfer.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ModelHub.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeChatCheck.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeCompatibility.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeContext.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycle.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleSignals.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeMeasurement.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeQuality.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeResourcePlan.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeStateRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTaskResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTasks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTeacherForcing.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeWorker.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/WorkerChecks.swift"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83572,
+          "stdout": "artifacts/m8-context-ui-checks-v2/iphoneos-module.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/iphoneos-module.stderr"
+        }
+      },
+      {
+        "label": "iphoneos-context-c-layout",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/xcrun",
+            "--sdk",
+            "iphoneos",
+            "clang",
+            "-target",
+            "arm64-apple-ios18.0",
+            "-isysroot",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+            "-std=c11",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-fsyntax-only",
+            "-I/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/include",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/context_smoke.c"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83664,
+          "stdout": "artifacts/m8-context-ui-checks-v2/iphoneos-context-c-layout.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/iphoneos-context-c-layout.stderr"
+        }
+      },
+      {
+        "label": "iphonesimulator-sdk",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/xcrun",
+            "--sdk",
+            "iphonesimulator",
+            "--show-sdk-path"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83667,
+          "stdout": "artifacts/m8-context-ui-checks-v2/iphonesimulator-sdk.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/iphonesimulator-sdk.stderr"
+        }
+      },
+      {
+        "label": "iphonesimulator-module",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+            "-sdk",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk",
+            "-target",
+            "arm64-apple-ios18.0-simulator",
+            "-swift-version",
+            "6",
+            "-strict-concurrency=complete",
+            "-warnings-as-errors",
+            "-parse-as-library",
+            "-O",
+            "-I",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/include",
+            "-module-cache-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/ModuleCache",
+            "-emit-module",
+            "-module-name",
+            "TokletContextCheck",
+            "-emit-module-path",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/iphonesimulator.swiftmodule",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatContent.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ChatWorkspace.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ExpertHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyChatStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/FriendlyHarness.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationCapabilities.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/GenerationResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessApp.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HarnessStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubStore.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/HubTransfer.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/ModelHub.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeChatCheck.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeCompatibility.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeContext.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycle.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeLifecycleSignals.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeMeasurement.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeQuality.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeResourcePlan.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeStateRun.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTaskResponse.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTasks.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeTeacherForcing.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/Harness/NativeWorker.swift",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/swift/WorkerChecks.swift"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83669,
+          "stdout": "artifacts/m8-context-ui-checks-v2/iphonesimulator-module.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/iphonesimulator-module.stderr"
+        }
+      },
+      {
+        "label": "iphonesimulator-context-c-layout",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/usr/bin/xcrun",
+            "--sdk",
+            "iphonesimulator",
+            "clang",
+            "-target",
+            "arm64-apple-ios18.0-simulator",
+            "-isysroot",
+            "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk",
+            "-std=c11",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-fsyntax-only",
+            "-I/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/include",
+            "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/sources/apple/tests/context_smoke.c"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83775,
+          "stdout": "artifacts/m8-context-ui-checks-v2/iphonesimulator-context-c-layout.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/iphonesimulator-context-c-layout.stderr"
+        }
+      },
+      {
+        "label": "ios-apps",
+        "invocation_error": null,
+        "owned_result": {
+          "command": [
+            "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+            "-I",
+            "-S",
+            "-B",
+            "-c",
+            "import runpy,sys;sys.path.insert(0,'/Users/coloner/work/rust/toklet/tools/experiments');sys.argv=['/Users/coloner/work/rust/toklet/tools/experiments/m7_swift_harness_build.py', '/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-native-package-v1/package', '1f187db18feb5131a8c2dc31d28963ea329ab029a6741d642b144cb5053caffc', '/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-checks-v2/ios-apps'];runpy.run_path('/Users/coloner/work/rust/toklet/tools/experiments/m7_swift_harness_build.py',run_name=\"__main__\")"
+          ],
+          "exit_code": 0,
+          "primary_error": null,
+          "cleanup_errors": [],
+          "pid": 83780,
+          "stdout": "artifacts/m8-context-ui-checks-v2/ios-apps.stdout",
+          "stderr": "artifacts/m8-context-ui-checks-v2/ios-apps.stderr"
+        }
+      }
+    ],
+    "observations": {
+      "native_package": {
+        "identity": {
+          "bytes": 39513,
+          "sha256": "1f187db18feb5131a8c2dc31d28963ea329ab029a6741d642b144cb5053caffc"
+        },
+        "three_slices_verified": true,
+        "wrapper": {
+          "bytes": 754472,
+          "sha256": "9421f98cea0a3e20fc9aa317f1c465778530e9c9884b2843eac32144ffdca1c1"
+        },
+        "owned_groups_absent": 21
+      },
+      "development_history": "Strict DTO/policy and app development checks retained; first UI compile failed SwiftUI macro sandbox, identical escalated invocation passed. Final sources are separately frozen/compiled here.",
+      "compiler_invocation": {
+        "path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+        "resolved": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend",
+        "name_semantics_preserved": true
+      },
+      "swift_version": [
+        "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)",
+        "Target: arm64-apple-macosx26.0"
+      ],
+      "policy": {
+        "frozen_shared_cases": 5,
+        "invalid_budget_records": 12,
+        "invalid_context_records": 27,
+        "mode_byte_limits_preserved": true,
+        "model_caps_optional": true,
+        "passed": true,
+        "reply_choices_ignore_old_history": true
+      },
+      "fixture": {
+        "passed": true,
+        "raw_exact_and_plus_one": true,
+        "suspend_replay_identity": true,
+        "cancelled_replay": true,
+        "stale_publication_cases": 2,
+        "legacy_declaration_unknown": true
+      },
+      "fixture_memory": {
+        "rss": 13926400,
+        "physical": 3211744
+      },
+      "real": {
+        "passed": true,
+        "declared": 40960,
+        "loaded": 512,
+        "selected": 512,
+        "rendered_input": 385,
+        "exact_reply": 127,
+        "overflow_reply": 128,
+        "raw_and_chat_boundary": true,
+        "token_prefix_preserved": true,
+        "cancel_after_tokens": 1,
+        "completed_512_positions": false,
+        "suspend_send_new_identity": true,
+        "rejected_draft_cases": 3,
+        "offline_preference_preserved": true,
+        "phone_qualified": false
+      },
+      "real_memory": {
+        "rss": 1027850240,
+        "physical": 1001964984
+      },
+      "score_stdout": [
+        "{\"backend\":\"cpu\",\"closed\":true,\"passed\":true,\"publicationRaces\":[\"interrupt-unload\",\"close\"],\"released\":true,\"physicalDeviceQualified\":false,\"checks\":[{\"history\":0,\"name\":\"unloaded-reject\",\"pending\":0,\"evaluated\":0,\"status\":1,\"saved\":0},{\"history\":0,\"name\":\"load\",\"pending\":0,\"evaluated\":0,\"status\":0,\"saved\":0},{\"history\":0,\"name\":\"empty-reject\",\"pending\":0,\"evaluated\":0,\"status\":1,\"saved\":0},{\"history\":4,\"name\":\"commit\",\"pending\":0,\"evaluated\":4,\"status\":0,\"saved\":4},{\"name\":\"target\",\"saved\":4,\"evaluated\":4,\"history\":4,\"pending\":0,\"status\":0,\"score\":{\"targetLogit\":3.2532131671905518,\"negativeLogLikelihood\":1.6877385208116804,\"greedyLogit\":3.2532131671905518,\"target\":47,\"vocabulary\":64,\"evaluated\":4,\"greedy\":47}},{\"name\":\"repeat\",\"saved\":4,\"evaluated\":4,\"history\":4,\"pending\":0,\"status\":0,\"score\":{\"vocabulary\":64,\"negativeLogLikelihood\":1.6877385208116804,\"target\":47,\"greedyLogit\":3.2532131671905518,\"evaluated\":4,\"greedy\":47,\"targetLogit\":3.2532131671905518}},{\"name\":\"alternative\",\"saved\":4,\"evaluated\":4,\"status\":0,\"pending\":0,\"history\":4,\"score\":{\"vocabulary\":64,\"negativeLogLikelihood\":3.0812254974352156,\"target\":3,\"greedyLogit\":3.2532131671905518,\"evaluated\":4,\"greedy\":47,\"targetLogit\":1.8597261905670166}},{\"status\":1,\"name\":\"range-reject\",\"pending\":0,\"history\":4,\"evaluated\":4,\"saved\":4},{\"name\":\"recover\",\"saved\":4,\"evaluated\":4,\"status\":0,\"pending\":0,\"history\":4,\"score\":{\"vocabulary\":64,\"negativeLogLikelihood\":1.6877385208116804,\"target\":47,\"greedyLogit\":3.2532131671905518,\"evaluated\":4,\"greedy\":47,\"targetLogit\":3.2532131671905518}},{\"status\":0,\"name\":\"teacher-append\",\"pending\":0,\"history\":5,\"evaluated\":5,\"saved\":5},{\"saved\":5,\"history\":5,\"score\":{\"vocabulary\":64,\"negativeLogLikelihood\":0.6298318923053361,\"target\":47,\"greedyLogit\":5.230978012084961,\"evaluated\":5,\"greedy\":47,\"targetLogit\":5.230978012084961},\"status\":0,\"name\":\"after-append\",\"evaluated\":5,\"pending\":0},{\"status\":0,\"name\":\"pending\",\"pending\":1,\"history\":6,\"evaluated\":5,\"saved\":6},{\"status\":1,\"name\":\"pending-reject\",\"pending\":1,\"history\":6,\"evaluated\":5,\"saved\":6},{\"status\":0,\"name\":\"suspend\",\"pending\":0,\"history\":0,\"evaluated\":0,\"saved\":6},{\"status\":1,\"name\":\"suspend-reject\",\"pending\":0,\"history\":0,\"evaluated\":0,\"saved\":6},{\"status\":0,\"name\":\"replay\",\"pending\":0,\"history\":6,\"evaluated\":6,\"saved\":6},{\"saved\":6,\"history\":6,\"score\":{\"target\":47,\"targetLogit\":5.2979512214660645,\"vocabulary\":64,\"greedyLogit\":5.2979512214660645,\"greedy\":47,\"evaluated\":6,\"negativeLogLikelihood\":0.5924863809210611},\"status\":0,\"name\":\"after-replay\",\"evaluated\":6,\"pending\":0},{\"status\":0,\"name\":\"reset\",\"pending\":0,\"history\":0,\"evaluated\":0,\"saved\":0},{\"status\":1,\"name\":\"reset-reject\",\"pending\":0,\"history\":0,\"evaluated\":0,\"saved\":0},{\"status\":0,\"name\":\"unload\",\"pending\":0,\"history\":0,\"evaluated\":0,\"saved\":0}]}"
+      ],
+      "recovery_stdout": [
+        "TOKLET_APP_RECOVERY_PASS"
+      ],
+      "library_link": {
+        "path": "apple/Binaries/Toklet.xcframework",
+        "previous_target": "../../artifacts/m8-native-policy-v1/package/Toklet.xcframework",
+        "target": "../../artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework",
+        "previous_build": {
+          "bytes": 26489,
+          "sha256": "2d7d35b02d5c35a343d29b657cbf254f722171846d0df49f57bb15f92ba2194d"
+        }
+      },
+      "ios_apps": {
+        "identity": {
+          "bytes": 34521,
+          "sha256": "566c960da64e7d898afde7a727d3c6b96e49dc00c2aaaf44ff55aeaaf642705c"
+        },
+        "device_unsigned": true,
+        "simulator_ad_hoc_signed": true,
+        "physical_device_qualified": false
+      },
+      "scope": {
+        "swift_both_modes_wired": true,
+        "actual_mac_linked": true,
+        "model_or_app_limits_raised": false,
+        "real_request_admission_positions": 512,
+        "completed_512_position_execution": false,
+        "declared_model_positions": 40960,
+        "native_context_or_quality_qualification_granted": false,
+        "whole_app_device_fit_granted": false,
+        "phone_qualified": false,
+        "full_model_window_qualified": false
+      },
+      "nested_app_groups_absent": 9
+    },
+    "primary_error": null,
+    "endpoint_errors": []
+  },
+  "failed_attempt": {
+    "bytes": 49358,
+    "sha256": "ca266ed074bea4934036eba593f296cdda081d71ad01e8121e886175944350b2"
+  },
+  "tool_endpoint": {
+    "path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+    "literal_target": "swift-frontend",
+    "resolved_target": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend",
+    "identity": {
+      "bytes": 173118384,
+      "sha256": "c90fc92073e78cd2b3c65efcacf65acfaf4290b02f7a9d301853563b85f4a993"
+    },
+    "scope": "Endpoint-only tool-path binding: controller retained initial path/resolved identity; publisher verifies matching literal link/target/file after checks. No continuous or per-command alias verification."
+  },
+  "owned_groups_absent": 32,
+  "native_package_three_slices": true,
+  "swift_strict_concurrency": true,
+  "swift_warnings_as_errors": true,
+  "mac_modes": [
+    "Chat",
+    "Expert"
+  ],
+  "ios_device_unsigned": true,
+  "ios_simulator_ad_hoc_signed": true,
+  "visual_check": "Actual ContextWindowSummary plus error component rendered at393-point width and inspected. No complete interactive app or physical phone visual qualification.",
+  "model_or_app_limits_raised": false,
+  "preflight_reserves_capacity": false,
+  "completed_512_position_execution": false,
+  "full_model_window_qualified": false,
+  "whole_app_device_fit_qualified": false,
+  "phone_qualified": false,
+  "failures_retained": [
+    "Initial frozen Swift compile invoked resolved swift-frontend path instead of swiftc driver; failed before policy compile. Corrected tool-only retry preserves driver name and unchanged Swift source.",
+    "Development sandbox denied SwiftUI macro sandbox; same compilation passed outside workspace sandbox."
+  ],
+  "review": "Astra accepted source, scoped test design and controller. Final complete evidence/publication/documentation review required before commit.",
+  "interpretation": "Both app modes consume live native context and shared request admission, distinguish declaration/configuration from live session state and reject over-budget requests without prefix/draft loss. Real385+127vs128 witness cancels after one token and proves admission/state only. Current limits unchanged.",
+  "next": "L4 progressive independent numerical/state/quality qualification at existing selected real contexts before raising capacities. L5 larger bounded text/codec/event and context controls, L6 device qualification and remaining Gemma precision/quality/context plus E1-E6/H1-H4 remain open."
+}

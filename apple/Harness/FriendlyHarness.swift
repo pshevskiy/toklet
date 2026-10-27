@@ -74,6 +74,21 @@ struct RuntimeMonitorView: View {
 }
 
 @MainActor
+struct ContextWindowSummary: View {
+    let model: NativeModelContext
+    var detailed = false
+    var body: some View {
+        VStack(alignment:.leading,spacing:4) {
+            Text(model.windowSummary).accessibilityIdentifier("chat-context-window")
+            if detailed {
+                Text(model.partialReason)
+                Text(NativeGenerationPolicy.limits(.chat,model:model).outputReason)
+            }
+        }.foregroundStyle(.secondary)
+    }
+}
+
+@MainActor
 struct FriendlyHarnessView: View {
     @ObservedObject var store: HarnessStore
     @StateObject private var hub: HubStore
@@ -236,6 +251,9 @@ struct FriendlyHarnessView: View {
     private var dashboard: some View {
         VStack(alignment:.leading,spacing:10) {
             RuntimeMonitorView(store:store)
+            if chat.hasChatModel, let context = store.state.modelContext {
+                ContextWindowSummary(model:context).font(.caption)
+            }
             if typeSize.isAccessibilitySize {
                 VStack(alignment:.leading) { dashboardActions }
             } else {
@@ -271,7 +289,7 @@ struct FriendlyHarnessView: View {
             if store.state.hasModel && !chat.hasChatModel && !chat.loadingModel {
                 Text("Choose this conversation’s model, or start a new chat with " + chat.modelName + ".").font(.callout).foregroundStyle(.secondary)
             }
-            if !store.state.message.isEmpty { Text(store.state.message).font(.callout) }
+            if !store.state.message.isEmpty && store.state.message != chat.notice { Text(store.state.message).font(.callout) }
             HStack(alignment:.bottom,spacing:8) {
                 TextField("Message…",text:Binding(get:{ chat.workspace.current.draft },set:{ chat.edit($0) }),axis:.vertical)
                     .lineLimit(1...(typeSize.isAccessibilitySize ? 2 : 6)).padding(.vertical,15).padding(.leading,18)
@@ -557,7 +575,15 @@ struct FriendlyHarnessView: View {
                         Text("\(chat.workspace.outputLimit.formatted()) tokens (unavailable)").tag(chat.workspace.outputLimit)
                     }
                 }.disabled(!unlocked).onChange(of:chat.workspace.outputLimit) { _,_ in chat.save() }
-                Text("Tokens are pieces of words. This sets the maximum reply length; a model can finish earlier. Prompt, chat history and reply share 512 tokens. Choose a shorter limit or start a new chat when they do not fit.").font(.footnote).foregroundStyle(.secondary)
+                Text("Tokens are pieces of words. This sets the maximum reply length; a model can finish earlier. The rendered prompt, chat history and requested reply must fit together.").font(.footnote).foregroundStyle(.secondary)
+                if chat.hasChatModel, let context = store.state.modelContext {
+                    ContextWindowSummary(model:context,detailed:true).font(.footnote)
+                    if let budget = store.state.requestBudget {
+                        Text("Last request: \(budget.historyAfterInput.formatted()) input/history + up to \(budget.output.formatted()) reply tokens; \(budget.remaining.formatted()) unused in that budget.").font(.footnote).foregroundStyle(.secondary)
+                    }
+                } else {
+                    Text("Open this conversation’s model to check its declared and currently usable window.").font(.footnote).foregroundStyle(.secondary)
+                }
             }
             Section("Expert") {
                 Button("Expert mode",systemImage:"slider.horizontal.3") { hub.modelChoiceChanged(); sheet = nil; chat.enterExpert() }

@@ -5439,3 +5439,45 @@ modes with explicit codec/text/event/qualification policy and stale-instance
 handling, preserving current qualified ranges and remaining real Gemma full
 precision/quality/fit/context work. See [the API contract](context-admission.md)
 and [public evidence](../benchmarks/results/2026-10-27-context-admission-v1.json).
+
+## 2026-10-27 — Context facts and shared-window admission in both app modes (L3.2)
+
+Chat and Expert consume the fixed native records with strict ABI, field, identity
+and overflow validation. Retained model/configuration facts are separate from
+live session/history/remaining-capacity facts. Suspend drops live identity;
+explicit Chat Send recreates a session, while Expert Append/Continue still need
+replay. Queued unload/close invalidates facts immediately and finishing work
+cannot republish them. Same-folder reloads are distinguished by model instance.
+
+Both modes preflight on the native owner thread using fresh session facts; actual
+generation revalidates. Chat counts complete rendered history/prompt and requested
+reply within the shared window. Rejection preserves token prefixes, prior turns
+and draft edit/clear intent. The UI shows declared versus selected capacity and
+partial support, while explicit policy retains existing512-input/256-output Chat,
+128-output Expert and distinct text/event bounds. Saved unsupported preferences
+remain preserved offline. No model or app limit is raised.
+
+Strict Swift6/concurrency/warnings checks pass on Mac and both iOS SDKs. Policy
+checks cover27 malformed context and12 malformed admission records plus five
+frozen native arithmetic cases. CPU exact32/+1, pending state, suspend/replay,
+cancellation, identity and two stale-publication races pass, as do existing
+mobile-interface, scoring and pinned Smol real recovery regressions. Real Qwen3
+on Mac admits385 rendered input+127 requested output and rejects+128 in both
+modes without prefix mutation; three draft recovery cases and suspended Send
+with a new session pass. This witness cancels after one emitted token and does
+not qualify completed512-position numerical execution or full40960 positions.
+
+The new native package has all three slices/28 entrypoints. Device-unsigned and
+simulator-ad-hoc-signed app builds pass. The generated framework link selects the
+admitted package with its previous binding recorded; no physical phone is used.
+The context/error component is visually inspected at393-point width. Functional
+real-process peaks are1,001,964,984 physical/1,027,850,240 RSS bytes, without a fit
+or latency claim. The first frozen compile's Swift driver-name tooling failure
+is retained; its corrected retry preserves source and scoped checks. All32
+new/failed/nested groups close, protected release binaries remain unchanged.
+
+See [the integration contract](context-app-integration.md) and
+[public evidence](../benchmarks/results/2026-10-27-context-app-integration-v2.json).
+Next L4 directly qualifies independent numerical execution at Qwen3's current512
+positions before raising limits; Gemma real precision/quality/context and broader
+architecture/Hugging Face/device work remain open.

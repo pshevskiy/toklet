@@ -84,7 +84,7 @@ struct HarnessView: View {
         })
     }
     private func tokens(_ text: String) throws -> [UInt32] {
-        guard text.utf8.count <= 256 * 1024 else { throw validation("Input exceeds 256 KiB") }
+        guard text.utf8.count <= NativeGenerationPolicy.maximumRawTokenTextBytes else { throw validation("Input exceeds 256 KiB") }
         let fields = text.split { $0 == "," || $0.isWhitespace }
         guard fields.count <= 32768 else { throw validation("Too many token IDs") }
         return try fields.map {
@@ -109,8 +109,13 @@ struct HarnessView: View {
     }
     private func generate(_ operation: UInt32) {
         do {
-            guard let maximum = UInt32(outputCount), maximum <= 128 else { throw validation("Output limit must be 0 through 128") }
+            guard let context = store.state.modelContext else { throw validation("Load a model to inspect its current window") }
+            let limits = NativeGenerationPolicy.limits(.raw,model:context)
+            guard let maximum = UInt32(outputCount), UInt64(maximum) <= limits.maximumOutput else {
+                throw validation("Output limit must be 0 through \(limits.maximumOutput). \(limits.outputReason)")
+            }
             let input = operation == 2 ? [] : try tokens(prompt)
+            try limits.validate(input:input.count,output:maximum)
             store.submit(.generate(operation:operation,tokens:input,maximum:maximum,stops:try tokens(stops)))
         } catch { store.inputError = error.localizedDescription }
     }
@@ -190,6 +195,21 @@ struct HarnessView: View {
                     Text(store.state.phase)
                     Text("Active history \(store.state.history), committed \(store.state.evaluated), pending \(store.state.pending)")
                     Text("Saved prefix \(store.state.savedHistory); stop reason \(store.state.reason)")
+                    if let context = store.state.modelContext {
+                        Text(context.windowSummary)
+                        Text(context.partialReason).font(.caption)
+                        Text("Global loader ceiling \(context.engineGlobalCeiling); loaded graph \(context.loadedLimit); configured session \(context.configuredCapacity); absolute offset \(context.offset)").font(.caption)
+                        Text("Model instance \(context.modelInstance). Context qualification and whole-app/device fit are not supplied by this record.").font(.caption)
+                        Text(NativeGenerationPolicy.limits(.raw,model:context).outputReason).font(.caption)
+                    }
+                    if let live = store.state.liveContext {
+                        Text("Session instance \(live.sessionInstance); snapshot capacity left \(live.capacity-live.history) tokens")
+                    } else if store.state.hasModel && !store.state.busy {
+                        Text("No active session facts. Replay explicitly before Append or Continue.").font(.caption)
+                    }
+                    if let budget = store.state.requestBudget {
+                        Text("Last preflight: \(budget.historyAfterInput) input/history + \(budget.output) requested output; \(budget.remaining) remaining after that request. This snapshot reserves nothing.").font(.caption)
+                    }
                     Text("Last numerical admission upper bound: \(store.state.admittedBytes) bytes")
                     Text("Swift buffers and framework memory are additional. Physical-device model/context limits remain unqualified.")
                     if !store.state.message.isEmpty { Text("Status \(store.state.status): \(store.state.message)").foregroundStyle(.red) }

@@ -1,8 +1,9 @@
 # Engine context facts and request preflight
 
 L3.1 adds read-only engine facts and request arithmetic. Runtime and app limits
-are unchanged. Swift consumption and explicit app/qualification policy are the
-next task; the unused JSON capability proposal is not treated as a native API.
+are unchanged. Swift consumption and explicit app policy now have separate
+[L3.2 evidence](context-app-integration.md); the unused JSON capability proposal
+is not treated as a native API.
 
 The MLX dense source retains `max_position_embeddings` from the same bounded,
 duplicate-checked configuration document passed to architecture admission,
@@ -88,9 +89,8 @@ results, and reruns only outstanding C checks with the SDK path. All21 owned
 groups are absent. Astra accepts the source and complete scoped evidence.
 See the [public receipt](../benchmarks/results/2026-10-27-context-admission-v1.json).
 
-L3.2 now needs to consume the fixed records in Chat and Expert, combine them
-with explicit codec/text/event and qualification policy, show declared versus
-usable context, count rendered Chat input plus requested output, and reject
-stale instances. Current ranges remain unchanged; no global32768 bound becomes
-a qualified app limit. Real Gemma whole32/long BF16/1025 quality and progressive
-selected-model windows remain open.
+L3.2 [app integration](context-app-integration.md) now consumes these records
+in both modes with explicit policy, fresh identities and rendered shared-window
+preflight. Its admission/state checks preserve current ranges. Next L4 qualifies
+independent real Qwen3 C512 numerical execution before raising capacities.
+Real Gemma whole32/long BF16/1025 quality and broader full-window work remain open.

@@ -82,6 +82,9 @@ struct NativeSnapshot: Sendable {
     var runtimePlan: NativeResourcePlan?
     var compatibilityDirectory = ""
     var workerFinished = false
+    var modelContext: NativeModelContext?
+    var liveContext: NativeContextFacts?
+    var requestBudget: NativeRequestBudget?
     var chatEnabled = false
     // Retained across queued lifecycle cleanup until the next text request.
     var chatResult: NativeChatResult?
@@ -182,6 +185,14 @@ final class NativeWorker: @unchecked Sendable {
         if case .load = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
         if case .unload = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
         if case .suspend = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
+        switch command {
+        case .load, .unload, .suspend:
+            view.modelContext = nil; view.liveContext = nil
+        case .chat, .generate, .reset, .replay:
+            view.liveContext = nil
+        default: break
+        }
+        view.requestBudget = nil
         view.busy = true
         view.phase = "Queued"
         view.score = nil
@@ -223,6 +234,7 @@ final class NativeWorker: @unchecked Sendable {
         // Once a full unload is queued, a later background event cannot weaken it.
         if case .unload? = queued {} else { queued = unload ? .unload : .suspend }
         view.busy = true
+        view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
         view.phase = "Cancelling for lifecycle cleanup"
         view.score = nil
         view.savedPrefix = nil
@@ -235,6 +247,7 @@ final class NativeWorker: @unchecked Sendable {
         guard !view.closed else { return }
         cancelQueuedChat()
         closing = true; queued = nil
+        view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         view.score = nil
         view.savedPrefix = nil
@@ -300,8 +313,16 @@ final class NativeWorker: @unchecked Sendable {
             view.phase = "Running"
             condition.unlock()
             var failure: NSError?
-            do { try autoreleasepool { try engine.perform(command, flag: flag, worker: self) } }
-            catch { failure = error as NSError }
+            do { try autoreleasepool {
+                try engine.perform(command, flag: flag, worker: self)
+                try engine.refreshContext()
+            } }
+            catch {
+                failure = error as NSError
+                // Preserve the original command error while suppressing any
+                // invalid live facts. No old session snapshot authorizes replay.
+                try? engine.refreshContext()
+            }
             if case .score = command { beforeScorePublication?() }
             condition.lock()
             switch command {
@@ -311,6 +332,9 @@ final class NativeWorker: @unchecked Sendable {
             }
             view.hasModel = engine.model != nil
             view.hasSession = engine.session != nil
+            view.modelContext = !closing && queued == nil ? engine.modelContext : nil
+            view.liveContext = !closing && queued == nil ? engine.liveContext : nil
+            view.requestBudget = !closing && queued == nil ? engine.requestBudget : nil
             view.chatEnabled = engine.chat != nil
             if case .chat = command { view.chatResult = engine.chatResult }
             view.savedHistory = engine.savedCount
@@ -351,6 +375,7 @@ final class NativeWorker: @unchecked Sendable {
         }
         view.hasModel = false; view.hasSession = false
         view.chatEnabled = false
+        view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         // Closed means there is no active numerical prefix. Do not retain the
         // last command's counts when close supersedes an in-flight operation.
@@ -405,10 +430,30 @@ private final class Engine {
     var compatibility: NativeCompatibility?
     var runtimePlan: NativeResourcePlan?
     var compatibilityDirectory = ""
+    var modelContext: NativeModelContext?
+    var liveContext: NativeContextFacts?
+    var requestBudget: NativeRequestBudget?
+
+    func refreshContext() throws {
+        liveContext = nil
+        guard let session else { return }
+        do {
+            var value = TokletContextInfo(); var error = TokletError()
+            try requireOK(toklet_session_context(session,&value,&error),&error)
+            let fresh = try NativeContextFacts(value)
+            let retained = NativeModelContext(fresh)
+            guard let settings, fresh.capacity == UInt64(settings.capacity),
+                  fresh.offset == 0, fresh.backend == (settings.metal ? TOKLET_CONTEXT_METAL : TOKLET_CONTEXT_CPU),
+                  modelContext == nil || modelContext == retained else {
+                throw invalid("Native context does not match the loaded model/settings")
+            }
+            modelContext = retained; liveContext = fresh
+        } catch { modelContext = nil; requestBudget = nil; throw error }
+    }
 
     func decodeChat(_ ids: [UInt32]) throws -> String {
         guard let chat else { throw invalid("Choose a chat model first") }
-        var bytes = [UInt8](repeating:0,count:64 * 1024)
+        var bytes = [UInt8](repeating:0,count:NativeGenerationPolicy.maximumDecodedBytes)
         var count = 0; var error = TokletError()
         let code = ids.withUnsafeBufferPointer { ids in
             bytes.withUnsafeMutableBufferPointer { output in
@@ -427,10 +472,12 @@ private final class Engine {
         chatResult = nil
         var generationStarted = false
         do {
-            guard let chat, let settings, conversation.count <= 64 * 1024,
-                  (1...NativeSettings.maximumChatOutputTokens).contains(maximum),
-                  (0...Int(NativeSettings.maximumChatOutputTokens)).contains(autoCancelAfter) else { throw invalid("Choose a chat model and a valid response limit") }
-            var ids = [UInt32](repeating:0,count:512)
+            guard let chat, let modelContext, conversation.count <= NativeGenerationPolicy.maximumConversationBytes,
+                  maximum > 0 else { throw invalid("Choose a chat model and a valid response limit") }
+            let limits = NativeGenerationPolicy.limits(.chat,model:modelContext)
+            try limits.validate(input:0,output:maximum)
+            guard autoCancelAfter >= 0, UInt64(autoCancelAfter) <= limits.maximumOutput else { throw invalid("Invalid automatic cancellation count") }
+            var ids = [UInt32](repeating:0,count:Int(limits.maximumPrompt))
             var count = 0; var error = TokletError()
             let code = conversation.withUnsafeBytes { input in
                 ids.withUnsafeMutableBufferPointer { output in
@@ -439,15 +486,13 @@ private final class Engine {
                 }
             }
             try requireOK(code,&error)
-            // Admit the WHOLE turn before reset+prompt changes numerical state.
-            guard count <= ids.count, count + Int(maximum) <= Int(settings.capacity) else {
-                throw invalid("This conversation is full. Start a new chat or choose a shorter response limit.")
-            }
+            guard count <= ids.count else { throw invalid("Encoded input exceeds current chat input limit") }
             if session == nil { try createSession() } // Explicit Send, never foreground auto-resume.
             var generationError: Error?
-            generationStarted = true
-            do { try generate(3,Array(ids.prefix(count)),maximum,chatStops,autoCancelAfter,flag,worker,chatOutput:true) }
+            do { try generate(3,Array(ids.prefix(count)),maximum,chatStops,autoCancelAfter,flag,worker,
+                              chatOutput:true,didAdmit:{ generationStarted = true }) }
             catch { generationError = error }
+            if !generationStarted, let generationError { throw generationError }
             let text = try decodeChat(worker.snapshot().ids)
             chatResult = NativeChatResult(id:id,text:text,reason:report.reason,
                 error:generationError?.localizedDescription ?? "")
@@ -459,6 +504,7 @@ private final class Engine {
     }
 
     func releaseSession() throws {
+        liveContext = nil; requestBudget = nil
         score = nil
         if let value = session {
             session = nil
@@ -468,6 +514,7 @@ private final class Engine {
         report = TokletReport()
     }
     func unload() throws {
+        modelContext = nil; liveContext = nil; requestBudget = nil
         try releaseSession()
         if let value = chat {
             chat = nil; chatStops = []
@@ -488,6 +535,7 @@ private final class Engine {
         try requireOK(toklet_session_create(model, &options, &session, &error), &error)
         try requireOK(toklet_session_state(session, &report, &error), &error)
         admissionUpperBound = max(admissionUpperBound,report.admitted_bytes)
+        try refreshContext()
     }
     func refreshHistory() throws {
         guard let session else { return }
@@ -500,13 +548,36 @@ private final class Engine {
     }
     func generate(_ operation: UInt32, _ tokens: [UInt32], _ maximum: UInt32,
                   _ stops: [UInt32], _ autoCancel: Int, _ flag: OpaquePointer,
-                  _ worker: NativeWorker, chatOutput: Bool = false) throws {
+                  _ worker: NativeWorker, chatOutput: Bool = false, didAdmit: (() -> Void)? = nil) throws {
         guard let session else { throw invalid("Load or replay a session first") }
-        let bound: UInt32 = chatOutput ? NativeSettings.maximumChatOutputTokens : 128
-        guard tokens.count <= 32768, stops.count <= 32768, maximum <= bound,
-              autoCancel >= 0 && autoCancel <= Int(bound) else { throw invalid("Request exceeds harness bounds") }
+        try refreshContext()
+        guard let modelContext, let liveContext else { throw invalid("Native context unavailable; reload the model") }
+        let limits = NativeGenerationPolicy.limits(chatOutput ? .chat : .raw,model:modelContext)
+        try limits.validate(input:tokens.count,output:maximum)
+        guard stops.count <= Int(NativeGenerationPolicy.maximumRawPrompt),
+              autoCancel >= 0, UInt64(autoCancel) <= limits.maximumOutput else { throw invalid("Request exceeds current mode limits") }
+        var admission = TokletRequestAdmission(); var error = TokletError()
+        let preflight = tokens.withUnsafeBufferPointer { input in
+            stops.withUnsafeBufferPointer { stop in
+                toklet_session_preflight(session,operation,input.baseAddress,input.count,maximum,
+                    stop.baseAddress,stop.count,&admission,&error)
+            }
+        }
+        if preflight == TOKLET_INVALID {
+            let base = operation == 0 || operation == 3 ? 0 : liveContext.history
+            let after = base.addingReportingOverflow(UInt64(tokens.count))
+            let required = after.partialValue.addingReportingOverflow(UInt64(maximum))
+            if !after.overflow, !required.overflow, required.partialValue > liveContext.capacity {
+                throw invalid("This request needs \(required.partialValue.formatted()) tokens including its reply; the current shared window is \(liveContext.capacity.formatted()). Choose a shorter reply or a new chat.")
+            }
+        }
+        try requireOK(preflight,&error)
+        let budget = try NativeRequestBudget(admission,expected:liveContext,operation:operation,input:tokens.count,output:maximum)
+        try limits.validateHistory(tokens:budget.historyAfterInput,output:maximum)
+        requestBudget = budget
+        didAdmit?()
         let sink = Sink(worker, autoCancel)
-        var error = TokletError(); report = TokletReport()
+        report = TokletReport()
         let code = withExtendedLifetime(sink) {
             tokens.withUnsafeBufferPointer { input in
                 stops.withUnsafeBufferPointer { stop in
@@ -536,6 +607,7 @@ private final class Engine {
     func perform(_ command: NativeCommand, flag: OpaquePointer, worker: NativeWorker) throws {
         lastEmitted = 0
         score = nil
+        requestBudget = nil
         switch command {
         case .chat(let id,let conversation,let maximum,let autoCancel):
             try generateChat(id,conversation,maximum,autoCancel,flag,worker)
