@@ -6920,3 +6920,23 @@ is added. See [report](window-row-geometry.md),
 [evidence](../benchmarks/results/2026-10-29-window-row-geometry-v1.json) and
 [TODO](../TODO.md). Continue independent Half rolling attention, followed by
 all-owner two-phase copy and poisoned-state recovery.
+
+## 2026-10-29 — Frozen staged Half attention reference
+
+The shared row task is committed as `7635606`. An independent source now fixes
+eight local/full old-ring plus immutable-new-staging cases at D32/256, including
+the seeded512→513→514 boundary and an early-query chunk-wrap hazard. Physical
+retentionW and numerical old viewW−1 remain distinct. The 104 saved arrays include
+48 main/wide numerical profiles and56 before/staged/expected-after raw states.
+
+Five portable controls pass and both owned exports replay byte-for-byte. Astra
+independently recomputes722,896 numerical values,24 envelopes/gates,
+3,553,672 raw physical words,10,120 masked-zero entries, copy runs and chained
+states. The two committed fixture files preserve those exact expectations.
+This task invokes no Toklet graph/attention kernel or native transaction; seeded
+states do not qualify model prefill, a GPU copy or poisoned-session recovery.
+No app/phone, quality or performance claim is added. See
+[reference](gemma3-staged-attention-reference.md),
+[evidence](../benchmarks/results/2026-10-29-gemma3-staged-attention-reference-v1.json)
+and [TODO](../TODO.md). The optional native operator and cache transaction remain
+separate reviewed code tasks.

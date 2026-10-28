@@ -1,0 +1,2215 @@
+{
+  "cases": [
+    {
+      "arrays": {
+        "context": {
+          "envelope": 4.76837158203125e-07,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 1792,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 17890,
+            "sha256": "c743b29084d0d47c3210b218c7029d18aff232b39759d5a42d0f05b35f2bf880",
+            "shape": [
+              7,
+              4,
+              32
+            ]
+          },
+          "wide": {
+            "bytes": 1792,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 19682,
+            "sha256": "b27c59bd0cdccac4ba148dc41fe018bec2968500e96ad834e98e60ae40ac9eef",
+            "shape": [
+              7,
+              4,
+              32
+            ]
+          }
+        },
+        "probabilities": {
+          "envelope": 2.9802322387695312e-08,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 1120,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 15650,
+            "sha256": "f7efd3078644d419693badab5cf2e8b8c0f5fdd5aa6c0713d03b24faf0fc6774",
+            "shape": [
+              4,
+              7,
+              10
+            ]
+          },
+          "wide": {
+            "bytes": 1120,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 16770,
+            "sha256": "563f50cf66533963b136d4da6724e53690be8cb4ad2df119e92b5361fa7641a1",
+            "shape": [
+              4,
+              7,
+              10
+            ]
+          }
+        },
+        "scores": {
+          "envelope": 1.862645149230957e-09,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 1120,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 13410,
+            "sha256": "da61938615f70baf12392efe5cd817c6443915b87473e8dfea9929e0d08577c7",
+            "shape": [
+              4,
+              7,
+              10
+            ]
+          },
+          "wide": {
+            "bytes": 1120,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 14530,
+            "sha256": "27a5a63ae335e99883f1c565bcc4b9d9dec597f76f73583bb646d10ca43baf0e",
+            "shape": [
+              4,
+              7,
+              10
+            ]
+          }
+        }
+      },
+      "capacity": 12,
+      "chunk_capacity": 32,
+      "committed": 5,
+      "copy_runs": [
+        {
+          "destination_row": 0,
+          "rows": 4,
+          "source_row": 3
+        }
+      ],
+      "dim": 32,
+      "exact_context_first_four_per_head": null,
+      "inputs": {
+        "expected_after_k": {
+          "bytes": 270,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 10538,
+          "sha256": "ba377ae85d868375542d06feddcdf1eac2e55ad782f2709f133dfffb05adc094",
+          "shape": [
+            135
+          ]
+        },
+        "expected_after_v": {
+          "bytes": 270,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 13140,
+          "sha256": "eb7cafc354ce135c6f63856f671d5339fab5231f3783f85e0175cf4e1cea976d",
+          "shape": [
+            135
+          ]
+        },
+        "new_k": {
+          "bytes": 2062,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 8476,
+          "sha256": "d1e904d9f9cd86d167eaf974bc46159e8dac829e82cd1db165c2a21aec690aee",
+          "shape": [
+            1031
+          ]
+        },
+        "new_v": {
+          "bytes": 2062,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 11078,
+          "sha256": "07d52bd5046ea466445dbfc525ef8d840944a1ba9c42974a3200098557abff12",
+          "shape": [
+            1031
+          ]
+        },
+        "old_k": {
+          "bytes": 270,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 8206,
+          "sha256": "a1ea6a028f702f7f18ae5e98fdd5c0923bb225d4de211c41ef6b3edeb5b6e80c",
+          "shape": [
+            135
+          ]
+        },
+        "old_v": {
+          "bytes": 270,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 10808,
+          "sha256": "e6c3d83ba644e7b04fe0ac36be8980f79c302420f3457c8a0d727728f8137b19",
+          "shape": [
+            135
+          ]
+        },
+        "q": {
+          "bytes": 8206,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 0,
+          "sha256": "3edc4879405ee99b3b96b0ca0baa4daf4ca6be4cb2fa5c9187fd58166cffcce5",
+          "shape": [
+            4103
+          ]
+        }
+      },
+      "kind": "local",
+      "kv_heads": 1,
+      "name": "tiny_local",
+      "pattern": "dyadic",
+      "query_heads": 4,
+      "score_key_capacity": 12,
+      "seeded_state_only": true,
+      "source_input_immutability": {
+        "new_k": {
+          "bytes": 2062,
+          "sha256": "d1e904d9f9cd86d167eaf974bc46159e8dac829e82cd1db165c2a21aec690aee"
+        },
+        "new_v": {
+          "bytes": 2062,
+          "sha256": "07d52bd5046ea466445dbfc525ef8d840944a1ba9c42974a3200098557abff12"
+        },
+        "old_k": {
+          "bytes": 270,
+          "sha256": "a1ea6a028f702f7f18ae5e98fdd5c0923bb225d4de211c41ef6b3edeb5b6e80c"
+        },
+        "old_v": {
+          "bytes": 270,
+          "sha256": "e6c3d83ba644e7b04fe0ac36be8980f79c302420f3457c8a0d727728f8137b19"
+        },
+        "q": {
+          "bytes": 8206,
+          "sha256": "3edc4879405ee99b3b96b0ca0baa4daf4ca6be4cb2fa5c9187fd58166cffcce5"
+        }
+      },
+      "tokens": 7,
+      "view": {
+        "end": 12,
+        "new_rows": 7,
+        "new_start": 5,
+        "old_spans": [
+          {
+            "absolute_start": 2,
+            "rows": 2,
+            "slot": 2
+          },
+          {
+            "absolute_start": 4,
+            "rows": 1,
+            "slot": 0
+          }
+        ],
+        "retention": 4,
+        "start": 2
+      },
+      "visible_ranges": [
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          4,
+          8
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          6,
+          10
+        ],
+        [
+          7,
+          11
+        ],
+        [
+          8,
+          12
+        ]
+      ],
+      "window": 4
+    },
+    {
+      "arrays": {
+        "context": {
+          "envelope": 1.1920928955078125e-07,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 1792,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 42308,
+            "sha256": "6b0824fc83cdf82ecb48f0a2cf8fe90576543c8edff46ce8e6894c805c549940",
+            "shape": [
+              7,
+              4,
+              32
+            ]
+          },
+          "wide": {
+            "bytes": 1792,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 44100,
+            "sha256": "fb636eb65f84a5e2986a4684a281f7f93feb61ef988c8fbaeb1bec4a26849543",
+            "shape": [
+              7,
+              4,
+              32
+            ]
+          }
+        },
+        "probabilities": {
+          "envelope": 1.4901161193847656e-08,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 1344,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 39620,
+            "sha256": "2334c64f9a084a63a100162dbd09a599db58d4a1850a7bb283df4e309a4c44ae",
+            "shape": [
+              4,
+              7,
+              12
+            ]
+          },
+          "wide": {
+            "bytes": 1344,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 40964,
+            "sha256": "5a0f4a12d944036f94ae48f65bdf2c161b4e0cd7c65383a278ff9a3b1794b7d0",
+            "shape": [
+              4,
+              7,
+              12
+            ]
+          }
+        },
+        "scores": {
+          "envelope": 1.862645149230957e-09,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 1344,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 36932,
+            "sha256": "88d0dcadfaa18a61e6abcd60b17461ce001237c440ab2f1a066a693df42d210f",
+            "shape": [
+              4,
+              7,
+              12
+            ]
+          },
+          "wide": {
+            "bytes": 1344,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 38276,
+            "sha256": "0f377b024f37d3808940578f2336aea9857eed6d2311c373b92b8ba875b442f8",
+            "shape": [
+              4,
+              7,
+              12
+            ]
+          }
+        }
+      },
+      "capacity": 12,
+      "chunk_capacity": 32,
+      "committed": 5,
+      "copy_runs": [
+        {
+          "destination_row": 5,
+          "rows": 7,
+          "source_row": 0
+        }
+      ],
+      "dim": 32,
+      "exact_context_first_four_per_head": null,
+      "inputs": {
+        "expected_after_k": {
+          "bytes": 782,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 32524,
+          "sha256": "345c7c03d1f4fdb18610bbfe5379c202d6da6318bf3438d445891eeb6129320b",
+          "shape": [
+            391
+          ]
+        },
+        "expected_after_v": {
+          "bytes": 782,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 36150,
+          "sha256": "67c4d1a9420c1111dbd59b95577368653ef7b1f370aa0c89bbcbf5fd7f2477c1",
+          "shape": [
+            391
+          ]
+        },
+        "new_k": {
+          "bytes": 2062,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 30462,
+          "sha256": "d1e904d9f9cd86d167eaf974bc46159e8dac829e82cd1db165c2a21aec690aee",
+          "shape": [
+            1031
+          ]
+        },
+        "new_v": {
+          "bytes": 2062,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 34088,
+          "sha256": "07d52bd5046ea466445dbfc525ef8d840944a1ba9c42974a3200098557abff12",
+          "shape": [
+            1031
+          ]
+        },
+        "old_k": {
+          "bytes": 782,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 29680,
+          "sha256": "3ff6c6f4aee4a816f96fecbef6d1826440ea8240f97f8e4dedd05034d3d8e83d",
+          "shape": [
+            391
+          ]
+        },
+        "old_v": {
+          "bytes": 782,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 33306,
+          "sha256": "927fb2fa345bfaab9a3f140580c6f7ba184aca41919d8dce05d43cf9c33f2377",
+          "shape": [
+            391
+          ]
+        },
+        "q": {
+          "bytes": 8206,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 21474,
+          "sha256": "3edc4879405ee99b3b96b0ca0baa4daf4ca6be4cb2fa5c9187fd58166cffcce5",
+          "shape": [
+            4103
+          ]
+        }
+      },
+      "kind": "full",
+      "kv_heads": 1,
+      "name": "tiny_full",
+      "pattern": "dyadic",
+      "query_heads": 4,
+      "score_key_capacity": 12,
+      "seeded_state_only": true,
+      "source_input_immutability": {
+        "new_k": {
+          "bytes": 2062,
+          "sha256": "d1e904d9f9cd86d167eaf974bc46159e8dac829e82cd1db165c2a21aec690aee"
+        },
+        "new_v": {
+          "bytes": 2062,
+          "sha256": "07d52bd5046ea466445dbfc525ef8d840944a1ba9c42974a3200098557abff12"
+        },
+        "old_k": {
+          "bytes": 782,
+          "sha256": "3ff6c6f4aee4a816f96fecbef6d1826440ea8240f97f8e4dedd05034d3d8e83d"
+        },
+        "old_v": {
+          "bytes": 782,
+          "sha256": "927fb2fa345bfaab9a3f140580c6f7ba184aca41919d8dce05d43cf9c33f2377"
+        },
+        "q": {
+          "bytes": 8206,
+          "sha256": "3edc4879405ee99b3b96b0ca0baa4daf4ca6be4cb2fa5c9187fd58166cffcce5"
+        }
+      },
+      "tokens": 7,
+      "view": {
+        "end": 12,
+        "new_rows": 7,
+        "new_start": 5,
+        "old_spans": [
+          {
+            "absolute_start": 0,
+            "rows": 5,
+            "slot": 0
+          }
+        ],
+        "retention": 12,
+        "start": 0
+      },
+      "visible_ranges": [
+        [
+          0,
+          6
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          10
+        ],
+        [
+          0,
+          11
+        ],
+        [
+          0,
+          12
+        ]
+      ],
+      "window": null
+    },
+    {
+      "arrays": {
+        "context": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 2048,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 1225638,
+            "sha256": "73b0776d033411b53e153f360337caac22248efe9b2f6ff8709c7279cc507197",
+            "shape": [
+              1,
+              4,
+              256
+            ]
+          },
+          "wide": {
+            "bytes": 2048,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 1227686,
+            "sha256": "73b0776d033411b53e153f360337caac22248efe9b2f6ff8709c7279cc507197",
+            "shape": [
+              1,
+              4,
+              256
+            ]
+          }
+        },
+        "probabilities": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 8192,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 1209254,
+            "sha256": "442f7677d55cbf04a4133258e8d3cdb8f0e677301c3dcc54010d9dbf7f325076",
+            "shape": [
+              4,
+              1,
+              512
+            ]
+          },
+          "wide": {
+            "bytes": 8192,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 1217446,
+            "sha256": "442f7677d55cbf04a4133258e8d3cdb8f0e677301c3dcc54010d9dbf7f325076",
+            "shape": [
+              4,
+              1,
+              512
+            ]
+          }
+        },
+        "scores": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 8192,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 1192870,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              4,
+              1,
+              512
+            ]
+          },
+          "wide": {
+            "bytes": 8192,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 1201062,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              4,
+              1,
+              512
+            ]
+          }
+        }
+      },
+      "capacity": 544,
+      "chunk_capacity": 32,
+      "committed": 512,
+      "copy_runs": [
+        {
+          "destination_row": 0,
+          "rows": 1,
+          "source_row": 0
+        }
+      ],
+      "dim": 256,
+      "exact_context_first_four_per_head": [
+        0,
+        15360,
+        15360,
+        0
+      ],
+      "inputs": {
+        "expected_after_k": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 389998,
+          "sha256": "09b761e7926aad4d4909826c73cdac647b95bada9f8dc3a313d40566202307ef",
+          "shape": [
+            131079
+          ]
+        },
+        "expected_after_v": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 930712,
+          "sha256": "64756d9e10602c16f33c7f59af6d9a49832b08f6f9d4b3e22453b3448a7de1ec",
+          "shape": [
+            131079
+          ]
+        },
+        "new_k": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 373600,
+          "sha256": "4d8036a8134217b0646779f795af5f2c8b8f17de21f44b7c1b15cc18fe02d9fb",
+          "shape": [
+            8199
+          ]
+        },
+        "new_v": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 914314,
+          "sha256": "83c6051112adf8e3a3208c8e346e0a855acf2e598e18a4020c09c0dfd0cc4ede",
+          "shape": [
+            8199
+          ]
+        },
+        "old_k": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 111442,
+          "sha256": "717d68a3f7558b340e960a2012be73c926bbb5f404d5078e5f16978e74e11951",
+          "shape": [
+            131079
+          ]
+        },
+        "old_v": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 652156,
+          "sha256": "a8fc87ea577b7aff6c99e18d853a0ab947183332304421394163ad3fbdc86ead",
+          "shape": [
+            131079
+          ]
+        },
+        "q": {
+          "bytes": 65550,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 45892,
+          "sha256": "059104c33c795ba17a47bdf853b0b058d4400bd92a233c843ada579ffac5600d",
+          "shape": [
+            32775
+          ]
+        }
+      },
+      "kind": "local",
+      "kv_heads": 1,
+      "name": "boundary513_local",
+      "pattern": "uniform",
+      "query_heads": 4,
+      "score_key_capacity": 544,
+      "seeded_state_only": true,
+      "source_input_immutability": {
+        "new_k": {
+          "bytes": 16398,
+          "sha256": "4d8036a8134217b0646779f795af5f2c8b8f17de21f44b7c1b15cc18fe02d9fb"
+        },
+        "new_v": {
+          "bytes": 16398,
+          "sha256": "83c6051112adf8e3a3208c8e346e0a855acf2e598e18a4020c09c0dfd0cc4ede"
+        },
+        "old_k": {
+          "bytes": 262158,
+          "sha256": "717d68a3f7558b340e960a2012be73c926bbb5f404d5078e5f16978e74e11951"
+        },
+        "old_v": {
+          "bytes": 262158,
+          "sha256": "a8fc87ea577b7aff6c99e18d853a0ab947183332304421394163ad3fbdc86ead"
+        },
+        "q": {
+          "bytes": 65550,
+          "sha256": "059104c33c795ba17a47bdf853b0b058d4400bd92a233c843ada579ffac5600d"
+        }
+      },
+      "tokens": 1,
+      "view": {
+        "end": 513,
+        "new_rows": 1,
+        "new_start": 512,
+        "old_spans": [
+          {
+            "absolute_start": 1,
+            "rows": 511,
+            "slot": 1
+          }
+        ],
+        "retention": 512,
+        "start": 1
+      },
+      "visible_ranges": [
+        [
+          1,
+          513
+        ]
+      ],
+      "window": 512
+    },
+    {
+      "arrays": {
+        "context": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 2048,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 2475080,
+            "sha256": "f0c5bc3a9d05ab7b8ca7adb228568b72be69081a6a80900cf488e7d1a2071335",
+            "shape": [
+              1,
+              4,
+              256
+            ]
+          },
+          "wide": {
+            "bytes": 2048,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 2477128,
+            "sha256": "f0c5bc3a9d05ab7b8ca7adb228568b72be69081a6a80900cf488e7d1a2071335",
+            "shape": [
+              1,
+              4,
+              256
+            ]
+          }
+        },
+        "probabilities": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 8208,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 2458664,
+            "sha256": "956c13cc26e0c13775fb59f9913ee6d6585a5b995ca312ecac1101fc2207e7b2",
+            "shape": [
+              4,
+              1,
+              513
+            ]
+          },
+          "wide": {
+            "bytes": 8208,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 2466872,
+            "sha256": "956c13cc26e0c13775fb59f9913ee6d6585a5b995ca312ecac1101fc2207e7b2",
+            "shape": [
+              4,
+              1,
+              513
+            ]
+          }
+        },
+        "scores": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 8208,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 2442248,
+            "sha256": "f2a9630e7917f14f54264504d1f1cf7015deb917377451dc9eca1f0fc3757f05",
+            "shape": [
+              4,
+              1,
+              513
+            ]
+          },
+          "wide": {
+            "bytes": 8208,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 2450456,
+            "sha256": "f2a9630e7917f14f54264504d1f1cf7015deb917377451dc9eca1f0fc3757f05",
+            "shape": [
+              4,
+              1,
+              513
+            ]
+          }
+        }
+      },
+      "capacity": 544,
+      "chunk_capacity": 32,
+      "committed": 512,
+      "copy_runs": [
+        {
+          "destination_row": 512,
+          "rows": 1,
+          "source_row": 0
+        }
+      ],
+      "dim": 256,
+      "exact_context_first_four_per_head": null,
+      "inputs": {
+        "expected_after_k": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1590224,
+          "sha256": "fee94654d9a93d64040b4bc28d2c8b55bc7066282736e69ec5b4b14e44b914fe",
+          "shape": [
+            139271
+          ]
+        },
+        "expected_after_v": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2163706,
+          "sha256": "624589e0e120d6cd294ed6711bc84d4997b0b68bff57f48eea1a2727f0afa131",
+          "shape": [
+            139271
+          ]
+        },
+        "new_k": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1573826,
+          "sha256": "4d8036a8134217b0646779f795af5f2c8b8f17de21f44b7c1b15cc18fe02d9fb",
+          "shape": [
+            8199
+          ]
+        },
+        "new_v": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2147308,
+          "sha256": "83c6051112adf8e3a3208c8e346e0a855acf2e598e18a4020c09c0dfd0cc4ede",
+          "shape": [
+            8199
+          ]
+        },
+        "old_k": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1295284,
+          "sha256": "d100851ad4c2665c73c8f7db29f8e366d9472b7516be4546e4e95230a124c4d5",
+          "shape": [
+            139271
+          ]
+        },
+        "old_v": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1868766,
+          "sha256": "82bf294ea8867e3d18346087ca53234aef83a2c10525a852a473428488db286f",
+          "shape": [
+            139271
+          ]
+        },
+        "q": {
+          "bytes": 65550,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1229734,
+          "sha256": "059104c33c795ba17a47bdf853b0b058d4400bd92a233c843ada579ffac5600d",
+          "shape": [
+            32775
+          ]
+        }
+      },
+      "kind": "full",
+      "kv_heads": 1,
+      "name": "boundary513_full",
+      "pattern": "uniform",
+      "query_heads": 4,
+      "score_key_capacity": 544,
+      "seeded_state_only": true,
+      "source_input_immutability": {
+        "new_k": {
+          "bytes": 16398,
+          "sha256": "4d8036a8134217b0646779f795af5f2c8b8f17de21f44b7c1b15cc18fe02d9fb"
+        },
+        "new_v": {
+          "bytes": 16398,
+          "sha256": "83c6051112adf8e3a3208c8e346e0a855acf2e598e18a4020c09c0dfd0cc4ede"
+        },
+        "old_k": {
+          "bytes": 278542,
+          "sha256": "d100851ad4c2665c73c8f7db29f8e366d9472b7516be4546e4e95230a124c4d5"
+        },
+        "old_v": {
+          "bytes": 278542,
+          "sha256": "82bf294ea8867e3d18346087ca53234aef83a2c10525a852a473428488db286f"
+        },
+        "q": {
+          "bytes": 65550,
+          "sha256": "059104c33c795ba17a47bdf853b0b058d4400bd92a233c843ada579ffac5600d"
+        }
+      },
+      "tokens": 1,
+      "view": {
+        "end": 513,
+        "new_rows": 1,
+        "new_start": 512,
+        "old_spans": [
+          {
+            "absolute_start": 0,
+            "rows": 512,
+            "slot": 0
+          }
+        ],
+        "retention": 544,
+        "start": 0
+      },
+      "visible_ranges": [
+        [
+          0,
+          513
+        ]
+      ],
+      "window": null
+    },
+    {
+      "arrays": {
+        "context": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 2048,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 3658922,
+            "sha256": "af70a379625b5d2f4a234e165e4cff92e0f546865186d18cd56633989a4bb26b",
+            "shape": [
+              1,
+              4,
+              256
+            ]
+          },
+          "wide": {
+            "bytes": 2048,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 3660970,
+            "sha256": "af70a379625b5d2f4a234e165e4cff92e0f546865186d18cd56633989a4bb26b",
+            "shape": [
+              1,
+              4,
+              256
+            ]
+          }
+        },
+        "probabilities": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 8192,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 3642538,
+            "sha256": "442f7677d55cbf04a4133258e8d3cdb8f0e677301c3dcc54010d9dbf7f325076",
+            "shape": [
+              4,
+              1,
+              512
+            ]
+          },
+          "wide": {
+            "bytes": 8192,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 3650730,
+            "sha256": "442f7677d55cbf04a4133258e8d3cdb8f0e677301c3dcc54010d9dbf7f325076",
+            "shape": [
+              4,
+              1,
+              512
+            ]
+          }
+        },
+        "scores": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 8192,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 3626154,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              4,
+              1,
+              512
+            ]
+          },
+          "wide": {
+            "bytes": 8192,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 3634346,
+            "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+            "shape": [
+              4,
+              1,
+              512
+            ]
+          }
+        }
+      },
+      "capacity": 544,
+      "chunk_capacity": 32,
+      "committed": 513,
+      "copy_runs": [
+        {
+          "destination_row": 1,
+          "rows": 1,
+          "source_row": 0
+        }
+      ],
+      "dim": 256,
+      "exact_context_first_four_per_head": [
+        0,
+        0,
+        15360,
+        15360
+      ],
+      "inputs": {
+        "expected_after_k": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2823282,
+          "sha256": "7210461c6f26eb73f495eec7d38006de4a265b16e04b23f1939d65e0dc8e3b67",
+          "shape": [
+            131079
+          ]
+        },
+        "expected_after_v": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 3363996,
+          "sha256": "a1fadf92435ed7686288d8b347ced7822cfcc575ce9f3f0bb05f34d1b3cd67f7",
+          "shape": [
+            131079
+          ]
+        },
+        "new_k": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2806884,
+          "sha256": "b7eca86c13211fd8453887467e47874c7e56000af4af25ea237e0a63aec5c278",
+          "shape": [
+            8199
+          ]
+        },
+        "new_v": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 3347598,
+          "sha256": "1aa5526841fc00e6acc2b35b2a64e26c3b7d9c94f4cdfd6743c38d7e9683c4e3",
+          "shape": [
+            8199
+          ]
+        },
+        "old_k": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2544726,
+          "sha256": "09b761e7926aad4d4909826c73cdac647b95bada9f8dc3a313d40566202307ef",
+          "shape": [
+            131079
+          ]
+        },
+        "old_v": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 3085440,
+          "sha256": "64756d9e10602c16f33c7f59af6d9a49832b08f6f9d4b3e22453b3448a7de1ec",
+          "shape": [
+            131079
+          ]
+        },
+        "q": {
+          "bytes": 65550,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2479176,
+          "sha256": "059104c33c795ba17a47bdf853b0b058d4400bd92a233c843ada579ffac5600d",
+          "shape": [
+            32775
+          ]
+        }
+      },
+      "kind": "local",
+      "kv_heads": 1,
+      "name": "boundary514_local",
+      "pattern": "uniform",
+      "query_heads": 4,
+      "score_key_capacity": 544,
+      "seeded_state_only": true,
+      "source_input_immutability": {
+        "new_k": {
+          "bytes": 16398,
+          "sha256": "b7eca86c13211fd8453887467e47874c7e56000af4af25ea237e0a63aec5c278"
+        },
+        "new_v": {
+          "bytes": 16398,
+          "sha256": "1aa5526841fc00e6acc2b35b2a64e26c3b7d9c94f4cdfd6743c38d7e9683c4e3"
+        },
+        "old_k": {
+          "bytes": 262158,
+          "sha256": "09b761e7926aad4d4909826c73cdac647b95bada9f8dc3a313d40566202307ef"
+        },
+        "old_v": {
+          "bytes": 262158,
+          "sha256": "64756d9e10602c16f33c7f59af6d9a49832b08f6f9d4b3e22453b3448a7de1ec"
+        },
+        "q": {
+          "bytes": 65550,
+          "sha256": "059104c33c795ba17a47bdf853b0b058d4400bd92a233c843ada579ffac5600d"
+        }
+      },
+      "tokens": 1,
+      "view": {
+        "end": 514,
+        "new_rows": 1,
+        "new_start": 513,
+        "old_spans": [
+          {
+            "absolute_start": 2,
+            "rows": 510,
+            "slot": 2
+          },
+          {
+            "absolute_start": 512,
+            "rows": 1,
+            "slot": 0
+          }
+        ],
+        "retention": 512,
+        "start": 2
+      },
+      "visible_ranges": [
+        [
+          2,
+          514
+        ]
+      ],
+      "window": 512
+    },
+    {
+      "arrays": {
+        "context": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 2048,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 4908428,
+            "sha256": "d4bd396b9ae2d63809267799a760582e18b63f7fafb957c263301f29b5156d77",
+            "shape": [
+              1,
+              4,
+              256
+            ]
+          },
+          "wide": {
+            "bytes": 2048,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 4910476,
+            "sha256": "d4bd396b9ae2d63809267799a760582e18b63f7fafb957c263301f29b5156d77",
+            "shape": [
+              1,
+              4,
+              256
+            ]
+          }
+        },
+        "probabilities": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 8224,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 4891980,
+            "sha256": "cef842d7dda00711a6d91df2621548b6d0c4ae6c1f66b314147b140cd10671db",
+            "shape": [
+              4,
+              1,
+              514
+            ]
+          },
+          "wide": {
+            "bytes": 8224,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 4900204,
+            "sha256": "cef842d7dda00711a6d91df2621548b6d0c4ae6c1f66b314147b140cd10671db",
+            "shape": [
+              4,
+              1,
+              514
+            ]
+          }
+        },
+        "scores": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 8224,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 4875532,
+            "sha256": "bcace01200693bf98ec16079d184c4f56eed0ee5e8358bd929ffac0fb6f456af",
+            "shape": [
+              4,
+              1,
+              514
+            ]
+          },
+          "wide": {
+            "bytes": 8224,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 4883756,
+            "sha256": "bcace01200693bf98ec16079d184c4f56eed0ee5e8358bd929ffac0fb6f456af",
+            "shape": [
+              4,
+              1,
+              514
+            ]
+          }
+        }
+      },
+      "capacity": 544,
+      "chunk_capacity": 32,
+      "committed": 513,
+      "copy_runs": [
+        {
+          "destination_row": 513,
+          "rows": 1,
+          "source_row": 0
+        }
+      ],
+      "dim": 256,
+      "exact_context_first_four_per_head": null,
+      "inputs": {
+        "expected_after_k": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 4023508,
+          "sha256": "b001fa5b1e53d61a0edc03465945704af14b7343c629d03e62376cee16ff0fcd",
+          "shape": [
+            139271
+          ]
+        },
+        "expected_after_v": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 4596990,
+          "sha256": "cdfde9d7667bd2e5e7fed953f436ab2743808b938e8a46c73c5301fa48e0bdd7",
+          "shape": [
+            139271
+          ]
+        },
+        "new_k": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 4007110,
+          "sha256": "b7eca86c13211fd8453887467e47874c7e56000af4af25ea237e0a63aec5c278",
+          "shape": [
+            8199
+          ]
+        },
+        "new_v": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 4580592,
+          "sha256": "1aa5526841fc00e6acc2b35b2a64e26c3b7d9c94f4cdfd6743c38d7e9683c4e3",
+          "shape": [
+            8199
+          ]
+        },
+        "old_k": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 3728568,
+          "sha256": "fee94654d9a93d64040b4bc28d2c8b55bc7066282736e69ec5b4b14e44b914fe",
+          "shape": [
+            139271
+          ]
+        },
+        "old_v": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 4302050,
+          "sha256": "624589e0e120d6cd294ed6711bc84d4997b0b68bff57f48eea1a2727f0afa131",
+          "shape": [
+            139271
+          ]
+        },
+        "q": {
+          "bytes": 65550,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 3663018,
+          "sha256": "059104c33c795ba17a47bdf853b0b058d4400bd92a233c843ada579ffac5600d",
+          "shape": [
+            32775
+          ]
+        }
+      },
+      "kind": "full",
+      "kv_heads": 1,
+      "name": "boundary514_full",
+      "pattern": "uniform",
+      "query_heads": 4,
+      "score_key_capacity": 544,
+      "seeded_state_only": true,
+      "source_input_immutability": {
+        "new_k": {
+          "bytes": 16398,
+          "sha256": "b7eca86c13211fd8453887467e47874c7e56000af4af25ea237e0a63aec5c278"
+        },
+        "new_v": {
+          "bytes": 16398,
+          "sha256": "1aa5526841fc00e6acc2b35b2a64e26c3b7d9c94f4cdfd6743c38d7e9683c4e3"
+        },
+        "old_k": {
+          "bytes": 278542,
+          "sha256": "fee94654d9a93d64040b4bc28d2c8b55bc7066282736e69ec5b4b14e44b914fe"
+        },
+        "old_v": {
+          "bytes": 278542,
+          "sha256": "624589e0e120d6cd294ed6711bc84d4997b0b68bff57f48eea1a2727f0afa131"
+        },
+        "q": {
+          "bytes": 65550,
+          "sha256": "059104c33c795ba17a47bdf853b0b058d4400bd92a233c843ada579ffac5600d"
+        }
+      },
+      "tokens": 1,
+      "view": {
+        "end": 514,
+        "new_rows": 1,
+        "new_start": 513,
+        "old_spans": [
+          {
+            "absolute_start": 0,
+            "rows": 513,
+            "slot": 0
+          }
+        ],
+        "retention": 544,
+        "start": 0
+      },
+      "visible_ranges": [
+        [
+          0,
+          514
+        ]
+      ],
+      "window": null
+    },
+    {
+      "arrays": {
+        "context": {
+          "envelope": 9.5367431640625e-07,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 65536,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 7149038,
+            "sha256": "7d813b99c957d7dd2e95ae34eb7cc1959375527a48ec693f2d5034ed5c8f3837",
+            "shape": [
+              32,
+              4,
+              256
+            ]
+          },
+          "wide": {
+            "bytes": 65536,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 7214574,
+            "sha256": "c8eb2d30445f05ea02484e9010f1a7b7240a5e45f47ea2b6b913d29d0f37848b",
+            "shape": [
+              32,
+              4,
+              256
+            ]
+          }
+        },
+        "probabilities": {
+          "envelope": 4.6566128730773926e-09,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 272384,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 6604270,
+            "sha256": "6cd032cc798b30fc8ecb51130e9658ede48ce2b9fdced4a858d5d896d420890d",
+            "shape": [
+              4,
+              32,
+              532
+            ]
+          },
+          "wide": {
+            "bytes": 272384,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 6876654,
+            "sha256": "2e97b274ac535194310961e48b3d147e03a76f11edaf62085580ceaadb1c59c4",
+            "shape": [
+              4,
+              32,
+              532
+            ]
+          }
+        },
+        "scores": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 272384,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 6059502,
+            "sha256": "9581495f8e3e371d55a707e3e57874ed057fa64d0775e4f027313967cf1ee84a",
+            "shape": [
+              4,
+              32,
+              532
+            ]
+          },
+          "wide": {
+            "bytes": 272384,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 6331886,
+            "sha256": "9581495f8e3e371d55a707e3e57874ed057fa64d0775e4f027313967cf1ee84a",
+            "shape": [
+              4,
+              32,
+              532
+            ]
+          }
+        }
+      },
+      "capacity": 544,
+      "chunk_capacity": 32,
+      "committed": 500,
+      "copy_runs": [
+        {
+          "destination_row": 500,
+          "rows": 12,
+          "source_row": 0
+        },
+        {
+          "destination_row": 0,
+          "rows": 20,
+          "source_row": 12
+        }
+      ],
+      "dim": 256,
+      "exact_context_first_four_per_head": null,
+      "inputs": {
+        "expected_after_k": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 5256630,
+          "sha256": "fc6b18c2ecb223b88f783de6e2a542969d47a702bad118e37b1f6aed9b060c50",
+          "shape": [
+            131079
+          ]
+        },
+        "expected_after_v": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 5797344,
+          "sha256": "002a896e7d736d4c190569204c595ead2f7fcd0434538366c5156893e1d0e77b",
+          "shape": [
+            131079
+          ]
+        },
+        "new_k": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 5240232,
+          "sha256": "6c58df2b166ef6c260c27991c56235fa846c1e0dc26eae1a93872cfee7baa516",
+          "shape": [
+            8199
+          ]
+        },
+        "new_v": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 5780946,
+          "sha256": "bcca07a4e40667b109627adae237c831bbb7c239343095c425d3dd0784b33b14",
+          "shape": [
+            8199
+          ]
+        },
+        "old_k": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 4978074,
+          "sha256": "fc94c1e8e694c3e638fc9c1e5d957498e24eed8c3defd56fd1d49a1f5f445096",
+          "shape": [
+            131079
+          ]
+        },
+        "old_v": {
+          "bytes": 262158,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 5518788,
+          "sha256": "3184beec98cd1a33934fea4019ceca5079c1caf286047185953e2c8c5fd4cbbd",
+          "shape": [
+            131079
+          ]
+        },
+        "q": {
+          "bytes": 65550,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 4912524,
+          "sha256": "25b0853613b7ce0735f29e602f31363a7833d1a81b69d04ddd5e742416792763",
+          "shape": [
+            32775
+          ]
+        }
+      },
+      "kind": "local",
+      "kv_heads": 1,
+      "name": "chunk32_local",
+      "pattern": "dyadic",
+      "query_heads": 4,
+      "score_key_capacity": 544,
+      "seeded_state_only": true,
+      "source_input_immutability": {
+        "new_k": {
+          "bytes": 16398,
+          "sha256": "6c58df2b166ef6c260c27991c56235fa846c1e0dc26eae1a93872cfee7baa516"
+        },
+        "new_v": {
+          "bytes": 16398,
+          "sha256": "bcca07a4e40667b109627adae237c831bbb7c239343095c425d3dd0784b33b14"
+        },
+        "old_k": {
+          "bytes": 262158,
+          "sha256": "fc94c1e8e694c3e638fc9c1e5d957498e24eed8c3defd56fd1d49a1f5f445096"
+        },
+        "old_v": {
+          "bytes": 262158,
+          "sha256": "3184beec98cd1a33934fea4019ceca5079c1caf286047185953e2c8c5fd4cbbd"
+        },
+        "q": {
+          "bytes": 65550,
+          "sha256": "25b0853613b7ce0735f29e602f31363a7833d1a81b69d04ddd5e742416792763"
+        }
+      },
+      "tokens": 32,
+      "view": {
+        "end": 532,
+        "new_rows": 32,
+        "new_start": 500,
+        "old_spans": [
+          {
+            "absolute_start": 0,
+            "rows": 500,
+            "slot": 0
+          }
+        ],
+        "retention": 512,
+        "start": 0
+      },
+      "visible_ranges": [
+        [
+          0,
+          501
+        ],
+        [
+          0,
+          502
+        ],
+        [
+          0,
+          503
+        ],
+        [
+          0,
+          504
+        ],
+        [
+          0,
+          505
+        ],
+        [
+          0,
+          506
+        ],
+        [
+          0,
+          507
+        ],
+        [
+          0,
+          508
+        ],
+        [
+          0,
+          509
+        ],
+        [
+          0,
+          510
+        ],
+        [
+          0,
+          511
+        ],
+        [
+          0,
+          512
+        ],
+        [
+          1,
+          513
+        ],
+        [
+          2,
+          514
+        ],
+        [
+          3,
+          515
+        ],
+        [
+          4,
+          516
+        ],
+        [
+          5,
+          517
+        ],
+        [
+          6,
+          518
+        ],
+        [
+          7,
+          519
+        ],
+        [
+          8,
+          520
+        ],
+        [
+          9,
+          521
+        ],
+        [
+          10,
+          522
+        ],
+        [
+          11,
+          523
+        ],
+        [
+          12,
+          524
+        ],
+        [
+          13,
+          525
+        ],
+        [
+          14,
+          526
+        ],
+        [
+          15,
+          527
+        ],
+        [
+          16,
+          528
+        ],
+        [
+          17,
+          529
+        ],
+        [
+          18,
+          530
+        ],
+        [
+          19,
+          531
+        ],
+        [
+          20,
+          532
+        ]
+      ],
+      "window": 512
+    },
+    {
+      "arrays": {
+        "context": {
+          "envelope": 9.5367431640625e-07,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 65536,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 9582160,
+            "sha256": "512c5449e76865cf14cf60f8d188007ca4d0d7ed264eda8daee04ea14ea0fe5b",
+            "shape": [
+              32,
+              4,
+              256
+            ]
+          },
+          "wide": {
+            "bytes": 65536,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 9647696,
+            "sha256": "b6cebd5daa119f1e59b839469c002a77bd9c61570500ba90c8f133cd61755a55",
+            "shape": [
+              32,
+              4,
+              256
+            ]
+          }
+        },
+        "probabilities": {
+          "envelope": 4.423782229423523e-09,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 272384,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 9037392,
+            "sha256": "8a615f69b425d7cbf18579808b88bcd0d66d4052b7654f51e97d4a15db0bbe6e",
+            "shape": [
+              4,
+              32,
+              532
+            ]
+          },
+          "wide": {
+            "bytes": 272384,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 9309776,
+            "sha256": "bf8301d81ee3ec094642c6fad74722f5345ecf1306afb05143b27dec0a2fb508",
+            "shape": [
+              4,
+              32,
+              532
+            ]
+          }
+        },
+        "scores": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 272384,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 8492624,
+            "sha256": "9581495f8e3e371d55a707e3e57874ed057fa64d0775e4f027313967cf1ee84a",
+            "shape": [
+              4,
+              32,
+              532
+            ]
+          },
+          "wide": {
+            "bytes": 272384,
+            "dtype": "f32le",
+            "file": "arrays.bin",
+            "offset": 8765008,
+            "sha256": "9581495f8e3e371d55a707e3e57874ed057fa64d0775e4f027313967cf1ee84a",
+            "shape": [
+              4,
+              32,
+              532
+            ]
+          }
+        }
+      },
+      "capacity": 544,
+      "chunk_capacity": 32,
+      "committed": 500,
+      "copy_runs": [
+        {
+          "destination_row": 500,
+          "rows": 32,
+          "source_row": 0
+        }
+      ],
+      "dim": 256,
+      "exact_context_first_four_per_head": null,
+      "inputs": {
+        "expected_after_k": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 7640600,
+          "sha256": "e672a9850984e82c3c97cd94f12cb03f03c0a6037051f73c3e9fdaefb346167e",
+          "shape": [
+            139271
+          ]
+        },
+        "expected_after_v": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 8214082,
+          "sha256": "cee91364d07c6da5960d0ff6d6dc7bbb5df02fab420708883c81bc287d0b1604",
+          "shape": [
+            139271
+          ]
+        },
+        "new_k": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 7624202,
+          "sha256": "6c58df2b166ef6c260c27991c56235fa846c1e0dc26eae1a93872cfee7baa516",
+          "shape": [
+            8199
+          ]
+        },
+        "new_v": {
+          "bytes": 16398,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 8197684,
+          "sha256": "bcca07a4e40667b109627adae237c831bbb7c239343095c425d3dd0784b33b14",
+          "shape": [
+            8199
+          ]
+        },
+        "old_k": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 7345660,
+          "sha256": "44519fe003c4652179a61a5bfd3755e926e097c4846819d04b0773e1bb227bff",
+          "shape": [
+            139271
+          ]
+        },
+        "old_v": {
+          "bytes": 278542,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 7919142,
+          "sha256": "837e224298b25d18b7f774804445a7884035cce92b344ba4b44031d743503d4e",
+          "shape": [
+            139271
+          ]
+        },
+        "q": {
+          "bytes": 65550,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 7280110,
+          "sha256": "25b0853613b7ce0735f29e602f31363a7833d1a81b69d04ddd5e742416792763",
+          "shape": [
+            32775
+          ]
+        }
+      },
+      "kind": "full",
+      "kv_heads": 1,
+      "name": "chunk32_full",
+      "pattern": "dyadic",
+      "query_heads": 4,
+      "score_key_capacity": 544,
+      "seeded_state_only": true,
+      "source_input_immutability": {
+        "new_k": {
+          "bytes": 16398,
+          "sha256": "6c58df2b166ef6c260c27991c56235fa846c1e0dc26eae1a93872cfee7baa516"
+        },
+        "new_v": {
+          "bytes": 16398,
+          "sha256": "bcca07a4e40667b109627adae237c831bbb7c239343095c425d3dd0784b33b14"
+        },
+        "old_k": {
+          "bytes": 278542,
+          "sha256": "44519fe003c4652179a61a5bfd3755e926e097c4846819d04b0773e1bb227bff"
+        },
+        "old_v": {
+          "bytes": 278542,
+          "sha256": "837e224298b25d18b7f774804445a7884035cce92b344ba4b44031d743503d4e"
+        },
+        "q": {
+          "bytes": 65550,
+          "sha256": "25b0853613b7ce0735f29e602f31363a7833d1a81b69d04ddd5e742416792763"
+        }
+      },
+      "tokens": 32,
+      "view": {
+        "end": 532,
+        "new_rows": 32,
+        "new_start": 500,
+        "old_spans": [
+          {
+            "absolute_start": 0,
+            "rows": 500,
+            "slot": 0
+          }
+        ],
+        "retention": 544,
+        "start": 0
+      },
+      "visible_ranges": [
+        [
+          0,
+          501
+        ],
+        [
+          0,
+          502
+        ],
+        [
+          0,
+          503
+        ],
+        [
+          0,
+          504
+        ],
+        [
+          0,
+          505
+        ],
+        [
+          0,
+          506
+        ],
+        [
+          0,
+          507
+        ],
+        [
+          0,
+          508
+        ],
+        [
+          0,
+          509
+        ],
+        [
+          0,
+          510
+        ],
+        [
+          0,
+          511
+        ],
+        [
+          0,
+          512
+        ],
+        [
+          0,
+          513
+        ],
+        [
+          0,
+          514
+        ],
+        [
+          0,
+          515
+        ],
+        [
+          0,
+          516
+        ],
+        [
+          0,
+          517
+        ],
+        [
+          0,
+          518
+        ],
+        [
+          0,
+          519
+        ],
+        [
+          0,
+          520
+        ],
+        [
+          0,
+          521
+        ],
+        [
+          0,
+          522
+        ],
+        [
+          0,
+          523
+        ],
+        [
+          0,
+          524
+        ],
+        [
+          0,
+          525
+        ],
+        [
+          0,
+          526
+        ],
+        [
+          0,
+          527
+        ],
+        [
+          0,
+          528
+        ],
+        [
+          0,
+          529
+        ],
+        [
+          0,
+          530
+        ],
+        [
+          0,
+          531
+        ],
+        [
+          0,
+          532
+        ]
+      ],
+      "window": null
+    }
+  ],
+  "context_values_per_profile": 71424,
+  "files": {
+    "arrays.bin": {
+      "bytes": 9713232,
+      "sha256": "12339d584e5d67602d386b75fcdca2dcfe62087ef1f4ac13eb0a5109525c150e"
+    }
+  },
+  "format": "toklet-gemma3-staged-attention-v1",
+  "full_graph_executed": false,
+  "guard": 7,
+  "input_padding_half_word": 32341,
+  "numerical_profile_arrays": 48,
+  "physical_state_arrays": 56,
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "rtol": 0.001
+  },
+  "probability_values_per_profile": 145012,
+  "producer": {
+    "bytes": 17609,
+    "sha256": "a3a37f5460d6566e83200c0a29f5eaf19ab3eadbe52b1576170f7d4f75aabaab"
+  },
+  "protocol_sha256": "7b4508605e7432c39fd70ce409ad4dd658541054361b2e02937acfa02055e30f",
+  "runtime": {
+    "executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "python": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]"
+  },
+  "scope": "Seeded primitive numerical/copy expectations; source controls do not certify GPU ownership, completion, poisoning or reset",
+  "score_values_per_profile": 145012,
+  "source_reference_executed": true,
+  "stored_arrays": 104,
+  "target_gpu_executed": false
+}

@@ -1,0 +1,110 @@
+{
+  "format": "toklet-gemma3-staged-attention-reference-v1",
+  "date": "2026-10-29",
+  "base_revision": "7635606",
+  "passed": true,
+  "scope": "Independent source-only seeded Half attention and physical copy expectations; no target/GPU transaction",
+  "source": {
+    "cases": 8,
+    "query_heads": 4,
+    "kv_heads": 1,
+    "chunk_capacity": 32,
+    "head_dimensions": [
+      32,
+      256
+    ],
+    "stored_arrays": 104,
+    "numerical_arrays": 48,
+    "physical_arrays": 56,
+    "context_values_per_profile": 71424,
+    "score_values_per_profile": 145012,
+    "probability_values_per_profile": 145012,
+    "total_numerical_values_per_profile": 361448,
+    "independently_recomputed_numerical_values": 722896,
+    "independently_reconstructed_physical_words": 3553672,
+    "masked_zero_entries": 10120,
+    "case_stage_gates": 24,
+    "policy": {
+      "atol_floor": 0.0001,
+      "envelope_factor": 2,
+      "fatal_reference": "main",
+      "rtol": 0.001
+    },
+    "seeded_only": true
+  },
+  "checks": {
+    "portable_tests_passed": 5,
+    "export_replay_identical": true,
+    "export_files": 3,
+    "promoted_fixture_files": 2,
+    "owned_commands": 3,
+    "groups_closed": true,
+    "target_executed": false,
+    "gpu_executed": false,
+    "model_executed": false
+  },
+  "evidence": {
+    "portable_controls": {
+      "path": "artifacts/new-goal-b3c3b-reference-controls-v1/checks.json",
+      "bytes": 404466,
+      "sha256": "6addbbacccc72da01b8c664f4a88271f4f7e621305b829ac508ed68288a6c595"
+    },
+    "source_export": {
+      "path": "artifacts/new-goal-b3c3b-source-v1/export.json",
+      "bytes": 408319,
+      "sha256": "95387642d5d25aeb429e8b053c91bbeb455931f15ac7c41db2117a823a13dfe3"
+    },
+    "source_proposal": {
+      "path": "artifacts/new-goal-b3c3-reference-proposal-v2/manifest.json",
+      "bytes": 2938,
+      "sha256": "f4b6c70632a9810712f9382411975183dbd579916961e40d8976ffa60d974913"
+    },
+    "prospective_source_review": {
+      "path": "artifacts/new-goal-b3c3b-independent-review-v1/prospective-source-review.json",
+      "bytes": 4305,
+      "sha256": "ac9142d1262359cea695ee7df7545a92ea2a088aca937483e1cafa94768fd3e8"
+    },
+    "prospective_export_review": {
+      "path": "artifacts/new-goal-b3c3b-independent-review-v1/prospective-export-review.json",
+      "bytes": 2170,
+      "sha256": "22c9927ae30511879bcd46ca80a708a47d60a3691412405bd2c18d16d4da7cad"
+    },
+    "frozen_source_review": {
+      "path": "artifacts/new-goal-b3c3b-independent-review-v1/frozen-source-review.json",
+      "bytes": 3278,
+      "sha256": "2f88a886e8521fba25aa22915018a8d7e4ee347bbb24e561a73bcdd45a2ef612"
+    }
+  },
+  "producer_files": [
+    {
+      "path": "tools/reference/gemma3_staged_attention.py",
+      "bytes": 17609,
+      "sha256": "a3a37f5460d6566e83200c0a29f5eaf19ab3eadbe52b1576170f7d4f75aabaab"
+    },
+    {
+      "path": "tools/reference/test_gemma3_staged_attention.py",
+      "bytes": 6075,
+      "sha256": "da82e8131c7c71cdd860548cf2168b2a8a7cb52a70b084c8bad5492701e93994"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "tests/fixtures/gemma3-staged-attention-v1/arrays.bin",
+      "bytes": 9713232,
+      "sha256": "12339d584e5d67602d386b75fcdca2dcfe62087ef1f4ac13eb0a5109525c150e"
+    },
+    {
+      "path": "tests/fixtures/gemma3-staged-attention-v1/manifest.json",
+      "bytes": 54401,
+      "sha256": "90656e1a724b1bfb8d3c14fd742166348d5abf64dedbaf3f8d83645e5e5ca7cb"
+    }
+  ],
+  "limitations": [
+    "No target attention or graph numerical result.",
+    "Seeded primitive boundary states are not actual512/513-token model prefills.",
+    "Expected-after arrays do not prove native blit/owner/generation/transaction handling.",
+    "No real checkpoint, app/phone, quality, throughput or memory-fit qualification."
+  ],
+  "next_task": "B3c3b2 borrowed native serial Reference attention",
+  "final_publication_review": "artifacts/new-goal-b3c3b-independent-review-v1/final-source-publication-review.json"
+}
