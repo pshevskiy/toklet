@@ -1,0 +1,230 @@
+{
+  "format": "toklet-gemma3-half-rms-qualification-v1",
+  "date": "2026-10-29",
+  "base_revision": "cdf5f7aeaabc041aaacc6a0e8b290a92a71ae4b2",
+  "passed": true,
+  "scope": "internal test-only standalone Half RMS with FP32 effective scales; release Mac profile",
+  "hardware": {
+    "device": "Apple M1 Pro",
+    "os": "macOS 26.6.2 (25G83)",
+    "ram_bytes": 17179869184
+  },
+  "build": {
+    "rust": "1.90.0",
+    "features": [
+      "metal"
+    ],
+    "profile": "release",
+    "debug_assertions": false,
+    "binary": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3c1-release-checks-v1/rms-tests",
+      "bytes": 60328416,
+      "sha256": "a7f970968418a1ef300abc075c1d9208370360fff10d15cb398a746054f2a60d"
+    }
+  },
+  "reference": {
+    "cases": 6,
+    "values_per_profile": 54272,
+    "main_fatal": true,
+    "wide_diagnostic": true,
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "rtol": 0.001
+  },
+  "result": {
+    "main_compared_values": 108544,
+    "wide_compared_values": 108544,
+    "bit_exact_source_values": 108544,
+    "max_absolute_error": 0,
+    "max_gate_fraction": 0,
+    "wide_diagnostic_exceedances": 0,
+    "valid_recovery_values": 192,
+    "exact_subnormal_values": 64,
+    "raw_records": 17,
+    "twin_records": 6,
+    "measured_release_encode_calls": 12,
+    "rust_allocations": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "driver_allocations_measured": false,
+    "explicit_gpu_jobs": 3
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_passed": 420,
+    "metal_library_passed": 300,
+    "targeted_cold_passed": 2,
+    "metadata_regression_passed": 5,
+    "packed_regression_passed": 19,
+    "portable_reference_passed": 4,
+    "release_cold_passed": 2,
+    "counts_overlap": true
+  },
+  "sampled_direct_process_memory": [
+    {
+      "test": "metal::half_rms_f32::tests::gpu_source_arrays_batched_encode_and_preflight",
+      "samples": 12,
+      "observed_maxima": {
+        "resident_size": 14680064,
+        "phys_footprint": 5046800,
+        "lifetime_max_phys_footprint": 5079568
+      }
+    },
+    {
+      "test": "metal::half_rms_f32::tests::gpu_nonfinite_status_sticky_and_recovery",
+      "samples": 1,
+      "observed_maxima": {
+        "resident_size": 425984,
+        "phys_footprint": 163912,
+        "lifetime_max_phys_footprint": 163912
+      }
+    },
+    {
+      "test": "metal::half_rms_f32::tests::gpu_exact_subnormal_words",
+      "samples": 1,
+      "observed_maxima": {
+        "resident_size": 32768,
+        "phys_footprint": 81992,
+        "lifetime_max_phys_footprint": 98376
+      }
+    }
+  ],
+  "evidence": {
+    "portable_controls": {
+      "path": "artifacts/new-goal-b3c1-reference-controls-v1/checks.json",
+      "bytes": 403629,
+      "sha256": "3e758bbbffce322b3d9a3cdd358146ddf03a4c198330e98f20bdc505fd607389"
+    },
+    "source_export": {
+      "path": "artifacts/new-goal-b3c1-source-v1/export.json",
+      "bytes": 407850,
+      "sha256": "6a29fa5f5dd471c8b14afb3d2c7d98d5f805de3987a5b95a7e00e685c0eb19e6"
+    },
+    "source_review": {
+      "path": "artifacts/new-goal-b3c1-independent-review-v1/frozen-source-review.json",
+      "bytes": 3279,
+      "sha256": "78bd5a26273934c9cd02ce24f9ce7ce692d6e8239e0f8a8ee84e73de0f77c4b8"
+    },
+    "cold_checks": {
+      "path": "artifacts/new-goal-b3c1-cold-checks-v2/checks.json",
+      "bytes": 864279,
+      "sha256": "38b0eeb44addd3eeef440882623d6946a18614fcbd7762f5f9e6fce497ce0c1f"
+    },
+    "release_checks": {
+      "path": "artifacts/new-goal-b3c1-release-checks-v1/checks.json",
+      "bytes": 1412303,
+      "sha256": "5f888ead20c5f114c182330939074f66bc7bc511c11ec58703cf81d928f1167c"
+    },
+    "prospective_code_review": {
+      "path": "artifacts/new-goal-b3c1-independent-review-v1/prospective-operator-review-v2.json",
+      "bytes": 4189,
+      "sha256": "5f0f6dfd40dc9f157d33e575ae5c5b69b6b6a66ae1d87bae384ef8ffc3772a50"
+    },
+    "gpu": {
+      "path": "artifacts/new-goal-b3c1-gpu-v2/gpu.json",
+      "bytes": 1415423,
+      "sha256": "906bfd2c6cf15046e3688ba76a8a452df1462141b1aaf04bd210241d6a46d83c"
+    },
+    "gpu_approval": {
+      "path": "artifacts/new-goal-b3c1-gpu-v2/prospective-review.json",
+      "bytes": 3076,
+      "sha256": "1b54ece7625696c9b40e9c0c50509d5a9697525f8b1ab89c609e2568ff69a03a"
+    },
+    "postrun_review": {
+      "path": "artifacts/new-goal-b3c1-independent-review-v1/postrun-evidence-review.json",
+      "bytes": 4406,
+      "sha256": "e190224f48759af58dc326f06600246b9ae9053795fa0656e8694ac60071026b"
+    },
+    "preserved_selection_failure": {
+      "path": "artifacts/new-goal-b3c1-cold-checks-v1/checks.json",
+      "bytes": 863077,
+      "sha256": "bf1d12670235728f31685dd03ee06a72c840ea98a724a4052f7307927dce4984"
+    },
+    "preserved_debug_gpu_failure": {
+      "path": "artifacts/new-goal-b3c1-gpu-v1/gpu.json",
+      "bytes": 1267692,
+      "sha256": "7e3077e7b02fe7b96a4a696a470017fb42e2d1c4120e97f4931d4bfd54ef9173"
+    },
+    "failed_gpu_review": {
+      "path": "artifacts/new-goal-b3c1-independent-review-v1/failed-gpu-v1-review.json",
+      "bytes": 3126,
+      "sha256": "1d4d1c1bafc405bb2b01c66116d8a1c8125621d8abad79c2cb82c203823b198b"
+    }
+  },
+  "source_files": [
+    {
+      "path": "src/metal/mod.rs",
+      "bytes": 135800,
+      "sha256": "8c64b6606bac81d617ffcfbb2053b800cb2c0c2871d8d5e1428bd03c8739d04f"
+    },
+    {
+      "path": "src/metal/half_rms_f32.rs",
+      "bytes": 8687,
+      "sha256": "53fb782a439de163798dcb6886fbdc1820541a07968296cfc4ee1f1fef5268db"
+    },
+    {
+      "path": "src/metal/half_rms_f32.metal",
+      "bytes": 1718,
+      "sha256": "026374967bf0fa4e6d4cc0fe71a33bdc8a2d35faf0ea2c85ef559a4831748abb"
+    },
+    {
+      "path": "src/metal/half_rms_f32/tests.rs",
+      "bytes": 20232,
+      "sha256": "950928cf73523b9e79b990548dc261e8a16ac650ee371c3a13dcb6a6ed6f1943"
+    },
+    {
+      "path": "tools/reference/gemma3_half_rms.py",
+      "bytes": 10205,
+      "sha256": "9368ba31ee169c0d527e6462df60f0ebcaacc09ac33bab98d4c5929f795a4ca7"
+    },
+    {
+      "path": "tools/reference/test_gemma3_half_rms.py",
+      "bytes": 3704,
+      "sha256": "a035b2e330d615aa956c1002e83528ea5298a918936d5f2cf57bf5430ad3fa9f"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "tests/fixtures/gemma3-half-rms-v1/arrays.bin",
+      "bytes": 336882,
+      "sha256": "c332bfe4f273d5d44638877f99cc6e3f445c848adab5e1d76e855d929e5d67cc"
+    },
+    {
+      "path": "tests/fixtures/gemma3-half-rms-v1/errors.json",
+      "bytes": 3612,
+      "sha256": "45a91f005248bce106c23f9b3423f9fe2347177e3b787e1e174601e1ef90fc37"
+    },
+    {
+      "path": "tests/fixtures/gemma3-half-rms-v1/manifest.json",
+      "bytes": 11734,
+      "sha256": "aaca461bcbca3176132a5b030d3cee5cc0ff2d382de26b8695af81b4ede49b8a"
+    },
+    {
+      "path": "tests/fixtures/gemma3-half-rms-v1/subnormal.json",
+      "bytes": 767,
+      "sha256": "a8d753607dcc1293e40978899145fbca5bcbf9061b45e6964daac15c3bca2b36"
+    }
+  ],
+  "limitations": [
+    "Debug encoding fails the unchanged zero-Rust-allocation assertion at5 per invocation; rejected and retained.",
+    "No zero Objective-C/Metal driver allocation claim.",
+    "Sampled direct-process memory is not a guaranteed peak or whole-model fit.",
+    "Internal test-only module; graph integration remains B3c4.",
+    "No real model, app, phone, full-context, throughput or quality qualification."
+  ],
+  "next_task": "B3c2 Half tanh-GELU and embedding scale",
+  "final_publication_review": "artifacts/new-goal-b3c1-independent-review-v1/final-publication-review.json"
+}

@@ -6791,3 +6791,51 @@ Real checkpoint loading, native/Half rolling state, app/codec, phone, full decla
 context, quality and performance remain separate. See [report](gemma3-cpu-composition.md),
 [evidence](../benchmarks/results/2026-10-28-gemma3-cpu-composition-v1.json) and
 [TODO](../TODO.md).
+
+## 2026-10-28 — Half RMS with FP32 scales (preparation)
+
+Astra identified the missing resident precision mechanism: existing Half RMS
+narrows norm weights, while the separate Gemma RMS operates on FP32 activations.
+The new optional borrowed-encode draft preserves Half input/output with FP32
+effective coefficients and the existing compensated reduction order. A source-only
+rounding control requires0x3fa7; narrowing scales to Half gives0x3fa6. Four portable
+reference controls pass. Exported bytes, GPU results and integration remain
+pending. Default shaders/pipelines and app eligibility stay unchanged.
+
+The 29 October continuation verifies the export/replay and all frozen source
+words independently with Astra, adding exact positive/negative Half subnormal
+controls before target outcomes. Review strengthens true alias/short-buffer
+rejection and measured Rust encoding allocation checks. Formatting, strict
+Clippy,420 default /300 Metal-library tests and existing regressions pass.
+The final private binary selector expected Cargo's `lib` kind instead of this
+package's `rlib/staticlib`; its failed receipt is preserved. An authenticated
+metadata-only continuation freezes the already-built test binary without
+repeating numerical checks. GPU collection and graph integration remain pending.
+
+The first explicit GPU job rejects debug-mode encoding's five Rust allocations
+per invocation. Astra independently verifies all64 saved first-case outputs
+bit-for-bit, immutable inputs, status and guards. Dependency inspection predicts
+five debug-only Objective-C signature-parser allocations; this is source-grounded
+localization rather than a captured allocation stack. The failure remains
+rejected. The same source and zero-allocation/numerical gates compile and pass
+both cold controls in release; hardware execution must now qualify that profile.
+No debug checks are disabled and no allocation or numerical limit is increased.
+
+## 2026-10-29 — Qualified standalone Half/F32-scale RMS
+
+The unchanged release profile passes all three explicit Metal jobs on Apple
+M1 Pro. Astra independently rescores all108,544 main/wide source comparisons
+bit-for-bit,192 recovery values and64 subnormal active words. Every raw output,
+guard, status transition and immutable input/scale hash passes. All twelve
+measured encodes make zero calling-thread Rust allocations in release; driver
+encoder allocations are outside that measurement. The debug5/5 failure stays
+preserved and rejected.
+
+Source export/replay, four portable controls, formatting, strict checks,
+420 default /300 Metal-library tests and existing regressions pass. The optional
+pipeline remains an internal test-only leaf until concrete graph composition.
+No whole-model memory, throughput, real model, app or phone claim follows from
+this operator. See [report](gemma3-half-rms.md),
+[evidence](../benchmarks/results/2026-10-29-gemma3-half-rms-v1.json) and
+[TODO](../TODO.md). Continue B3c2 Half GELU and embedding scale with physical
+Half store boundaries before rolling KV and complete graph integration.

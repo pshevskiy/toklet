@@ -1,0 +1,454 @@
+{
+  "cases": [
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 64,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 84,
+          "sha256": "41d1543dd9dad1595632b494ce8b3e7d9314042b842233feac8155fcc81d3f11",
+          "shape": [
+            32
+          ]
+        },
+        "input": {
+          "bytes": 84,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 0,
+          "sha256": "2db3881aafb40646f6e69e8786919b533c20e04e042ca701838e517527d5121b",
+          "shape": [
+            42
+          ]
+        },
+        "main": {
+          "bytes": 64,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 304,
+          "sha256": "94df1b2c9977911f62c081ebcb556bf67c5d1ee51d0b33c4679fe5901ba457bb",
+          "shape": [
+            1,
+            32
+          ]
+        },
+        "scales": {
+          "bytes": 156,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 148,
+          "sha256": "cf6808eeb862523100a24e6946ffeef0c509855b33e8e687afd6b4b5d955bf52",
+          "shape": [
+            39
+          ]
+        },
+        "wide": {
+          "bytes": 64,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 368,
+          "sha256": "94df1b2c9977911f62c081ebcb556bf67c5d1ee51d0b33c4679fe5901ba457bb",
+          "shape": [
+            1,
+            32
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [
+        {
+          "column": 0,
+          "expected_word": 16295,
+          "row": 0,
+          "wrong_half_scale_word": 16294
+        }
+      ],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 35,
+      "name": "coefficient_rounding",
+      "output_elements": 44,
+      "output_stride": 37,
+      "rows": 1,
+      "width": 32
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 64,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 656,
+          "sha256": "91526c9c9394e7f594f126194b929ddc762c5e8959aa04d2bf86f44a18d175db",
+          "shape": [
+            32
+          ]
+        },
+        "input": {
+          "bytes": 224,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 432,
+          "sha256": "dd5b7d77ae2b053f08897dabf8efb06b84f64c397db633a66df454bedb4d9026",
+          "shape": [
+            112
+          ]
+        },
+        "main": {
+          "bytes": 192,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 876,
+          "sha256": "f4535077581c573cd5cc7d7f153866fb8730d1e5551b470d9bf84c7fb9fd446b",
+          "shape": [
+            3,
+            32
+          ]
+        },
+        "scales": {
+          "bytes": 156,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 720,
+          "sha256": "71575cf7f2854b4781691e1d94681303520cfef8df0c56e129edd9c4cdf1cd8c",
+          "shape": [
+            39
+          ]
+        },
+        "wide": {
+          "bytes": 192,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1068,
+          "sha256": "f4535077581c573cd5cc7d7f153866fb8730d1e5551b470d9bf84c7fb9fd446b",
+          "shape": [
+            3,
+            32
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 35,
+      "name": "mixed32",
+      "output_elements": 118,
+      "output_stride": 37,
+      "rows": 3,
+      "width": 32
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 128,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1810,
+          "sha256": "bb5eaeceddb68019f10bfcaedb845738433f97f01e9e29b67669cfbdaaf20c83",
+          "shape": [
+            64
+          ]
+        },
+        "input": {
+          "bytes": 550,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1260,
+          "sha256": "a08395077e8859a31218e795e6537befeac77b6a713d3cc37223565333e73bf0",
+          "shape": [
+            275
+          ]
+        },
+        "main": {
+          "bytes": 512,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2222,
+          "sha256": "4792f95cf1fbff72f0427c3788ca7ffb4849a90214db5dd6e409b555560597da",
+          "shape": [
+            4,
+            64
+          ]
+        },
+        "scales": {
+          "bytes": 284,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 1938,
+          "sha256": "8d75ca482cb7500e25ab0dd2cfd066990012ee42503c82757f76ac2d13611ee6",
+          "shape": [
+            71
+          ]
+        },
+        "wide": {
+          "bytes": 512,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2734,
+          "sha256": "4792f95cf1fbff72f0427c3788ca7ffb4849a90214db5dd6e409b555560597da",
+          "shape": [
+            4,
+            64
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 67,
+      "name": "hidden64",
+      "output_elements": 283,
+      "output_stride": 69,
+      "rows": 4,
+      "width": 64
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 512,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 69564,
+          "sha256": "17e8f7f100ef35cf9c28a6bfbfa69245edc56f7eb64a70cd62e6e29b14bd6f5d",
+          "shape": [
+            256
+          ]
+        },
+        "input": {
+          "bytes": 66318,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 3246,
+          "sha256": "701329222fa889757828a5f143ba9c52efa5a2edbf7e3e29fd10c264e2b5c567",
+          "shape": [
+            33159
+          ]
+        },
+        "main": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 71128,
+          "sha256": "57924d87eb124013bbbd5e78df3eafd8f46f13ebb857be71e8fb44645c526bf2",
+          "shape": [
+            128,
+            256
+          ]
+        },
+        "scales": {
+          "bytes": 1052,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 70076,
+          "sha256": "d58b88a2ed7b392fdcae4cf36099b9d290a96fdbb73d4878ed9b1982363865d0",
+          "shape": [
+            263
+          ]
+        },
+        "wide": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 136664,
+          "sha256": "57924d87eb124013bbbd5e78df3eafd8f46f13ebb857be71e8fb44645c526bf2",
+          "shape": [
+            128,
+            256
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 259,
+      "name": "heads256",
+      "output_elements": 33415,
+      "output_stride": 261,
+      "rows": 128,
+      "width": 256
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 1280,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 243366,
+          "sha256": "358f8cc4b5ddacfd5c593e344eb8a322d5f365dac477d2c76d0f4164b621c8e4",
+          "shape": [
+            640
+          ]
+        },
+        "input": {
+          "bytes": 41166,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 202200,
+          "sha256": "ce17d5d9eb697d10525edbd889f9f5ef1ee61b4134744139aba3c3cb2d572dbe",
+          "shape": [
+            20583
+          ]
+        },
+        "main": {
+          "bytes": 40960,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 247234,
+          "sha256": "af465fd6c9c7873258ed5d35db5d8504cb5dd7ca04d81f9b1e252272c31d49bc",
+          "shape": [
+            32,
+            640
+          ]
+        },
+        "scales": {
+          "bytes": 2588,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 244646,
+          "sha256": "1f15406bf09152d9dff18673fad1824ae13529c670526a9a271793c0cac05491",
+          "shape": [
+            647
+          ]
+        },
+        "wide": {
+          "bytes": 40960,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 288194,
+          "sha256": "af465fd6c9c7873258ed5d35db5d8504cb5dd7ca04d81f9b1e252272c31d49bc",
+          "shape": [
+            32,
+            640
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 643,
+      "name": "hidden640",
+      "output_elements": 20647,
+      "output_stride": 645,
+      "rows": 32,
+      "width": 640
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 1280,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 330454,
+          "sha256": "358f8cc4b5ddacfd5c593e344eb8a322d5f365dac477d2c76d0f4164b621c8e4",
+          "shape": [
+            640
+          ]
+        },
+        "input": {
+          "bytes": 1300,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 329154,
+          "sha256": "050cce66dc5cef310e3b243b6fcefd3ff91724b17178f318c8d453e035fdf6cd",
+          "shape": [
+            650
+          ]
+        },
+        "main": {
+          "bytes": 1280,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 334322,
+          "sha256": "f3f547859fc20ccff20bb3b7dc9300ab0fbcc753ddf37be196dea80e22425591",
+          "shape": [
+            1,
+            640
+          ]
+        },
+        "scales": {
+          "bytes": 2588,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 331734,
+          "sha256": "1f15406bf09152d9dff18673fad1824ae13529c670526a9a271793c0cac05491",
+          "shape": [
+            647
+          ]
+        },
+        "wide": {
+          "bytes": 1280,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 335602,
+          "sha256": "f3f547859fc20ccff20bb3b7dc9300ab0fbcc753ddf37be196dea80e22425591",
+          "shape": [
+            1,
+            640
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 643,
+      "name": "large640",
+      "output_elements": 652,
+      "output_stride": 645,
+      "rows": 1,
+      "width": 640
+    }
+  ],
+  "coefficient_guard_word": 1511456817,
+  "epsilon_bits": 897988541,
+  "files": {
+    "arrays.bin": {
+      "bytes": 336882,
+      "sha256": "c332bfe4f273d5d44638877f99cc6e3f445c848adab5e1d76e855d929e5d67cc"
+    },
+    "errors.json": {
+      "bytes": 3612,
+      "sha256": "45a91f005248bce106c23f9b3423f9fe2347177e3b787e1e174601e1ef90fc37"
+    }
+  },
+  "finite_output_values": 54272,
+  "format": "toklet-gemma3-half-rms-v1",
+  "guard": 7,
+  "input_padding_word": 32341,
+  "output_canary_word": 23063,
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "rtol": 0.001
+  },
+  "producer": {
+    "bytes": 10205,
+    "sha256": "9368ba31ee169c0d527e6462df60f0ebcaacc09ac33bab98d4c5929f795a4ca7"
+  },
+  "protocol_sha256": "01d5b70be1a408b03dd849bd7b166a108b25489a55300bd779fa0e30d855e845",
+  "runtime": {
+    "executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "python": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]"
+  },
+  "scope": "Isolated independent Half RMS; exact chosen scale witness plus main-only per-array gate; no whole graph or upstream runtime parity",
+  "source_reference_executed": true,
+  "target_gpu_executed": false
+}

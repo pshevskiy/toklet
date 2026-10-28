@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
-Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3c — resident Gemma3 packed/Half graph and explicit rolling KV state**.
+Last updated: **29 October 2026**. Active milestone: **M8**.
+Next implementation task: **B3c2 — Half GELU and embedding scaling**, followed by rolling KV state and resident Gemma3 composition.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -126,8 +126,14 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 - [x] B3b2: actual CPU composition
   for four hidden norms, Q/K norm, embedding scale, GELU, residual order and
   both rotary/mask branches. Include meaningful window visibility and transactions.
-- [ ] B3c: resident packed/Half graph and explicitly accounted local/full cache
-  staging/commit; source comparisons and native state/readback checks.
+- [x] B3c1: optional Half RMS with model-owned FP32 effective scales; frozen
+  independent main/wide/rounding fixtures, GPU guards/status and precise encoding.
+  [Report](docs/gemma3-half-rms.md); standalone release Mac qualification only.
+- [ ] B3c2: checked Half tanh-GELU and embedding scaling with explicit store boundaries.
+- [ ] B3c3: resident old-ring/new-chunk attention and two-phase cache commit;
+  uncertain commit failure requires reset/replay.
+- [ ] B3c4: compose the complete resident packed/Half tiny graph, accounting
+  local/full staging/commit; source comparisons and native state/readback checks.
 - [ ] B3d: verified real payload/text and fixed short/513-plus-window/resource
   journey on Mac; prospective544 scope requires its own frozen run protocol.
 - [ ] Resolve selected-checkpoint numerical/quality gaps and obtain Astra review
@@ -247,4 +253,8 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B3a cold checks | Strict v2 schema passes415 default /293 Metal-library /5 Gemma3 /14 Gemma4 regression tests (overlap), fmt and strict Clippy. Seven groups close; no payload/model/GPU work. | [Evidence](benchmarks/results/2026-10-28-gemma3-cold-plan-v1.json); `bfd8d4a`; continue B3b. |
 | 2026-10-28 | B3b1 independent CPU fixtures | Six portable controls,192 source arrays/108,816 finite values and exact six-file replay pass. Astra verifies source packing/causality/components and independently rescores1,856 tied-head logits. No Rust target result yet. | [Reference](docs/gemma3-cpu-reference.md); `b7f01a6`; continue B3b2. |
 | 2026-10-28 | B3b2 initial compile | Formatting passes; strict Clippy catches unused default-build Metal compatibility import and two staging-size error conversions before numerical tests. Explicit feature guard and hoisted typed conversion fix both; failed receipt preserved. | Corrected v3 source, fresh CPU-check v2 in progress; frozen fixtures/gates unchanged. |
-| 2026-10-28 | B3b2 concrete CPU graph | All428,832 frozen comparisons/2,400 observations pass; exact schedules, causal prefix and ordinary/TRACE agree. Two-/18-layer fault/retry/reset, budget-minus-one and D256/W512CPU-ring controls pass with zero measured steady-state allocations.420 default /298 Metal-library and regressions pass. | [Report](docs/gemma3-cpu-composition.md); Astra approves retention/commit; continue B3c. |
+| 2026-10-28 | B3b2 concrete CPU graph | All428,832 frozen comparisons/2,400 observations pass; exact schedules, causal prefix and ordinary/TRACE agree. Two-/18-layer fault/retry/reset, budget-minus-one and D256/W512CPU-ring controls pass with zero measured steady-state allocations.420 default /298 Metal-library and regressions pass. | [Report](docs/gemma3-cpu-composition.md); `cdf5f7a`; continue B3c. |
+| 2026-10-28 | B3c1 Half/F32-scale RMS preparation | Astra selects the missing operator; four independent portable controls pass with exact0x3fa7 vs0x3fa6 scale witness. Private borrowed-encode kernel/plan draft; default Metal paths unchanged. No export/GPU outcome yet. | Guarded source export/replay, then reviewed GPU consumer. |
+| 2026-10-29 | B3c1 cold checks and binary selection | Exact reference export/replay and Astra verification pass. Formatting, strict Clippy,420 default /300 Metal-library tests and regressions pass. Collector then rejects Cargo's rlib/staticlib artifact kind; preserved failed receipt and authenticated metadata-only continuation freeze the existing binary. No source/gate change or GPU result. | Three explicit reviewed GPU checks next. |
+| 2026-10-29 | B3c1 debug allocation rejection | First GPU case retains64 exact reference values and intact guards/status, but fails unchanged zero-Rust-allocation assertions at5/5. Astra source inspection predicts debug-only Objective-C signature parsing; failure preserved. Same source/gates compile in release and both cold controls pass. | Frozen release GPU run pending; allocation claim will be release-only. |
+| 2026-10-29 | B3c1 release RMS qualification | Three explicit GPU jobs pass:108,544 source values bit-exact,192 recovery and64 subnormal words, guards/status/immutability and12 zero-Rust-allocation encodes. Astra independently authenticates all saved results and closed groups. Debug failure retained. | [Report](docs/gemma3-half-rms.md); reviewed task commit, then B3c2. |
