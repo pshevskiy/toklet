@@ -1,0 +1,201 @@
+{
+  "format": "toklet-gemma3-half-pointwise-qualification-v1",
+  "date": "2026-10-29",
+  "base_revision": "9b68a22",
+  "passed": true,
+  "scope": "internal test-only Half tanh-GELU/scalar scale plus existing stored-Half gating; release Mac profile",
+  "hardware": {
+    "device": "Apple M1 Pro",
+    "os": "macOS 26.6.2 (25G83)",
+    "ram_bytes": 17179869184
+  },
+  "build": {
+    "rust": "1.90.0",
+    "features": [
+      "metal"
+    ],
+    "profile": "release",
+    "debug_assertions": false,
+    "binary": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3c2-cold-checks-v2/pointwise-tests",
+      "bytes": 62280000,
+      "sha256": "af2527f9f100d4f920719400d985afaa482c83a10e13f62d3dc8a8378fc23ca2"
+    }
+  },
+  "reference": {
+    "cases": 4,
+    "case_stage_groups": 6,
+    "values_per_profile": 152512,
+    "main_fatal": true,
+    "wide_diagnostic": true,
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "rtol": 0.001
+  },
+  "result": {
+    "main_compared_values": 218432,
+    "main_bit_exact_values": 218432,
+    "main_max_absolute_error": 0,
+    "main_max_gate_fraction": 0,
+    "wide_compared_values": 218432,
+    "wide_bit_differences": 21051,
+    "wide_max_absolute_error": 4.76837158203125e-07,
+    "wide_diagnostic_exceedances": 0,
+    "valid_recovery_values": 5888,
+    "error_controls": 7,
+    "recovery_phases": 21,
+    "source_raw_records": 4,
+    "composed_raw_records": 2,
+    "recovery_raw_records": 21,
+    "recovery_product_records": 21,
+    "measured_release_encode_calls": 8,
+    "rust_allocations": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "driver_allocations_measured": false,
+    "explicit_gpu_jobs": 2
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_passed": 420,
+    "metal_library_passed": 302,
+    "targeted_cold_passed": 2,
+    "portable_reference_passed": 4,
+    "release_cold_passed": 2,
+    "counts_overlap": true
+  },
+  "sampled_direct_process_memory": [
+    {
+      "test": "metal::half_pointwise::tests::gpu_source_arrays_physical_store_and_preflight",
+      "samples": 12,
+      "observed_maxima": {
+        "resident_size": 18006016,
+        "phys_footprint": 6472280,
+        "lifetime_max_phys_footprint": 6472280
+      }
+    },
+    {
+      "test": "metal::half_pointwise::tests::gpu_nonfinite_status_and_recovery",
+      "samples": 1,
+      "observed_maxima": {
+        "resident_size": 327680,
+        "phys_footprint": 114760,
+        "lifetime_max_phys_footprint": 114760
+      }
+    }
+  ],
+  "evidence": {
+    "portable_controls": {
+      "path": "artifacts/new-goal-b3c2-reference-controls-v1/checks.json",
+      "bytes": 404120,
+      "sha256": "97c6339cf249ec5a336010088d477e25a46a1a75154eb93be731c7c099e41bbb"
+    },
+    "source_export": {
+      "path": "artifacts/new-goal-b3c2-source-v1/export.json",
+      "bytes": 408363,
+      "sha256": "9dee2302dd766f335a0fbfc4ee1430b45fa0586f10fbd65f6eeaf35dae3e2d20"
+    },
+    "source_review": {
+      "path": "artifacts/new-goal-b3c2-independent-review-v1/frozen-source-review.json",
+      "bytes": 3288,
+      "sha256": "43fd87b1c8243cada0e289f6eeb6bc10302aa0e92d32bc6043649b15e0c28fcd"
+    },
+    "cold_checks": {
+      "path": "artifacts/new-goal-b3c2-cold-checks-v2/checks.json",
+      "bytes": 864289,
+      "sha256": "d3fa4be260d75ce2dc92db44ecefec985805ef3009b33f2e386cdc2c4fd7aa82"
+    },
+    "prospective_code_review": {
+      "path": "artifacts/new-goal-b3c2-independent-review-v1/prospective-operator-review-v2.json",
+      "bytes": 2492,
+      "sha256": "bfdb8203548745fc986be9675eb1be8cfc48f05a073a676f211ed3ddd34a825e"
+    },
+    "gpu": {
+      "path": "artifacts/new-goal-b3c2-gpu-v1/gpu.json",
+      "bytes": 1268713,
+      "sha256": "e5787c0b17b0e4c7b934f01073e4f20945fda5576090933cd79e404c06443201"
+    },
+    "gpu_approval": {
+      "path": "artifacts/new-goal-b3c2-gpu-v1/prospective-review.json",
+      "bytes": 3669,
+      "sha256": "c6615a8e5f3484f43f4834ea28818bae04bde60a6e2827b3cdfb298f1c507908"
+    },
+    "postrun_review": {
+      "path": "artifacts/new-goal-b3c2-independent-review-v1/postrun-evidence-review.json",
+      "bytes": 5865,
+      "sha256": "8d3d87008f2a8472829bf5f179442c6041e3f35d1f5379e1e23d4bd33b41d651"
+    },
+    "preserved_cold_failure": {
+      "path": "artifacts/new-goal-b3c2-cold-checks-v1/checks.json",
+      "bytes": 859638,
+      "sha256": "e5c90048f46937e9f3eb920a73767b6f7e1d40787631aaa9cb16cf7290587122"
+    }
+  },
+  "source_files": [
+    {
+      "path": "src/metal/mod.rs",
+      "bytes": 135833,
+      "sha256": "0444d5272f4ecc9577f6597ca244f3faf6f0c7165518d4251629a013fe241dc2"
+    },
+    {
+      "path": "src/metal/half_pointwise.rs",
+      "bytes": 9123,
+      "sha256": "2b4c2f8e644f023349cf0e9a9e295428979c6771593b8c7d6175f2ee6386012a"
+    },
+    {
+      "path": "src/metal/half_pointwise.metal",
+      "bytes": 1765,
+      "sha256": "0f1204e03f7feaf15299e3d1f1ffeb2b926252c99ff0fcd7fb11cdff003c5993"
+    },
+    {
+      "path": "src/metal/half_pointwise/tests.rs",
+      "bytes": 20829,
+      "sha256": "acfafb6fcb1c5e96748dd779059b840b68e2a1d848e12decef86b67389ba2a6e"
+    },
+    {
+      "path": "tools/reference/gemma3_half_pointwise.py",
+      "bytes": 11191,
+      "sha256": "0e2086db4c2aacf786b117f3a320304c8248ffefe7877b2a5e1576b2704ba1b5"
+    },
+    {
+      "path": "tools/reference/test_gemma3_half_pointwise.py",
+      "bytes": 4079,
+      "sha256": "0b6b9e94dcc4209d036f6d6eba0d6442377538c99aefc363a1ff56c9366c6258"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "tests/fixtures/gemma3-half-pointwise-v1/arrays.bin",
+      "bytes": 915576,
+      "sha256": "22653051542e73908ba50ad88c81eefa4ef00d24ecaef6349efce0f08a96e5a2"
+    },
+    {
+      "path": "tests/fixtures/gemma3-half-pointwise-v1/controls.json",
+      "bytes": 1259,
+      "sha256": "944fabb168b7d0ba780825aaea2defb420acb610c8d80a03c6a95566c0f15680"
+    },
+    {
+      "path": "tests/fixtures/gemma3-half-pointwise-v1/manifest.json",
+      "bytes": 10100,
+      "sha256": "a0814112d9db5b77cf55832625e062723d90ab79c3fe1a16ae07a9efccc52cea"
+    }
+  ],
+  "limitations": [
+    "Internal test-only leaves; no full graph or actual gather composition qualification.",
+    "No zero Objective-C/Metal driver allocation claim; measured Rust allocation scope is release.",
+    "Sampled direct-process memory is not a guaranteed peak or whole-model fit.",
+    "No real model, app, phone, full-context, throughput or quality qualification.",
+    "Original Clippy field-spelling failure retained; no numerical code/gate change."
+  ],
+  "next_task": "B3c3 rolling KV attention and two-phase commit",
+  "final_publication_review": "artifacts/new-goal-b3c2-independent-review-v1/final-publication-review.json"
+}

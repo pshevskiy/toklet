@@ -1,0 +1,405 @@
+{
+  "cases": [
+    {
+      "arrays": {
+        "activation": {
+          "envelope": 5.960464477539063e-08,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 768,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 1582,
+            "sha256": "087af967963cff74513170dcbbaf4b04f01fdc5006f054735132f0d2afcaf61f",
+            "shape": [
+              3,
+              128
+            ]
+          },
+          "wide": {
+            "bytes": 768,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 2350,
+            "sha256": "68c268c9af66c2fe0d10ea36b4ee4732966e609c03b354787d9203082f34dfcb",
+            "shape": [
+              3,
+              128
+            ]
+          }
+        },
+        "product": {
+          "envelope": 4.76837158203125e-07,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 768,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 3118,
+            "sha256": "756d8bf490151ee5900fb41b99e78701f6d24cb904ee55eb528ab3e0eeaef590",
+            "shape": [
+              3,
+              128
+            ]
+          },
+          "wide": {
+            "bytes": 768,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 3886,
+            "sha256": "5f3a035e464f74956bc9b8e881ad1155059e8c9041e382848e87261788cad729",
+            "shape": [
+              3,
+              128
+            ]
+          }
+        }
+      },
+      "exact": [
+        {
+          "activation": 12490,
+          "column": 0,
+          "product": 14844,
+          "row": 0
+        },
+        {
+          "activation": 1,
+          "column": 1,
+          "product": 5,
+          "row": 0
+        },
+        {
+          "activation": 32769,
+          "column": 2,
+          "product": 32773,
+          "row": 0
+        }
+      ],
+      "factor": null,
+      "input_stride": 131,
+      "inputs": {
+        "input": {
+          "bytes": 800,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 0,
+          "sha256": "aa185ef1692ff646195e1c9cb7f3f6b123afba6efbd007a418bb6a882a410366",
+          "shape": [
+            400
+          ]
+        },
+        "up": {
+          "bytes": 782,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 800,
+          "sha256": "5c7e1b2525d741ebc8f97f36a2cd8527678e80f0f2fef0427b92e05218487fd4",
+          "shape": [
+            391
+          ]
+        }
+      },
+      "name": "gelu_tiny",
+      "operation": "gelu_gated",
+      "output_elements": 406,
+      "output_stride": 133,
+      "rows": 3,
+      "width": 128
+    },
+    {
+      "arrays": {
+        "activation": {
+          "envelope": 5.960464477539063e-08,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 131072,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 267018,
+            "sha256": "6c1926592166a4b508daee3510a07704c4f567ac6e34a7bf1fbe67175dda82f0",
+            "shape": [
+              32,
+              2048
+            ]
+          },
+          "wide": {
+            "bytes": 131072,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 398090,
+            "sha256": "5dee554b1455fcb74370b77e073fcd93ab023d1225326e39645a357d48dc55ca",
+            "shape": [
+              32,
+              2048
+            ]
+          }
+        },
+        "product": {
+          "envelope": 4.76837158203125e-07,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 131072,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 529162,
+            "sha256": "6ec4fc801c211c325a35df68d632fd37aff3b88afd10088b8b9d80b425f0a54a",
+            "shape": [
+              32,
+              2048
+            ]
+          },
+          "wide": {
+            "bytes": 131072,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 660234,
+            "sha256": "3d414c27aaef2ad23aadb7a683de11ce7a00af463d43fc91dff6d8e5f25b07b1",
+            "shape": [
+              32,
+              2048
+            ]
+          }
+        }
+      },
+      "exact": [
+        {
+          "activation": 12490,
+          "column": 0,
+          "product": 14844,
+          "row": 0
+        },
+        {
+          "activation": 1,
+          "column": 1,
+          "product": 5,
+          "row": 0
+        },
+        {
+          "activation": 32769,
+          "column": 2,
+          "product": 32773,
+          "row": 0
+        }
+      ],
+      "factor": null,
+      "input_stride": 2051,
+      "inputs": {
+        "input": {
+          "bytes": 131278,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 4654,
+          "sha256": "7ea976fbc19c5b6fff3016979059bd6113df2e362d4a44ecccca6db9031c498a",
+          "shape": [
+            65639
+          ]
+        },
+        "up": {
+          "bytes": 131086,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 135932,
+          "sha256": "254a151f0c0cb897395bcdb68ebe32eb8016ec6b80b4c27df7247bf7bf7a8316",
+          "shape": [
+            65543
+          ]
+        }
+      },
+      "name": "gelu_real_width",
+      "operation": "gelu_gated",
+      "output_elements": 65703,
+      "output_stride": 2053,
+      "rows": 32,
+      "width": 2048
+    },
+    {
+      "arrays": {
+        "scaled": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 384,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 791722,
+            "sha256": "53f52c94610e34779112714b6a86d283f1052a03a14953d9fcb08448810da1f6",
+            "shape": [
+              3,
+              64
+            ]
+          },
+          "wide": {
+            "bytes": 384,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 792106,
+            "sha256": "53f52c94610e34779112714b6a86d283f1052a03a14953d9fcb08448810da1f6",
+            "shape": [
+              3,
+              64
+            ]
+          }
+        }
+      },
+      "exact": [
+        {
+          "column": 0,
+          "row": 0,
+          "scaled": 18432
+        },
+        {
+          "column": 1,
+          "row": 0,
+          "scaled": 8
+        },
+        {
+          "column": 2,
+          "row": 0,
+          "scaled": 32776
+        }
+      ],
+      "factor": 8.0,
+      "input_stride": 67,
+      "inputs": {
+        "input": {
+          "bytes": 416,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 791306,
+          "sha256": "b1355b1591b477c7112c88e73f3783e9ecfcc8b41bf01a31480cd21d2f4a34b8",
+          "shape": [
+            208
+          ]
+        }
+      },
+      "name": "scale_tiny",
+      "operation": "scale",
+      "output_elements": 214,
+      "output_stride": 69,
+      "rows": 3,
+      "width": 64
+    },
+    {
+      "arrays": {
+        "scaled": {
+          "envelope": 0.0,
+          "gate": {
+            "atol": 0.0001,
+            "rtol": 0.001
+          },
+          "main": {
+            "bytes": 40960,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 833656,
+            "sha256": "6f1160b74cf872efb1d617b84b828947e13b3645ba152183540e2e22710d6470",
+            "shape": [
+              32,
+              640
+            ]
+          },
+          "wide": {
+            "bytes": 40960,
+            "dtype": "u16le",
+            "file": "arrays.bin",
+            "offset": 874616,
+            "sha256": "6f1160b74cf872efb1d617b84b828947e13b3645ba152183540e2e22710d6470",
+            "shape": [
+              32,
+              640
+            ]
+          }
+        }
+      },
+      "exact": [
+        {
+          "column": 0,
+          "row": 0,
+          "scaled": 20048
+        },
+        {
+          "column": 1,
+          "row": 0,
+          "scaled": 25
+        },
+        {
+          "column": 2,
+          "row": 0,
+          "scaled": 32793
+        }
+      ],
+      "factor": 25.25,
+      "input_stride": 643,
+      "inputs": {
+        "input": {
+          "bytes": 41166,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 792490,
+          "sha256": "a5c9fb1fc6f33a8399dc669e8d7f76d409ed6494d3ad3fcf88ca58ce754d5090",
+          "shape": [
+            20583
+          ]
+        }
+      },
+      "name": "scale_real_width",
+      "operation": "scale",
+      "output_elements": 20647,
+      "output_stride": 645,
+      "rows": 32,
+      "width": 640
+    }
+  ],
+  "constants_f32_bits": {
+    "c": 1061962282,
+    "k": 1027024659
+  },
+  "files": {
+    "arrays.bin": {
+      "bytes": 915576,
+      "sha256": "22653051542e73908ba50ad88c81eefa4ef00d24ecaef6349efce0f08a96e5a2"
+    },
+    "controls.json": {
+      "bytes": 1259,
+      "sha256": "944fabb168b7d0ba780825aaea2defb420acb610c8d80a03c6a95566c0f15680"
+    }
+  },
+  "format": "toklet-gemma3-half-pointwise-v1",
+  "guard": 7,
+  "input_padding_word": 32341,
+  "output_canary_word": 23063,
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "rtol": 0.001
+  },
+  "producer": {
+    "bytes": 11191,
+    "sha256": "0e2086db4c2aacf786b117f3a320304c8248ffefe7877b2a5e1576b2704ba1b5"
+  },
+  "protocol_sha256": "fd84f903bc1f078b3413e4a6ff1a195f404ab3eac723fd111761276c3265e45b",
+  "runtime": {
+    "executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "python": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]"
+  },
+  "scope": "Isolated Half GELU then Half product and Half scale; no complete graph/HF runtime parity/performance",
+  "source_reference_executed": true,
+  "target_gpu_executed": false,
+  "values_per_profile": 152512
+}

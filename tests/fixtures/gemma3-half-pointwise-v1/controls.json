@@ -1,0 +1,55 @@
+{
+  "error_output_words_not_a_gate": true,
+  "errors": [
+    {
+      "input_word": 32256,
+      "operation": "gelu_gated",
+      "status_nonzero": true,
+      "up_word": 15360
+    },
+    {
+      "input_word": 31744,
+      "operation": "gelu_gated",
+      "status_nonzero": true,
+      "up_word": 15360
+    },
+    {
+      "input_word": 31743,
+      "operation": "gelu_gated",
+      "status_nonzero": true,
+      "up_word": 16384
+    },
+    {
+      "input_word": 15360,
+      "operation": "gelu_gated",
+      "status_nonzero": true,
+      "up_word": 32256
+    },
+    {
+      "factor": 25.25,
+      "input_word": 32256,
+      "operation": "scale",
+      "status_nonzero": true
+    },
+    {
+      "factor": 25.25,
+      "input_word": 31744,
+      "operation": "scale",
+      "status_nonzero": true
+    },
+    {
+      "factor": 25.25,
+      "input_word": 31743,
+      "operation": "scale",
+      "status_nonzero": true
+    }
+  ],
+  "ordering": {
+    "gather_input_f32_word": 1065357312,
+    "gathered_half_word": 15360,
+    "scaled_half_word": 20048,
+    "scope": "Scalar source ordering witness; leaf Half API alone does not prove actual gather implementation",
+    "wrong_delayed_gelu_half_product": 14845,
+    "wrong_scale_before_gather_half_word": 20049
+  }
+}

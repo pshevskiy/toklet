@@ -8,6 +8,8 @@ mod diagnostic;
 #[cfg(test)]
 mod half_consistency;
 #[cfg(test)]
+mod half_pointwise;
+#[cfg(test)]
 mod half_projection;
 #[cfg(test)]
 mod half_rms_f32;

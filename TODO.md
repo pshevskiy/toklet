@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3c2 — Half GELU and embedding scaling**, followed by rolling KV state and resident Gemma3 composition.
+Next implementation task: **B3c3 — resident rolling KV attention and two-phase commit**, followed by complete Gemma3 composition.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -129,7 +129,8 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 - [x] B3c1: optional Half RMS with model-owned FP32 effective scales; frozen
   independent main/wide/rounding fixtures, GPU guards/status and precise encoding.
   [Report](docs/gemma3-half-rms.md); standalone release Mac qualification only.
-- [ ] B3c2: checked Half tanh-GELU and embedding scaling with explicit store boundaries.
+- [x] B3c2: checked Half tanh-GELU and embedding scaling with explicit store boundaries.
+  [Report](docs/gemma3-half-pointwise.md); standalone release Mac qualification only.
 - [ ] B3c3: resident old-ring/new-chunk attention and two-phase cache commit;
   uncertain commit failure requires reset/replay.
 - [ ] B3c4: compose the complete resident packed/Half tiny graph, accounting
@@ -257,4 +258,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B3c1 Half/F32-scale RMS preparation | Astra selects the missing operator; four independent portable controls pass with exact0x3fa7 vs0x3fa6 scale witness. Private borrowed-encode kernel/plan draft; default Metal paths unchanged. No export/GPU outcome yet. | Guarded source export/replay, then reviewed GPU consumer. |
 | 2026-10-29 | B3c1 cold checks and binary selection | Exact reference export/replay and Astra verification pass. Formatting, strict Clippy,420 default /300 Metal-library tests and regressions pass. Collector then rejects Cargo's rlib/staticlib artifact kind; preserved failed receipt and authenticated metadata-only continuation freeze the existing binary. No source/gate change or GPU result. | Three explicit reviewed GPU checks next. |
 | 2026-10-29 | B3c1 debug allocation rejection | First GPU case retains64 exact reference values and intact guards/status, but fails unchanged zero-Rust-allocation assertions at5/5. Astra source inspection predicts debug-only Objective-C signature parsing; failure preserved. Same source/gates compile in release and both cold controls pass. | Frozen release GPU run pending; allocation claim will be release-only. |
-| 2026-10-29 | B3c1 release RMS qualification | Three explicit GPU jobs pass:108,544 source values bit-exact,192 recovery and64 subnormal words, guards/status/immutability and12 zero-Rust-allocation encodes. Astra independently authenticates all saved results and closed groups. Debug failure retained. | [Report](docs/gemma3-half-rms.md); reviewed task commit, then B3c2. |
+| 2026-10-29 | B3c1 release RMS qualification | Three explicit GPU jobs pass:108,544 source values bit-exact,192 recovery and64 subnormal words, guards/status/immutability and12 zero-Rust-allocation encodes. Astra independently authenticates all saved results and closed groups. Debug failure retained. | [Report](docs/gemma3-half-rms.md); `9b68a22`; continue B3c2. |
+| 2026-10-29 | B3c2 pointwise reference preparation | Astra reviews the independent Half GELU/product and scalar-scale source; four portable controls pass, including exact intermediate-store and subnormal witnesses. Two optional borrowed kernel drafts remain private; no export or GPU result. | Freeze/export/replay source, then reviewed native consumers. |
+| 2026-10-29 | B3c2 frozen reference and cold preflight | Export/replay and independent152,512-value main/wide verification pass. First strict Metal Clippy stops on redundant field-name spelling before target tests; corrected to field shorthand, failed receipt preserved. Numerical source/gates unchanged. | Fresh cold checks, then reviewed release GPU execution. |
+| 2026-10-29 | B3c2 release pointwise qualification |420 default /302 Metal-library tests, strict checks and two explicit GPU jobs pass. Astra independently verifies218,432 bit-exact MAIN comparisons, zero WIDE gate exceedances, physical Half/gating/store/subnormal controls,8 zero-Rust-allocation encodes and5,888 recovery words. | [Report](docs/gemma3-half-pointwise.md); reviewed task commit, then B3c3. |

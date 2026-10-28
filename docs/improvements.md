@@ -6839,3 +6839,48 @@ this operator. See [report](gemma3-half-rms.md),
 [evidence](../benchmarks/results/2026-10-29-gemma3-half-rms-v1.json) and
 [TODO](../TODO.md). Continue B3c2 Half GELU and embedding scale with physical
 Half store boundaries before rolling KV and complete graph integration.
+
+## 2026-10-29 — Half GELU and embedding scale preparation
+
+Astra recommends two small borrowed pipelines and reusing existing tight
+gating after a physical Half GELU intermediate. The independent reference and
+four portable controls pass prospective review and execution. Exact witnesses
+distinguish the required GELU product `0x39fc` from delayed-store `0x39fd`, and
+embedding scale after the Half gather store from premature scaling. Both
+operations include exact signed subnormal controls. The private kernel drafts
+remain unqualified; source export/replay and native checks follow. The preceding
+RMS task is committed as `9b68a22`.
+
+The pointwise export and replay are identical; Astra independently verifies all
+152,512 values in each profile, exact controls and six stage gates. Review also
+requires complete raw capture before guard assertions and explicit command-error
+checking; both are applied before target execution. Initial strict Metal Clippy
+rejects redundant `width: width` field spelling; field shorthand corrects it
+without numerical changes. The failed cold receipt is retained and a fresh
+complete check run follows.
+
+## 2026-10-29 — Qualified Half GELU, scale and stored-Half gating
+
+Two small optional borrowed Metal pipelines now preserve the explicit Half
+activation and embedding boundaries. Existing tight gating consumes the actual
+GPU Half intermediate in the same command; no new product kernel or host
+readback between operations is introduced. The internal leaves remain test-only
+until full graph composition.
+
+Both release GPU jobs pass. Astra independently verifies all218,432 MAIN
+comparisons bit-for-bit, exact intermediate-store/subnormal/scale witnesses,
+strided/tight equality, immutable input/up hashes, all guards and command status
+with no error. WIDE has21,051 differing words, maximum absolute difference
+4.76837158203125e-7 and zero diagnostic gate exceedances; it is not bit-exact.
+Eight measured release encodes make zero Rust allocations. Seven invalid
+controls pass21 error/sticky/reset phases with5,888 checked recovery words.
+Source replay, four portable controls, formatting, strict Clippy,
+420 default /302 Metal-library tests and both debug/release cold controls pass.
+
+The initial field-spelling Clippy failure remains preserved. Direct-process
+memory samples are not execution peaks or whole-model fit. No full graph,
+real checkpoint, app/phone, throughput or quality claim follows. See
+[report](gemma3-half-pointwise.md),
+[evidence](../benchmarks/results/2026-10-29-gemma3-half-pointwise-v1.json) and
+[TODO](../TODO.md). Next: shared rolling-state geometry, immutable old/new
+attention views and a two-phase GPU copy/publication transaction.
