@@ -1,0 +1,275 @@
+{
+  "format": "toklet-phi3-real-short-vertical-v1",
+  "date": "2026-10-28",
+  "base_revision": "d592ac7",
+  "passed": true,
+  "decision": "retain-bounded-native-adapter",
+  "model": {
+    "repository": "mlx-community/Phi-3-mini-4k-instruct-4bit",
+    "revision": "5b3819ed6317784fb20eddeae9bed984f778d0d0",
+    "payload_sha256": "8d75680621a09474f6601e9176f2f61f92a5e4c079d68d583901f51699fda50a",
+    "source_payload_bytes": 2149644288,
+    "declared_positions": 4096,
+    "declared_sliding_window": 2047,
+    "implemented_positions": 512
+  },
+  "hardware": {
+    "device": "Apple M1 Pro",
+    "os": "macOS26.6.2",
+    "build": "25G83"
+  },
+  "profile": "MlxAffine/Compensated/Reference/Half",
+  "scope": {
+    "short_source_comparison": true,
+    "full_512_state_control": true,
+    "full_512_source_accuracy": false,
+    "source_main": "independent NumPy FP32 BLAS with Half storage boundaries",
+    "source_wide": "independent NumPy FP64 BLAS with identical Half storage",
+    "native_exact": "finite numeric equality; signed zeros equal",
+    "canonical_torch_mlx_runtime_parity": false,
+    "original_unquantized_adoption_quality": false,
+    "production_chat": false,
+    "iphone_qualified": false,
+    "performance_qualified": false
+  },
+  "results": {
+    "passed": true,
+    "arrays": 1288,
+    "compared_values": 23946432,
+    "failed_values": 0,
+    "max_absolute_error": 1.5,
+    "max_gate_fraction": 0.9399477806788512,
+    "wide_diagnostic": {
+      "compared_values": 23946432,
+      "exceedances": 0,
+      "max_absolute_error": 0.75,
+      "max_gate_fraction": 0.8363701535336638,
+      "fatal": false
+    },
+    "source_compared_arrays": 1282,
+    "raw_state_observed_values": 192384,
+    "exact_numeric_logits_schedules": true,
+    "exact_numeric_logits_causal_prefix": true,
+    "exact_numeric_logits_boundary_schedules": true,
+    "native_generated_ids": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "full_quality_qualified": false,
+    "app_qualified": false,
+    "iphone_qualified": false
+  },
+  "memory": {
+    "resident_weights_bytes": 2149645198,
+    "positional_bytes": 0,
+    "source_admitted_load_bytes": 2216818688,
+    "exact_native_load_budget_bytes": 2216819598,
+    "maximum_diagnostic_admitted_with_extra_reserve_bytes": 2698625144,
+    "extra_owner_ledger": {
+      "source_manifest_input_bytes": 1048576,
+      "parsed_reference_reserve_bytes": 8388608,
+      "descriptor_tables_reserve_bytes": 8388608,
+      "maximum_descriptors": 1288,
+      "numeric_witnesses_bytes": 1026048,
+      "history_reserve_bytes": 65536,
+      "io_buffers_bytes": 24576,
+      "full_tensor_serialization_bytes": 0,
+      "snapshot_and_cpu_readback_already_in_session": true,
+      "total_extra_owner_reserve_bytes": 18941952,
+      "reserved_bytes": 33554432,
+      "allocator_and_process_peak_measured_separately": true
+    },
+    "resident_owner_ledger": {
+      "queried_half_norm_row_bytes": 6144,
+      "packed_resident_bytes": 2149244928,
+      "norm_count": 65,
+      "guard_bytes_per_norm": 14,
+      "resident_weights_bytes": 2149645198
+    },
+    "session_budget_controls": [
+      {
+        "chunk": 32,
+        "readback": "FullLogits",
+        "required": 2430574690,
+        "exact_budget_constructed": true,
+        "one_byte_under_exact_budget_error": true
+      },
+      {
+        "chunk": 32,
+        "readback": "GreedyToken",
+        "required": 2430318218,
+        "exact_budget_constructed": true,
+        "one_byte_under_exact_budget_error": true
+      },
+      {
+        "chunk": 128,
+        "readback": "FullLogits",
+        "required": 2467081954,
+        "exact_budget_constructed": true,
+        "one_byte_under_exact_budget_error": true
+      },
+      {
+        "chunk": 128,
+        "readback": "GreedyToken",
+        "required": 2466825482,
+        "exact_budget_constructed": true,
+        "one_byte_under_exact_budget_error": true
+      }
+    ],
+    "native_observed_maxima": {
+      "resident_size": 1787068416,
+      "phys_footprint": 2516764952,
+      "lifetime_max_phys_footprint": 2517715224
+    },
+    "hard_process_cap_bytes": 6442450944,
+    "observations": "Live owned-child libproc samples, including available OS lifetime physical maximum; sampled RSS is not an OS lifetime RSS maximum."
+  },
+  "state": {
+    "boundary_controls": [
+      {
+        "chunk": 32,
+        "append_error": "Err(Options(\"token ID/count outside session capacity\"))",
+        "set_error": "Err(Options(\"token ID/count outside session capacity\"))",
+        "append_state_equal": true,
+        "set_state_equal": true,
+        "evaluated": 512,
+        "pending": 0
+      },
+      {
+        "chunk": 128,
+        "append_error": "Err(Options(\"token ID/count outside session capacity\"))",
+        "set_error": "Err(Options(\"token ID/count outside session capacity\"))",
+        "append_state_equal": true,
+        "set_state_equal": true,
+        "evaluated": 512,
+        "pending": 0
+      }
+    ],
+    "generation_controls": [
+      {
+        "readback": "FullLogits",
+        "generated_ids": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "output_limit": true,
+        "pre_cancel_preserved_state": true,
+        "callback_failure_valid_prefix": true,
+        "forced_stop_id": 3,
+        "natural_model_eos_tested": false,
+        "text_chat_qualified": false
+      },
+      {
+        "readback": "GreedyToken",
+        "generated_ids": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "output_limit": true,
+        "pre_cancel_preserved_state": true,
+        "callback_failure_valid_prefix": true,
+        "forced_stop_id": 3,
+        "natural_model_eos_tested": false,
+        "text_chat_qualified": false
+      }
+    ],
+    "source_512_quality_qualified": false
+  },
+  "load_observation": {
+    "load_seconds": 1.740489792,
+    "conversion_seconds": 1.7376458750000001,
+    "compilation_seconds": 0.001601292,
+    "scope": "One diagnostic load; no comparative performance qualification"
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_and_metal_clippy": true,
+    "default_tests": 410,
+    "metal_library_tests": 288,
+    "example_tests": 3,
+    "checker_controls": 4,
+    "overlapping_suites": true,
+    "closed_native_and_checker_groups": 2,
+    "endpoint_errors": []
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b2c-native-proposal-v1/manifest.json",
+      "bytes": 961,
+      "sha256": "bb5f6688b4f1225048bf62ea350e243175349f8d38aaf74fe297cb5823678c2d"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-native-review-v1/initial-review.json",
+      "bytes": 5744,
+      "sha256": "264bfdbd12539d5b4a5d7bc9cd550033c62f25548a938ef9bebdbf90bd1d160e"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-native-review-v1/prospective-native-review.json",
+      "bytes": 6790,
+      "sha256": "6bd0e9966847df5c869201da3cc935a4f900c80082402122f41547511ec1f929"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-native-checks-v1/checks.json",
+      "bytes": 856134,
+      "sha256": "cbdecfd2c95cfa77132abd6b30bc2caf970a62f6ab06828df6d92fab7b201ffb"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-native-checker-controls-v1/checks.json",
+      "bytes": 403693,
+      "sha256": "b43efc1650d936a051c11c8e3244e5f6773fbf14e380d70456f9d62704c4016b"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-native-v1/native.json",
+      "bytes": 1490603,
+      "sha256": "d40674e193c654ce5e20625503c13f6ddf70c412a4d8a8119049d2f24144718f"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-native-v1/comparison.json",
+      "bytes": 289171,
+      "sha256": "a58a51c220484c1928c3b9c2633f89f2a5c9536e4192c97f9be3e69a5b7b3a32"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-native-v1/capture/capture.json",
+      "bytes": 430773,
+      "sha256": "18626992ba9f359e22bba9759b4b1a8711a05e8d4a3cbea7b9f9d20509899425"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-source-v2/export.json",
+      "bytes": 641141,
+      "sha256": "6b0e87b5f0e3db7bd7485f27abf261fab4b55a1530c3727e1256b0da5907044c"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-independent-review-v1/source-evidence-review.json",
+      "bytes": 5450,
+      "sha256": "9645358df8b16c72bffb4716e82759cc5dbfc93abd1147305f83bb98df72c5e5"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-independent-review-v1/final-review.json",
+      "bytes": 3657,
+      "sha256": "a0b935aa02c9686769ba5e193dd8bb3ab51e36a4befef5f5edb36f6d96a81edf"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-native-review-v1/native-evidence-review.json",
+      "bytes": 1490245,
+      "sha256": "e740c6f00b591e7ef9042a54f1e7ac0db2bf0aa02feb75c81de1b36986edc2cc"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-native-review-v1/audit_native.py",
+      "bytes": 17728,
+      "sha256": "db1a9c1994185ff51982fab03aa178a4768fa0bf928f4302b11780a93f10d161"
+    }
+  ],
+  "next_task": "B3 select compact Gemma text candidate and compose actual local/global mechanisms",
+  "independent_review": {
+    "all_native_comparisons_rescored": true,
+    "all_source_array_gates_recomputed": true,
+    "consumed_identities_authenticated": 6857,
+    "decision": "retain_bounded_Phi3_Mac512_native_vertical"
+  }
+}

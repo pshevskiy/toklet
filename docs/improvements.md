@@ -6675,3 +6675,42 @@ parity, production Chat, phone, full-window, adoption quality or speed claim.
 See [report](phi3-real-reference.md),
 [evidence](../benchmarks/results/2026-10-28-phi3-real-reference-v1.json) and
 [TODO](../TODO.md). Continue B2c2 with Astra review.
+
+## 2026-10-28 — Real Phi3 native preparation (target results pending)
+
+Added a bounded diagnostic capture and independent checker for the frozen source
+reference. Queried real source/resident/session plans, exact-budget construction
+and exact one-byte-under rejection are separate from sampled process peaks.
+Raw generation, cancellation/output failure and full512 capacity rejection keep
+explicit state witnesses. Nonfinite failures retain offending index/IEEE bits;
+wide comparisons stay diagnostic and never change main-only acceptance.
+
+Formatting, strict default/Metal Clippy,410 default /288 Metal-library tests,
+three runner and four checker controls pass. Astra prospectively corrected copied
+probe IDs, exact boundary error checks and failure evidence retention before any
+real native outcome. Binary/controller approval and actual Metal checks remain
+pending; no qualification upgrade is implied.
+
+## 2026-10-28 — Real Phi3 native vertical
+
+The pinned Phi3 four-bit export now passes23,946,432 frozen main comparisons
+with zero failures, maximum gate fraction0.9399477807. All native intermediate
+captures are retained for independent rescoring; wide diagnostics do not decide
+acceptance. Exact logits across chunks, causal prefix, cached reuse, raw
+four-token/readback generation, cancellation/output-error recovery and full512
+state/schedule controls pass. Append/set513 reject with exact errors and unchanged
+valid state. Native raw IDs are3/3/3/3; this does not qualify production text.
+
+Queried plans agree with real resident weights and four exact session budgets;
+model/session one-byte-under controls reject precisely. Weights are2,149,645,198
+bytes including910 norm guards. Maximum diagnostic admission plus extra reserve
+is2,698,625,144 bytes; observed lifetime physical maximum2,517,715,224 bytes stays
+below6GiB. Source and native runs are sequential. Formatting, strict checks,
+410 default /288 Metal-library /3 runner /4 checker controls pass.
+
+Astra independently rescores every native comparison and source envelope,
+authenticates6,857 consumed identities and approves bounded retention/commit.
+The selected Mac512 B2 adapter closes in that scope. App/codec, phone, full-window, original adoption quality and comparative
+performance remain open. See [report](phi3-real-model.md),
+[evidence](../benchmarks/results/2026-10-28-phi3-real-short-vertical-v1.json) and
+[TODO](../TODO.md). Continue B3, preserving B5/M8 integration and quality gates.

@@ -8,8 +8,8 @@ Initial research fetched only metadata and header ranges. The complete
 2,149,696,167-byte payload is now downloaded and locally SHA256-verified as
 `8d75680621a09474f6601e9176f2f61f92a5e4c079d68d583901f51699fda50a`.
 Astra independently verified the complete file,455 header/index entries and
-contiguous shape-derived extents. This is artifact acquisition only; Phi
-execution and app qualification remain pending. See the separate acquisition
+contiguous shape-derived extents. This acquisition evidence is separate from the later
+[bounded Mac source/native checks](phi3-real-model.md); app qualification remains pending. See the separate acquisition
 entry in the [loading evidence](../benchmarks/results/2026-10-28-logical-projection-loading-v1.json).
 
 ## Concrete shared-block mapping

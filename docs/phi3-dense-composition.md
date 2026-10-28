@@ -3,8 +3,8 @@
 Toklet now parses ordinary-RoPE Phi3 exports and maps their original fused QKV
 and gate/up rows into the existing dense CPU and Metal blocks. No new inference
 kernel or numerical dispatch hierarchy is introduced. This completes the tiny
-composition checks; the [pinned real checkpoint](phi3-fused-source.md) still
-needs independent numerical, session, text and measured-memory qualification.
+composition checks. The [pinned real checkpoint](phi3-fused-source.md) now also
+has separate [bounded real-model qualification](phi3-real-model.md).
 
 ## Source and ownership contract
 

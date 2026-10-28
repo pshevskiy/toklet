@@ -72,3 +72,7 @@ required-features = ["metal"]
 [[example]]
 name = "llama3_loss"
 required-features = ["metal"]
+
+[[example]]
+name = "phi3_checkpoint"
+required-features = ["metal"]
