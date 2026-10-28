@@ -6333,3 +6333,13 @@ no blockers. Retain this shared core; no new real-model, performance, phone or
 universal-architecture qualification is claimed. See the
 [implementation and limits](capacity-core.md) and
 [source-bound evidence](../benchmarks/results/2026-10-28-capacity-core-v1.json).
+
+## 2026-10-28 — Live iteration checklist
+
+Added [TODO.md](../TODO.md) with evidence-backed completed items, the active
+M8 B1–B5 queue, M9's first delivery and separately conditional follow-ons.
+Repository guidance now requires updating the checklist after every iteration,
+including research, failures and interruptions, while preserving the existing
+checks/Astra-review/commit rule for code. README and PLAN link to the tracker.
+Corrected the planning inventory to reflect B0's completed solver. This is a
+documentation change; link/content and whitespace checks apply.

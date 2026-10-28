@@ -8,6 +8,9 @@ broader native MLX architecture support, per-model context/KV planning and
 supported user controls, followed by measured optimization. This is active work,
 not a claim that every Hugging Face model already runs.
 
+The [live TODO checklist](TODO.md) tracks completed work, remaining tasks and
+iteration results, and is updated after every iteration.
+
 The [final implementation and performance summary](docs/final-summary.md) covers
 what is implemented, measured Mac/iPhone 14 Pro results and remaining limitations.
 

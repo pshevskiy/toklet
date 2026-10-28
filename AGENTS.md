@@ -4,6 +4,12 @@ This guidance applies throughout the Toklet repository. Build a small, understan
 
 For implementation work, follow the milestones and acceptance criteria in [PLAN.md](PLAN.md). Use [apple_llm_performance_plan.md](apple_llm_performance_plan.md) for design rationale. Inspect the current code before assuming a planned feature exists. Keep changes within the requested task; a roadmap is not a request to implement every milestone.
 
+Keep [TODO.md](TODO.md) updated after every work iteration, including research,
+failed checks and interrupted work. Record the current/next task, completion
+checkboxes, blockers, check/review outcomes and commit/evidence references.
+Mark code tasks complete only after required checks and Astra review pass;
+commit completed tasks and keep [docs/improvements.md](docs/improvements.md) current.
+
 ## Architecture and working method
 
 - Start with one package and ordinary functions over slices. Add modules when their implementation exists. Introduce abstractions only when concrete use cases justify them.

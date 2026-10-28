@@ -27,7 +27,7 @@ generation speed is a separate measured property.
 | Dense blocks | Shared Qwen2/Qwen3/Llama/Mistral projections, RMS/QK norms, ordinary split-half RoPE, GQA, causal attention and SiLU MLP | Config variants and Metal geometry admission remain narrow; a family name does not cover all its exports. |
 | Packed weights | MLX affine primitives and validated floating/packed tensor layouts | Primitive format support is broader than whole-model/backend support. Other containers or quantization conventions are separate mechanisms. |
 | Local/shared state | Concrete full/sliding producer caches and shared consumers, including existing Gemma work | Gemma is not an ordinary native Chat family; its open graph/precision gates remain. |
-| Planning | Checked dense CPU/Metal session plans, shared/window accounting, native context facts | No reusable per-model range solver or friendly context/KV controls. Current inspection may initialize pipelines repeatedly. |
+| Planning | Checked dense CPU/Metal session plans, shared/window accounting, native context facts and the completed B0 capacity solver | Broader per-model capability reporting and friendly context/KV controls remain. Each inspection still initializes device/pipelines once; capacity candidates use pure arithmetic. |
 | Text and discovery | HF search/download foundations and four pinned text profiles | Numerical compatibility must not silently enable unknown chat templates or tokenizer/stop semantics. |
 
 Use the existing implementations in `src/mlx`, `src/model/shared_kv.rs`,

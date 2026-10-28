@@ -1,5 +1,7 @@
 # Toklet implementation plan
 
+See [TODO.md](TODO.md) for the live checklist and per-iteration progress record.
+
 **Active goal and execution order,28 October2026:** follow the
 [shared-block model support and capacity plan](docs/shared-block-model-plan.md).
 The user replaced the full-Qwen3-window priority with broad architecture support
