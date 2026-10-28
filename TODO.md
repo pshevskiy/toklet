@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B1d — bounded real Llama3 source and text qualification on Mac**.
+Next implementation task: **B1d — 1,024-target Llama3 consistency screen, scoped B1 closure, then B2 Phi**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -60,6 +60,14 @@ the goal, not a claim that arbitrary Hugging Face models already run.
   metadata untested until separate real-checkpoint qualification.
 - [ ] B1d: freeze a bounded plain-text chat/BOS/stop contract and independent
   model/source comparisons; tokenizer metadata alone does not establish Chat.
+- [x] B1d artifact: verify the complete pinned 1B payload, metadata/header and
+  source identity; preserve bounded-transfer failure and exact-range recovery.
+- [x] B1d reference: review/export the fixed dual CPU profile and plain-text
+  fixtures under the source/native contract; no app admission yet.
+- [x] B1d runner: check the explicit pinned diagnostic and independent complete
+  source comparisons, native schedule/prefix/readback/state and raw generation.
+- [ ] B1d screen: freeze corpus/IDs and run the separate 1,024-target consistency
+  screen; retain full adoption quality as a distinct requirement.
 - [ ] Pass short complete source/native, cache/session, bounded real generation
   and measured memory checks on Mac; obtain Astra review and commit.
 
@@ -114,10 +122,17 @@ rounding must not silently replace tied output-projection coefficients.
 - [ ] Finish Mac app checks and record separate iPhone 14 Pro validation or
   explicit remaining device gaps; Astra review and commit each code task.
 
+- [ ] Implement the pinned Llama3 plain renderer/codec in the app path, checking
+  single BOS, all three hidden stops, trim/decoding, cancellation and actual
+  rendered prompt/reply boundaries. Independent fixtures alone do not enable Chat.
+
 ### M8 closure
 
 - [ ] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation.
+- [ ] Complete required full adoption quality for newly adopted artifacts,
+  including Llama3's original unquantized 10,000-target / 100-task gates. The
+  1,024-target same-artifact screen is not a substitute or app qualification.
 - [ ] Publish supported context/KV settings, evidence and remaining limitations;
   make explicit decisions on open/conditional admissions before milestone closure.
 - [ ] Confirm required checks/reviews/commits and update this checklist and
@@ -171,3 +186,8 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B1c2b preflight corrections | First Clippy run rejected manual saturating arithmetic; spelling corrected. Astra found a theta-below-1 native angle/FTZ admission gap; explicit native domain restricted before GPU results. Tiny source/CPU semantics remain broader. | Final cold checks and prospective review pending. |
 | 2026-10-28 | B1c2b shared Swift checks | Legacy/scaled positional wire checks, current CPU and Metal resource-worker checks and unsigned iOS typecheck pass. Initial private wrapper omitted existing NativeContext.swift dependency; corrected source list rerun passes. No physical device run. | [Composition scope](docs/llama3-metal-composition.md); complete numerical collection next. |
 | 2026-10-28 | B1c2b Metal composition | 384 default / 265 Metal-library tests, strict checks, current CPU/Metal Swift workers and unsigned iOS typecheck pass. Seven explicit GPU checks pass; 1,680 scaled snapshots / 110,208 values, exact numeric schedule/prefix/resume and accounting controls. Astra verified final evidence; reviewed task complete. | [Report](docs/llama3-metal-composition.md); B1d real source/text qualification next. |
+| 2026-10-28 | B1d artifact and contract | Astra reviewed bounded acquisition. Initial 600s transfer timed out near completion; separate exact 206 range plus full SHA/header/index verification passes. No model execution or app admission. | [Contract](docs/llama3-real-model-contract.md); independent references and runner checks in progress. |
+| 2026-10-28 | B1d reference controls | Seven synthetic reader/graph and two renderer tests pass. Initial cleanup test inspected a deliberately cleared owner; retained its mock before cleanup and checked both cleared fields. Producer arithmetic and gates unchanged. | Source-only export follows the reviewed runtime/controller contract. |
+| 2026-10-28 | B1d frozen source export | CPU dual-profile 349-array export, independent saved-bit verification and exact text replay pass; four owned groups close. Observed source peak RSS 2,875,883,520 bytes and lifetime physical peak 1,210,075,872 bytes, below 6 GiB. Native comparison still pending. | [Contract](docs/llama3-real-model-contract.md); final prospective native review. |
+| 2026-10-28 | B1d short native vertical | Fixed source/consumer policy; 28,791,552 value comparisons pass with zero failures, exact logit schedules/causal prefix/readback/state and actual 512-token boundary pass. Native observed physical lifetime peak 1,587,398,264 bytes. Astra independently rescored all values and verified final evidence; reviewed task complete. | [Results](benchmarks/results/2026-10-28-llama3-real-short-vertical-v1.json); 1,024-target screen, scoped B1 closure and B2 next; text/app and adoption quality remain open. |
+| 2026-10-28 | B1 execution-order clarification | Astra checked the actual B1 acceptance row: after the fixed consistency screen and scoped review, move to B2 architecture work. Production Llama Chat and full adoption quality stay explicit in B5/M8 closure; no gate waiver. | Screen remains next; B1 is not yet closed. |

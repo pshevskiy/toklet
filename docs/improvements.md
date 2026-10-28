@@ -6462,3 +6462,37 @@ iPhone qualification and performance remain separate. See
 [report](llama3-metal-composition.md),
 [evidence](../benchmarks/results/2026-10-28-llama3-metal-composition-v1.json) and
 [updated TODO](../TODO.md). B1d is next.
+
+## 2026-10-28 — Real Llama3 short Mac vertical and independent text contract
+
+Verified the complete public pinned Llama 3.2 1B eight-bit artifact and all
+metadata/header identities. The initial bounded transfer timed out near its end;
+a separate exact206 range completed the retained prefix, and the complete payload
+SHA passes. Added an explicit pinned capture example, bounded dual-profile CPU
+reference and strict capture checker. No numerical kernel or application
+allowlist changed. Every completed array has a flushed journal descriptor;
+interrupted captures preserve a started record and partial bytes.
+
+Astra reviewed the independent main/wide Half-storage policy before outcomes,
+then source values, BOS/stop/ByteLevel text replay and the native controller.
+Packed tied output remains FP32 reconstruction while lookup rounds to Half.
+Native generation is a separate raw four-step control from source-selected
+teacher forcing. The fixed checker requires complete stages/rows, array hashes,
+finite gates and exact numeric logits for schedules, causal prefixes and state.
+
+All 28,791,552 source comparisons pass, maximum gate fraction0.5198856252, with
+zero failures. Actual512 state/capacity, partial discard/resume, reset and both
+readbacks pass. Learned/positional residency is1,313,116,622/196 bytes; native
+observed lifetime physical peak is1,587,398,264 bytes. Standard strict checks,
+384 default /265 Metal-library tests (overlap), three runner, seven reader,
+two renderer and three checker controls pass. A non-Serialize timing development
+compile and a cleanup-mock test error were corrected without numerical changes;
+failed attempts remain documented.
+
+Retain this bounded path; it does not qualify application Chat, throughput,
+iPhone or full held-out quality. Next is the separate1,024-target consistency
+screen, scoped B1 closure and B2 architecture work. Text/app and full adoption
+quality remain explicit B5/M8 closure requirements. See
+[contract/results](llama3-real-model-contract.md),
+[compact evidence](../benchmarks/results/2026-10-28-llama3-real-short-vertical-v1.json)
+and [TODO](../TODO.md).

@@ -24,7 +24,7 @@ generation speed is a separate measured property.
 
 | Component | What exists | Current gap |
 | --- | --- | --- |
-| Dense blocks | Shared Qwen2/Qwen3/Llama/Mistral projections, RMS/QK norms, ordinary split-half RoPE, GQA, causal attention and SiLU MLP | Config variants and Metal geometry admission remain narrow; a family name does not cover all its exports. |
+| Dense blocks | Shared Qwen2/Qwen3/Llama/Mistral projections, RMS/QK norms, ordinary and Llama3 scaled split-half RoPE, GQA, causal attention and SiLU MLP | Llama structural admission and a bounded real checkpoint now pass; other config variants and device/artifact qualification remain scoped. A family name does not cover all its exports. |
 | Packed weights | MLX affine primitives and validated floating/packed tensor layouts | Primitive format support is broader than whole-model/backend support. Other containers or quantization conventions are separate mechanisms. |
 | Local/shared state | Concrete full/sliding producer caches and shared consumers, including existing Gemma work | Gemma is not an ordinary native Chat family; its open graph/precision gates remain. |
 | Planning | Checked dense CPU/Metal session plans, shared/window accounting, native context facts and the completed B0 capacity solver | Broader per-model capability reporting and friendly context/KV controls remain. Each inspection still initializes device/pipelines once; capacity candidates use pure arithmetic. |
@@ -117,15 +117,16 @@ allocation/search boundaries, standard checks, three tiny GPU controls and
 independent Astra review. B1 is next. This does not add a model family, user
 control or a larger qualified context by itself.
 
-**B1 in progress:** the [scalar Llama3 positional core](llama3-rotary-core.md)
-and independent fixtures pass checks/Astra review, and one fitting artifact's
-metadata is pinned. [Positional-plan propagation and tiny CPU graph/session
-checks](llama3-position-plan.md) now pass; scaled Metal is explicitly rejected.
-The [isolated scaled Half rotary operation](llama3-metal-rotary.md) now passes
-fixed GPU gates, but remains test-only. Structural Metal model integration,
-real-model and text/quality checks remain open; no new native app family support
-is claimed. [Composite shader index checks](metal-index-contracts.md) now guard
-strided MLX addresses and planned KV/score extents without widening eligibility.
+**B1 in progress:** the [scalar positional core](llama3-rotary-core.md),
+[source/model plan](llama3-position-plan.md),
+[isolated Half rotary](llama3-metal-rotary.md) and
+[composed structural Metal path](llama3-metal-composition.md) pass their scoped
+checks and Astra review. [Composite index contracts](metal-index-contracts.md)
+guard strided MLX and KV/score extents. The pinned real Llama 3.2 1B
+[short Mac vertical and independent text contract](llama3-real-model-contract.md)
+now pass source/native, cache/state, raw generation and observed memory checks.
+The separate 1,024-target consistency screen, production text/app admission and
+full adoption quality remain open; no new native app family is claimed.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |

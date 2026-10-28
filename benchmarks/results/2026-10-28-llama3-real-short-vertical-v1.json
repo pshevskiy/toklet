@@ -1,0 +1,161 @@
+{
+  "format": "toklet-llama3-real-short-vertical-v1",
+  "date": "2026-10-28",
+  "base_revision": "7b70d27",
+  "implementation_identity": "Exact source and frozen binary identities in bound receipts; no numerical kernel changes in this task.",
+  "passed": true,
+  "decision": "retain-bounded-diagnostic",
+  "model": {
+    "repository": "mlx-community/Llama-3.2-1B-Instruct-8bit",
+    "revision": "d48cdf0a4ea22d893b7c63a99d6a693e24822795",
+    "full_payload_sha256": "cd3582a78766654e3e2107e3b4d51d9cb18e6754b659bfb44a34328ef9d7fa52",
+    "payload_verified": true,
+    "declared_positions": 131072,
+    "implemented_positions": 512
+  },
+  "profile": "MlxAffine/Compensated/Reference/Half",
+  "scope": {
+    "raw_short_source_comparison": true,
+    "full_512_state_control": true,
+    "full_512_source_quality": false,
+    "source_profile": "NumPy BLAS FP32 and FP64 with identical Half storage and canonical Llama3 rotary; not scalar order or exact Metal emulation",
+    "native_logit_exactness": "numeric equality; signed-zero bits not separately qualified",
+    "held_out_1024_screen": "pending",
+    "original_unquantized_10000_target_100_task_adoption_quality": "pending",
+    "application_chat": "pending",
+    "iphone_qualified": false,
+    "performance_qualified": false
+  },
+  "hardware": {
+    "device": "Apple M1 Pro",
+    "os": "macOS26.6.2",
+    "build": "25G83"
+  },
+  "results": {
+    "arrays": 1288,
+    "source_compared_arrays": 1282,
+    "compared_values": 28791552,
+    "failed_values": 0,
+    "max_absolute_error": 0.125,
+    "max_gate_fraction": 0.5198856251624643,
+    "raw_state_observed_values": 769536,
+    "exact_numeric_logits_schedules": true,
+    "exact_numeric_logits_causal_prefix": true,
+    "exact_numeric_logits_boundary_schedules": true,
+    "native_generated_ids": [
+      662,
+      662,
+      883,
+      1
+    ]
+  },
+  "memory": {
+    "weights_bytes": 1313116622,
+    "positional_bytes": 196,
+    "maximum_diagnostic_admitted_with_application_allowance_bytes": 1782219068,
+    "application_allowance_bytes": 33554432,
+    "native_observed_maxima": {
+      "resident_size": 1557823488,
+      "phys_footprint": 1587381880,
+      "lifetime_max_phys_footprint": 1587398264
+    },
+    "source_observed_maxima": {
+      "resident_size": 2875883520,
+      "phys_footprint": 1186679520,
+      "lifetime_max_phys_footprint": 1210075872
+    },
+    "observations": "live owned-child libproc samples; source also records completed lifetime peaks; these are not throughput measurements"
+  },
+  "load_observation": {
+    "load_seconds": 4.105752292,
+    "conversion_seconds": 3.789743542,
+    "compilation_seconds": 0.313554333,
+    "scope": "One diagnostic model load, including explicit compile/conversion; no performance comparison"
+  },
+  "checks": {
+    "default_tests": 384,
+    "metal_library_tests": 265,
+    "runner_portable_tests": 3,
+    "reference_reader_graph_tests": 7,
+    "text_renderer_tests": 2,
+    "checker_tests": 3,
+    "fmt": true,
+    "strict_default_and_metal_clippy": true,
+    "overlapping_suites": true
+  },
+  "evidence": {
+    "download_failure": {
+      "path": "artifacts/new-goal-b1d-download-v1/download.json",
+      "bytes": 5792,
+      "sha256": "94454d508e8481daeb4b02e592cf189849e5c0ee00b22e903c83882dfd79706a"
+    },
+    "verified_download": {
+      "path": "artifacts/new-goal-b1d-download-v2/download.json",
+      "bytes": 6380,
+      "sha256": "a22417dbaf5524d8e0e86a3ef0728e83465c8a22e925dc7a7e8ef4474f78ffc8"
+    },
+    "runner_checks": {
+      "path": "artifacts/new-goal-b1d-runner-checks-v2/checks.json",
+      "bytes": 813559,
+      "sha256": "7d7f0e18f411c850e00b9db52fb5a1a6ee76f0d33d611ce6b57d445a89993582"
+    },
+    "reference_controls": {
+      "path": "artifacts/new-goal-b1d-reference-controls-v2/checks.json",
+      "bytes": 109928,
+      "sha256": "0748ef1d6bb09e112032b7c54fde0f4f74b0864615233184eee0a958637e6507"
+    },
+    "checker_controls": {
+      "path": "artifacts/new-goal-b1d-checker-controls-v2/checks.json",
+      "bytes": 109034,
+      "sha256": "461ecc8b61402fe306411ab3d2f9f0fda982afe4e59e32990e01358a7a7d0890"
+    },
+    "source_export": {
+      "path": "artifacts/new-goal-b1d-source-v1/export.json",
+      "bytes": 522323,
+      "sha256": "45e1dbecb4a5e1b5adb72df980c8be9760229e96a067c11335dc8e36833024df"
+    },
+    "native": {
+      "path": "artifacts/new-goal-b1d-native-v1/native.json",
+      "bytes": 1329212,
+      "sha256": "eb4536fac6cc2287dbeac1c02874ffdb09399f9d94d42cce4934de388135cb58"
+    },
+    "comparison": {
+      "path": "artifacts/new-goal-b1d-native-v1/comparison.json",
+      "bytes": 290543,
+      "sha256": "874bf71aa14b41bb23a014359165bf3248b16d8004c457db24ae9d7490909bbd"
+    },
+    "reference_review": {
+      "path": "artifacts/new-goal-b1d-independent-review-v1/reference-review.json",
+      "bytes": 6554,
+      "sha256": "2db86670e02532793242cdbcfab52861741bc5e4eab3af4847eef383c6723c1b"
+    },
+    "prospective_source_review": {
+      "path": "artifacts/new-goal-b1d-independent-review-v1/prospective-source-review.json",
+      "bytes": 7201,
+      "sha256": "cdef85993d5725d2ffced8304e374ff80e64126c3c43fefd8f543a5676b9c36c"
+    },
+    "prospective_native_review": {
+      "path": "artifacts/new-goal-b1d-independent-review-v1/prospective-native-review.json",
+      "bytes": 7421,
+      "sha256": "79b88e8b6757639071f023d0bf8b139c02a385d8774c03ddb3ce22ff5f064a94"
+    },
+    "source_manifest": {
+      "path": "tests/fixtures/mlx-llama3-real-v1/manifest.json",
+      "bytes": 251620,
+      "sha256": "da088a718df353857f2dd5f4946a38b1233377a2d604595870623862152912f6"
+    },
+    "text_fixture": {
+      "path": "tests/fixtures/llama3-plain-text-v1/fixture.json",
+      "bytes": 16051,
+      "sha256": "7efa1dd5eec42d167f824c7f395417e98de47000761abd9cd62d6d0cc91fa3b3"
+    }
+  },
+  "final_review": "artifacts/new-goal-b1d-independent-review-v1/final-review-v2.json",
+  "retained_development_attempts": [
+    "First transfer hit600sdeadline; preserved prefix and completed exact20,136,981-byte range, full final hash verified.",
+    "Initial example compile attempted to serialize non-Serialize LoadTiming; used explicit existing timing fields without engine change before owned checks.",
+    "First synthetic cleanup test accessed an owner deliberately cleared by __exit__; retained the mock and asserted closed+cleared state.",
+    "Runner v1 passed cold checks before prospective journal/native-generation strengthening; finalv2 passed after changes."
+  ],
+  "next": "Freeze and run1024-target same-artifact loss screen; scoped B1 closure then B2 Phi. Production Llama text/app and original full adoption quality remain explicit B5/M8 closure work."
+}

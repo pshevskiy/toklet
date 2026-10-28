@@ -1,0 +1,444 @@
+{
+  "format": "toklet-llama3-plain-text-v1",
+  "repository": "mlx-community/Llama-3.2-1B-Instruct-8bit",
+  "revision": "d48cdf0a4ea22d893b7c63a99d6a693e24822795",
+  "file_pins": {
+    "tokenizer.json": "79e3e522635f3171300913bb421464a87de6222182a0570b9b2ccba2a964b2b4",
+    "tokenizer_config.json": "9823dcfdc1121869029da45192238e85cf44f0b232a6d9dc20e4fe6f4242a14e",
+    "special_tokens_map.json": "6f38c73729248f6c127296386e3cdde96e254636cc58b4169d3fd32328d9a8ec"
+  },
+  "producer_sha256": "571983bab77af3859835ac6a7a1b3cddd996b3c83135cb7f2567df7ea001dd0d",
+  "package_pins": {
+    ".venv/lib/python3.12/site-packages/jinja2/__init__.py": "c717a93bd8bb0c7b2a910ae004476e2ed7e8cf6402b93ebf81b2f85d237585b5",
+    ".venv/lib/python3.12/site-packages/jinja2/_identifier.py": "ff361cb4d2b346a964fe6bab4cd973ae3bb514524bed56bf223aaa77b8a2da55",
+    ".venv/lib/python3.12/site-packages/jinja2/async_utils.py": "bcaf8f76cba8ace3275929c4913de25094489139d880ed93e8c9c6c43807239a",
+    ".venv/lib/python3.12/site-packages/jinja2/bccache.py": "821d2ab3daee9675e8d0f857e634c9cb6507cc8f3016743ade8fefc3b9e1cd18",
+    ".venv/lib/python3.12/site-packages/jinja2/compiler.py": "f51a42425e57f3c0479652623ec1cf876f791e1d2e029bf0149350baeb542de3",
+    ".venv/lib/python3.12/site-packages/jinja2/constants.py": "18ca05c9d045fe476969128fa0ce5c97932f8aab9544b57266d7e9e7ed7a8e0d",
+    ".venv/lib/python3.12/site-packages/jinja2/debug.py": "0a71ea0831ddf81546bed8bff19b13a259d7361037102b18fba9ffda9c14f07c",
+    ".venv/lib/python3.12/site-packages/jinja2/defaults.py": "6e805c4b0efc87e969db461b697489b2a900236b8dfe60ff4ed0b27697aae705",
+    ".venv/lib/python3.12/site-packages/jinja2/environment.py": "f6786b3fb0a1f8d6c65f4d30bf2af8cb2fae84d1ead8e09ceb48201ab9e2fdf9",
+    ".venv/lib/python3.12/site-packages/jinja2/exceptions.py": "8a81de1eb5b009635a5d7d629c798755b96f73885a3bb017b230a9dc67d6bf1d",
+    ".venv/lib/python3.12/site-packages/jinja2/ext.py": "e4f1797877e1f265c02315c71d1076c576d7a218bca44de71d23b16baeae4bb1",
+    ".venv/lib/python3.12/site-packages/jinja2/filters.py": "3d0fc481df67f634a0b671906321782b98f69d8c21508ba584f9f28a691dafe9",
+    ".venv/lib/python3.12/site-packages/jinja2/idtracking.py": "fa5979948a7bde930bdc4ad46222098fbb5d996c5c1ff2250efdf203f862658a",
+    ".venv/lib/python3.12/site-packages/jinja2/lexer.py": "2d88988a8e9bafe4dea7d9cf72ea565ec3c4b6396ec37a75994fa534155151f9",
+    ".venv/lib/python3.12/site-packages/jinja2/loaders.py": "c08ae7c63bdc6ea8795705b6f0d4a47e8b620eaf2a342c4839215b1948922c1e",
+    ".venv/lib/python3.12/site-packages/jinja2/meta.py": "3930cf91a16f5361e0bf1fba6a4cfbd79e05f012166919af25c045bf0a291f0c",
+    ".venv/lib/python3.12/site-packages/jinja2/nativetypes.py": "ec620600b54981dc8bf34a1925d4146947f04ade6ada549265b5edd1d35ffcce",
+    ".venv/lib/python3.12/site-packages/jinja2/nodes.py": "9b50eecdcafaaa1648f0943a57226050d8a78c07f96d0ce28d29839ccb2f531f",
+    ".venv/lib/python3.12/site-packages/jinja2/optimizer.py": "ac99c246543ba59b04126321b100e00bfa4ac831f13f94cf4bacd53c6b2072ef",
+    ".venv/lib/python3.12/site-packages/jinja2/parser.py": "94b385cb7b0498773921a1074621f5b1056721dda6a14433872789653b5d637d",
+    ".venv/lib/python3.12/site-packages/jinja2/runtime.py": "80393e1af76b8895ea82c19b1e0adc2933f4629eb33d7ce1ceb2290851f78c05",
+    ".venv/lib/python3.12/site-packages/jinja2/sandbox.py": "330d9a8ad958d88f256bb15885c5f6606f41b5461c2e70f41a1ddddbd7035ab6",
+    ".venv/lib/python3.12/site-packages/jinja2/tests.py": "54bb018551675a0f8fc52073d4c8519cd5a03f5a2f5e4de778ed452d031e0bd4",
+    ".venv/lib/python3.12/site-packages/jinja2/utils.py": "ad1a77a3d7bb64a4b87f2ad645b10bc8b729b8655315c9e8a1a39ad6ac7f1489",
+    ".venv/lib/python3.12/site-packages/jinja2/visitor.py": "11c9cbd4f2307ffe1154238cc6c44db91f005c76d2d6a7c074c384da780a273e",
+    ".venv/lib/python3.12/site-packages/markupsafe/__init__.py": "1f512743b0ba6e96c1d7a9450e425889e9978eb3d2d15e72dd57c8c47f518686",
+    ".venv/lib/python3.12/site-packages/markupsafe/_native.py": "8522ecf099b3e5aa9acae7a780927791d4f93f0369056a4aae6412762a67742f",
+    ".venv/lib/python3.12/site-packages/markupsafe/_speedups.cpython-312-darwin.so": "c5dff96c03976c47aa7d1cae3a73b4c57099259b49305c9486735ee9f7022304",
+    ".venv/lib/python3.12/site-packages/tokenizers/__init__.py": "148ecb122f3fee03be9abb1fe213dd85fbc691bf2ad2b437ff531533781a6a3a",
+    ".venv/lib/python3.12/site-packages/tokenizers/decoders/__init__.py": "85fc0ce821540ef94c1862f8fb1b1a698cfcd4af4fe6b408e592f950758af18e",
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/__init__.py": "57302ca65688a3bae5e0014ef0c8aeee283b31f663be89f055b959c34d7347a3",
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/base_tokenizer.py": "3ed4364d29a8306953a4bf2873c7c3bf0255218ea2b161a6a6cf5ca26cec5a31",
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/bert_wordpiece.py": "b0a0ae9b414a3d875280914937c2c37ab541a130d14aacaa49dadc9be96f42a2",
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/byte_level_bpe.py": "8817a933fcf5b392b2ef314356b60b7372f96f262b228ba4efe934246b85d74b",
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/char_level_bpe.py": "35a83f1c5abc46f72e72a8bc321575fb4c6da11d02ec58c739e70555444beecb",
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/sentencepiece_bpe.py": "734f1f29fea2f7613646c2a0b31cbb2f365f617f3e3000874911bc53f239cad6",
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/sentencepiece_unigram.py": "d91a087c556988c9093ad382b2433f54278210b59a0bf6cd9ddb3a1afb44d0a4",
+    ".venv/lib/python3.12/site-packages/tokenizers/models/__init__.py": "7896781d3010669c672882cdca559a4c5ab15f2f816ba38ab3058de3b7de795f",
+    ".venv/lib/python3.12/site-packages/tokenizers/normalizers/__init__.py": "ff4eb0e1ca9122dbde12021d75868b3127209123a4200308cd809eb1be400385",
+    ".venv/lib/python3.12/site-packages/tokenizers/pre_tokenizers/__init__.py": "295f7e12c03290610d514ce419609bbf89fa60cea161ad617e763e83306930d1",
+    ".venv/lib/python3.12/site-packages/tokenizers/processors/__init__.py": "c4cd8310ac0ab4722e987b2ccccf00324abe0256aabc16455d680b53c48d84e6",
+    ".venv/lib/python3.12/site-packages/tokenizers/tokenizers.abi3.so": "899b244f19f1ddd6506c45ea0f7163f38952f2a552272a687a6ef4b9ddcc7327",
+    ".venv/lib/python3.12/site-packages/tokenizers/tools/__init__.py": "c46f1c681f4e1c2f1c6c1d354b9bd8575e0767184ee9e59b2de86c6fbd29a62a",
+    ".venv/lib/python3.12/site-packages/tokenizers/tools/visualizer.py": "8edc646b4d6984d3f8eee412a1c21014efc33272f7647770a211950eaa9824fa",
+    ".venv/lib/python3.12/site-packages/tokenizers/trainers/__init__.py": "513bb6d8019ca7be88be95b8e712d16c95844f4e0dc4f5ba35f09bd98633d043"
+  },
+  "versions": {
+    "jinja2": "3.1.6",
+    "tokenizers": "0.22.2"
+  },
+  "date_string": "26 Jul 2024",
+  "add_special_tokens": false,
+  "decode_policy": "raw tokenizers ByteLevel; no Transformers cleanup transform",
+  "stop_ids": [
+    128001,
+    128008,
+    128009
+  ],
+  "cases": [
+    {
+      "name": "single",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello!"
+        }
+      ],
+      "rendered": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHello!<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "rendered_sha256": "431ae938f995207f12b5416d7ed1a35e45ed97455ba076d5e4aed3059a45bf59",
+      "ids": [
+        128000,
+        128006,
+        9125,
+        128007,
+        271,
+        38766,
+        1303,
+        33025,
+        2696,
+        25,
+        6790,
+        220,
+        2366,
+        18,
+        198,
+        15724,
+        2696,
+        25,
+        220,
+        1627,
+        10263,
+        220,
+        2366,
+        19,
+        271,
+        128009,
+        128006,
+        882,
+        128007,
+        271,
+        9906,
+        0,
+        128009,
+        128006,
+        78191,
+        128007,
+        271
+      ],
+      "decoded_with_specials": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHello!<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "bos_with_special_processing": [
+        128000,
+        128000
+      ]
+    },
+    {
+      "name": "multi",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Count to two."
+        },
+        {
+          "role": "assistant",
+          "content": "One, two."
+        },
+        {
+          "role": "user",
+          "content": "Теперь по-русски 👋"
+        }
+      ],
+      "rendered": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nCount to two.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\nOne, two.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nТеперь по-русски 👋<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "rendered_sha256": "432ab76025266ef8924f6188f28c1c91502fd5ec048597d08625c9cc198cff0e",
+      "ids": [
+        128000,
+        128006,
+        9125,
+        128007,
+        271,
+        38766,
+        1303,
+        33025,
+        2696,
+        25,
+        6790,
+        220,
+        2366,
+        18,
+        198,
+        15724,
+        2696,
+        25,
+        220,
+        1627,
+        10263,
+        220,
+        2366,
+        19,
+        271,
+        128009,
+        128006,
+        882,
+        128007,
+        271,
+        2568,
+        311,
+        1403,
+        13,
+        128009,
+        128006,
+        78191,
+        128007,
+        271,
+        4054,
+        11,
+        1403,
+        13,
+        128009,
+        128006,
+        882,
+        128007,
+        271,
+        35095,
+        67124,
+        106980,
+        18154,
+        12,
+        107392,
+        80112,
+        62904,
+        233,
+        128009,
+        128006,
+        78191,
+        128007,
+        271
+      ],
+      "decoded_with_specials": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nCount to two.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\nOne, two.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nТеперь по-русски 👋<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "bos_with_special_processing": [
+        128000,
+        128000
+      ]
+    },
+    {
+      "name": "trim",
+      "messages": [
+        {
+          "role": "user",
+          "content": " \t café é\n\n"
+        }
+      ],
+      "rendered": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\ncafé é<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "rendered_sha256": "d9b9267b994d7cca6f6ecf8a993bc0da3aa9074c5dd0f2228c2d30815ffc7d08",
+      "ids": [
+        128000,
+        128006,
+        9125,
+        128007,
+        271,
+        38766,
+        1303,
+        33025,
+        2696,
+        25,
+        6790,
+        220,
+        2366,
+        18,
+        198,
+        15724,
+        2696,
+        25,
+        220,
+        1627,
+        10263,
+        220,
+        2366,
+        19,
+        271,
+        128009,
+        128006,
+        882,
+        128007,
+        271,
+        936,
+        59958,
+        384,
+        54939,
+        128009,
+        128006,
+        78191,
+        128007,
+        271
+      ],
+      "decoded_with_specials": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\ncafé é<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "bos_with_special_processing": [
+        128000,
+        128000
+      ]
+    },
+    {
+      "name": "empty",
+      "messages": [
+        {
+          "role": "user",
+          "content": ""
+        }
+      ],
+      "rendered": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "rendered_sha256": "a40c1c46ec138ab70c954f20d8788367264929cb58e9d37ef5e3e7bd08111563",
+      "ids": [
+        128000,
+        128006,
+        9125,
+        128007,
+        271,
+        38766,
+        1303,
+        33025,
+        2696,
+        25,
+        6790,
+        220,
+        2366,
+        18,
+        198,
+        15724,
+        2696,
+        25,
+        220,
+        1627,
+        10263,
+        220,
+        2366,
+        19,
+        271,
+        128009,
+        128006,
+        882,
+        128007,
+        271,
+        128009,
+        128006,
+        78191,
+        128007,
+        271
+      ],
+      "decoded_with_specials": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "bos_with_special_processing": [
+        128000,
+        128000
+      ]
+    },
+    {
+      "name": "python_trim",
+      "messages": [
+        {
+          "role": "user",
+          "content": "\u001c  X  \u001f"
+        }
+      ],
+      "rendered": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nX<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "rendered_sha256": "2047aa5b287ecc42e52f0fa2520129176cf02fc30b07255bb347624c46a5cdcc",
+      "ids": [
+        128000,
+        128006,
+        9125,
+        128007,
+        271,
+        38766,
+        1303,
+        33025,
+        2696,
+        25,
+        6790,
+        220,
+        2366,
+        18,
+        198,
+        15724,
+        2696,
+        25,
+        220,
+        1627,
+        10263,
+        220,
+        2366,
+        19,
+        271,
+        128009,
+        128006,
+        882,
+        128007,
+        271,
+        55,
+        128009,
+        128006,
+        78191,
+        128007,
+        271
+      ],
+      "decoded_with_specials": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nX<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+      "bos_with_special_processing": [
+        128000,
+        128000
+      ]
+    }
+  ],
+  "raw_roundtrips": [
+    {
+      "text": "Hello, world!",
+      "ids": [
+        9906,
+        11,
+        1917,
+        0
+      ],
+      "decoded": "Hello, world!"
+    },
+    {
+      "text": " a  b\n",
+      "ids": [
+        264,
+        220,
+        293,
+        198
+      ],
+      "decoded": " a  b\n"
+    },
+    {
+      "text": "Привет 👋 café é",
+      "ids": [
+        54745,
+        28089,
+        8341,
+        62904,
+        233,
+        53050,
+        384,
+        54939
+      ],
+      "decoded": "Привет 👋 café é"
+    },
+    {
+      "text": "\t x \n",
+      "ids": [
+        197,
+        865,
+        720
+      ],
+      "decoded": "\t x \n"
+    }
+  ],
+  "stop_decodes": [
+    {
+      "id": 128001,
+      "literal": "<|end_of_text|>",
+      "decoded_skip_specials": ""
+    },
+    {
+      "id": 128008,
+      "literal": "<|eom_id|>",
+      "decoded_skip_specials": ""
+    },
+    {
+      "id": 128009,
+      "literal": "<|eot_id|>",
+      "decoded_skip_specials": ""
+    }
+  ],
+  "model_executed": false,
+  "chat_integration_qualified": false,
+  "full_quality_qualified": false
+}

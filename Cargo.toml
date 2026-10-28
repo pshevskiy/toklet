@@ -64,3 +64,7 @@ required-features = ["metal"]
 [[example]]
 name = "metal_bench"
 required-features = ["metal"]
+
+[[example]]
+name = "llama3_checkpoint"
+required-features = ["metal"]
