@@ -1,11 +1,19 @@
 use super::*;
 use crate::weights::range_tests::Fixture;
 
-fn wrapper(source: weights::Source, storage: Storage, shape: Vec<usize>) -> Source {
+pub(super) fn wrapper(source: weights::Source, storage: Storage, shape: Vec<usize>) -> Source {
     let payload_bytes = match storage {
         Storage::Affine(layout) => layout.total_bytes(),
         Storage::Float(dtype) => shape.iter().product::<usize>() * dtype.bytes(),
     };
+    let tensors = BTreeMap::from([(
+        "x.weight".into(),
+        TensorSpec {
+            shape,
+            storage,
+            payload_bytes,
+        },
+    )]);
     Source {
         declared_positions: 8,
         config: Config {
@@ -23,14 +31,8 @@ fn wrapper(source: weights::Source, storage: Storage, shape: Vec<usize>) -> Sour
         architecture: Architecture::Llama,
         tied_output: true,
         position_plan: crate::model::PositionPlan::Ordinary,
-        tensors: BTreeMap::from([(
-            "x.weight".into(),
-            TensorSpec {
-                shape,
-                storage,
-                payload_bytes,
-            },
-        )]),
+        tensors: tensors.clone(),
+        logical: logical::plan(&tensors, &[]).unwrap(),
         source,
         tensor_payload_bytes: payload_bytes,
         admitted_load_bytes: METADATA_ALLOWANCE + STREAM_BYTES + payload_bytes,

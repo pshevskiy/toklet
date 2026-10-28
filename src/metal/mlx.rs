@@ -209,7 +209,7 @@ impl Packed {
         weights.with_bytes_mut(|w| {
             self.scales.with_bytes_mut(|sc| {
                 self.biases.with_bytes_mut(|bi| {
-                    source.read_affine(name, w, &mut sc[..size], &mut bi[..size])?;
+                    source.read_logical_affine(name, w, &mut sc[..size], &mut bi[..size])?;
                     validate_domain(layout, &sc[..size], &bi[..size])
                 })
             })

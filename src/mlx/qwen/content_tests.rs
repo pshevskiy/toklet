@@ -1,6 +1,18 @@
 use super::*;
 use crate::weights::audit::tests::Fixture;
 fn wrapper(source: weights::Source, storage: Storage) -> Source {
+    let payload_bytes = match storage {
+        Storage::Affine(layout) => layout.total_bytes(),
+        Storage::Float(dtype) => 32 * dtype.bytes(),
+    };
+    let tensors = BTreeMap::from([(
+        "x.weight".into(),
+        TensorSpec {
+            shape: vec![1, 32],
+            storage,
+            payload_bytes,
+        },
+    )]);
     Source {
         declared_positions: 8,
         config: Config {
@@ -18,17 +30,11 @@ fn wrapper(source: weights::Source, storage: Storage) -> Source {
         architecture: Architecture::Llama,
         tied_output: true,
         position_plan: crate::model::PositionPlan::Ordinary,
-        tensors: BTreeMap::from([(
-            "x.weight".into(),
-            TensorSpec {
-                shape: vec![1, 32],
-                storage,
-                payload_bytes: 36,
-            },
-        )]),
+        tensors: tensors.clone(),
+        logical: logical::plan(&tensors, &[]).unwrap(),
         source,
-        tensor_payload_bytes: 36,
-        admitted_load_bytes: METADATA_ALLOWANCE + STREAM_BYTES + 36,
+        tensor_payload_bytes: payload_bytes,
+        admitted_load_bytes: METADATA_ALLOWANCE + STREAM_BYTES + payload_bytes,
     }
 }
 #[test]

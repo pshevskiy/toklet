@@ -27,6 +27,9 @@ use std::{
     path::Path,
 };
 
+mod logical;
+pub(crate) use logical::LogicalTensorSpec;
+
 const MAX_CONFIG_BYTES: usize = 1024 * 1024;
 const METADATA_ALLOWANCE: usize = 64 * 1024 * 1024;
 const STREAM_BYTES: usize = 64 * 1024;
@@ -147,6 +150,7 @@ pub struct Source {
     tied_output: bool,
     position_plan: crate::model::PositionPlan,
     tensors: BTreeMap<String, TensorSpec>,
+    logical: BTreeMap<String, LogicalTensorSpec>,
     source: weights::Source,
     tensor_payload_bytes: usize,
     admitted_load_bytes: usize,
@@ -432,6 +436,7 @@ impl Source {
             tied_output,
             position_plan,
             tensors,
+            logical: BTreeMap::new(),
             source,
             tensor_payload_bytes,
             admitted_load_bytes,
@@ -440,6 +445,7 @@ impl Source {
             result.check_tied_output()?;
             result.tensors.remove("lm_head.weight");
         }
+        result.logical = logical::plan(&result.tensors, &[])?;
         Ok(result)
     }
     pub fn config(&self) -> &Config {
@@ -990,3 +996,7 @@ mod content_tests;
 #[cfg(test)]
 #[path = "qwen/row_tests.rs"]
 mod row_tests;
+
+#[cfg(test)]
+#[path = "qwen/logical_tests.rs"]
+pub(crate) mod logical_tests;

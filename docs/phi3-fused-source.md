@@ -4,10 +4,13 @@ Selected prospective representative:
 [mlx-community/Phi-3-mini-4k-instruct-4bit](https://huggingface.co/mlx-community/Phi-3-mini-4k-instruct-4bit/tree/5b3819ed6317784fb20eddeae9bed984f778d0d0),
 revision `5b3819ed6317784fb20eddeae9bed984f778d0d0`. Astra inspected public config,
 tokenizer assets, source implementations, index and the exact safetensors header.
-Only metadata and header ranges were fetched. The complete 2,149,696,167-byte
-payload and advertised SHA256 `8d75680621a09474f6601e9176f2f61f92a5e4c079d68d583901f51699fda50a`
-are **not locally downloaded or verified**. This is not Phi execution or app
-qualification.
+Initial research fetched only metadata and header ranges. The complete
+2,149,696,167-byte payload is now downloaded and locally SHA256-verified as
+`8d75680621a09474f6601e9176f2f61f92a5e4c079d68d583901f51699fda50a`.
+Astra independently verified the complete file,455 header/index entries and
+contiguous shape-derived extents. This is artifact acquisition only; Phi
+execution and app qualification remain pending. See the separate acquisition
+entry in the [loading evidence](../benchmarks/results/2026-10-28-logical-projection-loading-v1.json).
 
 ## Concrete shared-block mapping
 

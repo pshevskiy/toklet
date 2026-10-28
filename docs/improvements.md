@@ -6551,3 +6551,32 @@ logical row mapping and strict bounded Phi composition. See
 [report](fused-row-source.md),
 [evidence](../benchmarks/results/2026-10-28-fused-row-source-v1.json) and
 [TODO](../TODO.md).
+
+## 2026-10-28 — Shared cold logical projection loading
+
+Added one concrete crate-private logical tensor plan for whole tensors or complete
+original row partitions. Physical names, quantization overrides and unique source
+payloads remain authoritative. Scalar loading/peak estimates, Metal loading and
+actual padding, and compatibility grouping consume the same effective specs.
+No descriptors or name lookups enter numerical loops. Whole reads preserve their
+existing audits; selected reads preserve the bounded range contracts.
+
+Formatting, strict default/Metal Clippy,403 default /285 Metal-library /8 targeted
+logical tests (overlap) and the existing explicit tied/untied tiny Metal graph
+pass. A synthetic80-byte source needs88 actual resident bytes after splitting;
+exact totals and admission boundaries pass. The sandbox initially hid Metal;
+only that GPU job was repeated with hardware access, with unchanged source and
+policy. All eight owned groups close. A private test-initializer typo was caught
+before application and corrected in preserved successor v2.
+
+Astra reviewed the proposal and final source/evidence. Retain this shared loading
+mechanism; Phi admission, source-window reporting, head96 graph and real-model
+qualification remain separate. See [report](logical-projection-loading.md),
+[evidence](../benchmarks/results/2026-10-28-logical-projection-loading-v1.json)
+and [TODO](../TODO.md). Continue B2b2.
+
+Also acquired the pinned public Phi3 four-bit payload for later checks. The full
+2,149,696,167 bytes, SHA256,455-entry header/index and contiguous tensor extents
+pass; Astra independently rehashed the entire file. No remote Python executes.
+The unaligned51,879-byte payload start remains valid. This acquisition does not
+qualify Phi numerical execution, text, application or device behavior.

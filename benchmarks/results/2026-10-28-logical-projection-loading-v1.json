@@ -1,0 +1,165 @@
+{
+  "schema": "toklet.logical-projection-loading.v1",
+  "date": "2026-10-28",
+  "base_revision": "69055ec",
+  "decision": "retain cold logical projection mapping; Phi admission remains B2b2",
+  "scope": {
+    "mapping": "crate-private Whole or original complete Rows partitions",
+    "current_production_families": "Whole identity maps",
+    "whole_readers_unchanged": true,
+    "physical_source_payload": "unique original owners",
+    "resident_padding": "each actual logical owner",
+    "hot_loop_change": false,
+    "real_model_executed": false,
+    "phi_executed": false,
+    "performance_claim": false
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_tests_passed": 403,
+    "metal_library_tests_passed": 285,
+    "logical_tests_passed": 8,
+    "suites_overlap": true,
+    "explicit_gpu_regressions_passed": 1,
+    "gpu_regression": "existing tiny tied/untied Llama frozen Half graph",
+    "owned_groups_closed": 8,
+    "first_attempt": "portable checks pass; sandbox GPU reports no Metal device",
+    "retry": "GPU only with hardware access; identical source; passes",
+    "ignored_tests_not_inferred_passed": true
+  },
+  "padding_control": {
+    "source_bytes": 80,
+    "resident_bytes": 88,
+    "rows": [
+      2,
+      1,
+      1
+    ],
+    "format": "affine4/group32/F16",
+    "real_device_measurement": false
+  },
+  "sources": [
+    {
+      "path": "src/mlx/qwen.rs",
+      "bytes": 39086,
+      "sha256": "14e4d6c464796eca8b93a73a4f171275174af509dd9f6143f1ae16d0ec18b967"
+    },
+    {
+      "path": "src/mlx/qwen/content_tests.rs",
+      "bytes": 4777,
+      "sha256": "e47d75811f60c0802652da2668a3df778e0c40feed1cd5d6468ae976830c909a"
+    },
+    {
+      "path": "src/mlx/qwen/row_tests.rs",
+      "bytes": 15707,
+      "sha256": "813bdec4c604b874f758468fb8f17dc26bad0c162635b58824acdc4cb27a968a"
+    },
+    {
+      "path": "src/mlx/reference.rs",
+      "bytes": 9634,
+      "sha256": "08b691fce98ca7e45ecadf7cb9c5aa14aab1f0da7c93504926154c5e7e2e0ed5"
+    },
+    {
+      "path": "src/mlx/compatibility.rs",
+      "bytes": 12508,
+      "sha256": "43020227d6b960c874f1eebf5e3f25930a82c9405892809d11881100cd1f1854"
+    },
+    {
+      "path": "src/metal/planning.rs",
+      "bytes": 47448,
+      "sha256": "17b4bf5ee3d4f6c24923b4d6fa4402054720ba150d7f8d71225a8c2ad5f52c59"
+    },
+    {
+      "path": "src/metal/mod.rs",
+      "bytes": 135769,
+      "sha256": "0850e65fd83f1ccd7869fac9bf10650008154905a5c739768137e5f754c89443"
+    },
+    {
+      "path": "src/metal/mlx.rs",
+      "bytes": 38133,
+      "sha256": "143dfd2b34b94045cf5c729a153f8f200a5f7bb59442aad7e9d90f9e55b882ce"
+    },
+    {
+      "path": "src/mlx/qwen/logical.rs",
+      "bytes": 8239,
+      "sha256": "a38d36a15974b84515ba3b9a9175f75779dc54b5ff7d9a63a6e47952d9ff3f5b"
+    },
+    {
+      "path": "src/mlx/qwen/logical_tests.rs",
+      "bytes": 10310,
+      "sha256": "9ffd67815c75ada22ea598d1986d575bcdeaf81cf8aed35ba7cb6bfafa6ff1f5"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b2b1-proposal-v2/manifest.json",
+      "bytes": 3956,
+      "sha256": "8f704d9f6ce644c93e74c71be53472f08830280540b8757641ac7e9cd14354d0"
+    },
+    {
+      "path": "artifacts/new-goal-b2b1-independent-review-v1/prospective-review.json",
+      "bytes": 8212,
+      "sha256": "4cbecf79345097536d38c5146963d5ffb93e2b9f277a01e033b1483e8db5dd5c"
+    },
+    {
+      "path": "artifacts/new-goal-b2b1-checks-v1/check.py",
+      "bytes": 6062,
+      "sha256": "58b6c8961f96672142590e142e7663e4c472c41cea9e3d4b25738742917fa6f6"
+    },
+    {
+      "path": "artifacts/new-goal-b2b1-checks-v1/checks.json",
+      "bytes": 815921,
+      "sha256": "8561aa9fb6062b84e820c5841246d8af888c41836f87a02095464378a6f9cc1d"
+    },
+    {
+      "path": "artifacts/new-goal-b2b1-gpu-retry-v1/check.py",
+      "bytes": 5664,
+      "sha256": "75b4059a54d9b34a3a8573733b4b2f681cc6a45d1b01828b8c6282bdb4771f3d"
+    },
+    {
+      "path": "artifacts/new-goal-b2b1-gpu-retry-v1/checks.json",
+      "bytes": 810907,
+      "sha256": "1c755a8a02fa633446e4a4baa555806a63d11796e95f8fe214c40d083190d947"
+    }
+  ],
+  "final_review": {
+    "path": "artifacts/new-goal-b2b1-independent-review-v1/final-review.json",
+    "bytes": 6044,
+    "sha256": "4eaf4e6bf55a99fff22ad035f7960135b835ba549ad4a372306ea32f37526bcc"
+  },
+  "next": "B2b2 strict Phi parser, declared window, fused inventory and tiny graph",
+  "separate_artifact_acquisition": {
+    "repository": "mlx-community/Phi-3-mini-4k-instruct-4bit",
+    "revision": "5b3819ed6317784fb20eddeae9bed984f778d0d0",
+    "file_bytes": 2149696167,
+    "file_sha256": "8d75680621a09474f6601e9176f2f61f92a5e4c079d68d583901f51699fda50a",
+    "header_tensor_count": 455,
+    "data_start": 51879,
+    "model_executed": false,
+    "app_admitted": false,
+    "evidence": [
+      {
+        "path": "artifacts/new-goal-b2c-download-v1/download.py",
+        "bytes": 5686,
+        "sha256": "594866f3f191cf51a9e8fd5c1bb8d6ea403a5e42bc8f13ea941789aaf6db67ab"
+      },
+      {
+        "path": "artifacts/new-goal-b2c-download-v1/download.json",
+        "bytes": 5673,
+        "sha256": "c40b617af3e8f78fe96ea9adf27d5e21bd2885c02bcebd82cea05cf73f737f93"
+      },
+      {
+        "path": "artifacts/new-goal-b2c-independent-review-v1/download-review.json",
+        "bytes": 4735,
+        "sha256": "d26eecca95beecf3065d738c39d7a2a96ffde1c1d522066b0107029ed9aeb423"
+      },
+      {
+        "path": "artifacts/new-goal-b2c-independent-review-v1/acquisition-final-review.json",
+        "bytes": 2247,
+        "sha256": "d88e5a1ce3b74f4712c6cab46b13bd0fbdcf772e555f39eb504ac2efffc244b7"
+      }
+    ]
+  }
+}

@@ -388,7 +388,7 @@ impl Model {
                         let mut tensor = Tensor::allocate(&gpu, layout)?;
                         let mut index = 0;
                         tensor.buffer.with_mut(|data| {
-                            source.visit_float(&name, |x| {
+                            source.visit_logical_float(&name, |x| {
                                 let x = half::f16::from_f32(x);
                                 if !x.is_finite() {
                                     return Err(weights::Error::Invalid(

@@ -260,7 +260,8 @@ pub fn inspect(directory: &Path, backend: Backend, options: LoadOptions) -> Repo
     report.tied_output = Some(source.tied_output());
     report.tensor_metadata_validated = true;
     let mut groups = BTreeMap::new();
-    for spec in source.tensors().values() {
+    for logical in source.logical_tensors().values() {
+        let spec = logical.tensor();
         let key = match spec.storage() {
             Storage::Float(kind) => ("floating", dtype(kind), None, None),
             Storage::Affine(layout) => (

@@ -46,9 +46,10 @@ fn bytes(count: usize) -> Result<Vec<u8>, Error> {
 }
 fn read(source: &mut Source, name: &str) -> Result<Vec<f32>, Error> {
     let spec = source
-        .tensors()
+        .logical_tensors()
         .get(name)
         .ok_or_else(|| invalid("validated reference tensor absent"))?;
+    let spec = spec.tensor();
     let count = spec
         .shape()
         .iter()
@@ -58,7 +59,7 @@ fn read(source: &mut Source, name: &str) -> Result<Vec<f32>, Error> {
     match storage {
         Storage::Float(_) => {
             let mut index = 0;
-            source.visit_float(name, |x| {
+            source.visit_logical_float(name, |x| {
                 *result
                     .get_mut(index)
                     .ok_or_else(|| invalid("MLX reference float element count differs"))? = x;
@@ -73,7 +74,7 @@ fn read(source: &mut Source, name: &str) -> Result<Vec<f32>, Error> {
             let mut weights = bytes(layout.weight_bytes())?;
             let mut scales = bytes(layout.metadata_bytes())?;
             let mut biases = bytes(layout.metadata_bytes())?;
-            source.read_affine(name, &mut weights, &mut scales, &mut biases)?;
+            source.read_logical_affine(name, &mut weights, &mut scales, &mut biases)?;
             let matrix = Matrix::from_le_bytes(layout, &weights, &scales, &biases)
                 .map_err(|e| invalid(e.0))?;
             for row in 0..layout.rows() {
@@ -112,7 +113,8 @@ pub(crate) struct LoadPlan {
 pub(crate) fn load_plan(source: &Source) -> Result<LoadPlan, Error> {
     let mut fp32_weights_bytes = 0;
     let mut temporary_packed_bytes = 0;
-    for spec in source.tensors().values() {
+    for logical in source.logical_tensors().values() {
+        let spec = logical.tensor();
         let count = spec
             .shape()
             .iter()
@@ -221,4 +223,39 @@ fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error
         temporary_packed_bytes,
         admitted_load_bytes,
     })
+}
+
+#[cfg(test)]
+mod logical_load_tests {
+    use super::*;
+    use crate::mlx::{affine::MetadataDtype, qwen::logical_tests::split_source};
+
+    #[test]
+    fn scalar_loader_reads_selected_rows_and_accounts_only_largest_temporary_span() {
+        for bits in [2, 3, 4, 5, 6, 8] {
+            for kind in [MetadataDtype::F16, MetadataDtype::BF16, MetadataDtype::F32] {
+                let (_fixture, mut source) = split_source(bits, kind);
+                let p = load_plan(&source).unwrap();
+                assert_eq!(p.fp32_weights_bytes, 4 * 32 * 4);
+                let temporary = 2 * 32 * usize::from(bits) / 8 + 4 * kind.bytes();
+                assert_eq!(p.temporary_packed_bytes, temporary);
+                assert!(temporary < source.tensor_payload_bytes());
+                assert_eq!(
+                    p.admitted_load_bytes,
+                    512 + temporary + 64 * 1024 + 64 * 1024 * 1024
+                );
+                let mut all = Vec::new();
+                for name in ["q.weight", "k.weight", "v.weight"] {
+                    all.extend(read(&mut source, name).unwrap());
+                }
+                let expected: Vec<_> = (0..4)
+                    .flat_map(|row| {
+                        let value = (((1usize << bits) - 1) * (row + 1) - row) as f32;
+                        std::iter::repeat_n(value, 32)
+                    })
+                    .collect();
+                assert_eq!(all, expected);
+            }
+        }
+    }
 }

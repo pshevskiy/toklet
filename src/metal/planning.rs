@@ -29,7 +29,8 @@ impl MlxWeights {
     pub fn new(source: &Source) -> Result<Self> {
         let mut plans = BTreeMap::new();
         let mut weight_bytes = 0;
-        for (name, spec) in source.tensors() {
+        for (name, logical) in source.logical_tensors() {
+            let spec = logical.tensor();
             let (rows, columns) = match spec.shape() {
                 [n] => (1, *n),
                 [r, c] => (*r, *c),
@@ -1288,5 +1289,36 @@ mod tests {
             );
         }
         assert!(validate_attention(Some(Architecture::Qwen2), AttentionMode::Online).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod logical_weight_tests {
+    use super::*;
+    use crate::mlx::{affine::MetadataDtype, qwen::logical_tests::split_source};
+
+    #[test]
+    fn logical_weight_plan_counts_actual_selected_padding_and_admits_before_allocation() {
+        let (_fixture, source) = split_source(4, MetadataDtype::F16);
+        let plan = MlxWeights::new(&source).unwrap();
+        assert_eq!(source.tensor_payload_bytes(), 80);
+        // 64 code bytes; q has 4-byte metadata, k/v each need 2 -> 4 bytes
+        // in *both* coefficient buffers. Separate resident owners total 88.
+        assert_eq!(plan.weight_bytes, 88);
+        assert_eq!(plan.tensors.len(), 3);
+        for (name, rows) in [("q.weight", 2), ("k.weight", 1), ("v.weight", 1)] {
+            let (layout, storage) = plan.tensors[name];
+            assert_eq!(layout.rows, rows);
+            assert_eq!(layout.columns, 32);
+            let Storage::Affine(p) = storage else {
+                panic!()
+            };
+            assert_eq!(p.rows(), rows);
+        }
+        assert_eq!(plan.admitted, 88 + ALLOWANCE + 64 * 1024);
+        assert!(plan.admit(plan.admitted).is_ok());
+        assert!(plan.admit(plan.admitted - 1).is_err());
+        assert_eq!(plan.validate_buffers(32).unwrap(), 32);
+        assert!(plan.validate_buffers(31).is_err());
     }
 }
