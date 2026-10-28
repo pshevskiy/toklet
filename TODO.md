@@ -61,6 +61,16 @@ the goal, not a claim that arbitrary Hugging Face models already run.
 - [ ] Pass short complete source/native, cache/session, bounded real generation
   and measured memory checks on Mac; obtain Astra review and commit.
 
+The next integration decisions are settled with Astra: keep learned-weight bytes
+separate from positional residency, add zero-omitted positional memory fields,
+and update the shared Swift resource decoder's checked totals. Count model-owned
+frequencies once; inspection must not allocate them while reporting
+`numerical_buffers_allocated=false`. Keep Llama Reference-only and its initial
+512-position scope. Freeze the tiny Half graph before target outcomes using the
+existing stage policy (`atol=max(1e-4, 2*maxabs(half32-half64))`, `rtol=1e-3`).
+Packed projection weights remain FP32 reconstructions; Half embedding lookup
+rounding must not silently replace tied output-projection coefficients.
+
 ### B2 — Fused projection composition
 
 - [ ] Select and pin a compact Phi-style model with explicit positional rules.
@@ -153,4 +163,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B1c1 numerical policy | Astra froze dual per-element gates and optional-operation ownership before GPU outcomes; fixture export/replay exact. | [Policy and results](docs/llama3-metal-rotary.md); isolated collection only. |
 | 2026-10-28 | B1c1 check launcher | Private driver rewrite raised NameError before child launch; retained and corrected with exact replacement and AST preflight. No numerical outcome or gate change. | [Evidence](benchmarks/results/2026-10-28-llama3-metal-rotary-v1.json); full successful check driver v2. |
 | 2026-10-28 | B1c1 isolated Metal rotary | 383 default / 261 Metal-library tests (overlap), strict checks and both explicit GPU tests pass; 17,408 scaled and 13,824 ordinary comparisons. Astra final approval. | `f5ab3be`; B1c2 structural model integration. |
-| 2026-10-28 | B1c2a index contracts | UInt32/strided and synthetic planner boundaries, 383 default / 263 Metal-library tests (overlap), strict checks and existing strided MLX GPU regression pass; Astra approval. | Commit containing this entry; B1c2b model residency/composition next. |
+| 2026-10-28 | B1c2a index contracts | UInt32/strided and synthetic planner boundaries, 383 default / 263 Metal-library tests (overlap), strict checks and existing strided MLX GPU regression pass; Astra approval. | `1a4621b`; B1c2b model residency/composition. |
+| 2026-10-28 | B1c2b integration decisions | Astra resolved separate positional accounting, optional Swift decoder fields, allocation-free inspection and the unchanged tiny Half graph policy. Design only; model integration remains unchecked. | Commit containing this entry; implement the explicit residency contract before wiring the model. |

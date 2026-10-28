@@ -6423,3 +6423,13 @@ broader structural admission; no shader, eligibility, budget, context, real-mode
 or performance scope changes. See [report](metal-index-contracts.md),
 [evidence](../benchmarks/results/2026-10-28-metal-index-contracts-v1.json) and
 [progress](../TODO.md).
+
+## 2026-10-28 — Preserve the next model-integration decisions
+
+Recorded Astra's B1c2b accounting and fixture decisions in [TODO.md](../TODO.md)
+so the next iteration can implement them directly. Learned weights and positional
+residency stay separate; zero-omitted memory fields require the shared Swift
+decoder to include them in checked totals. Inspection cannot allocate the
+frequency buffer while claiming otherwise. The new tiny Half graph retains
+the existing stage-envelope policy and actual packed-versus-lookup semantics.
+This records design only; no model-admission or completion checkbox changes.
