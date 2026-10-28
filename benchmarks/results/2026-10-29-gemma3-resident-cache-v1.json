@@ -1,0 +1,236 @@
+{
+  "format": "toklet-resident-half-cache-transaction-v1",
+  "date": "2026-10-29",
+  "base_revision": "229eb8b52165a87b65a9f6f4b1e0d8acbb8cb676",
+  "passed": true,
+  "scope": "Internal standalone all-owner two-phase F16 cache set; no complete graph/model/token replay",
+  "hardware": {
+    "device": "Apple M1 Pro",
+    "os": "macOS 26.6.2 (25G83)",
+    "ram_bytes": 17179869184
+  },
+  "build": {
+    "rust": "1.90.0",
+    "features": [
+      "metal"
+    ],
+    "profile": "release",
+    "debug_assertions": false,
+    "binary": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3c3c-cold-checks-v2/staged-cache-tests",
+      "bytes": 72541664,
+      "sha256": "102ee8705887c2315a396dce633522ddf2fb674c5b876a6bafef7148c4e4984e"
+    }
+  },
+  "domain": {
+    "physical_owners_min": 1,
+    "physical_owners_max": 32,
+    "kv_heads": 1,
+    "head_dimensions": [
+      32,
+      256
+    ],
+    "capacity_min": 1,
+    "capacity_max": 544,
+    "chunk_max": 32,
+    "window": "full or1..capacity"
+  },
+  "result": {
+    "raw_snapshots": 67,
+    "counts": {
+      "physical_half_words_compared": 6210796,
+      "guard_half_words": 6188,
+      "guard_status_words": 469,
+      "input_hash_pairs": 426,
+      "inactive_stage_words": 143442
+    },
+    "source_cases": 8,
+    "source_copy_pairs": 4,
+    "exact_source_expected_after_words": 1623152,
+    "exact_replayed_expected_after_words": 1052,
+    "actual_chain_offsets": [
+      512,
+      513,
+      514
+    ],
+    "owner_extremes": [
+      1,
+      32
+    ],
+    "all_raw_words_independently_reconstructed": true,
+    "observed_release_boundary_measurements": 27,
+    "required_zero_source_boundaries": 12,
+    "all_observed_rust_counts_zero": true,
+    "includes_command_creation_and_waits": true,
+    "driver_allocations_measured": false,
+    "omitted_and_partial_producers_rejected": true,
+    "opaque_readiness": true,
+    "whole_set_poison_on_partial_copy": true,
+    "reset_prefix": 0,
+    "synthetic_kv_replay_chunks": [
+      5,
+      7
+    ],
+    "actual_hardware_completion_error_injected": false,
+    "rollback_claim": false,
+    "successful_submissions_derived": [
+      12,
+      14,
+      6
+    ],
+    "submission_counter_is_device_instrumentation": false
+  },
+  "resource_accounting": {
+    "local_w512_c544_d256_old_and_stage_bytes": 557112,
+    "full_c544_d256_old_and_stage_bytes": 589880,
+    "owners15local3full_old_stage_bytes": 10126320,
+    "shared_status_bytes": 32,
+    "guard_elements_each": 7,
+    "session_adds_set_size_and_explicit_transaction_metadata_reserve": true,
+    "model_operation_and_plan_separate": true,
+    "compiler_allowance_bytes": 67108864,
+    "graph_scratch_weights_framework_driver_separate": true,
+    "not_measured_whole_model_fit": true
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_passed": 424,
+    "metal_library_passed": 310,
+    "debug_targeted_passed": 2,
+    "release_targeted_passed": 2,
+    "explicit_gpu_tests": 3,
+    "counts_overlap": true
+  },
+  "sampled_direct_process_memory": [
+    {
+      "pid": 42704,
+      "live_samples": 27,
+      "observed_maxima": {
+        "resident_size": 137445376,
+        "phys_footprint": 96895672,
+        "lifetime_max_phys_footprint": 113722040
+      }
+    },
+    {
+      "pid": 42720,
+      "live_samples": 1,
+      "observed_maxima": {
+        "resident_size": 655360,
+        "phys_footprint": 213088,
+        "lifetime_max_phys_footprint": 213088
+      }
+    },
+    {
+      "pid": 42721,
+      "live_samples": 1,
+      "observed_maxima": {
+        "resident_size": 32768,
+        "phys_footprint": 81992,
+        "lifetime_max_phys_footprint": 98376
+      }
+    }
+  ],
+  "evidence": {
+    "cold_checks": {
+      "path": "artifacts/new-goal-b3c3c-cold-checks-v2/checks.json",
+      "bytes": 866437,
+      "sha256": "1816d4d20ebc9004afea948a8d6d2afd535e249981ced8334282a098c97136f0"
+    },
+    "preserved_cold_failure": {
+      "path": "artifacts/new-goal-b3c3c-cold-checks-v1/checks.json",
+      "bytes": 861745,
+      "sha256": "84e1e7abb15be79042d6d05fe17ed689f3506576dc0bc3fbeb9acd8a929e98a7"
+    },
+    "candidate": {
+      "path": "artifacts/new-goal-b3c3c-root-draft-v1/manifest.json",
+      "bytes": 1313,
+      "sha256": "1ce7878076a76944bfb5d48e7a3a817c5edce38ec7e8263b0849150cc9715837"
+    },
+    "author_proposal": {
+      "path": "artifacts/new-goal-b3c3c-cache-proposal-v2/manifest.json",
+      "bytes": 3578,
+      "sha256": "456b8fd236c98cad3e6e48473fa7fd62bae2f71b9c4f1b35032c6cf2fa95db1f"
+    },
+    "prospective_operator_review": {
+      "path": "artifacts/new-goal-b3c3c-independent-review-v1/prospective-operator-review.json",
+      "bytes": 3581,
+      "sha256": "9bbc324c4aa4233257bfbdae4642449ffff265b6236c37978993bfaf22c75771"
+    },
+    "design_review": {
+      "path": "artifacts/new-goal-b3c3c-independent-review-v1/design-review.json",
+      "bytes": 6926,
+      "sha256": "626f9bd310f5be2da0fe2c50c5feeb2c53ed57164386fcacca939a424d7c846f"
+    },
+    "gpu": {
+      "path": "artifacts/new-goal-b3c3c-gpu-v1/gpu.json",
+      "bytes": 1272864,
+      "sha256": "783f21383b75bd27b63ed025548b66e29b37f53640e55657bbd753f700a6b00a"
+    },
+    "gpu_approval": {
+      "path": "artifacts/new-goal-b3c3c-gpu-v1/prospective-review.json",
+      "bytes": 3609,
+      "sha256": "28da522e55741aef36fce1bad146eb31a1f3ab4ab7a29d775743ccaae9deb68d"
+    },
+    "postrun_review": {
+      "path": "artifacts/new-goal-b3c3c-independent-review-v1/postrun-evidence-review.json",
+      "bytes": 25147,
+      "sha256": "175f93b4a40e87eb3857cdc01ba21f0e51117987d2218eb44438f555a72f4ab5"
+    }
+  },
+  "source_files": [
+    {
+      "path": "src/metal/mod.rs",
+      "bytes": 135899,
+      "sha256": "6e06de61d5dab564bc93a964e804d86363d289027f2781fdf7b3bb5a848e5aee"
+    },
+    {
+      "path": "src/metal/staged_cache.rs",
+      "bytes": 24232,
+      "sha256": "2ead7fbe0c4ca966e8383dbf68ba38d1621e2196684886d4d051da36b9eda5fc"
+    },
+    {
+      "path": "src/metal/staged_cache.metal",
+      "bytes": 719,
+      "sha256": "6ed5e328ae356e7aa37cec2d3fb72381139640b1aee303d30c30fd64539e77e2"
+    },
+    {
+      "path": "src/metal/staged_cache/tests.rs",
+      "bytes": 33917,
+      "sha256": "06d129929fd522df9e900222c42c842c4e807870d96fcf93e56b29548ba7714c"
+    }
+  ],
+  "shared_geometry": {
+    "path": "src/model/window_rows.rs",
+    "bytes": 7372,
+    "sha256": "a3df63a4c1433725dc2890151e13fb569bb13dae86c15543806ada40d6725b14"
+  },
+  "shared_owner_accounting": {
+    "path": "src/capacity.rs",
+    "bytes": 11922,
+    "sha256": "f78ae474bf762266caac8512ecff0b41a78975a754133c39be5573ed32d71cee"
+  },
+  "fixtures": [
+    {
+      "path": "tests/fixtures/gemma3-staged-attention-v1/manifest.json",
+      "bytes": 54401,
+      "sha256": "90656e1a724b1bfb8d3c14fd742166348d5abf64dedbaf3f8d83645e5e5ca7cb"
+    },
+    {
+      "path": "tests/fixtures/gemma3-staged-attention-v1/arrays.bin",
+      "bytes": 9713232,
+      "sha256": "12339d584e5d67602d386b75fcdca2dcfe62087ef1f4ac13eb0a5109525c150e"
+    }
+  ],
+  "limitations": [
+    "Test-only until concrete resident graph consumer.",
+    "Full decoder/head/candidate token publication is caller responsibility and remains unqualified.",
+    "Seeded source-copy and synthetic KV replay are not real model/token prefills.",
+    "Real hardware-error branches are statically reviewed, not faulted; injected protocol error follows a completed real first-K copy.",
+    "Sparse direct-process samples do not establish execution peaks or whole-model fit.",
+    "No real checkpoint, app/phone, quality, throughput or latency claim."
+  ],
+  "next_task": "B3c4 shared packed upload, frozen Half graph reference and concrete resident Model/Session",
+  "final_publication_review": "artifacts/new-goal-b3c3c-independent-review-v1/final-publication-review.json"
+}

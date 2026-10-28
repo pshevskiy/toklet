@@ -21,6 +21,8 @@ mod online_attention;
 mod q4_v2_projection;
 #[cfg(test)]
 mod staged_attention;
+#[cfg(test)]
+mod staged_cache;
 pub use capture::Capture;
 pub mod gemma_affine;
 pub mod gemma_rms;

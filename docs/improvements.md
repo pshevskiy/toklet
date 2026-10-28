@@ -6980,3 +6980,54 @@ cache publication, graph, app/phone, quality or throughput claim follows. See
 [evidence](../benchmarks/results/2026-10-29-gemma3-staged-attention-v1.json) and
 [TODO](../TODO.md). Continue the all-owner two-phase GPU cache transaction with
 explicit poisoned-state recovery.
+
+## 2026-10-29 — Resident cache transaction design
+
+The native attention task is committed as `229eb8b`. Astra's next concrete
+design keeps the Phase-A command inside the cache set and creates an opaque
+readiness token only after all owner frames and active Half K/V rows validate.
+An initial same-command NaN fill prevents an omitted producer from reusing stale
+finite staging. A separate all-owner blit phase publishes metadata only after
+completed/no-error execution; submitted partial-copy uncertainty poisons the
+entire set until terminal reset/rebuild and replay.
+
+Independent Astra review focuses every early-error/discard/reset path on actual
+command state before mapped access or buffer reuse. The private proposal reuses
+`KvOwner` and row-copy descriptors with fixed metadata slots; no framework or
+caller-supplied boolean success proof is introduced. Implementation checks and
+GPU transaction evidence remain pending.
+
+Initial cache-set cold checks stop on two strict-lint issues before target
+tests: an unnecessary unsafe block around the safe fill API and a collapsible
+snapshot guard. Both are mechanically corrected with the state/lifetime
+conditions unchanged, and the failed receipt is retained. Astra confirms the
+transaction design and clarifies that the consumer observes 27 complete
+begin/finish/commit boundaries, with zero Rust allocations required on the
+12 source-path boundaries. Driver allocations remain outside that measurement.
+
+## 2026-10-29 — Qualified all-owner resident KV transaction
+
+The concrete cache set now validates every producer after an initial same-command
+NaN stamp, mints opaque readiness after completed/no-error Phase A, and performs
+one all-owner GPU blit phase before publishing offset/generation. It reuses the
+existing F16 owner equations and shared row descriptors with fixed metadata.
+Submitted-copy uncertainty poisons the whole set; mapped reuse/reset requires
+terminal completion, then zero-prefix reset/rebuild and trusted replay.
+
+All strict checks, 424 default /310 Metal-library tests, debug/release cold
+controls and three explicit GPU jobs pass. Astra independently reconstructs all
+67 snapshots and 6,210,796 Half words, including 1,623,152 expected source-copy
+words, the actual 513→514 chain, omitted/partial producers, frame/state rejection,
+actual first-K-only mutation with whole-set poison, and 1,052 final GPU replay
+words. Input hashes and every Half/status guard pass. All 27 observed release
+boundary allocation counts are zero; 12 source-path counts are required-zero.
+These are whole-boundary Rust measurements, excluding driver allocations.
+
+The partial-copy error is injected after a real successful terminal command;
+it is not a hardware-error or rollback claim. Sparse direct-process samples
+cannot establish peaks or whole-model fit. This remains an internal/test-only
+cache mechanism, without full graph, real model, token replay, app/phone or
+performance qualification. See [report](gemma3-resident-cache.md),
+[evidence](../benchmarks/results/2026-10-29-gemma3-resident-cache-v1.json) and
+[TODO](../TODO.md). Continue resident Gemma3 graph composition with shared packed
+upload, an independent Half graph reference and actual model/session consumers.

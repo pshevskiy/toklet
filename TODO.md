@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3c3c — resident all-owner two-phase cache commit**, then complete Gemma3 composition.
+Next implementation task: **B3c4 — complete resident Gemma3 composition**, starting with shared packed-matrix upload.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -131,7 +131,7 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
   [Report](docs/gemma3-half-rms.md); standalone release Mac qualification only.
 - [x] B3c2: checked Half tanh-GELU and embedding scaling with explicit store boundaries.
   [Report](docs/gemma3-half-pointwise.md); standalone release Mac qualification only.
-- [ ] B3c3: resident old-ring/new-chunk attention and two-phase cache commit;
+- [x] B3c3: resident old-ring/new-chunk attention and two-phase cache commit;
   uncertain commit failure requires reset/replay.
 - [x] B3c3a: shared row-span/copy descriptors used by CPU cache views and commit;
   independent small-ring and multihead chunk-partition checks.
@@ -143,8 +143,9 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 - [x] B3c3b2: checked borrowed native reference attention and complete saved
   source comparisons; keep expected-copy obligations separate until B3c3c.
   [Report](docs/gemma3-staged-attention.md); no native cache transaction/model claim.
-- [ ] B3c3c: resident all-owner two-phase copy/publication and poison/reset/replay
+- [x] B3c3c: resident all-owner two-phase copy/publication and poison/reset/replay
   checks; no in-place overwrite during attention.
+  [Report](docs/gemma3-resident-cache.md); standalone cache/state qualification only.
 - [ ] B3c4: compose the complete resident packed/Half tiny graph, accounting
   local/full staging/commit; source comparisons and native state/readback checks.
 - [ ] B3d: verified real payload/text and fixed short/513-plus-window/resource
@@ -278,4 +279,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B3c3a checked CPU row composition | Formatting/strict checks,424 default /306 Metal-library /11 targeted tests pass. Independent678 old-span and9,772 copy-plan cases plus64 multihead/partition combinations/576 commits preserve exact bits, spans and addresses. Existing frozen graph/failure/allocation regressions pass. | [Report](docs/window-row-geometry.md); `7635606`; continue B3c3b. |
 | 2026-10-29 | B3c3b1 frozen attention reference | Five portable controls and exact export/replay pass. Astra independently verifies722,896 numerical values,104 arrays,24 gates and exact physical/mask/chained expectations. Source-only seeded primitive states; no engine/GPU transaction outcome. | [Report](docs/gemma3-staged-attention-reference.md); `2ba2a42`; continue native operator. |
 | 2026-10-29 | B3c3b2 native attention preparation | Borrowed serial-Reference host/shader and raw-first consumer are in cold checks. Frozen eight-case comparisons, W1/c0 analytical identities, short/alias errors and nonfinite/status recovery are prospectively fixed. No GPU result yet. | Complete strict checks, Astra review and explicit release GPU collection. |
-| 2026-10-29 | B3c3b2 checked resident attention leaf | Strict checks,424 default /308 Metal-library tests and both explicit GPU jobs pass. Astra rescored361,448 source values (one tiny probability difference, zero failures),16,016 exact recovery values and all27 raw records/identities/guards/masks. Eight release encodes allocate zero Rust objects. | [Report](docs/gemma3-staged-attention.md); reviewed task commit, then two-phase cache set. |
+| 2026-10-29 | B3c3b2 checked resident attention leaf | Strict checks,424 default /308 Metal-library tests and both explicit GPU jobs pass. Astra rescored361,448 source values (one tiny probability difference, zero failures),16,016 exact recovery values and all27 raw records/identities/guards/masks. Eight release encodes allocate zero Rust objects. | [Report](docs/gemma3-staged-attention.md); `229eb8b`; continue two-phase cache set. |
+| 2026-10-29 | B3c3c transaction design | Astra advises and independently checks a concrete set-owned command/opaque readiness API, all-owner Half-bit validation after NaN staging fill, and whole-set poison after submitted copy uncertainty. Private host/shader/tests proposal is under preparation; no build/GPU outcome. | Freeze/review candidate, then cold and actual copy/state checks. |
+| 2026-10-29 | B3c3c initial cold preflight | Frozen candidate passes formatting/default Clippy; strict Metal Clippy catches an unnecessary unsafe block around a safe API and a collapsible readback guard. Mechanical fixes preserve transaction semantics; failed receipt retained. Prospective allocation reporting distinguishes27 observed boundaries from12 required-zero source boundaries. | Fresh cold checks and reviewed three-job GPU controller next. |
+| 2026-10-29 | B3c3c checked cache transaction | Strict checks,424 default /310 Metal-library tests and three explicit GPU jobs pass. Astra reconstructs67 snapshots/6,210,796 Half words, exact copies/chained513→514, all-owner readiness, real partial-copy poison and terminal zero-prefix GPU replay. All27 observed boundary allocations zero;12 are required-zero. | [Report](docs/gemma3-resident-cache.md); reviewed task commit, then B3c4. |
