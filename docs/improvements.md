@@ -6406,3 +6406,20 @@ app, iPhone, larger scaled context, throughput or source-profile quality claim
 is made. See [report](llama3-metal-rotary.md),
 [evidence](../benchmarks/results/2026-10-28-llama3-metal-rotary-v1.json) and
 [updated TODO](../TODO.md).
+
+## 2026-10-28 — Explicit composite UInt32 address admission
+
+Closed the strided-address gap between host-sized buffers and UInt32 MLX shader
+indices. One actual helper checks product input/output and gather output; the
+planner now bounds its already computed guarded KV/score counts before allocation
+or casts. Existing queried layouts, packing checks and arithmetic remain intact.
+
+Exact/overflow/physical bounds and synthetic allocation-free planner thresholds
+pass. Formatting, strict default/Metal Clippy, 383 default / 263 Metal-library /
+targeted 9/10 Llama tests (overlap), release compilation and the unchanged strided
+projection/gather GPU regression pass. Astra independently authenticates both
+files, all evidence and nine closed groups. Retain these safety contracts before
+broader structural admission; no shader, eligibility, budget, context, real-model
+or performance scope changes. See [report](metal-index-contracts.md),
+[evidence](../benchmarks/results/2026-10-28-metal-index-contracts-v1.json) and
+[progress](../TODO.md).

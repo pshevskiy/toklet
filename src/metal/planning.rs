@@ -350,6 +350,12 @@ impl<'a> ResolvedSessionPlan<'a> {
                 .and_then(|n| n.checked_add(7))
                 .ok_or(Error::Options("score size overflow"))?
         };
+        // Matrix Layout already bounds queried activation strides. KV and
+        // Reference score storage use separate head-major UInt32 expressions;
+        // validate their actual computed guarded counts before allocation/casts.
+        if cache_count > u32::MAX as usize || score_count > u32::MAX as usize {
+            return Err(Error::Options("KV/score shader indexing exceeds UInt32"));
+        }
         let zero_count = widest
             .checked_add(7)
             .ok_or(Error::Options("zero bias overflow"))?;
@@ -674,6 +680,71 @@ fn inspect_with_policy(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn kv_and_reference_scores_reject_composite_uint32_overflow() {
+        let config = |query_heads, kv_heads| model::Config {
+            hidden_size: query_heads * 8,
+            intermediate_size: 8,
+            query_heads,
+            kv_heads,
+            head_dim: 8,
+            num_layers: 1,
+            vocab_size: 8,
+            max_positions: 32768,
+            rope_theta: 10000.,
+            rms_norm_eps: 1e-6,
+        };
+        let options = session::Options {
+            capacity: 32768,
+            prefill_chunk_size: 1,
+            position_offset: 0,
+            memory_limit_bytes: weights::INITIAL_MEMORY_LIMIT_BYTES,
+        };
+        let safe_cache = SessionPlan::new(
+            &config(16383, 16383),
+            0,
+            options,
+            ReadbackMode::FullLogits,
+            AttentionMode::Online,
+        )
+        .unwrap();
+        assert!(safe_cache.cache_count <= u32::MAX as usize);
+        assert!(matches!(
+            SessionPlan::new(
+                &config(16384, 16384),
+                0,
+                options,
+                ReadbackMode::FullLogits,
+                AttentionMode::Online
+            ),
+            Err(Error::Options("KV/score shader indexing exceeds UInt32"))
+        ));
+        let options = session::Options {
+            prefill_chunk_size: 128,
+            ..options
+        };
+        let safe_scores = SessionPlan::new(
+            &config(1023, 1),
+            0,
+            options,
+            ReadbackMode::FullLogits,
+            AttentionMode::Reference,
+        )
+        .unwrap();
+        assert!(safe_scores.score_count <= u32::MAX as usize);
+        assert!(matches!(
+            SessionPlan::new(
+                &config(1024, 1),
+                0,
+                options,
+                ReadbackMode::FullLogits,
+                AttentionMode::Reference
+            ),
+            Err(Error::Options("KV/score shader indexing exceeds UInt32"))
+        ));
+        // These are pure plans with zero placeholder weights, not executable
+        // models or budget-fit claims; no numerical buffers are allocated.
+    }
     #[test]
     fn resolved_capacity_search_matches_constructor_totals_and_device_edge() {
         let c = model::Config {

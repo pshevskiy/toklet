@@ -165,6 +165,28 @@ pub(super) fn packed_bytes(layout: Layout) -> Result<usize> {
 pub(super) fn validate_resident_layout(layout: Layout) -> Result<()> {
     Sizes::new(layout, 1, crate::weights::INITIAL_MEMORY_LIMIT_BYTES).map(|_| ())
 }
+
+/// Validate every positive strided active index before UInt32 shader arithmetic,
+/// independently of the physical buffer's potentially wider host address space.
+fn active_extent(
+    rows: usize,
+    width: usize,
+    stride: usize,
+    offset: usize,
+    available: usize,
+) -> Result<()> {
+    if rows == 0 || width == 0 || stride < width {
+        return Err(Error::Options("MLX active shape differs"));
+    }
+    let end = (rows - 1)
+        .checked_mul(stride)
+        .and_then(|n| n.checked_add(offset))
+        .and_then(|n| n.checked_add(width));
+    if end.is_none_or(|n| n > available || n > u32::MAX as usize) {
+        return Err(Error::Options("MLX active buffer/UInt32 extent differs"));
+    }
+    Ok(())
+}
 impl Packed {
     pub fn allocate(gpu: &Gpu, layout: Layout, pipelines: &[[Pipeline; 2]]) -> Result<Self> {
         validate_resident_layout(layout)?;
@@ -234,18 +256,14 @@ pub(super) fn product(
     {
         return Err(Error::Options("MLX input/output view differs"));
     }
-    let input_end = (n - 1)
-        .checked_mul(row_bytes / 2)
-        .and_then(|v| v.checked_add(offset / 2))
-        .and_then(|v| v.checked_add(width));
-    let output_end = (n - 1)
-        .checked_mul(output_stride)
-        .and_then(|v| v.checked_add(out));
-    if input_end.is_none_or(|v| v > input.length() / 2)
-        || output_end.is_none_or(|v| v > output.length() / if half_output { 2 } else { 4 })
-    {
-        return Err(Error::Options("MLX projection buffer extent differs"));
-    }
+    active_extent(n, width, row_bytes / 2, offset / 2, input.length() / 2)?;
+    active_extent(
+        n,
+        out,
+        output_stride,
+        0,
+        output.length() / if half_output { 2 } else { 4 },
+    )?;
     let shape = shape([
         n,
         width,
@@ -288,16 +306,10 @@ pub(super) fn gather(
         return Err(Error::Options("MLX gather storage differs"));
     };
     let width = p.layout.columns();
-    if n == 0
-        || n > tokens.len
-        || stride < width
-        || (n - 1)
-            .checked_mul(stride)
-            .and_then(|v| v.checked_add(width))
-            .is_none_or(|v| v > output.len)
-    {
+    if n > tokens.len {
         return Err(Error::Options("MLX gather extent differs"));
     }
+    active_extent(n, width, stride, 0, output.len)?;
     let shape = shape([
         n,
         width,
@@ -737,6 +749,19 @@ fn validate_domain(layout: Layout, scales: &[u8], biases: &[u8]) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn strided_active_indices_check_uint32_and_physical_bounds() {
+        let maximum = u32::MAX as usize;
+        assert!(active_extent(2, 3, 8, 2, 13).is_ok());
+        assert!(active_extent(2, 3, 8, 2, 12).is_err());
+        assert!(active_extent(1, 1, maximum, maximum - 1, maximum).is_ok());
+        assert!(active_extent(2, 1, maximum, 0, usize::MAX).is_err());
+        assert!(active_extent(1, 1, 1, usize::MAX, usize::MAX).is_err());
+        assert!(active_extent(usize::MAX, 1, 2, 0, usize::MAX).is_err());
+        for (rows, width, stride) in [(0, 1, 1), (1, 0, 1), (1, 2, 1)] {
+            assert!(active_extent(rows, width, stride, 0, 128).is_err());
+        }
+    }
     #[test]
     fn admission_checks_sizes_before_any_device_or_payload_allocation() {
         let layout = Layout::new(3, 32, 4, 32, MetadataDtype::F16).unwrap();

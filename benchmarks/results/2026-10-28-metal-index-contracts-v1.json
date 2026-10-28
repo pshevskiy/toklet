@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "task": "M8 B1c2a composite UInt32 Metal address contracts",
+  "decision": "retain explicit production index checks; eligibility unchanged",
+  "base_commit": "f5ab3be",
+  "files": [
+    {
+      "path": "src/metal/mlx.rs",
+      "bytes": 38342,
+      "sha256": "1eceee21b0bfed52c64c0974f7cf8b7651cf074006b3efafbd82258ceb88f11c"
+    },
+    {
+      "path": "src/metal/planning.rs",
+      "bytes": 41835,
+      "sha256": "a744200c813359b5f711529f0432d34b75d21bce19cee1eb2586900cc14b47f6"
+    }
+  ],
+  "checks": {
+    "passed": true,
+    "default_tests": 383,
+    "metal_library_tests": 263,
+    "targeted_default_llama_tests": 9,
+    "targeted_metal_llama_tests": 10,
+    "counts_overlap": true,
+    "commands": [
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "fmt",
+          "--check"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--test",
+          "mlx_llama"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--features",
+          "metal",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--features",
+          "metal",
+          "--test",
+          "mlx_llama"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--features",
+          "metal",
+          "--lib"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--release",
+          "--features",
+          "metal",
+          "--lib",
+          "--no-run"
+        ],
+        "exit_code": 0
+      }
+    ]
+  },
+  "gpu": {
+    "existing_regression": "metal::mlx::tests::strided_projection_and_gather_honor_offsets_and_preserve_padding",
+    "passed": true,
+    "commands": [
+      {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Users/coloner/work/rust/toklet/artifacts/new-goal-b1c2a-checks-v1/frozen-bin/metal-unit-tests",
+          "metal::mlx::tests::strided_projection_and_gather_honor_offsets_and_preserve_padding",
+          "--exact",
+          "--ignored",
+          "--nocapture",
+          "--test-threads=1"
+        ],
+        "exit_code": 0,
+        "memory": {
+          "maximum resident set size": 18382848,
+          "peak memory footprint": 7930480
+        }
+      }
+    ],
+    "frozen_binary": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b1c2a-checks-v1/frozen-bin/metal-unit-tests",
+      "bytes": 60245008,
+      "sha256": "caf91f53701f966c62f29b57adcb06250a4e5254f70a4598e7d140a44b4a5d20"
+    }
+  },
+  "raw_receipts": [
+    {
+      "path": "artifacts/new-goal-b1c2a-checks-v1/checks.json",
+      "bytes": 55780,
+      "sha256": "cf72e6fd1a0533e81d8e5a38d5109e983cbd2f57fc61f092c769baf7055f02c2"
+    },
+    {
+      "path": "artifacts/new-goal-b1c2a-checks-v1/gpu.json",
+      "bytes": 52274,
+      "sha256": "d946fcddcbdcd4f50777153c02c215aabda71ac94bbad99dcd8e8a9ebd744c76"
+    }
+  ],
+  "independent_astra_review": {
+    "path": "artifacts/new-goal-b1c2a-independent-review-v1/review.json",
+    "bytes": 4598,
+    "sha256": "13379f5aba0f29fd3a11cdf25720eba05cad0a66381cd553443098f7171aca81"
+  },
+  "contract_cases": [
+    "Three actual consumers: packed product input, packed product output, gathered output",
+    "Checked last-row exclusive end within physical element count and UInt32 range before shape/encoding",
+    "UInt32 MAX and overflowing next/strided/offset cases without allocating large buffers",
+    "Already computed guarded cache/Reference-score counts checked before allocation/casts",
+    "Virtual KV threshold16383/16384 heads and Reference threshold1023/1024 heads; no numerical allocation or model qualification",
+    "Online uses existing constant8 scores and does not inherit unused Reference workspace bounds"
+  ],
+  "limitations": [
+    "No shader, numerical gate, model eligibility, budget cap or supported-context change.",
+    "Synthetic large planner configurations are not executable or budget-fit models.",
+    "No real-model, phone, broader scaled-Metal model or performance qualification.",
+    "Structural Llama model composition, positional residency accounting and tiny Half graph validation remain next."
+  ]
+}

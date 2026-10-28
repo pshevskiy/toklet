@@ -124,7 +124,8 @@ checks](llama3-position-plan.md) now pass; scaled Metal is explicitly rejected.
 The [isolated scaled Half rotary operation](llama3-metal-rotary.md) now passes
 fixed GPU gates, but remains test-only. Structural Metal model integration,
 real-model and text/quality checks remain open; no new native app family support
-is claimed.
+is claimed. [Composite shader index checks](metal-index-contracts.md) now guard
+strided MLX addresses and planned KV/score extents without widening eligibility.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |
