@@ -41,6 +41,25 @@ pub struct Layout {
     metadata_bytes: usize,
     total_bytes: usize,
 }
+/// Checked row selection; byte ranges are relative to each original tensor.
+/// The same metadata range applies separately to scales and affine biases.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RowSpan {
+    layout: Layout,
+    weights: Range<usize>,
+    metadata: Range<usize>,
+}
+impl RowSpan {
+    pub fn layout(&self) -> Layout {
+        self.layout
+    }
+    pub fn weight_range(&self) -> Range<usize> {
+        self.weights.clone()
+    }
+    pub fn metadata_range(&self) -> Range<usize> {
+        self.metadata.clone()
+    }
+}
 impl Layout {
     pub fn new(
         rows: usize,
@@ -84,6 +103,31 @@ impl Layout {
             weight_bytes,
             metadata_bytes,
             total_bytes,
+        })
+    }
+    /// Plan a nonempty contiguous selection without reading or allocating data.
+    /// Applying this to an already selected layout makes ranges relative to that
+    /// selection, not to any earlier parent allocation.
+    pub fn row_span(self, rows: Range<usize>) -> Result<RowSpan, Error> {
+        let invalid = Error("MLX affine row range out of bounds");
+        if rows.start >= rows.end || rows.end > self.rows {
+            return Err(invalid);
+        }
+        let layout = Self::new(
+            rows.end - rows.start,
+            self.columns,
+            self.bits,
+            self.group_size,
+            self.dtype,
+        )?;
+        let range = |stride: usize| -> Result<Range<usize>, Error> {
+            Ok(rows.start.checked_mul(stride).ok_or(invalid)?
+                ..rows.end.checked_mul(stride).ok_or(invalid)?)
+        };
+        Ok(RowSpan {
+            layout,
+            weights: range(self.row_bytes)?,
+            metadata: range(self.metadata_bytes / self.rows)?,
         })
     }
     pub fn rows(self) -> usize {
@@ -220,27 +264,13 @@ impl<'a> Matrix<'a> {
     /// which must be counted once. It may outlive this Matrix value but cannot
     /// outlive its original source bytes. Empty or invalid ranges return no view.
     pub fn row_range(&self, rows: Range<usize>) -> Result<Matrix<'a>, Error> {
+        let span = self.layout.row_span(rows)?;
         let invalid = Error("MLX affine row range out of bounds");
-        if rows.start >= rows.end || rows.end > self.layout.rows {
-            return Err(invalid);
-        }
-        let layout = Layout::new(
-            rows.end - rows.start,
-            self.layout.columns,
-            self.layout.bits,
-            self.layout.group_size,
-            self.layout.dtype,
-        )?;
-        let selected = |source: &'a [u8], stride: usize| {
-            let start = rows.start.checked_mul(stride).ok_or(invalid)?;
-            let end = rows.end.checked_mul(stride).ok_or(invalid)?;
-            source.get(start..end).ok_or(invalid)
-        };
         Ok(Matrix {
-            layout,
-            weights: selected(self.weights, self.layout.row_bytes)?,
-            scales: selected(self.scales, self.layout.metadata_bytes / self.layout.rows)?,
-            biases: selected(self.biases, self.layout.metadata_bytes / self.layout.rows)?,
+            layout: span.layout(),
+            weights: self.weights.get(span.weight_range()).ok_or(invalid)?,
+            scales: self.scales.get(span.metadata_range()).ok_or(invalid)?,
+            biases: self.biases.get(span.metadata_range()).ok_or(invalid)?,
         })
     }
 
@@ -571,5 +601,70 @@ mod row_tests {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod span_tests {
+    use super::*;
+    #[test]
+    fn spans_match_original_rows_for_every_format_and_nested_view() {
+        for bits in [2, 3, 4, 5, 6, 8] {
+            for dtype in [MetadataDtype::F16, MetadataDtype::BF16, MetadataDtype::F32] {
+                for group in [32, 64, 128] {
+                    let layout = Layout::new(5, 128, bits, group, dtype).unwrap();
+                    let stride = 128 / group * dtype.bytes();
+                    let codes: Vec<_> = (0..layout.weight_bytes())
+                        .map(|n| (n % 251) as u8)
+                        .collect();
+                    let coefficients = vec![0; layout.metadata_bytes()];
+                    let matrix =
+                        Matrix::from_le_bytes(layout, &codes, &coefficients, &coefficients)
+                            .unwrap();
+                    for rows in [0..1, 1..4, 4..5, 0..5] {
+                        let span = layout.row_span(rows.clone()).unwrap();
+                        assert_eq!(span.layout().rows(), rows.len());
+                        assert_eq!(
+                            span.weight_range(),
+                            rows.start * layout.row_bytes()..rows.end * layout.row_bytes()
+                        );
+                        assert_eq!(
+                            span.metadata_range(),
+                            rows.start * stride..rows.end * stride
+                        );
+                        let view = matrix.row_range(rows.clone()).unwrap();
+                        assert_eq!(view.weights, &codes[span.weight_range()]);
+                        assert_eq!(view.layout(), span.layout());
+                    }
+                    let middle = matrix.row_range(1..4).unwrap();
+                    let nested = middle.row_range(1..2).unwrap();
+                    assert_eq!(
+                        nested.weights,
+                        &codes[2 * layout.row_bytes()..3 * layout.row_bytes()]
+                    );
+                    assert_eq!(
+                        middle.layout().row_span(1..2).unwrap().metadata_range(),
+                        stride..2 * stride
+                    );
+                    for rows in [
+                        0..0,
+                        std::ops::Range { start: 3, end: 2 },
+                        4..6,
+                        usize::MAX..usize::MAX,
+                    ] {
+                        assert!(layout.row_span(rows.clone()).is_err());
+                        assert!(matrix.row_range(rows).is_err());
+                    }
+                }
+            }
+        }
+        assert!(Layout::new(usize::MAX, 128, 8, 32, MetadataDtype::F32).is_err());
+        assert!(Layout::new(2, usize::MAX - 127, 8, 32, MetadataDtype::F32).is_err());
+        // An admitted parent also makes every valid nested endpoint bounded.
+        let rows = (isize::MAX as usize) / 36;
+        let layout = Layout::new(rows, 32, 8, 32, MetadataDtype::F16).unwrap();
+        let last = layout.row_span(rows - 1..rows).unwrap();
+        assert_eq!(last.weight_range().end, layout.weight_bytes());
+        assert_eq!(last.metadata_range().end, layout.metadata_bytes());
     }
 }

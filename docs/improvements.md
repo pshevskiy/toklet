@@ -6527,3 +6527,27 @@ unquantized10k/100 adoption quality, app/phone and performance remain unfinished
 See [screen and closure](llama3-loss1024.md),
 [evidence](../benchmarks/results/2026-10-28-llama3-loss1024-screen-v1.json) and
 [TODO](../TODO.md).
+
+## 2026-10-28 — Checked fused row spans and bounded source reads
+
+Added one checked original-row byte plan shared by borrowed affine matrices and
+source range reads. Codes/scales/biases retain packing and row order; float rows
+stream through the existing64KiB buffer without alignment assumptions. All three
+affine destination lengths are checked before writes. Partial failures require
+discard, and unaudited reads can explicitly retry. Audited range attempts always
+reject before I/O/callback and sticky-poison whole-content identity; whole read
+methods and scalar arithmetic remain unchanged.
+
+Astra reviewed the proposal and final source/evidence. Formatting, strict default
+and Metal Clippy,397 default /278 Metal-library tests (overlap), targeted row18,
+raw-range4 and Metal Llama9 pass in eight cleanly closed owned groups. Controls
+cover all six CPU bit widths, all metadata dtypes, boundaries, unaligned payloads,
+selected/unselected NaNs and audit failures. An initial repeated--lib invocation
+was rejected before compilation; the corrected targeted check passes.
+
+Retain the storage mechanism. Phi config/execution, real payload, numerical and
+text qualification remain open; no GPU or performance claim. Next is B2b's cold
+logical row mapping and strict bounded Phi composition. See
+[report](fused-row-source.md),
+[evidence](../benchmarks/results/2026-10-28-fused-row-source-v1.json) and
+[TODO](../TODO.md).

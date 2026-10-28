@@ -592,6 +592,62 @@ impl Source {
             .and_then(|&index| self.shards[index].metadata.info(name))
     }
 
+    /// Stream a nonempty tensor-relative byte range using the existing 64 KiB
+    /// buffer. This checks only the selected bytes, never whole-tensor identity.
+    /// Any audited source is rejected and permanently poisoned before seeking or
+    /// delivering bytes, including a range that happens to cover the full tensor.
+    /// On read/consumer error callers must discard partial destination contents.
+    pub(crate) fn visit_raw_range(
+        &mut self,
+        name: &str,
+        range: std::ops::Range<usize>,
+        mut consume: impl FnMut(&[u8]) -> Result<(), Error>,
+    ) -> Result<(), Error> {
+        if self.audit.is_some() {
+            self.poison_audit();
+            return Err(invalid(
+                "audited source does not support tensor range reads",
+            ));
+        }
+        let index = *self
+            .locations
+            .get(name)
+            .ok_or_else(|| invalid(format!("missing tensor: {name}")))?;
+        let shard = &mut self.shards[index];
+        let (begin, end) = shard.metadata.info(name).unwrap().data_offsets;
+        let payload = end
+            .checked_sub(begin)
+            .ok_or_else(|| invalid("invalid tensor byte extent"))?;
+        if range.start >= range.end || range.end > payload {
+            return Err(invalid("tensor byte range out of bounds"));
+        }
+        let absolute = |offset: usize| -> Result<u64, Error> {
+            let relative = begin
+                .checked_add(offset)
+                .ok_or_else(|| invalid("tensor range offset overflow"))?;
+            let relative =
+                u64::try_from(relative).map_err(|_| invalid("tensor range offset overflow"))?;
+            shard
+                .data_start
+                .checked_add(relative)
+                .ok_or_else(|| invalid("tensor range offset overflow"))
+        };
+        let start = absolute(range.start)?;
+        let _end = absolute(range.end)?;
+        io(&shard.path, shard.file.seek(SeekFrom::Start(start)))?;
+        let mut remaining = range.end - range.start;
+        while remaining > 0 {
+            let count = remaining.min(self.buffer.len());
+            io(
+                &shard.path,
+                shard.file.read_exact(&mut self.buffer[..count]),
+            )?;
+            consume(&self.buffer[..count])?;
+            remaining -= count;
+        }
+        Ok(())
+    }
+
     /// Stream bytes from the validated open shard handle. Callers own decoding
     /// and must discard partial destination state if either read/consumer fails.
     pub(crate) fn visit_raw(
@@ -942,3 +998,6 @@ impl HalfSource {
 
 #[cfg(all(test, feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 pub(crate) mod half_tests;
+
+#[cfg(test)]
+pub(crate) mod range_tests;

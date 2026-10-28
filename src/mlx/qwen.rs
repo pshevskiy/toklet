@@ -23,6 +23,7 @@ use std::{
     fmt,
     fs::File,
     io::Read,
+    ops::Range,
     path::Path,
 };
 
@@ -490,6 +491,161 @@ impl Source {
         }
         result
     }
+    /// Stream rows of a planned rank-two floating tensor. Dtype is selected once
+    /// and decoded from little-endian bytes without pointer alignment assumptions.
+    /// Only selected values are checked for finiteness; no whole-tensor identity
+    /// is established. Audited sources reject this path, even for all rows.
+    /// A read/consumer failure requires discarding any partial destination.
+    pub fn visit_float_rows(
+        &mut self,
+        name: &str,
+        rows: Range<usize>,
+        consume: impl FnMut(f32) -> Result<(), Error>,
+    ) -> Result<(), Error> {
+        let result = (|| {
+            let spec = self
+                .tensors
+                .get(name)
+                .ok_or_else(|| invalid("MLX tensor is not a planned floating tensor"))?;
+            let Storage::Float(dtype) = spec.storage else {
+                return Err(invalid("MLX tensor is not a planned floating tensor"));
+            };
+            if spec.shape.len() != 2
+                || spec.shape[1] == 0
+                || rows.start >= rows.end
+                || rows.end > spec.shape[0]
+            {
+                return Err(invalid("MLX floating row range out of bounds"));
+            }
+            let stride = spec.shape[1]
+                .checked_mul(dtype.bytes())
+                .ok_or_else(|| invalid("MLX floating row size overflow"))?;
+            let start = rows
+                .start
+                .checked_mul(stride)
+                .ok_or_else(|| invalid("MLX floating row size overflow"))?;
+            let end = rows
+                .end
+                .checked_mul(stride)
+                .ok_or_else(|| invalid("MLX floating row size overflow"))?;
+            fn stream<const WIDTH: usize>(
+                source: &mut weights::Source,
+                name: &str,
+                range: Range<usize>,
+                decode: impl Fn([u8; WIDTH]) -> f32,
+                mut consume: impl FnMut(f32) -> Result<(), Error>,
+            ) -> Result<(), Error> {
+                source.visit_raw_range(name, range, |bytes| {
+                    // The shared buffer and admitted ranges are multiples of
+                    // both supported scalar widths; never cast a byte pointer.
+                    let chunks = bytes.chunks_exact(WIDTH);
+                    if !chunks.remainder().is_empty() {
+                        return Err(invalid("MLX floating range byte alignment"));
+                    }
+                    for raw in chunks {
+                        let value = decode(raw.try_into().unwrap());
+                        if !value.is_finite() {
+                            return Err(invalid("nonfinite weight value in tensor payload"));
+                        }
+                        consume(value)?;
+                    }
+                    Ok(())
+                })
+            }
+            match dtype {
+                MetadataDtype::F32 => stream(
+                    &mut self.source,
+                    name,
+                    start..end,
+                    f32::from_le_bytes,
+                    consume,
+                ),
+                MetadataDtype::F16 => stream(
+                    &mut self.source,
+                    name,
+                    start..end,
+                    |v| half::f16::from_le_bytes(v).to_f32(),
+                    consume,
+                ),
+                MetadataDtype::BF16 => stream(
+                    &mut self.source,
+                    name,
+                    start..end,
+                    |v| half::bf16::from_le_bytes(v).to_f32(),
+                    consume,
+                ),
+            }
+        })();
+        if result.is_err() {
+            self.source.poison_audit();
+        }
+        result
+    }
+
+    /// Read original packed row spans into three caller-owned allocations.
+    /// All destination sizes are checked before any write. Selected metadata is
+    /// checked after streaming; unselected metadata is not read or validated.
+    /// Discard all three partial destinations on failure. No whole-tensor proof
+    /// is produced; audited sources reject even a full-row-range request.
+    pub fn read_affine_rows(
+        &mut self,
+        name: &str,
+        rows: Range<usize>,
+        weights: &mut [u8],
+        scales: &mut [u8],
+        biases: &mut [u8],
+    ) -> Result<Layout, Error> {
+        let result = (|| {
+            let Some(Storage::Affine(layout)) = self.tensors.get(name).map(|s| s.storage) else {
+                return Err(invalid("MLX tensor is not a planned affine tensor"));
+            };
+            let span = layout.row_span(rows).map_err(|e| invalid(e.to_string()))?;
+            let selected = span.layout();
+            if weights.len() != selected.weight_bytes()
+                || scales.len() != selected.metadata_bytes()
+                || biases.len() != selected.metadata_bytes()
+            {
+                return Err(invalid(
+                    "MLX destination sizes do not match planned row span",
+                ));
+            }
+            let module = name
+                .strip_suffix(".weight")
+                .ok_or_else(|| invalid("MLX affine tensor name lacks weight suffix"))?;
+            self.read_raw_range(name, span.weight_range(), weights)?;
+            self.read_raw_range(&format!("{module}.scales"), span.metadata_range(), scales)?;
+            self.read_raw_range(&format!("{module}.biases"), span.metadata_range(), biases)?;
+            Matrix::from_le_bytes(selected, weights, scales, biases)
+                .map_err(|e| invalid(e.to_string()))?;
+            Ok(selected)
+        })();
+        if result.is_err() {
+            self.source.poison_audit();
+        }
+        result
+    }
+    fn read_raw_range(
+        &mut self,
+        name: &str,
+        range: Range<usize>,
+        destination: &mut [u8],
+    ) -> Result<(), Error> {
+        let mut offset = 0;
+        self.source.visit_raw_range(name, range, |bytes| {
+            let end = add(offset, bytes.len())?;
+            destination
+                .get_mut(offset..end)
+                .ok_or_else(|| invalid("MLX raw range size mismatch"))?
+                .copy_from_slice(bytes);
+            offset = end;
+            Ok(())
+        })?;
+        if offset != destination.len() {
+            return Err(invalid("MLX raw range size mismatch"));
+        }
+        Ok(())
+    }
+
     /// Read directly into three caller-admitted packed allocations, then check
     /// finite affine metadata. Buffers are partial/unpublished on any error.
     pub fn read_affine(
@@ -830,3 +986,7 @@ mod context_diagnostic_tests {
 #[cfg(test)]
 #[path = "qwen/content_tests.rs"]
 mod content_tests;
+
+#[cfg(test)]
+#[path = "qwen/row_tests.rs"]
+mod row_tests;

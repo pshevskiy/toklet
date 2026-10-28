@@ -1,0 +1,84 @@
+{
+  "schema": "toklet.fused-row-source.v1",
+  "date": "2026-10-28",
+  "base_revision": "d29b6b673ddf1014219a9b2f3ada72f97a9b6e4d",
+  "decision": "retain B2a storage mechanism; Phi execution remains pending",
+  "scope": {
+    "whole_tensor_readers_unchanged": true,
+    "audited_ranges": "always reject and sticky-poison before seek/callback",
+    "partial_outputs": "discard on any error",
+    "allocation": "existing 64 KiB stream buffer; caller-owned destinations",
+    "real_model_executed": false,
+    "gpu_executed": false,
+    "performance_claim": false
+  },
+  "checks": {
+    "passed": true,
+    "owned_groups": 8,
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_tests_passed": 397,
+    "metal_library_tests_passed": 278,
+    "targeted_row_tests_passed": 18,
+    "targeted_raw_range_tests_passed": 4,
+    "metal_llama_tests_passed": 9,
+    "suites_overlap": true,
+    "ignored_tests_not_executed": true
+  },
+  "sources": [
+    {
+      "path": "src/mlx/affine.rs",
+      "bytes": 27390,
+      "sha256": "801509901cdbb2116e8fefdacc1d78a7ab06c0c0a66d638a500309d181f5a761"
+    },
+    {
+      "path": "src/mlx/qwen.rs",
+      "bytes": 38800,
+      "sha256": "01fd4164b71b46625faaec38de23ca8a8b0e7824807e5c0e5c2aaea50970113a"
+    },
+    {
+      "path": "src/weights/mod.rs",
+      "bytes": 36631,
+      "sha256": "2dd3315f4b646e634ea3684d1c630e2f294e8b87f7cc7719b1ac2626ebcfc118"
+    },
+    {
+      "path": "src/mlx/qwen/row_tests.rs",
+      "bytes": 15633,
+      "sha256": "bf3d29dd1d7a774ad2964acbcc71206b98ca9fd5cd023852b1d5f8d1f2c9e301"
+    },
+    {
+      "path": "src/weights/range_tests.rs",
+      "bytes": 7227,
+      "sha256": "33a759db7bd65a94f8bc9883ca04d6c7254041761aa7bfe34b98b9e353d88d63"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b2a-proposal-v1/manifest.json",
+      "bytes": 2203,
+      "sha256": "aeb3c663646a3e48c86f3da61bd1e1da8155c85de61c26bfc07be994224a14d2"
+    },
+    {
+      "path": "artifacts/new-goal-b2a-independent-review-v1/prospective-review.json",
+      "bytes": 6313,
+      "sha256": "b61d264b74917481fe33d97535afc716ebc89d048181324c4ae1d95eccc42fdd"
+    },
+    {
+      "path": "artifacts/new-goal-b2a-checks-v1/check.py",
+      "bytes": 5867,
+      "sha256": "d893fb5e372024e8eae034c7071ef6ebcc1842ba3067a9ab98056aa2e47a749f"
+    },
+    {
+      "path": "artifacts/new-goal-b2a-checks-v1/checks.json",
+      "bytes": 815655,
+      "sha256": "ef55b2b238e1c5637f19660dd1d233a3a8297b8de1149d21e79a7d206ff0ec48"
+    }
+  ],
+  "next": "B2b strict Phi adapter, shared logical row mapping, bounded-window admission and tiny graph",
+  "final_review": {
+    "path": "artifacts/new-goal-b2a-independent-review-v1/final-review.json",
+    "bytes": 6213,
+    "sha256": "bf6f9c5198dad877cc7085743f5c55c61daadcd38caa4f6226fdcf40cc6ca41b"
+  }
+}

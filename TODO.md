@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B2a — checked fused row-span source/loading core for the selected Phi adapter**.
+Next implementation task: **B2b — strict Phi3 adapter, shared logical row mapping and bounded tiny graph**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -85,8 +85,9 @@ qualification. Proceed to B2 as Astra's acceptance review requires.
 - [x] Select/pin a compact Phi-style candidate and exact metadata/header:
   public Phi-3-mini-4k-instruct-4bit at `5b3819ed6317784fb20eddeae9bed984f778d0d0`.
   Metadata only: full payload is not downloaded/verified or numerically admitted.
-- [ ] B2a: checked original QKV/gate-up row spans and source range loading;
+- [x] B2a: checked original QKV/gate-up row spans and source range loading;
   preserve packing, original row order and safe unaligned-header byte handling.
+  [Report](docs/fused-row-source.md); audited ranges reject and poison identity.
 - [ ] B2b: strict Phi3 config/composition and tiny head96 graph checks; retain
   declared sliding2047 and enforce bounded full/sliding equivalence on CPU/Metal.
   LongRoPE variants remain rejected until actually implemented.
@@ -199,3 +200,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B1 execution-order clarification | Astra checked the actual B1 acceptance row: after the fixed consistency screen and scoped review, move to B2 architecture work. Production Llama Chat and full adoption quality stay explicit in B5/M8 closure; no gate waiver. | Screen remains next; B1 is not yet closed. |
 | 2026-10-28 | B1d consistency screen | Fixed 1,024-target paired screen passes for chunks32/128: native mean2.9947039895, paired delta−0.0000441146691 ≤0.05; exact numeric row hashes match. 384 default /265 Metal-library /15 example and nine Python controls pass. Astra independently verified final statistics and evidence; scoped B1 closure approved. | [Report](docs/llama3-loss1024.md); close selected Mac512 B1 and move B2 after review. |
 | 2026-10-28 | B2 candidate research | Astra pinned a fitting public Phi3 four-bit metadata/header with fused QKV/gate-up, ordinary head96 RoPE, sliding2047 constraint and text/padded-vocabulary limits. No payload or model run. | Private pinned research; B2a is next, preserving all scope limits. |
+| 2026-10-28 | B2a row-span source core | 397 default /278 Metal-library tests (overlap), targeted row18/range4/Metal Llama9, fmt and strict Clippy pass. Exact source spans, unaligned reads, discard/retry and sticky audit controls pass; Astra approved final source and evidence. No Phi model run. | [Report](docs/fused-row-source.md); B2b shared cold mapping and tiny graph next. |
