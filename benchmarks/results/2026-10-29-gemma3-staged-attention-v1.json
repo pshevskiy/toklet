@@ -1,0 +1,231 @@
+{
+  "format": "toklet-native-staged-attention-v1",
+  "date": "2026-10-29",
+  "base_revision": "2ba2a42",
+  "passed": true,
+  "scope": "Internal standalone resident serial Reference Half attention; no cache commit/graph/model admission",
+  "hardware": {
+    "device": "Apple M1 Pro",
+    "os": "macOS 26.6.2 (25G83)",
+    "ram_bytes": 17179869184
+  },
+  "build": {
+    "rust": "1.90.0",
+    "features": [
+      "metal"
+    ],
+    "profile": "release",
+    "debug_assertions": false,
+    "binary": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3c3b-cold-checks-v1/staged-attention-tests",
+      "bytes": 70861856,
+      "sha256": "e1d0338991045b72888a2f44fabacb8b3dc6df99bfecd1c04b181ea27218c55f"
+    }
+  },
+  "domain": {
+    "query_heads": 4,
+    "kv_heads": 1,
+    "head_dimensions": [
+      32,
+      256
+    ],
+    "capacity_min": 1,
+    "capacity_max": 544,
+    "chunk_max": 32,
+    "window": "None or1..capacity",
+    "source_cases": 8,
+    "additional_analytical_cases": 3
+  },
+  "result": {
+    "source_and_recovery": {
+      "source": {
+        "main": {
+          "values": 361448,
+          "bit_differences": 1,
+          "max_absolute_error": 7.450580596923828e-09,
+          "max_gate_fraction": 4.077729383919762e-05,
+          "exceedances": 0
+        },
+        "wide": {
+          "values": 361448,
+          "bit_differences": 122891,
+          "max_absolute_error": 9.5367431640625e-07,
+          "max_gate_fraction": 0.009363944692797065,
+          "exceedances": 0
+        }
+      },
+      "recovery": {
+        "main": {
+          "values": 16016,
+          "bit_differences": 0,
+          "max_absolute_error": 0.0,
+          "max_gate_fraction": 0.0,
+          "exceedances": 0
+        },
+        "wide": {
+          "values": 16016,
+          "bit_differences": 880,
+          "max_absolute_error": 4.76837158203125e-07,
+          "max_gate_fraction": 0.004742276254664029,
+          "exceedances": 0
+        }
+      }
+    },
+    "raw_records": 27,
+    "explicit_gpu_jobs": 2,
+    "submissions": 27,
+    "analytical_context_words": 1152,
+    "analytical_probability_values": 204,
+    "masked_zero_entries_source_and_recovery": 6908,
+    "uniform_context_words": 32,
+    "input_hash_pairs": 135,
+    "guard_and_inactive_words": 797172,
+    "release_measured_encodes": 8,
+    "rust_allocations": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "driver_allocations_measured": false,
+    "short_operand_rejections": 9,
+    "equal_extent_alias_rejections": 4,
+    "active_invalid_controls": 5,
+    "sticky_reset_phases": 15,
+    "unused_old_nan_row_control": true,
+    "cache_copy_executed": false
+  },
+  "physical_operands": {
+    "local_w512_c544_d256_bytes": 1245356,
+    "full_c544_d256_bytes": 1278124,
+    "largest_buffer_bytes": 278556,
+    "guards_each_array": 7,
+    "compiler_reserve_bytes": 67108864,
+    "reserve_excludes_owner": true,
+    "weights_framework_diagnostics_separate": true
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_passed": 424,
+    "metal_library_passed": 308,
+    "debug_targeted_passed": 2,
+    "release_targeted_passed": 2,
+    "counts_overlap": true
+  },
+  "sampled_direct_process_memory": [
+    {
+      "pid": 38757,
+      "live_samples": 18,
+      "observed_maxima": {
+        "resident_size": 46284800,
+        "phys_footprint": 25641560,
+        "lifetime_max_phys_footprint": 28607064
+      }
+    },
+    {
+      "pid": 38764,
+      "live_samples": 2,
+      "observed_maxima": {
+        "resident_size": 28491776,
+        "phys_footprint": 8340056,
+        "lifetime_max_phys_footprint": 8340056
+      }
+    }
+  ],
+  "evidence": {
+    "cold_checks": {
+      "path": "artifacts/new-goal-b3c3b-cold-checks-v1/checks.json",
+      "bytes": 865948,
+      "sha256": "bd53e9eabdafc689bcb54e2237935fdd92bf981ba88bbaa63f6a4bfaadc6ec25"
+    },
+    "candidate": {
+      "path": "artifacts/new-goal-b3c3b-root-draft-v2/manifest.json",
+      "bytes": 1288,
+      "sha256": "b6aed0bdd0183022adcec61729909d9aa0c5a915e6d19db16bac7c9bf36646bc"
+    },
+    "consumer_proposal": {
+      "path": "artifacts/new-goal-b3c3b-consumer-proposal-v1/manifest.json",
+      "bytes": 2591,
+      "sha256": "d9ab3ad8a8a89fc7230588b168f75a2d197d1a5678b4a422650419ebd796a591"
+    },
+    "prospective_operator_review": {
+      "path": "artifacts/new-goal-b3c3b-independent-review-v1/prospective-complete-operator-review.json",
+      "bytes": 4633,
+      "sha256": "5004edeba1b24e8bb69dcaa767f47bb268c8561a6da39bb768b09344b935bd47"
+    },
+    "gpu": {
+      "path": "artifacts/new-goal-b3c3b-gpu-v1/gpu.json",
+      "bytes": 1270929,
+      "sha256": "9382c32ea23d3e7cb60cc0d53783e3e5796e7acdea350cec13a71bdc81d36474"
+    },
+    "gpu_approval": {
+      "path": "artifacts/new-goal-b3c3b-gpu-v1/prospective-review.json",
+      "bytes": 3244,
+      "sha256": "d4b2e2444fa371671632895d7df2b82432ea0604ddf9bba27c370ac6a796e548"
+    },
+    "postrun_review": {
+      "path": "artifacts/new-goal-b3c3b-independent-review-v1/postrun-evidence-review.json",
+      "bytes": 28844,
+      "sha256": "a64e23210ad704d34f30bb2be7e6866613084488625ddb586e35f3f21afa1b79"
+    },
+    "frozen_source_review": {
+      "path": "artifacts/new-goal-b3c3b-independent-review-v1/frozen-source-review.json",
+      "bytes": 3278,
+      "sha256": "2f88a886e8521fba25aa22915018a8d7e4ee347bbb24e561a73bcdd45a2ef612"
+    }
+  },
+  "source_files": [
+    {
+      "path": "src/metal/mod.rs",
+      "bytes": 135868,
+      "sha256": "4b5989e8d02286da1e4e81219a6ea32bd5a20f3d480aab9ca6cb4fa92eba9b26"
+    },
+    {
+      "path": "src/metal/staged_attention.rs",
+      "bytes": 10844,
+      "sha256": "1b3cf19ad5f60d33e4408180b6803d7a7fe050fd9c1d37bd39d7819adee3d487"
+    },
+    {
+      "path": "src/metal/staged_attention.metal",
+      "bytes": 3798,
+      "sha256": "41b62452eb4399095aa457a7a78be2611b565ad709fb6d6fd14830711c171960"
+    },
+    {
+      "path": "src/metal/staged_attention/tests.rs",
+      "bytes": 28131,
+      "sha256": "54d42d65c2fc2ed6d7c606fb379b37b7c6265d6d6a9ac46f40aa2a10fc1be7c0"
+    }
+  ],
+  "shared_geometry": {
+    "path": "src/model/window_rows.rs",
+    "bytes": 7372,
+    "sha256": "a3df63a4c1433725dc2890151e13fb569bb13dae86c15543806ada40d6725b14"
+  },
+  "fixtures": [
+    {
+      "path": "tests/fixtures/gemma3-staged-attention-v1/manifest.json",
+      "bytes": 54401,
+      "sha256": "90656e1a724b1bfb8d3c14fd742166348d5abf64dedbaf3f8d83645e5e5ca7cb"
+    },
+    {
+      "path": "tests/fixtures/gemma3-staged-attention-v1/arrays.bin",
+      "bytes": 9713232,
+      "sha256": "12339d584e5d67602d386b75fcdca2dcfe62087ef1f4ac13eb0a5109525c150e"
+    }
+  ],
+  "limitations": [
+    "Test-only leaf until concrete graph consumer.",
+    "Seeded 513/514 states are not real model prefills.",
+    "No cache-copy, all-owner async transaction or poisoned-session recovery qualification.",
+    "Source MAIN has one differing probability value within the frozen gate; not all source bits exact.",
+    "No whole-process peak/fit, throughput, quality, real checkpoint, app or phone claim."
+  ],
+  "next_task": "B3c3c all-owner two-phase resident cache transaction",
+  "final_publication_review": "artifacts/new-goal-b3c3b-independent-review-v1/final-operator-publication-review.json"
+}

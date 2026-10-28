@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3c3b2 — native Half rolling-KV attention**, then two-phase commit and complete Gemma3 composition.
+Next implementation task: **B3c3c — resident all-owner two-phase cache commit**, then complete Gemma3 composition.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -136,12 +136,13 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 - [x] B3c3a: shared row-span/copy descriptors used by CPU cache views and commit;
   independent small-ring and multihead chunk-partition checks.
   [Report](docs/window-row-geometry.md); no GPU execution claim.
-- [ ] B3c3b: frozen independent Half old/new attention fixtures and optional
+- [x] B3c3b: frozen independent Half old/new attention fixtures and optional
   native reference operation, including seeded512→513→514 and chunk-wrap cases.
 - [x] B3c3b1: reviewed independent reference, exact export/replay and frozen
   local/full numerical and expected-copy arrays. [Report](docs/gemma3-staged-attention-reference.md).
-- [ ] B3c3b2: checked borrowed native reference attention and complete saved
+- [x] B3c3b2: checked borrowed native reference attention and complete saved
   source comparisons; keep expected-copy obligations separate until B3c3c.
+  [Report](docs/gemma3-staged-attention.md); no native cache transaction/model claim.
 - [ ] B3c3c: resident all-owner two-phase copy/publication and poison/reset/replay
   checks; no in-place overwrite during attention.
 - [ ] B3c4: compose the complete resident packed/Half tiny graph, accounting
@@ -275,4 +276,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B3c2 release pointwise qualification |420 default /302 Metal-library tests, strict checks and two explicit GPU jobs pass. Astra independently verifies218,432 bit-exact MAIN comparisons, zero WIDE gate exceedances, physical Half/gating/store/subnormal controls,8 zero-Rust-allocation encodes and5,888 recovery words. | [Report](docs/gemma3-half-pointwise.md); `a954146`; continue B3c3. |
 | 2026-10-29 | B3c3 shared window geometry | Astra resolves physical retentionW versus old attention viewW−1 and recommends small prevalidated row helpers. CPU view/contiguous-copy extraction and independent row/chunk-partition controls are in checks; GPU attention/state remain unimplemented. | Finish B3c3a checks/review, then B3c3b. |
 | 2026-10-29 | B3c3a checked CPU row composition | Formatting/strict checks,424 default /306 Metal-library /11 targeted tests pass. Independent678 old-span and9,772 copy-plan cases plus64 multihead/partition combinations/576 commits preserve exact bits, spans and addresses. Existing frozen graph/failure/allocation regressions pass. | [Report](docs/window-row-geometry.md); `7635606`; continue B3c3b. |
-| 2026-10-29 | B3c3b1 frozen attention reference | Five portable controls and exact export/replay pass. Astra independently verifies722,896 numerical values,104 arrays,24 gates and exact physical/mask/chained expectations. Source-only seeded primitive states; no engine/GPU transaction outcome. | [Report](docs/gemma3-staged-attention-reference.md); reviewed task commit, then native operator. |
+| 2026-10-29 | B3c3b1 frozen attention reference | Five portable controls and exact export/replay pass. Astra independently verifies722,896 numerical values,104 arrays,24 gates and exact physical/mask/chained expectations. Source-only seeded primitive states; no engine/GPU transaction outcome. | [Report](docs/gemma3-staged-attention-reference.md); `2ba2a42`; continue native operator. |
+| 2026-10-29 | B3c3b2 native attention preparation | Borrowed serial-Reference host/shader and raw-first consumer are in cold checks. Frozen eight-case comparisons, W1/c0 analytical identities, short/alias errors and nonfinite/status recovery are prospectively fixed. No GPU result yet. | Complete strict checks, Astra review and explicit release GPU collection. |
+| 2026-10-29 | B3c3b2 checked resident attention leaf | Strict checks,424 default /308 Metal-library tests and both explicit GPU jobs pass. Astra rescored361,448 source values (one tiny probability difference, zero failures),16,016 exact recovery values and all27 raw records/identities/guards/masks. Eight release encodes allocate zero Rust objects. | [Report](docs/gemma3-staged-attention.md); reviewed task commit, then two-phase cache set. |

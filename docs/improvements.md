@@ -6940,3 +6940,43 @@ No app/phone, quality or performance claim is added. See
 [evidence](../benchmarks/results/2026-10-29-gemma3-staged-attention-reference-v1.json)
 and [TODO](../TODO.md). The optional native operator and cache transaction remain
 separate reviewed code tasks.
+
+## 2026-10-29 — Native staged-attention preparation
+
+The independent reference is committed as `2ba2a42`. A small borrowed Metal
+operation now reads the shared old-ring spans and immutable new Half KV without
+changing persistent cache bytes. Its host plan checks the bounded UInt32 domain,
+all nine operand owners, aliases, device identity and guarded physical bytes.
+Serial FP32 score/softmax/context arithmetic matches the frozen profile.
+
+The raw-first test consumer compares all eight source cases and adds fixed
+W1/c0 single-visible-value identities, nine short buffers, typed aliases and
+nonfinite/sticky/reset controls. Release Rust allocation checks remain separate
+from driver allocations. Cold checks and prospective final review are running;
+no native outcome, cache transaction, graph or model qualification is claimed.
+
+## 2026-10-29 — Qualified native staged Half attention
+
+The optional resident Reference operation now passes both explicit Metal jobs
+on Apple M1 Pro. Astra independently verifies all 27 raw records: 361,448 source
+MAIN values have one differing probability value, maximum error 7.450580596923828e-9
+and zero unchanged-gate failures. WIDE has zero diagnostic exceedances. Another
+16,016 recovery MAIN values are bit-exact; exact W1/c0 identities, masked zeros,
+uniform window boundaries, all input hash pairs and inactive/guard words pass.
+Nine short operands, typed aliases and five invalid-input/sticky/reset controls
+pass, including acceptance of an unused old NaN row with unchanged outputs.
+
+All eight measured release encodes make zero calling-thread Rust allocations;
+driver encoders remain outside that measurement. Physical operands reuse the
+shared row descriptors and `KvOwner` F16 accounting, with no KV-head expansion,
+cache copy, host wait or input mutation during encoding. Formatting, strict
+default/Metal Clippy, 424 default /308 Metal-library tests and both targeted
+debug/release cold controls pass. Source and numerical policy are unchanged.
+
+Memory observations are direct-process samples, not execution peaks or whole-model
+fit. The leaf remains internal/test-only until graph composition. No real model,
+cache publication, graph, app/phone, quality or throughput claim follows. See
+[report](gemma3-staged-attention.md),
+[evidence](../benchmarks/results/2026-10-29-gemma3-staged-attention-v1.json) and
+[TODO](../TODO.md). Continue the all-owner two-phase GPU cache transaction with
+explicit poisoned-state recovery.

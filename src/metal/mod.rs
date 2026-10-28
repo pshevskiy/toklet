@@ -19,6 +19,8 @@ mod native_profile;
 mod online_attention;
 #[cfg(test)]
 mod q4_v2_projection;
+#[cfg(test)]
+mod staged_attention;
 pub use capture::Capture;
 pub mod gemma_affine;
 pub mod gemma_rms;
