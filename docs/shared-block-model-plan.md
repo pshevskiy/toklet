@@ -117,6 +117,11 @@ allocation/search boundaries, standard checks, three tiny GPU controls and
 independent Astra review. B1 is next. This does not add a model family, user
 control or a larger qualified context by itself.
 
+**B1 in progress:** the [scalar Llama3 positional core](llama3-rotary-core.md)
+and independent fixtures pass checks/Astra review, and one fitting artifact's
+metadata is pinned. Positional-plan propagation, Metal admission/execution,
+real-model and text/quality checks remain open; no new family support is claimed.
+
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |
 | **B0: shared planning core** | Reuse checked physical KV-owner descriptors in dense CPU/Metal and existing window/shared plans. Add a pure capacity solver; resolve Metal layouts once. Preserve current caps, eligibility, arithmetic and defaults. Keep this small: no new settings panel or graph VM. | Exact old allocation totals; distinct F16/F32 and shared-owner accounting; local retention/staging; overflow, per-buffer, budget and selected+1 boundaries; planner/constructor equality. Ordinary checks and relevant tiny controls. |

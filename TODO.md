@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B1 — Llama3 scaled RoPE and a fitting real model**.
+Next implementation task: **B1b — propagate the positional plan into models**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -39,15 +39,20 @@ the goal, not a claim that arbitrary Hugging Face models already run.
 
 ## M8 — Architecture breadth and usable context controls
 
-### B1 — Llama3 scaled RoPE (next)
+### B1 — Llama3 scaled RoPE (in progress)
 
-- [ ] Pin a fitting MLX artifact, revision, config, packing and text protocol.
+- [x] Pin a fitting MLX artifact, revision, config, packing and tokenizer bytes:
+  [Llama 3.2 1B inventory](docs/llama3-rotary-core.md). Metadata only; no weights.
+- [x] B1a: validated scalar scaling/rotation, independent boundary/high-offset
+  fixtures, standard checks and Astra approval; [evidence](benchmarks/results/2026-10-28-llama3-rotary-core-v1.json).
+- [ ] B1b: strictly parse and propagate a source/model-owned positional plan;
+  preserve ordinary constructors and reject unsupported/conflicting scaling fields.
 - [ ] Define structural block/kernel admission instead of adding a model-name
   or geometry tuple as the sole compatibility rule.
-- [ ] Implement a reusable Llama3 scaled positional transform with validated
-  config and consistent CPU/Metal absolute-position semantics.
-- [ ] Freeze independent frequency-transition/high-offset fixtures; preserve
-  existing models' outputs and reject unsupported positional variants.
+- [ ] B1c: implement scaled Metal rotation with explicit arithmetic/resource
+  rules and consistent absolute positions; preserve existing ordinary outputs.
+- [ ] B1d: freeze a bounded plain-text chat/BOS/stop contract and independent
+  model/source comparisons; tokenizer metadata alone does not establish Chat.
 - [ ] Pass short complete source/native, cache/session, bounded real generation
   and measured memory checks on Mac; obtain Astra review and commit.
 
@@ -135,4 +140,6 @@ completed or prerequisites for the active breadth-first queue.
 | --- | --- | --- | --- |
 | 2026-10-28 | Active plan and M9 architecture | Astra approved shared-block and performance boundaries; local links/whitespace passed. | `1d673e0`; B0 core. |
 | 2026-10-28 | B0 capacity core | 375 default / 254 Metal-library tests (overlap), fmt, strict Clippy and three tiny GPU checks passed; independent Astra approval. | `ea874d1`; B1 artifact and positional-block research. |
-| 2026-10-28 | Progress tracking | Created this live checklist and persistent iteration-update instruction; documentation link/content and whitespace checks. | Commit containing this entry; continue B1 with Astra advice/review. |
+| 2026-10-28 | Progress tracking | Created this live checklist and persistent iteration-update instruction; documentation link/content and whitespace checks. | `4602baf`; continue B1 with Astra advice/review. |
+| 2026-10-28 | B1 candidate research | Astra pinned public Llama 3.2 1B metadata/tokenizer/header; all 13 source pins, Git blobs and header extents verified. No tensor payload or model run. | [Inventory](docs/llama3-rotary-core.md); bounded positional work first. |
+| 2026-10-28 | B1a positional core | Six targeted / 381 default / 260 Metal-library tests (overlap), fmt, strict Clippy and deterministic fixture replay pass; independent Astra approval. | Commit containing this entry; B1b positional-plan propagation next. |

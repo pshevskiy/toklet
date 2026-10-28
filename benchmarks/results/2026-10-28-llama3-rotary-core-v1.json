@@ -1,0 +1,282 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "task": "M8 B1a Llama3 scalar positional primitive",
+  "decision": "retain primitive; vertical integration pending",
+  "base_commit": "4602bafc309733519069e9704714c403c7776179",
+  "files": [
+    {
+      "path": "src/cpu/llama3_rotary.rs",
+      "bytes": 5707,
+      "sha256": "1650e29048c81a84fb90fc6638433d01292046c9db3e3be874912e94bdc78081"
+    },
+    {
+      "path": "src/cpu/llama3_rotary/tests.rs",
+      "bytes": 9591,
+      "sha256": "94e0ae9069da4007549e1ee3021d7f09abfa4564fa1e62555b564ec3b27993cf"
+    },
+    {
+      "path": "src/cpu/mod.rs",
+      "bytes": 10019,
+      "sha256": "7946e4949012185c442c3cc353d1efe7a76d1afb09ddea62c8e9afde5460347b"
+    },
+    {
+      "path": "tools/reference/llama3_rotary.py",
+      "bytes": 4189,
+      "sha256": "0c6c778c0395754353d81b05b6e9c341d94f837e5bedee4578d84f8946ebbcba"
+    },
+    {
+      "path": "tests/fixtures/llama3-rotary-v1/math.json",
+      "bytes": 60656,
+      "sha256": "980c8835bc5485c7d064b77e868dab44891a55c2bbff8365ea3b30c96d4c1692"
+    }
+  ],
+  "checks": {
+    "passed": true,
+    "bindings": 259,
+    "outputs": 12,
+    "closed_recorded_processes_and_groups": 6,
+    "targeted_tests": 6,
+    "default_tests": 381,
+    "metal_library_tests": 260,
+    "counts_overlap": true,
+    "fixture_replay_byte_identical": true,
+    "fixture_cases": 7,
+    "fixture_output_values": 1224,
+    "fixture_frequencies": 148,
+    "frequency_controls": 5,
+    "commands": [
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "fmt",
+          "--check"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--lib",
+          "cpu::llama3_rotary"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--features",
+          "metal",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--features",
+          "metal",
+          "--lib"
+        ],
+        "exit_code": 0
+      }
+    ]
+  },
+  "review": {
+    "status": "approved",
+    "receipt": {
+      "path": "artifacts/new-goal-b1a-independent-review-v2/review.json",
+      "bytes": 4081,
+      "sha256": "ef7e625183a6975769bc99300868fb359c280c672a8050e14cae8a98ecef2e3e"
+    }
+  },
+  "raw_receipts": [
+    {
+      "path": "artifacts/new-goal-b1a-checks-v2/checks.json",
+      "bytes": 52023,
+      "sha256": "83a36ec3563f54fe06e16627b767271316c080c8f0bc7df8fbb41fb57d022725"
+    },
+    {
+      "path": "artifacts/new-goal-b1a-checks-v1/fixture-replay.json",
+      "bytes": 603,
+      "sha256": "81026bdfcafb5bb32dbf1350520c5bd04de7c18e29f04ce007f348ceab0224de"
+    }
+  ],
+  "source_policy": {
+    "name": "canonical inclusive Llama3 wavelength blend",
+    "source_url": "https://github.com/huggingface/transformers/blob/v4.45.2/src/transformers/modeling_rope_utils.py",
+    "source_sha256": "81432edf7d4974e202e850798b034cdb463b0e6a9d5503d043f26cdaca79ce95",
+    "fp32_output_gate": {
+      "absolute": 1e-05,
+      "relative": 0.0001
+    },
+    "inverse_frequency_gate": {
+      "absolute": 1e-15,
+      "relative": 1e-13
+    },
+    "math_precision": "Decimal80 fixture; scalar FP64 frequency/angle/trig then FP32 sine/cosine and pair arithmetic"
+  },
+  "candidate_research": {
+    "status": "metadata only; not executable or quality qualification",
+    "repository": "mlx-community/Llama-3.2-1B-Instruct-8bit",
+    "revision": "d48cdf0a4ea22d893b7c63a99d6a693e24822795",
+    "gated": false,
+    "private": false,
+    "metadata_manifest": {
+      "path": "artifacts/b1-llama3-research-v1/metadata-manifest.json",
+      "bytes": 3356,
+      "sha256": "9e3b3e0d32f9826ecae06d728af707ba4955506c8e5168a6429e3002fb42ec38"
+    },
+    "metadata_records": [
+      {
+        "path": "hf-api.json",
+        "bytes": 20915,
+        "sha256": "f6c3c7944f648e01fb267ec491d62a131d154e27efe514b52b01629bc5d4c363"
+      },
+      {
+        "path": "config.json",
+        "bytes": 1041,
+        "sha256": "847794a29e25927b4b98f35f5e66829e1b8bfd78f7743a9582780b4fd4a8ef9d",
+        "hf_git_blob": "bfe77c76175ed1df350378e63cc47b0deaad293a"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 26160,
+        "sha256": "c444df144fe9d86b42f8b1d797432c1f8379225316e41b1b9551e90d63136155",
+        "hf_git_blob": "51923f3a8c4f7bdb2930a44caec07017ae945733"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 9085657,
+        "sha256": "79e3e522635f3171300913bb421464a87de6222182a0570b9b2ccba2a964b2b4",
+        "hf_git_blob": "5cc5f00a5b203e90a27a3bd60d1ec393b07971e8"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 54528,
+        "sha256": "9823dcfdc1121869029da45192238e85cf44f0b232a6d9dc20e4fe6f4242a14e",
+        "hf_git_blob": "4ff488a165e900e5129cda7c20ab32d568d2a475"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 296,
+        "sha256": "6f38c73729248f6c127296386e3cdde96e254636cc58b4169d3fd32328d9a8ec",
+        "hf_git_blob": "02ee80b6196926a5ad790a004d9efd6ab1ba6542"
+      },
+      {
+        "path": "safetensors-prefix-v2.bin",
+        "bytes": 8,
+        "sha256": "e56fcafaaf33d457f684379923ae26dc46816471b22720da5c04e380f2ff3453"
+      },
+      {
+        "path": "safetensors-header.json",
+        "bytes": 41268,
+        "sha256": "f96f92c0513d2eb74c05a4115b2acb792cee6755386addf7b4a511e688030288"
+      },
+      {
+        "path": "transformers-rope-v4.45.2.py",
+        "bytes": 28700,
+        "sha256": "81432edf7d4974e202e850798b034cdb463b0e6a9d5503d043f26cdaca79ce95"
+      },
+      {
+        "path": "mlx-lm-head.json",
+        "bytes": 9040,
+        "sha256": "302b0d30bad10df835b322ca081c1a441effca167a3f6d1e18a8a3ae39acec37"
+      },
+      {
+        "path": "mlx-lm-rope_utils.py",
+        "bytes": 12803,
+        "sha256": "ccba2f0c7b246c008a1188dc3760c162bdd906b15a1c490461dee4be64bc62df"
+      },
+      {
+        "path": "mlx-lm-llama.py",
+        "bytes": 9207,
+        "sha256": "dfb656511e6740781cd0563f7994a78b3404c199b9aebaa2fbca28a19e280891"
+      },
+      {
+        "path": "RESEARCH.md",
+        "bytes": 10934,
+        "sha256": "36002c3779cb232deb8cc83b0df3e548a03f639cbe4115115a57f2ed1b79ab80"
+      }
+    ],
+    "tensor_count": 372,
+    "affine8_group64_matrices": 113,
+    "f16_norm_vectors": 33,
+    "tensor_payload_bytes": 1313116160,
+    "full_weights_downloaded": false,
+    "payload_hash_verified": false,
+    "text_profile_implemented": false,
+    "declared_positions": 131072,
+    "initial_vertical_scope": 512,
+    "frequency_regions": {
+      "high": 15,
+      "blend": 3,
+      "low": 14,
+      "exact_transition_hits": 0
+    }
+  },
+  "scope": {
+    "scalar_primitive": true,
+    "loader_wired": false,
+    "cpu_model_wired": false,
+    "metal_wired": false,
+    "new_artifact_admitted": false,
+    "real_model_run": false,
+    "phone_run": false,
+    "quality_qualified": false
+  },
+  "limitations": [
+    "No model context, throughput or memory qualification from mathematical high-position fixtures.",
+    "Ordinary CPU/Metal arithmetic, model caps and eligibility unchanged.",
+    "MLX-LM strict low-edge behavior differs from canonical inclusive rule; actual candidate has no exact edge frequency.",
+    "Source-owned positional-plan propagation, native arithmetic profile, structural Metal checks, real model/source/session/full quality and text integration remain open.",
+    "Metadata pins were verified independently against recorded SHA256/Git blobs/header extents; full tensor payload was not downloaded."
+  ],
+  "validation_history": {
+    "initial_passing_checks": {
+      "path": "artifacts/new-goal-b1a-checks-v1/checks.json",
+      "bytes": 52023,
+      "sha256": "80054a8595200fd5c0295877acb9b421e145905b15fd9c9102e7cb7cf88b4c8a"
+    },
+    "final_passing_checks": {
+      "path": "artifacts/new-goal-b1a-checks-v2/checks.json",
+      "bytes": 52023,
+      "sha256": "83a36ec3563f54fe06e16627b767271316c080c8f0bc7df8fbb41fb57d022725"
+    },
+    "reason_for_repeat": "Test-only portability correction: reject original positions above2^53 when representable, rather than assuming usize::MAX exceeds2^53. Production, generator, fixture and gates unchanged."
+  }
+}

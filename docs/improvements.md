@@ -6343,3 +6343,22 @@ including research, failures and interruptions, while preserving the existing
 checks/Astra-review/commit rule for code. README and PLAN link to the tracker.
 Corrected the planning inventory to reflect B0's completed solver. This is a
 documentation change; link/content and whitespace checks apply.
+
+## 2026-10-28 — Llama3 scalar positional block and pinned next artifact
+
+Added validated canonical Llama3 inverse-frequency scaling and allocation-free
+split-half scalar rotation. An independent Decimal80 fixture freezes all three
+bands, exact boundaries and high offsets; ordinary rotary is unchanged. Six
+targeted, 381 default and 260 Metal-library tests pass (overlap), with formatting,
+strict default/Metal Clippy and byte-identical fixture regeneration. Independent
+Astra review authenticates all source/output bindings and closed process groups.
+
+Astra also pinned public Llama 3.2 1B eight-bit metadata, tokenizer and tensor
+header. Actual F16/affine8 layout is explicit; no weight payload, model run or
+new app capability is claimed. The canonical low-edge rule deliberately differs
+from a strict-boundary MLX implementation; actual candidate frequencies avoid
+that edge, and source-profile/numerical qualification remains separate. Retain
+the primitive, then propagate the positional plan and implement native admission.
+See [scope and next tasks](llama3-rotary-core.md),
+[evidence](../benchmarks/results/2026-10-28-llama3-rotary-core-v1.json) and
+[updated progress](../TODO.md).
