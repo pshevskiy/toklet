@@ -16,6 +16,7 @@ pub(super) fn wrapper(source: weights::Source, storage: Storage, shape: Vec<usiz
     )]);
     Source {
         declared_positions: 8,
+        declared_sliding_window: None,
         config: Config {
             vocab_size: 1,
             hidden_size: 32,

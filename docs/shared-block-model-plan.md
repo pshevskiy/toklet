@@ -24,7 +24,7 @@ generation speed is a separate measured property.
 
 | Component | What exists | Current gap |
 | --- | --- | --- |
-| Dense blocks | Shared Qwen2/Qwen3/Llama/Mistral projections, RMS/QK norms, ordinary and Llama3 scaled split-half RoPE, GQA, causal attention and SiLU MLP | Llama structural admission and a bounded real checkpoint now pass; other config variants and device/artifact qualification remain scoped. A family name does not cover all its exports. |
+| Dense blocks | Shared Qwen2/Qwen3/Llama/Mistral and bounded Phi3 projections, RMS/QK norms, ordinary and Llama3 scaled split-half RoPE, GQA, causal attention and SiLU MLP | Llama structural admission and a bounded real checkpoint now pass; other config variants and device/artifact qualification remain scoped. A family name does not cover all its exports. |
 | Packed weights | MLX affine primitives and validated floating/packed tensor layouts | Primitive format support is broader than whole-model/backend support. Other containers or quantization conventions are separate mechanisms. |
 | Local/shared state | Concrete full/sliding producer caches and shared consumers, including existing Gemma work | Gemma is not an ordinary native Chat family; its open graph/precision gates remain. |
 | Planning | Checked dense CPU/Metal session plans, shared/window accounting, native context facts and the completed B0 capacity solver | Broader per-model capability reporting and friendly context/KV controls remain. Each inspection still initializes device/pipelines once; capacity candidates use pure arithmetic. |
@@ -127,6 +127,14 @@ raw generation and measured-memory requirements. This does not qualify declared
 131072, original unquantized10k/100 adoption quality, production Chat or iPhone.
 Those remain B5/M8 closure work. Next is B2 fused-row composition; frontend
 qualification does not interrupt the breadth-first order.
+
+**B2 storage and tiny composition complete:** checked original row spans and
+one [cold logical loading plan](logical-projection-loading.md) now compose the
+strict ordinary Phi3 adapter with existing dense blocks. The independent
+[head96 CPU/Metal checks](phi3-dense-composition.md) pass at the initial512 bound,
+retaining declared4096/window2047. This does not close B2: the acquired real
+checkpoint still needs short source/native/session/text and measured-memory
+qualification. B2c is next; no whole-family, app or full-window claim.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |

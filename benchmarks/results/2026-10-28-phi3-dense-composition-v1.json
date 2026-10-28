@@ -1,0 +1,314 @@
+{
+  "schema": "toklet.phi3-dense-composition.v1",
+  "date": "2026-10-28",
+  "base_revision": "397284a",
+  "decision": "retain B2b2 tiny composition; B2 real qualification remains open",
+  "hardware": "Apple M1 Pro",
+  "native_build": "debug test binary; precise Metal math; no benchmark claim",
+  "scope": {
+    "architecture": "ordinary full-head Phi3 dense composition with original fused-row loading",
+    "declared_positions": 4096,
+    "declared_sliding_window": 2047,
+    "implemented_request": "1..=min(512, declared positions, positive source window when present)",
+    "tested_absolute_last_position": 511,
+    "tested_boundary_local_keys": 17,
+    "full512_key_numerics_tested": false,
+    "capacity_allocated": 512,
+    "largest_native_state_history": 21,
+    "real_model_executed": false,
+    "app_qualified": false,
+    "iphone_qualified": false,
+    "held_out_quality_qualified": false,
+    "performance_claim": false
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_tests_passed": 410,
+    "metal_library_tests_passed": 288,
+    "suites_overlap": true,
+    "cpu_tests_passed": 4,
+    "explicit_gpu_tests_passed": 2,
+    "failed_attempts_preserved": [
+      "test-only slice borrow mismatch before graph execution",
+      "authenticated JSON numeric spelling comparison before graph execution"
+    ],
+    "policy_correction_before_gpu": "remove unapproved wide fatal gate; frozen MAIN-only policy unchanged"
+  },
+  "source_fixture": {
+    "stage_groups": 195,
+    "stored_arrays": 585,
+    "export_replay_exact": true,
+    "manifest": {
+      "path": "tests/fixtures/mlx-phi3-v1/manifest.json",
+      "bytes": 264936,
+      "sha256": "bd297f60a0b6e280ee3495688b31c2c4042afc124b10735c4539262ead01ef26"
+    },
+    "cpu_gate": {
+      "atol": 1e-05,
+      "rtol": 0.0001
+    },
+    "half_main_gate": {
+      "atol": "max(1e-4,2*case-stage main-wide envelope)",
+      "rtol": 0.001
+    },
+    "wide_role": "precomputed envelope and diagnostics only"
+  },
+  "cpu": {
+    "compared_values": 513704,
+    "stage_groups": 195,
+    "exact_cached_schedules": true
+  },
+  "gpu": {
+    "schedules": 19,
+    "committed_rows": 281,
+    "snapshots": 3815,
+    "captured_stages_per_chunk": 35,
+    "source_stages_per_case": 39,
+    "main_gate_values": 1996224,
+    "main_gate_failures": 0,
+    "max_main_gate_fraction": 0.8143322475570033,
+    "max_abs_main": 0.00390625,
+    "wide_diagnostic_values": 1996224,
+    "wide_diagnostic_exceedances": 0,
+    "native_stage_values_independently_retained": false,
+    "evidence": "Rust consumer compares all stage values; logs retain aggregates and original raw logits, not every passing intermediate",
+    "exact_comparison": "finite numeric equality; signed zeros equal; raw IEEE journals preserved",
+    "externally_rescored_retained_logits": {
+      "values": 17984,
+      "max_main_gate_fraction": 0.3889997708890382,
+      "full_stage_external_rescore": false
+    }
+  },
+  "tiny_memory": {
+    "untied_source_bytes": 347520,
+    "tied_source_bytes": 340608,
+    "untied_resident_weights_bytes": 347590,
+    "tied_resident_weights_bytes": 340678,
+    "norm_guard_bytes": 70,
+    "untied_session_admitted_bytes": 68483922,
+    "tied_session_admitted_bytes": 68477010,
+    "measured_process_peak": false
+  },
+  "real_artifact_metadata": {
+    "physical_header_entries": 455,
+    "logical_specs": 291,
+    "source_payload_bytes": 2149644288,
+    "scalar_fp32_weights_bytes": 15284318208,
+    "scalar_admitted_load_bytes": 15406899200,
+    "scalar_rejected_under_6GiB": true,
+    "metal_status": "compatible_untested",
+    "numerical_execution": false
+  },
+  "sources": [
+    {
+      "path": "src/metal/planning.rs",
+      "bytes": 47585,
+      "sha256": "dee298924644b7c1b439480c1f22c65ed3f91e6c26c674593b78ab938054ca99"
+    },
+    {
+      "path": "src/mlx/compatibility.rs",
+      "bytes": 12943,
+      "sha256": "8458505cc88d8174f787bcb3e59f5d6a7f5bdb0441d34f8b6e29e79a1a8b5202"
+    },
+    {
+      "path": "src/mlx/dense.rs",
+      "bytes": 9313,
+      "sha256": "3a5adc23865e95cf754c61121985c1dca7f122808fed2b6e63a7fe72ba1f4f33"
+    },
+    {
+      "path": "src/mlx/execution.rs",
+      "bytes": 22395,
+      "sha256": "dc91bde0587a596c6dad9aabafb7867c8fc97cd2652a7434d511f46c7dc352bc"
+    },
+    {
+      "path": "src/mlx/mod.rs",
+      "bytes": 388,
+      "sha256": "0d1b6b5bdd323dfff21353b23cfdfc7b6071fa0902e286aa4683a528b743f711"
+    },
+    {
+      "path": "src/mlx/phi3.rs",
+      "bytes": 8748,
+      "sha256": "9cbd4df324d788acfbb5f0add56ba018920ff8afbb96c204c763198a709314e0"
+    },
+    {
+      "path": "src/mlx/qwen/content_tests.rs",
+      "bytes": 4816,
+      "sha256": "0f1c9d59b348a0f99362344c0ca44ea5162a3e7efafebd569700123ebb28a9af"
+    },
+    {
+      "path": "src/mlx/qwen/phi3.rs",
+      "bytes": 2968,
+      "sha256": "79df7dea933533800699878a7b99572ebb913da6818b427938dfc3d60b12fd75"
+    },
+    {
+      "path": "src/mlx/qwen/row_tests.rs",
+      "bytes": 15746,
+      "sha256": "ad8d825f068790b7a362332bd8e7a0aad62dbab326eb49ce11e35d0b6b0177a3"
+    },
+    {
+      "path": "src/mlx/qwen.rs",
+      "bytes": 39850,
+      "sha256": "0071a738c95f5586af9c4d60036985b4b0ceee5e98a1c56f9c9782ed7bed0e1a"
+    },
+    {
+      "path": "tools/reference/phi3_graph.py",
+      "bytes": 25730,
+      "sha256": "a6a20988cc056c978a70c57c5ea4896c230e192d97158ac4c62f1ea11c605804"
+    },
+    {
+      "path": "tools/reference/test_phi3_graph.py",
+      "bytes": 7383,
+      "sha256": "226e8f3fdfd4749198584307a2372b8e40e68c86405dfb333a4519900c06b21e"
+    },
+    {
+      "path": "tests/mlx_phi3.rs",
+      "bytes": 13145,
+      "sha256": "49183583e17ec6e04b9685b89f02fbe057533b685d76de5533b29320fec4fb24"
+    },
+    {
+      "path": "tests/support/phi3.rs",
+      "bytes": 2999,
+      "sha256": "d40a0172f800baf706108edc30bd1e59f39f80089176eedc7d10f388f4280f15"
+    },
+    {
+      "path": "tests/mlx_phi3_metal.rs",
+      "bytes": 25800,
+      "sha256": "d327b8e2a8c750f84bd06a80641b96270756528870488e6619066099d7cdf6e6"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b2b2-root-draft-v1/manifest.json",
+      "bytes": 3912,
+      "sha256": "c692f23928569ec23aa94d8fc897bcae2f9eef4c5d9fd29ea913f91bef537355"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-phi-fixture-proposal-v1/manifest.json",
+      "bytes": 1915,
+      "sha256": "2f30f6c1df2ea197087a5349ffce8e69aa92fa1c42508341aa85e88bbd0445e7"
+    },
+    {
+      "path": "artifacts/new-goal-b2b-advice-v1/fixture-policy-v1.json",
+      "bytes": 5976,
+      "sha256": "f2eba6a4a8aa5c00020ddde373cdc4adc9365686cf62f54f6949359a593e1613"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-fixture-v1/export-receipt.json",
+      "bytes": 408343,
+      "sha256": "ab4cd26f2268f3fee5d953f9dc8705ae569726fc6c42d65da1665917220661b1"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-preflight-v1/checks.json",
+      "bytes": 812825,
+      "sha256": "9d443326f1aa22da03cc4f2334244135a0921098c286ab346ba95da1429792ad"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-cpu-v1/checks.json",
+      "bytes": 813103,
+      "sha256": "a7c184b1e824e3d6f3168fb59f85414f45d34f399c64674354e9215828aa0c75"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-cpu-v2/checks.json",
+      "bytes": 813494,
+      "sha256": "7dfad66f78d941c38822149cc705794dd662b01b77f6c5a807bbcf2cfc2783db"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-cpu-v3/checks.json",
+      "bytes": 813533,
+      "sha256": "109b83d1de7398f35e9b6c3ba32da50d6374d552d43e1df67a3955821d0fcf19"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-real-metadata-v1/checks.json",
+      "bytes": 820421,
+      "sha256": "33957f1c35c8cc7c881212e2a2112ae165c0d76902f17ce94d45152e9b8f2f5f"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-checks-v1/checks.json",
+      "bytes": 818713,
+      "sha256": "8b4cf78a0147e907cb73a037e2aac6f718f02046f5007ff85b6217a58144393e"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-gpu-v1/run.py",
+      "bytes": 5481,
+      "sha256": "a4ecae16599b87706d70b9013c8ea8176eb12eac7f2cd9fb2c9ee282529c7bae"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-gpu-v1/gpu-receipt.json",
+      "bytes": 824681,
+      "sha256": "1b1beeee65b95911c14fd107c3692f3c969a83d24c57605705020cdda28fd003"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-metal-proposal-v1/manifest.json",
+      "bytes": 1865,
+      "sha256": "aa9eca8f0761a29094e38803a014aff558f9113e231657f43b9ac493f54ceafd"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-metal-proposal-v2/manifest.json",
+      "bytes": 1961,
+      "sha256": "ddc3c2c37d48888247cc8d5fcb988d8638a4bb938f7c48d7a7248bec99c91633"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-metal-proposal-v3/manifest.json",
+      "bytes": 1961,
+      "sha256": "f1ae7923976af135e627cc6cf6c755d63058a17be13560f4658f07a11324b5f1"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/cpu-evidence-review.json",
+      "bytes": 2003,
+      "sha256": "fe586a48d2670dcb3e2bf6ac8483836353ca0282415022c0789e980f8f28cfbe"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/final-readback.json",
+      "bytes": 4241,
+      "sha256": "0a40fe2346e1209ec518984255adad47b5cec66a1e3cce48abf14efc4de65514"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/frozen-fixture-review.json",
+      "bytes": 4020,
+      "sha256": "c6d878fe17d0215849b57df007345720f6239a5424acb088066b13ada06cb7ec"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/frozen-readback.json",
+      "bytes": 2046,
+      "sha256": "dd0a29b8810b247b40c4460a72035476a27ba019f5b3b38f02187674336c2952"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/prospective-cpu-consumer-review.json",
+      "bytes": 2328,
+      "sha256": "df01f581c741b0daae4edd38046d30434f1f075acf86193f1339f6ec8152b916"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/prospective-export-review.json",
+      "bytes": 2560,
+      "sha256": "99fcdcc9200596e6928cac4ad9655d06c3ba58fd190c3f5fd9bcce9612f9c596"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/prospective-gpu-controller-review.json",
+      "bytes": 3759,
+      "sha256": "6593c486387970d491192169b2c8183f97767736fc6a74c98fc6323633cb7074"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/prospective-metal-consumer-review.json",
+      "bytes": 5131,
+      "sha256": "3deee002ba2cbcea04be60b1c75c6729e8e4100ba5ee6ec934842bfdb59a8cdb"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/prospective-review.json",
+      "bytes": 7546,
+      "sha256": "e95805ce651cc793cff815106af651b9845d0cff9eff65e3d078ffba8a4a8e74"
+    },
+    {
+      "path": "artifacts/new-goal-b2b2-independent-review-v1/final-readback.json",
+      "bytes": 4241,
+      "sha256": "0a40fe2346e1209ec518984255adad47b5cec66a1e3cce48abf14efc4de65514"
+    }
+  ],
+  "final_review": {
+    "path": "artifacts/new-goal-b2b2-independent-review-v1/final-review.json",
+    "bytes": 11136,
+    "sha256": "2b011fd82b77ed6ad8c8ff9ef4ec8f0033c98b4420a497c8953650e82a497eac"
+  },
+  "next": "B2c short real Phi3 source/native/session/text and measured-memory qualification"
+}

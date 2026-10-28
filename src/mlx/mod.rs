@@ -8,6 +8,7 @@ pub mod compatibility;
 pub mod dense;
 pub(crate) mod execution;
 pub mod gemma4;
+mod phi3;
 pub mod qwen;
 mod qwen3;
 pub mod reference;

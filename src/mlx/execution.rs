@@ -29,12 +29,16 @@ pub(crate) fn metal_source_geometry(
         ));
     }
     metal_geometry(source.config(), source.architecture())?;
-    if source.architecture() == Architecture::Llama {
+    if matches!(
+        source.architecture(),
+        Architecture::Llama | Architecture::Phi3
+    ) {
         let c = source.config();
         for pair in 0..c.head_dim / 2 {
             native_inverse_frequency(c.rope_theta, c.head_dim, pair, source.position_plan())?;
         }
-        for spec in source.tensors().values() {
+        for logical in source.logical_tensors().values() {
+            let spec = logical.tensor();
             let count = spec
                 .shape()
                 .iter()
@@ -42,12 +46,12 @@ pub(crate) fn metal_source_geometry(
                 .and_then(|n| n.checked_add(7));
             if count.is_none_or(|n| n > u32::MAX as usize) {
                 return Err(GeometryError::Unsupported(
-                    "Llama tensor extent exceeds UInt32 layout",
+                    "dense tensor extent exceeds UInt32 layout",
                 ));
             }
             if let Storage::Affine(layout) = spec.storage() {
                 layout.validate_gpu_indexing().map_err(|_| {
-                    GeometryError::Unsupported("Llama packed indexing exceeds UInt32")
+                    GeometryError::Unsupported("dense packed indexing exceeds UInt32")
                 })?;
             }
         }
@@ -74,12 +78,12 @@ pub(crate) fn native_inverse_frequency(
             "invalid native positional parameters",
         ));
     }
-    // The initial native Llama path is bounded to positions 0..511. A base
+    // The initial native Llama/Phi path is bounded to positions 0..511. A base
     // >=1 keeps canonical inverse frequencies <=1 and angles finite, while
     // also excluding a subnormal theta input to the ordinary GPU power.
     if theta < 1.0 {
         return Err(GeometryError::Unsupported(
-            "native Llama rotary base requires theta at least 1",
+            "native dense rotary base requires theta at least 1",
         ));
     }
     let ordinary = f64::from(theta).powf(-2.0 * pair as f64 / dimension as f64);
@@ -226,17 +230,17 @@ pub(crate) fn metal_geometry(
             Ok(())
         }
         crate::mlx::dense::Architecture::Qwen2 => qwen_geometry(c),
-        crate::mlx::dense::Architecture::Llama => {
+        crate::mlx::dense::Architecture::Llama | crate::mlx::dense::Architecture::Phi3 => {
             c.validate()
-                .map_err(|_| GeometryError::Invalid("invalid Llama model configuration"))?;
+                .map_err(|_| GeometryError::Invalid("invalid dense model configuration"))?;
             if !c.rms_norm_eps.is_normal() {
                 return Err(GeometryError::Unsupported(
-                    "native Llama RMS epsilon requires positive normal FP32",
+                    "native dense RMS epsilon requires positive normal FP32",
                 ));
             }
             if c.max_positions > 512 {
                 return Err(GeometryError::Unsupported(
-                    "Metal Llama initial implemented context is at most 512 positions",
+                    "Metal dense initial implemented context is at most 512 positions",
                 ));
             }
             for n in [
@@ -248,7 +252,7 @@ pub(crate) fn metal_geometry(
             ] {
                 if n.checked_add(7).is_none_or(|v| v > u32::MAX as usize) {
                     return Err(GeometryError::Unsupported(
-                        "Llama activation width exceeds UInt32",
+                        "dense activation width exceeds UInt32",
                     ));
                 }
             }

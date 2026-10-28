@@ -13,11 +13,22 @@ pub enum Architecture {
     Qwen3,
     Llama,
     Mistral,
+    Phi3,
 }
 impl Architecture {
     pub(crate) const fn has_projection_bias(self) -> bool {
         matches!(self, Self::Qwen2)
     }
+}
+
+/// Validated source semantics, before physical tensors or numerical allocation.
+pub(crate) struct ParsedConfig {
+    pub config: Config,
+    pub architecture: Architecture,
+    pub tied_output: bool,
+    pub position_plan: PositionPlan,
+    /// Source declaration; not a sliding cache implementation.
+    pub declared_sliding_window: Option<usize>,
 }
 
 #[derive(Deserialize)]
@@ -117,21 +128,26 @@ fn invalid(reason: impl Into<String>) -> Error {
     Error::Invalid(reason.into())
 }
 
-pub(crate) fn config(
-    value: Value,
-    options: LoadOptions,
-) -> Result<(Config, Architecture, bool, PositionPlan), Error> {
+pub(crate) fn config(value: Value, options: LoadOptions) -> Result<ParsedConfig, Error> {
     match value.get("model_type").and_then(Value::as_str) {
         Some("qwen3") => {
             let (config, tied) = super::qwen3::config(value, options)?;
-            Ok((config, Architecture::Qwen3, tied, PositionPlan::Ordinary))
+            Ok(ParsedConfig {
+                config,
+                architecture: Architecture::Qwen3,
+                tied_output: tied,
+                position_plan: PositionPlan::Ordinary,
+                declared_sliding_window: None,
+            })
         }
-        Some("qwen2") => Ok((
-            weights::qwen_config(value, options)?,
-            Architecture::Qwen2,
-            true,
-            PositionPlan::Ordinary,
-        )),
+        Some("qwen2") => Ok(ParsedConfig {
+            config: weights::qwen_config(value, options)?,
+            architecture: Architecture::Qwen2,
+            tied_output: true,
+            position_plan: PositionPlan::Ordinary,
+            declared_sliding_window: None,
+        }),
+        Some("phi3") => super::phi3::config(value, options),
         Some("llama" | "mistral") => {
             // Mistral defaults can imply sliding attention when the field is
             // absent. Only an explicit null opts into this full-attention graph.
@@ -231,7 +247,13 @@ pub(crate) fn config(
                 rope_theta: c.rope_theta,
             };
             config.validate()?;
-            Ok((config, architecture, c.tie_word_embeddings, position_plan))
+            Ok(ParsedConfig {
+                config,
+                architecture,
+                tied_output: c.tie_word_embeddings,
+                position_plan,
+                declared_sliding_window: None,
+            })
         }
         _ => Err(invalid("unsupported native MLX decoder architecture")),
     }

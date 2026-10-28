@@ -62,14 +62,16 @@ not proven by its old model card; later quality work must preserve that limitati
 
 ## Implementation tasks
 
-1. **B2a:** reuse the existing borrowed `Matrix::row_range`; add one checked
+1. **B2a complete:** reuse the existing borrowed `Matrix::row_range`; add one checked
    `Layout::row_span` plan and source range reads. Preserve all whole-tensor APIs.
    Ranged reads reject/sticky-poison audited sources, even for a full-length range;
    whole audited reads keep their existing proof path. Selected metadata is
    validated; a partial read grants no identity for unselected bytes.
-2. **B2b:** strict Phi3 adapter, row mapping, head96 tiny independent graph and
+2. **B2b complete:** strict Phi3 adapter, row mapping, head96 tiny independent graph and
    bounded-window admission. Reuse ordinary projection/norm/rotary/attention/MLP;
    no generic graph interpreter or new fused math kernel.
+   [Tiny composition evidence](phi3-dense-composition.md) passes CPU/Metal and
+   Astra review; it does not qualify the real checkpoint.
 3. **B2c:** explicitly verify the complete pinned payload, independent short
    real-model/state/text protocol and measured Mac memory. Keep full adoption
    quality, application and phone work separate, with unchanged gates.

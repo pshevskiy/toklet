@@ -28,6 +28,7 @@ use std::{
 };
 
 mod logical;
+mod phi3;
 pub(crate) use logical::LogicalTensorSpec;
 
 const MAX_CONFIG_BYTES: usize = 1024 * 1024;
@@ -146,6 +147,7 @@ pub use crate::weights::audit::SourceContentIdentity;
 pub struct Source {
     config: Config,
     declared_positions: usize,
+    declared_sliding_window: Option<usize>,
     architecture: Architecture,
     tied_output: bool,
     position_plan: crate::model::PositionPlan,
@@ -297,15 +299,22 @@ impl Source {
             .and_then(|value| usize::try_from(value).ok())
             .filter(|&value| value > 0)
             .ok_or_else(|| invalid("positive model position declaration required"))?;
-        let (config, architecture, tied_output, position_plan) = if allow_dense {
+        let dense::ParsedConfig {
+            config,
+            architecture,
+            tied_output,
+            position_plan,
+            declared_sliding_window,
+        } = if allow_dense {
             dense::config(document, options)?
         } else {
-            (
-                weights::qwen_config(document, options)?,
-                Architecture::Qwen2,
-                true,
-                crate::model::PositionPlan::Ordinary,
-            )
+            dense::ParsedConfig {
+                config: weights::qwen_config(document, options)?,
+                architecture: Architecture::Qwen2,
+                tied_output: true,
+                position_plan: crate::model::PositionPlan::Ordinary,
+                declared_sliding_window: None,
+            }
         };
         // Bound name-map construction before looping over declared layers.
         let count = config
@@ -332,6 +341,11 @@ impl Source {
                 }
             }
         }
+        let partitions = if architecture == Architecture::Phi3 {
+            phi3::inventory(&config, &mut expected)?
+        } else {
+            Vec::new()
+        };
         let source = weights::Source::open_with_audit(directory, audit)?;
         let has_head = source.info("lm_head.weight").is_some();
         if has_head || !tied_output {
@@ -432,6 +446,7 @@ impl Source {
         let mut result = Self {
             config,
             declared_positions,
+            declared_sliding_window,
             architecture,
             tied_output,
             position_plan,
@@ -445,7 +460,7 @@ impl Source {
             result.check_tied_output()?;
             result.tensors.remove("lm_head.weight");
         }
-        result.logical = logical::plan(&result.tensors, &[])?;
+        result.logical = logical::plan(&result.tensors, &partitions)?;
         Ok(result)
     }
     pub fn config(&self) -> &Config {
@@ -455,6 +470,11 @@ impl Source {
     /// Not proof of numerical qualification, artifact provenance or device fit.
     pub fn declared_positions(&self) -> usize {
         self.declared_positions
+    }
+    /// Original source window. The initial Phi path uses a bounded equivalent
+    /// full prefix, not a ring cache; this is not a residency or fit estimate.
+    pub fn declared_sliding_window(&self) -> Option<usize> {
+        self.declared_sliding_window
     }
     pub fn architecture(&self) -> Architecture {
         self.architecture

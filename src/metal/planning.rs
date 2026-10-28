@@ -103,9 +103,9 @@ fn admit(required: usize, limit: usize) -> Result<()> {
 pub(super) fn native_attention_mode(architecture: Option<Architecture>) -> AttentionMode {
     match architecture {
         None | Some(Architecture::Qwen2) => AttentionMode::Online,
-        Some(Architecture::Llama | Architecture::Mistral | Architecture::Qwen3) => {
-            AttentionMode::Reference
-        }
+        Some(
+            Architecture::Llama | Architecture::Mistral | Architecture::Qwen3 | Architecture::Phi3,
+        ) => AttentionMode::Reference,
     }
 }
 
@@ -116,11 +116,16 @@ pub(super) fn validate_attention(
     if mode == AttentionMode::Online
         && matches!(
             architecture,
-            Some(Architecture::Llama | Architecture::Mistral | Architecture::Qwen3)
+            Some(
+                Architecture::Llama
+                    | Architecture::Mistral
+                    | Architecture::Qwen3
+                    | Architecture::Phi3
+            )
         )
     {
         return Err(Error::Unsupported(
-            "Llama/Mistral/Qwen3 Online attention is not qualified; explicitly select Reference attention",
+            "Llama/Mistral/Qwen3/Phi3 Online attention is not qualified; explicitly select Reference attention",
         ));
     }
     Ok(())

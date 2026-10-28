@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B2b2 — strict Phi3 adapter, window reporting and bounded independent head96 graph**.
+Next implementation task: **B2c — short real Phi3 source/native/session/text and measured-memory qualification**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -92,11 +92,12 @@ qualification. Proceed to B2 as Astra's acceptance review requires.
 - [x] B2b1: shared cold logical row mapping and CPU/Metal loading/accounting;
   original physical payloads and audited whole readers preserved.
   [Report](docs/logical-projection-loading.md); no Phi admission yet.
-- [ ] B2b2: strict Phi3 config/composition and tiny head96 graph checks; retain
+- [x] B2b2: strict Phi3 config/composition and tiny head96 graph checks; retain
   declared sliding2047 and enforce bounded full/sliding equivalence on CPU/Metal.
   LongRoPE variants remain rejected until actually implemented.
-- [ ] Implement checked fused QKV/gate-up mapping using shared projection blocks.
-- [ ] Validate packed row spans/alignment, an independent tiny graph and actual
+  [Report](docs/phi3-dense-composition.md); tiny CPU/Metal checks and Astra review pass.
+- [x] Implement checked fused QKV/gate-up mapping using shared projection blocks.
+- [x] Validate packed row spans/alignment, an independent tiny graph and actual
   LongRoPE when required; reject unimplemented variants.
 - [x] B2c artifact: acquire and independently verify the complete pinned2.15GB
   payload/header/index; acquisition only, no model execution.
@@ -209,3 +210,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B2a row-span source core | 397 default /278 Metal-library tests (overlap), targeted row18/range4/Metal Llama9, fmt and strict Clippy pass. Exact source spans, unaligned reads, discard/retry and sticky audit controls pass; Astra approved final source and evidence. No Phi model run. | [Report](docs/fused-row-source.md); B2b shared cold mapping and tiny graph next. |
 | 2026-10-28 | B2b1 logical projection loading | 403 default /285 Metal-library /8 logical tests (overlap), strict checks and existing tiny tied/untied Metal graph pass. Initial sandbox GPU access failed; hardware-only retry with identical source passes. Astra approved final source/evidence. | [Report](docs/logical-projection-loading.md); B2b2 strict Phi/window and independent tiny graph next. |
 | 2026-10-28 | B2c artifact acquisition | Bounded public transfer, full SHA/header/index/455 contiguous tensor extents and endpoint checks pass; Astra independently rehashed the entire payload. No model execution or app admission. | [Contract](docs/phi3-fused-source.md); B2b2 remains next before real qualification. |
+| 2026-10-28 | B2b2 frozen tiny reference | Strict parser tests and Metal compilation pass. Five independent head96 source cases export/replay identically; Astra verifies195 stage groups/585 finite arrays and fixed gates, original fused rows and unaligned storage. Six fixture files promoted exactly. No target numerical or GPU result yet. | [Source contract](docs/phi3-fused-source.md); CPU/native consumer checks remain in progress. |
+| 2026-10-28 | B2b2 initial CPU check | New test failed compilation on a slice/reference equality assertion before graph execution. Added the required borrow; engine and frozen gates unchanged. Failed receipt retained; fresh v2 targeted run in progress. | Finish CPU and native checks; no qualification upgrade. |
+| 2026-10-28 | B2b2 CPU policy spelling control | Three metadata/window/accounting tests pass; the graph test initially stops on arbitrary-precision JSON exponent spelling. Compare authenticated policy numerically; fixed gate unchanged. Failed v2 receipt retained. | Fresh v3 run follows. |
+| 2026-10-28 | B2b2 CPU vertical | All four targeted tests pass:195 independent stages/513,704 values, exact cached schedules/causal prefix/reset, unique source/scalar peak and window/native-domain controls. | GPU consumers remain under prospective review; no real model execution yet. |
+| 2026-10-28 | B2b2 cold checks and tiny GPU | 410 default /288 Metal-library tests, strict checks and two frozen-binary GPU tests pass. 19 schedules/3,815 snapshots/1,996,224 main values pass unchanged policy; wide diagnostics exceedances0. State/readback/budget controls pass. Real metadata rejects15.28GB FP32 expansion; real execution remains pending. | Final Astra review and task commit pending; B2c real protocol follows. |
+| 2026-10-28 | B2b2 reviewed completion | Astra approves final source/evidence, frozen policy and tiny composition. 17,984 retained logits independently rescored; full intermediate coverage remains checked in the Rust consumer. Real Phi execution, app/phone, full-window and adoption quality stay open. | [Report](docs/phi3-dense-composition.md); reviewed task commit, then B2c. |

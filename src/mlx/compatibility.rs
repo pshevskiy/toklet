@@ -116,6 +116,9 @@ pub struct Report {
     pub architecture: Option<&'static str>,
     pub declared_model_type: Option<String>,
     pub configured_max_positions: Option<usize>,
+    /// Source-declared window, not an implemented ring-cache or fit estimate.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub configured_sliding_window: Option<usize>,
     pub requested_context: usize,
     pub requested_memory_limit_bytes: usize,
     pub geometry: Option<Geometry>,
@@ -148,6 +151,7 @@ impl Report {
             architecture: None,
             declared_model_type: None,
             configured_max_positions: None,
+            configured_sliding_window: None,
             requested_context: options.context_limit,
             requested_memory_limit_bytes: options.memory_limit_bytes,
             geometry: None,
@@ -184,6 +188,7 @@ fn name(architecture: Architecture) -> &'static str {
         Architecture::Qwen3 => "qwen3",
         Architecture::Llama => "llama",
         Architecture::Mistral => "mistral",
+        Architecture::Phi3 => "phi3",
     }
 }
 
@@ -218,6 +223,10 @@ pub fn inspect(directory: &Path, backend: Backend, options: LoadOptions) -> Repo
         .get("max_position_embeddings")
         .and_then(|v| v.as_u64())
         .and_then(|v| usize::try_from(v).ok());
+    report.configured_sliding_window = document
+        .get("sliding_window")
+        .and_then(|v| v.as_u64())
+        .and_then(|v| usize::try_from(v).ok());
     let model_type = match document.get("model_type").and_then(|v| v.as_str()) {
         Some(value) if !value.is_empty() && value.len() <= 128 => value,
         _ => {
@@ -227,7 +236,7 @@ pub fn inspect(directory: &Path, backend: Backend, options: LoadOptions) -> Repo
         }
     };
     report.declared_model_type = Some(model_type.to_owned());
-    if !["qwen2", "qwen3", "llama", "mistral"].contains(&model_type) {
+    if !["qwen2", "qwen3", "llama", "mistral", "phi3"].contains(&model_type) {
         report.status = Status::Unknown;
         report.reason = Reason::UnknownArchitecture;
         report.message = "The declared architecture has no native MLX decoder".into();

@@ -6580,3 +6580,58 @@ Also acquired the pinned public Phi3 four-bit payload for later checks. The full
 pass; Astra independently rehashed the entire file. No remote Python executes.
 The unaligned51,879-byte payload start remains valid. This acquisition does not
 qualify Phi numerical execution, text, application or device behavior.
+
+## 2026-10-28 — Phi3 independent reference preparation (target checks pending)
+
+Prepared strict ordinary-RoPE Phi parsing, original fused inventory and source
+window reporting. Parser controls and Metal compilation pass. A new independent
+stdlib producer preserves the original fused rows, head96 positions, actual F16
+storage and packed FP32 output head. Five source cases include absolute511 with
+17 local keys and a separate tied-weight control. Existing B1 producers remain
+unchanged.
+
+Source export/replay is byte-identical. Astra independently verifies195 stage
+groups/585 arrays, exact extents, per-case-stage frozen Half envelopes and the
+unchanged CPU gate. Six reviewed fixture files are promoted. This records source
+preparation only; Rust graph/session/GPU comparisons, final review and commit
+remain pending. No real Phi execution, app or performance claim.
+
+The initial targeted CPU consumer check caught a test-only slice/reference type
+mismatch before graph execution. Its corrected borrow preserves exact equality;
+engine arithmetic and fixed gates are unchanged. The failed receipt is retained
+and the fresh targeted run remains pending.
+
+The next attempt exposed JSON exponent spelling retained by arbitrary_precision;
+policy assertions now compare authenticated numeric values. No tolerance changed.
+Both failed attempts are retained. The final targeted CPU run passes all four
+tests:195 independent source stages/513,704 values, exact cached schedules,
+causal prefix/reset, physical/scalar accounting and bounded window/native-domain
+controls. Metal comparisons remain pending consumer review.
+
+## 2026-10-28 — Reviewed Phi3 tiny CPU/Metal composition
+
+Composed strict Phi source configuration, original fused-row mapping and declared
+window reporting with existing dense CPU/Metal blocks. Initial context requests
+reject beyond512, the source declaration or window; no sliding/LongRoPE fallback.
+Native structural/index/frequency limits and Reference-only attention apply.
+Existing families retain their earlier semantics and absent window wire form.
+
+All195 CPU stages/513,704 values pass; exact cached schedules/prefix/reset and
+window/accounting controls pass. Formatting, strict default/Metal Clippy,
+410 default /288 Metal-library tests (overlap) and both explicit tiny GPU tests
+pass. GPU checks cover19 schedules/3,815 snapshots/1,996,224 accepted main values,
+maximum gate fraction0.8143322476; wide diagnostic exceedances0. Astra corrected
+an extra wide fatal comparison prospectively, preserving the already-frozen
+main-only policy. Signed zeros compare numerically; raw witnesses remain intact.
+
+State/readback/raw generation/stop/cancel/output failure and exact budgets pass.
+Tiny resident weights add70 norm-guard bytes to original source payloads. Cold
+real-artifact inspection accepts291 logical specs but rejects15,284,318,208-byte
+FP32 weights under6GiB. This is no real Phi execution, whole-process peak,
+full-window, application, phone or performance qualification. Passing native
+intermediates are checked in the Rust consumer, not externally retained/rescored.
+Astra approves final source/evidence and retain/commit. It independently rescores
+17,984 retained logits; full passing intermediates remain consumer-checked. See
+[report](phi3-dense-composition.md),
+[evidence](../benchmarks/results/2026-10-28-phi3-dense-composition-v1.json) and
+[TODO](../TODO.md). Next is B2c's real protocol.
