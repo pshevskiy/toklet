@@ -6383,3 +6383,26 @@ scaled-Metal, Chat, performance or larger-context qualification is claimed.
 See [report](llama3-position-plan.md),
 [evidence](../benchmarks/results/2026-10-28-llama3-position-plan-v1.json) and
 [iteration checklist](../TODO.md).
+
+## 2026-10-28 — Isolated resident Llama3 Half rotary
+
+Added a private optional precise pipeline and immutable FP32 inverse frequencies,
+with borrowed session buffers/command encoding and no per-call buffer allocation
+or host wait.
+Ordinary shader/pipeline inventory and scaled-model rejection remain unchanged;
+the new operator is test-only pending structural model integration.
+
+Astra froze and reviewed independent mathematical plus cancellation-aware
+rounded-profile gates before GPU outcomes. Seven cases, repeats and partitions
+pass 17,408 scaled output comparisons; the unchanged ordinary rotary regression
+passes 13,824 values. Guards, immutability, Half-overflow signalling and recovery
+pass. Standard checks, 383 default / 261 Metal-library / targeted 9/10 Llama
+tests (overlap) and release compilation pass. Astra independently audits raw
+values, all identities and ten closed groups. A failed private launcher rewrite
+is retained and fixed before any numerical work; no gates or fixtures changed.
+
+Retain the isolated block on the tested M1 Pro within positions 0–511. No model,
+app, iPhone, larger scaled context, throughput or source-profile quality claim
+is made. See [report](llama3-metal-rotary.md),
+[evidence](../benchmarks/results/2026-10-28-llama3-metal-rotary-v1.json) and
+[updated TODO](../TODO.md).

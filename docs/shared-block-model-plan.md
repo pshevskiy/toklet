@@ -121,8 +121,10 @@ control or a larger qualified context by itself.
 and independent fixtures pass checks/Astra review, and one fitting artifact's
 metadata is pinned. [Positional-plan propagation and tiny CPU graph/session
 checks](llama3-position-plan.md) now pass; scaled Metal is explicitly rejected.
-Metal admission/execution, real-model and text/quality checks remain open;
-no new native app family support is claimed.
+The [isolated scaled Half rotary operation](llama3-metal-rotary.md) now passes
+fixed GPU gates, but remains test-only. Structural Metal model integration,
+real-model and text/quality checks remain open; no new native app family support
+is claimed.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |

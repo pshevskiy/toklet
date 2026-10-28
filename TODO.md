@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B1c — scaled Metal rotation and structural admission**.
+Next implementation task: **B1c2 — compose scaled Metal and structural admission**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -50,8 +50,10 @@ the goal, not a claim that arbitrary Hugging Face models already run.
   explicit pre-GPU rejection pass. [Report](docs/llama3-position-plan.md).
 - [ ] Define structural block/kernel admission instead of adding a model-name
   or geometry tuple as the sole compatibility rule.
-- [ ] B1c: implement scaled Metal rotation with explicit arithmetic/resource
-  rules and consistent absolute positions; preserve existing ordinary outputs.
+- [x] B1c1: isolated resident Half rotary and frozen dual-gate GPU checks pass
+  on Mac; ordinary shader and loader guard remain. [Report](docs/llama3-metal-rotary.md).
+- [ ] B1c2: compose the proven Metal operation with exact shared memory accounting,
+  structural/UInt32 index admission and independent tiny Half graph/session checks.
 - [ ] B1d: freeze a bounded plain-text chat/BOS/stop contract and independent
   model/source comparisons; tokenizer metadata alone does not establish Chat.
 - [ ] Pass short complete source/native, cache/session, bounded real generation
@@ -145,4 +147,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B1 candidate research | Astra pinned public Llama 3.2 1B metadata/tokenizer/header; all 13 source pins, Git blobs and header extents verified. No tensor payload or model run. | [Inventory](docs/llama3-rotary-core.md); bounded positional work first. |
 | 2026-10-28 | B1a positional core | Six targeted / 381 default / 260 Metal-library tests (overlap), fmt, strict Clippy and deterministic fixture replay pass; independent Astra approval. | `c5b1a1d`; B1b positional-plan propagation. |
 | 2026-10-28 | B1b initial check | Tiny graph/session tests passed; lint test compilation found a synthetic Source initializer missing the new field. Fixed its Ordinary default; failed receipt preserved. | [Evidence](benchmarks/results/2026-10-28-llama3-position-plan-v1.json); complete rerun. |
-| 2026-10-28 | B1b positional propagation | Independent four-graph fixture/replay, 383 default / 260 Metal-library / targeted 9/10 Llama tests (overlap), fmt and strict Clippy pass; Astra approved. | Commit containing this entry; B1c scaled Metal and structural admission next. |
+| 2026-10-28 | B1b positional propagation | Independent four-graph fixture/replay, 383 default / 260 Metal-library / targeted 9/10 Llama tests (overlap), fmt and strict Clippy pass; Astra approved. | `429e400`; B1c scaled Metal and structural admission. |
+| 2026-10-28 | B1c1 numerical policy | Astra froze dual per-element gates and optional-operation ownership before GPU outcomes; fixture export/replay exact. | [Policy and results](docs/llama3-metal-rotary.md); isolated collection only. |
+| 2026-10-28 | B1c1 check launcher | Private driver rewrite raised NameError before child launch; retained and corrected with exact replacement and AST preflight. No numerical outcome or gate change. | [Evidence](benchmarks/results/2026-10-28-llama3-metal-rotary-v1.json); full successful check driver v2. |
+| 2026-10-28 | B1c1 isolated Metal rotary | 383 default / 261 Metal-library tests (overlap), strict checks and both explicit GPU tests pass; 17,408 scaled and 13,824 ordinary comparisons. Astra final approval. | Commit containing this entry; B1c2 structural model integration next. |

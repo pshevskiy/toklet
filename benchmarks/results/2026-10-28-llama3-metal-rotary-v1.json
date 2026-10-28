@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "task": "M8 B1c1 isolated resident scaled Half rotary",
+  "decision": "retain_isolated_llama3_half_rotary_positions0_through511",
+  "base_commit": "429e400",
+  "files": [
+    {
+      "path": "src/metal/mod.rs",
+      "bytes": 133485,
+      "sha256": "2c51dbc2f19cc58e5b4408361e99aa2df0954dcb1e28c1ebd7f2a055a92842cc"
+    },
+    {
+      "path": "src/metal/llama3_rotary.rs",
+      "bytes": 8316,
+      "sha256": "dd778ce9139be32beaae13ada5edc0c90d3cec65964f11c53879c56966782596"
+    },
+    {
+      "path": "src/metal/llama3_rotary.metal",
+      "bytes": 1457,
+      "sha256": "94813e3c83c4b39f03c8bf39eeede5858ee8f84ba675efb1d67f2d1f22a29efe"
+    },
+    {
+      "path": "src/metal/llama3_rotary/tests.rs",
+      "bytes": 12004,
+      "sha256": "6cdafee3f3f10d00ec6590d3879ad73642579bc35478df13a1337e1a63892cec"
+    },
+    {
+      "path": "tools/reference/llama3_metal_rotary.py",
+      "bytes": 5084,
+      "sha256": "8c7f936305424b7fc82df671a9f5f7a0da5eaf27d1593de5350c19b64f4e9a80"
+    },
+    {
+      "path": "tests/fixtures/llama3-metal-rotary-v1/fixture.json",
+      "bytes": 526987,
+      "sha256": "29c138081b7681ecab8fbc4f5353862e85cc5209754aefc86619e7d0e2b3c809"
+    }
+  ],
+  "checks": {
+    "passed": true,
+    "cold_receipt_bindings_authenticated": 268,
+    "cold_outputs_authenticated": 16,
+    "cold_commands_passed_and_groups_absent": 8,
+    "gpu_receipt_bindings_authenticated": 278,
+    "gpu_outputs_authenticated": 4,
+    "gpu_commands_passed_and_groups_absent": 2,
+    "all_prospective_source_pins_unchanged": true,
+    "fixture_replay_exact": true,
+    "overlapping_tests": {
+      "default": 383,
+      "metal_library": 261,
+      "targeted_default_llama": 9,
+      "targeted_metal_llama": 10
+    },
+    "commands": [
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "fmt",
+          "--check"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--test",
+          "mlx_llama"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--features",
+          "metal",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--features",
+          "metal",
+          "--test",
+          "mlx_llama"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--features",
+          "metal",
+          "--lib"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--release",
+          "--features",
+          "metal",
+          "--lib",
+          "--no-run"
+        ],
+        "exit_code": 0
+      }
+    ]
+  },
+  "gpu": {
+    "device": "Apple M1 Pro",
+    "new_absolute_positions": [
+      0,
+      511
+    ],
+    "fixture_cases": 7,
+    "unique_fixture_values": 4352,
+    "case_repeat_summaries": 14,
+    "successful_numerical_calls_including_recovery": 45,
+    "controlled_overflow_call": 1,
+    "fixture_per_value_comparisons_including_repeats_and_chunks": 17408,
+    "max_math_error": 0.0009690819351995117,
+    "max_profile_error": 1.1920928955078125e-07,
+    "max_math_gate_fraction": 0.8244751076942185,
+    "max_profile_gate_fraction": 0.0700218818380744,
+    "all_fixed_gates_pass": true,
+    "raw_output_status_guards_exact": true,
+    "repeat_and_partition_output_bits_exact": true,
+    "controlled_overflow_status": 1,
+    "subsequent_fresh_invocation_status_clean": true,
+    "input_and_frequency_immutability": "Verified by source-bound passing assertions; raw log does not duplicate those buffers.",
+    "ordinary_regression_values": 13824,
+    "ordinary_regression_max_abs_error": 0.005016697790291125,
+    "ordinary_regression_position_max": 32767,
+    "commands": [
+      {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Users/coloner/work/rust/toklet/artifacts/new-goal-b1c1-checks-v2/frozen-bin/metal-unit-tests",
+          "metal::llama3_rotary::tests::isolated_half_rotary_matches_prospective_dual_gates_and_guards",
+          "--exact",
+          "--ignored",
+          "--nocapture",
+          "--test-threads=1"
+        ],
+        "exit_code": 0,
+        "memory": {
+          "maximum resident set size": 21364736,
+          "peak memory footprint": 10502720
+        }
+      },
+      {
+        "command": [
+          "/usr/bin/time",
+          "-l",
+          "/Users/coloner/work/rust/toklet/artifacts/new-goal-b1c1-checks-v2/frozen-bin/metal-unit-tests",
+          "metal::online_attention::high_position_rotary_matches_independent_math_envelope",
+          "--exact",
+          "--ignored",
+          "--nocapture",
+          "--test-threads=1"
+        ],
+        "exit_code": 0,
+        "memory": {
+          "maximum resident set size": 17039360,
+          "peak memory footprint": 6963800
+        }
+      }
+    ],
+    "maximum_resident_set_size_bytes": 21364736,
+    "maximum_physical_footprint_bytes": 10502720,
+    "os_version": "26.6.2",
+    "os_build": "25G83"
+  },
+  "prospective_policy": {
+    "receipt": {
+      "path": "artifacts/new-goal-b1c1-numerical-policy-v1/policy.json",
+      "bytes": 3349,
+      "sha256": "f5f6e91726d3dbe32ba8fda9b7f949c27c9aeceb9f5e86d3953e924019549a46"
+    },
+    "source": {
+      "path": "/Users/coloner/work/rust/toklet/src/metal/online_attention.rs",
+      "sha256": "e4e6c1f554220174d684396eb6688c86e2e670ef2ad094563fbbffb56219862c",
+      "test": "high_position_rotary_matches_independent_math_envelope",
+      "formula_lines": [
+        428,
+        430
+      ]
+    },
+    "mathematical_gate": {
+      "expected": "Unrounded FP64 mathematical output using independent Decimal80 scaled frequency and FP64 trig, from exactly representable dyadic Half inputs.",
+      "scale": "abs(input_a)+abs(input_b)",
+      "angle": "absolute_position * independent scaled frequency",
+      "bound": "scale * (8 * 2^-23 * (abs(angle) + 1) + 0.0005) + 1e-5",
+      "comparison": "abs(actual_half_as_f64 - mathematical_expected) <= bound"
+    },
+    "profile_gate": {
+      "expected": "Independent producer: Decimal80 scaled frequency rounded to FP32; position-times-frequency rounded to FP32; sin/cos of that rounded angle each rounded to FP32; each pair product rounded to FP32, then separate add/sub rounded to FP32; final Half nearest-even. No fused pair arithmetic.",
+      "bound": "8 * 2^-23 * scale + 2 * U_H(expected_half)",
+      "U_H": "Larger finite adjacent Half spacing in either numeric direction; at zero/subnormals2^-24; binade boundaries use larger side. Cases must have finite expected and finite adjacent values.",
+      "comparison": "abs(actual_half_as_f64 - profile_expected_half_as_f64) <= bound",
+      "rationale": "FP32 trig/product error scales with input magnitude, so bare two-Half-ULP testing is inappropriate near cancellation."
+    },
+    "interpretation": "These are prospective engineering gates, not a vendor error guarantee or MLX source-profile parity. The first gate reuses an unchanged existing project envelope; the second is additional for this new arithmetic profile. Existing scalar, ordinary GPU and future full-graph gates remain independent and unchanged."
+  },
+  "review": {
+    "decision": "retain_isolated_llama3_half_rotary_positions0_through511",
+    "receipt": {
+      "path": "artifacts/new-goal-b1c1-independent-review-v1/final-review.json",
+      "bytes": 4161,
+      "sha256": "dfca704d6d810b3194aaa6a3e34e746fab342744ab2b43ed1eec308acd2bef96"
+    },
+    "prospective_review": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b1c1-independent-review-v1/prospective-review.json",
+      "bytes": 5104,
+      "sha256": "87d4f2e2630ce7fd5dbe44bc797fd82b3c5bf3538e4fcecfc02c1547699d3295"
+    }
+  },
+  "raw_receipts": [
+    {
+      "path": "artifacts/new-goal-b1c1-checks-v2/checks.json",
+      "bytes": 55745,
+      "sha256": "fbb4391bdfc3e4dc51f311a4c491dfbd324df2daf7e3a43ce97d310b0d79d2c6"
+    },
+    {
+      "path": "artifacts/new-goal-b1c1-checks-v2/gpu.json",
+      "bytes": 53711,
+      "sha256": "7d7246ae2b32544135484123c947319b13a8558da92e9572f0a4ad77c8eff1c9"
+    },
+    {
+      "path": "artifacts/new-goal-b1c1-checks-v2/replay-receipt.json",
+      "bytes": 784,
+      "sha256": "7a3f546340c7b7e242d87f2950dedda427c71e4e488edfc76b18caff1aa6e48e"
+    }
+  ],
+  "frozen_binary": {
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b1c1-checks-v2/frozen-bin/metal-unit-tests",
+    "bytes": 60005408,
+    "sha256": "32757dc4d33898c3d8ac593cf3b32c00d4d4409d357361b1b543ae4a2b5b10ff"
+  },
+  "initial_attempt": {
+    "failed_driver": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b1c1-checks-v1/check.py",
+      "bytes": 4562,
+      "sha256": "541ff2a98e83a06b811e00e792b0a42223af0aaee7151cf723231517d643a47d"
+    },
+    "description": "Private driver rewrite matched an earlier helper loop and removed main, causing NameError before any child started. Corrected exact replacement plus AST preflight; no engine, fixture or gate change."
+  },
+  "scope": {
+    "cfg_test_only": true,
+    "isolated_metal_operator": true,
+    "optional_pipeline_and_immutable_frequencies": true,
+    "model_admission_changed": false,
+    "real_weights_downloaded": false,
+    "real_model_quality_run": false,
+    "phone_run": false,
+    "throughput_claim": false
+  },
+  "limitations": [
+    "Qualification is isolated Half rotary on the measured Apple GPU and specified fixed inputs at absolute positions0..511.",
+    "Ordinary regression retains its separate historical range; it does not extend the new scaled operator.",
+    "No model wiring, real-checkpoint quality/text/app admission, other hardware, larger scaled positions or performance claim."
+  ]
+}

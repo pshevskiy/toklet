@@ -19,6 +19,9 @@ pub use capture::Capture;
 pub mod gemma_affine;
 pub mod gemma_rms;
 pub mod gemma_rotary;
+// Qualify the isolated operation before promoting it into model admission.
+#[cfg(test)]
+mod llama3_rotary;
 mod memory;
 pub mod mlx;
 pub mod planning;
