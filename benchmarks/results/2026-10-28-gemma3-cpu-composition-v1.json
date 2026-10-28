@@ -1,0 +1,171 @@
+{
+  "format": "toklet-gemma3-cpu-composition-v1",
+  "date": "2026-10-28",
+  "base_revision": "b7f01a6",
+  "passed": true,
+  "decision": "retain-bounded-cpu-graph",
+  "scope": {
+    "synthetic_cpu_graph": true,
+    "real_checkpoint_executed": false,
+    "gpu_qualified": false,
+    "half_qualified": false,
+    "app_qualified": false,
+    "full_quality_qualified": false,
+    "performance_qualified": false,
+    "passing_target_intermediates_raw_retained": false,
+    "comparisons_checked_in_rust_consumer": true,
+    "full_513_token_model_executed": false,
+    "actual_d256_w512_cpu_cache_operator_witness": true
+  },
+  "geometry": {
+    "hidden": 64,
+    "query_width": 128,
+    "query_heads": 4,
+    "kv_heads": 1,
+    "head_dim": 32,
+    "layers": 2,
+    "window": 4,
+    "capacity": 12
+  },
+  "implementation_bounds": {
+    "layers": 32,
+    "kv_heads": 1,
+    "context": 544,
+    "chunk": 32,
+    "scope": "implementation admission bounds; not real-checkpoint or whole-shape qualification"
+  },
+  "results": {
+    "source_cases": 4,
+    "source_stage_groups": 192,
+    "one_shot_compared_values": 108816,
+    "observations": 2400,
+    "compared_values": 428832,
+    "max_absolute_error": 2.384185791015625e-06,
+    "max_gate_fraction": 0.0753252425036715,
+    "main_gate": {
+      "atol": 1e-05,
+      "rtol": 0.0001
+    },
+    "target_schedules": [
+      12,
+      1,
+      3,
+      7
+    ],
+    "attention_scope": "actual available absolute-key columns only",
+    "exact_numeric_logits_schedules": true,
+    "exact_causal_logits_prefix": true,
+    "ordinary_trace_identical": true
+  },
+  "state": {
+    "ordinary_trace_numeric_equality": true,
+    "layer_and_head_failure_points_2_and_18_layer_models": 24,
+    "measured_failure_retry_reset_phases": 72,
+    "measured_forward_retry_reset_allocations": 0,
+    "measured_budget_minus_one_constructors": 4,
+    "budget_minus_one_allocations": 0,
+    "exact_budget_and_constructor_sum_checks": true,
+    "persistent_owners_stable_with_hidden_residual_pair_permutation": true,
+    "exact_capacity_scratch_token_errors": true,
+    "raw_gamma_f32_counterexample_bits": "0x3f800800",
+    "actual_cpu_ring_positions": [
+      513,
+      514
+    ],
+    "no_pending_token_or_arbitrary_prefix_reuse_wrapper": true
+  },
+  "accounting": {
+    "once_owned_derived_norms_f32": true,
+    "session_planning_uses_existing_window_owner_formulas": true,
+    "borrowed_tensor_extents_and_persistent_model_session_owners_only": true,
+    "caller_source_padding_conversion_trace_process_owners_separate": true,
+    "whole_process_or_device_fit_measured": false,
+    "one_packed_table_for_embedding_and_head": true
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_and_metal_clippy": true,
+    "test_counts": {
+      "gemma3-cpu-targeted": 5,
+      "cpu-tests": 420,
+      "metal-library-tests": 298,
+      "gemma3-metadata-regression": 5,
+      "packed-graph-regression": 19
+    },
+    "overlapping_suites": true,
+    "closed_owned_groups": 8,
+    "initial_compile_failure_retained": true,
+    "failed_before_numerical_target_tests": true,
+    "fixture_or_gate_changes": false
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b3b-root-draft-v1/manifest.json",
+      "bytes": 2536,
+      "sha256": "38993dca00c797978a78f83e94784bb97afdedb2fdad64b12556f34b44e8e4ab"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-root-draft-v2/manifest.json",
+      "bytes": 3051,
+      "sha256": "8129894000c0220d2adca9df987ffb201cbca77b1c7ab93c90e5d0722dc454ea"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-root-draft-v3/manifest.json",
+      "bytes": 3243,
+      "sha256": "5b88272c36e6351cae728ccf5a9b3530d3c19c6c2319f6ea92d694c8e95d80ac"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-engine-review-v1/preliminary-review.json",
+      "bytes": 2164,
+      "sha256": "319f08f33a673129eb2212624edf23aa77d814940bd6114a46bc44258552fff0"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-independent-review-v1/prospective-engine-v1-findings.json",
+      "bytes": 1748,
+      "sha256": "9eb241139eb0b760492b351378b1510f80fc3bdb5e8b24014e076739c913a89a"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-independent-review-v1/prospective-engine-v2-review.json",
+      "bytes": 1431,
+      "sha256": "17000e0cac59dbd0a589669c0fd45255f4c1d7d0b2f18bdeb7ca53ce7bcb4352"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-independent-review-v1/prospective-engine-v3-review.json",
+      "bytes": 1144,
+      "sha256": "8a386a159cddc8c3eba5555ce2bcf149dc642774e3b728f3789d6cea0bf39c3c"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-cpu-checks-v1/checks.json",
+      "bytes": 856039,
+      "sha256": "924138fdd89e9532e403b1699528cff5650a2ac2f1591d8aa4b0b5f0180d6f25"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-cpu-checks-v2/checks.json",
+      "bytes": 860972,
+      "sha256": "b31f006e1432e4d7526aced16423b755b13876fbeb0e38aafdd5e4723a2d0bb9"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-independent-review-v1/frozen-source-review.json",
+      "bytes": 2997,
+      "sha256": "4dbf6e44515486854206e9caab7feab03d88c41462f1febc8c721861867c8e67"
+    },
+    {
+      "path": "tests/fixtures/gemma3-cpu-v1/manifest.json",
+      "bytes": 63095,
+      "sha256": "bc63d9d478d50ee24e9c78e471ccd4d1ce2f268700cef8fddf7c2c096c7e7566"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-independent-review-v1/final-engine-review.json",
+      "bytes": 5015,
+      "sha256": "0b3f09c6b23b7f7a1116e2b2a45ea1c093c5888e22c85ec55c03617af6b3d549"
+    }
+  ],
+  "next_task": "B3c resident packed/Half composition and explicit rolling KV state, independently qualified",
+  "independent_review": {
+    "decision": "retain-bounded-synthetic-cpu-graph",
+    "current_bindings_authenticated": 3927,
+    "retained_output_files": 20,
+    "closed_success_groups": 8,
+    "closed_failed_attempt_groups": 2
+  }
+}

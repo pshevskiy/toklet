@@ -9,8 +9,10 @@ use crate::cpu::{self, AttentionShape, finite, length, nonzero, product};
 use std::fmt;
 
 mod cache;
+pub mod gemma3;
 pub mod gemma_packed;
 pub mod gemma_reference;
+pub(crate) mod packed_operations;
 mod position;
 pub mod shared_kv;
 mod trace;

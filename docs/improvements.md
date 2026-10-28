@@ -6760,3 +6760,34 @@ model/session remains a private draft for the next reviewed code task. See
 [reference](gemma3-cpu-reference.md),
 [evidence](../benchmarks/results/2026-10-28-gemma3-cpu-reference-v1.json) and
 [TODO](../TODO.md).
+
+B3b2's first compile stops before numerical target tests: the old-path sealed
+reexport needs its actual Apple/Metal feature guard, and checked staging-size
+errors need explicit CPU→model→session conversion. The corrected v3
+preserves numerical code and frozen source/gates; the failed receipt is retained
+and a fresh complete check run follows.
+
+## 2026-10-28 — Concrete Gemma3 packed CPU graph
+
+Composed existing packed gather/projection, FP32 unit-offset norms, Q/K norms,
+per-layer ordinary RoPE, local/full span attention and postnorm GeGLU residuals.
+Immutable weights and one tied table are separate from session-owned staging,
+window/full caches, scratch and publication. Shared packed-operation bodies stay
+unchanged and old Gemma4 paths are reexported. KV1 and32 inline proposals are
+explicit; no old fifteen-producer constraint leaks into the new graph.
+
+All428,832 frozen comparisons pass (maximum gate fraction0.0753252425), with
+complete per-chunk stage inventories, exact numeric schedules/causality and
+ordinary/TRACE equality. Twenty-four two-/18-layer failure points preserve prior
+cache/history/logits;72 measured failure/retry/reset phases allocate nothing.
+Exact/minus-one budgets and actualD256/W512CPU ring/operator steps513→514 pass.
+These are synthetic graph and CPU operator checks, not a513-token real model.
+Formatting, strict supported checks,420 default /298 Metal-library tests and
+old packed-graph regressions pass. Astra verifies3,927 current bindings,20 retained
+outputs and all closed groups, approving bounded CPU retention/commit.
+
+Passing target intermediates are consumer-checked rather than externally retained.
+Real checkpoint loading, native/Half rolling state, app/codec, phone, full declared
+context, quality and performance remain separate. See [report](gemma3-cpu-composition.md),
+[evidence](../benchmarks/results/2026-10-28-gemma3-cpu-composition-v1.json) and
+[TODO](../TODO.md).
