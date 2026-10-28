@@ -23,6 +23,7 @@ mod memory;
 pub mod mlx;
 pub mod planning;
 mod profile;
+mod reference_schedule;
 use crate::{model, q4, session, weights};
 pub use diagnostic::Diagnostic;
 use memory::{Buffer, Gpu, Kernel, Layout, matrix, matrix_offset, multiply};
@@ -31,6 +32,7 @@ use objc2_metal::{MTLBuffer, MTLCommandBuffer, MTLCommandBufferStatus, MTLDevice
 use objc2_metal_performance_shaders::{MPSMatrix, MPSMatrixMultiplication};
 use profile::Command;
 pub use profile::{ClockPair, Profile, ProfileEvent};
+pub use reference_schedule::ReferenceSchedule;
 use std::{collections::BTreeMap, path::Path, time::Instant};
 const ALLOWANCE: usize = 64 * 1024 * 1024;
 type Result<T> = std::result::Result<T, Error>;
@@ -739,6 +741,7 @@ pub struct Session<'m> {
     normalization_mode: NormalizationMode,
     readback_mode: ReadbackMode,
     attention_mode: AttentionMode,
+    parallel_reference: Option<&'m reference_schedule::Pipelines>,
     memory: session::Memory,
     history: Vec<u32>,
     evaluated: usize,
@@ -763,6 +766,41 @@ pub struct Session<'m> {
     trace: Option<profile::Trace>,
 }
 impl<'m> Session<'m> {
+    /// Unqualified exact-order scheduling experiment; no default/app admission.
+    /// Only the explicit Qwen3 context loader may supply this model capability.
+    pub fn with_qwen3_reference_schedule_diagnostic(
+        model: &'m Model,
+        options: session::Options,
+        readback_mode: ReadbackMode,
+        schedule: ReferenceSchedule,
+    ) -> Result<Self> {
+        reference_schedule::validate_options(
+            model.qwen3_context_diagnostic,
+            model.mlx_architecture,
+            &model.config,
+            options,
+        )?;
+        let mut session = Self::with_attention_mode(
+            model,
+            options,
+            ProjectionMode::MlxAffine,
+            NormalizationMode::Compensated,
+            readback_mode,
+            AttentionMode::Reference,
+        )?;
+        if schedule == ReferenceSchedule::ParallelOutputsExperimental {
+            session.parallel_reference = Some(model.gpu.parallel_reference()?);
+        }
+        Ok(session)
+    }
+    pub fn reference_schedule(&self) -> ReferenceSchedule {
+        if self.parallel_reference.is_some() {
+            ReferenceSchedule::ParallelOutputsExperimental
+        } else {
+            ReferenceSchedule::Serial
+        }
+    }
+
     pub fn new(model: &'m Model, options: session::Options) -> Result<Self> {
         Self::with_projection_mode(model, options, ProjectionMode::Original)
     }
@@ -980,6 +1018,7 @@ impl<'m> Session<'m> {
                 normalization_mode,
                 readback_mode,
                 attention_mode,
+                parallel_reference: None,
                 memory,
                 history: Vec::with_capacity(options.capacity),
                 evaluated: 0,
@@ -1365,8 +1404,21 @@ impl<'m> Session<'m> {
                 start as u32,
                 (start + n) as u32,
             ];
-            match self.attention_mode {
-                AttentionMode::Reference | AttentionMode::CompensatedReference => g.encode(
+            match (self.attention_mode, self.parallel_reference) {
+                (AttentionMode::Reference, Some(pipelines)) => pipelines.encode(
+                    &command,
+                    [
+                        &q_rotary.raw,
+                        &cache.k.raw,
+                        &cache.v.raw,
+                        &s.scores.raw,
+                        &s.probs.raw,
+                        &s.context.raw,
+                    ],
+                    attention_shape,
+                    &s.status,
+                )?,
+                (AttentionMode::Reference | AttentionMode::CompensatedReference, _) => g.encode(
                     &command,
                     if self.attention_mode == AttentionMode::CompensatedReference {
                         Kernel::AttentionCompensated
@@ -1385,7 +1437,7 @@ impl<'m> Session<'m> {
                     n * c.query_heads,
                     Some(&s.status),
                 )?,
-                AttentionMode::Online => g.encode(
+                (AttentionMode::Online, _) => g.encode(
                     &command,
                     if n == 1 {
                         Kernel::AttentionDecode

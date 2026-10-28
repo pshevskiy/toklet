@@ -118,6 +118,11 @@ mod apple {
         let directory = PathBuf::from(args.next().ok_or("missing model directory")?);
         let mode = args.next().ok_or("quality mode must be loss or tasks")?;
         let input = PathBuf::from(args.next().ok_or("missing frozen quality input")?);
+        let parallel = match args.next() {
+            None => false,
+            Some(value) if value == "--parallel-reference-experimental" => true,
+            Some(_) => return Err("unknown quality schedule argument".into()),
+        };
         if args.next().is_some() {
             return Err("extra quality argument".into());
         }
@@ -132,26 +137,38 @@ mod apple {
             return Err("quality mode must be loss, tasks or explicit frozen probe".into());
         };
         let budget = weights::INITIAL_MEMORY_LIMIT_BYTES - APP_BYTES;
-        let model = metal::Model::load_mlx_qwen3_quality_diagnostic(
-            &directory,
-            weights::LoadOptions {
-                context_limit: CAPACITY,
-                memory_limit_bytes: budget,
-            },
-        )?;
-        let mut session = metal::Session::with_attention_mode(
-            &model,
-            session::Options {
-                capacity: CAPACITY,
-                prefill_chunk_size: 128,
-                position_offset: 0,
-                memory_limit_bytes: budget,
-            },
-            ProjectionMode::MlxAffine,
-            NormalizationMode::Compensated,
-            ReadbackMode::FullLogits,
-            AttentionMode::Reference,
-        )?;
+        let load_options = weights::LoadOptions {
+            context_limit: CAPACITY,
+            memory_limit_bytes: budget,
+        };
+        let model = if parallel {
+            metal::Model::load_mlx_qwen3_context_diagnostic(&directory, load_options)?
+        } else {
+            metal::Model::load_mlx_qwen3_quality_diagnostic(&directory, load_options)?
+        };
+        let options = session::Options {
+            capacity: CAPACITY,
+            prefill_chunk_size: 128,
+            position_offset: 0,
+            memory_limit_bytes: budget,
+        };
+        let mut session = if parallel {
+            metal::Session::with_qwen3_reference_schedule_diagnostic(
+                &model,
+                options,
+                ReadbackMode::FullLogits,
+                metal::ReferenceSchedule::ParallelOutputsExperimental,
+            )?
+        } else {
+            metal::Session::with_attention_mode(
+                &model,
+                options,
+                ProjectionMode::MlxAffine,
+                NormalizationMode::Compensated,
+                ReadbackMode::FullLogits,
+                AttentionMode::Reference,
+            )?
+        };
         if matches!(work, Work::Loss { .. }) {
             session.enable_diagnostics(&[])?;
         }
@@ -168,18 +185,25 @@ mod apple {
             Work::Tasks { cases, sha } => (sha, 0, cases.len()),
         };
         let mut out = io::stdout().lock();
-        writeln!(
-            out,
-            "{}",
-            json!({"event":"ready","format":FORMAT,"mode":mode.to_string_lossy(),
+        let mut readiness = json!({"event":"ready","format":FORMAT,"mode":mode.to_string_lossy(),
             "diagnostic_only":true,"full_quality_workload":mode!="probe","c512_numerical_gate_status":"rejected_unchanged","quality_qualified":false,
             "device":model.device_name(),"debug_assertions":cfg!(debug_assertions),"context_capacity":CAPACITY,
             "prefill_chunk_size":128,"input_sha256":input_sha,"targets":targets,"tasks":cases,
             "projection":"mlx_affine","normalization":"compensated","attention":"reference",
             "activation_dtype":"FP16","kv_dtype":"FP16","memory":session.memory(),
             "application_allowance_bytes":APP_BYTES,"admitted_bytes":admitted,
-            "external_source_identity_and_endpoint_required":true})
-        )?;
+            "external_source_identity_and_endpoint_required":true});
+        if parallel {
+            if session.reference_schedule() != metal::ReferenceSchedule::ParallelOutputsExperimental
+            {
+                return Err("explicit quality reference schedule differs".into());
+            }
+            readiness.as_object_mut().unwrap().insert(
+                "reference_schedule".into(),
+                json!("parallel_outputs_experimental"),
+            );
+        }
+        writeln!(out, "{readiness}")?;
         out.flush()?;
         match work {
             Work::Loss { ids, .. } => {

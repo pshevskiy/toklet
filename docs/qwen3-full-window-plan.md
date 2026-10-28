@@ -28,7 +28,8 @@ delivery bottleneck.
 The [4096-position diagnostic](qwen3-context4096.md) now passes its finite native
 state/schedule/generation, independent controls,1024-target BF16 quality and
 whole-process memory gates. The scoped result leaves ordinary app512 unchanged.
-Proceed through the measured scheduling experiment below before8192; later
+The measured scheduling experiment below is retained for its scoped4096 endpoint.
+Proceed to the separate8192 diagnostic; later
 boundaries and the full model window remain open.
 
 Use1025 as the existing anchor, then4096,8192,16384,32768 and40960. Freeze input
@@ -98,6 +99,16 @@ accounting and the finite workspace/process probe before using that candidate
 ledger. The current4096 experiment keeps its original conservative reserves.
 
 ### Measured Reference bottleneck before8192
+
+**Closed, retained on28 October:** the [exact-order parallel schedule](qwen3-reference-schedule.md)
+passes complete F2/current-quality bridges and two fixed opposite-order3+10
+performance runs. Primary medians improve6.8801→1.2322s and6.8830→1.2324s;
+minimum reduction82.08996% exceeds maximum between-run variation0.04164%, with
+no required-metric regressions and maximum physical footprint1669318336 bytes.
+This is cached-tail/short-request evidence; Serial remains default and app512
+unchanged. Next independently qualify8192 using a separate API/protocol, unchanged
+4096 rejection and historicalA prefix, fresh disjoint deep quality and bounded
+whole-process checks. Prepared private proposals alone grant no larger window.
 
 The frozen4096 experiment's completed chunk32 diagnostic pass records463.1623
 seconds of completed model calls, excluding load and diagnostic host processing.

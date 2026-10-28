@@ -1,0 +1,433 @@
+{
+  "format": "toklet-qwen3-reference-schedule-retained-v1",
+  "base_revision": "b77e208db464e7a3079dbb2c6f186817634b40fc",
+  "accepted": true,
+  "retained_schedule": "ParallelOutputsExperimental",
+  "named_hardware": "Apple M1 Pro/MacBookPro18,3/16GiB/macOS26.6.2(25G83)",
+  "profile": "MlxAffine / Compensated normalization / Reference attention; Half activations/KV; FP32 logits",
+  "arithmetic_changed": false,
+  "serial_remains_default": true,
+  "diagnostic_capacity": 4096,
+  "ordinary_app_capacity": 512,
+  "declared_model_capacity": 40960,
+  "full_window_qualified": false,
+  "iphone_qualified": false,
+  "native_replay_committed_tokens": 37376,
+  "complete_loss_targets": 10000,
+  "complete_task_output_bridge_count": 100,
+  "absolute_instruction_quality": "weak; exact outputs preserve prior native3/100 versus BF165/100 grades",
+  "historical_trajectory_fidelity": "rejected; separate from approved native arithmetic profile",
+  "benchmark_committed_tokens": 53016,
+  "warmups_per_schedule": 3,
+  "samples_per_schedule": 10,
+  "initial_metrics": {
+    "primary_deep32": {
+      "Serial": {
+        "samples": [
+          6.854353584,
+          6.8961007500000004,
+          6.8913665,
+          6.893502042,
+          6.88041425,
+          6.864332875,
+          6.879823833,
+          6.861924458,
+          6.87757625,
+          6.883731667
+        ],
+        "median": 6.8801190415,
+        "min": 6.854353584,
+        "max": 6.8961007500000004
+      },
+      "ParallelOutputsExperimental": {
+        "samples": [
+          1.229574959,
+          1.242363125,
+          1.232273333,
+          1.214650958,
+          1.240252333,
+          1.23219125,
+          1.231286042,
+          1.239161833,
+          1.236913375,
+          1.212979375
+        ],
+        "median": 1.2322322915,
+        "min": 1.212979375,
+        "max": 1.242363125
+      },
+      "median_gain_fraction": 0.8208995681517526,
+      "nonoverlapping_faster_range": true,
+      "regression": false
+    },
+    "deep1": {
+      "Serial": {
+        "samples": [
+          6.50272775,
+          6.629026542,
+          6.616164791,
+          6.632066875,
+          6.5182065829999996,
+          6.58391075,
+          6.490715916,
+          6.5704835,
+          6.587228042,
+          6.602245833
+        ],
+        "median": 6.585569396,
+        "min": 6.490715916,
+        "max": 6.632066875
+      },
+      "ParallelOutputsExperimental": {
+        "samples": [
+          0.1684005,
+          0.168738167,
+          0.169639875,
+          0.168429458,
+          0.168899917,
+          0.174969833,
+          0.169294166,
+          0.168434667,
+          0.166894792,
+          0.169413666
+        ],
+        "median": 0.168819042,
+        "min": 0.166894792,
+        "max": 0.174969833
+      },
+      "median_gain_fraction": 0.9743653081687152,
+      "nonoverlapping_faster_range": true,
+      "regression": false
+    },
+    "short128": {
+      "Serial": {
+        "samples": [
+          6.464076333,
+          6.456391458,
+          6.463559209,
+          6.471711125,
+          6.463731917,
+          6.457703,
+          6.453656875,
+          6.457384583,
+          6.47075275,
+          6.467588125
+        ],
+        "median": 6.463645563,
+        "min": 6.453656875,
+        "max": 6.471711125
+      },
+      "ParallelOutputsExperimental": {
+        "samples": [
+          2.363228334,
+          2.364054375,
+          2.367640042,
+          2.374974042,
+          2.355357916,
+          2.342852417,
+          2.374607833,
+          2.3535717910000002,
+          2.361122,
+          2.352310791
+        ],
+        "median": 2.362175167,
+        "min": 2.342852417,
+        "max": 2.374974042
+      },
+      "median_gain_fraction": 0.6345444464774097,
+      "nonoverlapping_faster_range": true,
+      "regression": false
+    },
+    "short480": {
+      "Serial": {
+        "samples": [
+          23.293854708,
+          23.294655,
+          23.285002166,
+          23.289250833,
+          23.292995959,
+          23.30183425,
+          23.294657292,
+          23.312094875,
+          23.291288209,
+          23.30071375
+        ],
+        "median": 23.294254854000002,
+        "min": 23.285002166,
+        "max": 23.312094875
+      },
+      "ParallelOutputsExperimental": {
+        "samples": [
+          6.42652825,
+          6.435797625,
+          6.4301847500000004,
+          6.427424792,
+          6.413157958,
+          6.436362375,
+          6.436740666,
+          6.435182917,
+          6.430168916,
+          6.452142208
+        ],
+        "median": 6.4326838335000005,
+        "min": 6.413157958,
+        "max": 6.452142208
+      },
+      "median_gain_fraction": 0.7238510579618131,
+      "nonoverlapping_faster_range": true,
+      "regression": false
+    }
+  },
+  "confirmation_metrics": {
+    "primary_deep32": {
+      "ParallelOutputsExperimental": {
+        "samples": [
+          1.232759375,
+          1.234941209,
+          1.227232084,
+          1.244045333,
+          1.231961708,
+          1.2157164169999999,
+          1.239388917,
+          1.239651958,
+          1.2305465,
+          1.210835625
+        ],
+        "median": 1.2323605415,
+        "min": 1.210835625,
+        "max": 1.244045333
+      },
+      "Serial": {
+        "samples": [
+          6.87017075,
+          6.868825083,
+          6.902527125,
+          6.9030914580000005,
+          6.871383167,
+          6.881801583,
+          6.884166208,
+          6.919923417,
+          6.926818167,
+          6.861131375
+        ],
+        "median": 6.8829838955,
+        "min": 6.861131375,
+        "max": 6.926818167
+      },
+      "median_gain_fraction": 0.8209554809062243,
+      "nonoverlapping_faster_range": true,
+      "regression": false
+    },
+    "deep1": {
+      "ParallelOutputsExperimental": {
+        "samples": [
+          0.167903791,
+          0.173208167,
+          0.168055833,
+          0.168195916,
+          0.168884958,
+          0.175268708,
+          0.168909666,
+          0.167708875,
+          0.168115542,
+          0.16674525
+        ],
+        "median": 0.168155729,
+        "min": 0.16674525,
+        "max": 0.175268708
+      },
+      "Serial": {
+        "samples": [
+          6.648414,
+          6.58685075,
+          6.577161166,
+          6.569932875,
+          6.471218167,
+          6.647172375,
+          6.472696166,
+          6.459944458,
+          6.532076666,
+          6.644313458
+        ],
+        "median": 6.5735470204999995,
+        "min": 6.459944458,
+        "max": 6.648414
+      },
+      "median_gain_fraction": 0.9744193312262625,
+      "nonoverlapping_faster_range": true,
+      "regression": false
+    },
+    "short128": {
+      "ParallelOutputsExperimental": {
+        "samples": [
+          2.362376584,
+          2.365578375,
+          2.373629583,
+          2.374784625,
+          2.372583542,
+          2.362015958,
+          2.368659333,
+          2.369037417,
+          2.363308458,
+          2.366323625
+        ],
+        "median": 2.367491479,
+        "min": 2.362015958,
+        "max": 2.374784625
+      },
+      "Serial": {
+        "samples": [
+          6.46293275,
+          6.468062667,
+          6.469075708,
+          6.468057542,
+          6.472578958,
+          6.475853625,
+          6.472100375,
+          6.473323417,
+          6.470010125,
+          6.47409475
+        ],
+        "median": 6.47105525,
+        "min": 6.46293275,
+        "max": 6.475853625
+      },
+      "median_gain_fraction": 0.634141359092862,
+      "nonoverlapping_faster_range": true,
+      "regression": false
+    },
+    "short480": {
+      "ParallelOutputsExperimental": {
+        "samples": [
+          6.454615291,
+          6.430653459,
+          6.4578046669999996,
+          6.429885167,
+          6.429271792,
+          6.430642083,
+          6.424634916,
+          6.42139175,
+          6.427234375,
+          6.4248615000000004
+        ],
+        "median": 6.4295784795,
+        "min": 6.42139175,
+        "max": 6.4578046669999996
+      },
+      "Serial": {
+        "samples": [
+          24.4082975,
+          24.407848417,
+          24.471416834,
+          24.424712917,
+          24.40090375,
+          24.539673958,
+          24.412649292,
+          24.633213625,
+          24.417122041,
+          24.456196
+        ],
+        "median": 24.420917479,
+        "min": 24.40090375,
+        "max": 24.633213625
+      },
+      "median_gain_fraction": 0.7367183896743882,
+      "nonoverlapping_faster_range": true,
+      "regression": false
+    }
+  },
+  "between_run_relative_primary_median_variation": {
+    "Serial": 0.00041639599296450073,
+    "ParallelOutputsExperimental": 0.00010407940198032293
+  },
+  "regressions": {
+    "initial": [],
+    "confirmation": []
+  },
+  "memory_bytes": {
+    "initial": [
+      {
+        "maximum resident set size": 1465974784,
+        "peak memory footprint": 1668581056
+      },
+      {
+        "maximum resident set size": 869351424,
+        "peak memory footprint": 859047040
+      },
+      {
+        "maximum resident set size": 822902784,
+        "peak memory footprint": 880002200
+      }
+    ],
+    "confirmation": [
+      {
+        "maximum resident set size": 960200704,
+        "peak memory footprint": 1669318336
+      },
+      {
+        "maximum resident set size": 869335040,
+        "peak memory footprint": 858948712
+      },
+      {
+        "maximum resident set size": 886685696,
+        "peak memory footprint": 876364952
+      }
+    ]
+  },
+  "performance_scope": "completed cached-tail deep32/deep1 calls and short128/short480 whole requests; not whole4096 prefill throughput",
+  "short_request_wall_includes_witness_copies": true,
+  "environment_review": {
+    "hardware": "Apple M1 Pro / MacBookPro18,3 /16GiB /macOS26.6.2(25G83); raw hardware and OS outputs identical within and across both runs.",
+    "power": "AC Power throughout observed endpoints; battery80%, AC lowpowermode0; raw power and configured settings identical within and across runs.",
+    "thermal": "All four raw pmset therm endpoints identical: no thermal/performance warning recorded, no CPU power status recorded. This is endpoint evidence, not continuous temperature/frequency telemetry. No adverse recorded condition; repeat order and fixed dispersion/variation criteria pass.",
+    "exclusivity": "Caller provided explicit exclusive GPU/build attestation; controller process scans and owned cleanup pass. Arbitrary GUI GPU activity is not proven absent by process names alone.",
+    "memory": "All six completed lifetimeRSS/physical counters and sampled owned-groupRSS below6GiB. Largest peakphysical footprint1669318336B. Owned groups absent in final process snapshots; publisher must recheck live PID/group absence before writing."
+  },
+  "parents": {
+    "checks": {
+      "path": "artifacts/m8-qwen3-reference-schedule-checks-v3/prepare.json",
+      "bytes": 53750,
+      "sha256": "64ed29a47924e34502696fe0a2bf792709b35e8360be77546dc1e8ad99ef7517"
+    },
+    "controls": {
+      "path": "artifacts/m8-qwen3-reference-schedule-checks-v3/controls.json",
+      "bytes": 46442,
+      "sha256": "db09d18ab8d1596ded59e431a49d99d174eb4a51614ca679fe96d60b778d5db1"
+    },
+    "focused_checks": {
+      "path": "artifacts/m8-qwen3-reference-schedule-checks-v4/prepare.json",
+      "bytes": 59405,
+      "sha256": "95e289b8d04d56e4909c05ae63e75686d5d8e9e71c86d4e6febb91c2b1ff8a8c"
+    },
+    "replay": {
+      "path": "artifacts/m8-qwen3-reference-schedule-replay-v1/replay.json",
+      "bytes": 108328,
+      "sha256": "adc01c0bd7a1ed4b8eb10507a314b9853a9c581147bfab1421f9525687b80b5a"
+    },
+    "quality": {
+      "path": "artifacts/m8-qwen3-reference-schedule-quality-continuation-v1/quality.json",
+      "bytes": 103405,
+      "sha256": "8727db2c6096dc104c9233846453064293a854b8b6e6f4f5f26aa1abfaefa7b0"
+    },
+    "initial": {
+      "path": "artifacts/m8-qwen3-reference-schedule-benchmark-run-v1/initial/result.json",
+      "bytes": 17868,
+      "sha256": "004363dd3a95418db6fe638a7a38e256dbedc45c9dcc21edbb18ecf105c21f39"
+    },
+    "confirmation": {
+      "path": "artifacts/m8-qwen3-reference-schedule-benchmark-run-v1/confirmation/result.json",
+      "bytes": 18307,
+      "sha256": "7371a77c446c73dc093788fb8b89ccc5d398d62a18d884105185b8060fba9b8c"
+    }
+  },
+  "review_decision": {
+    "path": "artifacts/m8-qwen3-reference-schedule-benchmark-independent-review-v1/retention-decision.json",
+    "bytes": 2970,
+    "sha256": "57f856a78e3141b4f8b750f43a22593f6cedc97eb3f6210edd28a1517f67f57a"
+  },
+  "binding_count": 614,
+  "publisher_source": {
+    "bytes": 16153,
+    "sha256": "3ecf82bce3d18e0e932f0139040baf6e505fdd8536abcc104a56aad5a2baacf0"
+  }
+}

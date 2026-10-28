@@ -9,6 +9,7 @@ use std::{
     marker::PhantomData,
     mem::{align_of, size_of},
     ptr::NonNull,
+    sync::OnceLock,
 };
 
 pub(super) trait Scalar: Copy + Default {}
@@ -270,8 +271,20 @@ pub(super) struct Gpu {
     pub queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
     pipelines: Vec<Retained<ProtocolObject<dyn MTLComputePipelineState>>>,
     pub width: usize,
+    parallel_reference: OnceLock<std::result::Result<super::reference_schedule::Pipelines, String>>,
 }
 impl Gpu {
+    pub(super) fn parallel_reference(&self) -> Result<&super::reference_schedule::Pipelines> {
+        // Cold once-per-model initialization, including a cached failure. Using
+        // OnceLock avoids changing the existing GPU object's Sync capability or
+        // compiling duplicate optional pipelines under concurrent admission.
+        self.parallel_reference
+            .get_or_init(|| {
+                super::reference_schedule::Pipelines::new(self).map_err(|e| e.to_string())
+            })
+            .as_ref()
+            .map_err(|error| Error::Native(error.clone()))
+    }
     pub(super) fn execution_width(&self, kernel: Kernel) -> usize {
         self.pipelines[kernel as usize].threadExecutionWidth()
     }
@@ -361,6 +374,7 @@ impl Gpu {
             queue,
             pipelines,
             width,
+            parallel_reference: OnceLock::new(),
         })
     }
     pub fn command(&self) -> Result<Retained<ProtocolObject<dyn MTLCommandBuffer>>> {

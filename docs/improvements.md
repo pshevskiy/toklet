@@ -6208,3 +6208,52 @@ memory. Ordinary app512, full-window streaming/admission, final quality and iPho
 remain open. See [report](qwen3-context4096.md),
 [receipt](../benchmarks/results/2026-10-28-qwen3-context4096-v1.json) and
 [corrected next sequence](qwen3-full-window-plan.md).
+
+## 2026-10-28 — Retain exact-order parallel Reference scheduling
+
+Hypothesis: the measured serial query/head attention lane limits deep Qwen3
+latency. The explicit diagnostic now parallelizes independent score and context
+outputs, with a separate stable-softmax dispatch. Every feature/key reduction,
+mask, division and Half rounding stays in the original order. Existing resident
+buffers are reused; optional pipelines/labels are cached once per model. No
+per-layer wait, new numerical buffer or default/app capacity change is introduced.
+
+All60 primitive comparisons and390 tied/untied tiny-stage arrays pass bit exactly.
+Complete37376-token F2 replay matches all nine historical journals,16896 row hashes
+and state/generation events. New strict historical-row bindings retain full FP32
+mismatch evidence before rejection. The complete10000-target and100-task outputs
+also match exactly; historical weak native3/100 versus BF165/100 grades and both
+trajectory-fidelity rejections remain. An initial task-only invocation supplied
+grading rather than execution input and rejected before model loading. Its
+evidence remains; a separately reviewed continuation uses the exact original
+execution input, preserving the successful loss/replay without rerunning them.
+
+Two fixed opposite-order runs each use three warmups and ten measured samples
+per schedule,53016 commits total. Completed32-row call after4064 cached tokens:
+Serial6.8801/6.8830s versus parallel1.2322/1.2324s median. One-row call after4095:
+6.5856/6.5735s versus0.1688/0.1682s. Whole short128 requests:
+6.4636/6.4711s versus2.3622/2.3675s; short480:
+23.2943/24.4209s versus6.4327/6.4296s. These raw short walls include bounded
+witness copies and final flush. Every metric has nonoverlapping faster ranges
+and no median regression in either run. Minimum primary gain82.08996% exceeds
+the unchanged5% gate and maximum between-run primary variation0.04164%.
+No whole4096-prefill or uninstrumented-app throughput claim follows.
+
+Maximum lifetime physical footprint1669318336 bytes stays below6GiB; shared
+weights and both session plans plus256MiB application reserve are independently
+accounted. AC power/80% battery/AC low-power-off, hardware/OS/power settings and
+all four raw no-recorded-warning thermal endpoints stay unchanged. This is
+endpoint evidence, not continuous thermal telemetry. All six benchmark groups
+close; the final reader authenticates614 bindings and independently recomputes
+raw timing summaries/variation/peak counters. Astra independently reviews code,
+quality, initial/confirmation evidence, environment and the final retention.
+
+Formatting, strict default/Metal Clippy,372 default tests,249 Metal-library tests,
+targeted example/Python checks and explicit primitive/tiny GPU controls pass;
+counts overlap. Earlier Clippy/tiny-test-envelope corrections and failed checks
+remain retained. The focused final check reuses unchanged core controls through
+authenticated source/binary continuity. Decision: retain the explicit4096
+diagnostic schedule; Serial stays default/oracle. App512, separate8192/full40960
+qualification and iPhone remain open. See [report](qwen3-reference-schedule.md),
+[all samples and parent identities](../benchmarks/results/2026-10-28-qwen3-reference-schedule-v1.json)
+and [next sequence](qwen3-full-window-plan.md).

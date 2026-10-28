@@ -59,6 +59,15 @@ mod protocol {
                 Self::Timing32Full | Self::Timing128Full | Self::Timing32Greedy
             )
         }
+        pub fn historical_rows(self) -> bool {
+            matches!(self, Self::A32 | Self::A128 | Self::B128 | Self::Quality)
+        }
+    }
+    #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
+    #[serde(rename_all = "snake_case")]
+    pub enum Schedule {
+        Serial,
+        ParallelOutputsExperimental,
     }
     #[derive(Deserialize)]
     #[serde(deny_unknown_fields)]
@@ -71,6 +80,8 @@ mod protocol {
     pub struct Config {
         pub format: String,
         pub phase: Phase,
+        pub reference_schedule: Option<Schedule>,
+        pub historical_rows: Option<Binding>,
         pub input: Binding,
         pub expected_rows: Option<Binding>,
         pub expected_visible_tokens: Option<Binding>,
@@ -85,7 +96,13 @@ mod protocol {
     }
     impl Config {
         pub fn validate(&self) -> Result<(), &'static str> {
-            if self.format != "toklet-qwen3-context4096-native-phase-v1"
+            let format_ok = match self.reference_schedule {
+                None => self.format == "toklet-qwen3-context4096-native-phase-v1",
+                Some(_) => self.format == "toklet-qwen3-parallel-reference-phase-v1",
+            };
+            if !format_ok
+                || self.historical_rows.is_some()
+                    != (self.reference_schedule.is_some() && self.phase.historical_rows())
                 || self.expected_rows.is_some() != (self.phase.expected_rows() > 0)
                 || self.expected_visible_tokens.is_some()
                     != matches!(self.phase, Phase::Timing128Full | Phase::Timing32Greedy)
@@ -104,12 +121,41 @@ mod protocol {
                     Some(&self.input),
                     self.expected_rows.as_ref(),
                     self.expected_visible_tokens.as_ref(),
+                    self.historical_rows.as_ref(),
                 ]
                 .iter()
                 .flatten()
                 .any(|b| !b.path.is_absolute() || !digest(&b.sha256))
             {
                 return Err("phase protocol, comparison bindings or digest differs");
+            }
+            Ok(())
+        }
+    }
+    #[derive(Deserialize)]
+    #[serde(deny_unknown_fields)]
+    pub struct HistoricalRows {
+        pub format: String,
+        pub phase: Phase,
+        pub input_sha256: String,
+        pub parent_result_sha256: String,
+        pub parent_journal_sha256: String,
+        pub rows: Vec<String>,
+    }
+    impl HistoricalRows {
+        pub fn validate(&self, phase: Phase, input_sha256: &str) -> Result<(), &'static str> {
+            if self.format != "toklet-qwen3-f2-historical-rows-v1"
+                || !phase.historical_rows()
+                || self.phase != phase
+                || !digest(input_sha256)
+                || self.input_sha256 != input_sha256
+                || self.parent_result_sha256
+                    != "2961d4baef9c1fc488ea2497efda705ea5b8e96f3d4a021bebc1f889235cc9a6"
+                || !digest(&self.parent_journal_sha256)
+                || self.rows.len() != CAPACITY
+                || self.rows.iter().any(|value| !digest(value))
+            {
+                return Err("complete phase/input/parent-bound historical rows required");
             }
             Ok(())
         }
@@ -354,6 +400,8 @@ mod apple {
         let config_sha = owner.binding.sha256.clone();
         let mut owners = vec![owner];
         let phase = config.phase;
+        let explicit_schedule = config.reference_schedule;
+        let selected_schedule = explicit_schedule.unwrap_or(Schedule::Serial);
         let input_sha = config.input.sha256.clone();
         let (owner, body) = Owner::read(config.input, CAPACITY * 4)?;
         owners.push(owner);
@@ -368,6 +416,15 @@ mod apple {
                 "expected row coverage differs",
             )?;
             rows
+        } else {
+            Vec::new()
+        };
+        let historical = if let Some(binding) = config.historical_rows {
+            let (owner, body) = Owner::read(binding, 512 * 1024)?;
+            owners.push(owner);
+            let rows: HistoricalRows = serde_json::from_slice(&body)?;
+            rows.validate(phase, &input_sha)?;
+            rows.rows
         } else {
             Vec::new()
         };
@@ -390,6 +447,7 @@ mod apple {
             json!({"event":"start","format":"toklet-qwen3-context4096-native-events-v1","phase":phase,
             "config_sha256":config_sha,"input_sha256":input_sha,"input_tokens":input.len(),
             "expected_rows":expected.len(),"profile":"MlxAffine/Compensated/Reference/FP16",
+            "reference_schedule":selected_schedule,
             "diagnostic_only":true,"external_source_identity_and_resource_endpoints_required":true}),
         )?;
         let budget = weights::INITIAL_MEMORY_LIMIT_BYTES - APP_BYTES;
@@ -398,7 +456,7 @@ mod apple {
             context_limit: phase.rows(),
             memory_limit_bytes: budget,
         };
-        let model = if phase == Phase::Anchor {
+        let model = if phase == Phase::Anchor && explicit_schedule.is_none() {
             metal::Model::load_mlx(Path::new(&model_path), options)?
         } else {
             metal::Model::load_mlx_qwen3_context_diagnostic(Path::new(&model_path), options)?
@@ -410,19 +468,34 @@ mod apple {
         } else {
             ReadbackMode::FullLogits
         };
-        let mut s = metal::Session::with_attention_mode(
-            &model,
-            session::Options {
-                capacity: phase.rows(),
-                prefill_chunk_size: phase.chunk(),
-                position_offset: 0,
-                memory_limit_bytes: budget,
-            },
-            ProjectionMode::MlxAffine,
-            NormalizationMode::Compensated,
-            readback,
-            AttentionMode::Reference,
-        )?;
+        let session_options = session::Options {
+            capacity: phase.rows(),
+            prefill_chunk_size: phase.chunk(),
+            position_offset: 0,
+            memory_limit_bytes: budget,
+        };
+        let mut s = if let Some(schedule) = explicit_schedule {
+            metal::Session::with_qwen3_reference_schedule_diagnostic(
+                &model,
+                session_options,
+                readback,
+                match schedule {
+                    Schedule::Serial => metal::ReferenceSchedule::Serial,
+                    Schedule::ParallelOutputsExperimental => {
+                        metal::ReferenceSchedule::ParallelOutputsExperimental
+                    }
+                },
+            )?
+        } else {
+            metal::Session::with_attention_mode(
+                &model,
+                session_options,
+                ProjectionMode::MlxAffine,
+                NormalizationMode::Compensated,
+                readback,
+                AttentionMode::Reference,
+            )?
+        };
         if phase.diagnostic() {
             s.enable_diagnostics(&[])?;
         }
@@ -436,6 +509,7 @@ mod apple {
             &mut out,
             json!({"event":"ready","device":model.device_name(),"debug_assertions":cfg!(debug_assertions),
             "capacity":phase.rows(),"chunk":phase.chunk(),"readback":readback,"diagnostics":phase.diagnostic(),
+            "reference_schedule":format!("{:?}",s.reference_schedule()),
             "load_compile_seconds":load_seconds,"session_creation_seconds":session_seconds,"memory":s.memory(),
             "application_allowance_bytes":APP_BYTES,"admitted_bytes":admitted,"state":state(&s)}),
         )?;
@@ -473,18 +547,24 @@ mod apple {
                     let hash = row_hash(row);
                     let finite = row.iter().all(|v| v.is_finite());
                     let expected_hash = expected.get(position);
-                    let matches = expected_hash.is_none_or(|h| *h == hash);
+                    let historical_hash = historical.get(position);
+                    let matches = expected_hash.is_none_or(|h| *h == hash)
+                        && historical_hash.is_none_or(|h| *h == hash);
                     emit(
                         &mut out,
                         json!({"event":"row","position":position,"sha256":hash,"finite":finite,
                         "expected_sha256":expected_hash,"matches":matches,"evaluated":s.evaluated_len(),"pending":s.pending_len()}),
                     )?;
                     if !finite || !matches {
-                        emit(
-                            &mut out,
-                            json!({"event":"failing_row","position":position,"expected_sha256":expected_hash,
-                            "actual_fp32_bits":row.iter().map(|v|v.to_bits()).collect::<Vec<_>>()}),
-                        )?;
+                        let mut failure = json!({"event":"failing_row","position":position,"expected_sha256":expected_hash,
+                            "actual_fp32_bits":row.iter().map(|v|v.to_bits()).collect::<Vec<_>>()});
+                        if let Some(historical_hash) = historical_hash {
+                            failure
+                                .as_object_mut()
+                                .unwrap()
+                                .insert("historical_sha256".into(), json!(historical_hash));
+                        }
+                        emit(&mut out, failure)?;
                     }
                     require(finite && matches, "nonfinite or unequal row")?;
                     observed += 1;
@@ -715,6 +795,12 @@ mod tests {
         assert!(c.validate().is_err());
         c.phase = Phase::Quality;
         c.validate().unwrap();
+        c.historical_rows = Some(Binding {
+            path: "/tmp/historical".into(),
+            sha256: "b".repeat(64),
+        });
+        assert!(c.validate().is_err());
+        c.historical_rows = None;
         c.input.sha256 = "A".repeat(64);
         assert!(c.validate().is_err());
         c.input.sha256 = "a".repeat(64);
@@ -728,5 +814,56 @@ mod tests {
         ids[4095] = 151936;
         assert!(validate_ids(&ids, 4096).is_err());
         assert!(serde_json::from_str::<Config>(r#"{"format":"x","phase":"quality","input":{"path":"/tmp/a","sha256":"x"},"capacity":8192}"#).is_err());
+    }
+    #[test]
+    fn experimental_schedule_requires_explicit_versioned_protocol() {
+        let value = serde_json::json!({"format":"toklet-qwen3-context4096-native-phase-v1",
+            "phase":"quality","input":{"path":"/tmp/q","sha256":"a".repeat(64)}});
+        let mut config: Config = serde_json::from_value(value.clone()).unwrap();
+        config.validate().unwrap();
+        config.reference_schedule = Some(Schedule::Serial);
+        assert!(config.validate().is_err());
+        config.format = "toklet-qwen3-parallel-reference-phase-v1".into();
+        assert!(config.validate().is_err());
+        config.historical_rows = Some(Binding {
+            path: "/tmp/historical".into(),
+            sha256: "b".repeat(64),
+        });
+        config.validate().unwrap();
+        config.reference_schedule = Some(Schedule::ParallelOutputsExperimental);
+        config.validate().unwrap();
+        config.reference_schedule = None;
+        assert!(config.validate().is_err());
+        let mut corrupt = value;
+        corrupt["reference_schedule"] = serde_json::json!("unknown");
+        assert!(serde_json::from_value::<Config>(corrupt).is_err());
+    }
+    #[test]
+    fn complete_historical_rows_require_the_frozen_phase_input_and_parent() {
+        let mut rows = HistoricalRows {
+            format: "toklet-qwen3-f2-historical-rows-v1".into(),
+            phase: Phase::Quality,
+            input_sha256: "a".repeat(64),
+            parent_result_sha256:
+                "2961d4baef9c1fc488ea2497efda705ea5b8e96f3d4a021bebc1f889235cc9a6".into(),
+            parent_journal_sha256: "b".repeat(64),
+            rows: vec!["c".repeat(64); CAPACITY],
+        };
+        rows.validate(Phase::Quality, &"a".repeat(64)).unwrap();
+        assert!(rows.validate(Phase::A32, &"a".repeat(64)).is_err());
+        assert!(rows.validate(Phase::Quality, &"b".repeat(64)).is_err());
+        rows.rows.pop();
+        assert!(rows.validate(Phase::Quality, &"a".repeat(64)).is_err());
+        rows.rows.push("C".repeat(64));
+        assert!(rows.validate(Phase::Quality, &"a".repeat(64)).is_err());
+        rows.rows[4095] = "c".repeat(64);
+        rows.rows.push("c".repeat(64));
+        assert!(rows.validate(Phase::Quality, &"a".repeat(64)).is_err());
+        rows.rows.pop();
+        rows.parent_journal_sha256 = "x".repeat(64);
+        assert!(rows.validate(Phase::Quality, &"a".repeat(64)).is_err());
+        rows.parent_journal_sha256 = "b".repeat(64);
+        rows.parent_result_sha256 = "d".repeat(64);
+        assert!(rows.validate(Phase::Quality, &"a".repeat(64)).is_err());
     }
 }
