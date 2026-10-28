@@ -1,6 +1,11 @@
 # Qwen3 full-window delivery after native-profile qualification
 
-Follow the [active queue](qwen3-mac-delivery-plan.md). Q4's frozen current-native
+**Deferred historical track:** the user changed the goal on28 October to
+[shared-block architecture coverage and per-model capacity/KV tuning](shared-block-model-plan.md).
+The8192 run was [interrupted and remains unqualified](qwen3-context8192-experiment.md).
+The work below is preserved; it is not the current execution queue.
+
+This track followed the [Qwen3 queue](qwen3-mac-delivery-plan.md). Q4's frozen current-native
 qualification is complete. This Astra investigation prepares Q6; it grants no
 larger app limit or full-window qualification by itself.
 

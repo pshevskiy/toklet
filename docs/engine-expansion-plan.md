@@ -1,8 +1,14 @@
 # Engine coverage and Hugging Face implementation plan
 
-**Active execution order, 27 October 2026:** follow the [Astra-reviewed Qwen3 Mac delivery queue](qwen3-mac-delivery-plan.md). Finish the existing source experiment and precision decision, then C512/complete quality and the admitted Mac app path. Q1–Q5 define the near-term milestone; full40960-position expansion follows. Gemma, other architectures and iPhone work remain deferred, open requirements. This queue supersedes earlier execution-order statements below; historical evidence and acceptance policies remain unchanged.
+**Superseded execution order,28 October2026:** the user's new
+[shared-block architecture and capacity plan](shared-block-model-plan.md) is active.
+Build reusable blocks and broaden actual model compositions, calculate per-model
+context/state fit, expose supported controls, then optimize. The Qwen3-only
+full-window queue below is historical; its interrupted8192 work is not qualified.
 
-## Active delivery correction — 26 October 2026
+**Historical execution order,27 October2026:** the [Qwen3 Mac delivery queue](qwen3-mac-delivery-plan.md) prioritized its source experiment, precision decision, C512/complete quality and bounded Mac app path before full-window expansion. The new goal above supersedes that order; historical evidence and acceptance policies remain unchanged.
+
+## Historical delivery correction — 26 October 2026
 
 The human corrected the context requirement: **support the input/output context
 window of the selected model**, with rendered input and requested continuation

@@ -3,6 +3,11 @@ Toklet — Fast, lightweight LLM inference on Apple Silicon. An open-source Rust
 
 See the [implementation plan](PLAN.md) for milestones, dependencies, and acceptance criteria, and the [Apple LLM performance proposal](apple_llm_performance_plan.md) for the design rationale.
 
+Current work follows the [shared-block model and capacity plan](docs/shared-block-model-plan.md):
+broader native MLX architecture support, per-model context/KV planning and
+supported user controls, followed by measured optimization. This is active work,
+not a claim that every Hugging Face model already runs.
+
 The [final implementation and performance summary](docs/final-summary.md) covers
 what is implemented, measured Mac/iPhone 14 Pro results and remaining limitations.
 

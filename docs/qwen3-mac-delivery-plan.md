@@ -1,9 +1,15 @@
 # Qwen3 Mac delivery queue — 28 October 2026
 
+**Historical queue:** on28 October the user replaced this single-model priority
+with the [shared-block architecture and capacity plan](shared-block-model-plan.md).
+Completed scoped results remain valid. The8192 experiment was interrupted before
+deep quality/final audit and is [not qualified](qwen3-context8192-experiment.md).
+Do not resume the full-window ladder as an active prerequisite for broader models.
+
 The human requested Qwen3 on Mac first, completion of the existing source
 experiment, Astra review of each code task, commits after checks pass, and an
 updated improvement record. Astra reviewed this sequence on27 October.
-This queue controls execution order over the earlier Gemma/architecture queues.
+This queue formerly controlled execution order over the Gemma/architecture queues.
 The broader requirements remain open; they are not prerequisites for this first
 delivery. Near-term completion means **Q1–Q5**, followed by Q6 expansion.
 
@@ -29,7 +35,7 @@ CPU-trajectory fidelity remains rejected. The
 [experimental envelope](../tests/fixtures/qwen3-context-gates-v2/README.md) is
 rejected for qualification and cannot authorize validation or larger app limits.
 
-## Active sequence
+## Historical sequence
 
 | Task | Deliverable and decision gate | Current state |
 | --- | --- | --- |

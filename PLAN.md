@@ -1,6 +1,27 @@
 # Toklet implementation plan
 
-**Active execution order, 28 October 2026:** follow the [Astra-reviewed Qwen3 Mac delivery queue](docs/qwen3-mac-delivery-plan.md). Q1–Q5 are complete in their scoped native C512/quality/bounded Mac functionality contracts. The human-approved [native arithmetic profile](docs/qwen3-native-profile.md) now also passes the [4096-position diagnostic](docs/qwen3-context4096.md), including deep relative quality and whole-process fit. The explicit [parallel Reference schedule](docs/qwen3-reference-schedule.md) is retained after exact complete replay/quality bridges and two controlled performance runs; Serial remains the default/oracle. Ordinary app512 remains a partial window. Next qualify the separate8192 diagnostic, then continue the [full40960-window plan](docs/qwen3-full-window-plan.md). Full-window source-memory proof, real streaming/application admission, final quality, Gemma, other architectures and iPhone remain open. This queue supersedes earlier execution-order statements below; historical trajectory-fidelity rejections and original acceptance policies remain unchanged.
+**Active goal and execution order,28 October2026:** follow the
+[shared-block model support and capacity plan](docs/shared-block-model-plan.md).
+The user replaced the full-Qwen3-window priority with broad architecture support
+through reusable blocks, per-model/device context and KV calculation, supported
+user controls, then measured architecture-specific optimization. Astra researched
+vLLM/MLX-LM/llama.cpp and reviewed the new architecture/resource boundaries.
+Start with the small shared planning core, then actual Llama3/Phi/local-global
+model compositions; frontend knobs follow useful breadth. The old8192 experiment
+was interrupted and preserved as [unqualified experimental work](docs/qwen3-context8192-experiment.md).
+Ordinary app512 and historical scoped qualifications remain unchanged. This
+paragraph supersedes the execution-order statements below; they retain history,
+not authority to resume the old full-window campaign.
+
+**Next milestone: M9, measured performance improvements.** Follow the
+[M9 delivery and architecture contract](docs/next-performance-milestone.md),
+derived from the user's [Toklet next performance improvement plan](https://chatgpt.com/space/page_18e155f0450c8191a76010b2b26832a5).
+M8's shared blocks preserve the required scheduling, state, capacity and output
+boundaries now. M9 starts after the active M8 scope: profile the pinned MLX8
+path, choose one useful RMSNorm or prefill candidate, then qualify adoption or
+record rejection. Later cache/speculation techniques remain conditional.
+
+**Historical Qwen3 execution order, earlier28 October2026:** the [Qwen3 Mac delivery queue](docs/qwen3-mac-delivery-plan.md) completed Q1–Q5 in their scoped native C512/quality/bounded Mac functionality contracts. The human-approved [native arithmetic profile](docs/qwen3-native-profile.md) also passes the [4096-position diagnostic](docs/qwen3-context4096.md), including deep relative quality and whole-process fit. The explicit [parallel Reference schedule](docs/qwen3-reference-schedule.md) is retained after exact complete replay/quality bridges and two controlled performance runs; Serial remains the default/oracle. Ordinary app512 remains partial. The planned8192/full40960 expansion was superseded by the new goal above. Full-window source memory, streaming/application admission, final quality and iPhone remain open. Historical trajectory-fidelity rejections and original acceptance policies remain unchanged.
 
 Prepared 9 October 2026; updated 21 October 2026. Status: M0–M7 are complete in their qualified scopes. M7 qualifies the selected models on iPhone 14 Pro/iOS27.0.1 after the user explicitly amended the original base-device target; see the [M7 closure](docs/experiments/2026-10-21-m7-release.md). M6 qualifies explicit Online attention with FP16 KV for the selected small compensated Half and frozen larger group8 Q4 v2 models at4K/8K/16K/32K total tokens on Apple M1 Pro. Full quality, context boundary/state/memory and maximum application evidence pass within6GiB. Defaults and baseline limits remain. See the [M6 release decision](docs/experiments/2026-10-19-m6-release.md) and [M5 release decision](docs/experiments/2026-10-15-m5-release.md).
 

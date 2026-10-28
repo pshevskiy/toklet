@@ -6280,3 +6280,38 @@ Decision: retain the reviewed experimental mechanism as an isolated checkpoint,
 then follow the new architecture/resource-tuning goal. See the
 [scoped record](qwen3-context8192-experiment.md) and
 [interrupted evidence](../benchmarks/results/2026-10-28-qwen3-context8192-interrupted-v1.json).
+
+## 2026-10-28 — Replace single-model window priority with shared model blocks
+
+The user explicitly changed the goal: broad model architectures first, context/KV
+calculation and supported user settings, then architecture-specific optimization.
+The requested design uses shared blocks inspired by open-source engines. Two
+Astra audits inspected actual Toklet code and primary vLLM/MLX-LM/llama.cpp
+sources. The resulting [active plan](shared-block-model-plan.md) reuses existing
+dense and shared/window implementations, separates adapter wiring from block
+mechanisms, and keeps numerical dispatch static.
+
+The first bounded task is a common physical-state descriptor and pure checked
+capacity solver using constructor allocation recipes. Actual Llama3 scaled-RoPE,
+fused Phi and local/global compositions follow before a large frontend settings
+project. Device-fit estimates, implemented ranges, validation and text support
+stay separate. No new model capability or runtime option follows from this
+documentation. Old full-window/F3 prototypes remain preserved and unapplied.
+Only link/content and whitespace checks are needed for this plan correction.
+
+## 2026-10-28 — Plan M9 and preserve performance extension boundaries
+
+Read the complete user-linked Page, **Toklet next performance improvement plan**
+(sequence 2), and made it the [next milestone](next-performance-milestone.md)
+after active M8 breadth and context/KV controls. M9's first delivery is P0,
+one measured normalization or native MLX prefill candidate, then P2 adoption or
+documented rejection. Historical Page timings require a new baseline; Qwen2.5
+MLX8, Qwen3 diagnostics and Toklet Q4 remain separate configurations.
+
+The shared-block plan now records extension boundaries for numerical semantics
+versus scheduling, physical KV codecs and scratch, state transactions,
+per-position/output demand and bounded profile coverage. Later split-KV, I8 KV,
+strict verification and checkpoint-specific shared-KV/MTP work remain conditional.
+These are architecture obligations, not implemented optimization claims or new
+public options. Astra reviews the mapping; link/content and whitespace checks
+apply to this documentation task.
