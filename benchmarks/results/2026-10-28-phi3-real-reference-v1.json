@@ -1,0 +1,330 @@
+{
+  "format": "toklet-phi3-real-reference-v1",
+  "date": "2026-10-28",
+  "base_revision": "6cee52afe73d852a5cbdc3b037a80014b342bb29",
+  "passed": true,
+  "decision": "retain-independent-reference",
+  "model": {
+    "repository": "mlx-community/Phi-3-mini-4k-instruct-4bit",
+    "revision": "5b3819ed6317784fb20eddeae9bed984f778d0d0",
+    "file_pins": {
+      "config.json": "0e2e43bc4358b4cabbcc33c496f34e170fdfe04612a47428f1691d1e9ec5a568",
+      "model.safetensors": "8d75680621a09474f6601e9176f2f61f92a5e4c079d68d583901f51699fda50a",
+      "model.safetensors.index.json": "4ef199a5c6c29fa54d84d3710bfad4b5424b75bbd68872f9e1e12234bd3fd9c3"
+    }
+  },
+  "scope": {
+    "source_cpu_graph_executed": true,
+    "target_gpu_executed": false,
+    "held_out_quality_qualified": false,
+    "app_qualified": false,
+    "iphone_qualified": false,
+    "performance_qualified": false,
+    "canonical_torch_mlx_runtime_parity": false
+  },
+  "source_profile": {
+    "quantization_bits": 4,
+    "group_size": 64,
+    "metadata": "F16",
+    "packed_word": "little-endian U32; eight low-to-high nibbles",
+    "tied_head": false,
+    "declared_positions": 4096,
+    "declared_sliding_window": 2047,
+    "implemented_positions": 512,
+    "main": "NumPy2.3.2 FP32 BLAS",
+    "wide": "NumPy2.3.2 FP64 BLAS",
+    "main_rotary": "FP32 exponent, pow, angle, trig and separate products/adds -> Half",
+    "wide_rotary": "Decimal80 frequency -> FP64 angle/trig/products -> Half",
+    "embedding": "selected original rows -> FP32 reconstruction -> Half gather",
+    "head": "distinct original lm_head reconstructed FP32"
+  },
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_multiplier": 2,
+    "rtol": 0.001,
+    "absolute_limit": "max(1e-4,2*exact_array_FP32_FP64_max_abs)",
+    "case_scope": "each exact case/stage and each greedy/scoring distribution separately",
+    "comparison": "native versus independent main only; wide comparison diagnostic",
+    "reference": "NumPy BLAS FP32/FP64 arithmetic; reconstructed FP32 affine weights; Half gather/norms/activations/KV; FP32 scores/probabilities/logits; ordinary split-half rotary. Not scalar-order or exact Metal/Torch/MLX emulation.",
+    "cross_profile_greedy": "diagnostic only; native schedules/readback selection remain exact numeric",
+    "equivalent_prefix": "diagnostic only; never enlarges this gate"
+  },
+  "cases": {
+    "single": {
+      "tokens": [
+        1
+      ],
+      "offset": 0
+    },
+    "short": {
+      "tokens": [
+        1,
+        7,
+        13,
+        3
+      ],
+      "offset": 0
+    },
+    "future_changed": {
+      "tokens": [
+        1,
+        7,
+        13,
+        17
+      ],
+      "offset": 0
+    },
+    "offset5": {
+      "tokens": [
+        7,
+        13,
+        3
+      ],
+      "offset": 5
+    },
+    "tile17": {
+      "tokens": [
+        1,
+        7,
+        13,
+        3,
+        1,
+        7,
+        13,
+        3,
+        1,
+        7,
+        13,
+        3,
+        1,
+        7,
+        13,
+        3,
+        1
+      ],
+      "offset": 0
+    },
+    "offset509": {
+      "tokens": [
+        7,
+        13,
+        3
+      ],
+      "offset": 509
+    }
+  },
+  "layers": [
+    0,
+    1,
+    31
+  ],
+  "source_arrays": {
+    "pairs": 349,
+    "bytes_per_profile": 19025664,
+    "main_sha256": "75b3f69cecc43c1c04db5e7435b14489d42aff5ecb0df2d3f86501b7a7a95782",
+    "wide_sha256": "debdb4d20106bccca8b61a8a2722ed3d4d545f374c35b76e8a21be9c5215855c",
+    "greedy": {
+      "prompt": [
+        1,
+        7,
+        13,
+        3
+      ],
+      "teacher_forcing": "Independent FP64-accumulation greedy history",
+      "fp32_tokens": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "fp64_tokens": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "fp64_logit_margins": [
+        0.9364128112792969,
+        2.0424251556396484,
+        2.390687942504883,
+        2.575296401977539
+      ]
+    },
+    "values_per_profile": 8197056
+  },
+  "memory": {
+    "admission": {
+      "source_mapping_bytes": 2149696167,
+      "current_reconstructed_matrix_bytes": 394002432,
+      "wide_linear_stripe_bytes": 67108864,
+      "dequant_graph_blas_workspace_bytes": 268435456,
+      "retained_dual_traces_publication_bytes": 536870912,
+      "framework_metadata_allowance_bytes": 1073741824,
+      "admitted_bytes": 4489855655
+    },
+    "hard_process_cap_bytes": 6442450944,
+    "source_observed_maxima": {
+      "resident_size": 2842066944,
+      "phys_footprint": 509201240,
+      "lifetime_max_phys_footprint": 522881880
+    },
+    "source_os_peak_rss_bytes": 2846588928,
+    "clean_mapped_pages_counted_in_admission": true
+  },
+  "runtime": {
+    "python": "3.12.8",
+    "numpy": "2.3.2",
+    "blas": "Apple Accelerate",
+    "os": "macOS26.6.2/25G83",
+    "machine": "MacBookPro18,3",
+    "physical_memory_bytes": 17179869184
+  },
+  "text": {
+    "cases": 16,
+    "raw_texts": 6,
+    "unmapped_rejected_ids": [
+      32011,
+      32012,
+      32013,
+      32014,
+      32015,
+      32016,
+      32017,
+      32018,
+      32019,
+      32020,
+      32021,
+      32022,
+      32023,
+      32024,
+      32025,
+      32026,
+      32027,
+      32028,
+      32029,
+      32030,
+      32031,
+      32032,
+      32033,
+      32034,
+      32035,
+      32036,
+      32037,
+      32038,
+      32039,
+      32040,
+      32041,
+      32042,
+      32043,
+      32044,
+      32045,
+      32046,
+      32047,
+      32048,
+      32049,
+      32050,
+      32051,
+      32052,
+      32053,
+      32054,
+      32055,
+      32056,
+      32057,
+      32058,
+      32059,
+      32060,
+      32061,
+      32062,
+      32063
+    ],
+    "stop_ids": [
+      32000,
+      32007
+    ],
+    "automatic_bos": false,
+    "full_fixture_replay_identical": true,
+    "rendered_decode_roundtrip_required": false,
+    "production_chat_qualified": false
+  },
+  "checks": {
+    "synthetic_reader_graph_tests": 10,
+    "synthetic_text_tests": 5,
+    "closed_owned_groups": 5,
+    "endpoint_errors": [],
+    "saved_bit_source_verification": true,
+    "source_and_native_never_concurrent": true
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b2c-design-v1/protocol.json",
+      "bytes": 4284,
+      "sha256": "1d8bfa6eb27fee9a35c5ea4bbe3bccdf6957008576aa97ec05cf3a6e1f22ce5e"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-independent-review-v1/design-review.json",
+      "bytes": 5681,
+      "sha256": "c9376653edf033568df7d0f3165fd1a60671d341c512cda686df47b5b93c2896"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-independent-review-v1/source-prospective-review.json",
+      "bytes": 2894,
+      "sha256": "6b76c41990c02c94230f05bf62cbcc1bc7410a0247a1d97b1ec5d6945b669c6a"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-reference-proposal-v2/manifest.json",
+      "bytes": 5277,
+      "sha256": "2854ccb71405d1123247ba2ed32af157029eac078d2a8964b237a0ceb954610d"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-reference-controls-v2/checks.json",
+      "bytes": 504137,
+      "sha256": "df0a6548ea948742b295647562986e288bf891a796687902f7ba79881f0f2362"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-text-review-v1/review.json",
+      "bytes": 4015,
+      "sha256": "dc7960e62679fc9ee665b47c63548443ccb74e34acd38e26eb894e6c0fae0f65"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-text-controls-v1/checks.json",
+      "bytes": 404879,
+      "sha256": "540d69ac6e5cf49f60a96224f32b25cc3abbe266de13447e3fa9d243f519028a"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-independent-review-v1/prospective-source-controller-review-v2.json",
+      "bytes": 6854,
+      "sha256": "4f7978997987d66e93933c1e815dbd0672562e6dbb60b8dc0a39f82c262b1930"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-source-v2/export.json",
+      "bytes": 641141,
+      "sha256": "6b0e87b5f0e3db7bd7485f27abf261fab4b55a1530c3727e1256b0da5907044c"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-source-v2/runtime-preflight.stdout",
+      "bytes": 80764,
+      "sha256": "c1f58739a29470508afebcade5475b8fe4c9b70c1998e23931fd1023716b12d3"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-source-v2/reference/manifest.json",
+      "bytes": 237738,
+      "sha256": "278855ab8fd55270b9cc4c74b2c96e8001246557119d1951ffa22c2511286906"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-source-v2/text.json",
+      "bytes": 43382,
+      "sha256": "2d25cf8ce5e21e966cd77204f3ce2cbb36c4685c6040085430c110efdb4c7835"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-independent-review-v1/source-evidence-review.json",
+      "bytes": 5450,
+      "sha256": "9645358df8b16c72bffb4716e82759cc5dbfc93abd1147305f83bb98df72c5e5"
+    },
+    {
+      "path": "artifacts/new-goal-b2c-source-readback-v1/readback.json",
+      "bytes": 1728,
+      "sha256": "81d3e2498a0344f801987559a0c9d782e0bc0f344dca40aef68a86330bf83cc5"
+    }
+  ],
+  "next_task": "B2c2 reviewed native capture/comparison, raw session controls and measured native memory"
+}

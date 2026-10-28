@@ -6635,3 +6635,43 @@ Astra approves final source/evidence and retain/commit. It independently rescore
 [report](phi3-dense-composition.md),
 [evidence](../benchmarks/results/2026-10-28-phi3-dense-composition-v1.json) and
 [TODO](../TODO.md). Next is B2c's real protocol.
+
+## 2026-10-28 — Real Phi3 reference preparation (export pending)
+
+Added a reviewed independent lazy source reader and ordinary Phi Half graph.
+Original fused rows, gathered-only embedding lookup and one temporary FP32
+projection matrix keep the full15.28GB scalar expansion out of the process.
+Astra approves the fixed six probes,349 main/wide pairs and exact-array main-only
+gates before outcomes; canonical Torch/MLX runtime and original-quality parity
+are explicitly not claimed. The conservative source ledger is4,489,855,655 bytes,
+with an independent observed6GiB process cap required.
+
+Ten portable original-row/corruption/lifetime tests and five plain-text guard
+controls pass. The separately reviewed text reference preserves exact template
+bytes, no automatic BOS, the two source stops and explicit rejection of53
+unmapped head slots; it does not introduce a native Chat codec. Actual runtime,
+source export/replay and text export remain pending their frozen controller.
+
+Before real export, staged whitespace checking caught an extra EOF blank line in
+the new Phi graph. It was removed in immutable successor v2 and all ten controls
+pass again. Existing B1 producer bytes and the numerical policy are unchanged;
+controller identities are renewed rather than reusing stale checked pins.
+
+## 2026-10-28 — Reviewed real Phi3 source and text reference
+
+The independent lazy Phi reader now exports349 main/wide array pairs without
+expanding the complete15.28GB FP32 model. All8,197,056 values per profile are
+finite; exact shapes/extents, hashes and per-array main/wide envelopes pass.
+Astra independently decodes every saved array and verifies the fixed greedy
+histories. The native main-only policy remains frozen before target outcomes.
+
+The plain-text fixture covers16 rendered cases, exact template/tokenizer replay,
+source stop union, added-token/metaspace/byte fallback and rejection of all53
+unmapped head slots. Ten synthetic reader/graph and five text controls pass.
+Five owned source/verify/text groups close without endpoint errors. OS peak RSS
+is2,846,588,928 bytes and lifetime physical footprint522,881,880 bytes, below6GiB.
+This closes source preparation only: no real native execution, canonical runtime
+parity, production Chat, phone, full-window, adoption quality or speed claim.
+See [report](phi3-real-reference.md),
+[evidence](../benchmarks/results/2026-10-28-phi3-real-reference-v1.json) and
+[TODO](../TODO.md). Continue B2c2 with Astra review.

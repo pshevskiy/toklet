@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B2c — short real Phi3 source/native/session/text and measured-memory qualification**.
+Next implementation task: **B2c2 — real Phi3 native comparison, session controls and measured memory**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -85,7 +85,7 @@ qualification. Proceed to B2 as Astra's acceptance review requires.
 - [x] Select/pin a compact Phi-style candidate and exact metadata/header:
   public Phi-3-mini-4k-instruct-4bit at `5b3819ed6317784fb20eddeae9bed984f778d0d0`.
   Initial selection was metadata only; acquisition is now verified separately.
-  No Phi numerical execution or app admission yet.
+  Source CPU reference is now verified; native execution and app admission remain pending.
 - [x] B2a: checked original QKV/gate-up row spans and source range loading;
   preserve packing, original row order and safe unaligned-header byte handling.
   [Report](docs/fused-row-source.md); audited ranges reject and poison identity.
@@ -101,6 +101,11 @@ qualification. Proceed to B2 as Astra's acceptance review requires.
   LongRoPE when required; reject unimplemented variants.
 - [x] B2c artifact: acquire and independently verify the complete pinned2.15GB
   payload/header/index; acquisition only, no model execution.
+- [x] B2c1: reviewed independent lazy real-model reader/graph, frozen source
+  probes and tokenizer/template contract under measured Mac process limits.
+  [Report](docs/phi3-real-reference.md);349 pairs, exact text replay and independent Astra verification.
+- [ ] B2c2: short real native comparisons, raw generation/cache state and
+  measured memory against the frozen source; keep app/full quality separate.
 - [ ] Pass short real-model/session/text/memory checks; Astra review and commit.
 
 ### B3 — Local/global composition
@@ -216,3 +221,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B2b2 CPU vertical | All four targeted tests pass:195 independent stages/513,704 values, exact cached schedules/causal prefix/reset, unique source/scalar peak and window/native-domain controls. | GPU consumers remain under prospective review; no real model execution yet. |
 | 2026-10-28 | B2b2 cold checks and tiny GPU | 410 default /288 Metal-library tests, strict checks and two frozen-binary GPU tests pass. 19 schedules/3,815 snapshots/1,996,224 main values pass unchanged policy; wide diagnostics exceedances0. State/readback/budget controls pass. Real metadata rejects15.28GB FP32 expansion; real execution remains pending. | Final Astra review and task commit pending; B2c real protocol follows. |
 | 2026-10-28 | B2b2 reviewed completion | Astra approves final source/evidence, frozen policy and tiny composition. 17,984 retained logits independently rescored; full intermediate coverage remains checked in the Rust consumer. Real Phi execution, app/phone, full-window and adoption quality stay open. | [Report](docs/phi3-dense-composition.md); reviewed task commit, then B2c. |
+| 2026-10-28 | B2c protocol and portable controls | Astra approves fixed short/native-profile protocol and4.49GB source ledger. Ten synthetic reader/ownership/corruption and five plain-text guard tests pass; independent reviews completed. No real graph/text export yet. | Freeze actual runtime/controller before source-only export; no native outcome. |
+| 2026-10-28 | B2c pre-export whitespace | Staged preflight caught a new producer blank line at EOF before real outcomes. Immutable proposal v2 removes only that LF; ten controls rerun pass. Old B1 producers and all numerical gates remain unchanged. | Source/controller identities renewed before real export. |
+| 2026-10-28 | B2c1 real source/text reference |349 main/wide pairs and full text replay pass; five closed groups, OS peak RSS2,846,588,928 bytes below6GiB. Astra independently authenticates all saved values/envelopes and evidence. Native execution remains pending. | [Report](docs/phi3-real-reference.md); reviewed source task commit, then B2c2. |

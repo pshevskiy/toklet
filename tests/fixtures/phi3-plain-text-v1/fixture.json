@@ -1,0 +1,1586 @@
+{
+  "add_special_tokens": false,
+  "added_token_controls": [
+    {
+      "decoded_with_specials": "<unk>",
+      "id": 0,
+      "literal": "<unk>",
+      "rstrip": false,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<s>",
+      "id": 1,
+      "literal": "<s>",
+      "rstrip": false,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "</s>",
+      "id": 2,
+      "literal": "</s>",
+      "rstrip": true,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<|endoftext|>",
+      "id": 32000,
+      "literal": "<|endoftext|>",
+      "rstrip": false,
+      "stop": true
+    },
+    {
+      "decoded_with_specials": "<|assistant|>",
+      "id": 32001,
+      "literal": "<|assistant|>",
+      "rstrip": true,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<|placeholder1|>",
+      "id": 32002,
+      "literal": "<|placeholder1|>",
+      "rstrip": true,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<|placeholder2|>",
+      "id": 32003,
+      "literal": "<|placeholder2|>",
+      "rstrip": true,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<|placeholder3|>",
+      "id": 32004,
+      "literal": "<|placeholder3|>",
+      "rstrip": true,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<|placeholder4|>",
+      "id": 32005,
+      "literal": "<|placeholder4|>",
+      "rstrip": true,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<|system|>",
+      "id": 32006,
+      "literal": "<|system|>",
+      "rstrip": true,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<|end|>",
+      "id": 32007,
+      "literal": "<|end|>",
+      "rstrip": true,
+      "stop": true
+    },
+    {
+      "decoded_with_specials": "<|placeholder5|>",
+      "id": 32008,
+      "literal": "<|placeholder5|>",
+      "rstrip": true,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<|placeholder6|>",
+      "id": 32009,
+      "literal": "<|placeholder6|>",
+      "rstrip": true,
+      "stop": false
+    },
+    {
+      "decoded_with_specials": "<|user|>",
+      "id": 32010,
+      "literal": "<|user|>",
+      "rstrip": true,
+      "stop": false
+    }
+  ],
+  "automatic_bos": false,
+  "cases": [
+    {
+      "add_generation_prompt": false,
+      "decoded_utf8": {
+        "bytes": 29,
+        "sha256": "497b0de30a30b1ebf873625b2f0b9d3b30f511c75b949ade5c93c469f8b684f0"
+      },
+      "decoded_with_specials": "<|user|> Hello!<|end|><|end|>",
+      "ids": [
+        32010,
+        15043,
+        29991,
+        32007,
+        32007
+      ],
+      "messages": [
+        {
+          "content": "Hello!",
+          "role": "user"
+        }
+      ],
+      "name": "single",
+      "rendered": "<|user|>\nHello!<|end|>\n<|end|>",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 30,
+        "sha256": "864f9e3cab90f7ead1b4b5bb2a02a81f8e82bcace0578bf0f1a41ac973704fa9"
+      },
+      "with_special_processing_ids": [
+        32010,
+        15043,
+        29991,
+        32007,
+        32007
+      ]
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded_utf8": {
+        "bytes": 35,
+        "sha256": "a1f6652754dea06af79f0f86b91548961c264f7ab78664febeb3bee0a5a7a372"
+      },
+      "decoded_with_specials": "<|user|> Hello!<|end|><|assistant|>",
+      "ids": [
+        32010,
+        15043,
+        29991,
+        32007,
+        32001
+      ],
+      "messages": [
+        {
+          "content": "Hello!",
+          "role": "user"
+        }
+      ],
+      "name": "single",
+      "rendered": "<|user|>\nHello!<|end|>\n<|assistant|>\n",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 37,
+        "sha256": "cb9ea15b3758ad8b07e590618bc11fdd87cce8e973bcc8ca2436d7153ec3cd57"
+      },
+      "with_special_processing_ids": [
+        32010,
+        15043,
+        29991,
+        32007,
+        32001
+      ]
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded_utf8": {
+        "bytes": 96,
+        "sha256": "bff1e99727c58e0f2234a66317ef931792338d9abb44a99d42a87d3e8a03043b"
+      },
+      "decoded_with_specials": "<|user|> Count to two.<|end|><|assistant|> One, two.<|end|><|user|> Now backwards.<|end|><|end|>",
+      "ids": [
+        32010,
+        3917,
+        304,
+        1023,
+        29889,
+        32007,
+        32001,
+        3118,
+        29892,
+        1023,
+        29889,
+        32007,
+        32010,
+        2567,
+        28953,
+        29889,
+        32007,
+        32007
+      ],
+      "messages": [
+        {
+          "content": "Count to two.",
+          "role": "user"
+        },
+        {
+          "content": "One, two.",
+          "role": "assistant"
+        },
+        {
+          "content": "Now backwards.",
+          "role": "user"
+        }
+      ],
+      "name": "multi",
+      "rendered": "<|user|>\nCount to two.<|end|>\n<|assistant|>\nOne, two.<|end|>\n<|user|>\nNow backwards.<|end|>\n<|end|>",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 99,
+        "sha256": "ed6573fc1a1038e43d3d877015b29bbd74e1695967f3cf3c32e2d095d9df5cfb"
+      },
+      "with_special_processing_ids": [
+        32010,
+        3917,
+        304,
+        1023,
+        29889,
+        32007,
+        32001,
+        3118,
+        29892,
+        1023,
+        29889,
+        32007,
+        32010,
+        2567,
+        28953,
+        29889,
+        32007,
+        32007
+      ]
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded_utf8": {
+        "bytes": 102,
+        "sha256": "ee7a700663f232416f624bba41eae6627df4f3f78aa370ae31ea223d1e933555"
+      },
+      "decoded_with_specials": "<|user|> Count to two.<|end|><|assistant|> One, two.<|end|><|user|> Now backwards.<|end|><|assistant|>",
+      "ids": [
+        32010,
+        3917,
+        304,
+        1023,
+        29889,
+        32007,
+        32001,
+        3118,
+        29892,
+        1023,
+        29889,
+        32007,
+        32010,
+        2567,
+        28953,
+        29889,
+        32007,
+        32001
+      ],
+      "messages": [
+        {
+          "content": "Count to two.",
+          "role": "user"
+        },
+        {
+          "content": "One, two.",
+          "role": "assistant"
+        },
+        {
+          "content": "Now backwards.",
+          "role": "user"
+        }
+      ],
+      "name": "multi",
+      "rendered": "<|user|>\nCount to two.<|end|>\n<|assistant|>\nOne, two.<|end|>\n<|user|>\nNow backwards.<|end|>\n<|assistant|>\n",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 106,
+        "sha256": "077e12db0c6c9767f1569a3c5903a17d47b146a3a092772b3b4311e834902773"
+      },
+      "with_special_processing_ids": [
+        32010,
+        3917,
+        304,
+        1023,
+        29889,
+        32007,
+        32001,
+        3118,
+        29892,
+        1023,
+        29889,
+        32007,
+        32010,
+        2567,
+        28953,
+        29889,
+        32007,
+        32001
+      ]
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded_utf8": {
+        "bytes": 77,
+        "sha256": "89b4ec700874176e2d92294ea025b7cac8cf55ed376483f693614ed45cd7e8ed"
+      },
+      "decoded_with_specials": "<|system|> Answer briefly.<|end|><|user|> What is two plus two?<|end|><|end|>",
+      "ids": [
+        32006,
+        673,
+        23359,
+        29889,
+        32007,
+        32010,
+        1724,
+        338,
+        1023,
+        2298,
+        1023,
+        29973,
+        32007,
+        32007
+      ],
+      "messages": [
+        {
+          "content": "Answer briefly.",
+          "role": "system"
+        },
+        {
+          "content": "What is two plus two?",
+          "role": "user"
+        }
+      ],
+      "name": "system",
+      "rendered": "<|system|>\nAnswer briefly.<|end|>\n<|user|>\nWhat is two plus two?<|end|>\n<|end|>",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 79,
+        "sha256": "8508abe2b1bfd126bd994e3af4e14b886849d513bd8251abed913c27de48ee9b"
+      },
+      "with_special_processing_ids": [
+        32006,
+        673,
+        23359,
+        29889,
+        32007,
+        32010,
+        1724,
+        338,
+        1023,
+        2298,
+        1023,
+        29973,
+        32007,
+        32007
+      ]
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded_utf8": {
+        "bytes": 83,
+        "sha256": "2ec869ab58d672da73d2ce74520df4d7ba7dea746922b3f5ad64aa8f5b36bab6"
+      },
+      "decoded_with_specials": "<|system|> Answer briefly.<|end|><|user|> What is two plus two?<|end|><|assistant|>",
+      "ids": [
+        32006,
+        673,
+        23359,
+        29889,
+        32007,
+        32010,
+        1724,
+        338,
+        1023,
+        2298,
+        1023,
+        29973,
+        32007,
+        32001
+      ],
+      "messages": [
+        {
+          "content": "Answer briefly.",
+          "role": "system"
+        },
+        {
+          "content": "What is two plus two?",
+          "role": "user"
+        }
+      ],
+      "name": "system",
+      "rendered": "<|system|>\nAnswer briefly.<|end|>\n<|user|>\nWhat is two plus two?<|end|>\n<|assistant|>\n",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 86,
+        "sha256": "6b6bdc7c75a5211d7d709058919cb19ba02e37e06283798eb09f9845e5ddf994"
+      },
+      "with_special_processing_ids": [
+        32006,
+        673,
+        23359,
+        29889,
+        32007,
+        32010,
+        1724,
+        338,
+        1023,
+        2298,
+        1023,
+        29973,
+        32007,
+        32001
+      ]
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded_utf8": {
+        "bytes": 22,
+        "sha256": "be269fd57a5cc9672243a8aa25733bc05f48744124fc8e96bb16c7c3d27d219a"
+      },
+      "decoded_with_specials": "<|user|><|end|><|end|>",
+      "ids": [
+        32010,
+        32007,
+        32007
+      ],
+      "messages": [
+        {
+          "content": "",
+          "role": "user"
+        }
+      ],
+      "name": "empty_content",
+      "rendered": "<|user|>\n<|end|>\n<|end|>",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 24,
+        "sha256": "6b47f5ceef45da1fd0ffade03cbe67fb2e0d18cf42327e5cc7f39e12dd8b8b7b"
+      },
+      "with_special_processing_ids": [
+        32010,
+        32007,
+        32007
+      ]
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded_utf8": {
+        "bytes": 28,
+        "sha256": "10602fb5750d54abf925918be1e4607c2093bd1eaad4db6596078d169121346f"
+      },
+      "decoded_with_specials": "<|user|><|end|><|assistant|>",
+      "ids": [
+        32010,
+        32007,
+        32001
+      ],
+      "messages": [
+        {
+          "content": "",
+          "role": "user"
+        }
+      ],
+      "name": "empty_content",
+      "rendered": "<|user|>\n<|end|>\n<|assistant|>\n",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 31,
+        "sha256": "aeecb5536c08e741d6d47b2c7a284075d7042fb81bf33034004cc8912ef0a110"
+      },
+      "with_special_processing_ids": [
+        32010,
+        32007,
+        32001
+      ]
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded_utf8": {
+        "bytes": 47,
+        "sha256": "1b463c9c0f1c6d74faf321b80465871ca28ef71b08bb7bd306b2eab374990fd8"
+      },
+      "decoded_with_specials": "<|user|> leading  and trailing \t <|end|><|end|>",
+      "ids": [
+        32010,
+        8236,
+        29871,
+        322,
+        25053,
+        29871,
+        12,
+        29871,
+        32007,
+        32007
+      ],
+      "messages": [
+        {
+          "content": " \t leading  and trailing \t ",
+          "role": "user"
+        }
+      ],
+      "name": "whitespace",
+      "rendered": "<|user|>\n \t leading  and trailing \t <|end|>\n<|end|>",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 51,
+        "sha256": "cce40a427f9c0bf1e1a74a348a84661740db67d593ba03c515aebb88b2f42bba"
+      },
+      "with_special_processing_ids": [
+        32010,
+        8236,
+        29871,
+        322,
+        25053,
+        29871,
+        12,
+        29871,
+        32007,
+        32007
+      ]
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded_utf8": {
+        "bytes": 53,
+        "sha256": "2aa49d7068881684a4ada32dc617eaac9d7ef4e48866b16e06bc69439c7cb511"
+      },
+      "decoded_with_specials": "<|user|> leading  and trailing \t <|end|><|assistant|>",
+      "ids": [
+        32010,
+        8236,
+        29871,
+        322,
+        25053,
+        29871,
+        12,
+        29871,
+        32007,
+        32001
+      ],
+      "messages": [
+        {
+          "content": " \t leading  and trailing \t ",
+          "role": "user"
+        }
+      ],
+      "name": "whitespace",
+      "rendered": "<|user|>\n \t leading  and trailing \t <|end|>\n<|assistant|>\n",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 58,
+        "sha256": "b02e6d7c008d04687c676721f526079eeb2d1794c583320e7a062ce9449db045"
+      },
+      "with_special_processing_ids": [
+        32010,
+        8236,
+        29871,
+        322,
+        25053,
+        29871,
+        12,
+        29871,
+        32007,
+        32001
+      ]
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded_utf8": {
+        "bytes": 44,
+        "sha256": "2a24905883feecff1efed8015ffd11590f1f1127ccb88c158d2894ee6d6fd89b"
+      },
+      "decoded_with_specials": "<|user|> line one\n\n\tline two\r\n<|end|><|end|>",
+      "ids": [
+        32010,
+        1196,
+        697,
+        13,
+        13,
+        12,
+        1220,
+        1023,
+        30004,
+        13,
+        32007,
+        32007
+      ],
+      "messages": [
+        {
+          "content": "line one\n\n\tline two\r\n",
+          "role": "user"
+        }
+      ],
+      "name": "newlines_tabs",
+      "rendered": "<|user|>\nline one\n\n\tline two\r\n<|end|>\n<|end|>",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 45,
+        "sha256": "cd19c427db6f04776e7901a8a364fbff5a1248cbd820db081e9c5358d553cb73"
+      },
+      "with_special_processing_ids": [
+        32010,
+        1196,
+        697,
+        13,
+        13,
+        12,
+        1220,
+        1023,
+        30004,
+        13,
+        32007,
+        32007
+      ]
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded_utf8": {
+        "bytes": 50,
+        "sha256": "680ea0b04a0d2db11b680a00826134e70463da1eb49e0d478ca9795714abb218"
+      },
+      "decoded_with_specials": "<|user|> line one\n\n\tline two\r\n<|end|><|assistant|>",
+      "ids": [
+        32010,
+        1196,
+        697,
+        13,
+        13,
+        12,
+        1220,
+        1023,
+        30004,
+        13,
+        32007,
+        32001
+      ],
+      "messages": [
+        {
+          "content": "line one\n\n\tline two\r\n",
+          "role": "user"
+        }
+      ],
+      "name": "newlines_tabs",
+      "rendered": "<|user|>\nline one\n\n\tline two\r\n<|end|>\n<|assistant|>\n",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 52,
+        "sha256": "bc061102d330397c214f9caa89fb8a03930740f4cdd6cb3c3b1b9662cf161633"
+      },
+      "with_special_processing_ids": [
+        32010,
+        1196,
+        697,
+        13,
+        13,
+        12,
+        1220,
+        1023,
+        30004,
+        13,
+        32007,
+        32001
+      ]
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded_utf8": {
+        "bytes": 49,
+        "sha256": "9101f64a38f3b98aca632b63d449d447bdebfc785ea8253b0aa541747e11f7e0"
+      },
+      "decoded_with_specials": "<|user|> café é — Привет<|end|><|end|>",
+      "ids": [
+        32010,
+        274,
+        28059,
+        321,
+        30103,
+        813,
+        7203,
+        7616,
+        32007,
+        32007
+      ],
+      "messages": [
+        {
+          "content": "café é — Привет",
+          "role": "user"
+        }
+      ],
+      "name": "combining_unicode",
+      "rendered": "<|user|>\ncafé é — Привет<|end|>\n<|end|>",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 50,
+        "sha256": "ec0954faa71e1fc39714630f6bba514fd9ceade883e624c4481dd8fafcf9ee41"
+      },
+      "with_special_processing_ids": [
+        32010,
+        274,
+        28059,
+        321,
+        30103,
+        813,
+        7203,
+        7616,
+        32007,
+        32007
+      ]
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded_utf8": {
+        "bytes": 55,
+        "sha256": "5087cd74498d330be0cd5b685dac9fea66c5ed820f7d2405a8477c5a07ff02ab"
+      },
+      "decoded_with_specials": "<|user|> café é — Привет<|end|><|assistant|>",
+      "ids": [
+        32010,
+        274,
+        28059,
+        321,
+        30103,
+        813,
+        7203,
+        7616,
+        32007,
+        32001
+      ],
+      "messages": [
+        {
+          "content": "café é — Привет",
+          "role": "user"
+        }
+      ],
+      "name": "combining_unicode",
+      "rendered": "<|user|>\ncafé é — Привет<|end|>\n<|assistant|>\n",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 57,
+        "sha256": "43f2c5b2d48b7d8c350b53db59e0e8390c4e7c2e633133df110d85943758b45e"
+      },
+      "with_special_processing_ids": [
+        32010,
+        274,
+        28059,
+        321,
+        30103,
+        813,
+        7203,
+        7616,
+        32007,
+        32001
+      ]
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded_utf8": {
+        "bytes": 37,
+        "sha256": "00d092edec9c4ca214720681279eebb6bf3dec0509f16a8a1bd2bf4e39aec4c5"
+      },
+      "decoded_with_specials": "<|user|> 👋 🧪 𐍈<|end|><|end|>",
+      "ids": [
+        32010,
+        29871,
+        243,
+        162,
+        148,
+        142,
+        29871,
+        243,
+        162,
+        170,
+        173,
+        29871,
+        243,
+        147,
+        144,
+        139,
+        32007,
+        32007
+      ],
+      "messages": [
+        {
+          "content": "👋 🧪 𐍈",
+          "role": "user"
+        }
+      ],
+      "name": "emoji_bytefallback",
+      "rendered": "<|user|>\n👋 🧪 𐍈<|end|>\n<|end|>",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 38,
+        "sha256": "de3203cc6a28f5d9fef2536f48141d7c8841d68c5b348ae77060be9259f59ddc"
+      },
+      "with_special_processing_ids": [
+        32010,
+        29871,
+        243,
+        162,
+        148,
+        142,
+        29871,
+        243,
+        162,
+        170,
+        173,
+        29871,
+        243,
+        147,
+        144,
+        139,
+        32007,
+        32007
+      ]
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded_utf8": {
+        "bytes": 43,
+        "sha256": "90869dd24bcce54080b9d229dc974068046311ace61b982e87ed11ae7b1e7871"
+      },
+      "decoded_with_specials": "<|user|> 👋 🧪 𐍈<|end|><|assistant|>",
+      "ids": [
+        32010,
+        29871,
+        243,
+        162,
+        148,
+        142,
+        29871,
+        243,
+        162,
+        170,
+        173,
+        29871,
+        243,
+        147,
+        144,
+        139,
+        32007,
+        32001
+      ],
+      "messages": [
+        {
+          "content": "👋 🧪 𐍈",
+          "role": "user"
+        }
+      ],
+      "name": "emoji_bytefallback",
+      "rendered": "<|user|>\n👋 🧪 𐍈<|end|>\n<|assistant|>\n",
+      "rendered_equals_decoded": false,
+      "rendered_utf8": {
+        "bytes": 45,
+        "sha256": "6d5558f719578411922ecec823f310696f5e00d4030b4c82ff7393d8aa7922d2"
+      },
+      "with_special_processing_ids": [
+        32010,
+        29871,
+        243,
+        162,
+        148,
+        142,
+        29871,
+        243,
+        162,
+        170,
+        173,
+        29871,
+        243,
+        147,
+        144,
+        139,
+        32007,
+        32001
+      ]
+    }
+  ],
+  "chat_integration_qualified": false,
+  "cleanup_transform": false,
+  "decode_policy": "Explicit tokenizers non-skipping decode; preserve pinned metaspace/ByteFallback/Fuse/Strip behavior",
+  "direct_byte_fallback_controls": [
+    {
+      "decoded_with_specials": "é",
+      "ids": [
+        198,
+        172
+      ],
+      "strip_one_leading_space": false,
+      "text": "é",
+      "utf8": [
+        195,
+        169
+      ]
+    },
+    {
+      "decoded_with_specials": "é",
+      "ids": [
+        104,
+        207,
+        132
+      ],
+      "strip_one_leading_space": false,
+      "text": "é",
+      "utf8": [
+        101,
+        204,
+        129
+      ]
+    },
+    {
+      "decoded_with_specials": "👋",
+      "ids": [
+        243,
+        162,
+        148,
+        142
+      ],
+      "strip_one_leading_space": false,
+      "text": "👋",
+      "utf8": [
+        240,
+        159,
+        145,
+        139
+      ]
+    },
+    {
+      "decoded_with_specials": "🧪",
+      "ids": [
+        243,
+        162,
+        170,
+        173
+      ],
+      "strip_one_leading_space": false,
+      "text": "🧪",
+      "utf8": [
+        240,
+        159,
+        167,
+        170
+      ]
+    },
+    {
+      "decoded_with_specials": "𐍈",
+      "ids": [
+        243,
+        147,
+        144,
+        139
+      ],
+      "strip_one_leading_space": false,
+      "text": "𐍈",
+      "utf8": [
+        240,
+        144,
+        141,
+        136
+      ]
+    },
+    {
+      "decoded_with_specials": "\n\t",
+      "ids": [
+        13,
+        12
+      ],
+      "strip_one_leading_space": false,
+      "text": "\n\t",
+      "utf8": [
+        10,
+        9
+      ]
+    },
+    {
+      "decoded_with_specials": "x",
+      "ids": [
+        35,
+        123
+      ],
+      "strip_one_leading_space": true,
+      "text": " x",
+      "utf8": [
+        32,
+        120
+      ]
+    }
+  ],
+  "file_pins": {
+    "config.json": {
+      "bytes": 1030,
+      "sha256": "0e2e43bc4358b4cabbcc33c496f34e170fdfe04612a47428f1691d1e9ec5a568"
+    },
+    "special_tokens_map.json": {
+      "bytes": 569,
+      "sha256": "474d699677e264edd3851559548cbbb61801ad8da6b249c81455007602313c34"
+    },
+    "tokenizer.json": {
+      "bytes": 1844436,
+      "sha256": "d0f067e1e15cd0a36ebef3668024882cb67a80b86fb4b7b4b128481f0d474db7"
+    },
+    "tokenizer_config.json": {
+      "bytes": 3333,
+      "sha256": "d6e13c85fbde9cf71f663da027cf558ab2bb9df80bd60c718be10dbba8d2a2be"
+    }
+  },
+  "format": "toklet-phi3-plain-text-v1",
+  "full_quality_qualified": false,
+  "mapped_ids": [
+    0,
+    32010
+  ],
+  "model_executed": false,
+  "native_session_prefix_preservation_qualified": false,
+  "native_text_executed": false,
+  "not_stops": [
+    1,
+    2
+  ],
+  "numerical_vocab": 32064,
+  "padding": false,
+  "producer": {
+    "bytes": 19988,
+    "sha256": "8255f4e85bef26dd54ba6ab96003841785925b5333bad9f6a7714f0ca44a7c10"
+  },
+  "raw_texts": [
+    {
+      "decoded_with_specials": "",
+      "ids": [],
+      "text": ""
+    },
+    {
+      "decoded_with_specials": "Hello, world!",
+      "ids": [
+        15043,
+        29892,
+        3186,
+        29991
+      ],
+      "text": "Hello, world!"
+    },
+    {
+      "decoded_with_specials": " leading  trailing ",
+      "ids": [
+        29871,
+        8236,
+        29871,
+        25053,
+        29871
+      ],
+      "text": " leading  trailing "
+    },
+    {
+      "decoded_with_specials": "\n\tline\r\n",
+      "ids": [
+        29871,
+        13,
+        12,
+        1220,
+        30004,
+        13
+      ],
+      "text": "\n\tline\r\n"
+    },
+    {
+      "decoded_with_specials": "café é",
+      "ids": [
+        274,
+        28059,
+        321,
+        30103
+      ],
+      "text": "café é"
+    },
+    {
+      "decoded_with_specials": "👋🧪𐍈",
+      "ids": [
+        29871,
+        243,
+        162,
+        148,
+        142,
+        243,
+        162,
+        170,
+        173,
+        243,
+        147,
+        144,
+        139
+      ],
+      "text": "👋🧪𐍈"
+    }
+  ],
+  "rendered_decode_roundtrip_required": false,
+  "repository": "mlx-community/Phi-3-mini-4k-instruct-4bit",
+  "revision": "5b3819ed6317784fb20eddeae9bed984f778d0d0",
+  "runtime_pins": {
+    "/Library/Frameworks/Python.framework/Versions/3.12/Python": {
+      "bytes": 16119328,
+      "sha256": "feaca1a7cfd5ffdd59731ee6f91921833e26660305c22273bd6e78190bc3dd71"
+    },
+    "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12": {
+      "bytes": 152096,
+      "sha256": "a7f5b535d61d1c7326824204ac80f045a97a652abb154421e2c74fcc365a3539"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2-3.1.6.dist-info/INSTALLER": {
+      "bytes": 4,
+      "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2-3.1.6.dist-info/METADATA": {
+      "bytes": 2871,
+      "sha256": "68c5548fb67c4132a13898d9b31ec50c6bea2abdd915d921f214355c3a6499c8"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2-3.1.6.dist-info/RECORD": {
+      "bytes": 3619,
+      "sha256": "1bb3b46d00f55f63d24c3a34a7f955ef6692d4691217a53b15261769607f9f7c"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2-3.1.6.dist-info/WHEEL": {
+      "bytes": 82,
+      "sha256": "ff6a3334508b59cf776cae1628708ef9e0d410d0e5a3e76073d714deaa2460ee"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2-3.1.6.dist-info/entry_points.txt": {
+      "bytes": 58,
+      "sha256": "38bf39818535783f1cb8f9629227c59e05e97818dac65eab209f0a902ff7afe2"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2-3.1.6.dist-info/licenses/LICENSE.txt": {
+      "bytes": 1475,
+      "sha256": "3b49dcee4105eb37bac10faf1be260408fe85d252b8e9df2e0979fc1e094437b"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/__init__.py": {
+      "bytes": 1928,
+      "sha256": "c717a93bd8bb0c7b2a910ae004476e2ed7e8cf6402b93ebf81b2f85d237585b5"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/_identifier.py": {
+      "bytes": 1958,
+      "sha256": "ff361cb4d2b346a964fe6bab4cd973ae3bb514524bed56bf223aaa77b8a2da55"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/async_utils.py": {
+      "bytes": 2834,
+      "sha256": "bcaf8f76cba8ace3275929c4913de25094489139d880ed93e8c9c6c43807239a"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/bccache.py": {
+      "bytes": 14061,
+      "sha256": "821d2ab3daee9675e8d0f857e634c9cb6507cc8f3016743ade8fefc3b9e1cd18"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/compiler.py": {
+      "bytes": 74131,
+      "sha256": "f51a42425e57f3c0479652623ec1cf876f791e1d2e029bf0149350baeb542de3"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/constants.py": {
+      "bytes": 1433,
+      "sha256": "18ca05c9d045fe476969128fa0ce5c97932f8aab9544b57266d7e9e7ed7a8e0d"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/debug.py": {
+      "bytes": 6297,
+      "sha256": "0a71ea0831ddf81546bed8bff19b13a259d7361037102b18fba9ffda9c14f07c"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/defaults.py": {
+      "bytes": 1267,
+      "sha256": "6e805c4b0efc87e969db461b697489b2a900236b8dfe60ff4ed0b27697aae705"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/environment.py": {
+      "bytes": 61513,
+      "sha256": "f6786b3fb0a1f8d6c65f4d30bf2af8cb2fae84d1ead8e09ceb48201ab9e2fdf9"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/exceptions.py": {
+      "bytes": 5071,
+      "sha256": "8a81de1eb5b009635a5d7d629c798755b96f73885a3bb017b230a9dc67d6bf1d"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/ext.py": {
+      "bytes": 31875,
+      "sha256": "e4f1797877e1f265c02315c71d1076c576d7a218bca44de71d23b16baeae4bb1"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/filters.py": {
+      "bytes": 55212,
+      "sha256": "3d0fc481df67f634a0b671906321782b98f69d8c21508ba584f9f28a691dafe9"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/idtracking.py": {
+      "bytes": 10555,
+      "sha256": "fa5979948a7bde930bdc4ad46222098fbb5d996c5c1ff2250efdf203f862658a"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/lexer.py": {
+      "bytes": 29786,
+      "sha256": "2d88988a8e9bafe4dea7d9cf72ea565ec3c4b6396ec37a75994fa534155151f9"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/loaders.py": {
+      "bytes": 24055,
+      "sha256": "c08ae7c63bdc6ea8795705b6f0d4a47e8b620eaf2a342c4839215b1948922c1e"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/meta.py": {
+      "bytes": 4397,
+      "sha256": "3930cf91a16f5361e0bf1fba6a4cfbd79e05f012166919af25c045bf0a291f0c"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/nativetypes.py": {
+      "bytes": 4210,
+      "sha256": "ec620600b54981dc8bf34a1925d4146947f04ade6ada549265b5edd1d35ffcce"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/nodes.py": {
+      "bytes": 34579,
+      "sha256": "9b50eecdcafaaa1648f0943a57226050d8a78c07f96d0ce28d29839ccb2f531f"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/optimizer.py": {
+      "bytes": 1651,
+      "sha256": "ac99c246543ba59b04126321b100e00bfa4ac831f13f94cf4bacd53c6b2072ef"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/parser.py": {
+      "bytes": 40383,
+      "sha256": "94b385cb7b0498773921a1074621f5b1056721dda6a14433872789653b5d637d"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/runtime.py": {
+      "bytes": 34249,
+      "sha256": "80393e1af76b8895ea82c19b1e0adc2933f4629eb33d7ce1ceb2290851f78c05"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/sandbox.py": {
+      "bytes": 15009,
+      "sha256": "330d9a8ad958d88f256bb15885c5f6606f41b5461c2e70f41a1ddddbd7035ab6"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/tests.py": {
+      "bytes": 5926,
+      "sha256": "54bb018551675a0f8fc52073d4c8519cd5a03f5a2f5e4de778ed452d031e0bd4"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/utils.py": {
+      "bytes": 24129,
+      "sha256": "ad1a77a3d7bb64a4b87f2ad645b10bc8b729b8655315c9e8a1a39ad6ac7f1489"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/visitor.py": {
+      "bytes": 3557,
+      "sha256": "11c9cbd4f2307ffe1154238cc6c44db91f005c76d2d6a7c074c384da780a273e"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe-3.0.4.dist-info/INSTALLER": {
+      "bytes": 4,
+      "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe-3.0.4.dist-info/METADATA": {
+      "bytes": 2690,
+      "sha256": "66767d76388ece15d49d50dafb655891ef5d868715e7128e7f7d737a70b353c4"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe-3.0.4.dist-info/RECORD": {
+      "bytes": 1106,
+      "sha256": "f5e0fefce6a0acf0aea17ca87522c2e697835ae9a1a2bfb40c3e6c2b78550d8f"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe-3.0.4.dist-info/WHEEL": {
+      "bytes": 136,
+      "sha256": "7156dcce88ca058d4e5118bde8900f7f0cacc719d55b67b78cb6de2362e7dbdb"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe-3.0.4.dist-info/licenses/LICENSE.txt": {
+      "bytes": 1475,
+      "sha256": "489a8e1108509ed98a37bb983e11e0f7e1d31f0bd8f99a79c8448e7ff37d07ea"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe-3.0.4.dist-info/top_level.txt": {
+      "bytes": 11,
+      "sha256": "ab2d0f9637b9209bafb020637a32728430a310075c0cb2bfd9a81571ec7c67a5"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe/__init__.py": {
+      "bytes": 13354,
+      "sha256": "1f512743b0ba6e96c1d7a9450e425889e9978eb3d2d15e72dd57c8c47f518686"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe/_native.py": {
+      "bytes": 210,
+      "sha256": "8522ecf099b3e5aa9acae7a780927791d4f93f0369056a4aae6412762a67742f"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe/_speedups.c": {
+      "bytes": 4327,
+      "sha256": "b77b42ea8555efe6e6294aaf08ee69552932f86f000885e958c689c2436d2638"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe/_speedups.cpython-312-darwin.so": {
+      "bytes": 50656,
+      "sha256": "c5dff96c03976c47aa7d1cae3a73b4c57099259b49305c9486735ee9f7022304"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe/_speedups.pyi": {
+      "bytes": 41,
+      "sha256": "10d7756d87bb81b0547f6cb0c9858e194a675ce1cd27e7204cda9eb655bc8799"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers-0.22.2.dist-info/INSTALLER": {
+      "bytes": 4,
+      "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers-0.22.2.dist-info/METADATA": {
+      "bytes": 7254,
+      "sha256": "15a5ddaf489f592b77e0a934c0eeb46b51130a94064ca129232afdb0a3868efc"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers-0.22.2.dist-info/RECORD": {
+      "bytes": 3870,
+      "sha256": "a3c13f46ace0e227bc7c3816c172244631afd183fca5c9cb4de2adc7e71e635b"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers-0.22.2.dist-info/REQUESTED": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers-0.22.2.dist-info/WHEEL": {
+      "bytes": 103,
+      "sha256": "1c31c34b272f665edc758aee7990e578e1ccb0ffadebff459ad0f7beaa6cea0f"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/__init__.py": {
+      "bytes": 2639,
+      "sha256": "148ecb122f3fee03be9abb1fe213dd85fbc691bf2ad2b437ff531533781a6a3a"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/__init__.pyi": {
+      "bytes": 55891,
+      "sha256": "30a585da6e26cfb206d5b3d3749ec08d79100cdce499048b3260024365546095"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/decoders/__init__.py": {
+      "bytes": 372,
+      "sha256": "85fc0ce821540ef94c1862f8fb1b1a698cfcd4af4fe6b408e592f950758af18e"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/decoders/__init__.pyi": {
+      "bytes": 12019,
+      "sha256": "4fad2615c90c6d2f18aeca273803ed7ef6fb5581d4262f669b8ed677ca53eb6a"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/implementations/__init__.py": {
+      "bytes": 310,
+      "sha256": "57302ca65688a3bae5e0014ef0c8aeee283b31f663be89f055b959c34d7347a3"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/implementations/base_tokenizer.py": {
+      "bytes": 15806,
+      "sha256": "3ed4364d29a8306953a4bf2873c7c3bf0255218ea2b161a6a6cf5ca26cec5a31"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/implementations/bert_wordpiece.py": {
+      "bytes": 5520,
+      "sha256": "b0a0ae9b414a3d875280914937c2c37ab541a130d14aacaa49dadc9be96f42a2"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/implementations/byte_level_bpe.py": {
+      "bytes": 4272,
+      "sha256": "8817a933fcf5b392b2ef314356b60b7372f96f262b228ba4efe934246b85d74b"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/implementations/char_level_bpe.py": {
+      "bytes": 5449,
+      "sha256": "35a83f1c5abc46f72e72a8bc321575fb4c6da11d02ec58c739e70555444beecb"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/implementations/sentencepiece_bpe.py": {
+      "bytes": 3721,
+      "sha256": "734f1f29fea2f7613646c2a0b31cbb2f365f617f3e3000874911bc53f239cad6"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/implementations/sentencepiece_unigram.py": {
+      "bytes": 7630,
+      "sha256": "d91a087c556988c9093ad382b2433f54278210b59a0bf6cd9ddb3a1afb44d0a4"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/models/__init__.py": {
+      "bytes": 176,
+      "sha256": "7896781d3010669c672882cdca559a4c5ab15f2f816ba38ab3058de3b7de795f"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/models/__init__.pyi": {
+      "bytes": 19517,
+      "sha256": "da064f411d59e7f92b4f32d7c7eb6ce5a8bb173edb4d9d102353922793323ae7"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/normalizers/__init__.py": {
+      "bytes": 841,
+      "sha256": "ff4eb0e1ca9122dbde12021d75868b3127209123a4200308cd809eb1be400385"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/normalizers/__init__.pyi": {
+      "bytes": 25709,
+      "sha256": "eb36266c5b6f745d5686859049d10df7be26c478dced9c09040d1323674993df"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/pre_tokenizers/__init__.py": {
+      "bytes": 598,
+      "sha256": "295f7e12c03290610d514ce419609bbf89fa60cea161ad617e763e83306930d1"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/pre_tokenizers/__init__.pyi": {
+      "bytes": 31566,
+      "sha256": "fe9737e3e29dd8decdbeceef4c73d42c12a39b5f2225133da8b3829551f0f67e"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/processors/__init__.py": {
+      "bytes": 307,
+      "sha256": "c4cd8310ac0ab4722e987b2ccccf00324abe0256aabc16455d680b53c48d84e6"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/processors/__init__.pyi": {
+      "bytes": 14348,
+      "sha256": "e4be4e059ed25c283b004cb9d63c831d589a0921c6e5ceef5b87968d25506d4b"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/tokenizers.abi3.so": {
+      "bytes": 8261072,
+      "sha256": "899b244f19f1ddd6506c45ea0f7163f38952f2a552272a687a6ef4b9ddcc7327"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/tokenizers.pyi": {
+      "bytes": 468,
+      "sha256": "32ae06e517312a255cd0565dfce9a2f9b4fb61031173e883054fe73c298264e0"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/tools/__init__.py": {
+      "bytes": 55,
+      "sha256": "c46f1c681f4e1c2f1c6c1d354b9bd8575e0767184ee9e59b2de86c6fbd29a62a"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/tools/visualizer-styles.css": {
+      "bytes": 4850,
+      "sha256": "cc0c9dab5a06583f10125978f9ec8bf0b970d01d6cb72fe1a48137b58c4bd369"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/tools/visualizer.py": {
+      "bytes": 14834,
+      "sha256": "8edc646b4d6984d3f8eee412a1c21014efc33272f7647770a211950eaa9824fa"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/trainers/__init__.py": {
+      "bytes": 248,
+      "sha256": "513bb6d8019ca7be88be95b8e712d16c95844f4e0dc4f5ba35f09bd98633d043"
+    },
+    "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/trainers/__init__.pyi": {
+      "bytes": 10719,
+      "sha256": "8cab433579e85fa1567824de1f3f96eb60a3dbf244ae0606ee1d4f45e533d6b5"
+    }
+  },
+  "skip_special_tokens": false,
+  "source_eos_declarations": {
+    "model": 32000,
+    "special_tokens_map": 32000,
+    "tokenizer_config": 32007
+  },
+  "special_boundaries": [
+    {
+      "decoded_with_specials": "<|user|> x",
+      "id": 32010,
+      "ids": [
+        32010,
+        921
+      ],
+      "literal": "<|user|>",
+      "no_whitespace_ids": [
+        32010,
+        921
+      ],
+      "rstrip": true,
+      "text": "<|user|>\n\t  x"
+    },
+    {
+      "decoded_with_specials": "<|assistant|> x",
+      "id": 32001,
+      "ids": [
+        32001,
+        921
+      ],
+      "literal": "<|assistant|>",
+      "no_whitespace_ids": [
+        32001,
+        921
+      ],
+      "rstrip": true,
+      "text": "<|assistant|>\n\t  x"
+    },
+    {
+      "decoded_with_specials": "<|system|> x",
+      "id": 32006,
+      "ids": [
+        32006,
+        921
+      ],
+      "literal": "<|system|>",
+      "no_whitespace_ids": [
+        32006,
+        921
+      ],
+      "rstrip": true,
+      "text": "<|system|>\n\t  x"
+    },
+    {
+      "decoded_with_specials": "<|end|> x",
+      "id": 32007,
+      "ids": [
+        32007,
+        921
+      ],
+      "literal": "<|end|>",
+      "no_whitespace_ids": [
+        32007,
+        921
+      ],
+      "rstrip": true,
+      "text": "<|end|>\n\t  x"
+    },
+    {
+      "decoded_with_specials": "</s> x",
+      "id": 2,
+      "ids": [
+        2,
+        921
+      ],
+      "literal": "</s>",
+      "no_whitespace_ids": [
+        2,
+        921
+      ],
+      "rstrip": true,
+      "text": "</s>\n\t  x"
+    },
+    {
+      "decoded_with_specials": "<|endoftext|> \n\t  x",
+      "id": 32000,
+      "ids": [
+        32000,
+        29871,
+        13,
+        12,
+        29871,
+        921
+      ],
+      "literal": "<|endoftext|>",
+      "no_whitespace_ids": [
+        32000,
+        921
+      ],
+      "rstrip": false,
+      "text": "<|endoftext|>\n\t  x"
+    }
+  ],
+  "stop_ids": [
+    32000,
+    32007
+  ],
+  "truncation": false,
+  "unmapped_rejected_ids": [
+    32011,
+    32012,
+    32013,
+    32014,
+    32015,
+    32016,
+    32017,
+    32018,
+    32019,
+    32020,
+    32021,
+    32022,
+    32023,
+    32024,
+    32025,
+    32026,
+    32027,
+    32028,
+    32029,
+    32030,
+    32031,
+    32032,
+    32033,
+    32034,
+    32035,
+    32036,
+    32037,
+    32038,
+    32039,
+    32040,
+    32041,
+    32042,
+    32043,
+    32044,
+    32045,
+    32046,
+    32047,
+    32048,
+    32049,
+    32050,
+    32051,
+    32052,
+    32053,
+    32054,
+    32055,
+    32056,
+    32057,
+    32058,
+    32059,
+    32060,
+    32061,
+    32062,
+    32063
+  ],
+  "versions": {
+    "jinja2": "3.1.6",
+    "markupsafe": "3.0.4",
+    "tokenizers": "0.22.2"
+  }
+}
