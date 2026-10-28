@@ -6257,3 +6257,26 @@ diagnostic schedule; Serial stays default/oracle. App512, separate8192/full40960
 qualification and iPhone remain open. See [report](qwen3-reference-schedule.md),
 [all samples and parent identities](../benchmarks/results/2026-10-28-qwen3-reference-schedule-v1.json)
 and [next sequence](qwen3-full-window-plan.md).
+
+## 2026-10-28 — Preserve experimental8192 mechanism after goal change
+
+Added a separate guarded8192 diagnostic endpoint and fixed source/input profile,
+sharing concrete runner mechanics with the unchanged4096 protocol. Public model
+capability, offset/chunk/shape/overflow validation remain explicit. No shader,
+arithmetic or ordinary app limit changes. Cold Rust/Python checks and three GPU
+controls pass; original-BF16 short equivalence and41472 new native commits plus512
+inherited complete, including exact full8192 chunk agreement and causal prefixes.
+
+The user changed priority to broad architecture support built from shared blocks,
+per-model/device context/KV calculation and user tuning. The owned qualification
+run was stopped and its source, raw partial results, input/replay and failed
+wrapper attempts retained. A recorded cleanup permission error is retained;
+subsequent independent checks verify all recorded processes/groups absent.
+Deep native/BF16 quality, remaining generation/replay and combined independent
+audit are incomplete. **No8192 qualification, app capacity increase or performance
+claim is made.** Historical4096 qualification and fidelity rejections remain.
+
+Decision: retain the reviewed experimental mechanism as an isolated checkpoint,
+then follow the new architecture/resource-tuning goal. See the
+[scoped record](qwen3-context8192-experiment.md) and
+[interrupted evidence](../benchmarks/results/2026-10-28-qwen3-context8192-interrupted-v1.json).

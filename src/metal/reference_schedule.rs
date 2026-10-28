@@ -47,6 +47,32 @@ pub(super) fn validate_options(
     Ok(())
 }
 
+const EXPERIMENTAL_8192_LIMIT: usize = 8192;
+
+pub(super) fn validate_options8192(
+    admitted: bool,
+    architecture: Option<Architecture>,
+    config: &model::Config,
+    options: session::Options,
+) -> Result<()> {
+    if !admitted || architecture != Some(Architecture::Qwen3) {
+        return Err(Error::Options(
+            "8192 Reference requires the explicit Qwen3 context diagnostic model",
+        ));
+    }
+    crate::mlx::execution::qwen3_context_geometry(config, Architecture::Qwen3)
+        .map_err(|e| Error::Options(e.message()))?;
+    if options.position_offset != 0
+        || !(1..=EXPERIMENTAL_8192_LIMIT).contains(&options.capacity)
+        || !matches!(options.prefill_chunk_size, 32 | 128)
+    {
+        return Err(Error::Options(
+            "8192 Reference diagnostic requires offset0, capacity1..8192 and chunk32/128",
+        ));
+    }
+    Ok(())
+}
+
 fn product(parts: &[usize]) -> Result<usize> {
     let count = parts
         .iter()
@@ -71,7 +97,7 @@ impl Shape {
             || !((heads, kvheads, dim) == (16, 8, 128)
                 || (cfg!(test) && (heads, kvheads, dim) == (4, 2, 16)))
             || valid == 0
-            || valid > 4096
+            || valid > EXPERIMENTAL_8192_LIMIT
             || valid > cap
             || offset.checked_add(rows).is_none_or(|end| end > valid)
         {
@@ -80,7 +106,7 @@ impl Shape {
             ));
         }
         // Padded capacity is permitted for primitive guards; public session
-        // admission separately caps its logical capacity at4096, offset0.
+        // admission separately caps logical capacity at4096 or8192, offset0.
         let query = product(&[rows, heads, dim])?;
         let cache = product(&[kvheads, cap, dim])?;
         let scratch = product(&[heads, chunk, cap])?;
@@ -409,6 +435,74 @@ mod tests {
         assert_eq!(grid(33, 32, 32).unwrap().width, 2);
     }
 
+    #[test]
+    fn explicit8192_gate_does_not_widen4096_or_position_capability() {
+        let c = config();
+        let base = options();
+        for capacity in [1, 512, 4096, 4097, 8192] {
+            for prefill_chunk_size in [32, 128] {
+                let o = session::Options {
+                    capacity,
+                    prefill_chunk_size,
+                    ..base
+                };
+                validate_options8192(true, Some(Architecture::Qwen3), &c, o).unwrap();
+                if capacity > 4096 {
+                    assert!(validate_options(true, Some(Architecture::Qwen3), &c, o).is_err());
+                }
+            }
+        }
+        for capacity in [0, 8193, 40960, usize::MAX] {
+            assert!(
+                validate_options8192(
+                    true,
+                    Some(Architecture::Qwen3),
+                    &c,
+                    session::Options { capacity, ..base }
+                )
+                .is_err()
+            );
+        }
+        for position_offset in [1, 8191, 8192, usize::MAX] {
+            assert!(
+                validate_options8192(
+                    true,
+                    Some(Architecture::Qwen3),
+                    &c,
+                    session::Options {
+                        position_offset,
+                        ..base
+                    }
+                )
+                .is_err()
+            );
+        }
+        for prefill_chunk_size in [0, 1, 31, 33, 127, 129, usize::MAX] {
+            assert!(
+                validate_options8192(
+                    true,
+                    Some(Architecture::Qwen3),
+                    &c,
+                    session::Options {
+                        prefill_chunk_size,
+                        ..base
+                    }
+                )
+                .is_err()
+            );
+        }
+        assert!(validate_options8192(false, Some(Architecture::Qwen3), &c, base).is_err());
+        for architecture in [None, Some(Architecture::Llama), Some(Architecture::Qwen2)] {
+            assert!(validate_options8192(true, architecture, &c, base).is_err());
+        }
+        let mut wrong = c;
+        wrong.head_dim = 64;
+        assert!(validate_options8192(true, Some(Architecture::Qwen3), &wrong, base).is_err());
+        let shape = Shape::new([128, 16, 8, 128, 8195, 128, 8064, 8192]).unwrap();
+        assert_eq!(shape.grid, [128 * 16 * 8192, 128 * 16, 128 * 16 * 128]);
+        assert!(Shape::new([1, 16, 8, 128, 8195, 32, 8192, 8193]).is_err());
+    }
+
     const GUARD: usize = 7;
     const HALF_GUARD: u16 = 0x3555;
     const FLOAT_GUARD: u32 = 0x7fa1_2345;
@@ -480,6 +574,13 @@ mod tests {
                 (32, 32, 4064, 4096, Values::General),
                 (127, 128, 2048, 2175, Values::General),
                 (128, 128, 3968, 4096, Values::General),
+                (1, 32, 8191, 8192, Values::Uniform),
+                (1, 32, 8190, 8192, Values::Dominant(0)),
+                (1, 32, 8190, 8192, Values::Dominant(4095)),
+                (1, 32, 8190, 8192, Values::Dominant(8190)),
+                (1, 32, 8191, 8192, Values::General),
+                (32, 32, 8160, 8192, Values::General),
+                (128, 128, 8064, 8192, Values::General),
             ];
             for (rows, chunk, offset, valid, values) in cases {
                 let (heads, kvheads, dim) = (16, 8, 128);

@@ -793,6 +793,33 @@ impl<'m> Session<'m> {
         }
         Ok(session)
     }
+    /// Explicit unqualified8192 diagnostic; the4096 route keeps its original gate.
+    /// Requires the context-loader capability, offset0 and exact Qwen3 geometry.
+    pub fn with_qwen3_reference_schedule8192_diagnostic(
+        model: &'m Model,
+        options: session::Options,
+        readback_mode: ReadbackMode,
+        schedule: ReferenceSchedule,
+    ) -> Result<Self> {
+        reference_schedule::validate_options8192(
+            model.qwen3_context_diagnostic,
+            model.mlx_architecture,
+            &model.config,
+            options,
+        )?;
+        let mut session = Self::with_attention_mode(
+            model,
+            options,
+            ProjectionMode::MlxAffine,
+            NormalizationMode::Compensated,
+            readback_mode,
+            AttentionMode::Reference,
+        )?;
+        if schedule == ReferenceSchedule::ParallelOutputsExperimental {
+            session.parallel_reference = Some(model.gpu.parallel_reference()?);
+        }
+        Ok(session)
+    }
     pub fn reference_schedule(&self) -> ReferenceSchedule {
         if self.parallel_reference.is_some() {
             ReferenceSchedule::ParallelOutputsExperimental

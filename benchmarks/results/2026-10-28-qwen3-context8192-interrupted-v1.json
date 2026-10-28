@@ -1,0 +1,221 @@
+{
+  "format": "toklet-qwen3-context8192-interrupted-v1",
+  "status": "interrupted_by_user_goal_change",
+  "accepted": false,
+  "experimental_mechanism": true,
+  "diagnostic_endpoint_capacity": 8192,
+  "qualified_diagnostic_capacity": 4096,
+  "ordinary_app_capacity": 512,
+  "declared_model_capacity": 40960,
+  "app_capacity_changed": false,
+  "numerical_arithmetic_changed": false,
+  "full_window_qualified": false,
+  "iphone_qualified": false,
+  "performance_qualified": false,
+  "base_revision": "9d4e84f3d6f6c17ce7a7080e08715467c2409f46",
+  "completed_new_native_commits": 41472,
+  "inherited_old_anchor_commits": 512,
+  "completed_phases": {
+    "anchor": {
+      "committed_tokens": 512,
+      "finite_rows": 512,
+      "capacity": 512,
+      "chunk": 32,
+      "readback": "FullLogits",
+      "numerical_memory": {
+        "weights_bytes": 633366062,
+        "kv_bytes": 58721040,
+        "scratch_bytes": 62711274,
+        "history_bytes": 2048,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 4736,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 823129512
+      },
+      "planned_application_allowance_bytes": 67108864,
+      "final_logits_sha256": "b37a32cbf24eb5ea8423b9d35137190f98d7b77e84ec57bd9e1a6b13fb2daf73",
+      "journal": {
+        "path": "artifacts/m8-qwen3-context8192-controller-continuation-v2/native-anchor.stdout",
+        "bytes": 149668,
+        "sha256": "1882b7cb05f83fd14df4e66ac126b5ce3cf81760471a7195f4099c053347c5a5"
+      }
+    },
+    "a32": {
+      "committed_tokens": 16384,
+      "finite_rows": 8192,
+      "capacity": 8192,
+      "chunk": 32,
+      "readback": "FullLogits",
+      "numerical_memory": {
+        "weights_bytes": 633366062,
+        "kv_bytes": 939524880,
+        "scratch_bytes": 94168554,
+        "history_bytes": 32768,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 4736,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 1735421352
+      },
+      "planned_application_allowance_bytes": 67108864,
+      "final_logits_sha256": "c4f97bda6cff4ef2c26469ea141c9aac32670e7dcc3eb130e37a8946f1295a8b",
+      "journal": {
+        "path": "artifacts/m8-qwen3-context8192-controller-continuation-v2/native-a32.stdout",
+        "bytes": 2631024,
+        "sha256": "c0257da71857572de048dc68145d8637c30f347a39c4f50613e281e5b0a430d4"
+      }
+    },
+    "a128": {
+      "committed_tokens": 8192,
+      "finite_rows": 8192,
+      "capacity": 8192,
+      "chunk": 128,
+      "readback": "FullLogits",
+      "numerical_memory": {
+        "weights_bytes": 633366062,
+        "kv_bytes": 939524880,
+        "scratch_bytes": 375760746,
+        "history_bytes": 32768,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 16256,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 2017025064
+      },
+      "planned_application_allowance_bytes": 67108864,
+      "final_logits_sha256": "c4f97bda6cff4ef2c26469ea141c9aac32670e7dcc3eb130e37a8946f1295a8b",
+      "journal": {
+        "path": "artifacts/m8-qwen3-context8192-controller-continuation-v2/native-a128.stdout",
+        "bytes": 2295430,
+        "sha256": "ebd8494d878c4cb3f64d70335ac03a0aa317366c455d5607aec59da66cbfb3b7"
+      }
+    },
+    "b128": {
+      "committed_tokens": 8192,
+      "finite_rows": 8192,
+      "capacity": 8192,
+      "chunk": 128,
+      "readback": "FullLogits",
+      "numerical_memory": {
+        "weights_bytes": 633366062,
+        "kv_bytes": 939524880,
+        "scratch_bytes": 375760746,
+        "history_bytes": 32768,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 16256,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 2017025064
+      },
+      "planned_application_allowance_bytes": 67108864,
+      "final_logits_sha256": "1644508941f96757a7a7abdc243a8bdd1b2e86de4b1b92dcb574bead4f1b9d6b",
+      "journal": {
+        "path": "artifacts/m8-qwen3-context8192-controller-continuation-v2/native-b128.stdout",
+        "bytes": 2295442,
+        "sha256": "ffac38e8bcab894853b5523e10a25a9425324abe7409cfba3b8393c77817d35d"
+      }
+    },
+    "timing32_full": {
+      "committed_tokens": 8192,
+      "finite_rows": 0,
+      "capacity": 8192,
+      "chunk": 32,
+      "readback": "FullLogits",
+      "numerical_memory": {
+        "weights_bytes": 633366062,
+        "kv_bytes": 939524880,
+        "scratch_bytes": 54879444,
+        "history_bytes": 32768,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 4736,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 1696132242
+      },
+      "planned_application_allowance_bytes": 67108864,
+      "final_logits_sha256": "c4f97bda6cff4ef2c26469ea141c9aac32670e7dcc3eb130e37a8946f1295a8b",
+      "journal": {
+        "path": "artifacts/m8-qwen3-context8192-controller-continuation-v2/native-timing32_full.stdout",
+        "bytes": 331737,
+        "sha256": "3399cf226ccfee6011b6cc176df61767f468d37c9ab00b52f40eb65600223896"
+      }
+    }
+  },
+  "bf16_short_equivalence_producer_complete": true,
+  "independent_combined_reader_executed": false,
+  "native_deep_quality_executed": false,
+  "bf16_deep_quality_executed": false,
+  "unfinished_phases": [
+    "timing128_full (interrupted)",
+    "timing32_greedy",
+    "sampled_replay",
+    "quality",
+    "BF16 quality",
+    "combined independent audit"
+  ],
+  "cold_checks": {
+    "default_tests": 372,
+    "metal_library_tests": 250,
+    "context_example_tests_each": 10,
+    "python_source8192": 7,
+    "python_inputs8192": 5,
+    "python_source4096": 13,
+    "python_inputs4096": 3,
+    "counts_overlap": true,
+    "commands": 13
+  },
+  "gpu_control_tests": [
+    "complete primitive arrays through8192",
+    "tied/untied tiny graph stages",
+    "unchanged high-position rotary oracle"
+  ],
+  "interruption": {
+    "reason": "Human explicitly replaced single-model full-window priority with broad modular architecture support and model/device-aware context/KV calculation and tuning.",
+    "primary_error": "InterruptedError: Received signal 15",
+    "exit_code": -15,
+    "cleanup_errors": [
+      "group cleanup: PermissionError: [Errno 1] Operation not permitted"
+    ],
+    "controller_endpoint_errors": [],
+    "later_independent_group_absence_verified": true
+  },
+  "limits": [
+    "This record is not an8192 qualification or a numerical/quality rejection.",
+    "Completed rows/state checks and successful source producer outputs remain scoped observations; remaining quality and combined audit did not run.",
+    "Single functional timings are not performance qualification.",
+    "Historical approved4096/native-profile results and rejected trajectory-fidelity results retain their scope."
+  ],
+  "evidence": {
+    "execute": {
+      "path": "artifacts/m8-qwen3-context8192-controller-continuation-v2/execute.json",
+      "bytes": 1090417,
+      "sha256": "59d57ef3d309e510087adb6195048ae4f93cb85137c1bde41c27fa40cfc4c581"
+    },
+    "execution": {
+      "path": "artifacts/m8-qwen3-context8192-controller-continuation-v2/execution.json",
+      "bytes": 1054034,
+      "sha256": "55582112328d263373098e5fb142efb125b42aac24c6792421550cd133c080fd"
+    },
+    "stop_and_closure": {
+      "path": "artifacts/m8-qwen3-goal-change-2026-10-28-v1/closed-run.json",
+      "bytes": 1528,
+      "sha256": "f2b898dd79020eaab51e21551c8b2e56e5ab54d97d436c62dd8482b5ac7d23e1"
+    },
+    "cold_checks": {
+      "path": "artifacts/m8-qwen3-context8192-checks-v1/prepare.json",
+      "bytes": 214794,
+      "sha256": "5ed59d63f8332a41b5d92d21d61fff33841357f8463ef7c0cf5d78a6d19ae140"
+    },
+    "gpu_controls": {
+      "path": "artifacts/m8-qwen3-context8192-checks-v1/controls.json",
+      "bytes": 206712,
+      "sha256": "88b27c1c3910dfc989692820339bec190acee66b2ce86981071c849f5ef993f8"
+    },
+    "source_equivalence": {
+      "path": "artifacts/m8-qwen3-context8192-controller-continuation-v2/equivalence-report.json",
+      "bytes": 74546,
+      "sha256": "b5324ec28d6af50a8a66495d391ffa8e8da01985654b66c2a5afde97b48f87c4"
+    },
+    "input_manifest": {
+      "path": "benchmarks/qwen3-context8192-v1/manifest.json",
+      "bytes": 3327,
+      "sha256": "de01ae0bd94e9db0b69d8f454522b2a5dd1bd58035db5e7e3ee2c614e5a6aaa4"
+    }
+  }
+}
