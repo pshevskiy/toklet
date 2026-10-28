@@ -6433,3 +6433,32 @@ decoder to include them in checked totals. Inspection cannot allocate the
 frequency buffer while claiming otherwise. The new tiny Half graph retains
 the existing stage-envelope policy and actual packed-versus-lookup semantics.
 This records design only; no model-admission or completion checkbox changes.
+
+## 2026-10-28 — Structural Llama and resident scaled rotary composition
+
+Composed the proven optional Llama3 rotary into native model execution using one
+immutable model-owned frequency buffer/pipeline and borrowed session commands.
+Replaced Llama checkpoint geometry tuples with implemented block, index, device
+and budget contracts in the initial 512-position Reference-attention scope.
+Learned weights remain unchanged; separate zero-omitted positional fields count
+shared residency once in loading, sessions, capacity search and example totals.
+The shared Swift decoder verifies the same checked totals and legacy wire form.
+
+Astra reviewed the independent Half producer/export and fixed native policy
+before GPU outcomes. It caught an extreme below-1 theta angle/FTZ domain gap;
+the initial native profile now requires theta >= 1 and normal positive FP32
+epsilon/frequencies, while scalar/source semantics stay broader. No gate was
+loosened. Packed tied-output coefficients retain their original reconstruction.
+
+Formatting, strict default/Metal Clippy, 384 default / 265 Metal-library tests
+(overlapping suites), current CPU/Metal Swift workers and unsigned iOS typecheck
+pass. Seven explicit GPU checks pass: 1,680 scaled graph snapshots / 110,208
+values, exact numeric schedule/prefix/resume, cache and memory boundaries, plus
+ordinary Llama/rotary and packed strided regressions. Initial lint and private
+wrapper errors are retained and corrected; final owned groups close cleanly.
+
+Retain this composition; real checkpoint/source/text quality, app admission,
+iPhone qualification and performance remain separate. See
+[report](llama3-metal-composition.md),
+[evidence](../benchmarks/results/2026-10-28-llama3-metal-composition-v1.json) and
+[updated TODO](../TODO.md). B1d is next.

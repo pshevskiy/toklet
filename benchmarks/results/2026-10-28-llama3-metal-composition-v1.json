@@ -1,0 +1,149 @@
+{
+  "format": "toklet-llama3-metal-composition-v1",
+  "date": "2026-10-28",
+  "base_revision": "29bf40c",
+  "implementation_identity": "Exact sources and frozen binaries in bound receipts; commit is the commit containing this report.",
+  "decision": "retain",
+  "passed": true,
+  "scope": {
+    "architecture": "native Rust MLX-format Llama with ordinary or Llama3 scaled RoPE",
+    "implemented_positions": 512,
+    "attention": "Reference",
+    "native_domain": "theta>=1; positive normal FP32 epsilon and inverse frequencies; all actual tensor/device layout/index/budget checks required",
+    "artifact_qualification": "CompatibleUntested only; no real checkpoint or plain-text chat qualification",
+    "iphone_qualified": false,
+    "performance_qualified": false
+  },
+  "reference": {
+    "fixture": {
+      "path": "tests/fixtures/llama3-half-graph-v1/fixture.json",
+      "bytes": 1595769,
+      "sha256": "7bab31c5552c3954e9ac5a97919881eee3657e036e71ddc072713929aebd3405"
+    },
+    "cases": 8,
+    "fixture_stages": 39,
+    "values_per_profile": 38336,
+    "captured_stages": 35,
+    "captured_values_per_profile": 36736,
+    "excluded_gpu_stages": [
+      "layer0 attention scores/probabilities",
+      "layer1 attention scores/probabilities"
+    ],
+    "profiles": [
+      "ordered FP32 with Half storage",
+      "wide FP64 with identical Half storage"
+    ],
+    "gate": "atol=max(1e-4,2*independent envelope),rtol=1e-3; all frozen atols=1e-4",
+    "target_derived_tolerances": false
+  },
+  "results": {
+    "default_passes": 384,
+    "metal_library_passes": 265,
+    "targeted_llama_passes": [
+      9,
+      9
+    ],
+    "test_totals_overlap": true,
+    "strict_default_and_metal_clippy": true,
+    "fmt": true,
+    "swift_cpu_and_metal_resource_workers": true,
+    "unsigned_ios_typecheck": true,
+    "gpu_jobs": 7,
+    "snapshots": 1680,
+    "compared_values": 110208,
+    "exact_controls": "numeric equality for schedule/causal-prefix/reset-resume; signed-zero bit identity not separately qualified",
+    "boundary": {
+      "absolute_positions": [
+        509,
+        510,
+        511
+      ],
+      "initial_kv_tokens": 0,
+      "local_keys": 3,
+      "full_512_key_quality": false
+    },
+    "memory_observations": [
+      {
+        "test": "scaled_llama_half_graph_and_session_match_frozen_independent_oracle",
+        "maximum resident set size": 32178176,
+        "peak memory footprint": 25150064
+      },
+      {
+        "test": "scaled_llama_runtime_and_loading_count_one_shared_positional_owner",
+        "maximum resident set size": 19546112,
+        "peak memory footprint": 8192528
+      },
+      {
+        "test": "native_llama_graph_matches_frozen_tied_and_untied_oracles",
+        "maximum resident set size": 24805376,
+        "peak memory footprint": 19448360
+      },
+      {
+        "test": "native_llama_pending_state_token_selection_and_memory_are_explicit",
+        "maximum resident set size": 23592960,
+        "peak memory footprint": 12567104
+      },
+      {
+        "test": "metal::llama3_rotary::tests::isolated_half_rotary_matches_prospective_dual_gates_and_guards",
+        "maximum resident set size": 21004288,
+        "peak memory footprint": 10175064
+      },
+      {
+        "test": "metal::online_attention::high_position_rotary_matches_independent_math_envelope",
+        "maximum resident set size": 17006592,
+        "peak memory footprint": 6996568
+      },
+      {
+        "test": "metal::mlx::tests::strided_projection_and_gather_honor_offsets_and_preserve_padding",
+        "maximum resident set size": 18120704,
+        "peak memory footprint": 7799384
+      }
+    ],
+    "memory_observation_scope": "Tiny GPU verification processes only; not pretrained-model performance or memory qualification"
+  },
+  "evidence": {
+    "cold": {
+      "path": "artifacts/new-goal-b1c2b-checks-v4/checks.json",
+      "bytes": 813357,
+      "sha256": "af88dc5254b4519d44eee0cd411d8ebffc7fb6ace218690a6bb4347e533a592e"
+    },
+    "gpu": {
+      "path": "artifacts/new-goal-b1c2b-checks-v4/gpu.json",
+      "bytes": 816941,
+      "sha256": "11aef5380d90ccfb2f950688e1c9668d6119c9088bfa9804b5a50918899d7ba9"
+    },
+    "swift": {
+      "path": "artifacts/new-goal-b1c2b-swift-v2/swift.json",
+      "bytes": 55328,
+      "sha256": "7ba70b291fb6641bdf48805611085b1c5e38ba293ee7fb5d01a1bcb045bd53d8"
+    },
+    "independent_export": {
+      "path": "artifacts/new-goal-b1c2b-fixture-v1/export-receipt.json",
+      "bytes": 26567,
+      "sha256": "91236d2267c7e96aad14c6dc77130b1cf2e3de90ed46a44c94ed1bdea3c67736"
+    },
+    "producer_review": {
+      "path": "artifacts/new-goal-b1c2b-independent-review-v1/producer-review.json",
+      "bytes": 4205,
+      "sha256": "5d1dbca7f6fbdb02e6ff3eb39a71acce97368573a99d7e79b0307dba6d1e45fd"
+    },
+    "fixture_review": {
+      "path": "artifacts/new-goal-b1c2b-independent-review-v1/fixture-review.json",
+      "bytes": 2992,
+      "sha256": "a5827621561fb2a5122470b678ed6941311fc4d725878e0772dd2b550d0d4cb5"
+    },
+    "prospective_review": {
+      "path": "artifacts/new-goal-b1c2b-independent-review-v1/prospective-review.json",
+      "bytes": 9431,
+      "sha256": "0bc83e037c90c9ddc1e9c0ef713bf62a7818e0c4a363005432fd95b77fa90b1e"
+    }
+  },
+  "final_review": "artifacts/new-goal-b1c2b-independent-review-v1/final-review.json",
+  "retained_attempts": [
+    "Initial reference controls wrapper used relative logpaths and failed receipt formatting after successful test/cleanup; repeated with absolute paths.",
+    "Cold v1 Clippy rejected manual saturating arithmetic; corrected without changing overflow rejection; v2/v3 passed before final reviewed strengthening/domain fix.",
+    "Astra found theta<1 frequency-domain flaw before GPU outcomes; final native-domain restriction and cold v4 passed.",
+    "Swift v1 private wrapper omitted existing NativeContext.swift; corrected list and complete v2 passed."
+  ],
+  "next_task": "B1d bounded real Llama3.2-1B source/text/runtime qualification on Mac; iPhone deferred"
+}

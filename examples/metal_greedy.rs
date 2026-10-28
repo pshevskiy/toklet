@@ -80,9 +80,10 @@ mod apple {
         };
         let mut full =
             metal::Session::with_execution_modes(&model, opts, projection, normalization)?;
+        let shared_model_bytes = model.model_resident_bytes()?;
         let remaining = opts
             .memory_limit_bytes
-            .checked_sub(full.memory().admitted_bytes - model.weights_bytes())
+            .checked_sub(full.memory().admitted_bytes - shared_model_bytes)
             .ok_or("shared greedy budget overflow")?;
         let mut token = metal::Session::with_readback_mode(
             &model,
@@ -98,7 +99,7 @@ mod apple {
             .memory()
             .admitted_bytes
             .checked_add(token.memory().admitted_bytes)
-            .and_then(|n| n.checked_sub(model.weights_bytes()))
+            .and_then(|n| n.checked_sub(shared_model_bytes))
             .and_then(|n| n.checked_add(APP))
             .ok_or("combined greedy budget overflow")?;
         if combined > weights::INITIAL_MEMORY_LIMIT_BYTES {

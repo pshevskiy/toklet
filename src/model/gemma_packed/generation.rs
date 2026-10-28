@@ -146,6 +146,7 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
             .map_err(Error::Kernel)?;
         let memory = Memory {
             weights_bytes: model.tensor_bytes,
+            positional_bytes: 0,
             kv_bytes: kv,
             scratch_bytes: scratch,
             history_bytes: history,

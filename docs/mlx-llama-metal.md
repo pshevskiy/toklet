@@ -1,4 +1,14 @@
-# Resident tiny Llama on Metal
+# Llama Metal graph and qualification history
+
+Current admission uses structural Llama block and index contracts, with ordinary
+or Llama3 scaled RoPE and an initial maximum of 512 positions. Native constants
+require `theta >= 1`, positive normal FP32 RMS epsilon and inverse frequencies.
+Actual device layouts, buffers and memory budgets are checked separately.
+See [scaled block composition](llama3-metal-composition.md) for current ownership,
+checks and limits. Structural metadata acceptance is `CompatibleUntested`;
+real Llama 3.2 checkpoint/text qualification remains a separate task.
+
+The results below describe the original 22 October tiny-model qualification.
 
 The explicit native `load_mlx` path now admits the strictly validated bias-free
 Llama graph and builds resident packed projections, embedding and output weights.
@@ -16,12 +26,12 @@ validated model theta as FP32 bits rather than assuming Qwen's1e6 constant;
 both production dispatches and the standalone operator check pass it explicitly.
 Existing Qwen/Half/Q4 default execution modes are unchanged.
 
-Architecture-specific geometry checks run before GPU creation. Llama is currently
-limited to the independently specified tiny shape: two layers, hidden32,
+Architecture-specific geometry checks run before GPU creation. That original
+qualification was limited to the independently specified tiny shape: two layers, hidden32,
 intermediate64, four query/two KV heads, width8, vocabulary64, capacity at most32,
-ordinary split-half RoPE theta10000 and RMSNorm epsilon1e-6. Wider shapes and
-scaled/sliding/bias variants remain unsupported. This is a graph implementation
-and tiny qualification, not real Llama checkpoint support.
+ordinary split-half RoPE theta10000 and RMSNorm epsilon1e-6. Those historical
+measurements establish tiny graph behavior; broader current admission is
+described above and does not extend their qualification claims.
 
 The [explicit GPU tests](../tests/mlx_llama_metal.rs) consume the original
 [frozen oracle](mlx-llama-oracle.md) by literal manifest and exact file/array

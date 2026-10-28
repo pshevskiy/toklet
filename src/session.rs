@@ -61,6 +61,10 @@ impl Default for Options {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize)]
 pub struct Memory {
     pub weights_bytes: usize,
+    /// Shared model-owned positional buffers/owner, separate from learned
+    /// tensors. Zero for scalar and existing ordinary models.
+    #[serde(skip_serializing_if = "no_positional_storage")]
+    pub positional_bytes: usize,
     pub kv_bytes: usize,
     pub scratch_bytes: usize,
     pub history_bytes: usize,
@@ -72,11 +76,15 @@ pub struct Memory {
     pub metadata_allowance_bytes: usize,
     pub admitted_bytes: usize,
 }
+fn no_positional_storage(bytes: &usize) -> bool {
+    *bytes == 0
+}
 
 impl Memory {
     fn sum(&mut self) -> Result<(), Error> {
         self.admitted_bytes = [
             self.weights_bytes,
+            self.positional_bytes,
             self.kv_bytes,
             self.scratch_bytes,
             self.history_bytes,
@@ -181,6 +189,7 @@ impl<'model> Session<'model> {
         // u32 token IDs and f32 storage both occupy four bytes.
         let mut memory = Memory {
             weights_bytes: model.allocated_weights_bytes()?,
+            positional_bytes: 0,
             kv_bytes: KvCache::planned_bytes(c, options.capacity)?,
             scratch_bytes: Scratch::planned_bytes(c, options.prefill_chunk_size, options.capacity)?,
             history_bytes: total_bytes(&[options.capacity])?,

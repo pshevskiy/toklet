@@ -429,17 +429,10 @@ impl Sizes {
         let output = product(capacity, layout.rows().max(layout.columns()))?
             .checked_add(GUARD)
             .ok_or(Error::Options("MLX guard overflow"))?;
-        let metadata = product(layout.rows(), layout.columns() / layout.group_size())?;
-        for n in [
-            layout.rows(),
-            layout.columns(),
-            product(layout.columns(), usize::from(layout.bits()))?,
-            layout.weight_bytes(),
-            metadata,
-            input,
-            output,
-            capacity,
-        ] {
+        layout
+            .validate_gpu_indexing()
+            .map_err(|e| Error::Options(e.0))?;
+        for n in [input, output, capacity] {
             if n > u32::MAX as usize {
                 return Err(Error::Options("MLX shader indexing overflow"));
             }

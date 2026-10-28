@@ -1,5 +1,5 @@
-//! Isolated, test-only qualification before model admission. The future model
-//! owns Operation; sessions supply borrowed mutable buffers and completion.
+//! Model-owned optional scaled positional operation. Sessions supply borrowed
+//! mutable buffers and completion; cold inspection plans/compiles without upload.
 use super::{
     Error, Result,
     memory::{Buffer, Gpu},
@@ -17,7 +17,7 @@ const SENTINEL: u32 = 0x5a17_0031;
 /// Immutable optional pipeline and one resident inverse-frequency allocation.
 /// Ordinary Gpu construction/pipelines and the ordinary rotary shader stay
 /// unchanged. Compiler/context policy is separate from these owned bytes.
-struct Operation {
+pub(super) struct Operation {
     pipeline: Retained<ProtocolObject<dyn MTLComputePipelineState>>,
     inverse: Buffer<u32>,
     dimension: usize,
@@ -25,15 +25,13 @@ struct Operation {
 }
 
 fn frequency(theta: f32, dimension: usize, pair: usize, scaling: Llama3Scaling) -> Result<u32> {
-    let ordinary = f64::from(theta).powf(-2.0 * pair as f64 / dimension as f64);
-    let inverse = scaling
-        .inverse_frequency(ordinary)
-        .map_err(|_| Error::Options("invalid scaled rotary frequency"))? as f32;
-    if !inverse.is_finite() || inverse <= 0.0 {
-        return Err(Error::Options(
-            "scaled rotary frequency exceeds positive FP32",
-        ));
-    }
+    let inverse = crate::mlx::execution::native_inverse_frequency(
+        theta,
+        dimension,
+        pair,
+        crate::model::PositionPlan::Llama3(scaling),
+    )
+    .map_err(|error| Error::Unsupported(error.message()))?;
     Ok(inverse.to_bits())
 }
 fn owned_bytes(dimension: usize) -> Result<usize> {
@@ -50,7 +48,74 @@ fn owned_bytes(dimension: usize) -> Result<usize> {
         .ok_or(Error::Options("scaled rotary allocation overflow"))
 }
 
+#[derive(Clone, Copy)]
+pub(super) struct Plan {
+    dimension: usize,
+    theta: f32,
+    scaling: Llama3Scaling,
+    buffer_bytes: usize,
+}
+impl Plan {
+    pub(super) fn new(dimension: usize, theta: f32, scaling: Llama3Scaling) -> Result<Self> {
+        let bytes = owned_bytes(dimension)?;
+        if !theta.is_finite() || theta <= 0.0 {
+            return Err(Error::Options("scaled rotary theta"));
+        }
+        for pair in 0..dimension / 2 {
+            frequency(theta, dimension, pair, scaling)?;
+        }
+        Ok(Self {
+            dimension,
+            theta,
+            scaling,
+            buffer_bytes: bytes - size_of::<Operation>(),
+        })
+    }
+    pub(super) fn buffer_bytes(self) -> usize {
+        self.buffer_bytes
+    }
+    pub(super) fn owned_bytes(self) -> usize {
+        self.buffer_bytes + size_of::<Operation>()
+    }
+}
+
+pub(super) fn compile(gpu: &Gpu) -> Result<Retained<ProtocolObject<dyn MTLComputePipelineState>>> {
+    let options = MTLCompileOptions::new();
+    options.setLanguageVersion(MTLLanguageVersion::Version2_3);
+    options.setMathMode(MTLMathMode::Safe);
+    options.setMathFloatingPointFunctions(MTLMathFloatingPointFunctions::Precise);
+    if options.languageVersion() != MTLLanguageVersion::Version2_3
+        || options.mathMode() != MTLMathMode::Safe
+        || options.mathFloatingPointFunctions() != MTLMathFloatingPointFunctions::Precise
+    {
+        return Err(Error::Unsupported("scaled rotary precise math unavailable"));
+    }
+    let library = gpu
+        .device
+        .newLibraryWithSource_options_error(
+            &NSString::from_str(include_str!("llama3_rotary.metal")),
+            Some(&options),
+        )
+        .map_err(|e| Error::Native(e.to_string()))?;
+    let function = library
+        .newFunctionWithName(&NSString::from_str("llama3_rotary"))
+        .ok_or_else(|| Error::Native("scaled rotary kernel absent".into()))?;
+    let pipeline = gpu
+        .device
+        .newComputePipelineStateWithFunction_error(&function)
+        .map_err(|e| Error::Native(e.to_string()))?;
+    let width = pipeline.threadExecutionWidth();
+    if width == 0 || width > pipeline.maxTotalThreadsPerThreadgroup() || width > u32::MAX as usize {
+        return Err(Error::Unsupported("scaled rotary launch width unavailable"));
+    }
+    Ok(pipeline)
+}
+
 impl Operation {
+    pub(super) fn owned_bytes(&self) -> usize {
+        self.inverse.raw.length() + size_of::<Self>()
+    }
+    #[cfg(test)]
     fn new(
         gpu: &Gpu,
         dimension: usize,
@@ -58,56 +123,39 @@ impl Operation {
         scaling: Llama3Scaling,
         budget: usize,
     ) -> Result<Self> {
-        let required = owned_bytes(dimension)?;
+        Self::from_plan(gpu, Plan::new(dimension, theta, scaling)?, budget)
+    }
+    #[cfg(test)]
+    fn from_plan(gpu: &Gpu, plan: Plan, budget: usize) -> Result<Self> {
+        if plan.owned_bytes() > budget {
+            return Err(Error::Budget {
+                required: plan.owned_bytes(),
+                limit: budget,
+            });
+        }
+        Self::with_pipeline(gpu, plan, budget, compile(gpu)?)
+    }
+    pub(super) fn with_pipeline(
+        gpu: &Gpu,
+        plan: Plan,
+        budget: usize,
+        pipeline: Retained<ProtocolObject<dyn MTLComputePipelineState>>,
+    ) -> Result<Self> {
+        let required = plan.owned_bytes();
         if required > budget {
             return Err(Error::Budget {
                 required,
                 limit: budget,
             });
         }
-        super::memory::validate_buffer_bytes(
-            required - size_of::<Operation>(),
-            gpu.device.maxBufferLength(),
-        )?;
-        if !theta.is_finite() || theta <= 0.0 {
-            return Err(Error::Options("scaled rotary theta"));
-        }
-        // Validate conversion before allocating/compiling. Recompute directly
-        // into shared immutable storage below, avoiding a temporary host table.
-        for pair in 0..dimension / 2 {
-            frequency(theta, dimension, pair, scaling)?;
-        }
-        let options = MTLCompileOptions::new();
-        options.setLanguageVersion(MTLLanguageVersion::Version2_3);
-        options.setMathMode(MTLMathMode::Safe);
-        options.setMathFloatingPointFunctions(MTLMathFloatingPointFunctions::Precise);
-        if options.languageVersion() != MTLLanguageVersion::Version2_3
-            || options.mathMode() != MTLMathMode::Safe
-            || options.mathFloatingPointFunctions() != MTLMathFloatingPointFunctions::Precise
-        {
-            return Err(Error::Unsupported("scaled rotary precise math unavailable"));
-        }
-        let library = gpu
-            .device
-            .newLibraryWithSource_options_error(
-                &NSString::from_str(include_str!("llama3_rotary.metal")),
-                Some(&options),
-            )
-            .map_err(|e| Error::Native(e.to_string()))?;
-        let function = library
-            .newFunctionWithName(&NSString::from_str("llama3_rotary"))
-            .ok_or_else(|| Error::Native("scaled rotary kernel absent".into()))?;
-        let pipeline = gpu
-            .device
-            .newComputePipelineStateWithFunction_error(&function)
-            .map_err(|e| Error::Native(e.to_string()))?;
+        super::memory::validate_buffer_bytes(plan.buffer_bytes(), gpu.device.maxBufferLength())?;
         let width = pipeline.threadExecutionWidth();
-        if width == 0
-            || width > pipeline.maxTotalThreadsPerThreadgroup()
-            || width > u32::MAX as usize
-        {
-            return Err(Error::Unsupported("scaled rotary launch width unavailable"));
-        }
+        let Plan {
+            dimension,
+            theta,
+            scaling,
+            ..
+        } = plan;
         let mut inverse = Buffer::new(gpu, dimension / 2 + GUARD)?;
         inverse.with_mut(|out| -> Result<()> {
             out.fill(SENTINEL);
@@ -124,7 +172,7 @@ impl Operation {
         })
     }
 
-    fn encode(&self, command: &Command<'_>, invocation: Invocation<'_>) -> Result<()> {
+    pub(super) fn encode(&self, command: &Command<'_>, invocation: Invocation<'_>) -> Result<()> {
         let n = extent(
             invocation.rows,
             invocation.heads,
@@ -195,13 +243,13 @@ impl Operation {
     }
 }
 
-struct Invocation<'a> {
-    input: &'a Buffer<u16>,
-    output: &'a Buffer<u16>,
-    status: &'a Buffer<u32>,
-    rows: usize,
-    heads: usize,
-    offset: usize,
+pub(super) struct Invocation<'a> {
+    pub(super) input: &'a Buffer<u16>,
+    pub(super) output: &'a Buffer<u16>,
+    pub(super) status: &'a Buffer<u32>,
+    pub(super) rows: usize,
+    pub(super) heads: usize,
+    pub(super) offset: usize,
 }
 fn extent(rows: usize, heads: usize, dimension: usize, offset: usize) -> Result<usize> {
     if rows == 0
@@ -220,4 +268,5 @@ fn extent(rows: usize, heads: usize, dimension: usize, offset: usize) -> Result<
         .ok_or(Error::Options("scaled rotary UInt32 extent overflow"))
 }
 
+#[cfg(test)]
 mod tests;

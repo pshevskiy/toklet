@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B1c2b — scaled model residency and structural composition**.
+Next implementation task: **B1d — bounded real Llama3 source and text qualification on Mac**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -48,14 +48,16 @@ the goal, not a claim that arbitrary Hugging Face models already run.
 - [x] B1b: strictly parse and propagate a source/model-owned positional plan;
   ordinary constructors preserved, independent tiny graph/session checks and
   explicit pre-GPU rejection pass. [Report](docs/llama3-position-plan.md).
-- [ ] Define structural block/kernel admission instead of adding a model-name
+- [x] Define structural block/kernel admission instead of adding a model-name
   or geometry tuple as the sole compatibility rule.
 - [x] B1c1: isolated resident Half rotary and frozen dual-gate GPU checks pass
   on Mac; ordinary shader and loader guard remain. [Report](docs/llama3-metal-rotary.md).
 - [x] B1c2a: production composite UInt32 index contracts and boundary tests,
   with existing strided projection/gather GPU regression. [Report](docs/metal-index-contracts.md).
-- [ ] B1c2b: compose the proven Metal operation with exact shared memory accounting,
+- [x] B1c2b: compose the proven Metal operation with exact shared memory accounting,
   structural Llama admission and independent tiny Half graph/session checks.
+  [Report](docs/llama3-metal-composition.md); 512-position implementation scope,
+  metadata untested until separate real-checkpoint qualification.
 - [ ] B1d: freeze a bounded plain-text chat/BOS/stop contract and independent
   model/source comparisons; tokenizer metadata alone does not establish Chat.
 - [ ] Pass short complete source/native, cache/session, bounded real generation
@@ -165,3 +167,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B1c1 isolated Metal rotary | 383 default / 261 Metal-library tests (overlap), strict checks and both explicit GPU tests pass; 17,408 scaled and 13,824 ordinary comparisons. Astra final approval. | `f5ab3be`; B1c2 structural model integration. |
 | 2026-10-28 | B1c2a index contracts | UInt32/strided and synthetic planner boundaries, 383 default / 263 Metal-library tests (overlap), strict checks and existing strided MLX GPU regression pass; Astra approval. | `1a4621b`; B1c2b model residency/composition. |
 | 2026-10-28 | B1c2b integration decisions | Astra resolved separate positional accounting, optional Swift decoder fields, allocation-free inspection and the unchanged tiny Half graph policy. Design only; model integration remains unchecked. | Commit containing this entry; implement the explicit residency contract before wiring the model. |
+| 2026-10-28 | B1c2b reference export | Independent Half graph frozen and replay-identical; four portable controls pass. Astra verified all 312 stage gates. Initial controls wrapper used relative log paths and failed formatting after successful cleanup; absolute-path export rerun passes. | [Composition scope](docs/llama3-metal-composition.md); target outcomes pending. |
+| 2026-10-28 | B1c2b preflight corrections | First Clippy run rejected manual saturating arithmetic; spelling corrected. Astra found a theta-below-1 native angle/FTZ admission gap; explicit native domain restricted before GPU results. Tiny source/CPU semantics remain broader. | Final cold checks and prospective review pending. |
+| 2026-10-28 | B1c2b shared Swift checks | Legacy/scaled positional wire checks, current CPU and Metal resource-worker checks and unsigned iOS typecheck pass. Initial private wrapper omitted existing NativeContext.swift dependency; corrected source list rerun passes. No physical device run. | [Composition scope](docs/llama3-metal-composition.md); complete numerical collection next. |
+| 2026-10-28 | B1c2b Metal composition | 384 default / 265 Metal-library tests, strict checks, current CPU/Metal Swift workers and unsigned iOS typecheck pass. Seven explicit GPU checks pass; 1,680 scaled snapshots / 110,208 values, exact numeric schedule/prefix/resume and accounting controls. Astra verified final evidence; reviewed task complete. | [Report](docs/llama3-metal-composition.md); B1d real source/text qualification next. |

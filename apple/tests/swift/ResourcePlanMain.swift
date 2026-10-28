@@ -41,7 +41,35 @@ struct ResourcePlanMain {
         func decode(_ value: [String:Any], budget: UInt64 = 3000) throws -> NativeResourcePlan {
             try NativeResourcePlan.decode(JSONSerialization.data(withJSONObject:value),capacity:32,chunk:3,budget:budget)
         }
-        _ = try decode(original)
+        let legacy = try decode(original)
+        try expect(legacy.positionalResidentBytes == nil && legacy.sessionMemory.positionalBytes == nil,"Legacy zero fields changed")
+        var scaled = original, scaledMemory = original["session_memory"] as! [String:Any]
+        scaled["positional_resident_bytes"] = UInt64(120)
+        scaledMemory["positional_bytes"] = UInt64(120)
+        scaledMemory["admitted_bytes"] = UInt64(1900)
+        scaled["session_memory"] = scaledMemory
+        let acceptedScaled = try decode(scaled)
+        try expect(acceptedScaled.positionalResidentBytes == 120 && acceptedScaled.sessionMemory.sum == 1900,"Positional owner missing from sum")
+        for (top,nested,admitted,residentLoad) in [
+            (UInt64(120),UInt64(121),UInt64(1901),UInt64(1800)),
+            (UInt64(121),UInt64(120),UInt64(1900),UInt64(1800)),
+            (UInt64(1200),UInt64(1200),UInt64(2980),UInt64(1800)),
+            (UInt64.max,UInt64.max,UInt64.max,UInt64.max),
+        ] {
+            var changed = scaled, memory = scaledMemory
+            changed["positional_resident_bytes"] = top
+            changed["resident_admitted_load_bytes"] = residentLoad
+            memory["positional_bytes"] = nested; memory["admitted_bytes"] = admitted
+            changed["session_memory"] = memory
+            var rejected = false
+            do { _ = try decode(changed) } catch { rejected = true }
+            try expect(rejected,"Contradictory/overflowing positional accounting accepted")
+        }
+        var missing = scaled
+        missing["session_memory"] = original["session_memory"]
+        var missingRejected = false
+        do { _ = try decode(missing) } catch { missingRejected = true }
+        try expect(missingRejected,"Omitted nested positional owner accepted")
         let mutations: [(String,Any)] = [("schema_version",2),("device_name",""),("maximum_buffer_bytes",0),
             ("requested_load_context",33),("requested_capacity",33),("requested_chunk_size",4),("requested_position_offset",1),
             ("requested_load_budget_bytes",1),("requested_session_budget_bytes",1),("projection","HalfCompensated"),

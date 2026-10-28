@@ -701,9 +701,13 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     run_session(frontend, &mut session, initial, a.capacity, external_bytes)
 }
 fn logical_memory(memory: toklet::session::Memory, external_bytes: usize) -> Value {
-    json!({"weights_bytes":memory.weights_bytes,"kv_bytes":memory.kv_bytes,"scratch_bytes":memory.scratch_bytes,
+    let mut value = json!({"weights_bytes":memory.weights_bytes,"kv_bytes":memory.kv_bytes,"scratch_bytes":memory.scratch_bytes,
         "history_bytes":memory.history_bytes,"logits_bytes":memory.logits_bytes,"metadata_bytes":memory.metadata_bytes,
-        "metadata_allowance_bytes":memory.metadata_allowance_bytes,"tokenizer_application_allowance_bytes":external_bytes})
+        "metadata_allowance_bytes":memory.metadata_allowance_bytes,"tokenizer_application_allowance_bytes":external_bytes});
+    if memory.positional_bytes != 0 {
+        value["positional_bytes"] = memory.positional_bytes.into();
+    }
+    value
 }
 fn run_session(
     mut frontend: Frontend,

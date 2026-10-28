@@ -114,6 +114,26 @@ impl Layout {
     pub fn total_bytes(self) -> usize {
         self.total_bytes
     }
+    /// Static UInt32 arithmetic used by the implemented packed Metal kernels.
+    /// Scalar storage support is intentionally broader than this backend limit.
+    pub(crate) fn validate_gpu_indexing(self) -> Result<(), Error> {
+        let overflow = Error("MLX shader indexing overflow");
+        let bits = self
+            .columns
+            .checked_mul(usize::from(self.bits))
+            .ok_or(overflow)?;
+        let metadata = self
+            .rows
+            .checked_mul(self.columns / self.group_size)
+            .ok_or(overflow)?;
+        if [self.rows, self.columns, bits, self.weight_bytes, metadata]
+            .into_iter()
+            .any(|n| n > u32::MAX as usize)
+        {
+            return Err(overflow);
+        }
+        Ok(())
+    }
 }
 
 // The metadata choice is made at an operation boundary, never per element.

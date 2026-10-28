@@ -90,8 +90,9 @@ mod apple {
         let mut base = metal::Session::new(&model, options)?;
         // Account the shared model once while admitting a second session plus
         // counter allowance. Reference/session temporaries do not share KV/scratch.
+        let shared_model_bytes = model.model_resident_bytes()?;
         let remaining = weights::INITIAL_MEMORY_LIMIT_BYTES
-            .checked_sub(base.memory().admitted_bytes - model.weights_bytes())
+            .checked_sub(base.memory().admitted_bytes - shared_model_bytes)
             .ok_or("combined admission overflow")?;
         let mut profiled = metal::Session::new(
             &model,
@@ -105,7 +106,7 @@ mod apple {
             .memory()
             .admitted_bytes
             .checked_add(profiled.memory().admitted_bytes)
-            .and_then(|n| n.checked_sub(model.weights_bytes()))
+            .and_then(|n| n.checked_sub(shared_model_bytes))
             .ok_or("combined admission overflow")?;
         if admitted > weights::INITIAL_MEMORY_LIMIT_BYTES {
             return Err("combined trace admission exceeded".into());

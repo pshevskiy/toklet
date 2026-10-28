@@ -7,9 +7,10 @@ struct NativeResourcePlan: Decodable, Sendable {
     struct Memory: Decodable, Sendable {
         let weightsBytes, kvBytes, scratchBytes, historyBytes, logitsBytes: UInt64
         let metadataBytes, metadataAllowanceBytes, admittedBytes: UInt64
+        let positionalBytes: UInt64?
         var sum: UInt64? {
             var total: UInt64 = 0
-            for bytes in [weightsBytes,kvBytes,scratchBytes,historyBytes,logitsBytes,metadataBytes,metadataAllowanceBytes] {
+            for bytes in [weightsBytes,kvBytes,scratchBytes,historyBytes,logitsBytes,metadataBytes,metadataAllowanceBytes,positionalBytes ?? 0] {
                 let (next,overflow) = total.addingReportingOverflow(bytes)
                 if overflow { return nil }; total = next
             }
@@ -25,9 +26,14 @@ struct NativeResourcePlan: Decodable, Sendable {
     let attention: Attention
     let sourcePayloadBytes, sourceAdmittedLoadBytes: UInt64
     let residentWeightsBytes, residentAdmittedLoadBytes: UInt64
+    let positionalResidentBytes: UInt64?
     let sessionMemory: Memory
     let fitsSourceLoadBudget, fitsResidentLoadBudget, fitsSessionBudget, fitsRequestedBudgets: Bool
     let numericalBuffersAllocated, payloadValidationRequired, qualificationEvaluated: Bool
+    private var modelResidentBytes: UInt64? {
+        let (sum, overflow) = residentWeightsBytes.addingReportingOverflow(positionalResidentBytes ?? 0)
+        return overflow ? nil : sum
+    }
 
     // Conservative logical requirement for both retained summaries/decoding.
     // This is outside numerical admission, not an enforced reservation or peak.
@@ -52,10 +58,12 @@ struct NativeResourcePlan: Decodable, Sendable {
               value.projection == "MlxAffine", value.normalization == "Compensated", value.readback == "FullLogits",
               !value.numericalBuffersAllocated, value.payloadValidationRequired, !value.qualificationEvaluated,
               value.sessionMemory.weightsBytes == value.residentWeightsBytes,
+              (value.sessionMemory.positionalBytes ?? 0) == (value.positionalResidentBytes ?? 0),
               value.sessionMemory.sum == value.sessionMemory.admittedBytes,
               value.residentWeightsBytes > 0, value.sourcePayloadBytes > 0,
               value.sourceAdmittedLoadBytes >= value.sourcePayloadBytes,
-              value.residentAdmittedLoadBytes >= value.residentWeightsBytes,
+              let residentBytes = value.modelResidentBytes,
+              value.residentAdmittedLoadBytes >= residentBytes,
               value.fitsSourceLoadBudget == (value.sourceAdmittedLoadBytes <= budget),
               value.fitsResidentLoadBudget == (value.residentAdmittedLoadBytes <= budget),
               value.fitsSessionBudget == (value.sessionMemory.admittedBytes <= budget),

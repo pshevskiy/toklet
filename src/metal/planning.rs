@@ -22,6 +22,7 @@ use std::{collections::BTreeMap, path::Path};
 pub(super) struct MlxWeights {
     pub tensors: BTreeMap<String, (Layout, Storage)>,
     pub weight_bytes: usize,
+    pub position: Option<super::llama3_rotary::Plan>,
     pub admitted: usize,
 }
 impl MlxWeights {
@@ -42,10 +43,23 @@ impl MlxWeights {
             weight_bytes = add(weight_bytes, bytes)?;
             plans.insert(name.clone(), (layout, spec.storage()));
         }
-        let admitted = add(add(weight_bytes, ALLOWANCE)?, 64 * 1024)?;
+        let position = match source.position_plan() {
+            model::PositionPlan::Ordinary => None,
+            model::PositionPlan::Llama3(scaling) => Some(super::llama3_rotary::Plan::new(
+                source.config().head_dim,
+                source.config().rope_theta,
+                scaling,
+            )?),
+        };
+        let positional_bytes = position.as_ref().map_or(0, |p| p.owned_bytes());
+        let admitted = add(
+            add(add(weight_bytes, positional_bytes)?, ALLOWANCE)?,
+            64 * 1024,
+        )?;
         Ok(Self {
             tensors: plans,
             weight_bytes,
+            position,
             admitted,
         })
     }
@@ -54,6 +68,10 @@ impl MlxWeights {
     }
     pub fn validate_buffers(&self, maximum: usize) -> Result<usize> {
         let mut largest = 0;
+        if let Some(position) = &self.position {
+            memory::validate_buffer_bytes(position.buffer_bytes(), maximum)?;
+            largest = position.buffer_bytes();
+        }
         for (layout, storage) in self.tensors.values() {
             match storage {
                 Storage::Float(_) => {
@@ -131,6 +149,16 @@ pub(super) struct SessionPlan {
     pub token_count: usize,
 }
 impl SessionPlan {
+    pub(super) fn with_positional_bytes(mut self, bytes: usize) -> Result<Self> {
+        let base = self
+            .memory
+            .admitted_bytes
+            .checked_sub(self.memory.positional_bytes)
+            .ok_or(Error::Options("positional accounting underflow"))?;
+        self.memory.admitted_bytes = add(base, bytes)?;
+        self.memory.positional_bytes = bytes;
+        Ok(self)
+    }
     pub fn new(
         c: &model::Config,
         weight_bytes: usize,
@@ -256,6 +284,7 @@ fn validate_session_options(
 struct ResolvedSessionPlan<'a> {
     c: &'a model::Config,
     weight_bytes: usize,
+    positional_bytes: usize,
     options: session::Options,
     readback_mode: ReadbackMode,
     attention_mode: AttentionMode,
@@ -299,6 +328,7 @@ impl<'a> ResolvedSessionPlan<'a> {
         Ok(Self {
             c,
             weight_bytes,
+            positional_bytes: 0,
             options,
             readback_mode,
             attention_mode,
@@ -315,6 +345,7 @@ impl<'a> ResolvedSessionPlan<'a> {
         let Self {
             c,
             weight_bytes,
+            positional_bytes,
             mut options,
             readback_mode,
             attention_mode,
@@ -418,7 +449,7 @@ impl<'a> ResolvedSessionPlan<'a> {
         ]
         .into_iter()
         .try_fold(0, add)?;
-        Ok(SessionPlan {
+        SessionPlan {
             h,
             q,
             k,
@@ -430,6 +461,7 @@ impl<'a> ResolvedSessionPlan<'a> {
             token_count: chunk + 7,
             memory: session::Memory {
                 weights_bytes: weight_bytes,
+                positional_bytes: 0,
                 kv_bytes,
                 scratch_bytes,
                 history_bytes,
@@ -438,7 +470,8 @@ impl<'a> ResolvedSessionPlan<'a> {
                 metadata_allowance_bytes: ALLOWANCE,
                 admitted_bytes: admitted,
             },
-        })
+        }
+        .with_positional_bytes(positional_bytes)
     }
     fn capacity_report(
         &self,
@@ -492,6 +525,8 @@ pub struct MlxReport {
     pub source_payload_bytes: usize,
     pub source_admitted_load_bytes: usize,
     pub resident_weights_bytes: usize,
+    #[serde(skip_serializing_if = "no_positional_storage")]
+    pub positional_resident_bytes: usize,
     pub resident_admitted_load_bytes: usize,
     pub session_memory: session::Memory,
     pub fits_source_load_budget: bool,
@@ -501,6 +536,9 @@ pub struct MlxReport {
     pub numerical_buffers_allocated: bool,
     pub payload_validation_required: bool,
     pub qualification_evaluated: bool,
+}
+fn no_positional_storage(bytes: &usize) -> bool {
+    *bytes == 0
 }
 
 /// Opt-in runtime inspection for the explicit MlxAffine projection backend.
@@ -619,7 +657,7 @@ fn inspect_with_policy(
         };
         validate_attention(Some(source.architecture()), attention)?;
         let weights = MlxWeights::new(&source)?;
-        let resolved = ResolvedSessionPlan::new(
+        let mut resolved = ResolvedSessionPlan::new(
             source.config(),
             weights.weight_bytes,
             options,
@@ -627,9 +665,15 @@ fn inspect_with_policy(
             attention,
             weights::MAX_CONTEXT_LIMIT,
         )?;
+        resolved.positional_bytes = weights.position.as_ref().map_or(0, |p| p.owned_bytes());
         let session = resolved.at_capacity(options.capacity)?;
         let gpu = Gpu::new()?;
         let _pipelines = mlx::compile(&gpu)?;
+        let _positional_pipeline = weights
+            .position
+            .as_ref()
+            .map(|_| super::llama3_rotary::compile(&gpu))
+            .transpose()?;
         validate_attention_device(&gpu, attention)?;
         let maximum = gpu.device.maxBufferLength();
         let weight_buffer_bytes = weights.validate_buffers(maximum)?;
@@ -661,6 +705,7 @@ fn inspect_with_policy(
                 source_payload_bytes: source.tensor_payload_bytes(),
                 source_admitted_load_bytes: source.admitted_load_bytes(),
                 resident_weights_bytes: weights.weight_bytes,
+                positional_resident_bytes: resolved.positional_bytes,
                 resident_admitted_load_bytes: weights.admitted,
                 session_memory: session.memory,
                 fits_source_load_budget,
@@ -680,6 +725,76 @@ fn inspect_with_policy(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn positional_residency_is_distinct_constant_and_zero_omitted() {
+        let c = model::Config {
+            hidden_size: 32,
+            intermediate_size: 64,
+            query_heads: 4,
+            kv_heads: 2,
+            head_dim: 8,
+            num_layers: 2,
+            vocab_size: 64,
+            max_positions: 32,
+            rope_theta: 10000.,
+            rms_norm_eps: 1e-6,
+        };
+        let options = session::Options {
+            capacity: 32,
+            prefill_chunk_size: 4,
+            position_offset: 0,
+            memory_limit_bytes: weights::INITIAL_MEMORY_LIMIT_BYTES,
+        };
+        let mut resolved = ResolvedSessionPlan::new(
+            &c,
+            1234,
+            options,
+            ReadbackMode::FullLogits,
+            AttentionMode::Reference,
+            weights::MAX_CONTEXT_LIMIT,
+        )
+        .unwrap();
+        let ordinary = resolved.at_capacity(32).unwrap();
+        assert!(
+            serde_json::to_value(ordinary.memory)
+                .unwrap()
+                .get("positional_bytes")
+                .is_none()
+        );
+        let position = super::super::llama3_rotary::Plan::new(
+            8,
+            10000.,
+            crate::cpu::Llama3Scaling::new(8., 1., 4., 64).unwrap(),
+        )
+        .unwrap();
+        resolved.positional_bytes = position.owned_bytes();
+        let scaled = resolved.at_capacity(32).unwrap();
+        assert_eq!(scaled.memory.weights_bytes, ordinary.memory.weights_bytes);
+        assert_eq!(scaled.memory.positional_bytes, position.owned_bytes());
+        assert_eq!(
+            scaled.memory.admitted_bytes,
+            ordinary.memory.admitted_bytes + position.owned_bytes()
+        );
+        let expected = scaled.memory;
+        assert_eq!(
+            scaled
+                .with_positional_bytes(position.owned_bytes())
+                .unwrap()
+                .memory,
+            expected
+        );
+        resolved.options.memory_limit_bytes = expected.admitted_bytes - 1;
+        let range = resolved.capacity_report(isize::MAX as usize, 1024).unwrap();
+        assert_eq!(range.selected.unwrap().capacity, 31);
+        assert_eq!(range.first_excluded.unwrap().capacity, 32);
+        assert!(
+            resolved
+                .at_capacity(32)
+                .unwrap()
+                .with_positional_bytes(usize::MAX)
+                .is_err()
+        );
+    }
     #[test]
     fn kv_and_reference_scores_reject_composite_uint32_overflow() {
         let config = |query_heads, kv_heads| model::Config {

@@ -336,10 +336,11 @@ mod apple {
         }
         // Model weights are shared once. Reserve all reference-owned resources
         // before admitting any Online allocations, including profile allowance.
+        let shared_model_bytes = model.model_resident_bytes()?;
         let reference_owned = reference
             .memory()
             .admitted_bytes
-            .checked_sub(model.weights_bytes())
+            .checked_sub(shared_model_bytes)
             .ok_or("paired memory subtraction")?;
         let remaining = budget
             .checked_sub(reference_owned)
@@ -352,7 +353,7 @@ mod apple {
             .memory()
             .admitted_bytes
             .checked_add(online.memory().admitted_bytes)
-            .and_then(|n| n.checked_sub(model.weights_bytes()))
+            .and_then(|n| n.checked_sub(shared_model_bytes))
             .and_then(|n| n.checked_add(APP))
             .ok_or("paired memory overflow")?;
         if admitted > weights::INITIAL_MEMORY_LIMIT_BYTES {

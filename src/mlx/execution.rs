@@ -15,18 +15,86 @@ impl GeometryError {
     }
 }
 
-/// Source semantics precede shape-only eligibility. Until the scaled Metal
-/// operation exists, even a scaled artifact with an old tiny/Smol shape must
-/// reject instead of executing the ordinary rotary shader.
+/// Source semantics and static storage contracts precede device layout checks.
+/// Compatibility remains untested until a separate artifact qualification.
 pub(crate) fn metal_source_geometry(
     source: &crate::mlx::qwen::Source,
 ) -> Result<(), GeometryError> {
-    if source.position_plan() != model::PositionPlan::Ordinary {
+    use crate::mlx::{dense::Architecture, qwen::Storage};
+    if source.position_plan() != model::PositionPlan::Ordinary
+        && source.architecture() != Architecture::Llama
+    {
         return Err(GeometryError::Unsupported(
-            "Metal scaled positional execution is not implemented",
+            "scaled positions require the implemented Llama block composition",
         ));
     }
-    metal_geometry(source.config(), source.architecture())
+    metal_geometry(source.config(), source.architecture())?;
+    if source.architecture() == Architecture::Llama {
+        let c = source.config();
+        for pair in 0..c.head_dim / 2 {
+            native_inverse_frequency(c.rope_theta, c.head_dim, pair, source.position_plan())?;
+        }
+        for spec in source.tensors().values() {
+            let count = spec
+                .shape()
+                .iter()
+                .try_fold(1usize, |n, &v| n.checked_mul(v))
+                .and_then(|n| n.checked_add(7));
+            if count.is_none_or(|n| n > u32::MAX as usize) {
+                return Err(GeometryError::Unsupported(
+                    "Llama tensor extent exceeds UInt32 layout",
+                ));
+            }
+            if let Storage::Affine(layout) = spec.storage() {
+                layout.validate_gpu_indexing().map_err(|_| {
+                    GeometryError::Unsupported("Llama packed indexing exceeds UInt32")
+                })?;
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Cold numerical representation contract shared by source inspection and the
+/// immutable frequency upload. Reject FP32 zero/subnormal/overflow rather than
+/// silently changing a declared mathematical transform through GPU flush-to-zero.
+pub(crate) fn native_inverse_frequency(
+    theta: f32,
+    dimension: usize,
+    pair: usize,
+    plan: model::PositionPlan,
+) -> Result<f32, GeometryError> {
+    if !theta.is_finite()
+        || theta <= 0.0
+        || dimension == 0
+        || !dimension.is_multiple_of(2)
+        || pair >= dimension / 2
+    {
+        return Err(GeometryError::Invalid(
+            "invalid native positional parameters",
+        ));
+    }
+    // The initial native Llama path is bounded to positions 0..511. A base
+    // >=1 keeps canonical inverse frequencies <=1 and angles finite, while
+    // also excluding a subnormal theta input to the ordinary GPU power.
+    if theta < 1.0 {
+        return Err(GeometryError::Unsupported(
+            "native Llama rotary base requires theta at least 1",
+        ));
+    }
+    let ordinary = f64::from(theta).powf(-2.0 * pair as f64 / dimension as f64);
+    let inverse = match plan {
+        model::PositionPlan::Ordinary => ordinary,
+        model::PositionPlan::Llama3(scaling) => scaling
+            .inverse_frequency(ordinary)
+            .map_err(|_| GeometryError::Unsupported("invalid scaled positional frequency"))?,
+    } as f32;
+    if !inverse.is_normal() || inverse <= 0.0 {
+        return Err(GeometryError::Unsupported(
+            "positional frequency requires positive normal FP32",
+        ));
+    }
+    Ok(inverse)
 }
 fn qwen_geometry(c: &model::Config) -> Result<(), GeometryError> {
     c.validate()
@@ -161,27 +229,28 @@ pub(crate) fn metal_geometry(
         crate::mlx::dense::Architecture::Llama => {
             c.validate()
                 .map_err(|_| GeometryError::Invalid("invalid Llama model configuration"))?;
-            let supported = match (
+            if !c.rms_norm_eps.is_normal() {
+                return Err(GeometryError::Unsupported(
+                    "native Llama RMS epsilon requires positive normal FP32",
+                ));
+            }
+            if c.max_positions > 512 {
+                return Err(GeometryError::Unsupported(
+                    "Metal Llama initial implemented context is at most 512 positions",
+                ));
+            }
+            for n in [
                 c.hidden_size,
                 c.intermediate_size,
-                c.query_heads,
-                c.kv_heads,
-                c.head_dim,
-                c.num_layers,
                 c.vocab_size,
-            ) {
-                (32, 64, 4, 2, 8, 2, 64) => {
-                    c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6 && c.max_positions <= 32
+                c.query_heads.saturating_mul(c.head_dim),
+                c.kv_heads.saturating_mul(c.head_dim),
+            ] {
+                if n.checked_add(7).is_none_or(|v| v > u32::MAX as usize) {
+                    return Err(GeometryError::Unsupported(
+                        "Llama activation width exceeds UInt32",
+                    ));
                 }
-                (576, 1536, 9, 3, 64, 30, 49152) => {
-                    c.rope_theta == 100000.0 && c.rms_norm_eps == 1e-5 && c.max_positions <= 512
-                }
-                _ => false,
-            };
-            if !supported {
-                return Err(GeometryError::Unsupported(
-                    "Metal Llama requires the admitted tiny/SmolLM2 geometry, context and ordinary RoPE",
-                ));
             }
             Ok(())
         }
@@ -220,6 +289,96 @@ pub(crate) fn metal_geometry(
 mod tests {
     use super::*;
     use crate::mlx::dense::Architecture;
+    #[test]
+    fn llama_contract_accepts_implemented_blocks_without_a_checkpoint_tuple() {
+        let c = model::Config {
+            hidden_size: 2048,
+            intermediate_size: 8192,
+            query_heads: 32,
+            kv_heads: 8,
+            head_dim: 64,
+            num_layers: 16,
+            vocab_size: 128256,
+            max_positions: 512,
+            rope_theta: 500000.,
+            rms_norm_eps: 1e-5,
+        };
+        assert!(metal_geometry(&c, Architecture::Llama).is_ok());
+        assert!(
+            metal_geometry(
+                &model::Config {
+                    rms_norm_eps: f32::MIN_POSITIVE,
+                    ..c.clone()
+                },
+                Architecture::Llama
+            )
+            .is_ok()
+        );
+        assert!(matches!(
+            metal_geometry(
+                &model::Config {
+                    rms_norm_eps: f32::from_bits(1),
+                    ..c.clone()
+                },
+                Architecture::Llama
+            ),
+            Err(GeometryError::Unsupported(_))
+        ));
+        assert!(
+            metal_geometry(
+                &model::Config {
+                    max_positions: 513,
+                    ..c.clone()
+                },
+                Architecture::Llama
+            )
+            .is_err()
+        );
+        let scaled =
+            model::PositionPlan::Llama3(crate::cpu::Llama3Scaling::new(32., 1., 4., 8192).unwrap());
+        for plan in [model::PositionPlan::Ordinary, scaled] {
+            for theta in [f32::from_bits(1), f32::MIN_POSITIVE, 0.5] {
+                assert!(matches!(
+                    native_inverse_frequency(theta, 128, 63, plan),
+                    Err(GeometryError::Unsupported(_))
+                ));
+            }
+            assert!(native_inverse_frequency(1., 128, 63, plan).is_ok());
+        }
+        for pair in 0..32 {
+            assert!(
+                native_inverse_frequency(c.rope_theta, 64, pair, scaled)
+                    .unwrap()
+                    .is_normal()
+            );
+        }
+        assert!(
+            native_inverse_frequency(
+                1e38,
+                128,
+                63,
+                model::PositionPlan::Llama3(
+                    crate::cpu::Llama3Scaling::new(f32::MAX, 1., 4., 8192).unwrap()
+                )
+            )
+            .is_err()
+        );
+        use crate::mlx::affine::{Layout, MetadataDtype};
+        let columns = (u32::MAX as usize / 8) / 32 * 32;
+        assert!(
+            Layout::new(1, columns, 8, 32, MetadataDtype::F16)
+                .unwrap()
+                .validate_gpu_indexing()
+                .is_ok()
+        );
+        if let Some(next) = columns.checked_add(32) {
+            assert!(
+                Layout::new(1, next, 8, 32, MetadataDtype::F16)
+                    .and_then(|layout| layout.validate_gpu_indexing())
+                    .is_err()
+            );
+        }
+    }
 
     #[test]
     fn qwen3_long_context_scope_preserves_all_existing_limits() {
@@ -498,16 +657,24 @@ mod tests {
                     ..c.clone()
                 },
             ] {
-                assert!(matches!(
-                    metal_geometry(&unqualified, architecture),
-                    Err(GeometryError::Unsupported(_))
-                ));
+                if architecture == Architecture::Llama {
+                    assert!(metal_geometry(&unqualified, architecture).is_ok());
+                } else {
+                    assert!(matches!(
+                        metal_geometry(&unqualified, architecture),
+                        Err(GeometryError::Unsupported(_))
+                    ));
+                }
             }
             if architecture != Architecture::Qwen2 {
                 assert!(
                     metal_geometry(
                         &model::Config {
-                            max_positions: positions + 1,
+                            max_positions: if architecture == Architecture::Llama {
+                                513
+                            } else {
+                                positions + 1
+                            },
                             ..c
                         },
                         architecture

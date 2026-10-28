@@ -19,8 +19,6 @@ pub use capture::Capture;
 pub mod gemma_affine;
 pub mod gemma_rms;
 pub mod gemma_rotary;
-// Qualify the isolated operation before promoting it into model admission.
-#[cfg(test)]
 mod llama3_rotary;
 mod memory;
 pub mod mlx;
@@ -187,6 +185,7 @@ pub struct Model {
     norm: Tensor,
     layers: Vec<Layer>,
     weight_bytes: usize,
+    positional: Option<llama3_rotary::Operation>,
     mlx_architecture: Option<crate::mlx::dense::Architecture>,
     // Set only by the explicit validated0.6B long-context diagnostic loader.
     qwen3_context_diagnostic: bool,
@@ -203,6 +202,13 @@ impl Model {
     }
     pub fn weights_bytes(&self) -> usize {
         self.weight_bytes
+    }
+    /// Shared derived positional storage/owner, separate from learned tensors.
+    pub fn positional_resident_bytes(&self) -> usize {
+        self.positional.as_ref().map_or(0, |p| p.owned_bytes())
+    }
+    pub fn model_resident_bytes(&self) -> Result<usize> {
+        add(self.weight_bytes, self.positional_resident_bytes())
     }
     /// Queried SIMD widths `[one-row decode, eight-row prefill]`. Numerical
     /// qualification applies independently even when the widths differ.
@@ -345,11 +351,26 @@ impl Model {
             let compile_clock = Instant::now();
             let gpu = Gpu::new()?;
             let pipelines = mlx::compile(&gpu)?;
+            let positional_pipeline = plan
+                .position
+                .as_ref()
+                .map(|_| llama3_rotary::compile(&gpu))
+                .transpose()?;
             let compilation_seconds = compile_clock.elapsed().as_secs_f64();
             plan.validate_buffers(gpu.device.maxBufferLength())?;
             let weight_bytes = plan.weight_bytes;
-            let plans = plan.tensors;
             let conversion_clock = Instant::now();
+            let positional = match (plan.position, positional_pipeline) {
+                (Some(p), Some(pipeline)) => Some(llama3_rotary::Operation::with_pipeline(
+                    &gpu,
+                    p,
+                    p.owned_bytes(),
+                    pipeline,
+                )?),
+                (None, None) => None,
+                _ => return Err(Error::Options("positional pipeline/plan differs")),
+            };
+            let plans = plan.tensors;
             let mut tensors = BTreeMap::new();
             for (name, (layout, storage)) in plans {
                 let tensor = match storage {
@@ -404,6 +425,7 @@ impl Model {
                 source.architecture() == crate::mlx::dense::Architecture::Qwen3,
             )?;
             model.mlx_architecture = Some(source.architecture());
+            model.positional = positional;
             model.qwen3_context_diagnostic = matches!(import, MlxImport::Qwen3ContextDiagnostic);
             model.mlx_declared_positions = Some(source.declared_positions());
             if matches!(import, MlxImport::SmolAudited) {
@@ -617,6 +639,7 @@ impl Model {
             norm,
             layers,
             weight_bytes,
+            positional: None,
             mlx_architecture: None,
             qwen3_context_diagnostic: false,
             mlx_declared_positions: None,
@@ -951,6 +974,7 @@ impl<'m> Session<'m> {
                     attention_mode,
                 )?
             };
+            let plan = plan.with_positional_bytes(model.positional_resident_bytes())?;
             plan.admit(options.memory_limit_bytes)?;
             plan.validate_buffers(model.gpu.device.maxBufferLength())?;
             let planning::SessionPlan {
@@ -1381,35 +1405,63 @@ impl<'m> Session<'m> {
                     (&s.q, &s.qr, &s.k, &s.kr)
                 };
             let position = self.options.position_offset + start;
-            g.encode(
-                &command,
-                Kernel::Rotary,
-                &[&q_input.raw, &q_rotary.raw],
-                &[
-                    n as u32,
-                    c.query_heads as u32,
-                    c.head_dim as u32,
-                    position as u32,
-                    c.rope_theta.to_bits(),
-                ],
-                n * query_width / 2,
-                Some(&s.status),
-            )?;
+            if let Some(operation) = &self.model.positional {
+                operation.encode(
+                    &command,
+                    llama3_rotary::Invocation {
+                        input: q_input,
+                        output: q_rotary,
+                        status: &s.status,
+                        rows: n,
+                        heads: c.query_heads,
+                        offset: position,
+                    },
+                )?;
+            } else {
+                g.encode(
+                    &command,
+                    Kernel::Rotary,
+                    &[&q_input.raw, &q_rotary.raw],
+                    &[
+                        n as u32,
+                        c.query_heads as u32,
+                        c.head_dim as u32,
+                        position as u32,
+                        c.rope_theta.to_bits(),
+                    ],
+                    n * query_width / 2,
+                    Some(&s.status),
+                )?;
+            }
             self.snapshot(&command, Some(layer_index), "q_rotary", &q_rotary.raw)?;
-            g.encode(
-                &command,
-                Kernel::Rotary,
-                &[&k_input.raw, &k_rotary.raw],
-                &[
-                    n as u32,
-                    c.kv_heads as u32,
-                    c.head_dim as u32,
-                    position as u32,
-                    c.rope_theta.to_bits(),
-                ],
-                n * kv / 2,
-                Some(&s.status),
-            )?;
+            if let Some(operation) = &self.model.positional {
+                operation.encode(
+                    &command,
+                    llama3_rotary::Invocation {
+                        input: k_input,
+                        output: k_rotary,
+                        status: &s.status,
+                        rows: n,
+                        heads: c.kv_heads,
+                        offset: position,
+                    },
+                )?;
+            } else {
+                g.encode(
+                    &command,
+                    Kernel::Rotary,
+                    &[&k_input.raw, &k_rotary.raw],
+                    &[
+                        n as u32,
+                        c.kv_heads as u32,
+                        c.head_dim as u32,
+                        position as u32,
+                        c.rope_theta.to_bits(),
+                    ],
+                    n * kv / 2,
+                    Some(&s.status),
+                )?;
+            }
             self.snapshot(&command, Some(layer_index), "k_rotary", &k_rotary.raw)?;
             g.encode(
                 &command,
@@ -3282,7 +3334,7 @@ mod qwen3_admission {
 mod llama_admission {
     use super::*;
     #[test]
-    fn unqualified_llama_geometry_rejects_without_a_device() {
+    fn llama_structural_contract_is_independent_of_checkpoint_tuples() {
         let mut c = model::Config {
             vocab_size: 64,
             hidden_size: 32,
@@ -3298,12 +3350,14 @@ mod llama_admission {
         let architecture = crate::mlx::dense::Architecture::Llama;
         assert!(mlx_geometry(&c, architecture).is_ok());
         c.rope_theta = 1e6;
-        assert!(mlx_geometry(&c, architecture).is_err());
+        assert!(mlx_geometry(&c, architecture).is_ok());
         c.rope_theta = 10000.0;
         c.num_layers = 3;
-        assert!(mlx_geometry(&c, architecture).is_err());
+        assert!(mlx_geometry(&c, architecture).is_ok());
         c.num_layers = 2;
-        c.max_positions = 33;
+        c.max_positions = 512;
+        assert!(mlx_geometry(&c, architecture).is_ok());
+        c.max_positions = 513;
         assert!(mlx_geometry(&c, architecture).is_err());
     }
     #[test]
@@ -3332,7 +3386,7 @@ mod llama_admission {
         assert!(std::mem::size_of::<Option<crate::mlx::qwen::SourceContentIdentity>>() <= 512);
     }
     #[test]
-    fn smollm_geometry_has_explicit_context_theta_and_norm_limits() {
+    fn llama_structural_geometry_keeps_context_and_math_validation() {
         let c = model::Config {
             vocab_size: 49152,
             hidden_size: 576,
@@ -3353,15 +3407,15 @@ mod llama_admission {
                 ..c.clone()
             },
             model::Config {
-                rope_theta: 10000.0,
+                rope_theta: f32::NAN,
                 ..c.clone()
             },
             model::Config {
-                rms_norm_eps: 1e-6,
+                rms_norm_eps: 0.0,
                 ..c.clone()
             },
             model::Config {
-                num_layers: 29,
+                kv_heads: 2,
                 ..c.clone()
             },
         ] {

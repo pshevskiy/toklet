@@ -81,11 +81,12 @@ mod apple {
         let normalization = metal::NormalizationMode::Compensated;
         let (capacity, offset) = if check { (2031, 17) } else { (2048, 0) };
         let budget = weights::INITIAL_MEMORY_LIMIT_BYTES - APP;
-        let mut allocated = model.weights_bytes();
+        let shared_model_bytes = model.model_resident_bytes()?;
+        let mut allocated = shared_model_bytes;
         let mut sessions = Vec::with_capacity(4);
         for chunk in CHUNKS {
             let remaining = budget
-                .checked_sub(allocated - model.weights_bytes())
+                .checked_sub(allocated - shared_model_bytes)
                 .ok_or("shared chunk budget overflow")?;
             let session = metal::Session::with_execution_modes(
                 &model,
@@ -99,7 +100,7 @@ mod apple {
                 normalization,
             )?;
             allocated = allocated
-                .checked_add(session.memory().admitted_bytes - model.weights_bytes())
+                .checked_add(session.memory().admitted_bytes - shared_model_bytes)
                 .ok_or("combined chunk admission overflow")?;
             sessions.push(session);
         }

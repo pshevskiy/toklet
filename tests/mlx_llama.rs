@@ -185,8 +185,12 @@ fn scaled_llama_parser_aliases_and_backend_capability_are_explicit() {
         let cpu = compatibility::inspect(&a.0, Backend::ScalarReference, options());
         assert_eq!(cpu.status, Status::CompatibleUntested);
         let metal = compatibility::inspect(&a.0, Backend::Metal, options());
-        assert_eq!(metal.reason, Reason::UnsupportedGeometry);
-        assert!(metal.message.contains("scaled positional"));
+        assert_eq!(metal.status, Status::CompatibleUntested);
+        assert!(matches!(
+            metal.reason,
+            Reason::MetadataAccepted | Reason::BackendUnavailable
+        ));
+        assert!(metal.resources.unwrap().metal_runtime_planning_required);
     }
     for (key, value) in [
         ("rope_type", json!("dynamic")),
@@ -223,24 +227,155 @@ fn scaled_llama_parser_aliases_and_backend_capability_are_explicit() {
     any(target_os = "macos", target_os = "ios")
 ))]
 #[test]
-fn scaled_llama_runtime_inspection_and_loading_reject_before_gpu_execution() {
-    use toklet::metal::{self, AttentionMode, NormalizationMode, ReadbackMode};
+#[ignore = "explicit Apple GPU scaled positional resource accounting and factory boundaries"]
+fn scaled_llama_runtime_and_loading_count_one_shared_positional_owner() {
+    use toklet::metal::{self, AttentionMode, NormalizationMode, ProjectionMode, ReadbackMode};
     let a = CopyArtifact::new("tied");
     a.config("rope_scaling", llama3_scaling());
-    assert!(
-        matches!(metal::Model::load_mlx(&a.0, options()), Err(metal::Error::Unsupported(message)) if message.contains("scaled positional"))
-    );
-    let session = session::Options {
+    let opts = session::Options {
         capacity: 32,
         prefill_chunk_size: 4,
         position_offset: 0,
         memory_limit_bytes: 128 * 1024 * 1024,
     };
-    assert!(
-        matches!(metal::planning::inspect_mlx(&a.0, options(), session, NormalizationMode::Original, ReadbackMode::FullLogits, AttentionMode::Reference), Err(metal::Error::Unsupported(message)) if message.contains("scaled positional"))
+    let resource = metal::planning::inspect_mlx_capacity(
+        &a.0,
+        options(),
+        opts,
+        NormalizationMode::Compensated,
+        ReadbackMode::FullLogits,
+        AttentionMode::Reference,
+    )
+    .unwrap();
+    assert!(!resource.resources.numerical_buffers_allocated);
+    assert!(resource.resources.positional_resident_bytes > 0);
+    assert_eq!(
+        resource.resources.positional_resident_bytes,
+        resource.resources.session_memory.positional_bytes
     );
+    assert_eq!(
+        resource
+            .capacity
+            .as_ref()
+            .unwrap()
+            .selected
+            .unwrap()
+            .capacity,
+        32
+    );
+    let model = metal::Model::load_mlx(&a.0, options()).unwrap();
+    assert_eq!(
+        model.weights_bytes(),
+        resource.resources.resident_weights_bytes
+    );
+    assert_eq!(
+        model.positional_resident_bytes(),
+        resource.resources.positional_resident_bytes
+    );
+    assert_eq!(
+        model.model_resident_bytes().unwrap(),
+        model.weights_bytes() + model.positional_resident_bytes()
+    );
+    let ordinary = metal::Model::load_mlx(&root().join("tied"), options()).unwrap();
+    assert_eq!(ordinary.weights_bytes(), model.weights_bytes());
+    assert_eq!(ordinary.positional_resident_bytes(), 0);
+    let create = |o| {
+        metal::Session::with_attention_mode(
+            &model,
+            o,
+            ProjectionMode::MlxAffine,
+            NormalizationMode::Compensated,
+            ReadbackMode::FullLogits,
+            AttentionMode::Reference,
+        )
+    };
+    let first = create(opts).unwrap();
+    assert_eq!(first.memory(), resource.resources.session_memory);
+    let exact = first.memory().admitted_bytes;
+    assert!(matches!(
+        create(session::Options {
+            memory_limit_bytes: exact - 1,
+            ..opts
+        }),
+        Err(metal::Error::Budget { .. })
+    ));
+    let second = create(session::Options {
+        memory_limit_bytes: exact,
+        ..opts
+    })
+    .unwrap();
+    assert_eq!(second.memory(), first.memory());
+    assert_eq!(
+        first.memory().admitted_bytes + second.memory().admitted_bytes
+            - model.model_resident_bytes().unwrap(),
+        model.model_resident_bytes().unwrap() + 2 * (exact - model.model_resident_bytes().unwrap())
+    );
+    let load = resource
+        .resources
+        .resident_admitted_load_bytes
+        .max(resource.resources.source_admitted_load_bytes);
     assert!(
-        matches!(metal::planning::inspect_mlx_capacity(&a.0, options(), session, NormalizationMode::Original, ReadbackMode::FullLogits, AttentionMode::Reference), Err(metal::Error::Unsupported(message)) if message.contains("scaled positional"))
+        metal::Model::load_mlx(
+            &a.0,
+            LoadOptions {
+                memory_limit_bytes: load - 1,
+                ..options()
+            }
+        )
+        .is_err()
+    );
+    let precise = metal::Model::load_mlx(
+        &a.0,
+        LoadOptions {
+            memory_limit_bytes: load,
+            ..options()
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        precise.model_resident_bytes().unwrap(),
+        model.model_resident_bytes().unwrap()
+    );
+    let mut small = opts;
+    small.memory_limit_bytes = exact - 1;
+    let denied = metal::planning::inspect_mlx_capacity(
+        &a.0,
+        options(),
+        small,
+        NormalizationMode::Compensated,
+        ReadbackMode::FullLogits,
+        AttentionMode::Reference,
+    )
+    .unwrap();
+    assert!(!denied.resources.fits_session_budget);
+    assert_eq!(
+        denied.capacity.as_ref().unwrap().selected.unwrap().capacity,
+        31
+    );
+    assert_eq!(
+        denied
+            .capacity
+            .as_ref()
+            .unwrap()
+            .first_excluded
+            .unwrap()
+            .capacity,
+        32
+    );
+    assert!(matches!(
+        metal::Session::with_attention_mode(
+            &model,
+            opts,
+            ProjectionMode::MlxAffine,
+            NormalizationMode::Compensated,
+            ReadbackMode::FullLogits,
+            AttentionMode::Online
+        ),
+        Err(metal::Error::Unsupported(_))
+    ));
+    println!(
+        "LLAMA3_POSITIONAL_RESOURCES {}",
+        serde_json::json!({"report":resource,"weights":model.weights_bytes(),"positional":model.positional_resident_bytes(),"device":model.device_name(),"model_qualified":false})
     );
 }
 fn tokens(v: &Value) -> Vec<u32> {

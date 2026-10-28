@@ -183,8 +183,9 @@ mod apple {
             projection_modes[0],
             normalization,
         )?;
+        let shared_model_bytes = model.model_resident_bytes()?;
         let remaining = budget
-            .checked_sub(baseline.memory().admitted_bytes - model.weights_bytes())
+            .checked_sub(baseline.memory().admitted_bytes - shared_model_bytes)
             .ok_or("shared model admission overflow")?;
         let mut reused = metal::Session::with_execution_modes(
             &model,
@@ -199,7 +200,7 @@ mod apple {
             .memory()
             .admitted_bytes
             .checked_add(reused.memory().admitted_bytes)
-            .and_then(|b| b.checked_sub(model.weights_bytes()))
+            .and_then(|b| b.checked_sub(shared_model_bytes))
             .and_then(|b| b.checked_add(APP))
             .ok_or("combined admission overflow")?;
         if combined > weights::INITIAL_MEMORY_LIMIT_BYTES {
