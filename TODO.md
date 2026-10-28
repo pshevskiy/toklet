@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3b — independent Gemma3 CPU local/global composition and window transactions**.
+Next implementation task: **B3b2 — implement and check the concrete Gemma3 CPU graph/window session**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -120,7 +120,10 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 - [x] B3a: strict cold plan, raw BF16/tied ownership, exact236 logical/490
   physical tensors and shared Gemma3/Gemma4 metadata helpers; checks and Astra review pass.
   [Design and scope](docs/gemma3-local-global.md).
-- [ ] B3b: independent tiny CPU graph/operator fixtures and actual composition
+- [x] B3b1: independent tiny CPU graph/operator fixtures, frozen gate and
+  byte-identical replay;192 arrays/108,816 values and Astra review pass.
+  [Reference](docs/gemma3-cpu-reference.md).
+- [ ] B3b2: actual CPU composition
   for four hidden norms, Q/K norm, embedding scale, GELU, residual order and
   both rotary/mask branches. Include meaningful window visibility and transactions.
 - [ ] B3c: resident packed/Half graph and explicitly accounted local/full cache
@@ -241,4 +244,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B2c2 real native vertical |23,946,432 main comparisons pass unchanged gates; exact schedules/causal prefix/readbacks/raw generation/state and actual load/session budgets pass. Observed native lifetime physical peak2,517,715,224 bytes below6GiB; Astra independently rescores the complete capture and approves retention. | [Report](docs/phi3-real-model.md); `b68b399`; continue B3. |
 | 2026-10-28 | B3 selection and cold plan | Astra pins/reviews public Gemma3 270M metadata and source; no payload or execution. Strict236/490 cold inventory and shared Gemma metadata implementation are in checks; runtime eligibility unchanged. | [Design](docs/gemma3-local-global.md); finish B3a checks/review, then CPU composition. |
 | 2026-10-28 | B3a initial metadata check | Full tests found the candidate index also has exact total_parameters268098176, absent from the older Gemma4 index schema. Strict rejection caught the omitted known field; v2 validates it and adds changed/missing-count controls. Failed v1 retained, numerical policy/source fixtures unchanged. | Full v2 rerun in progress. |
-| 2026-10-28 | B3a cold checks | Strict v2 schema passes415 default /293 Metal-library /5 Gemma3 /14 Gemma4 regression tests (overlap), fmt and strict Clippy. Seven groups close; no payload/model/GPU work. | [Evidence](benchmarks/results/2026-10-28-gemma3-cold-plan-v1.json); Astra approves retention/commit; continue B3b. |
+| 2026-10-28 | B3a cold checks | Strict v2 schema passes415 default /293 Metal-library /5 Gemma3 /14 Gemma4 regression tests (overlap), fmt and strict Clippy. Seven groups close; no payload/model/GPU work. | [Evidence](benchmarks/results/2026-10-28-gemma3-cold-plan-v1.json); `bfd8d4a`; continue B3b. |
+| 2026-10-28 | B3b1 independent CPU fixtures | Six portable controls,192 source arrays/108,816 finite values and exact six-file replay pass. Astra verifies source packing/causality/components and independently rescores1,856 tied-head logits. No Rust target result yet. | [Reference](docs/gemma3-cpu-reference.md); reviewed fixture task commit, then B3b2. |

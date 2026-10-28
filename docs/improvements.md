@@ -6743,3 +6743,20 @@ strict Clippy. Seven process groups close without endpoint errors. No payload,
 model or hardware execution occurred. Astra authenticates3,914 current bindings,
 all retained outputs and closed groups, and approves cold-plan retention/commit.
 Continue independent CPU graph and transactional local/global composition.
+
+## 2026-10-28 — Independent Gemma3 CPU reference
+
+Frozen a separate tiny local/global graph with raw BF16 offset-gamma storage,
+FP32 effective coefficients, unequal residual/query widths and one packed tied
+table. Four cases produce192 arrays/108,816 finite FP32 values; all six export
+files replay identically. Component witnesses cover unit-offset rounding,
+embedding25.25 and actualD256/W512 visibility without claiming a full model run.
+
+Six portable controls pass. Astra independently verifies source packing, every
+array identity and causal prefixes, analytical components and1,856 tied-head
+logits. Process groups close normally. No Rust target, real payload, Half/GPU,
+app, phone or quality/performance qualification is implied. The concrete CPU
+model/session remains a private draft for the next reviewed code task. See
+[reference](gemma3-cpu-reference.md),
+[evidence](../benchmarks/results/2026-10-28-gemma3-cpu-reference-v1.json) and
+[TODO](../TODO.md).

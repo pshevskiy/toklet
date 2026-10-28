@@ -1,0 +1,101 @@
+{
+  "format": "toklet-gemma3-cpu-reference-v1",
+  "date": "2026-10-28",
+  "base_revision": "bfd8d4a",
+  "passed": true,
+  "decision": "retain-frozen-independent-cpu-reference",
+  "scope": {
+    "tiny_cpu_source": true,
+    "target_graph_executed": false,
+    "real_payload_downloaded": false,
+    "half_qualified": false,
+    "gpu_qualified": false,
+    "app_qualified": false,
+    "performance_qualified": false
+  },
+  "geometry": {
+    "hidden": 64,
+    "intermediate": 128,
+    "vocab": 64,
+    "query_heads": 4,
+    "kv_heads": 1,
+    "head_dim": 32,
+    "query_width": 128,
+    "layers": 2,
+    "window": 4,
+    "capacity": 12,
+    "rotary_thetas": [
+      10000,
+      1000000
+    ]
+  },
+  "profile": "Independent FP64 mathematical reductions with FP32 operation stores and FP32 unit-offset gamma coefficients; not BF16/MLX or Half emulation",
+  "gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "results": {
+    "cases": 4,
+    "stage_groups": 192,
+    "arrays": 192,
+    "finite_values": 108816,
+    "array_bytes": 435264,
+    "physical_tensors": 58,
+    "packed_matrix_owners": 15,
+    "raw_bf16_norm_vectors": 13,
+    "effective_f32_norm_elements": 704,
+    "payload_start": 5806,
+    "fixture_files_promoted": 5,
+    "full_six_file_replay_identical": true,
+    "independent_tied_head_logits_rescored": 1856
+  },
+  "checks": {
+    "portable_controls": 6,
+    "owned_control_and_export_groups_closed": 3,
+    "source_scope_only": true,
+    "control_launcher_pin_omission": "The controls receipt binds framework/stdlib; export controller additionally binds both invoked launcher executable files. Original control receipt preserved."
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b3b-reference-proposal-v1/manifest.json",
+      "bytes": 2374,
+      "sha256": "c71ad71357f7761221783c8a32089963f318b9343cd7666466b2e0c9436ac2e8"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-reference-proposal-v1/protocol.json",
+      "bytes": 2864,
+      "sha256": "38d183309748bde1652ef6a5a088960a10ff8b3d143dc9847d09ccf0a15a4156"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-independent-review-v1/prospective-source-review.json",
+      "bytes": 3363,
+      "sha256": "580fbfd742695d9464d91234e2105ddde4224624246f2ff7bb212305ebe78105"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-reference-controls-v1/checks.json",
+      "bytes": 403583,
+      "sha256": "9b9692b9ecb03ec55d08a2e82e9df86682756718c61f44a821b26467efe92073"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-independent-review-v1/prospective-export-review.json",
+      "bytes": 2310,
+      "sha256": "c55a891fb3488d9d2c460524a74e0ff49399ed63cb117267baf193bb03d2d9a1"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-source-v1/export.json",
+      "bytes": 409034,
+      "sha256": "40ac332f249d426b52c66413b22d3e11b57b8296c92208184ab2ba23f7f6ab77"
+    },
+    {
+      "path": "artifacts/new-goal-b3b-independent-review-v1/frozen-source-review.json",
+      "bytes": 2997,
+      "sha256": "4dbf6e44515486854206e9caab7feab03d88c41462f1febc8c721861867c8e67"
+    },
+    {
+      "path": "tests/fixtures/gemma3-cpu-v1/manifest.json",
+      "bytes": 63095,
+      "sha256": "bc63d9d478d50ee24e9c78e471ccd4d1ce2f268700cef8fddf7c2c096c7e7566"
+    }
+  ],
+  "next_task": "B3b2 actual Rust CPU graph/session comparisons against these frozen fixtures"
+}
