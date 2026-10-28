@@ -1,6 +1,6 @@
 //! Explicit graph admission for the supported MLX dense decoders.
 use crate::{
-    model::Config,
+    model::{Config, PositionPlan},
     weights::{self, Error, LoadOptions},
 };
 use serde::Deserialize;
@@ -64,6 +64,55 @@ struct BiasFreeConfig {
     #[serde(flatten)]
     extra: BTreeMap<String, Value>,
 }
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Llama3Parameters {
+    #[serde(default)]
+    rope_type: Option<String>,
+    #[serde(default, rename = "type")]
+    legacy_type: Option<String>,
+    factor: f32,
+    low_freq_factor: f32,
+    high_freq_factor: f32,
+    original_max_position_embeddings: usize,
+}
+
+fn positions(value: Option<Value>, architecture: Architecture) -> Result<PositionPlan, Error> {
+    let Some(value) = value else {
+        return Ok(PositionPlan::Ordinary);
+    };
+    if architecture != Architecture::Llama {
+        return Err(invalid(
+            "scaled RoPE is implemented only for the Llama adapter",
+        ));
+    }
+    let object = value
+        .as_object()
+        .ok_or_else(|| invalid("RoPE scaling must be an object"))?;
+    for key in ["rope_type", "type"] {
+        if object.get(key).is_some_and(|v| v.as_str().is_none()) {
+            return Err(invalid("RoPE type aliases must be strings"));
+        }
+    }
+    let p: Llama3Parameters = serde_json::from_value(value)?;
+    if p.rope_type
+        .as_ref()
+        .zip(p.legacy_type.as_ref())
+        .is_some_and(|(a, b)| a != b)
+    {
+        return Err(invalid("conflicting RoPE type aliases"));
+    }
+    if p.rope_type.or(p.legacy_type).as_deref() != Some("llama3") {
+        return Err(invalid("only explicit llama3 RoPE scaling is implemented"));
+    }
+    Ok(PositionPlan::Llama3(crate::cpu::Llama3Scaling::new(
+        p.factor,
+        p.low_freq_factor,
+        p.high_freq_factor,
+        p.original_max_position_embeddings,
+    )?))
+}
 fn invalid(reason: impl Into<String>) -> Error {
     Error::Invalid(reason.into())
 }
@@ -71,16 +120,17 @@ fn invalid(reason: impl Into<String>) -> Error {
 pub(crate) fn config(
     value: Value,
     options: LoadOptions,
-) -> Result<(Config, Architecture, bool), Error> {
+) -> Result<(Config, Architecture, bool, PositionPlan), Error> {
     match value.get("model_type").and_then(Value::as_str) {
         Some("qwen3") => {
             let (config, tied) = super::qwen3::config(value, options)?;
-            Ok((config, Architecture::Qwen3, tied))
+            Ok((config, Architecture::Qwen3, tied, PositionPlan::Ordinary))
         }
         Some("qwen2") => Ok((
             weights::qwen_config(value, options)?,
             Architecture::Qwen2,
             true,
+            PositionPlan::Ordinary,
         )),
         Some("llama" | "mistral") => {
             // Mistral defaults can imply sliding attention when the field is
@@ -118,14 +168,14 @@ pub(crate) fn config(
                     // Export metadata only: the native session always owns Half KV.
                     v != &serde_json::json!({"kv_cache_dtype":{"q4f16":"float16","fp16":"float16"}})
                 })
-                || c.rope_scaling.is_some()
                 || c.use_sliding_window
                 || c.sliding_window.is_some()
             {
                 return Err(invalid(
-                    "only bias-free Llama/Mistral with SiLU, ordinary split-half RoPE and full causal attention is supported",
+                    "only bias-free Llama/Mistral with SiLU, split-half RoPE and full causal attention is supported",
                 ));
             }
+            let position_plan = positions(c.rope_scaling, architecture)?;
             if c.torch_dtype
                 .as_deref()
                 .is_some_and(|v| !["float32", "float16", "bfloat16"].contains(&v))
@@ -181,7 +231,7 @@ pub(crate) fn config(
                 rope_theta: c.rope_theta,
             };
             config.validate()?;
-            Ok((config, architecture, c.tie_word_embeddings))
+            Ok((config, architecture, c.tie_word_embeddings, position_plan))
         }
         _ => Err(invalid("unsupported native MLX decoder architecture")),
     }

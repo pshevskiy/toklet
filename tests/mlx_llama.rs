@@ -8,7 +8,7 @@ use std::{
 };
 use toklet::{
     mlx::{dense::Architecture, qwen::Source, reference},
-    model::{LayerTrace, Trace},
+    model::{LayerTrace, PositionPlan, Trace},
     session::{self, Session},
     weights::{Error, LoadOptions},
 };
@@ -54,6 +54,194 @@ fn options() -> LoadOptions {
         context_limit: 32,
         memory_limit_bytes: 128 * 1024 * 1024,
     }
+}
+fn llama3_scaling() -> Value {
+    json!({"rope_type":"llama3", "factor":8.0, "low_freq_factor":1.0,
+        "high_freq_factor":4.0, "original_max_position_embeddings":64})
+}
+
+#[test]
+fn scaled_llama_source_model_and_cached_graph_match_independent_fixture() {
+    manifest();
+    let raw = include_bytes!("fixtures/llama3-graph-v1/graph.json");
+    assert_eq!(
+        format!("{:x}", Sha256::digest(raw)),
+        "9e4d80dcec02b25f2f94f34225171dd30c279fdf6b7347f72ad75a4988c61402"
+    );
+    let fixture: Value = serde_json::from_slice(raw).unwrap();
+    assert_eq!(
+        fixture["producer"]["sha256"],
+        format!(
+            "{:x}",
+            Sha256::digest(include_bytes!("../tools/reference/llama3_graph.py"))
+        )
+    );
+    let plan = PositionPlan::Llama3(toklet::cpu::Llama3Scaling::new(8., 1., 4., 64).unwrap());
+    for variant in ["tied", "untied"] {
+        let a = CopyArtifact::new(variant);
+        a.config("rope_scaling", llama3_scaling());
+        let source = Source::open_dense(&a.0, options()).unwrap();
+        assert_eq!(source.position_plan(), plan);
+        assert!(Source::open(&a.0, options()).is_err());
+        let loaded = reference::load_dense(&a.0, options()).unwrap();
+        assert_eq!(loaded.model.position_plan(), plan);
+        let ordinary = reference::load_dense(&root().join(variant), options()).unwrap();
+        assert_eq!(ordinary.model.position_plan(), PositionPlan::Ordinary);
+        for case in fixture["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|c| c["variant"] == variant)
+        {
+            let ts = tokens(&case["tokens"]);
+            let offset = case["offset"].as_u64().unwrap() as usize;
+            let expected = |name: &str| {
+                case["arrays"][name]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_f64().unwrap() as f32)
+                    .collect::<Vec<_>>()
+            };
+            let mut scratch = loaded.model.scratch(ts.len()).unwrap();
+            let trace = loaded
+                .model
+                .forward_diagnostic(&ts, offset, &mut scratch)
+                .unwrap();
+            for (i, layer) in trace.layers.iter().enumerate() {
+                close(&layer.q_rotary, &expected(&format!("layer{i}.q_rotary")));
+                close(&layer.k_rotary, &expected(&format!("layer{i}.k_rotary")));
+            }
+            let logits = expected("logits");
+            close(&trace.logits, &logits);
+            let mut old_scratch = ordinary.model.scratch(ts.len()).unwrap();
+            let old = ordinary
+                .model
+                .forward_diagnostic(&ts, offset, &mut old_scratch)
+                .unwrap();
+            assert!(
+                trace
+                    .logits
+                    .iter()
+                    .zip(&old.logits)
+                    .any(|(a, b)| (a - b).abs() > 1e-5)
+            );
+            for chunk in [1, 3] {
+                let mut session = Session::new(
+                    &loaded.model,
+                    session::Options {
+                        capacity: 32 - offset,
+                        prefill_chunk_size: chunk,
+                        position_offset: offset,
+                        memory_limit_bytes: 128 * 1024 * 1024,
+                    },
+                )
+                .unwrap();
+                session.set_tokens(&ts).unwrap();
+                let mut cached = Vec::new();
+                while session.pending_len() > 0 {
+                    let count = session.pending_len().min(chunk);
+                    let mut rows = vec![0.; count * 64];
+                    assert_eq!(
+                        session.evaluate_next_chunk_with_logits(&mut rows).unwrap(),
+                        count
+                    );
+                    cached.extend(rows);
+                }
+                close(&cached, &logits);
+                let before = session.logits().unwrap().to_vec();
+                session.set_tokens(&ts).unwrap();
+                session.evaluate().unwrap();
+                assert_eq!(session.logits().unwrap(), before);
+                assert!(session.append(&[64]).is_err());
+                assert_eq!(session.logits().unwrap(), before);
+                session.reset();
+                session.set_tokens(&ts).unwrap();
+                session.evaluate().unwrap();
+                assert_eq!(session.logits().unwrap(), before);
+            }
+        }
+    }
+}
+
+#[test]
+fn scaled_llama_parser_aliases_and_backend_capability_are_explicit() {
+    use toklet::mlx::compatibility::{self, Backend, Reason, Status};
+    for aliases in [
+        json!({"rope_type":"llama3"}),
+        json!({"type":"llama3"}),
+        json!({"type":"llama3","rope_type":"llama3"}),
+    ] {
+        let a = CopyArtifact::new("tied");
+        let mut scale = llama3_scaling();
+        scale.as_object_mut().unwrap().remove("rope_type");
+        scale
+            .as_object_mut()
+            .unwrap()
+            .extend(aliases.as_object().unwrap().clone());
+        a.config("rope_scaling", scale);
+        let source = Source::open_dense(&a.0, options()).unwrap();
+        assert!(matches!(source.position_plan(), PositionPlan::Llama3(_)));
+        let cpu = compatibility::inspect(&a.0, Backend::ScalarReference, options());
+        assert_eq!(cpu.status, Status::CompatibleUntested);
+        let metal = compatibility::inspect(&a.0, Backend::Metal, options());
+        assert_eq!(metal.reason, Reason::UnsupportedGeometry);
+        assert!(metal.message.contains("scaled positional"));
+    }
+    for (key, value) in [
+        ("rope_type", json!("dynamic")),
+        ("type", json!("linear")),
+        ("rope_type", Value::Null),
+        ("factor", json!(0.5)),
+        ("low_freq_factor", json!(0)),
+        ("high_freq_factor", json!(1)),
+        ("original_max_position_embeddings", json!(0)),
+        ("attention_factor", json!(2)),
+        ("factor", json!("8")),
+    ] {
+        let a = CopyArtifact::new("tied");
+        let mut scale = llama3_scaling();
+        scale[key] = value;
+        a.config("rope_scaling", scale);
+        assert!(Source::open_dense(&a.0, options()).is_err(), "{key}");
+    }
+    let a = CopyArtifact::new("tied");
+    let mut scale = llama3_scaling();
+    scale.as_object_mut().unwrap().remove("rope_type");
+    a.config("rope_scaling", scale);
+    assert!(Source::open_dense(&a.0, options()).is_err());
+    a.config("model_type", json!("mistral"));
+    a.config("architectures", json!(["MistralForCausalLM"]));
+    a.config("sliding_window", Value::Null);
+    a.config("rope_scaling", llama3_scaling());
+    assert!(Source::open_dense(&a.0, options()).is_err());
+}
+
+#[cfg(all(
+    feature = "metal",
+    target_arch = "aarch64",
+    any(target_os = "macos", target_os = "ios")
+))]
+#[test]
+fn scaled_llama_runtime_inspection_and_loading_reject_before_gpu_execution() {
+    use toklet::metal::{self, AttentionMode, NormalizationMode, ReadbackMode};
+    let a = CopyArtifact::new("tied");
+    a.config("rope_scaling", llama3_scaling());
+    assert!(
+        matches!(metal::Model::load_mlx(&a.0, options()), Err(metal::Error::Unsupported(message)) if message.contains("scaled positional"))
+    );
+    let session = session::Options {
+        capacity: 32,
+        prefill_chunk_size: 4,
+        position_offset: 0,
+        memory_limit_bytes: 128 * 1024 * 1024,
+    };
+    assert!(
+        matches!(metal::planning::inspect_mlx(&a.0, options(), session, NormalizationMode::Original, ReadbackMode::FullLogits, AttentionMode::Reference), Err(metal::Error::Unsupported(message)) if message.contains("scaled positional"))
+    );
+    assert!(
+        matches!(metal::planning::inspect_mlx_capacity(&a.0, options(), session, NormalizationMode::Original, ReadbackMode::FullLogits, AttentionMode::Reference), Err(metal::Error::Unsupported(message)) if message.contains("scaled positional"))
+    );
 }
 fn tokens(v: &Value) -> Vec<u32> {
     v.as_array()

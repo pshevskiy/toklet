@@ -2,7 +2,7 @@ use super::{Error, finite, length, nonzero, product};
 
 /// Validated Llama 3.1/3.2 wavelength-dependent inverse-frequency scaling.
 /// This is neither ordinary RoPE nor uniform position/frequency scaling.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Llama3Scaling {
     factor: f64,
     low: f64,

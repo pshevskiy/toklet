@@ -14,6 +14,20 @@ impl GeometryError {
         }
     }
 }
+
+/// Source semantics precede shape-only eligibility. Until the scaled Metal
+/// operation exists, even a scaled artifact with an old tiny/Smol shape must
+/// reject instead of executing the ordinary rotary shader.
+pub(crate) fn metal_source_geometry(
+    source: &crate::mlx::qwen::Source,
+) -> Result<(), GeometryError> {
+    if source.position_plan() != model::PositionPlan::Ordinary {
+        return Err(GeometryError::Unsupported(
+            "Metal scaled positional execution is not implemented",
+        ));
+    }
+    metal_geometry(source.config(), source.architecture())
+}
 fn qwen_geometry(c: &model::Config) -> Result<(), GeometryError> {
     c.validate()
         .map_err(|_| GeometryError::Invalid("invalid model configuration"))?;

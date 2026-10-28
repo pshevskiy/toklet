@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B1b — propagate the positional plan into models**.
+Next implementation task: **B1c — scaled Metal rotation and structural admission**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -45,8 +45,9 @@ the goal, not a claim that arbitrary Hugging Face models already run.
   [Llama 3.2 1B inventory](docs/llama3-rotary-core.md). Metadata only; no weights.
 - [x] B1a: validated scalar scaling/rotation, independent boundary/high-offset
   fixtures, standard checks and Astra approval; [evidence](benchmarks/results/2026-10-28-llama3-rotary-core-v1.json).
-- [ ] B1b: strictly parse and propagate a source/model-owned positional plan;
-  preserve ordinary constructors and reject unsupported/conflicting scaling fields.
+- [x] B1b: strictly parse and propagate a source/model-owned positional plan;
+  ordinary constructors preserved, independent tiny graph/session checks and
+  explicit pre-GPU rejection pass. [Report](docs/llama3-position-plan.md).
 - [ ] Define structural block/kernel admission instead of adding a model-name
   or geometry tuple as the sole compatibility rule.
 - [ ] B1c: implement scaled Metal rotation with explicit arithmetic/resource
@@ -142,4 +143,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B0 capacity core | 375 default / 254 Metal-library tests (overlap), fmt, strict Clippy and three tiny GPU checks passed; independent Astra approval. | `ea874d1`; B1 artifact and positional-block research. |
 | 2026-10-28 | Progress tracking | Created this live checklist and persistent iteration-update instruction; documentation link/content and whitespace checks. | `4602baf`; continue B1 with Astra advice/review. |
 | 2026-10-28 | B1 candidate research | Astra pinned public Llama 3.2 1B metadata/tokenizer/header; all 13 source pins, Git blobs and header extents verified. No tensor payload or model run. | [Inventory](docs/llama3-rotary-core.md); bounded positional work first. |
-| 2026-10-28 | B1a positional core | Six targeted / 381 default / 260 Metal-library tests (overlap), fmt, strict Clippy and deterministic fixture replay pass; independent Astra approval. | Commit containing this entry; B1b positional-plan propagation next. |
+| 2026-10-28 | B1a positional core | Six targeted / 381 default / 260 Metal-library tests (overlap), fmt, strict Clippy and deterministic fixture replay pass; independent Astra approval. | `c5b1a1d`; B1b positional-plan propagation. |
+| 2026-10-28 | B1b initial check | Tiny graph/session tests passed; lint test compilation found a synthetic Source initializer missing the new field. Fixed its Ordinary default; failed receipt preserved. | [Evidence](benchmarks/results/2026-10-28-llama3-position-plan-v1.json); complete rerun. |
+| 2026-10-28 | B1b positional propagation | Independent four-graph fixture/replay, 383 default / 260 Metal-library / targeted 9/10 Llama tests (overlap), fmt and strict Clippy pass; Astra approved. | Commit containing this entry; B1c scaled Metal and structural admission next. |

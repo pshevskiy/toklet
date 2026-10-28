@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "task": "M8 B1b immutable positional plan and scalar graph wiring",
+  "decision": "retain CPU/source plan; keep scaled Metal rejected",
+  "base_commit": "c5b1a1d",
+  "files": [
+    {
+      "path": "tests/mlx_llama.rs",
+      "bytes": 22750,
+      "sha256": "71df728f3805d9292d11c9f8344d3e85d7cc66e2c5f4d4644f24de31e2726bfe"
+    },
+    {
+      "path": "tools/reference/llama3_graph.py",
+      "bytes": 8389,
+      "sha256": "cbd01d2b2bdb703f070a6e2344bd4149d658bd345041a35cd95990a322412e93"
+    },
+    {
+      "path": "tests/fixtures/llama3-graph-v1/graph.json",
+      "bytes": 81658,
+      "sha256": "9e4d80dcec02b25f2f94f34225171dd30c279fdf6b7347f72ad75a4988c61402"
+    },
+    {
+      "path": "src/metal/mod.rs",
+      "bytes": 133377,
+      "sha256": "88321ec758ad2ba2de7676b4c6047bb3dc2409a11fcfe1f18984bee435418015"
+    },
+    {
+      "path": "src/metal/planning.rs",
+      "bytes": 39290,
+      "sha256": "51e952c935b5592f2ee32af54caca8f8bd3e8542badcefa2f4a37d5a8921df85"
+    },
+    {
+      "path": "src/cpu/llama3_rotary.rs",
+      "bytes": 5718,
+      "sha256": "a185f247ca6d82d7613ef456b0de66f32b18fc83ef3297ee0c1c42e975c12225"
+    },
+    {
+      "path": "src/model/mod.rs",
+      "bytes": 29282,
+      "sha256": "32b8a9362d8f26b0244f5e738d1f8ad2841804ea0da36ca32ae00979ffa1e31d"
+    },
+    {
+      "path": "src/model/position.rs",
+      "bytes": 1246,
+      "sha256": "7d6634c6658575d9abf869238828875675fef63bc37c1b9d89daf74a9a5d6d71"
+    },
+    {
+      "path": "src/mlx/dense.rs",
+      "bytes": 8491,
+      "sha256": "8eb55fbe4eaac8ec93a0e789c397aae8167ef50cff04675ca747adab166f91b3"
+    },
+    {
+      "path": "src/mlx/execution.rs",
+      "bytes": 16218,
+      "sha256": "564956b8c39085566cd52b970a8bfee59e7669bc93f81124fb2d57b81e6ae058"
+    },
+    {
+      "path": "src/mlx/compatibility.rs",
+      "bytes": 12460,
+      "sha256": "eb6d8591dc3db136e8a6879c0f447434edb3cb617bc2ad63f8f78c38e935d4b4"
+    },
+    {
+      "path": "src/mlx/qwen.rs",
+      "bytes": 32372,
+      "sha256": "bbf1df3a07462ed4d254b73e4b43fd5a58b94bfb3517cac46ac3562dc104689c"
+    },
+    {
+      "path": "src/mlx/reference.rs",
+      "bytes": 8059,
+      "sha256": "24ca56c3f61cbd9144f48bc21ed699d5ca6effa06c09027aef94cb2d803656aa"
+    },
+    {
+      "path": "src/mlx/qwen/content_tests.rs",
+      "bytes": 4539,
+      "sha256": "903088f583a36788180f4e97f075db66d7d688a4c79f28402988221c93775f94"
+    }
+  ],
+  "checks": {
+    "passed": true,
+    "all_bindings_match_current_bytes": 262,
+    "all_outputs_match_current_bytes": 14,
+    "commands_passed": 7,
+    "all_command_processes_and_groups_absent": true,
+    "test_pass_counts_per_output_overlapping": {
+      "cpu-tests": 383,
+      "llama-tests": 9,
+      "metal-library-tests": 260,
+      "clippy": 0,
+      "fmt": 0,
+      "metal-clippy": 0,
+      "metal-llama-tests": 10
+    },
+    "fixture_replay_byte_identical": true,
+    "all_five_old_fixture_inputs_authenticated": true,
+    "counts_overlap": true,
+    "commands": [
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "fmt",
+          "--check"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--test",
+          "mlx_llama"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--features",
+          "metal",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--features",
+          "metal",
+          "--test",
+          "mlx_llama"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--features",
+          "metal",
+          "--lib"
+        ],
+        "exit_code": 0
+      }
+    ]
+  },
+  "review": {
+    "decision": "approve_b1b_cpu_position_plan_and_metal_rejection",
+    "receipt": {
+      "path": "artifacts/new-goal-b1b-independent-review-v1/review.json",
+      "bytes": 6264,
+      "sha256": "54bc7770cfc280475f8142928f0790d1cd56f5c483a5bad3f31fe5f093612fd8"
+    }
+  },
+  "raw_receipts": [
+    {
+      "path": "artifacts/new-goal-b1b-checks-v2/checks.json",
+      "bytes": 53444,
+      "sha256": "5dd012109288e4a7c6b8364d159adb570636327167040984713db1b844e5f3f7"
+    },
+    {
+      "path": "artifacts/new-goal-b1b-checks-v1/fixture-replay.json",
+      "bytes": 1762,
+      "sha256": "e4b3f921ca718c68d2c50b568c468f402dbeb35f453a44ddb9cbc543a1f19e0e"
+    }
+  ],
+  "initial_attempt": {
+    "receipt": {
+      "path": "artifacts/new-goal-b1b-checks-v1/checks.json",
+      "bytes": 50381,
+      "sha256": "f8ab914636dae1972bcc72507d630825a503bc8c91b441cf05783c98d25d59b6"
+    },
+    "targeted_tests_passed": true,
+    "failure": "StrictClippy cfg(test) compilation: synthetic Source initializer omitted position_plan. Fixed Ordinary default in test helper only; no numerical gate or fixture change."
+  },
+  "fixture": {
+    "cases": 4,
+    "captured_values": 2560,
+    "variants": [
+      "tied",
+      "untied"
+    ],
+    "tokens": [
+      1,
+      7,
+      13,
+      3
+    ],
+    "absolute_offsets": [
+      0,
+      5
+    ],
+    "captured_stages": [
+      "both layers Q/K rotary",
+      "all-row logits"
+    ],
+    "source_fixture": "tests/fixtures/mlx-llama-v1",
+    "source_manifest_sha256": "824d2ee2ae9dd5b623c5aa9db10c13b2e4dee32647ea5fa9d78274fb3529a1f5",
+    "scalar_gate": {
+      "absolute": 1e-05,
+      "relative": 0.0001
+    },
+    "cached_chunks": [
+      1,
+      3
+    ],
+    "regenerated_byte_identically": true
+  },
+  "scope": {
+    "strict_llama3_config": true,
+    "immutable_source_and_cpu_model_plan": true,
+    "scalar_graph_and_session": true,
+    "shared_pre_gpu_rejection": true,
+    "scaled_metal": false,
+    "real_model_run": false,
+    "phone_run": false,
+    "quality_qualification": false,
+    "text_profile_admission": false
+  },
+  "limitations": [
+    "No target-model download or real-model numerical/quality execution.",
+    "No scaled Metal implementation, GPU numerical qualification, tokenizer/chat admission, performance or enlarged-context qualification.",
+    "Test pass totals overlap across configurations and targeted invocations; they are not a count of unique tests."
+  ]
+}

@@ -296,7 +296,7 @@ pub fn inspect(directory: &Path, backend: Backend, options: LoadOptions) -> Repo
         metal_runtime_planning_required: backend == Backend::Metal,
     };
     if backend == Backend::Metal {
-        if let Err(error) = execution::metal_geometry(source.config(), source.architecture()) {
+        if let Err(error) = execution::metal_source_geometry(&source) {
             report.reason = Reason::UnsupportedGeometry;
             report.message = error.message().into();
             report.resources = Some(resources);

@@ -206,13 +206,15 @@ fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error
         layers,
         final_norm,
     };
+    let position_plan = source.position_plan();
     let model = if qk_normalized {
         Model::new_qk_normalized(config, weights, output, qk_norms)?
     } else if bias_free {
         Model::new_bias_free(config, weights, output)?
     } else {
         Model::new(config, weights)?
-    };
+    }
+    .with_position_plan(position_plan);
     Ok(Loaded {
         model,
         fp32_weights_bytes,

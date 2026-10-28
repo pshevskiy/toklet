@@ -6362,3 +6362,24 @@ the primitive, then propagate the positional plan and implement native admission
 See [scope and next tasks](llama3-rotary-core.md),
 [evidence](../benchmarks/results/2026-10-28-llama3-rotary-core-v1.json) and
 [updated progress](../TODO.md).
+
+## 2026-10-28 — Source/model positional semantics and scalar graph composition
+
+Added an immutable Ordinary/Llama3 positional plan, strict explicit scaling
+parsing and Source-to-CPU-model propagation. Old constructors keep Ordinary;
+consuming plan selection cannot change a borrowed model's live KV semantics.
+All CPU rotation sites use the plan. A shared source-aware guard prevents
+scaled metadata from entering ordinary Metal compatibility, inspection or
+loading until its actual kernel exists.
+
+Four independent tiny tied/untied graphs and 2560 frozen values pass the unchanged
+FP32 gate, including cached chunks, offsets, reuse/reset and failure preservation.
+Formatting, strict default/Metal Clippy, 383 default / 260 Metal-library and
+targeted 9/10 Llama tests pass (overlap); Astra independently authenticates final
+sources, outputs and all seven closed groups. The first lint compilation's
+missing field in a synthetic test helper is fixed and retained in the evidence;
+no numerical gate or fixture changed. Retain the shared wiring. No real-model,
+scaled-Metal, Chat, performance or larger-context qualification is claimed.
+See [report](llama3-position-plan.md),
+[evidence](../benchmarks/results/2026-10-28-llama3-position-plan-v1.json) and
+[iteration checklist](../TODO.md).

@@ -119,8 +119,10 @@ control or a larger qualified context by itself.
 
 **B1 in progress:** the [scalar Llama3 positional core](llama3-rotary-core.md)
 and independent fixtures pass checks/Astra review, and one fitting artifact's
-metadata is pinned. Positional-plan propagation, Metal admission/execution,
-real-model and text/quality checks remain open; no new family support is claimed.
+metadata is pinned. [Positional-plan propagation and tiny CPU graph/session
+checks](llama3-position-plan.md) now pass; scaled Metal is explicitly rejected.
+Metal admission/execution, real-model and text/quality checks remain open;
+no new native app family support is claimed.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |

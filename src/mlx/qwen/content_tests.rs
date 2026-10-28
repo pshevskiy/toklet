@@ -17,6 +17,7 @@ fn wrapper(source: weights::Source, storage: Storage) -> Source {
         },
         architecture: Architecture::Llama,
         tied_output: true,
+        position_plan: crate::model::PositionPlan::Ordinary,
         tensors: BTreeMap::from([(
             "x.weight".into(),
             TensorSpec {

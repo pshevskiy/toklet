@@ -144,6 +144,7 @@ pub struct Source {
     declared_positions: usize,
     architecture: Architecture,
     tied_output: bool,
+    position_plan: crate::model::PositionPlan,
     tensors: BTreeMap<String, TensorSpec>,
     source: weights::Source,
     tensor_payload_bytes: usize,
@@ -291,13 +292,14 @@ impl Source {
             .and_then(|value| usize::try_from(value).ok())
             .filter(|&value| value > 0)
             .ok_or_else(|| invalid("positive model position declaration required"))?;
-        let (config, architecture, tied_output) = if allow_dense {
+        let (config, architecture, tied_output, position_plan) = if allow_dense {
             dense::config(document, options)?
         } else {
             (
                 weights::qwen_config(document, options)?,
                 Architecture::Qwen2,
                 true,
+                crate::model::PositionPlan::Ordinary,
             )
         };
         // Bound name-map construction before looping over declared layers.
@@ -427,6 +429,7 @@ impl Source {
             declared_positions,
             architecture,
             tied_output,
+            position_plan,
             tensors,
             source,
             tensor_payload_bytes,
@@ -451,6 +454,9 @@ impl Source {
     }
     pub fn tied_output(&self) -> bool {
         self.tied_output
+    }
+    pub fn position_plan(&self) -> crate::model::PositionPlan {
+        self.position_plan
     }
     pub fn tensors(&self) -> &BTreeMap<String, TensorSpec> {
         &self.tensors

@@ -605,7 +605,8 @@ fn inspect_with_policy(
                 ..load
             },
         )?;
-        super::mlx_geometry(source.config(), source.architecture())?;
+        crate::mlx::execution::metal_source_geometry(&source)
+            .map_err(|error| Error::Unsupported(error.message()))?;
         let attention = match policy {
             AttentionPolicy::Explicit(mode) => mode,
             AttentionPolicy::NativeModel => native_attention_mode(Some(source.architecture())),

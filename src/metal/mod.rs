@@ -333,7 +333,8 @@ impl Model {
                         GeometryError::Unsupported(message) => Error::Unsupported(message),
                     })?;
             } else {
-                mlx_geometry(&config, source.architecture())?;
+                crate::mlx::execution::metal_source_geometry(&source)
+                    .map_err(|error| Error::Unsupported(error.message()))?;
             }
             // Admit padded resident weights before device/context compilation.
             let plan = planning::MlxWeights::new(&source)?;

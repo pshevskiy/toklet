@@ -11,10 +11,12 @@ use std::fmt;
 mod cache;
 pub mod gemma_packed;
 pub mod gemma_reference;
+mod position;
 pub mod shared_kv;
 mod trace;
 pub mod window_cache;
 pub(crate) use cache::KvCache;
+pub use position::PositionPlan;
 pub use trace::{LayerTrace, Trace};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -196,6 +198,7 @@ pub struct Model {
     projection_kernel: cpu::ProjectionKernel,
     output: Option<Vec<f32>>,
     qk_norms: Option<Vec<QkNormWeights>>,
+    position_plan: PositionPlan,
 }
 
 impl Model {
@@ -291,6 +294,7 @@ impl Model {
             projection_kernel: cpu::ProjectionKernel::Scalar,
             output,
             qk_norms,
+            position_plan: PositionPlan::Ordinary,
         })
     }
 
@@ -308,6 +312,18 @@ impl Model {
 
     pub fn projection_kernel(&self) -> cpu::ProjectionKernel {
         self.projection_kernel
+    }
+
+    /// Choose validated mathematical positions before any session borrows this
+    /// model. Consuming ownership prevents changing semantics under a live KV
+    /// prefix; a differently configured model requires a fresh session/replay.
+    pub fn with_position_plan(mut self, plan: PositionPlan) -> Self {
+        self.position_plan = plan;
+        self
+    }
+
+    pub fn position_plan(&self) -> PositionPlan {
+        self.position_plan
     }
 
     pub fn config(&self) -> &Config {
@@ -609,12 +625,16 @@ impl Model {
                     t.q_norm.copy_from_slice(q_rot);
                     t.k_norm.copy_from_slice(k_rot);
                 }
-                cpu::rotary(q_rot, q, n, c.query_heads, c.head_dim, offset, c.rope_theta)?;
-                cpu::rotary(k_rot, k, n, c.kv_heads, c.head_dim, offset, c.rope_theta)?;
+                self.position_plan
+                    .apply(q_rot, q, c, n, c.query_heads, offset)?;
+                self.position_plan
+                    .apply(k_rot, k, c, n, c.kv_heads, offset)?;
                 (q, k)
             } else {
-                cpu::rotary(q, q_rot, n, c.query_heads, c.head_dim, offset, c.rope_theta)?;
-                cpu::rotary(k, k_rot, n, c.kv_heads, c.head_dim, offset, c.rope_theta)?;
+                self.position_plan
+                    .apply(q, q_rot, c, n, c.query_heads, offset)?;
+                self.position_plan
+                    .apply(k, k_rot, c, n, c.kv_heads, offset)?;
                 (q_rot, k_rot)
             };
             if let Some(cache) = cache.as_deref_mut() {
