@@ -6,6 +6,7 @@
 
 pub mod app_chat;
 pub mod benchmark;
+pub mod capacity;
 pub mod cpu;
 pub mod generation;
 pub mod mlx;

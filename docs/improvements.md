@@ -6315,3 +6315,21 @@ strict verification and checkpoint-specific shared-KV/MTP work remain conditiona
 These are architecture obligations, not implemented optimization claims or new
 public options. Astra reviews the mapping; link/content and whitespace checks
 apply to this documentation task.
+
+## 2026-10-28 — Shared physical KV sizing and pure capacity search
+
+Implemented the small B0 core: one checked F16/F32 physical-producer descriptor
+for dense CPU, Metal and existing window/shared plans, plus a pure monotone
+capacity solver with exact adjacent exclusion witnesses. Metal resolves fixed
+layouts once and reuses actual constructor equations. An additive library
+inspection exposes the range without changing existing report schemas, model
+eligibility, arithmetic, caps or app settings. Load/process fit remains separate
+from session allocation fit.
+
+Formatting, strict default/Metal Clippy, 375 default tests, 254 Metal-library
+tests and all three explicit tiny GPU controls pass; counts overlap. Independent
+Astra review authenticates sources, raw outputs and closed process groups with
+no blockers. Retain this shared core; no new real-model, performance, phone or
+universal-architecture qualification is claimed. See the
+[implementation and limits](capacity-core.md) and
+[source-bound evidence](../benchmarks/results/2026-10-28-capacity-core-v1.json).

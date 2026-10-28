@@ -9,6 +9,7 @@
 //! Discarding a prepared frame leaves the exact committed prefix unchanged.
 
 use super::{Error, allocation_bytes, total_bytes, zeros};
+use crate::capacity::{KvOwner, KvStorage, Retention};
 use crate::cpu::{self, finite, length, nonzero, product};
 use std::ops::Range;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -80,11 +81,21 @@ impl WindowKvCache {
         if capacity > max_positions || window.is_some_and(|w| w == 0 || w != capacity) {
             return Err(Error::InvalidConfig("KV capacity/window"));
         }
-        let elements = product(product(heads, capacity)?, dims)?;
-        allocation_bytes(elements)?;
-        total_bytes(&[elements, elements])?
-            .checked_add(std::mem::size_of::<Self>())
-            .ok_or(cpu::Error::SizeOverflow.into())
+        KvOwner {
+            heads,
+            head_dim: dims,
+            storage: KvStorage::F32,
+            retention: match window {
+                Some(window) => Retention::Sliding { window },
+                None => Retention::Full,
+            },
+            guard_elements: 0,
+            copies: 1,
+        }
+        .at_capacity(capacity)?
+        .total_bytes
+        .checked_add(std::mem::size_of::<Self>())
+        .ok_or(cpu::Error::SizeOverflow.into())
     }
 
     pub fn new(

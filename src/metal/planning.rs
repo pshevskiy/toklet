@@ -8,6 +8,7 @@ use super::{
     mlx,
 };
 use crate::{
+    capacity::{self, KvOwner, KvStorage, Retention},
     mlx::{
         dense::Architecture,
         qwen::{Source, Storage},
@@ -51,19 +52,25 @@ impl MlxWeights {
     pub fn admit(&self, limit: usize) -> Result<()> {
         admit(self.admitted, limit)
     }
-    pub fn validate_buffers(&self, maximum: usize) -> Result<()> {
+    pub fn validate_buffers(&self, maximum: usize) -> Result<usize> {
+        let mut largest = 0;
         for (layout, storage) in self.tensors.values() {
             match storage {
-                Storage::Float(_) => memory::validate_buffer_bytes(layout.bytes(2)?, maximum)?,
+                Storage::Float(_) => {
+                    let bytes = layout.bytes(2)?;
+                    memory::validate_buffer_bytes(bytes, maximum)?;
+                    largest = largest.max(bytes);
+                }
                 Storage::Affine(p) => {
                     mlx::validate_resident_layout(*p)?;
                     for bytes in [p.weight_bytes(), p.metadata_bytes().div_ceil(4) * 4] {
                         memory::validate_buffer_bytes(bytes, maximum)?;
+                        largest = largest.max(bytes);
                     }
                 }
             }
         }
-        Ok(())
+        Ok(largest)
     }
 }
 fn admit(required: usize, limit: usize) -> Result<()> {
@@ -173,22 +180,103 @@ impl SessionPlan {
         attention_mode: AttentionMode,
         context_limit: usize,
     ) -> Result<Self> {
-        let chunk = options.prefill_chunk_size;
-        if options.capacity == 0
-            || options.capacity > context_limit
-            || chunk == 0
-            || chunk > 1024
-            || chunk > options.capacity
-            || options
-                .position_offset
-                .checked_add(options.capacity)
-                .is_none_or(|n| n > c.max_positions.min(context_limit))
-            || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
-        {
-            return Err(Error::Options(
-                "Metal session options outside admitted model/context bounds",
-            ));
+        ResolvedSessionPlan::new(
+            c,
+            weight_bytes,
+            options,
+            readback_mode,
+            attention_mode,
+            context_limit,
+        )?
+        .at_capacity(options.capacity)
+    }
+    pub fn admit(&self, limit: usize) -> Result<()> {
+        admit(self.memory.admitted_bytes, limit)
+    }
+    fn buffer_bytes(&self) -> Result<[usize; 10]> {
+        Ok([
+            self.h.bytes(2)?,
+            self.q.bytes(2)?,
+            self.k.bytes(2)?,
+            self.m.bytes(2)?,
+            self.f.bytes(4)?,
+            self.cache_count
+                .checked_mul(2)
+                .ok_or(Error::Options("cache size overflow"))?,
+            self.score_count
+                .checked_mul(4)
+                .ok_or(Error::Options("score size overflow"))?,
+            self.zero_count
+                .checked_mul(2)
+                .ok_or(Error::Options("zero bias overflow"))?,
+            self.token_count
+                .checked_mul(4)
+                .ok_or(Error::Options("token size overflow"))?,
+            32,
+        ])
+    }
+    fn largest_buffer_bytes(&self) -> Result<usize> {
+        Ok(self.buffer_bytes()?.into_iter().max().unwrap_or(0))
+    }
+    pub fn validate_buffers(&self, maximum: usize) -> Result<()> {
+        for bytes in self.buffer_bytes()? {
+            memory::validate_buffer_bytes(bytes, maximum)?;
         }
+        Ok(())
+    }
+}
+
+fn validate_session_options(
+    c: &model::Config,
+    options: session::Options,
+    context_limit: usize,
+) -> Result<usize> {
+    let chunk = options.prefill_chunk_size;
+    if options.capacity == 0
+        || options.capacity > context_limit
+        || chunk == 0
+        || chunk > 1024
+        || chunk > options.capacity
+        || options
+            .position_offset
+            .checked_add(options.capacity)
+            .is_none_or(|n| n > c.max_positions.min(context_limit))
+        || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
+    {
+        return Err(Error::Options(
+            "Metal session options outside admitted model/context bounds",
+        ));
+    }
+    Ok(chunk)
+}
+
+/// Device-specific layout resolution happens once. Candidate capacities below
+/// reuse only checked integer arithmetic and the exact constructor formula.
+#[derive(Clone, Copy)]
+struct ResolvedSessionPlan<'a> {
+    c: &'a model::Config,
+    weight_bytes: usize,
+    options: session::Options,
+    readback_mode: ReadbackMode,
+    attention_mode: AttentionMode,
+    context_limit: usize,
+    h: Layout,
+    q: Layout,
+    k: Layout,
+    m: Layout,
+    f: Layout,
+    widest: usize,
+}
+impl<'a> ResolvedSessionPlan<'a> {
+    fn new(
+        c: &'a model::Config,
+        weight_bytes: usize,
+        options: session::Options,
+        readback_mode: ReadbackMode,
+        attention_mode: AttentionMode,
+        context_limit: usize,
+    ) -> Result<Self> {
+        let chunk = validate_session_options(c, options, context_limit)?;
         let h = Layout::new(chunk, c.hidden_size, true)?;
         let query_width = c.query_heads * c.head_dim;
         let q = Layout::new(chunk, query_width, true)?;
@@ -208,12 +296,49 @@ impl SessionPlan {
         {
             return Err(Error::Unsupported("requires contiguous Half activations"));
         }
-        let cache_count = c
-            .kv_heads
-            .checked_mul(options.capacity)
-            .and_then(|n| n.checked_mul(c.head_dim))
-            .and_then(|n| n.checked_add(7))
-            .ok_or(Error::Options("cache size overflow"))?;
+        Ok(Self {
+            c,
+            weight_bytes,
+            options,
+            readback_mode,
+            attention_mode,
+            context_limit,
+            h,
+            q,
+            k,
+            m,
+            f,
+            widest,
+        })
+    }
+    fn at_capacity(&self, capacity: usize) -> Result<SessionPlan> {
+        let Self {
+            c,
+            weight_bytes,
+            mut options,
+            readback_mode,
+            attention_mode,
+            context_limit,
+            h,
+            q,
+            k,
+            m,
+            f,
+            widest,
+        } = *self;
+        options.capacity = capacity;
+        let chunk = validate_session_options(c, options, context_limit)?;
+        let kv = KvOwner {
+            heads: c.kv_heads,
+            head_dim: c.head_dim,
+            storage: KvStorage::F16,
+            retention: Retention::Full,
+            guard_elements: 7,
+            copies: c.num_layers,
+        }
+        .at_capacity(options.capacity)
+        .map_err(|_| Error::Options("KV bytes overflow"))?;
+        let cache_count = kv.elements_per_array;
         // Reference owns two [heads, chunk, capacity] FP32 matrices.
         // Online leaves only two eight-word guards, independent of depth.
         let score_count = if attention_mode == AttentionMode::Online {
@@ -267,10 +392,7 @@ impl SessionPlan {
                 )?,
             )?,
         )?;
-        let kv_bytes = cache_count
-            .checked_mul(4)
-            .and_then(|n| n.checked_mul(c.num_layers))
-            .ok_or(Error::Options("KV bytes overflow"))?;
+        let kv_bytes = kv.total_bytes;
         let history_bytes = options.capacity * 4;
         let logits_bytes = if readback_mode == ReadbackMode::GreedyToken {
             8
@@ -290,7 +412,7 @@ impl SessionPlan {
         ]
         .into_iter()
         .try_fold(0, add)?;
-        Ok(Self {
+        Ok(SessionPlan {
             h,
             q,
             k,
@@ -312,33 +434,32 @@ impl SessionPlan {
             },
         })
     }
-    pub fn admit(&self, limit: usize) -> Result<()> {
-        admit(self.memory.admitted_bytes, limit)
-    }
-    pub fn validate_buffers(&self, maximum: usize) -> Result<()> {
-        for bytes in [
-            self.h.bytes(2)?,
-            self.q.bytes(2)?,
-            self.k.bytes(2)?,
-            self.m.bytes(2)?,
-            self.f.bytes(4)?,
-            self.cache_count
-                .checked_mul(2)
-                .ok_or(Error::Options("cache size overflow"))?,
-            self.score_count
-                .checked_mul(4)
-                .ok_or(Error::Options("score size overflow"))?,
-            self.zero_count
-                .checked_mul(2)
-                .ok_or(Error::Options("zero bias overflow"))?,
-            self.token_count
-                .checked_mul(4)
-                .ok_or(Error::Options("token size overflow"))?,
-            32,
-        ] {
-            memory::validate_buffer_bytes(bytes, maximum)?;
-        }
-        Ok(())
+    fn capacity_report(
+        &self,
+        maximum_buffer_bytes: usize,
+        weight_buffer_bytes: usize,
+    ) -> Result<capacity::Report> {
+        capacity::search(
+            self.options.prefill_chunk_size,
+            self.options.capacity,
+            capacity::Limits {
+                budget_bytes: self.options.memory_limit_bytes,
+                maximum_buffer_bytes,
+            },
+            |capacity| -> Result<capacity::Footprint> {
+                let plan = self.at_capacity(capacity)?;
+                Ok(capacity::Footprint {
+                    admitted_bytes: plan.memory.admitted_bytes,
+                    largest_buffer_bytes: plan.largest_buffer_bytes()?.max(weight_buffer_bytes),
+                })
+            },
+        )
+        .map_err(|error| match error {
+            capacity::SearchError::InvalidBounds => {
+                Error::Options("invalid capacity search bounds")
+            }
+            capacity::SearchError::Planner(error) => error,
+        })
     }
 }
 
@@ -399,7 +520,9 @@ pub fn inspect_mlx(
         normalization,
         readback,
         AttentionPolicy::Explicit(attention),
+        false,
     )
+    .map(|inspection| inspection.resources)
 }
 
 /// Same planning with the actual native model factory's attention choice.
@@ -419,6 +542,38 @@ pub fn inspect_mlx_with_native_attention(
         normalization,
         readback,
         AttentionPolicy::NativeModel,
+        false,
+    )
+    .map(|inspection| inspection.resources)
+}
+
+/// Additive read-only numerical range report, within the already admitted
+/// requested upper capacity. This does not discover a model's declared maximum,
+/// widen factory eligibility, reserve memory or certify a text/device profile.
+/// `capacity` may fit while `resources.fits_*_load_budget` is false. Callers must
+/// honor both load flags, allow for application/process owners, and re-admit at
+/// construction. Existing inspect APIs/schema remain unchanged.
+#[derive(Debug, serde::Serialize)]
+pub struct CapacityInspection {
+    pub resources: MlxReport,
+    pub capacity: Option<capacity::Report>,
+}
+pub fn inspect_mlx_capacity(
+    directory: &Path,
+    load: weights::LoadOptions,
+    options: session::Options,
+    normalization: NormalizationMode,
+    readback: ReadbackMode,
+    attention: AttentionMode,
+) -> Result<CapacityInspection> {
+    inspect_with_policy(
+        directory,
+        load,
+        options,
+        normalization,
+        readback,
+        AttentionPolicy::Explicit(attention),
+        true,
     )
 }
 
@@ -433,7 +588,8 @@ fn inspect_with_policy(
     normalization: NormalizationMode,
     readback: ReadbackMode,
     policy: AttentionPolicy,
-) -> Result<MlxReport> {
+    search_capacity: bool,
+) -> Result<CapacityInspection> {
     autoreleasepool(|_| {
         if load.memory_limit_bytes == 0
             || load.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
@@ -456,50 +612,60 @@ fn inspect_with_policy(
         };
         validate_attention(Some(source.architecture()), attention)?;
         let weights = MlxWeights::new(&source)?;
-        let session = SessionPlan::new(
+        let resolved = ResolvedSessionPlan::new(
             source.config(),
             weights.weight_bytes,
             options,
             readback,
             attention,
+            weights::MAX_CONTEXT_LIMIT,
         )?;
+        let session = resolved.at_capacity(options.capacity)?;
         let gpu = Gpu::new()?;
         let _pipelines = mlx::compile(&gpu)?;
         validate_attention_device(&gpu, attention)?;
         let maximum = gpu.device.maxBufferLength();
-        weights.validate_buffers(maximum)?;
-        session.validate_buffers(maximum)?;
+        let weight_buffer_bytes = weights.validate_buffers(maximum)?;
+        let capacity = if search_capacity {
+            Some(resolved.capacity_report(maximum, weight_buffer_bytes)?)
+        } else {
+            session.validate_buffers(maximum)?;
+            None
+        };
         let fits_source_load_budget = source.admitted_load_bytes() <= load.memory_limit_bytes;
         let fits_resident_load_budget = weights.admitted <= load.memory_limit_bytes;
         let fits_session_budget = session.memory.admitted_bytes <= options.memory_limit_bytes;
-        Ok(MlxReport {
-            schema_version: 1,
-            device_name: gpu.device.name().to_string(),
-            maximum_buffer_bytes: maximum,
-            requested_load_context: load.context_limit,
-            requested_capacity: options.capacity,
-            requested_chunk_size: options.prefill_chunk_size,
-            requested_position_offset: options.position_offset,
-            requested_load_budget_bytes: load.memory_limit_bytes,
-            requested_session_budget_bytes: options.memory_limit_bytes,
-            projection: super::ProjectionMode::MlxAffine,
-            normalization,
-            readback,
-            attention,
-            source_payload_bytes: source.tensor_payload_bytes(),
-            source_admitted_load_bytes: source.admitted_load_bytes(),
-            resident_weights_bytes: weights.weight_bytes,
-            resident_admitted_load_bytes: weights.admitted,
-            session_memory: session.memory,
-            fits_source_load_budget,
-            fits_resident_load_budget,
-            fits_session_budget,
-            fits_requested_budgets: fits_source_load_budget
-                && fits_resident_load_budget
-                && fits_session_budget,
-            numerical_buffers_allocated: false,
-            payload_validation_required: true,
-            qualification_evaluated: false,
+        Ok(CapacityInspection {
+            capacity,
+            resources: MlxReport {
+                schema_version: 1,
+                device_name: gpu.device.name().to_string(),
+                maximum_buffer_bytes: maximum,
+                requested_load_context: load.context_limit,
+                requested_capacity: options.capacity,
+                requested_chunk_size: options.prefill_chunk_size,
+                requested_position_offset: options.position_offset,
+                requested_load_budget_bytes: load.memory_limit_bytes,
+                requested_session_budget_bytes: options.memory_limit_bytes,
+                projection: super::ProjectionMode::MlxAffine,
+                normalization,
+                readback,
+                attention,
+                source_payload_bytes: source.tensor_payload_bytes(),
+                source_admitted_load_bytes: source.admitted_load_bytes(),
+                resident_weights_bytes: weights.weight_bytes,
+                resident_admitted_load_bytes: weights.admitted,
+                session_memory: session.memory,
+                fits_source_load_budget,
+                fits_resident_load_budget,
+                fits_session_budget,
+                fits_requested_budgets: fits_source_load_budget
+                    && fits_resident_load_budget
+                    && fits_session_budget,
+                numerical_buffers_allocated: false,
+                payload_validation_required: true,
+                qualification_evaluated: false,
+            },
         })
     })
 }
@@ -507,6 +673,80 @@ fn inspect_with_policy(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn resolved_capacity_search_matches_constructor_totals_and_device_edge() {
+        let c = model::Config {
+            hidden_size: 1024,
+            intermediate_size: 3072,
+            query_heads: 16,
+            kv_heads: 8,
+            head_dim: 128,
+            num_layers: 28,
+            // Keep constant vocabulary scratch below the257-row KV/score
+            // buffers so this test exercises a genuine device-buffer limit.
+            vocab_size: 128,
+            max_positions: 512,
+            rope_theta: 1e6,
+            rms_norm_eps: 1e-6,
+        };
+        let options = session::Options {
+            capacity: 512,
+            prefill_chunk_size: 32,
+            position_offset: 0,
+            memory_limit_bytes: weights::INITIAL_MEMORY_LIMIT_BYTES,
+        };
+        for attention in [AttentionMode::Reference, AttentionMode::Online] {
+            for readback in [ReadbackMode::FullLogits, ReadbackMode::GreedyToken] {
+                // Planner-only Online shape coverage grants no Qwen3 Online eligibility.
+                let mut resolved = ResolvedSessionPlan::new(
+                    &c,
+                    633366062,
+                    options,
+                    readback,
+                    attention,
+                    weights::MAX_CONTEXT_LIMIT,
+                )
+                .unwrap();
+                let boundary = resolved.at_capacity(257).unwrap();
+                let direct = SessionPlan::new(
+                    &c,
+                    633366062,
+                    session::Options {
+                        capacity: 257,
+                        ..options
+                    },
+                    readback,
+                    attention,
+                )
+                .unwrap();
+                assert_eq!(boundary.memory, direct.memory);
+                resolved.options.memory_limit_bytes = boundary.memory.admitted_bytes;
+                let report = resolved.capacity_report(isize::MAX as usize, 1024).unwrap();
+                assert_eq!(report.selected.unwrap().capacity, 257);
+                assert_eq!(report.first_excluded.unwrap().capacity, 258);
+                assert!(!report.first_excluded.unwrap().fits_budget);
+                resolved.options.memory_limit_bytes = weights::INITIAL_MEMORY_LIMIT_BYTES;
+                let buffer_edge = boundary.largest_buffer_bytes().unwrap();
+                let report = resolved.capacity_report(buffer_edge, 1024).unwrap();
+                let expected = (32..=512)
+                    .filter(|&n| {
+                        resolved
+                            .at_capacity(n)
+                            .unwrap()
+                            .largest_buffer_bytes()
+                            .unwrap()
+                            <= buffer_edge
+                    })
+                    .next_back();
+                assert_eq!(report.selected.map(|p| p.capacity), expected);
+                assert_eq!(report.selected.unwrap().capacity, 257);
+                assert_eq!(report.first_excluded.unwrap().capacity, 258);
+                assert!(!report.first_excluded.unwrap().fits_buffer);
+                assert!(resolved.at_capacity(513).is_err());
+            }
+        }
+    }
+
     #[test]
     fn allocation_limits_match_buffer_boundary_without_device() {
         assert!(memory::validate_buffer_bytes(1, 1).is_ok());

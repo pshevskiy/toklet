@@ -112,6 +112,11 @@ separate. Unified CPU/GPU memory is one budget.
 
 ## Execution order and acceptance
 
+**B0 complete:** the [shared capacity core](capacity-core.md) passes its checked
+allocation/search boundaries, standard checks, three tiny GPU controls and
+independent Astra review. B1 is next. This does not add a model family, user
+control or a larger qualified context by itself.
+
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |
 | **B0: shared planning core** | Reuse checked physical KV-owner descriptors in dense CPU/Metal and existing window/shared plans. Add a pure capacity solver; resolve Metal layouts once. Preserve current caps, eligibility, arithmetic and defaults. Keep this small: no new settings panel or graph VM. | Exact old allocation totals; distinct F16/F32 and shared-owner accounting; local retention/staging; overflow, per-buffer, budget and selected+1 boundaries; planner/constructor equality. Ordinary checks and relevant tiny controls. |

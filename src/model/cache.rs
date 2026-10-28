@@ -1,4 +1,5 @@
 use super::{Config, Error, product, total_bytes, zeros};
+use crate::capacity::{KvOwner, KvStorage, Retention};
 
 pub(crate) struct LayerKv {
     k: Vec<f32>,
@@ -19,8 +20,16 @@ impl KvCache {
         product(c.num_layers, std::mem::size_of::<LayerKv>()).map_err(Into::into)
     }
     pub(crate) fn planned_bytes(c: &Config, capacity: usize) -> Result<usize, Error> {
-        let count = product(product(c.kv_heads, capacity)?, c.head_dim)?;
-        product(total_bytes(&[count, count])?, c.num_layers).map_err(Into::into)
+        Ok(KvOwner {
+            heads: c.kv_heads,
+            head_dim: c.head_dim,
+            storage: KvStorage::F32,
+            retention: Retention::Full,
+            guard_elements: 0,
+            copies: c.num_layers,
+        }
+        .at_capacity(capacity)?
+        .total_bytes)
     }
 
     pub(crate) fn new(c: &Config, capacity: usize) -> Result<Self, Error> {

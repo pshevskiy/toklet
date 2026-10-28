@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "task": "M8 B0 shared physical KV sizing and capacity search",
+  "decision": "retain reviewed planning core",
+  "scope": "Allocation arithmetic and read-only inspection; no numerical algorithm, model admission, app setting or default change.",
+  "tested_code_base_commit": "50fdf4a6ecb049686436154576fe303eaff98b25",
+  "source_files": [
+    {
+      "path": "src/capacity.rs",
+      "bytes": 11922,
+      "sha256": "f78ae474bf762266caac8512ecff0b41a78975a754133c39be5573ed32d71cee"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 599,
+      "sha256": "0660ed2a4906e6f3c2896e7cbc9bce1747d759308898dd5479336ee37f239652"
+    },
+    {
+      "path": "src/model/cache.rs",
+      "bytes": 3287,
+      "sha256": "71c83064082e0205666abd014598a6613889e968199273964df6398d0f599a54"
+    },
+    {
+      "path": "src/model/window_cache.rs",
+      "bytes": 15985,
+      "sha256": "9bded3155ca4440903b07dceb2db35218292420a73410484f44a6bef666e4313"
+    },
+    {
+      "path": "src/metal/planning.rs",
+      "bytes": 39230,
+      "sha256": "af5d59f5af4082d5bb34e4fe0aab8fc1feb60ea67793564f8211b32de76a3630"
+    }
+  ],
+  "checks": {
+    "passed": true,
+    "default_tests_passed": 375,
+    "metal_library_tests_passed": 254,
+    "counts_overlap": true,
+    "commands": [
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "fmt",
+          "--check"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--all-targets",
+          "--features",
+          "metal",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--features",
+          "metal",
+          "--lib"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--release",
+          "--features",
+          "metal",
+          "--test",
+          "mlx_qwen3_metal",
+          "--no-run"
+        ],
+        "exit_code": 0
+      }
+    ]
+  },
+  "tiny_gpu": {
+    "passed": true,
+    "tests": [
+      {
+        "name": "native_qwen3_graph_matches_frozen_tied_and_untied_oracles",
+        "exit_code": 0,
+        "memory": {
+          "maximum resident set size": 25968640,
+          "peak memory footprint": 20906512
+        }
+      },
+      {
+        "name": "native_qwen3_pending_state_token_selection_and_memory_are_explicit",
+        "exit_code": 0,
+        "memory": {
+          "maximum resident set size": 26001408,
+          "peak memory footprint": 14991936
+        }
+      },
+      {
+        "name": "native_qwen3_profile_counts_norm_encoders_and_exact_memory_boundaries",
+        "exit_code": 0,
+        "memory": {
+          "maximum resident set size": 26394624,
+          "peak memory footprint": 21987904
+        }
+      }
+    ],
+    "test_binary": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/frozen-bin/mlx_qwen3_metal",
+      "bytes": 2460160,
+      "sha256": "184fc2714abfb168237fc217b020775f328453a3287f36f1bac36965c8da1edc"
+    },
+    "maximum_resident_set_size_bytes": 26394624,
+    "maximum_physical_footprint_bytes": 21987904
+  },
+  "independent_astra_review": {
+    "status": "approved",
+    "receipt": {
+      "path": "artifacts/new-goal-b0-independent-review-v1/review.json",
+      "bytes": 4526,
+      "sha256": "3899a1c9af7dc7e3176e5336d5ccc7d3d0dc43b193776c432708d9350b3d1981"
+    },
+    "authenticated": {
+      "checks_bindings": 255,
+      "checks_outputs": 12,
+      "gpu_bindings": 264,
+      "gpu_outputs": 6,
+      "currently_absent_recorded_process_groups": 9,
+      "cpu_tests_passed": 375,
+      "metal_library_tests_passed": 254,
+      "tiny_gpu_tests_passed": 3
+    }
+  },
+  "raw_receipts": [
+    {
+      "path": "artifacts/new-goal-b0-checks-v1/checks.json",
+      "bytes": 51571,
+      "sha256": "acfca6f04b89df9803190779a8554217fbddae66e5ad6226779158b28403a463"
+    },
+    {
+      "path": "artifacts/new-goal-b0-checks-v1/gpu.json",
+      "bytes": 52117,
+      "sha256": "e0a5574cbb2155ebd7eb6a1ce3fe0011986338c1c5057b4a2e90ec7d69167016"
+    }
+  ],
+  "validation_cases": [
+    "literal unchanged dense F16/F32 and guarded totals",
+    "actual CPU cache/owner metadata totals",
+    "shared producer accounting without consumer duplication",
+    "window retention and separate chunk staging",
+    "checked overflow/isize and invalid bounds",
+    "4000 exhaustive solver budget/buffer cases",
+    "same Metal constructor formulas and resolved layouts",
+    "Reference/Online and FullLogits/GreedyToken planner combinations",
+    "exact selected257/excluded258 device-buffer boundary",
+    "tied/untied tiny GPU graph, pending state and exact memory boundaries"
+  ],
+  "limitations": [
+    "No real-model run or performance measurement for B0.",
+    "Existing model/backend/context caps and ordinary app settings remain unchanged.",
+    "Search covers only the supplied already implemented interval with fixed chunk/modes and monotone footprint.",
+    "Source/resident loading flags, application/process owners and fresh factory admission remain separate.",
+    "F16/F32 symmetric K/V owners only; future codecs, MLA or recurrent state need concrete layouts.",
+    "No phone qualification claimed."
+  ]
+}
