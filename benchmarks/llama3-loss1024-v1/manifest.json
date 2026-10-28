@@ -1,0 +1,122 @@
+{
+  "format": "toklet-llama3-loss1024-inputs-v1",
+  "repository": "mlx-community/Llama-3.2-1B-Instruct-8bit",
+  "revision": "d48cdf0a4ea22d893b7c63a99d6a693e24822795",
+  "dataset": {
+    "path": "artifacts/datasets/wikitext-2-raw-test.parquet",
+    "bytes": 732610,
+    "sha256": "5f1bea067869d04849c0f975a2b29c4ff47d867f484f5010ea5e861eab246d91",
+    "revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+    "split": "test",
+    "configuration": "wikitext-2-raw-v1"
+  },
+  "tokenizer": {
+    "path": "models/MLX-Llama-3.2-1B-Instruct-8bit-d48cdf0/tokenizer.json",
+    "bytes": 9085657,
+    "sha256": "79e3e522635f3171300913bb421464a87de6222182a0570b9b2ccba2a964b2b4"
+  },
+  "corpus": {
+    "utf8_bytes": 1290546,
+    "sha256": "430983e5a711fbc4c6576edffecacf47ff23d58f62f3923d2386d798e0a794c9",
+    "recipe": "text column, original row order, newline join rows if truthy; no stripping"
+  },
+  "parents": {
+    "benchmarks/sources.json": {
+      "bytes": 5858,
+      "sha256": "dc2f82fb50b3f1f763c4757a992429b9122f3628c049709bdd7cb2252c69ea28"
+    },
+    "benchmarks/contract-v1/manifest.json": {
+      "bytes": 6490,
+      "sha256": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66"
+    },
+    "benchmarks/qwen3-context4096-v1/manifest.json": {
+      "bytes": 2143,
+      "sha256": "710054f18fe9a983399c230d7c31c7e99ddcff24f0748498dc3ce4a8b917c7c9"
+    }
+  },
+  "blocks": [
+    {
+      "block": 0,
+      "input_start": 0,
+      "input_end": 257,
+      "score_rows": [
+        0,
+        256
+      ],
+      "global_target_indices": [
+        1,
+        257
+      ],
+      "targets": 256,
+      "reset_position": 0
+    },
+    {
+      "block": 1,
+      "input_start": 256,
+      "input_end": 513,
+      "score_rows": [
+        0,
+        256
+      ],
+      "global_target_indices": [
+        257,
+        513
+      ],
+      "targets": 256,
+      "reset_position": 0
+    },
+    {
+      "block": 2,
+      "input_start": 512,
+      "input_end": 769,
+      "score_rows": [
+        0,
+        256
+      ],
+      "global_target_indices": [
+        513,
+        769
+      ],
+      "targets": 256,
+      "reset_position": 0
+    },
+    {
+      "block": 3,
+      "input_start": 768,
+      "input_end": 1025,
+      "score_rows": [
+        0,
+        256
+      ],
+      "global_target_indices": [
+        769,
+        1025
+      ],
+      "targets": 256,
+      "reset_position": 0
+    }
+  ],
+  "policy": {
+    "targets": 1024,
+    "capacity": 512,
+    "block_tokens": 257,
+    "reset_each_block": true,
+    "add_special_tokens": false,
+    "chat_template": false,
+    "stop_on_eos": false,
+    "mean_nll_increase_limit": 0.05,
+    "reference": "same packed artifact canonical FP64 arithmetic/Half storage",
+    "cross_profile_greedy_gate": false,
+    "unquantized_quality_qualified": false,
+    "full_task_quality_qualified": false
+  },
+  "complete_corpus_tokens": 288936,
+  "tokens": {
+    "file": "tokens.u32le",
+    "dtype": "u32le",
+    "count": 1025,
+    "bytes": 4100,
+    "sha256": "e4086f7621d9d781f5487db05f17df63e9693d0d2788d43a69c8108fc28aa493"
+  },
+  "model_executed": false
+}

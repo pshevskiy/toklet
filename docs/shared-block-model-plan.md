@@ -117,16 +117,16 @@ allocation/search boundaries, standard checks, three tiny GPU controls and
 independent Astra review. B1 is next. This does not add a model family, user
 control or a larger qualified context by itself.
 
-**B1 in progress:** the [scalar positional core](llama3-rotary-core.md),
-[source/model plan](llama3-position-plan.md),
-[isolated Half rotary](llama3-metal-rotary.md) and
-[composed structural Metal path](llama3-metal-composition.md) pass their scoped
-checks and Astra review. [Composite index contracts](metal-index-contracts.md)
-guard strided MLX and KV/score extents. The pinned real Llama 3.2 1B
-[short Mac vertical and independent text contract](llama3-real-model-contract.md)
-now pass source/native, cache/state, raw generation and observed memory checks.
-The separate 1,024-target consistency screen, production text/app admission and
-full adoption quality remain open; no new native app family is claimed.
+**B1 complete in its selected Mac512 engine-adapter scope:** the
+[scalar positional core](llama3-rotary-core.md), [source/model plan](llama3-position-plan.md),
+[isolated rotary](llama3-metal-rotary.md), [structural composition](llama3-metal-composition.md)
+and [index contracts](metal-index-contracts.md) pass. The pinned real Llama3.2 1B
+[short vertical/text contract](llama3-real-model-contract.md) and unchanged
+[1,024-target consistency screen](llama3-loss1024.md) pass source/native, cache,
+raw generation and measured-memory requirements. This does not qualify declared
+131072, original unquantized10k/100 adoption quality, production Chat or iPhone.
+Those remain B5/M8 closure work. Next is B2 fused-row composition; frontend
+qualification does not interrupt the breadth-first order.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |

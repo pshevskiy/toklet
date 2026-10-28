@@ -6496,3 +6496,34 @@ quality remain explicit B5/M8 closure requirements. See
 [contract/results](llama3-real-model-contract.md),
 [compact evidence](../benchmarks/results/2026-10-28-llama3-real-short-vertical-v1.json)
 and [TODO](../TODO.md).
+
+## 2026-10-28 — Fixed Llama3 consistency screen; scoped B1 closure
+
+Added a re-encoded, independently replayed 1,025-ID held-out input contract,
+sequential one-block CPU main/wide source scorer, explicit native loss worker
+and paired statistics reader. Four reset257-token blocks score1,024 distinct
+next-token targets. The exact primary gate remains paired `fsum(native-wide)/1024
+<=0.05`; eight-ULP metadata coherence never augments it. Source/record hashes are
+authenticated, but full logits are not retained or claimed independently rescored.
+
+Shared only actual common diagnostic needs: fixed artifact identity and existing
+stable maximum/Kahan/exp/NLL functions. Existing scoring order, old worker policy
+and engine kernels stay unchanged. Astra caught an input hash/second-read gap;
+the exact consumed bounded bytes are now hashed. Mismatching rows are journaled
+before error. Canonical signed-zero row hashes preserve exact native numeric
+consistency without imposing source-profile hash or greedy equality.
+
+Both native chunks32/128 pass: mean2.9947039894934804, paired wide-reference
+delta−0.00004411466914202308. All1,028 rows/schedule agree numerically. Native
+observed lifetime physical peak is1,587,906,168B, source1,247,431,464B, below6GiB.
+Formatting, strict default/Metal Clippy,384 default /265 Metal-library /15 targeted
+example tests (overlap) and nine Python controls pass. An initial Metal lint
+failure in a legacy include is fixed with an equivalent type alias; no math or
+gate changed and its failed receipt remains.
+
+Retain/close B1 only in the selected Mac512 engine-adapter scope and continue
+B2 architecture breadth. Production Chat/codec/stop controls, original
+unquantized10k/100 adoption quality, app/phone and performance remain unfinished.
+See [screen and closure](llama3-loss1024.md),
+[evidence](../benchmarks/results/2026-10-28-llama3-loss1024-screen-v1.json) and
+[TODO](../TODO.md).

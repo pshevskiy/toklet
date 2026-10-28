@@ -1,0 +1,155 @@
+{
+  "format": "toklet-llama3-loss1024-screen-v1",
+  "date": "2026-10-28",
+  "base_revision": "17812e3",
+  "implementation_identity": "Exact code and frozen executable identities in bound receipts; commit containing this record. No numerical engine kernel changes.",
+  "passed": true,
+  "decision": "retain-scoped-b1-mac-adapter-and-proceed-b2",
+  "model": {
+    "repository": "mlx-community/Llama-3.2-1B-Instruct-8bit",
+    "revision": "d48cdf0a4ea22d893b7c63a99d6a693e24822795"
+  },
+  "scope": {
+    "implemented_capacity": 512,
+    "quality_input_rows_per_block": 257,
+    "targets": 1024,
+    "blocks": 4,
+    "reset_each_block": true,
+    "reference": "same quantized artifact canonical NumPy FP64 arithmetic/Half storage; full FP32 vocabulary logits scored",
+    "gate": "paired math.fsum(native_nll-wide_nll)/1024 <=0.05; exact threshold, no coherence tolerance added",
+    "native_numeric_consistency": "FP32 row hashes with signed zero canonicalized across chunks32/128, raw hashes retained separately",
+    "evidence": "authenticated per-target statistics, target bits and row hashes; no retained full-logit rescore claim",
+    "original_unquantized_10000_target_100_task_adoption_quality": "open in M8 closure",
+    "production_chat_app": "open in B5",
+    "iphone_qualified": false,
+    "performance_qualified": false
+  },
+  "results": [
+    {
+      "chunk": 32,
+      "mean_nll": 2.9947039894934804,
+      "wide_mean_nll": 2.9947481041626225,
+      "native_minus_wide": -4.411466914202308e-05,
+      "passed": true
+    },
+    {
+      "chunk": 128,
+      "mean_nll": 2.9947039894934804,
+      "wide_mean_nll": 2.9947481041626225,
+      "native_minus_wide": -4.411466914202308e-05,
+      "passed": true
+    }
+  ],
+  "source_main_minus_wide": -6.205189620778189e-05,
+  "checks": {
+    "default_tests": 384,
+    "metal_library_tests": 265,
+    "targeted_example_tests": 15,
+    "python_input_controls": 3,
+    "python_source_statistics_controls": 3,
+    "python_reader_controls": 3,
+    "fmt": true,
+    "strict_default_and_metal_clippy": true,
+    "overlapping_suites": true
+  },
+  "memory": {
+    "native_observed_maxima": {
+      "resident_size": 1597259776,
+      "phys_footprint": 1587906168,
+      "lifetime_max_phys_footprint": 1587906168
+    },
+    "source_observed_maxima": {
+      "resident_size": 3133161472,
+      "phys_footprint": 1241697064,
+      "lifetime_max_phys_footprint": 1247431464
+    },
+    "maximum_native_diagnostic_admitted_bytes": 1694265532,
+    "native_application_allowance_bytes": 67108864,
+    "source_admitted_bytes": 4377096508,
+    "observations": "Live owned-child libproc peaks; source also records completed lifetime peak. These are not throughput results."
+  },
+  "evidence": {
+    "inputs": {
+      "path": "artifacts/new-goal-b1d-loss-inputs-v1/inputs.json",
+      "bytes": 553586,
+      "sha256": "5a2fd1fe4a9d37fb29e161c53a310d625c0e76026995c3b54abd2d031525a984"
+    },
+    "portable_controls": {
+      "path": "artifacts/new-goal-b1d-loss-controls-v1/checks.json",
+      "bytes": 141808,
+      "sha256": "c06bae6f99b65034682e125598b0297809dc1aafd669e1dfaaae846982454147"
+    },
+    "rust_checks": {
+      "path": "artifacts/new-goal-b1d-loss-rust-checks-v2/checks.json",
+      "bytes": 815640,
+      "sha256": "a038933feb769446e6a39d7d20bdad4d02c161490ec149f46e35d4f9487f5a07"
+    },
+    "reader_controls": {
+      "path": "artifacts/new-goal-b1d-loss-checker-controls-v1/checks.json",
+      "bytes": 140903,
+      "sha256": "b156793397d0e1d8a1426933f097065143d47e6ebce450401fdc5473113cf1a7"
+    },
+    "source": {
+      "path": "artifacts/new-goal-b1d-loss-source-v1/source-run.json",
+      "bytes": 553833,
+      "sha256": "e339414dd97c71f19c407dad78478662866ebeb062c828a4b48ee48a232baa0c"
+    },
+    "source_report": {
+      "path": "artifacts/new-goal-b1d-loss-source-v1/loss/source.json",
+      "bytes": 69982,
+      "sha256": "0806525bf34aa6e6c35f98c5582ec5be354bb37d41bdcdc778a5feff4bc014ac"
+    },
+    "native": {
+      "path": "artifacts/new-goal-b1d-loss-native-v1/native-run.json",
+      "bytes": 1369618,
+      "sha256": "63418708a1a82140b9b43b67839531ca30500616521e7c9ab0b343aff4fe0c61"
+    },
+    "comparison": {
+      "path": "artifacts/new-goal-b1d-loss-native-v1/comparison.json",
+      "bytes": 240442,
+      "sha256": "2dc73b52b3d58f1bbd6aa368f594947144e59ebddc77a4944e57ba13099ba7bc"
+    },
+    "source_input_review": {
+      "path": "artifacts/new-goal-b1d-loss-independent-review-v1/prospective-source-input-review.json",
+      "bytes": 8132,
+      "sha256": "96efc29a608f30c8ed7cefd472f4692ad01c50f0fb7d9e45ddea5c0530db7082"
+    },
+    "input_controller_review": {
+      "path": "artifacts/new-goal-b1d-loss-independent-review-v1/prospective-input-controller-review.json",
+      "bytes": 5627,
+      "sha256": "bdcf50522655ee150981eaf470b8f12d28c4d6970e393afdbf58381cc0ed5b2a"
+    },
+    "source_controller_review": {
+      "path": "artifacts/new-goal-b1d-loss-independent-review-v1/prospective-source-controller-review.json",
+      "bytes": 6638,
+      "sha256": "20f5ce6f15800eb866eedef51a567d4688bb111bdb2fd1be964e7130ec07293d"
+    },
+    "reader_review": {
+      "path": "artifacts/new-goal-b1d-loss-independent-review-v1/prospective-reader-review.json",
+      "bytes": 4333,
+      "sha256": "77acd0eb2e813bc4b0398bd00ce767be191bb1c70a1338dac5d2ff3636f839d4"
+    },
+    "native_controller_review": {
+      "path": "artifacts/new-goal-b1d-loss-independent-review-v1/prospective-native-controller-review.json",
+      "bytes": 5711,
+      "sha256": "8d562a6a1d7f8091b70df11b7b7126650e4f4ddbeccd2b4edb69706f7be20c68"
+    },
+    "public_inputs": {
+      "path": "benchmarks/llama3-loss1024-v1/manifest.json",
+      "bytes": 3094,
+      "sha256": "c6142c0db112ec90fadde3e9e488037a4fb15cd971402f04a3dfb29cc84cab63"
+    },
+    "public_tokens": {
+      "path": "benchmarks/llama3-loss1024-v1/tokens.u32le",
+      "bytes": 4100,
+      "sha256": "e4086f7621d9d781f5487db05f17df63e9693d0d2788d43a69c8108fc28aa493"
+    }
+  },
+  "final_review": "artifacts/new-goal-b1d-loss-independent-review-v1/final-review.json",
+  "retained_attempts": [
+    "First coldMetalClippy rejected unusedSum reexport inside an existing library-test include; equivalent typealias preserves interface/math and finalv2 passed.",
+    "Astra caught a hash-then-second-read gap before outcomes; the consumed4100B token buffer is now bounded and hashed before decoding.",
+    "Mismatch row statistics are flushed before rejection, preserving failed schedule evidence."
+  ],
+  "next": "B2 Phi fused-row adapter: research pinned separately; production Chat and original adoption gates remain open."
+}

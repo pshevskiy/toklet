@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B1d — 1,024-target Llama3 consistency screen, scoped B1 closure, then B2 Phi**.
+Next implementation task: **B2a — checked fused row-span source/loading core for the selected Phi adapter**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -39,7 +39,7 @@ the goal, not a claim that arbitrary Hugging Face models already run.
 
 ## M8 — Architecture breadth and usable context controls
 
-### B1 — Llama3 scaled RoPE (in progress)
+### B1 — Llama3 scaled RoPE (complete in selected Mac512 engine scope)
 
 - [x] Pin a fitting MLX artifact, revision, config, packing and tokenizer bytes:
   [Llama 3.2 1B inventory](docs/llama3-rotary-core.md). Metadata only; no weights.
@@ -58,7 +58,7 @@ the goal, not a claim that arbitrary Hugging Face models already run.
   structural Llama admission and independent tiny Half graph/session checks.
   [Report](docs/llama3-metal-composition.md); 512-position implementation scope,
   metadata untested until separate real-checkpoint qualification.
-- [ ] B1d: freeze a bounded plain-text chat/BOS/stop contract and independent
+- [x] B1d: freeze a bounded plain-text chat/BOS/stop contract and independent
   model/source comparisons; tokenizer metadata alone does not establish Chat.
 - [x] B1d artifact: verify the complete pinned 1B payload, metadata/header and
   source identity; preserve bounded-transfer failure and exact-range recovery.
@@ -66,24 +66,30 @@ the goal, not a claim that arbitrary Hugging Face models already run.
   fixtures under the source/native contract; no app admission yet.
 - [x] B1d runner: check the explicit pinned diagnostic and independent complete
   source comparisons, native schedule/prefix/readback/state and raw generation.
-- [ ] B1d screen: freeze corpus/IDs and run the separate 1,024-target consistency
+- [x] B1d screen: freeze corpus/IDs and run the separate 1,024-target consistency
   screen; retain full adoption quality as a distinct requirement.
-- [ ] Pass short complete source/native, cache/session, bounded real generation
+- [x] Pass short complete source/native, cache/session, bounded real generation
   and measured memory checks on Mac; obtain Astra review and commit.
 
-The next integration decisions are settled with Astra: keep learned-weight bytes
-separate from positional residency, add zero-omitted positional memory fields,
-and update the shared Swift resource decoder's checked totals. Count model-owned
-frequencies once; inspection must not allocate them while reporting
-`numerical_buffers_allocated=false`. Keep Llama Reference-only and its initial
-512-position scope. Freeze the tiny Half graph before target outcomes using the
-existing stage policy (`atol=max(1e-4, 2*maxabs(half32-half64))`, `rtol=1e-3`).
-Packed projection weights remain FP32 reconstructions; Half embedding lookup
-rounding must not silently replace tied output-projection coefficients.
+B1 closes only the selected native Mac engine-adapter scope. The composed
+frequency owner, structural limits and zero-omitted Swift memory fields pass;
+[short real-model checks](docs/llama3-real-model-contract.md) and the unchanged
+[1,024-target screen](docs/llama3-loss1024.md) pass below 6 GiB. Declared131072,
+implemented512, scored257-row blocks and512 state checks remain distinct.
+Production Llama Chat, original unquantized10k/100 adoption quality and iPhone
+remain explicit B5/M8 requirements. This is not whole-family or full-window
+qualification. Proceed to B2 as Astra's acceptance review requires.
 
 ### B2 — Fused projection composition
 
-- [ ] Select and pin a compact Phi-style model with explicit positional rules.
+- [x] Select/pin a compact Phi-style candidate and exact metadata/header:
+  public Phi-3-mini-4k-instruct-4bit at `5b3819ed6317784fb20eddeae9bed984f778d0d0`.
+  Metadata only: full payload is not downloaded/verified or numerically admitted.
+- [ ] B2a: checked original QKV/gate-up row spans and source range loading;
+  preserve packing, original row order and safe unaligned-header byte handling.
+- [ ] B2b: strict Phi3 config/composition and tiny head96 graph checks; retain
+  declared sliding2047 and enforce bounded full/sliding equivalence on CPU/Metal.
+  LongRoPE variants remain rejected until actually implemented.
 - [ ] Implement checked fused QKV/gate-up mapping using shared projection blocks.
 - [ ] Validate packed row spans/alignment, an independent tiny graph and actual
   LongRoPE when required; reject unimplemented variants.
@@ -191,3 +197,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B1d frozen source export | CPU dual-profile 349-array export, independent saved-bit verification and exact text replay pass; four owned groups close. Observed source peak RSS 2,875,883,520 bytes and lifetime physical peak 1,210,075,872 bytes, below 6 GiB. Native comparison still pending. | [Contract](docs/llama3-real-model-contract.md); final prospective native review. |
 | 2026-10-28 | B1d short native vertical | Fixed source/consumer policy; 28,791,552 value comparisons pass with zero failures, exact logit schedules/causal prefix/readback/state and actual 512-token boundary pass. Native observed physical lifetime peak 1,587,398,264 bytes. Astra independently rescored all values and verified final evidence; reviewed task complete. | [Results](benchmarks/results/2026-10-28-llama3-real-short-vertical-v1.json); 1,024-target screen, scoped B1 closure and B2 next; text/app and adoption quality remain open. |
 | 2026-10-28 | B1 execution-order clarification | Astra checked the actual B1 acceptance row: after the fixed consistency screen and scoped review, move to B2 architecture work. Production Llama Chat and full adoption quality stay explicit in B5/M8 closure; no gate waiver. | Screen remains next; B1 is not yet closed. |
+| 2026-10-28 | B1d consistency screen | Fixed 1,024-target paired screen passes for chunks32/128: native mean2.9947039895, paired delta−0.0000441146691 ≤0.05; exact numeric row hashes match. 384 default /265 Metal-library /15 example and nine Python controls pass. Astra independently verified final statistics and evidence; scoped B1 closure approved. | [Report](docs/llama3-loss1024.md); close selected Mac512 B1 and move B2 after review. |
+| 2026-10-28 | B2 candidate research | Astra pinned a fitting public Phi3 four-bit metadata/header with fused QKV/gate-up, ordinary head96 RoPE, sliding2047 constraint and text/padded-vocabulary limits. No payload or model run. | Private pinned research; B2a is next, preserving all scope limits. |
