@@ -1,0 +1,87 @@
+{
+  "format": "toklet-window-row-geometry-v1",
+  "date": "2026-10-29",
+  "base_revision": "a95414609af82871802511da2ff2270bf9ad50ed",
+  "passed": true,
+  "scope": "Pure row descriptors reused by existing FP32 CPU cache; GPU consumer is future work",
+  "result": {
+    "old_span_oracle_cases": 678,
+    "copy_plan_oracle_cases": 9772,
+    "integration_combinations": 64,
+    "integration_commits": 576,
+    "physical_bits_and_signed_zero": true,
+    "segment_head_logical_equivalence": true,
+    "partition_physical_equivalence": true,
+    "partition_generations_compared": false,
+    "allocation_pointers_and_owned_bytes_unchanged": true,
+    "near_usize_boundary": true
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_passed": 424,
+    "metal_library_passed": 306,
+    "targeted_window_passed": 11,
+    "counts_overlap": true,
+    "commands": 6,
+    "gpu_executed": false,
+    "real_model_executed": false
+  },
+  "evidence": {
+    "checks": {
+      "path": "artifacts/new-goal-b3c3a-cold-checks-v1/checks.json",
+      "bytes": 862007,
+      "sha256": "fc5e6f61c47dbf9e28ef15db704dc750a4437a304076d1383125ba8aee36fe8d"
+    },
+    "proposal": {
+      "path": "artifacts/new-goal-b3c3a-root-draft-v1/manifest.json",
+      "bytes": 1303,
+      "sha256": "a3b856ee6edd219e827e398dda72daf4fc14206bb4eb4b3751ce902eb851b7c8"
+    },
+    "advice": {
+      "path": "artifacts/new-goal-b3c3a-advice-v1/advice.json",
+      "bytes": 7443,
+      "sha256": "4b6280cbde9175195ca342a94fc410a4a5e6678105dd47807f9a3a3f7ff44c09"
+    },
+    "prospective_review": {
+      "path": "artifacts/new-goal-b3c3a-independent-review-v1/prospective-review.json",
+      "bytes": 2838,
+      "sha256": "99d203ed7d4f16aa37242924fdb4fb560690fe846017e2a66a9f78db74a4372f"
+    }
+  },
+  "source_files": [
+    {
+      "path": "src/model/mod.rs",
+      "bytes": 29360,
+      "sha256": "76d1c59bc54d4e96a4d45137fe1c35c9e1cf67e7b085ef0c8035d2545f2ba282"
+    },
+    {
+      "path": "src/model/window_cache.rs",
+      "bytes": 15430,
+      "sha256": "f02e6517be6d55d7326c71a1c1e93ea0f17e617630f1a393a3af06e2c53c26a3"
+    },
+    {
+      "path": "src/model/window_cache/tests.rs",
+      "bytes": 22873,
+      "sha256": "b3e6f80d136c17b9f5c369f93bc14c857f049b6611ea581d049add2a3d524ffc"
+    },
+    {
+      "path": "src/model/window_rows.rs",
+      "bytes": 7372,
+      "sha256": "a3df63a4c1433725dc2890151e13fb569bb13dae86c15543806ada40d6725b14"
+    }
+  ],
+  "unchanged_frozen_fixture": {
+    "path": "tests/fixtures/gemma-kv-v1/math.json",
+    "bytes": 788669,
+    "sha256": "5d39cd8adb82349cc7ef5d4500a74b9f3bfd2ed007279d76c9d120d0d76ff2cb"
+  },
+  "limitations": [
+    "Target states are Rust-asserted, not externally retained raw captures.",
+    "No new GPU kernel, async cache transaction or model admission.",
+    "No measured speedup, throughput, memory peak, real-model or app/device qualification."
+  ],
+  "next_task": "B3c3b frozen independent Half old/new attention fixtures and native operation",
+  "final_publication_review": "artifacts/new-goal-b3c3a-independent-review-v1/final-publication-review.json"
+}

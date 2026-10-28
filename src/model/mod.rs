@@ -17,6 +17,7 @@ mod position;
 pub mod shared_kv;
 mod trace;
 pub mod window_cache;
+pub(crate) mod window_rows;
 pub(crate) use cache::KvCache;
 pub use position::PositionPlan;
 pub use trace::{LayerTrace, Trace};

@@ -410,3 +410,141 @@ fn moved_owner_preserves_identity_and_chunking_preserves_logical_ring() {
         );
     }
 }
+
+#[test]
+fn multihead_segments_and_copy_runs_preserve_bits_across_chunk_partitions() {
+    const TOTAL: usize = 23;
+    let schedules = [
+        vec![TOTAL],
+        vec![1; TOTAL],
+        vec![3, 3, 3, 3, 3, 3, 3, 2],
+        vec![7, 1, 11, 4],
+    ];
+    let value = |head: usize, position: usize, dim: usize| {
+        if (head + position + dim).is_multiple_of(5) {
+            -0.0f32
+        } else {
+            (head * 100 + position * 7 + dim) as f32 / 8.0
+        }
+    };
+    for window in [None, Some(1), Some(3), Some(7)] {
+        let capacity = window.unwrap_or(TOTAL);
+        for heads in [1, 3] {
+            for dims in [2, 5] {
+                let mut final_bits = None;
+                for schedule in &schedules {
+                    let mut cache =
+                        WindowKvCache::new(heads, dims, capacity, TOTAL, window).unwrap();
+                    let pointers = (cache.k.as_ptr(), cache.v.as_ptr(), cache.allocated_bytes());
+                    let mut expected_k = vec![0u32; heads * capacity * dims];
+                    let mut expected_v = expected_k.clone();
+                    let mut offset = 0;
+                    for &tokens in schedule {
+                        let mut k = Vec::new();
+                        let mut v = Vec::new();
+                        for head in 0..heads {
+                            for position in offset..offset + tokens {
+                                for dim in 0..dims {
+                                    let x = value(head, position, dim);
+                                    k.push(x);
+                                    v.push(f32::from_bits(x.to_bits() ^ 0x80000000));
+                                }
+                            }
+                        }
+                        let frame = cache.prepare(&k, &v, tokens).unwrap();
+                        let view = cache.view(&frame).unwrap();
+                        let segments = view.segments();
+                        for head in 0..heads {
+                            let mut from_segments = Vec::new();
+                            let mut from_head = Vec::new();
+                            let mut logical = Vec::new();
+                            for span in segments {
+                                for row in 0..span.keys {
+                                    for dim in 0..dims {
+                                        let i = head * span.head_stride + row * dims + dim;
+                                        from_segments.push((
+                                            span.key_start + row,
+                                            dim,
+                                            span.k[i].to_bits(),
+                                            span.v[i].to_bits(),
+                                        ));
+                                    }
+                                }
+                            }
+                            for span in view.head(head).unwrap() {
+                                for row in 0..span.k.len() / dims {
+                                    for dim in 0..dims {
+                                        let i = row * dims + dim;
+                                        from_head.push((
+                                            span.position + row,
+                                            dim,
+                                            span.k[i].to_bits(),
+                                            span.v[i].to_bits(),
+                                        ));
+                                    }
+                                }
+                            }
+                            for position in 0..offset + tokens {
+                                if window.is_some()
+                                    && position < offset
+                                    && offset - position >= capacity
+                                {
+                                    continue;
+                                }
+                                for dim in 0..dims {
+                                    let bits = value(head, position, dim).to_bits();
+                                    logical.push((position, dim, bits, bits ^ 0x80000000));
+                                }
+                            }
+                            assert_eq!(from_segments, logical);
+                            assert_eq!(from_head, logical);
+                        }
+                        // Independent old per-token oracle, including all writes
+                        // that a long chunk's bounded run descriptors can skip.
+                        for head in 0..heads {
+                            for position in offset..offset + tokens {
+                                for dim in 0..dims {
+                                    let slot = if window.is_some() {
+                                        position % capacity
+                                    } else {
+                                        position
+                                    };
+                                    let i = (head * capacity + slot) * dims + dim;
+                                    expected_k[i] = value(head, position, dim).to_bits();
+                                    expected_v[i] = expected_k[i] ^ 0x80000000;
+                                }
+                            }
+                        }
+                        cache.commit(&frame).unwrap();
+                        offset += tokens;
+                        assert_eq!(
+                            cache.k.iter().map(|x| x.to_bits()).collect::<Vec<_>>(),
+                            expected_k
+                        );
+                        assert_eq!(
+                            cache.v.iter().map(|x| x.to_bits()).collect::<Vec<_>>(),
+                            expected_v
+                        );
+                        assert_eq!(cache.offset(), offset);
+                        assert_eq!(
+                            (cache.k.as_ptr(), cache.v.as_ptr(), cache.allocated_bytes()),
+                            pointers
+                        );
+                    }
+                    let bits = (
+                        expected_k,
+                        expected_v,
+                        (0..capacity)
+                            .map(|slot| cache.position_in_slot(slot))
+                            .collect::<Vec<_>>(),
+                    );
+                    if let Some(before) = &final_bits {
+                        assert_eq!(&bits, before);
+                    } else {
+                        final_bits = Some(bits);
+                    }
+                }
+            }
+        }
+    }
+}

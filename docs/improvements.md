@@ -6884,3 +6884,39 @@ real checkpoint, app/phone, throughput or quality claim follows. See
 [evidence](../benchmarks/results/2026-10-29-gemma3-half-pointwise-v1.json) and
 [TODO](../TODO.md). Next: shared rolling-state geometry, immutable old/new
 attention views and a two-phase GPU copy/publication transaction.
+
+## 2026-10-29 — Shared window geometry preparation
+
+The pointwise task is committed as `a954146`. Astra confirms that the physical
+local cache retains W rows while a new attention view needs at most W−1 old
+rows. A small crate-private row helper now supplies both existing CPU view
+representations and contiguous per-head commit copies, ready for the future
+GPU cache to use the same descriptors. Public admission, finite input checks,
+owner identity, generation and all-owner validation are preserved.
+
+New tests compare bounded descriptors against an independent per-token oracle,
+include near-usize boundaries and verify signed-zero physical bits, multihead
+segments and four chunk partitions. Checks/review remain pending. GPU attention,
+two-phase state and real-model composition are separate tasks.
+
+## 2026-10-29 — Checked shared KV row descriptors
+
+Three ordinary functions and fixed Copy descriptors now serve both CPU cache
+view forms and bounded contiguous per-head commit copies. Constructor/prepare,
+finite inputs, ownership, generation and all-owner validation are unchanged.
+Local/full selection occurs before copying rows; model/session fields and
+persistent allocation sizes are unchanged. This is the concrete row mechanism
+that the upcoming GPU cache will reuse.
+
+All checks pass: formatting, strict default/Metal Clippy,424 default tests,
+306 Metal-library tests and11 targeted window tests (overlap). Independent
+oracles cover678 old-span and9,772 copy-plan cases. Sixty-four multihead/dimension/
+retention/partition combinations complete576 commits with exact physical bits,
+signed zeros, logical segments and unchanged pointers/bytes. Existing frozen
+cache/shared-KV/Gemma3 graph/failure/zero-allocation tests pass. Target states
+are asserted within the reviewed Rust consumer, not retained as external raw
+numerical captures. No GPU, latency, throughput, real-model or app/phone claim
+is added. See [report](window-row-geometry.md),
+[evidence](../benchmarks/results/2026-10-29-window-row-geometry-v1.json) and
+[TODO](../TODO.md). Continue independent Half rolling attention, followed by
+all-owner two-phase copy and poisoned-state recovery.

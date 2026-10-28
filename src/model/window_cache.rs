@@ -8,7 +8,7 @@
 //! Batch commit validates every frame before writes, then copies only new rows.
 //! Discarding a prepared frame leaves the exact committed prefix unchanged.
 
-use super::{Error, allocation_bytes, total_bytes, zeros};
+use super::{Error, allocation_bytes, total_bytes, window_rows, zeros};
 use crate::capacity::{KvOwner, KvStorage, Retention};
 use crate::cpu::{self, finite, length, nonzero, product};
 use std::ops::Range;
@@ -271,27 +271,24 @@ impl WindowKvCache {
     }
 
     fn commit_validated(&mut self, frame: &PreparedKv<'_>) {
-        // Prepare admitted all arithmetic. Retain only the final W rows if a
-        // local chunk is larger than W; its earlier rows remained in the view.
-        let first = if self.window.is_some() {
-            frame.tokens.saturating_sub(self.capacity)
-        } else {
-            0
-        };
+        // All owners were validated before any writes. Each backend applies
+        // the same row descriptors to its own head strides and scalar storage.
+        let runs = window_rows::copy_runs(
+            self.capacity,
+            self.offset,
+            frame.tokens,
+            self.window.is_some(),
+        );
         for head in 0..self.heads {
-            for token in first..frame.tokens {
-                let position = self.offset + token;
-                let slot = if self.window.is_some() {
-                    position % self.capacity
-                } else {
-                    position
-                };
-                let source = (head * frame.tokens + token) * self.dims;
-                let target = (head * self.capacity + slot) * self.dims;
-                self.k[target..target + self.dims]
-                    .copy_from_slice(&frame.k[source..source + self.dims]);
-                self.v[target..target + self.dims]
-                    .copy_from_slice(&frame.v[source..source + self.dims]);
+            for run in runs {
+                if run.rows == 0 {
+                    continue;
+                }
+                let source = (head * frame.tokens + run.source_row) * self.dims;
+                let target = (head * self.capacity + run.slot) * self.dims;
+                let count = run.rows * self.dims;
+                self.k[target..target + count].copy_from_slice(&frame.k[source..source + count]);
+                self.v[target..target + count].copy_from_slice(&frame.v[source..source + count]);
             }
         }
         self.offset += frame.tokens;
@@ -343,28 +340,21 @@ impl KvView<'_, '_> {
             key_start: self.cache.offset,
         };
         let mut segments = [empty; 3];
-        let start = self.start();
-        let old = self.cache.offset - start;
         let stride = self.cache.capacity * self.cache.dims;
-        if old > 0 {
-            let slot = start % self.cache.capacity;
-            let first = old.min(self.cache.capacity - slot);
-            for (index, physical, count, position) in
-                [(0, slot, first, start), (1, 0, old - first, start + first)]
-            {
-                if count == 0 {
-                    continue;
-                }
-                let begin = physical * self.cache.dims;
-                let end = (self.cache.heads - 1) * stride + begin + count * self.cache.dims;
-                segments[index] = crate::cpu::AttentionKvSegment {
-                    k: &self.cache.k[begin..end],
-                    v: &self.cache.v[begin..end],
-                    keys: count,
-                    head_stride: stride,
-                    key_start: position,
-                };
+        let old = window_rows::old_spans(self.cache.capacity, self.cache.offset, self.cache.window);
+        for (index, span) in old.into_iter().enumerate() {
+            if span.rows == 0 {
+                continue;
             }
+            let begin = span.slot * self.cache.dims;
+            let end = (self.cache.heads - 1) * stride + begin + span.rows * self.cache.dims;
+            segments[index] = crate::cpu::AttentionKvSegment {
+                k: &self.cache.k[begin..end],
+                v: &self.cache.v[begin..end],
+                keys: span.rows,
+                head_stride: stride,
+                key_start: span.position,
+            };
         }
         segments[2] = crate::cpu::AttentionKvSegment {
             k: self.k,
@@ -405,16 +395,14 @@ impl KvView<'_, '_> {
     }
 
     pub fn start(&self) -> usize {
-        self.cache
-            .window
-            .map_or(0, |w| self.cache.offset.saturating_sub(w - 1))
+        window_rows::view_start(self.cache.offset, self.cache.window)
     }
 
     pub fn visible_range(&self, query: usize) -> Result<Range<usize>, Error> {
         if !(self.query_start()..self.end()).contains(&query) {
             return Err(Error::InvalidConfig("KV view query position"));
         }
-        let start = self.cache.window.map_or(0, |w| query.saturating_sub(w - 1));
+        let start = window_rows::view_start(query, self.cache.window);
         Ok(start..query + 1)
     }
 
@@ -431,18 +419,13 @@ impl KvView<'_, '_> {
             v: &[],
         };
         let mut spans = [empty; 3];
-        let start = self.start();
-        let old = self.cache.offset - start;
-        if old > 0 {
-            let slot = start % self.cache.capacity;
-            let first = old.min(self.cache.capacity - slot);
-            for (index, physical, count, position) in
-                [(0, slot, first, start), (1, 0, old - first, start + first)]
-            {
-                let begin = (head * self.cache.capacity + physical) * self.cache.dims;
-                let end = begin + count * self.cache.dims;
+        let old = window_rows::old_spans(self.cache.capacity, self.cache.offset, self.cache.window);
+        if old[0].rows > 0 {
+            for (index, span) in old.into_iter().enumerate() {
+                let begin = (head * self.cache.capacity + span.slot) * self.cache.dims;
+                let end = begin + span.rows * self.cache.dims;
                 spans[index] = KvSpan {
-                    position,
+                    position: span.position,
                     k: &self.cache.k[begin..end],
                     v: &self.cache.v[begin..end],
                 };
