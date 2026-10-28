@@ -6714,3 +6714,32 @@ The selected Mac512 B2 adapter closes in that scope. App/codec, phone, full-wind
 performance remain open. See [report](phi3-real-model.md),
 [evidence](../benchmarks/results/2026-10-28-phi3-real-short-vertical-v1.json) and
 [TODO](../TODO.md). Continue B3, preserving B5/M8 integration and quality gates.
+
+## 2026-10-28 — Gemma3 cold local/global plan
+
+Astra selected the compact public Gemma3 270M four-bit representative and
+independently checked metadata, primary sources and all490 physical extents.
+The strict cold adapter resolves236 logical tensors, fifteen local and three
+full layers, unequal residual/query widths, raw BF16 coefficients and a single
+tied table. Shared concrete metadata helpers preserve the existing Gemma4 API.
+No graph, payload integrity, device or Chat eligibility is implied.
+
+Five targeted controls cover identity/inventory, unsupported config changes,
+missing/extra tensors, malformed extents and bounded unique JSON. Formatting and
+strict default/Metal Clippy pass; full tests and final Astra evidence review are
+in progress. Numerical profiles and actual resident window transactions remain
+separate next tasks. See [design](gemma3-local-global.md) and [TODO](../TODO.md).
+
+The first full B3a test run rejected the genuine index because its metadata also
+contains `total_parameters:268098176`. The older Gemma4 index has only total_size;
+that schema assumption was incorrect. Immutable v2 now validates both exact
+fields and rejects changed/missing parameter counts. The failed v1 receipt is
+preserved; source fixtures and numerical criteria are unchanged. Full checks
+are rerunning before final review.
+
+The corrected full run passes415 default /293 Metal-library tests, all five
+Gemma3 controls and14 Gemma4 regression tests (overlap), plus formatting and
+strict Clippy. Seven process groups close without endpoint errors. No payload,
+model or hardware execution occurred. Astra authenticates3,914 current bindings,
+all retained outputs and closed groups, and approves cold-plan retention/commit.
+Continue independent CPU graph and transactional local/global composition.

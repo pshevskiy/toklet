@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **28 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3 — select a compact Gemma text checkpoint and compose its local/global graph**.
+Next implementation task: **B3b — independent Gemma3 CPU local/global composition and window transactions**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -114,12 +114,21 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 
 ### B3 — Local/global composition
 
-- [ ] Select and inventory a compact Gemma text checkpoint and its exact graph.
-- [ ] Compose its norm, residual, activation, rotary and local/global mechanisms,
-  reusing existing window/shared state only where semantics match.
-- [ ] Validate an independent tiny graph and a meaningful cache-wrap boundary.
-- [ ] Resolve selected-checkpoint numerical/quality gaps and pass representative
-  generation/resource checks; Astra review and commit before claiming support.
+- [x] Select and inventory public Gemma3 270M four-bit text at
+  `ff1143e3a10547c9f2129e94ca37059b096b23f4`; independent Astra metadata/source
+  review passes. Header only; full payload/tokenizer not downloaded.
+- [x] B3a: strict cold plan, raw BF16/tied ownership, exact236 logical/490
+  physical tensors and shared Gemma3/Gemma4 metadata helpers; checks and Astra review pass.
+  [Design and scope](docs/gemma3-local-global.md).
+- [ ] B3b: independent tiny CPU graph/operator fixtures and actual composition
+  for four hidden norms, Q/K norm, embedding scale, GELU, residual order and
+  both rotary/mask branches. Include meaningful window visibility and transactions.
+- [ ] B3c: resident packed/Half graph and explicitly accounted local/full cache
+  staging/commit; source comparisons and native state/readback checks.
+- [ ] B3d: verified real payload/text and fixed short/513-plus-window/resource
+  journey on Mac; prospective544 scope requires its own frozen run protocol.
+- [ ] Resolve selected-checkpoint numerical/quality gaps and obtain Astra review
+  before claiming the selected adapter complete. App/full quality remain B5/M8.
 
 ### B4 — Additional concrete mechanisms
 
@@ -227,6 +236,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-28 | B2b2 reviewed completion | Astra approves final source/evidence, frozen policy and tiny composition. 17,984 retained logits independently rescored; full intermediate coverage remains checked in the Rust consumer. Real Phi execution, app/phone, full-window and adoption quality stay open. | [Report](docs/phi3-dense-composition.md); reviewed task commit, then B2c. |
 | 2026-10-28 | B2c protocol and portable controls | Astra approves fixed short/native-profile protocol and4.49GB source ledger. Ten synthetic reader/ownership/corruption and five plain-text guard tests pass; independent reviews completed. No real graph/text export yet. | Freeze actual runtime/controller before source-only export; no native outcome. |
 | 2026-10-28 | B2c pre-export whitespace | Staged preflight caught a new producer blank line at EOF before real outcomes. Immutable proposal v2 removes only that LF; ten controls rerun pass. Old B1 producers and all numerical gates remain unchanged. | Source/controller identities renewed before real export. |
-| 2026-10-28 | B2c1 real source/text reference |349 main/wide pairs and full text replay pass; five closed groups, OS peak RSS2,846,588,928 bytes below6GiB. Astra independently authenticates all saved values/envelopes and evidence. Native execution remains pending. | [Report](docs/phi3-real-reference.md); reviewed source task commit, then B2c2. |
+| 2026-10-28 | B2c1 real source/text reference |349 main/wide pairs and full text replay pass; five closed groups, OS peak RSS2,846,588,928 bytes below6GiB. Astra independently authenticates all saved values/envelopes and evidence. Native execution remains pending. | [Report](docs/phi3-real-reference.md); `d592ac7`; continue B2c2. |
 | 2026-10-28 | B2c2 native preparation | Fixed capture/checker and real exact-budget controls compile; fmt, strict default/Metal Clippy,410 default /288 Metal-library /3 runner /4 checker controls pass. Astra prospective review corrected copied IDs and evidence retention before target results. | Native binary/controller freeze; actual Metal comparison pending. |
-| 2026-10-28 | B2c2 real native vertical |23,946,432 main comparisons pass unchanged gates; exact schedules/causal prefix/readbacks/raw generation/state and actual load/session budgets pass. Observed native lifetime physical peak2,517,715,224 bytes below6GiB; Astra independently rescores the complete capture and approves retention. | [Report](docs/phi3-real-model.md); reviewed task commit, then B3. |
+| 2026-10-28 | B2c2 real native vertical |23,946,432 main comparisons pass unchanged gates; exact schedules/causal prefix/readbacks/raw generation/state and actual load/session budgets pass. Observed native lifetime physical peak2,517,715,224 bytes below6GiB; Astra independently rescores the complete capture and approves retention. | [Report](docs/phi3-real-model.md); `b68b399`; continue B3. |
+| 2026-10-28 | B3 selection and cold plan | Astra pins/reviews public Gemma3 270M metadata and source; no payload or execution. Strict236/490 cold inventory and shared Gemma metadata implementation are in checks; runtime eligibility unchanged. | [Design](docs/gemma3-local-global.md); finish B3a checks/review, then CPU composition. |
+| 2026-10-28 | B3a initial metadata check | Full tests found the candidate index also has exact total_parameters268098176, absent from the older Gemma4 index schema. Strict rejection caught the omitted known field; v2 validates it and adds changed/missing-count controls. Failed v1 retained, numerical policy/source fixtures unchanged. | Full v2 rerun in progress. |
+| 2026-10-28 | B3a cold checks | Strict v2 schema passes415 default /293 Metal-library /5 Gemma3 /14 Gemma4 regression tests (overlap), fmt and strict Clippy. Seven groups close; no payload/model/GPU work. | [Evidence](benchmarks/results/2026-10-28-gemma3-cold-plan-v1.json); Astra approves retention/commit; continue B3b. |

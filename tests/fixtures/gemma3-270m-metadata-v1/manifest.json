@@ -1,0 +1,37 @@
+{
+  "format": "toklet-gemma3-270m-metadata-v1",
+  "repository": "mlx-community/gemma-3-270m-it-4bit",
+  "revision": "ff1143e3a10547c9f2129e94ca37059b096b23f4",
+  "container_bytes_advertised": 150939130,
+  "container_sha256_advertised": "bf8b442cff5dd7c9ac6b5695310d5b66a4d0a4c3780f5c774fb90cd0c352bd9d",
+  "payload_bytes_from_header": 150885632,
+  "physical_tensors": 490,
+  "logical_tensors": 236,
+  "payload_downloaded": false,
+  "payload_integrity_verified": false,
+  "numerical_execution_qualified": false,
+  "text_qualified": false,
+  "files": {
+    "config.json": {
+      "bytes": 1653,
+      "sha256": "8fa17cb1689800679eeb5b19ab2d2ef5d425e16cf9f36f59925f130ed976ea38"
+    },
+    "index.json": {
+      "bytes": 34944,
+      "sha256": "3ef9f6408eebccbe14976dd8db24d75d848f01c4430aa8b5924d97782a0930fb"
+    },
+    "header.json": {
+      "bytes": 53490,
+      "sha256": "994efdf1aa3b4f6bc39d7935b1286380c6f9f49e926e02405fed6ed72f6e578f"
+    }
+  },
+  "independent_metadata_review": {
+    "path": "artifacts/new-goal-b3-independent-review-v1/metadata-findings.json",
+    "bytes": 9560,
+    "sha256": "5b6930de388b6c8cb8ef6eb82ed33d25703ca61887b6de87867f3a6b49007207"
+  },
+  "source_urls": [
+    "https://huggingface.co/mlx-community/gemma-3-270m-it-4bit/blob/ff1143e3a10547c9f2129e94ca37059b096b23f4/config.json",
+    "https://huggingface.co/mlx-community/gemma-3-270m-it-4bit/blob/ff1143e3a10547c9f2129e94ca37059b096b23f4/model.safetensors.index.json"
+  ]
+}

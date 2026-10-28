@@ -1,0 +1,118 @@
+{
+  "format": "toklet-gemma3-cold-plan-v1",
+  "date": "2026-10-28",
+  "base_revision": "b68b399",
+  "passed": true,
+  "decision": "retain-cold-metadata-plan",
+  "candidate": {
+    "repository": "mlx-community/gemma-3-270m-it-4bit",
+    "revision": "ff1143e3a10547c9f2129e94ca37059b096b23f4",
+    "container_bytes_advertised": 150939130,
+    "payload_bytes_from_header": 150885632,
+    "header_bytes": 53490,
+    "payload_absolute_offset": 53498,
+    "logical_parameters": 268098176,
+    "logical_tensors": 236,
+    "physical_tensors": 490,
+    "affine_matrices": 127,
+    "bf16_norm_vectors": 109,
+    "physical_embedding_head_owners": 1,
+    "local_layers": 15,
+    "full_layers": 3,
+    "declared_positions": 32768,
+    "local_window": 512,
+    "hidden": 640,
+    "query_width": 1024,
+    "kv_width": 256
+  },
+  "scope": {
+    "metadata_only": true,
+    "payload_downloaded": false,
+    "payload_integrity_verified": false,
+    "numerical_execution": false,
+    "device_qualified": false,
+    "chat_qualified": false,
+    "performance_qualified": false,
+    "gemma4_api_and_helper_semantics_preserved": true,
+    "new_execution_admission": false
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_and_metal_clippy": true,
+    "default_tests": 415,
+    "metal_library_tests": 293,
+    "targeted_gemma3_tests": 5,
+    "gemma4_regression_tests": 14,
+    "overlapping_suites": true,
+    "closed_owned_groups": 7,
+    "initial_failure_preserved": "candidate index total_parameters field omitted; corrected exact metadata schema before runtime or source fixture change"
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b3-gemma-research-v1/manifest.json",
+      "bytes": 10937,
+      "sha256": "11e6e5f87b5dca0342a3a2e9eaebe9838fe1006859f01dc57e76bdea80eac792"
+    },
+    {
+      "path": "artifacts/new-goal-b3-gemma-research-v1/ADVICE.md",
+      "bytes": 17078,
+      "sha256": "fb8ded8bc346c46ba0fde67e1ceffbb7ac1f56166b204c6f4690200d43c0ee3b"
+    },
+    {
+      "path": "artifacts/new-goal-b3-independent-review-v1/metadata-findings.json",
+      "bytes": 9560,
+      "sha256": "5b6930de388b6c8cb8ef6eb82ed33d25703ca61887b6de87867f3a6b49007207"
+    },
+    {
+      "path": "artifacts/new-goal-b3-independent-review-v1/research-review.json",
+      "bytes": 1463,
+      "sha256": "bc1fc4bcd56a0655fa8c83da66c7a430a5fc806d49ad6bd71fa411103a20d2cc"
+    },
+    {
+      "path": "artifacts/new-goal-b3-independent-review-v1/prospective-code-review.json",
+      "bytes": 3144,
+      "sha256": "4b8f7209cab4b0858dec3d0e292c2960f519bc7f5cdcaaeb3cd0bc86b0909ae7"
+    },
+    {
+      "path": "artifacts/new-goal-b3-independent-review-v1/v2-correction-review.json",
+      "bytes": 758,
+      "sha256": "d007f7fcdd85383f94ae661c9d660e8eb31739276ab13c5607e15986cbb080b8"
+    },
+    {
+      "path": "artifacts/new-goal-b3a-root-draft-v1/manifest.json",
+      "bytes": 1597,
+      "sha256": "d661632da94a4f253e03edf1bcd05c3ca3e923aaa00eeef2c361878b836980be"
+    },
+    {
+      "path": "artifacts/new-goal-b3a-root-draft-v2/manifest.json",
+      "bytes": 1873,
+      "sha256": "cbb0779235d3fc5ee2eb757c211ac0cbad0424773eb65c1e6427caa6b385a484"
+    },
+    {
+      "path": "artifacts/new-goal-b3a-checks-v1/checks.json",
+      "bytes": 855092,
+      "sha256": "74bd0cab8ba6debbbe6aa9d7cf3bd032b542b65c96a3324eaf1c9f8d92154033"
+    },
+    {
+      "path": "artifacts/new-goal-b3a-checks-v2/checks.json",
+      "bytes": 857334,
+      "sha256": "f86f80a9d76a9d1486575350277ad090c42f44191ff94ae79aa2820607b3efe8"
+    },
+    {
+      "path": "tests/fixtures/gemma3-270m-metadata-v1/manifest.json",
+      "bytes": 1461,
+      "sha256": "f0ddee0a975ec206fc0031d6fcb818b31dbe407c0bbc9a21a3b7e9537b627f29"
+    },
+    {
+      "path": "artifacts/new-goal-b3-independent-review-v1/final-review.json",
+      "bytes": 3925,
+      "sha256": "60c1d4fd266e6686cd032b88c8f189d7ac7b4e3fe15d7e6c7b4855297d2a90f5"
+    }
+  ],
+  "next_task": "B3b independent tiny CPU composition and transactional window checks",
+  "independent_review": {
+    "decision": "approve-cold-plan-retention-and-commit",
+    "current_bindings_authenticated": 3914,
+    "closed_v1_and_v2_groups": 11
+  }
+}
