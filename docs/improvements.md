@@ -7031,3 +7031,48 @@ performance qualification. See [report](gemma3-resident-cache.md),
 [evidence](../benchmarks/results/2026-10-29-gemma3-resident-cache-v1.json) and
 [TODO](../TODO.md). Continue resident Gemma3 graph composition with shared packed
 upload, an independent Half graph reference and actual model/session consumers.
+
+## 2026-10-29 — Resident graph composition decisions
+
+The cache transaction is committed as `8f0b092`. Astra's actual-code inspection
+confirms that existing packed projection/gather already support unequal hidden
+and query widths, so the next task adds no projection kernel. A shared checked
+original-byte upload helper will serve the existing affine Context and the new
+packed Matrix entry, preserving audited Qwen/Phi Source loading unchanged.
+
+Graph composition then needs its own frozen Half reference, explicit ordinary
+RoPE D32/256 coverage, tight-row layout admission and a concrete Model/Session
+that finishes every layer/head before the checked cache transaction. Weights,
+cache state, shared scratch and readback must be counted once each. Actual
+270M checkpoint gamma interpretation remains a payload/provenance question for
+B3d; these choices do not claim graph or model execution.
+
+## 2026-10-29 — Shared original-byte packed upload in validation
+
+Astra approves a two-file cold-path change sharing checked byte upload between
+the existing affine Context and a test-only Matrix entry for resident graph
+composition. It preserves original unaligned packed/coefficient bytes, nested
+row views, exact destination extents and the unchanged GPU numerical domain;
+only metadata alignment padding is zeroed. Existing audited Source loading and
+projection/gather arithmetic are byte-identical. Strict checks and424 default /
+313 Metal-library tests pass; explicit hardware regression is next. A separate
+independent Astra review is checking the new Half graph/RoPE source proposal.
+No complete Gemma3 GPU graph, real-model or performance result is claimed.
+
+## 2026-10-29 — Qualified shared packed Matrix upload
+
+The checked cold copy now serves the existing Context and a test-only original
+Matrix entry. It handles unaligned/nested row views without repacking and rejects
+invalid layout, extents or the existing numerical domain before writes. Existing
+Source loading, arithmetic shaders and numerical gates remain unchanged.
+
+All required strict/default/Metal/debug/release checks and seven explicit Mac
+hardware tests pass. Astra independently reconstructs3894 source bytes and2352
+resident bytes across18 formats, including padding and2352 unchanged bytes after
+rejection. Existing Context regressions pass54 storage cases,864 completed calls
+and390096 exact value assertions, checked inside Rust rather than external raw
+rescore; the existing tiny Qwen session recovery regression also passes. Sparse
+process samples establish no peak or model admission. This is an upload mechanism
+qualification, with complete Gemma3 graph/real-model/app/phone work still open.
+See [report](original-matrix-upload.md) and
+[evidence](../benchmarks/results/2026-10-29-original-matrix-upload-v1.json).

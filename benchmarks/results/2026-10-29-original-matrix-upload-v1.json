@@ -1,0 +1,116 @@
+{
+  "format": "toklet-original-matrix-upload-v1",
+  "date": "2026-10-29",
+  "base_revision": "8f0b092c396c45026314fbc4e871e288577bbd83",
+  "passed": true,
+  "scope": "Cold original-byte Matrix upload shared by Context and test-only packed entry; existing kernel/session regressions",
+  "hardware": {
+    "machine": "MacBookPro18,3",
+    "chip": "Apple M1 Pro",
+    "memory_bytes": 17179869184,
+    "os": "macOS26.6.2/25G83"
+  },
+  "result": {
+    "cold_format_group_view_combinations": 162,
+    "resident_format_pairs": 18,
+    "original_bytes_independently_reconstructed": 3894,
+    "resident_bytes_independently_reconstructed": 2352,
+    "rejected_resident_bytes_independently_reconstructed": 2352,
+    "all_original_metadata_and_packed_bytes_preserved": true,
+    "only_metadata_padding_zeroed": true,
+    "source_upload_and_math_bodies_unchanged": true,
+    "existing_context_storage_cases": 54,
+    "existing_context_completed_calls": 864,
+    "existing_context_exact_value_assertions": 390096,
+    "existing_context_values_external_rescore": false,
+    "existing_tiny_qwen_regression_executed": true,
+    "numerical_gates_changed": false
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_total_passed": 424,
+    "default_library_passed": 245,
+    "metal_library_passed": 313,
+    "targeted_cold_debug_passed": 3,
+    "targeted_cold_release_passed": 3,
+    "counts_overlap": true,
+    "cold_commands": 8,
+    "context_binary_build_commands": 1,
+    "explicit_release_hardware_jobs": 7,
+    "closed_owned_process_groups": true
+  },
+  "evidence": {
+    "proposal": {
+      "path": "artifacts/new-goal-b3c4a-upload-proposal-v1/manifest.json",
+      "bytes": 2323,
+      "sha256": "106ab06d24df93e46332e702e82eebd0507d420f0179465dc7f5729f7aacba7e"
+    },
+    "prospective_code_review": {
+      "path": "artifacts/new-goal-b3c4a-independent-review-v1/prospective-upload-review.json",
+      "bytes": 6580,
+      "sha256": "2d9df9858004668b8ceedad7634060821ddf5b9c6b5971e47e533a81e33d7949"
+    },
+    "cold_checks": {
+      "path": "artifacts/new-goal-b3c4a-cold-checks-v1/checks.json",
+      "bytes": 866642,
+      "sha256": "7db2927192e00d9003d6e7ff65bf7912486235dadda702b3e3b91a1682c12ef3"
+    },
+    "context_binary": {
+      "path": "artifacts/new-goal-b3c4a-context-binary-v1/checks.json",
+      "bytes": 860443,
+      "sha256": "300336695ae90a7c9c3f19343d3032d32c7a2bccdadfd32b7be663eb411f1d5f"
+    },
+    "prospective_gpu_review": {
+      "path": "artifacts/new-goal-b3c4a-gpu-v1/prospective-review.json",
+      "bytes": 405960,
+      "sha256": "bb554e9fac807597b099a49c6ece585ca0a3ca8b29476912915f74b6d6856284"
+    },
+    "gpu": {
+      "path": "artifacts/new-goal-b3c4a-gpu-v1/gpu.json",
+      "bytes": 1281879,
+      "sha256": "84d8fda428c2578e2dfe1acd92fc0e000f9956626283bbd00318a9871f3b9f78"
+    },
+    "independent_postrun_review": {
+      "path": "artifacts/new-goal-b3c4a-postrun-review-v1/postrun-review.json",
+      "bytes": 3355,
+      "sha256": "9b6098ea1c8c350c1766a10820b92842760a784b2b3e4b886d3b42cb54ba02ea"
+    }
+  },
+  "source_files": [
+    {
+      "path": "src/metal/mlx.rs",
+      "bytes": 39848,
+      "sha256": "2f09e18a785f25fae084b1f313a7b1a11f1148f5228518168655c1c5274e7606"
+    },
+    {
+      "path": "src/metal/mlx/upload_tests.rs",
+      "bytes": 9668,
+      "sha256": "fac171f9f25e916aad2e515145619a577d456f5bec264cb662f253bcea877e6e"
+    }
+  ],
+  "memory": {
+    "direct_process_samples_per_job": [
+      12,
+      1,
+      1,
+      12,
+      1,
+      1,
+      1
+    ],
+    "samples_establish_peak": false,
+    "whole_model_admission": false
+  },
+  "qualification": {
+    "byte_upload": true,
+    "existing_affine_gather_regression": true,
+    "complete_gemma3_gpu_graph": false,
+    "real_checkpoint": false,
+    "performance": false,
+    "app": false,
+    "iphone": false
+  },
+  "final_publication_review": "artifacts/new-goal-b3c4a-postrun-review-v1/final-publication-review.json"
+}

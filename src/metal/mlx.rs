@@ -56,28 +56,26 @@ impl Context {
         capacity: usize,
         memory_limit: usize,
     ) -> Result<Affine<'a>> {
-        Matrix::from_le_bytes(layout, weights, scales, biases).map_err(|e| Error::Options(e.0))?;
+        let matrix = Matrix::from_le_bytes(layout, weights, scales, biases)
+            .map_err(|e| Error::Options(e.0))?;
         validate_domain(layout, scales, biases)?;
         let sizes = Sizes::new(layout, capacity, memory_limit)?;
-        let upload = |bytes: &[u8]| -> Result<Buffer<u32>> {
-            let mut buffer = Buffer::new(&self.gpu, bytes.len().div_ceil(4))?;
-            buffer.with_mut(|target| {
-                for (word, raw) in target.iter_mut().zip(bytes.chunks(4)) {
-                    let mut padded = [0; 4];
-                    padded[..raw.len()].copy_from_slice(raw);
-                    *word = u32::from_le_bytes(padded);
-                }
-            });
-            Ok(buffer)
-        };
+        let mut weights = Buffer::<u32>::new(&self.gpu, layout.weight_bytes().div_ceil(4))?;
+        let mut scales = Buffer::<u32>::new(&self.gpu, layout.metadata_bytes().div_ceil(4))?;
+        let mut biases = Buffer::<u32>::new(&self.gpu, layout.metadata_bytes().div_ceil(4))?;
+        weights.with_bytes_mut(|w| {
+            scales.with_bytes_mut(|sc| {
+                biases.with_bytes_mut(|bi| copy_matrix(layout, &matrix, w, sc, bi))
+            })
+        })?;
         Ok(Affine {
             context: self,
             layout,
             capacity,
             allocated_bytes: sizes.bytes,
-            weights: upload(weights)?,
-            scales: upload(scales)?,
-            biases: upload(biases)?,
+            weights,
+            scales,
+            biases,
             input: Buffer::new(&self.gpu, sizes.input)?,
             linear_bias: Buffer::new(&self.gpu, layout.rows())?,
             half_output: Buffer::new(&self.gpu, sizes.output)?,
@@ -187,6 +185,39 @@ fn active_extent(
     }
     Ok(())
 }
+/// Copy an admitted immutable Matrix into cold, exclusively owned resident
+/// byte spans. Source rows may be unaligned views; no native typed source loads,
+/// reconstruction, coefficient conversion, or parent-row rebasing occurs here.
+/// All validation precedes every write. Only metadata's final alignment bytes
+/// are zero padding; packed weight bytes have no padding. Callers must exclude
+/// outstanding GPU access while supplying these mutable destination slices.
+fn copy_matrix(
+    expected: Layout,
+    matrix: &Matrix<'_>,
+    weights: &mut [u8],
+    scales: &mut [u8],
+    biases: &mut [u8],
+) -> Result<()> {
+    let metadata_bytes = expected.metadata_bytes().div_ceil(4) * 4;
+    if matrix.layout() != expected
+        || weights.len() != expected.weight_bytes()
+        || scales.len() != metadata_bytes
+        || biases.len() != metadata_bytes
+    {
+        return Err(Error::Options(
+            "MLX matrix upload layout/byte extent differs",
+        ));
+    }
+    let (raw_weights, raw_scales, raw_biases) = matrix.original_tensors();
+    validate_domain(expected, raw_scales, raw_biases)?;
+    weights.copy_from_slice(raw_weights);
+    scales[..raw_scales.len()].copy_from_slice(raw_scales);
+    biases[..raw_biases.len()].copy_from_slice(raw_biases);
+    scales[raw_scales.len()..].fill(0);
+    biases[raw_biases.len()..].fill(0);
+    Ok(())
+}
+
 impl Packed {
     pub fn allocate(gpu: &Gpu, layout: Layout, pipelines: &[[Pipeline; 2]]) -> Result<Self> {
         validate_resident_layout(layout)?;
@@ -196,6 +227,18 @@ impl Packed {
             scales: Buffer::new(gpu, layout.metadata_bytes().div_ceil(4))?,
             biases: Buffer::new(gpu, layout.metadata_bytes().div_ceil(4))?,
             pipelines: [pair[0].clone(), pair[1].clone()],
+        })
+    }
+    /// Cold Matrix path. Promoted with its first resident graph
+    /// consumer; the current Source upload retains its original streaming path.
+    #[cfg(test)]
+    pub fn upload_matrix(&mut self, matrix: &Matrix<'_>, weights: &mut Buffer<u16>) -> Result<()> {
+        let layout = self.layout;
+        weights.with_bytes_mut(|w| {
+            self.scales.with_bytes_mut(|sc| {
+                self.biases
+                    .with_bytes_mut(|bi| copy_matrix(layout, matrix, w, sc, bi))
+            })
         })
     }
     pub fn upload(
@@ -823,18 +866,13 @@ mod tests {
                 .collect();
             let oracle = Matrix::from_le_bytes(layout, &raw, &sc, &bi).unwrap();
             let mut packed = Packed::allocate(&gpu, layout, &pipelines).unwrap();
-            packed
-                .scales
-                .with_bytes_mut(|b| b[..6].copy_from_slice(&sc));
-            packed
-                .biases
-                .with_bytes_mut(|b| b[..6].copy_from_slice(&bi));
-            let mut weight = super::super::Tensor {
-                buffer: Buffer::new(&gpu, raw.len() / 2).unwrap(),
+            let mut buffer = Buffer::new(&gpu, raw.len() / 2).unwrap();
+            packed.upload_matrix(&oracle, &mut buffer).unwrap();
+            let weight = super::super::Tensor {
+                buffer,
                 layout: DenseLayout::new(3, 32, true).unwrap(),
                 storage: super::super::TensorStorage::Mlx(packed),
             };
-            weight.buffer.with_bytes_mut(|b| b.copy_from_slice(&raw));
             let mut input = Buffer::<u16>::new(&gpu, 3 * 40 + 7).unwrap();
             input.with_mut(|b| {
                 b.fill(f16::NAN.to_bits());
@@ -1008,3 +1046,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "mlx/upload_tests.rs"]
+mod upload_tests;

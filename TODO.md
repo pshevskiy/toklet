@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3c4 — complete resident Gemma3 composition**, starting with shared packed-matrix upload.
+Next implementation task: **B3c4 — complete resident Gemma3 composition**, with the independent Half graph reference and concrete Model/Session.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -148,6 +148,13 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
   [Report](docs/gemma3-resident-cache.md); standalone cache/state qualification only.
 - [ ] B3c4: compose the complete resident packed/Half tiny graph, accounting
   local/full staging/commit; source comparisons and native state/readback checks.
+- [x] B3c4a: shared checked original-byte matrix upload, preserving existing
+  audited Source loading and packed projection/gather behavior.
+  [Report](docs/original-matrix-upload.md); seven release hardware checks pass.
+- [ ] B3c4b: independent Half graph and D32/256 ordinary-RoPE source fixtures,
+  with fixed stage inventory, store boundaries and unchanged gates.
+- [ ] B3c4c: concrete resident Model/Session, consumed optional operations,
+  full tiny stage/state/failure/allocation/accounting checks.
 - [ ] B3d: verified real payload/text and fixed short/513-plus-window/resource
   journey on Mac; prospective544 scope requires its own frozen run protocol.
 - [ ] Resolve selected-checkpoint numerical/quality gaps and obtain Astra review
@@ -282,4 +289,10 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B3c3b2 checked resident attention leaf | Strict checks,424 default /308 Metal-library tests and both explicit GPU jobs pass. Astra rescored361,448 source values (one tiny probability difference, zero failures),16,016 exact recovery values and all27 raw records/identities/guards/masks. Eight release encodes allocate zero Rust objects. | [Report](docs/gemma3-staged-attention.md); `229eb8b`; continue two-phase cache set. |
 | 2026-10-29 | B3c3c transaction design | Astra advises and independently checks a concrete set-owned command/opaque readiness API, all-owner Half-bit validation after NaN staging fill, and whole-set poison after submitted copy uncertainty. Private host/shader/tests proposal is under preparation; no build/GPU outcome. | Freeze/review candidate, then cold and actual copy/state checks. |
 | 2026-10-29 | B3c3c initial cold preflight | Frozen candidate passes formatting/default Clippy; strict Metal Clippy catches an unnecessary unsafe block around a safe API and a collapsible readback guard. Mechanical fixes preserve transaction semantics; failed receipt retained. Prospective allocation reporting distinguishes27 observed boundaries from12 required-zero source boundaries. | Fresh cold checks and reviewed three-job GPU controller next. |
-| 2026-10-29 | B3c3c checked cache transaction | Strict checks,424 default /310 Metal-library tests and three explicit GPU jobs pass. Astra reconstructs67 snapshots/6,210,796 Half words, exact copies/chained513→514, all-owner readiness, real partial-copy poison and terminal zero-prefix GPU replay. All27 observed boundary allocations zero;12 are required-zero. | [Report](docs/gemma3-resident-cache.md); reviewed task commit, then B3c4. |
+| 2026-10-29 | B3c3c checked cache transaction | Strict checks,424 default /310 Metal-library tests and three explicit GPU jobs pass. Astra reconstructs67 snapshots/6,210,796 Half words, exact copies/chained513→514, all-owner readiness, real partial-copy poison and terminal zero-prefix GPU replay. All27 observed boundary allocations zero;12 are required-zero. | [Report](docs/gemma3-resident-cache.md); `8f0b092`; continue B3c4. |
+| 2026-10-29 | B3c4 composition advice | Astra inspects actual helpers: packed product/gather already support unequal hidden/query widths. Choose a shared original-byte upload helper first, then frozen independent Half graph and concrete resident Model/Session. Existing Source upload stays unchanged; actual270M norm interpretation remains B3d. | Private bounded upload proposal under preparation; no new build/GPU outcome. |
+| 2026-10-29 | B3c4a upload review/application | Astra independently approves exact original-byte copy, unaligned/nested views, rejection-before-write and seven unchanged existing function bodies. Guarded two-file application matches the private proposal; cold checks next. | Prospective review `2d9df9858004668b8ceedad7634060821ddf5b9c6b5971e47e533a81e33d7949`; no new GPU result. |
+| 2026-10-29 | B3c4a regression checks | Formatting, strict default/Metal Clippy, three new cold controls,424 default tests across library/integration suites and313 Metal library tests pass. Context integration release binary is frozen; release upload controls/libtest freeze finishing. | Private cold receipts; GPU bytes/numerical regressions next. |
+| 2026-10-29 | B3c4b prospective source review | Separate Astra approves the exact new48-stage Half graph and eight ordinary-RoPE components. Fifteen dependency pins,384 graph plus40 rotary arrays and fixed main-only gates authenticated. Guarded application passes; portable controls next. | Review `2330080446243d0872985d725c9beaf8804c146da9004a28e3ab869d41c7b630`; source export/native comparison still pending. |
+| 2026-10-29 | B3c4a hardware collection / B3c4b controls | All eight cold commands and separate Context binary freeze pass; reviewed seven-job release Metal collection starts. Seven new Half reference portable controls pass. Controller scope wording is corrected before execution to include the existing tiny Qwen session regression; no executable AST change or failed run. | Upload launch approval `bb554e9fac807597b099a49c6ece585ca0a3ca8b29476912915f74b6d6856284`; source export review next. |
+| 2026-10-29 | B3c4a checked original upload | All strict/default/Metal/cold checks and seven release hardware jobs pass. Astra independently reconstructs18 original/resident/rejected byte cases;2352 resident bytes remain exact after rejection. Existing Context390096 exact value assertions pass under unchanged gates. | [Report](docs/original-matrix-upload.md); reviewed task commit next, then B3c4b/c. |
