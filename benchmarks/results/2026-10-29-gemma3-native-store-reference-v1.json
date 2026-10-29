@@ -1,0 +1,154 @@
+{
+  "format": "toklet-gemma3-native-store-reference-v1",
+  "date": "2026-10-29",
+  "base_revision": "a38142d",
+  "passed": true,
+  "scope": "Independently justified native-store CPU reference correction; no new native numerical qualification",
+  "profile": "NativeHalf_certified_projection_serial_attention_v3",
+  "old_numerical_rejection": {
+    "main_values": 18537288,
+    "main_failures": 92,
+    "wide_diagnostic_exceedances": 98,
+    "preserved": true,
+    "retroactively_passed": false
+  },
+  "contract": {
+    "literal_legacy_gate_dictionaries": 3232,
+    "coefficients_changed": false,
+    "main_center_changed": true,
+    "relative_element_bounds_and_acceptance_set_changed": true,
+    "new_envelopes": "diagnostic only; not limit inputs",
+    "historical_wide_hashes_exact": 3232,
+    "teacher_chains_unchanged": 32,
+    "numerical_engine_changed": false
+  },
+  "source": {
+    "groups": 3232,
+    "arrays": 6464,
+    "values_per_profile": 13473568,
+    "arrays_bytes": 97110272,
+    "exact_replay": true,
+    "masked_probability_zeros_both_profiles": 19752
+  },
+  "projection_certificate": {
+    "calls": 4445,
+    "stores": 143984128,
+    "interval_certified": 143857582,
+    "exact_dyadic_fallback": 126546,
+    "stripes": 14630,
+    "maximum_converted_weight_bytes": 10485760,
+    "exported_witnesses_nearest_even_verified": 32,
+    "original_weight_row_hashes_verified": 32,
+    "exact_dots_reconstructed_from_retained_inputs": 31,
+    "unretained_inputs": 1,
+    "assumption": "Pinned ordinary binary64 BLAS summation with exact Half*FP32 products; unexamined backends are not qualified"
+  },
+  "direct_trace": {
+    "tokens": 6,
+    "requests": 1,
+    "snapshots": 13,
+    "finite_values": 42528,
+    "raw_bytes": 170112,
+    "own_input_rms_words_exact": 11520,
+    "row3_normalized": -84.875,
+    "row3_v0": 4.0859375,
+    "qualified_full_model": false
+  },
+  "source_resources": {
+    "prospective_admitted_bytes": 4931096570,
+    "limit_bytes": 6442450944,
+    "worker_seconds": [
+      137.51110108289868,
+      139.157211124897
+    ],
+    "live_samples": [
+      1296,
+      1319
+    ],
+    "os_peak_rss_bytes": [
+      2577956864,
+      2582560768
+    ],
+    "closed_groups": true,
+    "engine_performance_claim": false
+  },
+  "portable_controls": 18,
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b3d-native-store-reference-proposal-v1/manifest.json",
+      "bytes": 13093,
+      "sha256": "9279d21b2eaea5528eb2235e3aa7058bd45f7f83ede536ea4aa2948a4c824153"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-native-store-reference-proposal-v1/protocol.json",
+      "bytes": 10151,
+      "sha256": "035bd42111d8e702a65a7442a805a3cffac6c04517c90a7cf95ccdc86e668c68"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-native-store-independent-review-v1/prospective-review.json",
+      "bytes": 19898,
+      "sha256": "602328ae39005eaff60af4e794b06f93e64a95c1d46d86bb7dc06fabeccbbe9c"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-native-store-controls-v1/checks.json",
+      "bytes": 5379178,
+      "sha256": "7e46a68804f247d107973a4a30c00513cf1c8282711920be812018985931a52e"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-native-store-gates-v1/gates.json",
+      "bytes": 441159,
+      "sha256": "f40fa2275a9c9f193287f32f2764a3dbf9e4d8836a56706583df1d5555151bdd"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-native-rejection-investigation-v1/diagnosis.json",
+      "bytes": 7625,
+      "sha256": "d26e09d8049d783c5759cdd99198ab6cef0d6e31415bb2f7d7472916180de9fd"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-failure-independent-review-v1/review.json",
+      "bytes": 7359,
+      "sha256": "6a2e2107f56a60765c58a0968ef9198373b46b7e43d9852045cc92338b187063"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-six-token-trace-v1/collect.json",
+      "bytes": 1324171,
+      "sha256": "59b41e4fc24cbc4cacb406cdcb7dc5c4b03e7cee19836d789614b68599fd430b"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-six-token-trace-independent-review-v1/review.json",
+      "bytes": 5643,
+      "sha256": "eca871033a8d088d213dddaa2f336a859c17d440ab9f4cde4a9539171d0b69ff"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-source-v3/prospective-review.json",
+      "bytes": 4061,
+      "sha256": "adb5f0e15038f830dad4ebbe6fa6b054d906f50323ded1101ea7253901c32368"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-source-v3/source.json",
+      "bytes": 5413344,
+      "sha256": "c14302f19dcb6a4b94817c42e345af36956beee836f78ce1039f4acc9043dc20"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-source-v3/reference/manifest.json",
+      "bytes": 3037938,
+      "sha256": "a62bb30d2fe5ed49bedecd07e4d801616afa31be6781e2f1a7dabae0922fa09d"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-source-v3/reference/arrays.bin",
+      "bytes": 97110272,
+      "sha256": "355683397397c40cc744e6ba32e69b42f9fa920f0a4376b3a90f7240bd5f9657"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-reference-independent-review-v1/saved-source-v3-review.json",
+      "bytes": 29606,
+      "sha256": "47187192f00378391691c4e4cd6b5586a496b62d32457038a6d68e630850d11f"
+    }
+  ],
+  "final_publication_review": "artifacts/new-goal-b3d-native-store-publication-v1/final-review.json",
+  "remaining": [
+    "controlled saved-native diagnostic comparison",
+    "fresh source-preregistered bounded native qualification",
+    "app/phone and original-unquantized adoption quality"
+  ]
+}

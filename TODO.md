@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3d — verified real Gemma3 payload, text and bounded Mac window journey**.
+Next implementation task: **B3d3b — resolve the saved real-Gemma3 arithmetic-reference mismatch, then repeat the bounded Mac comparison**.
 No implementation task is currently blocked on user input.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
@@ -358,3 +358,21 @@ completed or prerequisites for the active breadth-first queue.
 
 | 2026-10-29 | B3d2 reviewed source commit | Exact seven-file Astra staged review passes; source-only reference task committed as`ba88fcc`. Both successful jobs and the failed unclipped predecessor remain recorded. | B3d3a original-byte loader task final review next; B3d3b real native runner remains in preparation. |
 | 2026-10-29 | B3d3a original-byte ownership verified | Storage/upload tests and independent complete original-range hashes pass, including all491 physical owners after source-store drop;431 default/327 Metal checks and strict review already pass. | [Report](docs/gemma3-original-loader.md); loader-only staged review/commit next. No inference qualification. |
+
+| 2026-10-29 | B3d3a reviewed original loader commit | Exact12-file Astra staged review passes; original-byte loader/storage/upload task committed as`a38142d`. Working tree retains only the pre-existing unrelated apple/.DS_Store. | B3d3b private native runner proposal is under peer review; independent checker is being prepared before target results. |
+
+| 2026-10-29 | B3d3b native runner guarded application | Astra approves the concrete public-API diagnostic runner:6,400 selected stage captures, two544-token partitions, bounded teacher/free generation, raw-first evidence and public session/codec/resource controls. Exact two-file proposal applied; strict/build/control checks next. | Review`57c99ce9586334e5bce65c64598cc7db5a77190a2182af5237861baba8b238be`; no native model execution yet. Separate checker remains a prerequisite. |
+
+| 2026-10-29 | B3d3b first native compile | Formatting/default strict Clippy pass; feature-Metal strict Clippy stops on one collapsible nested-if spelling in diagnostic exact-row comparison. Preserved failed receipt; mechanical let-chain successor changes no capture/control/numerical behavior. | Root frozen correction for Astra confirmation; fresh cold checks next, no model/GPU execution. |
+
+| 2026-10-29 | B3d3b native cold checks pass | All eight corrected checks pass: formatting, strict default/Metal Clippy,431 default and327 Metal library tests, three runner controls in debug/release and optimized example freeze. Astra confirms the mechanical lint-only correction. Reviewed separate checker applies exactly; six synthetic controls start before target results. | Native binary`8c4890f54bd9155055e920b592d1f0136db09a61436ffe3c4233ad3348b85ec3`; no native model run yet. |
+
+| 2026-10-29 | B3d3b bounded native capture completes | Single reviewed real Mac process completes6,400 stage records/141,258,016 raw bytes,2,351 committed tokens and187 forwards under fixed protocols. Both544-token partitions, causal/logical row equality and public state/codec controls pass in the runner.693 direct observations show812,025,152-byte lifetime physical maximum; owned group closes. | Capture is structurally complete, not numerical qualification. Frozen separate saved-output checker is next; no app/phone/performance claim. |
+
+| 2026-10-29 | B3d3b real numerical comparison rejected | Frozen saved-output checker completes all18,537,288 comparisons and rejects92 MAIN values (98 WIDE diagnostic exceedances), max error/gate3.16603. First failure is plain-France row5/layer3/post-attention norm. All raw arrays and clean closed failed-reader receipt remain; state/codec/ledger audit completes. | Astra investigates saved operands and precise reductions; no gate/source/target change or native retry. B3d3b stays open. |
+
+| 2026-10-29 | B3d3b independent rejection diagnosis | Separate Astra scalar audit exactly reproduces92 MAIN/98 WIDE failures. First failing RMS matches all640 own-input oracle words; original gamma73/effective74 and the preceding projection channel match independent reconstruction. First divergence lies upstream in attention context; exact native partitions exclude schedule/cache drift. | Saved-failure review`6a2e2107f56a60765c58a0968ef9198373b46b7e43d9852045cc92338b187063`; bounded first-layer attention investigation continues, no source/gate/target mutation. |
+
+| 2026-10-29 | B3d3b native-store contract correction | Direct six-token trace confirms frozen row3 FP32 RMS/V predictions; Astra verifies all42,528 words/13 captures and11,520 own-input RMS words. Independent review approves uniform certified-projection/FP32-reference source successor with exact legacy3,232 coefficients, diagnostic new envelopes and unchanged WIDE hashes. Exact three-file application passes;18 controls start. | Reference center/relative element bounds change explicitly; original92 rejection remains. No engine change or full-window retry. |
+
+| 2026-10-29 | B3d native-store source export/replay | Both corrected-profile CPU jobs and independent saved-source audit pass all3,232 groups/6,464 arrays, exact legacy gate dictionaries/WIDE hashes/teacher prefixes,143,984,128 projection stores and all32 exact-rounding witnesses (31 retained-input dots reconstructed). Raw97,110,272 bytes replay exactly. | [Contract](docs/gemma3-native-store-reference.md); reference-only staged review/commit next. Native reuse/fresh qualification remain separate; old92 rejection stays rejected. |

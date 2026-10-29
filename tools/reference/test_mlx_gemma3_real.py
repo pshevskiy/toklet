@@ -1,4 +1,5 @@
 """Portable controls; no downloaded artifact, graph export or Apple GPU required."""
+import copy
 import io
 import math
 from pathlib import Path
@@ -121,26 +122,45 @@ class RealGemmaControls(unittest.TestCase):
         for tokens,selected in (([],[0]),([64],[0]),([1],[1]),([1],[0,0])):
             with self.assertRaises(ValueError):g.forward(Empty(),tokens,selected,'main',lambda *args:None)
 
-    def test_writer_raw_pair_gate_and_corruption(self):
+    def test_writer_legacy_limits_wide_identity_and_corruption(self):
         with tempfile.TemporaryDirectory() as tmp:
             w=p.Writer(tmp)
             try:
                 x=np.array([[1.,2.]],dtype=np.float16)
                 w.emit('case','main',0,'embedding',x);x[0,0]=9
                 w.emit('case','wide',0,'embedding',np.array([[1.,2.25]],dtype=np.float16))
-                w.gates();group=w.arrays['case.row_0.embedding']
-                self.assertEqual(group['envelope'],.25);self.assertEqual(group['gate'],dict(atol=.5,rtol=.001,fatal_reference='main'))
+                name='case.row_0.embedding'
+                legacy={'arrays':copy.deepcopy(w.arrays)}
+                gate=dict(atol=.125,rtol=.001,fatal_reference='main')
+                legacy['arrays'][name]['gate']=dict(gate)
+                limits={'gates':{name:dict(gate)}}
+                w.gates(legacy,limits);group=w.arrays[name]
+                self.assertEqual(group['envelope'],.25)
+                # The new envelope would imply .5 under old formula: forbidden.
+                self.assertEqual(group['gate'],gate)
+                self.assertEqual(group['gate_basis'],'legacy_fixed_limits_new_native_store_center_v1')
+                changed=copy.deepcopy(limits);changed['gates'][name]['atol']=.5
+                with self.assertRaisesRegex(ValueError,'literal numerical'):w.gates(legacy,changed)
+                changed=copy.deepcopy(legacy);changed['arrays'][name]['wide']['sha256']='0'*64
+                with self.assertRaisesRegex(ValueError,'WIDE identity'):w.gates(changed,limits)
+                changed=copy.deepcopy(legacy);changed['arrays'][name]['main']['shape']=[2,1]
+                with self.assertRaisesRegex(ValueError,'shape/store'):w.gates(changed,limits)
+                with self.assertRaisesRegex(ValueError,'inventory'):w.gates(legacy,{'gates':{}})
                 with self.assertRaises(ValueError):w.emit('case','main',0,'embedding',x)
                 with patch.object(p,'MAX_ARRAYS',w.raw.tell()):
                     with self.assertRaises(ValueError):w.emit('other','main',0,'embedding',x)
+                # Remove the failed append's empty map to exercise actual raw hash.
+                w.arrays.pop('other.row_0.embedding',None)
                 with (Path(tmp)/'arrays.bin').open('r+b') as f:f.write(b'xx')
-                with self.assertRaises(ValueError):w.gates()
+                with self.assertRaisesRegex(ValueError,'Raw capture changed'):w.gates(legacy,limits)
             finally:w.close()
         with tempfile.TemporaryDirectory() as tmp:
             w=p.Writer(tmp)
             try:
                 w.emit('case','main',0,'logits',np.array([[0]],dtype=np.float32))
-                with self.assertRaises(ValueError):w.gates()
+                name='case.row_0.logits'
+                with self.assertRaisesRegex(ValueError,'Incomplete'):
+                    w.gates({'arrays':{name:{}}},{'gates':{name:{}}})
             finally:w.close()
 
     def test_fixed_inventory_missing_extra_shape_and_memory(self):
@@ -231,6 +251,120 @@ class RealGemmaControls(unittest.TestCase):
             with self.assertRaises(ValueError):g.residual(left,right)
         # Saturation is local to residual, never a globally permissive Half cast.
         with self.assertRaises(ValueError):g.half(np.array([79384.],dtype=np.float32))
+
+    def test_binary64_destination_cast_is_direct(self):
+        # Certification endpoint conversion must not double-round through FP32.
+        endpoints=np.array([1+2**-11+2**-40,-1-2**-11-2**-40],dtype=np.float64)
+        self.assertEqual(words(endpoints.astype(np.float16)),[0x3c01,0xbc01])
+        self.assertEqual(words(endpoints.astype(np.float32).astype(np.float16)),[0x3c00,0xbc00])
+        floats=np.array([1+2**-24+2**-48,-1-2**-24-2**-48],dtype=np.float64).astype(np.float32)
+        self.assertEqual(floats.view(np.uint32).tolist(),[0x3f800001,0xbf800001])
+
+    def test_certified_projection_midpoints_cancellation_and_direct_rounding(self):
+        # Literal exact-dyadic answers: a tiny positive tail beyond a midpoint
+        # is lost by binary64 summation but must choose the upper destination.
+        examples=[([1.,2**-11,2**-80],False,word(1+2**-10)),
+                  ([1.,2**-11,0.],False,word(1.)),
+                  ([1+2**-10,2**-11,0.],False,word(1+2**-9)),
+                  ([-1.,-2**-11,-2**-80],False,word(-1-2**-10)),
+                  ([2**100,1.,-2**100],False,word(1.)),
+                  ([1.,2**-24,2**-100],True,0x3f800001),
+                  ([1.,2**-24,0.],True,0x3f800000),
+                  ([1+2**-23,2**-24,0.],True,0x3f800002),
+                  ([-1.,-2**-24,-2**-100],True,0xbf800001),
+                  ([2**100,-1.,-2**100],True,0xbf800000)]
+        for coefficients,output_float,expected in examples:
+            g.reset_projection_audit()
+            x=np.ones((1,3),dtype=np.float16);matrix=np.array([coefficients],dtype=np.float32)
+            got=g.projection(x,matrix,'main',output_float=output_float)
+            raw=int(got.view(np.uint32 if output_float else np.uint16)[0,0])
+            self.assertEqual(raw,expected)
+            self.assertEqual(g.PROJECTION_AUDIT['exact_fallback'],1)
+            # An independent Fraction check verifies nearest-even directly;
+            # no production integer-unit/rounding helper is the test oracle.
+            from fractions import Fraction
+            exact=sum((Fraction(float(a))*Fraction(float(b)) for a,b in zip(x[0],matrix[0])),Fraction())
+            center=float(got[0,0]);previous=float(np.nextafter(got[0,0],got.dtype.type(-np.inf)))
+            following=float(np.nextafter(got[0,0],got.dtype.type(np.inf)))
+            distance=abs(exact-Fraction(center))
+            self.assertLessEqual(distance,abs(exact-Fraction(previous)))
+            self.assertLessEqual(distance,abs(exact-Fraction(following)))
+            if distance in (abs(exact-Fraction(previous)),abs(exact-Fraction(following))):self.assertEqual(raw&1,0)
+
+    def test_certified_projection_subnormal_signed_zero_and_overflow(self):
+        for sign in (1.,-1.):
+            for tail,want in ((0.,0),(2**-100,1)):
+                x=np.array([[2**-24,2**-24]],dtype=np.float16)
+                matrix=np.array([[sign*.5,sign*tail]],dtype=np.float32)
+                actual=g.projection(x,matrix,'main')
+                self.assertEqual(words(actual),[want|(0x8000 if sign<0 else 0)])
+            for tail,want in ((0.,0),(2**-149,1)):
+                matrix=np.array([[sign*2**-126,sign*tail]],dtype=np.float32)
+                actual=g.projection(x,matrix,'main',output_float=True)
+                self.assertEqual(actual.view(np.uint32).tolist(),[[want|(0x80000000 if sign<0 else 0)]])
+        zero=g.projection(np.array([[-0.,0.]],dtype=np.float16),np.ones((1,2),dtype=np.float32),'main')
+        self.assertEqual(words(zero),[0])
+        for coefficients in ([65504.,16.],[-65504.,-16.]):
+            with self.assertRaisesRegex(ValueError,'projection store'):
+                g.projection(np.ones((1,2),dtype=np.float16),np.array([coefficients],dtype=np.float32),'main')
+        with self.assertRaisesRegex(ValueError,'projection store'):
+            g.projection(np.array([[2.]],dtype=np.float16),np.array([[np.finfo(np.float32).max]],dtype=np.float32),'main',output_float=True)
+        for bad in (np.nan,np.inf):
+            with self.assertRaises(ValueError):g.projection(np.ones((1,2),dtype=np.float16),np.array([[bad,1.]],dtype=np.float32),'main')
+        with self.assertRaises(ValueError):g.projection(np.ones((1,2049),dtype=np.float16),np.ones((1,2049),dtype=np.float32),'main')
+
+    def test_projection_stripes_certificate_owner_and_basis(self):
+        g.reset_projection_audit()
+        x=np.array([[1.,2.,3.],[-2.,1.,.5]],dtype=np.float16)
+        matrix=np.array([[.25,.5,1.],[1.,2.,3.],[-1.,.25,.5],[.125,-.5,2.],[.75,1.,-.125]],dtype=np.float32)
+        matrix.flags.writeable=False
+        with patch.object(g,'PROJECTION_STRIPE',2):out=g.projection(x,matrix,'main')
+        from fractions import Fraction
+        expected=np.array([[float(sum((Fraction(float(a))*Fraction(float(b))for a,b in zip(row,w)),Fraction()))for w in matrix]for row in x],dtype=np.float16)
+        np.testing.assert_array_equal(out,expected)
+        self.assertEqual(g.PROJECTION_AUDIT['stripes'],3)
+        self.assertEqual(g.PROJECTION_AUDIT['max_converted_bytes'],2*3*8)
+        self.assertEqual(g.PROJECTION_AUDIT['certified'],10)
+        self.assertEqual(g.PROJECTION_AUDIT['exact_fallback'],0)
+        self.assertTrue(out.flags.owndata);self.assertFalse(np.shares_memory(out,matrix))
+        self.assertFalse(matrix.flags.writeable)
+
+    def test_reference_attention_explicit_serial_cancellation(self):
+        # Exact products2^24,+1,-2^24: serialFP32 is0, accurate sum is1.
+        q=np.zeros((3,4,256),dtype=np.float16);k=np.zeros((3,1,256),dtype=np.float16)
+        q[:,:,:3]=[4096.,1.,4096.];k[:,:,:3]=[4096.,1.,-4096.]
+        v=np.zeros_like(k);v[:,:,0]=[[2048.],[1.],[-2048.]]
+        scores,prob,context=g.attention(q,k,v,None,'main')
+        self.assertTrue(np.all(scores==0))
+        wide,_,_=g.attention(q,k,v,None,'wide')
+        self.assertTrue(np.all(wide==np.float32(1/16)))
+        for row in range(3):
+            mass=f32(row+1);expected=f32(1/mass)
+            for head in range(4):
+                self.assertEqual(prob[head,row,:row+1].tolist(),[expected]*(row+1))
+                self.assertEqual(prob[head,row,row+1:].tolist(),[0.]*(2-row))
+                total=0.
+                for key in range(row+1):total=f32(total+f32(expected*float(v[key,0,0])))
+                self.assertEqual(word(float(context[row,head*256])),word(total))
+
+    def test_real_first_layer_midpoint_input_semantics(self):
+        # Source-only original embedding row, independently reconstructed before
+        # successor design. This is an arithmetic branch control, not target data.
+        original_hex='d5b4d5b8d5383bc0d534403b403bd5b840bf0b3ed538d5b40000d538d5b8d534d534d534d53c0000d5b40000d534d538d534403bd534d5b8d5b8d538d534d5340000d538d5b8d5b840bbd5bc40bbd538403bd540d534d5bcd5b400000000d538d5b80000d5b80b3e0000d5380000d53840bbd5b8d5b80bbed5b40000d53cd5b4501e93b9b8353b40b835501e31bcb8353e3cac3986b5b83599bd93b9501e50c23e3c501eb83586b5501e86b5b835b835b835b8353b4086b53e3cb835ac3993b90d3fb83593b901bf99bdb83593b93e3c501eb835501e501ea63d01bfac39ac3931bcac3986b586b5b835ac3931bc93b9501eb83586b5b8353e3ca63d501e31bc083d9c44b5bab5ba0000b5b60000b536084100000000b5b60000b5b6b5ba083db5bab5bab5b6b5be0000b53608bdb5360000b536b536b53ab5360000b53ab53e0000b5b6b53ade41b536b5b6b5bab5b60000b53608bd0000b53eb5b6b5b60000b53ab5b6b5ba0000b5bab536b5b6b53a0000083db5360000b5b6b5ba000000003940c2b6c23ac2b6c23ac23a11bdc236e941000011bd0000c2b6000011bdc2bac23ac23ac236c2b6c236c23a113dc23ac23a3940c2bac2bac2b6c236113dc2ba113d0000c236c23ac2c20000c2b6c23ec236c2b6c2bac23611bd0000c2b6e941c236c2bac2b60000c23ac23ac23a11bdc23600000000c23a11bd0000c2b6000050ba823a502250ba5022823a5022763e5022502250ba823a5022823a50225022823a763e502250ba823a5022823a763e823a5022502250225022763e5dbe5022502234c95022763ec9c0823a823a763e50ba5022823a5dbe5022502250225dbe502250ba823a823a823a5022823a5dbe823a502250ba50ba763e502250ba502224342434373c3138509e69ba44bc313857b43138243431384ab844bc57b463be373c44bc509e313857b444bc313863be57b43138509e69ba4ab8373c509e69ba54bd3138503a63be57b4373c44bc44bc503a373c2434473d473d563e563e24344ab824343138c240243457b457b463be57b457b43138503a243463be509e313810c1de35bc1c5b40de35de35b8b5bc1cde3556c0c2b954bcbc1c56c0de35d539d539b8b5de35bc1c82c2de35b8b53abfd539b8b53abfc2b9de35d53954bcd03d5d3cde35bc1c5b40b8b5b8b5bc1c3abfd03dde35de35c2b9bc1cbc1c54bcd539de35de35c7bd5d3cb8b5b8b554bcde35d539b8b554bcd03dbc1cde355b40b8b5b5369cb6501a2b40501a9cb6af3afbbca5bea2ba9cb6af3a501aaf3a501aa2bab536a2ba9cb6af3aac3eb536b5369cb6a2bab536ac3eb536af3a9cb6a2bab536013db536501a013d501ab536b536501ab536b536501a9cb6b53628c0af3a501a013daf3a501afdc09cb628c02b40501aa2bafbbcb5367f43501ab536501a501a14ba1e361e361a3a1a3a1e361a3a933c933c11b69f3f501690bc11b6501611b614ba11b650161e36db42501690bc501650161e36501691c014ba11b614ba50161a3a9f3f11b61e361a3a11b61a3a501611b690bc1e3614ba11b611b61e36933c14ba933c11b61e36501614ba9f3f14ba5016933c11b650161e361e361a3a1e3614b9509a1bb51bb51bb50839083901358f3b8f3b013514b98f3b0b3d14b90b3d9bbb0839509a8f3b509a9bbb55be01359bbb923f55be01351bb59bbb4e3e08390135013511bd14b9013501351bb5013501350135509a9bbb01351bb511bd11bd013508390135923f1bb59bbb509a14b90839509a509a14b9509a1bb508395042'
+        x=np.frombuffer(bytes.fromhex(original_hex),dtype='<f2').copy().reshape(1,640)
+        scale=np.ones(640,dtype=np.float32);scale[3]=41.5
+        self.assertEqual(float(x[0,3]),-2.115234375)
+        self.assertEqual(words(g.norm(x,scale,'main'))[3],0xd54e)
+        self.assertEqual(words(g.norm(x,scale,'wide'))[3],0xd54f)
+        # Independent scalar structFP32 RMS produces an exact Half midpoint.
+        total=correction=0.
+        for value in x[0]:
+            square=f32(float(value)*float(value));following=f32(total+square)
+            error=f32(f32(total-following)+square)if abs(total)>=abs(square)else f32(f32(square-following)+total)
+            correction=f32(correction+error);total=following
+        inverse=f32(1/f32(math.sqrt(f32(f32(f32(total+correction)/640)+f32(1e-6)))))
+        pre=f32(f32(float(x[0,3])*inverse)*41.5)
+        self.assertEqual(pre,-84.90625);self.assertEqual(word(pre),0xd54e)
 
     def test_cleanup_preserves_primary_and_releases_owners(self):
         class Broken(io.BytesIO):

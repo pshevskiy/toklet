@@ -73,3 +73,9 @@ mobile memory budget. Both owned groups close before native loading begins.
 
 See [machine-readable evidence](../benchmarks/results/2026-10-29-gemma3-real-reference-v1.json),
 [verified acquisition](gemma3-artifact-acquisition.md) and [remaining tasks](../TODO.md).
+
+The native comparison against this BLAS-profile reference subsequently rejects
+92 intermediate values. That result remains preserved. See the separately
+versioned [native-store reference correction](gemma3-native-store-reference.md)
+for the independently confirmed rounding witness and corrected arithmetic
+contract; it retains every literal gate coefficient and changes the MAIN center.

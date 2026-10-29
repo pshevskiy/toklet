@@ -18,8 +18,10 @@ import gemma3_real_half as graph
 # These existing helpers are generic byte/descriptor/runtime operations only.
 from mlx_phi3_real import bounded, descriptor_sha, package_pins, runtime_identity, sha, unique, validate_header
 
-FORMAT='toklet-mlx-gemma3-real-reference-v2'
-PROTOCOL_SHA='8a28910d0452a36dcd8c0157a1f240a7ee49f9a23fab694dccb51181dff625a8'
+FORMAT='toklet-mlx-gemma3-real-reference-v3'
+PROTOCOL_SHA='035bd42111d8e702a65a7442a805a3cffac6c04517c90a7cf95ccdc86e668c68'
+LEGACY_MANIFEST_SHA='60617b26647d2d4a6c96c41ac8675d978cfdec6dc251545ae308e52dd01c9033'
+LEGACY_LIMITS_SHA='f40fa2275a9c9f193287f32f2764a3dbf9e4d8836a56706583df1d5555151bdd'
 INPUT_SHA='30c67871d9de7086d32e8c250416ba2134a4c65c8f54173f6cd17401aebba4ac'
 HEADER_SHA='994efdf1aa3b4f6bc39d7935b1286380c6f9f49e926e02405fed6ed72f6e578f'
 HEADER_BYTES=53490
@@ -156,11 +158,14 @@ class Writer:
             try:stream.close()
             except BaseException as exc:failures.append(exc)
         preserve_cleanup(None,failures)
-    def gates(self):
+    def gates(self,legacy,limits):
         self.raw.flush()
+        if set(self.arrays)!=set(legacy['arrays']) or set(self.arrays)!=set(limits['gates']):
+            raise ValueError('Legacy exact group inventory differs')
         with (self.out/'arrays.bin').open('rb') as stream:
             for name,group in self.arrays.items():
-                if set(group)!=set(('main','wide')):raise ValueError('Incomplete pair: '+name)
+                if not {'main','wide'}<=set(group) or set(group)-{'main','wide','envelope','envelope_scope','gate','gate_basis'}:
+                    raise ValueError('Incomplete/unexpected pair: '+name)
                 values=[]
                 for profile in ('main','wide'):
                     d=group[profile];stream.seek(d['offset']);b=stream.read(d['bytes'])
@@ -168,7 +173,21 @@ class Writer:
                     values.append(np.frombuffer(b,dtype='<f2' if d['dtype']=='u16le' else '<f4').astype(np.float64))
                 if group['main']['shape']!=group['wide']['shape'] or group['main']['dtype']!=group['wide']['dtype']:raise ValueError('Profile shape differs')
                 envelope=float(np.max(np.abs(values[0]-values[1])))
-                group['envelope']=envelope;group['gate']=dict(atol=max(1e-4,2*envelope),rtol=1e-3,fatal_reference='main')
+                previous=legacy['arrays'][name]
+                for profile in ('main','wide'):
+                    if any(group[profile][key]!=previous[profile][key] for key in ('shape','dtype','bytes')):
+                        raise ValueError('Legacy exact shape/store differs: '+name)
+                if group['wide']['sha256']!=previous['wide']['sha256']:
+                    raise ValueError('Unchanged WIDE identity differs: '+name)
+                gate=limits['gates'][name]
+                if gate!=previous['gate'] or set(gate)!={'atol','rtol','fatal_reference'} or gate['fatal_reference']!='main':
+                    raise ValueError('Legacy literal numerical limits differ: '+name)
+                if not math.isfinite(gate['atol']) or gate['atol']<1e-4 or gate['rtol']!=1e-3:
+                    raise ValueError('Invalid legacy limits')
+                group['envelope']=envelope
+                group['envelope_scope']='successor MAIN/WIDE diagnostic only; not a limit input'
+                group['gate']=dict(gate)
+                group['gate_basis']='legacy_fixed_limits_new_native_store_center_v1'
 
 
 LAYER_STAGES=('input_norm','q_projection','k_projection','v_projection','q_norm','k_norm',
@@ -234,6 +253,13 @@ def run(args):
         for name in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','VECLIB_MAXIMUM_THREADS'):
             if os.environ.get(name)!='1':raise ValueError('Explicit single-thread source environment required: '+name)
         protocol=bounded(Path(args.protocol),1024**2,PROTOCOL_SHA);contract=inputs(args.inputs)
+        legacy=bounded(Path(args.legacy_manifest),MAX_MANIFEST,LEGACY_MANIFEST_SHA)
+        limits=bounded(Path(args.legacy_limits),1024**2,LEGACY_LIMITS_SHA)
+        if (legacy['format']!='toklet-mlx-gemma3-real-reference-v2' or legacy['cases']!=contract['cases']
+                or limits['format']!='toklet-gemma3-legacy-numeric-limits-v1' or limits['group_count']!=3232
+                or limits['source']['sha256']!=LEGACY_MANIFEST_SHA):
+            raise ValueError('Legacy profile/input/limits basis')
+        graph.reset_projection_audit()
         if protocol['memory']['admitted_bytes']!=4931096570 or protocol['process_bound']!=6*1024**3:raise ValueError('Ledger identity')
         runtime=runtime_identity();packages=package_pins();config=io.StringIO()
         with contextlib.redirect_stdout(config):np.show_config()
@@ -246,27 +272,37 @@ def run(args):
                     graph_started=True
                     result=graph.forward(weights,c['tokens'],c['selected_rows'],profile,lambda row,stage,a,c=c,profile=profile:writer.emit(c['name'],profile,row,stage,a))
                     del result
-            for c in contract['cases'][:2]:
+            for c,old_trial in zip(contract['cases'][:2],legacy['greedy']):
+                if old_trial['prompt']!=c['name']:raise ValueError('Historical teacher prompt')
                 history=list(c['tokens']);visible=[];steps=[]
-                for step in range(16):
+                if not 1<=len(old_trial['steps'])<=16:raise ValueError('Historical teacher bound')
+                for step,old_step in enumerate(old_trial['steps']):
+                    if old_step['prefix']!=history:raise ValueError('Historical teacher prefix')
                     name=f'teacher.{c["name"]}.step_{step}';row=len(history)-1
                     wide=graph.forward(weights,history,[row],'wide',lambda r,s,a:writer.emit(name,'wide',r,s,a),logits_only=True)
                     token=int(np.argmax(wide[0]));del wide
+                    if token!=old_step['wide_teacher_token']:raise ValueError('Unchanged WIDE teacher differs')
                     main=graph.forward(weights,history,[row],'main',lambda r,s,a:writer.emit(name,'main',r,s,a),logits_only=True)
                     main_token=int(np.argmax(main[0]));del main
                     stop=token in (1,106)
+                    if stop!=old_step['stop']:raise ValueError('Historical teacher stop differs')
                     steps.append(dict(prefix=list(history),wide_teacher_token=token,main_greedy_diagnostic=main_token,stop=stop))
-                    if stop:break
+                    if stop:
+                        if step+1!=len(old_trial['steps']):raise ValueError('Historical steps after stop')
+                        break
                     visible.append(token);history.append(token)
+                if visible!=old_trial['visible_ids']:raise ValueError('Historical teacher visible IDs')
                 teacher.append(dict(prompt=c['name'],steps=steps,visible_ids=visible,stop_reason='stop_token' if steps[-1]['stop'] else 'length'))
             counts=validate_inventory(writer.arrays,contract['cases'],teacher)
-            writer.gates();graph_completed=True
+            writer.gates(legacy,limits);graph_completed=True
         if package_pins()!=packages:raise ValueError('Runtime package endpoint changed')
         inputs(args.inputs)
         bounded(Path(args.protocol),1024**2,PROTOCOL_SHA)
+        bounded(Path(args.legacy_manifest),MAX_MANIFEST,LEGACY_MANIFEST_SHA)
+        bounded(Path(args.legacy_limits),1024**2,LEGACY_LIMITS_SHA)
         for name,want in own.items():
             if identity(Path(__file__).with_name(name))!=want:raise ValueError('Producer endpoint changed')
-        result=dict(format=FORMAT,source_reference_executed=True,target_gpu_executed=False,protocol_sha256=PROTOCOL_SHA,input_sha256=INPUT_SHA,model=dict(repository=protocol['repository'],revision=protocol['revision'],file_pins=protocol['model_file_pins']),profile=protocol['profile'],policy=protocol['gates'],memory=protocol['memory'],cases=contract['cases'],greedy=teacher,counts=counts,arrays=writer.arrays,runtime=runtime,package_pins=packages,blas_configuration=config.getvalue(),producer_files=own,scope='selected-artifact numerical profiles; no native output, original-unquantized quality or app qualification')
+        result=dict(format=FORMAT,source_reference_executed=True,target_gpu_executed=False,protocol_sha256=PROTOCOL_SHA,input_sha256=INPUT_SHA,model=dict(repository=protocol['repository'],revision=protocol['revision'],file_pins=protocol['model_file_pins']),profile=protocol['profile'],policy=protocol['gates'],gate_basis=protocol['gate_basis'],projection_audit=graph.PROJECTION_AUDIT,memory=protocol['memory'],cases=contract['cases'],greedy=teacher,counts=counts,arrays=writer.arrays,runtime=runtime,package_pins=packages,blas_configuration=config.getvalue(),producer_files=own,scope='selected-artifact numerical profiles; no native output, original-unquantized quality or app qualification')
     except BaseException as exc:
         primary=exc
     finally:
@@ -284,7 +320,7 @@ def run(args):
     except BaseException as exc:
         failure=dict(error=repr(exc),traceback=traceback.format_exc(),source_reference_started=graph_started,
                      source_reference_completed=graph_completed,target_gpu_executed=False,
-                     partial_arrays=writer.arrays if writer is not None else {})
+                     partial_arrays=writer.arrays if writer is not None else {},projection_audit=graph.PROJECTION_AUDIT)
         try:(out/'failure.json').write_text(json.dumps(failure,indent=2,allow_nan=False)+'\n')
         except BaseException as report_error:exc.add_note('Failure report write: '+repr(report_error))
         raise
@@ -292,4 +328,4 @@ def run(args):
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--model',required=True);parser.add_argument('--inputs',required=True);parser.add_argument('--protocol',required=True);parser.add_argument('--out',required=True);run(parser.parse_args())
+    parser=argparse.ArgumentParser();parser.add_argument('--model',required=True);parser.add_argument('--inputs',required=True);parser.add_argument('--protocol',required=True);parser.add_argument('--out',required=True);parser.add_argument('--legacy-manifest',required=True);parser.add_argument('--legacy-limits',required=True);run(parser.parse_args())

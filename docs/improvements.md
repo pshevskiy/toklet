@@ -7264,3 +7264,68 @@ vectors and491 unique resident buffers survive source-store drop exactly.
 Requested capacity is explicitly1..544 while declared32,768 stays metadata.
 The [loader report](gemma3-original-loader.md) keeps actual inference, window
 comparisons, Chat and phone qualification open.
+
+The original-byte loader task is committed as `a38142d` after exact staged Astra
+review. The next bounded diagnostic runner reuses the public Model/Session APIs,
+compares selected stages across two544-token partitions, and keeps source
+comparison separate from raw capture. Its private proposal and independent
+checker are under review before any real native numerical run.
+
+Astra approves guarded application of the bounded real native diagnostic runner.
+It reuses the original loader and public Model/Session APIs, captures6,400
+selected stage records across two native schedules, and retains exact replay,
+public rejection, codec and source/native separation controls. Only the runner
+and its Cargo example entry change; cold checks and independent checker review
+are required before actual native execution.
+
+The first native-runner build reaches strict Metal Clippy and stops on a single
+collapsible-if spelling. A frozen mechanical let-chain correction preserves the
+comparison condition/body exactly. Failed checks remain recorded; no native
+model outcome or numerical-policy change occurred.
+
+The corrected runner passes all eight cold commands, including strict checks,
+431 default/327 Metal library tests, three debug/release controls and a frozen
+optimized binary. Astra confirms the lint-only fix and reviews the independent
+checker before application. Six synthetic checker controls precede target
+outcomes; all numerical tolerances and absolute-column semantics remain fixed.
+
+The first bounded real native Gemma3 capture completes both544-token partitions
+and its public state/codec/replay controls:6,400 stage records,2,351 committed
+tokens and187 forward calls. The closed process records a lifetime physical
+maximum812,025,152 bytes across693 observations, below6GiB. The141,258,016 raw
+bytes are preserved. Source comparison remains an independent next gate; this
+structural result does not yet qualify numerical execution, Chat or performance.
+
+The independent complete numerical comparison rejects92 of18,537,288 MAIN
+values, with98 WIDE diagnostic exceedances and maximum error/gate3.16603. The
+first rejection is plain-France row5/layer3 post-attention normalization. All
+6,496 raw records, source arrays and clean closed failed-checker evidence remain.
+Public state/codec/ledger checks completed; numerical qualification and commit
+remain open. Astra now investigates exact saved operands/reductions before any
+code change, policy decision or target retry; tolerances are unchanged.
+
+A second independent saved-byte audit exactly confirms the numerical rejection.
+The first RMS output is correct for all640 own-input words with authenticated
+gamma73/effective74; the preceding projection channel also matches accurate
+original-weight reconstruction. The difference originates in earlier attention
+context, while exact native partitions rule out scheduling/cache drift. This
+narrows the investigation to attention precision without changing a gate or
+rerunning the full model.
+
+A direct six-token trace confirms the independently predicted mixed-precision
+rounding branch; Astra verifies13 full snapshots/42,528 words and11,520 exact
+own-input RMS words. The reference successor uniformly uses certified accurate
+projection stores with exact dyadic fallback, FP32 RMS and serial reference
+attention. All3,232 old atol/rtol coefficients remain literal; the MAIN center
+and therefore relative element bounds change explicitly, while new envelopes
+are diagnostic. Old source/capture rejections remain. Astra approves exact
+three-file application and18 controls before any new source export.
+
+The native-store reference exports/replays exactly and passes independent full
+saved-byte review. All legacy gate coefficients, WIDE hashes and teacher inputs
+remain exact. Its143,984,128 projection stores include126,546 exact fallbacks;
+all32 exported destination words and original weight hashes verify independently,
+with31 input-retained dots reconstructed. The MAIN center and relative bounds
+change explicitly; the old92 rejection remains rejected. The
+[native-store contract](gemma3-native-store-reference.md) records the correction,
+direct trace, mathematical assumptions and source-only scope.
