@@ -1,0 +1,408 @@
+{
+  "format": "toklet-lfm2-resident-tiny-result-v1",
+  "date": "2026-10-29",
+  "status": "bounded_tiny_mac_resident_hybrid_qualified",
+  "device": "Apple M1 Pro",
+  "scope": "Synthetic original-packed three-layer Model/Session, not real LFM2-350M or app admission",
+  "geometry": {
+    "capacity": 12,
+    "head_dim": 64,
+    "hidden": 256,
+    "intermediate": 256,
+    "kv_heads": 2,
+    "layers": [
+      "Conv",
+      "Attention",
+      "Conv"
+    ],
+    "query_heads": 4,
+    "vocab": 64
+  },
+  "implementation": {
+    "new_shader": false,
+    "generic_graph_vm": false,
+    "immutable_resident_weights": true,
+    "tied_table_owners": 1,
+    "borrowed_source_not_retained_after_upload": true,
+    "shared_bcx_parent": true,
+    "u_scratch_reused_after_raw_history_candidate": true,
+    "one_math_command_then_kv_copy": true,
+    "history_logit_token_publication_after_successful_kv_copy": true,
+    "whole_session_poison_on_uncertain_copy": true,
+    "diagnostics_invalidated_before_phase_a": true,
+    "last_row_and_all_row_modes": true
+  },
+  "numerical_profile": {
+    "reference": "Original independent Half fixture; uniform exact-dyadic original FP32 affine center, D1 direct RMS, D2 Conv, D3 Reference attention",
+    "fatal_reference": "MAIN",
+    "wide": "diagnostic",
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "rtol": 0.001,
+    "changed_after_target": false
+  },
+  "native": {
+    "actual_boundary_state": {
+      "groups": 330,
+      "max_error": 6.103515625e-05,
+      "max_fraction": 0.030098723814110283,
+      "primary_main_failures": 0,
+      "values": 199936,
+      "wide_diagnostic_exceedances": 0,
+      "wide_max_fraction": 0.32144005143040827
+    },
+    "chunks": 55,
+    "cold_source_original_gpu_owners_unique": 66,
+    "counts": {
+      "admission_rejections": 4,
+      "authenticated_model_owner_observations": 264,
+      "cache_physical_words": 1626048,
+      "exact_actual_history_suffix_words": 57090,
+      "exact_actual_kv_words": 621060,
+      "failed_candidate_words_reconstructed": 9342,
+      "first_copy_exact_changed_words": 128,
+      "full_failure_or_published_words_authenticated": 3750916,
+      "guard_words": 50199,
+      "history_physical_words": 298944,
+      "masked_positive_zeros": 1044,
+      "memory_owner_ledgers": 15,
+      "poison_forward_rejections": 1,
+      "recovery_success_history_words_exact": 87192,
+      "recovery_success_kv_words_exact": 474264,
+      "recovery_success_logit_words_exact": 10432,
+      "same_native_causal_words": 1618080,
+      "scratch_physical_words_reconstructed": 6710385,
+      "snapshot_physical_words_reconstructed": 25537875,
+      "state_records": 144,
+      "successful_recovery_forwards": 42,
+      "validator_rejections": 7
+    },
+    "failed_candidate_validation_and_reset_replay_passed": true,
+    "first_copy_changed_words_exact": 128,
+    "geometry": {
+      "capacity": 12,
+      "head_dim": 64,
+      "hidden": 256,
+      "intermediate": 256,
+      "kv_heads": 2,
+      "layers": [
+        "Conv",
+        "Attention",
+        "Conv"
+      ],
+      "query_heads": 4,
+      "vocab": 64
+    },
+    "history_and_logits_bank_roles_preserved_or_swapped_at_required_boundary": true,
+    "math": {
+      "groups": 3135,
+      "max_error": 6.103515625e-05,
+      "max_fraction": 0.030098723814110283,
+      "primary_main_failures": 0,
+      "values": 1923728,
+      "wide_diagnostic_exceedances": 0,
+      "wide_max_fraction": 0.3616636528028933
+    },
+    "numerical_profile_changed": false,
+    "ordinary_release_zero_allocation_measurements": 12,
+    "phase_a_commands": 106,
+    "phase_b_commands_including_forced_partial": 98,
+    "raw_records_by_kind": [
+      {
+        "memory_owners": 15,
+        "model": 1,
+        "model_final": 1,
+        "stage": 3135,
+        "state": 70,
+        "summary": 2
+      },
+      {
+        "allocation": 12,
+        "history_validator_preflight": 1,
+        "memory": 3,
+        "model": 1,
+        "model_final": 1,
+        "state": 74,
+        "state_summary": 1
+      }
+    ],
+    "raw_status_address_logged": false,
+    "required_semantic_faults": 9,
+    "scheduled_tokens": 133,
+    "schedules": 15,
+    "session_logged_addresses_disjoint_from_model": true,
+    "source_gates_changed": false
+  },
+  "legacy": {
+    "gqa_cache_jobs": 2,
+    "gqa_cache_records": 55,
+    "gqa_cache_required_zero_boundaries": 42,
+    "gqa_same_set512_to513": true,
+    "legacy_cache_jobs": 3,
+    "legacy_cache_observed_zero_boundaries": 27,
+    "legacy_cache_records": 67,
+    "legacy_cache_source_expected_after_words": 1623152,
+    "legacy_tiny_jobs": 2,
+    "legacy_tiny_main": {
+      "bit_differences": 6549,
+      "failures": 0,
+      "max_abs": 0.001953125,
+      "max_fraction": 0.4126969242717473,
+      "values": 428832,
+      "worst": {
+        "case": "future_changed12",
+        "index": 751,
+        "native": -0.028549328446388245,
+        "reference": -0.02848200872540474,
+        "stage": "logits",
+        "start": 0
+      }
+    },
+    "legacy_tiny_stages": 2400,
+    "legacy_tiny_wide_diagnostic": {
+      "bit_differences": 13245,
+      "failures": 0,
+      "max_abs": 0.0009765625,
+      "max_fraction": 0.4560194568301581,
+      "values": 428832,
+      "worst": {
+        "case": "short",
+        "index": 119,
+        "native": 0.052703857421875,
+        "reference": 0.052978515625,
+        "stage": "layers.1.post_ff_norm",
+        "start": 0
+      }
+    },
+    "legacy_tiny_zero_allocation_measurements": 12
+  },
+  "all_observed_release_zero_rust_boundaries": 93,
+  "numerical_owner_ledger": {
+    "model": {
+      "affine_buffers": 54,
+      "affine_parents": 18,
+      "direct_norm_buffers": 9,
+      "direct_norm_bytes": 7932,
+      "numeric_buffers": 66,
+      "numeric_bytes": 762178,
+      "packed_affine_bytes": 746496,
+      "tap_buffers": 2,
+      "tap_bytes": 6200,
+      "zero_bias_buffers": 1,
+      "zero_bias_bytes": 1550
+    },
+    "session": {
+      "additional_cache_metadata": "actual Set.session_bytes minus kv_numeric_bytes; do not double count nested Set",
+      "additional_graph_metadata": "actual structs, vector capacity and retained MPS view banks",
+      "core_numeric_all_rows_bytes": 293520,
+      "core_numeric_last_row_bytes": 277648,
+      "cpu_committed_token_capacity_bytes": 48,
+      "external_caller_bytes": "explicit caller argument; includes any retained original artifact and raw test captures",
+      "half_scratch_buffers": 14,
+      "half_scratch_bytes": 237764,
+      "history_bank_bytes": 4152,
+      "kv_numeric_bytes": 22616,
+      "logit_all_rows_bytes": 16440,
+      "logit_last_row_bytes": 568,
+      "score_probability_bytes": 12344,
+      "scratch_numeric_bytes": 250108,
+      "shared_framework_allowance_bytes": 67108864,
+      "token_upload_bytes": 156
+    },
+    "diagnostic_gpu_bytes": 938932,
+    "diagnostic_host_reserve_bytes": 1855488,
+    "half_snapshot_backing_alignment_bytes": 4,
+    "totals_are_not_process_peaks": true
+  },
+  "cold_checks": {
+    "commands": 6,
+    "fmt": true,
+    "strict_all_targets_clippy_default_and_metal": true,
+    "default": {
+      "passed": 450,
+      "ignored": 20
+    },
+    "metal": {
+      "passed": 545,
+      "ignored": 181
+    },
+    "release_opt_level": 3,
+    "release_debug_assertions": false
+  },
+  "gpu_owner": {
+    "jobs": 9,
+    "all_groups_closed": true,
+    "endpoint_errors": [],
+    "raw_log_bytes": 163558564,
+    "per_stream_log_cap_bytes": 67108864,
+    "per_job_deadline_seconds": 300,
+    "total_cleanup_seconds": 30,
+    "new_job_pre_run_log_bounds_bytes": [
+      32624768,
+      36216664
+    ],
+    "new_job_actual_log_bytes": [
+      24670544,
+      30090938
+    ],
+    "usage_samples": [
+      27,
+      8,
+      3,
+      3,
+      7,
+      1,
+      1,
+      17,
+      4
+    ],
+    "maximum_sparse_observed_rss_bytes": 137691136,
+    "complete_process_peak_or_general_model_fit_established": false,
+    "global_fsize_limit": false
+  },
+  "binary": {
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43",
+    "profile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": true
+    },
+    "bytes": 115129856,
+    "sha256": "97e0599b38f42025bebbd97f71807334e98473b70022b309baaf1a8b09fd1beb"
+  },
+  "retained_binary": {
+    "executed_path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43",
+    "retained_copy": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4d4c-resident-hybrid-gpu-v2/retained-release-test-binary",
+      "bytes": 115129856,
+      "sha256": "97e0599b38f42025bebbd97f71807334e98473b70022b309baaf1a8b09fd1beb"
+    },
+    "bytes_identical_after_success": true,
+    "actual_execution_from_retained_path": false,
+    "jobs": 9
+  },
+  "retained_first_failure": {
+    "cause": "FirstCopy destination already held identical future K words from prior full replay; raw source job passed but recovery stopped before ordinary allocation and all legacy tests.",
+    "correctly_rejected_test_witness": true,
+    "not_reclassified_as_pass": true,
+    "repair": "Consumer-only fresh Session for FirstCopy; retains assert_ne and adds exact copied head0 K range proof. Seven other proposed core paths, numerical sources, fixed gates and token workload unchanged."
+  },
+  "limits": [
+    "Qualification is the fixed tiny three-layer resident mixed graph on this collecting Mac, with independent frozen Half fixture and the declared15schedules/positions0..11. It is not the real350M model or a generic shape/window admission.",
+    "No model payload loader, tokenizer/chat, original-unquantized adoption quality, application, phone, throughput, latency or complete process-peak qualification.",
+    "Logical history rollback is preservation of the prior bank before successful KV PhaseB; real partial KV copying intentionally poisons the whole Session and requires reset/replay. Forced protocol failure after a completed copy is not a hardware-error injection.",
+    "All normal/failed physical buffers, source stages, state copies and fixed gates were audited from saved bytes without producer imports/re-export or numerical model/GPU reruns. Some API getter/budget rejection Result predicates are established by the exact passing harness; not every predicate has its own serialized raw Result.",
+    "Shared cache status contents, guards and bytes are audited; its physical address is omitted from raw identity sets. Model66 owners and all logged Session addresses are distinct; no complete logged-status-address claim.",
+    "Sparse NativeUsage samples, including one early sample for two legacy microjobs, are observations only and do not establish complete peaks or general6GiB model fit.",
+    "Private reader attempt1 and correction are retained. Source/native outcomes and thresholds were not edited to accommodate the reader."
+  ],
+  "evidence": {
+    "design": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-design-v1/manifest.json",
+      "bytes": 5292,
+      "sha256": "65ba3990cf34394701e554522bada7551e5acadf3d8854f0c206affe7bf8f9a3"
+    },
+    "design_review": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-independent-review-v1/design-review.json",
+      "bytes": 7334,
+      "sha256": "ae0639e977ba4636ec4da925bd0bfab049f5f4ca4b5a7a46b89a6f90401a87e1"
+    },
+    "initial_native_proposal": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-proposal-v1/manifest.json",
+      "bytes": 14756,
+      "sha256": "d5ff896d450d93e6aa675d8624a8618e5ab101ccbd1bbba7688062823ad815fa"
+    },
+    "initial_native_review": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-independent-review-v1/prospective-native-review.json",
+      "bytes": 16829,
+      "sha256": "2278da1475c3980d02840159e875488b2303e17d9574ca3d14b2293d58ec9b49"
+    },
+    "source_qualification": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-independent-review-v1/saved-source-review.json",
+      "bytes": 14029,
+      "sha256": "c812a2d6672ff7dc9d206fee3ca57b97e3413b74c75043fc200febf2f26f4003"
+    },
+    "first_cold_checks": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-cold-checks-v1/checks.json",
+      "bytes": 884449,
+      "sha256": "57e907b0ab1328d6008e820a1e704c0e95721243e81b620a9b6c9278413d89e8"
+    },
+    "failed_gpu_receipt": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-gpu-v1/gpu.json",
+      "bytes": 1289137,
+      "sha256": "8d065c00b5f80312b957567a267e84296fc61291fb03eebb0a68a7faa40780b6"
+    },
+    "failed_gpu_review": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-independent-review-v1/first-gpu-failure-review.json",
+      "bytes": 1291181,
+      "sha256": "475e8132e17a04403042a09993edb68956f6cacd727b07c105caaf9337ba7a60"
+    },
+    "failure_investigation": {
+      "path": "artifacts/new-goal-b4d4c-first-copy-investigation-v1/audit.json",
+      "bytes": 2200,
+      "sha256": "68a03839e9ab553f94b437c9337fd90cccf6c3400c8fe38744f878445eef7c91"
+    },
+    "failed_binary_record": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-gpu-v1/retained-binary.json",
+      "bytes": 582,
+      "sha256": "2476a78cd4f951c76eb90ba4992c5f3a6fff715088ba3ef17221d10939a708ea"
+    },
+    "test_only_successor": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-proposal-v2/manifest.json",
+      "bytes": 16656,
+      "sha256": "3e480c63531253f82d0b7e71851cb12d60b8ec1485fa4a8740c0e349994ff5cd"
+    },
+    "test_only_successor_review": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-independent-review-v1/prospective-native-v2-review.json",
+      "bytes": 2255,
+      "sha256": "5653b90d31c165d678fdee2410c0544382928e5067e65d3288531eda0086f96e"
+    },
+    "cold_checks": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-cold-checks-v2/checks.json",
+      "bytes": 884451,
+      "sha256": "d314b0ba867970d67e2ca54710f2b0db648914aa22ef981e6e7d0b2713e78072"
+    },
+    "gpu_package": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-gpu-v2/package.json",
+      "bytes": 1474883,
+      "sha256": "310cc0293adb92d35adadc39803b3312f873a55c06d53a69e0f40de5aad8b2a1"
+    },
+    "gpu_approval": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-gpu-v2/prospective-review.json",
+      "bytes": 5015,
+      "sha256": "989b9f300966484889fd5b89d717934e749023b19b6b39c6a03841bb06559839"
+    },
+    "gpu_run": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-gpu-v2/gpu.json",
+      "bytes": 1297772,
+      "sha256": "e520db5ce8b239e68a5bb4c6a82d61f82274c8ea67367249a4fae2b74657ac48"
+    },
+    "raw_qualification": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-independent-review-v1/postrun-evidence-review.json",
+      "bytes": 14578,
+      "sha256": "a5d2eb8eacfb8f8b3b8769b8b8dd15760fe93fb65051e653e38f25064d42eb8d"
+    },
+    "retained_binary_record": {
+      "path": "artifacts/new-goal-b4d4c-resident-hybrid-gpu-v2/retained-binary.json",
+      "bytes": 490,
+      "sha256": "67ffe715aa28d18a614e8a2ec42f61579e326da1ba7c711008e88871aa67c448"
+    },
+    "source_fixture_manifest": {
+      "path": "tests/fixtures/lfm2-half-tiny-v1/manifest.json",
+      "bytes": 235595,
+      "sha256": "271c4f243a99615a8cb90339781bacd6fbff73f793f389bc735f4031630f47e3"
+    },
+    "original_artifact": {
+      "path": "tests/fixtures/lfm2-scalar-v1/model.safetensors",
+      "bytes": 760078,
+      "sha256": "5965adf8a9663fed07fd2b293e717d72f907ddae931649e3189d161d58257487"
+    }
+  },
+  "tiny_graph_qualified": true,
+  "real_model_qualified": false,
+  "app_qualified": false,
+  "performance_qualified": false,
+  "iphone_qualified": false
+}

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4d4c — concrete resident tiny mixed graph and publication/recovery**.
+Next implementation task: **B4e2 — bounded real LFM2 source/text reference protocol and experiment**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -220,7 +220,7 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
   - [x] B4c2: compose shared blocks with whole-step KV/history/token publication.
     [Scalar hybrid](docs/lfm2-scalar-hybrid.md); frozen source/state, rollback,
     partitions, warmed allocations and full450/531 default/Metal checks pass.
-- [ ] B4d: resident block/composition, allocation/ownership and recovery checks.
+- [x] B4d: resident block/composition, allocation/ownership and recovery checks.
   - [x] B4d1: [direct-gain Half RMS](docs/lfm2-half-rms.md) at epsilon1e-5,
     head64 up to512 rows and hidden256/1024; source/release Mac/legacy checks pass.
   - [x] B4d2: [borrowed three-tap Half convolution](docs/causal-conv3-half.md)
@@ -228,12 +228,13 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
     Model-wide transaction publication remains B4d4.
   - [x] B4d3: [multi-KV staged attention/cache](docs/staged-gqa-half.md) views,
     checked physical accounting and all-query/source/state/legacy Mac qualification.
-  - [ ] B4d4: resident tiny mixed graph, whole-step status/publication/recovery.
+  - [x] B4d4: resident tiny mixed graph, whole-step status/publication/recovery.
     - [x] B4d4a: [strided B*x/C*z products](docs/strided-half-product.md);
       independent source, borrowed native wrapper and Mac release checks pass.
     - [x] B4d4b: [independent tiny Half mixed-graph source](docs/lfm2-half-reference.md)
       with accurate original-FP32 affine rounding and complete state/stage fixtures.
-    - [ ] B4d4c: concrete resident graph and all-owner publication/recovery.
+    - [x] B4d4c: [concrete resident graph](docs/lfm2-resident-tiny.md) and
+      all-owner publication/recovery; complete selected Mac source/state/legacy checks.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
   text/session and actual process-memory checks before any support claim.
   - [x] B4e1: authenticate complete original weights and all eight cached metadata
@@ -478,3 +479,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4d4a reviewed commit / Half graph source starts | Exact18-file Astra approval and all checks pass; strided product committed as`451e2cf`. Separately reviewed two-file Half graph source uses the original container and uniform direct exact-dyadic projection stores. | Twelve source controls pass; first export stops before graph arrays because a diagnostic counterexample assumed builtin float sum meant naive ordered FP64. Failed v1 remains; Astra recommends explicit ordered additions without changing graph math/gates. |
 | 2026-10-29 | B4d4b independent Half graph source qualified | Reviewed witness-only successor passes12 controls/exact4-file replay. Astra independently reconstructs504 descriptors/1,097,888 values bit-exactly,252gates,original65tensors,74,317,824 scalar products and all state/mask/causal/component checks. Six-file fixture promoted; failedv1 retained. | [Half reference report](docs/lfm2-half-reference.md). Native mixed graph remains pending. Concrete design/physical ledger receives independent Astra approval; implementation is private until code review/checks. |
 | 2026-10-29 | D4b full repository checks pass | All six repository commands pass: formatting, strict default/Metal all-target Clippy,450default/541Metal tests and optimized test compilation. Source controls/replay/full audit remain passed; original Rust engine bytes are unchanged. | Exact source/fixture/report staged review and commit next. The private D4c Model/Session implementation remains separate and unqualified. |
+| 2026-10-29 | B4d4b reviewed source commit / resident graph starts | Exact14-file Astra approval and all checks pass; independent Half reference committed as`e577eb9`. The qualified source remains fixed before native graph outcomes. | Private D4c core uses the approved concrete Model/Session design and all-owner ledger. No new shader, generic graph VM, live graph code or target qualification yet. |
+| 2026-10-29 | D4c first native collection / mutation witness corrected | Reviewed8-file graph and full450/545 checks pass. First GPU numerical job passes; Astra independently gates1,923,728 math+199,936 boundary values with no MAIN/WIDE exceedance. Recovery stops at FirstCopy mutation assertion because all128 destination words already equal staged K from earlier replay. Actual commands complete and poison/replay error is correct. | Failed binary/logs/closed receipt retained. Reviewed test-only successor uses fresh FirstCopy Session and exact copied-range proof, retaining every assertion and unchanged graph/source/gates/counts. Full check/recollection pending; seven legacy and12allocation checks not yet reached. |
+| 2026-10-29 | B4d4c resident tiny graph qualified | All6successor repository checks and9release GPU jobs pass. Astra gates1,923,728math+199,936boundary values, all57snapshots/9faults/exact128word partial-copy poison/reset/replay,12ordinary allocation-free forwards and7legacyjobs;93observed zero boundaries total. | [Resident graph report](docs/lfm2-resident-tiny.md); failedv1 remains failed, correction test-only. Status address is unlogged(contents/guards/bytes verified), sparse usage is not peak/fit, real model/app/device/performance remain open. |

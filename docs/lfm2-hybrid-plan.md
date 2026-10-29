@@ -267,8 +267,25 @@ verified. The first export's diagnostic builtin-sum assumption is corrected in
 a reviewed successor without changing any graph math or gate; failed evidence
 remains. The original container is shared, with no scalar golden-output import.
 
-B4d4c will own the existing blocks in one concrete resident Model/Session. Its
+B4d4c owns the existing blocks in one concrete resident Model/Session. Its
 approved design uses the KV Set's command/status for complete candidate history
 stamping/validation, then KV copy and infallible history/logit/token publication.
-Uncertain copies poison every family. No native graph qualification follows
-until actual source/state/allocator/recovery checks pass.
+Uncertain copies poison every family. The selected tiny source/state/allocator/
+recovery qualification below passes; real checkpoint admission remains separate.
+
+## B4d4c resident tiny result
+
+The [concrete resident tiny graph](lfm2-resident-tiny.md) now passes selected Mac
+qualification, all six repository checks and nine release GPU jobs. Astra gates
+1,923,728 math and199,936 observed boundary values, validates history/KV/logit/
+token publication, nine failure paths, actual partial-copy poisoning and replay,
+and all seven changed-cache/Gemma regressions. Twelve ordinary forwards allocate
+no Rust memory. The failed first-copy witness run is preserved; its test-only
+fresh-session correction changes no numerical code, source gate or workload.
+
+B4d is complete for the tiny graph. B4e2 next freezes the fitting real350M
+source/text workload and resource limits before any real decoder run. Cold
+coefficient research proposes certified exact blockwise dots with checked
+fallbacks; it is not an executed model source or qualification. Keep512-capacity
+admission distinct from the proposed short complete source trajectory and the
+declared128,000 window. B4e3 real native testing and B5 integration remain open.

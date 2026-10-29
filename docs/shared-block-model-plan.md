@@ -185,10 +185,10 @@ prototypes and iPhone work remain preserved but are not this queue's prerequisit
 B4 now has qualified reusable [Half RMS](lfm2-half-rms.md),
 [raw Conv3](causal-conv3-half.md), [multi-KV attention/cache](staged-gqa-half.md)
 and [strided Half product](strided-half-product.md) blocks for the selected Mac
-cases, plus the fully audited [Half tiny reference](lfm2-half-reference.md).
-Next compose these in the concrete resident mixed graph with one checked
-publication boundary. Real LFM2 model and B5 app/context/adoption gates remain
-open; leaf qualification and a source fixture do not imply whole-model support.
+cases, plus the fully audited [Half tiny reference](lfm2-half-reference.md) and
+[resident mixed graph](lfm2-resident-tiny.md) with one checked publication boundary.
+Next freeze and qualify the fitting real LFM2 model before B5 app/context/adoption
+gates. Tiny numerical/state qualification does not imply real-model support.
 
 ## Research references
 

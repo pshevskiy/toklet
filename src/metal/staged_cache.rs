@@ -150,6 +150,95 @@ pub(super) struct Operation {
     width: usize,
 }
 impl Operation {
+    /// Append complete external candidate validation to the retained Phase-A
+    /// command. The concrete hybrid Session stamps and validates both history
+    /// banks before allowing Set::finish_math to mint Ready. No CPU value access.
+    pub(super) fn encode_half_pair(
+        &self,
+        command: &Command<'_>,
+        left: &Buffer<u16>,
+        right: &Buffer<u16>,
+        element_offset: usize,
+        count: usize,
+        status: &Buffer<u32>,
+    ) -> Result<()> {
+        let end = element_offset
+            .checked_add(count)
+            .filter(|&n| n <= u32::MAX as usize)
+            .ok_or(Error::Options("cache external validator extent"))?;
+        let offset = element_offset
+            .checked_mul(2)
+            .ok_or(Error::Options("cache external validator offset"))?;
+        if count == 0
+            || end > left.len
+            || end > right.len
+            || status.len < 1 + GUARD
+            || !offset.is_multiple_of(4)
+            || count
+                .div_ceil(self.width)
+                .checked_mul(self.width)
+                .is_none_or(|n| n > u32::MAX as usize)
+        {
+            return Err(Error::Options("cache external validator shape"));
+        }
+        let buffers = [&*left.raw, &*right.raw, &*status.raw];
+        for (i, b) in buffers.iter().enumerate() {
+            if buffers[..i].iter().any(|other| std::ptr::eq(*b, *other)) {
+                return Err(Error::Options("cache external validator alias"));
+            }
+        }
+        let device = self.pipeline.device();
+        if !std::ptr::eq(&*command.device(), &*device)
+            || buffers
+                .iter()
+                .any(|b| !std::ptr::eq(&*b.device(), &*device))
+        {
+            return Err(Error::Options("cache external validator device"));
+        }
+        if !command.retainedReferences() || command.status() != MTLCommandBufferStatus::NotEnqueued
+        {
+            return Err(Error::Options("cache external validator command"));
+        }
+        let e = command
+            .computeCommandEncoder()
+            .ok_or_else(|| Error::Native("cache external validator encoder absent".into()))?;
+        e.setComputePipelineState(&self.pipeline);
+        self.dispatch_pair(&e, &left.raw, &right.raw, offset, count as u32, &status.raw);
+        e.endEncoding();
+        Ok(())
+    }
+    // Caller prevalidates extents, alignment, device identity and rounded count.
+    // Kept separate so finish_math retains ONE encoder across all KV heads.
+    fn dispatch_pair(
+        &self,
+        e: &ProtocolObject<dyn MTLComputeCommandEncoder>,
+        left: &ProtocolObject<dyn MTLBuffer>,
+        right: &ProtocolObject<dyn MTLBuffer>,
+        offset: usize,
+        count: u32,
+        status: &ProtocolObject<dyn MTLBuffer>,
+    ) {
+        // SAFETY: checked same-device initialized operands, aligned byte offsets,
+        // copied scalar ABI, retained command and no CPU access until terminal.
+        unsafe {
+            e.setBuffer_offset_atIndex(Some(left), offset, 0);
+            e.setBuffer_offset_atIndex(Some(right), offset, 1);
+            e.setBytes_length_atIndex(NonNull::from(&count).cast(), size_of::<u32>(), 2);
+            e.setBuffer_offset_atIndex(Some(status), 0, 3);
+        }
+        e.dispatchThreadgroups_threadsPerThreadgroup(
+            MTLSize {
+                width: (count as usize).div_ceil(self.width),
+                height: 1,
+                depth: 1,
+            },
+            MTLSize {
+                width: self.width,
+                height: 1,
+                depth: 1,
+            },
+        );
+    }
     pub(super) fn new(gpu: &Gpu, plan: Plan, available: usize) -> Result<Self> {
         let required = PIPELINE_ALLOWANCE + size_of::<Self>();
         if required > available {
@@ -519,25 +608,13 @@ impl<'a> Set<'a> {
             let count = (self.tokens * p.config.dim) as u32;
             for head in 0..p.config.kv_heads {
                 let (offset, _) = active_range(*p, head, self.tokens)?;
-                // SAFETY: disjoint initialized same-device operands, checked active
-                // count excludes padding/guards; copied scalar and retained buffers.
-                unsafe {
-                    e.setBuffer_offset_atIndex(Some(&owner.new_k.raw), offset, 0);
-                    e.setBuffer_offset_atIndex(Some(&owner.new_v.raw), offset, 1);
-                    e.setBytes_length_atIndex(NonNull::from(&count).cast(), size_of::<u32>(), 2);
-                    e.setBuffer_offset_atIndex(Some(&self.status.raw), 0, 3);
-                }
-                e.dispatchThreadgroups_threadsPerThreadgroup(
-                    MTLSize {
-                        width: (count as usize).div_ceil(self.operation.width),
-                        height: 1,
-                        depth: 1,
-                    },
-                    MTLSize {
-                        width: self.operation.width,
-                        height: 1,
-                        depth: 1,
-                    },
+                self.operation.dispatch_pair(
+                    &e,
+                    &owner.new_k.raw,
+                    &owner.new_v.raw,
+                    offset,
+                    count,
+                    &self.status.raw,
                 );
             }
         }

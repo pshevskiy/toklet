@@ -44,7 +44,6 @@ impl Plan {
         Self::with_heads(capacity, HEADS, 1, dim, window, committed, tokens)
     }
     /// Bounded new head geometries; legacy callers retain the old constructor.
-    #[cfg(test)]
     pub(super) fn new_gqa(
         capacity: usize,
         query_heads: usize,

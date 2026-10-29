@@ -2,7 +2,6 @@
 //! Numerical kernels use concrete owned buffers; token/chat/application state is
 //! outside GPU execution. A chunk has one completion boundary, not per-op waits.
 mod capture;
-#[cfg(test)]
 mod causal_conv3_half;
 #[cfg(test)]
 mod compensated_attention;
@@ -23,13 +22,13 @@ mod staged_attention;
 mod staged_cache;
 #[cfg(test)]
 mod staged_gqa_fixture;
-#[cfg(test)]
 mod strided_half_product;
 pub use capture::Capture;
 pub mod gemma3;
 pub mod gemma_affine;
 pub mod gemma_rms;
 pub mod gemma_rotary;
+pub mod lfm2;
 mod llama3_rotary;
 mod memory;
 pub mod mlx;

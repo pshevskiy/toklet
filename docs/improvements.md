@@ -7658,3 +7658,34 @@ default/Metal all-target Clippy,450default/541Metal tests and optimized test
 compilation. The original Rust engine bytes remain unchanged. Active plan text
 is reconciled around the completed leaves/reference and remaining resident
 graph, rather than leaving earlier next-step statements contradictory.
+
+The exact14-file source task is committed as`e577eb9` after final Astra approval.
+D4c now implements the concrete resident mixed graph privately. Its reviewed
+design reuses all qualified blocks and the KV Set's command/status, validates
+both stamped history candidates, and permits only infallible publication after
+KV-copy success. Diagnostic availability is invalidated before scratch mutation;
+published logits remain separate. Code review and all target checks remain.
+
+D4c's reviewed resident graph passes full450default/545Metal repository checks.
+Its first source GPU job passes independent1,923,728-value math and199,936-value
+boundary-state reconstruction with no MAIN/WIDE exceedance. Recovery reaches the
+actual partial-copy fault but its mutation witness is invalid: prior complete
+replay left all128 destination K words identical to the new staged words. Both
+Astra audits confirm completed commands, correct poison and preserved publication;
+this is a test precondition defect. A reviewed test-only successor drops/recreates
+the owned FirstCopy Session, retains the mutation assertion and verifies the exact
+copied range. Graph arithmetic, source/gates/counts stay fixed. Failed executable,
+raw logs and clean closed-group receipt remain; full check/recollection is pending.
+
+[Resident tiny mixed graph](lfm2-resident-tiny.md) now qualifies on Apple M1 Pro.
+All six successor repository checks and nine GPU jobs pass; Astra independently
+gates1,923,728 mathematical and199,936 observed boundary-state values with zero
+MAIN/WIDE exceedance, validates all57 physical snapshot reconstructions, actual
+raw-u suffix/KV copies, published banks/tokens, nine faults and exact128-word
+partial-copy poison/reset/replay. Twelve ordinary forwards allocate no Rust
+memory; all legacy counters give93 observed zero boundaries total. Original
+weights and66 model owners remain immutable and correctly accounted. The failed
+v1 stays rejected and retained, with only test setup/proof changed. Status bytes/
+guards are checked without a logged address; sparse usage is not a process peak.
+B4d closes only the tiny Mac scope. Real LFM2 source/text/native/memory, B5 app/
+context/adoption, quality, performance and separate phone qualification remain.
