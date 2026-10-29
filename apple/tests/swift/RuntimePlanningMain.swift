@@ -35,6 +35,28 @@ struct RuntimePlanningMain {
         precondition(value["fits_requested_budgets"] as? Bool == true)
         precondition(value["numerical_buffers_allocated"] as? Bool == false)
         precondition(value["qualification_evaluated"] as? Bool == false)
+        var capacityOwner: OpaquePointer?
+        let capacityStatus = path.withUnsafeBufferPointer {
+            toklet_mlx_capacity_plan_create($0.baseAddress, $0.count, &options, &capacityOwner, &error)
+        }
+        precondition(capacityStatus == TOKLET_OK)
+        guard let capacityOwner else { fatalError("Missing capacity report") }
+        defer { precondition(toklet_mlx_inspect_release(capacityOwner, nil) == TOKLET_OK) }
+        var capacityCount = 0
+        precondition(toklet_mlx_inspect_json(capacityOwner, nil, 0, &capacityCount, &error) == TOKLET_OK)
+        precondition(capacityCount > 0 && capacityCount <= Int(TOKLET_MAX_COMPATIBILITY_JSON_BYTES))
+        var capacityBytes = [UInt8](repeating: 0xa5, count: capacityCount)
+        let capacityCopied = capacityBytes.withUnsafeMutableBufferPointer {
+            toklet_mlx_inspect_json(capacityOwner, $0.baseAddress, $0.count, &capacityCount, &error)
+        }
+        precondition(capacityCopied == TOKLET_OK && capacityCount == capacityBytes.count)
+        let capacityValue = try JSONSerialization.jsonObject(with: Data(capacityBytes)) as! [String: Any]
+        let resources = capacityValue["resources"] as! [String: Any]
+        precondition(NSDictionary(dictionary: resources).isEqual(to: value))
+        let range = capacityValue["capacity"] as! [String: Any]
+        precondition((range["minimum"] as? NSNumber)?.uint32Value == 3)
+        precondition((range["maximum"] as? NSNumber)?.uint32Value == 31)
+        precondition(range["first_excluded"] is NSNull)
         FileHandle.standardOutput.write(Data(bytes)); FileHandle.standardOutput.write(Data([10]))
     }
 }

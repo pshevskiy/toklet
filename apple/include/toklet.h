@@ -88,6 +88,19 @@ uint32_t toklet_mlx_inspect_create(const uint8_t *, size_t,
    Captured plans remain historical and require revalidation before loading. */
 uint32_t toklet_mlx_plan_create(const uint8_t *, size_t,
     const TokletRuntimePlanningOptions *, TokletCompatibility **, TokletError *);
+/* Additive ABI v1 numerical capacity inspection. Same options, thread, error,
+   bounded JSON allowance and Metal/MPS initialization as toklet_mlx_plan_create.
+   Returns {"resources":<unchanged runtime schema>,"capacity":<range report>}.
+   capacity.minimum is requested chunk; maximum is requested capacity. Selected
+   is the largest fitting point, or null; first_excluded is selected+1 (or the
+   minimum if no point fits), or null when maximum fits. Modes and offset stay
+   fixed. Every point reports budget and per-buffer fit. A fitting point does NOT
+   override false source/resident load flags in resources. Neither OK nor a
+   selected point reserves memory, widens factory eligibility, discovers declared
+   model context, or grants context/text/whole-process/device qualification.
+   Current allocations and all limits are revalidated at actual construction. */
+uint32_t toklet_mlx_capacity_plan_create(const uint8_t *, size_t,
+    const TokletRuntimePlanningOptions *, TokletCompatibility **, TokletError *);
 /* UTF-8 bytes, no NUL, <=65536 bytes. NULL+0 queries required byte count. Short
    buffers return INVALID, set required count and leave output untouched. Other
    failures clear a valid count. Capacity >65536 rejects before copying.

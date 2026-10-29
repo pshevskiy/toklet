@@ -8140,3 +8140,37 @@ with capacity 512, distinct from the declared 128,000. Original-unquantized
 quality, ordinary app discovery/load/Chat, context/KV controls, iPhone 14 Pro and
 performance adoption stay open. B5 begins with the existing numerical capacity
 solver exposed through the native-policy C API; no new planner is required.
+
+
+### M8 B5a — Native capacity-report API applied, 30 October 2026
+
+After B4 closure in `415b831`, the reviewed five-file change adds an ordinary
+native-policy capacity wrapper and additive C report entrypoint over the
+existing pure solver. Both entrypoints share cold validation, error mapping and
+handle ownership; the original flat resource report remains unchanged. The new
+range preserves load-fit flags and grants no new factory or model admission.
+
+All six Rust checks, release static library, exact header exports and C caller
+compilation pass. The final Swift build fails in the runner: canonicalizing
+`swiftc` changes its invocation name to `swift-frontend`. The failed receipt and
+13 passed jobs/products remain pinned. A reviewed alias-preserving Swift-only
+retry will reuse those unchanged successful checks; no engine arithmetic or
+source-data change is involved. Actual Mac planning and C/Swift execution remain
+pending, so this task is not yet committed or qualified.
+
+The alias-preserving Swift retry passes and the explicit 13+1 aggregate remains
+current and authenticated. All five Mac hardware planning/ABI jobs pass:
+four factory cases exercise range 3–31 at offset 1 and exact/below budgets;
+20 direct reports preserve snapshot/ownership behavior. C and strict Swift 6
+callers validate the additive symbol and range/resource assertions. The original
+29-export set including the new symbol matches the header. Default 457 and
+Metal 564 tests pass, with 20/184 ignored; suites overlap.
+
+Astra independently verifies actual retained products, source/runtime/aliases,
+build provenance, outputs and closed process groups. These are compiled range
+assertions; full nested capacity JSON was not retained for an additional
+independent decoder. [API evidence](native-capacity-report.md) preserves the
+failed compiler-dispatch job and all scope limits. No real-model forward,
+new context/factory admission, phone or performance qualification is granted.
+B5b next shares the enforced ordinary geometry/context-cap policy with a
+metadata-only limits snapshot, before typed Swift previews and safe settings.

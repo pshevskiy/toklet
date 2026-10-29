@@ -81,6 +81,61 @@ pub unsafe extern "C" fn toklet_mlx_plan_create(
     out: *mut *mut CompatibilityHandle,
     error: *mut NativeError,
 ) -> u32 {
+    unsafe { plan_create(path, len, opts, out, error, ReportKind::Resources) }
+}
+
+/// Search numerical capacity within the requested upper bound, using the same
+/// explicit modes or native factory policy as toklet_mlx_plan_create. Returns
+/// {resources, capacity}; neither the selected capacity nor an OK status grants
+/// loading, context qualification or application/device fit. Check load flags
+/// separately. The requested chunk is the search minimum; modes/offset stay fixed.
+/// # Safety
+/// Same pointer, disjointness, creating-thread and release contract as
+/// toklet_mlx_plan_create. A valid out is cleared on error.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_mlx_capacity_plan_create(
+    path: *const u8,
+    len: usize,
+    opts: *const RuntimePlanningOptions,
+    out: *mut *mut CompatibilityHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe { plan_create(path, len, opts, out, error, ReportKind::Capacity) }
+}
+
+#[derive(Clone, Copy)]
+enum ReportKind {
+    Resources,
+    Capacity,
+}
+
+#[cfg(all(
+    feature = "metal",
+    any(target_os = "macos", target_os = "ios"),
+    target_arch = "aarch64"
+))]
+fn planning_error(error: crate::metal::Error) -> Failure {
+    use crate::metal::Error;
+    fail(
+        match error {
+            Error::Options(_) => INVALID,
+            Error::Unsupported(_) => UNSUPPORTED,
+            Error::Weights(_) | Error::Budget { .. } => LOAD_ERROR,
+            _ => ENGINE_ERROR,
+        },
+        error.to_string(),
+    )
+}
+
+// One cold ABI path keeps validation, error codes and handle ownership identical.
+unsafe fn plan_create(
+    path: *const u8,
+    len: usize,
+    opts: *const RuntimePlanningOptions,
+    out: *mut *mut CompatibilityHandle,
+    error: *mut NativeError,
+    kind: ReportKind,
+) -> u32 {
     unsafe {
         boundary(error, || {
             pointer(out)?;
@@ -106,40 +161,58 @@ pub unsafe extern "C" fn toklet_mlx_plan_create(
                 } else {
                     ReadbackMode::GreedyToken
                 };
-                let report = if raw.attention == 2 {
-                    metal::planning::inspect_mlx_with_native_attention(
-                        path,
-                        load,
-                        options,
-                        normalization,
-                        readback,
-                    )
+                let attention = if raw.attention == 0 {
+                    AttentionMode::Reference
                 } else {
-                    metal::planning::inspect_mlx(
-                        path,
-                        load,
-                        options,
-                        normalization,
-                        readback,
-                        if raw.attention == 0 {
-                            AttentionMode::Reference
+                    AttentionMode::Online
+                };
+                let handle = match kind {
+                    ReportKind::Resources => {
+                        let report = if raw.attention == 2 {
+                            metal::planning::inspect_mlx_with_native_attention(
+                                path,
+                                load,
+                                options,
+                                normalization,
+                                readback,
+                            )
                         } else {
-                            AttentionMode::Online
-                        },
-                    )
-                }
-                .map_err(|error| {
-                    fail(
-                        match error {
-                            metal::Error::Options(_) => INVALID,
-                            metal::Error::Unsupported(_) => UNSUPPORTED,
-                            metal::Error::Weights(_) | metal::Error::Budget { .. } => LOAD_ERROR,
-                            _ => ENGINE_ERROR,
-                        },
-                        error.to_string(),
-                    )
-                })?;
-                out.write(compatibility::capture(&report)?);
+                            metal::planning::inspect_mlx(
+                                path,
+                                load,
+                                options,
+                                normalization,
+                                readback,
+                                attention,
+                            )
+                        }
+                        .map_err(planning_error)?;
+                        compatibility::capture(&report)?
+                    }
+                    ReportKind::Capacity => {
+                        let report = if raw.attention == 2 {
+                            metal::planning::inspect_mlx_capacity_with_native_attention(
+                                path,
+                                load,
+                                options,
+                                normalization,
+                                readback,
+                            )
+                        } else {
+                            metal::planning::inspect_mlx_capacity(
+                                path,
+                                load,
+                                options,
+                                normalization,
+                                readback,
+                                attention,
+                            )
+                        }
+                        .map_err(planning_error)?;
+                        compatibility::capture(&report)?
+                    }
+                };
+                out.write(handle);
                 Ok(())
             }
             #[cfg(not(all(
@@ -148,7 +221,7 @@ pub unsafe extern "C" fn toklet_mlx_plan_create(
                 target_arch = "aarch64"
             )))]
             {
-                let _ = (load, options, path);
+                let _ = (load, options, path, kind);
                 Err(fail(
                     UNSUPPORTED,
                     "Runtime Metal planning unavailable in this build/platform",
@@ -177,8 +250,25 @@ mod tests {
             session_memory_limit_bytes: 256 * 1024 * 1024,
         }
     }
+    type Create = unsafe extern "C" fn(
+        *const u8,
+        usize,
+        *const RuntimePlanningOptions,
+        *mut *mut CompatibilityHandle,
+        *mut NativeError,
+    ) -> u32;
+
     #[test]
     fn runtime_planning_abi_and_invalid_arguments_clear_output_before_device() {
+        for create in [
+            toklet_mlx_plan_create as Create,
+            toklet_mlx_capacity_plan_create,
+        ] {
+            invalid_arguments(create);
+        }
+    }
+
+    fn invalid_arguments(create: Create) {
         assert_eq!(size_of::<RuntimePlanningOptions>(), 56);
         assert_eq!(
             std::mem::offset_of!(RuntimePlanningOptions, load_memory_limit_bytes),
@@ -265,9 +355,7 @@ mod tests {
         for options in invalid {
             let mut out = ptr::dangling_mut::<CompatibilityHandle>();
             assert_eq!(
-                unsafe {
-                    toklet_mlx_plan_create(b"x".as_ptr(), 1, &options, &mut out, ptr::null_mut())
-                },
+                unsafe { create(b"x".as_ptr(), 1, &options, &mut out, ptr::null_mut()) },
                 INVALID
             );
             assert!(out.is_null());
@@ -283,23 +371,19 @@ mod tests {
         ] {
             let mut out = ptr::dangling_mut::<CompatibilityHandle>();
             assert_eq!(
-                unsafe { toklet_mlx_plan_create(path, length, &valid, &mut out, ptr::null_mut()) },
+                unsafe { create(path, length, &valid, &mut out, ptr::null_mut()) },
                 INVALID
             );
             assert!(out.is_null());
         }
         let mut out = ptr::dangling_mut::<CompatibilityHandle>();
         assert_eq!(
-            unsafe {
-                toklet_mlx_plan_create(b"x".as_ptr(), 1, ptr::null(), &mut out, ptr::null_mut())
-            },
+            unsafe { create(b"x".as_ptr(), 1, ptr::null(), &mut out, ptr::null_mut()) },
             INVALID
         );
         assert!(out.is_null());
         assert_eq!(
-            unsafe {
-                toklet_mlx_plan_create(b"x".as_ptr(), 1, &valid, ptr::null_mut(), ptr::null_mut())
-            },
+            unsafe { create(b"x".as_ptr(), 1, &valid, ptr::null_mut(), ptr::null_mut()) },
             INVALID
         );
     }
@@ -354,20 +438,25 @@ mod tests {
         target_arch = "aarch64"
     )))]
     fn runtime_planning_unavailable_build_is_explicit_without_fallback() {
-        let mut out = ptr::dangling_mut::<CompatibilityHandle>();
-        assert_eq!(
-            unsafe {
-                toklet_mlx_plan_create(
-                    b"missing".as_ptr(),
-                    7,
-                    &options(),
-                    &mut out,
-                    ptr::null_mut(),
-                )
-            },
-            UNSUPPORTED
-        );
-        assert!(out.is_null());
+        for create in [
+            toklet_mlx_plan_create as Create,
+            toklet_mlx_capacity_plan_create,
+        ] {
+            let mut out = ptr::dangling_mut::<CompatibilityHandle>();
+            assert_eq!(
+                unsafe {
+                    create(
+                        b"missing".as_ptr(),
+                        7,
+                        &options(),
+                        &mut out,
+                        ptr::null_mut(),
+                    )
+                },
+                UNSUPPORTED
+            );
+            assert!(out.is_null());
+        }
     }
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     mod gpu {
@@ -381,11 +470,18 @@ mod tests {
                 .join(name)
         }
         fn create(path: &Path, options: RuntimePlanningOptions) -> *mut CompatibilityHandle {
+            create_with(toklet_mlx_plan_create, path, options)
+        }
+        fn create_with(
+            create: Create,
+            path: &Path,
+            options: RuntimePlanningOptions,
+        ) -> *mut CompatibilityHandle {
             let bytes = path.to_str().unwrap().as_bytes();
             let mut out = ptr::null_mut();
             assert_eq!(
                 unsafe {
-                    toklet_mlx_plan_create(
+                    create(
                         bytes.as_ptr(),
                         bytes.len(),
                         &options,
@@ -440,6 +536,155 @@ mod tests {
             bytes.truncate(length);
             bytes
         }
+        fn report(create: Create, path: &Path, request: RuntimePlanningOptions) -> Value {
+            let handle = create_with(create, path, request);
+            let first = bytes(handle);
+            assert_eq!(bytes(handle), first);
+            let value = serde_json::from_slice(&first).unwrap();
+            assert_eq!(
+                unsafe { toklet_mlx_inspect_release(handle, ptr::null_mut()) },
+                OK
+            );
+            value
+        }
+
+        #[test]
+        #[ignore = "Explicit Apple GPU capacity C/direct policy equality and independent load/session fit"]
+        fn native_capacity_planning_preserves_policy_bounds_and_separate_load_fit() {
+            for (directory, attention) in [
+                ("mlx-qwen-v1/model", AttentionMode::Online),
+                ("mlx-llama-v1/tied", AttentionMode::Reference),
+                ("mlx-mistral-v1/untied", AttentionMode::Reference),
+                ("mlx-qwen3-v1/tied", AttentionMode::Reference),
+            ] {
+                let p = path(directory);
+                let request = RuntimePlanningOptions {
+                    attention: 2,
+                    ..options()
+                };
+                let capacity = report(toklet_mlx_capacity_plan_create, &p, request);
+                let single = report(toklet_mlx_plan_create, &p, request);
+                // The old JSON does not gain an envelope or change its fields.
+                assert_eq!(capacity["resources"], single);
+                assert!(single.get("resources").is_none());
+                assert_eq!(capacity["capacity"]["minimum"], 3);
+                assert_eq!(capacity["capacity"]["maximum"], 31);
+                assert_eq!(capacity["capacity"]["selected"]["capacity"], 31);
+                assert!(capacity["capacity"]["first_excluded"].is_null());
+                assert_eq!(capacity["resources"]["numerical_buffers_allocated"], false);
+                assert_eq!(capacity["resources"]["qualification_evaluated"], false);
+                let (load, session) = request.validate().unwrap();
+                let direct = metal::planning::inspect_mlx_capacity(
+                    &p,
+                    load,
+                    session,
+                    NormalizationMode::Compensated,
+                    ReadbackMode::FullLogits,
+                    attention,
+                )
+                .unwrap();
+                assert_eq!(capacity, serde_json::to_value(direct).unwrap());
+                let explicit = RuntimePlanningOptions {
+                    attention: if attention == AttentionMode::Online {
+                        1
+                    } else {
+                        0
+                    },
+                    ..request
+                };
+                assert_eq!(
+                    capacity,
+                    report(toklet_mlx_capacity_plan_create, &p, explicit)
+                );
+                if attention == AttentionMode::Reference {
+                    let unsupported = RuntimePlanningOptions {
+                        attention: 1,
+                        ..request
+                    };
+                    let raw = p.to_str().unwrap().as_bytes();
+                    let mut handle = ptr::dangling_mut();
+                    assert_eq!(
+                        unsafe {
+                            toklet_mlx_capacity_plan_create(
+                                raw.as_ptr(),
+                                raw.len(),
+                                &unsupported,
+                                &mut handle,
+                                ptr::null_mut(),
+                            )
+                        },
+                        UNSUPPORTED
+                    );
+                    assert!(handle.is_null());
+                }
+            }
+            let p = path("mlx-qwen-v1/model");
+            let request = RuntimePlanningOptions {
+                attention: 2,
+                ..options()
+            };
+            let at17 = report(
+                toklet_mlx_plan_create,
+                &p,
+                RuntimePlanningOptions {
+                    capacity: 17,
+                    ..request
+                },
+            );
+            let bytes17 = at17["session_memory"]["admitted_bytes"].as_u64().unwrap();
+            for (budget, expected) in [(bytes17, 17), (bytes17 - 1, 16)] {
+                let value = report(
+                    toklet_mlx_capacity_plan_create,
+                    &p,
+                    RuntimePlanningOptions {
+                        session_memory_limit_bytes: budget,
+                        ..request
+                    },
+                );
+                assert_eq!(value["capacity"]["selected"]["capacity"], expected);
+                assert_eq!(
+                    value["capacity"]["first_excluded"]["capacity"],
+                    expected + 1
+                );
+                assert_eq!(value["capacity"]["first_excluded"]["fits_budget"], false);
+                assert_eq!(value["resources"]["fits_session_budget"], false);
+            }
+            let empty = report(
+                toklet_mlx_capacity_plan_create,
+                &p,
+                RuntimePlanningOptions {
+                    session_memory_limit_bytes: 0,
+                    ..request
+                },
+            );
+            assert!(empty["capacity"]["selected"].is_null());
+            assert_eq!(empty["capacity"]["first_excluded"]["capacity"], 3);
+            // A fitting session range cannot authorize loading under an insufficient load budget.
+            let load_rejected = report(
+                toklet_mlx_capacity_plan_create,
+                &p,
+                RuntimePlanningOptions {
+                    load_memory_limit_bytes: 1,
+                    ..request
+                },
+            );
+            assert_eq!(load_rejected["capacity"]["selected"]["capacity"], 31);
+            assert_eq!(load_rejected["resources"]["fits_source_load_budget"], false);
+            assert_eq!(
+                load_rejected["resources"]["fits_resident_load_budget"],
+                false
+            );
+            assert_eq!(load_rejected["resources"]["fits_requested_budgets"], false);
+            println!(
+                "NATIVE_CAPACITY_PLANNING {}",
+                serde_json::json!({
+                    "factory_cases":4,"bounds":[3,31],"position_offset":1,
+                    "exact_and_below_session_budget":true,"load_fit_separate":true,
+                    "numerical_buffers_allocated":false,"passed":true
+                })
+            );
+        }
+
         #[test]
         #[ignore = "Explicit Apple GPU native-policy plans match actual model/session factory budgets"]
         fn native_policy_matches_factory_and_frozen_parent_memory() {

@@ -1,0 +1,296 @@
+{
+  "format": "toklet-native-capacity-ffi-result-v1",
+  "date": "2026-10-30",
+  "base_revision": "415b831",
+  "status": "additive_native_capacity_api_checked_on_mac",
+  "api": "toklet_mlx_capacity_plan_create",
+  "rust_wrapper": "metal::planning::inspect_mlx_capacity_with_native_attention",
+  "old_api_and_schema_preserved": true,
+  "source_files": [
+    {
+      "path": "apple/include/toklet.h",
+      "bytes": 16031,
+      "sha256": "2d8565ac193af5c7758e8f816480224e4b4cf3f61ca849b4c6e72872ddf3947d"
+    },
+    {
+      "path": "apple/tests/runtime_planning_smoke.c",
+      "bytes": 3633,
+      "sha256": "d14fcc7f8bf0b2ab7809ad36ce69442ea36e8f8db6fb47e198a9cf633d1f9690"
+    },
+    {
+      "path": "apple/tests/swift/RuntimePlanningMain.swift",
+      "bytes": 3810,
+      "sha256": "c7a82b6157a0a4468d114e7cdf9b83ba6d293c0d634df80d761a6ab9253ee3f4"
+    },
+    {
+      "path": "src/metal/planning.rs",
+      "bytes": 48232,
+      "sha256": "ca4d7a655de4cdcb92f8ba01a50574d016945f2c4f3619d85020411323add79f"
+    },
+    {
+      "path": "src/native/runtime_planning.rs",
+      "bytes": 38517,
+      "sha256": "17e1a070d19675e98814e4e2c108e16abf4a158ce6d808a0d7afa2b2a092bbf3"
+    }
+  ],
+  "verification": {
+    "format": true,
+    "strict_default_and_metal_clippy": true,
+    "default_tests": 457,
+    "default_ignored": 20,
+    "metal_tests": 564,
+    "metal_ignored": 184,
+    "counts_overlap": true,
+    "release_metal_test_build": true,
+    "release_static_library_build": true,
+    "c_and_swift6_strict_compile": true,
+    "header_exports": 29,
+    "cold_execution_summary": {
+      "executed_retry_jobs": 1,
+      "reused_successful_jobs": 13
+    },
+    "hardware_jobs": 5,
+    "factory_fixture_cases": 4,
+    "tested_capacity_bounds": [
+      3,
+      31
+    ],
+    "position_offset": 1,
+    "direct_report_equalities": 20,
+    "source_and_resident_load_fit_separate": true,
+    "exact_and_one_byte_under_session_budget": true,
+    "no_fit_zero_session_budget": true,
+    "immutable_snapshot_and_wrong_thread_checks": true
+  },
+  "products": {
+    "c": {
+      "bytes": 12198136,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-capacity-verification-owner-v3/retained/c",
+      "sha256": "778c3aad03077539fb96934c889bcde432d637291867025ef9b0bde91746aebc"
+    },
+    "library": {
+      "bytes": 26952136,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-capacity-verification-owner-v3/retained/libtoklet.a",
+      "sha256": "498c26fa33a5c5da251ab3f4424a5a0dce8f99692e0c09de12eff7658618726e"
+    },
+    "swift": {
+      "bytes": 11994656,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-capacity-verification-owner-v3/retained/swift",
+      "sha256": "3a3fe0d2be988a47494a8bc6fa283aafe268b6a332eb376ec4579262c52ea8e3"
+    },
+    "tests": {
+      "bytes": 116999968,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-capacity-verification-owner-v3/retained/tests",
+      "sha256": "2a62e506570f0903c12f02d85acb1c2d0598fc835d96be2a636a4704d4d15435"
+    }
+  },
+  "exported_symbols": [
+    "toklet_abi_version",
+    "toklet_cancel_create",
+    "toklet_cancel_release",
+    "toklet_cancel_set",
+    "toklet_chat_create",
+    "toklet_chat_create_smol_audited",
+    "toklet_chat_decode",
+    "toklet_chat_encode",
+    "toklet_chat_release",
+    "toklet_chat_stop_ids",
+    "toklet_mlx_capacity_plan_create",
+    "toklet_mlx_inspect_create",
+    "toklet_mlx_inspect_json",
+    "toklet_mlx_inspect_release",
+    "toklet_mlx_plan_create",
+    "toklet_model_load",
+    "toklet_model_load_metal",
+    "toklet_model_load_mlx",
+    "toklet_model_load_mlx_smol_audited",
+    "toklet_model_release",
+    "toklet_session_context",
+    "toklet_session_create",
+    "toklet_session_generate",
+    "toklet_session_history",
+    "toklet_session_preflight",
+    "toklet_session_release",
+    "toklet_session_reset",
+    "toklet_session_score",
+    "toklet_session_state"
+  ],
+  "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+  "hardware_device": "Apple M1 Pro",
+  "hardware_commands": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-capacity-verification-owner-v3/retained/tests",
+        "--exact",
+        "native::runtime_planning::tests::gpu::native_capacity_planning_preserves_policy_bounds_and_separate_load_fit",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "pid": 99126,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 23,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 7045720,
+        "phys_footprint": 7045720,
+        "resident_size": 19480576
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-capacity-verification-owner-v3/retained/tests",
+        "--exact",
+        "native::runtime_planning::tests::gpu::native_policy_matches_factory_and_frozen_parent_memory",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "pid": 99133,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 180296,
+        "phys_footprint": 180296,
+        "resident_size": 458752
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-capacity-verification-owner-v3/retained/tests",
+        "--exact",
+        "native::runtime_planning::tests::gpu::native_runtime_planning_matches_direct_reports_and_keeps_snapshot_ownership",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "pid": 99139,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 2,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 7045744,
+        "phys_footprint": 7029360,
+        "resident_size": 19464192
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-capacity-verification-owner-v3/retained/c",
+        "/Users/coloner/work/rust/toklet/tests/fixtures/mlx-qwen3-v1/tied"
+      ],
+      "pid": 99152,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 10,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 3342792,
+        "phys_footprint": 3342792,
+        "resident_size": 12730368
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-capacity-verification-owner-v3/retained/swift",
+        "/Users/coloner/work/rust/toklet/tests/fixtures/mlx-qwen3-v1/tied"
+      ],
+      "pid": 99156,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 9,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 98376,
+        "phys_footprint": 81992,
+        "resident_size": 32768
+      }
+    }
+  ],
+  "swift_saved_resources": {
+    "schema_version": 1,
+    "device_name": "Apple M1 Pro",
+    "maximum_buffer_bytes": 9534832640,
+    "requested_load_context": 32,
+    "requested_capacity": 31,
+    "requested_chunk_size": 3,
+    "requested_position_offset": 1,
+    "requested_load_budget_bytes": 268435456,
+    "requested_session_budget_bytes": 268435456,
+    "projection": "MlxAffine",
+    "normalization": "Compensated",
+    "readback": "FullLogits",
+    "attention": "Reference",
+    "source_payload_bytes": 28288,
+    "source_admitted_load_bytes": 67202688,
+    "resident_weights_bytes": 23884,
+    "resident_admitted_load_bytes": 67198284,
+    "session_memory": {
+      "weights_bytes": 23884,
+      "kv_bytes": 7992,
+      "scratch_bytes": 8064,
+      "history_bytes": 124,
+      "logits_bytes": 512,
+      "metadata_bytes": 424,
+      "metadata_allowance_bytes": 67108864,
+      "admitted_bytes": 67149864
+    },
+    "fits_source_load_budget": true,
+    "fits_resident_load_budget": true,
+    "fits_session_budget": true,
+    "fits_requested_budgets": true,
+    "numerical_buffers_allocated": false,
+    "payload_validation_required": true,
+    "qualification_evaluated": false
+  },
+  "capacity_assertion_scope": "Reviewed compiled Rust/C/Swift assertions; full nested capacity JSON not retained for an independent saved-byte decoder.",
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b5-capacity-ffi-proposal-v1/manifest.json",
+      "bytes": 8904,
+      "sha256": "ad629b7153c6e1345c625276a48b23c3cd23c7a81241f8bfd0b48f368fb8a044"
+    },
+    {
+      "path": "artifacts/new-goal-b5-capacity-ffi-independent-review-v1/prospective-review.json",
+      "bytes": 9757,
+      "sha256": "15365c91ff8450d08a4dec2aa1e7237cdedc9f9b15d07f72b1e2e606d22cfb37"
+    },
+    {
+      "path": "artifacts/new-goal-b5-capacity-verification-owner-v2/cold-v1/checks.json",
+      "bytes": 1257107,
+      "sha256": "6c3463b545637fd21117294ae291d9347fa233447099a9e93c36ac91a0b06374"
+    },
+    {
+      "path": "artifacts/new-goal-b5-capacity-verification-owner-v3/cold-v1/checks.json",
+      "bytes": 1272607,
+      "sha256": "634cc84a01b598b2a33a35800044a9eb011243ab41679c0e1332fa8e15554587"
+    },
+    {
+      "path": "artifacts/new-goal-b5-capacity-verification-owner-v3/package.json",
+      "bytes": 1434398,
+      "sha256": "2ec169ee92169484905815ec6c586a4c9931fc04874084505ec792ed8a3b26e6"
+    },
+    {
+      "path": "artifacts/new-goal-b5-capacity-verification-owner-v3/launch-review.json",
+      "bytes": 4659,
+      "sha256": "fcf7021ba924d8d38a0b264411f7804633879e5d83fd92467f6c929c4b1cd1fa"
+    },
+    {
+      "path": "artifacts/new-goal-b5-capacity-verification-owner-v3/hardware-v1/checks.json",
+      "bytes": 1247956,
+      "sha256": "51e9613cada31687a444814174533c70181f5d33bcc9dd2746273bf19cf1df0d"
+    },
+    {
+      "path": "artifacts/new-goal-b5-capacity-verification-independent-review-v1/saved-review.json",
+      "bytes": 11808,
+      "sha256": "c6bef00795f42aa82d03c97bd2682679635f2aa6bd8c628c07a90cf4434d227b"
+    }
+  ],
+  "limits": [
+    "Range is within caller-admitted upper, not discovered declared/factory maximum.",
+    "A fitting session point does not override source/resident load failures or reserve memory.",
+    "Metal/MPS initialization occurs; no numerical buffers in the range report.",
+    "No real-model forward, context/phone/whole-app/performance or broader factory qualification.",
+    "Sparse process samples are not complete command/system peaks; per-job elapsed is not explicitly retained.",
+    "Failed Swift frontend-dispatch job stays failed; aggregate reuses13authenticated successful jobs and one actual retry."
+  ]
+}

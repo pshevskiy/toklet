@@ -627,6 +627,27 @@ pub fn inspect_mlx_capacity(
     )
 }
 
+/// Capacity inspection with the actual native factory's attention policy.
+/// The upper bound is the caller's already admitted requested capacity, not a
+/// declared or qualified model maximum. Loading fit remains a separate result.
+pub fn inspect_mlx_capacity_with_native_attention(
+    directory: &Path,
+    load: weights::LoadOptions,
+    options: session::Options,
+    normalization: NormalizationMode,
+    readback: ReadbackMode,
+) -> Result<CapacityInspection> {
+    inspect_with_policy(
+        directory,
+        load,
+        options,
+        normalization,
+        readback,
+        AttentionPolicy::NativeModel,
+        true,
+    )
+}
+
 enum AttentionPolicy {
     Explicit(AttentionMode),
     NativeModel,

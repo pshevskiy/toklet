@@ -69,3 +69,10 @@ This task does not add timing, quality or physical iPhone qualification. The
 [H1 CLI/native runtime consumers](metal-resource-consumers.md) now expose
 these plans. The Swift/app runtime consumer and exact qualification-receipt
 evaluation remain open, as do the other items in the active expansion plan.
+
+
+The [additive native capacity-report API](native-capacity-report.md), checked on
+30 October 2026, exposes the existing pure range solver through the ordinary
+native attention policy. The original flat report remains unchanged. A fitting
+session range still cannot override loading failures; its caller-admitted upper
+is distinct from declared/enforced per-model maxima and any qualification.

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5a — expose the existing capacity report through the native API**.
+Next implementation task: **B5b — report ordinary per-model context limits before capacity search**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -293,10 +293,14 @@ separate requirements below. Further model admissions require their own scope.
 
 ### B5 — Context/KV controls and Hugging Face integration
 
-- [ ] B5a: add the native-policy capacity-report C API over the existing pure
-  solver; preserve the old report/schema, current factory admission and separate
-  source/resident loading fit. Astra reviewed the private proposal; application,
-  Rust checks, Mac planning checks and C/Swift smoke are next.
+- [x] B5a: [native-policy capacity-report C API](docs/native-capacity-report.md)
+  reuses the pure solver and preserves the old report/schema, current factory
+  admission and separate loading fit. All six Rust checks, static library/
+  exports/compilation, five Mac planning/ABI jobs and Astra saved audit pass.
+- [ ] B5b: centralize the existing ordinary factory geometry/context-cap policy
+  and expose declared/enforced metadata-only limits before capacity search;
+  distinguish diagnostic routes and broader scalar metadata from ordinary app
+  admission. Then add typed Swift decoding and dedicated-worker integration.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -564,3 +568,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | Status correction checked and independently audited | All 33 controls pass in 0.302s, all six repository checks pass (default 457/Metal 564), and Astra verifies current bindings, runtime and seven closed groups. Independent diagnostic audit preserves all 104 attempts/367 rows with explicit numerical stub/qualification false; root audit independently preserves all strict math and 3/8 trajectory diagnostics. | Narrow correction task is ready for exact staged review and commit. Complete full-reader replay and final bounded qualification remain next. |
 | 2026-10-30 | Status correction committed / final combined replay starts | Exact six-file Astra staged review passes; status correction committed as `74ab2f8`. Full V5 saved reader starts under unchanged 900s/6GiB limits and original capture authority, after independent 33-control and state/codec audits. | Await complete combined numerical/state/codec/endpoints and independent final qualification review. No GPU or source-model rerun. |
 | 2026-10-30 | B4 selected Mac qualification complete | Full unstubbed reader passes all 6,440 local groups/11,971,552 values, 303 strict groups/1,965,024 values, full state/codec/ordinary/budget coverage and clean endpoints. Astra verifies original inputs/raw extents/runtime and independently approves selected Mac64/C512 conformance; MAIN3/WIDE8 diagnostics remain rejected. | [Report](docs/lfm2-real-native.md). B5 native-policy capacity API is the next concrete task; original quality, ordinary app/phone/full-window/performance work remain open. |
+| 2026-10-30 | B4 report committed / B5a validation starts | Bounded qualification and synchronized plan committed as `415b831`. Astra-reviewed five-file capacity-report API is applied. All six Rust checks, release static library, exact header exports and C compilation pass; final Swift compilation fails because the runner invoked resolved swift-frontend instead of the swiftc alias. | Preserve the failed receipt and 13 successful jobs. Astra prepares an alias-preserving Swift-only retry; engine code and test outcomes remain unchanged, hardware checks pending. |
+| 2026-10-30 | B5a native capacity API checked | Alias-preserving Swift retry passes with explicit 13+1 successful-job provenance, preserving the failed original. All five exact Mac planning/C/Swift jobs pass and Astra independently audits current source/products/29 exports/closed groups. Default457/Metal564 tests pass (20/184 ignored). | [API report](docs/native-capacity-report.md); exact staged task review and commit next. B5b centralizes the actual ordinary factory context caps and adds metadata-only range facts before Swift/UI work. |
