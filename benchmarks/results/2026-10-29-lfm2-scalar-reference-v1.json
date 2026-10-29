@@ -1,0 +1,114 @@
+{
+  "format": "toklet-lfm2-scalar-reference-result-v1",
+  "date": "2026-10-29",
+  "status": "independent_scalar_source_fixture_approved",
+  "scope": "Independent tiny scalar reference only",
+  "geometry": {
+    "hidden": 256,
+    "intermediate": 256,
+    "vocab": 64,
+    "query_heads": 4,
+    "kv_heads": 2,
+    "head_dim": 64,
+    "capacity": 12,
+    "layers": [
+      "conv3",
+      "attention",
+      "conv3"
+    ]
+  },
+  "original_ownership": {
+    "affine": 18,
+    "direct_bf16_norm": 9,
+    "depthwise3": 2,
+    "logical": 29,
+    "physical": 65,
+    "payload_bytes": 753408,
+    "payload_start": 6670,
+    "unaligned_u32_payload": true,
+    "tied_embedding_owners": 1
+  },
+  "profile": "Independent FP64 mathematical reductions with declared FP32 operation stores, direct BF16 gains; scalar CPU only",
+  "gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "fixture": {
+    "cases": 4,
+    "groups": 252,
+    "mathematical_groups": 228,
+    "state_groups": 24,
+    "values": 548944,
+    "math_values": 405584,
+    "state_values": 143360,
+    "array_bytes": 2195776
+  },
+  "checks": {
+    "portable_controls_passed": 8,
+    "source_exports": 2,
+    "six_files_byte_identical": true,
+    "owned_jobs_closed": true,
+    "endpoint_errors": [],
+    "rust_unchanged_since": "9c18a4f",
+    "cargo_rerun_required": false
+  },
+  "source_job_maxrss_bytes": [
+    94896128,
+    109854720,
+    107200512
+  ],
+  "memory_observation_scope": "macOS own-process maximum RSS counters for source-only jobs; no real-model physical-fit claim",
+  "source_executed": true,
+  "rust_graph_executed": false,
+  "gpu_executed": false,
+  "real_model_executed": false,
+  "text_qualified": false,
+  "evidence": {
+    "proposal": {
+      "path": "artifacts/new-goal-b4c1-reference-proposal-v1/manifest.json",
+      "bytes": 4244,
+      "sha256": "c88d6bcf4995001041a077e244f64f72e3f6bc91a08b470622827fdacb9828d4"
+    },
+    "source_review": {
+      "path": "artifacts/new-goal-b4c1-reference-independent-review-v1/prospective-review.json",
+      "bytes": 5643,
+      "sha256": "fa57fadde0d91d3241a0218e976d8f5b4897cffc41233f68c50b684ac8d09374"
+    },
+    "source_jobs": {
+      "path": "artifacts/new-goal-b4c1-reference-checks-v1/checks.json",
+      "bytes": 7814,
+      "sha256": "8d16aa1732ce32854ece92a30d3fef0d60ca09e8b7a4096b95588a2053204bad"
+    },
+    "fixture_manifest": {
+      "path": "tests/fixtures/lfm2-scalar-v1/manifest.json",
+      "bytes": 82561,
+      "sha256": "876b55cd158ccc98b71b63fcd3b4c03d06e979fdada58dbca64921e2fe8d736b"
+    },
+    "protocol": {
+      "path": "tests/fixtures/lfm2-scalar-v1/protocol.json",
+      "bytes": 2912,
+      "sha256": "e6cfd973db5392e8f1cd684230a26dce1af12508392df9405319b2b496e0ef83"
+    },
+    "independent_saved_source_review": {
+      "path": "artifacts/new-goal-b4c1-reference-independent-review-v1/saved-source-review.json",
+      "bytes": 3367,
+      "sha256": "69e737c0c9a16903dd5e6c4a9f0664dae3ca58f48082acd3501b4e3239056a62"
+    }
+  },
+  "remaining": [
+    "Rust scalar composition and compound KV/history/token/logit publication",
+    "Resident Half/native leaf and tiny graph qualification",
+    "Verified real artifact and bounded Mac qualification",
+    "Context/app/text/adoption quality and separate device evidence"
+  ],
+  "independent_audit": {
+    "finite_values": 548944,
+    "physical_ranges": 65,
+    "original_packed_code_words": 165888,
+    "state_values": 143360,
+    "masked_positive_zero_words": 540,
+    "norm_words": 60928,
+    "context_words": 7168,
+    "earlier_causal_words": 215512
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "cases": [
+    [
+      "single",
+      [
+        1
+      ]
+    ],
+    [
+      "short",
+      [
+        1,
+        7,
+        13
+      ]
+    ],
+    [
+      "context12",
+      [
+        1,
+        7,
+        13,
+        3,
+        9,
+        5,
+        11,
+        2,
+        17,
+        4,
+        6,
+        10
+      ]
+    ],
+    [
+      "future_changed12",
+      [
+        1,
+        7,
+        13,
+        3,
+        9,
+        5,
+        11,
+        2,
+        17,
+        4,
+        6,
+        19
+      ]
+    ]
+  ],
+  "causal": "All earlier activation/probability/logit/state rows equal for changed final token. Raw scores compare visible source columns for causality; masked future scores remain raw and may differ.",
+  "format": "toklet-lfm2-scalar-tiny-protocol-v1",
+  "gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "geometry": {
+    "capacity": 12,
+    "epsilon_f32": 1e-05,
+    "head_dim": 64,
+    "hidden": 256,
+    "intermediate": 256,
+    "kv_heads": 2,
+    "layers": [
+      "conv3",
+      "attention",
+      "conv3"
+    ],
+    "query_heads": 4,
+    "theta": 1000000,
+    "vocab": 64
+  },
+  "mathematical_groups_per_case": 57,
+  "physical_owners": {
+    "affine": 18,
+    "depthwise3": 2,
+    "direct_bf16_norm": 9,
+    "logical": 29,
+    "physical": 65,
+    "tied_embedding_owners": 1
+  },
+  "profile": {
+    "attention": "span_attention full GQA semantics: FP64 dots and scale to F32 raw scores; FP64 softmax to F32; FP64 context to F32",
+    "conv": "F32 B*x; oldest-to-current FP64 three-tap sum to F32; F32 C*z; no SiLU",
+    "embedding": "original tied F32 table, no scaling",
+    "projection": "original Q4/G64/BF16 reconstruction to F32; independent FP64 fsum dots to F32",
+    "residual": "ordinary F32 addition, no Gemma clamp",
+    "rms": "direct BF16 gain widened to F32; FP64 squares/reduction/division/scaling to F32",
+    "rotary": "independent Decimal80 frequency to FP64 angle/trig; F32 sin/cos, separately rounded F32 products and add/subtract",
+    "silu": "FP32 exp(-abs), denominator, division, product; separate F32 gating"
+  },
+  "runs_performed": false,
+  "scope": "Independent synthetic scalar reference only; no Rust target, Half, GPU, real model or text qualification",
+  "stage_groups_per_case": 63,
+  "state": "Two conv before/after prefix tables [tokens,2,H]; attention Krotary and V prefix snapshots [tokens,KV,capacity,D], inactive positions positive zero. Reference-derived active states use the same numerical gate; source internal suffix identities and later native transaction identities are exact.",
+  "state_groups_per_case": 6,
+  "target_inactive_kv": "Source inactive +0 is initialization convention only. Target numerical comparisons cover valid active prefix; target reset may retain stale invalid tail. Failure/rollback comparisons use actual retained physical before/after bytes, never fabricated target zeros.",
+  "total_stage_groups": 252
+}

@@ -7466,3 +7466,16 @@ strict all-target Clippy/formatting. Astra independently verifies code/private
 evidence and the exact integer fixture. Hybrid KV/logit/token atomicity and
 Half/native execution remain separate. B4c1 freezes its independent tiny reference
 before graph implementation, using actual head64 and two KV heads.
+
+The scalar history task is committed as `9c18a4f` after exact10-file Astra
+approval. B4c1 now prepares independent original-packed mixed-layer fixtures
+before Rust composition. Head64/two KV heads and two separate convolution owners
+will exercise physical state and causal partitions without downloading a model.
+
+[B4c1 independent tiny scalar reference](lfm2-scalar-reference.md) passes eight
+portable controls and byte-identical six-file export/replay. Astra audits every
+252-group/548,944-value array,165,888 original packed words,143,360 state values,
+540 masked positive zeros and215,512 earlier causal values. This freezes direct
+BF16 gains, actual head64/two-KV GQA, unactivated three-tap histories and declared
+mixed FP64/FP32 stores before target outcomes. Rust graph, complete compound
+publication and native/device qualification remain separate tasks.

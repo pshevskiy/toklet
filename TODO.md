@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4c1 — independent tiny mixed attention/convolution reference**.
+Next implementation task: **B4c2 — tiny scalar hybrid graph and compound state publication**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -214,7 +214,9 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
   [History report](docs/short-conv3-history.md); unchanged scalar leaf, six state
   controls, zero warmed Rust allocations and full default/Metal checks pass.
 - [ ] B4c: independent complete tiny mixed attention/convolution graph.
-  - [ ] B4c1: freeze independent original-packed tiny scalar reference and state fixtures.
+  - [x] B4c1: freeze independent original-packed tiny scalar reference and state fixtures.
+    [Reference report](docs/lfm2-scalar-reference.md); eight controls, exact
+    export/replay and independent complete saved-array/state audit pass.
   - [ ] B4c2: compose shared blocks with whole-step KV/history/token publication.
 - [ ] B4d: resident block/composition, allocation/ownership and recovery checks.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
@@ -431,3 +433,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4a full checks pass | All five parent commands pass: formatting, strict default/Metal all-target Clippy,438 default and519 Metal-feature tests. Test-only structural-Llama regression repair is independently reviewed; failed predecessor retained. | [Cold plan](docs/lfm2-cold-plan.md); Astra verifies all3,985 bindings and closed jobs; exact staged review precedes commit. B4b reuses the existing scalar primitive rather than adding a duplicate. |
 | 2026-10-29 | B4a reviewed commit / B4b starts | Exact17-file Astra review and all checks pass; cold adapter committed as`a3c3a6f`. Existing scalar convolution already covers tap orientation/raw-input history and independent fixtures; next adds bounded prepared history ownership and batch publication. | B4b design preserves replay-from-zero for changed earlier prefixes; no dense-session or backend admission from the standalone state block. |
 | 2026-10-29 | B4b scalar history checks pass | Reused convolution unchanged; six state tests and separate warmed allocation test pass. All five full parent checks pass:445 default/526 Metal-feature tests, strict all-target Clippy and formatting. Astra verifies code, original fixtures and all private evidence with no blocker. | [History report](docs/short-conv3-history.md); exact staged review and task commit, then independent tiny hybrid reference. |
+| 2026-10-29 | B4b reviewed commit / B4c1 starts | Exact10-file Astra approval and all parent checks pass; standalone scalar history committed as`9c18a4f`. Next freezes a three-layer independent packed hybrid source and complete physical-state fixtures before Rust graph work. | Geometry H256/I256/Q4/KV2/D64/V64/C12; original BF16 direct gains, no initial embedding norm, no SiLU in convolution, no Half or real-model claim. |
+| 2026-10-29 | B4c1 source fixture approved | Eight portable controls and two finite source-only exports pass; all6 files match exactly. Astra independently verifies252 groups/548,944 finite values, original packed ranges, complete history/KV states and causal prefixes. | [Reference](docs/lfm2-scalar-reference.md); source-only exact staged review/commit, then Rust scalar hybrid compound publication. No target/GPU/real-model qualification. |

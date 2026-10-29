@@ -1,0 +1,8 @@
+{"case": "single", "started": true, "offset": 0}
+{"case": "single", "complete": true, "stage_groups": 63, "offset": 78112}
+{"case": "short", "started": true, "offset": 78112}
+{"case": "short", "complete": true, "stage_groups": 63, "offset": 312640}
+{"case": "context12", "started": true, "offset": 312640}
+{"case": "context12", "complete": true, "stage_groups": 63, "offset": 1254208}
+{"case": "future_changed12", "started": true, "offset": 1254208}
+{"case": "future_changed12", "complete": true, "stage_groups": 63, "offset": 2195776}

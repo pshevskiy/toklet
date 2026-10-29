@@ -166,3 +166,13 @@ history and session publication together. The next tiny witness is planned
 at H256/I256/V64, Q4/KV2/D64, capacity12 and Conv→Attention→Conv. This tests
 multi-KV layout and actual head64 while retaining a small independent reference;
 it does not qualify the real16-layer or any Half graph.
+
+## B4c1 source result
+
+The [independent tiny scalar reference](lfm2-scalar-reference.md) is frozen after
+eight portable controls, exact six-file export/replay and Astra's complete
+saved-array/state audit. It has four cases,252 groups and548,944 finite values.
+The selected tiny geometry remains separate from real16-layer and native Half
+admission. B4c2 compares actual pre-/post-chunk committed state at its real
+boundaries; tokenwise execution covers every source prefix. Inactive source KV
+zeros do not impose tail clearing on reset.
