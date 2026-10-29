@@ -15,6 +15,7 @@ pub mod gemma_reference;
 pub(crate) mod packed_operations;
 mod position;
 pub mod shared_kv;
+pub mod short_conv3;
 mod trace;
 pub mod window_cache;
 pub(crate) mod window_rows;

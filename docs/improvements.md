@@ -7450,3 +7450,19 @@ separate six-KV/ten-history geometry and explicit absent implemented/qualified
 context. The reviewed compatibility repair changes tests only. Failed evidence
 is retained. B4b will reuse the existing scalar causal convolution before adding
 transactional history; no LFM2 inference or memory-fit claim follows here.
+
+B4a is committed as `a3c3a6f` after Astra's exact staged review. B4b starts
+with the existing scalar leaf and a concrete prepared history owner. Unlike KV,
+a two-row history cannot rewind to an arbitrary earlier prefix; changed/shortened
+committed histories require reset/replay. This policy will be checked before
+hybrid session composition, rather than inheriting dense longest-prefix reuse.
+
+[B4b scalar history](short-conv3-history.md) reuses the existing numerical leaf
+and adds opaque prepared candidates, full-batch identity/step validation before
+publication and checked reset/replay. Six meaningful state controls and a warmed
+allocation integration pass;64 preparations/32 commits/eight resets report zero
+Rust allocations. Full checks pass445 default and526 Metal-feature tests plus
+strict all-target Clippy/formatting. Astra independently verifies code/private
+evidence and the exact integer fixture. Hybrid KV/logit/token atomicity and
+Half/native execution remain separate. B4c1 freezes its independent tiny reference
+before graph implementation, using actual head64 and two KV heads.

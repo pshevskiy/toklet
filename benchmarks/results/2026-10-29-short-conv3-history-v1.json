@@ -1,0 +1,109 @@
+{
+  "format": "toklet-short-conv3-history-result-v1",
+  "date": "2026-10-29",
+  "status": "scalar_history_checks_and_astra_code_review_passed",
+  "scope": "Standalone transactional FP32 two-row convolution history; no complete model admission",
+  "existing_convolution_kernel_changed": false,
+  "existing_independent_fixture_or_gate_changed": false,
+  "dense_session_changed": false,
+  "new_unit_tests": 6,
+  "new_allocation_integration_tests": 1,
+  "full_checks": {
+    "fmt": true,
+    "strict_all_targets_clippy_default": true,
+    "strict_all_targets_clippy_metal": true,
+    "default": {
+      "passed": 445,
+      "ignored": 20
+    },
+    "metal_feature": {
+      "passed": 526,
+      "ignored": 169
+    },
+    "owned_jobs_closed": true
+  },
+  "allocation_control": {
+    "width": 1024,
+    "owners": 2,
+    "prepared_chunks": 64,
+    "commit_batches": 32,
+    "reset_batches": 8,
+    "rejected_zero_token_prepares": 8,
+    "rust_allocations": 0,
+    "warmed": true,
+    "performance_qualification": false
+  },
+  "hypothetical_fp32_payload_at10owners_width1024": {
+    "committed_bytes": 81920,
+    "candidate_bytes": 81920,
+    "one_shared_work_bytes": 8192,
+    "total_bytes": 172032,
+    "additional_candidate_plus_work_bytes": 90112,
+    "excludes": [
+      "owner_objects",
+      "collections",
+      "coefficients",
+      "input_output",
+      "other_model_or_app_resources"
+    ],
+    "measured_whole_process_admission": false
+  },
+  "correctness": {
+    "literal_five_row_partitions": 16,
+    "independent_channel_tail_fixture_preserved": true,
+    "scalar_gate": {
+      "atol": 1e-05,
+      "rtol": 0.0001
+    },
+    "prewrite_validation": true,
+    "abort_failure_retry": true,
+    "foreign_stale_missing_duplicate_mixed_step_rejection": true,
+    "batch_publication_before_mutation_checks": true,
+    "reset_generation_exhaustion_precheck": true,
+    "arbitrary_prefix_rewind_supported": false,
+    "earlier_prefix_change_policy": "reset and replay from position zero"
+  },
+  "evidence": {
+    "proposal": {
+      "path": "artifacts/new-goal-b4b-history-proposal-v1/manifest.json",
+      "bytes": 5795,
+      "sha256": "c575ea2292bf324bebca4950369d0f58da7021e94b065165cbb4f0fa32855d59"
+    },
+    "private_checks": {
+      "path": "artifacts/new-goal-b4b-history-proposal-v1/checks-attempt-01/checks.json",
+      "bytes": 2735974,
+      "sha256": "bb36f8b34f3e62f04fd35793706d24099bdbfd1c966fe53c0bca1bf2a43e46ae"
+    },
+    "private_summary": {
+      "path": "artifacts/new-goal-b4b-history-proposal-v1/checks-summary.json",
+      "bytes": 2901,
+      "sha256": "3de81e1d51162f321b2d18d91375af3a337702f9d524177a76e3a4eed26b6bdf"
+    },
+    "advice": {
+      "path": "artifacts/new-goal-b4b-history-independent-advice-v1/review.json",
+      "bytes": 7109,
+      "sha256": "83c3035914ce1b5469e18f112271b772cf2799eaead05a01ccfc86362986c641"
+    },
+    "independent_code_and_private_evidence": {
+      "path": "artifacts/new-goal-b4b-history-independent-review-v1/private-verification.json",
+      "bytes": 2918,
+      "sha256": "ecf9d218aebae3ff7180f7e62d01b650a508c1f620d7304176957cf59107b703"
+    },
+    "parent_checks": {
+      "path": "artifacts/new-goal-b4b-history-checks-v1/checks.json",
+      "bytes": 869259,
+      "sha256": "f5faae7d8b76023b079edc772467eb34818b9b4440b0c6b880124ea47c880170"
+    },
+    "independent_parent_verification": {
+      "path": "artifacts/new-goal-b4b-history-independent-review-v1/parent-verification.json",
+      "bytes": 2417,
+      "sha256": "0ba82e466cd5769e4fff7be2542529933cc1bb3e024bef6eb0077d6188750c21"
+    }
+  },
+  "limitations": [
+    "No attention-KV plus convolution plus logits/token atomicity until hybrid composition",
+    "No mask/padding support: all supplied rows active",
+    "Future Half arithmetic/history must be qualified independently",
+    "No LFM2 payload/model/GPU/Chat/context/iPhone/performance qualification"
+  ]
+}

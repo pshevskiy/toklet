@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4b — scalar convolution reuse and transactional two-row history**.
+Next implementation task: **B4c1 — independent tiny mixed attention/convolution reference**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -210,8 +210,12 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
 - [x] B4a: authenticate the declared same-artifact loader/norm profile and strict
   config/header plan before a real source reference; verify payload separately.
   [Cold plan report](docs/lfm2-cold-plan.md); full default/Metal checks pass, no runtime admission.
-- [ ] B4b: independent scalar short-convolution and transactional state controls.
+- [x] B4b: independent scalar short-convolution and transactional state controls.
+  [History report](docs/short-conv3-history.md); unchanged scalar leaf, six state
+  controls, zero warmed Rust allocations and full default/Metal checks pass.
 - [ ] B4c: independent complete tiny mixed attention/convolution graph.
+  - [ ] B4c1: freeze independent original-packed tiny scalar reference and state fixtures.
+  - [ ] B4c2: compose shared blocks with whole-step KV/history/token publication.
 - [ ] B4d: resident block/composition, allocation/ownership and recovery checks.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
   text/session and actual process-memory checks before any support claim.
@@ -425,3 +429,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4a cold adapter applied / broader check catches stale control | Astra approves exact cold plan,12 source/fixture actions and unchanged shared helper bodies. Private six-command checks pass; parent formatting/strict default+Metal Clippy and437 full default tests pass. Full Metal run exposes an older integration test still rejecting theta12345 for Llama despite B1 structural admission. | Failed owner v1 retained; independent history/source diagnosis confirms no production regression or changed qualification gate. |
 | 2026-10-29 | B4a compatibility control correction | Astra reviews a test-only mini-patch: true unsupported theta0.5 still rejects all four families before GPU creation; separate Llama12345 metadata-only control asserts CompatibleUntested, planning still required and no text/quality qualification. Production code/limits remain unchanged. | Reviewed correction applied; fresh five-command full default/Metal retry v2 running. Cold adapter is not committed/qualified yet. |
 | 2026-10-29 | B4a full checks pass | All five parent commands pass: formatting, strict default/Metal all-target Clippy,438 default and519 Metal-feature tests. Test-only structural-Llama regression repair is independently reviewed; failed predecessor retained. | [Cold plan](docs/lfm2-cold-plan.md); Astra verifies all3,985 bindings and closed jobs; exact staged review precedes commit. B4b reuses the existing scalar primitive rather than adding a duplicate. |
+| 2026-10-29 | B4a reviewed commit / B4b starts | Exact17-file Astra review and all checks pass; cold adapter committed as`a3c3a6f`. Existing scalar convolution already covers tap orientation/raw-input history and independent fixtures; next adds bounded prepared history ownership and batch publication. | B4b design preserves replay-from-zero for changed earlier prefixes; no dense-session or backend admission from the standalone state block. |
+| 2026-10-29 | B4b scalar history checks pass | Reused convolution unchanged; six state tests and separate warmed allocation test pass. All five full parent checks pass:445 default/526 Metal-feature tests, strict all-target Clippy and formatting. Astra verifies code, original fixtures and all private evidence with no blocker. | [History report](docs/short-conv3-history.md); exact staged review and task commit, then independent tiny hybrid reference. |

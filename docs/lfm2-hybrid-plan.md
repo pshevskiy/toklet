@@ -155,3 +155,14 @@ strict invalid metadata controls and checked hypothetical state equations. Full
 default/Metal checks pass; numerical, payload and backend admissions remain
 absent. B4b starts by reusing the already implemented scalar causal-depthwise
 step, then validating the concrete transactional history integration.
+
+## B4b implementation result
+
+The [standalone scalar history owner](short-conv3-history.md) reuses the existing
+convolution leaf unchanged and passes independent fixture, transactional failure,
+identity/reset and zero warmed Rust allocation controls. Complete default/Metal
+checks pass. Only convolution state is published here; B4c must validate KV,
+history and session publication together. The next tiny witness is planned
+at H256/I256/V64, Q4/KV2/D64, capacity12 and Conv→Attention→Conv. This tests
+multi-KV layout and actual head64 while retaining a small independent reference;
+it does not qualify the real16-layer or any Half graph.

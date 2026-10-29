@@ -142,7 +142,10 @@ actual-input/coupled policy after fresh native collection and independent
 checking/review. All18,537,288 selected values retain fatal coverage. Earlier
 92/84 CPU-trajectory screens remain rejected. Original-unquantized10k/100 quality,
 ordinary app/Chat, declared full window and iPhone stay separate B5/M8 work.
-Next is B4a's strict LFM2 cold plan and actual short-convolution mechanism.
+B4a's strict LFM2 cold plan and B4b's standalone scalar history are complete.
+See the [cold report](lfm2-cold-plan.md) and [history report](short-conv3-history.md).
+Next is B4c's independent tiny hybrid reference and composition; real runtime
+admission remains pending through B4c–e.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |
