@@ -1,0 +1,131 @@
+{
+  "format": "toklet-gemma3-half-reference-qualification-v1",
+  "date": "2026-10-29",
+  "base_revision": "11bcc36",
+  "passed": true,
+  "scope": "Independent tiny Half graph and ordinary-RoPE source only; no native qualification",
+  "result": {
+    "tiny_layers": 2,
+    "hidden": 64,
+    "query_heads": 4,
+    "kv_heads": 1,
+    "head_dim": 32,
+    "intermediate": 128,
+    "vocabulary": 64,
+    "local_window": 4,
+    "capacity": 12,
+    "cases": 4,
+    "stages_per_case": 48,
+    "graph_stage_groups": 192,
+    "graph_stored_arrays": 384,
+    "graph_values_per_profile": 108816,
+    "rotary_components": 8,
+    "rotary_values_per_profile": 11520,
+    "rotary_mathematical_envelope_comparisons": 23040,
+    "rotary_positions": [
+      0,
+      511,
+      512,
+      513
+    ],
+    "source_rotary_position_domain": [
+      0,
+      544
+    ],
+    "rotary_stored_arrays": 40,
+    "total_stored_arrays": 424,
+    "total_stored_values": 275232,
+    "binary_bytes": 715648,
+    "exact_export_replay": true,
+    "independent_reconstruction_all_bytes": true,
+    "both_profile_causal_prefixes_equal": true
+  },
+  "arithmetic": {
+    "affine_weights": "One FP32 reconstruction of original tiny BF16/nibble matrices shared by profiles",
+    "main": "Separately rounded ascending FP32 projection reductions and explicit Half stores",
+    "wide": "FP64 projection reductions with the same Half/FP32 stage stores; diagnostic",
+    "main_only_gate": {
+      "atol_floor": 0.0001,
+      "absolute_envelope_factor": 2,
+      "rtol": 0.001
+    },
+    "gate_derived_before_target_execution": true,
+    "compensated_native_projection_emulated": false,
+    "effective_norms": "Widen raw BF16 gamma and form FP32(1+gamma)",
+    "ordinary_rotary": "Main FP32 pow/angle/trig products; Decimal80 inverse plus FP64 math diagnostic, unchanged mathematical envelope"
+  },
+  "checks": {
+    "portable_controls": 7,
+    "source_export_runs": 2,
+    "source_export_deadline_seconds": 300,
+    "closed_owned_groups": true,
+    "native_executed": false,
+    "real_model_executed": false
+  },
+  "evidence": {
+    "proposal": {
+      "path": "artifacts/new-goal-b3c4b-half-reference-proposal-v1/manifest.json",
+      "bytes": 3605,
+      "sha256": "4c590572ddb2b72c19b09cd98f51b4133cfd0988309198a865a22b120514fd15"
+    },
+    "prospective_source_review": {
+      "path": "artifacts/new-goal-b3c4b-independent-review-v1/prospective-source-review.json",
+      "bytes": 8726,
+      "sha256": "2330080446243d0872985d725c9beaf8804c146da9004a28e3ab869d41c7b630"
+    },
+    "portable_controls": {
+      "path": "artifacts/new-goal-b3c4b-reference-controls-v1/checks.json",
+      "bytes": 405768,
+      "sha256": "bcc7718d1a9761905615c9dec1475dfdde7621651cc80d4d17cf94bff239f362"
+    },
+    "prospective_export_review": {
+      "path": "artifacts/new-goal-b3c4b-independent-review-v1/prospective-export-review.json",
+      "bytes": 3450,
+      "sha256": "52b802795b7c773b26794705dcbbe20a5eb9d252bff0a27bb906f916da51d018"
+    },
+    "export_replay": {
+      "path": "artifacts/new-goal-b3c4b-source-v1/export.json",
+      "bytes": 409933,
+      "sha256": "17a8b78cbb973e2b73a12111d1244554990b4ae334f8805a3ac49fa914c4716e"
+    },
+    "independent_frozen_output_review": {
+      "path": "artifacts/new-goal-b3c4b-independent-review-v1/frozen-output-review.json",
+      "bytes": 4314,
+      "sha256": "371dc969cd647ce4be42068b9e51300b65a2644caa2cf2bd4f832ea78fb9ee2f"
+    }
+  },
+  "fixture": [
+    {
+      "path": "tests/fixtures/gemma3-half-tiny-v1/manifest.json",
+      "bytes": 180092,
+      "sha256": "f9c8de309701b1ba85cff79ce41eb68c51c6dbc8185581c9bd12e51db9dcde0d"
+    },
+    {
+      "path": "tests/fixtures/gemma3-half-tiny-v1/arrays.bin",
+      "bytes": 715648,
+      "sha256": "0455fd4b4c0110411756f0d296fb3d8b6ac31702ff79462386a2eccf6126bb56"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "tools/reference/gemma3_half_graph.py",
+      "bytes": 20086,
+      "sha256": "1a2aaa1080d9748325d0ea6f2adcdbc103f948b9df9b9ee2a9a228d7918ef398"
+    },
+    {
+      "path": "tools/reference/test_gemma3_half_graph.py",
+      "bytes": 7470,
+      "sha256": "6cad2013627ddeefa8d0477ce27e6e3cb9896f1739352650222ceaf4bd5e6b7b"
+    }
+  ],
+  "qualification": {
+    "source_reference": true,
+    "native_graph": false,
+    "real_checkpoint": false,
+    "context_admission": false,
+    "app": false,
+    "iphone": false,
+    "performance": false
+  },
+  "final_publication_review": "artifacts/new-goal-b3c4b-independent-review-v1/final-publication-review.json"
+}

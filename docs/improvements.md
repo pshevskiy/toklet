@@ -7076,3 +7076,22 @@ process samples establish no peak or model admission. This is an upload mechanis
 qualification, with complete Gemma3 graph/real-model/app/phone work still open.
 See [report](original-matrix-upload.md) and
 [evidence](../benchmarks/results/2026-10-29-original-matrix-upload-v1.json).
+
+## 2026-10-29 — Independent complete Half graph reference
+
+The exact original tiny artifact now has a separate explicit48-stage Gemma3 Half
+graph, shared once-reconstructed FP32 packed weights, widened effective norms,
+required Half store boundaries and FP32 tied logits. Four cases cover full12
+tokens and future-token causality. Eight ordinary-RoPE components cover D32/256,
+both rotary bases and Q4/KV1 at positions0/511/512/513, keeping the unchanged
+mathematical envelope. The main serial FP32 profile is independent of native
+compensated projection; wide is diagnostic and fixes source-only main gates.
+
+Seven portable controls and two fresh byte-identical exports pass. Astra
+independently reconstructs all424 arrays/715648 bytes, all192 graph groups,
+both causal prefixes, every source gate and23040 rotary envelope comparisons.
+The promoted fixture is source evidence; native graph, checkpoint semantics,
+quality, app/phone and performance remain unqualified. See
+[report](gemma3-half-reference.md),
+[evidence](../benchmarks/results/2026-10-29-gemma3-half-reference-v1.json) and
+[TODO](../TODO.md). A separate resident Model/Session proposal is under review.
