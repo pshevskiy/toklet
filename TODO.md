@@ -1,8 +1,12 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3d3b — resolve the saved real-Gemma3 arithmetic-reference mismatch, then repeat the bounded Mac comparison**.
+Next implementation task: **B3d3b — implement the reviewed universal actual-input checker, then collect a fresh bounded Gemma3 Mac comparison**.
 No implementation task is currently blocked on user input.
+
+Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
+Both historical coupled-intermediate rejections remain failed; all selected
+values retain a fatal semantic or coupled check. Full adoption quality stays open.
 
 This is the live progress index for [PLAN.md](PLAN.md), the
 [M8 shared-block plan](docs/shared-block-model-plan.md) and
@@ -172,6 +176,15 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
   [Report](docs/gemma3-original-loader.md).
 - [ ] B3d3b: bounded real native runner, frozen source comparisons and
   two-partition544 window/text/state/resource journey.
+- [x] Investigate both coupled-intermediate rejections without changing the
+  engine: all84 source3 failures map to42 paired values matching own-input
+  independent checks; strict final/teacher outputs pass. Astra reviews the proof.
+- [ ] Review/commit the [universal native conformance policy](docs/gemma3-native-conformance.md)
+  before checker implementation; preserve both historical failed screens.
+- [ ] Implement/review the generic actual-input checker, analytic corruption
+  controls and bounded resources; no coordinate whitelist or unsupported skip.
+- [ ] Complete posthoc diagnostics, then a separately frozen fresh capture,
+  independent full checking and Astra review before closing B3d3b.
 - [x] B3d3 prerequisite: qualify the source-supported FP16 clamped residual at
   both Gemma3 branch additions, preserving generic residual behavior and all
   finite/numerical gates; retain the failed strict-Half real-source evidence.
@@ -376,3 +389,10 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B3d3b native-store contract correction | Direct six-token trace confirms frozen row3 FP32 RMS/V predictions; Astra verifies all42,528 words/13 captures and11,520 own-input RMS words. Independent review approves uniform certified-projection/FP32-reference source successor with exact legacy3,232 coefficients, diagnostic new envelopes and unchanged WIDE hashes. Exact three-file application passes;18 controls start. | Reference center/relative element bounds change explicitly; original92 rejection remains. No engine change or full-window retry. |
 
 | 2026-10-29 | B3d native-store source export/replay | Both corrected-profile CPU jobs and independent saved-source audit pass all3,232 groups/6,464 arrays, exact legacy gate dictionaries/WIDE hashes/teacher prefixes,143,984,128 projection stores and all32 exact-rounding witnesses (31 retained-input dots reconstructed). Raw97,110,272 bytes replay exactly. | [Contract](docs/gemma3-native-store-reference.md); reference-only staged review/commit next. Native reuse/fresh qualification remain separate; old92 rejection stays rejected. |
+
+| 2026-10-29 | B3d native-store reference committed / consumer checks | Reference-only task committed as`0ef34f6` after exact8-file Astra review. Separate consumer v2 closes an endpoint-failure eligibility-label bug before execution, then exactly applies3 metadata/checker files. Four Rust and ten Python controls plus strict checks/release freeze start; numerical engine remains unchanged. | Historical rescore is explicitly diagnostic only; fresh preregistered capture remains required. |
+
+| 2026-10-29 | B3d native-store consumer checks pass | Strict Metal Clippy/formatting, four Rust controls in debug/release, optimized release freeze and ten Python controls pass. Historical posthoc launcher then rejects a truncated historical-array SHA literal before any child (commands[]); data/checker/source remain unchanged. | Failed owner v2 preserved; exact provenance-only successor pending. Fresh native qualification still required after diagnostic success. |
+
+| 2026-10-29 | B3d source3 trajectory rejection investigated | Corrected provenance-only reader completes all18,537,288 values and rejects84 MAIN intermediates/98 WIDE diagnostics. All84 map42 paired values that match independent own-input checks;33 whole groups/24,984 values pass old local gates. Strict final/teacher12,582,912 values pass. Astra checks the proof and fixed provider contracts. | Both historical screens remain rejected; no kernel/reference/gate change or fresh target run. |
+| 2026-10-29 | B3d prospective semantic policy | Astra approves universal coverage design:624 coupled groups/13,185,444 values plus5,808 own-input groups/5,351,844 values. Faithful exact-dot Half brackets, exact basic/RMS stores and independently propagated provider contracts supplement unchanged local coefficients; unsupported proof is fatal. | [Policy](docs/gemma3-native-conformance.md), plan correction and doc checks/review before commit; checker implementation follows. Full adoption quality/app/phone remain open. |

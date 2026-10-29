@@ -7329,3 +7329,35 @@ with31 input-retained dots reconstructed. The MAIN center and relative bounds
 change explicitly; the old92 rejection remains rejected. The
 [native-store contract](gemma3-native-store-reference.md) records the correction,
 direct trace, mathematical assumptions and source-only scope.
+
+The verified native-store reference is committed as `0ef34f6`. Separate
+consumer review fixes qualification eligibility remaining true after endpoint
+failure; its added control protects that boundary. The reviewed consumer adds
+explicit historical-only rescore and fresh-profile capture modes, retaining
+old coefficients and WIDE identities. Four Rust/ten Python controls and strict
+checks precede any saved-native or fresh target comparison.
+
+The updated consumers pass strict checks, four debug/release Rust controls and
+ten Python controls. The historical owner rejects a copied truncated array hash
+before launching any child; the original bytes and numerical checker are
+unchanged. That preflight receipt is retained while a provenance-only successor
+corrects the literal. No new numerical result is inferred from the rejection.
+
+The corrected historical reader completes the source3 screen and still rejects
+84 MAIN intermediate values, with98 WIDE diagnostic exceedances. Saved-operand
+investigation accounts for all84 as42 paired values; every rejected scalar
+matches its independent own-input operation. Thirty-three whole groups contain
+24,984 checked values with zero existing local-gate failures. All12,582,912 strict
+coupled final/teacher values pass. Astra reviews that evidence and verifies that
+the selected GELU/rotary differences fit fixed published intrinsic contracts.
+This is bounded evidence, not a proof for every unselected producer.
+
+The prospective [Gemma3 native conformance policy](gemma3-native-conformance.md)
+keeps a fatal check on every18,537,288 selected value. Scores/context/head/teacher
+retain coupled gates; other operators use actual saved inputs, original weights,
+exact store/RMS semantics, true faithful projection brackets and independently
+propagated provider contracts, together with unchanged local coefficient gates.
+It explicitly changes the acceptance method and local centers, preserves both
+failed trajectory screens, and requires policy review/commit before checker
+implementation and fresh collection. No engine or reference change, quality
+waiver, app/phone qualification or measured performance improvement follows.

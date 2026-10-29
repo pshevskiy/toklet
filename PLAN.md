@@ -15,6 +15,14 @@ Ordinary app512 and historical scoped qualifications remain unchanged. This
 paragraph supersedes the execution-order statements below; they retain history,
 not authority to resume the old full-window campaign.
 
+**29 October2026 B3d comparison correction:** follow the prospective
+[Gemma3 bounded native conformance policy](docs/gemma3-native-conformance.md).
+The two strict coupled-intermediate screens remain rejected. Universal
+actual-input operator validation plus strict coupled attention/output checks
+replaces neither the original adoption-quality gates nor B5/app/phone work.
+Review/commit the policy before checker implementation and fresh collection;
+then continue B4 and B5 in the existing breadth-first order.
+
 **Next milestone: M9, measured performance improvements.** Follow the
 [M9 delivery and architecture contract](docs/next-performance-milestone.md),
 derived from the user's [Toklet next performance improvement plan](https://chatgpt.com/space/page_18e155f0450c8191a76010b2b26832a5).
