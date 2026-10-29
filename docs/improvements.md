@@ -8018,3 +8018,35 @@ state drift reporting covers4212 groups/21,657,600 values per profile without
 fabricating within-chunk committed snapshots. [Exact evidence](../benchmarks/results/2026-10-29-lfm2-native-reader-code-v1.json)
 records code/control scope only; actual fresh native capture, full reader and
 independent outer qualification are the next gate.
+
+The complete reader is committed as`cc6de7e`. The first real-owner metadata
+freeze stops before executable retention or launch-package creation: its generic
+passed-field check does not match the older source attestation schema. That
+failure is retained, with no model/GPU execution. The successor checks the exact
+source-qualified decision/scope and receipt/output identities; engine arithmetic,
+workload and acceptance gates remain unchanged.
+
+The first real capture completes104 attempts/367 rows and retains all14,672
+arrays. Independent framing/hash/closure audit passes, without numerical
+qualification. Its saved reader stops before selected math comparisons because
+source KV sidebands are head-major while native producer rows are token-major.
+The failed reader and original capture remain unchanged. A narrow axis mapping
+fix and nonuniform/nonzero-start regression control are reviewed before retry;
+source values, gates and producer code are unchanged.
+
+
+### M8 — Source KV diagnostic layout correction, 30 October 2026
+
+The reader now maps token-major captured KV producers into the source's
+head-major coordinates and slices only the source token axis. A nonuniform
+regression uses different head/token counts and a nonzero chunk offset; a
+separate injected error must still fail. All 30 controls pass in 0.301s, with
+69,009,408 bytes OS maximum RSS. All six repository checks pass, including
+457 default and 564 Metal tests (overlapping suites). Astra independently
+verifies the saved controls, runtime origins and seven closed process groups.
+
+The original saved-reader axis error and the malformed zero-tolerance synthetic
+fixture remain recorded. The latter was corrected to the existing required
+coefficients; production gates and source values are unchanged. This correction
+qualifies the verifier code only. Complete replay of the unchanged native
+capture and independent numerical qualification follow separately.

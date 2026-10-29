@@ -1,12 +1,13 @@
 # Toklet progress checklist
 
-Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4e3c3 — freeze and execute the bounded real GPU/reader experiment**.
-The bounded real source, original payload, resident composition, independent
-operators and capture I/O are checked. Current default457/Metal564 tests, four
-writer controls and the Tiny visitor GPU check pass with Astra saved audit.
-Native real-model execution remains pending; failed and unexecuted prior
-attempts stay recorded.
+Last updated: **30 October 2026**. Active milestone: **M8**.
+Next implementation task: **B4e3c3 — complete independent saved-capture verification**.
+The real Mac GPU capture has completed 104 attempts/367 rows; independent
+collection framing passes. The first saved reader failed on source KV axis
+mapping before selected numerical checks. Its reviewed correction now passes 30
+controls and all six repository checks (default 457/Metal 564). Astra's saved audit
+passes; correction commit and complete saved-capture replay are next. Numerical
+qualification remains pending; failed and unexecuted attempts stay recorded.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -541,3 +542,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | C2a commit / C2b capture cold retry | Capture I/O committed as`a776029`. Astra approves full capture workload after a held unexecuted V1 safety-flag correction. Applied V2 passes fmt/default Clippy, then Metal compilation rejects one unparenthesized json! array-index expression; tests/release/GPU are not reached. | Failed receipt retained with closed groups/clean endpoints. Reviewed V3 changes only expression parentheses; full cold retry starts. Reader remains private and unexecuted with source/state/zero-word/corruption checks under independent review; no real GPU launch. |
 | 2026-10-29 | C2b capture code checked | Four cold controls and all six checks pass(default457/Metal564,20/183 ignored). Astra authenticates4076 bindings,12 outputs, exact source and retained116,847,040B release executable; no real execution. | [Capture code report](docs/lfm2-real-capture.md); six current/three historical groups closed, V1 hold and compiler failure preserved. Complete reader is separately frozen for29 controls/review; actual native owner/run and conformance remain pending. |
 | 2026-10-29 | C2b capture commit / reader checked | Capture code committed as`1c20180`. Complete five-module reader and29 controls pass in0.321s; all six checks pass(default457/Metal564). Astra verifies current runtime/pins and seven closed groups; no real native dataset, codec, model or GPU execution. | [Reader report](docs/lfm2-native-reader.md). Source-state diagnostics cover all168 identities prospectively; strict303/local6440 counts unchanged. Next: separately freeze base/control/bundle/actual executable, obtain launch review, run fresh capture and reader, then independent bounded qualification. |
+| 2026-10-29 | Reader commit / real owner metadata retry | Complete reader committed as`cc6de7e`; all29 controls and six checks pass. The first approved metadata freezer stops before package/control/binary creation because it expects a generic passed field in the older saved-source attestation, whose schema uses source_fixture_qualified. | No model/GPU run. Preserve failed-freeze record; narrow successor validates exact format/decision/scope and source receipt/output identities before retry. Model code, frozen source and numerical criteria unchanged. |
+| 2026-10-30 | First native capture / reader layout correction | Real GPU capture passes104 attempts/367rows,14672 arrays/154629840B,335 model-owner before/after records and completed process closure. Independent collection audit passes. The first saved-reader stops at source KV diagnostic axis mismatch after30 diagnostic groups and before any selected numerical gate. | Capture is not numerical qualification. Preserve failed reader and all raw data; reviewed narrow fix uses original head-major[8,N,64] source slices and adds nonuniform/nonzero-start regression control. Current30-control/full-check retry begins; no GPU rerun, data/gate/criteria change. |
+| 2026-10-30 | Nonuniform reader control fixture correction | The30-control run has29 passes and one error: the new test supplied zero tolerances, outside the frozen permitted coefficient policy. Production reader rejects that malformed stub correctly. | Preserve failed controls/PID closure. Reviewed V3 changes only the test dictionary to existing1e-4/.001; injected8-unit error still exceeds its0.2911 bound. No production gate/data/kernel change; fresh controls and bound-source checks follow. |
+| 2026-10-30 | Reader correction checks and audit pass | Correct source KV head/token mapping and its nonuniform regression control pass all 30 controls in 0.301s, all six repository checks, and independent Astra saved audit. Both failed attempts remain preserved. | Commit the narrow correction, then replay the unchanged native capture through the separately reviewed current reader. Numerical qualification remains pending. |

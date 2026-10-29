@@ -510,10 +510,10 @@ class Reader:
             for role,kind,name in ((0,2,'kv_keys_producer'),(1,3,'kv_values_producer')):
                 group=f'cases.{chunk.case}.layers.{layer}.{name}'
                 actual=self.capture.values(self.capture.get(sid,aid,kind,layer,
-                                            (chunk.start,len(chunk.tokens)))).reshape(-1,8,64)
-                compare(group,actual,lambda x:x[chunk.start:chunk.end])
+                                            (chunk.start,len(chunk.tokens)))).reshape(-1,8,64).transpose(1,0,2)
+                compare(group,actual,lambda x:x[:,chunk.start:chunk.end,:])
                 active=self.capture.values(self.capture.get(sid,aid,7,2*owner+role))
-                compare(group,active,lambda x:x[:chunk.end].transpose(1,0,2))
+                compare(group,active,lambda x:x[:,:chunk.end,:])
 
     def selected(self, chunk, row):
         sid, aid = chunk.session,self.current_attempt

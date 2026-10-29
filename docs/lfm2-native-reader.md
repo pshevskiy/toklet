@@ -2,9 +2,10 @@
 
 The five-module reader connects strict byte/control admission, all293 arithmetic
 routes, literal workload transitions, physical-state validation and the final
-CLI. It has29 passing synthetic controls and Astra review. It has not processed
-a real native capture; this closes checker implementation only. The separate
-fresh GPU/reader experiment and independent outer qualification remain pending.
+CLI. Its original V1 passed 29 synthetic controls and code review. The first
+actual saved-capture read then stopped on a diagnostic KV-layout mismatch before
+any selected mathematical comparison. The narrow correction now passes 30
+controls; a complete saved-reader replay and outer qualification remain pending.
 
 Original file/header/tensor identities, source arrays/literal gates, actual
 executable/control/owner and all native outputs are authenticated. Records have
@@ -46,7 +47,7 @@ later codec step rechecks all ten frozen fixtures and raw sampled/prompt decodes
 with tokenizers0.22.2. Raw samples retain the observed terminal stop token; this
 is diagnostic text, not a production emission or Chat guarantee.
 
-All29 controls pass in0.321s. Formatting, both strict Clippy configurations,
+The original V1 validation passed 29 controls in 0.321s. Formatting, both strict Clippy configurations,
 default457/Metal564 tests and the release Metal library test build pass
 (20/183 ignored; suites overlap). Astra authenticates current bindings and all
 seven closed groups. The controlled NumPy2.3.2 worker has164→306 module origins
@@ -62,3 +63,30 @@ premises remain explicit. [Exact code/check evidence](../benchmarks/results/2026
 pins code, actual controls, runtime and Astra audit. Real model/session/text/
 process-memory qualification, original-unquantized quality, app/phone integration
 and performance remain separate tasks.
+
+On 30 October 2026, the first actual read exposed a source-state diagnostic axis
+error. Frozen KV producer sidebands are [8, N, 64]; captured chunk producers are
+[N, 512]. The reader had sliced the source head axis as a token axis. V2 views
+actual producers as [8, N, 64], slices source[:, start:end, :], and compares active
+head-major KV directly with source[:, :end, :]. The original failed owner/report
+remain retained: 30 convolution-state groups were reached, but zero selected
+MAIN/local/strict groups. This was not a rejected numerical tolerance.
+
+The added nonuniform control uses source N=5, chunk N=3/start=1, distinct head/token/
+channel and K/V values, and an injected producer error. Its first version used
+a 0/0 synthetic gate that the existing policy correctly rejected; the retained
+30-test attempt had 29 successes and one error. V3 changes only that test fixture
+to the already-required 1e-4/.001 coefficients. The 291→299 corruption remains
+well outside its .2911 bound. Real source gates, centers, native capture, binary,
+workload and fatal 303/6440 routing are unchanged.
+
+The corrected 30 controls pass in 0.301s, and all six current repository checks
+pass(default 457/Metal 564, 20/183 ignored, overlapping suites). The synthetic
+worker records six direct samples and OS maximum RSS 69,009,408 bytes; these are
+not real-reader memory results. Astra independently authenticates the current
+code/runtime/output pins and all seven closed groups.
+[Correction evidence](../benchmarks/results/2026-10-30-lfm2-native-reader-layout-correction-v1.json)
+preserves both failures and the new passing controls. The same native capture
+will be replayed only through a separately reviewed owner with explicit
+original-native-to-current-reader identity supersession; no GPU rerun or
+qualification claim is part of this correction.

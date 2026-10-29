@@ -491,7 +491,7 @@ class EventAndDispatchControls(unittest.TestCase):
         capture=C();groups={}
         class Gold:
             def values(self,name,profile):
-                shape=(1,2,1024) if 'history_' in name else ((1,1024) if 'u_producer' in name else (1,8,64))
+                shape=(1,2,1024) if 'history_' in name else ((1,1024) if 'u_producer' in name else (8,1,64))
                 return np.zeros(shape,dtype='<f4')
         source=Gold();source.groups=groups
         def group(layer,name):
@@ -516,6 +516,53 @@ class EventAndDispatchControls(unittest.TestCase):
         self.assertEqual(reader.dispatch.local.groups,0)
         self.assertEqual(reader.dispatch.coupled.failures,0)
 
+
+
+    def test_30_source_kv_head_major_nonzero_chunk_and_active_prefix(self):
+        import check_lfm2_capture as r
+        from lfm2_capture_workload import Chunk
+        class C(FakeCapture):
+            def values(self,d):return self.words(d).view('<f2').astype('<f4')
+        capture=C();groups={}
+        class Gold:
+            def values(self,name,profile):
+                if 'history_' in name:return np.zeros((5,2,1024),dtype='<f4')
+                if 'u_producer' in name:return np.zeros((5,1024),dtype='<f4')
+                role=1024 if 'kv_values' in name else 0
+                # Original source stores [head,token,channel], N=5 != heads=8.
+                return np.array([[[role+128*h+16*t+d for d in range(64)]
+                                  for t in range(5)]for h in range(8)],dtype='<f4')
+        source=Gold();source.groups=groups
+        def group(layer,name):
+            groups[f'cases.synthetic.layers.{layer}.{name}']=dict(route='state_producer_sideband',
+                gate_usage='diagnostic sideband',gate={'atol':1e-4,'rtol':.001})
+        for owner,layer in enumerate(c.CONVOLUTION):
+            capture.put(1,layer,np.zeros((3,1024),dtype='<u2'),(1,3));group(layer,'u_producer')
+            for kind,name in ((4,'history_before'),(5,'history_after')):
+                capture.put(kind,2*owner,np.zeros(2055,dtype='<u2'));group(layer,name)
+        for owner,layer in enumerate(c.ATTENTION):
+            for role,kind,name in ((0,2,'kv_keys_producer'),(1,3,'kv_values_producer')):
+                # Captured producers are independently constructed [token,head*channel].
+                values=np.array([[role*1024+128*h+16*t+d for h in range(8)for d in range(64)]
+                                 for t in range(1,4)],dtype='<f2')
+                active=np.array([[[role*1024+128*h+16*t+d for d in range(64)]
+                                  for t in range(4)]for h in range(8)],dtype='<f2')
+                capture.put(kind,layer,values.view('<u2'),(1,3))
+                capture.put(7,2*owner+role,active.view('<u2'));group(layer,name)
+        chunk=Chunk(0,1,1,(7,11,13),(),'synthetic')
+        def check(failures):
+            reader=r.Reader(capture,source,None,{},{});reader.current_attempt=1
+            reader.source_state_diagnostics(chunk)
+            for totals in (reader.source_state_main,reader.source_state_wide):
+                self.assertEqual((totals.groups,totals.values,totals.failures),(54,114688,failures))
+            self.assertEqual(len(reader.source_state_identities),42)
+            self.assertEqual(reader.dispatch.local.groups,0)
+            self.assertEqual(reader.dispatch.coupled.groups,0)
+        check(0)
+        # A genuine K-producer error remains visible; active prefix is untouched.
+        words=capture.items[(2,c.ATTENTION[0],(1,3))]['words']
+        words.view('<f2')[1,2*64+3]+=8
+        check(1)
 
 if __name__ == '__main__':
     unittest.main()
