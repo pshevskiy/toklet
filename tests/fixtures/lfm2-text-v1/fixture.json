@@ -1,0 +1,874 @@
+{
+  "add_special_tokens": false,
+  "app_qualified": false,
+  "cases": [
+    {
+      "add_generation_prompt": false,
+      "decoded": "<|startoftext|><|im_start|>user\n<|im_end|>\n",
+      "ids": [
+        1,
+        6,
+        6423,
+        708,
+        7,
+        708
+      ],
+      "messages": [
+        {
+          "content": "",
+          "role": "user"
+        }
+      ],
+      "name": "empty_user",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        6423,
+        708,
+        7,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>user\n<|im_end|>\n",
+      "template_rendered": "<|startoftext|><|im_start|>user\n<|im_end|>\n"
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded": "<|startoftext|><|im_start|>user\n<|im_end|>\n<|im_start|>assistant\n",
+      "ids": [
+        1,
+        6,
+        6423,
+        708,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "messages": [
+        {
+          "content": "",
+          "role": "user"
+        }
+      ],
+      "name": "empty_user",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        6423,
+        708,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>user\n<|im_end|>\n<|im_start|>assistant\n",
+      "template_rendered": "<|startoftext|><|im_start|>user\n<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded": "<|startoftext|><|im_start|>user\nSay hello.<|im_end|>\n",
+      "ids": [
+        1,
+        6,
+        6423,
+        708,
+        560,
+        892,
+        64033,
+        523,
+        7,
+        708
+      ],
+      "messages": [
+        {
+          "content": "Say hello.",
+          "role": "user"
+        }
+      ],
+      "name": "plain_user",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        6423,
+        708,
+        560,
+        892,
+        64033,
+        523,
+        7,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>user\nSay hello.<|im_end|>\n",
+      "template_rendered": "<|startoftext|><|im_start|>user\nSay hello.<|im_end|>\n"
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded": "<|startoftext|><|im_start|>user\nSay hello.<|im_end|>\n<|im_start|>assistant\n",
+      "ids": [
+        1,
+        6,
+        6423,
+        708,
+        560,
+        892,
+        64033,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "messages": [
+        {
+          "content": "Say hello.",
+          "role": "user"
+        }
+      ],
+      "name": "plain_user",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        6423,
+        708,
+        560,
+        892,
+        64033,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>user\nSay hello.<|im_end|>\n<|im_start|>assistant\n",
+      "template_rendered": "<|startoftext|><|im_start|>user\nSay hello.<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded": "<|startoftext|><|im_start|>system\nBe concise.<|im_end|>\n<|im_start|>user\nWhat is 2 + 2?<|im_end|>\n",
+      "ids": [
+        1,
+        6,
+        24131,
+        708,
+        4685,
+        56412,
+        523,
+        7,
+        708,
+        6,
+        6423,
+        708,
+        3493,
+        856,
+        730,
+        527,
+        2011,
+        730,
+        527,
+        540,
+        7,
+        708
+      ],
+      "messages": [
+        {
+          "content": "Be concise.",
+          "role": "system"
+        },
+        {
+          "content": "What is 2 + 2?",
+          "role": "user"
+        }
+      ],
+      "name": "system_user",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        24131,
+        708,
+        4685,
+        56412,
+        523,
+        7,
+        708,
+        6,
+        6423,
+        708,
+        3493,
+        856,
+        730,
+        527,
+        2011,
+        730,
+        527,
+        540,
+        7,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>system\nBe concise.<|im_end|>\n<|im_start|>user\nWhat is 2 + 2?<|im_end|>\n",
+      "template_rendered": "<|startoftext|><|im_start|>system\nBe concise.<|im_end|>\n<|im_start|>user\nWhat is 2 + 2?<|im_end|>\n"
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded": "<|startoftext|><|im_start|>system\nBe concise.<|im_end|>\n<|im_start|>user\nWhat is 2 + 2?<|im_end|>\n<|im_start|>assistant\n",
+      "ids": [
+        1,
+        6,
+        24131,
+        708,
+        4685,
+        56412,
+        523,
+        7,
+        708,
+        6,
+        6423,
+        708,
+        3493,
+        856,
+        730,
+        527,
+        2011,
+        730,
+        527,
+        540,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "messages": [
+        {
+          "content": "Be concise.",
+          "role": "system"
+        },
+        {
+          "content": "What is 2 + 2?",
+          "role": "user"
+        }
+      ],
+      "name": "system_user",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        24131,
+        708,
+        4685,
+        56412,
+        523,
+        7,
+        708,
+        6,
+        6423,
+        708,
+        3493,
+        856,
+        730,
+        527,
+        2011,
+        730,
+        527,
+        540,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>system\nBe concise.<|im_end|>\n<|im_start|>user\nWhat is 2 + 2?<|im_end|>\n<|im_start|>assistant\n",
+      "template_rendered": "<|startoftext|><|im_start|>system\nBe concise.<|im_end|>\n<|im_start|>user\nWhat is 2 + 2?<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded": "<|startoftext|><|im_start|>user\nName a color.<|im_end|>\n<|im_start|>assistant\nBlue.<|im_end|>\n<|im_start|>user\nName another.<|im_end|>\n",
+      "ids": [
+        1,
+        6,
+        6423,
+        708,
+        3118,
+        768,
+        4100,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708,
+        31466,
+        523,
+        7,
+        708,
+        6,
+        6423,
+        708,
+        3118,
+        2772,
+        523,
+        7,
+        708
+      ],
+      "messages": [
+        {
+          "content": "Name a color.",
+          "role": "user"
+        },
+        {
+          "content": "Blue.",
+          "role": "assistant"
+        },
+        {
+          "content": "Name another.",
+          "role": "user"
+        }
+      ],
+      "name": "assistant_history",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        6423,
+        708,
+        3118,
+        768,
+        4100,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708,
+        31466,
+        523,
+        7,
+        708,
+        6,
+        6423,
+        708,
+        3118,
+        2772,
+        523,
+        7,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>user\nName a color.<|im_end|>\n<|im_start|>assistant\nBlue.<|im_end|>\n<|im_start|>user\nName another.<|im_end|>\n",
+      "template_rendered": "<|startoftext|><|im_start|>user\nName a color.<|im_end|>\n<|im_start|>assistant\nBlue.<|im_end|>\n<|im_start|>user\nName another.<|im_end|>\n"
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded": "<|startoftext|><|im_start|>user\nName a color.<|im_end|>\n<|im_start|>assistant\nBlue.<|im_end|>\n<|im_start|>user\nName another.<|im_end|>\n<|im_start|>assistant\n",
+      "ids": [
+        1,
+        6,
+        6423,
+        708,
+        3118,
+        768,
+        4100,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708,
+        31466,
+        523,
+        7,
+        708,
+        6,
+        6423,
+        708,
+        3118,
+        2772,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "messages": [
+        {
+          "content": "Name a color.",
+          "role": "user"
+        },
+        {
+          "content": "Blue.",
+          "role": "assistant"
+        },
+        {
+          "content": "Name another.",
+          "role": "user"
+        }
+      ],
+      "name": "assistant_history",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        6423,
+        708,
+        3118,
+        768,
+        4100,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708,
+        31466,
+        523,
+        7,
+        708,
+        6,
+        6423,
+        708,
+        3118,
+        2772,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>user\nName a color.<|im_end|>\n<|im_start|>assistant\nBlue.<|im_end|>\n<|im_start|>user\nName another.<|im_end|>\n<|im_start|>assistant\n",
+      "template_rendered": "<|startoftext|><|im_start|>user\nName a color.<|im_end|>\n<|im_start|>assistant\nBlue.<|im_end|>\n<|im_start|>user\nName another.<|im_end|>\n<|im_start|>assistant\n"
+    },
+    {
+      "add_generation_prompt": false,
+      "decoded": "<|startoftext|><|im_start|>user\nCafé — 東京\nLine two.<|im_end|>\n",
+      "ids": [
+        1,
+        6,
+        6423,
+        708,
+        544,
+        2305,
+        860,
+        2180,
+        730,
+        20374,
+        708,
+        11300,
+        1547,
+        523,
+        7,
+        708
+      ],
+      "messages": [
+        {
+          "content": "Café — 東京\nLine two.",
+          "role": "user"
+        }
+      ],
+      "name": "unicode_user",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        6423,
+        708,
+        544,
+        2305,
+        860,
+        2180,
+        730,
+        20374,
+        708,
+        11300,
+        1547,
+        523,
+        7,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>user\nCafé — 東京\nLine two.<|im_end|>\n",
+      "template_rendered": "<|startoftext|><|im_start|>user\nCafé — 東京\nLine two.<|im_end|>\n"
+    },
+    {
+      "add_generation_prompt": true,
+      "decoded": "<|startoftext|><|im_start|>user\nCafé — 東京\nLine two.<|im_end|>\n<|im_start|>assistant\n",
+      "ids": [
+        1,
+        6,
+        6423,
+        708,
+        544,
+        2305,
+        860,
+        2180,
+        730,
+        20374,
+        708,
+        11300,
+        1547,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "messages": [
+        {
+          "content": "Café — 東京\nLine two.",
+          "role": "user"
+        }
+      ],
+      "name": "unicode_user",
+      "postprocessor_ids": [
+        1,
+        1,
+        6,
+        6423,
+        708,
+        544,
+        2305,
+        860,
+        2180,
+        730,
+        20374,
+        708,
+        11300,
+        1547,
+        523,
+        7,
+        708,
+        6,
+        64015,
+        708
+      ],
+      "rendered": "<|startoftext|><|im_start|>user\nCafé — 東京\nLine two.<|im_end|>\n<|im_start|>assistant\n",
+      "template_rendered": "<|startoftext|><|im_start|>user\nCafé — 東京\nLine two.<|im_end|>\n<|im_start|>assistant\n"
+    }
+  ],
+  "clean_up_tokenization_spaces": false,
+  "decode_policy": "tokenizers raw ByteLevel, skip_special_tokens=False; no Transformers cleanup",
+  "file_pins": {
+    "chat_template.jinja": "a805e50fed68938a076b07e2e602639611b50b1ced0e50f11eb92f1ba25be4dc",
+    "config.json": "95e6906d77ac647e8bf93c2d2bbd2f37eb9bf3fac8732a563653236ad81072af",
+    "generation_config.json": "0f678f07a00ae4bdeb2b2bd5f37988a4b33a87686d9103fefe08de7a46522373",
+    "special_tokens_map.json": "742aefe2b7dec496e8caffdba03a75d0c1a9925d53bd3f3e0d388c96b591b6f4",
+    "tokenizer.json": "98cff83b4f6d7e9d8929bebc62b07e92cf1b3f99c80d16bafe8b84a75448f40b",
+    "tokenizer_config.json": "36f511115e9d8952cbc9d15d9a20dfa7ce7d1444940e5c1dc42a762020c99bf5"
+  },
+  "format": "toklet-lfm2-text-reference-v1",
+  "mapped_boundary_decode": {
+    "decoded": "<|pad|><|file_end|>",
+    "ids": [
+      0,
+      64399
+    ]
+  },
+  "model_executed": false,
+  "plain_cases": [
+    {
+      "decoded": "<|startoftext|>",
+      "ids": [
+        1
+      ],
+      "text": ""
+    },
+    {
+      "decoded": "<|startoftext|>Hello, world!",
+      "ids": [
+        1,
+        36309,
+        521,
+        2031,
+        510
+      ],
+      "text": "Hello, world!"
+    },
+    {
+      "decoded": "<|startoftext|> a  b\n",
+      "ids": [
+        1,
+        768,
+        730,
+        794,
+        708
+      ],
+      "text": " a  b\n"
+    },
+    {
+      "decoded": "<|startoftext|>Привет 👋 café é",
+      "ids": [
+        1,
+        7245,
+        13328,
+        23805,
+        749,
+        743,
+        35499,
+        821,
+        10186
+      ],
+      "text": "Привет 👋 café é"
+    }
+  ],
+  "producer": {
+    "bytes": 16352,
+    "sha256": "7bedf87a0219c2310486fc1ea8aeb9f8bd9ba40258af793f7e80d1f12be40fb0"
+  },
+  "raw_capture": {
+    "bytes": 123852,
+    "sha256": "70e40aad026fb2fb5b97d10a93b92a2b1f2bef677a07f785a98fa0e30a171724"
+  },
+  "raw_records": 539,
+  "rejected_ids": [
+    {
+      "rejected_before_decode": true,
+      "token": -1
+    },
+    {
+      "rejected_before_decode": true,
+      "token": true
+    },
+    {
+      "rejected_before_decode": true,
+      "token": 64400
+    },
+    {
+      "rejected_before_decode": true,
+      "token": 65535
+    },
+    {
+      "rejected_before_decode": true,
+      "token": 65536
+    }
+  ],
+  "rejected_reserved_literals": 505,
+  "repository": "mlx-community/LFM2-350M-4bit",
+  "revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066",
+  "runtime": {
+    ".venv/lib/python3.12/site-packages/jinja2/__init__.py": {
+      "bytes": 1928,
+      "sha256": "c717a93bd8bb0c7b2a910ae004476e2ed7e8cf6402b93ebf81b2f85d237585b5"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/_identifier.py": {
+      "bytes": 1958,
+      "sha256": "ff361cb4d2b346a964fe6bab4cd973ae3bb514524bed56bf223aaa77b8a2da55"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/async_utils.py": {
+      "bytes": 2834,
+      "sha256": "bcaf8f76cba8ace3275929c4913de25094489139d880ed93e8c9c6c43807239a"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/bccache.py": {
+      "bytes": 14061,
+      "sha256": "821d2ab3daee9675e8d0f857e634c9cb6507cc8f3016743ade8fefc3b9e1cd18"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/compiler.py": {
+      "bytes": 74131,
+      "sha256": "f51a42425e57f3c0479652623ec1cf876f791e1d2e029bf0149350baeb542de3"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/constants.py": {
+      "bytes": 1433,
+      "sha256": "18ca05c9d045fe476969128fa0ce5c97932f8aab9544b57266d7e9e7ed7a8e0d"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/debug.py": {
+      "bytes": 6297,
+      "sha256": "0a71ea0831ddf81546bed8bff19b13a259d7361037102b18fba9ffda9c14f07c"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/defaults.py": {
+      "bytes": 1267,
+      "sha256": "6e805c4b0efc87e969db461b697489b2a900236b8dfe60ff4ed0b27697aae705"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/environment.py": {
+      "bytes": 61513,
+      "sha256": "f6786b3fb0a1f8d6c65f4d30bf2af8cb2fae84d1ead8e09ceb48201ab9e2fdf9"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/exceptions.py": {
+      "bytes": 5071,
+      "sha256": "8a81de1eb5b009635a5d7d629c798755b96f73885a3bb017b230a9dc67d6bf1d"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/ext.py": {
+      "bytes": 31875,
+      "sha256": "e4f1797877e1f265c02315c71d1076c576d7a218bca44de71d23b16baeae4bb1"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/filters.py": {
+      "bytes": 55212,
+      "sha256": "3d0fc481df67f634a0b671906321782b98f69d8c21508ba584f9f28a691dafe9"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/idtracking.py": {
+      "bytes": 10555,
+      "sha256": "fa5979948a7bde930bdc4ad46222098fbb5d996c5c1ff2250efdf203f862658a"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/lexer.py": {
+      "bytes": 29786,
+      "sha256": "2d88988a8e9bafe4dea7d9cf72ea565ec3c4b6396ec37a75994fa534155151f9"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/loaders.py": {
+      "bytes": 24055,
+      "sha256": "c08ae7c63bdc6ea8795705b6f0d4a47e8b620eaf2a342c4839215b1948922c1e"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/meta.py": {
+      "bytes": 4397,
+      "sha256": "3930cf91a16f5361e0bf1fba6a4cfbd79e05f012166919af25c045bf0a291f0c"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/nativetypes.py": {
+      "bytes": 4210,
+      "sha256": "ec620600b54981dc8bf34a1925d4146947f04ade6ada549265b5edd1d35ffcce"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/nodes.py": {
+      "bytes": 34579,
+      "sha256": "9b50eecdcafaaa1648f0943a57226050d8a78c07f96d0ce28d29839ccb2f531f"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/optimizer.py": {
+      "bytes": 1651,
+      "sha256": "ac99c246543ba59b04126321b100e00bfa4ac831f13f94cf4bacd53c6b2072ef"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/parser.py": {
+      "bytes": 40383,
+      "sha256": "94b385cb7b0498773921a1074621f5b1056721dda6a14433872789653b5d637d"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/runtime.py": {
+      "bytes": 34249,
+      "sha256": "80393e1af76b8895ea82c19b1e0adc2933f4629eb33d7ce1ceb2290851f78c05"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/sandbox.py": {
+      "bytes": 15009,
+      "sha256": "330d9a8ad958d88f256bb15885c5f6606f41b5461c2e70f41a1ddddbd7035ab6"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/tests.py": {
+      "bytes": 5926,
+      "sha256": "54bb018551675a0f8fc52073d4c8519cd5a03f5a2f5e4de778ed452d031e0bd4"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/utils.py": {
+      "bytes": 24129,
+      "sha256": "ad1a77a3d7bb64a4b87f2ad645b10bc8b729b8655315c9e8a1a39ad6ac7f1489"
+    },
+    ".venv/lib/python3.12/site-packages/jinja2/visitor.py": {
+      "bytes": 3557,
+      "sha256": "11c9cbd4f2307ffe1154238cc6c44db91f005c76d2d6a7c074c384da780a273e"
+    },
+    ".venv/lib/python3.12/site-packages/markupsafe/__init__.py": {
+      "bytes": 13354,
+      "sha256": "1f512743b0ba6e96c1d7a9450e425889e9978eb3d2d15e72dd57c8c47f518686"
+    },
+    ".venv/lib/python3.12/site-packages/markupsafe/_native.py": {
+      "bytes": 210,
+      "sha256": "8522ecf099b3e5aa9acae7a780927791d4f93f0369056a4aae6412762a67742f"
+    },
+    ".venv/lib/python3.12/site-packages/markupsafe/_speedups.cpython-312-darwin.so": {
+      "bytes": 50656,
+      "sha256": "c5dff96c03976c47aa7d1cae3a73b4c57099259b49305c9486735ee9f7022304"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/__init__.py": {
+      "bytes": 2639,
+      "sha256": "148ecb122f3fee03be9abb1fe213dd85fbc691bf2ad2b437ff531533781a6a3a"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/decoders/__init__.py": {
+      "bytes": 372,
+      "sha256": "85fc0ce821540ef94c1862f8fb1b1a698cfcd4af4fe6b408e592f950758af18e"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/__init__.py": {
+      "bytes": 310,
+      "sha256": "57302ca65688a3bae5e0014ef0c8aeee283b31f663be89f055b959c34d7347a3"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/base_tokenizer.py": {
+      "bytes": 15806,
+      "sha256": "3ed4364d29a8306953a4bf2873c7c3bf0255218ea2b161a6a6cf5ca26cec5a31"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/bert_wordpiece.py": {
+      "bytes": 5520,
+      "sha256": "b0a0ae9b414a3d875280914937c2c37ab541a130d14aacaa49dadc9be96f42a2"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/byte_level_bpe.py": {
+      "bytes": 4272,
+      "sha256": "8817a933fcf5b392b2ef314356b60b7372f96f262b228ba4efe934246b85d74b"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/char_level_bpe.py": {
+      "bytes": 5449,
+      "sha256": "35a83f1c5abc46f72e72a8bc321575fb4c6da11d02ec58c739e70555444beecb"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/sentencepiece_bpe.py": {
+      "bytes": 3721,
+      "sha256": "734f1f29fea2f7613646c2a0b31cbb2f365f617f3e3000874911bc53f239cad6"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/implementations/sentencepiece_unigram.py": {
+      "bytes": 7630,
+      "sha256": "d91a087c556988c9093ad382b2433f54278210b59a0bf6cd9ddb3a1afb44d0a4"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/models/__init__.py": {
+      "bytes": 176,
+      "sha256": "7896781d3010669c672882cdca559a4c5ab15f2f816ba38ab3058de3b7de795f"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/normalizers/__init__.py": {
+      "bytes": 841,
+      "sha256": "ff4eb0e1ca9122dbde12021d75868b3127209123a4200308cd809eb1be400385"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/pre_tokenizers/__init__.py": {
+      "bytes": 598,
+      "sha256": "295f7e12c03290610d514ce419609bbf89fa60cea161ad617e763e83306930d1"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/processors/__init__.py": {
+      "bytes": 307,
+      "sha256": "c4cd8310ac0ab4722e987b2ccccf00324abe0256aabc16455d680b53c48d84e6"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/tokenizers.abi3.so": {
+      "bytes": 8261072,
+      "sha256": "899b244f19f1ddd6506c45ea0f7163f38952f2a552272a687a6ef4b9ddcc7327"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/tools/__init__.py": {
+      "bytes": 55,
+      "sha256": "c46f1c681f4e1c2f1c6c1d354b9bd8575e0767184ee9e59b2de86c6fbd29a62a"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/tools/visualizer.py": {
+      "bytes": 14834,
+      "sha256": "8edc646b4d6984d3f8eee412a1c21014efc33272f7647770a211950eaa9824fa"
+    },
+    ".venv/lib/python3.12/site-packages/tokenizers/trainers/__init__.py": {
+      "bytes": 248,
+      "sha256": "513bb6d8019ca7be88be95b8e712d16c95844f4e0dc4f5ba35f09bd98633d043"
+    }
+  },
+  "runtime_admission": {
+    "files": 1971,
+    "imports": {
+      "jinja2": "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/jinja2/__init__.py",
+      "markupsafe": "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe/__init__.py",
+      "markupsafe._speedups": "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/markupsafe/_speedups.cpython-312-darwin.so",
+      "tokenizers": "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/__init__.py",
+      "tokenizers.tokenizers": "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/tokenizers/tokenizers.abi3.so"
+    },
+    "manifest_sha256": "23aa8bfdbeebc2a29cc3c5427c840b57319c51067bffcac9dfe7d2c59889e91f",
+    "versions": {
+      "Jinja2": "3.1.6",
+      "MarkupSafe": "3.0.4",
+      "tokenizers": "0.22.2"
+    }
+  },
+  "stop_ids": [
+    7
+  ],
+  "stop_rows": [
+    {
+      "decoded": "<|endoftext|>",
+      "is_stop": false,
+      "token": 2
+    },
+    {
+      "decoded": "<|im_end|>",
+      "is_stop": true,
+      "token": 7
+    }
+  ],
+  "transformers_executed": false,
+  "versions": {
+    "jinja2": "3.1.6",
+    "markupsafe": "3.0.4",
+    "tokenizers": "0.22.2"
+  }
+}

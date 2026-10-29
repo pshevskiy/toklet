@@ -289,3 +289,12 @@ coefficient research proposes certified exact blockwise dots with checked
 fallbacks; it is not an executed model source or qualification. Keep512-capacity
 admission distinct from the proposed short complete source trajectory and the
 declared128,000 window. B4e3 real native testing and B5 integration remain open.
+
+B4e2a's [streamed exact-affine helper](lfm2-exact-affine-reference.md) now passes
+thirteen independent controls and all repository checks, committed as`dbe855b`.
+B4e2b's [pinned text reference](lfm2-text-reference.md) passes eight controls,
+ten fixed cases,539 raw observations and exact replay; Astra independently
+reconstructs all saved decode comparisons. These are reference prerequisites,
+not real decoder or app admission. B4e2c next exports the complete bounded
+numerical source under the approved64-token protocol;512 constructor/admission
+and the128000 declaration stay distinct.

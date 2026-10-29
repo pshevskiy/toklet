@@ -7736,3 +7736,31 @@ fixtures, source gates and adoption-quality obligations are unchanged. This
 closes the helper task only; codec-only fixtures, real reference/native model,
 app/context controls and device qualification remain. Evidence and exact pins
 are in the [result record](../benchmarks/results/2026-10-29-lfm2-exact-affine-reference-v1.json).
+
+### M8 B4e2b — Pinned LFM2 text reference,29 October2026
+
+The helper task is committed as`dbe855b` after exact seven-file Astra review.
+The separate [text reference](lfm2-text-reference.md) now freezes manual rendering,
+actual tokenizer IDs and raw whole-prefix decoding for the selected original
+LFM2 artifact. Ten cases independently match the pinned Jinja bytes; both
+generation flags, empty content, system/history and Unicode are covered. BOS1
+appears once, diagnostic postprocessing exposes duplication, stop7 is distinct
+from non-stop2, and unmapped padded-head IDs reject before decoding without
+masking/remapping. All505 special literals reject while ordinary added tokens
+`Mathias` and `python` retain their actual IDs and decoded content.
+
+Eight portable controls, explicit export/replay and all six repository checks
+pass(default450/Metal545, overlapping;20/181 ignored). Both stable files replay
+identically:23,078-byte fixture and123,852-byte539-record raw capture. Astra
+independently reconstructs29decoded strings/382ID occurrences directly from the
+original vocabulary, audits every raw record/runtime identity and verifies all
+nine closed process groups. Codec-worker OSmaxRSS is at most195,379,200 bytes
+under its1GiB ceiling; this is not combined app/model fit. Fresh runtime cache
+paths and observations remain separate from stable golden bytes.
+
+The [published fixtures](../tests/fixtures/lfm2-text-v1/README.md) retain exact
+source/runtime provenance. This is independent rendering and saved-decode
+checking, not a second BPE implementation or Transformers equivalence. No model,
+GPU, Rust codec/app profile, Chat or phone execution is claimed. The complete
+real numerical reference remains B4e2c, followed by native/session/memory B4e3;
+all existing numerical gates and adoption-quality obligations remain.

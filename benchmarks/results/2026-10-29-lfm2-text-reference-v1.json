@@ -1,0 +1,338 @@
+{
+  "format": "toklet-lfm2-text-reference-result-v1",
+  "date": "2026-10-29",
+  "base_revision": "dbe855b",
+  "task": "M8 B4e2b: pinned text reference",
+  "status": "codec_export_replay_repository_checks_and_independent_saved_audit_passed",
+  "repository": "mlx-community/LFM2-350M-4bit",
+  "revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066",
+  "producer_files": [
+    {
+      "path": "tools/reference/lfm2_text_fixture.py",
+      "bytes": 16352,
+      "sha256": "7bedf87a0219c2310486fc1ea8aeb9f8bd9ba40258af793f7e80d1f12be40fb0"
+    },
+    {
+      "path": "tools/reference/test_lfm2_text_fixture.py",
+      "bytes": 4832,
+      "sha256": "2c27264ab04097990db56db96332b9f4619a820af3e770a4fd38f4bc2749d6c2"
+    }
+  ],
+  "text_policy": {
+    "bos_id": 1,
+    "add_special_tokens": false,
+    "stops": [
+      7
+    ],
+    "not_stop": [
+      2
+    ],
+    "mapped_ids": [
+      0,
+      64400
+    ],
+    "unmapped_numerical_head_slots": [
+      64400,
+      65536
+    ],
+    "unmapped_behavior": "explicit rejection before decode; no masking/remapping",
+    "decode": "raw Tokenizers ByteLevel, skip_special_tokens=False; no Transformers cleanup",
+    "transforms": "no trim/normalization/default system",
+    "roles": "optional first system, then user/assistant alternation; assistant-ending accepted",
+    "maximum_messages": 64,
+    "maximum_json_and_rendered_bytes": 65536,
+    "maximum_codec_tokens": 512,
+    "numerical_capacity_qualified": false
+  },
+  "cases": [
+    {
+      "name": "empty_user",
+      "generation_prompt": false,
+      "tokens": 6,
+      "decode_equals_rendered": true
+    },
+    {
+      "name": "empty_user",
+      "generation_prompt": true,
+      "tokens": 9,
+      "decode_equals_rendered": true
+    },
+    {
+      "name": "plain_user",
+      "generation_prompt": false,
+      "tokens": 10,
+      "decode_equals_rendered": true
+    },
+    {
+      "name": "plain_user",
+      "generation_prompt": true,
+      "tokens": 13,
+      "decode_equals_rendered": true
+    },
+    {
+      "name": "system_user",
+      "generation_prompt": false,
+      "tokens": 22,
+      "decode_equals_rendered": true
+    },
+    {
+      "name": "system_user",
+      "generation_prompt": true,
+      "tokens": 25,
+      "decode_equals_rendered": true
+    },
+    {
+      "name": "assistant_history",
+      "generation_prompt": false,
+      "tokens": 25,
+      "decode_equals_rendered": true
+    },
+    {
+      "name": "assistant_history",
+      "generation_prompt": true,
+      "tokens": 28,
+      "decode_equals_rendered": true
+    },
+    {
+      "name": "unicode_user",
+      "generation_prompt": false,
+      "tokens": 16,
+      "decode_equals_rendered": true
+    },
+    {
+      "name": "unicode_user",
+      "generation_prompt": true,
+      "tokens": 19,
+      "decode_equals_rendered": true
+    }
+  ],
+  "controls": {
+    "portable": 8,
+    "positive_chat_cases": 10,
+    "reserved_special_literals_rejected": 505,
+    "ordinary_added_accepted": [
+      "Mathias",
+      "python"
+    ],
+    "invalid_ids_rejected": 5,
+    "raw_records_per_export": 539,
+    "stable_files_byte_identical": true
+  },
+  "replay": {
+    "fixture.json": {
+      "bytes": 23078,
+      "sha256": "c0d521d4cf09507e667e68a36ccfd8698be5dd30b72adcf5befb5b18c7cd283a"
+    },
+    "fixture.raw.jsonl": {
+      "bytes": 123852,
+      "sha256": "70e40aad026fb2fb5b97d10a93b92a2b1f2bef677a07f785a98fa0e30a171724"
+    }
+  },
+  "commands": [
+    {
+      "name": "controls",
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "os_maxrss_bytes": 41730048,
+      "live_samples": 4,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 30687856,
+        "phys_footprint": 30425712,
+        "resident_size": 40927232
+      },
+      "log_bytes": {
+        "stderr": 161,
+        "stdout": 0
+      }
+    },
+    {
+      "name": "export",
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "os_maxrss_bytes": 187367424,
+      "live_samples": 19,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 102400696,
+        "phys_footprint": 77398736,
+        "resident_size": 187367424
+      },
+      "log_bytes": {
+        "stderr": 56,
+        "stdout": 0
+      },
+      "endpoint_origins": {
+        "modules": 186,
+        "non_system_native_images": 26
+      }
+    },
+    {
+      "name": "replay",
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "os_maxrss_bytes": 195379200,
+      "live_samples": 18,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 104563480,
+        "phys_footprint": 95421160,
+        "resident_size": 187514880
+      },
+      "log_bytes": {
+        "stderr": 56,
+        "stdout": 0
+      },
+      "endpoint_origins": {
+        "modules": 186,
+        "non_system_native_images": 26
+      }
+    }
+  ],
+  "runtime": {
+    "python": "3.12.8",
+    "tokenizers": "0.22.2",
+    "jinja": "3.1.6",
+    "markupsafe": "3.0.4",
+    "input_bindings": 1996,
+    "text_runtime_files": 1971,
+    "controller_runtime_files": 1871,
+    "system_shared_cache": "image paths observed, not content-hashed",
+    "transformers_executed": false
+  },
+  "repository_checks": {
+    "formatting": true,
+    "strict_default_and_metal_all_target_clippy": true,
+    "default": {
+      "passed": 450,
+      "ignored": 20
+    },
+    "metal": {
+      "passed": 545,
+      "ignored": 181
+    },
+    "counts_overlap": true,
+    "release_metal_library_test_build": true
+  },
+  "owned_limits": {
+    "seconds_per_job": 120,
+    "observed_process_bytes": 1073741824,
+    "log_bytes_per_stream": 1048576,
+    "fixture_bytes": 4194304,
+    "raw_bytes": 8388608,
+    "observation_bytes": 4194304,
+    "cleanup_seconds": 30,
+    "closed_groups": 9
+  },
+  "limitations": [
+    "Reference only; no Rust codec/app profile or Chat admission",
+    "No second independent BPE implementation or Transformers equivalence",
+    "No real model/source/GPU/phone run or inference/performance claim",
+    "512 codec IDs are a text limit, not numerical trajectory qualification",
+    "Original-unquantized adoption-quality gates remain open"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e2-codec-proposal-v1/manifest.json",
+      "bytes": 1214,
+      "sha256": "8c6d9ded3452b04466afb971987a443631a1f8e1dca593994da0fd2a901fcb2e"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-independent-review-v1/prospective-review.json",
+      "bytes": 7893,
+      "sha256": "beffa520d7252f18ec2f6faac1e421f02834ea17e3879c8718109dc2a6f67dd9"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/manifest.json",
+      "bytes": 5121,
+      "sha256": "aba6d4466891485afc83f8829522aadae47bcb6bd47a6f0c06711b6897aac09c"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/package.json",
+      "bytes": 813966,
+      "sha256": "edc6bf809004fe153b47e3fb780c7c3b9286be035d8a30164dccb81dad6a6ec4"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/runtime.json",
+      "bytes": 421156,
+      "sha256": "23aa8bfdbeebc2a29cc3c5427c840b57319c51067bffcac9dfe7d2c59889e91f"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/prospective-review.json",
+      "bytes": 3160,
+      "sha256": "bc4df49129a77220d15cee20ae46352694ab8aede0440cce48130ffdf0c5aef2"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/checks.json",
+      "bytes": 434326,
+      "sha256": "534e6220e71b132a9830a611d724a8acfca8719a6a711f7a237952ec058b1496"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-cold-checks-v1/checks.json",
+      "bytes": 884450,
+      "sha256": "72751138dbe7c5c54b87e4252d3ca62cbd242eaa0424c45368dc0c66beb67fba"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/controls/observation.json",
+      "bytes": 592,
+      "sha256": "73ed7d37c7a5334f1c548e1885d3dbe877fcde46cb4c384164494f271bbaff8a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/export/observation.json",
+      "bytes": 163247,
+      "sha256": "d096340cc0fa362afbd7dfc28a73558d5d204fcee65b6bbf2a405229186e2368"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/replay/observation.json",
+      "bytes": 163247,
+      "sha256": "9b5e105e2542038ded7e1a4d470a64d5f437529eebc6ce11f739abb8c732f3fb"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/export/fixture.json",
+      "bytes": 23078,
+      "sha256": "c0d521d4cf09507e667e68a36ccfd8698be5dd30b72adcf5befb5b18c7cd283a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/export/fixture.raw.jsonl",
+      "bytes": 123852,
+      "sha256": "70e40aad026fb2fb5b97d10a93b92a2b1f2bef677a07f785a98fa0e30a171724"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/replay/fixture.json",
+      "bytes": 23078,
+      "sha256": "c0d521d4cf09507e667e68a36ccfd8698be5dd30b72adcf5befb5b18c7cd283a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-owner-proposal-v1/replay/fixture.raw.jsonl",
+      "bytes": 123852,
+      "sha256": "70e40aad026fb2fb5b97d10a93b92a2b1f2bef677a07f785a98fa0e30a171724"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-codec-independent-review-v1/saved-codec-review.json",
+      "bytes": 10497,
+      "sha256": "73a6507499ed47a517825ded9e38ceb073b1b8f9ae57bc92f715def24ab601f1"
+    }
+  ],
+  "published_fixture_files": [
+    {
+      "path": "tests/fixtures/lfm2-text-v1/fixture.json",
+      "bytes": 23078,
+      "sha256": "c0d521d4cf09507e667e68a36ccfd8698be5dd30b72adcf5befb5b18c7cd283a"
+    },
+    {
+      "path": "tests/fixtures/lfm2-text-v1/fixture.raw.jsonl",
+      "bytes": 123852,
+      "sha256": "70e40aad026fb2fb5b97d10a93b92a2b1f2bef677a07f785a98fa0e30a171724"
+    }
+  ],
+  "independent_saved_audit": {
+    "path": "artifacts/new-goal-b4e2-codec-independent-review-v1/saved-codec-review.json",
+    "bytes": 10497,
+    "sha256": "73a6507499ed47a517825ded9e38ceb073b1b8f9ae57bc92f715def24ab601f1"
+  },
+  "independent_decode_audit": {
+    "saved_strings": 29,
+    "token_id_occurrences": 382,
+    "method": "Original vocabulary plus independent ByteLevel reconstruction; no tokenizer/template imports"
+  }
+}
