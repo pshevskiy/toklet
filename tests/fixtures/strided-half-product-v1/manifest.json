@@ -1,0 +1,547 @@
+{
+  "cases": [
+    {
+      "a": {
+        "offset": 0,
+        "owner": "bcx",
+        "stride": 768
+      },
+      "arrays": {
+        "main": {
+          "bytes": 512,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1550,
+          "sha256": "8f8d6ad76780add143301b341105e630a3ee13027fe3925354390e9e1733c737",
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "wide": {
+          "bytes": 512,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2062,
+          "sha256": "8f8d6ad76780add143301b341105e630a3ee13027fe3925354390e9e1733c737",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      },
+      "b": {
+        "offset": 512,
+        "owner": "bcx",
+        "stride": 768
+      },
+      "envelope": 0.0,
+      "exact_prefix_words": [],
+      "expected_physical_output": {
+        "bytes": 532,
+        "sha256": "e60e064b100822912eeb12450bf0661bb1c88d2dcc051d42d2c77b94d1ffcaee"
+      },
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "inputs": {
+        "bcx": {
+          "bytes": 1550,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 0,
+          "sha256": "def0b6e6fc30bfd8b91b515effa1e24c7a2473cbcba6bae06bc69b6468b12e3a",
+          "shape": [
+            775
+          ]
+        }
+      },
+      "name": "tiny_bx1",
+      "output": {
+        "offset": 0,
+        "owner": "output",
+        "stride": 259
+      },
+      "output_elements": 266,
+      "partitions": [
+        [
+          1
+        ]
+      ],
+      "physical_input_bytes": 1550,
+      "readonly_same_parent": true,
+      "rows": 1,
+      "width": 256
+    },
+    {
+      "a": {
+        "offset": 256,
+        "owner": "bcx",
+        "stride": 768
+      },
+      "arrays": {
+        "main": {
+          "bytes": 1536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 8780,
+          "sha256": "545a3b9cadf14122a39d70fcd7b995b0eb978af7ed11ec051d188684a746cff4",
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "wide": {
+          "bytes": 1536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 10316,
+          "sha256": "545a3b9cadf14122a39d70fcd7b995b0eb978af7ed11ec051d188684a746cff4",
+          "shape": [
+            3,
+            256
+          ]
+        }
+      },
+      "b": {
+        "offset": 2,
+        "owner": "z",
+        "stride": 261
+      },
+      "envelope": 0.0,
+      "exact_prefix_words": [],
+      "expected_physical_output": {
+        "bytes": 1598,
+        "sha256": "79db7a6fb8c8dccb0f77597d03f48624ca66352ee19053d6cafd390231191868"
+      },
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "inputs": {
+        "bcx": {
+          "bytes": 4622,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2574,
+          "sha256": "f8bdc0206305a77de270821ca6c047e026aac25c7e2e600b99f68987ecf8c41b",
+          "shape": [
+            2311
+          ]
+        },
+        "z": {
+          "bytes": 1584,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 7196,
+          "sha256": "382a2e871331e8596322691de5898338771da7bf1eec470fc59674296aeb2be6",
+          "shape": [
+            792
+          ]
+        }
+      },
+      "name": "tiny_cz3",
+      "output": {
+        "offset": 3,
+        "owner": "output",
+        "stride": 263
+      },
+      "output_elements": 799,
+      "partitions": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          3
+        ]
+      ],
+      "physical_input_bytes": 6206,
+      "readonly_same_parent": false,
+      "rows": 3,
+      "width": 256
+    },
+    {
+      "a": {
+        "offset": 0,
+        "owner": "bcx",
+        "stride": 768
+      },
+      "arrays": {
+        "main": {
+          "bytes": 1024,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 14938,
+          "sha256": "4c747d7b24c5c6f5dfe52427b788b9d2811ca4a470ca679b4d8d1d65c182f6c5",
+          "shape": [
+            2,
+            256
+          ]
+        },
+        "wide": {
+          "bytes": 1024,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 15962,
+          "sha256": "4c747d7b24c5c6f5dfe52427b788b9d2811ca4a470ca679b4d8d1d65c182f6c5",
+          "shape": [
+            2,
+            256
+          ]
+        }
+      },
+      "b": {
+        "offset": 512,
+        "owner": "bcx",
+        "stride": 768
+      },
+      "envelope": 0.0,
+      "exact_prefix_words": [
+        32768,
+        0,
+        1,
+        0,
+        2,
+        32769,
+        32768,
+        31743,
+        15362,
+        32768
+      ],
+      "expected_physical_output": {
+        "bytes": 1052,
+        "sha256": "b64e33eac354ac55545d94f8e4dd7f828a21e38197fe78ac85269e936751a71a"
+      },
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "inputs": {
+        "bcx": {
+          "bytes": 3086,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 11852,
+          "sha256": "95710745726ddb1a5dc2c8afeb233e90ff56630e8e6b394416ec1a60a36da306",
+          "shape": [
+            1543
+          ]
+        }
+      },
+      "name": "tiny_words2",
+      "output": {
+        "offset": 5,
+        "owner": "output",
+        "stride": 257
+      },
+      "output_elements": 526,
+      "partitions": [
+        [
+          1,
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "physical_input_bytes": 3086,
+      "readonly_same_parent": true,
+      "rows": 2,
+      "width": 256
+    },
+    {
+      "a": {
+        "offset": 0,
+        "owner": "bcx",
+        "stride": 3072
+      },
+      "arrays": {
+        "main": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 213608,
+          "sha256": "3f328a2cc5bee6cb1ed5c696e86000753dfc27a2ee3050f0e880e931a8caa95a",
+          "shape": [
+            32,
+            1024
+          ]
+        },
+        "wide": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 279144,
+          "sha256": "3f328a2cc5bee6cb1ed5c696e86000753dfc27a2ee3050f0e880e931a8caa95a",
+          "shape": [
+            32,
+            1024
+          ]
+        }
+      },
+      "b": {
+        "offset": 2048,
+        "owner": "bcx",
+        "stride": 3072
+      },
+      "envelope": 0.0,
+      "exact_prefix_words": [],
+      "expected_physical_output": {
+        "bytes": 65550,
+        "sha256": "aee4ae120d36d362e27ba04e528797ddef24d6dcbd250840d218bb0146f33a43"
+      },
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "inputs": {
+        "bcx": {
+          "bytes": 196622,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 16986,
+          "sha256": "44de1240821d299bcaecaebdc3e1335da654e87777b965dcea740b2e48c41dc8",
+          "shape": [
+            98311
+          ]
+        }
+      },
+      "name": "real_bx32",
+      "output": {
+        "offset": 0,
+        "owner": "output",
+        "stride": 1024
+      },
+      "output_elements": 32775,
+      "partitions": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          2
+        ],
+        [
+          32
+        ]
+      ],
+      "physical_input_bytes": 196622,
+      "readonly_same_parent": true,
+      "rows": 32,
+      "width": 1024
+    },
+    {
+      "a": {
+        "offset": 1024,
+        "owner": "bcx",
+        "stride": 3072
+      },
+      "arrays": {
+        "main": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 607176,
+          "sha256": "7261f019661d90e393e83881fc0d9da6500f14022ce1640cc468571a26e89d13",
+          "shape": [
+            32,
+            1024
+          ]
+        },
+        "wide": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 672712,
+          "sha256": "7261f019661d90e393e83881fc0d9da6500f14022ce1640cc468571a26e89d13",
+          "shape": [
+            32,
+            1024
+          ]
+        }
+      },
+      "b": {
+        "offset": 2,
+        "owner": "z",
+        "stride": 1029
+      },
+      "envelope": 0.0,
+      "exact_prefix_words": [],
+      "expected_physical_output": {
+        "bytes": 65748,
+        "sha256": "3feb520ae2686c60e137f3df6864bfcc047e7579d53e5a185ba54818d9d591ad"
+      },
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "inputs": {
+        "bcx": {
+          "bytes": 196622,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 344680,
+          "sha256": "44de1240821d299bcaecaebdc3e1335da654e87777b965dcea740b2e48c41dc8",
+          "shape": [
+            98311
+          ]
+        },
+        "z": {
+          "bytes": 65874,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 541302,
+          "sha256": "43039a784e3a4db2fbb4dc1fb3837cc71d3a11b0d57effb69556fa34dcb972b3",
+          "shape": [
+            32937
+          ]
+        }
+      },
+      "name": "real_cz32",
+      "output": {
+        "offset": 3,
+        "owner": "output",
+        "stride": 1027
+      },
+      "output_elements": 32874,
+      "partitions": [
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          2
+        ],
+        [
+          32
+        ]
+      ],
+      "physical_input_bytes": 262496,
+      "readonly_same_parent": false,
+      "rows": 32,
+      "width": 1024
+    }
+  ],
+  "files": {
+    "arrays.bin": {
+      "bytes": 738248,
+      "sha256": "a30602034fbbc8b78a85f4c38d57328f20627264cbbec3c15e30a7fb91f6a636"
+    },
+    "controls.json": {
+      "bytes": 1616,
+      "sha256": "ebdb5839fc38874e2b6e967c9cdb2f8b43b0324e41809ced3efc4bceb922f081"
+    }
+  },
+  "finite_output_values": 67072,
+  "format": "toklet-strided-half-product-v1",
+  "guard_words": 7,
+  "helper": {
+    "bytes": 10205,
+    "path": "/Users/coloner/work/rust/toklet/tools/reference/gemma3_half_rms.py",
+    "sha256": "9368ba31ee169c0d527e6462df60f0ebcaacc09ac33bab98d4c5929f795a4ca7"
+  },
+  "input_padding_word": 32341,
+  "output_canary_word": 23063,
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "rtol": 0.001
+  },
+  "producer": {
+    "bytes": 12106,
+    "sha256": "25022161c62ae05de51bfb823c9ddaf14c1429f2a3e556f28aa847152393b5fb"
+  },
+  "protocol_sha256": "eb77913b363e5ba0b58fb7bebfb84adf1137da412c48bf98f2202801b79da8d6",
+  "runtime": {
+    "executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "python": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]"
+  },
+  "scope": "Standalone strided Half multiply and physical-view oracle; no activation, projection, graph, model, transaction or performance claim",
+  "source_reference_executed": true,
+  "stored_arrays": 17,
+  "target_gpu_executed": false
+}

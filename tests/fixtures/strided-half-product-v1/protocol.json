@@ -1,0 +1,143 @@
+{
+  "cases": [
+    {
+      "kind": "bx",
+      "name": "tiny_bx1",
+      "output_offset": 0,
+      "output_stride_extra": 3,
+      "rows": 1,
+      "width": 256
+    },
+    {
+      "kind": "cz",
+      "name": "tiny_cz3",
+      "output_offset": 3,
+      "output_stride_extra": 7,
+      "rows": 3,
+      "width": 256
+    },
+    {
+      "kind": "words",
+      "name": "tiny_words2",
+      "output_offset": 5,
+      "output_stride_extra": 1,
+      "rows": 2,
+      "width": 256
+    },
+    {
+      "kind": "bx",
+      "name": "real_bx32",
+      "output_offset": 0,
+      "output_stride_extra": 0,
+      "rows": 32,
+      "width": 1024
+    },
+    {
+      "kind": "cz",
+      "name": "real_cz32",
+      "output_offset": 3,
+      "output_stride_extra": 3,
+      "rows": 32,
+      "width": 1024
+    }
+  ],
+  "controls": [
+    "explicit same-parent B/x indices and distinct C values",
+    "nonzero output/input offsets, full row padding and last active addresses",
+    "both inputs prevalidated even when counterpart is zero",
+    "signed-zero/minsub/tie-even/maxfinite/overflow witnesses",
+    "changed last-row causality and immutable physical inputs",
+    "tokenwise/uneven partition numeric words",
+    "wrong offsets/strides, negative/bool/overflow/count and exact minus-one extents",
+    "read/read alias permitted; output/input/status aliases reject"
+  ],
+  "counts": {
+    "arrays": 17,
+    "cases": 5,
+    "raw_bytes": 738248,
+    "values_per_profile": 67072
+  },
+  "format": "toklet-strided-half-product-source-protocol-v1",
+  "limits": {
+    "arrays_bytes": 2097152,
+    "controls_bytes": 65536,
+    "manifest_bytes": 131072,
+    "source_job_seconds": 120,
+    "source_worker_bytes": 268435456,
+    "stderr_bytes": 1048576,
+    "stdout_bytes": 1048576
+  },
+  "math": {
+    "main": "Prevalidate all active finite Half inputs, exact FP32 multiply then one RNE finite Half store; no clamp/FMA/intermediate Half, no generic FTZ",
+    "signed_zero": "Exact witness and raw operand hashes preserve sign; general numeric comparison may equate signed zeros; no subnormal flushing",
+    "store_witness_a": [
+      0,
+      32768,
+      1,
+      1,
+      3,
+      32769,
+      32769,
+      31743,
+      15361,
+      48128
+    ],
+    "store_witness_b": [
+      48128,
+      48128,
+      15360,
+      14336,
+      14336,
+      15360,
+      14336,
+      15360,
+      15361,
+      0
+    ],
+    "store_witness_result": [
+      32768,
+      0,
+      1,
+      0,
+      2,
+      32769,
+      32768,
+      31743,
+      15362,
+      32768
+    ],
+    "wide": "Same finite Half operands, one exact FP64 product then RNE finite Half; all finite Half products are exact FP32 because <=22 significand bits and exponent range safely within FP32"
+  },
+  "output_files": [
+    "arrays.bin",
+    "manifest.json",
+    "controls.json",
+    "progress.jsonl"
+  ],
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "exact_witnesses": "additional required fixed words; MAIN/WIDE equality is a source self-check",
+    "fatal_reference": "main",
+    "rtol": 0.001,
+    "wide": "diagnostic"
+  },
+  "scope": "Borrowed standalone Half product used separately for B*x and C*z; no activation/projection/graph/state publication",
+  "shape": {
+    "alias": "Read/read same physical parent allowed; output disjoint from both inputs/status; status disjoint from inputs too",
+    "guard_words": 7,
+    "input_view_extent": "offset+(rows-1)*stride+width+7, checked UInt32 address and host size arithmetic",
+    "output_owner_extent": "output_offset+rows*output_stride+7, checked; prefix and every row tail remain canaries",
+    "parent": "One physical [T,3H] B/C/x owner, no separate B/x copies; C*z has one additional padded z owner",
+    "rows": [
+      1,
+      32
+    ],
+    "widths": [
+      256,
+      1024
+    ]
+  },
+  "source_reference_executed": false,
+  "target_gpu_executed": false
+}

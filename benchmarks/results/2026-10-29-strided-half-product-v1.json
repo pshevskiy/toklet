@@ -1,0 +1,252 @@
+{
+  "format": "toklet-strided-half-product-result-v1",
+  "date": "2026-10-29",
+  "status": "selected_standalone_mac_strided_half_product_qualified",
+  "device": "Apple M1 Pro",
+  "scope": "Borrowed B*x and C*z products over shared readonly BCx views; no resident model transaction",
+  "profile": {
+    "widths": [
+      256,
+      1024
+    ],
+    "active_rows": [
+      1,
+      32
+    ],
+    "operation": "FP32 product of finite stored Half operands, one RNE Half store; no clamp/activation/fusion",
+    "views": "Checked offset+(row*stride)+column; read/read aliases allowed, all writable/status aliases reject",
+    "old_kernel_changes": false,
+    "production_graph_consumer": false
+  },
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "rtol": 0.001,
+    "fatal_reference": "main",
+    "wide": "diagnostic",
+    "changed_after_target": false,
+    "exact_store_witnesses_additional": true
+  },
+  "source": {
+    "cases": 5,
+    "controls": 8,
+    "arrays": 17,
+    "binary_bytes": 738248,
+    "values_per_profile": 67072,
+    "physical_input_words": 234980,
+    "expected_physical_output_words": 67240,
+    "expected_output_canaries": 168,
+    "partition_schedules": 11,
+    "partition_boundaries": 96,
+    "exact_store_words": 10,
+    "invalid_controls": 8,
+    "four_file_exact_replay": true
+  },
+  "native": {
+    "submissions": 128,
+    "exact_own_input_finite_output_words": 347384,
+    "output_padding_words_exact": 1749,
+    "raw_records": 133,
+    "full_output_words": 349141,
+    "readonly_physical_words_hashed": 10529267,
+    "shared_parent_records": 78,
+    "MAIN_fixed_gate_values": 342784,
+    "WIDE_diagnostic_values": 342784,
+    "partition_boundaries": 96,
+    "partition_schedules": 11,
+    "invalid_output_words_retained_not_gated": 8,
+    "normal_main_values": 134144,
+    "partition_main_values": 199424,
+    "recovery_main_values": 9216,
+    "additional_finite_invalid_neighbor_words": 4088,
+    "additional_finite_changed_tail_words": 512,
+    "main_failures": 0,
+    "wide_exceedances": 0,
+    "max_error": 0,
+    "max_fraction": 0,
+    "release_zero_rust_encode_measurements": 10,
+    "preflight": {
+      "equal_extent_half_writable_aliases": 2,
+      "typed_status_aliases": 3,
+      "short_operands": 4,
+      "not_enqueued": true
+    },
+    "invalid_controls": 8,
+    "sticky_reset_phases": 24,
+    "causal_prefix_words_exact": 256
+  },
+  "physical_accounting": {
+    "method": "Report minimum view extents separately; deduplicate actual readonly parent identities in consumer ledger. No duplicate BCx owner.",
+    "representative_strided_buffers": [
+      {
+        "label": "tiny_bx1/strided",
+        "physical_owner_count": 3,
+        "physical_owner_bytes": 2114
+      },
+      {
+        "label": "tiny_cz3/strided",
+        "physical_owner_count": 4,
+        "physical_owner_bytes": 7836
+      },
+      {
+        "label": "tiny_words2/strided",
+        "physical_owner_count": 3,
+        "physical_owner_bytes": 4170
+      },
+      {
+        "label": "real_bx32/strided",
+        "physical_owner_count": 3,
+        "physical_owner_bytes": 262204
+      },
+      {
+        "label": "real_cz32/strided",
+        "physical_owner_count": 4,
+        "physical_owner_bytes": 328276
+      }
+    ],
+    "pipeline_admission_allowance_bytes": 67108864,
+    "pipeline_metadata_framework_capture_and_caller_owners_separate": true,
+    "whole_model_process_fit_established": false
+  },
+  "cold_checks": {
+    "commands": 6,
+    "fmt": true,
+    "strict_all_targets_clippy_default_and_metal": true,
+    "default": {
+      "passed": 450,
+      "ignored": 20
+    },
+    "metal": {
+      "passed": 541,
+      "ignored": 179
+    },
+    "release_opt_level": 3,
+    "release_debug_assertions": false
+  },
+  "gpu_owner": {
+    "jobs": 2,
+    "all_groups_closed": true,
+    "endpoint_errors": [],
+    "raw_log_bytes": 2138703,
+    "prospective_combined_log_bound_bytes": 2713662,
+    "per_stream_log_cap_bytes": 16777216,
+    "deadline_seconds": 300,
+    "total_cleanup_seconds": 30,
+    "usage_samples": [
+      21,
+      1
+    ],
+    "maximum_sparse_observed_rss_bytes": 24182784,
+    "complete_process_peak_or_model_fit_established": false,
+    "global_fsize_limit_used": false
+  },
+  "binary": {
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43",
+    "profile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": true
+    },
+    "bytes": 111862496,
+    "sha256": "4df5ade5230a426b055c5f302f4fb858f6899274b0e219a9a59ca5608ddac419"
+  },
+  "retained_binary": {
+    "executed_path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43",
+    "retained_copy": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4d4a-product-gpu-v1/retained-release-test-binary",
+      "bytes": 111862496,
+      "sha256": "4df5ade5230a426b055c5f302f4fb858f6899274b0e219a9a59ca5608ddac419"
+    },
+    "bytes_identical_after_success": true,
+    "actual_execution_from_retained_path": false,
+    "jobs": 2
+  },
+  "limits": [
+    "Standalone tested widths256/1024, rows1/2/3/32, offsets/strides and fixed cases only; no composed graph, real-model, application, phone or performance qualification.",
+    "Twenty-one/one live samples are sparse observations, not complete process peaks or a model memory qualification.",
+    "Eight invalid active output words are preserved but intentionally not numerically gated; all finite neighboring outputs, guards, immutable inputs and sticky/reset status are checked.",
+    "Preflight alias/extent rejection counts and command absence are captured test evidence; no underlying GPU buffer identifiers are fabricated. Physical allocations count shared read-only parents once."
+  ],
+  "evidence": {
+    "source_proposal": {
+      "path": "artifacts/new-goal-b4d4a-product-reference-proposal-v1/manifest.json",
+      "bytes": 3110,
+      "sha256": "76bb1afeb915181dab8ae735a3f0c200bd2c9de5ddda88e43e3348acfff8f124"
+    },
+    "source_review": {
+      "path": "artifacts/new-goal-b4d4a-product-independent-review-v1/prospective-review.json",
+      "bytes": 8114,
+      "sha256": "8d6fe398acd35c166f6953fc2ed77df36c575c8d011b2f282cac089d67c91c3c"
+    },
+    "source_jobs": {
+      "path": "artifacts/new-goal-b4d4a-product-source-checks-v1/checks.json",
+      "bytes": 8698,
+      "sha256": "9419a12a71f36b17daf4039718379b9156f52941065a0c4ee1392efbd7359c3a"
+    },
+    "saved_source_review": {
+      "path": "artifacts/new-goal-b4d4a-product-independent-review-v1/saved-source-review.json",
+      "bytes": 13343,
+      "sha256": "5b1f211937f19e8f520882ea0bd9e53e7f5acea0e369eecdbfc28f359012d46e"
+    },
+    "native_proposal": {
+      "path": "artifacts/new-goal-b4d4a-product-native-proposal-v1/manifest.json",
+      "bytes": 7968,
+      "sha256": "eef4316f34b671b86a1015e960f7cdf238d6f7427d5ffdc3fcd4323961ed9802"
+    },
+    "native_review": {
+      "path": "artifacts/new-goal-b4d4a-product-independent-review-v1/prospective-native-review.json",
+      "bytes": 12852,
+      "sha256": "95286f7cf76f8f8bf21882152bd5802e4643e03c4c217ac93163efd0c5520734"
+    },
+    "cold_release_checks": {
+      "path": "artifacts/new-goal-b4d4a-product-cold-checks-v1/checks.json",
+      "bytes": 881767,
+      "sha256": "9edab2b96248b7c062f238536ab1124e5442ad492db263b95d36ce1cf5a49833"
+    },
+    "gpu_package": {
+      "path": "artifacts/new-goal-b4d4a-product-gpu-v1/package.json",
+      "bytes": 1471384,
+      "sha256": "e90606f3f9cafd9527b4930dfc8a11905979595b718f32db4ccacefbd8752c51"
+    },
+    "gpu_approval": {
+      "path": "artifacts/new-goal-b4d4a-product-gpu-v1/prospective-review.json",
+      "bytes": 3520,
+      "sha256": "ec30f4d2dc3c61957829479921539f2eef89943231669c99d760eb1ecc967fff"
+    },
+    "gpu_run": {
+      "path": "artifacts/new-goal-b4d4a-product-gpu-v1/gpu.json",
+      "bytes": 1285693,
+      "sha256": "0ce3ac1bea18d1988db6cddb2e1cff20293f9855a677d28f8adc0a44a73fc9e3"
+    },
+    "raw_qualification": {
+      "path": "artifacts/new-goal-b4d4a-product-independent-review-v1/postrun-evidence-review.json",
+      "bytes": 1306510,
+      "sha256": "e6575f985f75f9f82ad448b79fccb6de1e3843d2dc8085f600ea8989eb1e0b49"
+    },
+    "retained_binary_record": {
+      "path": "artifacts/new-goal-b4d4a-product-gpu-v1/retained-binary.json",
+      "bytes": 482,
+      "sha256": "57731d111989d7a662b79c00fab20e34e86bc1e9f3bf95028c12bd71196b8062"
+    },
+    "transport_reuse": {
+      "path": "artifacts/new-goal-b4d4a-product-gpu-v1/transport-reuse.json",
+      "bytes": 1037,
+      "sha256": "4a5b6b17241babf802ad3d03f10165fb0bd9ec70b841e61fe1e2454b071d3578"
+    },
+    "fixture_manifest": {
+      "path": "tests/fixtures/strided-half-product-v1/manifest.json",
+      "bytes": 12042,
+      "sha256": "294a521b372897eef69fe9670f979f3e582abc3ca58570331a27b666d652e0d6"
+    },
+    "source_protocol": {
+      "path": "tests/fixtures/strided-half-product-v1/protocol.json",
+      "bytes": 3867,
+      "sha256": "eb77913b363e5ba0b58fb7bebfb84adf1137da412c48bf98f2202801b79da8d6"
+    }
+  },
+  "whole_graph_qualified": false,
+  "real_model_qualified": false,
+  "performance_qualified": false
+}

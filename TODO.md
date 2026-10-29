@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4d4a — strided Half products, then the resident tiny mixed graph**.
+Next implementation task: **B4d4b — independent tiny Half mixed-graph source**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -229,6 +229,11 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
   - [x] B4d3: [multi-KV staged attention/cache](docs/staged-gqa-half.md) views,
     checked physical accounting and all-query/source/state/legacy Mac qualification.
   - [ ] B4d4: resident tiny mixed graph, whole-step status/publication/recovery.
+    - [x] B4d4a: [strided B*x/C*z products](docs/strided-half-product.md);
+      independent source, borrowed native wrapper and Mac release checks pass.
+    - [ ] B4d4b: independent tiny Half mixed-graph source with accurate
+      original-FP32 affine rounding and complete state/stage fixtures.
+    - [ ] B4d4c: concrete resident graph and all-owner publication/recovery.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
   text/session and actual process-memory checks before any support claim.
   - [x] B4e1: authenticate complete original weights and all eight cached metadata
@@ -466,3 +471,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | D3 reviewed native extension and full cold checks | Astra approves the nine-file successor after terminal raw capture is moved before metadata rejection assertions. All six parent jobs pass: formatting, strict default/Metal all-target Clippy,450default/539Metal tests and optimized release freeze. | Separate new4-job16MiB and legacy7-job64MiB packages retain complete known legacy logs; no pruning. Mac GPU qualification remains pending. |
 | 2026-10-29 | D3 all eleven release GPU jobs pass | Four new all-query GQA/cache and seven existing attention/cache/tiny-Gemma jobs pass with closed groups and unchanged binary/source/gates. New raw logs total39,103,956B; full legacy logs96,364,008B. Exact tested executable is retained before future Cargo rebuilds. | Independent saved-raw numerical/physical-state qualification and exact staged review remain before task closure/commit. |
 | 2026-10-29 | B4d3 standalone GQA/cache qualified | Astra independently gates1,978,360 new MAIN values,119 raw records/98 submissions, complete per-head physical/cache/recovery state and seven legacy jobs. All100 observed release allocation boundaries are zero. | [GQA/cache report](docs/staged-gqa-half.md); source/target/gates unchanged. Six-owner fault workload is64, single-owner cases reach544; resident mixed graph and real model remain open. |
+| 2026-10-29 | B4d3 reviewed commit / D4a starts | Exact22-file Astra approval and all parent checks pass; multi-KV attention/cache committed as`0effda1`. Next independent strided-product source covers both B*x/C*z views into one physical BCx owner. | Prospective five cases/67,072 values per profile, fixed store witnesses and120s/256MiB source bounds. No new product/kernel or mixed-graph qualification yet. |
+| 2026-10-29 | D4a product source controls/replay pass | Reviewed source and bounded owner pass eight controls plus exact four-file export/replay: five cases/17arrays/738,248B. Explicit same-parent readonly views, offsets/guards, signed/subnormal/RNE/overflow and invalid-zero-counterpart controls remain fixed. | Astra saved-array audit pending before fixture/native qualification; no graph or performance claim. |
+| 2026-10-29 | D4a strided-product source qualified | Astra's independent integer-dyadic/RNE audit exactly reconstructs67,072 words in each profile,234,980 physical input words,67,240 physical output words,96partition boundaries and all store/invalid controls. Exact six-file fixture promoted. | tests/fixtures/strided-half-product-v1; native wrapper/release checks remain. B4d4 is split into product, independent Half tiny source and concrete resident graph to track actual remaining work. |
+| 2026-10-29 | B4d4a standalone strided product qualified | Reviewed four-file native leaf, full450/541 checks and both optimized GPU jobs pass. Astra independently reconstructs347,384 finite outputs exactly, including342,784 MAIN/WIDE comparisons,133raw/128submissions, guards/readonly parents,96boundaries and10zeroencodes. | [Product report](docs/strided-half-product.md); no existing shader changes. Exact staged review/commit follows, then approved independent Half graph source. No model transaction or performance claim. |

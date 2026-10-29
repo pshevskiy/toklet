@@ -1,0 +1,106 @@
+{
+  "exact_a": [
+    0,
+    32768,
+    1,
+    1,
+    3,
+    32769,
+    32769,
+    31743,
+    15361,
+    48128
+  ],
+  "exact_b": [
+    48128,
+    48128,
+    15360,
+    14336,
+    14336,
+    15360,
+    14336,
+    15360,
+    15361,
+    0
+  ],
+  "exact_result": [
+    32768,
+    0,
+    1,
+    0,
+    2,
+    32769,
+    32768,
+    31743,
+    15362,
+    32768
+  ],
+  "invalid": [
+    {
+      "column": 255,
+      "name": "a_nan",
+      "other_word": 0,
+      "row": 1,
+      "view": "a",
+      "word": 32257
+    },
+    {
+      "column": 255,
+      "name": "a_positive_inf",
+      "other_word": 0,
+      "row": 1,
+      "view": "a",
+      "word": 31744
+    },
+    {
+      "column": 255,
+      "name": "a_negative_inf",
+      "other_word": 0,
+      "row": 1,
+      "view": "a",
+      "word": 64512
+    },
+    {
+      "column": 255,
+      "name": "b_nan",
+      "other_word": 0,
+      "row": 1,
+      "view": "b",
+      "word": 32257
+    },
+    {
+      "column": 255,
+      "name": "b_positive_inf",
+      "other_word": 0,
+      "row": 1,
+      "view": "b",
+      "word": 31744
+    },
+    {
+      "column": 255,
+      "name": "b_negative_inf",
+      "other_word": 0,
+      "row": 1,
+      "view": "b",
+      "word": 64512
+    },
+    {
+      "column": 255,
+      "name": "positive_half_overflow",
+      "other_word": 16384,
+      "row": 1,
+      "view": "a",
+      "word": 31743
+    },
+    {
+      "column": 255,
+      "name": "negative_half_overflow",
+      "other_word": 16384,
+      "row": 1,
+      "view": "a",
+      "word": 64511
+    }
+  ],
+  "invalid_base_case": "tiny_words2",
+  "invalid_output_bits_not_a_gate": true
+}

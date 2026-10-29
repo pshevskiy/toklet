@@ -189,6 +189,10 @@ B5 app/context/adoption gates remain open. Next use strided products for both
 BCx convolution gates, then compose the existing blocks with one mixed-state
 publication boundary; leaf tests do not imply whole-model support.
 
+The [strided Half product](strided-half-product.md) is now separately qualified
+for both shared-BCx uses. The independent tiny Half graph source and concrete
+mixed-state transaction remain the next two B4 tasks.
+
 ## Research references
 
 Astra inspected these primary implementations for design patterns. This plan

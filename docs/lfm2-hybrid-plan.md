@@ -241,3 +241,18 @@ activation blocks are reused. Then freeze an independent Half tiny-graph source
 before concrete resident mixed-state publication/recovery. The scalar graph's
 outputs alone are not a Half reference. Avoid a generic graph VM or new fused
 model-specific kernels for these concrete uses.
+
+## B4d4a strided-product result
+
+The [borrowed strided Half product](strided-half-product.md) passes independent
+source, full cold checks and selected Mac release qualification for both BCx
+uses. Shared readonly parents are counted once and every writable alias rejects.
+Astra reconstructs all347,384 finite native outputs exactly, including342,784
+fixed MAIN/WIDE comparisons, padding,96 partition boundaries and10 zero-allocation
+encodes. The leaf stays test-only until the mixed graph owns it.
+
+B4d4b's separately approved protocol/source now targets the same original tiny
+container with exact integer-dyadic affine sums and direct Half/FP32 rounding.
+The twelve authored source controls and bounded export/replay remain before
+source qualification; neither scalar outputs nor native outcomes set its center.
+Then B4d4c composes the concrete mixed-state publication boundary.

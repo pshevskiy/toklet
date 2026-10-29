@@ -7597,3 +7597,36 @@ eight bytes in the current ABI, explicitly separated from physical buffers.
 The reviewer's process-local identity correction is preserved without target or
 gate changes. Next is reusable strided B*x/C*z, then the resident mixed graph;
 no real LFM2/app/context/performance/mobile support is inferred.
+
+The exact22-file GQA/cache task is committed as`0effda1` after final Astra
+approval. D4a starts with a small independently frozen strided-product source:
+both convolution gates borrow the same BCx parent, with no split/copied B/C/x
+owners. Five prospective cases/67,072 values per profile pin finite products,
+signed/subnormal stores, readonly aliasing and checked physical extents before
+native outcomes. Source review/execution and the native consumer remain open.
+
+D4a's source and bounded owner pass Astra review, eight portable controls and
+four-file exact export/replay. Five cases retain17arrays/738,248B and67,072
+outputs per profile. Physical readonly aliasing, nonzero offsets, last-row/guard
+extents and finite validation even against zero are fixed before native work.
+Independent saved-array review remains before declaring source qualification.
+
+Astra's saved-source audit exactly reconstructs both67,072-word product profiles
+using independent integer-dyadic/RNE arithmetic,234,980 physical input words,
+67,240 physical outputs including168 canaries,11 schedules/96 boundaries and
+64,256 causal-prefix words. All10 store witnesses and eight invalid controls
+pass. The six-file fixture is promoted without byte transformation. The native
+product and later mixed graph remain pending; the checklist now names those
+separate steps explicitly.
+
+[Native strided Half product](strided-half-product.md) qualifies on Apple M1 Pro
+without modifying existing shaders. The wrapper resolves checked view extents,
+permits readonly BCx parent identity and rejects writable/status aliases before
+encoding. Actual unique-owner accounting avoids duplicate B/x buffers. Full
+checks pass450default/541Metal tests and both optimized GPU jobs. Astra exactly
+reconstructs347,384 finite outputs, including342,784 MAIN/WIDE comparisons,
+133raw/128submissions,1,749 canaries,96 partition boundaries,24 invalid/sticky/
+reset phases and10 allocation-free Rust encodes. No graph or performance claim.
+The next independent Half graph source uses the original packed container and
+uniform exact-dyadic projections; analytic witnesses prove each Bx/Conv/Cz store
+matters before any source export or target outcome.

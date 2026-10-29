@@ -23,6 +23,8 @@ mod staged_attention;
 mod staged_cache;
 #[cfg(test)]
 mod staged_gqa_fixture;
+#[cfg(test)]
+mod strided_half_product;
 pub use capture::Capture;
 pub mod gemma3;
 pub mod gemma_affine;
