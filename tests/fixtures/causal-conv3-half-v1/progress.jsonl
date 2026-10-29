@@ -1,0 +1,24 @@
+{"case": "hand", "started": true}
+{"case": "hand", "complete": true, "arrays_end": 366}
+{"case": "tail1", "started": true}
+{"case": "tail1", "complete": true, "arrays_end": 588}
+{"case": "tail2", "started": true}
+{"case": "tail2", "complete": true, "arrays_end": 846}
+{"case": "tail3", "started": true}
+{"case": "tail3", "complete": true, "arrays_end": 1140}
+{"case": "tail32", "started": true}
+{"case": "tail32", "complete": true, "arrays_end": 2478}
+{"case": "tiny1", "started": true}
+{"case": "tiny1", "complete": true, "arrays_end": 10732}
+{"case": "tiny32", "started": true}
+{"case": "tiny32", "complete": true, "arrays_end": 66788}
+{"case": "real2", "started": true}
+{"case": "real2", "complete": true, "arrays_end": 105768}
+{"case": "real3", "started": true}
+{"case": "real3", "complete": true, "arrays_end": 150898}
+{"case": "real32", "started": true}
+{"case": "real32", "complete": true, "arrays_end": 374378}
+{"case": "stores", "started": true}
+{"case": "stores", "complete": true, "arrays_end": 374600}
+{"case": "zero_coeff", "started": true}
+{"case": "zero_coeff", "complete": true, "arrays_end": 374894}

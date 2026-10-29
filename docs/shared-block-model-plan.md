@@ -146,7 +146,7 @@ B4a's strict LFM2 cold plan and B4b's standalone scalar history are complete.
 See the [cold report](lfm2-cold-plan.md) and [history report](short-conv3-history.md).
 B4c's [independent tiny scalar hybrid](lfm2-scalar-hybrid.md) now passes. Next is
 B4d's resident leaf/composition qualification: [direct-gain Half RMS](lfm2-half-rms.md)
-now passes; raw convolution and multi-KV staging remain next. Real runtime
+and [raw Conv3](causal-conv3-half.md) now pass; multi-KV staging remains next. Real runtime
 admission stays pending through B4d–e.
 
 | Task | Concrete delivery | Required checks |

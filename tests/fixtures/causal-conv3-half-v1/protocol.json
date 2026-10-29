@@ -1,0 +1,139 @@
+{
+  "admission": {
+    "coefficient": "channel-major three taps",
+    "input_output_stride": "at least width",
+    "old_candidate": "packed two rows",
+    "rows": [
+      1,
+      32
+    ],
+    "widths": [
+      5,
+      256,
+      1024
+    ]
+  },
+  "candidate": {
+    "dispatch": "Only first H global linear IDs write candidate; each writes BOTH rows. Never every thread with id%H<H. Old immutable; no publication claim.",
+    "rows1": [
+      "old row1",
+      "u row0"
+    ],
+    "rows2_or_more": [
+      "u row T-2",
+      "u row T-1"
+    ]
+  },
+  "cases": [
+    [
+      "hand",
+      5,
+      5,
+      "hand"
+    ],
+    [
+      "tail1",
+      1,
+      5,
+      "seed"
+    ],
+    [
+      "tail2",
+      2,
+      5,
+      "seed"
+    ],
+    [
+      "tail3",
+      3,
+      5,
+      "seed"
+    ],
+    [
+      "tail32",
+      32,
+      5,
+      "seed"
+    ],
+    [
+      "tiny1",
+      1,
+      256,
+      "seed"
+    ],
+    [
+      "tiny32",
+      32,
+      256,
+      "seed"
+    ],
+    [
+      "real2",
+      2,
+      1024,
+      "seed"
+    ],
+    [
+      "real3",
+      3,
+      1024,
+      "seed"
+    ],
+    [
+      "real32",
+      32,
+      1024,
+      "seed"
+    ],
+    [
+      "stores",
+      1,
+      5,
+      "stores"
+    ],
+    [
+      "zero_coeff",
+      3,
+      5,
+      "zero"
+    ]
+  ],
+  "exact_controls": [
+    "asymmetric hand-computed oldest/middle/current taps with nonzero history",
+    "delayed Half store: 1+2^-11+2^-11 gives0x3c01 not0x3c00",
+    "direct BF16 coefficients2^-25 times ones sum toHalf0x0002, narrowing coefficients gives0",
+    "signed minsub +/-0x0001 and all-negative-zero\u21920x8000",
+    "zero coefficients outputzero but candidate must retain nonzero rawu",
+    "T1 copies BOTH rows; T2 replaces both; T3/32 only raw lasttwo"
+  ],
+  "format": "toklet-causal-conv3-half-protocol-v1",
+  "gate": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "granularity": "per exact case output array",
+    "rtol": 0.001,
+    "wide": "diagnostic only"
+  },
+  "invalid": "9 operand/intermediate/output controls; invalid output words are retained by native consumer but never source equality gates",
+  "output_values_per_profile": 46571,
+  "physical": {
+    "coefficient_guard_word": "0x5a170031",
+    "guard": 7,
+    "input_padding_word": "0x7e55",
+    "input_stride": "H+3",
+    "old_candidate_guard_word": "0x5a17",
+    "output_canary_word": "0x5a17",
+    "output_stride": "H+5"
+  },
+  "precision": {
+    "coefficients": "original finite BF16 widened exactly to F32; no Half narrowing",
+    "domain": "finite active inputs, all FP32 products/partial sums and final Half required; WIDE shares this admitted MAIN domain; no overflow cancellation rescue, clamp or generic FTZ",
+    "main": "p0=F32(oldest*c0), p1=F32(middle*c1), p2=F32(current*c2); s01=F32(p0+p1); z=F32(s01+p2); Half RNE(z); no initial+0, no FMA, no Half products",
+    "signed_zero": "exact state copies preserve sign bits; exact store witnesses include -0; general output comparisons numerical +/-0 equivalent; full/chunk same-profile output words compared exactly",
+    "wide": "same stored operands; separately evaluated FP64 p0,p1,p2; FP64(p0+p1) then FP64(s01+p2), one Half RNE; diagnostic only"
+  },
+  "scope": "standalone NativeHalf raw causal depthwise3 and candidate recipe; no B*x/C*z fusion, resident state publication, graph, model, quality or performance",
+  "source_export_executed": false,
+  "target_gpu_executed": false
+}

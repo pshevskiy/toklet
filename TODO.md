@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4d2 — resident causal three-tap convolution and raw history**.
+Next implementation task: **B4d3 — multi-KV staged attention/cache source and native extension**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -223,7 +223,9 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
 - [ ] B4d: resident block/composition, allocation/ownership and recovery checks.
   - [x] B4d1: [direct-gain Half RMS](docs/lfm2-half-rms.md) at epsilon1e-5,
     head64 up to512 rows and hidden256/1024; source/release Mac/legacy checks pass.
-  - [ ] B4d2: borrowed three-tap Half convolution and transactional raw history.
+  - [x] B4d2: [borrowed three-tap Half convolution](docs/causal-conv3-half.md)
+    with immutable old history and exact separate candidates; full source/GPU checks.
+    Model-wide transaction publication remains B4d4.
   - [ ] B4d3: actual multi-KV staged attention/cache views and accounting.
   - [ ] B4d4: resident tiny mixed graph, whole-step status/publication/recovery.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
@@ -455,3 +457,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4d1 cold/release pass and GPU launch | All6 cold/build jobs pass450 default/534 Metal-feature tests, strict Clippy/formatting and optimized release freeze. Astra reviews v3 launch with consumed-byte JSON identity, bounded logs and exact frozen binary; seven reader controls pass. Five literal GPU jobs start. | Earlier unrun owner drafts/AST failure retained. Same numerical source, fixtures and gates; GPU raw-data qualification still pending. |
 | 2026-10-29 | D1 first GPU wrapper failure / pipe correction | First v3 job exitsSIGXFSZ before raw RMS/gate output;116B stdout/0stderr and closed group retained. Both Astra agents identify process-wide file-cap scope; exact incidental write remains unknown. V4 caps only two pipes with unchanged binary/data/gates, and four actual CPU transport controls pass. | V3 failure preserved; v4 hardware launch awaits reviewed current package. No numerical outcome or tolerance change. |
 | 2026-10-29 | B4d1 standalone Mac RMS qualified | All5 reviewed release jobs pass; Astra exactly rescores150,016 normal+640 recovery LFM values,108,544 legacy normal+192 recovery+64 subnormal words, guards/status and26 zero-allocation encodes. Cold450/534 and source gates unchanged. | [RMS report](docs/lfm2-half-rms.md); exact staged review/commit, then borrowed convolution. Sparse observations are not process peaks; real model/GQA/app remain open. |
+| 2026-10-29 | B4d1 reviewed native RMS commit / D2 starts | Exact17-file Astra review passes; standalone native RMS task committed as`7ef4cab`. Next raw conv3 source fixes original BF16 coefficients, explicit FP32 tap order/Half store and exact two-row raw-u candidates. | Peer catches the T1 dispatch requirement: each channel writes both candidate rows. No convolution implementation or hardware outcome yet. |
+| 2026-10-29 | B4d2 independent raw Conv3 source qualified | Eight portable controls and exact four-file export/replay pass. Astra reconstructs46,571 MAIN/WIDE outputs,7,238 exact candidate words,10,857 original BF16 coefficients and233 boundaries across35 schedules. | Frozen fixture at tests/fixtures/causal-conv3-half-v1; native operator/consumer and GPU/status/ownership qualification remain pending. |
+| 2026-10-29 | B4d2 raw native Conv3 qualified | Source8controls/35schedules and full450/536 cold checks pass. Astra independently reconstructs312,670 exact valid outputs across274commands/286captures, all233chunk boundaries, candidate bits, guards/status and24zero-allocation encodes. | [Conv3 report](docs/causal-conv3-half.md); exact staged review/commit, then all-query multi-KV source. Unrun missing-log-cap draft retained; no numerical changes or model transaction claim. |

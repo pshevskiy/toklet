@@ -213,3 +213,16 @@ immutable old[2,H] and a separate candidate[2,H]. Preserve separate FP32 product
 and oldest-to-current sums before a Half output store. B*x/C*z and model-wide
 publication are later concrete composition work; do not prematurely fuse these
 into a new model-specific kernel. Multi-KV staging remains B4d3.
+
+## B4d2 raw Conv3 result
+
+The [borrowed raw Half Conv3 leaf](causal-conv3-half.md) passes selected Mac
+release qualification, exact candidates and all233 source chunk boundaries.
+Only stored rawu, direct FP32-widened BF16 tap coefficients, output/candidate and
+sticky status are involved; B*x/C*z and model-wide publication remain later.
+
+B4d3's all-query source is fixed prospectively at11cases/143arrays/22,405,366raw
+bytes, including all32 deep queries at Q16/KV8/D64. Preserve fixed32-row head
+strides and qualify each head's active fill/validation/copy intervals. A small
+sampling draft is superseded planning with no outcomes. The existing Reference
+arithmetic/legacy behavior remains the target, not a new attention algorithm.

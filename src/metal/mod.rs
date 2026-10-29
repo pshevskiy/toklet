@@ -3,6 +3,8 @@
 //! outside GPU execution. A chunk has one completion boundary, not per-op waits.
 mod capture;
 #[cfg(test)]
+mod causal_conv3_half;
+#[cfg(test)]
 mod compensated_attention;
 mod diagnostic;
 #[cfg(test)]

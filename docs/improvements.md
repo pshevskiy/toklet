@@ -7539,3 +7539,24 @@ zero-allocation encodes pass. Six cold/build jobs pass450 default/534 Metal
 checks. The failed global-file-cap wrapper is retained and corrected through
 reviewed pipe-only transport with identical numerical binary/data/gates. Sparse
 memory samples establish no peak or model fit. Next is the raw convolution leaf.
+
+Native RMS qualification is committed as `7ef4cab` after exact17-file Astra
+approval. D2 now freezes the reusable raw conv3 contract, retaining immutable old
+history and exact candidate suffix. The adviser flags the one-token dispatch
+case before implementation: a channel thread must write both candidate rows.
+
+D2's independent raw Half conv3 source passes eight controls and exact replay.
+Astra reconstructs every46,571 output word per profile and7,238 raw candidate
+words, plus all35 partition schedules/233 boundaries. The source fixes explicit
+FP32 products/adds, direct BF16 coefficients, signed-zero/store witnesses and
+nine invalid domains before native outcomes. Operator and transaction support
+remain unqualified until the separate hardware journey passes.
+
+[Raw native Half Conv3](causal-conv3-half.md) qualifies on Apple M1 Pro using
+explicit FP32 tap order and exact UInt16 raw candidate copies. Astra reconstructs
+312,670 valid outputs and every candidate bit across274commands/286captures,
+35schedules/233boundaries, with immutable old/input/coefficient state, guards,
+nine invalid/sticky/reset sites and24zero-Rust-allocation encodes. Full cold
+checks pass450default/536Metal tests. A controller-only missing constant is caught
+before launch and fixed without changing numerical source, gates or binary.
+This is a universal raw leaf; model transaction, GQA and real inference remain.

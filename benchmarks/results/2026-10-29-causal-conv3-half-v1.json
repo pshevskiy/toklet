@@ -1,0 +1,196 @@
+{
+  "format": "toklet-causal-conv3-half-result-v1",
+  "date": "2026-10-29",
+  "status": "selected_standalone_mac_native_conv3_qualified",
+  "device": "Apple M1 Pro",
+  "scope": "Raw borrowed three-tap Half convolution only; no resident model transaction",
+  "profile": {
+    "widths": [
+      5,
+      256,
+      1024
+    ],
+    "rows": [
+      1,
+      32
+    ],
+    "input_history": "Original stored Half u; immutable old[2,H]",
+    "coefficients": "Original BF16 widened exactly to FP32, [H,3] oldest-to-current",
+    "arithmetic": "Separate FP32 p0,p1,p2 then (p0+p1)+p2; no contraction; one Half output",
+    "candidate": "Exact UInt16 raw last-two suffix, first H global IDs each write both rows",
+    "finite_intermediates_checked": true,
+    "state_publication": false,
+    "fused_Bx_or_Cz": false
+  },
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "rtol": 0.001,
+    "fatal_reference": "main",
+    "changed_after_target": false
+  },
+  "source": {
+    "cases": 12,
+    "controls": 8,
+    "outputs_per_profile": 46571,
+    "candidate_words": 7238,
+    "original_bf16_coefficients": 10857,
+    "partition_schedules": 35,
+    "chunk_boundaries": 233,
+    "invalid_controls": 9,
+    "four_file_exact_replay": true
+  },
+  "native": {
+    "submissions": 274,
+    "raw_captures": 286,
+    "normal_source_comparisons": 93142,
+    "partition_source_comparisons": 219388,
+    "recovery_source_comparisons": 90,
+    "causal_pair_outputs_independently_reconstructed": 50,
+    "valid_outputs_total": 312670,
+    "all_valid_words_exact": true,
+    "max_error": 0.0,
+    "candidate_words_normal_partition": 200750,
+    "candidate_words_causal": 20,
+    "candidate_words_recovery": 180,
+    "causal_equal_prefix_words": 20,
+    "schedules": 35,
+    "boundaries": 233,
+    "invalid_sticky_reset_phases": 27,
+    "invalid_sites": 9,
+    "release_zero_rust_encode_measurements": 24,
+    "old_input_coefficients_immutable": true,
+    "guard_status_and_candidate_checks": true
+  },
+  "invalid_control_limitation": "Partial-sum overflow also overflows Half WIDE output; status alone does not isolate intermediate validation. Explicit shader checks independently reviewed.",
+  "cold_checks": {
+    "commands": 6,
+    "fmt": true,
+    "strict_all_targets_clippy_default_and_metal": true,
+    "default": {
+      "passed": 450,
+      "ignored": 20
+    },
+    "metal_feature": {
+      "passed": 536,
+      "ignored": 173
+    },
+    "release_opt_level": 3,
+    "release_debug_assertions": false
+  },
+  "gpu_owner": {
+    "jobs": 2,
+    "all_groups_closed": true,
+    "endpoint_errors": [],
+    "raw_log_bytes": 3347784,
+    "pre_run_stdout_bound_bytes": 4521573,
+    "per_stream_log_cap_bytes": 16777216,
+    "deadline_seconds": 300,
+    "usage_samples": [
+      16,
+      1
+    ],
+    "maximum_sparse_observed_rss_bytes": 20529152,
+    "complete_process_peak_or_model_fit_established": false,
+    "global_fsize_limit_used": false
+  },
+  "controller_hold_preserved": {
+    "first_draft_executed": false,
+    "issue": "LOG_CAP omitted during adaptation",
+    "correction": "Restore fixed16MiB constant; verify both global bounds and seven supervision function ASTs against qualified base",
+    "numeric_binary_source_gates_changed": false
+  },
+  "binary": {
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43",
+    "profile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": true
+    },
+    "bytes": 89573120,
+    "sha256": "126be2c35cb3ff933efd280ce022f988df0e13162e2d061f9092cfb86f0c5330"
+  },
+  "evidence": {
+    "source_proposal": {
+      "path": "artifacts/new-goal-b4d2-conv-reference-proposal-v1/manifest.json",
+      "bytes": 3330,
+      "sha256": "cc5820805600a9637dd4ca8926901f6acab85f02448d55bc4d944a93801e385d"
+    },
+    "source_review": {
+      "path": "artifacts/new-goal-b4d2-conv-independent-review-v1/prospective-review.json",
+      "bytes": 4199,
+      "sha256": "1c76e7c2906ceaff497635c18e1cc7c105a67f6982f25de1c59118360eefa252"
+    },
+    "source_jobs": {
+      "path": "artifacts/new-goal-b4d2-conv-source-checks-v1/checks.json",
+      "bytes": 7616,
+      "sha256": "bb58a4759f4a1f4d95e5f167c34c27a695e20c1ee3149f226029614b01bebe41"
+    },
+    "saved_source_review": {
+      "path": "artifacts/new-goal-b4d2-conv-independent-review-v1/saved-source-review.json",
+      "bytes": 6596,
+      "sha256": "4061e29399899d8a65fcb2a21d3c79826df7b95f00174aade821b339694a1e5c"
+    },
+    "native_proposal": {
+      "path": "artifacts/new-goal-b4d2-conv-native-proposal-v1/manifest.json",
+      "bytes": 6651,
+      "sha256": "192a50d1bc6deb687ea315415a0a691b428212bdaf16c25de22c49ad7e675fb7"
+    },
+    "native_review": {
+      "path": "artifacts/new-goal-b4d2-conv-independent-review-v1/prospective-native-review.json",
+      "bytes": 5366,
+      "sha256": "392e02d1524204b23977ea748126778c54dc880f2d7dd9b8ef8fbc588c7998c0"
+    },
+    "cold_release_checks": {
+      "path": "artifacts/new-goal-b4d2-conv-cold-checks-v1/checks.json",
+      "bytes": 877520,
+      "sha256": "8502033623184ca1f3af69ca6347818e183a34a90a0aef05b831069cb4135bac"
+    },
+    "gpu_package": {
+      "path": "artifacts/new-goal-b4d2-conv-gpu-v2/package.json",
+      "bytes": 1467320,
+      "sha256": "b4d13bc7b572bf5d2fec69d62bc6e1ea226aa5e770497060de3b4aa863f2965d"
+    },
+    "gpu_approval": {
+      "path": "artifacts/new-goal-b4d2-conv-gpu-v2/prospective-review.json",
+      "bytes": 3004,
+      "sha256": "3a2093681e7c9e9ec78769a5707f693ab6bbe0f7f152d7d2948f526d6064f01e"
+    },
+    "gpu_run": {
+      "path": "artifacts/new-goal-b4d2-conv-gpu-v2/gpu.json",
+      "bytes": 1281601,
+      "sha256": "53df61ddfd33bffb4214b98ecd0cfa1bfc0404710062abdeaf35f7ca2b3042df"
+    },
+    "raw_qualification": {
+      "path": "artifacts/new-goal-b4d2-conv-independent-review-v1/postrun-evidence-review.json",
+      "bytes": 5515,
+      "sha256": "ed4b6d52b92d68e40176bce3f6aabe69b36bbb54a80ca069f504de4d50a2793c"
+    },
+    "unrun_controller_hold": {
+      "path": "artifacts/new-goal-b4d2-conv-gpu-v1/independent-hold-review.json",
+      "bytes": 1504,
+      "sha256": "5d1d08d7bfe2f97666fc142ff37f9bf22c0aeabfdbd6565192980701e3ea0ddb"
+    },
+    "retained_binary_record": {
+      "path": "artifacts/new-goal-b4d2-conv-gpu-v2/retained-binary.json",
+      "bytes": 499,
+      "sha256": "a15de0ab7a690cbb76df584e22818ac0a76f6e646826028d7672a6c74836f247"
+    },
+    "fixture_manifest": {
+      "path": "tests/fixtures/causal-conv3-half-v1/manifest.json",
+      "bytes": 126434,
+      "sha256": "ca946c68bce4b38bcf231a6e8a1f55dfa86ed7dc9719667c087414404cc867cc"
+    }
+  },
+  "remaining": [
+    "Multi-KV staged attention/cache and strided binary products",
+    "Resident tiny mixed graph and publication/recovery",
+    "Bounded real LFM source/native/text/memory qualification",
+    "Context/app/full adoption quality and separate device evidence"
+  ],
+  "whole_graph_qualified": false,
+  "real_model_qualified": false,
+  "performance_qualified": false
+}
