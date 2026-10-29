@@ -1,0 +1,397 @@
+{
+  "format": "toklet-lfm2-real-composition-result-v1",
+  "date": "2026-10-29",
+  "base_revision": "a85f143",
+  "task": "M8 B4e3b: selected-real resident composition and existing Tiny regressions",
+  "status": "selected_real_cold_composition_and_two_tiny_regressions_qualified_real_execution_pending",
+  "source_files": [
+    {
+      "path": "src/metal/lfm2.rs",
+      "bytes": 33451,
+      "sha256": "11647ea2fd6eaede167a46b89ec62b16aab437ba1a3c27c9549932432864ddfd"
+    },
+    {
+      "path": "src/metal/lfm2/forward.rs",
+      "bytes": 13900,
+      "sha256": "f281065ccd228ab542986886d9f7e0aa69c77c685c6c660a068da00b0ef5e8fa"
+    },
+    {
+      "path": "src/metal/lfm2/snapshots.rs",
+      "bytes": 13196,
+      "sha256": "9eb0229190b2e2eff69c6a5558665dc7145d5b88c99733b619c18b624e151ead"
+    },
+    {
+      "path": "src/metal/lfm2/tests.rs",
+      "bytes": 11431,
+      "sha256": "827d84f8002b373312ecf0dc048b786c2f26494c06dd01b32def7a11aacafa5a"
+    },
+    {
+      "path": "src/metal/lfm2/gpu_tests.rs",
+      "bytes": 41753,
+      "sha256": "f5d40ba58d6b19d609ee044e38f37108545c43c8d0171217ec4300371055b1ef"
+    }
+  ],
+  "composition": {
+    "tiny": {
+      "hidden": 256,
+      "intermediate": 256,
+      "vocabulary": 64,
+      "layers": 3,
+      "attention_owners": 1,
+      "convolution_owners": 2,
+      "capacity": 12,
+      "diagnostic_stages": 57
+    },
+    "selected_real": {
+      "hidden": 1024,
+      "intermediate": 4608,
+      "vocabulary": 65536,
+      "layers": 16,
+      "attention_owners": 6,
+      "convolution_owners": 10,
+      "constructor_capacity": [
+        1,
+        512
+      ],
+      "diagnostic_stages": 293,
+      "model_buffers_predicted": 335,
+      "diagnostic_gpu_bytes_predicted": 54530796,
+      "diagnostic_host_bytes_predicted": 88080384
+    },
+    "view_bank_chunk_limit": 32,
+    "zero_bias_real_bytes_predicted": 131086,
+    "real_numeric_allocations_observed": false
+  },
+  "verification": {
+    "format": true,
+    "strict_default_and_metal_all_targets_clippy": true,
+    "default_tests": {
+      "passed": 457,
+      "ignored": 20
+    },
+    "metal_tests": {
+      "passed": 556,
+      "ignored": 181
+    },
+    "suite_counts_overlap": true,
+    "new_cold_controls": 4,
+    "release_metal_library_test_build": true,
+    "tiny_gpu_tests": 2,
+    "legacy_seven_jobs_rerun": false,
+    "real_model_executed": false
+  },
+  "commands": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/retained-release-test-binary",
+        "--exact",
+        "metal::lfm2::gpu_tests::resident_lfm2_all_stages_schedules_and_resources",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "pid": 68561,
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 26,
+      "observed_maxima": {
+        "resident_size": 43188224,
+        "phys_footprint": 35177120,
+        "lifetime_max_phys_footprint": 35177120
+      },
+      "retained_log_bytes": {
+        "stdout": 24670544,
+        "stderr": 0
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/retained-release-test-binary",
+        "--exact",
+        "metal::lfm2::gpu_tests::resident_lfm2_mixed_rollback_reset_and_zero_allocation",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "pid": 68573,
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 8,
+      "observed_maxima": {
+        "resident_size": 49463296,
+        "phys_footprint": 44335800,
+        "lifetime_max_phys_footprint": 44335800
+      },
+      "retained_log_bytes": {
+        "stdout": 30090938,
+        "stderr": 0
+      }
+    }
+  ],
+  "gpu_binary": {
+    "bytes": 115053456,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/retained-release-test-binary",
+    "profile": {
+      "debug_assertions": false,
+      "debuginfo": 0,
+      "opt_level": "3",
+      "overflow_checks": false,
+      "test": true
+    },
+    "sha256": "f6f8ca5389a2b0ce877cb712b78a78be11b813e54bc88db17b6f629e1b3a8005"
+  },
+  "owned_limits": {
+    "seconds_per_job": 300,
+    "process_sample_bytes": 6442450944,
+    "log_bytes_per_stream": 67108864,
+    "cleanup_seconds": 30,
+    "observations_are_not_complete_process_peaks": true
+  },
+  "retained_failures": [
+    {
+      "attempt": "cold_v1",
+      "cause": "strict Metal Clippy unused_enumerate_index; tests/release/GPU not reached",
+      "correction": "direct iteration, equivalent cfg(test) target identity"
+    },
+    {
+      "attempt": "gpu_v2",
+      "cause": "Unsupported no Metal device; ordinary sandbox first job fails before model construction, second job unrun",
+      "correction": "platform-approved escalated Metal access, exact retained binary/controller/source/workload/gates unchanged"
+    }
+  ],
+  "limitations": [
+    "Selected-real geometry and numeric owner sizing are cold implementation/predictions only; no real GPU model/forward has been executed",
+    "Only existing Tiny source/state/fault/allocation suites rerun; seven unchanged shared-cache/Gemma jobs retain their historical evidence",
+    "No ordinary model factory, app, Chat, device, full-window, adoption-quality or performance qualification",
+    "Sparse direct-process samples do not establish complete peak process memory or whole-app fit"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-proposal-v2/manifest.json",
+      "bytes": 17737,
+      "sha256": "60e788ec0343662c39ea8c51af44bc5b7c5eb9e7c78a877915aaca40735f571b"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-independent-review-v1/prospective-review.json",
+      "bytes": 21601,
+      "sha256": "4b2b733f247af7a01d7951d120ebd8187c323a404f60537062ea1e564ccc7b2f"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-independent-review-v1/prospective-v2-review.json",
+      "bytes": 6020,
+      "sha256": "4b5a9848d1a4dafcb66f469ddb4f015803799625c935a2f1e8841e34cf90544c"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-cold-checks-v1/checks.json",
+      "bytes": 884443,
+      "sha256": "05c4dfacffe602c947cc2825277995472dbc616e89c79922caa3f4d8af9897c7"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-cold-checks-v2/checks.json",
+      "bytes": 886772,
+      "sha256": "b6a08d3c6dad431475038e3b69efce19731bc9d98464d55594e020ea7e6c2554"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v2/prospective-review.json",
+      "bytes": 3720,
+      "sha256": "202e166e49d74b0145908d6648f52b23f8650d365d6c0eb25a298f71be2cc197"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v2/gpu.json",
+      "bytes": 1293475,
+      "sha256": "a623e2c67687b7ccd05ea5a40da9cab94513505cce3c657766c37cd4ff5037ac"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-independent-review-v1/device-unavailable-failure-review.json",
+      "bytes": 4490,
+      "sha256": "63be2b7a874f17121fecb8433f7d18e88fa7fc4d817b32db8a8649a8969b5fa5"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/package.json",
+      "bytes": 1480909,
+      "sha256": "d5d814d106aadf5072b04adfaded6c0d4bfd7b8973c52b5cbaace87eafa7ba18"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/prospective-review.json",
+      "bytes": 4772,
+      "sha256": "e2df64ba22a2a65bbd24feac99133163d923dca8320591f0aa7f2d4f53017741"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/environment-retry.json",
+      "bytes": 2038,
+      "sha256": "6969b8c3ae5bbd8be9305424e43ec5ec09f62e475304ea55b1056c438173173c"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/gpu.json",
+      "bytes": 1294096,
+      "sha256": "bfb7b0efca335427a8ba155d2a7f50e2649af8032835dff557166e681351ab5a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/hybrid_source.stdout",
+      "bytes": 24670544,
+      "sha256": "60f1e540451e17db9b2b62b595ed1733a88f26fcf39006575f151a1ff8db1d4a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/hybrid_source.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/hybrid_recovery.stdout",
+      "bytes": 30090938,
+      "sha256": "ecc9f85ddb1b9a1ca10d98277d1d470922a69538159b1eb5aa099d23c41dd47a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-gpu-proposal-v3/hybrid_recovery.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3b-composition-independent-review-v1/saved-evidence-review.json",
+      "bytes": 12929,
+      "sha256": "e1bbad04d7f49ea1eaf071a9fd35ecd645517861613dfada05379c13bb872978"
+    }
+  ],
+  "independent_saved_audit": {
+    "path": "artifacts/new-goal-b4e3b-composition-independent-review-v1/saved-evidence-review.json",
+    "bytes": 12929,
+    "sha256": "e1bbad04d7f49ea1eaf071a9fd35ecd645517861613dfada05379c13bb872978"
+  },
+  "numerical": {
+    "actual_boundary_states": {
+      "groups": 330,
+      "max_error": 6.103515625e-05,
+      "max_fraction": 0.030098723814110283,
+      "primary_main_failures": 0,
+      "values": 199936,
+      "wide_diagnostic_exceedances": 0,
+      "wide_max_fraction": 0.32144005143040827
+    },
+    "mathematical_stages": {
+      "groups": 3135,
+      "max_error": 6.103515625e-05,
+      "max_fraction": 0.030098723814110283,
+      "primary_main_failures": 0,
+      "values": 1923728,
+      "wide_diagnostic_exceedances": 0,
+      "wide_max_fraction": 0.3616636528028933
+    }
+  },
+  "independent_counts": {
+    "admission_rejections": 4,
+    "authenticated_model_owner_observations": 264,
+    "cache_physical_words": 1626048,
+    "exact_actual_history_suffix_words": 57090,
+    "exact_actual_kv_words": 621060,
+    "failed_candidate_words_reconstructed": 9342,
+    "first_copy_exact_changed_words": 128,
+    "full_failure_or_published_words_authenticated": 3750916,
+    "guard_words": 50199,
+    "history_physical_words": 298944,
+    "masked_positive_zeros": 1044,
+    "memory_owner_ledgers": 15,
+    "poison_forward_rejections": 1,
+    "recovery_success_history_words_exact": 87192,
+    "recovery_success_kv_words_exact": 474264,
+    "recovery_success_logit_words_exact": 10432,
+    "same_native_causal_words": 1618080,
+    "scratch_physical_words_reconstructed": 6710385,
+    "snapshot_physical_words_reconstructed": 25537875,
+    "state_records": 144,
+    "successful_recovery_forwards": 42,
+    "validator_rejections": 7
+  },
+  "publication_and_memory": {
+    "diagnostic_session": {
+      "admitted": 104534278,
+      "cache": 32600,
+      "cold_peak": 104534278,
+      "diagnostic_gpu": 938932,
+      "external": 33554432,
+      "framework": 67108864,
+      "history": 4152,
+      "logits": 16440,
+      "metadata": 10880,
+      "norms": 7932,
+      "packed": 746496,
+      "readback": 1855488,
+      "scratch": 250108,
+      "taps": 6200,
+      "tokens": 204,
+      "zero_bias": 1550
+    },
+    "difference_from_prior_tiny_run": {
+      "Rust_metadata_increase_bytes": 168,
+      "all_numeric_owner_sizes_unchanged": true,
+      "each_budget_mode_deltas": [
+        {
+          "admitted": 168,
+          "cold_peak": 168,
+          "metadata": 168
+        },
+        {
+          "admitted": 168,
+          "cold_peak": 168,
+          "metadata": 168
+        },
+        {
+          "admitted": 168,
+          "cold_peak": 168,
+          "metadata": 168
+        }
+      ]
+    },
+    "exact_budget_modes": [
+      {
+        "all_logits": false,
+        "diagnostics": false,
+        "kind": "memory",
+        "memory": "Memory { packed_weights: 746496, direct_norms: 7932, convolution_coefficients: 6200, zero_bias: 1550, cache: 32600, convolution_history: 4152, scratch: 250108, logits: 568, tokens: 204, diagnostic_gpu: 0, diagnostic_readback_reserved: 0, metadata: 6776, shared_framework_allowance: 67108864, external_resident: 33554432, admitted: 101719882, cold_peak: 101719882 }",
+        "required": 101719882
+      },
+      {
+        "all_logits": true,
+        "diagnostics": false,
+        "kind": "memory",
+        "memory": "Memory { packed_weights: 746496, direct_norms: 7932, convolution_coefficients: 6200, zero_bias: 1550, cache: 32600, convolution_history: 4152, scratch: 250108, logits: 16440, tokens: 204, diagnostic_gpu: 0, diagnostic_readback_reserved: 0, metadata: 6776, shared_framework_allowance: 67108864, external_resident: 33554432, admitted: 101735754, cold_peak: 101735754 }",
+        "required": 101735754
+      },
+      {
+        "all_logits": true,
+        "diagnostics": true,
+        "kind": "memory",
+        "memory": "Memory { packed_weights: 746496, direct_norms: 7932, convolution_coefficients: 6200, zero_bias: 1550, cache: 32600, convolution_history: 4152, scratch: 250108, logits: 16440, tokens: 204, diagnostic_gpu: 938932, diagnostic_readback_reserved: 1855488, metadata: 10880, shared_framework_allowance: 67108864, external_resident: 33554432, admitted: 104534278, cold_peak: 104534278 }",
+        "required": 104534278
+      }
+    ],
+    "model": {
+      "admitted": 67876570,
+      "cache": 0,
+      "cold_peak": 69973722,
+      "convolution_coefficients": 6200,
+      "convolution_history": 0,
+      "diagnostic_gpu": 0,
+      "diagnostic_readback_reserved": 0,
+      "direct_norms": 7932,
+      "external_resident": 0,
+      "logits": 0,
+      "metadata": 5528,
+      "packed_weights": 746496,
+      "scratch": 0,
+      "shared_framework_allowance": 67108864,
+      "tokens": 0,
+      "zero_bias": 1550
+    },
+    "session_owner_ids_unique_stable_in_logged_scope": true,
+    "status_scope": "Status contents, guard words and byte accounting verified; status address is omitted from the raw ID ledger. No claim that its address was independently checked."
+  },
+  "closure": {
+    "all_current_endpoint_errors_empty": true,
+    "current_cold_groups_closed": 6,
+    "current_gpu_groups_closed": 2,
+    "preserved_failed_gpu_group_closed": 1,
+    "source_groups_closed": 3
+  }
+}

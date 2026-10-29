@@ -158,7 +158,7 @@ fn numerical_ledger_includes_fused_parent_and_all_bank_owners() {
     );
     assert_eq!(extent(4 * B, CAP).unwrap() * 8, 12344);
     assert_eq!(4 * (2 * H + GUARD) * 2, 4152);
-    let (p, gpu, host, _) = snapshots::plan(true).unwrap();
+    let (p, gpu, host, _) = snapshots::plan(true, geometry(&inputs().0).unwrap()).unwrap();
     assert_eq!((p.len(), gpu, host), (57, 938932, 1855488));
     assert!(extent(usize::MAX, 2).is_err());
     assert!(mul(usize::MAX, 2).is_err());
@@ -188,4 +188,136 @@ fn invalid_inputs_are_rejected_before_gpu_construction() {
         Model::from_raw_weights(c, w, 2 * 1024 * 1024, 1),
         Err(Error::Budget { .. })
     ));
+}
+
+pub(super) fn real_config(capacity: usize) -> Config {
+    Config {
+        vocab_size: 65536,
+        hidden_size: 1024,
+        intermediate_size: 4608,
+        num_layers: 16,
+        query_heads: 16,
+        kv_heads: 8,
+        head_dim: 64,
+        max_positions: capacity,
+        rms_norm_eps: 1e-5,
+        rope_theta: 1e6,
+    }
+}
+#[test]
+fn selected_real_routes_and_bounded_views_are_resolved_cold() {
+    for capacity in [1, 31, 32, 64, 511, 512] {
+        let g = geometry(&real_config(capacity)).unwrap();
+        assert_eq!((g.views(), g.stages()), (capacity.min(32), 293));
+        let (mut kv, mut history, mut slots) = (0, 0, 1);
+        for layer in 0..16 {
+            if [2, 5, 8, 10, 12, 14].contains(&layer) {
+                assert_eq!(g.kind(layer), Kind::Attention(kv));
+                kv += 1;
+                slots += 20;
+            } else {
+                assert_eq!(g.kind(layer), Kind::Convolution(history));
+                history += 1;
+                slots += 17;
+            }
+        }
+        assert_eq!((kv, history, slots + 2), (6, 10, 293));
+        assert!(g.cache_plan().unwrap().session_bytes().unwrap() > 0);
+    }
+    for capacity in [0, 513, 128000, usize::MAX] {
+        assert!(geometry(&real_config(capacity)).is_err());
+    }
+    for field in 0..9 {
+        let mut c = real_config(512);
+        match field {
+            0 => c.vocab_size -= 1,
+            1 => c.hidden_size = 256,
+            2 => c.intermediate_size = 4096,
+            3 => c.num_layers = 15,
+            4 => c.query_heads = 8,
+            5 => c.kv_heads = 4,
+            6 => c.head_dim = 128,
+            7 => c.rms_norm_eps = 1e-6,
+            _ => c.rope_theta = 10000.,
+        }
+        assert!(geometry(&c).is_err());
+    }
+}
+#[test]
+fn selected_real_step_bounds_do_not_admit_capacity_sized_mps_views() {
+    let g = geometry(&real_config(512)).unwrap();
+    g.admit_step(480, &[65535; 32]).unwrap();
+    g.admit_step(511, &[1]).unwrap();
+    for (offset, tokens) in [
+        (0, vec![]),
+        (0, vec![1; 33]),
+        (481, vec![1; 32]),
+        (512, vec![1]),
+        (usize::MAX, vec![1]),
+        (0, vec![65536]),
+    ] {
+        assert!(g.admit_step(offset, &tokens).is_err());
+    }
+    let single = geometry(&real_config(1)).unwrap();
+    single.admit_step(0, &[1]).unwrap();
+    assert!(single.admit_step(0, &[1, 2]).is_err());
+    // Pairs validate every candidate, not one history per attention owner.
+    let owners: Vec<_> = (0..g.convolution).collect();
+    assert_eq!(owners.chunks_exact(2).count(), 5);
+    assert_eq!(
+        owners
+            .chunks_exact(2)
+            .flatten()
+            .copied()
+            .collect::<Vec<_>>(),
+        owners
+    );
+    assert_eq!(g.convolution * 2 * g.h, 20480);
+}
+#[test]
+fn selected_real_original_layout_and_numerical_owner_ledger() {
+    let g = geometry(&real_config(512)).unwrap();
+    let bytes = |r, c| {
+        let layout = crate::mlx::affine::Layout::new(r, c, 4, 64, MetadataDtype::BF16).unwrap();
+        mlx::validate_resident_layout(layout).unwrap();
+        let resident = mlx::packed_bytes(layout).unwrap();
+        assert_eq!(resident, layout.total_bytes());
+        resident
+    };
+    let packed = bytes(g.v, g.h)
+        + g.layers * (2 * bytes(g.i, g.h) + bytes(g.h, g.i))
+        + g.attention * (2 * bytes(g.q, g.h) + 2 * bytes(g.k, g.h))
+        + g.convolution * (bytes(3 * g.h, g.h) + bytes(g.h, g.h));
+    assert_eq!(
+        (
+            1 + 3 * g.layers + 4 * g.attention + 2 * g.convolution,
+            packed
+        ),
+        (93, 199360512)
+    );
+    assert_eq!(g.half_width(), 4608);
+    assert_eq!(geometry(&inputs().0).unwrap().half_width(), 768);
+    assert_eq!(g.norm_bytes().unwrap(), 139500);
+    assert_eq!(g.coefficient_bytes().unwrap(), 123160);
+    assert_eq!(g.zero_bytes().unwrap(), 131086);
+    assert_eq!(g.history_bytes().unwrap(), 82200);
+    assert_eq!(g.scratch_bytes().unwrap(), 3735804);
+    assert!(g.cache_plan().unwrap().session_bytes().unwrap() >= 6685040);
+    assert_eq!(extent(B, g.v).unwrap() * 4 * 2, 16777272);
+    assert_eq!(extent(1, g.v).unwrap() * 4 * 2, 524344);
+    let (_, gpu, host, _) = snapshots::plan(true, g).unwrap();
+    assert_eq!((gpu, host), (54530796, 88080384));
+    let (none, gpu, host, metadata) = snapshots::plan(false, g).unwrap();
+    assert!(none.is_empty());
+    assert_eq!((gpu, host, metadata), (0, 0, 0));
+    let sum = packed
+        + g.norm_bytes().unwrap()
+        + g.coefficient_bytes().unwrap()
+        + g.zero_bytes().unwrap()
+        + g.history_bytes().unwrap()
+        + g.scratch_bytes().unwrap();
+    admit(sum, sum).unwrap();
+    assert!(
+        matches!(admit(sum, sum - 1), Err(Error::Budget { required, limit }) if required == sum && limit == sum - 1)
+    );
 }

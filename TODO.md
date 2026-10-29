@@ -1,8 +1,12 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4e3b — selected real resident composition and tiny regressions**.
-The bounded real source is qualified; native real-model execution remains pending.
+Next implementation task: **B4e3c1 — independent actual-input conformance operators**,
+then the frozen native capture/checker and real-model experiment.
+The bounded real source, original payload and resident composition are checked;
+native real-model execution remains pending. All six cold checks and both Tiny
+GPU regressions pass with Astra's independent saved audit. Failed lint and
+no-device attempts remain recorded.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -257,8 +261,9 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
     - [x] B4e3a: [original payload store](docs/lfm2-original-loader.md) and
       direct-weight preparation pass seven controls, full checks, bounded actual
       file probe and Astra saved audit; no backend/model/session admission.
-    - [ ] B4e3b: extend the concrete resident composition to the selected real
-      16-layer geometry with complete planning, state, recovery and tiny regressions.
+    - [x] B4e3b: [selected real resident composition](docs/lfm2-real-composition.md)
+      with complete cold planning and unchanged Tiny state/recovery/numerical/
+      allocation gates; six cold checks, two GPU jobs and Astra saved audit pass.
     - [ ] B4e3c: freeze/implement the actual-input checker and complete native
       capture inventory, then pass the bounded real/session/text/memory experiment.
 - [ ] Qualify a fitting real representative and obtain Astra review before a
@@ -510,3 +515,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4e2c real source qualified | All13 controls,6repository checks and two real source jobs pass with exact four-file replay. Astra verifies all6204descriptors/22,072,064finite values/3102gates, independent selected local formulas/3720exact projection coordinates,6912current identities and10closed groups. | [Source report](docs/lfm2-real-reference.md); peak source RSS469,549,056B. Literal gates frozen before native data; remaining projection/uncaptured-trajectory limitations explicit. B4e3 split into original store, real resident composition and bounded checker/experiment; private store task starts. |
 | 2026-10-29 | B4e2c commit / B4e3a loader checks | Exact12-file source review committed as`ada0910`. Astra approves the3-file original payload/direct-weight adapter; all6parentchecks pass, including7new controls(default457/Metal552). Unrun V1's unused test import is removed before application. | The separately reviewed4-job CPU original-file/golden/build/probe now runs under finite bounds. Data preparation is not backend or Config512 trajectory admission; no live Metal/session/app change. |
 | 2026-10-29 | B4e3a original payload qualified | All four CPU probe jobs and six cold checks pass. Astra verifies original334 extents, all279 matrix/558 endpoint records,110 direct vectors/130560 BF16 words,32 routes, exact/under budgets and ten closed groups. | [Loader report](docs/lfm2-original-loader.md); load266,976,701B/prepared267,016,841B accounting, sparse maxresident203,522,048B. No backend/forward/GPU; Config1/512 is data only. Concrete resident geometry extension starts privately. |
+| 2026-10-29 | B4e3a commit / B4e3b cold retry | Exact nine-file loader review committed as`a85f143`. Astra approves five-file cold geometry/vector-state composition with unchanged shader/cache/math/gates. Cold V1 fails Metal Clippy on discarded enumerate index; no tests/GPU reached. | Failed receipt retained. Reviewed V2 uses direct iteration and equivalent test-only fault targeting; formatting/both Clippy/default tests now pass. Remaining Metal/release/two tiny GPU regressions stay pending; no real GPU authorization. |
+| 2026-10-29 | B4e3b GPU environment retry | All six cold V2 checks pass(default457/Metal556). Astra authenticates5984 bindings,1871 runtime files and retained release executable. The first exact Tiny test exits before model construction: no Metal device in ordinary sandbox; the second job is not run. | Preserved failed V2 receipt, clean group endpoints. V3 changes only owned output paths/environment access, with identical executable/controller/source/gates; escalated Metal retry awaits Astra package review. No numerical failure or real execution claim. |
+| 2026-10-29 | B4e3b composition qualified | Six cold checks and both exact Tiny GPU tests pass. Astra independently rescored2,123,664 mathematical/boundary values,144 states,57 snapshots, actual history/KV writes, guards, immutable owners,9 faults/18 replay chunks and12 zero allocations with unchanged MAIN gates. | [Composition report](docs/lfm2-real-composition.md); current Rust metadata+168B, numeric owners unchanged. Both failed attempts preserved. Selected real sizing is cold-only; proceed B4e3c1 independent operator checker, then capture/native real experiment. |

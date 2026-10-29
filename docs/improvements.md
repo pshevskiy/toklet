@@ -7853,3 +7853,43 @@ Config1..512 is not native or trajectory qualification. Scalar/Metal numerical
 code, ordinary factories and app profiles stay unchanged. The concrete resident
 extension follows; [evidence](../benchmarks/results/2026-10-29-lfm2-original-loader-v1.json)
 records exact scope and limitations.
+
+The nine-file payload task is committed as`a85f143`. B4e3b's five-file resident
+extension resolves tiny/selected-real geometry, six KV and ten history owners,
+293 diagnostic slots and capacity/chunk sizing once. Astra's prospective review
+passes with unchanged kernels, cache helpers, source gates and arithmetic. The
+first cold run fails only Metal Clippy's unused-enumerate-index lint after stage
+bases move into the cold plan; no test or GPU job is reached. Its reviewed
+successor removes production enumeration while preserving test fault indices.
+Formatting, both strict Clippy checks and default tests pass on the retry; final
+Metal/release/tiny-GPU qualification is still pending. Real-model GPU collection
+remains a separate B4e3c prerequisite.
+
+### M8 B4e3b — Bounded real geometry and retained Tiny behavior, 29 October 2026
+
+The [concrete resident composition](lfm2-real-composition.md) now resolves the
+selected16-layer LFM2 layout, six attention and ten convolution owners,293
+snapshot slots, requested capacity1–512 and chunk views1–32 during cold setup.
+All history candidates preflight before KV publication; failure poisons the
+whole session when copies are uncertain. No new shader, graph VM, per-step name
+lookup or arithmetic change is introduced. Real buffer totals are checked
+predictions; actual real-model GPU construction remains pending.
+
+Four new cold controls and all six repository checks pass(default457/Metal556,
+20/181 ignored, overlapping suites). Both unchanged Tiny GPU tests pass. Astra
+independently checks all2,123,664 mathematical/boundary comparisons with zero
+MAIN/WIDE exceedances,144 states, physical guards/hashes,66 immutable model
+owners,9 faults/18 replay chunks,7 validator refusals and12 zero Rust allocations.
+Maximum fatal fraction remains0.030098723814110283. All numerical owner bytes
+are unchanged; current Rust metadata adds168 bytes to each session admission.
+
+The first cold lint failure and first no-device GPU attempt remain failed;
+reviewed successors change only loop bookkeeping and Metal access respectively.
+The successful GPU retry executes the exact retained optimized binary and
+unchanged gates/workloads. Sparse maximum RSS is49,463,296 bytes across the two
+Tiny jobs, not a process-peak, real-model or whole-app claim. Both GPU groups,
+all six cold groups and the source closure are clean. The seven unchanged
+legacy cache/Gemma checks retain their earlier evidence and were not rerun.
+[Exact evidence](../benchmarks/results/2026-10-29-lfm2-real-composition-v1.json)
+keeps real native/app/phone/quality/performance work open; next is B4e3c1's
+actual-input operator checker and then complete native capture/experiment.

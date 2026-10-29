@@ -416,10 +416,10 @@ fn resource_words(m: &Model) -> Value {
         }
     }
     for (name, t) in [
-        ("q_proj", &m.attention.q),
-        ("k_proj", &m.attention.k),
-        ("v_proj", &m.attention.v),
-        ("out_proj", &m.attention.o),
+        ("q_proj", &m.attention[0].q),
+        ("k_proj", &m.attention[0].k),
+        ("v_proj", &m.attention[0].v),
+        ("out_proj", &m.attention[0].o),
     ] {
         push(format!("model.layers.1.self_attn.{name}"), t);
     }
@@ -453,11 +453,11 @@ fn resource_words(m: &Model) -> Value {
     }
     coefficient(
         "model.layers.1.self_attn.q_layernorm.weight".into(),
-        &m.attention.q_norm,
+        &m.attention[0].q_norm,
     );
     coefficient(
         "model.layers.1.self_attn.k_layernorm.weight".into(),
-        &m.attention.k_norm,
+        &m.attention[0].k_norm,
     );
     for (i, c) in m.convolution.iter().enumerate() {
         coefficient(

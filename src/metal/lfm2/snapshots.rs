@@ -1,47 +1,51 @@
-//! Fixed57 stage slots, resolved cold. State observations belong to real chunk
+//! Fixed57 tiny or293 selected-real stage slots, resolved cold. State observations belong to real chunk
 //! boundaries, not fabricated within-chunk committed prefixes.
 use super::*;
-const CONV: [(&str, usize); 17] = [
-    ("operator_norm", H),
-    ("bcx_projection", 3 * H),
-    ("b", H),
-    ("c", H),
-    ("x", H),
-    ("u", H),
-    ("convolution", H),
-    ("gated_conv", H),
-    ("operator_projection", H),
-    ("operator_residual", H),
-    ("ffn_norm", H),
-    ("gate_projection", I),
-    ("up_projection", I),
-    ("gate_silu", I),
-    ("ffn_gated", I),
-    ("down_projection", H),
-    ("output", H),
-];
-const ATTN: [(&str, usize); 20] = [
-    ("operator_norm", H),
-    ("q_projection", Q),
-    ("k_projection", K),
-    ("v_projection", K),
-    ("q_norm", Q),
-    ("k_norm", K),
-    ("q_rotary", Q),
-    ("k_rotary", K),
-    ("attention_scores", CAP),
-    ("attention_probabilities", CAP),
-    ("attention_context", Q),
-    ("operator_projection", H),
-    ("operator_residual", H),
-    ("ffn_norm", H),
-    ("gate_projection", I),
-    ("up_projection", I),
-    ("gate_silu", I),
-    ("ffn_gated", I),
-    ("down_projection", H),
-    ("output", H),
-];
+fn conv(g: Geometry) -> [(&'static str, usize); 17] {
+    [
+        ("operator_norm", g.h),
+        ("bcx_projection", 3 * g.h),
+        ("b", g.h),
+        ("c", g.h),
+        ("x", g.h),
+        ("u", g.h),
+        ("convolution", g.h),
+        ("gated_conv", g.h),
+        ("operator_projection", g.h),
+        ("operator_residual", g.h),
+        ("ffn_norm", g.h),
+        ("gate_projection", g.i),
+        ("up_projection", g.i),
+        ("gate_silu", g.i),
+        ("ffn_gated", g.i),
+        ("down_projection", g.h),
+        ("output", g.h),
+    ]
+}
+fn attn(g: Geometry) -> [(&'static str, usize); 20] {
+    [
+        ("operator_norm", g.h),
+        ("q_projection", g.q),
+        ("k_projection", g.k),
+        ("v_projection", g.k),
+        ("q_norm", g.q),
+        ("k_norm", g.k),
+        ("q_rotary", g.q),
+        ("k_rotary", g.k),
+        ("attention_scores", g.capacity),
+        ("attention_probabilities", g.capacity),
+        ("attention_context", g.q),
+        ("operator_projection", g.h),
+        ("operator_residual", g.h),
+        ("ffn_norm", g.h),
+        ("gate_projection", g.i),
+        ("up_projection", g.i),
+        ("gate_silu", g.i),
+        ("ffn_gated", g.i),
+        ("down_projection", g.h),
+        ("output", g.h),
+    ]
+}
 pub(super) struct Snapshot {
     layer: Option<usize>,
     stage: &'static str,
@@ -66,16 +70,20 @@ impl SnapshotInfo {
         self.shape.into_iter().product()
     }
 }
-pub(super) fn plan(enabled: bool) -> Result<(Vec<Snapshot>, usize, usize, usize)> {
+pub(super) fn plan(enabled: bool, g: Geometry) -> Result<(Vec<Snapshot>, usize, usize, usize)> {
     let mut out = Vec::new();
     if !enabled {
         return Ok((out, 0, 0, 0));
     }
-    out.try_reserve_exact(57)
+    out.try_reserve_exact(g.stages())
         .map_err(|_| Error::Options("LFM2 diagnostic metadata allocation"))?;
     let (mut gpu, mut host) = (0, 0);
     let mut push = |layer, stage, width, half, scores, qk| -> Result<()> {
-        let active = if scores { 4 * B * CAP } else { B * width };
+        let active = if scores {
+            g.query_heads * B * g.capacity
+        } else {
+            B * width
+        };
         // u32-backed Half snapshots include the extra alignment Half word after
         // seven guards. Ordinary Half scratch has exactly seven guard words.
         let bytes = mul(add(active, GUARD)?, if half { 2 } else { 4 })?.div_ceil(4) * 4;
@@ -93,9 +101,14 @@ pub(super) fn plan(enabled: bool) -> Result<(Vec<Snapshot>, usize, usize, usize)
         });
         Ok(())
     };
-    push(None, "embedding_lookup", H, true, false, false)?;
-    for layer in 0..3 {
-        let table: &[(&str, usize)] = if layer == 1 { &ATTN } else { &CONV };
+    push(None, "embedding_lookup", g.h, true, false, false)?;
+    let conv = conv(g);
+    let attn = attn(g);
+    for layer in 0..g.layers {
+        let table: &[(&str, usize)] = match g.kind(layer) {
+            Kind::Attention(_) => &attn,
+            Kind::Convolution(_) => &conv,
+        };
         for &(stage, width) in table {
             let scores = matches!(stage, "attention_scores" | "attention_probabilities");
             let qk = matches!(
@@ -111,8 +124,8 @@ pub(super) fn plan(enabled: bool) -> Result<(Vec<Snapshot>, usize, usize, usize)
             push(Some(layer), stage, width, !scores, scores, qk)?;
         }
     }
-    push(None, "final_norm", H, true, false, false)?;
-    push(None, "logits", V, false, false, false)?;
+    push(None, "final_norm", g.h, true, false, false)?;
+    push(None, "logits", g.v, false, false, false)?;
     let metadata = mul(out.capacity(), size_of::<Snapshot>())?;
     Ok((out, gpu, host, metadata))
 }
@@ -157,7 +170,11 @@ impl Session<'_> {
             slot,
             source,
             0,
-            if s.scores { 4 * CAP } else { s.width },
+            if s.scores {
+                self.model.geometry.query_heads * self.model.geometry.capacity
+            } else {
+                s.width
+            },
         )
     }
     pub(super) fn capture_view(
@@ -177,7 +194,11 @@ impl Session<'_> {
             .ok_or(Error::Options("LFM2 snapshot slot"))?;
         let out = s.buffer.as_ref().unwrap();
         let scalar = if s.half { 2 } else { 4 };
-        let width = if s.scores { 4 * CAP } else { s.width };
+        let width = if s.scores {
+            self.model.geometry.query_heads * self.model.geometry.capacity
+        } else {
+            s.width
+        };
         // Score physical layout is copied whole; its host reader applies head,
         // query and key strides. BCx B/C/x views copy one tight row at a time.
         let end = add(add(offset, mul(B - 1, stride)?)?, width)?;
@@ -234,9 +255,10 @@ impl Session<'_> {
             .snapshots
             .get(index)
             .ok_or(Error::Options("LFM2 diagnostic index"))?;
+        let g = self.model.geometry;
         let n = self.diagnostic_rows;
         let (shape, rank) = if s.scores {
-            ([4, n, self.diagnostic_start + n], 3)
+            ([g.query_heads, n, self.diagnostic_start + n], 3)
         } else if s.qk {
             ([n, s.width / D, D], 3)
         } else {
@@ -256,15 +278,16 @@ impl Session<'_> {
         if out.len() != info.values() {
             return Err(Error::Options("LFM2 diagnostic output length"));
         }
+        let g = self.model.geometry;
         let s = &self.snapshots[index];
         s.buffer.as_ref().unwrap().with_slice(|v| {
             if s.scores {
                 let keys = info.shape[2];
-                for head in 0..4 {
+                for head in 0..g.query_heads {
                     for row in 0..self.diagnostic_rows {
                         for key in 0..keys {
                             out[(head * self.diagnostic_rows + row) * keys + key] =
-                                f32::from_bits(v[(head * B + row) * CAP + key]);
+                                f32::from_bits(v[(head * B + row) * g.capacity + key]);
                         }
                     }
                 }
@@ -308,5 +331,60 @@ impl Session<'_> {
             };
             assert!(v[v.len() - count..].iter().all(|&x| x == expected));
         }
+    }
+}
+
+#[cfg(test)]
+mod cold_tests {
+    use super::*;
+    #[test]
+    fn selected_real_snapshot_slots_shapes_and_aligned_owner_bytes() {
+        let g = geometry(&super::super::tests::real_config(512)).unwrap();
+        let (plans, gpu, host, metadata) = plan(true, g).unwrap();
+        assert_eq!((plans.len(), gpu, host), (293, 54530796, 88080384));
+        assert_eq!(metadata, plans.capacity() * size_of::<Snapshot>());
+        assert_eq!(plans[0].stage, "embedding_lookup");
+        assert_eq!(plans[291].stage, "final_norm");
+        assert_eq!(plans[292].stage, "logits");
+        let (mut slot, mut scores, mut qk) = (1, 0, 0);
+        let mut names = std::collections::BTreeSet::new();
+        for layer in 0..16 {
+            let length = if matches!(g.kind(layer), Kind::Attention(_)) {
+                20
+            } else {
+                17
+            };
+            for p in &plans[slot..slot + length] {
+                assert_eq!(p.layer, Some(layer));
+                assert!(names.insert((p.layer, p.stage)));
+                assert!(p.buffer.is_none());
+                if p.scores {
+                    scores += 1;
+                    assert_eq!(
+                        (p.width, p.elements, p.half),
+                        (512, 16 * 32 * 512 + 7, false)
+                    );
+                } else {
+                    assert_eq!(p.elements * 4, (32 * p.width + 8) * 2);
+                }
+                if p.qk {
+                    qk += 1;
+                    assert!(p.width == 1024 || p.width == 512);
+                }
+            }
+            slot += length;
+        }
+        assert_eq!((slot, scores, qk), (291, 12, 42));
+        assert_eq!(plans[292].elements, 32 * 65536 + 7);
+        assert!(!plans[292].half);
+        validate(&plans, 8_388_636).unwrap();
+        assert!(validate(&plans, 8_388_635).is_err());
+        let (_, small_gpu, small_host, _) = plan(
+            true,
+            geometry(&super::super::tests::real_config(1)).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(gpu - small_gpu, 12 * 16 * 32 * 511 * 4);
+        assert_eq!(host - small_host, 12 * 16 * 32 * 511 * 4);
     }
 }
