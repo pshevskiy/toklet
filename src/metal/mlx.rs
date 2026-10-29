@@ -229,9 +229,8 @@ impl Packed {
             pipelines: [pair[0].clone(), pair[1].clone()],
         })
     }
-    /// Cold Matrix path. Promoted with its first resident graph
-    /// consumer; the current Source upload retains its original streaming path.
-    #[cfg(test)]
+    /// Cold original-Matrix upload used by the resident Gemma3 graph.
+    /// The audited Source upload retains its original streaming path.
     pub fn upload_matrix(&mut self, matrix: &Matrix<'_>, weights: &mut Buffer<u16>) -> Result<()> {
         let layout = self.layout;
         weights.with_bytes_mut(|w| {
@@ -1050,3 +1049,17 @@ mod tests {
 #[cfg(test)]
 #[path = "mlx/upload_tests.rs"]
 mod upload_tests;
+
+// Test-only immutable metadata observation. Caller must establish completion of
+// every command referencing this Packed; no GPU resource handle escapes.
+#[cfg(test)]
+impl Packed {
+    pub(super) fn test_metadata(&self) -> [(usize, Vec<u32>); 2] {
+        [&self.scales, &self.biases].map(|b| {
+            (
+                b.raw.contents().as_ptr() as usize,
+                b.with_slice(|v| v.to_vec()),
+            )
+        })
+    }
+}

@@ -664,7 +664,11 @@ impl<'a> Set<'a> {
         Ok(())
     }
     #[cfg(test)]
-    fn interrupt_copy_after_first_run(&mut self, gpu: &Gpu, ready: &Ready) -> Result<CommitInfo> {
+    pub(super) fn interrupt_copy_after_first_run(
+        &mut self,
+        gpu: &Gpu,
+        ready: &Ready,
+    ) -> Result<CommitInfo> {
         self.copy(gpu, ready, CopyMode::FirstRunThenFail)
     }
 }
@@ -691,3 +695,47 @@ impl CopyMode {
 }
 #[cfg(test)]
 mod tests;
+
+// Test-only owned observation, never a mutable-buffer escape. Refuse mapped
+// access until the Set's actual command is safe; poisoned completed copies may
+// be observed for rollback evidence, but remain unavailable through the graph.
+#[cfg(test)]
+impl Set<'_> {
+    pub(super) fn test_safe_read(&self) -> Result<()> {
+        if self
+            .command
+            .as_ref()
+            .is_some_and(|c| c.status() != MTLCommandBufferStatus::NotEnqueued && !terminal(c))
+        {
+            return Err(Error::ReplayRequired);
+        }
+        Ok(())
+    }
+    pub(super) fn test_completion(&self) -> Option<(bool, bool)> {
+        self.command.as_ref().map(|c| (terminal(c), completed(c)))
+    }
+    pub(super) fn test_observe(&self) -> Result<serde_json::Value> {
+        self.test_safe_read()?;
+        let owners: Vec<_> = self.owners[..self.operation.plan.count]
+            .iter()
+            .map(|o| {
+                let o = o.as_ref().unwrap();
+                let buffers: Vec<_> = [&o.old_k, &o.old_v, &o.new_k, &o.new_v]
+                    .iter()
+                    .map(|b| {
+                        serde_json::json!({
+                            "address": b.raw.contents().as_ptr() as usize, "bytes": b.raw.length(),
+                            "words": b.with_slice(|v| v.to_vec())
+                        })
+                    })
+                    .collect();
+                serde_json::json!(buffers)
+            })
+            .collect();
+        Ok(
+            serde_json::json!({"offset":self.offset,"generation":self.generation,"epoch":self.epoch,"identity":self.identity,"poisoned":self.is_poisoned(),
+            "owners":owners,"status":self.status.with_slice(|v|v.to_vec()),
+            "command":self.command.as_ref().map(|c|serde_json::json!({"status":format!("{:?}",c.status()),"error":c.error().map(|e|e.to_string()),"terminal":terminal(c),"completed":completed(c)}))}),
+        )
+    }
+}

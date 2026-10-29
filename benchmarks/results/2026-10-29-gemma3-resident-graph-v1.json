@@ -1,0 +1,255 @@
+{
+  "format": "toklet-gemma3-resident-graph-v1",
+  "date": "2026-10-29",
+  "base_revision": "1ecff33",
+  "passed": true,
+  "scope": "Complete resident two-layer H64/D32 packed/Half tiny Gemma3 graph and bounded ordinary rotary components on release Mac; no real checkpoint or app",
+  "hardware": {
+    "machine": "MacBookPro18,3",
+    "chip": "Apple M1 Pro",
+    "memory_bytes": 17179869184,
+    "os": "macOS26.6.2/25G83"
+  },
+  "graph": {
+    "cases": 4,
+    "schedules": 16,
+    "captured_chunks": 50,
+    "captured_rows": 116,
+    "stage_snapshots": 2400,
+    "main_values": 428832,
+    "main_failures": 0,
+    "main_bit_differences": 6549,
+    "main_max_absolute_error": 0.001953125,
+    "main_max_error_gate_fraction": 0.4126969242717473,
+    "wide_bit_differences": 13245,
+    "wide_exceedances_diagnostic": 0,
+    "wide_max_error_gate_fraction_diagnostic": 0.4560194568301581,
+    "gates_changed": false,
+    "exact_native_replays": 16,
+    "exact_ordinary_last_head_cases": 4,
+    "exact_causal_equalities": 3,
+    "independently_reconstructed_masked_probability_zeros": 2352
+  },
+  "state": {
+    "raw_snapshots": 170,
+    "successful_cache_commits": 122,
+    "old_cache_words_independently_compared": 129396,
+    "graph_guard_words": 59196,
+    "exposed_resource_identity_observations": 3910,
+    "snapshot_resource_addresses_exposed": false,
+    "actual_gpu_nan_faults": 2,
+    "actual_submitted_first_k_copy_then_injected_failure": 1,
+    "complete_history_published_owner_and_row_count_preserved_on_failure": true,
+    "poison_blocks_output_until_terminal_zero_reset_and_replay": true,
+    "actual_driver_completion_error_injected": false,
+    "original_packed_matrices": 15,
+    "original_metadata_owners": 30,
+    "fp32_effective_norm_owners": 13,
+    "immutable_model_verified": true,
+    "budget_and_getter_controls": "Passing reviewed Rust assertions; not all individually serialized"
+  },
+  "allocation": {
+    "release_warmed_forward_calls": 12,
+    "raw_per_call_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "scope": "Rust forward boundary includes command creation/completion; driver allocations excluded"
+  },
+  "rotary": {
+    "components": 8,
+    "commands": 32,
+    "values": 11520,
+    "head_dimensions": [
+      32,
+      256
+    ],
+    "positions": [
+      0,
+      511,
+      512,
+      513
+    ],
+    "main_failures": 0,
+    "mathematical_envelope_failures": 0,
+    "main_bit_differences": 134,
+    "wide_bit_differences_diagnostic": 141,
+    "main_max_error_gate_fraction": 0.8065817067268914,
+    "unchanged_mathematical_envelope_max_fraction": 0.8402245695219449,
+    "d256_full_graph_or_544_model_context_qualified": false
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true,
+    "default_total_passed": 424,
+    "core_metal_library_passed": 318,
+    "final_metal_library_passed": 320,
+    "targeted_cold_debug_passed": 7,
+    "targeted_cold_release_passed": 7,
+    "counts_overlap": true,
+    "core_preflight_commands": 8,
+    "final_feature_metal_commands": 6,
+    "explicit_gpu_jobs": 3,
+    "closed_owned_process_groups": true,
+    "initial_core_compile_and_consumer_lint_failures_preserved": true,
+    "reader_only_corrections_preserved": true
+  },
+  "memory": {
+    "model_packed_weights": 52992,
+    "model_effective_norms": 3180,
+    "model_zero_bias": 270,
+    "ordinary_session_admitted": 100818954,
+    "diagnostic_session_admitted": 101580486,
+    "shared_framework_estimate": 67108864,
+    "test_external_allowance": 33554432,
+    "ordinary_last_gpu_logits_owners_bytes": 568,
+    "diagnostic_all_row_gpu_logits_owners_bytes": 16440,
+    "diagnostic_gpu_snapshot_bytes": 258876,
+    "diagnostic_host_readback_reserved": 483328,
+    "direct_process_samples": [
+      35,
+      4,
+      1
+    ],
+    "observations_establish_peak": false,
+    "observed_process_bound_bytes": 6442450944,
+    "whole_model_memory_admission_qualified": false
+  },
+  "evidence": {
+    "core_proposal": {
+      "path": "artifacts/new-goal-b3c4c-graph-proposal-v2/manifest.json",
+      "bytes": 5983,
+      "sha256": "7edee5b29fc9854e0119af14d63a1e3e1d0bcbfafaf9ebfbb5dd8b8cda41beca"
+    },
+    "core_review": {
+      "path": "artifacts/new-goal-b3c4c-independent-review-v1/prospective-core-review-v2.json",
+      "bytes": 7053,
+      "sha256": "df5bdc13815c74589ec71953f658456b2fa6d36cc82182bdc541612c6a069a9d"
+    },
+    "root_core_review": {
+      "path": "artifacts/new-goal-b3c4c-independent-review-v1/prospective-root-review.json",
+      "bytes": 3341,
+      "sha256": "065c88115cb52e090a54ffebcf0ea2bc753c7060b70168bab09e898f17ba8978"
+    },
+    "consumer_proposal": {
+      "path": "artifacts/new-goal-b3c4c-consumer-proposal-v2/manifest.json",
+      "bytes": 5085,
+      "sha256": "38d7e31deaaead36f725524b500cf16339805869f5e537cc7f3bd89a5e6f28f8"
+    },
+    "consumer_review": {
+      "path": "artifacts/new-goal-b3c4c-independent-review-v1/prospective-consumer-review-v2.json",
+      "bytes": 11733,
+      "sha256": "e298ec1e1daf2a0734e731b5abdd5a889f4fa8be65d1d9c34d9ba0136e3dfcd1"
+    },
+    "root_final_draft": {
+      "path": "artifacts/new-goal-b3c4c-root-draft-v2/manifest.json",
+      "bytes": 2097,
+      "sha256": "9ea24d5460284c116fd372df71fdbe9a2299284dd793334c543b0a4a5bf68b57"
+    },
+    "root_final_review": {
+      "path": "artifacts/new-goal-b3c4c-independent-review-v1/prospective-final-root-delta-review.json",
+      "bytes": 3028,
+      "sha256": "ea05fa2a86be1df01a6a99a96279c22f7f39cdeee1cc5b43a40143fe9504f675"
+    },
+    "core_checks": {
+      "path": "artifacts/new-goal-b3c4c-cold-checks-v2/checks.json",
+      "bytes": 867930,
+      "sha256": "2a5d2bdf7e95c35ba51aa8d0fab9e42c1a73edac80ad372f906034045c6a57d3"
+    },
+    "final_checks": {
+      "path": "artifacts/new-goal-b3c4c-final-metal-checks-v2/checks.json",
+      "bytes": 866646,
+      "sha256": "0ef38dbbd9e84011cc3ca158e42ab5aff25b5fd6f37dceb34a5c8ca2f7d5a11d"
+    },
+    "gpu_approval": {
+      "path": "artifacts/new-goal-b3c4c-gpu-v2/prospective-review.json",
+      "bytes": 404920,
+      "sha256": "ce6f4af4151f03148375103507c9a41bbb268ac9030be8401c68b38cc1ea7019"
+    },
+    "gpu": {
+      "path": "artifacts/new-goal-b3c4c-gpu-v2/gpu.json",
+      "bytes": 1284119,
+      "sha256": "f357f68f9c213ff208553131b159a887c9a576c29dbde8da534ec49206dc2476"
+    },
+    "independent_raw_review": {
+      "path": "artifacts/new-goal-b3c4c-independent-review-v1/postrun-evidence-review.json",
+      "bytes": 1277423,
+      "sha256": "01c5f803deff87723f99c4f634ccf4336b8ac9eff379c827d1c7cf694c7abe1d"
+    }
+  },
+  "source_files": [
+    {
+      "path": "src/metal/gemma3.rs",
+      "bytes": 36913,
+      "sha256": "48dc884ae72449fd4604668b36b5a7accc5430699edf7ba6dec013c0798957ea"
+    },
+    {
+      "path": "src/metal/gemma3/gpu_tests.rs",
+      "bytes": 45649,
+      "sha256": "832e4a2021c5f2195b7ed6737c64460cbe26b6e5fffc417176fe475fe2fcb676"
+    },
+    {
+      "path": "src/metal/gemma3/snapshots.rs",
+      "bytes": 9798,
+      "sha256": "7e4acb9866c821fbde1b7cb9d37c913a2837d670193c6b39c66dce30dd2d0767"
+    },
+    {
+      "path": "src/metal/gemma3/tests.rs",
+      "bytes": 4340,
+      "sha256": "991ad44714e483d214886b628c5f172aa488c198ef474e1cd1fa90278bea19a8"
+    },
+    {
+      "path": "src/metal/half_pointwise.rs",
+      "bytes": 9103,
+      "sha256": "fcbf0e869564a36edc7fa3d30ad5ccbca478006bfcda6c573952a30cc7732265"
+    },
+    {
+      "path": "src/metal/half_rms_f32.rs",
+      "bytes": 8667,
+      "sha256": "817bc383e4bfccb3ec30be977ba1227b8fa67dcda9bf2ebdeb2beb0f3f5388c7"
+    },
+    {
+      "path": "src/metal/mlx.rs",
+      "bytes": 40269,
+      "sha256": "58999138b8f6e5ab150b13712547080945e186aa14a0e21aa5095ac6c2335e38"
+    },
+    {
+      "path": "src/metal/mod.rs",
+      "bytes": 135863,
+      "sha256": "c54f0cbe08012cf180af32aba7a4ffd88baeea3de28581e9ec9f4ccd414516c7"
+    },
+    {
+      "path": "src/metal/staged_attention.rs",
+      "bytes": 10824,
+      "sha256": "5b1f48aa37cbb800c11bb09d223820e06c578b93b7fc7da03852e0f0889b1e3b"
+    },
+    {
+      "path": "src/metal/staged_cache.rs",
+      "bytes": 26212,
+      "sha256": "85ac1351c1c72b7ef7f6548feeb61a4629a3e13561fa9957f18691cb2ce2e12d"
+    }
+  ],
+  "qualification": {
+    "complete_tiny_native_graph": true,
+    "transactional_tiny_state": true,
+    "ordinary_rotary_components": true,
+    "real_checkpoint": false,
+    "real_544_token_journey": false,
+    "tokenizer_or_chat": false,
+    "application": false,
+    "iphone": false,
+    "performance": false
+  },
+  "final_publication_review": "artifacts/new-goal-b3c4c-independent-review-v1/final-publication-review.json"
+}

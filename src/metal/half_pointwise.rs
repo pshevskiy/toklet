@@ -1,5 +1,5 @@
 //! Borrowed Half GELU and scalar scale, with explicit Half output stores.
-//! Test-only until the complete resident graph owns/uses this optional pipeline.
+//! Owned and consumed by the concrete resident Gemma3 graph.
 //! Encode performs no operand upload/allocation, host wait or status reset.
 //! Rust allocation qualification is release-only; driver encoders are separate.
 use super::{

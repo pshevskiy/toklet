@@ -1,5 +1,5 @@
 //! Borrowed serial Reference attention over old ring and immutable new Half KV.
-//! Test-only until the complete resident graph owns/uses this optional pipeline.
+//! Owned and consumed by the concrete resident Gemma3 graph.
 //! No operand upload/allocation, host wait, cache write or status reset in encode.
 //! Rust allocation qualification is release-only; driver encoders are separate.
 use super::{

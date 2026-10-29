@@ -7095,3 +7095,68 @@ quality, app/phone and performance remain unqualified. See
 [report](gemma3-half-reference.md),
 [evidence](../benchmarks/results/2026-10-29-gemma3-half-reference-v1.json) and
 [TODO](../TODO.md). A separate resident Model/Session proposal is under review.
+
+## 2026-10-29 — Resident core review before application
+
+The complete Model/Session draft composes original packed projections, FP32-scale
+Half norms, rotary, staged attention, explicit GELU stores and checked all-owner
+publication. It includes all48 source stage snapshots, caller-buffer readback and
+a physical-owner ledger. Independent Astra review catches a mixed-width zero-bias
+maximum omission and model-only peak reporting inherited by the Session. Both
+receive bounded fixes and controls before application; no numerical tolerance
+or architecture tuple is changed. The full native fixture/state/fault/allocation
+consumer is being prepared separately. No decoder execution is claimed yet.
+
+The corrected resident core now passes all eight owned cold commands: formatting,
+strict default/Metal Clippy, five debug/release controls,424 default tests and318
+Metal-library tests, with a frozen release binary. Initial missing-trait-import
+and Config-borrow compile errors are mechanically fixed and independently
+reviewed; their failed receipt is retained. Complete GPU stage/state/fault and
+allocation qualification remains pending before this code task is complete.
+
+The prospective GPU consumer receives explicit evidence controls before execution:
+nonzero tail guards, complete old history/published-buffer comparisons after
+rejection or failure, and per-call allocation logging before assertions. Existing
+fixed source gates and production arithmetic remain unchanged. The selected real
+checkpoint converter research also positively supports raw gamma: the pinned
+0.26.3 sanitize/cast/quantize/save chain does not fold normalization weights.
+Payload/header/card authentication and real numerical checks still remain B3d.
+
+Three reviewed release native collection jobs now pass with unchanged gates:
+2400 stage snapshots/428832 main values (maximum error/gate0.41270), exact native
+full/chunk and causal/replay controls, actual NaN rollback and submitted partial
+copy poison/reset/replay, immutable originals, nonzero guards and twelve zero
+Rust forward allocation counts. Ordinary rotary passes11520 values, including
+D256 and511/512/513, under the same source and mathematical envelopes. Raw
+evidence remains under independent Astra audit before qualification/commit;
+35/4/1 process samples cannot establish peaks or performance.
+
+## 2026-10-29 — Qualified complete tiny resident Gemma3 graph
+
+The concrete Model/Session now composes the shared original packed upload,
+projection/gather, effective-scale Half RMS, rotary, explicit GELU stores,
+staged attention and all-owner publication. It retains one tied table and
+resident session scratch/cache, caches tight input views, and publishes only
+after completed finite math plus copy. Diagnostic snapshots have explicit
+physical ownership and caller-buffer readback; source overlap/application bytes
+and the shared framework estimate are accounted separately.
+
+All required cold/strict checks and three release Mac jobs pass. Astra
+independently rescores428832 main values/2400 stages (6549 bit differences,
+zero failures, maximum error/gate0.41270), both source profiles and every native
+schedule/replay/causal witness. It reconstructs170 physical states/122 commits,
+129396 old-cache words,2352 exact masked probability zeros,59196 guard words,
+immutable15 original matrices/30 metadata owners/13 FP32 norms, complete failed
+publication/history preservation and the real first-K partial-copy poison path.
+All twelve measured forwards allocate zero Rust objects in release. The32
+rotary commands/11520 values pass both fixed gates and the unchanged mathematical
+envelope. Initial compiler/lint failures and independent-reader-only corrections
+are retained; no target/gate change was used to pass.
+
+Budget/getter controls remain passing Rust assertions where no individual raw
+record exists; snapshot addresses are not exposed. Sparse35/4/1 process samples
+prove no peak, real-model fit or speed. This closes the bounded complete tiny
+Mac graph, not real Gemma3 payload/text/window, app, iPhone or performance
+qualification. See [report](gemma3-resident-graph.md),
+[evidence](../benchmarks/results/2026-10-29-gemma3-resident-graph-v1.json) and
+[TODO](../TODO.md). Continue B3d with verified immutable acquisition and source.

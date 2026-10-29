@@ -7,11 +7,9 @@ mod compensated_attention;
 mod diagnostic;
 #[cfg(test)]
 mod half_consistency;
-#[cfg(test)]
 mod half_pointwise;
 #[cfg(test)]
 mod half_projection;
-#[cfg(test)]
 mod half_rms_f32;
 #[cfg(test)]
 mod native_profile;
@@ -19,11 +17,10 @@ mod native_profile;
 mod online_attention;
 #[cfg(test)]
 mod q4_v2_projection;
-#[cfg(test)]
 mod staged_attention;
-#[cfg(test)]
 mod staged_cache;
 pub use capture::Capture;
+pub mod gemma3;
 pub mod gemma_affine;
 pub mod gemma_rms;
 pub mod gemma_rotary;

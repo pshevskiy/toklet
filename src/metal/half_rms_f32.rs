@@ -1,5 +1,5 @@
 //! Experimental borrowed Half RMS with model-owned FP32 effective scales.
-//! Test-only until the complete resident graph owns/uses this optional pipeline.
+//! Owned and consumed by the concrete resident Gemma3 graph.
 //! No buffer upload, allocation, host wait or status reset occurs in encode.
 use super::{
     Error, Result,
