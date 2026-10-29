@@ -153,6 +153,8 @@ and [separate codec fixtures](lfm2-text-reference.md) now pass. The complete
 [bounded real numerical reference](lfm2-real-reference.md) also passes exact
 export/replay and independent saved-input audit. Real checkpoint admission
 still requires B4e3; app controls and adoption quality remain B5/M8 work.
+The [original LFM2 payload adapter](lfm2-original-loader.md) now also passes
+its actual-file CPU checks; real resident composition and qualification remain.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |

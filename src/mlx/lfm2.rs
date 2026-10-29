@@ -1,6 +1,6 @@
 //! Cold metadata for the pinned LFM2-350M MLX export.
 //!
-//! No tensor payload is read, and no backend, context, text or model admission
+//! Inspection reads no tensor payload and grants no backend, context, text or model admission
 //! is granted. Convolution rank-three coefficients are explicit owners, separate
 //! from the shared vector/matrix inventory. B/C/x views borrow one fused parent.
 use super::affine::{Layout, MetadataDtype, RowSpan};
@@ -10,6 +10,9 @@ use crate::capacity::{KvOwner, KvStorage, Retention};
 use crate::weights::Error;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
+
+/// Original-byte loading is separate from metadata and numerical admission.
+pub mod payload;
 
 const LAYERS: usize = 16;
 const HIDDEN: usize = 1024;

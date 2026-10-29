@@ -1,0 +1,373 @@
+{
+  "format": "toklet-lfm2-original-loader-result-v1",
+  "date": "2026-10-29",
+  "base_revision": "ada0910",
+  "task": "M8 B4e3a: original payload storage and direct-weight preparation",
+  "status": "cpu_payload_and_preparation_qualified_by_checks_real_probe_and_independent_saved_audit",
+  "artifact": {
+    "repository": "mlx-community/LFM2-350M-4bit",
+    "revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066",
+    "container_bytes": 199527820,
+    "container_sha256": "558353ad098c1230a8e2ea508cd34ef311a1b97a2bc4f47498f4df8229dc5c0f",
+    "header_bytes": 36740,
+    "payload_bytes": 199491072
+  },
+  "source_files": [
+    {
+      "path": "src/mlx/lfm2.rs",
+      "bytes": 14478,
+      "sha256": "131006ff0df72b6231d634143ef67e7cfc0b6e5541d497acefd5d3ace4fe498d"
+    },
+    {
+      "path": "src/mlx/lfm2/payload.rs",
+      "bytes": 20992,
+      "sha256": "def77ebb7b5afcd19f35b83b63d01c879ad2fabac3de62040ed42491feb852cd"
+    },
+    {
+      "path": "src/mlx/lfm2/payload/tests.rs",
+      "bytes": 18725,
+      "sha256": "9b4743cb71ff9aa18ce3a1f65437690012c56009a15c091cac581850d66faee3"
+    }
+  ],
+  "representation": {
+    "affine_parents": 93,
+    "direct_bf16_norms": 45,
+    "rank3_bf16_convolutions": 10,
+    "physical_tensors": 334,
+    "layers": 16,
+    "attention_owners": 6,
+    "history_owners": 10,
+    "prepared_bf16_elements": 65280,
+    "prepared_bf16_bytes": 130560,
+    "descriptor_bytes_observed": 11856,
+    "tied_embedding_head_once": true,
+    "expanded_full_model": false,
+    "alignment": "BF16 typed copies via explicit little-endian decode; no Vec<u8> alignment assumption"
+  },
+  "verification": {
+    "synthetic_controls": 7,
+    "format": true,
+    "strict_default_and_metal_all_targets_clippy": true,
+    "default_tests": {
+      "passed": 457,
+      "ignored": 20
+    },
+    "metal_tests": {
+      "passed": 552,
+      "ignored": 181
+    },
+    "suite_counts_overlap": true,
+    "release_metal_library_test_build": true,
+    "actual_cpu_probe": {
+      "endpoint_values": 558,
+      "gpu": false,
+      "load_under_before_payload": true,
+      "matrix_observations": 279,
+      "passed": true,
+      "prepared_capacities": [
+        1,
+        512
+      ],
+      "prepared_direct_words": 130560,
+      "real_forward": false,
+      "successful_file_loads": 2
+    }
+  },
+  "raw_records": [
+    {
+      "kind": "LFM2_PAYLOAD_LOADED",
+      "container_bytes": 199527820,
+      "header_bytes": 36740,
+      "header_capacity": 36740,
+      "payload_bytes": 199491072,
+      "payload_capacity": 199491072,
+      "external_bytes": 274489,
+      "metadata_reserve": 67108864,
+      "admitted_load_bytes": 266976701
+    },
+    {
+      "kind": "LFM2_PAYLOAD_PREPARED",
+      "capacity": 1,
+      "source_resident_bytes": 267016841,
+      "matrix_count": 93,
+      "direct_words": 65280,
+      "descriptor_capacities": [
+        16,
+        6,
+        10
+      ]
+    },
+    {
+      "kind": "LFM2_PAYLOAD_PREP_UNDER",
+      "capacity": 1,
+      "rejected": true
+    },
+    {
+      "kind": "LFM2_PAYLOAD_PREPARED",
+      "capacity": 512,
+      "source_resident_bytes": 267016841,
+      "matrix_count": 93,
+      "direct_words": 65280,
+      "descriptor_capacities": [
+        16,
+        6,
+        10
+      ]
+    },
+    {
+      "kind": "LFM2_PAYLOAD_PREP_UNDER",
+      "capacity": 512,
+      "rejected": true
+    },
+    {
+      "kind": "LFM2_PAYLOAD_LOAD_UNDER",
+      "rejected": true,
+      "bytes_consumed": 36748
+    },
+    {
+      "kind": "LFM2_PAYLOAD_RESULT",
+      "passed": true,
+      "successful_file_loads": 2,
+      "load_under_before_payload": true,
+      "prepared_capacities": [
+        1,
+        512
+      ],
+      "matrix_observations": 279,
+      "endpoint_values": 558,
+      "prepared_direct_words": 130560,
+      "real_forward": false,
+      "gpu": false
+    }
+  ],
+  "probe_binary": {
+    "bytes": 852160,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/payload-probe",
+    "sha256": "3de377eb1c4a8b2de169620475556a5efca29ea57b0af0c05c1983f4dfd194af"
+  },
+  "commands": [
+    {
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/golden-bytecode",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3a-payload-real-probe-v2/golden.py",
+        "/Users/coloner/work/rust/toklet/models/LFM2-350M-4bit-18dc72a",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/golden"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 2,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 19939904,
+        "phys_footprint": 19939904,
+        "resident_size": 29605888
+      },
+      "retained_log_bytes": {
+        "stderr": 0,
+        "stdout": 181
+      }
+    },
+    {
+      "command": [
+        "/opt/homebrew/Cellar/rust/1.90.0/bin/cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "--release",
+        "--lib",
+        "--message-format=json"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 59,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 23364016,
+        "phys_footprint": 23347632,
+        "resident_size": 43188224
+      },
+      "retained_log_bytes": {
+        "stderr": 123,
+        "stdout": 105982
+      }
+    },
+    {
+      "command": [
+        "/opt/homebrew/Cellar/rust/1.90.0/bin/rustc",
+        "--edition=2024",
+        "--crate-name",
+        "lfm2_payload_probe",
+        "--crate-type=bin",
+        "-C",
+        "opt-level=3",
+        "-C",
+        "overflow-checks=yes",
+        "-D",
+        "warnings",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3a-payload-real-probe-v2/driver.rs",
+        "--extern",
+        "toklet=/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/libtoklet.rlib",
+        "-L",
+        "dependency=/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps",
+        "-o",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/payload-probe"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 6,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 78103368,
+        "phys_footprint": 73614152,
+        "resident_size": 152535040
+      },
+      "retained_log_bytes": {
+        "stderr": 0,
+        "stdout": 0
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/payload-probe",
+        "/Users/coloner/work/rust/toklet/models/LFM2-350M-4bit-18dc72a",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/golden/golden.bin"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 21,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 202818040,
+        "phys_footprint": 202818040,
+        "resident_size": 203522048
+      },
+      "retained_log_bytes": {
+        "stderr": 0,
+        "stdout": 588754
+      }
+    }
+  ],
+  "owned_limits": {
+    "jobs": 4,
+    "seconds_per_job": 600,
+    "observed_process_bytes": 6442450944,
+    "log_bytes_per_stream": 1048576,
+    "cleanup_seconds": 30,
+    "model_file_loads_successful": 2,
+    "loads_sequential": true,
+    "observations_are_not_complete_peaks": true,
+    "compiler_children_not_aggregate_peak": true,
+    "total_cold_and_probe_groups": 10
+  },
+  "metadata_semantics": {
+    "declared_positions": 128000,
+    "implemented_positions": null,
+    "qualified_positions": null,
+    "prepared_config_capacities": [
+      1,
+      512
+    ],
+    "backend_constructed": false,
+    "model_forward": false,
+    "gpu_executed": false
+  },
+  "limitations": [
+    "Original-byte storage and data preparation only; no backend/model/session/app factory admission",
+    "Matrix arithmetic evidence samples first/last coordinates, with whole-container identity checked separately; no all-weight reconstruction claim",
+    "Capacity1/512 is data preparation and budget admission, not executed numerical trajectory",
+    "Sparse direct process observations are not complete process/aggregate compiler peak or whole-app fit",
+    "Native real composition/conformance/text/session/memory, app/context/full quality/phone/performance remain pending"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-proposal-v2/manifest.json",
+      "bytes": 7502,
+      "sha256": "044cbbb57a6acd8f92034dce36551a9ad7c288327388a776c738099e377229b7"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-independent-review-v1/prospective-review.json",
+      "bytes": 11023,
+      "sha256": "e8c10f923c0fcd87921e3fe4d308e011733bbe1e5ff46bb89f9afba60c08f0fc"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-cold-checks-v1/checks.json",
+      "bytes": 886661,
+      "sha256": "03117886fa40d19013485f06a252ac465b2420958037eb42389b1a44e405a81f"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/manifest.json",
+      "bytes": 48198,
+      "sha256": "71c49f57ff49e5d07446ee7e9b551771202153bb6ea0250511191da4706f2c37"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/prospective-review.json",
+      "bytes": 6063,
+      "sha256": "fd5f5a9516a951b45ccf60ab164583da224f8141c82e652ac7a397fda63aaf80"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/run.py",
+      "bytes": 13141,
+      "sha256": "835dbbd4a47e5ec2922d03139232f16e122ff26309297302c138e3c5143dda0a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/driver.rs",
+      "bytes": 14486,
+      "sha256": "4b8e1918880d66c363fc7de70839ec6a84ad8bb2ef00c94f0773a62bdf24ad47"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/golden.py",
+      "bytes": 6456,
+      "sha256": "d05fd27a2f745e8b83016580002a19e5e681b92237fad7efd1bd5b0c3f2fc0b3"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/runtime.json",
+      "bytes": 590377,
+      "sha256": "a5b8b9c8eeced05f781adf35d4f1fd7d7107961573dc17263e417e119d9eb02a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/probe.json",
+      "bytes": 507184,
+      "sha256": "3db1ce4d69aad484d103128e280b2d3dce145a6eb71b5d572230e6e4ade43b9b"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/golden/golden.bin",
+      "bytes": 141665,
+      "sha256": "2a9f76260899dd808fc06c9b2386e990a4303ca3addbc52007aab6fe575f514d"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/golden/golden.json",
+      "bytes": 33844,
+      "sha256": "c2df01c832a557033934d24970739c88a3b3fe96cc4802b42623a7fc075ed177"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/payload-probe",
+      "bytes": 852160,
+      "sha256": "3de377eb1c4a8b2de169620475556a5efca29ea57b0af0c05c1983f4dfd194af"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/payload-probe.stdout",
+      "bytes": 588754,
+      "sha256": "e64bc3e417d5c3801997bf32c2660fb8a21f4e02ea9a7b6473fba4e91e5388f8"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-real-probe-v2/collection/payload-probe.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3a-payload-independent-review-v1/saved-probe-review.json",
+      "bytes": 10223,
+      "sha256": "4c8c3f67de820ed6d86712e0f9de1e033de4c3a9e0735e5c42dba5ef6ccdcfe9"
+    }
+  ],
+  "independent_saved_audit": {
+    "path": "artifacts/new-goal-b4e3a-payload-independent-review-v1/saved-probe-review.json",
+    "bytes": 10223,
+    "sha256": "4c8c3f67de820ed6d86712e0f9de1e033de4c3a9e0735e5c42dba5ef6ccdcfe9"
+  }
+}

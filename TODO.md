@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4e3a — original payload store and direct-weight preparation**.
+Next implementation task: **B4e3b — selected real resident composition and tiny regressions**.
 The bounded real source is qualified; native real-model execution remains pending.
 No implementation task is currently blocked on user input.
 
@@ -254,8 +254,9 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
       13 controls, all repository checks, exact four-file export/replay and
       independent saved-input audit; literal gates are frozen before native outcomes.
   - [ ] B4e3: pass bounded native real-model/session/text/memory qualification.
-    - [ ] B4e3a: original payload store and checked direct-weight preparation,
-      preserving tied ownership, finite reconstruction and explicit source overlap.
+    - [x] B4e3a: [original payload store](docs/lfm2-original-loader.md) and
+      direct-weight preparation pass seven controls, full checks, bounded actual
+      file probe and Astra saved audit; no backend/model/session admission.
     - [ ] B4e3b: extend the concrete resident composition to the selected real
       16-layer geometry with complete planning, state, recovery and tiny regressions.
     - [ ] B4e3c: freeze/implement the actual-input checker and complete native
@@ -507,3 +508,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4e2a commit / B4e2b codec qualification | Exact7-file helper review committed as`dbe855b`. Codec's8controls/export/replay and6repository jobs pass; all10cases/539records replay exactly. Astra independently reconstructs29decoded strings/382ID occurrences and verifies9closed groups/runtime/bounds. | [Text report](docs/lfm2-text-reference.md); exact BOS1/stop7/nonstop2,505special rejections/2ordinary entries and unmapped-head errors. This freezes text reference only; complete real numerical source and native/app/device work remain. |
 | 2026-10-29 | B4e2b commit / B4e2c real source collection starts | Exact11-file codec review committed as`c1e740e`. Astra approves full16-layer reference,13synthetic controls, all2,817 pins and fixed6204-descriptor/48,049,152-byte output before execution. Exact2source files applied; all6repository checks pass. | Bounded controls/export/replay now running with600/900/900s and512MiB/6GiB/6GiB limits. Independent saved-input reader is prepared separately; source outcomes, native runtime and model fit remain unqualified. |
 | 2026-10-29 | B4e2c real source qualified | All13 controls,6repository checks and two real source jobs pass with exact four-file replay. Astra verifies all6204descriptors/22,072,064finite values/3102gates, independent selected local formulas/3720exact projection coordinates,6912current identities and10closed groups. | [Source report](docs/lfm2-real-reference.md); peak source RSS469,549,056B. Literal gates frozen before native data; remaining projection/uncaptured-trajectory limitations explicit. B4e3 split into original store, real resident composition and bounded checker/experiment; private store task starts. |
+| 2026-10-29 | B4e2c commit / B4e3a loader checks | Exact12-file source review committed as`ada0910`. Astra approves the3-file original payload/direct-weight adapter; all6parentchecks pass, including7new controls(default457/Metal552). Unrun V1's unused test import is removed before application. | The separately reviewed4-job CPU original-file/golden/build/probe now runs under finite bounds. Data preparation is not backend or Config512 trajectory admission; no live Metal/session/app change. |
+| 2026-10-29 | B4e3a original payload qualified | All four CPU probe jobs and six cold checks pass. Astra verifies original334 extents, all279 matrix/558 endpoint records,110 direct vectors/130560 BF16 words,32 routes, exact/under budgets and ten closed groups. | [Loader report](docs/lfm2-original-loader.md); load266,976,701B/prepared267,016,841B accounting, sparse maxresident203,522,048B. No backend/forward/GPU; Config1/512 is data only. Concrete resident geometry extension starts privately. |

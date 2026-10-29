@@ -7810,3 +7810,46 @@ original payload preparation, concrete16-layer resident composition and the
 bounded native checker/experiment. No native/app admission or original quality
 gate is changed; [exact evidence](../benchmarks/results/2026-10-29-lfm2-real-reference-v1.json)
 records all observations and remaining limitations.
+
+The exact twelve-file real-reference task is committed as`ada0910`. B4e3a now
+adds only an original payload store and cold direct-weight preparation. Astra
+approves its three Rust paths; formatting, both strict Clippy configurations and
+default457/Metal552 tests pass, including seven new storage/identity/budget/
+unaligned-word controls. The first private proposal was never compiled; an
+unused test import is removed in its reviewed successor before live application.
+A separate actual-original-file CPU/data probe is running after its own review;
+this does not construct a backend, model graph, session or app profile.
+
+### M8 B4e3a — Original LFM2 payload and direct weights, 29 October 2026
+
+The [original payload adapter](lfm2-original-loader.md) authenticates the complete
+container/header/config/index and retains one original payload. All 93 matrices
+borrow original bytes; 45 direct norms and ten rank-three tap arrays decode
+safely into typed BF16 vectors without relying on byte-buffer alignment.
+Preparation resolves sixteen routes, six KV and ten history owners once, outside
+numerical loops. Tied input/output storage is counted once, with no expanded
+FP32 model.
+
+Seven synthetic controls and all six repository checks pass: default 457/Metal
+552, with 20/181 ignored and overlapping suites. The four-job real CPU probe
+passes two sequential File loads, 279 matrix/558 endpoint observations and all
+130,560 BF16 comparisons across capacities 1/512. Independent original bytes and
+a separate Fraction-to-FP32 rescore verify 186 distinct endpoints. All 32 routes,
+110 direct-vector records, identities and exact/under budget boundaries pass;
+load-under reads only 36,748 header/prefix bytes before refusing payload.
+
+Load admission is 266,976,701 bytes and preparation 267,016,841, including caller
+274,489 bytes, 64 MiB metadata allowance, actual header/payload capacities,
+130,560 bytes of typed data and 11,856 bytes of descriptors. Sparse CPU readings
+reach 203,522,048 resident/202,818,040 lifetime physical-footprint bytes; these
+are not complete process or aggregate compiler peaks. The actual library,
+dependencies and executable are pinned; original CLI/benchmark binaries are
+unchanged. Astra verifies all ten owned groups closed, with zero mismatches.
+
+Initial private versions were unexecuted: successors remove one unused import
+and invoke pinned compiler paths, without changing data, workload or gates.
+This closes payload/preparation only; declared 128000 remains metadata and
+Config1..512 is not native or trajectory qualification. Scalar/Metal numerical
+code, ordinary factories and app profiles stay unchanged. The concrete resident
+extension follows; [evidence](../benchmarks/results/2026-10-29-lfm2-original-loader-v1.json)
+records exact scope and limitations.

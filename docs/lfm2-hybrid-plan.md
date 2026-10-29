@@ -307,3 +307,12 @@ public protocol/components/gates are frozen before native outcomes. This closes
 the source prerequisite only. B4e3 next adds the strict original payload store,
 extends the existing resident composition to16 layers, then implements/reviews
 the actual-input checker and bounded native/session/text/memory experiment.
+
+B4e3a's [original payload adapter](lfm2-original-loader.md) now passes all
+repository checks and its bounded actual-file CPU/data probe. Astra verifies
+all matrix endpoint/layout records, complete typed BF16 gains/taps, routes,
+exact/under budget boundaries and ten closed groups. This is original storage
+and data preparation only; existing tiny constructors, metadata capacity claims
+and ordinary factories remain unchanged. Next extend the resident composition,
+preserving tiny arithmetic/state tests and freezing the real checker/capture
+protocol before a real GPU run.
