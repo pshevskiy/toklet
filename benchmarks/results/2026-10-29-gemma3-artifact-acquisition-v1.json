@@ -1,0 +1,147 @@
+{
+  "format": "toklet-gemma3-selected-artifact-acquisition-v1",
+  "date": "2026-10-29",
+  "base_revision": "73416b0",
+  "passed": true,
+  "scope": "Verified local original artifact and tokenizer bytes only; no numerical or text qualification",
+  "repository": "mlx-community/gemma-3-270m-it-4bit",
+  "revision": "ff1143e3a10547c9f2129e94ca37059b096b23f4",
+  "destination": "models/MLX-Gemma-3-270m-it-4bit-ff1143e",
+  "result": {
+    "files": 11,
+    "total_bytes": 190208344,
+    "transport_cap_bytes": 209715200,
+    "verified_cached_metadata_files": 8,
+    "verified_lfs_payloads": 3,
+    "closed_transfer_groups": 3,
+    "required_final_http_status": 200,
+    "redirects_before_final_200": true,
+    "stderr_empty": true,
+    "physical_tensors": 490,
+    "affine_matrices": 127,
+    "bf16_norm_vectors": 109,
+    "bf16_norm_words": 55936,
+    "norm_nonfinite_words": 0,
+    "physical_lm_head_present": false,
+    "tied_table": true,
+    "header_bytes": 53490,
+    "payload_start": 53498,
+    "payload_bytes": 150885632,
+    "model_container_bytes": 150939130,
+    "complete_directory_atomic_exclusive_publication": true,
+    "existing_destination_overwritten": false,
+    "retained_partials_share_published_inodes": true
+  },
+  "source_semantics": {
+    "declared_positions": 32768,
+    "declared_sliding_window": 512,
+    "norm_lineage": "Pinned conversion-card0.26.3 and no-fold dispatch/sanitize/cast/quantize/save chain support explicit raw BF16 gamma for future selected-artifact reference; numerical interpretation unqualified",
+    "original_google_revision_known": false
+  },
+  "files": [
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/README.md",
+      "bytes": 1200,
+      "sha256": "2f9fd1ee79d22ff16c563909ca7d42a93bbbb3658a0d24c8b1b41732957ec92d"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/added_tokens.json",
+      "bytes": 35,
+      "sha256": "50b2f405ba56a26d4913fd772089992252d7f942123cc0a034d96424221ba946"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/chat_template.jinja",
+      "bytes": 1532,
+      "sha256": "7de1c58e208eda46e9c7f86397df37ec49883aeece39fb961e0a6b24088dd3c4"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/config.json",
+      "bytes": 1653,
+      "sha256": "8fa17cb1689800679eeb5b19ab2d2ef5d425e16cf9f36f59925f130ed976ea38"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/generation_config.json",
+      "bytes": 173,
+      "sha256": "f3d7bb125d6b8751b8fc57c7155c10d6716ebe5a64900a27f56ca236c1c0c241"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/model.safetensors",
+      "bytes": 150939130,
+      "sha256": "bf8b442cff5dd7c9ac6b5695310d5b66a4d0a4c3780f5c774fb90cd0c352bd9d"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/model.safetensors.index.json",
+      "bytes": 34944,
+      "sha256": "3ef9f6408eebccbe14976dd8db24d75d848f01c4430aa8b5924d97782a0930fb"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/special_tokens_map.json",
+      "bytes": 662,
+      "sha256": "2f7b0adf4fb469770bb1490e3e35df87b1dc578246c5e7e6fc76ecf33213a397"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/tokenizer.json",
+      "bytes": 33384568,
+      "sha256": "4667f2089529e8e7657cfb6d1c19910ae71ff5f28aa7ab2ff2763330affad795"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/tokenizer.model",
+      "bytes": 4689074,
+      "sha256": "1299c11d7cf632ef3b4e11937501358ada021bbdf7c47638d13c0ee982f2e79c"
+    },
+    {
+      "path": "models/MLX-Gemma-3-270m-it-4bit-ff1143e/tokenizer_config.json",
+      "bytes": 1155373,
+      "sha256": "db4e9d507644beaaf7e3da1ad8184057e9f661adeb67f9473c8b6ad45141f303"
+    }
+  ],
+  "evidence": {
+    "advice": {
+      "path": "artifacts/new-goal-b3d-advice-v1/manifest.json",
+      "bytes": 5548,
+      "sha256": "e372f30e4f1e93175e52ae952aa2749876ed8650aa3a0baba907da37c971adbc"
+    },
+    "acquisition_protocol": {
+      "path": "artifacts/new-goal-b3d-advice-v1/acquisition.json",
+      "bytes": 5161,
+      "sha256": "f6d02bbc3c2a70397c24b69fac9f0637619eb82da19461197ecae9a2ecfef5e5"
+    },
+    "controller_manifest": {
+      "path": "artifacts/new-goal-b3d-acquisition-proposal-v2/manifest.json",
+      "bytes": 408807,
+      "sha256": "c07d24d27094c00d478475f67d1837842c6f09fff1eacf393cbd1051d8e71704"
+    },
+    "prospective_review": {
+      "path": "artifacts/new-goal-b3d-acquisition-proposal-v2/prospective-review.json",
+      "bytes": 401885,
+      "sha256": "efcada39c78d6960b989607921993413770f2f6486e7e07bdc4765ff84de13c8"
+    },
+    "independent_controller_review": {
+      "path": "artifacts/new-goal-b3d-independent-review-v1/review-v2.json",
+      "bytes": 4635,
+      "sha256": "bbb5d3f9edb3ad8f4575090b1a7e5daff4c0bd7faa919a1aa43ee4ea2721a311"
+    },
+    "acquisition": {
+      "path": "artifacts/new-goal-b3d-acquisition-proposal-v2/acquisition.json",
+      "bytes": 417868,
+      "sha256": "1b89a6909ddcac7b83634810dc513eeb38d52e56a5d5062ffc274056562b4252"
+    },
+    "independent_postrun_review": {
+      "path": "artifacts/new-goal-b3d-independent-review-v1/postrun-acquisition-review.json",
+      "bytes": 6018,
+      "sha256": "2e3f839b9383a936b74db95d255c08423e0d120292c7a3671a1161aa5bc5d4aa"
+    }
+  },
+  "qualification": {
+    "payload_integrity": true,
+    "layout_inventory": true,
+    "normalization_execution": false,
+    "native_real_model": false,
+    "text_or_tokenizer_execution": false,
+    "chat": false,
+    "application": false,
+    "iphone": false,
+    "performance": false
+  },
+  "final_publication_review": "artifacts/new-goal-b3d-independent-review-v1/final-acquisition-publication-review.json"
+}

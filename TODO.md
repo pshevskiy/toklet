@@ -159,6 +159,13 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
   [Report](docs/gemma3-resident-graph.md); independent saved-byte audit and all three release GPU jobs pass.
 - [ ] B3d: verified real payload/text and fixed short/513-plus-window/resource
   journey on Mac; prospective544 scope requires its own frozen run protocol.
+- [x] B3d1: acquire/authenticate original selected payload and tokenizer files,
+  source identity and complete layout; no numerical/text admission.
+  [Report](docs/gemma3-artifact-acquisition.md).
+- [ ] B3d2: freeze independent selected real Half arithmetic/text/source protocol
+  and selected544-position probes within the Mac process budget.
+- [ ] B3d3: checked original-byte real loader/native runner, source comparisons,
+  two-partition window journey and bounded text/resource/state controls.
 - [ ] Resolve selected-checkpoint numerical/quality gaps and obtain Astra review
   before claiming the selected adapter complete. App/full quality remain B5/M8.
 
@@ -313,4 +320,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B3c4c final checks / hardware launch | Final six feature-Metal commands pass: strict checks, seven debug/release controls,320 Metal-library tests and82,869,088-byte release libtest freeze. Astra verifies5871 identities/1871 runtime files and all nine prior source/cold groups closed, then approves exactly three bounded native jobs. | GPU-v2 approval `ce6f4af4151f03148375103507c9a41bbb268ac9030be8401c68b38cc1ea7019`; collection started, results not yet qualified. |
 | 2026-10-29 | B3c4c native collection passes | All three reviewed release GPU jobs pass:2400 snapshots/428832 main values (max gate fraction0.41270), exact schedules/state/recovery, twelve warmed zero-allocation forward calls, and11520 rotary values (main0.80659/math0.84023 max fractions). Complete raw arrays/state/status retained; independent Astra audit starts before qualification or commit. | GPU-v2 receipt; source gates unchanged, no real-checkpoint/app/performance claim. |
 | 2026-10-29 | B3c4c independent native rescore | Astra independently rescored all428832 main values/2400 stages with zero failures, reconstructed170 physical snapshots and122 successful commits, exact partial-copy mutation/recovery, full publication/history and immutable original tensors; all12 allocations and rotary gates pass. Reader-only indexing/swapped-role mistakes were preserved/corrected without target/gate changes. | Final masked-zero/provenance audit still finishing before publication/commit. |
-| 2026-10-29 | B3c4c checked complete tiny resident graph | Independent Astra saved-byte audit passes all428832 main values/2400 stages,170 physical snapshots/122 commits, exact recovery/publication, guards/originals, twelve zero-allocation forwards and11520 rotary values. Frozen gates unchanged. Budget/getter controls are reviewed Rust assertions; sparse memory samples are not peaks. | [Report](docs/gemma3-resident-graph.md); reviewed task commit next, then B3d acquisition/source/window journey. |
+| 2026-10-29 | B3c4c checked complete tiny resident graph | Independent Astra saved-byte audit passes all428832 main values/2400 stages,170 physical snapshots/122 commits, exact recovery/publication, guards/originals, twelve zero-allocation forwards and11520 rotary values. Frozen gates unchanged. Budget/getter controls are reviewed Rust assertions; sparse memory samples are not peaks. | [Report](docs/gemma3-resident-graph.md); `73416b0`; continue B3d acquisition/source/window journey. |
+| 2026-10-29 | B3d1 verified artifact acquisition | Eleven files/190208344 bytes authenticate under200MiB transport cap. Eight cached metadata plus three public immutable LFS transfers pass hashes, exact53490-byte header/490 spans/index,109 finite BF16 norm vectors and atomic exclusive publication. Astra independently rehashes all inputs/payloads/outputs and confirms three closed groups plus retained hardlinks. | [Report](docs/gemma3-artifact-acquisition.md); artifact-only publication review/commit next, real source and inference unqualified. |

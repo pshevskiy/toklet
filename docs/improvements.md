@@ -7160,3 +7160,21 @@ Mac graph, not real Gemma3 payload/text/window, app, iPhone or performance
 qualification. See [report](gemma3-resident-graph.md),
 [evidence](../benchmarks/results/2026-10-29-gemma3-resident-graph-v1.json) and
 [TODO](../TODO.md). Continue B3d with verified immutable acquisition and source.
+
+## 2026-10-29 — Verified selected Gemma3 artifact and tokenizer files
+
+The exact public270M four-bit revision is now local: eleven files/190208344
+bytes, including the original150939130-byte payload and both tokenizer formats.
+Eight cached metadata files and three bounded credential-free HTTPS transfers
+verify hashes before one exclusive atomic directory publication. Failed/partial
+paths are retained; successful payload partials share physical inodes with the
+published files. No existing model directory is overwritten.
+
+Astra independently authenticates all eleven files,490 contiguous indexed
+tensors,127 affine triples,109 finite BF16 norm vectors and closed transfer
+groups. The pinned converter0.26.3 no-fold lineage supports the explicit raw
+gamma source decision; unknown original Google revision stays separate. These
+are byte/layout/provenance results, without model, tokenizer, text, app, iPhone
+or performance execution. See [report](gemma3-artifact-acquisition.md) and
+[evidence](../benchmarks/results/2026-10-29-gemma3-artifact-acquisition-v1.json).
+Next freeze real source IDs/profiles and then qualify native window execution.
