@@ -7361,3 +7361,17 @@ It explicitly changes the acceptance method and local centers, preserves both
 failed trajectory screens, and requires policy review/commit before checker
 implementation and fresh collection. No engine or reference change, quality
 waiver, app/phone qualification or measured performance improvement follows.
+
+The policy task is committed as `ae7a457` after exact staged Astra review and
+passing documentation checks. The next code task implements that fixed universal
+checker and portable corruption controls before any fresh target collection.
+
+The [next concrete mechanism](lfm2-hybrid-plan.md) is now scoped to LFM2-350M's
+two-row short-convolution history composed with six full-attention layers.
+Astra checks the cached primary source/config/header and estimated budget. The
+queue separates strict loader/profile provenance, scalar transactional state,
+tiny hybrid composition, resident execution and real bounded qualification.
+This improves the implementable roadmap; no LFM2 tensor payload, inference,
+physical-fit result or architecture support is claimed. Historical converter
+identity stays unknown; an explicitly authenticated current same-artifact loader
+profile can be qualified independently. B3 remains the active implementation.

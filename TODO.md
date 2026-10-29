@@ -179,7 +179,7 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 - [x] Investigate both coupled-intermediate rejections without changing the
   engine: all84 source3 failures map to42 paired values matching own-input
   independent checks; strict final/teacher outputs pass. Astra reviews the proof.
-- [ ] Review/commit the [universal native conformance policy](docs/gemma3-native-conformance.md)
+- [x] Review/commit the [universal native conformance policy](docs/gemma3-native-conformance.md)
   before checker implementation; preserve both historical failed screens.
 - [ ] Implement/review the generic actual-input checker, analytic corruption
   controls and bounded resources; no coordinate whitelist or unsupported skip.
@@ -194,10 +194,19 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 
 ### B4 — Additional concrete mechanisms
 
-- [ ] Choose and document the next fitting model need: routed MoE,
-  recurrent/hybrid state or MLA. This selection is pending, not a user blocker.
-- [ ] Split the selected mechanism into implementation tasks with state/layout,
-  routing/update/rollback fixtures and complete physical-owner accounting.
+- [x] Choose and document the next fitting mechanism: LFM2-350M's two-row
+  short-convolution history composed with full attention. Astra checks cached
+  metadata/source and planning fit; [plan](docs/lfm2-hybrid-plan.md).
+- [x] Split into strict adapter/source plan, scalar history, tiny hybrid graph,
+  resident block/composition and bounded real qualification; preserve unknown
+  historical converter identity and separate text/adoption-quality requirements.
+- [ ] B4a: authenticate the declared same-artifact loader/norm profile and strict
+  config/header plan before a real source reference; verify payload separately.
+- [ ] B4b: independent scalar short-convolution and transactional state controls.
+- [ ] B4c: independent complete tiny mixed attention/convolution graph.
+- [ ] B4d: resident block/composition, allocation/ownership and recovery checks.
+- [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
+  text/session and actual process-memory checks before any support claim.
 - [ ] Qualify a fitting real representative and obtain Astra review before a
   family support claim. Add further admissions only as explicitly scoped tasks.
 
@@ -396,3 +405,5 @@ completed or prerequisites for the active breadth-first queue.
 
 | 2026-10-29 | B3d source3 trajectory rejection investigated | Corrected provenance-only reader completes all18,537,288 values and rejects84 MAIN intermediates/98 WIDE diagnostics. All84 map42 paired values that match independent own-input checks;33 whole groups/24,984 values pass old local gates. Strict final/teacher12,582,912 values pass. Astra checks the proof and fixed provider contracts. | Both historical screens remain rejected; no kernel/reference/gate change or fresh target run. |
 | 2026-10-29 | B3d prospective semantic policy | Astra approves universal coverage design:624 coupled groups/13,185,444 values plus5,808 own-input groups/5,351,844 values. Faithful exact-dot Half brackets, exact basic/RMS stores and independently propagated provider contracts supplement unchanged local coefficients; unsupported proof is fatal. | [Policy](docs/gemma3-native-conformance.md), plan correction and doc checks/review before commit; checker implementation follows. Full adoption quality/app/phone remain open. |
+| 2026-10-29 | B3d policy committed | Exact five-document Astra review,1,003 existing local-link checks and staged whitespace/content checks pass; prospective policy committed as`ae7a457`. Both rejected screens and every original selected value remain recorded. | Generic checker/corruption implementation is now authorized under that frozen policy; no new target run or engine change. |
+| 2026-10-29 | B4 concrete mechanism selected | Astra verifies cached LFM2-350M metadata/current primary source:6 attention plus10 short-convolution layers, actual FF4608 and two-row per-channel state. B4a–e now separate strict source/adapter, scalar state, tiny hybrid, resident composition and bounded real qualification. Estimated fit is not measured; historical converter identity is unknown. | [Plan](docs/lfm2-hybrid-plan.md); documentation review/commit. B3 remains active; no LFM2 payload or model execution. |
