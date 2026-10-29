@@ -5,8 +5,11 @@ routes, literal workload transitions, physical-state validation and the final
 CLI. Its original V1 passed 29 synthetic controls and code review. The first
 actual saved-capture read then stopped on a diagnostic KV-layout mismatch before
 any selected mathematical comparison. The KV-axis correction passed 30 controls. Its saved-reader retry then stopped
-on a flat attention-source layout mismatch. The V4 correction passes 32 controls and six current repository checks. Complete saved-reader conformance
-and outer qualification remain pending.
+on a flat attention-source layout mismatch. The V4 saved-reader attempt completed every mathematical comparison with zero
+fatal local or strict coupled failures, then failed the Head fault-status check.
+V5 corrects that status-bit expectation and passes 33 controls plus six repository
+checks. Complete saved-reader conformance and
+outer qualification remain pending.
 
 Original file/header/tensor identities, source arrays/literal gates, actual
 executable/control/owner and all native outputs are authenticated. Records have
@@ -118,3 +121,39 @@ The next saved read requires an independently reviewed owner with exactly three
 original-native-to-current-consumer replacements (main, contract and test); all
 other native authority remains strict. No GPU rerun or full qualification is
 part of this reader code correction.
+
+The completed mathematical section of V4 covered all 6,440 actual-input groups /
+11,971,552 values and 303 strict coupled groups / 1,965,024 values with zero
+fatal failures. The complete attempt nevertheless failed at Head attempt 96:
+the reader expected boolean 1, while the unchanged float validator records
+status bit 4. V5 requires the actual bitmask for every fault: normal 0,
+OmitHistory9 1, Head 4 and FirstCopy 0 with poison. Its added boundary control
+checks these exact values, ordinary-mode metadata, wrong status bits, wrong
+poison and invalid diagnostic publication. No kernel, source center, gate,
+capture or workload changed.
+
+All 6,743 MAIN/WIDE trajectory groups remain diagnostic: 13,936,576 values per
+profile contain exactly 3 MAIN and 8 WIDE failing coordinates. An independent
+stdlib saved-array audit reproduces these counts and maxima, including all 303
+strict coupled gates with zero failures. It does not independently repeat the
+6,440 local semantic checks and does not convert the failed reader into a pass.
+
+A separate bounded state/codec diagnostic uses private V5 code and the same
+saved inputs. It completes structural, physical-state, source-state and codec
+checks while explicitly replacing selected numerical dispatch. Its owner passes;
+the underlying report deliberately retains passed=false, eligibility=false and
+numerical qualification=false. This diagnostic and the mathematical audit are
+separate evidence, not a combined full-reader qualification. The complete V5
+reader must still run under a separately approved owner.
+
+[Status-correction evidence](../benchmarks/results/2026-10-30-lfm2-native-reader-status-correction-v1.json)
+preserves the failed V4 report, unchanged native/source authority, the independent
+numerical audit and the explicitly nonqualifying state/codec diagnostic.
+
+The corrected 33 controls pass in 0.302s. All six repository checks pass
+(default 457 / Metal 564, with 20 / 183 ignored; overlapping suites). Astra
+checks 6,891 identities and all seven closed process groups. Six direct
+synthetic-worker samples observe maximum RSS 63,275,008 bytes; OS maximum RSS
+is 70,385,664 bytes. These are synthetic-worker observations, not full-reader
+peaks. The state/codec diagnostic is independently audited as a separate,
+nonqualifying run; neither result relaxes the final complete-reader requirement.

@@ -8070,3 +8070,40 @@ correction changes the reader and its controls only; full validation is pending.
 All 32 controls now pass in 0.319s, with 98,074,624 bytes OS maximum RSS;
 all six repository checks pass. The unchanged real capture still awaits a
 complete verifier pass and independent outer qualification.
+
+The attention-layout correction is committed as `69c94ff`. The complete
+arithmetic replay passes all 6,440 actual-input groups / 11,971,552 values and
+303 strict coupled groups / 1,965,024 values. All 168 source-state identities,
+4,212 groups / 21,657,600 values per profile, pass their diagnostic gates.
+Original MAIN/WIDE trajectory diagnostics retain 3/8 failing coordinates;
+these are not relabeled as passing source fidelity.
+
+The reader then stops at the injected nonfinite-head fault: the shader writes
+status bit 4 while the reader expected Boolean 1. Omitted-history status is 1;
+partial-copy failure has status 0 and a poisoned session. The failed reader,
+raw data and clean process closure remain retained. Astra is correcting the
+reader's exact bit contract and inspecting the remaining recovery paths; full
+bounded qualification is still pending.
+
+A separate stdlib-only audit independently decodes the saved native and source
+bytes, replays all 303 strict coupled gates with zero failures, and reproduces
+all 6,743 MAIN/WIDE trajectory groups and exact 3/8 rejected groups/coordinates.
+It matches the original maximum errors/fractions and guards input endpoints.
+The audit keeps numerical qualification false because the full reader's later
+state/codec/ordinary path has not yet completed successfully.
+
+A separately reviewed diagnostic completes the entire saved state and codec
+path: all 104 attempts / 367 rows, three faults and reset/replay, ordinary mode,
+exact budget boundaries, immutable owners and raw codecs. It explicitly stubs
+numerical dispatch and preserves false reader-passed/eligibility/qualification
+fields; diagnostic job success cannot qualify the model. Its peak OS RSS is
+374,489,088 bytes with 37 direct process samples. After process and endpoint
+closure, V5's narrow status-bit correction and boundary regression are applied.
+All six repository checks pass; the 33-control suite and full replay follow.
+
+The exact status correction passes all 33 controls in 0.302s with 70,385,664
+bytes OS maximum RSS and all six repository checks (default 457/Metal 564).
+Astra authenticates the current runtime/bindings and seven closed groups, plus
+the saved nonqualifying state/codec diagnostic and its two explicitly historical
+source bindings. The narrow code task is checked; one complete full numerical
+and state reader replay remains necessary before bounded qualification.

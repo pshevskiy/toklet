@@ -1,0 +1,304 @@
+{
+  "correction": {
+    "new_control": 33,
+    "prior_32_controls_unchanged": true,
+    "status": {
+      "FirstCopy": 0,
+      "Head": 4,
+      "OmitHistory9": 1,
+      "normal": 0
+    }
+  },
+  "date": "2026-10-30",
+  "eligibility": false,
+  "evidence": [
+    {
+      "bytes": 9889,
+      "path": "artifacts/new-goal-b4e3-native-reader-proposal-v5/manifest.json",
+      "sha256": "eae2f73e1a8f92a9bb26374d94314c9da0ce36be68847ce4528f3cb619d53ad2"
+    },
+    {
+      "bytes": 5262,
+      "path": "artifacts/new-goal-b4e3-native-reader-independent-review-v1/prospective-v5-review.json",
+      "sha256": "3a85558074ef77b9b8cc8bee399b0c96ed4f2f40d838ef4e246f70e6889a1a1b"
+    },
+    {
+      "bytes": 1522367,
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v4/checks.json",
+      "sha256": "b39e7200bbb32113a805f21075e5225f59515da6ff4d7025a76b3cf60d97d185"
+    },
+    {
+      "bytes": 11464,
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v4/read-v1/check.json",
+      "sha256": "45b3050a84bc03feb7c2293710ec6d435e9981fbfc2e91007ea2abda827bb26c"
+    },
+    {
+      "bytes": 2833,
+      "path": "artifacts/new-goal-b4e3-root-coupled-audit-v2/audit.json",
+      "sha256": "d474e6470f3011a1f2f24b6b37d2f409113dba940838e644be67fc99e51a2b07"
+    },
+    {
+      "bytes": 576,
+      "path": "artifacts/new-goal-b4e3-root-coupled-audit-v2/run.json",
+      "sha256": "55c8069b02e997af5cc4c16292054078aaa0854c1ccd88a0aeb785c29f716d8f"
+    },
+    {
+      "bytes": 5097,
+      "path": "artifacts/new-goal-b4e3-root-coupled-audit-independent-review-v1/saved-v2-review.json",
+      "sha256": "8d56688cede4aaa50bedbc8f793d643951fb2fe421034dce439dd7529223512a"
+    },
+    {
+      "bytes": 4687,
+      "path": "artifacts/new-goal-b4e3-reader-state-diagnostic-v1/owner-review.json",
+      "sha256": "89993c2c6ecd23a5388c972bd89994bc09c220befe0a2ac424c04a8bd3329f58"
+    },
+    {
+      "bytes": 140919,
+      "path": "artifacts/new-goal-b4e3-reader-state-diagnostic-v1/attempt-v1/run.json",
+      "sha256": "f1ca2f4d7c8486f73ac15be109fe28e7e8e0693eb2ac7a0082d8de44f9dd1551"
+    },
+    {
+      "bytes": 12327,
+      "path": "artifacts/new-goal-b4e3-reader-state-diagnostic-v1/attempt-v1/check.json",
+      "sha256": "870c8c9de24fb1d6c494dc41ca7bfb336b5d778cc186228dc625db5b0d440cbd"
+    },
+    {
+      "bytes": 889110,
+      "path": "artifacts/new-goal-b4e3-native-reader-cold-checks-v5/checks.json",
+      "sha256": "868bc4e2c2e14438106f3161b20ce99bb256c7c9c3686010ea57eea242cccc68"
+    },
+    {
+      "bytes": 8366,
+      "path": "benchmarks/results/2026-10-30-lfm2-native-reader-attention-layout-correction-v1.json",
+      "sha256": "2c96f0605e6e04799a968667caaa02568b709444279d00436f7d784ff42e1467"
+    },
+    {
+      "bytes": 740667,
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v5/controls-v1/checks.json",
+      "sha256": "7a13eb0328f95af3801a876408b3f40bbad539f8bc3cc582d935a074c8459493"
+    },
+    {
+      "bytes": 6856,
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-independent-review-v1/saved-controls-v5-review.json",
+      "sha256": "c3b2c366f4de1b7d42950731051383a16eaf3a10d21fd0ed35387c98d4c94968"
+    },
+    {
+      "bytes": 7197,
+      "path": "artifacts/new-goal-b4e3-reader-state-diagnostic-v1/saved-state-codec-review.json",
+      "sha256": "ebe9173a834be43dc69febdd5cd7d9807bcb643ed1efaf9357f988733914079d"
+    }
+  ],
+  "failed_v4": {
+    "error": "ValueError: failure status/poison",
+    "numerical_qualification": false,
+    "partial_numerical": {
+      "actual_input": {
+        "failures": 0,
+        "first_failure": null,
+        "groups": 6440,
+        "maximum_error": 0.0009765625,
+        "maximum_fraction": 0.546268982847154,
+        "values": 11971552
+      },
+      "strict_coupled": {
+        "failures": 0,
+        "first_failure": null,
+        "groups": 303,
+        "maximum_error": 0.03635406494140625,
+        "maximum_fraction": 0.9458106153332592,
+        "values": 1965024
+      },
+      "trajectory_main_diagnostic": {
+        "failures": 3,
+        "first_failure": {
+          "actual_word": 3155542016,
+          "center_word": 3155877888,
+          "gate": {
+            "atol": 0.0001678466796875,
+            "rtol": 0.001
+          },
+          "index": 1009,
+          "name": "cases.journey64.row_32.layers.9.down_projection"
+        },
+        "groups": 6743,
+        "maximum_error": 0.04296875,
+        "maximum_fraction": 1.764275571238005,
+        "values": 13936576
+      },
+      "trajectory_wide_diagnostic": {
+        "failures": 8,
+        "first_failure": {
+          "actual_word": 3155509248,
+          "center_word": 3155099648,
+          "gate": {
+            "atol": 0.0003376007080078125,
+            "rtol": 0.001
+          },
+          "index": 346,
+          "name": "cases.future_tail11.row_10.layers.12.operator_projection"
+        },
+        "groups": 6743,
+        "maximum_error": 0.05299806594848633,
+        "maximum_fraction": 1.3345387231477894,
+        "values": 13936576
+      }
+    },
+    "passed": false,
+    "source_state_trajectory_diagnostic": {
+      "fatal": false,
+      "history_scope": "actual before/after chunk old banks only; no invented per-token snapshots",
+      "main": {
+        "failures": 0,
+        "first_failure": null,
+        "groups": 4212,
+        "maximum_error": 0.0166015625,
+        "maximum_fraction": 0.4634943056413878,
+        "values": 21657600
+      },
+      "source_identities": 168,
+      "wide": {
+        "failures": 0,
+        "first_failure": null,
+        "groups": 4212,
+        "maximum_error": 0.01953125,
+        "maximum_fraction": 0.6252735571812668,
+        "values": 21657600
+      }
+    }
+  },
+  "format": "toklet-lfm2-reader-status-correction-result-v1",
+  "independent_numerical_audit": {
+    "coupled": {
+      "failing_groups": 0,
+      "failing_values": 0,
+      "groups": 303,
+      "maximum_error": 0.03635406494140625,
+      "maximum_fraction": 0.9458106153332592,
+      "values": 1965024
+    },
+    "main": {
+      "failing_groups": 3,
+      "failing_values": 3,
+      "groups": 6743,
+      "maximum_error": 0.04296875,
+      "maximum_fraction": 1.764275571238005,
+      "values": 13936576
+    },
+    "wide": {
+      "failing_groups": 8,
+      "failing_values": 8,
+      "groups": 6743,
+      "maximum_error": 0.05299806594848633,
+      "maximum_fraction": 1.3345387231477894,
+      "values": 13936576
+    }
+  },
+  "numerical_qualification": false,
+  "preserved": {
+    "binary": true,
+    "fatal_coupled_groups": 303,
+    "fatal_local_groups": 6440,
+    "literal_gates": true,
+    "native_capture": true,
+    "original_failures": true,
+    "source_centers": true
+  },
+  "remaining": [
+    "Complete current-reader replay and outer review remain required; no GPU rerun is needed for this correction."
+  ],
+  "scope": "Status bitmask validation correction only; no complete reader qualification.",
+  "source_files": [
+    {
+      "bytes": 54074,
+      "path": "tools/reference/check_lfm2_capture.py",
+      "sha256": "faf8e4181df87f7aad2c598f00180e782af4f3fc85466ec400af9453fc9cd45c"
+    },
+    {
+      "bytes": 22757,
+      "path": "tools/reference/lfm2_capture_bytes.py",
+      "sha256": "f1b7d87f378079f6b9c37ff332d5541979cc1c32e95ef11b8005ef2053663064"
+    },
+    {
+      "bytes": 26095,
+      "path": "tools/reference/lfm2_capture_contract.py",
+      "sha256": "d89d1b6ad5199e1fbde4cf6f5ec26dc8aecaee263c28609f501c99c38c84abc4"
+    },
+    {
+      "bytes": 8448,
+      "path": "tools/reference/lfm2_capture_workload.py",
+      "sha256": "09df2bae68b6db686dcd5a093b1da709ec7bc30065d7888a2a657985359bf2fd"
+    },
+    {
+      "bytes": 38974,
+      "path": "tools/reference/test_lfm2_capture_reader.py",
+      "sha256": "d80f5c9e48b8bb2eb564a7f9df52905233dcc05c46b9cff60f33bd46d279e746"
+    }
+  ],
+  "state_codec_diagnostic": {
+    "capture_counts": {
+      "attempted_rows": 367,
+      "attempts": 104,
+      "guard_bytes": 719376,
+      "guard_records": 126,
+      "history_stacks": 18,
+      "model_original_owners": 335,
+      "physical_prefixes": 72,
+      "primary_chunks": 78,
+      "primary_rows": 231,
+      "producer_rows": 303,
+      "row_hashes": 299,
+      "same_native_prefixes": 77,
+      "selected_groups": 6739,
+      "zero_allocation_calls": 2
+    },
+    "codec_passed": true,
+    "eligibility": false,
+    "endpoint_errors": [],
+    "error": null,
+    "independent_saved_audit": {
+      "bytes": 7197,
+      "path": "artifacts/new-goal-b4e3-reader-state-diagnostic-v1/saved-state-codec-review.json",
+      "sha256": "ebe9173a834be43dc69febdd5cd7d9807bcb643ed1efaf9357f988733914079d"
+    },
+    "numerical": {
+      "diagnostic_math_dispatch_stub": true,
+      "fatal_numerical_passed": false,
+      "selected_rows": 23,
+      "teachers": 4
+    },
+    "numerical_qualification": false,
+    "owner_passed": true,
+    "reader_report_passed": false,
+    "structural_complete": true
+  },
+  "status": "reader_status_correction_checked_complete_saved_replay_pending",
+  "verification": {
+    "authenticated_union": 6891,
+    "closed_groups": 7,
+    "counts_overlap": true,
+    "default_ignored": 20,
+    "default_passed": 457,
+    "independent_saved_audit": {
+      "bytes": 6856,
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-independent-review-v1/saved-controls-v5-review.json",
+      "sha256": "c3b2c366f4de1b7d42950731051383a16eaf3a10d21fd0ed35387c98d4c94968"
+    },
+    "metal_ignored": 183,
+    "metal_passed": 564,
+    "observed_maxima": {
+      "lifetime_max_phys_footprint": 46203456,
+      "phys_footprint": 42992192,
+      "resident_size": 63275008
+    },
+    "observed_samples": 6,
+    "os_maxrss_bytes": 70385664,
+    "seconds": 0.302,
+    "six_cold_checks_passed": true,
+    "synthetic_controls": 33,
+    "synthetic_controls_receipt": {
+      "bytes": 740667,
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v5/controls-v1/checks.json",
+      "sha256": "7a13eb0328f95af3801a876408b3f40bbad539f8bc3cc582d935a074c8459493"
+    }
+  }
+}

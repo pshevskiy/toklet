@@ -640,5 +640,50 @@ class EventAndDispatchControls(unittest.TestCase):
         actual[1][0,0,2]=.25  # Masked probabilities remain exact positive zero.
         with self.assertRaisesRegex(ValueError,'masked probability'):run()
 
+    def test_33_full_boundary_kernel_status_bits_and_ordinary_metadata(self):
+        import check_lfm2_capture as r
+        from types import SimpleNamespace
+        from lfm2_capture_workload import Chunk
+        for fault,diagnostics,status in ((None,True,0),(None,False,0),
+                ('OmitHistory9',True,1),('Head',True,4),('FirstCopy',True,0)):
+            with self.subTest(fault=fault,diagnostics=diagnostics):
+                before=dict(cache=dict(identity=7,generation=2,epoch=3),published_rows=3,
+                    owners=[[i,1000+i,'a'*64]for i in range(24,44)]+[[61,1061,'b'*64],[62,1062,'c'*64]])
+                owners=[]
+                for i,address,sha in before['owners']:
+                    prior=(i^1 if i<44 else 123-i)if fault is None else i
+                    old=next(x for x in before['owners']if x[0]==prior)
+                    owners.append([i,old[1],old[2]])
+                body=dict(session=1,attempt=5,label='committed'if fault is None else'failed',
+                    cache=dict(offset=5 if fault is None else 3,identity=7,generation=2+int(fault is None),
+                        epoch=4,poisoned=fault=='FirstCopy',status={'words':[status]+[c.WORD_PAD]*7},
+                        command=None if fault in('Head','OmitHistory9')else
+                        dict(status='MTLCommandBufferStatus(4)',error=None,terminal=True,completed=True)),
+                    owners=owners,guard_array=10,published_rows=(2 if diagnostics else 1)if fault is None else 3,
+                    diagnostic_rows=2 if fault is None else 0,tokens=[],model_table='model_before')
+                chunk=Chunk(0,1,3,(5,7),(),'synthetic',fault)
+                def invoke(value):
+                    # Isolate the actual Reader.boundary transition validator.
+                    # PhysicalState raw hash/guard proofs have separate controls;
+                    # this stub returns its authenticated-owner output contract.
+                    state=SimpleNamespace(last=copy.deepcopy(before),session=1,diagnostics=diagnostics)
+                    def observed(b):
+                        state.last=b
+                        return{i:(address,sha)for i,address,sha in b['owners']}
+                    state.boundary=observed
+                    reader=r.Reader(None,None,None,{},{});reader.state=state
+                    reader.current_attempt=5;reader.cursor=11
+                    reader.array=lambda *a,**kw:dict(seq=10,bytes=5824 if diagnostics else 980)
+                    reader.event=lambda kind:copy.deepcopy(value)
+                    return reader.boundary(value['label'],success=chunk)
+                self.assertEqual(invoke(body),body)
+                for wrong in set((0,1,2,4,5))-{status}:
+                    bad=copy.deepcopy(body);bad['cache']['status']['words'][0]=wrong
+                    with self.assertRaisesRegex(ValueError,'failure status/poison'):invoke(bad)
+                bad=copy.deepcopy(body);bad['cache']['poisoned']=not bad['cache']['poisoned']
+                with self.assertRaisesRegex(ValueError,'failure status/poison'):invoke(bad)
+                bad=copy.deepcopy(body);bad['diagnostic_rows']=1
+                with self.assertRaisesRegex(ValueError,'diagnostic publication'):invoke(bad)
+
 if __name__ == '__main__':
     unittest.main()

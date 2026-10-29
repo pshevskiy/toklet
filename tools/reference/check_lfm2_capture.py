@@ -320,8 +320,11 @@ class Reader:
                     meta['epoch'] == before['cache']['epoch'] + 1 and
                     meta['generation'] == before['cache']['generation'] + int(fault is None),
                     'attempt generation/epoch authority')
+            # The shared status is a kernel bitmask, not a boolean: the Half
+            # candidate validator sets1, while validate_float sets4 for Head.
+            expected_status = {None: 0, 'OmitHistory9': 1, 'Head': 4, 'FirstCopy': 0}[fault]
             require(meta['poisoned'] == (fault == 'FirstCopy') and
-                    meta['status']['words'][0] == int(fault in ('Head','OmitHistory9')), 'failure status/poison')
+                    meta['status']['words'][0] == expected_status, 'failure status/poison')
             command = meta['command']
             if fault in ('Head','OmitHistory9'):
                 require(command is None, 'failed Phase A command discarded after terminal')

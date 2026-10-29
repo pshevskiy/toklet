@@ -5,11 +5,14 @@ Next implementation task: **B4e3c3 — complete independent saved-capture verifi
 The real Mac GPU capture has completed 104 attempts/367 rows; independent
 collection framing passes. The reviewed source-KV coordinate correction passes
 30 controls and all six repository checks and is committed as `b99fbaa`.
-The saved-reader retry passes 43 local groups before rejecting flattened
-reference attention scores. Its reviewed correction now passes all 32 controls,
-six repository checks and Astra's saved audit. The narrow commit and complete
-saved-capture replay are next. Numerical qualification remains pending; failed
-and unexecuted attempts stay recorded.
+The reviewed layout corrections are committed as `b99fbaa` and `69c94ff`.
+The full arithmetic replay passes all 6,440 local and 303 strict groups, plus
+all 4,212 source-state diagnostic groups per profile. It then stops at a
+verifier fault-status assumption: nonfinite-head status is bit 4, not Boolean 1.
+The reviewed status correction now passes 33 controls, all six repository
+checks and Astra's saved audit. A separate diagnostic completes all remaining
+recovery/codec paths with qualification explicitly false. Commit the correction
+and complete the full saved reader next; all failed attempts stay recorded.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -551,3 +554,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | Reader correction committed / attention layout investigation | Correction committed as `b99fbaa`. The saved-reader retry closes cleanly after passing 43 local groups/74,752 values and 54 source-state groups per profile; it stops at flattened reference attention-score admission before strict coupled checks. | Preserve the failed receipt and unchanged GPU capture. Astra investigates all remaining reader layout contracts; no numerical gate failure or qualification claim. |
 | 2026-10-30 | Flat-attention reader correction applied | Astra independently approves restoring the source's flat head-major attention arrays before native-prefix slicing, with exact case lengths and two additional controls. Metadata-only audit covers all 3,102 source groups, 293 routes and 14,672 native layouts; no other concrete layout mismatch is found. | Guarded two-file application complete; 32-control and six-check validation next. Complete numerical/state/codec replay remains required. |
 | 2026-10-30 | Flat-attention correction checks pass | All 32 isolated controls pass in 0.319s and all six repository checks pass with unchanged default 457/Metal 564 counts. Source/numerical/producer code and gates remain fixed. | Independent saved audit passes; narrow task commit and complete saved-capture replay next. |
+| 2026-10-30 | Attention correction committed / complete arithmetic passes | `69c94ff` is committed. The saved reader passes all 6,440 local groups/11,971,552 values and 303 strict groups/1,965,024 values; all 168 source-state identities pass. MAIN/WIDE retain 3/8 rejected diagnostic coordinates. Reader stops at Head fault status 4 versus a Boolean expectation, with clean process closure. | Preserve the failed full-state result. Astra corrects the exact status-bit contract and checks remaining state/codec/ordinary paths before another complete read; no engine/gate change or qualification claim. |
+| 2026-10-30 | Independent saved-array audit passes | Separate stdlib-only binary decoding replays all 303 strict groups/1,965,024 values with zero failures and all 6,743 trajectory groups/13,936,576 values per profile. It independently reproduces exactly 3 MAIN and 8 WIDE failing groups/coordinates and maxima from the failed V4 read. | This confirms complete coupled numerical evidence only. State/codec/ordinary completion and full bounded qualification remain open; audit retains qualification false. |
+| 2026-10-30 | Recovery/codec diagnostic passes; status correction applied | Reviewed diagnostic completes all 104 attempts/367 rows, full physical recovery/reset/replay, ordinary calls, budgets, immutable owners and codec checks. It explicitly stubs numerical dispatch and retains passed/eligibility/qualification false. V5's exact status-bit map and boundary regression are then applied; six repository checks pass. | Validate all 33 controls and independent saved evidence, commit the narrow verifier correction, then rerun the complete unchanged numerical/state reader. |
+| 2026-10-30 | Status correction checked and independently audited | All 33 controls pass in 0.302s, all six repository checks pass (default 457/Metal 564), and Astra verifies current bindings, runtime and seven closed groups. Independent diagnostic audit preserves all 104 attempts/367 rows with explicit numerical stub/qualification false; root audit independently preserves all strict math and 3/8 trajectory diagnostics. | Narrow correction task is ready for exact staged review and commit. Complete full-reader replay and final bounded qualification remain next. |
