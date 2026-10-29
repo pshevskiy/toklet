@@ -1,14 +1,16 @@
 //! Cold metadata plan for the inspected Gemma3 270M text export.
 //!
-//! This is not the ordinary dense graph: four hidden unit-offset norms, Q/K
-//! norms, GELU and per-layer local/global state still need concrete consumers.
 //! Inspection neither reads tensor payload nor grants execution/Chat admission.
+//! The separate payload module authenticates original bytes and prepares explicit
+//! raw-gamma inputs for a bounded concrete graph; it does not grant Chat admission.
 use super::affine::{Layout, MetadataDtype};
 pub use super::gemma_metadata::{Dtype, PhysicalTensor, Shape, Storage, TensorPlan};
 use super::gemma_metadata::{descriptor, expected_physical, same_semantics};
 use crate::{model::shared_kv::KvKind, weights::Error};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
+
+pub mod payload;
 
 const LAYERS: usize = 18;
 const HIDDEN: usize = 640;

@@ -167,6 +167,11 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
   [Report](docs/gemma3-real-reference.md); exact export/replay and independent saved-source audit pass.
 - [ ] B3d3: checked original-byte real loader/native runner, source comparisons,
   two-partition window journey and bounded text/resource/state controls.
+- [x] B3d3a: original-byte CPU store, explicit raw-gamma preparation and resident
+  upload lifetime; actual original-range/hash checks pass.
+  [Report](docs/gemma3-original-loader.md).
+- [ ] B3d3b: bounded real native runner, frozen source comparisons and
+  two-partition544 window/text/state/resource journey.
 - [x] B3d3 prerequisite: qualify the source-supported FP16 clamped residual at
   both Gemma3 branch additions, preserving generic residual behavior and all
   finite/numerical gates; retain the failed strict-Half real-source evidence.
@@ -350,3 +355,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B3d original storage/upload collection succeeds | Corrected placement v3 launches two literal release jobs; actual original storage and491 resident buffers pass before/after CPU-store drop. Root independently reconstructs all236 source logical records per job,127 matrices and55,936 effective norm words from original file ranges. | Reader-only capacity assumptions corrected in preserved v2 reader; no target/gate changes. Real inference remains pending; separate loader task publication next. |
 
 | 2026-10-29 | B3d2 independently frozen real source | Astra authenticates all3,232 groups/6,464 finite arrays and unchanged gates, exact replay/prefixes, original109 norms,368,640 residual stores/40 saturations,589,824 gating stores and10,240 embedding-scale words. | [Report](docs/gemma3-real-reference.md); reference-only final review/commit, then loader/native journey. |
+
+| 2026-10-29 | B3d2 reviewed source commit | Exact seven-file Astra staged review passes; source-only reference task committed as`ba88fcc`. Both successful jobs and the failed unclipped predecessor remain recorded. | B3d3a original-byte loader task final review next; B3d3b real native runner remains in preparation. |
+| 2026-10-29 | B3d3a original-byte ownership verified | Storage/upload tests and independent complete original-range hashes pass, including all491 physical owners after source-store drop;431 default/327 Metal checks and strict review already pass. | [Report](docs/gemma3-original-loader.md); loader-only staged review/commit next. No inference qualification. |

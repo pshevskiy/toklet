@@ -7256,3 +7256,11 @@ original109 norm conversions,368,640 residual-store words/40 saturations,
 finite arrays, exact replay and historical-prefix checks pass. The frozen
 [real reference](gemma3-real-reference.md) closes B3d2 in its source-only scope;
 actual native comparison and application/adoption quality remain open.
+
+The real source reference is committed as `ba88fcc` after exact seven-file Astra
+review. Original-byte storage/upload is separately complete in its bounded
+ownership scope:150,885,632 payload bytes,127 original matrices,109 raw norm
+vectors and491 unique resident buffers survive source-store drop exactly.
+Requested capacity is explicitly1..544 while declared32,768 stays metadata.
+The [loader report](gemma3-original-loader.md) keeps actual inference, window
+comparisons, Chat and phone qualification open.

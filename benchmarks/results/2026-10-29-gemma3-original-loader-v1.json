@@ -1,0 +1,135 @@
+{
+  "format": "toklet-gemma3-original-loader-v1",
+  "date": "2026-10-29",
+  "base_revision": "8528b5b",
+  "worktree_identity": "Executed source exact-pinned by cold and storage/upload receipts; correction/source commits8528b5b/ba88fcc are separate",
+  "passed": true,
+  "scope": "Authenticated original checkpoint CPU storage and resident Metal upload/lifetime; no Session or inference",
+  "artifact_revision": "ff1143e3a10547c9f2129e94ca37059b096b23f4",
+  "storage": {
+    "original_payload_bytes": 150885632,
+    "container_bytes": 150939130,
+    "logical_records": 236,
+    "packed_matrices": 127,
+    "raw_bf16_norm_vectors": 109,
+    "effective_fp32_norm_words": 55936,
+    "metadata_reservation_bytes": 67108864,
+    "stream_scratch_bytes": 65536,
+    "admitted_load_bytes": 218060032
+  },
+  "capacity": {
+    "declared": 32768,
+    "declared_local_window": 512,
+    "explicit_preparation_range": [
+      1,
+      544
+    ],
+    "tested": [
+      1,
+      12,
+      511,
+      512,
+      513,
+      544
+    ],
+    "rejected": [
+      0,
+      545,
+      18446744073709551615
+    ],
+    "physical_retention": "min(512,requested_capacity)",
+    "numerical_context_qualified_by_this_task": false
+  },
+  "resident": {
+    "logical_records_each_pass": 237,
+    "unique_physical_buffers": 491,
+    "passes": 2,
+    "source_store_dropped_between_passes": true,
+    "all_original_hashes_and_addresses_preserved": true,
+    "packed_weights_bytes": 150773760,
+    "effective_norms_including_guards_bytes": 226796,
+    "zero_bias_bytes": 524302,
+    "metadata_bytes": 24208,
+    "shared_framework_allowance_bytes": 67108864,
+    "admitted_model_bytes": 218657930,
+    "cold_peak_bound_bytes": 436781146,
+    "session_allocated": false,
+    "forward_calls": 0,
+    "explicit_gpu_commands_submitted": 0
+  },
+  "checks": {
+    "formatting": true,
+    "strict_default_and_metal_clippy": true,
+    "default_passed": 431,
+    "metal_library_passed": 327,
+    "targeted_debug_and_release_passed_each": 26,
+    "new_portable_loader_controls": 7,
+    "real_ignored_tests_passed": 2,
+    "all_owned_groups_closed": true
+  },
+  "observed_memory": {
+    "lifetime_max_phys_footprint": [
+      156123688,
+      325321496
+    ],
+    "continuous_peak_claim": false,
+    "performance_claim": false
+  },
+  "preflight_and_reader_corrections": [
+    "Controller v2 stale approval inventory path rejected before any child; corrected v3 controller code unchanged",
+    "Independent reader capacity assumptions corrected to actual literal Rust controls; no target/gate change"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b3d-loader-independent-review-v1/prospective-review.json",
+      "bytes": 7030,
+      "sha256": "b938b3a561ac5547c82b434642d2d3c1887adac97bac3e2b582097ae054411c0"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-loader-consumer-independent-review-v1/prospective-review.json",
+      "bytes": 9106,
+      "sha256": "7df34e12f471a71bb09895dec49d4fca77cc2c7136f30cb40891541597e49c40"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-loader-cold-checks-v1/checks.json",
+      "bytes": 868814,
+      "sha256": "fe62eb26321ac905866f708331c7f86405eef0434cfdb423261717709587f1ce"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-residual-clamp-cold-checks-v1/checks.json",
+      "bytes": 868290,
+      "sha256": "3ff1fd8d67f9bdf6f7f5ed4d167ed08e47e9a55a2e800f1224ca355518adcd0b"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-loader-run-v2/run.json",
+      "bytes": 2260,
+      "sha256": "f9a5e0253d1a5098a10970aaa7ffb7ed964022f9111da49348cfc7b5aa751553"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-loader-run-v3/prospective-review.json",
+      "bytes": 4573,
+      "sha256": "c3bebc8ad906150ca3acba2ebb715c6be05293edb25f9d1be4d4fbc32993874d"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-loader-run-v3/run.json",
+      "bytes": 6260359,
+      "sha256": "b00dba08d71afd14f7c9714f6d96ef71f6c58a0ad0f4ebd37b6dc29d997fab33"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-loader-postrun-root-v1/review.json",
+      "bytes": 2209,
+      "sha256": "0d391ba27c2975415bef418185d427c05ff0136beadf6fad7abb857fd4003704"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-loader-postrun-root-v1/reader-correction.json",
+      "bytes": 317,
+      "sha256": "22022084c37052d68dc89fe987abc3cbc647024d11dcee284edd42965e81404c"
+    }
+  ],
+  "final_publication_review": "artifacts/new-goal-b3d-loader-publication-v1/final-review.json",
+  "remaining": [
+    "real native source/window/text/resource comparisons",
+    "production app integration, wider contexts, adoption quality and phone"
+  ],
+  "cold_build_base_revision": "f6015b4121d8f150b019a877cdae7ec3ae498632"
+}

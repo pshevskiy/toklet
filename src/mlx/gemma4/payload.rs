@@ -6,6 +6,7 @@
 
 use super::{E2bPlan, ModalityPolicy, Storage, inspect, invalid};
 use crate::mlx::affine::{Layout, Matrix};
+use crate::mlx::payload::{buffer, read_exact, validate_q4_bf16};
 use crate::weights::Error;
 use half::bf16;
 use sha2::{Digest, Sha256};
@@ -143,22 +144,6 @@ fn multiply(a: usize, b: usize) -> Result<usize, Error> {
     }
     Ok(n)
 }
-fn buffer(size: usize) -> Result<Vec<u8>, Error> {
-    if size > isize::MAX as usize {
-        return Err(invalid("Gemma payload allocation bound"));
-    }
-    let mut v = Vec::new();
-    v.try_reserve_exact(size).map_err(|_| Error::Allocation)?;
-    v.resize(size, 0);
-    Ok(v)
-}
-fn read_exact<R: Read>(reader: &mut R, bytes: &mut [u8], sha: &mut Sha256) -> Result<(), Error> {
-    reader
-        .read_exact(bytes)
-        .map_err(|e| invalid(format!("Gemma payload read: {e}")))?;
-    sha.update(bytes);
-    Ok(())
-}
 
 struct Reservation {
     tensors: usize,
@@ -221,24 +206,7 @@ fn vector(raw: &[u8]) -> Result<Vec<f32>, Error> {
     Ok(result)
 }
 fn validate_packed(p: &Packed) -> Result<(), Error> {
-    if p.layout.bits() != 4 || p.layout.metadata_dtype() != crate::mlx::affine::MetadataDtype::BF16
-    {
-        return Err(invalid("Gemma payload packed representation"));
-    }
-    Matrix::from_le_bytes(p.layout, &p.weight, &p.scales, &p.biases).map_err(|e| invalid(e.0))?;
-    // With a linear affine reconstruction, finite FP32 endpoints at codes0/15
-    // imply finite results for every intervening four-bit code. This stronger
-    // admission intentionally includes unused codes; no whole matrix expansion.
-    for (s, b) in p.scales.chunks_exact(2).zip(p.biases.chunks_exact(2)) {
-        let scale = f64::from(bf16::from_le_bytes(s.try_into().unwrap()).to_f32());
-        let bias = f64::from(bf16::from_le_bytes(b.try_into().unwrap()).to_f32());
-        for code in [0., 15.] {
-            if !((scale * code + bias) as f32).is_finite() {
-                return Err(invalid("Gemma affine reconstruction overflow"));
-            }
-        }
-    }
-    Ok(())
+    validate_q4_bf16(p.layout, &p.weight, &p.scales, &p.biases)
 }
 
 /// Consume one complete safetensors stream with an externally pinned identity.

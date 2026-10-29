@@ -10,6 +10,7 @@ pub(crate) mod execution;
 pub mod gemma3;
 pub mod gemma4;
 mod gemma_metadata;
+mod payload;
 mod phi3;
 pub mod qwen;
 mod qwen3;

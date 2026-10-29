@@ -1,7 +1,8 @@
 //! Concrete resident Gemma3 packed/Half graph, bounded to the qualified leaves.
 //! Raw BF16 gamma is an explicit constructor contract, not artifact inference.
 //! The caller authenticates borrowed original matrices before construction.
-//! There is no checkpoint loader, tokenizer, sampling or Chat eligibility here.
+//! The explicit payload adapter uploads authenticated bytes without retaining
+//! the CPU owner. Tokenization, sampling and Chat eligibility remain separate.
 use super::{
     ALLOWANCE, Error, Result, Tensor, TensorStorage, add, half_pointwise as pointwise,
     half_rms_f32 as rms,
@@ -28,6 +29,8 @@ mod snapshots;
 pub use snapshots::SnapshotInfo;
 #[cfg(test)]
 mod gpu_tests;
+#[cfg(test)]
+mod loader_tests;
 #[cfg(test)]
 mod residual_tests;
 #[cfg(test)]
@@ -253,6 +256,32 @@ fn packed_upload(
     })
 }
 impl Model {
+    /// Explicit selected-artifact raw-gamma interpretation. Byte admission alone
+    /// does not authorize this call; the caller authenticates the no-fold source
+    /// lineage. This upload retains no CPU-store reference or duplicate weights.
+    /// Capacity is independently bounded to 1..=544, not source-declared 32768.
+    pub fn from_payload_raw_gamma(
+        store: &crate::mlx::gemma3::payload::PayloadStore,
+        capacity: usize,
+        external_resident_bytes: usize,
+        memory_limit: usize,
+    ) -> Result<Self> {
+        budget(memory_limit)?;
+        let input = store.prepare_raw_gamma(capacity, external_resident_bytes, memory_limit)?;
+        let load_peak = add(store.report().admitted_load_bytes, external_resident_bytes)?;
+        admit(load_peak, memory_limit)?;
+        let mut model = Self::from_raw_gamma(
+            input.config,
+            input.specs,
+            input.local_window,
+            input.weights,
+            input.source_resident_bytes,
+            memory_limit,
+        )?;
+        model.memory.cold_peak = accounted_peak(model.memory.cold_peak, load_peak);
+        Ok(model)
+    }
+
     /// Upload authenticated original packed matrices exactly once. `source_bytes`
     /// must include the caller's live artifact/container and raw gamma owners;
     /// this cold overlap is checked before GPU creation and numerical allocation.
